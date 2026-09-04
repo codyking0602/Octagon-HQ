@@ -1,10 +1,11 @@
 import {
   buildFootballBlindResumeRounds,
   footballBlindResumeNextRevealCount,
+  footballBlindResumeRevealStage,
   footballBlindResumeRoundPoints,
+  FOOTBALL_BLIND_RESUME_CORRECT_POINTS,
   FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES,
-  FOOTBALL_BLIND_RESUME_REVEAL_COUNTS,
-  type FootballBlindResumeRevealCount,
+  FOOTBALL_BLIND_RESUME_MISS_POINTS,
 } from "../back-room/footballBlindResumeModel";
 import {
   buildFootballFindLeaderBoard,
@@ -38,17 +39,16 @@ import {
   OFFICIAL_SCORE_CONTRACT_VERSION,
   WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,
 } from "./officialScoreContract";
-import {
-  BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION,
-  type OfficialDailyAdvanceResult,
-  type OfficialDailyGameType,
-  type OfficialDailyRuntimeContext,
-  type OfficialDailySetupPublication,
+import type {
+  OfficialDailyAdvanceResult,
+  OfficialDailyGameType,
+  OfficialDailyRuntimeContext,
+  OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
 export const FOOTBALL_DAILY_RUNTIME_VERSION = "football-official-daily-v1" as const;
-export const FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION = "football-blind-resume-daily-v3" as const;
-export const FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION = BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION;
+export const FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION = "football-blind-resume-daily-v4" as const;
+export const FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION = "football-blind-resume-score-v4" as const;
 export const FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "football-hit-the-number-daily-v1" as const;
 
 type JsonRecord = Record<string, unknown>;
@@ -168,15 +168,31 @@ function buildWavelengthSetup(day: string, scheduleVersion: string): OfficialDai
   };
 }
 
-function visibleBlindResumeRound(round: JsonRecord, revealedCount: FootballBlindResumeRevealCount) {
-  const stats = recordArray(round.stats, "Football Blind Resume stats").slice(0, revealedCount);
+function blindResumeRevealCounts(round: JsonRecord): readonly [number, number, number] {
+  const raw = round.reveal_counts;
+  if (!Array.isArray(raw) || raw.length !== 3 || raw.some((value) => !Number.isInteger(value))) {
+    throw new Error("Football Blind Resume reveal stages are invalid.");
+  }
+  const counts = raw.map(Number) as [number, number, number];
+  if (!(counts[0] > 0 && counts[0] < counts[1] && counts[1] < counts[2])) {
+    throw new Error("Football Blind Resume reveal stages must increase.");
+  }
+  return counts;
+}
+
+function visibleBlindResumeRound(round: JsonRecord, revealedCount: number) {
+  const allStats = recordArray(round.stats, "Football Blind Resume stats");
+  const revealCounts = blindResumeRevealCounts(round);
+  const stage = footballBlindResumeRevealStage({ revealCounts }, revealedCount);
   return {
     prompt: round.prompt,
     league: round.league,
-    difficulty: round.difficulty,
+    context_label: round.context_label,
     revealed_count: revealedCount,
-    max_revealed_count: 8,
-    stats,
+    reveal_stage: stage + 1,
+    reveal_counts: [...revealCounts],
+    max_revealed_count: allStats.length,
+    stats: allStats.slice(0, revealedCount),
   };
 }
 
@@ -189,7 +205,7 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
     id: round.id,
     prompt: round.prompt,
     league: round.league,
-    difficulty: round.difficulty,
+    context_label: round.contextLabel,
     left_id: round.leftId,
     right_id: round.rightId,
     left_name: round.leftName,
@@ -197,18 +213,25 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
     left_subtitle: round.leftSubtitle,
     right_subtitle: round.rightSubtitle,
     winner_id: round.winnerId,
+    reveal_counts: [...round.revealCounts],
     stats: round.stats.map((stat) => ({ label: stat.label, value_a: stat.valueA, value_b: stat.valueB })),
   }));
+  const scoringLadder = FOOTBALL_BLIND_RESUME_CORRECT_POINTS.map((correct, index) => ({
+    stage: index + 1,
+    correct,
+    wrong: FOOTBALL_BLIND_RESUME_MISS_POINTS[index],
+  }));
+  const openingCount = blindResumeRevealCounts(privateRounds[0]!)[0];
   return {
     setupKey: `${FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}`,
     contentVersion: FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION,
-    scoringVersion: FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION,
+    scoringVersion: FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION as OfficialDailySetupPublication["scoringVersion"],
     publicSetup: {
       runtime_version: FOOTBALL_DAILY_RUNTIME_VERSION,
       round_count: privateRounds.length,
-      difficulty_mix: [...FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES],
+      scoring_ladder: scoringLadder,
       league_mix: rounds.reduce<Record<string, number>>((acc, round) => ({ ...acc, [round.league]: (acc[round.league] ?? 0) + 1 }), {}),
-      initial_state: { complete: false, round_index: 0, results: [], current_round: visibleBlindResumeRound(privateRounds[0]!, FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[0]) },
+      initial_state: { complete: false, round_index: 0, results: [], raw_points: 0, current_round: visibleBlindResumeRound(privateRounds[0]!, openingCount) },
     },
     revealSetup: {},
     privateSetupEvidence: { rounds: privateRounds },
@@ -355,24 +378,59 @@ function advanceBlindResume(context: OfficialDailyRuntimeContext, action: JsonRe
   if (answers.length >= rounds.length) throw new Error("The Football Blind Resume card is complete.");
   const round = rounds[answers.length]!;
   const publicRound = asRecord(context.publicState.current_round);
-  const revealedCount = integer(publicRound.revealed_count, "Football Blind Resume reveal count", FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[0], 8) as FootballBlindResumeRevealCount;
-  if (!FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.includes(revealedCount)) throw new Error("Unsupported Football Blind Resume reveal stage.");
+  const revealCounts = blindResumeRevealCounts(round);
+  const revealedCount = integer(publicRound.revealed_count, "Football Blind Resume reveal count", revealCounts[0], revealCounts[2]);
+  const stage = footballBlindResumeRevealStage({ revealCounts }, revealedCount);
   const priorResults = recordArray(context.publicState.results ?? [], "Football Blind Resume results");
+  const priorRaw = Number(context.publicState.raw_points ?? 0);
+  if (!Number.isFinite(priorRaw)) throw new Error("Football Blind Resume raw score is invalid.");
+
   if (action.reveal === true) {
-    const next = footballBlindResumeNextRevealCount(revealedCount);
-    if (next === null) throw new Error("All Football Blind Resume stats are already revealed.");
-    return { submissionState: { answers, final_submission: null }, publicState: { complete: false, round_index: answers.length, results: priorResults, current_round: visibleBlindResumeRound(round, next) }, complete: false, finalSubmission: null };
+    const next = footballBlindResumeNextRevealCount({ revealCounts }, revealedCount);
+    if (next === null) throw new Error("All Football Blind Resume facts are already revealed.");
+    return {
+      submissionState: { answers, final_submission: null },
+      publicState: { complete: false, round_index: answers.length, results: priorResults, raw_points: priorRaw, current_round: visibleBlindResumeRound(round, next) },
+      complete: false,
+      finalSubmission: null,
+    };
   }
+
   const side = String(action.choice ?? "").toUpperCase();
   if (side !== "A" && side !== "B") throw new Error("Football Blind Resume choice must be A or B.");
   const pickedId = side === "A" ? String(round.left_id) : String(round.right_id);
   const correct = pickedId === String(round.winner_id);
-  const points = footballBlindResumeRoundPoints(revealedCount, correct);
-  const nextAnswers = [...answers, { choice: pickedId, revealed_count: revealedCount }];
-  const results = [...priorResults, { round_index: answers.length, difficulty: round.difficulty, picked_side: side, picked_id: pickedId, winner_id: round.winner_id, correct, revealed_count: revealedCount, points_awarded: points, left: { id: round.left_id, name: round.left_name, subtitle: round.left_subtitle }, right: { id: round.right_id, name: round.right_name, subtitle: round.right_subtitle } }];
+  const points = footballBlindResumeRoundPoints(stage, correct);
+  const rawPoints = priorRaw + points;
+  const nextAnswers = [...answers, { choice: pickedId, reveal_stage: stage + 1, revealed_count: revealedCount }];
+  const results = [...priorResults, {
+    round_index: answers.length,
+    context_label: round.context_label,
+    picked_side: side,
+    picked_id: pickedId,
+    winner_id: round.winner_id,
+    correct,
+    reveal_stage: stage + 1,
+    revealed_count: revealedCount,
+    points_awarded: points,
+    left: { id: round.left_id, name: round.left_name, subtitle: round.left_subtitle },
+    right: { id: round.right_id, name: round.right_name, subtitle: round.right_subtitle },
+  }];
   const complete = nextAnswers.length === rounds.length;
   const finalSubmission = complete ? { answers: nextAnswers } : null;
-  return { submissionState: { answers: nextAnswers, final_submission: finalSubmission }, publicState: { complete, round_index: complete ? rounds.length : nextAnswers.length, results, current_round: complete ? null : visibleBlindResumeRound(rounds[nextAnswers.length]!, FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[0]) }, complete, finalSubmission };
+  const nextRound = complete ? null : rounds[nextAnswers.length]!;
+  return {
+    submissionState: { answers: nextAnswers, final_submission: finalSubmission },
+    publicState: {
+      complete,
+      round_index: complete ? rounds.length : nextAnswers.length,
+      results,
+      raw_points: rawPoints,
+      current_round: nextRound ? visibleBlindResumeRound(nextRound, blindResumeRevealCounts(nextRound)[0]) : null,
+    },
+    complete,
+    finalSubmission,
+  };
 }
 
 function advanceBlindRank(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {

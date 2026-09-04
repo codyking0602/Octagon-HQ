@@ -1,223 +1,236 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { blindResumeV3RoundPoints, createBlindResumeV3Card } from "../play/blindResumeV3";
-import {
-  BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION,
-} from "../play/todaysChallengeRuntime";
 import {
   buildFootballOfficialDailySetup,
   FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION,
   FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION,
-  FOOTBALL_DAILY_RUNTIME_VERSION,
 } from "../play/footballTodayChallengeRuntime";
+import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
 import FootballBlindResumePage from "./FootballBlindResumePage";
+import FootballTodayChallengePage from "./FootballTodayChallengePage";
 import {
+  FOOTBALL_BLIND_RESUME_CORRECT_POINTS,
   FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES,
-  FOOTBALL_BLIND_RESUME_REVEAL_COUNTS,
-  buildFootballBlindResumeEvidence,
+  FOOTBALL_BLIND_RESUME_MISS_POINTS,
+  FOOTBALL_BLIND_RESUME_RAW_MAX,
+  FOOTBALL_BLIND_RESUME_REVEAL_STAGES,
+  FOOTBALL_BLIND_RESUME_ROUNDS,
   buildFootballBlindResumeRounds,
   footballBlindResumeMatchups,
   footballBlindResumeNextRevealCount,
+  footballBlindResumeRevealStage,
   footballBlindResumeRoundPoints,
+  normalizeFootballBlindResumeDailyScore,
   resolvedFootballBlindResumeMatchups,
 } from "./footballBlindResumeModel";
-import { getFootballRankFivePack } from "./footballRankFiveModel";
 
-vi.mock("../challenges/ChallengeProvider", () => ({
-  usePlayChallenges: () => ({
-    beginChallenge: vi.fn().mockResolvedValue(""),
-    activeProfile: null,
-    profiles: [],
-    getChallenge: () => null,
-    markOpened: vi.fn(),
-    submitResult: vi.fn(),
+const repositoryMocks = vi.hoisted(() => ({
+  loadToday: vi.fn(),
+  advance: vi.fn(),
+}));
+
+vi.mock("../identity/IdentityProvider", () => ({
+  useIdentity: () => ({
+    status: "ready",
+    profile: { id: "test-profile" },
+    openDialog: vi.fn(),
   }),
 }));
 
-function normalizedRow(row: { label: string; valueA: string; valueB: string }) {
-  return `${row.label}|${row.valueA}|${row.valueB}`.trim().toLowerCase().replace(/\s+/g, " ");
+vi.mock("../play/todayChallengeRepository", () => ({
+  createTodayChallengeRepository: () => repositoryMocks,
+  TodayChallengeRepositoryError: class TodayChallengeRepositoryError extends Error {
+    stale = false;
+  },
+}));
+
+function projectionFor(day = "2026-09-04", scheduleVersion = "football-blind-resume-v4-test"): TodayChallengeProjection {
+  const setup = buildFootballOfficialDailySetup("blind_resume", day, scheduleVersion);
+  return {
+    available: true,
+    sport: "football",
+    id: "00000000-0000-4000-8000-000000000004",
+    centralDay: day,
+    scheduleVersion,
+    gameType: "blind_resume",
+    setupKey: setup.setupKey,
+    contentVersion: setup.contentVersion,
+    scoringVersion: String(setup.scoringVersion),
+    fallbackReason: null,
+    publicSetup: setup.publicSetup,
+    progressRevision: 0,
+    publicState: setup.publicSetup.initial_state as Record<string, unknown>,
+    revealSetup: null,
+    officialAttempt: null,
+    deploymentSha: "test-sha",
+    actionHistory: [],
+  };
 }
 
-describe("Football Blind Resume", () => {
+describe("Football Blind Resume Daily v4", () => {
   beforeEach(() => {
-    window.localStorage.clear();
+    repositoryMocks.loadToday.mockReset();
+    repositoryMocks.advance.mockReset();
   });
 
-  it("covers every PR5 archetype with evidence-backed NFL and CFB matchups while Rank 5 stays the verdict owner", () => {
-    expect(footballBlindResumeMatchups.length).toBeGreaterThanOrEqual(80);
-    expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.packId)).size).toBe(13);
-    expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.archetype))).toEqual(new Set([
-      "team-season",
-      "player-career",
-      "player-season",
-      "coach",
-      "program-era",
-    ]));
+  it("keeps the locked three-round, three-stage scoring contract and 100-point normalization", () => {
+    expect(FOOTBALL_BLIND_RESUME_ROUNDS).toBe(3);
+    expect(FOOTBALL_BLIND_RESUME_REVEAL_STAGES).toBe(3);
+    expect(FOOTBALL_BLIND_RESUME_CORRECT_POINTS).toEqual([10, 8, 7]);
+    expect(FOOTBALL_BLIND_RESUME_MISS_POINTS).toEqual([-4, -1, 0]);
+    expect(FOOTBALL_BLIND_RESUME_RAW_MAX).toBe(30);
+
+    expect(footballBlindResumeRoundPoints(0, true)).toBe(10);
+    expect(footballBlindResumeRoundPoints(0, false)).toBe(-4);
+    expect(footballBlindResumeRoundPoints(1, true)).toBe(8);
+    expect(footballBlindResumeRoundPoints(1, false)).toBe(-1);
+    expect(footballBlindResumeRoundPoints(2, true)).toBe(7);
+    expect(footballBlindResumeRoundPoints(2, false)).toBe(0);
+
+    expect(normalizeFootballBlindResumeDailyScore(30)).toBe(100);
+    expect(normalizeFootballBlindResumeDailyScore(24)).toBe(80);
+    expect(normalizeFootballBlindResumeDailyScore(21)).toBe(70);
+    expect(normalizeFootballBlindResumeDailyScore(-12)).toBe(0);
+  });
+
+  it("uses an editorial curated bank with variable evidence and the canonical factual owner", () => {
+    expect(footballBlindResumeMatchups.length).toBeGreaterThanOrEqual(24);
     expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.league))).toEqual(new Set(["NFL", "CFB"]));
+    expect(new Set(footballBlindResumeMatchups.map((matchup) => matchup.packId)).size).toBeGreaterThanOrEqual(8);
 
+    const evidenceLengths = new Set<number>();
+    const revealSignatures = new Set<string>();
     for (const matchup of resolvedFootballBlindResumeMatchups()) {
-      const pack = getFootballRankFivePack(matchup.packId);
-      const left = pack.items.find((item) => item.id === matchup.leftId)!;
-      const right = pack.items.find((item) => item.id === matchup.rightId)!;
-      expect(matchup.leftRating).toBe(left.rating);
-      expect(matchup.rightRating).toBe(right.rating);
-      expect(matchup.winnerId).toBe(left.rating > right.rating ? left.id : right.id);
-      expect(matchup.stats).toHaveLength(8);
-      expect(new Set(matchup.stats.map((row) => row.source.dimensionId)).size).toBe(8);
-      expect(new Set(matchup.stats.map((row) => row.label.toLowerCase())).size).toBe(8);
-      expect(new Set(matchup.stats.map(normalizedRow)).size).toBe(8);
+      expect([matchup.leftId, matchup.rightId]).toContain(matchup.winnerId);
+      expect(matchup.stats.length).toBeGreaterThanOrEqual(6);
+      expect(matchup.stats.length).toBeLessThanOrEqual(8);
+      expect(matchup.revealCounts).toHaveLength(3);
+      expect(matchup.revealCounts[0]).toBeGreaterThan(0);
+      expect(matchup.revealCounts[0]).toBeLessThan(matchup.revealCounts[1]);
+      expect(matchup.revealCounts[1]).toBeLessThan(matchup.revealCounts[2]);
+      expect(matchup.revealCounts[2]).toBe(matchup.stats.length);
       expect(matchup.stats.every((row) => row.source.owner === "footballFactualStats")).toBe(true);
-      expect(["easy", "medium", "hard", "villain"]).toContain(matchup.difficulty);
+      expect(new Set(matchup.stats.map((row) => row.source.dimensionId)).size).toBe(matchup.stats.length);
 
-      const hiddenEvidence = matchup.stats.flatMap((row) => [row.valueA, row.valueB]).join(" ").toLowerCase();
-      expect(hiddenEvidence).not.toContain(matchup.leftName.toLowerCase());
-      expect(hiddenEvidence).not.toContain(matchup.rightName.toLowerCase());
+      const visibleEvidence = matchup.stats.flatMap((row) => [row.label, row.valueA, row.valueB]).join(" ").toLowerCase();
+      expect(visibleEvidence).not.toContain(matchup.leftName.toLowerCase());
+      expect(visibleEvidence).not.toContain(matchup.rightName.toLowerCase());
+      expect(visibleEvidence).not.toContain("same tier");
+
+      evidenceLengths.add(matchup.stats.length);
+      revealSignatures.add(matchup.revealCounts.join("/"));
+    }
+
+    expect(evidenceLengths.size).toBeGreaterThan(1);
+    expect(revealSignatures.size).toBeGreaterThan(2);
+  });
+
+  it("builds deterministic mixed three-round Daily slates with matchup-specific reveal counts", () => {
+    const first = buildFootballBlindResumeRounds("blind-resume-v4-proof", FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES);
+    const second = buildFootballBlindResumeRounds("blind-resume-v4-proof", FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES);
+
+    expect(first).toEqual(second);
+    expect(first).toHaveLength(3);
+    expect(first.map((round) => round.difficulty)).toEqual([...FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES]);
+    expect(new Set(first.map((round) => round.packId)).size).toBe(3);
+    expect(new Set(first.map((round) => round.league))).toEqual(new Set(["NFL", "CFB"]));
+    expect(new Set(first.flatMap((round) => [round.leftId, round.rightId])).size).toBe(6);
+
+    for (const round of first) {
+      expect(footballBlindResumeRevealStage(round, round.revealCounts[0])).toBe(0);
+      expect(footballBlindResumeNextRevealCount(round, round.revealCounts[0])).toBe(round.revealCounts[1]);
+      expect(footballBlindResumeNextRevealCount(round, round.revealCounts[1])).toBe(round.revealCounts[2]);
+      expect(footballBlindResumeNextRevealCount(round, round.revealCounts[2])).toBeNull();
     }
   });
 
-  it("fails loudly when a matchup asks the canonical factual owner for incomplete evidence", () => {
-    expect(() => buildFootballBlindResumeEvidence(
-      "nfl-quarterbacks",
-      "patrick-mahomes",
-      "tom-brady",
-      "player-career",
-    )).toThrow(/no factual evidence profile/i);
-  });
-
-  it("reuses the canonical UFC V3 reveal ladder and scoring owner unchanged", () => {
-    const ufcCard = createBlindResumeV3Card("football-blind-resume-parity-proof");
-    expect([...FOOTBALL_BLIND_RESUME_REVEAL_COUNTS]).toEqual(ufcCard.revealCounts);
-    expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS).toEqual([2, 4, 6, 8]);
-    expect(footballBlindResumeNextRevealCount(2)).toBe(4);
-    expect(footballBlindResumeNextRevealCount(4)).toBe(6);
-    expect(footballBlindResumeNextRevealCount(6)).toBe(8);
-    expect(footballBlindResumeNextRevealCount(8)).toBeNull();
-
-    for (const shown of FOOTBALL_BLIND_RESUME_REVEAL_COUNTS) {
-      expect(footballBlindResumeRoundPoints(shown, true)).toBe(blindResumeV3RoundPoints(shown, true));
-      expect(footballBlindResumeRoundPoints(shown, false)).toBe(blindResumeV3RoundPoints(shown, false));
-    }
-    expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.map((shown) => footballBlindResumeRoundPoints(shown, true))).toEqual([20, 19, 18, 17]);
-    expect(FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.map((shown) => footballBlindResumeRoundPoints(shown, false))).toEqual([2, 4, 6, 8]);
-  });
-
-  it("builds deterministic mixed five-round cards including deterministic evidence", () => {
-    const first = buildFootballBlindResumeRounds("blind-resume-pr5-proof");
-    const second = buildFootballBlindResumeRounds("blind-resume-pr5-proof");
-    expect(first.map((round) => round.id)).toEqual(second.map((round) => round.id));
-    expect(first.map((round) => round.stats)).toEqual(second.map((round) => round.stats));
-    expect(first.map((round) => round.difficulty)).toEqual(second.map((round) => round.difficulty));
-    expect(first).toHaveLength(5);
-    const ids = first.flatMap((round) => [round.leftId, round.rightId]);
-    expect(new Set(ids).size).toBe(10);
-    expect(new Set(first.map((round) => round.packId)).size).toBe(5);
-    expect(new Set(first.map((round) => round.difficulty)).size).toBeGreaterThanOrEqual(2);
-    const nfl = first.filter((round) => round.league === "NFL").length;
-    const cfb = first.filter((round) => round.league === "CFB").length;
-    expect([nfl, cfb].sort((left, right) => left - right)).toEqual([2, 3]);
-  });
-
-  it("uses the same canonical evidence in replayable and official-daily modes and opens official daily at 2 rows", () => {
-    const day = "2026-08-24";
-    const scheduleVersion = "football-pr5-proof";
-    const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|blind-resume|${scheduleVersion}|${day}`;
-    const direct = buildFootballBlindResumeRounds(seed, FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES);
-    const official = buildFootballOfficialDailySetup("blind_resume", day, scheduleVersion);
-    const privateRounds = (official.privateSetupEvidence as { rounds: Array<{
-      id: string;
-      stats: Array<{ label: string; value_a: string; value_b: string }>;
-    }> }).rounds;
-    const publicSetup = official.publicSetup as {
-      initial_state: {
-        current_round: {
-          revealed_count: number;
-          max_revealed_count: number;
-          stats: unknown[];
-        };
-      };
+  it("publishes only the visible anonymous facts and the complete risk/reward ladder", () => {
+    const day = "2026-09-04";
+    const scheduleVersion = "football-blind-resume-v4-public-proof";
+    const setup = buildFootballOfficialDailySetup("blind_resume", day, scheduleVersion);
+    const privateRounds = (setup.privateSetupEvidence as { rounds: Array<Record<string, unknown>> }).rounds;
+    const publicSetup = setup.publicSetup as {
+      round_count: number;
+      scoring_ladder: Array<{ stage: number; correct: number; wrong: number }>;
+      initial_state: { current_round: Record<string, unknown> };
     };
+    const opening = publicSetup.initial_state.current_round;
+    const firstPrivate = privateRounds[0]!;
+    const revealCounts = firstPrivate.reveal_counts as number[];
+    const visibleStats = opening.stats as unknown[];
 
-    expect(official.contentVersion).toBe(FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION);
-    expect(official.scoringVersion).toBe(FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION);
-    expect(official.scoringVersion).toBe(BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION);
-    expect(publicSetup.initial_state.current_round.revealed_count).toBe(2);
-    expect(publicSetup.initial_state.current_round.max_revealed_count).toBe(8);
-    expect(publicSetup.initial_state.current_round.stats).toHaveLength(2);
-    expect(privateRounds.map((round) => ({
-      id: round.id,
-      stats: round.stats,
-    }))).toEqual(direct.map((round) => ({
-      id: round.id,
-      stats: round.stats.map((stat) => ({
-        label: stat.label,
-        value_a: stat.valueA,
-        value_b: stat.valueB,
-      })),
-    })));
+    expect(setup.contentVersion).toBe(FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION);
+    expect(setup.scoringVersion).toBe(FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION);
+    expect(publicSetup.round_count).toBe(3);
+    expect(publicSetup.scoring_ladder).toEqual([
+      { stage: 1, correct: 10, wrong: -4 },
+      { stage: 2, correct: 8, wrong: -1 },
+      { stage: 3, correct: 7, wrong: 0 },
+    ]);
+    expect(opening.reveal_stage).toBe(1);
+    expect(opening.revealed_count).toBe(revealCounts[0]);
+    expect(opening.max_revealed_count).toBe(revealCounts[2]);
+    expect(visibleStats).toHaveLength(revealCounts[0]!);
+    expect(opening).not.toHaveProperty("left_name");
+    expect(opening).not.toHaveProperty("right_name");
+    expect(opening).not.toHaveProperty("winner_id");
 
-    const publicJson = JSON.stringify(official.publicSetup).toLowerCase();
-    expect(publicJson).not.toContain(direct[0]!.leftName.toLowerCase());
-    expect(publicJson).not.toContain(direct[0]!.rightName.toLowerCase());
+    const publicJson = JSON.stringify(setup.publicSetup).toLowerCase();
+    expect(publicJson).not.toContain(String(firstPrivate.left_name).toLowerCase());
+    expect(publicJson).not.toContain(String(firstPrivate.right_name).toLowerCase());
   });
 
-  it("starts with two evidence rows, hides identities until the pick, and resets the next round to two rows", () => {
-    const { container } = render(
-      <MemoryRouter>
-        <FootballBlindResumePage />
-      </MemoryRouter>,
-    );
+  it("renders the UFC-like anonymous card rhythm, full ladder, and secondary reveal action", async () => {
+    const projection = projectionFor();
+    const setup = buildFootballOfficialDailySetup("blind_resume", projection.centralDay, projection.scheduleVersion);
+    const firstPrivate = (setup.privateSetupEvidence as { rounds: Array<Record<string, unknown>> }).rounds[0]!;
+    repositoryMocks.loadToday.mockResolvedValue(projection);
+    repositoryMocks.advance.mockResolvedValue(projection);
 
-    expect(screen.getAllByText("?")).toHaveLength(2);
-    expect(screen.getByText("2 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(screen.getByText("LOCK NOW: CORRECT +20")).toBeInTheDocument();
-    expect(screen.getByText(/MISS \+2/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "REVEAL 2 MORE EVIDENCE" })).toBeInTheDocument();
-    expect(container.querySelectorAll(".football-blind-resume-stats .is-revealed")).toHaveLength(2);
-    expect(container.querySelectorAll(".football-blind-resume-stats .is-locked")).toHaveLength(6);
-    expect([...container.querySelectorAll(".football-blind-resume-stats .is-locked span")].every((node) => !/^EVIDENCE \d+$/.test(node.textContent ?? ""))).toBe(true);
-
-    fireEvent.click(screen.getByRole("button", { name: "REVEAL 2 MORE EVIDENCE" }));
-    expect(screen.getByText("4 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(screen.getByText("LOCK NOW: CORRECT +19")).toBeInTheDocument();
-    expect(screen.getByText(/MISS \+4/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "REVEAL 2 MORE EVIDENCE" }));
-    expect(screen.getByText("6 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(screen.getByText("LOCK NOW: CORRECT +18")).toBeInTheDocument();
-    expect(screen.getByText(/MISS \+6/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "REVEAL 2 MORE EVIDENCE" }));
-    expect(screen.getByText("8 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(screen.getByText("LOCK NOW: CORRECT +17")).toBeInTheDocument();
-    expect(screen.getByText(/MISS \+8/)).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "REVEAL 2 MORE EVIDENCE" })).not.toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "PICK A" }));
-    expect(screen.queryByText("?")).not.toBeInTheDocument();
-    expect(screen.getByLabelText("Football Blind Resume identities")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "NEXT ROUND" }));
-    expect(screen.getAllByText("?")).toHaveLength(2);
-    expect(screen.getByText("2 OF 8 EVIDENCE SHOWN")).toBeInTheDocument();
-    expect(container.querySelectorAll(".football-blind-resume-stats .is-revealed")).toHaveLength(2);
-  });
-
-  it("finishes five rounds with the points-and-evidence recap", () => {
     render(
       <MemoryRouter>
-        <FootballBlindResumePage />
+        <FootballTodayChallengePage />
       </MemoryRouter>,
     );
 
-    for (let round = 0; round < 5; round += 1) {
-      fireEvent.click(screen.getByRole("button", { name: "PICK A" }));
-      fireEvent.click(screen.getByRole("button", { name: round === 4 ? "SEE FINAL SCORE" : "NEXT ROUND" }));
-    }
+    expect(await screen.findByText("Which football résumé is greater?")).toBeInTheDocument();
+    expect(screen.getAllByText("?")).toHaveLength(2);
+    expect(screen.getByText("ROUND 1 OF 3")).toBeInTheDocument();
+    expect(screen.getByText("CORRECT / WRONG")).toBeInTheDocument();
+    expect(screen.getByText("+10 / -4")).toBeInTheDocument();
+    expect(screen.getByText("+8 / -1")).toBeInTheDocument();
+    expect(screen.getByText("+7 / 0")).toBeInTheDocument();
+    expect(screen.getByText(/\d+ OF \d+ FACTS SHOWN/)).toBeInTheDocument();
+    expect(screen.queryByText(String(firstPrivate.left_name))).not.toBeInTheDocument();
+    expect(screen.queryByText(String(firstPrivate.right_name))).not.toBeInTheDocument();
 
-    expect(screen.getByText("FOOTBALL BLIND RESUME · FINAL SCORE")).toBeInTheDocument();
-    expect(screen.getByText("THE FIVE CALLS")).toBeInTheDocument();
-    expect(screen.getByText("/100")).toBeInTheDocument();
-    expect(screen.getAllByText(/PICK .* · WINNER /)).toHaveLength(5);
-    expect(screen.getByText("Early conviction pays. Later reveals trade upside for miss protection.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
+    const reveal = screen.getByRole("button", { name: "REVEAL MORE · NEXT CORRECT +8" });
+    fireEvent.click(reveal);
+    await waitFor(() => expect(repositoryMocks.advance).toHaveBeenCalledWith(projection, { reveal: true }));
+
+    fireEvent.click(screen.getByRole("button", { name: "PICK A" }));
+    await waitFor(() => expect(repositoryMocks.advance).toHaveBeenCalledWith(projection, { choice: "A" }));
+  });
+
+  it("keeps the legacy Football route Daily-only instead of restoring a second game owner", () => {
+    render(
+      <MemoryRouter initialEntries={["/football/blind-resume"]}>
+        <Routes>
+          <Route path="/football/blind-resume" element={<FootballBlindResumePage />} />
+          <Route path="/football/today" element={<div>DAILY BLIND RESUME OWNER</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("DAILY BLIND RESUME OWNER")).toBeInTheDocument();
+  });
+
+  it("does not change the UFC Blind Resume V3 reveal or scoring contract", () => {
+    const ufcCard = createBlindResumeV3Card("football-v4-ufc-nonregression");
+    expect(ufcCard.revealCounts).toEqual([2, 4, 6, 8]);
+    expect(ufcCard.revealCounts.map((shown) => blindResumeV3RoundPoints(shown, true))).toEqual([20, 19, 18, 17]);
+    expect(ufcCard.revealCounts.map((shown) => blindResumeV3RoundPoints(shown, false))).toEqual([2, 4, 6, 8]);
   });
 });

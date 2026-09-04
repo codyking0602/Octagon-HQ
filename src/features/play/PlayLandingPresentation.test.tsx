@@ -4,6 +4,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
   PLAY_LANDING_COMMON_GAME_ORDER,
+  PLAY_LANDING_FOOTBALL_GAME_ORDER,
   PLAY_LANDING_UFC_STRATEGIC_GAME,
   PlayLandingGameLibrary,
   PlayLandingHeader,
@@ -13,17 +14,21 @@ import {
 import { playGameDefinition } from "./playRegistry";
 
 describe("Play landing PR3 repair", () => {
-  it("keeps implemented games in their locked final-order slots with Auction first", () => {
+  it("keeps the shared replayable order while leaving Football Blind Resume with the Daily owner", () => {
     expect(PLAY_LANDING_COMMON_GAME_ORDER).toEqual(["find-leader", "wavelength", "blind-resume", "hit-the-number"]);
+    expect(PLAY_LANDING_FOOTBALL_GAME_ORDER).toEqual(["find-leader", "wavelength", "hit-the-number"]);
     expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]);
-    expect(playLandingGameIds("football")).toEqual(PLAY_LANDING_COMMON_GAME_ORDER);
+    expect(playLandingGameIds("football")).toEqual(PLAY_LANDING_FOOTBALL_GAME_ORDER);
   });
 
   it("does not fake future games or restore Daily-only games to All Games", () => {
-    const ids = [...playLandingGameIds("ufc"), ...playLandingGameIds("football")];
-    expect(ids).not.toContain("blind-rank");
-    expect(ids).not.toContain("keep-cut");
+    const footballIds = [...playLandingGameIds("football")];
+    const allIds = [...playLandingGameIds("ufc"), ...footballIds];
+    expect(allIds).not.toContain("blind-rank");
+    expect(allIds).not.toContain("keep-cut");
+    expect(footballIds).not.toContain("blind-resume");
     render(<PlayLandingGameLibrary sport="football" onNavigate={() => {}} />);
+    expect(screen.queryByRole("button", { name: /blind resume/i })).not.toBeInTheDocument();
     expect(screen.queryByText(/Who Am I/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/20 Questions/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Draft Room/i)).not.toBeInTheDocument();
