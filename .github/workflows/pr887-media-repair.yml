@@ -1,9 +1,9 @@
 name: PR 887 media repair
 
 on:
-  pull_request:
-    types:
-      - reopened
+  push:
+    branches:
+      - chatgpt/football-media-hard-pass
 
 permissions:
   contents: write
