@@ -182,10 +182,12 @@ describe("Football Blind Resume Daily v4", () => {
     expect(publicJson).not.toContain(String(firstPrivate.right_name).toLowerCase());
   });
 
-  it("renders the UFC-like anonymous card rhythm, full ladder, and secondary reveal action", async () => {
+  it("renders the aligned anonymous card, full ladder, and slim reveal action", async () => {
     const projection = projectionFor();
     const setup = buildFootballOfficialDailySetup("blind_resume", projection.centralDay, projection.scheduleVersion);
     const firstPrivate = (setup.privateSetupEvidence as { rounds: Array<Record<string, unknown>> }).rounds[0]!;
+    const revealCounts = firstPrivate.reveal_counts as number[];
+    const nextFactCount = revealCounts[1]! - revealCounts[0]!;
     repositoryMocks.loadToday.mockResolvedValue(projection);
     repositoryMocks.advance.mockResolvedValue(projection);
 
@@ -195,10 +197,13 @@ describe("Football Blind Resume Daily v4", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("Which football résumé is greater?")).toBeInTheDocument();
+    expect(await screen.findByText("Which football career ranks higher?")).toBeInTheDocument();
+    expect(screen.getByText("PLAY HUB")).toBeInTheDocument();
     expect(screen.getAllByText("?")).toHaveLength(2);
     expect(screen.getByText("ROUND 1 OF 3")).toBeInTheDocument();
-    expect(screen.getByText("CORRECT / WRONG")).toBeInTheDocument();
+    expect(screen.getByText("GUESS NOW")).toBeInTheDocument();
+    expect(screen.getByText("NEXT")).toBeInTheDocument();
+    expect(screen.getByText("FINAL REVEAL")).toBeInTheDocument();
     expect(screen.getByText("+10 / -4")).toBeInTheDocument();
     expect(screen.getByText("+8 / -1")).toBeInTheDocument();
     expect(screen.getByText("+7 / 0")).toBeInTheDocument();
@@ -206,7 +211,7 @@ describe("Football Blind Resume Daily v4", () => {
     expect(screen.queryByText(String(firstPrivate.left_name))).not.toBeInTheDocument();
     expect(screen.queryByText(String(firstPrivate.right_name))).not.toBeInTheDocument();
 
-    const reveal = screen.getByRole("button", { name: "REVEAL MORE · NEXT CORRECT +8" });
+    const reveal = screen.getByRole("button", { name: `SHOW ${nextFactCount} MORE ${nextFactCount === 1 ? "FACT" : "FACTS"}` });
     fireEvent.click(reveal);
     await waitFor(() => expect(repositoryMocks.advance).toHaveBeenCalledWith(projection, { reveal: true }));
 

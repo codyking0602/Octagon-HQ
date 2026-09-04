@@ -60,6 +60,7 @@ import "./styles/back-room.css";
 import "./styles/football-rank-five.css";
 import "./styles/football-debate-games.css";
 import "./styles/football-blind-resume.css";
+import "./styles/blind-resume-alignment.css";
 import "./styles/football-foundation.css";
 import "./styles/football-shell.css";
 import "./styles/football-picks.css";
