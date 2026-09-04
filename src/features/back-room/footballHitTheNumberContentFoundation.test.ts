@@ -26,6 +26,7 @@ describe("Football Hit the Number content foundation", () => {
     expect(metricById.get("cfb-best-season-rushing-yards")?.contentKind).toBe("peak-season");
     expect(metricById.get("cfb-best-season-receiving-yards")?.contentKind).toBe("peak-season");
     expect(metricById.get("nfl-team-overall-wins")?.contentKind).toBe("team-season");
+    expect(metricById.get("cfb-team-point-differential")?.contentKind).toBe("team-season");
     expect(metricById.get("nfl-team-postseason-wins")?.contentKind).toBe("accomplishment");
     expect(metricById.get("cfb-team-postseason-wins")?.contentKind).toBe("accomplishment");
     expect(metricById.get("cfb-heisman-awards")?.contentKind).toBe("accomplishment");
@@ -33,11 +34,18 @@ describe("Football Hit the Number content foundation", () => {
 
     expect(metricById.has("cfb-team-srs")).toBe(false);
     expect(metricById.has("cfb-team-sos")).toBe(false);
+    expect(metricById.has("cfb-best-season-tackles-for-loss")).toBe(false);
   });
 
-  it("dedupes compatibility and projected identities for the same real season", () => {
+  it("exports only unique subjects that participate in an enabled factual board", () => {
     const identityKeys = footballHitTheNumberSubjects.map(footballHitTheNumberSubjectIdentityKey);
     expect(new Set(identityKeys).size).toBe(identityKeys.length);
+
+    for (const subject of footballHitTheNumberSubjects) {
+      const playable = FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.some((metric) =>
+        metric.group === subject.group && getFootballFact(subject.id, metric.metricId) != null);
+      expect(playable, subject.id).toBe(true);
+    }
   });
 
   it("generates source-backed boards with peak/team/accomplishment variety and rare career trivia", () => {
