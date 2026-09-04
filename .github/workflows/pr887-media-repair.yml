@@ -21,7 +21,9 @@ jobs:
           node-version: 22
           cache: npm
       - name: Apply repair
-        run: python scripts/pr887-media-repair.py
+        run: |
+          python scripts/pr887-media-repair.py
+          python scripts/pr887-cfb-media-repair.py
       - name: Regenerate runtime artifact
         run: node scripts/generate-football-find-leader-runtime.mjs
       - name: Install dependencies
@@ -30,7 +32,7 @@ jobs:
         run: npx vitest run src/features/back-room/footballSubjectAssets.test.ts
       - name: Commit repair
         run: |
-          git rm .github/workflows/pr887-media-repair.yml scripts/pr887-media-repair.py
+          git rm .github/workflows/pr887-media-repair.yml scripts/pr887-media-repair.py scripts/pr887-cfb-media-repair.py
           git add scripts/generate-football-find-leader-runtime.mjs src/features/back-room/footballFindLeaderRuntimeProjection.ts src/features/back-room/footballSubjectRegistry.ts src/features/back-room/footballMediaIdentity.ts src/features/back-room/footballSubjectAssets.ts data/generated/football/find-leader-runtime-projection.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
