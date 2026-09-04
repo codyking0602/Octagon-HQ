@@ -8,6 +8,12 @@ declare
   v_day date := date '2026-08-22';
   v_ufc_daily uuid;
   v_football_daily uuid;
+  v_existing_setup uuid;
+  v_existing_football_daily uuid;
+  v_override_daily uuid;
+  v_republished_daily uuid;
+  v_publication jsonb;
+  v_grade record;
   v_history jsonb;
   v_streak jsonb;
   v_standings jsonb;
@@ -34,7 +40,7 @@ begin
   if exists (
     select 1
     from private.daily_challenge_schedule_versions
-    where version <> 'football-daily-v1'
+    where version not in ('football-daily-v1', 'football-daily-v2', 'football-daily-v3')
       and sport <> 'ufc'
   ) then
     raise exception 'pre-Football schedules were reclassified away from UFC';
@@ -42,6 +48,12 @@ begin
 
   if private.daily_challenge_schedule_for_day(date '2026-08-23', 'football') <> 'football-daily-v1' then
     raise exception 'sport-aware schedule resolver did not return Football';
+  end if;
+
+  if private.daily_challenge_schedule_for_day(date '2026-09-03', 'football') <> 'football-daily-v1'
+    or private.daily_challenge_schedule_for_day(date '2026-09-04', 'football') <> 'football-daily-v2'
+    or private.daily_challenge_schedule_for_day(date '2026-09-05', 'football') <> 'football-daily-v3' then
+    raise exception 'Football mid-day release schedules do not preserve the Sep 3/4/5 cutover';
   end if;
 
   if exists (
@@ -59,6 +71,125 @@ begin
     or private.daily_challenge_expected_game('football-daily-v1', date '2026-08-25') <> 'keep_4_cut_4'
     or private.daily_challenge_expected_game('football-daily-v1', date '2026-08-26') <> 'hit_the_number' then
     raise exception 'Football five-slot schedule is not deterministic';
+  end if;
+
+  if private.daily_challenge_expected_game('football-daily-v2', date '2026-09-04') <> 'blind_resume'
+    or private.daily_challenge_expected_game('football-daily-v3', date '2026-09-05') <> 'hit_the_number' then
+    raise exception 'Football release schedules do not select the intended games';
+  end if;
+
+  -- Reproduce production: Sep. 4 was already materialized under v1 before the Blind Resume
+  -- release. The stale v1 caller must publish the new game under v2 without mutating v1.
+  insert into private.daily_challenge_setups (
+    game_type,
+    setup_key,
+    content_version,
+    scoring_version,
+    public_setup,
+    reveal_setup,
+    private_setup_evidence,
+    private_grading_evidence
+  )
+  values (
+    'keep_4_cut_4',
+    'test-midday-existing-v1',
+    'football-daily-double-v1',
+    'play-official-score-v4',
+    '{}'::jsonb,
+    '{}'::jsonb,
+    '{}'::jsonb,
+    '{}'::jsonb
+  )
+  returning id into v_existing_setup;
+
+  insert into private.daily_challenges (
+    central_day,
+    schedule_version,
+    game_type,
+    setup_id,
+    content_version,
+    scoring_version,
+    fallback_reason
+  )
+  values (
+    date '2026-09-04',
+    'football-daily-v1',
+    'keep_4_cut_4',
+    v_existing_setup,
+    'football-daily-double-v1',
+    'play-official-score-v4',
+    null
+  )
+  returning id into v_existing_football_daily;
+
+  v_publication := public.publish_daily_challenge_setup(
+    date '2026-09-04',
+    'football-daily-v1',
+    'blind_resume',
+    'test-midday-blind-resume-v4',
+    'football-blind-resume-daily-v4',
+    'football-blind-resume-score-v4',
+    jsonb_build_object('round_count', 3),
+    '{}'::jsonb,
+    jsonb_build_object('rounds', jsonb_build_array()),
+    jsonb_build_object('correct_choices', jsonb_build_array('a', 'b', 'c')),
+    null
+  );
+  v_override_daily := (v_publication->>'id')::uuid;
+
+  if v_publication->>'schedule_version' <> 'football-daily-v2'
+    or v_override_daily = v_existing_football_daily then
+    raise exception 'stale Football v1 publisher did not cut over to the immutable v2 identity';
+  end if;
+
+  if not exists (
+    select 1
+    from private.daily_challenges
+    where id = v_existing_football_daily
+      and schedule_version = 'football-daily-v1'
+      and central_day = date '2026-09-04'
+      and game_type = 'keep_4_cut_4'
+      and setup_id = v_existing_setup
+  ) then
+    raise exception 'mid-day release mutated the already-published Football v1 challenge';
+  end if;
+
+  v_republished_daily := (public.publish_daily_challenge_setup(
+    date '2026-09-04',
+    'football-daily-v1',
+    'blind_resume',
+    'test-midday-blind-resume-v4',
+    'football-blind-resume-daily-v4',
+    'football-blind-resume-score-v4',
+    jsonb_build_object('round_count', 3),
+    '{}'::jsonb,
+    jsonb_build_object('rounds', jsonb_build_array()),
+    jsonb_build_object('correct_choices', jsonb_build_array('a', 'b', 'c')),
+    null
+  )->>'id')::uuid;
+
+  if v_republished_daily <> v_override_daily then
+    raise exception 'repeated Football load did not reuse the v2 challenge idempotently';
+  end if;
+
+  select *
+  into v_grade
+  from private.grade_daily_challenge(
+    'blind_resume',
+    'football-blind-resume-score-v4',
+    jsonb_build_object('answers', jsonb_build_array(
+      jsonb_build_object('choice', 'a', 'reveal_stage', 1, 'revealed_count', 2),
+      jsonb_build_object('choice', 'wrong', 'reveal_stage', 2, 'revealed_count', 5),
+      jsonb_build_object('choice', 'c', 'reveal_stage', 3, 'revealed_count', 8)
+    )),
+    jsonb_build_object('correct_choices', jsonb_build_array('a', 'b', 'c'))
+  );
+
+  if v_grade.native_score <> 16
+    or v_grade.normalized_score <> 53
+    or (v_grade.public_result->>'correct')::integer <> 2
+    or (v_grade.public_result->>'raw_points')::integer <> 16 then
+    raise exception 'Football Blind Resume v4 server grading does not match the approved 10/-4, 8/-1, 7/0 ladder';
   end if;
 
   insert into auth.users (
