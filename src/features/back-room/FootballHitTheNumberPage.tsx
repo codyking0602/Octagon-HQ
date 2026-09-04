@@ -38,6 +38,12 @@ const selectedFootballCardStyle = {
   background: "rgba(var(--football-accent-rgb), .14)",
 } as CSSProperties;
 
+const activeFootballSlotStyle = {
+  borderColor: "rgba(var(--football-accent-rgb), .78)",
+  background: "rgba(var(--football-accent-rgb), .14)",
+  boxShadow: "inset 3px 0 0 var(--football-accent)",
+} as CSSProperties;
+
 function resultTitle(result: FootballHitTheNumberResult) {
   if (result.status === "perfect") return "PERFECT";
   if (result.status === "bust") return "BUST";
@@ -60,6 +66,28 @@ function boardType(value: string | null): FootballHitTheNumberBoardType | null {
 
 function isSlotProgression(plan: FootballHitTheNumberPlan) {
   return plan.formatId === "one-from-each" || plan.formatId === "build-the-team";
+}
+
+function choiceNoun(kind: string | undefined) {
+  if (kind === "team-season" || kind === "program" || kind === "program-era") return "team";
+  if (kind === "player-season" || kind === "player-career") return "player";
+  return "pick";
+}
+
+function pluralChoiceNoun(noun: string) {
+  return noun === "team" ? "teams" : noun === "player" ? "players" : "choices";
+}
+
+function subjectDisplayName(subject: NonNullable<ReturnType<typeof getFootballHitTheNumberSubject>>) {
+  if (subject.kind !== "team-season" || subject.season == null) return subject.name;
+  return subject.name.replace(new RegExp(`^${subject.season}\\s+`), "");
+}
+
+function subjectDisplaySubtitle(subject: NonNullable<ReturnType<typeof getFootballHitTheNumberSubject>>) {
+  if (subject.kind === "team-season" && subject.season != null) {
+    return `${subject.season} season${subject.nationalChampion ? " · National champion" : ""}`;
+  }
+  return subject.subtitle;
 }
 
 function oneFromEachSlotSeasonRange(slotId: string): readonly [number, number] | null {
@@ -182,9 +210,12 @@ export default function FootballHitTheNumberPage() {
   const slotProgression = isSlotProgression(plan);
   const activeSlot = activeProgressionSlot(plan, selectedIds);
   const availableSubjectIds = availableProgressionSubjectIds(plan, selectedIds);
-  const displayedSubjectIds = result || !slotProgression
-    ? plan.subjectIds
-    : [...selectedIds, ...availableSubjectIds];
+  const displayedSubjectIds = result || !slotProgression ? plan.subjectIds : availableSubjectIds;
+  const representativeSubject = getFootballHitTheNumberSubject(
+    availableSubjectIds[0] ?? plan.subjectIds[0] ?? "",
+  );
+  const poolNoun = choiceNoun(representativeSubject?.kind);
+  const poolPlural = pluralChoiceNoun(poolNoun);
   const ready = selectionValid;
   const fullButInvalid = selectedIds.length === plan.pickCount && !selectionValid;
 
@@ -302,7 +333,7 @@ export default function FootballHitTheNumberPage() {
       onChallenge={() => void challengeSomeone()}
       onReplay={replay}
       onAllGames={() => navigate("/football")}
-      replayLabel={shared ? "REPLAY CHALLENGE" : "NEW LINEUP"}
+      replayLabel={shared ? "REPLAY CHALLENGE" : "NEW BOARD"}
       status={challengeStatus}
     />
   ) : null;
@@ -322,16 +353,16 @@ export default function FootballHitTheNumberPage() {
         </section>
       ) : null}
 
-      <section className="hit-number-heading">
+      <section className="hit-number-heading" style={{ padding: "16px 14px 14px" }}>
         <button className="hit-number-back" type="button" onClick={() => navigate("/football")}>← ALL GAMES</button>
         <p className="eyebrow">HIT THE NUMBER</p>
         <div className="hit-number-target" aria-label={`Target ${formatFootballHitTheNumberValue(plan, plan.target)}`}>
           <span>TARGET</span>
-          <strong>{formatFootballHitTheNumberValue(plan, plan.target)}</strong>
+          <strong style={{ fontSize: "clamp(3.2rem, 14vw, 5.4rem)" }}>{formatFootballHitTheNumberValue(plan, plan.target)}</strong>
           <small>{plan.metricLabel.toUpperCase()}</small>
         </div>
-        <p className="hit-number-rule">Get as close as possible without going over. Go over the target and you bust.</p>
-        <div className="hit-number-meta" aria-label="Current challenge context">
+        <p className="hit-number-rule" style={{ marginTop: 10 }}>Get as close as possible without going over. Go over the target and you bust.</p>
+        <div className="hit-number-meta" aria-label="Current challenge context" style={{ marginTop: 10 }}>
           <span>{plan.league}</span>
           {plan.configurationLabel ? <span>{plan.configurationLabel.toUpperCase()}</span> : null}
         </div>
@@ -340,11 +371,11 @@ export default function FootballHitTheNumberPage() {
       {!result && !shared ? (
         <section
           className="hit-number-controls surface-card"
-          aria-label="Hit the Number lineup controls"
+          aria-label="Hit the Number board controls"
           style={{ gridTemplateColumns: "1fr" }}
         >
           <button className="hit-number-new-board" type="button" onClick={startNew}>
-            NEW LINEUP
+            NEW BOARD
           </button>
         </section>
       ) : null}
@@ -377,6 +408,7 @@ export default function FootballHitTheNumberPage() {
                     disabled={Boolean(result) || (!subject && !active)}
                     onClick={() => rewindToSlot(index)}
                     key={slot.id}
+                    style={active ? activeFootballSlotStyle : undefined}
                   >
                     <span className="hit-number-role-slot__index">{index + 1}</span>
                     {subject && subjectId ? (
@@ -386,7 +418,9 @@ export default function FootballHitTheNumberPage() {
                     )}
                     <span className="hit-number-role-slot__copy">
                       <small>{slot.label}</small>
-                      <strong>{subject?.name ?? "Choose player"}</strong>
+                      <strong style={{ whiteSpace: "normal", overflow: "visible", textOverflow: "clip", lineHeight: 1.15 }}>
+                        {subject?.name ?? `Choose ${poolNoun}`}
+                      </strong>
                     </span>
                     <span className="hit-number-role-slot__state">
                       {result
@@ -464,8 +498,8 @@ export default function FootballHitTheNumberPage() {
         <section className="hit-number-roster surface-card">
           <div className="hit-number-section-heading">
             <div>
-              <p className="eyebrow">{result ? "POOL RESULTS" : plan.league === "CFB" ? "TEAM POOL" : "PLAYER POOL"}</p>
-              <h2>{activeSlot && !result ? activeSlot.label : `${displayedSubjectIds.length} eligible ${plan.league === "CFB" ? "teams" : "players"}`}</h2>
+              <p className="eyebrow">{result ? "POOL RESULTS" : `${poolNoun.toUpperCase()} POOL`}</p>
+              <h2>{activeSlot && !result ? activeSlot.label : `${displayedSubjectIds.length} eligible ${poolPlural}`}</h2>
             </div>
             <span>
               {result
@@ -475,7 +509,7 @@ export default function FootballHitTheNumberPage() {
                   : `Pick ${plan.pickCount} from this pool`}
             </span>
           </div>
-          <div className="hit-number-fighter-grid">
+          <div className="hit-number-fighter-grid" style={{ gridTemplateColumns: "1fr" }}>
             {displayedSubjectIds.map((subjectId) => {
               const subject = getFootballHitTheNumberSubject(subjectId)!;
               const selected = selectedIds.includes(subjectId);
@@ -492,10 +526,12 @@ export default function FootballHitTheNumberPage() {
                 >
                   <SubjectMark subjectId={subjectId} className="hit-number-fighter-card__photo" />
                   <span>
-                    <strong>{subject.name}</strong>
-                    <small>{result && selected ? `YOUR PICK · ${subject.subtitle}` : subject.subtitle}</small>
+                    <strong style={{ whiteSpace: "normal", overflow: "visible", textOverflow: "clip", lineHeight: 1.15 }}>
+                      {subjectDisplayName(subject)}
+                    </strong>
+                    <small>{result && selected ? `YOUR PICK · ${subjectDisplaySubtitle(subject)}` : subjectDisplaySubtitle(subject)}</small>
                   </span>
-                  <b>{result && value != null ? formatFootballHitTheNumberValue(plan, value) : selected ? "✓" : "+"}</b>
+                  <b>{result && value != null ? formatFootballHitTheNumberValue(plan, value) : selected ? "SELECTED" : "+"}</b>
                 </button>
               );
             })}
