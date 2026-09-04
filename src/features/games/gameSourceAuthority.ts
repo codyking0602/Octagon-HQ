@@ -3,13 +3,15 @@ import {
   footballComparisonCategorySpecs,
   type FootballComparisonCandidate,
 } from "../back-room/footballComparisonAuthority";
+import { getFootballRatingBand, type FootballRatingBand } from "../back-room/footballContentContract";
 import {
   footballSubjectMeetsFactRequirements,
   type FootballFactRequirementGroup,
 } from "../back-room/footballFactualEligibility";
-import type {
-  FootballRankFiveItem,
-  FootballRankFivePackId,
+import {
+  footballRankFivePacks as reviewedFootballRankFivePacks,
+  type FootballRankFiveItem,
+  type FootballRankFivePackId,
 } from "../back-room/footballRankFiveModel";
 
 export type GameSourceOwnerId =
@@ -153,11 +155,91 @@ export function footballGameComparisonCandidateIsEligible(
   return candidate.factMetricIds.length >= footballComparisonCategorySpecs[packId].minimumFacts;
 }
 
+function reviewedItemsForPack(packId: FootballRankFivePackId) {
+  return reviewedFootballRankFivePacks.find((pack) => pack.id === packId)?.items ?? [];
+}
+
 /** One Games-facing path into the canonical Football comparison authority. */
 export function footballGameComparisonCandidates(
   packId: FootballRankFivePackId,
-  reviewedItems: readonly FootballRankFiveItem[] = [],
+  reviewedItems: readonly FootballRankFiveItem[] = reviewedItemsForPack(packId),
 ) {
   return buildFootballComparisonCandidatePool(packId, reviewedItems)
     .filter((candidate) => footballGameComparisonCandidateIsEligible(packId, candidate));
+}
+
+export type FootballGameComparisonContract = "career" | "season" | "team" | "program" | "coach";
+export type FootballGameComparisonVerdict = "left" | "tie" | "right";
+
+const RANKING_SEMANTICS_BY_CONTRACT = {
+  career: ["career-greatness"],
+  season: ["single-season-greatness"],
+  team: ["team-season-greatness"],
+  program: ["program-franchise-greatness", "bounded-era-greatness"],
+  coach: ["coach-greatness"],
+} as const satisfies Record<FootballGameComparisonContract, readonly FootballComparisonCandidate["rankingSemantic"][]>;
+
+const FOOTBALL_GREATNESS_TIER_ORDER: readonly FootballRatingBand[] = [
+  "elite",
+  "great",
+  "good",
+  "average",
+  "below-average",
+  "bad",
+];
+
+export interface FootballGameComparisonResolution {
+  owner: "football-comparison-authority";
+  contract: FootballGameComparisonContract;
+  packId: FootballRankFivePackId;
+  left: FootballComparisonCandidate;
+  right: FootballComparisonCandidate;
+  leftTier: FootballRatingBand;
+  rightTier: FootballRatingBand;
+  verdict: FootballGameComparisonVerdict;
+}
+
+/**
+ * Blind Resume and other three-way comparison mechanics resolve through canonical
+ * comparison candidates plus the locked Football greatness-tier contract. The private
+ * rating remains available for matchup selection only; it never breaks a same-tier tie.
+ * A semantic mismatch or missing canonical candidate fails closed.
+ */
+export function footballGameComparisonResolution(
+  packId: FootballRankFivePackId,
+  leftId: string,
+  rightId: string,
+  contract: FootballGameComparisonContract,
+): FootballGameComparisonResolution | null {
+  if (!leftId || !rightId || leftId === rightId) return null;
+  const candidates = footballGameComparisonCandidates(packId);
+  const left = candidates.find((candidate) => candidate.id === leftId);
+  const right = candidates.find((candidate) => candidate.id === rightId);
+  if (!left || !right) return null;
+
+  const allowedSemantics = RANKING_SEMANTICS_BY_CONTRACT[contract];
+  if (!allowedSemantics.includes(left.rankingSemantic) || !allowedSemantics.includes(right.rankingSemantic)) {
+    return null;
+  }
+
+  const leftTier = getFootballRatingBand(left.rating);
+  const rightTier = getFootballRatingBand(right.rating);
+  const leftIndex = FOOTBALL_GREATNESS_TIER_ORDER.indexOf(leftTier);
+  const rightIndex = FOOTBALL_GREATNESS_TIER_ORDER.indexOf(rightTier);
+  const verdict: FootballGameComparisonVerdict = leftIndex === rightIndex
+    ? "tie"
+    : leftIndex < rightIndex
+      ? "left"
+      : "right";
+
+  return {
+    owner: "football-comparison-authority",
+    contract,
+    packId,
+    left,
+    right,
+    leftTier,
+    rightTier,
+    verdict,
+  };
 }
