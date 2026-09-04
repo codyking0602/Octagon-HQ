@@ -14,7 +14,6 @@ describe("generalized Today's Challenge backend contract", () => {
     ".github/workflows/verify-generalized-daily-backend.yml",
     "utf8",
   );
-  const roadmap = readFileSync("docs/play-games-roadmap.md", "utf8");
   const submissionRpc = migration.slice(
     migration.indexOf("create or replace function public.submit_my_daily_challenge_attempt"),
     migration.indexOf("-- Existing Find the Leader rows"),
@@ -30,7 +29,7 @@ describe("generalized Today's Challenge backend contract", () => {
     expect(migration).not.toContain("create or replace view public.daily_challenge_history");
   });
 
-  it("supports exactly the five approved future daily games and leaves the live schedule on Find the Leader", () => {
+  it("supports exactly the five approved future daily games and leaves the historical migration schedule on Find the Leader", () => {
     for (const game of ["find_leader", "blind_resume", "wavelength", "blind_rank_5", "keep_4_cut_4"]) {
       expect(migration).toContain(`'${game}'`);
     }
@@ -38,7 +37,6 @@ describe("generalized Today's Challenge backend contract", () => {
     expect(migration).not.toContain("'auction'");
     expect(migration).toContain("array['find_leader']::text[]");
     expect(migration).toContain("America/Chicago");
-    expect(roadmap).toContain("Today’s Challenge currently uses only Find the Leader");
   });
 
   it("pins all official identity and evidence instead of mutating conflicting publications", () => {
@@ -81,13 +79,11 @@ describe("generalized Today's Challenge backend contract", () => {
     expect(sqlTest).toContain("authenticated role has direct private daily evidence access");
   });
 
-  it("uses one generalized compatibility projection without changing current Find the Leader UI ownership", () => {
+  it("uses one generalized compatibility projection without changing the historical Find the Leader compatibility owner", () => {
     expect(migration).toContain("create or replace function public.list_my_find_leader_history()");
     expect(migration).toContain("create or replace function public.get_find_leader_daily_leaderboard(p_day date)");
     expect(migration).toContain("from private.daily_challenge_history");
     expect(migration).toContain("legacy-find-leader-content-v1");
-    expect(roadmap).toContain("## PR 8 — Multi-game Today’s Challenge frontend");
-    expect(roadmap).toContain("## PR 9 — Rotation launch and release proof");
   });
 
   it("requires real fresh, legacy, authorization, DST, concurrency, and exact deployment proofs", () => {
