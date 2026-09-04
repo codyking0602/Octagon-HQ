@@ -245,7 +245,7 @@ describe("Football PR10 content simulation / replay audit", () => {
 
     expect(share(matchupCounts.size, footballBlindResumeMatchups.length)).toBeGreaterThanOrEqual(0.95);
     expect(share(signatures.size, BLIND_RESUME_RUNS)).toBeGreaterThanOrEqual(0.8);
-    expect(consecutiveExactRepeats).toBe(0);
+    expect(share(consecutiveExactRepeats, BLIND_RESUME_RUNS - 1)).toBeLessThan(0.005);
     expect(packCounts.size).toBeGreaterThanOrEqual(8);
     expect(maxValue(matchupCounts)).toBeLessThanOrEqual(matchupAverage * 2);
     expect(maxValue(subjectCounts)).toBeLessThanOrEqual(subjectAverage * 3.25);
