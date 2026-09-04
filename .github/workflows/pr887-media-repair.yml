@@ -1,0 +1,129 @@
+name: PR 887 media repair
+
+on:
+  push:
+    branches:
+      - chatgpt/football-media-hard-pass
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Apply narrow media identity repair
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              target = Path(path)
+              text = target.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected one replacement target, found {count}")
+              target.write_text(text.replace(old, new))
+
+          replace_once(
+              "scripts/generate-football-find-leader-runtime.mjs",
+              '''      const season = finite(at(row, nflGrouped.ix, "season"));
+              const seasonAttempts = finite(at(row, nflGrouped.ix, "attempts"));
+              if (!season || seasonAttempts < 200) continue;
+              const seasonCompletions = finite(at(row, nflGrouped.ix, "completions"));''',
+              '''      const season = finite(at(row, nflGrouped.ix, "season"));
+              const seasonAttempts = finite(at(row, nflGrouped.ix, "attempts"));
+              if (!season || seasonAttempts < 200) continue;
+              const seasonTeamCode = String(at(row, nflGrouped.ix, "recentTeam") ?? "").trim();
+              if (!seasonTeamCode) throw new Error(`NFL QB season ${sourcePlayerId}:${season} is missing recentTeam.`);
+              const seasonCompletions = finite(at(row, nflGrouped.ix, "completions"));''',
+          )
+          replace_once(
+              "scripts/generate-football-find-leader-runtime.mjs",
+              '''        position: "QB",
+                      season,
+                      tier: recognized.tier,
+                      sourceProvider: "nflverse",
+                      sourceId: `${sourcePlayerId}:${season}`,'''.replace("          ", "        ", 1),
+              '''        position: "QB",
+                      season,
+                      teamCode: seasonTeamCode,
+                      tier: recognized.tier,
+                      sourceProvider: "nflverse",
+                      sourceId: `${sourcePlayerId}:${season}`,'''.replace("          ", "        ", 1),
+          )
+
+          replace_once(
+              "src/features/back-room/footballFindLeaderRuntimeProjection.ts",
+              '''  season?: number;
+            school?: string;
+            startSeason?: number;'''.replace("      ", "  "),
+              '''  season?: number;
+            school?: string;
+            teamCode?: string;
+            startSeason?: number;'''.replace("      ", "  "),
+          )
+          replace_once(
+              "src/features/back-room/footballFindLeaderRuntimeProjection.ts",
+              '''export function footballFindLeaderProjectedKnowledgeOverride(subjectId: string): FootballSubjectKnowledgeOverride | null {''',
+              '''export function footballFindLeaderProjectedNflTeamCode(subjectId: string): string | null {
+            const subject = rawSubjectById.get(subjectId);
+            if (!subject || subject.league !== "NFL") return null;
+            if (subject.kind === "player-season") return subject.teamCode?.trim() || null;
+            if (subject.kind !== "team-season") return null;
+            const match = /^\\d{4}:([^:]+)$/.exec(subject.sourceId);
+            return match?.[1]?.trim() || null;
+          }
+
+          export function footballFindLeaderProjectedKnowledgeOverride(subjectId: string): FootballSubjectKnowledgeOverride | null {'''.replace("          ", "", 1),
+          )
+
+          replace_once(
+              "src/features/back-room/footballSubjectRegistry.ts",
+              '''  footballCfbTeamMediaIdFromSeasonSubjectId,
+            footballTeamMediaIdFromComparisonAsset,'''.replace("      ", "  "),
+              '''  footballCfbTeamMediaIdFromSeasonSubjectId,
+            footballNflTeamMediaId,
+            footballTeamMediaIdFromComparisonAsset,'''.replace("      ", "  "),
+          )
+          replace_once(
+              "src/features/back-room/footballSubjectRegistry.ts",
+              '''  footballFindLeaderProjectedAdditionalSubjects,
+            footballFindLeaderProjectedKnowledgeOverride,'''.replace("      ", "  "),
+              '''  footballFindLeaderProjectedAdditionalSubjects,
+            footballFindLeaderProjectedKnowledgeOverride,
+            footballFindLeaderProjectedNflTeamCode,'''.replace("      ", "  "),
+          )
+          replace_once(
+              "src/features/back-room/footballSubjectRegistry.ts",
+              '''  const comparisonItem = comparisonItemById.get(subject.id);
+            if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
+            if (subject.kind === "team-season" && subject.league === "CFB")'''.replace("      ", "  "),
+              '''  const comparisonItem = comparisonItemById.get(subject.id);
+            if (comparisonItem) return footballTeamMediaIdFromComparisonAsset(comparisonItem.asset);
+            const projectedNflTeamCode = footballFindLeaderProjectedNflTeamCode(subject.id);
+            if (projectedNflTeamCode) return footballNflTeamMediaId(projectedNflTeamCode);
+            if (subject.kind === "team-season" && subject.league === "CFB")'''.replace("      ", "  "),
+          )
+          PY
+      - name: Regenerate canonical runtime artifact
+        run: node scripts/generate-football-find-leader-runtime.mjs
+      - name: Install dependencies
+        run: npm ci
+      - name: Focused media coverage test
+        run: npx vitest run src/features/back-room/footballSubjectAssets.test.ts
+      - name: Commit repaired owner chain
+        run: |
+          git rm .github/workflows/pr887-media-repair.yml
+          git add scripts/generate-football-find-leader-runtime.mjs src/features/back-room/footballFindLeaderRuntimeProjection.ts src/features/back-room/footballSubjectRegistry.ts data/generated/football/find-leader-runtime-projection.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Repair Football historical media identity"
+          git push origin HEAD:${GITHUB_REF_NAME}
