@@ -22,7 +22,7 @@ import {
 } from "./footballWavelengthModel";
 import {
   footballWavelengthCategoryLabel,
-  footballWavelengthCluePrompt,
+  footballWavelengthClueDescriptor,
 } from "./footballWavelengthPresentation";
 import {
   asChallengeJson,
@@ -250,7 +250,7 @@ export default function FootballWavelengthPage() {
   }
 
   return (
-    <div className="page football-debate-page football-wavelength-page">
+    <div className="page football-debate-page football-wavelength-page wavelength-page wavelength-page--playing wavelength-page--football">
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
@@ -258,34 +258,29 @@ export default function FootballWavelengthPage() {
           <small>Lock all four guesses to reveal the matchup.</small>
         </section>
       ) : null}
-      <section className="football-wavelength-topline">
-        <span>WAVELENGTH · {shared ? "FRIEND CHALLENGE" : "FIND THE HIDDEN NUMBER"}</span>
+      <section className="wavelength-topline">
+        <span>WAVELENGTH</span>
         <b>CLUE {clueIndex + 1} OF 4</b>
       </section>
-      <p className="football-wavelength-rules">
-        Use 4 football clues to find one hidden number from 1–100. Only your final guess scores.
-      </p>
-
-      <div className="football-wavelength-progress" aria-label="Football Wavelength clue progress">
+      <section className="wavelength-intro" aria-label="How to play Wavelength">
+        <strong>Find the hidden 1–100 number.</strong>
+        <span>Each clue reacts to your last guess. Only your fourth guess scores.</span>
+      </section>
+      <div className="wavelength-progress" aria-label="Football Wavelength clue progress">
         {[0, 1, 2, 3].map((index) => (
           <i className={`${index < clueIndex ? "is-complete" : ""}${index === clueIndex ? " is-current" : ""}`} key={index} />
         ))}
       </div>
 
-      <section className="football-wavelength-clue" aria-live="polite">
-        <div className="football-wavelength-clue__head">
-          <span>{footballWavelengthCategoryLabel(clue.category)}</span>
-          <b>CLUE {clueIndex + 1}</b>
-        </div>
-        <h1>{clue.text}</h1>
-        <p>{footballWavelengthCluePrompt(clue.category)}</p>
+      <section className="wavelength-clue wavelength-clue--hero" aria-live="polite">
+        <h1>
+          {clue.text}
+          <span className="wavelength-clue__descriptor">{footballWavelengthClueDescriptor(clue.category)}</span>
+        </h1>
       </section>
 
-      <section className="football-wavelength-guess-panel">
-        <div className="football-wavelength-guess-value">
-          <small>{clueIndex === 3 ? "FINAL HIDDEN NUMBER GUESS" : "YOUR HIDDEN NUMBER GUESS"}</small>
-          <strong>{guess}</strong>
-        </div>
+      <section className="wavelength-guess-panel">
+        <div><span>{clueIndex === 3 ? "FINAL GUESS" : "YOUR GUESS"}</span><strong>{guess}</strong></div>
         <input
           aria-label="Football Wavelength guess from 1 to 100"
           type="range"
@@ -295,17 +290,20 @@ export default function FootballWavelengthPage() {
           value={guess}
           onChange={(event) => setGuess(clampWavelength(Number(event.target.value)))}
         />
-        <div className="football-wavelength-scale"><span>1 · LOW</span><span>50 · MIDDLE</span><span>100 · HIGH</span></div>
-        <button type="button" onClick={lockGuess}>
+        <div className="wavelength-scale"><span>1 · LOW</span><span>50 · MIDDLE</span><span>100 · HIGH</span></div>
+        <button className="primary-action" type="button" onClick={lockGuess}>
           {clueIndex === 3 ? "LOCK FINAL GUESS" : "LOCK GUESS & REVEAL NEXT CLUE"}
         </button>
       </section>
 
-      <div className="football-wavelength-path">
-        <small>YOUR PATH</small>
-        <strong>{[0, 1, 2, 3].map((index) => guesses[index] ?? "—").join(" → ")}</strong>
+      <div className="wavelength-path">
+        <span>YOUR PATH</span>
+        {[0, 1, 2, 3].map((index) => (
+          <span className="wavelength-path__step" key={index}>
+            {index > 0 && <em>→</em>}<b>{guesses[index] ?? "—"}</b>
+          </span>
+        ))}
       </div>
-      <p className="football-wavelength-rules">Each clue reacts to your last guess. Only the fourth guess determines your score. {WAVELENGTH_OPINION_DISCLOSURE}</p>
     </div>
   );
 }

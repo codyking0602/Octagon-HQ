@@ -388,7 +388,7 @@ export default function WavelengthGame({
   }
 
   return (
-    <div className="wavelength-page page">
+    <div className="wavelength-page wavelength-page--playing page">
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
@@ -397,8 +397,12 @@ export default function WavelengthGame({
         </section>
       ) : null}
       <section className="wavelength-topline">
-        <span>{run.identity.type === "curated" ? "CURATED CHALLENGE" : "REPLAYABLE GAME"}</span>
+        <span>WAVELENGTH</span>
         <b>CLUE {clueIndex + 1} OF 4</b>
+      </section>
+      <section className="wavelength-intro" aria-label="How to play Wavelength">
+        <strong>Find the hidden 1–100 number.</strong>
+        <span>Each clue reacts to your last guess. Only your fourth guess scores.</span>
       </section>
       <div className="wavelength-progress" aria-label="Wavelength clue progress">
         {[0, 1, 2, 3].map((index) => (
@@ -406,14 +410,12 @@ export default function WavelengthGame({
         ))}
       </div>
 
-      <section className="wavelength-clue" aria-live="polite">
-        <div><span>{clue.category}</span><b>CLUE {clueIndex + 1}</b></div>
+      <section className="wavelength-clue wavelength-clue--hero" aria-live="polite">
         <h1>{clue.text}</h1>
-        <p>Where does it land on Octagon HQ’s calibrated 1–100 UFC opinion scale?</p>
       </section>
 
       <section className="wavelength-guess-panel">
-        <div><span>{clueIndex === 3 ? "FINAL ANSWER" : "YOUR GUESS"}</span><strong>{guess}</strong></div>
+        <div><span>{clueIndex === 3 ? "FINAL GUESS" : "YOUR GUESS"}</span><strong>{guess}</strong></div>
         <input
           aria-label="Your Wavelength guess from 1 to 100"
           max="100"
@@ -437,7 +439,6 @@ export default function WavelengthGame({
           </span>
         ))}
       </div>
-      <p className="wavelength-rules">Each clue reacts to your last guess. Only your fourth guess determines your score. {WAVELENGTH_OPINION_DISCLOSURE}</p>
     </div>
   );
 }
