@@ -19,6 +19,7 @@ describe("Blind Resume UFC and Football UI alignment", () => {
     expect(footballPage).toContain('className="football-blind-resume-logo"');
     expect(footballPage).toContain('<div><span>PLAYER A</span><strong>?</strong></div>');
     expect(footballPage).toContain('<div><span>PLAYER B</span><strong>?</strong></div>');
+    expect(css).toContain("transform: translateY(12px);");
   });
 
   it("sanitizes both visible Football fact values and keeps the reveal CTA slim and full-width", () => {
