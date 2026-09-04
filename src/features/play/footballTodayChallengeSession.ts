@@ -21,6 +21,9 @@ const FOOTBALL_TODAY_CYCLE: readonly OfficialDailyGameType[] = [
   "keep_4_cut_4",
   "hit_the_number",
 ];
+const FOOTBALL_TODAY_GAME_OVERRIDES: Readonly<Record<string, OfficialDailyGameType>> = {
+  "2026-09-04": "blind_resume",
+};
 const FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION = "football-daily-double-v1";
 const SHARED_DAILY_DOUBLE_GRADING_VERSION = "daily-rank-keep-combo-v1";
 const SHARED_DAILY_DOUBLE_SCORING_VERSION = "play-official-score-v4" as const;
@@ -87,7 +90,10 @@ function dayNumber(day: string) {
 }
 
 export function footballTodayGameForDay(day: string): OfficialDailyGameType {
-  const offset = dayNumber(day) - dayNumber(FOOTBALL_TODAY_ANCHOR_DAY);
+  const currentDayNumber = dayNumber(day);
+  const override = FOOTBALL_TODAY_GAME_OVERRIDES[day];
+  if (override) return override;
+  const offset = currentDayNumber - dayNumber(FOOTBALL_TODAY_ANCHOR_DAY);
   const index = ((offset % FOOTBALL_TODAY_CYCLE.length) + FOOTBALL_TODAY_CYCLE.length) % FOOTBALL_TODAY_CYCLE.length;
   return FOOTBALL_TODAY_CYCLE[index]!;
 }
