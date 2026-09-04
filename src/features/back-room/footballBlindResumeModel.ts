@@ -1,4 +1,3 @@
-import { blindResumeV3RoundPoints } from "../play/blindResumeV3";
 import {
   createReplaySeed,
   seededLineupRandom,
@@ -8,23 +7,24 @@ import {
 } from "../play/lineupModel";
 import {
   getFootballBlindResumeEvidenceProfile,
-  getFootballBlindResumeEvidenceProfilesForPack,
   type FootballBlindResumeArchetype,
 } from "./footballFactualStats";
 import {
   getFootballRankFivePack,
-  type FootballRankFiveItem,
   type FootballRankFivePackId,
 } from "./footballRankFiveModel";
 
 export const FOOTBALL_BLIND_RESUME_GAME_ID = "football-blind-resume";
-export const FOOTBALL_BLIND_RESUME_ROUNDS = 5;
-export const FOOTBALL_BLIND_RESUME_REVEAL_COUNTS = [2, 4, 6, 8] as const;
-export const FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES = ["villain", "hard", "villain", "hard", "medium"] as const;
+export const FOOTBALL_BLIND_RESUME_ROUNDS = 3;
+export const FOOTBALL_BLIND_RESUME_REVEAL_STAGES = 3;
+export const FOOTBALL_BLIND_RESUME_CORRECT_POINTS = [10, 8, 7] as const;
+export const FOOTBALL_BLIND_RESUME_MISS_POINTS = [-4, -1, 0] as const;
+export const FOOTBALL_BLIND_RESUME_RAW_MAX = 30;
+export const FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES = ["hard", "hard", "medium"] as const;
 
 export type FootballBlindResumeLeague = "NFL" | "CFB";
-export type FootballBlindResumeRevealCount = typeof FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[number];
-export type FootballBlindResumeDifficulty = "easy" | "medium" | "hard" | "villain";
+export type FootballBlindResumeDifficulty = "medium" | "hard";
+export type FootballBlindResumeRevealStage = 0 | 1 | 2;
 
 export interface FootballBlindResumeFactSource {
   owner: "footballFactualStats";
@@ -43,11 +43,14 @@ export interface FootballBlindResumeMatchup {
   packId: FootballRankFivePackId;
   league: FootballBlindResumeLeague;
   archetype: FootballBlindResumeArchetype;
+  contextLabel: string;
   prompt: string;
   leftId: string;
   rightId: string;
+  winnerId: string;
   difficulty: FootballBlindResumeDifficulty;
   stats: readonly FootballBlindResumeStat[];
+  revealCounts: readonly [number, number, number];
 }
 
 export interface FootballBlindResumeRound extends FootballBlindResumeMatchup {
@@ -57,7 +60,6 @@ export interface FootballBlindResumeRound extends FootballBlindResumeMatchup {
   rightSubtitle: string;
   leftRating: number;
   rightRating: number;
-  winnerId: string;
 }
 
 export interface FootballBlindResumeRun {
@@ -66,221 +68,158 @@ export interface FootballBlindResumeRun {
 }
 
 interface MatchupFamily {
-  packId: FootballRankFivePackId;
   league: FootballBlindResumeLeague;
   archetype: FootballBlindResumeArchetype;
-  prompt: string;
+  contextLabel: string;
 }
 
-const MATCHUP_FAMILIES: readonly MatchupFamily[] = [
-  { packId: "nfl-quarterbacks", league: "NFL", archetype: "player-career", prompt: "Which NFL quarterback career was greater?" },
-  { packId: "nfl-running-backs", league: "NFL", archetype: "player-career", prompt: "Which NFL running back career was greater?" },
-  { packId: "nfl-wide-receivers", league: "NFL", archetype: "player-career", prompt: "Which NFL wide receiver career was greater?" },
-  { packId: "nfl-tight-ends", league: "NFL", archetype: "player-career", prompt: "Which NFL tight end career was greater?" },
-  { packId: "nfl-defensive-players", league: "NFL", archetype: "player-career", prompt: "Which NFL defensive career was greater?" },
-  { packId: "nfl-head-coaches", league: "NFL", archetype: "coach", prompt: "Which NFL head-coaching career was greater?" },
-  { packId: "nfl-qb-seasons", league: "NFL", archetype: "player-season", prompt: "Which NFL quarterback season was greater?" },
-  { packId: "nfl-team-seasons", league: "NFL", archetype: "team-season", prompt: "Which NFL team season was greater?" },
-  { packId: "college-quarterbacks", league: "CFB", archetype: "player-season", prompt: "Which college quarterback season was greater?" },
-  { packId: "college-head-coaches", league: "CFB", archetype: "coach", prompt: "Which college head-coaching career was greater?" },
-  { packId: "college-programs", league: "CFB", archetype: "program-era", prompt: "Which program has the stronger resume since 2000?" },
-  { packId: "college-program-eras", league: "CFB", archetype: "program-era", prompt: "Which defined college program era was greater?" },
-  { packId: "college-team-seasons", league: "CFB", archetype: "team-season", prompt: "Which college team season was greater?" },
+interface CuratedMatchupSpec {
+  packId: FootballRankFivePackId;
+  leftId: string;
+  rightId: string;
+  winnerId: string;
+  difficulty: FootballBlindResumeDifficulty;
+  evidenceOrder: readonly number[];
+  revealCounts: readonly [number, number, number];
+}
+
+const MATCHUP_FAMILIES: Partial<Record<FootballRankFivePackId, MatchupFamily>> = {
+  "nfl-quarterbacks": { league: "NFL", archetype: "player-career", contextLabel: "NFL · QB · CAREER" },
+  "nfl-running-backs": { league: "NFL", archetype: "player-career", contextLabel: "NFL · RB · CAREER" },
+  "nfl-wide-receivers": { league: "NFL", archetype: "player-career", contextLabel: "NFL · WR · CAREER" },
+  "nfl-tight-ends": { league: "NFL", archetype: "player-career", contextLabel: "NFL · TE · CAREER" },
+  "nfl-defensive-players": { league: "NFL", archetype: "player-career", contextLabel: "NFL · DEFENSE · CAREER" },
+  "nfl-head-coaches": { league: "NFL", archetype: "coach", contextLabel: "NFL · HEAD COACH · CAREER" },
+  "nfl-qb-seasons": { league: "NFL", archetype: "player-season", contextLabel: "NFL · QB · SEASON" },
+  "college-quarterbacks": { league: "CFB", archetype: "player-season", contextLabel: "CFB · QB · SEASON" },
+  "college-head-coaches": { league: "CFB", archetype: "coach", contextLabel: "CFB · HEAD COACH · CAREER" },
+  "college-programs": { league: "CFB", archetype: "program-era", contextLabel: "CFB · PROGRAM · SINCE 2000" },
+  "college-program-eras": { league: "CFB", archetype: "program-era", contextLabel: "CFB · PROGRAM ERA" },
+};
+
+const CAREER_SWING = [1, 2, 0, 5, 6, 3, 4, 7] as const;
+const CAREER_PEAK_FIRST = [2, 1, 0, 5, 3, 6, 4] as const;
+const SEASON_SWING = [0, 1, 5, 3, 4, 2, 6, 7] as const;
+const COACH_SWING = [3, 4, 6, 0, 2, 1, 5, 7] as const;
+const PROGRAM_SWING = [0, 4, 5, 3, 2, 1, 6, 7] as const;
+
+// This bank is intentionally editorial and explicit. It is the temporary verdict authority
+// until Football has an approved exact-ranking product. Factual rows still come only from
+// footballFactualStats; generated comparison ratings do not decide these winners.
+const CURATED_MATCHUPS: readonly CuratedMatchupSpec[] = [
+  { packId: "nfl-quarterbacks", leftId: "drew-brees", rightId: "peyton-manning", winnerId: "peyton-manning", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 6, 8] },
+  { packId: "nfl-quarterbacks", leftId: "dan-marino", rightId: "joe-montana", winnerId: "joe-montana", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
+  { packId: "nfl-quarterbacks", leftId: "dan-marino", rightId: "peyton-manning", winnerId: "peyton-manning", difficulty: "medium", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 4, 7] },
+
+  { packId: "nfl-running-backs", leftId: "adrian-peterson", rightId: "emmitt-smith", winnerId: "emmitt-smith", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
+  { packId: "nfl-running-backs", leftId: "adrian-peterson", rightId: "walter-payton", winnerId: "walter-payton", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 5, 8] },
+  { packId: "nfl-running-backs", leftId: "adrian-peterson", rightId: "barry-sanders", winnerId: "barry-sanders", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
+
+  { packId: "nfl-wide-receivers", leftId: "randy-moss", rightId: "jerry-rice", winnerId: "jerry-rice", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
+  { packId: "nfl-wide-receivers", leftId: "terrell-owens", rightId: "jerry-rice", winnerId: "jerry-rice", difficulty: "medium", evidenceOrder: CAREER_SWING, revealCounts: [3, 6, 8] },
+  { packId: "nfl-wide-receivers", leftId: "calvin-johnson", rightId: "jerry-rice", winnerId: "jerry-rice", difficulty: "medium", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 4, 7] },
+
+  { packId: "nfl-tight-ends", leftId: "antonio-gates", rightId: "rob-gronkowski", winnerId: "rob-gronkowski", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 5, 8] },
+  { packId: "nfl-tight-ends", leftId: "shannon-sharpe", rightId: "rob-gronkowski", winnerId: "rob-gronkowski", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
+  { packId: "nfl-tight-ends", leftId: "antonio-gates", rightId: "tony-gonzalez", winnerId: "tony-gonzalez", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 6, 8] },
+
+  { packId: "nfl-defensive-players", leftId: "jj-watt", rightId: "lawrence-taylor", winnerId: "lawrence-taylor", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
+  { packId: "nfl-defensive-players", leftId: "jj-watt", rightId: "reggie-white", winnerId: "reggie-white", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 5, 8] },
+
+  { packId: "nfl-head-coaches", leftId: "bill-walsh", rightId: "bill-belichick", winnerId: "bill-belichick", difficulty: "hard", evidenceOrder: COACH_SWING, revealCounts: [3, 6, 8] },
+  { packId: "nfl-head-coaches", leftId: "don-shula", rightId: "bill-belichick", winnerId: "bill-belichick", difficulty: "hard", evidenceOrder: COACH_SWING, revealCounts: [2, 5, 8] },
+
+  { packId: "nfl-qb-seasons", leftId: "aaron-rodgers-2011", rightId: "patrick-mahomes-2022", winnerId: "patrick-mahomes-2022", difficulty: "hard", evidenceOrder: SEASON_SWING, revealCounts: [3, 5, 8] },
+  { packId: "nfl-qb-seasons", leftId: "aaron-rodgers-2011", rightId: "steve-young-1994", winnerId: "steve-young-1994", difficulty: "hard", evidenceOrder: SEASON_SWING, revealCounts: [2, 5, 8] },
+  { packId: "nfl-qb-seasons", leftId: "tom-brady-2007", rightId: "patrick-mahomes-2022", winnerId: "patrick-mahomes-2022", difficulty: "hard", evidenceOrder: SEASON_SWING, revealCounts: [3, 6, 8] },
+
+  { packId: "college-quarterbacks", leftId: "tim-tebow-2007", rightId: "joe-burrow-2019", winnerId: "joe-burrow-2019", difficulty: "medium", evidenceOrder: SEASON_SWING, revealCounts: [2, 5, 8] },
+  { packId: "college-quarterbacks", leftId: "tim-tebow-2007", rightId: "cam-newton-2010", winnerId: "cam-newton-2010", difficulty: "hard", evidenceOrder: SEASON_SWING, revealCounts: [3, 5, 8] },
+  { packId: "college-quarterbacks", leftId: "vince-young-2005", rightId: "joe-burrow-2019", winnerId: "joe-burrow-2019", difficulty: "hard", evidenceOrder: SEASON_SWING, revealCounts: [3, 6, 8] },
+
+  { packId: "college-head-coaches", leftId: "urban-meyer-cfb", rightId: "nick-saban-cfb", winnerId: "nick-saban-cfb", difficulty: "hard", evidenceOrder: COACH_SWING, revealCounts: [3, 6, 8] },
+  { packId: "college-head-coaches", leftId: "bob-stoops-cfb", rightId: "nick-saban-cfb", winnerId: "nick-saban-cfb", difficulty: "medium", evidenceOrder: COACH_SWING, revealCounts: [2, 5, 8] },
+  { packId: "college-head-coaches", leftId: "kirby-smart-cfb", rightId: "nick-saban-cfb", winnerId: "nick-saban-cfb", difficulty: "hard", evidenceOrder: COACH_SWING, revealCounts: [3, 5, 8] },
+
+  { packId: "college-programs", leftId: "georgia-program", rightId: "alabama-program", winnerId: "alabama-program", difficulty: "hard", evidenceOrder: PROGRAM_SWING, revealCounts: [3, 6, 8] },
+  { packId: "college-programs", leftId: "lsu-program", rightId: "alabama-program", winnerId: "alabama-program", difficulty: "medium", evidenceOrder: PROGRAM_SWING, revealCounts: [2, 5, 8] },
+
+  { packId: "college-program-eras", leftId: "clemson-2015-2020", rightId: "alabama-2009-2020", winnerId: "alabama-2009-2020", difficulty: "hard", evidenceOrder: PROGRAM_SWING, revealCounts: [3, 6, 8] },
+  { packId: "college-program-eras", leftId: "georgia-2021-2024", rightId: "alabama-2009-2020", winnerId: "alabama-2009-2020", difficulty: "medium", evidenceOrder: PROGRAM_SWING, revealCounts: [2, 5, 8] },
+  { packId: "college-program-eras", leftId: "usc-2002-2008", rightId: "alabama-2009-2020", winnerId: "alabama-2009-2020", difficulty: "hard", evidenceOrder: PROGRAM_SWING, revealCounts: [3, 6, 8] },
 ] as const;
 
-function pairKey(packId: FootballRankFivePackId, leftId: string, rightId: string) {
-  return `${packId}:${[leftId, rightId].sort().join("|")}`;
+function familyFor(packId: FootballRankFivePackId) {
+  const family = MATCHUP_FAMILIES[packId];
+  if (!family) throw new Error(`Football Blind Resume has no curated family metadata for ${packId}.`);
+  return family;
 }
 
-const VILLAIN_TIGHT_PAIRS = new Set<string>([
-  pairKey("nfl-quarterbacks", "joe-montana", "peyton-manning"),
-  pairKey("nfl-quarterbacks", "drew-brees", "dan-marino"),
-  pairKey("nfl-running-backs", "barry-sanders", "walter-payton"),
-  pairKey("nfl-wide-receivers", "terrell-owens", "calvin-johnson"),
-  pairKey("nfl-defensive-players", "lawrence-taylor", "reggie-white"),
-  pairKey("nfl-defensive-players", "ray-lewis", "jj-watt"),
-  pairKey("nfl-head-coaches", "bill-belichick", "vince-lombardi"),
-  pairKey("nfl-head-coaches", "don-shula", "bill-walsh"),
-  pairKey("nfl-qb-seasons", "tom-brady-2007", "aaron-rodgers-2011"),
-  pairKey("nfl-qb-seasons", "patrick-mahomes-2022", "steve-young-1994"),
-  pairKey("nfl-team-seasons", "1972-miami-dolphins", "1985-chicago-bears"),
-  pairKey("college-quarterbacks", "cam-newton-2010", "joe-burrow-2019"),
-  pairKey("college-quarterbacks", "vince-young-2005", "tim-tebow-2007"),
-  pairKey("college-programs", "ohio-state-program", "georgia-program"),
-  pairKey("college-program-eras", "georgia-2021-2024", "usc-2002-2008"),
-  pairKey("college-team-seasons", "2020-alabama", "2005-texas"),
-]);
-
-function normalizedEvidenceRow(row: FootballBlindResumeStat) {
-  return `${row.label}|${row.valueA}|${row.valueB}`.trim().toLowerCase().replace(/\s+/g, " ");
-}
-
-export function buildFootballBlindResumeEvidence(
-  packId: FootballRankFivePackId,
-  leftId: string,
-  rightId: string,
-  archetype: FootballBlindResumeArchetype,
-) {
-  const left = getFootballBlindResumeEvidenceProfile(packId, leftId);
-  const right = getFootballBlindResumeEvidenceProfile(packId, rightId);
-  if (left.archetype !== archetype || right.archetype !== archetype) {
-    throw new Error(
-      `Football Blind Resume ${packId}:${leftId}:${rightId} evidence does not match archetype ${archetype}.`,
-    );
+function buildStats(spec: CuratedMatchupSpec) {
+  const family = familyFor(spec.packId);
+  const left = getFootballBlindResumeEvidenceProfile(spec.packId, spec.leftId);
+  const right = getFootballBlindResumeEvidenceProfile(spec.packId, spec.rightId);
+  if (left.league !== family.league || right.league !== family.league || left.archetype !== family.archetype || right.archetype !== family.archetype) {
+    throw new Error(`Football Blind Resume curated evidence ${spec.packId}:${spec.leftId}:${spec.rightId} does not match its family.`);
   }
-  if (left.league !== right.league) {
-    throw new Error(
-      `Football Blind Resume ${packId}:${leftId}:${rightId} mixes factual evidence leagues.`,
-    );
+  if (spec.evidenceOrder.length < 6 || spec.evidenceOrder.length > 8 || new Set(spec.evidenceOrder).size !== spec.evidenceOrder.length) {
+    throw new Error(`Football Blind Resume curated evidence order ${spec.packId}:${spec.leftId}:${spec.rightId} must contain 6–8 unique rows.`);
   }
-  if (left.evidence.length !== 8 || right.evidence.length !== 8) {
-    throw new Error(
-      `Football Blind Resume ${packId}:${leftId}:${rightId} requires exactly 8 evidence rows per side.`,
-    );
+  if (spec.evidenceOrder.some((index) => !Number.isInteger(index) || index < 0 || index >= left.evidence.length)) {
+    throw new Error(`Football Blind Resume curated evidence order ${spec.packId}:${spec.leftId}:${spec.rightId} contains an invalid row.`);
+  }
+  const [first, second, third] = spec.revealCounts;
+  if (!(first > 0 && first < second && second < third && third === spec.evidenceOrder.length)) {
+    throw new Error(`Football Blind Resume reveal stages ${spec.packId}:${spec.leftId}:${spec.rightId} must increase and end at the evidence count.`);
   }
 
-  const stats = left.evidence.map((leftRow, index) => {
-    const rightRow = right.evidence[index];
-    if (
-      !rightRow
-      || leftRow.dimensionId !== rightRow.dimensionId
-      || leftRow.label !== rightRow.label
-    ) {
-      throw new Error(
-        `Football Blind Resume ${packId}:${leftId}:${rightId} evidence dimensions are misaligned at row ${index + 1}.`,
-      );
+  return spec.evidenceOrder.map((sourceIndex) => {
+    const leftRow = left.evidence[sourceIndex]!;
+    const rightRow = right.evidence[sourceIndex]!;
+    if (leftRow.dimensionId !== rightRow.dimensionId || leftRow.label !== rightRow.label) {
+      throw new Error(`Football Blind Resume curated rows ${spec.packId}:${spec.leftId}:${spec.rightId} are misaligned.`);
     }
     return {
       label: leftRow.label,
       valueA: leftRow.value,
       valueB: rightRow.value,
-      source: {
-        owner: "footballFactualStats",
-        dimensionId: leftRow.dimensionId,
-      } as const,
+      source: { owner: "footballFactualStats", dimensionId: leftRow.dimensionId } as const,
     };
   });
-
-  const dimensions = new Set(stats.map((row) => row.source.dimensionId));
-  const labels = new Set(stats.map((row) => row.label.trim().toLowerCase()));
-  const rows = new Set(stats.map(normalizedEvidenceRow));
-  if (dimensions.size !== 8 || labels.size !== 8 || rows.size !== 8) {
-    throw new Error(
-      `Football Blind Resume ${packId}:${leftId}:${rightId} contains duplicate evidence dimensions or rows.`,
-    );
-  }
-  return stats;
 }
 
-function difficultyFor(
-  family: MatchupFamily,
-  left: FootballRankFiveItem,
-  right: FootballRankFiveItem,
-): FootballBlindResumeDifficulty {
-  const gap = Math.abs(left.rating - right.rating);
-  if (gap >= 3) return "easy";
-  if (gap === 2) return "medium";
-  if (gap !== 1) {
-    throw new Error(
-      `Football Blind Resume cannot build tied canonical matchup ${family.packId}:${left.id}:${right.id}.`,
-    );
+function makeMatchup(spec: CuratedMatchupSpec): FootballBlindResumeMatchup {
+  const family = familyFor(spec.packId);
+  if (spec.winnerId !== spec.leftId && spec.winnerId !== spec.rightId) {
+    throw new Error(`Football Blind Resume curated winner ${spec.winnerId} is not on matchup ${spec.leftId}:${spec.rightId}.`);
   }
-  return VILLAIN_TIGHT_PAIRS.has(pairKey(family.packId, left.id, right.id)) ? "villain" : "hard";
-}
-
-function makeMatchup(
-  family: MatchupFamily,
-  left: FootballRankFiveItem,
-  right: FootballRankFiveItem,
-): FootballBlindResumeMatchup {
-  if (left.league !== family.league || right.league !== family.league) {
-    throw new Error(
-      `Football Blind Resume matchup ${family.packId}:${left.id}:${right.id} has a league mismatch.`,
-    );
-  }
-  const difficulty = difficultyFor(family, left, right);
   return {
-    id: `${family.packId}-${left.id}-v-${right.id}`,
-    packId: family.packId,
+    id: `${spec.packId}-${spec.leftId}-v-${spec.rightId}`,
+    packId: spec.packId,
     league: family.league,
     archetype: family.archetype,
-    prompt: family.prompt,
-    leftId: left.id,
-    rightId: right.id,
-    difficulty,
-    stats: buildFootballBlindResumeEvidence(family.packId, left.id, right.id, family.archetype),
+    contextLabel: family.contextLabel,
+    prompt: "Who has the better résumé?",
+    leftId: spec.leftId,
+    rightId: spec.rightId,
+    winnerId: spec.winnerId,
+    difficulty: spec.difficulty,
+    stats: buildStats(spec),
+    revealCounts: spec.revealCounts,
   };
 }
 
-function buildMatchupCatalog() {
-  const matchups: FootballBlindResumeMatchup[] = [];
-  const seenPairs = new Set<string>();
+export const footballBlindResumeMatchups: readonly FootballBlindResumeMatchup[] = CURATED_MATCHUPS.map(makeMatchup);
 
-  for (const family of MATCHUP_FAMILIES) {
-    const pack = getFootballRankFivePack(family.packId);
-    const profiles = getFootballBlindResumeEvidenceProfilesForPack(family.packId);
-    if (profiles.length < 4) {
-      throw new Error(
-        `Football Blind Resume ${family.packId} requires at least four complete factual evidence profiles.`,
-      );
-    }
-    if (profiles.some((profile) => profile.league !== family.league || profile.archetype !== family.archetype)) {
-      throw new Error(
-        `Football Blind Resume ${family.packId} contains a factual evidence profile with the wrong league or archetype.`,
-      );
-    }
-
-    const items = profiles.map((profile) => {
-      const item = pack.items.find((row) => row.id === profile.subjectId);
-      if (!item) {
-        throw new Error(
-          `Football Blind Resume factual evidence ${family.packId}:${profile.subjectId} has no canonical Rank 5 subject.`,
-        );
-      }
-      return item;
-    });
-
-    const familyStart = matchups.length;
-    for (let leftIndex = 0; leftIndex < items.length - 1; leftIndex += 1) {
-      for (let rightIndex = leftIndex + 1; rightIndex < items.length; rightIndex += 1) {
-        const left = items[leftIndex]!;
-        const right = items[rightIndex]!;
-        const key = pairKey(family.packId, left.id, right.id);
-        if (seenPairs.has(key)) {
-          throw new Error(`Football Blind Resume duplicate matchup pair ${key}.`);
-        }
-        seenPairs.add(key);
-        matchups.push(makeMatchup(family, left, right));
-      }
-    }
-
-    if (matchups.length - familyStart < 5) {
-      throw new Error(
-        `Football Blind Resume ${family.packId} does not have enough complete matchup inventory.`,
-      );
-    }
-  }
-
-  if (matchups.length < 80) {
-    throw new Error(
-      `Football Blind Resume factual catalog is too shallow: ${matchups.length} matchups.`,
-    );
-  }
-  return matchups;
+if (new Set(footballBlindResumeMatchups.map((row) => row.id)).size !== footballBlindResumeMatchups.length) {
+  throw new Error("Football Blind Resume curated bank contains a duplicate matchup.");
 }
-
-export const footballBlindResumeMatchups: readonly FootballBlindResumeMatchup[] = buildMatchupCatalog();
 
 function resolveMatchup(matchup: FootballBlindResumeMatchup): FootballBlindResumeRound {
   const pack = getFootballRankFivePack(matchup.packId);
   const left = pack.items.find((item) => item.id === matchup.leftId);
   const right = pack.items.find((item) => item.id === matchup.rightId);
-  if (!left || !right) {
-    throw new Error(`Football Blind Resume matchup ${matchup.id} references an item outside ${matchup.packId}.`);
-  }
-  if (left.rating === right.rating) {
-    throw new Error(`Football Blind Resume matchup ${matchup.id} cannot use a tied canonical rating.`);
-  }
+  if (!left || !right) throw new Error(`Football Blind Resume matchup ${matchup.id} references an unavailable canonical subject.`);
   return {
     ...matchup,
     leftName: left.name,
@@ -289,7 +228,6 @@ function resolveMatchup(matchup: FootballBlindResumeMatchup): FootballBlindResum
     rightSubtitle: right.subtitle,
     leftRating: left.rating,
     rightRating: right.rating,
-    winnerId: left.rating > right.rating ? left.id : right.id,
   };
 }
 
@@ -297,9 +235,7 @@ export function resolvedFootballBlindResumeMatchups() {
   return footballBlindResumeMatchups.map(resolveMatchup);
 }
 
-const nflQuarterbackCareerIds = new Set(
-  getFootballRankFivePack("nfl-quarterbacks").items.map((item) => item.id),
-);
+const nflQuarterbackCareerIds = new Set(getFootballRankFivePack("nfl-quarterbacks").items.map((item) => item.id));
 
 export function footballBlindResumeSubjectIdentityId(subjectId: string) {
   for (const careerId of nflQuarterbackCareerIds) {
@@ -309,33 +245,22 @@ export function footballBlindResumeSubjectIdentityId(subjectId: string) {
 }
 
 export function footballBlindResumeDifficultyLabel(difficulty: FootballBlindResumeDifficulty) {
-  if (difficulty === "villain") return "VILLAIN";
   return difficulty.toUpperCase();
 }
 
-function canUseRound(
-  matchup: FootballBlindResumeRound,
-  usedMatchupIds: ReadonlySet<string>,
-  usedSubjectIds: ReadonlySet<string>,
-) {
+function canUseRound(matchup: FootballBlindResumeRound, usedMatchupIds: ReadonlySet<string>, usedSubjectIds: ReadonlySet<string>, usedPackIds: ReadonlySet<FootballRankFivePackId>) {
   return !usedMatchupIds.has(matchup.id)
+    && !usedPackIds.has(matchup.packId)
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.leftId))
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
 }
 
-export function buildFootballBlindResumeRounds(
-  seed: string,
-  requestedDifficulties?: readonly FootballBlindResumeDifficulty[],
-) {
+export function buildFootballBlindResumeRounds(seed: string, requestedDifficulties?: readonly FootballBlindResumeDifficulty[]) {
   if (requestedDifficulties && requestedDifficulties.length !== FOOTBALL_BLIND_RESUME_ROUNDS) {
-    throw new Error("Football Blind Resume difficulty slate must contain exactly five rounds.");
+    throw new Error("Football Blind Resume difficulty slate must contain exactly three rounds.");
   }
-
   const random = seededLineupRandom(FOOTBALL_BLIND_RESUME_GAME_ID, seed);
   const shuffled = shuffleLineup(resolvedFootballBlindResumeMatchups(), random);
-  const leagueOrder: readonly (FootballBlindResumeLeague | null)[] = random() < 0.5
-    ? ["NFL", "CFB", "NFL", "CFB", null]
-    : ["CFB", "NFL", "CFB", "NFL", null];
 
   const search = (
     index: number,
@@ -345,50 +270,41 @@ export function buildFootballBlindResumeRounds(
     usedPackIds: Set<FootballRankFivePackId>,
   ): FootballBlindResumeRound[] | null => {
     if (index === FOOTBALL_BLIND_RESUME_ROUNDS) {
-      if (!requestedDifficulties && new Set(selected.map((round) => round.difficulty)).size < 2) return null;
-      return selected;
+      const leagues = new Set(selected.map((round) => round.league));
+      return leagues.size === 2 ? selected : null;
     }
     const desiredDifficulty = requestedDifficulties?.[index] ?? null;
-    const desiredLeague = leagueOrder[index];
     const candidates = shuffled.filter((matchup) =>
       (!desiredDifficulty || matchup.difficulty === desiredDifficulty)
-      && (!desiredLeague || matchup.league === desiredLeague)
-      && !usedPackIds.has(matchup.packId)
-      && canUseRound(matchup, usedMatchupIds, usedSubjectIds));
-
+      && canUseRound(matchup, usedMatchupIds, usedSubjectIds, usedPackIds));
     for (const matchup of candidates) {
       const nextMatchupIds = new Set(usedMatchupIds).add(matchup.id);
       const nextSubjectIds = new Set(usedSubjectIds);
       nextSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.leftId));
       nextSubjectIds.add(footballBlindResumeSubjectIdentityId(matchup.rightId));
       const nextPackIds = new Set(usedPackIds).add(matchup.packId);
-      const result = search(index + 1, [...selected, matchup], nextMatchupIds, nextSubjectIds, nextPackIds);
-      if (result) return result;
+      const found = search(index + 1, [...selected, matchup], nextMatchupIds, nextSubjectIds, nextPackIds);
+      if (found) return found;
     }
     return null;
   };
 
   const selected = search(0, [], new Set(), new Set(), new Set());
-  if (!selected) {
-    const requested = requestedDifficulties ? ` difficulty slate ${requestedDifficulties.join("/")}` : " mixed casual slate";
-    throw new Error(`Football Blind Resume catalog cannot satisfy${requested}.`);
-  }
+  if (!selected) throw new Error("Football Blind Resume curated bank cannot build a three-round mixed NFL/CFB daily slate.");
   return selected;
 }
 
 export function createFootballBlindResumeRun(): FootballBlindResumeRun {
   const resolved = resolvedFootballBlindResumeMatchups();
-  const validMatchupIds = new Set(resolved.map((row) => row.id));
-  const validSubjectIds = new Set(resolved.flatMap((row) => [
-    footballBlindResumeSubjectIdentityId(row.leftId),
-    footballBlindResumeSubjectIdentityId(row.rightId),
-  ]));
   const selected = selectReplayLineup({
     gameId: FOOTBALL_BLIND_RESUME_GAME_ID,
     lineupSize: FOOTBALL_BLIND_RESUME_ROUNDS,
     attempts: 12,
-    validItemIds: validMatchupIds,
-    validFighterIds: validSubjectIds,
+    validItemIds: new Set(resolved.map((row) => row.id)),
+    validFighterIds: new Set(resolved.flatMap((row) => [
+      footballBlindResumeSubjectIdentityId(row.leftId),
+      footballBlindResumeSubjectIdentityId(row.rightId),
+    ])),
     seedFactory: () => createReplaySeed(FOOTBALL_BLIND_RESUME_GAME_ID),
     build: (seed) => {
       const rounds = buildFootballBlindResumeRounds(seed);
@@ -405,26 +321,34 @@ export function createFootballBlindResumeRun(): FootballBlindResumeRun {
   return { rounds: selected.value, identity: selected.identity };
 }
 
-export function footballBlindResumeNextRevealCount(value: FootballBlindResumeRevealCount) {
-  const index = FOOTBALL_BLIND_RESUME_REVEAL_COUNTS.indexOf(value);
-  return index >= 0 ? FOOTBALL_BLIND_RESUME_REVEAL_COUNTS[index + 1] ?? null : null;
+export function footballBlindResumeRevealStage(matchup: Pick<FootballBlindResumeMatchup, "revealCounts">, revealedCount: number): FootballBlindResumeRevealStage {
+  const index = matchup.revealCounts.indexOf(revealedCount);
+  if (index < 0) throw new Error(`Football Blind Resume reveal count ${revealedCount} is not a valid stage.`);
+  return index as FootballBlindResumeRevealStage;
 }
 
-export function footballBlindResumeRoundPoints(
-  revealedCount: FootballBlindResumeRevealCount,
-  correct: boolean,
-) {
-  return blindResumeV3RoundPoints(revealedCount, correct);
+export function footballBlindResumeNextRevealCount(matchup: Pick<FootballBlindResumeMatchup, "revealCounts">, revealedCount: number) {
+  const stage = footballBlindResumeRevealStage(matchup, revealedCount);
+  return matchup.revealCounts[stage + 1] ?? null;
 }
 
-export function footballBlindResumeScore(correct: number) {
-  return Math.max(0, Math.min(100, correct * 20));
+export function footballBlindResumeRoundPoints(stage: FootballBlindResumeRevealStage, correct: boolean) {
+  return correct ? FOOTBALL_BLIND_RESUME_CORRECT_POINTS[stage] : FOOTBALL_BLIND_RESUME_MISS_POINTS[stage];
 }
 
-export function footballBlindResumeTier(correct: number) {
-  if (correct === 5) return "FRONT OFFICE SAVANT";
-  if (correct === 4) return "ELITE BALL KNOWER";
-  if (correct === 3) return "SOLID TAPE";
-  if (correct === 2) return "GROUP CHAT GM";
+export function normalizeFootballBlindResumeDailyScore(rawPoints: number) {
+  if (!Number.isFinite(rawPoints)) throw new Error("Football Blind Resume raw score must be finite.");
+  return Math.max(0, Math.min(100, Math.round((rawPoints / FOOTBALL_BLIND_RESUME_RAW_MAX) * 100)));
+}
+
+export function footballBlindResumeScore(rawPoints: number) {
+  return normalizeFootballBlindResumeDailyScore(rawPoints);
+}
+
+export function footballBlindResumeTier(score: number) {
+  if (score >= 90) return "FRONT OFFICE SAVANT";
+  if (score >= 75) return "ELITE BALL KNOWER";
+  if (score >= 55) return "SOLID TAPE";
+  if (score >= 35) return "GROUP CHAT GM";
   return "BACK TO THE FILM";
 }
