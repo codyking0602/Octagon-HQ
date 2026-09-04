@@ -13,6 +13,7 @@ import {
 } from "./footballHitTheNumberModel";
 
 const metricById = new Map(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((metric) => [metric.metricId, metric]));
+const careerSpecialGroups = new Set(["nfl-qb-career", "nfl-rb-career", "nfl-receiving-career"]);
 
 describe("Football Hit the Number content foundation", () => {
   it("makes peak seasons and team seasons core while keeping raw career totals special", () => {
@@ -37,7 +38,7 @@ describe("Football Hit the Number content foundation", () => {
     expect(metricById.has("cfb-best-season-tackles-for-loss")).toBe(false);
   });
 
-  it("exports only unique subjects that participate in an enabled factual board", () => {
+  it("exports only unique playable subjects and keeps career specials recognizable", () => {
     const identityKeys = footballHitTheNumberSubjects.map(footballHitTheNumberSubjectIdentityKey);
     expect(new Set(identityKeys).size).toBe(identityKeys.length);
 
@@ -45,6 +46,11 @@ describe("Football Hit the Number content foundation", () => {
       const playable = FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.some((metric) =>
         metric.group === subject.group && getFootballFact(subject.id, metric.metricId) != null);
       expect(playable, subject.id).toBe(true);
+
+      if (careerSpecialGroups.has(subject.group)) {
+        expect(subject.casualEligible, subject.id).toBe(true);
+        expect(["A", "B"], subject.id).toContain(subject.recognizabilityTier);
+      }
     }
   });
 
