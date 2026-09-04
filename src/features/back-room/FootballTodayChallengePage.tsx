@@ -8,6 +8,10 @@ import {
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
+import {
+  footballBlindResumeFactText,
+  footballBlindResumeRevealAsset,
+} from "./footballBlindResumePresentation";
 import type { FootballRankFiveItem, FootballRankFivePackId } from "./footballRankFiveModel";
 import "../../styles/today-challenge-hub.css";
 import "../../styles/football-today-challenge.css";
@@ -122,6 +126,16 @@ function pointCopy(value: unknown) {
   return points > 0 ? `+${points}` : String(points);
 }
 
+function BlindResumeRevealLogo({ subject }: { subject: JsonRecord }) {
+  const asset = footballBlindResumeRevealAsset(subject.id);
+  const name = String(subject.name ?? "Football player");
+  return (
+    <span className="football-blind-resume-logo" aria-label={`${name} team logo`}>
+      {asset ? <img alt="" loading="lazy" referrerPolicy="no-referrer" src={asset.src} title={asset.label} /> : <b aria-hidden="true">FB</b>}
+    </span>
+  );
+}
+
 function BlindResume({ projection, advance }: GameProps) {
   const setup = projection.publicSetup;
   const state = projection.publicState;
@@ -148,17 +162,18 @@ function BlindResume({ projection, advance }: GameProps) {
     return (
       <div className="football-blind-resume-result" data-result={correct ? "correct" : "miss"}>
         <section className={`football-blind-resume-verdict ${correct ? "is-correct" : "is-miss"}`}>
-          <p className="eyebrow">{correct ? "CORRECT" : "MISSED"}</p>
-          <h2>{String((winnerId === left.id ? left : right).name ?? "Winner")} had the stronger résumé</h2>
-          <strong>{pointCopy(result?.points_awarded)} PTS</strong>
+          <p className="eyebrow">{correct ? "YOU PICKED THE BETTER RÉSUMÉ" : "THE MODEL DISAGREES"}</p>
+          <h2>{String((winnerId === left.id ? left : right).name ?? "Winner")} ranks higher</h2>
+          <strong>{pointCopy(result?.points_awarded)} POINTS</strong>
         </section>
         <section className="football-blind-resume-reveal-grid">
           {[left, right].map((subject, index) => (
             <article className={`${subject.id === winnerId ? "is-winner" : ""}${subject.id === pickedId ? " is-picked" : ""}`} key={`${String(subject.id)}-${index}`}>
-              <span>RESUME {index === 0 ? "A" : "B"}</span>
+              <BlindResumeRevealLogo subject={subject} />
+              <span>PLAYER {index === 0 ? "A" : "B"}</span>
               <strong>{String(subject.name ?? "")}</strong>
               <small>{String(subject.subtitle ?? "")}</small>
-              <em>{subject.id === winnerId ? "WINNER" : subject.id === pickedId ? "YOUR PICK" : ""}</em>
+              {subject.id === pickedId ? <em>YOUR PICK</em> : null}
             </article>
           ))}
         </section>
@@ -209,39 +224,41 @@ function BlindResume({ projection, advance }: GameProps) {
   const currentStage = Math.max(0, Math.min(2, Number(round.reveal_stage ?? 1) - 1));
   const revealed = Number(round.revealed_count ?? stats.length);
   const maxRevealed = Number(round.max_revealed_count ?? stats.length);
+  const revealCounts = Array.isArray(round.reveal_counts) ? round.reveal_counts.map(Number).filter(Number.isFinite) : [];
+  const nextRevealCount = revealCounts[currentStage + 1];
+  const moreFacts = typeof nextRevealCount === "number" ? Math.max(1, nextRevealCount - revealed) : 0;
   const nextStage = ladder[currentStage + 1];
   const contextLabel = String(round.context_label ?? round.league ?? "FOOTBALL");
 
   return (
     <div className="football-blind-resume-game" data-game="blind_resume" data-version="v4">
       <section className="football-blind-resume-scoreboard">
-        <div><p className="eyebrow">TODAY’S CHALLENGE</p><h2>Which football résumé is greater?</h2></div>
-        <aside><span>ROUND {Number(state.round_index ?? 0) + 1} OF 3</span><b>{rawPoints} RAW PTS · {correctCount}-{results.length - correctCount}</b></aside>
+        <div><p className="eyebrow">DAILY CHALLENGE</p><h2>Which football career ranks higher?</h2></div>
+        <aside><span>ROUND {Number(state.round_index ?? 0) + 1} OF 3</span><b>DAILY SCORE {rawPoints} RAW PTS · {correctCount}-{results.length - correctCount}</b></aside>
       </section>
       <section className="football-today-resume football-blind-resume-card">
         <header className="football-blind-resume-card-head">
-          <div><span>RESUME A</span><strong>?</strong></div>
+          <div><span>PLAYER A</span><strong>?</strong></div>
           <b>RESUME</b>
-          <div><span>RESUME B</span><strong>?</strong></div>
+          <div><span>PLAYER B</span><strong>?</strong></div>
         </header>
         <p className="football-blind-resume-context">{contextLabel}</p>
         <div className="football-today-resume-stats football-blind-resume-stats">
           {stats.map((stat, index) => (
             <div key={`${String(stat.label)}-${index}`}>
-              <strong>{String(stat.value_a ?? "—")}</strong>
+              <strong>{footballBlindResumeFactText(stat.value_a)}</strong>
               <span>{String(stat.label)}</span>
-              <strong>{String(stat.value_b ?? "—")}</strong>
+              <strong>{footballBlindResumeFactText(stat.value_b)}</strong>
             </div>
           ))}
         </div>
-        <p className="football-blind-resume-fact-count">{revealed} OF {maxRevealed} FACTS SHOWN</p>
         <section className="football-blind-resume-scoring" aria-label="Blind Resume scoring">
-          <header><span>SCORING</span><small>CORRECT / WRONG</small></header>
+          <strong className="football-blind-resume-fact-count">{revealed} OF {maxRevealed} FACTS SHOWN</strong>
           <div>
             {ladder.map((row, index) => {
               const expired = index < currentStage;
               const active = index === currentStage;
-              const label = expired ? "USED" : active ? "NOW" : index === 2 ? "FINAL" : "NEXT";
+              const label = expired ? "USED" : active ? "GUESS NOW" : index === 2 ? "FINAL REVEAL" : "NEXT";
               return (
                 <article className={`${expired ? "is-expired" : ""}${active ? " is-current" : ""}`} key={String(row.stage ?? index)}>
                   <span>{label}</span>
@@ -257,7 +274,7 @@ function BlindResume({ projection, advance }: GameProps) {
         </div>
         {nextStage ? (
           <button className="football-blind-resume-reveal" type="button" onClick={() => advance({ reveal: true })}>
-            REVEAL MORE · NEXT CORRECT {pointCopy(nextStage.correct)}
+            SHOW {moreFacts} MORE {moreFacts === 1 ? "FACT" : "FACTS"}
           </button>
         ) : null}
       </section>
@@ -443,16 +460,25 @@ export default function FootballTodayChallengePage() {
     return <div className="page football-today-page"><section className="football-today-shell"><p className="eyebrow">FOOTBALL HQ</p><h1>{busy ? "Building today’s board…" : "Today’s Challenge"}</h1>{error ? <p>{error}</p> : null}</section></div>;
   }
 
+  const blindResume = projection.gameType === "blind_resume";
+
   return (
     <div className="page football-today-page">
       <section className="football-today-shell">
-        <header className="football-today-header">
-          <div><p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p><h1>{GAME_LABELS[projection.gameType]}</h1><span>{projection.centralDay} · SAME BOARD FOR EVERYONE</span></div>
-          <button type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
-        </header>
+        {blindResume ? (
+          <header className="football-today-header football-today-header--blind-resume">
+            <button className="football-today-back" type="button" aria-label="Back to Football Play Hub" onClick={() => navigate("/football")}>←</button>
+            <div><p className="eyebrow">PLAY HUB</p><h1>Blind Resume</h1></div>
+          </header>
+        ) : (
+          <header className="football-today-header">
+            <div><p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p><h1>{GAME_LABELS[projection.gameType]}</h1><span>{projection.centralDay} · SAME BOARD FOR EVERYONE</span></div>
+            <button type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+          </header>
+        )}
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
-        {projection.gameType !== "blind_resume" ? <ScoreCard projection={projection} /> : null}
+        {!blindResume ? <ScoreCard projection={projection} /> : null}
         {projection.officialAttempt ? (
           <div className="football-today-result-actions">
             <button className="football-today-primary" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
@@ -461,7 +487,7 @@ export default function FootballTodayChallengePage() {
           </div>
         ) : null}
         {projection.gameType === "find_leader" ? <FindLeader projection={projection} advance={advance} /> : null}
-        {projection.gameType === "blind_resume" ? <BlindResume projection={projection} advance={advance} /> : null}
+        {blindResume ? <BlindResume projection={projection} advance={advance} /> : null}
         {projection.gameType === "wavelength" ? <Wavelength projection={projection} advance={advance} /> : null}
         {projection.gameType === "blind_rank_5" ? <BlindRank projection={projection} advance={advance} /> : null}
         {projection.gameType === "keep_4_cut_4" ? <KeepCut projection={projection} advance={advance} /> : null}
