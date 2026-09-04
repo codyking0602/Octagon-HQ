@@ -44,6 +44,19 @@ For every production slice:
 8. Deploy only through the canonical GitHub Actions owner when live testing/release is needed.
 9. Verify the exact live deployment SHA before calling a change live.
 
+## Repository tool routing
+
+Repository operations use the connected GitHub tools as the primary and canonical repository interface.
+
+1. Resolve `main`, read files, inspect trees/branches/PRs/workflows, create branches/commits/PRs, and merge through the connected GitHub tools.
+2. Do not clone the repository into a container or use shell Git as first-line repository access. Only use a local clone if Cody explicitly asks for local Git work or a task genuinely requires execution that the GitHub connector cannot perform.
+3. Read known paths directly with GitHub file fetches. Use code search only to locate an unknown owner.
+4. If two searches fail to locate an owner, stop changing search terms. Trace from the relevant registry/router/provider or inspect the owning directory/tree instead.
+5. A failed repository tool call is a strategy-change trigger, not a retry-loop trigger. Change method and continue; do not repeat near-identical searches.
+6. Do not use web search, File Library, or generic shell browsing as substitutes for GitHub repository access.
+7. Before editing, load the GitHub write, PR, and workflow actions needed to complete the task through the same repository path.
+8. Local execution may be used when needed for focused tests, typecheck, or builds, but it never becomes a competing source of truth; GitHub `main` and the exact branch SHA remain canonical.
+
 ## Deployment ownership
 
 GitHub Actions is the only deployment owner.
