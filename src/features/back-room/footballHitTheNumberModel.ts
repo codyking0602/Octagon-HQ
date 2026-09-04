@@ -274,16 +274,16 @@ const subjectsByGroup = new Map<FootballHitTheNumberSubjectGroup, readonly Footb
   ]),
 );
 
-const uniqueSubjects = new Map<string, FootballHitTheNumberSubject>();
+const allSubjectIdentities = new Map<string, FootballHitTheNumberSubject>();
 for (const group of groupOrder) {
   for (const subject of subjectsByGroup.get(group) ?? []) {
     const key = footballHitTheNumberSubjectIdentityKey(subject);
-    const current = uniqueSubjects.get(key);
-    uniqueSubjects.set(key, current ? preferredDuplicateSubject(current, subject) : subject);
+    const current = allSubjectIdentities.get(key);
+    allSubjectIdentities.set(key, current ? preferredDuplicateSubject(current, subject) : subject);
   }
 }
-export const footballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = [...uniqueSubjects.values()];
-const subjectById = new Map(footballHitTheNumberSubjects.map((subject) => [subject.id, subject]));
+const allFootballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = [...allSubjectIdentities.values()];
+const subjectById = new Map(allFootballHitTheNumberSubjects.map((subject) => [subject.id, subject]));
 
 function subjectsFor(group: FootballHitTheNumberSubjectGroup) {
   return subjectsByGroup.get(group) ?? [];
@@ -358,7 +358,6 @@ const domains: readonly FootballHitTheNumberDomain[] = [
       metric("cfb-best-season-receiving-touchdowns", "CFB", "cfb-player-peak", "CFB Player Peak-Season Receiving TD", "peak-season"),
       metric("cfb-best-season-sacks", "CFB", "cfb-player-peak", "CFB Player Peak-Season Sacks", "peak-season"),
       metric("cfb-best-season-defensive-interceptions", "CFB", "cfb-player-peak", "CFB Player Peak-Season Defensive Interceptions", "peak-season"),
-      metric("cfb-best-season-tackles-for-loss", "CFB", "cfb-player-peak", "CFB Player Peak-Season Tackles for Loss", "peak-season"),
       metric("cfb-heisman-awards", "CFB", "cfb-player-peak", "CFB Heisman Trophies", "accomplishment"),
       metric("cfb-team-point-differential", "CFB", "cfb", "CFB Team-Season Point Differential", "team-season"),
       metric("cfb-team-postseason-wins", "CFB", "cfb", "CFB Team-Season Postseason Wins", "accomplishment"),
@@ -369,6 +368,10 @@ const domains: readonly FootballHitTheNumberDomain[] = [
 function metricBoardEnabled(board: FootballHitTheNumberMetricBoard) {
   return metricSubjects(board).length >= FOOTBALL_HIT_THE_NUMBER_MIN_PICKS;
 }
+
+export const footballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = dedupeSemanticSubjects(
+  domains.flatMap((domain) => domain.metrics.filter(metricBoardEnabled).flatMap(metricSubjects)),
+);
 
 export const FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG = domains.flatMap((domain) =>
   domain.metrics.filter(metricBoardEnabled).map((row) => ({
