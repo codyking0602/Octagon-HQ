@@ -1,3 +1,4 @@
+import { normalizeFootballBlindResumeDailyScore } from "../back-room/footballBlindResumeModel";
 import { hitTheNumberScore, type HitTheNumberResultStatus } from "./hitTheNumberEngine";
 import { scoreBlindRankOrderedRatings } from "./officialScoreContract";
 import { wavelengthScore } from "./wavelengthEngine";
@@ -57,7 +58,7 @@ export interface FootballTodayRuntimeSnapshot {
 
 export type FootballTodayPersistenceSetup = Omit<OfficialDailySetupPublication, "scoringVersion"> & {
   gameType: OfficialDailyGameType;
-  scoringVersion: OfficialDailySetupPublication["scoringVersion"] | typeof SHARED_DAILY_DOUBLE_SCORING_VERSION;
+  scoringVersion: string;
 };
 
 function asRecord(value: unknown, label: string): JsonRecord {
@@ -158,9 +159,13 @@ function grade(
 
   if (gameType === "blind_resume") {
     const results = recordArray(context.publicState.results, "Football Blind Resume results");
-    const normalized = results.reduce((sum, row) => sum + Number(row.points_awarded ?? 0), 0);
+    const raw = results.reduce((sum, row) => sum + Number(row.points_awarded ?? 0), 0);
+    if (!Number.isFinite(raw)) throw new Error("Football Blind Resume raw score is invalid.");
+    const savedRaw = Number(context.publicState.raw_points ?? raw);
+    if (savedRaw !== raw) throw new Error("Football Blind Resume saved score does not match its round results.");
+    const normalized = normalizeFootballBlindResumeDailyScore(raw);
     const correct = results.filter((row) => row.correct === true).length;
-    return { native: normalized, normalized, result: { correct, results } };
+    return { native: raw, normalized, result: { correct, raw_points: raw, results } };
   }
 
   if (gameType === "blind_rank_5") {
