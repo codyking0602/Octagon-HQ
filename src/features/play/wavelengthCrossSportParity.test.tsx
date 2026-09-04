@@ -140,36 +140,48 @@ describe("Wavelength cross-sport source and calibration parity", () => {
     assertHealthyTargetSample(footballTargets);
   });
 
-  it("presents the same four-lock opinion-game family and standard result actions in UFC and Football", () => {
+  it("presents the same full-screen hidden-number game family in UFC and Football", () => {
     const ufc = render(
       <MemoryRouter>
         <WavelengthGame challengeSeed="pr5-ui-ufc" onExit={() => undefined} />
       </MemoryRouter>,
     );
-    expect(screen.getByText(/calibrated 1–100 UFC opinion scale/i)).toBeInTheDocument();
+    expect(screen.getByText("WAVELENGTH")).toBeInTheDocument();
+    expect(screen.getByText("Find the hidden 1–100 number.")).toBeInTheDocument();
+    expect(screen.getByText("Each clue reacts to your last guess. Only your fourth guess scores.")).toBeInTheDocument();
+    expect(screen.getByText("YOUR GUESS")).toBeInTheDocument();
     expect(screen.getByText(/1 · LOW/)).toBeInTheDocument();
     expect(screen.getByText(/50 · MIDDLE/)).toBeInTheDocument();
     expect(screen.getByText(/100 · HIGH/)).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(WAVELENGTH_OPINION_DISCLOSURE, "i"))).toBeInTheDocument();
+    expect(ufc.container.querySelector(".wavelength-page--playing")).toBeInTheDocument();
+    expect(screen.queryByText(/Where does it land/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(new RegExp(WAVELENGTH_OPINION_DISCLOSURE, "i"))).not.toBeInTheDocument();
     finishVisibleRound();
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(WAVELENGTH_OPINION_DISCLOSURE, "i"))).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CHALLENGE SOMEONE" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "REPLAY CHALLENGE" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ALL GAMES" })).toBeInTheDocument();
     ufc.unmount();
 
-    render(
+    const football = render(
       <MemoryRouter>
         <FootballWavelengthPage />
       </MemoryRouter>,
     );
-    expect(screen.getByText(/calibrated 1–100 (?:football )?opinion scale/i)).toBeInTheDocument();
+    expect(screen.getByText("WAVELENGTH")).toBeInTheDocument();
+    expect(screen.getByText("Find the hidden 1–100 number.")).toBeInTheDocument();
+    expect(screen.getByText("Each clue reacts to your last guess. Only your fourth guess scores.")).toBeInTheDocument();
+    expect(screen.getByText("YOUR GUESS")).toBeInTheDocument();
     expect(screen.getByText(/1 · LOW/)).toBeInTheDocument();
     expect(screen.getByText(/50 · MIDDLE/)).toBeInTheDocument();
     expect(screen.getByText(/100 · HIGH/)).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(WAVELENGTH_OPINION_DISCLOSURE, "i"))).toBeInTheDocument();
+    expect(football.container.querySelector(".wavelength-page--playing.wavelength-page--football")).toBeInTheDocument();
+    expect(screen.queryByText(/Where does it land/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(new RegExp(WAVELENGTH_OPINION_DISCLOSURE, "i"))).not.toBeInTheDocument();
     finishVisibleRound();
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(WAVELENGTH_OPINION_DISCLOSURE, "i"))).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CHALLENGE SOMEONE" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ALL GAMES" })).toBeInTheDocument();
