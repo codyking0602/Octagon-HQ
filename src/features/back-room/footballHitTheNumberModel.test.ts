@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { getFootballFact } from "./footballFactualStats";
 import {
+  FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_RANDOM_POOL_SIZE,
+  FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH,
   FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE,
   FOOTBALL_HIT_THE_NUMBER_MAX_PICKS,
   FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG,
@@ -9,6 +11,7 @@ import {
   FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE,
   FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG,
   createFootballHitTheNumberPlan,
+  footballHitTheNumberAvailableBuildSubjectIds,
   footballHitTheNumberPlanQuality,
   footballHitTheNumberPlayableThemes,
   footballHitTheNumberRandomPoolSize,
@@ -29,10 +32,10 @@ const ONE_FROM_EACH_LABELS = [
 ];
 
 const BUILD_TEAM_LABELS = [
-  "Elite Tier",
-  "High Tier",
-  "Middle Tier",
-  "Value Tier",
+  "Tier 1",
+  "Tier 2",
+  "Tier 3",
+  "Tier 4",
   "Wild Card",
 ];
 
@@ -95,7 +98,7 @@ describe("Football Hit the Number canonical fact integration", () => {
     ]);
   });
 
-  it("builds deterministic, solvable, quality-gated boards with distinct era and tier formats", () => {
+  it("builds deterministic, solvable, quality-gated boards with distinct era and stat-tier formats", () => {
     let sawOneFromEach = false;
     let sawBuildTeam = false;
     let sawExpandedNflPlayerFamily = false;
@@ -113,7 +116,11 @@ describe("Football Hit the Number canonical fact integration", () => {
         expect(new Set(first.subjectIds).size).toBe(first.subjectIds.length);
         expect(first.subjectIds.length).toBeGreaterThanOrEqual(first.pickCount);
         if (boardType === "random-pool") {
-          expect(first.subjectIds.length).toBe(footballHitTheNumberRandomPoolSize(first.pickCount));
+          expect(first.subjectIds.length).toBe(
+            first.formatId === "build-the-team"
+              ? FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_RANDOM_POOL_SIZE
+              : footballHitTheNumberRandomPoolSize(first.pickCount),
+          );
         }
         expect(first.solutionSubjectIds).toHaveLength(first.pickCount);
         expect(new Set(first.solutionSubjectIds).size).toBe(first.pickCount);
@@ -133,7 +140,14 @@ describe("Football Hit the Number canonical fact integration", () => {
           sawBuildTeam = true;
           expect(first.pickCount).toBe(5);
           expect(first.slots.map((slot) => slot.label)).toEqual(BUILD_TEAM_LABELS);
-          expect(first.configurationLabel).toBe("Four production tiers + wild card");
+          expect(first.configurationLabel).toBe("4 stat tiers + wild card");
+          for (let slotIndex = 0; slotIndex < 4; slotIndex += 1) {
+            const previousPicks = first.solutionSubjectIds.slice(0, slotIndex);
+            expect(
+              footballHitTheNumberAvailableBuildSubjectIds(first, previousPicks).length,
+              `${first.metricId}:${boardType}:tier-${slotIndex + 1}`,
+            ).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH);
+          }
         }
         if (first.metricId.startsWith("nfl-career-receiv") || first.metricId.startsWith("nfl-season-")) sawExpandedNflPlayerFamily = true;
 
