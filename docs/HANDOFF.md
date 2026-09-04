@@ -23,6 +23,7 @@ Do not revive superseded roadmap files or use historical implementation notes as
 - Production branch: `main`
 - Production app: `https://octagon.hq-app.workers.dev`
 - `main` is the live source of truth.
+- Resolve the current `main` HEAD from GitHub before every branch. Never trust a copied SHA in a handoff document.
 - The legacy V1 repository is reference-only.
 - The completed V1 history migration must never be rerun.
 - Any remaining V1 runtime URL/dependency is a stabilization defect, not a fallback.
@@ -111,7 +112,7 @@ Football Blind Resume is now **Daily-only**. The old standalone route redirects 
 
 20 Questions, Who Am I, and Draft Room remain planned roadmap games and are not exposed until implemented.
 
-### Football Today's Challenge
+## Football Today's Challenge
 
 Football Today's Challenge reuses the shared Daily Challenge platform.
 
@@ -119,7 +120,13 @@ Canonical route:
 
 - `/back-room/football/today`
 
-The platform remains sport-scoped through the shared Daily runtime/repository/backend owners. Do not create Football-specific attempt/history/standings/streak/leaderboard/notification/share persistence stacks.
+Current platform ownership:
+
+- shared `daily-challenge-runtime` owns private setup/actions/grading
+- shared `todayChallengeRepository` owns browser persistence transport
+- Daily Challenge records, history, streaks, standings, leaderboards, competition, and reminders remain sport-scoped through the shared backend
+
+Do not create Football-specific attempt/history/standings/streak/leaderboard/notification/share persistence stacks.
 
 Current Football Blind Resume contract:
 
@@ -159,6 +166,11 @@ Comparative greatness flows through the canonical Football comparison/ranking au
 Missing evidence excludes a subject from that mechanic. Do not create a second factual table, fallback rating catalog, or manual game-only truth layer.
 
 ## Picks monitoring operations
+
+Current player-facing behavior includes:
+
+- Automatic validated pre-lock sportsbook odds applied only through the canonical Picks monitoring path.
+- ESPN live-state-aware Fight Night behavior so trusted provider attachment owns automatic fight-by-fight locking while schedule times remain estimates.
 
 Canonical owners include:
 
