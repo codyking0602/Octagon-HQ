@@ -56,7 +56,7 @@ function blindResumeActions(day: string, revealStage: 1 | 2 | 3, correct: boolea
 }
 
 describe("Football Today’s Challenge session", () => {
-  it("keeps the deterministic five-day rotation and explicitly schedules Blind Resume for September 4", () => {
+  it("keeps the deterministic five-day rotation and schedules only September 4 to Blind Resume", () => {
     expect([
       footballTodayGameForDay("2026-08-22"),
       footballTodayGameForDay("2026-08-23"),
@@ -71,7 +71,9 @@ describe("Football Today’s Challenge session", () => {
       "hit_the_number",
     ]);
     expect(footballTodayGameForDay("2026-08-27")).toBe("find_leader");
+    expect(footballTodayGameForDay("2026-09-03")).toBe("wavelength");
     expect(footballTodayGameForDay("2026-09-04")).toBe("blind_resume");
+    expect(footballTodayGameForDay("2026-09-05")).toBe("hit_the_number");
   });
 
   it("builds the same public board for the same Central day without leaking Find the Leader evidence", () => {
