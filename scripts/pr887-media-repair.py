@@ -64,6 +64,26 @@ export function footballFindLeaderProjectedKnowledgeOverride(subjectId: string):
 )
 
 replace_once(
+    "src/features/back-room/footballMediaIdentity.ts",
+    '''export function footballNflTeamMediaId(teamCode: string): FootballTeamMediaId {
+  return `nfl:${teamCode.toLowerCase()}`;
+}''',
+    '''const NFL_TEAM_MEDIA_CODE_ALIASES: Readonly<Record<string, string>> = {
+  la: "lar",
+  was: "wsh",
+};
+
+export function footballNflTeamMediaCode(teamCode: string): string {
+  const normalized = teamCode.trim().toLowerCase();
+  return NFL_TEAM_MEDIA_CODE_ALIASES[normalized] ?? normalized;
+}
+
+export function footballNflTeamMediaId(teamCode: string): FootballTeamMediaId {
+  return `nfl:${footballNflTeamMediaCode(teamCode)}`;
+}''',
+)
+
+replace_once(
     "src/features/back-room/footballSubjectRegistry.ts",
     '''  footballCfbTeamMediaIdFromSeasonSubjectId,
   footballTeamMediaIdFromComparisonAsset,''',
@@ -89,4 +109,85 @@ replace_once(
   const projectedNflTeamCode = footballFindLeaderProjectedNflTeamCode(subject.id);
   if (projectedNflTeamCode) return footballNflTeamMediaId(projectedNflTeamCode);
   if (subject.kind === "team-season" && subject.league === "CFB")''',
+)
+
+replace_once(
+    "src/features/back-room/footballSubjectAssets.ts",
+    '''import {
+  footballCfbTeamMediaId,
+  footballTeamMediaIdFromComparisonAsset,
+  type FootballTeamMediaId,
+} from "./footballMediaIdentity";''',
+    '''import {
+  footballCfbTeamMediaId,
+  footballNflTeamMediaCode,
+  footballNflTeamMediaId,
+  footballTeamMediaIdFromComparisonAsset,
+  type FootballTeamMediaId,
+} from "./footballMediaIdentity";''',
+)
+replace_once(
+    "src/features/back-room/footballSubjectAssets.ts",
+    '''function nflMark(team: string, label: string): FootballSubjectAsset {
+  return {
+    src: `https://a.espncdn.com/i/teamlogos/nfl/500/${team}.png`,
+    kind: "team-mark",
+    label,
+  };
+}''',
+    '''function nflMark(team: string, label: string): FootballSubjectAsset {
+  const mediaCode = footballNflTeamMediaCode(team);
+  return {
+    src: `https://a.espncdn.com/i/teamlogos/nfl/500/${mediaCode}.png`,
+    kind: "team-mark",
+    label,
+  };
+}''',
+)
+replace_once(
+    "src/features/back-room/footballSubjectAssets.ts",
+    '''const coreCfbTeamAssets = [
+  ["nebraska", 158, "Nebraska"],''',
+    '''const coreNflTeamAssets = [
+  ["ARI", "Arizona Cardinals"],
+  ["ATL", "Atlanta Falcons"],
+  ["BAL", "Baltimore Ravens"],
+  ["BUF", "Buffalo Bills"],
+  ["CAR", "Carolina Panthers"],
+  ["CHI", "Chicago Bears"],
+  ["CIN", "Cincinnati Bengals"],
+  ["CLE", "Cleveland Browns"],
+  ["DAL", "Dallas Cowboys"],
+  ["DEN", "Denver Broncos"],
+  ["DET", "Detroit Lions"],
+  ["GB", "Green Bay Packers"],
+  ["HOU", "Houston Texans"],
+  ["IND", "Indianapolis Colts"],
+  ["JAX", "Jacksonville Jaguars"],
+  ["KC", "Kansas City Chiefs"],
+  ["LAC", "Los Angeles Chargers"],
+  ["LAR", "Los Angeles Rams"],
+  ["LV", "Las Vegas Raiders"],
+  ["MIA", "Miami Dolphins"],
+  ["MIN", "Minnesota Vikings"],
+  ["NE", "New England Patriots"],
+  ["NO", "New Orleans Saints"],
+  ["NYG", "New York Giants"],
+  ["NYJ", "New York Jets"],
+  ["PHI", "Philadelphia Eagles"],
+  ["PIT", "Pittsburgh Steelers"],
+  ["SEA", "Seattle Seahawks"],
+  ["SF", "San Francisco 49ers"],
+  ["TB", "Tampa Bay Buccaneers"],
+  ["TEN", "Tennessee Titans"],
+  ["WSH", "Washington Commanders"],
+] as const;
+
+// NFL team marks are owned here so historical factual seasons do not depend on comparison-catalog coverage.
+for (const [teamCode, label] of coreNflTeamAssets) {
+  registerFootballTeamAsset(footballNflTeamMediaId(teamCode), nflMark(teamCode, label));
+}
+
+const coreCfbTeamAssets = [
+  ["nebraska", 158, "Nebraska"],''',
 )
