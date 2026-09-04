@@ -25,7 +25,7 @@ import {
 } from "./footballSubjectRegistry";
 
 export const FOOTBALL_HIT_THE_NUMBER_GAME_ID = "football-hit-the-number";
-export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v2" as const;
+export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v3" as const;
 export const FOOTBALL_HIT_THE_NUMBER_MIN_PICKS = 4;
 export const FOOTBALL_HIT_THE_NUMBER_MAX_PICKS = 7;
 export const FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE = "random-pool" as const;
@@ -39,12 +39,19 @@ export type FootballHitTheNumberFormatId =
 export type FootballHitTheNumberBoardType = "open-roster" | "random-pool";
 export type FootballHitTheNumberLeague = "NFL" | "CFB";
 export type FootballHitTheNumberDomainId = "volume" | "efficiency" | "dominance";
+export type FootballHitTheNumberContentKind =
+  | "peak-season"
+  | "team-season"
+  | "accomplishment"
+  | "career-special";
 export type FootballHitTheNumberSubjectGroup =
   | "nfl-qb-career"
   | "nfl-rb-career"
   | "nfl-receiving-career"
   | "nfl-defense-career"
   | "nfl-qb-season"
+  | "nfl-team-season"
+  | "cfb-player-peak"
   | "cfb";
 
 type FootballHitTheNumberSubjectDomainId = FootballHitTheNumberSubjectGroup;
@@ -74,6 +81,8 @@ interface FootballHitTheNumberMetricBoard {
   league: FootballHitTheNumberLeague;
   group: FootballHitTheNumberSubjectGroup;
   boardLabel: string;
+  contentKind: FootballHitTheNumberContentKind;
+  weight: number;
 }
 
 interface FootballHitTheNumberDomain {
@@ -131,6 +140,20 @@ export const FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE = [
 
 export const FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE = HIT_THE_NUMBER_GENERATION_PROFILE.picks;
 
+export const FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS = {
+  "peak-season": 8,
+  "team-season": 6,
+  accomplishment: 5,
+  "career-special": 2,
+} as const satisfies Readonly<Record<FootballHitTheNumberContentKind, number>>;
+
+export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH = 20;
+
+function careerSpecialSubjectEligible(subject: FootballSubjectProfile) {
+  return subject.casualEligible
+    && (subject.recognizabilityTier === "A" || subject.recognizabilityTier === "B");
+}
+
 const decades = (...values: number[]): FootballSubjectQuery[] => values.map((decade) => ({ decade }));
 const championSeasons = (...values: number[]): FootballSubjectQuery[] => values.map((season) => ({
   league: "CFB",
@@ -141,6 +164,9 @@ const championSeasons = (...values: number[]): FootballSubjectQuery[] => values.
 
 /** Declarative configurations over the canonical registry; never HTN-owned rosters. */
 export const FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG: readonly FootballHitTheNumberThemeDefinition[] = [
+  { id: "nfl-qb-seasons", label: "Notable NFL QB Seasons", league: "NFL", group: "nfl-qb-season", queries: [{ league: "NFL", kind: "player-season", position: "QB", includeProjectedSourceSubjects: true }] },
+  { id: "nfl-team-seasons", label: "NFL Team Seasons", league: "NFL", group: "nfl-team-season", queries: [{ league: "NFL", kind: "team-season", includeProjectedSourceSubjects: true }] },
+  { id: "cfb-player-peaks", label: "College Football Peak Seasons", league: "CFB", group: "cfb-player-peak", queries: [{ league: "CFB", kind: "player-career", casualEligible: true }] },
   { id: "nfl-qbs", label: "NFL Quarterbacks", league: "NFL", group: "nfl-qb-career", queries: [{ league: "NFL", kind: "player-career", position: "QB" }] },
   { id: "nfl-qbs-2000s-2020s", label: "2000s–2020s QBs", league: "NFL", group: "nfl-qb-career", queries: decades(2000, 2010, 2020) },
   { id: "nfl-qbs-1990s-2020s", label: "1990s–2020s QBs", league: "NFL", group: "nfl-qb-career", queries: decades(1990, 2000, 2010, 2020) },
@@ -167,15 +193,18 @@ function hasScope(subjectId: string, scope: FootballFactScope) {
 }
 
 function groupAcceptsSubject(group: FootballHitTheNumberSubjectGroup, subject: FootballSubjectProfile) {
-  if (group === "nfl-qb-career") return subject.kind === "player-career" && subject.position === "QB" && hasScope(subject.id, "nfl-player-career");
-  if (group === "nfl-rb-career") return subject.kind === "player-career" && subject.position === "RB" && hasScope(subject.id, "nfl-player-career");
-  if (group === "nfl-receiving-career") return subject.kind === "player-career" && (subject.position === "WR" || subject.position === "TE") && hasScope(subject.id, "nfl-player-career");
-  if (group === "nfl-defense-career") return subject.kind === "player-career" && (subject.position === "DL" || subject.position === "LB" || subject.position === "DB") && hasScope(subject.id, "nfl-player-career");
-  if (group === "nfl-qb-season") return subject.kind === "player-season" && subject.position === "QB" && hasScope(subject.id, "nfl-player-season");
-  return subject.kind === "team-season" && hasScope(subject.id, "cfb-team-season");
+  if (group === "nfl-qb-career") return subject.kind === "player-career" && subject.league === "NFL" && subject.position === "QB" && careerSpecialSubjectEligible(subject) && hasScope(subject.id, "nfl-player-career");
+  if (group === "nfl-rb-career") return subject.kind === "player-career" && subject.league === "NFL" && subject.position === "RB" && careerSpecialSubjectEligible(subject) && hasScope(subject.id, "nfl-player-career");
+  if (group === "nfl-receiving-career") return subject.kind === "player-career" && subject.league === "NFL" && (subject.position === "WR" || subject.position === "TE") && careerSpecialSubjectEligible(subject) && hasScope(subject.id, "nfl-player-career");
+  if (group === "nfl-defense-career") return subject.kind === "player-career" && subject.league === "NFL" && (subject.position === "DL" || subject.position === "LB" || subject.position === "DB") && careerSpecialSubjectEligible(subject) && hasScope(subject.id, "nfl-player-career");
+  if (group === "nfl-qb-season") return subject.kind === "player-season" && subject.league === "NFL" && subject.position === "QB" && hasScope(subject.id, "nfl-player-season");
+  if (group === "nfl-team-season") return subject.kind === "team-season" && subject.league === "NFL" && hasScope(subject.id, "nfl-team-season");
+  if (group === "cfb-player-peak") return subject.kind === "player-career" && subject.league === "CFB" && hasScope(subject.id, "cfb-player-career");
+  return subject.kind === "team-season" && subject.league === "CFB" && hasScope(subject.id, "cfb-team-season");
 }
 
-function subtitleFor(subject: FootballSubjectProfile) {
+function subtitleFor(subject: FootballSubjectProfile, group: FootballHitTheNumberSubjectGroup) {
+  if (group === "cfb-player-peak") return `${subject.position ?? "Player"} peak college season`;
   if (subject.kind === "player-season") return `${subject.season ?? "Season"} ${subject.position ?? "player"} season`;
   if (subject.kind === "team-season") {
     return subject.nationalChampion
@@ -188,10 +217,44 @@ function subtitleFor(subject: FootballSubjectProfile) {
 function canonicalSubject(subject: FootballSubjectProfile, group: FootballHitTheNumberSubjectGroup): FootballHitTheNumberSubject {
   return {
     ...subject,
-    subtitle: subtitleFor(subject),
+    subtitle: subtitleFor(subject, group),
     group,
     domainId: group,
   };
+}
+
+function normalizedIdentityPart(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+/** One real player/team season may have compatibility and projected ids; gameplay treats it as one subject. */
+export function footballHitTheNumberSubjectIdentityKey(subject: FootballSubjectProfile) {
+  if ((subject.kind === "team-season" || subject.kind === "player-season") && subject.season != null) {
+    const seasonText = String(subject.season);
+    const baseName = normalizedIdentityPart(subject.name.replace(new RegExp(`\\b${seasonText}\\b`, "g"), ""));
+    return `${subject.league}:${subject.kind}:${subject.season}:${baseName || subject.teamId || subject.playerId || subject.id}`;
+  }
+  return `${subject.league}:${subject.kind}:${subject.id}`;
+}
+
+function preferredDuplicateSubject(left: FootballHitTheNumberSubject, right: FootballHitTheNumberSubject) {
+  const leftFacts = getFootballFactualRecord(left.id)?.facts.length ?? 0;
+  const rightFacts = getFootballFactualRecord(right.id)?.facts.length ?? 0;
+  if (leftFacts !== rightFacts) return leftFacts > rightFacts ? left : right;
+  const leftIdentity = Number(Boolean(left.teamId || left.playerId));
+  const rightIdentity = Number(Boolean(right.teamId || right.playerId));
+  if (leftIdentity !== rightIdentity) return leftIdentity > rightIdentity ? left : right;
+  return left.id.length <= right.id.length ? left : right;
+}
+
+function dedupeSemanticSubjects(subjects: readonly FootballHitTheNumberSubject[]) {
+  const byIdentity = new Map<string, FootballHitTheNumberSubject>();
+  for (const subject of subjects) {
+    const key = footballHitTheNumberSubjectIdentityKey(subject);
+    const current = byIdentity.get(key);
+    byIdentity.set(key, current ? preferredDuplicateSubject(current, subject) : subject);
+  }
+  return [...byIdentity.values()];
 }
 
 const groupOrder: readonly FootballHitTheNumberSubjectGroup[] = [
@@ -199,27 +262,33 @@ const groupOrder: readonly FootballHitTheNumberSubjectGroup[] = [
   "nfl-rb-career",
   "nfl-receiving-career",
   "nfl-qb-season",
+  "nfl-team-season",
+  "cfb-player-peak",
   "cfb",
 ];
 
 const subjectsByGroup = new Map<FootballHitTheNumberSubjectGroup, readonly FootballHitTheNumberSubject[]>(
   groupOrder.map((group) => [
     group,
-    footballFactualRecords
-      .map((record) => getFootballSubject(record.subjectId))
-      .filter((subject): subject is FootballSubjectProfile => Boolean(subject && groupAcceptsSubject(group, subject)))
-      .map((subject) => canonicalSubject(subject, group)),
+    dedupeSemanticSubjects(
+      footballFactualRecords
+        .map((record) => getFootballSubject(record.subjectId))
+        .filter((subject): subject is FootballSubjectProfile => Boolean(subject && groupAcceptsSubject(group, subject)))
+        .map((subject) => canonicalSubject(subject, group)),
+    ),
   ]),
 );
 
-const uniqueSubjects = new Map<string, FootballHitTheNumberSubject>();
+const allSubjectIdentities = new Map<string, FootballHitTheNumberSubject>();
 for (const group of groupOrder) {
   for (const subject of subjectsByGroup.get(group) ?? []) {
-    if (!uniqueSubjects.has(subject.id)) uniqueSubjects.set(subject.id, subject);
+    const key = footballHitTheNumberSubjectIdentityKey(subject);
+    const current = allSubjectIdentities.get(key);
+    allSubjectIdentities.set(key, current ? preferredDuplicateSubject(current, subject) : subject);
   }
 }
-export const footballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = [...uniqueSubjects.values()];
-const subjectById = new Map(footballHitTheNumberSubjects.map((subject) => [subject.id, subject]));
+const allFootballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = [...allSubjectIdentities.values()];
+const subjectById = new Map(allFootballHitTheNumberSubjects.map((subject) => [subject.id, subject]));
 
 function subjectsFor(group: FootballHitTheNumberSubjectGroup) {
   return subjectsByGroup.get(group) ?? [];
@@ -242,49 +311,72 @@ const metric = (
   league: FootballHitTheNumberLeague,
   group: FootballHitTheNumberSubjectGroup,
   boardLabel: string,
-): FootballHitTheNumberMetricBoard => ({ metricId, league, group, boardLabel });
+  contentKind: FootballHitTheNumberContentKind,
+): FootballHitTheNumberMetricBoard => ({
+  metricId,
+  league,
+  group,
+  boardLabel,
+  contentKind,
+  weight: FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS[contentKind],
+});
 
 const domains: readonly FootballHitTheNumberDomain[] = [
   {
     id: "volume",
     metrics: [
-      metric("nfl-career-passing-yards", "NFL", "nfl-qb-career", "NFL QB Career Passing Yards"),
-      metric("nfl-career-rushing-yards", "NFL", "nfl-rb-career", "NFL RB Career Rushing Yards"),
-      metric("nfl-career-receptions", "NFL", "nfl-receiving-career", "NFL Career Receptions"),
-      metric("nfl-career-receiving-yards", "NFL", "nfl-receiving-career", "NFL Career Receiving Yards"),
-      metric("nfl-season-passing-yards", "NFL", "nfl-qb-season", "NFL QB Season Passing Yards"),
-      metric("cfb-team-points-for", "CFB", "cfb", "CFB Team-Season Points Scored"),
-      metric("cfb-team-points-against", "CFB", "cfb", "CFB Team-Season Points Allowed"),
-      metric("cfb-team-wins", "CFB", "cfb", "CFB Team-Season Wins"),
+      metric("nfl-season-passing-yards", "NFL", "nfl-qb-season", "NFL QB Season Passing Yards", "peak-season"),
+      metric("nfl-team-overall-wins", "NFL", "nfl-team-season", "NFL Team-Season Wins", "team-season"),
+      metric("nfl-team-points-for", "NFL", "nfl-team-season", "NFL Team-Season Points Scored", "team-season"),
+      metric("nfl-career-passing-yards", "NFL", "nfl-qb-career", "NFL QB Career Passing Yards", "career-special"),
+      metric("nfl-career-rushing-yards", "NFL", "nfl-rb-career", "NFL RB Career Rushing Yards", "career-special"),
+      metric("nfl-career-receiving-yards", "NFL", "nfl-receiving-career", "NFL Career Receiving Yards", "career-special"),
+      metric("cfb-best-season-passing-yards", "CFB", "cfb-player-peak", "CFB Player Peak-Season Passing Yards", "peak-season"),
+      metric("cfb-best-season-rushing-yards", "CFB", "cfb-player-peak", "CFB Player Peak-Season Rushing Yards", "peak-season"),
+      metric("cfb-best-season-receiving-yards", "CFB", "cfb-player-peak", "CFB Player Peak-Season Receiving Yards", "peak-season"),
+      metric("cfb-team-points-for", "CFB", "cfb", "CFB Team-Season Points Scored", "team-season"),
+      metric("cfb-team-points-against", "CFB", "cfb", "CFB Team-Season Points Allowed", "team-season"),
+      metric("cfb-team-wins", "CFB", "cfb", "CFB Team-Season Wins", "team-season"),
     ],
   },
   {
     id: "efficiency",
     metrics: [
-      metric("nfl-season-passer-rating", "NFL", "nfl-qb-season", "NFL QB Season Passer Rating"),
-      metric("cfb-team-points-per-game", "CFB", "cfb", "CFB Team-Season Points Per Game"),
+      metric("nfl-season-passer-rating", "NFL", "nfl-qb-season", "NFL QB Season Passer Rating", "peak-season"),
+      metric("nfl-team-points-per-game", "NFL", "nfl-team-season", "NFL Team-Season Points Per Game", "team-season"),
+      metric("cfb-team-points-per-game", "CFB", "cfb", "CFB Team-Season Points Per Game", "team-season"),
     ],
   },
   {
     id: "dominance",
     metrics: [
-      metric("nfl-career-passing-touchdowns", "NFL", "nfl-qb-career", "NFL QB Career Passing TD"),
-      metric("nfl-career-rushing-touchdowns", "NFL", "nfl-rb-career", "NFL RB Career Rushing TD"),
-      metric("nfl-career-receiving-touchdowns", "NFL", "nfl-receiving-career", "NFL Career Receiving TD"),
-      metric("nfl-season-passing-touchdowns", "NFL", "nfl-qb-season", "NFL QB Season Passing TD"),
-      metric("nfl-season-interceptions", "NFL", "nfl-qb-season", "NFL QB Season Interceptions Thrown"),
-      metric("nfl-defensive-player-of-year-awards", "NFL", "nfl-defense-career", "NFL Defensive Player of the Year Awards"),
-      metric("nfl-career-sacks", "NFL", "nfl-defense-career", "NFL Career Sacks"),
-      metric("cfb-team-srs", "CFB", "cfb", "CFB Team-Season SRS"),
-      metric("cfb-team-sos", "CFB", "cfb", "CFB Team-Season Strength of Schedule"),
-      metric("cfb-team-losses", "CFB", "cfb", "CFB Team-Season Losses"),
+      metric("nfl-season-passing-touchdowns", "NFL", "nfl-qb-season", "NFL QB Season Passing TD", "peak-season"),
+      metric("nfl-season-interceptions", "NFL", "nfl-qb-season", "NFL QB Season Interceptions Thrown", "peak-season"),
+      metric("nfl-team-defensive-sacks", "NFL", "nfl-team-season", "NFL Team-Season Defensive Sacks", "team-season"),
+      metric("nfl-team-defensive-interceptions", "NFL", "nfl-team-season", "NFL Team-Season Defensive Interceptions", "team-season"),
+      metric("nfl-team-postseason-wins", "NFL", "nfl-team-season", "NFL Team-Season Postseason Wins", "accomplishment"),
+      metric("nfl-career-passing-touchdowns", "NFL", "nfl-qb-career", "NFL QB Career Passing TD", "career-special"),
+      metric("nfl-career-rushing-touchdowns", "NFL", "nfl-rb-career", "NFL RB Career Rushing TD", "career-special"),
+      metric("nfl-career-receiving-touchdowns", "NFL", "nfl-receiving-career", "NFL Career Receiving TD", "career-special"),
+      metric("cfb-best-season-passing-touchdowns", "CFB", "cfb-player-peak", "CFB Player Peak-Season Passing TD", "peak-season"),
+      metric("cfb-best-season-rushing-touchdowns", "CFB", "cfb-player-peak", "CFB Player Peak-Season Rushing TD", "peak-season"),
+      metric("cfb-best-season-receiving-touchdowns", "CFB", "cfb-player-peak", "CFB Player Peak-Season Receiving TD", "peak-season"),
+      metric("cfb-best-season-sacks", "CFB", "cfb-player-peak", "CFB Player Peak-Season Sacks", "peak-season"),
+      metric("cfb-best-season-defensive-interceptions", "CFB", "cfb-player-peak", "CFB Player Peak-Season Defensive Interceptions", "peak-season"),
+      metric("cfb-heisman-awards", "CFB", "cfb-player-peak", "CFB Heisman Trophies", "accomplishment"),
+      metric("cfb-team-point-differential", "CFB", "cfb", "CFB Team-Season Point Differential", "team-season"),
+      metric("cfb-team-postseason-wins", "CFB", "cfb", "CFB Team-Season Postseason Wins", "accomplishment"),
     ],
   },
 ] as const;
 
 function metricBoardEnabled(board: FootballHitTheNumberMetricBoard) {
-  return board.group !== "nfl-defense-career" && board.metricId !== "cfb-team-losses";
+  return metricSubjects(board).length >= FOOTBALL_HIT_THE_NUMBER_MIN_PICKS;
 }
+
+export const footballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = dedupeSemanticSubjects(
+  domains.flatMap((domain) => domain.metrics.filter(metricBoardEnabled).flatMap(metricSubjects)),
+);
 
 export const FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG = domains.flatMap((domain) =>
   domain.metrics.filter(metricBoardEnabled).map((row) => ({
@@ -293,6 +385,8 @@ export const FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG = domains.flatMap((domain) =
     league: row.league,
     group: row.group,
     boardLabel: row.boardLabel,
+    contentKind: row.contentKind,
+    weight: row.weight,
   })),
 );
 
@@ -479,6 +573,8 @@ function pickOptionsFor(
   board: FootballHitTheNumberMetricBoard,
 ) {
   if (!metricBoardEnabled(board)) return [];
+  if (formatId !== "classic" && board.contentKind === "accomplishment") return [];
+  if (formatId === "build-the-team" && board.contentKind === "career-special") return [];
   if (formatId === "one-from-each") {
     if (board.group !== "cfb") return [];
     const subjects = oneFromEachSubjects(board);
@@ -489,7 +585,11 @@ function pickOptionsFor(
   }
 
   if (formatId === "build-the-team") {
-    return metricSubjects(board).length >= requiredPoolSize(boardType, 5) ? [5] : [];
+    const minimum = Math.max(
+      FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH,
+      requiredPoolSize(boardType, 5),
+    );
+    return metricSubjects(board).length >= minimum ? [5] : [];
   }
 
   return FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE
@@ -556,11 +656,24 @@ export function footballHitTheNumberSelectionSatisfies(
   return assignSlots(slotsForPlan(plan), selectedSubjectIds.map(subjectFor), plan.metricId);
 }
 
+function minimumGoodUnderScore(plan: FootballHitTheNumberPlan) {
+  const fact = getFootballFact(plan.subjectIds[0]!, plan.metricId);
+  if (!fact) return 90;
+  const resolution = 10 ** -fact.definition.decimals;
+  return Math.min(90, hitTheNumberScore({
+    status: "under",
+    target: plan.target,
+    distance: resolution,
+    pickCount: plan.pickCount,
+  }));
+}
+
 export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan): FootballHitTheNumberQualityResult {
   let legalSelectionCount = 0;
   let hasGoodUnder = false;
   let hasMiddlingOutcome = false;
   let hasMeaningfulBust = false;
+  const goodUnderMinimum = minimumGoodUnderScore(plan);
 
   const inspectSelection = (subjectIds: readonly string[]) => {
     if (!footballHitTheNumberSelectionSatisfies(plan, subjectIds)) return false;
@@ -574,7 +687,7 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
       distance: Math.abs(plan.target - total),
       pickCount: plan.pickCount,
     });
-    if (status === "under" && score >= 90) hasGoodUnder = true;
+    if (status === "under" && score >= goodUnderMinimum) hasGoodUnder = true;
     if (
       (status === "under" && score >= 75 && score <= 89)
       || (status === "bust" && score >= 66)
@@ -718,6 +831,19 @@ function buildCandidate(
   };
 }
 
+function viableDomainChoices(
+  league: FootballHitTheNumberLeague,
+  formatId: FootballHitTheNumberFormatId,
+  boardType: FootballHitTheNumberBoardType,
+) {
+  return domains
+    .map((domain) => ({
+      domain,
+      boards: viableMetricBoards(domain, league, formatId, boardType),
+    }))
+    .filter((choice) => choice.boards.length > 0);
+}
+
 export function createFootballHitTheNumberPlan(
   seed: string,
   boardType: FootballHitTheNumberBoardType = FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE,
@@ -727,12 +853,14 @@ export function createFootballHitTheNumberPlan(
   const league: FootballHitTheNumberLeague = formatId === "one-from-each"
     ? "CFB"
     : choiceRandom() < 0.5 ? "NFL" : "CFB";
-  const viableDomains = domains.filter((domain) => viableMetricBoards(domain, league, formatId, boardType).length > 0);
-  const domain = viableDomains[Math.floor(choiceRandom() * viableDomains.length)];
-  if (!domain) throw new Error(`Football Hit the Number has no viable ${league} ${formatId} domain.`);
-  const leagueMetrics = viableMetricBoards(domain, league, formatId, boardType);
-  const metricBoard = leagueMetrics[Math.floor(choiceRandom() * leagueMetrics.length)];
-  if (!metricBoard) throw new Error(`Football Hit the Number has no viable ${league} ${domain.id} metric.`);
+  const choices = viableDomainChoices(league, formatId, boardType);
+  if (!choices.length) throw new Error(`Football Hit the Number has no viable ${league} ${formatId} metrics.`);
+  const selected = choices[Math.floor(choiceRandom() * choices.length)]!;
+  const domain = selected.domain;
+  const metricBoard = weightedValue(
+    selected.boards.map((board) => ({ value: board, weight: board.weight })),
+    choiceRandom,
+  );
   const pickCount = pickCountFor(formatId, boardType, metricBoard, choiceRandom);
   if (pickCount == null) {
     throw new Error(`Football Hit the Number does not have enough ${metricBoard.metricId} depth for ${boardType}.`);
