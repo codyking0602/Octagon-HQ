@@ -17,7 +17,7 @@ const careerSpecialGroups = new Set(["nfl-qb-career", "nfl-rb-career", "nfl-rece
 
 describe("Football Hit the Number content foundation", () => {
   it("makes peak seasons and team seasons core while keeping raw career totals special", () => {
-    expect(FOOTBALL_HIT_THE_NUMBER_VERSION).toBe("football-hit-the-number-v3");
+    expect(FOOTBALL_HIT_THE_NUMBER_VERSION).toBe("football-hit-the-number-v4");
     expect(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["peak-season"])
       .toBeGreaterThan(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["career-special"]);
     expect(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["team-season"])
