@@ -831,14 +831,17 @@ function buildCandidate(
   };
 }
 
-function viableMetricChoices(
+function viableDomainChoices(
   league: FootballHitTheNumberLeague,
   formatId: FootballHitTheNumberFormatId,
   boardType: FootballHitTheNumberBoardType,
 ) {
-  return domains.flatMap((domain) =>
-    viableMetricBoards(domain, league, formatId, boardType).map((board) => ({ domain, board })),
-  );
+  return domains
+    .map((domain) => ({
+      domain,
+      boards: viableMetricBoards(domain, league, formatId, boardType),
+    }))
+    .filter((choice) => choice.boards.length > 0);
 }
 
 export function createFootballHitTheNumberPlan(
@@ -850,14 +853,14 @@ export function createFootballHitTheNumberPlan(
   const league: FootballHitTheNumberLeague = formatId === "one-from-each"
     ? "CFB"
     : choiceRandom() < 0.5 ? "NFL" : "CFB";
-  const choices = viableMetricChoices(league, formatId, boardType);
+  const choices = viableDomainChoices(league, formatId, boardType);
   if (!choices.length) throw new Error(`Football Hit the Number has no viable ${league} ${formatId} metrics.`);
-  const selected = weightedValue(
-    choices.map((choice) => ({ value: choice, weight: choice.board.weight })),
+  const selected = choices[Math.floor(choiceRandom() * choices.length)]!;
+  const domain = selected.domain;
+  const metricBoard = weightedValue(
+    selected.boards.map((board) => ({ value: board, weight: board.weight })),
     choiceRandom,
   );
-  const domain = selected.domain;
-  const metricBoard = selected.board;
   const pickCount = pickCountFor(formatId, boardType, metricBoard, choiceRandom);
   if (pickCount == null) {
     throw new Error(`Football Hit the Number does not have enough ${metricBoard.metricId} depth for ${boardType}.`);
