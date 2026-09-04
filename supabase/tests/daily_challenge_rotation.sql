@@ -22,7 +22,8 @@ begin
   select schedule.*
   into v_source_schedule
   from private.daily_challenge_schedule_versions schedule
-  where schedule.version = 'play-rotation-v1';
+  where schedule.version = 'play-rotation-v1'
+    and schedule.sport = 'ufc';
 
   if v_source_schedule.version is null
     or v_source_schedule.time_zone <> 'America/Chicago'
@@ -34,7 +35,8 @@ begin
   select schedule.*
   into v_reroll_schedule
   from private.daily_challenge_schedule_versions schedule
-  where schedule.version = 'play-rotation-v2';
+  where schedule.version = 'play-rotation-v2'
+    and schedule.sport = 'ufc';
 
   if v_reroll_schedule.version is null
     or v_reroll_schedule.time_zone is distinct from v_source_schedule.time_zone
@@ -95,12 +97,16 @@ begin
   select min(schedule.starts_on)
   into v_reroll_next_starts_on
   from private.daily_challenge_schedule_versions schedule
-  where schedule.starts_on > v_reroll_schedule.starts_on;
+  where schedule.sport = 'ufc'
+    and schedule.starts_on > v_reroll_schedule.starts_on;
 
   if exists (
     select 1
     from private.daily_challenges daily
-    where daily.schedule_version <> v_reroll_schedule.version
+    join private.daily_challenge_schedule_versions daily_schedule
+      on daily_schedule.version = daily.schedule_version
+    where daily_schedule.sport = 'ufc'
+      and daily.schedule_version <> v_reroll_schedule.version
       and daily.central_day >= v_reroll_schedule.starts_on
       and (
         v_reroll_next_starts_on is null
@@ -113,6 +119,7 @@ begin
   select schedule.*
   into v_active_schedule
   from private.daily_challenge_schedule_versions schedule
+  where schedule.sport = 'ufc'
   order by schedule.starts_on desc, schedule.created_at desc, schedule.version desc
   limit 1;
 
