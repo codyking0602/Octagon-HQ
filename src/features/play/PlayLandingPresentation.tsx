@@ -8,12 +8,18 @@ export const PLAY_LANDING_COMMON_GAME_ORDER = [
   "hit-the-number",
 ] as const satisfies readonly PlayGameId[];
 
+export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
+  "find-leader",
+  "wavelength",
+  "hit-the-number",
+] as const satisfies readonly PlayGameId[];
+
 export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies PlayGameId;
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
   return sport === "ufc"
     ? [PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]
-    : PLAY_LANDING_COMMON_GAME_ORDER;
+    : PLAY_LANDING_FOOTBALL_GAME_ORDER;
 }
 
 export function playLandingDestination(sport: PlaySport, gameId: PlayGameId) {
