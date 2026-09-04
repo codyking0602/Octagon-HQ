@@ -149,6 +149,11 @@ export const FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS = {
 
 export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH = 20;
 
+function careerSpecialSubjectEligible(subject: FootballSubjectProfile) {
+  return subject.casualEligible
+    && (subject.recognizabilityTier === "A" || subject.recognizabilityTier === "B");
+}
+
 const decades = (...values: number[]): FootballSubjectQuery[] => values.map((decade) => ({ decade }));
 const championSeasons = (...values: number[]): FootballSubjectQuery[] => values.map((season) => ({
   league: "CFB",
@@ -188,10 +193,10 @@ function hasScope(subjectId: string, scope: FootballFactScope) {
 }
 
 function groupAcceptsSubject(group: FootballHitTheNumberSubjectGroup, subject: FootballSubjectProfile) {
-  if (group === "nfl-qb-career") return subject.kind === "player-career" && subject.league === "NFL" && subject.position === "QB" && hasScope(subject.id, "nfl-player-career");
-  if (group === "nfl-rb-career") return subject.kind === "player-career" && subject.league === "NFL" && subject.position === "RB" && hasScope(subject.id, "nfl-player-career");
-  if (group === "nfl-receiving-career") return subject.kind === "player-career" && subject.league === "NFL" && (subject.position === "WR" || subject.position === "TE") && hasScope(subject.id, "nfl-player-career");
-  if (group === "nfl-defense-career") return subject.kind === "player-career" && subject.league === "NFL" && (subject.position === "DL" || subject.position === "LB" || subject.position === "DB") && hasScope(subject.id, "nfl-player-career");
+  if (group === "nfl-qb-career") return subject.kind === "player-career" && subject.league === "NFL" && subject.position === "QB" && careerSpecialSubjectEligible(subject) && hasScope(subject.id, "nfl-player-career");
+  if (group === "nfl-rb-career") return subject.kind === "player-career" && subject.league === "NFL" && subject.position === "RB" && careerSpecialSubjectEligible(subject) && hasScope(subject.id, "nfl-player-career");
+  if (group === "nfl-receiving-career") return subject.kind === "player-career" && subject.league === "NFL" && (subject.position === "WR" || subject.position === "TE") && careerSpecialSubjectEligible(subject) && hasScope(subject.id, "nfl-player-career");
+  if (group === "nfl-defense-career") return subject.kind === "player-career" && subject.league === "NFL" && (subject.position === "DL" || subject.position === "LB" || subject.position === "DB") && careerSpecialSubjectEligible(subject) && hasScope(subject.id, "nfl-player-career");
   if (group === "nfl-qb-season") return subject.kind === "player-season" && subject.league === "NFL" && subject.position === "QB" && hasScope(subject.id, "nfl-player-season");
   if (group === "nfl-team-season") return subject.kind === "team-season" && subject.league === "NFL" && hasScope(subject.id, "nfl-team-season");
   if (group === "cfb-player-peak") return subject.kind === "player-career" && subject.league === "CFB" && hasScope(subject.id, "cfb-player-career");
