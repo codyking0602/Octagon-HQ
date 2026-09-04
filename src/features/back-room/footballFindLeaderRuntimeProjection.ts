@@ -20,6 +20,9 @@ interface RuntimeProjectionSubject {
   position?: FootballCanonicalPosition;
   season?: number;
   school?: string;
+  teamCode?: string;
+  programName?: string;
+  sourceProgramId?: string;
   startSeason?: number;
   endSeason?: number;
   tier: FootballRecognizabilityTier;
@@ -67,6 +70,27 @@ export const footballFindLeaderProjectedAdditionalSubjects: readonly FootballCan
       ? [Math.floor(subject.season / 10) * 10]
       : activeDecades(subject.startSeason, subject.endSeason),
   }));
+
+export function footballFindLeaderProjectedNflTeamCode(subjectId: string): string | null {
+  const subject = rawSubjectById.get(subjectId);
+  if (!subject || subject.league !== "NFL") return null;
+  if (subject.kind === "player-season") return subject.teamCode?.trim() || null;
+  if (subject.kind !== "team-season") return null;
+  const match = /^\d{4}:([^:]+)$/.exec(subject.sourceId);
+  return match?.[1]?.trim() || null;
+}
+
+export function footballFindLeaderProjectedCfbTeamMedia(subjectId: string): { programName: string; sourceProgramId: string } | null {
+  const subject = rawSubjectById.get(subjectId);
+  if (!subject || subject.kind !== "team-season" || subject.league !== "CFB") return null;
+  if (!subject.programName || !subject.sourceProgramId) return null;
+  return { programName: subject.programName, sourceProgramId: subject.sourceProgramId };
+}
+
+export const footballFindLeaderProjectedCfbTeamMediaOwners = rawSubjects.flatMap((subject) => {
+  if (subject.kind !== "team-season" || subject.league !== "CFB" || !subject.programName || !subject.sourceProgramId) return [];
+  return [{ programName: subject.programName, sourceProgramId: subject.sourceProgramId }];
+});
 
 export function footballFindLeaderProjectedKnowledgeOverride(subjectId: string): FootballSubjectKnowledgeOverride | null {
   const subject = rawSubjectById.get(subjectId);

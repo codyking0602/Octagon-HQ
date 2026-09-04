@@ -11,8 +11,18 @@ function slugify(value: string) {
     .replace(/^-|-$/g, "");
 }
 
+const NFL_TEAM_MEDIA_CODE_ALIASES: Readonly<Record<string, string>> = {
+  la: "lar",
+  was: "wsh",
+};
+
+export function footballNflTeamMediaCode(teamCode: string): string {
+  const normalized = teamCode.trim().toLowerCase();
+  return NFL_TEAM_MEDIA_CODE_ALIASES[normalized] ?? normalized;
+}
+
 export function footballNflTeamMediaId(teamCode: string): FootballTeamMediaId {
-  return `nfl:${teamCode.toLowerCase()}`;
+  return `nfl:${footballNflTeamMediaCode(teamCode)}`;
 }
 
 export function footballCfbTeamMediaId(teamId: string): FootballTeamMediaId {
