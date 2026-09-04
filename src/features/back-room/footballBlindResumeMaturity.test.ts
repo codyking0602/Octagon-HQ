@@ -3,14 +3,12 @@ import {
   FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES,
   FOOTBALL_BLIND_RESUME_ROUNDS,
   buildFootballBlindResumeRounds,
+  footballBlindResumeCandidatesForPack,
   footballBlindResumeMatchups,
   footballBlindResumeSubjectIdentityId,
   resolvedFootballBlindResumeMatchups,
 } from "./footballBlindResumeModel";
-import {
-  getFootballRankFivePack,
-  type FootballRankFivePackId,
-} from "./footballRankFiveModel";
+import type { FootballRankFivePackId } from "./footballRankFiveModel";
 
 const EXPECTED_FAMILIES: readonly FootballRankFivePackId[] = [
   "nfl-quarterbacks",
@@ -42,7 +40,7 @@ function expectValidCard(rounds: ReturnType<typeof buildFootballBlindResumeRound
   expect([nfl, cfb].sort((left, right) => left - right)).toEqual([2, 3]);
 }
 
-describe("Football Blind Resume PR4 behavior / PR5 evidence maturity", () => {
+describe("Football Blind Resume deep factual maturity", () => {
   it("preserves a broad comparison universe across every approved family", () => {
     expect(footballBlindResumeMatchups.length).toBeGreaterThanOrEqual(80);
     const counts = new Map<FootballRankFivePackId, number>();
@@ -52,11 +50,11 @@ describe("Football Blind Resume PR4 behavior / PR5 evidence maturity", () => {
     for (const packId of EXPECTED_FAMILIES) expect(counts.get(packId) ?? 0).toBeGreaterThanOrEqual(5);
   });
 
-  it("keeps winner ownership exclusively on canonical Rank Five ratings", () => {
+  it("resolves every winner from the same canonical comparison candidate pool that supplied membership", () => {
     for (const matchup of resolvedFootballBlindResumeMatchups()) {
-      const pack = getFootballRankFivePack(matchup.packId);
-      const left = pack.items.find((item) => item.id === matchup.leftId)!;
-      const right = pack.items.find((item) => item.id === matchup.rightId)!;
+      const candidates = footballBlindResumeCandidatesForPack(matchup.packId);
+      const left = candidates.find((item) => item.id === matchup.leftId)!;
+      const right = candidates.find((item) => item.id === matchup.rightId)!;
       expect(matchup.leftRating).toBe(left.rating);
       expect(matchup.rightRating).toBe(right.rating);
       expect(left.rating).not.toBe(right.rating);
@@ -88,7 +86,7 @@ describe("Football Blind Resume PR4 behavior / PR5 evidence maturity", () => {
   it("builds deterministic mixed casual cards without forcing the same difficulty staircase", () => {
     const difficultySequences = new Set<string>();
     for (let index = 0; index < 80; index += 1) {
-      const seed = `pr4-casual-${index}`;
+      const seed = `pr11-casual-${index}`;
       const first = buildFootballBlindResumeRounds(seed);
       const second = buildFootballBlindResumeRounds(seed);
       expect(first.map((round) => round.id)).toEqual(second.map((round) => round.id));
@@ -103,7 +101,7 @@ describe("Football Blind Resume PR4 behavior / PR5 evidence maturity", () => {
 
   it("uses the same engine for the tougher Daily authored mix: two Villains, two Hard, one Medium", () => {
     for (let index = 0; index < 80; index += 1) {
-      const rounds = buildFootballBlindResumeRounds(`pr4-daily-${index}`, FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES);
+      const rounds = buildFootballBlindResumeRounds(`pr11-daily-${index}`, FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES);
       expectValidCard(rounds);
       expect(rounds.map((round) => round.difficulty)).toEqual([...FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES]);
     }

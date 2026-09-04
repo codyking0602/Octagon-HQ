@@ -32,7 +32,7 @@ import {
 } from "./footballWavelengthModel";
 
 const COMPARISON_RUNS_PER_PACK = 384;
-const BLIND_RESUME_RUNS = 1_200;
+const BLIND_RESUME_RUNS = 8_000;
 const WAVELENGTH_RUNS = 2_000;
 const HIT_THE_NUMBER_RUNS = 1_000;
 const FIND_LEADER_RUNS = 1_600;
