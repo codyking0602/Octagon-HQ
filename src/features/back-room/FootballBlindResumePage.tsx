@@ -8,11 +8,13 @@ import {
   FOOTBALL_BLIND_RESUME_GAME_ID,
   FOOTBALL_BLIND_RESUME_REVEAL_COUNTS,
   createFootballBlindResumeRun,
+  footballBlindResumeAnswerLabel,
   footballBlindResumeDifficultyLabel,
   footballBlindResumeNextRevealCount,
   footballBlindResumeRoundPoints,
   footballBlindResumeTier,
   resolvedFootballBlindResumeMatchups,
+  type FootballBlindResumeAnswer,
   type FootballBlindResumeRevealCount,
   type FootballBlindResumeRun,
 } from "./footballBlindResumeModel";
@@ -25,10 +27,9 @@ import {
   footballCuratedIdentity,
 } from "./footballChallengeRuntime";
 
-type PickSide = "left" | "right";
-
 interface RoundPick {
-  pickedId: string;
+  pickedAnswer: FootballBlindResumeAnswer;
+  pickedId: string | null;
   correct: boolean;
   revealedCount: FootballBlindResumeRevealCount;
   points: number;
@@ -69,7 +70,7 @@ export default function FootballBlindResumePage() {
   const [run, setRun] = useState<FootballBlindResumeRun>(() => sharedRun ?? createFootballBlindResumeRun());
   const [roundIndex, setRoundIndex] = useState(0);
   const [picks, setPicks] = useState<RoundPick[]>([]);
-  const [pickedSide, setPickedSide] = useState<PickSide | null>(null);
+  const [pickedAnswer, setPickedAnswer] = useState<FootballBlindResumeAnswer | null>(null);
   const [revealedCount, setRevealedCount] = useState<FootballBlindResumeRevealCount>(OPENING_REVEAL);
   const [challengeStatus, setChallengeStatus] = useState("");
   const round = run.rounds[roundIndex];
@@ -88,7 +89,7 @@ export default function FootballBlindResumePage() {
     setRun(nextRun);
     setRoundIndex(0);
     setPicks([]);
-    setPickedSide(null);
+    setPickedAnswer(null);
     setRevealedCount(OPENING_REVEAL);
     setChallengeStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -103,12 +104,13 @@ export default function FootballBlindResumePage() {
     else startNew();
   }
 
-  function choose(side: PickSide) {
-    if (!round || pickedSide) return;
-    const pickedId = side === "left" ? round.leftId : round.rightId;
-    const isCorrect = pickedId === round.winnerId;
-    setPickedSide(side);
+  function choose(answer: FootballBlindResumeAnswer) {
+    if (!round || pickedAnswer) return;
+    const pickedId = answer === "left" ? round.leftId : answer === "right" ? round.rightId : null;
+    const isCorrect = answer === round.correctAnswer;
+    setPickedAnswer(answer);
     setPicks((current) => [...current, {
+      pickedAnswer: answer,
       pickedId,
       correct: isCorrect,
       revealedCount,
@@ -117,7 +119,7 @@ export default function FootballBlindResumePage() {
   }
 
   function revealMore() {
-    if (pickedSide) return;
+    if (pickedAnswer) return;
     const next = footballBlindResumeNextRevealCount(revealedCount);
     if (next !== null) setRevealedCount(next);
   }
@@ -130,6 +132,7 @@ export default function FootballBlindResumePage() {
       record: { wins, losses: nextPicks.length - wins },
       matchupIds: run.rounds.map((item) => item.id),
       picks: nextPicks.map((pick) => ({
+        pickedAnswer: pick.pickedAnswer,
         pickedId: pick.pickedId,
         correct: pick.correct,
         revealedCount: pick.revealedCount,
@@ -139,7 +142,7 @@ export default function FootballBlindResumePage() {
   }
 
   function advance() {
-    if (!round || !pickedSide) return;
+    if (!round || !pickedAnswer) return;
     const nextIndex = roundIndex + 1;
     if (nextIndex === run.rounds.length) {
       const payload = resultPayload();
@@ -149,7 +152,7 @@ export default function FootballBlindResumePage() {
       }
     }
     setRoundIndex(nextIndex);
-    setPickedSide(null);
+    setPickedAnswer(null);
     setRevealedCount(OPENING_REVEAL);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -159,7 +162,7 @@ export default function FootballBlindResumePage() {
     setChallengeStatus("");
     const status = await beginChallenge({
       gameId: "blind-resume",
-      gameVersion: "football-blind-resume-v3",
+      gameVersion: "football-blind-resume-v4",
       gameTitle: "Football Blind Resume",
       summary: "Five rounds · same hidden resumes",
       setup: asChallengeJson({
@@ -167,7 +170,11 @@ export default function FootballBlindResumePage() {
         rounds: run.rounds.map((item) => ({
           fighterA: { id: item.leftId, name: item.leftName },
           fighterB: { id: item.rightId, name: item.rightName },
+          correctAnswer: item.correctAnswer,
           winnerId: item.winnerId,
+          leftTier: item.leftTier,
+          rightTier: item.rightTier,
+          comparisonOwner: item.comparisonOwner,
           difficulty: item.difficulty,
         })),
       }),
@@ -183,7 +190,7 @@ export default function FootballBlindResumePage() {
 
   if (complete) {
     return (
-      <div className="page football-debate-page football-blind-resume-page">
+      <div className="page football-debate-page football-blind-resume-page" data-game-family="blind-resume" data-sport="football">
         {profileMatch.creator ? (
           <section className="challenge-game-banner">
             <span>PROFILE CHALLENGE</span>
@@ -201,13 +208,16 @@ export default function FootballBlindResumePage() {
         <section className="football-blind-resume-recap">
           <header>
             <p className="eyebrow">THE FIVE CALLS</p>
-            <h2>How quickly did you see the better resume?</h2>
+            <h2>How quickly did you read each hidden resume?</h2>
           </header>
           <div>
             {run.rounds.map((item, index) => {
               const pick = picks[index];
-              const winnerName = item.winnerId === item.leftId ? item.leftName : item.rightName;
-              const pickedName = pick?.pickedId === item.leftId ? item.leftName : item.rightName;
+              const pickedName = pick?.pickedAnswer === "tie"
+                ? "SAME TIER"
+                : pick?.pickedId === item.leftId
+                  ? item.leftName
+                  : item.rightName;
               return (
                 <article key={item.id}>
                   <b>{index + 1}</b>
@@ -216,7 +226,7 @@ export default function FootballBlindResumePage() {
                     <strong>{item.leftName} vs. {item.rightName}</strong>
                   </span>
                   <em className={pick?.correct ? "is-correct" : "is-wrong"}>
-                    {pick?.correct ? "RIGHT" : "MISS"} · +{pick?.points ?? 0} · PICK {pickedName} · WINNER {winnerName}
+                    {pick?.correct ? "RIGHT" : "MISS"} · +{pick?.points ?? 0} · PICK {pickedName} · VERDICT {footballBlindResumeAnswerLabel(item.correctAnswer)}
                   </em>
                 </article>
               );
@@ -238,16 +248,15 @@ export default function FootballBlindResumePage() {
   if (!round) return null;
 
   const latestPick = picks[picks.length - 1];
-  const pickedId = pickedSide === "left" ? round.leftId : pickedSide === "right" ? round.rightId : null;
-  const pickedCorrect = pickedId === round.winnerId;
-  const winnerSide: PickSide = round.winnerId === round.leftId ? "left" : "right";
-  const winnerName = winnerSide === "left" ? round.leftName : round.rightName;
-  const winnerSubtitle = winnerSide === "left" ? round.leftSubtitle : round.rightSubtitle;
+  const pickedCorrect = pickedAnswer === round.correctAnswer;
   const nextReveal = footballBlindResumeNextRevealCount(revealedCount);
   const difficultyLabel = footballBlindResumeDifficultyLabel(round.difficulty);
+  const verdictLabel = footballBlindResumeAnswerLabel(round.correctAnswer);
+  const winnerName = round.correctAnswer === "left" ? round.leftName : round.correctAnswer === "right" ? round.rightName : "SAME TIER";
+  const winnerSubtitle = round.correctAnswer === "left" ? round.leftSubtitle : round.correctAnswer === "right" ? round.rightSubtitle : `${round.leftTier.toUpperCase()} · ${round.rightTier.toUpperCase()}`;
 
   return (
-    <div className="page football-debate-page football-blind-resume-page">
+    <div className="page football-debate-page football-blind-resume-page" data-game-family="blind-resume" data-sport="football">
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
@@ -272,9 +281,9 @@ export default function FootballBlindResumePage() {
 
       <section className="football-blind-resume-card">
         <header>
-          <div><span>RESUME A</span><strong>{pickedSide ? round.leftName : "?"}</strong></div>
+          <div><span>RESUME A</span><strong>{pickedAnswer ? round.leftName : "?"}</strong></div>
           <b>VS</b>
-          <div><span>RESUME B</span><strong>{pickedSide ? round.rightName : "?"}</strong></div>
+          <div><span>RESUME B</span><strong>{pickedAnswer ? round.rightName : "?"}</strong></div>
         </header>
 
         <div className="football-blind-resume-stats" aria-label="Football Blind Resume evidence ladder">
@@ -290,7 +299,7 @@ export default function FootballBlindResumePage() {
           })}
         </div>
 
-        {!pickedSide ? (
+        {!pickedAnswer ? (
           <>
             <div className="football-blind-resume-stakes">
               <span>{revealedCount} OF 8 EVIDENCE SHOWN</span>
@@ -299,6 +308,7 @@ export default function FootballBlindResumePage() {
             </div>
             <div className="football-blind-resume-picks">
               <button type="button" onClick={() => choose("left")}>PICK A</button>
+              <button type="button" onClick={() => choose("tie")}>SAME TIER</button>
               <button type="button" onClick={() => choose("right")}>PICK B</button>
             </div>
             {nextReveal !== null ? (
@@ -310,25 +320,25 @@ export default function FootballBlindResumePage() {
         ) : (
           <>
             <section className="football-blind-resume-identities" aria-label="Football Blind Resume identities">
-              <article className={winnerSide === "left" ? "is-winner" : ""}>
+              <article className={round.correctAnswer === "left" || round.correctAnswer === "tie" ? "is-winner" : ""}>
                 <FootballSubjectVisual
                   item={{ id: round.leftId, name: round.leftName, league: getLeague(round.packId) }}
                   packId={round.packId}
                 />
-                <span><small>RESUME A</small><strong>{round.leftName}</strong></span>
+                <span><small>RESUME A · {round.leftTier.toUpperCase()}</small><strong>{round.leftName}</strong></span>
               </article>
-              <article className={winnerSide === "right" ? "is-winner" : ""}>
+              <article className={round.correctAnswer === "right" || round.correctAnswer === "tie" ? "is-winner" : ""}>
                 <FootballSubjectVisual
                   item={{ id: round.rightId, name: round.rightName, league: getLeague(round.packId) }}
                   packId={round.packId}
                 />
-                <span><small>RESUME B</small><strong>{round.rightName}</strong></span>
+                <span><small>RESUME B · {round.rightTier.toUpperCase()}</small><strong>{round.rightName}</strong></span>
               </article>
             </section>
             <section className={`football-blind-resume-reveal ${pickedCorrect ? "is-correct" : "is-wrong"}`} aria-live="polite">
               <p className="eyebrow">{pickedCorrect ? "RIGHT CALL" : "MISSED IT"}</p>
               <h2>{winnerName}</h2>
-              <p>{winnerSubtitle}. Football HQ has this resume higher.</p>
+              <p>{winnerSubtitle}. Canonical Football comparison verdict: {verdictLabel}.</p>
               <strong>+{latestPick?.points ?? 0} POINTS · LOCKED AT {latestPick?.revealedCount ?? 0}/8</strong>
               <button type="button" onClick={advance}>{roundIndex === 4 ? "SEE FINAL SCORE" : "NEXT ROUND"}</button>
             </section>
