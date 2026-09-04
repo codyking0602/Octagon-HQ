@@ -369,8 +369,10 @@
   display: block;
   width: min(82%, 104px);
   height: min(82%, 104px);
+  margin: auto;
   object-fit: contain;
-  transform: translateY(12px);
+  object-position: center;
+  transform: translateY(18px);
 }
 
 .football-today-page .football-blind-resume-logo > b {
