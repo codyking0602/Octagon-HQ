@@ -286,9 +286,42 @@ function evidenceSubjectQuery(matchup: FootballBlindResumeMatchup, subjectId: st
   };
 }
 
+function resolveProgramEraAlias(matchup: FootballBlindResumeMatchup, subjectId: string) {
+  if (matchup.packId !== "college-program-eras" || matchup.archetype !== "program-era") return null;
+  const eraMatch = /^(.*)-(\d{4})-(\d{4})$/.exec(subjectId);
+  if (!eraMatch) return null;
+
+  const schoolKey = normalizedSubjectLabel(eraMatch[1]!);
+  const requestedStart = Number(eraMatch[2]);
+  const requestedEnd = Number(eraMatch[3]);
+  const enclosing = queryFootballSubjects(evidenceSubjectQuery(matchup, subjectId))
+    .filter((subject) => (
+      subject.school
+      && normalizedSubjectLabel(subject.school) === schoolKey
+      && subject.startSeason != null
+      && subject.endSeason != null
+      && subject.startSeason <= requestedStart
+      && subject.endSeason >= requestedEnd
+    ));
+  const uniqueById = [...new Map(enclosing.map((subject) => [subject.id, subject])).values()]
+    .sort((left, right) => (
+      ((left.endSeason ?? 0) - (left.startSeason ?? 0)) - ((right.endSeason ?? 0) - (right.startSeason ?? 0))
+      || left.id.localeCompare(right.id)
+    ));
+  if (!uniqueById.length) return null;
+  const shortestSpan = (uniqueById[0]!.endSeason ?? 0) - (uniqueById[0]!.startSeason ?? 0);
+  const tightest = uniqueById.filter((subject) => (
+    (subject.endSeason ?? 0) - (subject.startSeason ?? 0) === shortestSpan
+  ));
+  return tightest.length === 1 ? tightest[0]! : null;
+}
+
 function resolveEvidenceSubject(matchup: FootballBlindResumeMatchup, subjectId: string) {
   const direct = getFootballSubject(subjectId);
   if (direct) return direct;
+
+  const programEraAlias = resolveProgramEraAlias(matchup, subjectId);
+  if (programEraAlias) return programEraAlias;
 
   const targetName = evidenceSubjectNameKey(subjectId, matchup.archetype);
   const matches = queryFootballSubjects(evidenceSubjectQuery(matchup, subjectId))
