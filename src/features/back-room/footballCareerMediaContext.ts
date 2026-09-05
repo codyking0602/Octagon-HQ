@@ -9,6 +9,8 @@ import { footballRecognitionProjectionSubjectIdFor } from "./footballRecognizabi
 
 type CareerMediaProjection = {
   nflCareerTeamCodes?: readonly (readonly [subjectId: string, teamCode: string])[];
+  cfbCareerPrograms?: readonly (readonly [subjectId: string, programName: string])[];
+  cfbProgramMediaOwners?: readonly (readonly [programName: string, sourceProgramId: string])[];
 };
 
 type FootballCareerMediaSubject = {
@@ -20,18 +22,28 @@ type FootballCareerMediaSubject = {
 
 const projection = careerMediaJson as unknown as CareerMediaProjection;
 const nflCareerTeamCodeBySubjectId = new Map(projection.nflCareerTeamCodes ?? []);
+const cfbCareerProgramBySubjectId = new Map(projection.cfbCareerPrograms ?? []);
+
+export const footballCareerCfbProgramMediaOwners = (projection.cfbProgramMediaOwners ?? []).map(
+  ([programName, sourceProgramId]) => ({ programName, sourceProgramId }),
+);
 
 /**
  * Relationship-only media context. footballSubjectAssets remains the single public media owner.
- * CFB careers use their canonical school; source-backed NFL careers use the deterministic generated franchise context.
+ * Source-backed CFB careers use their pinned player-corpus program before canonical-school fallback;
+ * source-backed NFL careers use generated franchise context, with reviewed historical relationships outside 1999+.
  */
 export function footballCareerTeamMediaId(subject: FootballCareerMediaSubject): FootballTeamMediaId | null {
   if (subject.kind !== "player-career") return null;
-  if (subject.league === "CFB") {
-    return subject.school ? footballCfbTeamMediaId(subject.school) : null;
-  }
 
   const projectionId = footballRecognitionProjectionSubjectIdFor(subject as FootballCanonicalSubject);
+  if (subject.league === "CFB") {
+    const programName = cfbCareerProgramBySubjectId.get(subject.id)
+      ?? (projectionId ? cfbCareerProgramBySubjectId.get(projectionId) : undefined)
+      ?? subject.school;
+    return programName ? footballCfbTeamMediaId(programName) : null;
+  }
+
   const teamCode = nflCareerTeamCodeBySubjectId.get(subject.id)
     ?? (projectionId ? nflCareerTeamCodeBySubjectId.get(projectionId) : undefined);
   return teamCode ? footballNflTeamMediaId(teamCode) : null;
