@@ -35,4 +35,10 @@ describe("Football Hit the Number selection presentation", () => {
     expect(pageSource).toContain("subjectDisplayName(subject)");
     expect(pageSource).toContain("subjectDisplaySubtitle(subject, plan.metricId)");
   });
+
+  it("honors canonical light-backplate media treatment on the dark HTN surface", () => {
+    expect(pageSource).toContain('asset.darkSurfaceTreatment === "light-backplate"');
+    expect(pageSource).toContain('background: lightBackplate ? "#fff"');
+    expect(pageSource).not.toContain('subjectId.includes("ohio-state")');
+  });
 });
