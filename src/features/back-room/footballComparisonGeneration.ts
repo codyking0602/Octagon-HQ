@@ -354,6 +354,7 @@ function attemptBlindRankBoard(
   let eliteCount = 0;
   let badCount = 0;
   const targets = shuffleLineup([...archetype.targets], random);
+  const includeSparseExact = items.length > KEEP_CUT_SMALL_POOL_MAX;
 
   for (const targetTier of targets) {
     const forceAbsoluteTier = (
@@ -371,7 +372,7 @@ function attemptBlindRankBoard(
       MAX_BLIND_RANK_BAD,
       random,
       forceAbsoluteTier,
-      true,
+      includeSparseExact,
     );
     if (!picked) return null;
     selected.push(picked);
@@ -507,7 +508,7 @@ function desiredBadCount(
     case "one-superstar":
       return roll < 0.35 * depthScale ? 1 : 0;
     case "bottom-grind":
-      return availableBad >= 2 && roll < 0.5 ? 2 : 1;
+      return availableBad >= 2 ? 2 : 1;
     case "classic-spread":
       return 1;
   }
