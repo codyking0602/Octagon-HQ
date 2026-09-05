@@ -7,13 +7,14 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "predev": "npm run generate:football-cfb-player-seasons",
+    "predev": "npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe",
     "dev": "vite",
     "build": "npm run typecheck && npm run build:artifacts",
     "build:artifacts": "vite build && vite build --config vite.worker.config.ts && npm run verify:artifact",
     "preview": "vite preview",
     "generate:football-cfb-player-seasons": "node scripts/generate-football-cfb-player-season-recognition.mjs",
-    "generate:football-factual-universe": "node scripts/generate-football-factual-universe.mjs",
+    "generate:football-factual-universe": "node scripts/generate-football-factual-universe.mjs && npm run generate:football-hit-number-peak-seasons",
+    "generate:football-hit-number-peak-seasons": "node scripts/enrich-football-hit-number-peak-seasons.mjs",
     "generate:football-ledger-audit": "node scripts/generate-football-ledger-audit.mjs",
     "verify:football-ledger-audit": "node scripts/verify-football-ledger-audit-artifact.mjs",
     "pretypecheck": "npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit",
@@ -37,8 +38,6 @@
     "@types/node": "26.1.1",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
-    "@vitejs/plugin-react": "6.0.4",
-    "jsdom": "29.1.1",
     "typescript": "7.0.2",
     "vite": "8.1.5",
     "vitest": "4.1.10"
