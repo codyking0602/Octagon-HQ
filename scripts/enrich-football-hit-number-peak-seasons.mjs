@@ -19,6 +19,7 @@ const normalize = (value) => String(value ?? "")
   .normalize("NFKD")
   .replace(/[^a-z0-9]/g, "");
 const finite = (value) => typeof value === "number" && Number.isFinite(value);
+const n = (value) => finite(value) ? value : 0;
 const nearlyEqual = (left, right) => Math.abs(left - right) < 1e-9;
 
 const sourceFieldByMetric = new Map([
@@ -31,6 +32,7 @@ const sourceFieldByMetric = new Map([
   ["cfb-best-season-sacks", "sacks"],
   ["cfb-best-season-defensive-interceptions", "defensiveInterceptions"],
 ]);
+const sourceFields = [...new Set(sourceFieldByMetric.values())];
 
 // Reviewed context for peak seasons that predate the pinned 2014-2025 player-season corpus.
 // Values intentionally match the existing canonical Football factual ledger; this file does not own or alter facts.
@@ -82,26 +84,6 @@ const historicalOverrides = new Map([
   ["cfb-charles-woodson:cfb-best-season-defensive-interceptions", { value: 7, seasons: [1997] }],
 ]);
 
-const rowsByPlayerName = new Map();
-for (const row of playerSeasons) {
-  const key = normalize(row.playerName);
-  const rows = rowsByPlayerName.get(key) ?? [];
-  rows.push(row);
-  rowsByPlayerName.set(key, rows);
-}
-
-function sourceRowsFor(subject) {
-  let rows = (rowsByPlayerName.get(normalize(subject.name)) ?? []).filter((row) => (
-    (subject.startSeason == null || row.season >= subject.startSeason)
-    && (subject.endSeason == null || row.season <= subject.endSeason)
-  ));
-  if (subject.school) {
-    const schoolRows = rows.filter((row) => normalize(row.team) === normalize(subject.school));
-    if (schoolRows.length) rows = schoolRows;
-  }
-  return rows;
-}
-
 const gateServer = await createServer({
   root,
   configFile: false,
@@ -110,26 +92,85 @@ const gateServer = await createServer({
   appType: "custom",
 });
 
-let subjects;
+let queryFootballSubjects;
 let getFootballFact;
 try {
-  ({ queryFootballSubjects: subjects } = await gateServer.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts"));
+  ({ queryFootballSubjects } = await gateServer.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts"));
   ({ getFootballFact } = await gateServer.ssrLoadModule("/src/features/back-room/footballFactualStats.ts"));
 } finally {
   await gateServer.close();
 }
 
-const cfbPlayers = subjects({
+const cfbPlayers = queryFootballSubjects({
   league: "CFB",
   kind: "player-career",
   casualEligible: true,
   includeProjectedSourceSubjects: true,
 });
+const playersById = new Map(cfbPlayers.map((subject) => [subject.id, subject]));
+const playersBySourceId = new Map();
+const playersByName = new Map();
+for (const subject of cfbPlayers) {
+  for (const sourceKey of subject.sourceIdentityKeys ?? []) {
+    if (sourceKey.provider !== "cfbfastR") continue;
+    const rows = playersBySourceId.get(String(sourceKey.id)) ?? [];
+    rows.push(subject);
+    playersBySourceId.set(String(sourceKey.id), rows);
+  }
+  const nameKey = normalize(subject.name);
+  const rows = playersByName.get(nameKey) ?? [];
+  rows.push(subject);
+  playersByName.set(nameKey, rows);
+}
+
+function withinCareerWindow(row, subject) {
+  return (subject.startSeason == null || row.season >= subject.startSeason)
+    && (subject.endSeason == null || row.season <= subject.endSeason);
+}
+
+function unique(rows) {
+  return rows.length === 1 ? rows[0] : null;
+}
+
+function subjectForSourceRow(row) {
+  const sourceMatches = (playersBySourceId.get(String(row.sourcePlayerId)) ?? [])
+    .filter((subject) => withinCareerWindow(row, subject));
+  if (sourceMatches.length === 1) return sourceMatches[0];
+
+  const nameMatches = (playersByName.get(normalize(row.playerName)) ?? [])
+    .filter((subject) => withinCareerWindow(row, subject));
+  if (nameMatches.length === 1) return nameMatches[0];
+
+  const schoolMatches = nameMatches.filter((subject) => (
+    subject.school && normalize(subject.school) === normalize(row.team)
+  ));
+  return unique(schoolMatches);
+}
+
+const seasonTotalsBySubject = new Map();
+for (const row of playerSeasons) {
+  if (!Number.isInteger(row.season)) continue;
+  const subject = subjectForSourceRow(row);
+  if (!subject || !playersById.has(subject.id)) continue;
+  const bySeason = seasonTotalsBySubject.get(subject.id) ?? new Map();
+  const totals = bySeason.get(row.season) ?? Object.fromEntries(sourceFields.map((field) => [field, 0]));
+  for (const field of sourceFields) totals[field] += n(row[field]);
+  bySeason.set(row.season, totals);
+  seasonTotalsBySubject.set(subject.id, bySeason);
+}
+
+function sourceSeasonsFor(subjectId, sourceField, canonicalValue) {
+  const bySeason = seasonTotalsBySubject.get(subjectId);
+  if (!bySeason) return [];
+  return [...bySeason.entries()]
+    .filter(([, totals]) => nearlyEqual(totals[sourceField], canonicalValue))
+    .map(([season]) => season)
+    .sort((left, right) => left - right);
+}
+
 const contextRows = [];
 const missing = [];
-
 for (const subject of cfbPlayers) {
-  const sourceRows = sourceRowsFor(subject);
   for (const [metricId, sourceField] of sourceFieldByMetric) {
     const resolved = getFootballFact(subject.id, metricId);
     if (!resolved) continue;
@@ -142,13 +183,7 @@ for (const subject of cfbPlayers) {
       }
       seasons = override.seasons;
     } else {
-      const observed = sourceRows.filter((row) => finite(row[sourceField]));
-      const sourcePeak = observed.length ? Math.max(...observed.map((row) => row[sourceField])) : null;
-      seasons = sourcePeak == null ? [] : [...new Set(observed
-        .filter((row) => nearlyEqual(row[sourceField], sourcePeak))
-        .map((row) => row.season)
-        .filter(Number.isInteger))]
-        .sort((left, right) => left - right);
+      seasons = sourceSeasonsFor(subject.id, sourceField, resolved.fact.value);
     }
     if (!seasons.length) {
       missing.push(`${key}=${resolved.fact.value}`);
