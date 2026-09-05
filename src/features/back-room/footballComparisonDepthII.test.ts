@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { footballRankFivePacks } from "./footballRankFivePlayableModel";
 import { footballComparisonEligibilityQuery } from "./footballComparisonAuthority";
-import { getFootballRatingBand } from "./footballContentContract";
+import { footballGreatnessTierForItem } from "./footballGreatnessTier";
 import { resolveFootballSubjectReference } from "./footballSubjectRegistry";
 
 const CATEGORY_NAMES = [
@@ -12,6 +12,10 @@ const CATEGORY_NAMES = [
 
 function item(packId: (typeof footballRankFivePacks)[number]["id"], id: string) {
   return footballRankFivePacks.find((pack) => pack.id === packId)!.items.find((candidate) => candidate.id === id)!;
+}
+
+function tier(packId: (typeof footballRankFivePacks)[number]["id"], id: string) {
+  return footballGreatnessTierForItem(item(packId, id));
 }
 
 describe("Football greatness category expansion", () => {
@@ -39,15 +43,40 @@ describe("Football greatness category expansion", () => {
     }
   });
 
-  it("preserves representative locked anchors", () => {
-    expect(getFootballRatingBand(item("nfl-quarterbacks", "tom-brady").rating)).toBe("elite");
-    expect(getFootballRatingBand(item("nfl-running-backs", "derrick-henry").rating)).toBe("elite");
-    expect(getFootballRatingBand(item("nfl-tight-ends", "shannon-sharpe").rating)).toBe("elite");
-    expect(getFootballRatingBand(item("nfl-front-seven", "clay-matthews").rating)).toBe("good");
-    expect(getFootballRatingBand(item("nfl-secondary", "morris-claiborne").rating)).toBe("below-average");
-    expect(getFootballRatingBand(item("college-quarterbacks", "jake-fromm-career").rating)).toBe("good");
-    expect(item("college-running-backs", "trent-richardson-cfb").rating).toBeGreaterThanOrEqual(70);
+  it("preserves the approved tier anchors through the canonical greatness-tier owner", () => {
+    expect(tier("nfl-quarterbacks", "tom-brady")).toBe("goat");
+    expect(tier("nfl-quarterbacks", "drew-brees")).toBe("great");
+    expect(tier("nfl-quarterbacks", "eli-manning")).toBe("good");
+
+    expect(tier("nfl-running-backs", "jim-brown")).toBe("elite");
+    expect(tier("nfl-running-backs", "derrick-henry")).toBe("great");
+    expect(tier("nfl-running-backs", "frank-gore")).toBe("good");
+
+    expect(tier("nfl-wide-receivers", "jerry-rice")).toBe("goat");
+    expect(tier("nfl-wide-receivers", "randy-moss")).toBe("legendary");
+    expect(tier("nfl-wide-receivers", "antonio-brown")).toBe("elite");
+    expect(tier("nfl-wide-receivers", "julio-jones")).toBe("elite");
+
+    expect(tier("nfl-tight-ends", "tony-gonzalez")).toBe("elite");
+    expect(tier("nfl-tight-ends", "shannon-sharpe")).toBe("near-elite");
+    expect(tier("nfl-tight-ends", "jason-witten")).toBe("near-elite");
+
+    expect(tier("nfl-front-seven", "clay-matthews")).toBe("good");
+    expect(tier("nfl-secondary", "morris-claiborne")).toBe("below-average");
+
+    expect(tier("nfl-team-eras", "nfl-era-patriots-belichick-brady")).toBe("goat");
+    expect(tier("nfl-team-eras", "nfl-era-seahawks-legion-of-boom")).toBe("great");
+
+    expect(tier("college-quarterbacks", "lamar-jackson-2016")).toBe("great");
+    expect(tier("college-quarterbacks", "trevor-lawrence-2018")).toBe("good");
+    expect(tier("college-quarterbacks", "jake-fromm-career")).toBe("average");
+
+    expect(tier("college-running-backs", "bijan-robinson-cfb")).toBe("great");
+    expect(tier("college-running-backs", "trent-richardson-cfb")).toBe("good");
     expect(item("college-running-backs", "demarco-cobbs")).toBeUndefined();
-    expect(getFootballRatingBand(footballRankFivePacks.find((pack) => pack.id === "college-program-eras")!.items.find((candidate) => candidate.name.includes("Boise State"))!.rating)).toBe("average");
+
+    const boise = footballRankFivePacks.find((pack) => pack.id === "college-program-eras")!.items
+      .find((candidate) => candidate.name.includes("Boise State"))!;
+    expect(footballGreatnessTierForItem(boise)).toBe("average");
   });
 });
