@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
 import {
   footballGreatnessTierForRating,
+  footballGreatnessTierLabel,
   orderFootballItemsByGreatnessTier,
   scoreFootballBlindRankTierOrder,
   scoreFootballKeepCutTierSelection,
@@ -26,6 +27,30 @@ describe("Football greatness tier truth", () => {
     expect(footballGreatnessTierForRating(55)).toBe("average");
     expect(footballGreatnessTierForRating(35)).toBe("below-average");
     expect(footballGreatnessTierForRating(0)).toBe("bad");
+  });
+
+  it("presents the internal greatness bands as neutral Tier 1-5 labels", () => {
+    expect([
+      footballGreatnessTierLabel("goat"),
+      footballGreatnessTierLabel("legendary"),
+      footballGreatnessTierLabel("elite"),
+      footballGreatnessTierLabel("near-elite"),
+      footballGreatnessTierLabel("great"),
+      footballGreatnessTierLabel("good"),
+      footballGreatnessTierLabel("average"),
+      footballGreatnessTierLabel("below-average"),
+      footballGreatnessTierLabel("bad"),
+    ]).toEqual([
+      "TIER 1",
+      "TIER 2",
+      "TIER 2",
+      "TIER 3",
+      "TIER 3",
+      "TIER 4",
+      "TIER 4",
+      "TIER 5",
+      "TIER 5",
+    ]);
   });
 
   it("does not penalize Blind Rank swaps inside the same greatness tier", () => {
