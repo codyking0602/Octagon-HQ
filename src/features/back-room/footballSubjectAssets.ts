@@ -1,3 +1,4 @@
+import { footballCareerTeamMediaId } from "./footballCareerMediaContext";
 import { footballComparisonDepthItems } from "./footballComparisonDepthCatalog";
 import { footballFindLeaderProjectedCfbTeamMediaOwners } from "./footballFindLeaderRuntimeProjection";
 import {
@@ -15,6 +16,7 @@ export interface FootballSubjectAsset {
   src: string;
   kind: FootballSubjectAssetKind;
   label: string;
+  darkSurfaceTreatment?: "light-backplate";
 }
 
 function nflMark(team: string, label: string): FootballSubjectAsset {
@@ -31,6 +33,7 @@ function cfbMark(teamId: number, label: string): FootballSubjectAsset {
     src: `https://a.espncdn.com/i/teamlogos/ncaa/500/${teamId}.png`,
     kind: "program-mark",
     label,
+    ...(teamId === 194 ? { darkSurfaceTreatment: "light-backplate" as const } : {}),
   };
 }
 
@@ -345,9 +348,26 @@ function subjectUsesTeamMedia(kind: string | undefined) {
   return kind === "player-season" || kind === "team-season" || kind === "program" || kind === "program-era";
 }
 
+function normalizedAssetIdentity(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+const nflCareerPersonAssetByName = new Map(
+  Object.entries(footballSubjectAssets).map(([id, asset]) => [normalizedAssetIdentity(id), asset]),
+);
+
 /** One shared resolver for Football media. Historical records resolve through canonical identity first. */
 export function footballSubjectAsset(itemId: string) {
   const subject = getFootballSubject(itemId);
+  if (subject?.kind === "player-career") {
+    const reviewedPersonAsset = footballSubjectAssets[itemId]
+      ?? footballSubjectAssets[subject.id]
+      ?? (subject.league === "NFL" ? nflCareerPersonAssetByName.get(normalizedAssetIdentity(subject.name)) : undefined);
+    if (reviewedPersonAsset) return reviewedPersonAsset;
+
+    const careerTeamId = footballCareerTeamMediaId(subject);
+    return careerTeamId ? footballTeamAssets[careerTeamId] ?? null : null;
+  }
   if (subject && subjectUsesTeamMedia(subject.kind)) {
     return subject.teamId ? footballTeamAssets[subject.teamId] ?? null : null;
   }
