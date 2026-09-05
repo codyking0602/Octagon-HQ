@@ -36,7 +36,7 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberPageSource).toContain('className="hit-number-slots"');
     expect(footballHitTheNumberPageSource).toContain('className="hit-number-role-slots"');
     expect(footballHitTheNumberPageSource).toContain('className="hit-number-new-board"');
-    expect(footballHitTheNumberPageSource).toContain("NEW LINEUP");
+    expect(footballHitTheNumberPageSource).toContain("NEW BOARD");
     expect(footballHitTheNumberPageSource).toContain("plan.configurationLabel");
   });
 
@@ -89,13 +89,16 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberSelectionSatisfies(plan, plan.solutionSubjectIds)).toBe(true);
   });
 
-  it("uses one guided role-slot flow for both constrained formats without changing the game owner", () => {
+  it("uses one guided role-slot flow for both constrained formats through the canonical progression owner", () => {
     expect(footballHitTheNumberPageSource).toContain("isSlotProgression(plan)");
     expect(footballHitTheNumberPageSource).toContain('plan.formatId === "one-from-each"');
     expect(footballHitTheNumberPageSource).toContain('plan.formatId === "build-the-team"');
     expect(footballHitTheNumberPageSource).toContain("activeProgressionSlot(plan, selectedIds)");
     expect(footballHitTheNumberPageSource).toContain("availableProgressionSubjectIds(plan, selectedIds)");
-    expect(footballHitTheNumberPageSource).toContain("oneFromEachSlotAccepts(activeSlot.id, subjectId)");
+    expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberActiveProgressionSlot(plan, selectedSubjectIds)");
+    expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedSubjectIds)");
+    expect(footballHitTheNumberPageSource).not.toContain("oneFromEachSlotAccepts");
+    expect(footballHitTheNumberPageSource).not.toContain("oneFromEachSlotSeasonRange");
     expect(footballHitTheNumberPageSource).toContain("rewindToSlot(index)");
     expect(footballHitTheNumberPageSource).toContain("plan.slots.map((slot, index)");
     expect(footballHitTheNumberPageSource).toContain('"CHOOSING"');
