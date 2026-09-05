@@ -1,6 +1,6 @@
 import { normalizeFootballBlindResumeDailyScore } from "../back-room/footballBlindResumeModel";
 import { hitTheNumberScore, type HitTheNumberResultStatus } from "./hitTheNumberEngine";
-import { scoreBlindRankOrderedRatings } from "./officialScoreContract";
+import { scoreBlindRankOrderedRatings, scoreKeepCutComparisonRatings } from "./officialScoreContract";
 import { wavelengthScore } from "./wavelengthEngine";
 import {
   advanceFootballOfficialDailyRuntime,
@@ -192,12 +192,15 @@ function grade(
     const keptSet = new Set(kept);
     const cut = board.filter((id) => !keptSet.has(id));
     if (kept.length !== 4 || cut.length !== 4) throw new Error("Football Keep Cut final split is invalid.");
-    let correctComparisons = 0;
-    for (const keptId of kept) for (const cutId of cut) {
-      if ((ratings[keptId] ?? -1) >= (ratings[cutId] ?? 101) - 1) correctComparisons += 1;
-    }
-    const normalized = Math.max(0, Math.min(100, Math.round(correctComparisons * 6.25)));
-    return { native: correctComparisons, normalized, result: { kept_ids: kept, correct_comparisons: correctComparisons } };
+    const score = scoreKeepCutComparisonRatings(
+      kept.map((id) => ratings[id] ?? -1),
+      cut.map((id) => ratings[id] ?? -1),
+    );
+    return {
+      native: score.correctComparisons,
+      normalized: score.normalizedScore,
+      result: { kept_ids: kept, correct_comparisons: score.correctComparisons },
+    };
   }
 
   const selected = stringArray(finalSubmission.selected_ids, "Football Hit the Number selections");
