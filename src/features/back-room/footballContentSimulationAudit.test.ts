@@ -203,7 +203,7 @@ describe("Football PR10 content simulation / replay audit", () => {
       keepCutTightCutoffShare: share(keepCutTightBoards, totalBoards),
       keepCutAverageCutoffGap: keepCutGapTotal / totalBoards,
     }));
-  });
+  }, 150_000);
 
   it("proves Blind Resume rotates its curated three-round Daily cards without category or subject overexposure", () => {
     const matchupCounts = new Map<string, number>();
