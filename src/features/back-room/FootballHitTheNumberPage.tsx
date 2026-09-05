@@ -20,6 +20,7 @@ import {
   type FootballHitTheNumberResult,
   type FootballHitTheNumberRun,
 } from "./footballHitTheNumberModel";
+import { footballHitTheNumberPeakSeasons } from "./footballHitTheNumberPeakSeasonContext";
 import { footballSubjectAsset } from "./footballSubjectAssets";
 import {
   asChallengeJson,
@@ -83,9 +84,18 @@ function subjectDisplayName(subject: NonNullable<ReturnType<typeof getFootballHi
   return subject.name.replace(new RegExp(`^${subject.season}\\s+`), "");
 }
 
-function subjectDisplaySubtitle(subject: NonNullable<ReturnType<typeof getFootballHitTheNumberSubject>>) {
+function subjectDisplaySubtitle(
+  subject: NonNullable<ReturnType<typeof getFootballHitTheNumberSubject>>,
+  metricId: FootballHitTheNumberPlan["metricId"],
+) {
   if (subject.kind === "team-season" && subject.season != null) {
     return `${subject.season} season${subject.nationalChampion ? " · National champion" : ""}`;
+  }
+  if (subject.group === "cfb-player-peak" && metricId.startsWith("cfb-best-season-")) {
+    const seasons = footballHitTheNumberPeakSeasons(subject.id, metricId);
+    if (seasons.length > 0) {
+      return `${subject.position ?? "Player"} · ${seasons.join("/")} peak college season${seasons.length > 1 ? "s" : ""}`;
+    }
   }
   return subject.subtitle;
 }
@@ -492,7 +502,7 @@ export default function FootballHitTheNumberPage() {
                     <strong style={{ whiteSpace: "normal", overflow: "visible", textOverflow: "clip", lineHeight: 1.15 }}>
                       {subjectDisplayName(subject)}
                     </strong>
-                    <small>{result && selected ? `YOUR PICK · ${subjectDisplaySubtitle(subject)}` : subjectDisplaySubtitle(subject)}</small>
+                    <small>{result && selected ? `YOUR PICK · ${subjectDisplaySubtitle(subject, plan.metricId)}` : subjectDisplaySubtitle(subject, plan.metricId)}</small>
                   </span>
                   <b>{result && value != null ? formatFootballHitTheNumberValue(plan, value) : selected ? "SELECTED" : "+"}</b>
                 </button>
