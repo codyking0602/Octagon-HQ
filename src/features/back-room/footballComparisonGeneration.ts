@@ -76,7 +76,9 @@ const BLIND_RANK_COMPACT_POOL_MAX = 75;
 const KEEP_CUT_BOARD_SIZE = 8;
 const KEEP_COUNT = 4;
 const MAX_BLIND_RANK_BAD = 1;
+const MAX_BLIND_RANK_NON_EXTREME_TIER = 2;
 const MAX_KEEP_CUT_BAD = 2;
+const MAX_KEEP_CUT_NON_EXTREME_TIER = 3;
 const DEFAULT_MAX_KEEP_CUT_ELITE = 2;
 const MAX_KEEP_CUT_CUTOFF_GAP = 8;
 const TIGHT_KEEP_CUT_CUTOFF_GAP = 4;
@@ -213,13 +215,44 @@ function repeatableTierCount(items: readonly FootballRankFiveItem[], tier: Footb
   return availableTierCount(items, tier) >= minimumDepth ? 1 : 0;
 }
 
+function isNonExtremeTier(tier: FootballComparisonTierId) {
+  return tier !== "elite" && tier !== "bad";
+}
+
+function supportsNonExtremeTierCap(
+  items: readonly FootballRankFiveItem[],
+  boardSize: number,
+  nonExtremeCap: number,
+  eliteCap: number,
+  badCap: number,
+) {
+  const capacity = TIER_ORDER.reduce((sum, tier) => {
+    const available = availableTierCount(items, tier);
+    if (tier === "elite") return sum + Math.min(available, eliteCap);
+    if (tier === "bad") return sum + Math.min(available, badCap);
+    return sum + Math.min(available, nonExtremeCap);
+  }, 0);
+  return capacity >= boardSize;
+}
+
+function exceedsNonExtremeTierCap(
+  items: readonly FootballRankFiveItem[],
+  nonExtremeCap: number,
+) {
+  return TIER_ORDER.some((tier) => (
+    isNonExtremeTier(tier)
+    && availableTierCount(items, tier) > nonExtremeCap
+  ));
+}
+
 export function footballKeepCutRequiredDistinctTiers(items: readonly FootballRankFiveItem[]) {
   const availableTiers = new Set(items.map(footballComparisonTier)).size;
   const repeatableTiers = TIER_ORDER.reduce(
     (sum, tier) => sum + repeatableTierCount(items, tier),
     0,
   );
-  return Math.min(3, availableTiers, Math.max(2, repeatableTiers));
+  const desiredDistinctTiers = items.length <= KEEP_CUT_SMALL_POOL_MAX ? 3 : 4;
+  return Math.min(desiredDistinctTiers, availableTiers, Math.max(2, repeatableTiers));
 }
 
 function selectionCandidates(
@@ -252,11 +285,14 @@ function selectionCandidates(
   });
   const exactDepth = availableTierCount(pool, targetTier);
   const minimumExactDepth = Math.max(2, Math.ceil(pool.length * 0.08));
+  const preferExactTier = includeSparseExact || exactDepth >= minimumExactDepth;
+  if (preferExactTier && exact.length) return exact;
+
   const broadened = broadenPool && targetTier !== "bad"
     ? eligible.filter((item) => footballComparisonTier(item) !== "bad")
     : [];
   const combined = [
-    ...(includeSparseExact || exactDepth >= minimumExactDepth ? exact : []),
+    ...exact,
     ...inWindow,
     ...broadened,
   ].filter((item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index);
@@ -395,6 +431,14 @@ function attemptBlindRankBoard(
 
   const ratings = selected.map((item) => item.rating);
   if (Math.max(...ratings) - Math.min(...ratings) < requiredBlindRankRange(items, archetype)) return null;
+  const enforceTierCap = supportsNonExtremeTierCap(
+    items,
+    BLIND_RANK_BOARD_SIZE,
+    MAX_BLIND_RANK_NON_EXTREME_TIER,
+    BLIND_RANK_BOARD_SIZE,
+    MAX_BLIND_RANK_BAD,
+  );
+  if (enforceTierCap && exceedsNonExtremeTierCap(selected, MAX_BLIND_RANK_NON_EXTREME_TIER)) return null;
   return {
     items: shuffleLineup(selected, random),
     badItems: badCount,
@@ -705,17 +749,26 @@ export function footballKeepCutBoardIsCompetitive(
     const percentile = poolPercentiles.get(item.id) ?? 0.5;
     return percentile >= 0.18 && percentile <= 0.9;
   }).length;
+  const eliteCap = footballKeepCutEliteCap(pool);
   const elite = countTier(items, "elite");
   const bad = countTier(items, "bad");
   const distinctTiers = new Set(items.map(footballComparisonTier)).size;
   const requiredDistinctTiers = footballKeepCutRequiredDistinctTiers(pool);
+  const enforceTierCap = supportsNonExtremeTierCap(
+    pool,
+    KEEP_CUT_BOARD_SIZE,
+    MAX_KEEP_CUT_NON_EXTREME_TIER,
+    eliteCap,
+    MAX_KEEP_CUT_BAD,
+  );
   const cutoffGap = Math.abs(ordered[KEEP_COUNT - 1]!.rating - ordered[KEEP_COUNT]!.rating);
 
   return (
     coreChoices >= 4
-    && elite <= footballKeepCutEliteCap(pool)
+    && elite <= eliteCap
     && bad <= MAX_KEEP_CUT_BAD
     && distinctTiers >= requiredDistinctTiers
+    && (!enforceTierCap || !exceedsNonExtremeTierCap(items, MAX_KEEP_CUT_NON_EXTREME_TIER))
     && cutoffGap <= MAX_KEEP_CUT_CUTOFF_GAP
   );
 }
