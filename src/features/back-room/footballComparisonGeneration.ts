@@ -73,6 +73,7 @@ const TIER_ORDER: readonly FootballComparisonTierId[] = [
 ];
 const BLIND_RANK_BOARD_SIZE = 5;
 const BLIND_RANK_COMPACT_POOL_MAX = 75;
+const BLIND_RANK_COMPACT_CANDIDATES = 8;
 const KEEP_CUT_BOARD_SIZE = 8;
 const KEEP_COUNT = 4;
 const MAX_BLIND_RANK_BAD = 1;
@@ -415,9 +416,53 @@ export function buildFootballBlindRankBoard(
     : footballBlindRankArchetypeForSeed(scopeId, seed);
   if (!archetype) throw new Error(`Unsupported Football Blind Rank archetype: ${String(requestedArchetypeId)}`);
 
+  const compactPool = items.length <= BLIND_RANK_COMPACT_POOL_MAX;
+  const compactCandidates: Array<{
+    items: FootballRankFiveItem[];
+    badItems: number;
+    attempt: number;
+  }> = [];
+  const compactSignatures = new Set<string>();
+  let referenceBadItems: number | null = null;
+  let referenceEliteItems: number | null = null;
+
   for (let attempt = 0; attempt < BLIND_RANK_ATTEMPTS; attempt += 1) {
     const board = attemptBlindRankBoard(items, scopeId, seed, archetype, attempt);
     if (!board) continue;
+
+    if (!compactPool) {
+      return {
+        ...board,
+        archetype: archetype.id,
+        attemptsUsed: attempt + 1,
+      };
+    }
+
+    const eliteItems = board.items.filter((item) => footballComparisonTier(item) === "elite").length;
+    if (referenceBadItems === null) {
+      referenceBadItems = board.badItems;
+      referenceEliteItems = eliteItems;
+    }
+    if (board.badItems !== referenceBadItems || eliteItems !== referenceEliteItems) continue;
+
+    const signature = [...board.items.map((item) => item.id)].sort().join("|");
+    if (!compactSignatures.has(signature)) {
+      compactSignatures.add(signature);
+      compactCandidates.push({ ...board, attempt });
+    }
+    if (compactCandidates.length >= BLIND_RANK_COMPACT_CANDIDATES) break;
+  }
+
+  if (compactCandidates.length) {
+    const random = seededLineupRandom(
+      "football-rank-five",
+      "compact-candidate",
+      scopeId,
+      seed,
+      archetype.id,
+    );
+    const selected = shuffleLineup(compactCandidates, random)[0]!;
+    const { attempt, ...board } = selected;
     return {
       ...board,
       archetype: archetype.id,
