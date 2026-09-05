@@ -16,16 +16,18 @@ export type FootballGreatnessTier =
   | "below-average"
   | "bad";
 
+// Player-facing Football greatness uses the locked neutral five-tier language.
+// Internal tier ids remain calibration/scoring details and are not user-facing labels.
 export const FOOTBALL_GREATNESS_TIER_LABELS = {
-  goat: "GOAT",
-  legendary: "LEGENDARY",
-  elite: "ELITE",
-  "near-elite": "NEAR ELITE",
-  great: "GREAT",
-  good: "GOOD",
-  average: "AVERAGE",
-  "below-average": "BELOW AVERAGE",
-  bad: "BAD",
+  goat: "TIER 1",
+  legendary: "TIER 2",
+  elite: "TIER 2",
+  "near-elite": "TIER 3",
+  great: "TIER 3",
+  good: "TIER 4",
+  average: "TIER 4",
+  "below-average": "TIER 5",
+  bad: "TIER 5",
 } as const satisfies Record<FootballGreatnessTier, string>;
 
 const FOOTBALL_GREATNESS_TIER_ORDER: readonly FootballGreatnessTier[] = [
