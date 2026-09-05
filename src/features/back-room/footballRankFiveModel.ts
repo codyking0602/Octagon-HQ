@@ -41,7 +41,8 @@ export type FootballRankFivePackId =
   | "college-running-backs"
   | "college-head-coaches"
   | "college-program-eras"
-  // Retained as internal compatibility identifiers; these are not active greatness categories.
+  // Legacy comparison identifiers remain typed for non-product evidence owners only.
+  // They are not Rank Five packs and cannot be resolved by getFootballRankFivePack.
   | "nfl-defensive-players"
   | "nfl-qb-seasons"
   | "nfl-team-seasons"
@@ -327,16 +328,8 @@ export const footballRankFivePacks: readonly FootballRankFivePack[] = [
   { id: "college-program-eras", name: "CFB Program Eras", prompt: "Rank these defined program eras", intro: "Judge each objective multi-season program era as a whole.", items: collegeProgramEras },
 ] as const;
 
-const retiredFootballCalibrationPacks: readonly FootballRankFivePack[] = [
-  { id: "nfl-defensive-players", name: "NFL Defensive Careers", prompt: "Legacy calibration", intro: "Retired calibration owner.", items: nflDefensiveCareers },
-  { id: "nfl-qb-seasons", name: "NFL QB Seasons", prompt: "Legacy calibration", intro: "Retired calibration owner.", items: nflQuarterbackSeasons },
-  { id: "nfl-team-seasons", name: "NFL Team Seasons", prompt: "Legacy calibration", intro: "Retired calibration owner.", items: nflTeamSeasons },
-  { id: "college-programs", name: "Programs Since 2000", prompt: "Legacy calibration", intro: "Retired calibration owner.", items: [...withLegacyCfbRatingBasis(collegePrograms), ...collegeProgramDepth] },
-  { id: "college-team-seasons", name: "CFB Team Seasons", prompt: "Legacy calibration", intro: "Retired calibration owner.", items: [...withLegacyCfbRatingBasis(collegeTeamSeasons), ...collegeTeamSeasonDepth] },
-];
-
 export function getFootballRankFivePack(packId: FootballRankFivePackId) {
-  const pack = [...footballRankFivePacks, ...retiredFootballCalibrationPacks].find((row) => row.id === packId);
+  const pack = footballRankFivePacks.find((row) => row.id === packId);
   if (!pack) throw new Error(`Unsupported Football Rank 5 pack: ${packId}`);
   return pack;
 }
