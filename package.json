@@ -7,19 +7,20 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "predev": "npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe",
+    "predev": "npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe",
     "dev": "vite",
     "build": "npm run typecheck && npm run build:artifacts",
     "build:artifacts": "vite build && vite build --config vite.worker.config.ts && npm run verify:artifact",
     "preview": "vite preview",
     "generate:football-cfb-player-seasons": "node scripts/generate-football-cfb-player-season-recognition.mjs",
+    "generate:football-career-media-context": "node scripts/generate-football-career-media-context.mjs",
     "generate:football-factual-universe": "node scripts/generate-football-factual-universe.mjs && npm run generate:football-hit-number-peak-seasons",
     "generate:football-hit-number-peak-seasons": "node scripts/enrich-football-hit-number-peak-seasons.mjs",
     "generate:football-ledger-audit": "node scripts/generate-football-ledger-audit.mjs",
     "verify:football-ledger-audit": "node scripts/verify-football-ledger-audit-artifact.mjs",
-    "pretypecheck": "npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit",
+    "pretypecheck": "npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit",
     "typecheck": "tsc --noEmit",
-    "pretest": "npm run generate:football-cfb-player-seasons && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit",
+    "pretest": "npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit",
     "test": "vitest run",
     "verify:artifact": "node scripts/verify-production-artifact.mjs",
     "export:verdict": "node scripts/export-octagon-verdict.mjs"
