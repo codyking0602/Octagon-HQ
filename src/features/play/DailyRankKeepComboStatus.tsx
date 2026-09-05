@@ -1,6 +1,7 @@
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 
 export const DAILY_RANK_KEEP_COMBO_CONTENT_VERSION = "daily-rank-keep-combo-v1";
+export const FOOTBALL_DAILY_RANK_KEEP_COMBO_CONTENT_VERSION = "football-daily-double-v1";
 export const DAILY_RANK_KEEP_COMBO_BLIND_RESULT_KEY = "combo_blind_rank_result";
 
 type DailyComboScoreKey = "blind_rank" | "keep_cut";
@@ -17,7 +18,8 @@ function score(value: unknown) {
 }
 
 export function isDailyRankKeepCombo(projection: Pick<TodayChallengeProjection, "contentVersion"> | null | undefined) {
-  return projection?.contentVersion === DAILY_RANK_KEEP_COMBO_CONTENT_VERSION;
+  return projection?.contentVersion === DAILY_RANK_KEEP_COMBO_CONTENT_VERSION
+    || projection?.contentVersion === FOOTBALL_DAILY_RANK_KEEP_COMBO_CONTENT_VERSION;
 }
 
 export function dailyRankKeepComboStage(projection: Pick<TodayChallengeProjection, "contentVersion" | "gameType"> | null | undefined) {
@@ -30,7 +32,11 @@ export function dailyRankKeepComboComponentScore(
   key: DailyComboScoreKey,
 ) {
   if (!isDailyRankKeepCombo(projection) || !projection?.officialAttempt) return null;
-  return score(projection.officialAttempt.publicResult[key]);
+  const nestedScore = score(projection.officialAttempt.publicResult[key]);
+  if (nestedScore !== null) return nestedScore;
+  const footballKey = key === "blind_rank" ? "blind_rank_score" : "keep_cut_score";
+  const footballScore = projection.officialAttempt.publicResult[footballKey];
+  return typeof footballScore === "number" ? footballScore : null;
 }
 
 export function dailyRankKeepComboBlindRankResultState(
