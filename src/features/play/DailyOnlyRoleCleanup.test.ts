@@ -1,16 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { playLandingGameIds } from "./PlayLandingPresentation";
+import { playLandingDestination, playLandingGameIds } from "./PlayLandingPresentation";
 import {
   hasDailyOnlyCompatibilityIntent,
   isOfficialDailyRoute,
 } from "./TodayChallengeGameRoute";
 
-describe("Blind Rank and Keep/Cut Daily-only product role", () => {
-  it("keeps both mechanics out of normal UFC and Football All Games discovery", () => {
-    for (const sport of ["ufc", "football"] as const) {
-      expect(playLandingGameIds(sport)).not.toContain("blind-rank");
-      expect(playLandingGameIds(sport)).not.toContain("keep-cut");
-    }
+describe("Blind Rank and Keep/Cut product role", () => {
+  it("keeps UFC Daily-only while temporarily exposing Football casual comparison games", () => {
+    expect(playLandingGameIds("ufc")).not.toContain("blind-rank");
+    expect(playLandingGameIds("ufc")).not.toContain("keep-cut");
+
+    expect(playLandingGameIds("football")).toContain("blind-rank");
+    expect(playLandingGameIds("football")).toContain("keep-cut");
+    expect(playLandingDestination("football", "blind-rank")).toBe("/football/rank-five?mode=replayable");
+    expect(playLandingDestination("football", "keep-cut")).toBe("/football/keep-cut?mode=replayable");
   });
 
   it("routes plain UFC Blind Rank and Keep/Cut entry points into the official Daily runtime", () => {
