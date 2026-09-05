@@ -314,9 +314,18 @@ function requiredBlindRankRange(
   const uniqueReachable = reachable.filter(
     (item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index,
   );
-  const ratings = uniqueReachable.map((item) => item.rating);
-  const reachableRange = ratings.length > 1 ? Math.max(...ratings) - Math.min(...ratings) : 4;
-  const repeatableReach = Math.max(4, Math.floor(reachableRange * 0.85));
+  const orderedRatings = [...new Set(uniqueReachable.map((item) => item.rating))]
+    .sort((left, right) => right - left);
+  const reachableRange = orderedRatings.length > 1
+    ? orderedRatings[0]! - orderedRatings.at(-1)!
+    : 4;
+  const endpointTrimmedRange = orderedRatings.length >= 4
+    ? orderedRatings[1]! - orderedRatings.at(-2)!
+    : reachableRange;
+  const repeatableReach = Math.max(
+    4,
+    Math.min(Math.floor(reachableRange * 0.85), endpointTrimmedRange),
+  );
   return Math.min(archetype.minRange, repeatableReach, sustainablePoolRange(items));
 }
 
@@ -690,16 +699,7 @@ function attemptKeepCutBoard(
   let selectedBad = 0;
 
   for (const targetTier of targets) {
-    const repeatedTargetDepth = targets.filter((tier) => tier === targetTier).length;
-    const exactTierDepth = availableTierCount(items, targetTier);
-    const preferDeepExactTier = (
-      scopeId !== "college-team-seasons"
-      && targetTier !== "elite"
-      && targetTier !== "bad"
-      && exactTierDepth >= Math.max(3, repeatedTargetDepth)
-      && random() < 0.5
-    );
-    const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad" || preferDeepExactTier;
+    const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad";
     const picked = chooseItem(
       items,
       targetTier,
