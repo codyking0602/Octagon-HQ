@@ -41,11 +41,11 @@ describe("Football HQ final identity polish", () => {
     expect(footballVisualCss).toContain("background: #111315 !important;");
   });
 
-  it("reserves fixed visual lanes so Keep 4 / Cut 4 names cannot sit under team marks", () => {
+  it("reserves fixed visual lanes so Keep 4 / Cut 4 labels and names cannot sit under team marks", () => {
     expect(footballVisualCss).toContain("grid-template-columns: 74px minmax(0, 1fr) auto !important;");
-    expect(footballVisualCss).toContain("grid-template-columns: 28px 52px minmax(0, 1fr) auto !important;");
-    expect(footballVisualCss).toContain("grid-template-columns: 24px 52px minmax(0, 1fr) !important;");
-    expect(footballVisualCss).toContain("grid-template-columns: 62px minmax(0, 1fr);");
+    expect(footballVisualCss).toContain("grid-template-columns: 52px 52px minmax(0, 1fr) auto !important;");
+    expect(footballVisualCss).toContain("grid-template-columns: 52px 52px minmax(0, 1fr) !important;");
+    expect(footballVisualCss).toContain("grid-template-columns: 74px minmax(0, 1fr) !important;");
   });
 
   it("routes shared Football accents through the universal contextual theme path", () => {
