@@ -130,26 +130,30 @@ function peakSeasons(subjectId, metricId) {
     .sort((left, right) => left - right);
 }
 
-const requested = new Set();
+// Canonical values travel with presentation context so runtime can ignore stale year metadata
+// if the factual owner changes later. Reviewed expansion facts override generated gap-fill values.
+const requested = new Map();
 for (const record of projection.records ?? []) {
   if (record.scope !== "cfb-player-career") continue;
   for (const fact of record.facts ?? []) {
-    if (!sourceFieldByMetric.has(fact.metricId)) continue;
-    requested.add(`${record.subjectId}:${fact.metricId}`);
+    if (!sourceFieldByMetric.has(fact.metricId) || !finite(fact.value)) continue;
+    requested.set(`${record.subjectId}:${fact.metricId}`, fact.value);
   }
 }
 
 for (const match of expansionSource.matchAll(/cfbPlayer\("([^"]+)",\s*\[([\s\S]*?)\]\),/g)) {
   const subjectId = match[1];
   const body = match[2];
-  for (const metricMatch of body.matchAll(/\["(cfb-best-season-[^"]+)"\s*,/g)) {
-    if (sourceFieldByMetric.has(metricMatch[1])) requested.add(`${subjectId}:${metricMatch[1]}`);
+  for (const metricMatch of body.matchAll(/\["(cfb-best-season-[^"]+)"\s*,\s*(-?\d+(?:\.\d+)?)\s*\]/g)) {
+    const metricId = metricMatch[1];
+    if (!sourceFieldByMetric.has(metricId)) continue;
+    requested.set(`${subjectId}:${metricId}`, Number(metricMatch[2]));
   }
 }
 
 const contextRows = [];
 const missing = [];
-for (const key of [...requested].sort()) {
+for (const [key, canonicalValue] of [...requested.entries()].sort(([left], [right]) => left.localeCompare(right))) {
   const separator = key.indexOf(":");
   const subjectId = key.slice(0, separator);
   const metricId = key.slice(separator + 1);
@@ -158,7 +162,7 @@ for (const key of [...requested].sort()) {
     missing.push(key);
     continue;
   }
-  contextRows.push([subjectId, metricId, seasons]);
+  contextRows.push([subjectId, metricId, canonicalValue, seasons]);
 }
 
 if (missing.length) {
