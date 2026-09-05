@@ -80,11 +80,10 @@ const DEFAULT_MAX_KEEP_CUT_ELITE = 2;
 const MAX_KEEP_CUT_CUTOFF_GAP = 8;
 const TIGHT_KEEP_CUT_CUTOFF_GAP = 4;
 const BLIND_RANK_ATTEMPTS = 120;
-const BLIND_RANK_CANDIDATES = 12;
 const KEEP_CUT_ATTEMPTS = 180;
 const KEEP_CUT_TIGHT_CANDIDATES = 12;
 const KEEP_CUT_SMALL_POOL_CANDIDATES = 36;
-const KEEP_CUT_SMALL_POOL_MAX = KEEP_CUT_BOARD_SIZE + 4;
+const KEEP_CUT_SMALL_POOL_MAX = KEEP_CUT_BOARD_SIZE * 2;
 
 const TARGET_WINDOWS: Record<FootballComparisonTierId, RatingWindow> = {
   elite: { minPercentile: 0, maxPercentile: 0.34 },
@@ -354,8 +353,9 @@ function attemptBlindRankBoard(
   const selected: FootballRankFiveItem[] = [];
   let eliteCount = 0;
   let badCount = 0;
+  const targets = shuffleLineup([...archetype.targets], random);
 
-  for (const targetTier of archetype.targets) {
+  for (const targetTier of targets) {
     const forceAbsoluteTier = (
       targetTier === "bad"
       && availableTierCount(items, "bad") >= 2
@@ -402,22 +402,9 @@ export function buildFootballBlindRankBoard(
     : footballBlindRankArchetypeForSeed(scopeId, seed);
   if (!archetype) throw new Error(`Unsupported Football Blind Rank archetype: ${String(requestedArchetypeId)}`);
 
-  const candidates: Array<{ items: FootballRankFiveItem[]; badItems: number; attempt: number }> = [];
-  const signatures = new Set<string>();
   for (let attempt = 0; attempt < BLIND_RANK_ATTEMPTS; attempt += 1) {
     const board = attemptBlindRankBoard(items, scopeId, seed, archetype, attempt);
     if (!board) continue;
-    const signature = [...board.items.map((item) => item.id)].sort().join("|");
-    if (signatures.has(signature)) continue;
-    signatures.add(signature);
-    candidates.push({ ...board, attempt });
-    if (candidates.length >= BLIND_RANK_CANDIDATES) break;
-  }
-
-  if (candidates.length) {
-    const random = seededLineupRandom("football-rank-five", "candidate", scopeId, seed, archetype.id);
-    const selected = shuffleLineup(candidates, random)[0]!;
-    const { attempt, ...board } = selected;
     return {
       ...board,
       archetype: archetype.id,
@@ -457,18 +444,7 @@ function minimumProportionalEliteCount(items: readonly FootballRankFiveItem[]) {
   const availableElite = availableTierCount(items, "elite");
   const eliteShare = availableElite / items.length;
   if (eliteShare < 0.5) return 0;
-  const proportionalElite = Math.min(availableElite, Math.round(KEEP_CUT_BOARD_SIZE * eliteShare));
-  const availableTiers = new Set(items.map(footballComparisonTier));
-  const balancedTwoTierSmallPool = (
-    items.length <= KEEP_CUT_SMALL_POOL_MAX
-    && availableTiers.size === 2
-    && availableTiers.has("elite")
-    && availableTiers.has("great")
-    && availableElite * 2 === items.length
-  );
-  return balancedTwoTierSmallPool
-    ? Math.max(0, proportionalElite - 1)
-    : proportionalElite;
+  return Math.min(availableElite, Math.round(KEEP_CUT_BOARD_SIZE * eliteShare));
 }
 
 export function footballKeepCutEliteCap(items: readonly FootballRankFiveItem[]) {
