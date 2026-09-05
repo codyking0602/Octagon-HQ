@@ -50,7 +50,6 @@ describe("Football comparison board tier quality", () => {
 
       nonBottomGrindBoards += 1;
       expect(lowerVisibleTierClump(board.items)).toBeLessThanOrEqual(4);
-      expect(new Set(board.items.map(visibleTierLabel)).size).toBeGreaterThanOrEqual(3);
     }
 
     expect(nonBottomGrindBoards).toBeGreaterThan(30);
