@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import FootballRankFivePage from "./FootballRankFivePage";
 import { footballSubjectAssetPath } from "./FootballSubjectVisual";
+import { footballGreatnessTierForItem } from "./footballGreatnessTier";
 import {
   buildFootballRankFiveLineup,
   footballRankFivePacks,
@@ -43,6 +44,7 @@ describe("Football Blind Rank 5", () => {
       expect(pack.items.length).toBeGreaterThanOrEqual(8);
       expect(new Set(pack.items.map((item) => item.id)).size).toBe(pack.items.length);
       expect(pack.items.every((item) => Number.isInteger(item.rating) && item.rating >= 0 && item.rating <= 100)).toBe(true);
+      expect(pack.items.every((item) => ["elite", "great", "good", "average", "below-average", "bad"].includes(footballGreatnessTierForItem(item)))).toBe(true);
     }
 
     const liveReceivers = footballRankFivePacks.find((pack) => pack.id === "nfl-wide-receivers")!;
@@ -90,7 +92,7 @@ describe("Football Blind Rank 5", () => {
       .toBe("/images/football/programs/alabama-2009-2020.webp");
   });
 
-  it("locks all five placements and reveals the final score and canonical order", () => {
+  it("locks all five placements and reveals the final score and canonical tiers", () => {
     render(
       <MemoryRouter>
         <FootballRankFivePage />
@@ -104,7 +106,9 @@ describe("Football Blind Rank 5", () => {
 
     expect(screen.getByLabelText("Football Blind Rank 5 score")).toHaveTextContent("/100");
     expect(screen.getByText("YOUR FINAL RANKING")).toBeInTheDocument();
-    expect(screen.getByText("FOOTBALL HQ ORDER")).toBeInTheDocument();
+    expect(screen.getByText("FOOTBALL HQ TIERS")).toBeInTheDocument();
+    expect(screen.getByText(/Same-tier swaps do not cost points/i)).toBeInTheDocument();
+    expect(screen.queryByText("FOOTBALL HQ ORDER")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
 });

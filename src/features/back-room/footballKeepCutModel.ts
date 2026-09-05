@@ -1,4 +1,3 @@
-import { scoreKeepCutComparisonRatings } from "../play/officialScoreContract";
 import {
   createReplaySeed,
   seededLineupRandom,
@@ -15,6 +14,12 @@ import {
   footballComparisonCategorySpecs,
   footballComparisonEligibilityQuery,
 } from "./footballComparisonAuthority";
+import {
+  compareFootballGreatnessTiers,
+  footballGreatnessTierForItem,
+  orderFootballItemsByGreatnessTier,
+  scoreFootballKeepCutTierSelection,
+} from "./footballGreatnessTier";
 import {
   footballRankFivePacks,
   getFootballRankFivePack,
@@ -44,8 +49,9 @@ export interface FootballKeepCutRun {
 export interface FootballKeepCutResult {
   kept: FootballRankFiveItem[];
   cut: FootballRankFiveItem[];
-  topFour: FootballRankFiveItem[];
+  tierOrder: FootballRankFiveItem[];
   correctComparisons: number;
+  /** Legacy compatibility count: kept subjects at or above the fourth-place greatness-tier boundary. */
   topFourKept: number;
   score: number;
   label: string;
@@ -164,21 +170,19 @@ export function scoreFootballKeepCutSelection(
   const keptSet = new Set(keptIds);
   const kept = board.filter((item) => keptSet.has(item.id));
   const cut = board.filter((item) => !keptSet.has(item.id));
-  const comparisonScore = scoreKeepCutComparisonRatings(
-    kept.map((item) => item.rating),
-    cut.map((item) => item.rating),
-  );
-  const topFour = [...board]
-    .sort((left, right) => right.rating - left.rating || left.id.localeCompare(right.id))
-    .slice(0, KEEP_COUNT);
-  const topFourIds = new Set(topFour.map((item) => item.id));
+  const comparisonScore = scoreFootballKeepCutTierSelection(kept, cut);
+  const tierOrder = orderFootballItemsByGreatnessTier(board);
+  const cutoffTier = footballGreatnessTierForItem(tierOrder[KEEP_COUNT - 1]!);
+  const topFourKept = kept.filter((item) => (
+    compareFootballGreatnessTiers(footballGreatnessTierForItem(item), cutoffTier) >= 0
+  )).length;
 
   return {
     kept,
     cut,
-    topFour,
+    tierOrder,
     correctComparisons: comparisonScore.correctComparisons,
-    topFourKept: kept.filter((item) => topFourIds.has(item.id)).length,
+    topFourKept,
     score: comparisonScore.normalizedScore,
     label: footballKeepCutScoreLabel(comparisonScore.normalizedScore),
   };

@@ -12,6 +12,10 @@ import {
   scoreFootballKeepCutSelection,
   type FootballKeepCutRun,
 } from "./footballKeepCutModel";
+import {
+  footballGreatnessTierForItem,
+  footballGreatnessTierLabel,
+} from "./footballGreatnessTier";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
 import {
   asChallengeJson,
@@ -55,10 +59,12 @@ function ResultList({
   title,
   items,
   packId,
+  showTiers = false,
 }: {
   title: string;
   items: FootballRankFiveItem[];
   packId: FootballKeepCutRun["pack"]["id"];
+  showTiers?: boolean;
 }) {
   return (
     <section className="football-debate-result-list">
@@ -66,7 +72,7 @@ function ResultList({
       <div>
         {items.map((item, index) => (
           <article key={item.id}>
-            <b>#{index + 1}</b>
+            <b>{showTiers ? footballGreatnessTierLabel(footballGreatnessTierForItem(item)) : `#${index + 1}`}</b>
             <FootballSubjectVisual item={item} packId={packId} />
             <span><strong>{item.name}</strong><small>{item.subtitle}</small></span>
             <em>{item.league}</em>
@@ -186,7 +192,7 @@ export default function FootballKeepCutPage() {
     setChallengeStatus("");
     const status = await beginChallenge({
       gameId: "keep-cut",
-      gameVersion: "football-keep-cut-v1",
+      gameVersion: "football-keep-cut-v2",
       gameTitle: "Football Keep 4 / Cut 4",
       summary: `${run.pack.name} · same eight subjects`,
       setup: asChallengeJson({
@@ -218,12 +224,12 @@ export default function FootballKeepCutPage() {
         <section className="football-debate-result-hero">
           <p className="eyebrow">FOOTBALL HQ · KEEP 4 / CUT 4</p>
           <strong>{result.score}<small>/100</small></strong>
-          <span>{result.label} · {result.topFourKept}/4 Football HQ keeps</span>
+          <span>{result.label} · {result.correctComparisons}/16 tier matchups</span>
         </section>
 
         <div className="football-debate-result-grid">
           <ResultList title="YOUR FOUR" items={result.kept} packId={run.pack.id} />
-          <ResultList title="FOOTBALL HQ FOUR" items={result.topFour} packId={run.pack.id} />
+          <ResultList title="FOOTBALL HQ TIERS" items={result.tierOrder} packId={run.pack.id} showTiers />
         </div>
 
         <GameResultActions
