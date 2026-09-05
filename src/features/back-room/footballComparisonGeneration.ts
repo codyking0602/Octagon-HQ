@@ -709,64 +709,20 @@ function keepCutVisibleLowerTierClump(items: readonly FootballRankFiveItem[]) {
   return Math.max(tierFour, tierFive);
 }
 
-function preferredKeepCutTextureCandidates(
-  candidates: readonly KeepCutCandidate[],
-  styleId: FootballKeepCutBoardStyleId,
-) {
-  if (styleId === "bottom-grind" || candidates.length < 2) return [...candidates];
-
-  const minimumClump = Math.min(...candidates.map((candidate) => (
-    keepCutVisibleLowerTierClump(candidate.items)
-  )));
-  const acceptableClump = Math.max(4, minimumClump);
-
-  return candidates.filter((candidate) => (
-    keepCutVisibleLowerTierClump(candidate.items) <= acceptableClump
-  ));
-}
-
 function chooseKeepCutTextureCandidate(
   candidates: readonly KeepCutCandidate[],
   styleId: FootballKeepCutBoardStyleId,
   random: () => number,
 ) {
-  const preferred = preferredKeepCutTextureCandidates(candidates, styleId);
-  if (styleId === "bottom-grind" || preferred.length < 2) {
-    return shuffleLineup(preferred, random)[0]!;
-  }
+  const shuffled = shuffleLineup([...candidates], random);
+  if (styleId === "bottom-grind" || shuffled.length < 2) return shuffled[0]!;
 
-  const appearances = new Map<string, number>();
-  for (const candidate of preferred) {
-    for (const item of candidate.items) {
-      appearances.set(item.id, (appearances.get(item.id) ?? 0) + 1);
-    }
-  }
-  const weights = preferred.map((candidate) => candidate.items.reduce(
-    (sum, item) => sum + 1 / (appearances.get(item.id) ?? 1),
-    0,
-  ));
-  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-  let cursor = random() * totalWeight;
-
-  for (let index = 0; index < preferred.length; index += 1) {
-    cursor -= weights[index]!;
-    if (cursor <= 0) return preferred[index]!;
-  }
-  return preferred.at(-1)!;
-}
-
-function preferKeepCutBest(
-  candidate: KeepCutCandidate,
-  current: KeepCutCandidate | null,
-  styleId: FootballKeepCutBoardStyleId,
-) {
-  if (!current) return true;
-  if (styleId !== "bottom-grind") {
-    const candidateClump = keepCutVisibleLowerTierClump(candidate.items);
-    const currentClump = keepCutVisibleLowerTierClump(current.items);
-    if (candidateClump !== currentClump) return candidateClump < currentClump;
-  }
-  return candidate.cutoffGap < current.cutoffGap;
+  const baseline = shuffled[0]!;
+  const challenger = shuffled[1]!;
+  return keepCutVisibleLowerTierClump(challenger.items)
+    <= keepCutVisibleLowerTierClump(baseline.items) - 2
+    ? challenger
+    : baseline;
 }
 
 export function footballKeepCutBoardIsCompetitive(
@@ -875,7 +831,7 @@ export function buildFootballKeepCutBoard(
     );
     if (!board) continue;
     const candidate = { ...board, attempt };
-    if (preferKeepCutBest(candidate, best, style.id)) best = candidate;
+    if (!best || board.cutoffGap < best.cutoffGap) best = candidate;
 
     if (smallPool) {
       const signature = [...board.items.map((item) => item.id)].sort().join("|");
