@@ -266,12 +266,20 @@ function selectionCandidates(
   forceAbsoluteTier: boolean,
   includeSparseExact: boolean,
   broadenPool: boolean,
+  selectedTierCounts: ReadonlyMap<FootballComparisonTierId, number> | null = null,
+  nonExtremeTierCap: number | null = null,
 ) {
   const eligible = pool.filter((item) => {
     if (used.has(item.id)) return false;
     const tier = footballComparisonTier(item);
     if (tier === "elite" && eliteCount >= maxElite) return false;
     if (tier === "bad" && badCount >= maxBad) return false;
+    if (
+      nonExtremeTierCap !== null
+      && selectedTierCounts
+      && isNonExtremeTier(tier)
+      && (selectedTierCounts.get(tier) ?? 0) >= nonExtremeTierCap
+    ) return false;
     return true;
   });
   const exact = eligible.filter((item) => footballComparisonTier(item) === targetTier);
@@ -315,6 +323,8 @@ function chooseItem(
   forceAbsoluteTier = false,
   includeSparseExact = true,
   broadenPool = false,
+  selectedTierCounts: ReadonlyMap<FootballComparisonTierId, number> | null = null,
+  nonExtremeTierCap: number | null = null,
 ) {
   return shuffleLineup(
     selectionCandidates(
@@ -328,6 +338,8 @@ function chooseItem(
       forceAbsoluteTier,
       includeSparseExact,
       broadenPool,
+      selectedTierCounts,
+      nonExtremeTierCap,
     ),
     random,
   )[0] ?? null;
@@ -394,11 +406,19 @@ function attemptBlindRankBoard(
   const random = seededLineupRandom("football-rank-five", scopeId, seed, archetype.id, attempt);
   const used = new Set<string>();
   const selected: FootballRankFiveItem[] = [];
+  const selectedTierCounts = new Map<FootballComparisonTierId, number>();
   let eliteCount = 0;
   let badCount = 0;
   const targets = shuffleLineup([...archetype.targets], random);
   const includeSparseExact = items.length <= BLIND_RANK_SPARSE_EXACT_POOL_MAX;
   const broadenPool = items.length <= BLIND_RANK_COMPACT_POOL_MAX;
+  const enforceTierCap = supportsNonExtremeTierCap(
+    items,
+    BLIND_RANK_BOARD_SIZE,
+    MAX_BLIND_RANK_NON_EXTREME_TIER,
+    BLIND_RANK_BOARD_SIZE,
+    MAX_BLIND_RANK_BAD,
+  );
 
   for (const targetTier of targets) {
     const forceAbsoluteTier = (
@@ -418,23 +438,20 @@ function attemptBlindRankBoard(
       forceAbsoluteTier,
       includeSparseExact,
       broadenPool,
+      selectedTierCounts,
+      enforceTierCap ? MAX_BLIND_RANK_NON_EXTREME_TIER : null,
     );
     if (!picked) return null;
     selected.push(picked);
     used.add(picked.id);
-    eliteCount += footballComparisonTier(picked) === "elite" ? 1 : 0;
-    badCount += footballComparisonTier(picked) === "bad" ? 1 : 0;
+    const pickedTier = footballComparisonTier(picked);
+    selectedTierCounts.set(pickedTier, (selectedTierCounts.get(pickedTier) ?? 0) + 1);
+    eliteCount += pickedTier === "elite" ? 1 : 0;
+    badCount += pickedTier === "bad" ? 1 : 0;
   }
 
   const ratings = selected.map((item) => item.rating);
   if (Math.max(...ratings) - Math.min(...ratings) < requiredBlindRankRange(items, archetype)) return null;
-  const enforceTierCap = supportsNonExtremeTierCap(
-    items,
-    BLIND_RANK_BOARD_SIZE,
-    MAX_BLIND_RANK_NON_EXTREME_TIER,
-    BLIND_RANK_BOARD_SIZE,
-    MAX_BLIND_RANK_BAD,
-  );
   if (enforceTierCap && exceedsNonExtremeTierCap(selected, MAX_BLIND_RANK_NON_EXTREME_TIER)) return null;
   return {
     items: shuffleLineup(selected, random),
@@ -755,8 +772,8 @@ export function footballKeepCutBoardIsCompetitive(
     pool,
     KEEP_CUT_BOARD_SIZE,
     MAX_KEEP_CUT_NON_EXTREME_TIER,
-    eliteCap,
-    MAX_KEEP_CUT_BAD,
+    elite,
+    bad,
   );
   const cutoffGap = Math.abs(ordered[KEEP_COUNT - 1]!.rating - ordered[KEEP_COUNT]!.rating);
 
@@ -783,8 +800,16 @@ function attemptKeepCutBoard(
   const random = seededLineupRandom("football-keep-cut", scopeId, seed, style.id, attempt);
   const used = new Set<string>();
   const selected: FootballRankFiveItem[] = [];
+  const selectedTierCounts = new Map<FootballComparisonTierId, number>();
   let selectedElite = 0;
   let selectedBad = 0;
+  const enforceTierCap = supportsNonExtremeTierCap(
+    items,
+    KEEP_CUT_BOARD_SIZE,
+    MAX_KEEP_CUT_NON_EXTREME_TIER,
+    eliteCount,
+    badCount,
+  );
 
   for (const targetTier of targets) {
     const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad";
@@ -800,12 +825,16 @@ function attemptKeepCutBoard(
       forceAbsoluteTier,
       true,
       false,
+      selectedTierCounts,
+      enforceTierCap ? MAX_KEEP_CUT_NON_EXTREME_TIER : null,
     );
     if (!picked) return null;
     selected.push(picked);
     used.add(picked.id);
-    selectedElite += footballComparisonTier(picked) === "elite" ? 1 : 0;
-    selectedBad += footballComparisonTier(picked) === "bad" ? 1 : 0;
+    const pickedTier = footballComparisonTier(picked);
+    selectedTierCounts.set(pickedTier, (selectedTierCounts.get(pickedTier) ?? 0) + 1);
+    selectedElite += pickedTier === "elite" ? 1 : 0;
+    selectedBad += pickedTier === "bad" ? 1 : 0;
   }
 
   if (selectedElite !== eliteCount || selectedBad !== badCount) return null;
