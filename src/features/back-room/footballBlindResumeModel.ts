@@ -10,7 +10,9 @@ import {
   getFootballSubject,
   queryFootballSubjects,
   type FootballBlindResumeArchetype,
+  type FootballSubjectKind,
   type FootballSubjectProfile,
+  type FootballSubjectQuery,
 } from "./footballFactualStats";
 import type { FootballRankFivePackId } from "./footballRankFiveModel";
 
@@ -239,9 +241,60 @@ function subjectSubtitle(subject: FootballSubjectProfile) {
   return subject.school ?? subject.league;
 }
 
+function normalizedSubjectLabel(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+function evidenceSubjectNameKey(subjectId: string, archetype: FootballBlindResumeArchetype) {
+  if (archetype === "player-season") return normalizedSubjectLabel(subjectId.replace(/-\d{4}$/, ""));
+  if (archetype === "player-career") return normalizedSubjectLabel(subjectId.replace(/-career$/, "").replace(/-cfb$/, ""));
+  if (archetype === "coach") return normalizedSubjectLabel(subjectId.replace(/-cfb$/, ""));
+  return normalizedSubjectLabel(subjectId.replace(/-program$/, ""));
+}
+
+function evidenceSubjectQuery(matchup: FootballBlindResumeMatchup, subjectId: string): FootballSubjectQuery {
+  let kind: FootballSubjectKind;
+  switch (matchup.archetype) {
+    case "player-career":
+      kind = "player-career";
+      break;
+    case "player-season":
+      kind = "player-season";
+      break;
+    case "coach":
+      kind = "coach";
+      break;
+    case "team-season":
+      kind = "team-season";
+      break;
+    case "program-era":
+      kind = matchup.packId === "college-programs" ? "program" : "program-era";
+      break;
+  }
+  const seasonMatch = matchup.archetype === "player-season" ? /-(\d{4})$/.exec(subjectId) : null;
+  return {
+    kind,
+    league: matchup.league,
+    ...(seasonMatch ? { season: Number(seasonMatch[1]) } : {}),
+    includeProjectedSourceSubjects: true,
+    includeProjectedCanonicalRecognition: true,
+  };
+}
+
+function resolveEvidenceSubject(matchup: FootballBlindResumeMatchup, subjectId: string) {
+  const direct = getFootballSubject(subjectId);
+  if (direct) return direct;
+
+  const targetName = evidenceSubjectNameKey(subjectId, matchup.archetype);
+  const matches = queryFootballSubjects(evidenceSubjectQuery(matchup, subjectId))
+    .filter((subject) => normalizedSubjectLabel(subject.name) === targetName);
+  const uniqueById = new Map(matches.map((subject) => [subject.id, subject]));
+  return uniqueById.size === 1 ? [...uniqueById.values()][0]! : null;
+}
+
 function resolveMatchup(matchup: FootballBlindResumeMatchup): FootballBlindResumeRound {
-  const left = getFootballSubject(matchup.leftId);
-  const right = getFootballSubject(matchup.rightId);
+  const left = resolveEvidenceSubject(matchup, matchup.leftId);
+  const right = resolveEvidenceSubject(matchup, matchup.rightId);
   if (!left || !right) {
     throw new Error(`Football Blind Resume matchup ${matchup.id} references an unavailable canonical subject.`);
   }
@@ -259,7 +312,12 @@ export function resolvedFootballBlindResumeMatchups() {
 }
 
 const nflQuarterbackCareerIds = new Set(
-  queryFootballSubjects({ kind: "player-career", league: "NFL", position: "QB" }).map((subject) => subject.id),
+  queryFootballSubjects({
+    kind: "player-career",
+    league: "NFL",
+    includeProjectedSourceSubjects: true,
+    includeProjectedCanonicalRecognition: true,
+  }).map((subject) => subject.id),
 );
 
 export function footballBlindResumeSubjectIdentityId(subjectId: string) {
