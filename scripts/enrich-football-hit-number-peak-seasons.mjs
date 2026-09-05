@@ -105,19 +105,13 @@ const cfbPlayers = queryFootballSubjects({
   casualEligible: true,
   includeProjectedSourceSubjects: true,
 });
-const playersBySourceId = new Map();
-const playersByName = new Map();
-for (const subject of cfbPlayers) {
-  for (const sourceKey of subject.sourceIdentityKeys ?? []) {
-    if (sourceKey.provider !== "cfbfastR") continue;
-    const values = playersBySourceId.get(String(sourceKey.id)) ?? [];
-    values.push(subject);
-    playersBySourceId.set(String(sourceKey.id), values);
-  }
-  const key = normalize(subject.name);
-  const values = playersByName.get(key) ?? [];
-  values.push(subject);
-  playersByName.set(key, values);
+
+const sourceRowsByName = new Map();
+for (const row of playerSeasons) {
+  const key = normalize(row.playerName);
+  const rows = sourceRowsByName.get(key) ?? [];
+  rows.push(row);
+  sourceRowsByName.set(key, rows);
 }
 
 function withinCareerWindow(row, subject) {
@@ -125,45 +119,29 @@ function withinCareerWindow(row, subject) {
     && (subject.endSeason == null || row.season <= subject.endSeason);
 }
 
-function unique(values) {
-  return values.length === 1 ? values[0] : null;
+// Mirror generate-football-factual-universe.mjs exactly: canonical facts are selected by
+// normalized player name, bounded by the canonical career window, with school narrowing only
+// when that narrowing has source rows. Keeping the same resolver prevents a second identity path.
+function sourceRowsFor(subject) {
+  let rows = (sourceRowsByName.get(normalize(subject.name)) ?? [])
+    .filter((row) => withinCareerWindow(row, subject));
+  if (subject.school) {
+    const schoolRows = rows.filter((row) => normalize(row.team) === normalize(subject.school));
+    if (schoolRows.length) rows = schoolRows;
+  }
+  return rows;
 }
 
-function subjectForSourceRow(row) {
-  const sourceMatches = (playersBySourceId.get(String(row.sourcePlayerId)) ?? [])
-    .filter((subject) => withinCareerWindow(row, subject));
-  if (sourceMatches.length === 1) return sourceMatches[0];
-
-  const nameMatches = (playersByName.get(normalize(row.playerName)) ?? [])
-    .filter((subject) => withinCareerWindow(row, subject));
-  if (nameMatches.length === 1) return nameMatches[0];
-
-  const schoolMatches = nameMatches.filter((subject) => (
-    subject.school && normalize(subject.school) === normalize(row.team)
-  ));
-  return unique(schoolMatches);
-}
-
-const sourceRowsBySubject = new Map();
-for (const row of playerSeasons) {
-  if (!Number.isInteger(row.season)) continue;
-  const subject = subjectForSourceRow(row);
-  if (!subject) continue;
-  const rows = sourceRowsBySubject.get(subject.id) ?? [];
-  rows.push(row);
-  sourceRowsBySubject.set(subject.id, rows);
-}
-
-function seasonsMatchingValue(subjectId, sourceField, canonicalValue) {
-  const rows = sourceRowsBySubject.get(subjectId) ?? [];
+function seasonsMatchingValue(subject, sourceField, canonicalValue) {
+  const rows = sourceRowsFor(subject);
   return [...new Set(rows
     .filter((row) => finite(row[sourceField]) && nearlyEqual(row[sourceField], canonicalValue))
     .map((row) => row.season))]
     .sort((left, right) => left - right);
 }
 
-function sourcePeakSeasons(subjectId, sourceField) {
-  const rows = (sourceRowsBySubject.get(subjectId) ?? []).filter((row) => finite(row[sourceField]));
+function sourcePeakSeasons(subject, sourceField) {
+  const rows = sourceRowsFor(subject).filter((row) => finite(row[sourceField]));
   if (!rows.length) return [];
   const peak = Math.max(...rows.map((row) => row[sourceField]));
   return [...new Set(rows.filter((row) => nearlyEqual(row[sourceField], peak)).map((row) => row.season))]
@@ -185,10 +163,10 @@ for (const subject of cfbPlayers) {
       }
       seasons = override.seasons;
     } else {
-      seasons = seasonsMatchingValue(subject.id, sourceField, resolved.fact.value);
+      seasons = seasonsMatchingValue(subject, sourceField, resolved.fact.value);
       if (!seasons.length && resolved.fact.evidence.sourceIds.includes("cfr-player-stat-lines")) {
         // CFR remains the fact owner. The pinned cfbfastR rows only identify which in-window season was the peak.
-        seasons = sourcePeakSeasons(subject.id, sourceField);
+        seasons = sourcePeakSeasons(subject, sourceField);
       }
     }
     if (!seasons.length) {
