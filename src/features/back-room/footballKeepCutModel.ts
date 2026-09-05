@@ -1,6 +1,4 @@
-import {
-  OFFICIAL_COMPARISON_GRADING_RULES,
-} from "../play/officialScoreContract";
+import { scoreKeepCutComparisonRatings } from "../play/officialScoreContract";
 import {
   createReplaySeed,
   seededLineupRandom,
@@ -166,18 +164,10 @@ export function scoreFootballKeepCutSelection(
   const keptSet = new Set(keptIds);
   const kept = board.filter((item) => keptSet.has(item.id));
   const cut = board.filter((item) => !keptSet.has(item.id));
-  const rules = OFFICIAL_COMPARISON_GRADING_RULES["keep-cut"];
-  let correctComparisons = 0;
-
-  for (const keptItem of kept) {
-    for (const cutItem of cut) {
-      if (keptItem.rating >= cutItem.rating - rules.ratingTieTolerance) correctComparisons += 1;
-    }
-  }
-
-  const score = Math.max(0, Math.min(100, Math.round(
-    correctComparisons * rules.normalizedPointsPerComparison,
-  )));
+  const comparisonScore = scoreKeepCutComparisonRatings(
+    kept.map((item) => item.rating),
+    cut.map((item) => item.rating),
+  );
   const topFour = [...board]
     .sort((left, right) => right.rating - left.rating || left.id.localeCompare(right.id))
     .slice(0, KEEP_COUNT);
@@ -187,9 +177,9 @@ export function scoreFootballKeepCutSelection(
     kept,
     cut,
     topFour,
-    correctComparisons,
+    correctComparisons: comparisonScore.correctComparisons,
     topFourKept: kept.filter((item) => topFourIds.has(item.id)).length,
-    score,
-    label: footballKeepCutScoreLabel(score),
+    score: comparisonScore.normalizedScore,
+    label: footballKeepCutScoreLabel(comparisonScore.normalizedScore),
   };
 }

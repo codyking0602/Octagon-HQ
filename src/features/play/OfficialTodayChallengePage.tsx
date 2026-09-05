@@ -41,16 +41,20 @@ function RuntimeStatus({ error, onRefresh }: { error: unknown; onRefresh?: () =>
   ) : null;
 }
 
+export function officialDailyGameAllowsCasualReplay(gameType: DailyGameType) {
+  return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4";
+}
+
 function OfficialResultActions({
   casualRoute,
   onNavigate,
 }: {
-  casualRoute: string;
+  casualRoute: string | null;
   onNavigate: (route: string) => void;
 }) {
   return (
     <div className="official-daily-result-actions">
-      <button type="button" onClick={() => onNavigate(casualRoute)}>PLAY CASUAL</button>
+      {casualRoute ? <button type="button" onClick={() => onNavigate(casualRoute)}>PLAY CASUAL</button> : null}
       <button type="button" onClick={() => onNavigate("/play")}>ALL GAMES</button>
     </div>
   );
@@ -109,7 +113,10 @@ export function OfficialTodayChallengeContent({
       )}
       <OfficialBlindRankCanonicalOrder projection={projection} />
       {projection.officialAttempt && adapter ? (
-        <OfficialResultActions casualRoute={adapter.casualRoute} onNavigate={onNavigate} />
+        <OfficialResultActions
+          casualRoute={officialDailyGameAllowsCasualReplay(projection.gameType) ? adapter.casualRoute : null}
+          onNavigate={onNavigate}
+        />
       ) : null}
     </>
   );

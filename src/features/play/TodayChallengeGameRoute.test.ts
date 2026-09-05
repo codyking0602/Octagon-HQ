@@ -15,15 +15,19 @@ describe("Today’s Challenge route ownership", () => {
     expect(isOfficialDailyRoute("find_leader", "?definition=wins&seed=test")).toBe(false);
   });
 
-  it("keeps the other four casual unless the later launch path explicitly selects daily mode", () => {
-    for (const gameType of [
-      "wavelength",
-      "blind_resume",
-      "blind_rank_5",
-      "keep_4_cut_4",
-    ] as const) {
+  it("keeps standalone games casual unless daily mode is explicit", () => {
+    for (const gameType of ["wavelength", "blind_resume"] as const) {
       expect(isOfficialDailyRoute(gameType, "")).toBe(false);
       expect(isOfficialDailyRoute(gameType, "?challenge=friend")).toBe(false);
+      expect(isOfficialDailyRoute(gameType, "?mode=daily")).toBe(true);
+    }
+  });
+
+  it("routes Daily-only Blind Rank and Keep/Cut through the official runtime while preserving challenge links", () => {
+    for (const gameType of ["blind_rank_5", "keep_4_cut_4"] as const) {
+      expect(isOfficialDailyRoute(gameType, "")).toBe(true);
+      expect(isOfficialDailyRoute(gameType, "?challenge=friend")).toBe(false);
+      expect(isOfficialDailyRoute(gameType, "?mode=replayable")).toBe(false);
       expect(isOfficialDailyRoute(gameType, "?mode=daily")).toBe(true);
     }
   });
