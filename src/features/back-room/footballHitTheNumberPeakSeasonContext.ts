@@ -13,12 +13,14 @@ const projection = factualProjectionJson as unknown as {
   hitTheNumberPeakSeasonContext?: readonly PeakSeasonContextRow[];
 };
 
-const contextByFact = new Map(
-  (projection.hitTheNumberPeakSeasonContext ?? []).map((row) => {
-    const canonicalSubjectId = getFootballSubject(row[0])?.id ?? row[0];
-    return [`${canonicalSubjectId}:${row[1]}`, row] as const;
-  }),
-);
+const contextByFact = new Map<string, PeakSeasonContextRow[]>();
+for (const row of projection.hitTheNumberPeakSeasonContext ?? []) {
+  const canonicalSubjectId = getFootballSubject(row[0])?.id ?? row[0];
+  const key = `${canonicalSubjectId}:${row[1]}`;
+  const rows = contextByFact.get(key) ?? [];
+  rows.push(row);
+  contextByFact.set(key, rows);
+}
 
 /**
  * Presentation-only context for Hit the Number best-season facts.
@@ -27,7 +29,10 @@ const contextByFact = new Map(
 export function footballHitTheNumberPeakSeasons(subjectId: string, metricId: FootballFactMetricId) {
   const resolved = getFootballFact(subjectId, metricId);
   if (!resolved) return [];
-  const context = contextByFact.get(`${resolved.record.subjectId}:${metricId}`);
-  if (!context || context[2] !== resolved.fact.value) return [];
-  return [...context[3]];
+  const contexts = contextByFact.get(`${resolved.record.subjectId}:${metricId}`) ?? [];
+  return [...new Set(
+    contexts
+      .filter((context) => context[2] === resolved.fact.value)
+      .flatMap((context) => context[3]),
+  )].sort((left, right) => left - right);
 }
