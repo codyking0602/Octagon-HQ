@@ -55,7 +55,7 @@ describe("Football HQ debate games", () => {
       const ordered = [...first].sort((left, right) => right.rating - left.rating || left.id.localeCompare(right.id));
       const perfect = scoreFootballKeepCutSelection(first, ordered.slice(0, 4).map((item) => item.id));
       expect(perfect.score).toBe(100);
-      expect(perfect.topFourKept).toBe(4);
+      expect(perfect.correctComparisons).toBe(16);
     }
   });
 
@@ -113,7 +113,7 @@ describe("Football HQ debate games", () => {
     expect(categoryPanel?.querySelector("strong")?.textContent).not.toBe(initialCategory);
   });
 
-  it("locks eight Keep/Cut calls and reveals the score against the same football ratings", () => {
+  it("locks eight Keep/Cut calls and reveals the score against Football greatness tiers", () => {
     render(
       <MemoryRouter>
         <FootballKeepCutPage />
@@ -129,7 +129,9 @@ describe("Football HQ debate games", () => {
     }
 
     expect(screen.getByText("YOUR FOUR")).toBeInTheDocument();
-    expect(screen.getByText("FOOTBALL HQ FOUR")).toBeInTheDocument();
+    expect(screen.getByText("FOOTBALL HQ TIERS")).toBeInTheDocument();
+    expect(screen.queryByText("FOOTBALL HQ FOUR")).not.toBeInTheDocument();
+    expect(screen.getByText(/tier matchups/i)).toBeInTheDocument();
     expect(screen.getByText("/100")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
   });
