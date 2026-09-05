@@ -15,6 +15,8 @@ import {
   footballComparisonEligibilityQuery,
 } from "./footballComparisonAuthority";
 import {
+  compareFootballGreatnessTiers,
+  footballGreatnessTierForItem,
   orderFootballItemsByGreatnessTier,
   scoreFootballKeepCutTierSelection,
 } from "./footballGreatnessTier";
@@ -49,6 +51,8 @@ export interface FootballKeepCutResult {
   cut: FootballRankFiveItem[];
   tierOrder: FootballRankFiveItem[];
   correctComparisons: number;
+  /** Legacy compatibility count: kept subjects at or above the fourth-place greatness-tier boundary. */
+  topFourKept: number;
   score: number;
   label: string;
 }
@@ -167,12 +171,18 @@ export function scoreFootballKeepCutSelection(
   const kept = board.filter((item) => keptSet.has(item.id));
   const cut = board.filter((item) => !keptSet.has(item.id));
   const comparisonScore = scoreFootballKeepCutTierSelection(kept, cut);
+  const tierOrder = orderFootballItemsByGreatnessTier(board);
+  const cutoffTier = footballGreatnessTierForItem(tierOrder[KEEP_COUNT - 1]!);
+  const topFourKept = kept.filter((item) => (
+    compareFootballGreatnessTiers(footballGreatnessTierForItem(item), cutoffTier) >= 0
+  )).length;
 
   return {
     kept,
     cut,
-    tierOrder: orderFootballItemsByGreatnessTier(board),
+    tierOrder,
     correctComparisons: comparisonScore.correctComparisons,
+    topFourKept,
     score: comparisonScore.normalizedScore,
     label: footballKeepCutScoreLabel(comparisonScore.normalizedScore),
   };
