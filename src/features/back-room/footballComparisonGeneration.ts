@@ -696,22 +696,17 @@ function countTier(items: readonly FootballRankFiveItem[], tier: FootballCompari
   return items.filter((item) => footballComparisonTier(item) === tier).length;
 }
 
-function keepCutVisibleTexture(items: readonly FootballRankFiveItem[]) {
+function keepCutVisibleLowerTierClump(items: readonly FootballRankFiveItem[]) {
   let tierFour = 0;
   let tierFive = 0;
-  const visibleTiers = new Set<string>();
 
   for (const item of items) {
     const label = footballGreatnessTierLabel(footballGreatnessTierForItem(item));
-    visibleTiers.add(label);
     if (label === "TIER 4") tierFour += 1;
     if (label === "TIER 5") tierFive += 1;
   }
 
-  return {
-    lowerTierClump: Math.max(tierFour, tierFive),
-    distinctVisibleTiers: visibleTiers.size,
-  };
+  return Math.max(tierFour, tierFive);
 }
 
 function preferredKeepCutTextureCandidates(
@@ -721,17 +716,12 @@ function preferredKeepCutTextureCandidates(
   if (styleId === "bottom-grind" || candidates.length < 2) return [...candidates];
 
   const minimumClump = Math.min(...candidates.map((candidate) => (
-    keepCutVisibleTexture(candidate.items).lowerTierClump
+    keepCutVisibleLowerTierClump(candidate.items)
   )));
-  const leastClumped = candidates.filter((candidate) => (
-    keepCutVisibleTexture(candidate.items).lowerTierClump === minimumClump
-  ));
-  const maximumDistinctTiers = Math.max(...leastClumped.map((candidate) => (
-    keepCutVisibleTexture(candidate.items).distinctVisibleTiers
-  )));
+  const acceptableClump = Math.max(4, minimumClump);
 
-  return leastClumped.filter((candidate) => (
-    keepCutVisibleTexture(candidate.items).distinctVisibleTiers === maximumDistinctTiers
+  return candidates.filter((candidate) => (
+    keepCutVisibleLowerTierClump(candidate.items) <= acceptableClump
   ));
 }
 
@@ -742,14 +732,9 @@ function preferKeepCutBest(
 ) {
   if (!current) return true;
   if (styleId !== "bottom-grind") {
-    const candidateTexture = keepCutVisibleTexture(candidate.items);
-    const currentTexture = keepCutVisibleTexture(current.items);
-    if (candidateTexture.lowerTierClump !== currentTexture.lowerTierClump) {
-      return candidateTexture.lowerTierClump < currentTexture.lowerTierClump;
-    }
-    if (candidateTexture.distinctVisibleTiers !== currentTexture.distinctVisibleTiers) {
-      return candidateTexture.distinctVisibleTiers > currentTexture.distinctVisibleTiers;
-    }
+    const candidateClump = keepCutVisibleLowerTierClump(candidate.items);
+    const currentClump = keepCutVisibleLowerTierClump(current.items);
+    if (candidateClump !== currentClump) return candidateClump < currentClump;
   }
   return candidate.cutoffGap < current.cutoffGap;
 }
