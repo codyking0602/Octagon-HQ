@@ -80,10 +80,12 @@ describe("Hit the Number PR7 cross-sport parity", () => {
 
     for (const page of [ufcPage, footballPage]) {
       expect(page).toContain("<GameResultActions");
-      expect(page).toContain('replayLabel={shared ? "REPLAY CHALLENGE" : "NEW LINEUP"}');
       expect(page).toContain("onReplay={replay}");
       expect(page).toContain("seed:");
       expect(page).toContain("board");
     }
+
+    expect(ufcPage).toContain('replayLabel={shared ? "REPLAY CHALLENGE" : "NEW LINEUP"}');
+    expect(footballPage).toContain('replayLabel={shared ? "REPLAY CHALLENGE" : "NEW BOARD"}');
   });
 });
