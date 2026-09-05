@@ -25,7 +25,7 @@ import {
 } from "./footballSubjectRegistry";
 
 export const FOOTBALL_HIT_THE_NUMBER_GAME_ID = "football-hit-the-number";
-export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v3" as const;
+export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v4" as const;
 export const FOOTBALL_HIT_THE_NUMBER_MIN_PICKS = 4;
 export const FOOTBALL_HIT_THE_NUMBER_MAX_PICKS = 7;
 export const FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE = "random-pool" as const;
@@ -148,6 +148,8 @@ export const FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS = {
 } as const satisfies Readonly<Record<FootballHitTheNumberContentKind, number>>;
 
 export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH = 20;
+export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH = 3;
+export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_RANDOM_POOL_SIZE = 4 * FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH;
 
 function careerSpecialSubjectEligible(subject: FootballSubjectProfile) {
   return subject.casualEligible
@@ -435,24 +437,34 @@ function weightedValue<T>(rows: readonly { value: T; weight: number }[], random:
   return rows[rows.length - 1]!.value;
 }
 
+function buildTierGroups(
+  subjects: readonly FootballHitTheNumberSubject[],
+  metricId: FootballFactMetricId,
+) {
+  const ordered = [...subjects].sort((left, right) =>
+    valueFor(right.id, metricId) - valueFor(left.id, metricId) || left.id.localeCompare(right.id));
+  return Array.from({ length: 4 }, (_, index) => {
+    const start = Math.floor(index * ordered.length / 4);
+    const end = Math.floor((index + 1) * ordered.length / 4);
+    return ordered.slice(start, end);
+  });
+}
+
 function buildSlotsFor(
   subjects: readonly FootballHitTheNumberSubject[],
   metricId: FootballFactMetricId,
 ): readonly FootballHitTheNumberSlot[] {
-  const ordered = [...subjects].sort((left, right) =>
-    valueFor(right.id, metricId) - valueFor(left.id, metricId) || left.id.localeCompare(right.id));
-  const groups = Array.from({ length: 4 }, (_, index) => {
-    const start = Math.floor(index * ordered.length / 4);
-    const end = Math.floor((index + 1) * ordered.length / 4);
-    return new Set(ordered.slice(start, end).map((subject) => subject.id));
-  });
-  const labels = ["Elite Tier", "High Tier", "Middle Tier", "Value Tier"] as const;
+  const groups = buildTierGroups(subjects, metricId);
+  const labels = ["Tier 1", "Tier 2", "Tier 3", "Tier 4"] as const;
   return [
-    ...groups.map((ids, index) => ({
-      id: `tier-${index + 1}`,
-      label: labels[index]!,
-      accepts: (subject: FootballHitTheNumberSubject) => ids.has(subject.id),
-    })),
+    ...groups.map((group, index) => {
+      const ids = new Set(group.map((subject) => subject.id));
+      return {
+        id: `tier-${index + 1}`,
+        label: labels[index]!,
+        accepts: (subject: FootballHitTheNumberSubject) => ids.has(subject.id),
+      };
+    }),
     { id: "wild-card", label: "Wild Card", accepts: () => true },
   ];
 }
@@ -531,6 +543,28 @@ function slotSolution(
   return visit(0) ? assigned : null;
 }
 
+function balancedBuildTeamRandomPool(
+  subjects: readonly FootballHitTheNumberSubject[],
+  solution: readonly FootballHitTheNumberSubject[],
+  metricId: FootballFactMetricId,
+  random: () => number,
+) {
+  const solutionIds = new Set(solution.map((subject) => subject.id));
+  const groups = buildTierGroups(subjects, metricId);
+  const pool = groups.flatMap((group) => {
+    const required = group.filter((subject) => solutionIds.has(subject.id));
+    if (required.length > FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH) return [];
+    const extras = shuffleLineup(
+      group.filter((subject) => !solutionIds.has(subject.id)),
+      random,
+    ).slice(0, FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH - required.length);
+    return [...required, ...extras];
+  });
+  if (pool.length !== FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_RANDOM_POOL_SIZE) return null;
+  if (!solution.every((subject) => pool.some((candidate) => candidate.id === subject.id))) return null;
+  return shuffleLineup(pool, random);
+}
+
 function combinations<T>(items: readonly T[], count: number, visit: (selection: readonly T[]) => boolean | void) {
   const selected: T[] = [];
   function walk(start: number): boolean {
@@ -585,11 +619,12 @@ function pickOptionsFor(
   }
 
   if (formatId === "build-the-team") {
-    const minimum = Math.max(
-      FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH,
-      requiredPoolSize(boardType, 5),
-    );
-    return metricSubjects(board).length >= minimum ? [5] : [];
+    const subjects = metricSubjects(board);
+    if (subjects.length < FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH) return [];
+    const groups = buildTierGroups(subjects, board.metricId);
+    if (groups.some((group) => group.length < FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH)) return [];
+    if (boardType === "random-pool" && subjects.length < FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_RANDOM_POOL_SIZE) return [];
+    return [5];
   }
 
   return FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE
@@ -783,7 +818,7 @@ function buildCandidate(
     solution = slotSolution(slots, eligible, metricId, random);
   } else if (formatId === "build-the-team") {
     slots = buildSlotsFor(eligible, metricId);
-    configurationLabel = "Four production tiers + wild card";
+    configurationLabel = "4 stat tiers + wild card";
     solution = slotSolution(slots, eligible, metricId, random);
   } else {
     solution = shuffleLineup(eligible, random).slice(0, pickCount);
@@ -796,6 +831,10 @@ function buildCandidate(
 
   if (boardType === "open-roster") {
     subjectIds = eligible.map((subject) => subject.id);
+  } else if (formatId === "build-the-team") {
+    const balancedPool = balancedBuildTeamRandomPool(eligible, solution, metricId, random);
+    if (!balancedPool) return null;
+    subjectIds = balancedPool.map((subject) => subject.id);
   } else {
     const poolSize = footballHitTheNumberRandomPoolSize(pickCount);
     const extras = shuffleLineup(
