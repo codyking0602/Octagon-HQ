@@ -3,6 +3,7 @@ import { getFootballFact } from "./footballFactualStats";
 import {
   FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS,
   FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG,
+  FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG,
   FOOTBALL_HIT_THE_NUMBER_VERSION,
   createFootballHitTheNumberPlan,
   footballHitTheNumberPlanQuality,
@@ -16,7 +17,7 @@ const metricById = new Map(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((metric) =
 const careerSpecialGroups = new Set(["nfl-qb-career", "nfl-rb-career", "nfl-receiving-career"]);
 
 describe("Football Hit the Number content foundation", () => {
-  it("makes peak seasons and team seasons core while keeping raw career totals special", () => {
+  it("keeps exact player seasons and team seasons core while removing CFB best-season boards", () => {
     expect(FOOTBALL_HIT_THE_NUMBER_VERSION).toBe("football-hit-the-number-v4");
     expect(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["peak-season"])
       .toBeGreaterThan(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["career-special"]);
@@ -24,14 +25,18 @@ describe("Football Hit the Number content foundation", () => {
       .toBeGreaterThan(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["career-special"]);
 
     expect(metricById.get("nfl-season-passing-yards")?.contentKind).toBe("peak-season");
-    expect(metricById.get("cfb-best-season-rushing-yards")?.contentKind).toBe("peak-season");
-    expect(metricById.get("cfb-best-season-receiving-yards")?.contentKind).toBe("peak-season");
     expect(metricById.get("nfl-team-overall-wins")?.contentKind).toBe("team-season");
     expect(metricById.get("cfb-team-point-differential")?.contentKind).toBe("team-season");
     expect(metricById.get("nfl-team-postseason-wins")?.contentKind).toBe("accomplishment");
     expect(metricById.get("cfb-team-postseason-wins")?.contentKind).toBe("accomplishment");
     expect(metricById.get("cfb-heisman-awards")?.contentKind).toBe("accomplishment");
     expect(metricById.get("nfl-career-passing-yards")?.contentKind).toBe("career-special");
+
+    expect([...metricById.keys()].some((metricId) => metricId.startsWith("cfb-best-season-"))).toBe(false);
+    expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.some((theme) => theme.id === "cfb-player-peaks")).toBe(false);
+    expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.some((theme) => /peak/i.test(theme.label))).toBe(false);
+    expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.find((theme) => theme.id === "cfb-players")?.label)
+      .toBe("College Football Players");
 
     expect(metricById.has("cfb-team-srs")).toBe(false);
     expect(metricById.has("cfb-team-sos")).toBe(false);
@@ -51,10 +56,13 @@ describe("Football Hit the Number content foundation", () => {
         expect(subject.casualEligible, subject.id).toBe(true);
         expect(["A", "B"], subject.id).toContain(subject.recognizabilityTier);
       }
+      if (subject.group === "cfb-player-peak") {
+        expect(subject.subtitle.toLowerCase()).not.toContain("peak");
+      }
     }
   });
 
-  it("generates source-backed boards with peak/team/accomplishment variety and rare career trivia", () => {
+  it("generates source-backed boards with season/team/accomplishment variety and rare career trivia", () => {
     const contentCounts = new Map<FootballHitTheNumberContentKind, number>([
       ["peak-season", 0],
       ["team-season", 0],
@@ -67,6 +75,7 @@ describe("Football Hit the Number content foundation", () => {
       const plan = createFootballHitTheNumberPlan(`football-htn-foundation-${index}`, "random-pool");
       const metric = metricById.get(plan.metricId);
       expect(metric, plan.metricId).toBeDefined();
+      expect(plan.metricId.startsWith("cfb-best-season-")).toBe(false);
       contentCounts.set(metric!.contentKind, contentCounts.get(metric!.contentKind)! + 1);
       expect(footballHitTheNumberPlanQuality(plan).passes).toBe(true);
 
