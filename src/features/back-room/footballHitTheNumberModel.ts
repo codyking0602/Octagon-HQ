@@ -147,9 +147,9 @@ export const FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS = {
   "career-special": 2,
 } as const satisfies Readonly<Record<FootballHitTheNumberContentKind, number>>;
 
-export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH = 20;
-export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH = 3;
-export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_RANDOM_POOL_SIZE = 4 * FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH;
+export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH = 24;
+export const FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH = 6;
+export const FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE = 4 * FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH;
 
 function careerSpecialSubjectEligible(subject: FootballSubjectProfile) {
   return subject.casualEligible
@@ -372,6 +372,10 @@ const domains: readonly FootballHitTheNumberDomain[] = [
   },
 ] as const;
 
+function metricSubjects(board: FootballHitTheNumberMetricBoard) {
+  return subjectsFor(board.group).filter((subject) => getFootballFact(subject.id, board.metricId) != null);
+}
+
 function metricBoardEnabled(board: FootballHitTheNumberMetricBoard) {
   return metricSubjects(board).length >= FOOTBALL_HIT_THE_NUMBER_MIN_PICKS;
 }
@@ -394,10 +398,6 @@ export const FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG = domains.flatMap((domain) =
 
 const domainById = new Map(domains.map((domain) => [domain.id, domain]));
 const metricBoardById = new Map(domains.flatMap((domain) => domain.metrics).map((row) => [row.metricId, row]));
-
-function metricSubjects(board: FootballHitTheNumberMetricBoard) {
-  return subjectsFor(board.group).filter((subject) => getFootballFact(subject.id, board.metricId) != null);
-}
 
 export function footballHitTheNumberThemeSubjects(theme: FootballHitTheNumberThemeDefinition) {
   const canonicalIds = new Set(theme.queries.flatMap((query) => queryFootballSubjects(query).map((subject) => subject.id)));
@@ -473,10 +473,10 @@ function oneFromEachSlots(): readonly FootballHitTheNumberSlot[] {
   const season = (subject: FootballHitTheNumberSubject) => subject.kind === "team-season" ? subject.season : undefined;
   const champion = (subject: FootballHitTheNumberSubject) => subject.nationalChampion === true;
   return [
-    { id: "1990s", label: "1990s Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 1990 && (season(subject) ?? 0) <= 1999 },
-    { id: "2000-06", label: "2000–06 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 2000 && (season(subject) ?? 0) <= 2006 },
-    { id: "2007-13", label: "2007–13 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 2007 && (season(subject) ?? 0) <= 2013 },
-    { id: "2014-22", label: "2014–22 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 2014 && (season(subject) ?? 0) <= 2022 },
+    { id: "1995-2002", label: "1995–2002 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 1995 && (season(subject) ?? 0) <= 2002 },
+    { id: "2003-08", label: "2003–08 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 2003 && (season(subject) ?? 0) <= 2008 },
+    { id: "2009-14", label: "2009–14 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 2009 && (season(subject) ?? 0) <= 2014 },
+    { id: "2015-22", label: "2015–22 Champion", accepts: (subject) => champion(subject) && (season(subject) ?? 0) >= 2015 && (season(subject) ?? 0) <= 2022 },
     { id: "wild-card", label: "Wild Card", accepts: (subject) => champion(subject) },
   ];
 }
@@ -543,24 +543,37 @@ function slotSolution(
   return visit(0) ? assigned : null;
 }
 
-function balancedBuildTeamRandomPool(
+function progressionSlotsHaveDepth(
+  slots: readonly FootballHitTheNumberSlot[],
+  subjects: readonly FootballHitTheNumberSubject[],
+  metricId: FootballFactMetricId,
+) {
+  return slots.slice(0, 4).every((slot) => (
+    subjects.filter((subject) => slot.accepts(subject, valueFor(subject.id, metricId))).length
+      >= FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH
+  ));
+}
+
+function balancedProgressionRandomPool(
   subjects: readonly FootballHitTheNumberSubject[],
   solution: readonly FootballHitTheNumberSubject[],
   metricId: FootballFactMetricId,
+  slots: readonly FootballHitTheNumberSlot[],
   random: () => number,
 ) {
   const solutionIds = new Set(solution.map((subject) => subject.id));
-  const groups = buildTierGroups(subjects, metricId);
-  const pool = groups.flatMap((group) => {
+  const pool = slots.slice(0, 4).flatMap((slot) => {
+    const group = subjects.filter((subject) => slot.accepts(subject, valueFor(subject.id, metricId)));
     const required = group.filter((subject) => solutionIds.has(subject.id));
-    if (required.length > FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH) return [];
+    if (required.length > FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH) return [];
     const extras = shuffleLineup(
       group.filter((subject) => !solutionIds.has(subject.id)),
       random,
-    ).slice(0, FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH - required.length);
+    ).slice(0, FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH - required.length);
     return [...required, ...extras];
   });
-  if (pool.length !== FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_RANDOM_POOL_SIZE) return null;
+  if (pool.length !== FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return null;
+  if (new Set(pool.map((subject) => subject.id)).size !== pool.length) return null;
   if (!solution.every((subject) => pool.some((candidate) => candidate.id === subject.id))) return null;
   return shuffleLineup(pool, random);
 }
@@ -584,7 +597,7 @@ export function footballHitTheNumberRandomPoolSize(pickCount: number) {
   if (!Number.isInteger(pickCount) || pickCount < FOOTBALL_HIT_THE_NUMBER_MIN_PICKS || pickCount > FOOTBALL_HIT_THE_NUMBER_MAX_PICKS) {
     throw new Error(`Football Hit the Number pick count must be ${FOOTBALL_HIT_THE_NUMBER_MIN_PICKS}-${FOOTBALL_HIT_THE_NUMBER_MAX_PICKS}.`);
   }
-  return Math.min(12, pickCount * 2);
+  return pickCount * 2 + 4;
 }
 
 function requiredPoolSize(boardType: FootballHitTheNumberBoardType, pickCount: number) {
@@ -612,18 +625,18 @@ function pickOptionsFor(
   if (formatId === "one-from-each") {
     if (board.group !== "cfb") return [];
     const subjects = oneFromEachSubjects(board);
-    if (subjects.length < requiredPoolSize(boardType, 5)) return [];
     const slots = oneFromEachSlots();
-    if (slots.some((slot) => !subjects.some((subject) => slot.accepts(subject, valueFor(subject.id, board.metricId))))) return [];
+    if (!progressionSlotsHaveDepth(slots, subjects, board.metricId)) return [];
+    if (boardType === "random-pool" && subjects.length < FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return [];
     return [5];
   }
 
   if (formatId === "build-the-team") {
     const subjects = metricSubjects(board);
     if (subjects.length < FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH) return [];
-    const groups = buildTierGroups(subjects, board.metricId);
-    if (groups.some((group) => group.length < FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_VISIBLE_TIER_DEPTH)) return [];
-    if (boardType === "random-pool" && subjects.length < FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_RANDOM_POOL_SIZE) return [];
+    const slots = buildSlotsFor(subjects, board.metricId);
+    if (!progressionSlotsHaveDepth(slots, subjects, board.metricId)) return [];
+    if (boardType === "random-pool" && subjects.length < FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return [];
     return [5];
   }
 
@@ -657,19 +670,23 @@ function slotsForPlan(plan: FootballHitTheNumberPlan) {
   return [];
 }
 
-export function footballHitTheNumberActiveBuildSlot(
+function isProgressionFormat(plan: FootballHitTheNumberPlan) {
+  return plan.formatId === "one-from-each" || plan.formatId === "build-the-team";
+}
+
+export function footballHitTheNumberActiveProgressionSlot(
   plan: FootballHitTheNumberPlan,
   selectedSubjectIds: readonly string[],
 ) {
-  if (plan.formatId !== "build-the-team" || selectedSubjectIds.length >= plan.pickCount) return null;
+  if (!isProgressionFormat(plan) || selectedSubjectIds.length >= plan.pickCount) return null;
   return plan.slots[selectedSubjectIds.length] ?? null;
 }
 
-export function footballHitTheNumberAvailableBuildSubjectIds(
+export function footballHitTheNumberAvailableProgressionSubjectIds(
   plan: FootballHitTheNumberPlan,
   selectedSubjectIds: readonly string[],
 ) {
-  if (plan.formatId !== "build-the-team" || selectedSubjectIds.length >= plan.pickCount) return [];
+  if (!isProgressionFormat(plan) || selectedSubjectIds.length >= plan.pickCount) return [];
   const selected = new Set(selectedSubjectIds);
   const activeSlot = slotsForPlan(plan)[selectedSubjectIds.length];
   if (!activeSlot) return [];
@@ -678,6 +695,22 @@ export function footballHitTheNumberAvailableBuildSubjectIds(
     const subject = subjectFor(subjectId);
     return activeSlot.accepts(subject, valueFor(subject.id, plan.metricId));
   });
+}
+
+export function footballHitTheNumberActiveBuildSlot(
+  plan: FootballHitTheNumberPlan,
+  selectedSubjectIds: readonly string[],
+) {
+  if (plan.formatId !== "build-the-team") return null;
+  return footballHitTheNumberActiveProgressionSlot(plan, selectedSubjectIds);
+}
+
+export function footballHitTheNumberAvailableBuildSubjectIds(
+  plan: FootballHitTheNumberPlan,
+  selectedSubjectIds: readonly string[],
+) {
+  if (plan.formatId !== "build-the-team") return [];
+  return footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedSubjectIds);
 }
 
 export function footballHitTheNumberSelectionSatisfies(
@@ -731,7 +764,7 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
     return legalSelectionCount >= 6 && hasGoodUnder && hasMiddlingOutcome && hasMeaningfulBust;
   };
 
-  if (plan.boardType === "open-roster") {
+  if (plan.boardType === "open-roster" || isProgressionFormat(plan)) {
     const solutionSet = new Set(plan.solutionSubjectIds);
     let complete = false;
     for (let solutionIndex = 0; solutionIndex < plan.solutionSubjectIds.length && !complete; solutionIndex += 1) {
@@ -831,8 +864,8 @@ function buildCandidate(
 
   if (boardType === "open-roster") {
     subjectIds = eligible.map((subject) => subject.id);
-  } else if (formatId === "build-the-team") {
-    const balancedPool = balancedBuildTeamRandomPool(eligible, solution, metricId, random);
+  } else if (formatId === "one-from-each" || formatId === "build-the-team") {
+    const balancedPool = balancedProgressionRandomPool(eligible, solution, metricId, slots, random);
     if (!balancedPool) return null;
     subjectIds = balancedPool.map((subject) => subject.id);
   } else {
