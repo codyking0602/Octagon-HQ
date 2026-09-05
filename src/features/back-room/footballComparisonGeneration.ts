@@ -72,6 +72,7 @@ const TIER_ORDER: readonly FootballComparisonTierId[] = [
   "bad",
 ];
 const BLIND_RANK_BOARD_SIZE = 5;
+const BLIND_RANK_COMPACT_POOL_MAX = 60;
 const KEEP_CUT_BOARD_SIZE = 8;
 const KEEP_COUNT = 4;
 const MAX_BLIND_RANK_BAD = 1;
@@ -231,6 +232,7 @@ function selectionCandidates(
   maxBad: number,
   forceAbsoluteTier: boolean,
   includeSparseExact: boolean,
+  broadenPool: boolean,
 ) {
   const eligible = pool.filter((item) => {
     if (used.has(item.id)) return false;
@@ -253,6 +255,7 @@ function selectionCandidates(
   const combined = [
     ...(includeSparseExact || exactDepth >= minimumExactDepth ? exact : []),
     ...inWindow,
+    ...(broadenPool ? eligible : []),
   ].filter((item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index);
   if (combined.length) return combined;
   if (exact.length) return exact;
@@ -275,6 +278,7 @@ function chooseItem(
   random: () => number,
   forceAbsoluteTier = false,
   includeSparseExact = true,
+  broadenPool = false,
 ) {
   return shuffleLineup(
     selectionCandidates(
@@ -287,6 +291,7 @@ function chooseItem(
       maxBad,
       forceAbsoluteTier,
       includeSparseExact,
+      broadenPool,
     ),
     random,
   )[0] ?? null;
@@ -311,6 +316,7 @@ function requiredBlindRankRange(
     BLIND_RANK_BOARD_SIZE,
     0,
     MAX_BLIND_RANK_BAD,
+    false,
     false,
     false,
   ));
@@ -356,6 +362,7 @@ function attemptBlindRankBoard(
   let badCount = 0;
   const targets = shuffleLineup([...archetype.targets], random);
   const includeSparseExact = items.length <= BLIND_RANK_SPARSE_EXACT_POOL_MAX;
+  const broadenPool = items.length <= BLIND_RANK_COMPACT_POOL_MAX;
 
   for (const targetTier of targets) {
     const forceAbsoluteTier = (
@@ -374,6 +381,7 @@ function attemptBlindRankBoard(
       random,
       forceAbsoluteTier,
       includeSparseExact,
+      broadenPool,
     );
     if (!picked) return null;
     selected.push(picked);
@@ -738,6 +746,7 @@ function attemptKeepCutBoard(
       random,
       forceAbsoluteTier,
       true,
+      false,
     );
     if (!picked) return null;
     selected.push(picked);
