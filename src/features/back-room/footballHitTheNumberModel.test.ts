@@ -7,8 +7,11 @@ import {
   FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH,
   FOOTBALL_HIT_THE_NUMBER_MIN_PICKS,
   FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE,
+  FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE,
+  FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH,
   FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG,
   createFootballHitTheNumberPlan,
+  footballHitTheNumberAvailableProgressionSubjectIds,
   footballHitTheNumberPlanQuality,
   footballHitTheNumberPlayableThemes,
   footballHitTheNumberRandomPoolSize,
@@ -21,18 +24,18 @@ import {
 } from "./footballHitTheNumberModel";
 
 const ONE_FROM_EACH_LABELS = [
-  "1990s Champion",
-  "2000–06 Champion",
-  "2007–13 Champion",
-  "2014–22 Champion",
+  "1995–2002 Champion",
+  "2003–08 Champion",
+  "2009–14 Champion",
+  "2015–22 Champion",
   "Wild Card",
 ];
 
 const BUILD_TEAM_LABELS = [
-  "Elite Tier",
-  "High Tier",
-  "Middle Tier",
-  "Value Tier",
+  "Tier 1",
+  "Tier 2",
+  "Tier 3",
+  "Tier 4",
   "Wild Card",
 ];
 
@@ -93,9 +96,10 @@ describe("Football Hit the Number canonical fact integration", () => {
       { value: 6, weight: 35 },
       { value: 7, weight: 15 },
     ]);
+    expect([4, 5, 6, 7].map(footballHitTheNumberRandomPoolSize)).toEqual([12, 14, 16, 18]);
   });
 
-  it("builds deterministic, solvable, quality-gated boards with distinct era and tier formats", () => {
+  it("builds deterministic, solvable, quality-gated boards with deep era and stat-tier choices", () => {
     let sawOneFromEach = false;
     let sawBuildTeam = false;
     let sawExpandedNflPlayerFamily = false;
@@ -113,7 +117,11 @@ describe("Football Hit the Number canonical fact integration", () => {
         expect(new Set(first.subjectIds).size).toBe(first.subjectIds.length);
         expect(first.subjectIds.length).toBeGreaterThanOrEqual(first.pickCount);
         if (boardType === "random-pool") {
-          expect(first.subjectIds.length).toBe(footballHitTheNumberRandomPoolSize(first.pickCount));
+          expect(first.subjectIds.length).toBe(
+            first.formatId === "one-from-each" || first.formatId === "build-the-team"
+              ? FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE
+              : footballHitTheNumberRandomPoolSize(first.pickCount),
+          );
         }
         expect(first.solutionSubjectIds).toHaveLength(first.pickCount);
         expect(new Set(first.solutionSubjectIds).size).toBe(first.pickCount);
@@ -128,12 +136,26 @@ describe("Football Hit the Number canonical fact integration", () => {
           expect(first.slots.map((slot) => slot.label)).toEqual(ONE_FROM_EACH_LABELS);
           expect(first.configurationLabel).toBe("One champion from each era + wild card");
           expect(first.subjectIds.every((subjectId) => footballHitTheNumberSubjects.find((subject) => subject.id === subjectId)?.nationalChampion === true)).toBe(true);
+          for (let slotIndex = 0; slotIndex < 4; slotIndex += 1) {
+            const previousPicks = first.solutionSubjectIds.slice(0, slotIndex);
+            expect(
+              footballHitTheNumberAvailableProgressionSubjectIds(first, previousPicks).length,
+              `${first.metricId}:${boardType}:era-${slotIndex + 1}`,
+            ).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH);
+          }
         }
         if (first.formatId === "build-the-team") {
           sawBuildTeam = true;
           expect(first.pickCount).toBe(5);
           expect(first.slots.map((slot) => slot.label)).toEqual(BUILD_TEAM_LABELS);
-          expect(first.configurationLabel).toBe("Four production tiers + wild card");
+          expect(first.configurationLabel).toBe("4 stat tiers + wild card");
+          for (let slotIndex = 0; slotIndex < 4; slotIndex += 1) {
+            const previousPicks = first.solutionSubjectIds.slice(0, slotIndex);
+            expect(
+              footballHitTheNumberAvailableProgressionSubjectIds(first, previousPicks).length,
+              `${first.metricId}:${boardType}:tier-${slotIndex + 1}`,
+            ).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH);
+          }
         }
         if (first.metricId.startsWith("nfl-career-receiv") || first.metricId.startsWith("nfl-season-")) sawExpandedNflPlayerFamily = true;
 

@@ -40,13 +40,13 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberPageSource).toContain("plan.configurationLabel");
   });
 
-  it("advances Build the Team through the five canonical tiers in order", () => {
+  it("advances Build the Team through the five canonical metric tiers in order", () => {
     const plan = planForFormat("build-the-team") as FootballHitTheNumberPlan;
     expect(plan.slots.map((slot) => slot.label)).toEqual([
-      "Elite Tier",
-      "High Tier",
-      "Middle Tier",
-      "Value Tier",
+      "Tier 1",
+      "Tier 2",
+      "Tier 3",
+      "Tier 4",
       "Wild Card",
     ]);
 
@@ -65,25 +65,25 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberSelectionSatisfies(plan, selectedIds)).toBe(true);
   });
 
-  it("keeps One From Each ordered by real champion eras instead of production tiers", () => {
+  it("keeps One From Each ordered by deep real champion eras instead of production tiers", () => {
     const plan = planForFormat("one-from-each") as FootballHitTheNumberPlan;
     expect(plan.league).toBe("CFB");
     expect(plan.slots.map((slot) => slot.id)).toEqual([
-      "1990s",
-      "2000-06",
-      "2007-13",
-      "2014-22",
+      "1995-2002",
+      "2003-08",
+      "2009-14",
+      "2015-22",
       "wild-card",
     ]);
 
     const seasons = plan.solutionSubjectIds.map((subjectId) => getFootballHitTheNumberSubject(subjectId)?.season ?? null);
-    expect(seasons[0]).toBeGreaterThanOrEqual(1990);
-    expect(seasons[0]).toBeLessThanOrEqual(1999);
-    expect(seasons[1]).toBeGreaterThanOrEqual(2000);
-    expect(seasons[1]).toBeLessThanOrEqual(2006);
-    expect(seasons[2]).toBeGreaterThanOrEqual(2007);
-    expect(seasons[2]).toBeLessThanOrEqual(2013);
-    expect(seasons[3]).toBeGreaterThanOrEqual(2014);
+    expect(seasons[0]).toBeGreaterThanOrEqual(1995);
+    expect(seasons[0]).toBeLessThanOrEqual(2002);
+    expect(seasons[1]).toBeGreaterThanOrEqual(2003);
+    expect(seasons[1]).toBeLessThanOrEqual(2008);
+    expect(seasons[2]).toBeGreaterThanOrEqual(2009);
+    expect(seasons[2]).toBeLessThanOrEqual(2014);
+    expect(seasons[3]).toBeGreaterThanOrEqual(2015);
     expect(seasons[3]).toBeLessThanOrEqual(2022);
     expect(seasons[4]).not.toBeNull();
     expect(footballHitTheNumberSelectionSatisfies(plan, plan.solutionSubjectIds)).toBe(true);
