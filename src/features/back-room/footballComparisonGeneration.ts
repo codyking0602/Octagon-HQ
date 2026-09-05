@@ -72,7 +72,7 @@ const TIER_ORDER: readonly FootballComparisonTierId[] = [
   "bad",
 ];
 const BLIND_RANK_BOARD_SIZE = 5;
-const BLIND_RANK_COMPACT_POOL_MAX = 60;
+const BLIND_RANK_COMPACT_POOL_MAX = 75;
 const KEEP_CUT_BOARD_SIZE = 8;
 const KEEP_COUNT = 4;
 const MAX_BLIND_RANK_BAD = 1;
@@ -252,10 +252,13 @@ function selectionCandidates(
   });
   const exactDepth = availableTierCount(pool, targetTier);
   const minimumExactDepth = Math.max(2, Math.ceil(pool.length * 0.08));
+  const broadened = broadenPool && targetTier !== "bad"
+    ? eligible.filter((item) => footballComparisonTier(item) !== "bad")
+    : [];
   const combined = [
     ...(includeSparseExact || exactDepth >= minimumExactDepth ? exact : []),
     ...inWindow,
-    ...(broadenPool ? eligible : []),
+    ...broadened,
   ].filter((item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index);
   if (combined.length) return combined;
   if (exact.length) return exact;
