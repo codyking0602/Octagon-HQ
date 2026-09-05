@@ -1,0 +1,34 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
+
+const pageSource = readFileSync(
+  resolve(process.cwd(), "src/features/back-room/FootballHitTheNumberPage.tsx"),
+  "utf8",
+);
+
+describe("Football Hit the Number selection presentation", () => {
+  it("uses board and subject-aware language instead of player-only lineup copy", () => {
+    expect(pageSource).toContain("NEW BOARD");
+    expect(pageSource).not.toContain("NEW LINEUP");
+    expect(pageSource).not.toContain('subject?.name ?? "Choose player"');
+    expect(pageSource).toContain("`Choose ${poolNoun}`");
+    expect(pageSource).toContain("`${poolNoun.toUpperCase()} POOL`");
+  });
+
+  it("keeps the active progression pool focused on unused eligible choices", () => {
+    expect(pageSource).toContain(
+      "const displayedSubjectIds = result || !slotProgression ? plan.subjectIds : availableSubjectIds;",
+    );
+    expect(pageSource).not.toContain("[...selectedIds, ...availableSubjectIds]");
+  });
+
+  it("keeps Football choices readable and Football-themed on narrow screens", () => {
+    expect(pageSource).toContain('style={{ gridTemplateColumns: "1fr" }}');
+    expect(pageSource).toContain("activeFootballSlotStyle");
+    expect(pageSource).toContain('background: "rgba(var(--football-accent-rgb), .14)"');
+    expect(pageSource).toContain('whiteSpace: "normal"');
+    expect(pageSource).toContain("subjectDisplayName(subject)");
+    expect(pageSource).toContain("subjectDisplaySubtitle(subject)");
+  });
+});
