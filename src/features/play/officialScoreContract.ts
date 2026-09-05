@@ -79,6 +79,11 @@ export interface BlindRankComparisonScore {
   normalizedScore: number;
 }
 
+export interface KeepCutComparisonScore {
+  correctComparisons: number;
+  normalizedScore: number;
+}
+
 /**
  * Mirrors the immutable server-owned Blind Rank pairwise grader for casual
  * results. Official Today’s Challenge attempts continue to be graded only by
@@ -108,6 +113,41 @@ export function scoreBlindRankOrderedRatings(
   return {
     correctComparisons,
     normalizedScore: correctComparisons * rules.normalizedPointsPerComparison,
+  };
+}
+
+/**
+ * Mirrors the immutable server-owned Keep/Cut sixteen-comparison grader for
+ * casual and deterministic Daily reconstruction. Persisted official attempts
+ * remain server graded; this prevents UFC and Football clients from drifting
+ * onto separate comparison formulas.
+ */
+export function scoreKeepCutComparisonRatings(
+  keptRatings: readonly number[],
+  cutRatings: readonly number[],
+): KeepCutComparisonScore {
+  if (keptRatings.length !== 4 || cutRatings.length !== 4) {
+    throw new RangeError("Keep/Cut scoring requires exactly four kept and four cut ratings.");
+  }
+
+  for (const rating of [...keptRatings, ...cutRatings]) {
+    requireIntegerInRange(rating, 0, 100, "Keep/Cut rating");
+  }
+
+  const rules = OFFICIAL_COMPARISON_GRADING_RULES["keep-cut"];
+  let correctComparisons = 0;
+  for (const keptRating of keptRatings) {
+    for (const cutRating of cutRatings) {
+      if (keptRating >= cutRating - rules.ratingTieTolerance) correctComparisons += 1;
+    }
+  }
+
+  return {
+    correctComparisons,
+    normalizedScore: Math.max(
+      0,
+      Math.min(100, Math.round(correctComparisons * rules.normalizedPointsPerComparison)),
+    ),
   };
 }
 
