@@ -278,17 +278,17 @@ export const footballNflCareerRankingFamilyModels: Readonly<Record<FootballNflCa
   "DL / EDGE": {
     positions: ["DL"],
     positionSpecs: { DL: nflDefensiveLineEdgeSpec },
-    calibrationPackId: "nfl-defensive-players",
+    calibrationPackId: "nfl-front-seven",
   },
   LB: {
     positions: ["LB"],
     positionSpecs: { LB: nflLinebackerSpec },
-    calibrationPackId: "nfl-defensive-players",
+    calibrationPackId: "nfl-front-seven",
   },
   Secondary: {
     positions: ["DB"],
     positionSpecs: { DB: nflSecondarySpec },
-    calibrationPackId: "nfl-defensive-players",
+    calibrationPackId: "nfl-secondary",
   },
   "K / P": {
     positions: ["K", "P"],
@@ -373,6 +373,12 @@ export const footballComparisonCategorySpecs: Readonly<Record<FootballRankFivePa
     ],
     2,
   ),
+  "nfl-front-seven": category(
+    { kind: "player-career", league: "NFL", positions: ["DL", "LB"] }, [], 1,
+  ),
+  "nfl-secondary": category(
+    { kind: "player-career", league: "NFL", position: "DB" }, [], 1,
+  ),
   "nfl-defensive-players": category(
     { kind: "player-career", league: "NFL", positions: ["DL", "LB", "DB"] },
     [],
@@ -398,6 +404,7 @@ export const footballComparisonCategorySpecs: Readonly<Record<FootballRankFivePa
     ],
     3,
   ),
+  "nfl-team-eras": nflBoundedEraSpec,
   "nfl-team-seasons": category(
     { kind: "team-season", league: "NFL" },
     [
@@ -422,6 +429,15 @@ export const footballComparisonCategorySpecs: Readonly<Record<FootballRankFivePa
       higher("cfb-heisman-awards", 0.05),
     ],
     5,
+  ),
+  "college-running-backs": category(
+    { kind: "player-career", league: "CFB", position: "RB" },
+    [
+      higher("cfb-career-rushing-yards", 0.30), higher("cfb-career-rushing-touchdowns", 0.20),
+      higher("cfb-career-receiving-yards", 0.10), higher("cfb-career-games", 0.10),
+      higher("cfb-best-season-rushing-yards", 0.15), higher("cfb-best-season-rushing-touchdowns", 0.10),
+      higher("cfb-heisman-awards", 0.05),
+    ], 3,
   ),
   "college-head-coaches": category(
     { kind: "coach", league: "CFB" },
@@ -475,11 +491,15 @@ const rankingSemanticByPack: Readonly<Record<FootballRankFivePackId, FootballRan
   "nfl-running-backs": "career-greatness",
   "nfl-wide-receivers": "career-greatness",
   "nfl-tight-ends": "career-greatness",
+  "nfl-front-seven": "career-greatness",
+  "nfl-secondary": "career-greatness",
   "nfl-defensive-players": "career-greatness",
   "nfl-head-coaches": "coach-greatness",
   "nfl-qb-seasons": "single-season-greatness",
+  "nfl-team-eras": "bounded-era-greatness",
   "nfl-team-seasons": "team-season-greatness",
   "college-quarterbacks": "career-greatness",
+  "college-running-backs": "career-greatness",
   "college-head-coaches": "coach-greatness",
   "college-programs": "program-franchise-greatness",
   "college-program-eras": "bounded-era-greatness",
@@ -539,12 +559,15 @@ const rankingDimensionByMetric: Readonly<Partial<Record<FootballFactMetricId, Fo
   "nfl-franchise-era-win-percentage": "sustained-excellence",
   "nfl-franchise-era-best-season-win-percentage": "peak",
   "nfl-franchise-era-postseason-resume": "postseason-team-accomplishment",
+  "cfb-career-rushing-yards": "sustained-excellence",
+  "cfb-career-rushing-touchdowns": "sustained-excellence",
+  "cfb-career-receiving-yards": "contextual-strength",
+  "cfb-best-season-rushing-yards": "peak",
+  "cfb-best-season-rushing-touchdowns": "peak",
   "cfb-career-games": "longevity-tail",
   "cfb-career-passing-yards": "sustained-excellence",
   "cfb-career-passing-touchdowns": "sustained-excellence",
   "cfb-career-interceptions-thrown": "contextual-strength",
-  "cfb-career-rushing-yards": "sustained-excellence",
-  "cfb-career-rushing-touchdowns": "sustained-excellence",
   "cfb-best-season-passing-yards": "peak",
   "cfb-best-season-passing-touchdowns": "peak",
   "cfb-best-season-passer-rating": "peak",
@@ -845,7 +868,7 @@ export function buildFootballComparisonCandidatePool(packId: FootballRankFivePac
   const spec = footballComparisonCategorySpecs[packId];
   const semantic = rankingSemanticByPack[packId];
 
-  if (packId === "nfl-defensive-players") {
+  if (packId === "nfl-defensive-players" || packId === "nfl-front-seven" || packId === "nfl-secondary") {
     return buildFootballCandidatePoolFromModel({
       query: spec.query,
       semantic,

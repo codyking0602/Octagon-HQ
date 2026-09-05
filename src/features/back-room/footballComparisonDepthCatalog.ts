@@ -106,6 +106,57 @@ export const nflDefensiveCareers = [
   nfl("vernon-gholston", "Vernon Gholston", "No. 6 pick · 0 career sacks", 8, "Three-year top-six-pick career without a sack is a recognizable bottom-of-scale defensive outcome.", "nyj", "New York Jets"),
 ] as const satisfies readonly FootballComparisonDepthItem[];
 
+const NFL_SECONDARY_CALIBRATION_IDS = new Set([
+  "deion-sanders", "ed-reed", "ronnie-lott", "rod-woodson", "champ-bailey", "brian-dawkins",
+  "troy-polamalu", "darrelle-revis", "richard-sherman", "morris-claiborne",
+]);
+
+/** Editorial calibration rows split by the canonical position-family ownership used by the subject registry. */
+export const nflFrontSevenCareers = nflDefensiveCareers.filter((item) => !NFL_SECONDARY_CALIBRATION_IDS.has(item.id));
+export const nflSecondaryCareers = nflDefensiveCareers.filter((item) => NFL_SECONDARY_CALIBRATION_IDS.has(item.id));
+
+export const nflTeamEras = [
+  nfl("nfl-era-patriots-belichick-brady", "New England Patriots — Belichick/Brady era", "6 championships · 9 Super Bowl appearances", 100, "The defining modern NFL dynasty: six titles and sustained contention across eighteen seasons.", "ne", "New England Patriots"),
+  nfl("nfl-era-49ers-montana-walsh", "San Francisco 49ers — Montana/Walsh dynasty", "5 championships", 98, "Five championships and sustained elite play across quarterback and roster transitions.", "sf", "San Francisco 49ers"),
+  nfl("nfl-era-steelers-steel-curtain", "Pittsburgh Steelers — Steel Curtain dynasty", "4 championships in 6 seasons", 97, "Four titles and historically dominant defense define an inner-circle dynasty.", "pit", "Pittsburgh Steelers"),
+  nfl("nfl-era-cowboys-triplets", "Dallas Cowboys — Triplets dynasty", "3 championships in 4 seasons", 96, "A compact three-title peak built around an exceptional roster.", "dal", "Dallas Cowboys"),
+  nfl("nfl-era-chiefs-mahomes-reid", "Kansas City Chiefs — Mahomes/Reid era", "3 championships · 5 Super Bowl appearances", 95, "The era's defining active contender with repeated championship conversion.", "kc", "Kansas City Chiefs"),
+  nfl("nfl-era-packers-lombardi", "Green Bay Packers — Lombardi dynasty", "5 NFL championships", 94, "Lombardi's five-title run established the championship standard.", "gb", "Green Bay Packers"),
+  nfl("nfl-era-washington-gibbs", "Washington — Joe Gibbs championship era", "3 championships", 90, "Three titles with different starting quarterbacks cap a decade of contention.", "wsh", "Washington"),
+  nfl("nfl-era-raiders-madden-flores", "Oakland Raiders — Madden/Flores contender era", "Super Bowl XI champion · perennial contender", 88, "Exceptional decade-long consistency and a championship peak.", "lv", "Raiders"),
+  nfl("nfl-era-steelers-roethlisberger", "Pittsburgh Steelers — Roethlisberger era", "2 championships · 3 Super Bowl appearances", 87, "Two titles and sustained defensive excellence across seven seasons.", "pit", "Pittsburgh Steelers"),
+  nfl("nfl-era-colts-peyton-manning", "Indianapolis Colts — Peyton Manning era", "Super Bowl XLI champion · 7 straight 12-win seasons", 86, "Historic regular-season consistency with a championship finish.", "ind", "Indianapolis Colts"),
+  nfl("nfl-era-packers-rodgers", "Green Bay Packers — Aaron Rodgers era", "Super Bowl XLV champion · 7 playoff trips", 85, "A title and uninterrupted contention around an MVP quarterback peak.", "gb", "Green Bay Packers"),
+  nfl("nfl-era-seahawks-legion-of-boom", "Seattle Seahawks — Legion of Boom era", "Super Bowl XLVIII champion · 8 playoff trips", 84, "A generational defensive peak and durable contender run.", "sea", "Seattle Seahawks"),
+] as const satisfies readonly FootballComparisonDepthItem[];
+
+export const collegeRunningBacks = [
+  cfb("herschel-walker-cfb", "Herschel Walker", "Georgia · Heisman · 5,259 rushing yards", 99, "Three historically dominant seasons and a Heisman anchor the top college running-back tier.", 61, "Georgia"),
+  cfb("barry-sanders-cfb", "Barry Sanders", "Oklahoma State · 1988 Heisman", 98, "The greatest single-season rushing peak in college football history.", 197, "Oklahoma State"),
+  cfb("tony-dorsett-cfb", "Tony Dorsett", "Pittsburgh · Heisman · national champion", 97, "Record-setting production paired with a Heisman and national title.", 221, "Pittsburgh"),
+  cfb("ricky-williams-cfb", "Ricky Williams", "Texas · Heisman · 6,279 rushing yards", 96, "Historic career volume and a dominant Heisman finish.", 251, "Texas"),
+  cfb("bo-jackson-cfb", "Bo Jackson", "Auburn · 1985 Heisman", 95, "Explosive era-defining peak with a Heisman season.", 2, "Auburn"),
+  cfb("marcus-allen-cfb", "Marcus Allen", "USC · Heisman · 2,342-yard season", 94, "Heisman peak and landmark 2,000-yard season.", 30, "USC"),
+  cfb("ron-dayne-cfb", "Ron Dayne", "Wisconsin · Heisman · career rushing record", 93, "Unmatched four-year volume and a Heisman-winning finish.", 275, "Wisconsin"),
+  cfb("reggie-bush-cfb", "Reggie Bush", "USC · 2× national champion", 93, "Transformative all-purpose peak on a dominant championship-era team.", 30, "USC"),
+  cfb("earl-campbell-cfb", "Earl Campbell", "Texas · 1977 Heisman", 92, "Powerful Heisman peak and sustained production.", 251, "Texas"),
+  cfb("jonathan-taylor-cfb", "Jonathan Taylor", "Wisconsin · 6,174 rushing yards", 92, "Three extraordinary high-volume seasons with elite efficiency.", 275, "Wisconsin"),
+  cfb("adrian-peterson-cfb", "Adrian Peterson", "Oklahoma · 4,041 rushing yards", 90, "Immediate freshman dominance and three high-impact seasons.", 201, "Oklahoma"),
+  cfb("oj-simpson-cfb", "O.J. Simpson", "USC · 1968 Heisman", 89, "Historic two-year peak capped by a dominant Heisman campaign.", 30, "USC"),
+  cfb("derrick-henry-cfb", "Derrick Henry", "Alabama · Heisman · national champion", 88, "Record SEC rushing season and championship centerpiece.", 333, "Alabama"),
+  cfb("ladainian-tomlinson-cfb", "LaDainian Tomlinson", "TCU · 5,263 rushing yards", 87, "Massive career production including a 2,000-yard senior season.", 2628, "TCU"),
+  cfb("archie-griffin-cfb", "Archie Griffin", "Ohio State · 2× Heisman", 87, "Only two-time Heisman winner with four years of elite production.", 194, "Ohio State"),
+  cfb("christian-mccaffrey-cfb", "Christian McCaffrey", "Stanford · NCAA all-purpose record", 86, "Historic all-purpose peak and sustained versatility.", 24, "Stanford"),
+  cfb("saquon-barkley-cfb", "Saquon Barkley", "Penn State · 5,038 scrimmage yards", 85, "Elite rushing, receiving, and return value over three seasons.", 213, "Penn State"),
+  cfb("darren-mcfadden-cfb", "Darren McFadden", "Arkansas · 2× Heisman runner-up", 84, "Repeated national-award contention and explosive SEC production.", 8, "Arkansas"),
+  cfb("billy-sims-cfb", "Billy Sims", "Oklahoma · 1978 Heisman", 84, "Heisman peak and sustained high-end production.", 201, "Oklahoma"),
+  cfb("eddie-george-cfb", "Eddie George", "Ohio State · 1995 Heisman", 83, "Dominant Heisman senior season and strong career volume.", 194, "Ohio State"),
+  cfb("mark-ingram-cfb", "Mark Ingram", "Alabama · Heisman · national champion", 83, "Heisman and championship peak with elite SEC efficiency.", 333, "Alabama"),
+  cfb("melvin-gordon-cfb", "Melvin Gordon", "Wisconsin · 2,587-yard season", 82, "One of the most productive rushing seasons ever caps a strong career.", 275, "Wisconsin"),
+  cfb("bijan-robinson-cfb", "Bijan Robinson", "Texas · Doak Walker winner", 82, "Elite efficiency and complete-back production over three seasons.", 251, "Texas"),
+  cfb("trent-richardson-cfb", "Trent Richardson", "Alabama · 2011 All-American", 76, "Excellent championship-era career and a dominant final season.", 333, "Alabama"),
+] as const satisfies readonly FootballComparisonDepthItem[];
+
 export const nflQuarterbackSeasons = [
   nfl("tom-brady-2007", "Tom Brady", "2007 · 50 TD · 16–0 regular season", 100, "Historic efficiency and touchdown dominance on an undefeated regular-season team; Super Bowl loss is the only meaningful blemish.", "ne", "New England Patriots"),
   nfl("peyton-manning-2013", "Peyton Manning", "2013 · 5,477 yards · 55 TD", 100, "Record-setting passing production and MVP dominance with a Super Bowl appearance.", "den", "Denver Broncos"),
@@ -267,7 +318,9 @@ export const footballComparisonDepthItems = [
   ...nflDefensiveCareers,
   ...nflQuarterbackSeasons,
   ...nflTeamSeasons,
+  ...nflTeamEras,
   ...collegeHeadCoaches,
+  ...collegeRunningBacks,
   ...collegeProgramEras,
   ...collegeQuarterbackDepth,
   ...collegeProgramDepth,

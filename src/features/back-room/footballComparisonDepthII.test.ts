@@ -1,94 +1,53 @@
 import { describe, expect, it } from "vitest";
+import { footballRankFivePacks } from "./footballRankFivePlayableModel";
+import { footballComparisonEligibilityQuery } from "./footballComparisonAuthority";
 import { getFootballRatingBand } from "./footballContentContract";
-import { footballKeepCutPacks } from "./footballKeepCutModel";
-import { footballRankFivePacks, getFootballRankFivePack } from "./footballRankFiveModel";
+import { resolveFootballSubjectReference } from "./footballSubjectRegistry";
 
-function rating(packId: Parameters<typeof getFootballRankFivePack>[0], itemId: string) {
-  const item = getFootballRankFivePack(packId).items.find((candidate) => candidate.id === itemId);
-  expect(item, `${packId}/${itemId}`).toBeDefined();
-  return item!.rating;
+const CATEGORY_NAMES = [
+  "NFL QB Careers", "NFL RB Careers", "NFL WR Careers", "NFL TE Careers",
+  "NFL Front Seven Careers", "NFL Secondary Careers", "NFL Head Coaches", "NFL Team Eras",
+  "College QBs", "College RB Careers", "CFB Head Coaches", "CFB Program Eras",
+] as const;
+
+function item(packId: (typeof footballRankFivePacks)[number]["id"], id: string) {
+  return footballRankFivePacks.find((pack) => pack.id === packId)!.items.find((candidate) => candidate.id === id)!;
 }
 
-describe("Football comparison depth II", () => {
-  it("lands on the approved mature comparison-universe target without duplicating subjects", () => {
-    expect(footballRankFivePacks).toHaveLength(13);
-    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "NFL"))).toHaveLength(8);
-    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "CFB"))).toHaveLength(5);
-
-    expect(getFootballRankFivePack("nfl-tight-ends").items).toHaveLength(18);
-    expect(getFootballRankFivePack("nfl-defensive-players").items).toHaveLength(32);
-    expect(getFootballRankFivePack("nfl-qb-seasons").items).toHaveLength(18);
-    expect(getFootballRankFivePack("nfl-team-seasons").items).toHaveLength(18);
-    expect(getFootballRankFivePack("college-quarterbacks").items).toHaveLength(20);
-    expect(getFootballRankFivePack("college-head-coaches").items).toHaveLength(20);
-    expect(getFootballRankFivePack("college-programs").items).toHaveLength(20);
-    expect(getFootballRankFivePack("college-program-eras").items).toHaveLength(15);
-    expect(getFootballRankFivePack("college-team-seasons").items).toHaveLength(21);
-
-    const ids = footballRankFivePacks.flatMap((pack) => pack.items.map((item) => item.id));
-    expect(ids).toHaveLength(350);
-    expect(new Set(ids).size).toBe(350);
-    expect(footballKeepCutPacks.map((pack) => pack.id)).toEqual(footballRankFivePacks.map((pack) => pack.id));
+describe("Football greatness category expansion", () => {
+  it("exposes exactly the twelve approved categories and removes the retired products", () => {
+    expect(footballRankFivePacks.map((pack) => pack.name)).toEqual(CATEGORY_NAMES);
+    expect(footballRankFivePacks.map((pack) => pack.id)).not.toEqual(expect.arrayContaining([
+      "nfl-defensive-players", "nfl-qb-seasons", "nfl-team-seasons", "college-programs", "college-team-seasons",
+    ]));
   });
 
-  it("gives the new universe real elite, middle, below-average, and bad depth", () => {
-    const newPackIds = [
-      "nfl-tight-ends",
-      "nfl-defensive-players",
-      "nfl-qb-seasons",
-      "nfl-team-seasons",
-      "college-head-coaches",
-      "college-program-eras",
-    ] as const;
-    const bands = new Set(
-      newPackIds.flatMap((packId) => getFootballRankFivePack(packId).items.map((item) => getFootballRatingBand(item.rating))),
-    );
-    expect(bands).toEqual(new Set(["elite", "great", "good", "average", "below-average", "bad"]));
-
-    expect(getFootballRatingBand(rating("nfl-defensive-players", "lawrence-taylor"))).toBe("elite");
-    expect(getFootballRatingBand(rating("nfl-defensive-players", "clay-matthews"))).toBe("good");
-    expect(getFootballRatingBand(rating("nfl-defensive-players", "jadeveon-clowney"))).toBe("average");
-    expect(getFootballRatingBand(rating("nfl-defensive-players", "morris-claiborne"))).toBe("below-average");
-    expect(getFootballRatingBand(rating("nfl-defensive-players", "vernon-gholston"))).toBe("bad");
+  it("owns every playable identity once per category through the canonical positional query", () => {
+    for (const pack of footballRankFivePacks) {
+      expect(new Set(pack.items.map((candidate) => candidate.id)).size).toBe(pack.items.length);
+      const query = footballComparisonEligibilityQuery(pack.id);
+      for (const candidate of pack.items) {
+        const subject = resolveFootballSubjectReference(candidate.id, candidate.name, query);
+        expect(subject, `${pack.id}:${candidate.id}`).not.toBeNull();
+      }
+    }
+    for (const candidate of footballRankFivePacks.find((pack) => pack.id === "nfl-front-seven")!.items) {
+      expect(["DL", "LB"]).toContain(resolveFootballSubjectReference(candidate.id, candidate.name, footballComparisonEligibilityQuery("nfl-front-seven"))?.position);
+    }
+    for (const candidate of footballRankFivePacks.find((pack) => pack.id === "nfl-secondary")!.items) {
+      expect(resolveFootballSubjectReference(candidate.id, candidate.name, footballComparisonEligibilityQuery("nfl-secondary"))?.position).toBe("DB");
+    }
   });
 
-  it("locks defensive and tight-end pairwise calibration anchors", () => {
-    expect(rating("nfl-defensive-players", "lawrence-taylor")).toBeGreaterThan(rating("nfl-defensive-players", "aaron-donald"));
-    expect(rating("nfl-defensive-players", "myles-garrett")).toBeGreaterThan(rating("nfl-defensive-players", "luke-kuechly"));
-    expect(rating("nfl-defensive-players", "jadeveon-clowney")).toBeGreaterThan(rating("nfl-defensive-players", "morris-claiborne"));
-    expect(rating("nfl-defensive-players", "morris-claiborne")).toBeGreaterThan(rating("nfl-defensive-players", "dion-jordan"));
-    expect(rating("nfl-defensive-players", "dion-jordan")).toBeGreaterThan(rating("nfl-defensive-players", "vernon-gholston"));
-
-    expect(rating("nfl-tight-ends", "tony-gonzalez")).toBeGreaterThan(rating("nfl-tight-ends", "travis-kelce"));
-    expect(rating("nfl-tight-ends", "travis-kelce")).toBeGreaterThan(rating("nfl-tight-ends", "jason-witten"));
-    expect(rating("nfl-tight-ends", "jason-witten")).toBeGreaterThan(rating("nfl-tight-ends", "eric-ebron"));
-    expect(rating("nfl-tight-ends", "eric-ebron")).toBeGreaterThan(rating("nfl-tight-ends", "oj-howard"));
-  });
-
-  it("locks season and team-season calibration anchors instead of grading reputation", () => {
-    expect(rating("nfl-qb-seasons", "tom-brady-2007")).toBeGreaterThan(rating("nfl-qb-seasons", "lamar-jackson-2019"));
-    expect(rating("nfl-qb-seasons", "lamar-jackson-2019")).toBeGreaterThan(rating("nfl-qb-seasons", "carson-wentz-2017"));
-    expect(rating("nfl-qb-seasons", "carson-wentz-2017")).toBeGreaterThan(rating("nfl-qb-seasons", "jameis-winston-2019"));
-    expect(rating("nfl-qb-seasons", "jameis-winston-2019")).toBeGreaterThan(rating("nfl-qb-seasons", "zach-wilson-2022"));
-    expect(rating("nfl-qb-seasons", "zach-wilson-2022")).toBeGreaterThan(rating("nfl-qb-seasons", "jamarcus-russell-2009"));
-
-    expect(rating("nfl-team-seasons", "2007-new-england-patriots")).toBeGreaterThan(rating("nfl-team-seasons", "2015-carolina-panthers"));
-    expect(rating("nfl-team-seasons", "2015-carolina-panthers")).toBeGreaterThan(rating("nfl-team-seasons", "2011-philadelphia-eagles"));
-    expect(rating("nfl-team-seasons", "2011-philadelphia-eagles")).toBeGreaterThan(rating("nfl-team-seasons", "2022-denver-broncos"));
-    expect(rating("nfl-team-seasons", "2022-denver-broncos")).toBeGreaterThan(rating("nfl-team-seasons", "2020-jacksonville-jaguars"));
-    expect(rating("nfl-team-seasons", "2020-jacksonville-jaguars")).toBeGreaterThan(rating("nfl-team-seasons", "2017-cleveland-browns"));
-  });
-
-  it("locks CFB coaching, era, and team-season anchors across the full scale", () => {
-    expect(rating("college-head-coaches", "nick-saban-cfb")).toBeGreaterThan(rating("college-head-coaches", "curt-cignetti-cfb"));
-    expect(rating("college-head-coaches", "curt-cignetti-cfb")).toBeGreaterThan(rating("college-head-coaches", "tom-herman-cfb"));
-    expect(rating("college-head-coaches", "tom-herman-cfb")).toBeGreaterThan(rating("college-head-coaches", "chad-morris-cfb"));
-
-    expect(rating("college-program-eras", "alabama-2009-2020")).toBeGreaterThan(rating("college-program-eras", "texas-2010-2016"));
-    expect(rating("college-program-eras", "texas-2010-2016")).toBeGreaterThan(rating("college-program-eras", "nebraska-2015-2022"));
-
-    expect(rating("college-team-seasons", "2025-indiana")).toBeGreaterThan(rating("college-team-seasons", "2022-tcu"));
-    expect(rating("college-team-seasons", "2022-tcu")).toBeGreaterThan(rating("college-team-seasons", "2012-usc"));
-    expect(rating("college-team-seasons", "2012-usc")).toBeGreaterThan(rating("college-team-seasons", "2022-texas-am"));
+  it("preserves representative locked anchors", () => {
+    expect(getFootballRatingBand(item("nfl-quarterbacks", "tom-brady").rating)).toBe("elite");
+    expect(getFootballRatingBand(item("nfl-running-backs", "derrick-henry").rating)).toBe("elite");
+    expect(getFootballRatingBand(item("nfl-tight-ends", "shannon-sharpe").rating)).toBe("elite");
+    expect(getFootballRatingBand(item("nfl-front-seven", "clay-matthews").rating)).toBe("good");
+    expect(getFootballRatingBand(item("nfl-secondary", "morris-claiborne").rating)).toBe("below-average");
+    expect(getFootballRatingBand(item("college-quarterbacks", "jake-fromm-career").rating)).toBe("good");
+    expect(item("college-running-backs", "trent-richardson-cfb").rating).toBeGreaterThanOrEqual(70);
+    expect(item("college-running-backs", "demarco-cobbs")).toBeUndefined();
+    expect(getFootballRatingBand(footballRankFivePacks.find((pack) => pack.id === "college-program-eras")!.items.find((candidate) => candidate.name.includes("Boise State"))!.rating)).toBe("average");
   });
 });

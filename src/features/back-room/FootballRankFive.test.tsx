@@ -31,9 +31,9 @@ describe("Football Blind Rank 5", () => {
   });
 
   it("owns the live deep comparison universe across both leagues", () => {
-    expect(footballRankFivePacks).toHaveLength(13);
+    expect(footballRankFivePacks).toHaveLength(12);
     expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "NFL"))).toHaveLength(8);
-    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "CFB"))).toHaveLength(5);
+    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "CFB"))).toHaveLength(4);
 
     const subjects = footballRankFivePacks.flatMap((pack) => pack.items);
     expect(subjects.length).toBeGreaterThanOrEqual(350);
