@@ -7,12 +7,14 @@ import {
 } from "../play/lineupModel";
 import {
   getFootballBlindResumeEvidenceProfile,
+  getFootballSubject,
+  queryFootballSubjects,
   type FootballBlindResumeArchetype,
+  type FootballSubjectKind,
+  type FootballSubjectProfile,
+  type FootballSubjectQuery,
 } from "./footballFactualStats";
-import {
-  getFootballRankFivePack,
-  type FootballRankFivePackId,
-} from "./footballRankFiveModel";
+import type { FootballRankFivePackId } from "./footballRankFiveModel";
 
 export const FOOTBALL_BLIND_RESUME_GAME_ID = "football-blind-resume";
 export const FOOTBALL_BLIND_RESUME_ROUNDS = 3;
@@ -40,6 +42,7 @@ export interface FootballBlindResumeStat {
 
 export interface FootballBlindResumeMatchup {
   id: string;
+  /** Evidence-family identifier. This does not imply an active Rank Five product. */
   packId: FootballRankFivePackId;
   league: FootballBlindResumeLeague;
   archetype: FootballBlindResumeArchetype;
@@ -58,8 +61,6 @@ export interface FootballBlindResumeRound extends FootballBlindResumeMatchup {
   rightName: string;
   leftSubtitle: string;
   rightSubtitle: string;
-  leftRating: number;
-  rightRating: number;
 }
 
 export interface FootballBlindResumeRun {
@@ -215,19 +216,132 @@ if (new Set(footballBlindResumeMatchups.map((row) => row.id)).size !== footballB
   throw new Error("Football Blind Resume curated bank contains a duplicate matchup.");
 }
 
+function subjectSubtitle(subject: FootballSubjectProfile) {
+  if (subject.kind === "player-career") {
+    const seasons = subject.startSeason != null && subject.endSeason != null
+      ? `${subject.startSeason}–${subject.endSeason}`
+      : null;
+    return [subject.position, subject.school, seasons].filter(Boolean).join(" · ") || subject.league;
+  }
+  if (subject.kind === "player-season") {
+    return [subject.position, subject.season].filter(Boolean).join(" · ") || subject.league;
+  }
+  if (subject.kind === "coach") {
+    return subject.school ? `${subject.school} · Head coach` : `${subject.league} head coach`;
+  }
+  if (subject.kind === "program-era") {
+    const seasons = subject.startSeason != null && subject.endSeason != null
+      ? `${subject.startSeason}–${subject.endSeason}`
+      : null;
+    return [subject.school, seasons].filter(Boolean).join(" · ") || "Program era";
+  }
+  if (subject.kind === "team-season") {
+    return subject.season ? `${subject.league} · ${subject.season}` : `${subject.league} team season`;
+  }
+  return subject.school ?? subject.league;
+}
+
+function normalizedSubjectLabel(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+function evidenceSubjectNameKey(subjectId: string, archetype: FootballBlindResumeArchetype) {
+  if (archetype === "player-season") return normalizedSubjectLabel(subjectId.replace(/-\d{4}$/, ""));
+  if (archetype === "player-career") return normalizedSubjectLabel(subjectId.replace(/-career$/, "").replace(/-cfb$/, ""));
+  if (archetype === "coach") return normalizedSubjectLabel(subjectId.replace(/-cfb$/, ""));
+  return normalizedSubjectLabel(subjectId.replace(/-program$/, ""));
+}
+
+function evidenceSubjectQuery(matchup: FootballBlindResumeMatchup, subjectId: string): FootballSubjectQuery {
+  const collegeQuarterbackSeason = matchup.packId === "college-quarterbacks" && matchup.archetype === "player-season";
+  let kind: FootballSubjectKind;
+  switch (matchup.archetype) {
+    case "player-career":
+      kind = "player-career";
+      break;
+    case "player-season":
+      // Historical CFB season evidence predates the source-backed season projection window.
+      // Its canonical identity owner is therefore the CFB player career, while the evidence remains season-scoped.
+      kind = collegeQuarterbackSeason ? "player-career" : "player-season";
+      break;
+    case "coach":
+      kind = "coach";
+      break;
+    case "team-season":
+      kind = "team-season";
+      break;
+    case "program-era":
+      kind = matchup.packId === "college-programs" ? "program" : "program-era";
+      break;
+  }
+  const seasonMatch = matchup.archetype === "player-season" && !collegeQuarterbackSeason
+    ? /-(\d{4})$/.exec(subjectId)
+    : null;
+  return {
+    kind,
+    league: matchup.league,
+    ...(seasonMatch ? { season: Number(seasonMatch[1]) } : {}),
+    includeProjectedSourceSubjects: true,
+    includeProjectedCanonicalRecognition: true,
+  };
+}
+
+function resolveProgramEraAlias(matchup: FootballBlindResumeMatchup, subjectId: string) {
+  if (matchup.packId !== "college-program-eras" || matchup.archetype !== "program-era") return null;
+  const eraMatch = /^(.*)-(\d{4})-(\d{4})$/.exec(subjectId);
+  if (!eraMatch) return null;
+
+  const schoolKey = normalizedSubjectLabel(eraMatch[1]!);
+  const requestedStart = Number(eraMatch[2]);
+  const requestedEnd = Number(eraMatch[3]);
+  const enclosing = queryFootballSubjects(evidenceSubjectQuery(matchup, subjectId))
+    .filter((subject) => (
+      subject.school
+      && normalizedSubjectLabel(subject.school) === schoolKey
+      && subject.startSeason != null
+      && subject.endSeason != null
+      && subject.startSeason <= requestedStart
+      && subject.endSeason >= requestedEnd
+    ));
+  const uniqueById = [...new Map(enclosing.map((subject) => [subject.id, subject])).values()]
+    .sort((left, right) => (
+      ((left.endSeason ?? 0) - (left.startSeason ?? 0)) - ((right.endSeason ?? 0) - (right.startSeason ?? 0))
+      || left.id.localeCompare(right.id)
+    ));
+  if (!uniqueById.length) return null;
+  const shortestSpan = (uniqueById[0]!.endSeason ?? 0) - (uniqueById[0]!.startSeason ?? 0);
+  const tightest = uniqueById.filter((subject) => (
+    (subject.endSeason ?? 0) - (subject.startSeason ?? 0) === shortestSpan
+  ));
+  return tightest.length === 1 ? tightest[0]! : null;
+}
+
+function resolveEvidenceSubject(matchup: FootballBlindResumeMatchup, subjectId: string) {
+  const direct = getFootballSubject(subjectId);
+  if (direct) return direct;
+
+  const programEraAlias = resolveProgramEraAlias(matchup, subjectId);
+  if (programEraAlias) return programEraAlias;
+
+  const targetName = evidenceSubjectNameKey(subjectId, matchup.archetype);
+  const matches = queryFootballSubjects(evidenceSubjectQuery(matchup, subjectId))
+    .filter((subject) => normalizedSubjectLabel(subject.name) === targetName);
+  const uniqueById = new Map(matches.map((subject) => [subject.id, subject]));
+  return uniqueById.size === 1 ? [...uniqueById.values()][0]! : null;
+}
+
 function resolveMatchup(matchup: FootballBlindResumeMatchup): FootballBlindResumeRound {
-  const pack = getFootballRankFivePack(matchup.packId);
-  const left = pack.items.find((item) => item.id === matchup.leftId);
-  const right = pack.items.find((item) => item.id === matchup.rightId);
-  if (!left || !right) throw new Error(`Football Blind Resume matchup ${matchup.id} references an unavailable canonical subject.`);
+  const left = resolveEvidenceSubject(matchup, matchup.leftId);
+  const right = resolveEvidenceSubject(matchup, matchup.rightId);
+  if (!left || !right) {
+    throw new Error(`Football Blind Resume matchup ${matchup.id} references an unavailable canonical subject.`);
+  }
   return {
     ...matchup,
     leftName: left.name,
     rightName: right.name,
-    leftSubtitle: left.subtitle,
-    rightSubtitle: right.subtitle,
-    leftRating: left.rating,
-    rightRating: right.rating,
+    leftSubtitle: subjectSubtitle(left),
+    rightSubtitle: subjectSubtitle(right),
   };
 }
 
@@ -235,7 +349,14 @@ export function resolvedFootballBlindResumeMatchups() {
   return footballBlindResumeMatchups.map(resolveMatchup);
 }
 
-const nflQuarterbackCareerIds = new Set(getFootballRankFivePack("nfl-quarterbacks").items.map((item) => item.id));
+const nflQuarterbackCareerIds = new Set(
+  queryFootballSubjects({
+    kind: "player-career",
+    league: "NFL",
+    includeProjectedSourceSubjects: true,
+    includeProjectedCanonicalRecognition: true,
+  }).map((subject) => subject.id),
+);
 
 export function footballBlindResumeSubjectIdentityId(subjectId: string) {
   for (const careerId of nflQuarterbackCareerIds) {

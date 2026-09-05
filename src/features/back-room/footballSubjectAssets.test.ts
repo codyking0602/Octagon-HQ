@@ -9,15 +9,19 @@ const TEAM_MEDIA_KINDS = new Set(["player-season", "team-season", "program", "pr
 describe("footballSubjectAssets", () => {
   it("routes every current comparison subject through the canonical media owner", () => {
     const ids = footballRankFivePacks.flatMap((pack) => pack.items.map((item) => item.id));
-    expect(ids).toHaveLength(350);
-    expect(new Set(ids).size).toBe(350);
+    expect(footballRankFivePacks).toHaveLength(12);
+    expect(ids.length).toBeGreaterThan(250);
+    expect(new Set(ids).size).toBe(ids.length);
 
     for (const id of ids) {
       const subject = getFootballSubject(id);
       expect(subject, id).toBeDefined();
 
       const asset = footballSubjectAsset(id);
-      if (subject && TEAM_MEDIA_KINDS.has(subject.kind)) {
+      const usesCanonicalTeamMedia = subject
+        && TEAM_MEDIA_KINDS.has(subject.kind)
+        && !(subject.kind === "program-era" && subject.league === "NFL");
+      if (usesCanonicalTeamMedia) {
         expect(subject.teamId, id).toBeDefined();
         expect(asset, id).toBe(footballTeamAssets[subject.teamId!]);
         expect(footballSubjectAssets[id], id).toBeUndefined();

@@ -9,15 +9,19 @@ import {
 } from "./footballComparisonGeneration";
 import {
   collegeHeadCoaches,
-  collegeProgramDepth,
   collegeProgramEras,
-  collegeQuarterbackDepth,
+  collegeProgramDepth,
   collegeTeamSeasonDepth,
-  legacyCfbRatingBasis,
   nflDefensiveCareers,
   nflQuarterbackSeasons,
   nflTeamSeasons,
+  collegeQuarterbackDepth,
+  collegeRunningBacks,
+  legacyCfbRatingBasis,
   nflTightEnds,
+  nflFrontSevenCareers,
+  nflSecondaryCareers,
+  nflTeamEras,
 } from "./footballComparisonDepthCatalog";
 
 export const FOOTBALL_RANK_FIVE_GAME_ID = "football-rank-five";
@@ -29,14 +33,20 @@ export type FootballRankFivePackId =
   | "nfl-running-backs"
   | "nfl-wide-receivers"
   | "nfl-tight-ends"
-  | "nfl-defensive-players"
+  | "nfl-front-seven"
+  | "nfl-secondary"
   | "nfl-head-coaches"
+  | "nfl-team-eras"
+  | "college-quarterbacks"
+  | "college-running-backs"
+  | "college-head-coaches"
+  | "college-program-eras"
+  // Legacy comparison identifiers remain typed for non-product evidence owners only.
+  // They are not Rank Five packs and cannot be resolved by getFootballRankFivePack.
+  | "nfl-defensive-players"
   | "nfl-qb-seasons"
   | "nfl-team-seasons"
-  | "college-quarterbacks"
-  | "college-head-coaches"
   | "college-programs"
-  | "college-program-eras"
   | "college-team-seasons";
 
 export interface FootballRankFiveItem {
@@ -205,8 +215,8 @@ const nflHeadCoaches: readonly FootballRankFiveItem[] = [
   { id: "bill-belichick", name: "Bill Belichick", subtitle: "6× Super Bowl champion as head coach", league: "NFL", rating: 100, ratingBasis: "Benchmark modern coaching dynasty with unmatched playoff success and two decades of sustained contention." },
   { id: "vince-lombardi", name: "Vince Lombardi", subtitle: "5× NFL champion · 2× Super Bowl champion", league: "NFL", rating: 99, ratingBasis: "Era-defining championship peak with extraordinary winning percentage and postseason dominance." },
   { id: "don-shula", name: "Don Shula", subtitle: "328 regular-season wins · 2× champion", league: "NFL", rating: 98, ratingBasis: "All-time wins leader with extraordinary longevity, multiple eras of contention and a perfect season." },
-  { id: "andy-reid", name: "Andy Reid", subtitle: "3× Super Bowl champion · 300+ combined wins", league: "NFL", rating: 98, ratingBasis: "Elite longevity across two franchises with three titles and sustained offensive innovation." },
-  { id: "bill-walsh", name: "Bill Walsh", subtitle: "3× Super Bowl champion", league: "NFL", rating: 97, ratingBasis: "Dynasty peak, offensive innovation and major coaching-tree influence in a shorter head-coaching career." },
+  { id: "andy-reid", name: "Andy Reid", subtitle: "3× Super Bowl champion · 300+ combined wins", league: "NFL", rating: 96, ratingBasis: "Elite longevity across two franchises with three titles and sustained offensive innovation." },
+  { id: "bill-walsh", name: "Bill Walsh", subtitle: "3× Super Bowl champion", league: "NFL", rating: 98, ratingBasis: "Dynasty peak, offensive innovation and major coaching-tree influence in a shorter head-coaching career." },
   { id: "chuck-noll", name: "Chuck Noll", subtitle: "4× Super Bowl champion", league: "NFL", rating: 96, ratingBasis: "Four-title dynasty architect with sustained roster-building and defensive/offensive adaptability." },
   { id: "tom-landry", name: "Tom Landry", subtitle: "250 regular-season wins · 2× champion", league: "NFL", rating: 95, ratingBasis: "Two decades of contention, innovation and exceptional longevity with five Super Bowl trips." },
   { id: "paul-brown", name: "Paul Brown", subtitle: "3× NFL champion · Browns / Bengals builder", league: "NFL", rating: 94, ratingBasis: "Three NFL titles with Cleveland plus foundational innovation and a successful Cincinnati build support an inner-circle NFL head-coaching career." },
@@ -233,7 +243,7 @@ const nflHeadCoaches: readonly FootballRankFiveItem[] = [
   { id: "jeff-fisher", name: "Jeff Fisher", subtitle: "Super Bowl appearance · 173 wins", league: "NFL", rating: 63, ratingBasis: "Exceptional longevity and one title-game run balanced by a near-.500 career record." },
   { id: "rex-ryan", name: "Rex Ryan", subtitle: "2 AFC title games", league: "NFL", rating: 62, ratingBasis: "Excellent early defensive peak and two deep playoff runs followed by sustained decline." },
   { id: "jason-garrett", name: "Jason Garrett", subtitle: "3 playoff trips · 85 regular-season wins", league: "NFL", rating: 59, ratingBasis: "Long competent Dallas tenure with winning seasons but little postseason ceiling." },
-  { id: "kliff-kingsbury", name: "Kliff Kingsbury", subtitle: "1 playoff appearance with Arizona", league: "NFL", rating: 55, ratingBasis: "Brief offensive flashes and one playoff season without sustained NFL head-coaching success." },
+  { id: "kliff-kingsbury", name: "Kliff Kingsbury", subtitle: "1 playoff appearance with Arizona", league: "NFL", rating: 50, ratingBasis: "Brief offensive flashes and one playoff season without sustained NFL head-coaching success." },
   { id: "adam-gase", name: "Adam Gase", subtitle: "32–48 head-coaching record", league: "NFL", rating: 44, ratingBasis: "One playoff season followed by repeated losing records and limited evidence of sustainable program building." },
   { id: "josh-mcdaniels", name: "Josh McDaniels", subtitle: "Two short head-coaching tenures", league: "NFL", rating: 40, ratingBasis: "Successful coordinator résumé did not translate to sustained head-coaching results in Denver or Las Vegas." },
   { id: "matt-patricia", name: "Matt Patricia", subtitle: "13–29–1 with Detroit", league: "NFL", rating: 28, ratingBasis: "Three losing seasons and significant regression left little positive head-coaching value." },
@@ -247,10 +257,10 @@ const collegeQuarterbacks: readonly FootballRankFiveItem[] = [
   { id: "joe-burrow-2019", name: "Joe Burrow", subtitle: "2019 · Heisman · 60 pass TD", league: "CFB", rating: 99 },
   { id: "vince-young-2005", name: "Vince Young", subtitle: "2005 · 3,036 pass · 1,050 rush", league: "CFB", rating: 98 },
   { id: "tim-tebow-2007", name: "Tim Tebow", subtitle: "Heisman · 2× national champion", league: "CFB", rating: 97 },
-  { id: "lamar-jackson-2016", name: "Lamar Jackson", subtitle: "2016 Heisman · 51 total TD", league: "CFB", rating: 95 },
-  { id: "matt-leinart-2004", name: "Matt Leinart", subtitle: "2004 Heisman · national champion", league: "CFB", rating: 94 },
-  { id: "baker-mayfield-2017", name: "Baker Mayfield", subtitle: "2017 Heisman · 198.9 passer rating", league: "CFB", rating: 93 },
-  { id: "trevor-lawrence-2018", name: "Trevor Lawrence", subtitle: "34–2 as starter · national champion", league: "CFB", rating: 92 },
+  { id: "lamar-jackson-2016", name: "Lamar Jackson", subtitle: "2016 Heisman · 51 total TD", league: "CFB", rating: 90 },
+  { id: "matt-leinart-2004", name: "Matt Leinart", subtitle: "2004 Heisman · national champion", league: "CFB", rating: 89 },
+  { id: "baker-mayfield-2017", name: "Baker Mayfield", subtitle: "2017 Heisman · 198.9 passer rating", league: "CFB", rating: 88 },
+  { id: "trevor-lawrence-2018", name: "Trevor Lawrence", subtitle: "34–2 as starter · national champion", league: "CFB", rating: 80 },
   { id: "marcus-mariota-2014", name: "Marcus Mariota", subtitle: "2014 Heisman · 58 total TD", league: "CFB", rating: 91 },
   { id: "johnny-manziel-2012", name: "Johnny Manziel", subtitle: "2012 Heisman · 5,116 total yards", league: "CFB", rating: 90 },
   { id: "colt-mccoy-2008", name: "Colt McCoy", subtitle: "45 career wins · 2008 Heisman runner-up", league: "CFB", rating: 89 },
@@ -304,97 +314,18 @@ function withLegacyCfbRatingBasis(items: readonly FootballRankFiveItem[]) {
 }
 
 export const footballRankFivePacks: readonly FootballRankFivePack[] = [
-  {
-    id: "nfl-quarterbacks",
-    name: "NFL QB Careers",
-    prompt: "Rank their NFL careers",
-    intro: "One quarterback at a time. Lock him into #1 through #5 before you see who comes next.",
-    items: nflQuarterbacks,
-  },
-  {
-    id: "nfl-running-backs",
-    name: "NFL RB Careers",
-    prompt: "Rank their NFL careers",
-    intro: "Career greatness only. Every placement locks before the next running back appears.",
-    items: nflRunningBacks,
-  },
-  {
-    id: "nfl-wide-receivers",
-    name: "NFL WR Careers",
-    prompt: "Rank their NFL careers",
-    intro: "Career greatness only. Peak, production and longevity all count before the next receiver appears.",
-    items: nflWideReceivers,
-  },
-  {
-    id: "nfl-tight-ends",
-    name: "NFL TE Careers",
-    prompt: "Rank their NFL careers",
-    intro: "Receiving, blocking, peak and longevity all count. Lock each tight end before the next reveal.",
-    items: nflTightEnds,
-  },
-  {
-    id: "nfl-defensive-players",
-    name: "NFL Defensive Careers",
-    prompt: "Rank their NFL defensive careers",
-    intro: "Cross-position defensive greatness. Judge each player against what elite impact looks like at his position.",
-    items: nflDefensiveCareers,
-  },
-  {
-    id: "nfl-head-coaches",
-    name: "NFL Head Coaches",
-    prompt: "Rank their NFL coaching careers",
-    intro: "Resume, peak, longevity and postseason success. Lock each coach before the next reveal.",
-    items: nflHeadCoaches,
-  },
-  {
-    id: "nfl-qb-seasons",
-    name: "NFL QB Seasons",
-    prompt: "Rank these quarterback seasons",
-    intro: "Judge only the season shown. Career reputation does not carry over.",
-    items: nflQuarterbackSeasons,
-  },
-  {
-    id: "nfl-team-seasons",
-    name: "NFL Team Seasons",
-    prompt: "Rank these NFL team seasons",
-    intro: "Great champions, near-misses and famous collapses share one season-only scale.",
-    items: nflTeamSeasons,
-  },
-  {
-    id: "college-quarterbacks",
-    name: "College QBs",
-    prompt: "Rank their college careers",
-    intro: "College only. Forget the NFL. Lock each quarterback before you see the next one.",
-    items: [...withLegacyCfbRatingBasis(collegeQuarterbacks), ...collegeQuarterbackDepth],
-  },
-  {
-    id: "college-head-coaches",
-    name: "CFB Head Coaches",
-    prompt: "Rank their college coaching careers",
-    intro: "College head-coaching value only: titles, program building, peak teams and sustained contention.",
-    items: collegeHeadCoaches,
-  },
-  {
-    id: "college-programs",
-    name: "Programs Since 2000",
-    prompt: "Rank the programs since 2000",
-    intro: "Titles, elite seasons, consistency and staying power since 2000. One program at a time.",
-    items: [...withLegacyCfbRatingBasis(collegePrograms), ...collegeProgramDepth],
-  },
-  {
-    id: "college-program-eras",
-    name: "CFB Program Eras",
-    prompt: "Rank these defined program eras",
-    intro: "Judge only the years shown. Dynasties and famous down eras belong on the same bounded-run scale.",
-    items: collegeProgramEras,
-  },
-  {
-    id: "college-team-seasons",
-    name: "CFB Team Seasons",
-    prompt: "Rank these single-season teams",
-    intro: "Judge only the season shown. Great champions and famous disappointments share one scale.",
-    items: [...withLegacyCfbRatingBasis(collegeTeamSeasons), ...collegeTeamSeasonDepth],
-  },
+  { id: "nfl-quarterbacks", name: "NFL QB Careers", prompt: "Rank their NFL careers", intro: "Career greatness, ranked within each tier.", items: nflQuarterbacks },
+  { id: "nfl-running-backs", name: "NFL RB Careers", prompt: "Rank their NFL careers", intro: "Career greatness, ranked within each tier.", items: nflRunningBacks },
+  { id: "nfl-wide-receivers", name: "NFL WR Careers", prompt: "Rank their NFL careers", intro: "Career greatness, ranked within each tier.", items: nflWideReceivers },
+  { id: "nfl-tight-ends", name: "NFL TE Careers", prompt: "Rank their NFL careers", intro: "Career greatness, ranked within each tier.", items: nflTightEnds },
+  { id: "nfl-front-seven", name: "NFL Front Seven Careers", prompt: "Rank their NFL careers", intro: "Defensive line, edge and linebacker careers on one position-aware scale.", items: nflFrontSevenCareers },
+  { id: "nfl-secondary", name: "NFL Secondary Careers", prompt: "Rank their NFL careers", intro: "Cornerback and safety careers on one position-aware scale.", items: nflSecondaryCareers },
+  { id: "nfl-head-coaches", name: "NFL Head Coaches", prompt: "Rank their NFL coaching careers", intro: "Titles, peak, longevity and sustained contention.", items: nflHeadCoaches },
+  { id: "nfl-team-eras", name: "NFL Team Eras", prompt: "Rank these NFL eras", intro: "Judge each objective multi-season franchise era as a whole.", items: nflTeamEras },
+  { id: "college-quarterbacks", name: "College QBs", prompt: "Rank their college careers", intro: "College careers only, ranked within each tier.", items: [...withLegacyCfbRatingBasis(collegeQuarterbacks), ...collegeQuarterbackDepth] },
+  { id: "college-running-backs", name: "College RB Careers", prompt: "Rank their college careers", intro: "College careers only, ranked within each tier.", items: collegeRunningBacks },
+  { id: "college-head-coaches", name: "CFB Head Coaches", prompt: "Rank their college coaching careers", intro: "Titles, program building, peak teams and sustained contention.", items: collegeHeadCoaches },
+  { id: "college-program-eras", name: "CFB Program Eras", prompt: "Rank these defined program eras", intro: "Judge each objective multi-season program era as a whole.", items: collegeProgramEras },
 ] as const;
 
 export function getFootballRankFivePack(packId: FootballRankFivePackId) {

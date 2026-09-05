@@ -16,11 +16,10 @@ const DEEP_PLAYER_PACKS: readonly FootballRankFivePackId[] = [
   "nfl-running-backs",
   "nfl-wide-receivers",
   "nfl-tight-ends",
-  "nfl-defensive-players",
-  "nfl-qb-seasons",
-  "nfl-team-seasons",
+  "nfl-front-seven",
+  "nfl-secondary",
   "college-quarterbacks",
-  "college-team-seasons",
+  "college-running-backs",
 ];
 
 describe("Football deep comparison authority", () => {
@@ -64,27 +63,27 @@ describe("Football deep comparison authority", () => {
     }
   });
 
-  it("makes the canonical database the player/season candidate source instead of the legacy rated inventory", () => {
+  it("makes the canonical database the active player candidate source instead of the reviewed rated inventory", () => {
     for (const packId of DEEP_PLAYER_PACKS) {
-      const legacy = getFootballRankFivePack(packId);
-      const pool = buildFootballComparisonCandidatePool(packId, legacy.items);
-      const legacyCanonicalIds = new Set(
-        legacy.items.flatMap((item) => {
+      const reviewed = getFootballRankFivePack(packId);
+      const pool = buildFootballComparisonCandidatePool(packId, reviewed.items);
+      const reviewedCanonicalIds = new Set(
+        reviewed.items.flatMap((item) => {
           const subject = resolveFootballSubjectReference(item.id, item.name, footballComparisonEligibilityQuery(packId));
           return subject ? [subject.id] : [];
         }),
       );
-      const newCandidates = pool.filter((candidate) => !legacyCanonicalIds.has(candidate.canonicalSubjectId));
-      expect(newCandidates.length, `${packId} non-legacy canonical candidates`).toBeGreaterThan(0);
+      const newCandidates = pool.filter((candidate) => !reviewedCanonicalIds.has(candidate.canonicalSubjectId));
+      expect(newCandidates.length, `${packId} non-reviewed canonical candidates`).toBeGreaterThan(0);
       expect(newCandidates.some((candidate) => candidate.evaluationSource === "canonical-facts"), `${packId} deep evaluation`).toBe(true);
     }
   });
 
   it("eliminates the four-profile WR-style bottleneck at the comparison authority", () => {
-    const legacy = getFootballRankFivePack("nfl-wide-receivers");
-    const pool = buildFootballComparisonCandidatePool("nfl-wide-receivers", legacy.items);
-    const legacyCanonicalIds = new Set(
-      legacy.items.flatMap((item) => {
+    const reviewed = getFootballRankFivePack("nfl-wide-receivers");
+    const pool = buildFootballComparisonCandidatePool("nfl-wide-receivers", reviewed.items);
+    const reviewedCanonicalIds = new Set(
+      reviewed.items.flatMap((item) => {
         const subject = resolveFootballSubjectReference(
           item.id,
           item.name,
@@ -94,8 +93,8 @@ describe("Football deep comparison authority", () => {
       }),
     );
 
-    expect(pool.length).toBeGreaterThan(legacyCanonicalIds.size);
-    expect(pool.filter((candidate) => !legacyCanonicalIds.has(candidate.canonicalSubjectId)).length).toBeGreaterThan(10);
+    expect(pool.length).toBeGreaterThan(reviewedCanonicalIds.size);
+    expect(pool.filter((candidate) => !reviewedCanonicalIds.has(candidate.canonicalSubjectId)).length).toBeGreaterThan(10);
   });
 
   it("keeps a data-derived rating fixed when caller-provided reviewed rows change", () => {

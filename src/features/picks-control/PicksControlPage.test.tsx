@@ -76,7 +76,11 @@ describe("Fight Night Control results lifecycle", () => {
   it("publishes the supplied recap URL before completing the event", async () => {
     const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
     renderPage(repo);
-    fireEvent.change(await screen.findByRole("textbox", { name: "RECAP URL" }), { target: { value: "https://youtu.be/example" } });
+    const recapInput = await screen.findByRole("textbox", { name: "RECAP URL" });
+    await act(async () => {
+      await Promise.resolve();
+    });
+    fireEvent.change(recapInput, { target: { value: "https://youtu.be/example" } });
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
     await waitFor(() => expect(repo.completeEvent).toHaveBeenCalledWith("ufc-control"));
     expect(repo.setWatchMoments).toHaveBeenCalledWith("ufc-control", [{ title: "Alpha vs. Bravo", url: "https://youtu.be/example" }]);

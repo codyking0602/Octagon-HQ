@@ -248,18 +248,31 @@ export const footballComparisonContracts = {
     evidenceSummary: NFL_REVIEW_SUMMARY,
     rubric: NFL_TE_CAREER_RUBRIC,
   },
-  "nfl-defensive-players": {
-    packId: "nfl-defensive-players",
+  "nfl-front-seven": {
+    packId: "nfl-front-seven",
+    methodologyVersion: "nfl-front-seven-career-v1",
+    question: "How great was this NFL front-seven career?",
+    scope: "NFL defensive line, edge, and linebacker careers, evaluated relative to position and era.",
     contentClass: "comparative",
-    methodologyVersion: "nfl-defensive-career-v1",
-    question: "How great was this player's NFL defensive career?",
-    scope: "Cross-position defensive careers; compare impact relative to position and era rather than directly equating sacks, interceptions, tackles, or other position-specific counting stats.",
     evidenceStatus: "reviewed",
     evidenceRequirements: EVIDENCE_REQUIREMENTS,
     evidenceCutoff: "through-2025-season",
     evidenceSummary: NFL_REVIEW_SUMMARY,
     rubric: NFL_DEFENSIVE_CAREER_RUBRIC,
   },
+  "nfl-secondary": {
+    packId: "nfl-secondary",
+    methodologyVersion: "nfl-secondary-career-v1",
+    question: "How great was this NFL secondary career?",
+    scope: "NFL cornerback and safety careers, evaluated relative to position and era.",
+    contentClass: "comparative",
+    evidenceStatus: "reviewed",
+    evidenceRequirements: EVIDENCE_REQUIREMENTS,
+    evidenceCutoff: "through-2025-season",
+    evidenceSummary: NFL_REVIEW_SUMMARY,
+    rubric: NFL_DEFENSIVE_CAREER_RUBRIC,
+  },
+
   "nfl-head-coaches": {
     packId: "nfl-head-coaches",
     contentClass: "comparative",
@@ -272,30 +285,14 @@ export const footballComparisonContracts = {
     evidenceSummary: NFL_REVIEW_SUMMARY,
     rubric: NFL_HEAD_COACH_CAREER_RUBRIC,
   },
-  "nfl-qb-seasons": {
-    packId: "nfl-qb-seasons",
-    contentClass: "comparative",
-    methodologyVersion: "nfl-qb-season-v1",
-    question: "How great was this quarterback's specific NFL season?",
-    scope: "Judge only the named NFL season; era-adjust production and efficiency, and do not let career reputation change the season grade.",
-    evidenceStatus: "reviewed",
-    evidenceRequirements: EVIDENCE_REQUIREMENTS,
-    evidenceCutoff: "through-2025-season",
-    evidenceSummary: NFL_REVIEW_SUMMARY,
-    rubric: PLAYER_SEASON_RUBRIC,
+
+  "nfl-team-eras": {
+    packId: "nfl-team-eras", contentClass: "comparative", methodologyVersion: "nfl-team-era-v1",
+    question: "How great was this bounded NFL team era?", scope: "Judge only the objective multi-season franchise era represented by the canonical ledger identity.",
+    evidenceStatus: "reviewed", evidenceRequirements: EVIDENCE_REQUIREMENTS, evidenceCutoff: "through-2025-season", evidenceSummary: NFL_REVIEW_SUMMARY,
+    rubric: CFB_PROGRAM_ERA_RUBRIC,
   },
-  "nfl-team-seasons": {
-    packId: "nfl-team-seasons",
-    contentClass: "comparative",
-    methodologyVersion: "nfl-team-season-v1",
-    question: "How great was this specific NFL team in this specific season?",
-    scope: "Judge only the named NFL team-season; record alone does not decide the grade, and dominant non-champions may outrank weaker champions.",
-    evidenceStatus: "reviewed",
-    evidenceRequirements: EVIDENCE_REQUIREMENTS,
-    evidenceCutoff: "through-2025-season",
-    evidenceSummary: NFL_REVIEW_SUMMARY,
-    rubric: TEAM_SEASON_RUBRIC,
-  },
+
   "college-quarterbacks": {
     packId: "college-quarterbacks",
     contentClass: "comparative",
@@ -307,6 +304,12 @@ export const footballComparisonContracts = {
     evidenceCutoff: "through-2025-season",
     evidenceSummary: CFB_REVIEW_SUMMARY,
     rubric: CFB_QB_CAREER_RUBRIC,
+  },
+  "college-running-backs": {
+    packId: "college-running-backs", contentClass: "comparative", methodologyVersion: "cfb-rb-career-v1",
+    question: "How great was this running back's college career?", scope: "College running-back careers only; weigh peak, production, awards, team accomplishment, and sustained excellence.",
+    evidenceStatus: "reviewed", evidenceRequirements: EVIDENCE_REQUIREMENTS, evidenceCutoff: "through-2025-season", evidenceSummary: CFB_REVIEW_SUMMARY,
+    rubric: NFL_RB_CAREER_RUBRIC,
   },
   "college-head-coaches": {
     packId: "college-head-coaches",
@@ -320,18 +323,7 @@ export const footballComparisonContracts = {
     evidenceSummary: CFB_REVIEW_SUMMARY,
     rubric: CFB_HEAD_COACH_CAREER_RUBRIC,
   },
-  "college-programs": {
-    packId: "college-programs",
-    contentClass: "comparative",
-    methodologyVersion: "cfb-program-since-2000-v1",
-    question: "How great has this college football program been since 2000?",
-    scope: "Program achievement from the 2000 season through the completed 2025 season; weigh championships, sustained contention, conference success, peak seasons, talent production, and resilience across eras.",
-    evidenceStatus: "reviewed",
-    evidenceRequirements: EVIDENCE_REQUIREMENTS,
-    evidenceCutoff: "through-2025-season",
-    evidenceSummary: CFB_REVIEW_SUMMARY,
-    rubric: CFB_PROGRAM_RUBRIC,
-  },
+
   "college-program-eras": {
     packId: "college-program-eras",
     contentClass: "comparative",
@@ -344,20 +336,11 @@ export const footballComparisonContracts = {
     evidenceSummary: CFB_REVIEW_SUMMARY,
     rubric: CFB_PROGRAM_ERA_RUBRIC,
   },
-  "college-team-seasons": {
-    packId: "college-team-seasons",
-    contentClass: "comparative",
-    methodologyVersion: "cfb-team-season-v1",
-    question: "How great was this specific college football team in this specific season?",
-    scope: "Judge only the named team-season; weigh dominance, competition, championship accomplishment, peak/postseason form, underlying team quality, and weaknesses or losses.",
-    evidenceStatus: "reviewed",
-    evidenceRequirements: EVIDENCE_REQUIREMENTS,
-    evidenceCutoff: "through-2025-season",
-    evidenceSummary: CFB_REVIEW_SUMMARY,
-    rubric: TEAM_SEASON_RUBRIC,
-  },
-} as const satisfies Record<FootballRankFivePackId, FootballComparisonContract>;
+
+} as const satisfies Partial<Record<FootballRankFivePackId, FootballComparisonContract>>;
 
 export function getFootballComparisonContract(packId: FootballRankFivePackId): FootballComparisonContract {
-  return footballComparisonContracts[packId];
+  const contract = footballComparisonContracts[packId as keyof typeof footballComparisonContracts];
+  if (!contract) throw new Error(`No active Football comparison contract: ${packId}`);
+  return contract;
 }
