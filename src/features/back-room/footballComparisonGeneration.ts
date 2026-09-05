@@ -8,6 +8,7 @@ import {
 } from "./footballContentContract";
 import {
   footballGreatnessTierForItem,
+  footballGreatnessTierLabel,
   type FootballGreatnessTier,
 } from "./footballGreatnessTier";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
@@ -62,6 +63,8 @@ interface RatingWindow {
   minPercentile: number;
   maxPercentile: number;
 }
+
+type KeepCutCandidate = Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number };
 
 const TIER_ORDER: readonly FootballComparisonTierId[] = [
   "elite",
@@ -693,6 +696,35 @@ function countTier(items: readonly FootballRankFiveItem[], tier: FootballCompari
   return items.filter((item) => footballComparisonTier(item) === tier).length;
 }
 
+function keepCutVisibleLowerTierClump(items: readonly FootballRankFiveItem[]) {
+  let tierFour = 0;
+  let tierFive = 0;
+
+  for (const item of items) {
+    const label = footballGreatnessTierLabel(footballGreatnessTierForItem(item));
+    if (label === "TIER 4") tierFour += 1;
+    if (label === "TIER 5") tierFive += 1;
+  }
+
+  return Math.max(tierFour, tierFive);
+}
+
+function chooseKeepCutTextureCandidate(
+  candidates: readonly KeepCutCandidate[],
+  styleId: FootballKeepCutBoardStyleId,
+  random: () => number,
+) {
+  const shuffled = shuffleLineup([...candidates], random);
+  if (styleId === "bottom-grind" || shuffled.length < 2) return shuffled[0]!;
+
+  const baseline = shuffled[0]!;
+  const challenger = shuffled[1]!;
+  return keepCutVisibleLowerTierClump(challenger.items)
+    <= keepCutVisibleLowerTierClump(baseline.items) - 2
+    ? challenger
+    : baseline;
+}
+
 export function footballKeepCutBoardIsCompetitive(
   items: readonly FootballRankFiveItem[],
   pool: readonly FootballRankFiveItem[] = items,
@@ -781,9 +813,9 @@ export function buildFootballKeepCutBoard(
   const style = footballKeepCutBoardStyleForSeed(scopeId, seed);
   const profile = keepCutProfileForSeed(items, scopeId, seed, style);
   const smallPool = items.length <= KEEP_CUT_SMALL_POOL_MAX;
-  let best: (Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }) | null = null;
-  const tightCandidates: Array<Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }> = [];
-  const smallPoolCandidates: Array<Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number }> = [];
+  let best: KeepCutCandidate | null = null;
+  const tightCandidates: KeepCutCandidate[] = [];
+  const smallPoolCandidates: KeepCutCandidate[] = [];
   const smallPoolSignatures = new Set<string>();
 
   for (let attempt = 0; attempt < KEEP_CUT_ATTEMPTS; attempt += 1) {
@@ -798,34 +830,35 @@ export function buildFootballKeepCutBoard(
       attempt,
     );
     if (!board) continue;
-    if (!best || board.cutoffGap < best.cutoffGap) best = { ...board, attempt };
+    const candidate = { ...board, attempt };
+    if (!best || board.cutoffGap < best.cutoffGap) best = candidate;
 
     if (smallPool) {
       const signature = [...board.items.map((item) => item.id)].sort().join("|");
       if (!smallPoolSignatures.has(signature)) {
         smallPoolSignatures.add(signature);
-        smallPoolCandidates.push({ ...board, attempt });
+        smallPoolCandidates.push(candidate);
       }
       if (smallPoolCandidates.length >= KEEP_CUT_SMALL_POOL_CANDIDATES) break;
       continue;
     }
 
     if (board.cutoffGap <= TIGHT_KEEP_CUT_CUTOFF_GAP) {
-      tightCandidates.push({ ...board, attempt });
+      tightCandidates.push(candidate);
       if (tightCandidates.length >= KEEP_CUT_TIGHT_CANDIDATES) break;
     }
   }
 
   if (smallPoolCandidates.length) {
     const random = seededLineupRandom("football-keep-cut", "small-pool-candidate", scopeId, seed, style.id);
-    const selected = shuffleLineup(smallPoolCandidates, random)[0]!;
+    const selected = chooseKeepCutTextureCandidate(smallPoolCandidates, style.id, random);
     const { attempt, ...board } = selected;
     return { ...board, style: style.id, attemptsUsed: attempt + 1 };
   }
 
   if (tightCandidates.length) {
     const random = seededLineupRandom("football-keep-cut", "candidate", scopeId, seed, style.id);
-    const selected = shuffleLineup(tightCandidates, random)[0]!;
+    const selected = chooseKeepCutTextureCandidate(tightCandidates, style.id, random);
     const { attempt, ...board } = selected;
     return { ...board, style: style.id, attemptsUsed: attempt + 1 };
   }
