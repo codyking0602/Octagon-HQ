@@ -31,6 +31,16 @@ function errorMessage(error: unknown) {
     : "Today’s Challenge could not be updated.";
 }
 
+function RuntimeStatus({ error, onRefresh }: { error: unknown; onRefresh?: () => void }) {
+  return error ? (
+    <section className="official-daily-status is-error" role="status">
+      <strong>Progress needs a refresh</strong>
+      <p>{errorMessage(error)}</p>
+      {onRefresh ? <button type="button" onClick={onRefresh}>REFRESH OFFICIAL GAME</button> : null}
+    </section>
+  ) : null;
+}
+
 export function officialDailyGameAllowsCasualReplay(gameType: DailyGameType) {
   return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4";
 }
