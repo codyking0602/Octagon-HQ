@@ -1,4 +1,7 @@
-import { footballCareerTeamMediaId } from "./footballCareerMediaContext";
+import {
+  footballCareerCfbProgramMediaOwners,
+  footballCareerTeamMediaId,
+} from "./footballCareerMediaContext";
 import { footballComparisonDepthItems } from "./footballComparisonDepthCatalog";
 import { footballFindLeaderProjectedCfbTeamMediaOwners } from "./footballFindLeaderRuntimeProjection";
 import {
@@ -107,6 +110,14 @@ const coreCfbTeamAssets = [
 // Core CFB teams used by factual Find the Leader seasons. Each program owns one mark.
 for (const [id, espnId, label] of coreCfbTeamAssets) {
   registerFootballTeamAsset(footballCfbTeamMediaId(id), cfbMark(espnId, label));
+}
+
+// Career media uses the same pinned CFB relationship corpus, registering each unambiguous program exactly once.
+for (const { programName, sourceProgramId } of footballCareerCfbProgramMediaOwners) {
+  registerFootballTeamAsset(
+    footballCfbTeamMediaId(programName),
+    cfbMark(Number(sourceProgramId), programName),
+  );
 }
 
 // Projected factual CFB seasons carry their source program identity, so every eligible school owns one mark here.
