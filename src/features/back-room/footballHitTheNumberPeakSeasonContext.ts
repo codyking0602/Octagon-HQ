@@ -1,5 +1,6 @@
 import factualProjectionJson from "../../../data/generated/football/factual-universe-projection.json";
 import { getFootballFact, type FootballFactMetricId } from "./footballFactualStats";
+import { getFootballSubject } from "./footballSubjectRegistry";
 
 type PeakSeasonContextRow = readonly [
   subjectId: string,
@@ -22,7 +23,9 @@ const contextByFact = new Map(
  */
 export function footballHitTheNumberPeakSeasons(subjectId: string, metricId: FootballFactMetricId) {
   const resolved = getFootballFact(subjectId, metricId);
-  const context = contextByFact.get(`${subjectId}:${metricId}`);
+  const canonicalSubjectId = getFootballSubject(subjectId)?.id ?? subjectId;
+  const context = contextByFact.get(`${canonicalSubjectId}:${metricId}`)
+    ?? contextByFact.get(`${subjectId}:${metricId}`);
   if (!resolved || !context || context[2] !== resolved.fact.value) return [];
   return [...context[3]];
 }
