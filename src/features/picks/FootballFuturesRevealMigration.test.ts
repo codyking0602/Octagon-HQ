@@ -1,13 +1,11 @@
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  fileURLToPath(
-    new URL(
-      "../../../supabase/migrations/202612310082_fix_locked_football_futures_reveal.sql",
-      import.meta.url,
-    ),
+  resolve(
+    process.cwd(),
+    "supabase/migrations/202612310082_fix_locked_football_futures_reveal.sql",
   ),
   "utf8",
 );
