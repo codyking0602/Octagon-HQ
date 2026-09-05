@@ -11,7 +11,10 @@ vi.mock("../picks/picksEventAssets", () => ({
   ],
 }));
 
-afterEach(cleanup);
+afterEach(() => {
+  vi.useRealTimers();
+  cleanup();
+});
 
 const event: PickEvent = {
   eventId: "football-2026-week-1",
@@ -132,6 +135,9 @@ const summary: PickSummary = {
 
 describe("Football HQ Home summary", () => {
   it("uses authored Matchup HQ games for featured card copy and deep links instead of the first league game", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-05T10:00:00-05:00"));
+
     render(
       <MemoryRouter>
         <FootballHq

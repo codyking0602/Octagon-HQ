@@ -50,20 +50,23 @@ describe("Football Stage 15 NFL remaining career ranking models", () => {
     }
   });
 
-  it("routes the combined defensive pool through family-relative models before cross-position comparison", () => {
-    const combined = buildFootballComparisonCandidatePool("nfl-defensive-players", []);
-
-    for (const familyId of ["DL / EDGE", "LB", "Secondary"] as const) {
+  it("routes the split defensive products through the same family-relative models", () => {
+    for (const [familyId, packId] of [
+      ["DL / EDGE", "nfl-front-seven"],
+      ["LB", "nfl-front-seven"],
+      ["Secondary", "nfl-secondary"],
+    ] as const) {
+      const productPool = buildFootballComparisonCandidatePool(packId, []);
       const familyPool = buildFootballNflCareerFamilyCandidatePool(familyId);
       const target = familyPool.find((candidate) => candidate.evaluationSource === "canonical-facts");
       expect(target, `${familyId} data-derived candidate`).toBeDefined();
 
-      const combinedTarget = combined.find((candidate) => candidate.canonicalSubjectId === target?.canonicalSubjectId);
-      expect(combinedTarget, `${familyId} survives combined defensive pool`).toBeDefined();
-      expect(combinedTarget?.rating).toBe(target?.rating);
-      expect(combinedTarget?.rankingCoverage).toBe(target?.rankingCoverage);
-      expect(combinedTarget?.rankingConfidence).toBe(target?.rankingConfidence);
-      expect(combinedTarget?.factMetricIds).toEqual(target?.factMetricIds);
+      const productTarget = productPool.find((candidate) => candidate.canonicalSubjectId === target?.canonicalSubjectId);
+      expect(productTarget, `${familyId} survives ${packId}`).toBeDefined();
+      expect(productTarget?.rating).toBe(target?.rating);
+      expect(productTarget?.rankingCoverage).toBe(target?.rankingCoverage);
+      expect(productTarget?.rankingConfidence).toBe(target?.rankingConfidence);
+      expect(productTarget?.factMetricIds).toEqual(target?.factMetricIds);
 
       const subject = target ? getFootballSubject(target.canonicalSubjectId) : undefined;
       const allowedMetrics = new Set(metricIdsFor(familyId, subject?.position ?? ""));

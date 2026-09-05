@@ -3,7 +3,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import FootballRankFivePage from "./FootballRankFivePage";
 import { footballSubjectAssetPath } from "./FootballSubjectVisual";
-import { footballGreatnessTierForItem } from "./footballGreatnessTier";
+import {
+  FOOTBALL_GREATNESS_TIER_LABELS,
+  footballGreatnessTierForItem,
+} from "./footballGreatnessTier";
+import {
+  getFootballRankFivePack as getReviewedCatalogPack,
+  type FootballRankFivePackId,
+} from "./footballRankFiveModel";
 import {
   buildFootballRankFiveLineup,
   footballRankFivePacks,
@@ -25,15 +32,23 @@ vi.mock("../challenges/challengeRuntime", () => ({
   }),
 }));
 
+const RETIRED_PACK_IDS = [
+  "nfl-defensive-players",
+  "nfl-qb-seasons",
+  "nfl-team-seasons",
+  "college-programs",
+  "college-team-seasons",
+] as const;
+
 describe("Football Blind Rank 5", () => {
   beforeEach(() => {
     window.localStorage.clear();
   });
 
   it("owns the live deep comparison universe across both leagues", () => {
-    expect(footballRankFivePacks).toHaveLength(13);
+    expect(footballRankFivePacks).toHaveLength(12);
     expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "NFL"))).toHaveLength(8);
-    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "CFB"))).toHaveLength(5);
+    expect(footballRankFivePacks.filter((pack) => pack.items.every((item) => item.league === "CFB"))).toHaveLength(4);
 
     const subjects = footballRankFivePacks.flatMap((pack) => pack.items);
     expect(subjects.length).toBeGreaterThanOrEqual(350);
@@ -44,13 +59,24 @@ describe("Football Blind Rank 5", () => {
       expect(pack.items.length).toBeGreaterThanOrEqual(8);
       expect(new Set(pack.items.map((item) => item.id)).size).toBe(pack.items.length);
       expect(pack.items.every((item) => Number.isInteger(item.rating) && item.rating >= 0 && item.rating <= 100)).toBe(true);
-      expect(pack.items.every((item) => ["elite", "great", "good", "average", "below-average", "bad"].includes(footballGreatnessTierForItem(item)))).toBe(true);
+      expect(pack.items.every((item) => Object.hasOwn(
+        FOOTBALL_GREATNESS_TIER_LABELS,
+        footballGreatnessTierForItem(item),
+      ))).toBe(true);
     }
 
     const liveReceivers = footballRankFivePacks.find((pack) => pack.id === "nfl-wide-receivers")!;
     const reviewedReceivers = getFootballReviewedRankFivePack("nfl-wide-receivers");
     expect(liveReceivers.items.length).toBeGreaterThan(reviewedReceivers.items.length);
     expect(liveReceivers.items.some((item) => !reviewedReceivers.items.some((reviewed) => reviewed.id === item.id))).toBe(true);
+  });
+
+  it("does not resolve retired categories as hidden Rank Five packs", () => {
+    for (const packId of RETIRED_PACK_IDS) {
+      expect(() => getReviewedCatalogPack(packId as FootballRankFivePackId)).toThrow(
+        `Unsupported Football Rank 5 pack: ${packId}`,
+      );
+    }
   });
 
   it("builds deterministic five-item lineups with non-flat rating separation", () => {
@@ -82,10 +108,10 @@ describe("Football Blind Rank 5", () => {
       .toBe("/images/football/players/patrick-mahomes.webp");
     expect(footballSubjectAssetPath("jerry-rice", "nfl-wide-receivers"))
       .toBe("/images/football/players/jerry-rice.webp");
-    expect(footballSubjectAssetPath("lawrence-taylor", "nfl-defensive-players"))
+    expect(footballSubjectAssetPath("lawrence-taylor", "nfl-front-seven"))
       .toBe("/images/football/players/lawrence-taylor.webp");
-    expect(footballSubjectAssetPath("1985-chicago-bears", "nfl-team-seasons"))
-      .toBe("/images/football/teams/1985-chicago-bears.webp");
+    expect(footballSubjectAssetPath("nfl-era-patriots-belichick-brady", "nfl-team-eras"))
+      .toBe("/images/football/teams/nfl-era-patriots-belichick-brady.webp");
     expect(footballSubjectAssetPath("nick-saban-cfb", "college-head-coaches"))
       .toBe("/images/football/coaches/nick-saban-cfb.webp");
     expect(footballSubjectAssetPath("alabama-2009-2020", "college-program-eras"))

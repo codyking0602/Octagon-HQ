@@ -16,6 +16,7 @@ import {
   footballKeepCutPacks,
   scoreFootballKeepCutSelection,
 } from "./footballKeepCutModel";
+import { orderFootballItemsByGreatnessTier } from "./footballGreatnessTier";
 import {
   buildFootballRankFiveLineup,
   footballRankFivePacks,
@@ -242,7 +243,7 @@ describe("Football comparison generation maturity", () => {
         const expectedStyle = footballKeepCutBoardStyleForSeed(pack.id, seed);
         const board = buildFootballKeepCutBoard(pack.items, pack.id, seed);
         const ids = board.items.map((item) => item.id);
-        const ordered = strongestFirst(board.items);
+        const ordered = orderFootballItemsByGreatnessTier(board.items);
 
         totalBoards += 1;
         styleCounts[board.style] = (styleCounts[board.style] ?? 0) + 1;
