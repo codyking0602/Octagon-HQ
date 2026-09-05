@@ -1,6 +1,6 @@
 .football-today-page {
   --football-navy: #07182d;
-  --football-blue: #17375f;
+  --football-blue: #1F4E79;
   --football-silver: #aeb7c2;
   --football-line: rgba(174, 183, 194, 0.22);
   background:
@@ -76,7 +76,7 @@
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 18px;
   padding: 22px;
-  background: linear-gradient(135deg, rgba(23,55,95,.82), rgba(7,24,45,.82));
+  background: linear-gradient(135deg, rgba(31,78,121,.82), rgba(7,24,45,.82));
   margin-bottom: 20px;
 }
 
@@ -127,14 +127,14 @@
 .football-today-name-grid button span { display: block; color: #9ea8b4; font-size: .78rem; margin-top: 3px; }
 .football-today-name-grid button em { display: block; color: #dce3ea; font-style: normal; font-size: .65rem; font-weight: 900; letter-spacing: .1em; margin-top: 11px; }
 .football-today-name-grid button:disabled { opacity: .43; }
-.football-today-name-grid button.is-selected { border-color: rgba(255,255,255,.6); background: rgba(23,55,95,.65); }
+.football-today-name-grid button.is-selected { border-color: rgba(255,255,255,.6); background: rgba(31,78,121,.65); }
 
 .football-today-reveal-list { display: grid; gap: 8px; margin-top: 18px; }
 .football-today-reveal-list > div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 13px; border-bottom: 1px solid var(--football-line); }
 .football-today-reveal-list span strong,
 .football-today-reveal-list span small { display: block; }
 .football-today-reveal-list span small { color: #9ea8b4; }
-.football-today-reveal-list .is-leader { background: rgba(23,55,95,.55); border-radius: 10px; }
+.football-today-reveal-list .is-leader { background: rgba(31,78,121,.55); border-radius: 10px; }
 
 .football-today-lock-result { display: flex; justify-content: space-between; gap: 10px; }
 .football-today-lock-result.is-correct strong { color: #83d8a0; }
@@ -200,7 +200,7 @@
   border: 1px solid var(--football-line);
   border-radius: 16px;
   padding: 13px;
-  background: linear-gradient(135deg, rgba(23,55,95,.55), rgba(255,255,255,.03));
+  background: linear-gradient(135deg, rgba(31,78,121,.55), rgba(255,255,255,.03));
 }
 .football-today-subject .football-subject-visual { width: 78px; height: 78px; flex: 0 0 78px; }
 .football-today-subject small,
