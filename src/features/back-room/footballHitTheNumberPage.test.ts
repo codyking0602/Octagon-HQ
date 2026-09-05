@@ -33,6 +33,6 @@ describe("Football Hit the Number selection presentation", () => {
     expect(pageSource).toContain('background: "rgba(var(--football-accent-rgb), .14)"');
     expect(pageSource).toContain('whiteSpace: "normal"');
     expect(pageSource).toContain("subjectDisplayName(subject)");
-    expect(pageSource).toContain("subjectDisplaySubtitle(subject)");
+    expect(pageSource).toContain("subjectDisplaySubtitle(subject, plan.metricId)");
   });
 });
