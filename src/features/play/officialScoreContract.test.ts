@@ -6,6 +6,7 @@ import {
   adaptFindLeaderOfficialScore,
   adaptWavelengthOfficialScore,
   existingOfficialScoreAdapters,
+  scoreKeepCutComparisonRatings,
 } from "./officialScoreContract";
 
 describe("official Play score contract", () => {
@@ -94,5 +95,22 @@ describe("official Play score contract", () => {
     for (const rules of Object.values(OFFICIAL_COMPARISON_GRADING_RULES)) {
       expect(rules.comparisonCount * rules.normalizedPointsPerComparison).toBe(100);
     }
+  });
+
+  it("uses one Keep/Cut comparison helper for the unchanged 16-comparison contract", () => {
+    expect(scoreKeepCutComparisonRatings([90, 80, 70, 60], [59, 50, 40, 30])).toEqual({
+      correctComparisons: 16,
+      normalizedScore: 100,
+    });
+    expect(scoreKeepCutComparisonRatings([60, 60, 60, 60], [61, 61, 61, 61])).toEqual({
+      correctComparisons: 16,
+      normalizedScore: 100,
+    });
+    expect(scoreKeepCutComparisonRatings([60, 60, 60, 60], [62, 62, 62, 62])).toEqual({
+      correctComparisons: 0,
+      normalizedScore: 0,
+    });
+    expect(() => scoreKeepCutComparisonRatings([90, 80, 70], [60, 50, 40, 30])).toThrow(RangeError);
+    expect(() => scoreKeepCutComparisonRatings([90, 80, 70, 101], [60, 50, 40, 30])).toThrow(RangeError);
   });
 });
