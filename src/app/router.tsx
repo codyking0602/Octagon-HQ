@@ -23,6 +23,9 @@ const FootballFindLeaderPage = lazy(() => import("../features/back-room/Football
 const TodayChallengeHubPage = lazy(() => import("../features/play/TodayChallengeHubPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
+const DailyOnlyGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute").then((module) => ({
+  default: module.DailyOnlyGameRoute,
+})));
 const WavelengthPage = lazy(() => import("../features/play/WavelengthPage"));
 const BlindResumePage = lazy(() => import("../features/play/BlindResumePage"));
 const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
@@ -60,8 +63,14 @@ export const appRoutes: RouteObject[] = [
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
       { path: "football/today", element: <FootballTodayChallengePage /> },
-      { path: "football/rank-five", element: <FootballRankFivePage /> },
-      { path: "football/keep-cut", element: <FootballKeepCutPage /> },
+      {
+        path: "football/rank-five",
+        element: <DailyOnlyGameRoute dailyRoute="/football/today" casual={<FootballRankFivePage />} />,
+      },
+      {
+        path: "football/keep-cut",
+        element: <DailyOnlyGameRoute dailyRoute="/football/today" casual={<FootballKeepCutPage />} />,
+      },
       { path: "football/wavelength", element: <FootballWavelengthPage /> },
       { path: "football/blind-resume", element: <FootballBlindResumePage /> },
       { path: "football/hit-the-number", element: <FootballHitTheNumberPage /> },
