@@ -8,8 +8,8 @@ import {
   FOOTBALL_HIT_THE_NUMBER_GAME_ID,
   createFootballHitTheNumberPlan,
   createFootballHitTheNumberRun,
-  footballHitTheNumberActiveBuildSlot,
-  footballHitTheNumberAvailableBuildSubjectIds,
+  footballHitTheNumberActiveProgressionSlot,
+  footballHitTheNumberAvailableProgressionSubjectIds,
   footballHitTheNumberSelectionSatisfies,
   footballHitTheNumberValue,
   formatFootballHitTheNumberValue,
@@ -90,49 +90,12 @@ function subjectDisplaySubtitle(subject: NonNullable<ReturnType<typeof getFootba
   return subject.subtitle;
 }
 
-function oneFromEachSlotSeasonRange(slotId: string): readonly [number, number] | null {
-  if (slotId === "wild-card") return null;
-  const decade = slotId.match(/^(\d{4})s$/);
-  if (decade) {
-    const start = Number(decade[1]);
-    return [start, start + 9];
-  }
-  const range = slotId.match(/^(\d{4})-(\d{2}|\d{4})$/);
-  if (!range) return null;
-  const start = Number(range[1]);
-  const end = range[2]!.length === 2
-    ? Math.floor(start / 100) * 100 + Number(range[2])
-    : Number(range[2]);
-  return [start, end];
-}
-
-function oneFromEachSlotAccepts(slotId: string, subjectId: string) {
-  const subject = getFootballHitTheNumberSubject(subjectId);
-  if (!subject || subject.group !== "cfb" || subject.season == null) return false;
-  if (slotId === "wild-card") return true;
-  const range = oneFromEachSlotSeasonRange(slotId);
-  return Boolean(range && subject.season >= range[0] && subject.season <= range[1]);
-}
-
 function activeProgressionSlot(plan: FootballHitTheNumberPlan, selectedSubjectIds: readonly string[]) {
-  if (!isSlotProgression(plan) || selectedSubjectIds.length >= plan.pickCount) return null;
-  if (plan.formatId === "build-the-team") {
-    return footballHitTheNumberActiveBuildSlot(plan, selectedSubjectIds);
-  }
-  return plan.slots[selectedSubjectIds.length] ?? null;
+  return footballHitTheNumberActiveProgressionSlot(plan, selectedSubjectIds);
 }
 
 function availableProgressionSubjectIds(plan: FootballHitTheNumberPlan, selectedSubjectIds: readonly string[]) {
-  if (!isSlotProgression(plan) || selectedSubjectIds.length >= plan.pickCount) return [];
-  if (plan.formatId === "build-the-team") {
-    return footballHitTheNumberAvailableBuildSubjectIds(plan, selectedSubjectIds);
-  }
-  const activeSlot = plan.slots[selectedSubjectIds.length];
-  if (!activeSlot) return [];
-  const selected = new Set(selectedSubjectIds);
-  return plan.subjectIds.filter((subjectId) => (
-    !selected.has(subjectId) && oneFromEachSlotAccepts(activeSlot.id, subjectId)
-  ));
+  return footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedSubjectIds);
 }
 
 function resolveChallengeRun(
