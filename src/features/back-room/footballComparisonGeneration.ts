@@ -6,6 +6,10 @@ import {
   getFootballRatingBand,
   type FootballRatingBand,
 } from "./footballContentContract";
+import {
+  footballGreatnessTierForItem,
+  type FootballGreatnessTier,
+} from "./footballGreatnessTier";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
 
 export type FootballComparisonTierId = FootballRatingBand;
@@ -159,8 +163,27 @@ export const FOOTBALL_KEEP_CUT_BOARD_STYLES: readonly FootballKeepCutBoardStyle[
   },
 ] as const;
 
+function comparisonTierForGreatness(tier: FootballGreatnessTier): FootballComparisonTierId {
+  switch (tier) {
+    case "goat":
+    case "legendary":
+    case "elite":
+      return "elite";
+    case "near-elite":
+    case "great":
+      return "great";
+    case "good":
+    case "average":
+    case "below-average":
+    case "bad":
+      return tier;
+  }
+}
+
 export function footballComparisonTier(itemOrRating: FootballRankFiveItem | number): FootballComparisonTierId {
-  return getFootballRatingBand(typeof itemOrRating === "number" ? itemOrRating : itemOrRating.rating);
+  return typeof itemOrRating === "number"
+    ? getFootballRatingBand(itemOrRating)
+    : comparisonTierForGreatness(footballGreatnessTierForItem(itemOrRating));
 }
 
 function sortedPool(items: readonly FootballRankFiveItem[]) {
