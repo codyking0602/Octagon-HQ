@@ -7,14 +7,7 @@ describe("Football Hit the Number canonical media coverage", () => {
   it("resolves every playable HTN subject through the shared Football media owner", () => {
     const missing = footballHitTheNumberSubjects
       .filter((subject) => footballSubjectAsset(subject.id) == null)
-      .map((subject) => JSON.stringify({
-        id: subject.id,
-        name: subject.name,
-        kind: subject.kind,
-        league: subject.league,
-        school: subject.school ?? null,
-        franchises: subject.franchises ?? [],
-      }));
+      .map((subject) => `${subject.id} (${subject.kind}/${subject.league})`);
 
     expect(footballHitTheNumberSubjects.length).toBeGreaterThan(0);
     expect(missing).toEqual([]);
