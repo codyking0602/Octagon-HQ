@@ -15,7 +15,7 @@
 
 ## 1. Current roadmap position
 
-PRs 1 through 7 are complete.
+PRs 1 through 8 are complete.
 
 Completed roadmap sequence:
 
@@ -26,10 +26,11 @@ Completed roadmap sequence:
 5. **PR 5 — Wavelength final parity/calibration pass** — merged as #873, with later presentation polish preserving the same mechanic/ownership.
 6. **PR 6 — Blind Resume final parity/source pass** — completed through the September 4 Blind Resume rebuild and follow-up fixes (#878–#882). The approved Football product direction changed during this work: Football Blind Resume is now Daily-only rather than a normal replayable Play-library game.
 7. **PR 7 — Hit the Number final parity/source pass** — completed by #885. UFC Random Pool quality now covers every mature format using only legal player selections; large deterministic parity/source tests lock UFC factual-ledger ownership, Football factual-registry ownership, format breadth, replayability, and challenge/result parity.
+8. **PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup** — completed by #895. Plain entry points now honor the Daily-only product role, compatible historical/challenge deep links remain valid, the existing Daily Double versions are preserved, Football comparison grading uses the shared official Keep/Cut comparison helper, and cross-sport Daily Double presentation recognizes both persisted UFC and Football result shapes.
 
 ### NEXT
 
-**PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup.**
+**PR 9 — 20 Questions.**
 
 Do not reopen an earlier completed mechanic unless a new defect or product decision requires it.
 
@@ -236,9 +237,24 @@ PR 7 completed the final parity/source pass by:
 
 Roadmap PR 7 is complete in #885.
 
-### Blind Rank + Keep 4 / Cut 4 — NEXT
+### Blind Rank + Keep 4 / Cut 4 — COMPLETE FOR PR 8
 
-Normal Play-library discovery is removed. Preserve Daily Double behavior, engines, graders, history, hydration, and compatible deep links. PR 8 owns the remaining Daily-only role/grading/presentation cleanup across sports.
+Keep:
+
+- Blind Rank 5 + Keep 4 / Cut 4 as Daily Double mechanics only;
+- the existing UFC and Football subject-generation owners;
+- the existing Daily runtimes, scheduler/session/repository ownership, persistence, hydration, history, and immutable completed results;
+- the existing persisted Daily Double content/scoring versions so historical results do not silently change;
+- compatible replay, challenge, match, pack, and lineup deep links where an old shared setup still needs the standalone mechanic;
+- normal All Games exclusion in both UFC and Football;
+- one shared official Keep/Cut comparison formula with the existing 16 comparisons, one-point tolerance, and nearest-whole normalization;
+- Football subject isolation to NFL/CFB data and UFC subject isolation to UFC data;
+- cross-sport Daily Double result/status presentation that understands each sport's persisted result shape;
+- UFC red context and Football navy `#1F4E79`, with team/program colors still allowed to own subject treatment.
+
+Plain UFC Blind Rank/Keep-Cut entry points now resolve through the existing official Daily route unless the URL carries compatible historical/challenge intent. Plain Football Rank Five/Keep-Cut entry points now return to the existing Football Today owner under the same compatibility rule. Completed Daily-only results no longer offer a misleading normal casual-replay CTA.
+
+Roadmap PR 8 is complete in #895. Blind Rank + Keep/Cut are **not** the next roadmap PR.
 
 ---
 
@@ -380,11 +396,11 @@ Completed through #878–#882, including the newer locked Football Daily-only di
 ### ✅ PR 7 — Hit the Number final parity/source pass
 Completed in #885. Canonical factual ownership is preserved, every UFC Random Pool format is quality-gated using legal selections, mature UFC/Football format depth is locked, and deterministic cross-sport source/quality/replay/challenge tests cover the final contract.
 
-### ▶ PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup
-**NEXT.** Finish the Daily-only product role, canonical grading path, cross-sport Daily Double presentation, and historical/deep-link preservation.
+### ✅ PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup
+Completed in #895. Blind Rank 5 + Keep 4 / Cut 4 remain Daily Double-only in both sports; normal Play discovery and plain standalone entry are removed, compatible historical/challenge deep links remain valid, the existing Daily/hydration/history owners and persisted versions are preserved, Football uses the shared official Keep/Cut comparison scorer, and cross-sport presentation recognizes both persisted Daily Double result shapes.
 
-### PR 9 — 20 Questions
-Implement the replayable cross-sport mechanic, deterministic predicate bank, scoring, no-narrowing-assistance contract, and source/depth/repetition/UI proof. Daily-ready only; do not activate Daily rotation here.
+### ▶ PR 9 — 20 Questions
+**NEXT.** Implement the replayable cross-sport mechanic, deterministic predicate bank, scoring, no-narrowing-assistance contract, and source/depth/repetition/UI proof. Daily-ready only; do not activate Daily rotation here.
 
 ### PR 10 — Who Am I?
 Implement progressive clue bands, two-at-a-time reveal cadence, scoring, source derivation, giveaway/repetition tests, and UI proof. Daily-ready only; do not activate Daily rotation here.
