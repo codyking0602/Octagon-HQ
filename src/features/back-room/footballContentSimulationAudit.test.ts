@@ -23,7 +23,7 @@ import {
   footballHitTheNumberPlanQuality,
   footballHitTheNumberSubjects,
 } from "./footballHitTheNumberModel";
-import { footballRankFivePacks } from "./footballRankFiveModel";
+import { footballRankFivePacks } from "./footballRankFivePlayableModel";
 import {
   createFootballWavelengthRound,
   footballWavelengthClues,
