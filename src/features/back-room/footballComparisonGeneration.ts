@@ -725,6 +725,36 @@ function preferredKeepCutTextureCandidates(
   ));
 }
 
+function chooseKeepCutTextureCandidate(
+  candidates: readonly KeepCutCandidate[],
+  styleId: FootballKeepCutBoardStyleId,
+  random: () => number,
+) {
+  const preferred = preferredKeepCutTextureCandidates(candidates, styleId);
+  if (styleId === "bottom-grind" || preferred.length < 2) {
+    return shuffleLineup(preferred, random)[0]!;
+  }
+
+  const appearances = new Map<string, number>();
+  for (const candidate of preferred) {
+    for (const item of candidate.items) {
+      appearances.set(item.id, (appearances.get(item.id) ?? 0) + 1);
+    }
+  }
+  const weights = preferred.map((candidate) => candidate.items.reduce(
+    (sum, item) => sum + 1 / (appearances.get(item.id) ?? 1),
+    0,
+  ));
+  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+  let cursor = random() * totalWeight;
+
+  for (let index = 0; index < preferred.length; index += 1) {
+    cursor -= weights[index]!;
+    if (cursor <= 0) return preferred[index]!;
+  }
+  return preferred.at(-1)!;
+}
+
 function preferKeepCutBest(
   candidate: KeepCutCandidate,
   current: KeepCutCandidate | null,
@@ -865,20 +895,14 @@ export function buildFootballKeepCutBoard(
 
   if (smallPoolCandidates.length) {
     const random = seededLineupRandom("football-keep-cut", "small-pool-candidate", scopeId, seed, style.id);
-    const selected = shuffleLineup(
-      preferredKeepCutTextureCandidates(smallPoolCandidates, style.id),
-      random,
-    )[0]!;
+    const selected = chooseKeepCutTextureCandidate(smallPoolCandidates, style.id, random);
     const { attempt, ...board } = selected;
     return { ...board, style: style.id, attemptsUsed: attempt + 1 };
   }
 
   if (tightCandidates.length) {
     const random = seededLineupRandom("football-keep-cut", "candidate", scopeId, seed, style.id);
-    const selected = shuffleLineup(
-      preferredKeepCutTextureCandidates(tightCandidates, style.id),
-      random,
-    )[0]!;
+    const selected = chooseKeepCutTextureCandidate(tightCandidates, style.id, random);
     const { attempt, ...board } = selected;
     return { ...board, style: style.id, attemptsUsed: attempt + 1 };
   }
