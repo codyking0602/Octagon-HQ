@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import type { ChallengeJson, PlayChallenge } from "../challenges/challengeModel";
 import { blindRankPacks, resolveBlindRankChallenge } from "./blindRankEngine";
@@ -88,9 +88,18 @@ function ProfileChallengeGate({ gameId, casual }: { gameId: PlayGameId; casual: 
   return casual;
 }
 
+export function hasDailyOnlyCompatibilityIntent(search: string) {
+  const params = new URLSearchParams(search);
+  if (params.get("mode") === "replayable") return true;
+  return ["challenge", "match", "pack", "lineup"].some((key) => params.has(key));
+}
+
 export function isOfficialDailyRoute(gameType: DailyGameType, search: string) {
   const params = new URLSearchParams(search);
   if (params.get("mode") === "daily") return true;
+  if (gameType === "blind_rank_5" || gameType === "keep_4_cut_4") {
+    return !hasDailyOnlyCompatibilityIntent(search);
+  }
   if (gameType !== "find_leader") return false;
 
   return !params.get("mode")
@@ -99,6 +108,19 @@ export function isOfficialDailyRoute(gameType: DailyGameType, search: string) {
     && !params.get("day")
     && !params.get("definition")
     && !params.get("seed");
+}
+
+export function DailyOnlyGameRoute({
+  dailyRoute,
+  casual,
+}: {
+  dailyRoute: string;
+  casual: ReactElement;
+}) {
+  const location = useLocation();
+  return hasDailyOnlyCompatibilityIntent(location.search)
+    ? casual
+    : <Navigate replace to={dailyRoute} />;
 }
 
 export default function TodayChallengeGameRoute({
