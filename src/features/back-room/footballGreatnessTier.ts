@@ -45,33 +45,27 @@ const FOOTBALL_GREATNESS_TIER_STRENGTH = new Map(
 );
 
 /**
- * Approved editorial anchors live here because this module is the canonical gameplay
- * greatness-tier owner. Ratings remain calculated/ranked evidence; these overrides are
- * the human-approved tier truth used by grading and reveal order.
+ * Human-approved tier truth. The ranking engine/rating remains the evidence owner;
+ * gameplay scoring and reveal order consume these approved tier exceptions here.
  */
-const FOOTBALL_GREATNESS_TIER_OVERRIDES = {
-  // NFL QB careers
+const FOOTBALL_GREATNESS_TIER_OVERRIDES: Readonly<Record<string, FootballGreatnessTier>> = {
   "tom-brady": "goat",
   "drew-brees": "great",
   "eli-manning": "good",
 
-  // NFL RB careers
   "jim-brown": "elite",
   "derrick-henry": "great",
   "frank-gore": "good",
 
-  // NFL WR careers
   "jerry-rice": "goat",
   "randy-moss": "legendary",
   "antonio-brown": "elite",
   "julio-jones": "elite",
 
-  // NFL TE careers
   "tony-gonzalez": "elite",
   "shannon-sharpe": "near-elite",
   "jason-witten": "near-elite",
 
-  // NFL Front Seven
   "lawrence-taylor": "elite",
   "reggie-white": "elite",
   "aaron-donald": "elite",
@@ -104,7 +98,6 @@ const FOOTBALL_GREATNESS_TIER_OVERRIDES = {
   "dion-jordan": "bad",
   "vernon-gholston": "bad",
 
-  // NFL Secondary
   "deion-sanders": "elite",
   "ed-reed": "elite",
   "ronnie-lott": "elite",
@@ -137,7 +130,6 @@ const FOOTBALL_GREATNESS_TIER_OVERRIDES = {
   "justin-gilbert": "bad",
   "dee-milliner": "bad",
 
-  // NFL head coaches
   "bill-belichick": "elite",
   "vince-lombardi": "elite",
   "don-shula": "elite",
@@ -149,7 +141,6 @@ const FOOTBALL_GREATNESS_TIER_OVERRIDES = {
   "mike-tomlin": "great",
   "kliff-kingsbury": "below-average",
 
-  // NFL team eras
   "nfl-era-patriots-belichick-brady": "goat",
   "nfl-era-49ers-montana-walsh": "elite",
   "nfl-era-steelers-steel-curtain": "elite",
@@ -163,15 +154,13 @@ const FOOTBALL_GREATNESS_TIER_OVERRIDES = {
   "nfl-era-packers-rodgers": "great",
   "nfl-era-seahawks-legion-of-boom": "great",
 
-  // College QB careers
-  "cam-newton-cfb": "elite",
-  "lamar-jackson-cfb": "great",
-  "matt-leinart-cfb": "great",
-  "baker-mayfield-cfb": "great",
-  "trevor-lawrence-cfb": "good",
-  "jake-fromm-cfb": "average",
+  "cam-newton-2010": "elite",
+  "lamar-jackson-2016": "great",
+  "matt-leinart-2004": "great",
+  "baker-mayfield-2017": "great",
+  "trevor-lawrence-2018": "good",
+  "jake-fromm-career": "average",
 
-  // College RB careers
   "herschel-walker-cfb": "elite",
   "barry-sanders-cfb": "elite",
   "tony-dorsett-cfb": "elite",
@@ -197,13 +186,12 @@ const FOOTBALL_GREATNESS_TIER_OVERRIDES = {
   "bijan-robinson-cfb": "great",
   "trent-richardson-cfb": "good",
 
-  // CFB head coaches / program eras
   "nick-saban-cfb": "goat",
   "gary-patterson-cfb": "good",
   "kyle-whittingham-cfb": "good",
   "mark-richt-cfb": "good",
-  "boise-state-petersen-era": "average",
-} as const satisfies Record<string, FootballGreatnessTier>;
+  "boise-state-2006-2011": "average",
+};
 
 export function footballGreatnessTierForRating(rating: number): FootballRatingBand {
   return getFootballRatingBand(rating);
@@ -219,10 +207,7 @@ export function footballGreatnessTierLabel(tier: FootballGreatnessTier) {
   return FOOTBALL_GREATNESS_TIER_LABELS[tier];
 }
 
-export function compareFootballGreatnessTiers(
-  left: FootballGreatnessTier,
-  right: FootballGreatnessTier,
-) {
+export function compareFootballGreatnessTiers(left: FootballGreatnessTier, right: FootballGreatnessTier) {
   return (FOOTBALL_GREATNESS_TIER_STRENGTH.get(left) ?? 0)
     - (FOOTBALL_GREATNESS_TIER_STRENGTH.get(right) ?? 0);
 }
@@ -242,10 +227,6 @@ export interface FootballTierComparisonScore {
   normalizedScore: number;
 }
 
-/**
- * Football Blind Rank has ten pairwise relationships. A stronger tier above a weaker
- * tier is correct, and same-tier order is intentionally neutral/full credit.
- */
 export function scoreFootballBlindRankTierOrder(
   orderedItems: readonly FootballRankFiveItem[],
 ): FootballTierComparisonScore {
@@ -269,11 +250,6 @@ export function scoreFootballBlindRankTierOrder(
   };
 }
 
-/**
- * Football Keep/Cut has sixteen kept-v-cut relationships. Same-tier choices are
- * interchangeable, so only keeping a genuinely weaker tier over a stronger tier
- * costs points.
- */
 export function scoreFootballKeepCutTierSelection(
   keptItems: readonly FootballRankFiveItem[],
   cutItems: readonly FootballRankFiveItem[],
