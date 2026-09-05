@@ -18,9 +18,7 @@ describe("footballSubjectAssets", () => {
       expect(subject, id).toBeDefined();
 
       const asset = footballSubjectAsset(id);
-      const usesCanonicalTeamMedia = subject
-        && TEAM_MEDIA_KINDS.has(subject.kind)
-        && !(subject.kind === "program-era" && subject.league === "NFL");
+      const usesCanonicalTeamMedia = subject && TEAM_MEDIA_KINDS.has(subject.kind);
       if (usesCanonicalTeamMedia) {
         expect(subject.teamId, id).toBeDefined();
         expect(asset, id).toBe(footballTeamAssets[subject.teamId!]);
@@ -28,6 +26,15 @@ describe("footballSubjectAssets", () => {
       } else {
         expect(asset, id).toBe(footballSubjectAssets[id] ?? null);
       }
+    }
+  });
+
+  it("resolves NFL Team Era subjects through the existing franchise marks", () => {
+    for (const id of ["nfl-era-49ers-montana-walsh", "nfl-era-patriots-belichick-brady"]) {
+      const subject = getFootballSubject(id);
+      expect(subject, id).not.toBeNull();
+      expect(subject?.teamId, id).toBeDefined();
+      expect(footballSubjectAsset(id), id).toBe(footballTeamAssets[subject!.teamId!]);
     }
   });
 

@@ -167,11 +167,13 @@ function enrichProjectedNonPlayerSubject(
     && !(sourceIdentityKey.provider === canonicalKey.provider && sourceIdentityKey.id === canonicalKey.id)
     ? [canonicalKey, sourceIdentityKey]
     : [canonicalKey];
+  const teamId = teamIdForSubject(subject);
   return {
     ...subject,
     recognizabilityTier: tier,
     casualEligible: tier !== "D",
     sourceIdentityKeys,
+    ...(teamId ? { teamId } : {}),
   };
 }
 
