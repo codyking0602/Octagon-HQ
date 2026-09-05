@@ -1,15 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createServer } from "vite";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
 const projectionPath = path.join(root, "data/generated/football/factual-universe-projection.json");
-const expansionPath = path.join(root, "src/features/back-room/footballFactualStatsExpansion.ts");
 
 const projection = readJson("data/generated/football/factual-universe-projection.json");
 const playerSeasonData = readJson("data/generated/football/cfb/player-seasons-2014-2025.json");
-const expansionSource = fs.readFileSync(expansionPath, "utf8");
 const indexes = new Map(playerSeasonData.columns.map((name, index) => [name, index]));
 const playerSeasons = playerSeasonData.rows.map((row) => (
   Object.fromEntries([...indexes].map(([key, index]) => [key, row[index]]))
@@ -20,6 +19,7 @@ const normalize = (value) => String(value ?? "")
   .normalize("NFKD")
   .replace(/[^a-z0-9]/g, "");
 const finite = (value) => typeof value === "number" && Number.isFinite(value);
+const nearlyEqual = (left, right) => Math.abs(left - right) < 1e-9;
 
 const sourceFieldByMetric = new Map([
   ["cfb-best-season-passing-yards", "passYards"],
@@ -32,6 +32,8 @@ const sourceFieldByMetric = new Map([
   ["cfb-best-season-defensive-interceptions", "defensiveInterceptions"],
 ]);
 
+// Reviewed context for playable peaks that predate the pinned 2014-2025 source corpus.
+// These rows identify seasons only. The canonical factual ledger remains the value owner.
 const historicalPeakSeasons = new Map([
   ["cfb-cam-newton:cfb-best-season-passing-yards", [2010]],
   ["cfb-cam-newton:cfb-best-season-passing-touchdowns", [2010]],
@@ -115,60 +117,91 @@ function sourceRowsFor(subjectId) {
   return rowsByPlayerName.get(normalize(slug)) ?? [];
 }
 
-function peakSeasons(subjectId, metricId) {
-  const reviewed = historicalPeakSeasons.get(`${subjectId}:${metricId}`);
-  if (reviewed) return reviewed;
+function sourcePeakSeasons(subjectId, metricId, canonicalValue) {
   const sourceField = sourceFieldByMetric.get(metricId);
   if (!sourceField) return [];
   const observed = sourceRowsFor(subjectId).filter((row) => finite(row[sourceField]));
   if (!observed.length) return [];
+
+  const exact = [...new Set(observed
+    .filter((row) => nearlyEqual(row[sourceField], canonicalValue))
+    .map((row) => row.season)
+    .filter(Number.isInteger))]
+    .sort((left, right) => left - right);
+  if (exact.length) return exact;
+
+  // Some reviewed CFR facts differ numerically from the pinned cfbfastR corpus.
+  // In that case cfbfastR supplies only the identity/year of the peak, never the fact value.
   const peak = Math.max(...observed.map((row) => row[sourceField]));
   return [...new Set(observed
-    .filter((row) => row[sourceField] === peak)
+    .filter((row) => nearlyEqual(row[sourceField], peak))
     .map((row) => row.season)
     .filter(Number.isInteger))]
     .sort((left, right) => left - right);
 }
 
-// Canonical values travel with presentation context so runtime can ignore stale year metadata
-// if the factual owner changes later. Reviewed expansion facts override generated gap-fill values.
-const requested = new Map();
-for (const record of projection.records ?? []) {
-  if (record.scope !== "cfb-player-career") continue;
-  for (const fact of record.facts ?? []) {
-    if (!sourceFieldByMetric.has(fact.metricId) || !finite(fact.value)) continue;
-    requested.set(`${record.subjectId}:${fact.metricId}`, fact.value);
-  }
+const gateServer = await createServer({
+  root,
+  configFile: false,
+  logLevel: "error",
+  server: { middlewareMode: true },
+  appType: "custom",
+});
+
+let footballHitTheNumberSubjects;
+let footballHitTheNumberMetricCatalog;
+let getFootballFact;
+try {
+  const model = await gateServer.ssrLoadModule("/src/features/back-room/footballHitTheNumberModel.ts");
+  const factual = await gateServer.ssrLoadModule("/src/features/back-room/footballFactualStats.ts");
+  footballHitTheNumberSubjects = model.footballHitTheNumberSubjects;
+  footballHitTheNumberMetricCatalog = model.FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG;
+  getFootballFact = factual.getFootballFact;
+} finally {
+  await gateServer.close();
 }
 
-for (const match of expansionSource.matchAll(/cfbPlayer\("([^"]+)",\s*\[([\s\S]*?)\]\),/g)) {
-  const subjectId = match[1];
-  const body = match[2];
-  for (const metricMatch of body.matchAll(/\["(cfb-best-season-[^"]+)"\s*,\s*(-?\d+(?:\.\d+)?)\s*\]/g)) {
-    const metricId = metricMatch[1];
-    if (!sourceFieldByMetric.has(metricId)) continue;
-    requested.set(`${subjectId}:${metricId}`, Number(metricMatch[2]));
-  }
-}
+const peakSubjects = footballHitTheNumberSubjects.filter((subject) => subject.group === "cfb-player-peak");
+const peakMetricIds = footballHitTheNumberMetricCatalog
+  .filter((row) => row.group === "cfb-player-peak" && sourceFieldByMetric.has(row.metricId))
+  .map((row) => row.metricId);
 
-const contextRows = [];
+const contextByFact = new Map();
 const missing = [];
-for (const [key, canonicalValue] of [...requested.entries()].sort(([left], [right]) => left.localeCompare(right))) {
-  const separator = key.indexOf(":");
-  const subjectId = key.slice(0, separator);
-  const metricId = key.slice(separator + 1);
-  const seasons = peakSeasons(subjectId, metricId);
-  if (!seasons.length) {
-    missing.push(key);
-    continue;
+for (const subject of peakSubjects) {
+  for (const metricId of peakMetricIds) {
+    const resolved = getFootballFact(subject.id, metricId);
+    if (!resolved) continue;
+
+    const factOwnerId = resolved.record.subjectId;
+    const reviewed = historicalPeakSeasons.get(`${factOwnerId}:${metricId}`)
+      ?? historicalPeakSeasons.get(`${subject.id}:${metricId}`);
+    const seasons = reviewed ?? sourcePeakSeasons(subject.id, metricId, resolved.fact.value);
+    if (!seasons.length) {
+      missing.push(`${subject.id}:${metricId}`);
+      continue;
+    }
+
+    const key = `${factOwnerId}:${metricId}`;
+    const current = contextByFact.get(key);
+    if (current && !nearlyEqual(current.canonicalValue, resolved.fact.value)) {
+      throw new Error(`Conflicting canonical Football peak context value for ${key}.`);
+    }
+    contextByFact.set(key, {
+      subjectId: factOwnerId,
+      metricId,
+      canonicalValue: resolved.fact.value,
+      seasons: [...new Set([...(current?.seasons ?? []), ...seasons])].sort((left, right) => left - right),
+    });
   }
-  contextRows.push([subjectId, metricId, canonicalValue, seasons]);
 }
 
 if (missing.length) {
   throw new Error(`Missing Football Hit the Number peak-season context:\n${missing.join("\n")}`);
 }
 
-projection.hitTheNumberPeakSeasonContext = contextRows;
+projection.hitTheNumberPeakSeasonContext = [...contextByFact.values()]
+  .sort((left, right) => `${left.subjectId}:${left.metricId}`.localeCompare(`${right.subjectId}:${right.metricId}`))
+  .map((row) => [row.subjectId, row.metricId, row.canonicalValue, row.seasons]);
 fs.writeFileSync(projectionPath, `${JSON.stringify(projection)}\n`);
-console.log(`Enriched Football Hit the Number with ${contextRows.length} metric-specific peak-season contexts.`);
+console.log(`Enriched Football Hit the Number with ${projection.hitTheNumberPeakSeasonContext.length} playable metric-specific peak-season contexts.`);
