@@ -4,8 +4,13 @@ import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { GameResultActions } from "../play/GameResultActions";
 import { recordLineupCompletion, replayLabelFor } from "../play/lineupModel";
-import { scoreBlindRankOrderedRatings } from "../play/officialScoreContract";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
+import {
+  footballGreatnessTierForItem,
+  footballGreatnessTierLabel,
+  orderFootballItemsByGreatnessTier,
+  scoreFootballBlindRankTierOrder,
+} from "./footballGreatnessTier";
 import {
   FOOTBALL_RANK_FIVE_GAME_ID,
   createRandomFootballRankFiveRun,
@@ -67,15 +72,9 @@ export default function FootballRankFivePage() {
   const current = run.lineup[currentIndex];
   const shared = run.identity.type === "curated";
   const completedScore = complete
-    ? scoreBlindRankOrderedRatings(
-      placements.flatMap((item) => item ? [item.rating] : []),
-    )
+    ? scoreFootballBlindRankTierOrder(placements.flatMap((item) => item ? [item] : []))
     : null;
-  const canonicalOrder = complete
-    ? run.lineup
-      .map((item, boardIndex) => ({ item, boardIndex }))
-      .sort((left, right) => right.item.rating - left.item.rating || left.boardIndex - right.boardIndex)
-    : [];
+  const tierOrder = complete ? orderFootballItemsByGreatnessTier(run.lineup) : [];
 
   useEffect(() => {
     if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
@@ -131,7 +130,7 @@ export default function FootballRankFivePage() {
     setChallengeStatus("");
     const status = await beginChallenge({
       gameId: "blind-rank",
-      gameVersion: "football-blind-rank-v1",
+      gameVersion: "football-blind-rank-v2",
       gameTitle: "Football Blind Rank 5",
       summary: `${run.pack.name} · same five subjects`,
       setup: asChallengeJson({
@@ -206,7 +205,7 @@ export default function FootballRankFivePage() {
             <section className="football-rank-five-score" aria-label="Football Blind Rank 5 score">
               <p className="eyebrow">FIVE SPOTS. NO TAKEBACKS.</p>
               <h2>{completedScore?.normalizedScore ?? 0}/100</h2>
-              <p>Graded against the Football HQ order using the same pairwise Blind Rank 5 scoring as UFC.</p>
+              <p>Graded by Football HQ greatness tiers. Same-tier swaps do not cost points.</p>
             </section>
 
             <div className="football-rank-five-reveal-grid">
@@ -225,11 +224,11 @@ export default function FootballRankFivePage() {
               </section>
 
               <section>
-                <p className="eyebrow">FOOTBALL HQ ORDER</p>
+                <p className="eyebrow">FOOTBALL HQ TIERS</p>
                 <div className="football-rank-five-results is-canonical">
-                  {canonicalOrder.map(({ item }, index) => (
+                  {tierOrder.map((item) => (
                     <article key={item.id}>
-                      <b>#{index + 1}</b>
+                      <b>{footballGreatnessTierLabel(footballGreatnessTierForItem(item))}</b>
                       <FootballSubjectVisual item={item} packId={run.pack.id} />
                       <span><strong>{item.name}</strong><small>{item.subtitle}</small></span>
                       <em>{item.league}</em>
