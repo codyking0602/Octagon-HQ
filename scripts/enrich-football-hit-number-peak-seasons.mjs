@@ -97,7 +97,13 @@ for (const row of playerSeasons) {
 function subjectSlug(subjectId) {
   const sourceMatch = subjectId.match(/^cfbfast-r-player-([^-]+)-(.+)$/);
   if (sourceMatch) return { sourceId: sourceMatch[1], slug: sourceMatch[2] };
-  return { sourceId: null, slug: subjectId.replace(/^cfb-/, "") };
+  return {
+    sourceId: null,
+    slug: subjectId
+      .replace(/^cfb-/, "")
+      .replace(/-career$/, "")
+      .replace(/-(?:qb|rb|wr|te|dl|lb|db)$/, ""),
+  };
 }
 
 function sourceRowsFor(subjectId) {
