@@ -16,11 +16,15 @@ describe("Football Hit the Number selection presentation", () => {
     expect(pageSource).toContain("`${poolNoun.toUpperCase()} POOL`");
   });
 
-  it("keeps the active progression pool focused on unused eligible choices", () => {
+  it("keeps the active progression pool focused on unused eligible choices through the canonical model owner", () => {
     expect(pageSource).toContain(
       "const displayedSubjectIds = result || !slotProgression ? plan.subjectIds : availableSubjectIds;",
     );
     expect(pageSource).not.toContain("[...selectedIds, ...availableSubjectIds]");
+    expect(pageSource).toContain("footballHitTheNumberActiveProgressionSlot(plan, selectedSubjectIds)");
+    expect(pageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedSubjectIds)");
+    expect(pageSource).not.toContain("oneFromEachSlotAccepts");
+    expect(pageSource).not.toContain("oneFromEachSlotSeasonRange");
   });
 
   it("keeps Football choices readable and Football-themed on narrow screens", () => {
