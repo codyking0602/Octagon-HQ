@@ -8,6 +8,10 @@ import {
   footballGreatnessTierForItem,
 } from "./footballGreatnessTier";
 import {
+  getFootballRankFivePack as getReviewedCatalogPack,
+  type FootballRankFivePackId,
+} from "./footballRankFiveModel";
+import {
   buildFootballRankFiveLineup,
   footballRankFivePacks,
   getFootballReviewedRankFivePack,
@@ -27,6 +31,14 @@ vi.mock("../challenges/challengeRuntime", () => ({
     submitResult: vi.fn(),
   }),
 }));
+
+const RETIRED_PACK_IDS = [
+  "nfl-defensive-players",
+  "nfl-qb-seasons",
+  "nfl-team-seasons",
+  "college-programs",
+  "college-team-seasons",
+] as const;
 
 describe("Football Blind Rank 5", () => {
   beforeEach(() => {
@@ -57,6 +69,14 @@ describe("Football Blind Rank 5", () => {
     const reviewedReceivers = getFootballReviewedRankFivePack("nfl-wide-receivers");
     expect(liveReceivers.items.length).toBeGreaterThan(reviewedReceivers.items.length);
     expect(liveReceivers.items.some((item) => !reviewedReceivers.items.some((reviewed) => reviewed.id === item.id))).toBe(true);
+  });
+
+  it("does not resolve retired categories as hidden Rank Five packs", () => {
+    for (const packId of RETIRED_PACK_IDS) {
+      expect(() => getReviewedCatalogPack(packId as FootballRankFivePackId)).toThrow(
+        `Unsupported Football Rank 5 pack: ${packId}`,
+      );
+    }
   });
 
   it("builds deterministic five-item lineups with non-flat rating separation", () => {
