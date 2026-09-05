@@ -145,6 +145,7 @@ function SubjectMark({ subjectId, className }: { subjectId: string; className: s
       </span>
     );
   }
+  const lightBackplate = asset.darkSurfaceTreatment === "light-backplate";
   return (
     <img
       alt=""
@@ -153,7 +154,13 @@ function SubjectMark({ subjectId, className }: { subjectId: string; className: s
       referrerPolicy="no-referrer"
       src={asset.src}
       title={asset.label}
-      style={{ objectFit: "contain", padding: 4, background: "rgba(255,255,255,.04)" }}
+      style={{
+        objectFit: "contain",
+        padding: lightBackplate ? 3 : 4,
+        background: lightBackplate ? "#fff" : "rgba(255,255,255,.04)",
+        borderRadius: lightBackplate ? "50%" : undefined,
+        boxShadow: lightBackplate ? "0 0 0 1px rgba(255,255,255,.28)" : undefined,
+      }}
     />
   );
 }
