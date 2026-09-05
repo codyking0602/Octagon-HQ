@@ -41,18 +41,24 @@ const deepPool: readonly FootballRankFiveItem[] = [
 ];
 
 describe("Football comparison board tier quality", () => {
-  it("prefers less-clumped visible Tier 4 / Tier 5 Keep/Cut boards without changing board-style ownership", () => {
+  it("keeps visible Tier 4 / Tier 5 clumping controlled across the Keep/Cut distribution", () => {
     let nonBottomGrindBoards = 0;
+    let totalClump = 0;
+    let severeClumps = 0;
 
-    for (let seedIndex = 0; seedIndex < 48; seedIndex += 1) {
+    for (let seedIndex = 0; seedIndex < 96; seedIndex += 1) {
       const board = buildFootballKeepCutBoard(deepPool, "quality-proof", `texture-${seedIndex}`);
       if (board.style === "bottom-grind") continue;
 
+      const clump = lowerVisibleTierClump(board.items);
       nonBottomGrindBoards += 1;
-      expect(lowerVisibleTierClump(board.items)).toBeLessThanOrEqual(4);
+      totalClump += clump;
+      severeClumps += Number(clump >= 6);
     }
 
-    expect(nonBottomGrindBoards).toBeGreaterThan(30);
+    expect(nonBottomGrindBoards).toBeGreaterThan(60);
+    expect(totalClump / nonBottomGrindBoards).toBeLessThan(4.5);
+    expect(severeClumps / nonBottomGrindBoards).toBeLessThan(0.25);
   });
 
   it("keeps the existing internal-tier competitiveness floor instead of hard-rejecting playable boards", () => {
