@@ -5,7 +5,7 @@ import { createServer } from "vite";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
-const projectionPath = path.join(root, "data/generated/football/factual-universe-projection.json");
+const contextPath = path.join(root, "data/generated/football/hit-the-number-peak-season-context.json");
 
 const projection = readJson("data/generated/football/factual-universe-projection.json");
 const playerSeasonData = readJson("data/generated/football/cfb/player-seasons-2014-2025.json");
@@ -200,8 +200,8 @@ if (missing.length) {
   throw new Error(`Missing Football Hit the Number peak-season context:\n${missing.join("\n")}`);
 }
 
-projection.hitTheNumberPeakSeasonContext = [...contextByFact.values()]
+const rows = [...contextByFact.values()]
   .sort((left, right) => `${left.subjectId}:${left.metricId}`.localeCompare(`${right.subjectId}:${right.metricId}`))
   .map((row) => [row.subjectId, row.metricId, row.canonicalValue, row.seasons]);
-fs.writeFileSync(projectionPath, `${JSON.stringify(projection)}\n`);
-console.log(`Enriched Football Hit the Number with ${projection.hitTheNumberPeakSeasonContext.length} playable metric-specific peak-season contexts.`);
+fs.writeFileSync(contextPath, `${JSON.stringify({ schemaVersion: 1, rows })}\n`);
+console.log(`Generated ${rows.length} playable metric-specific Football Hit the Number peak-season contexts.`);
