@@ -60,6 +60,31 @@ describe("Football Hit the Number canonical fact integration", () => {
     expect(metrics).not.toContain("nfl-career-sacks");
   });
 
+  it("removes CFB player peak stat boards while preserving the Heisman accomplishment", () => {
+    const cfbMetricIds = FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG
+      .filter((row) => row.league === "CFB")
+      .map((row) => row.metricId);
+    expect(cfbMetricIds).not.toEqual(expect.arrayContaining([
+      "cfb-best-season-passing-yards",
+      "cfb-best-season-rushing-yards",
+      "cfb-best-season-receiving-yards",
+      "cfb-best-season-passing-touchdowns",
+      "cfb-best-season-rushing-touchdowns",
+      "cfb-best-season-receiving-touchdowns",
+      "cfb-best-season-sacks",
+      "cfb-best-season-defensive-interceptions",
+    ]));
+
+    const awardRows = FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.filter((row) => row.group === "cfb-player-awards");
+    expect(awardRows.map((row) => row.metricId)).toEqual(["cfb-heisman-awards"]);
+    expect(awardRows.every((row) => row.contentKind === "accomplishment")).toBe(true);
+    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((row) => row.group)).not.toContain("cfb-player-peak");
+    expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.map((theme) => theme.id)).not.toContain("cfb-player-peaks");
+    expect(footballHitTheNumberSubjects
+      .filter((subject) => subject.group === "cfb-player-awards")
+      .every((subject) => getFootballFact(subject.id, "cfb-heisman-awards") != null)).toBe(true);
+  });
+
   it("keeps themes deep, unique and honest now that non-champion team seasons are eligible elsewhere", () => {
     const catalogIds = FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.map((theme) => theme.id);
     expect(catalogIds).not.toContain("nfl-qbs-top-picks");
