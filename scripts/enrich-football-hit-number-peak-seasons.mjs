@@ -19,7 +19,6 @@ const normalize = (value) => String(value ?? "")
   .normalize("NFKD")
   .replace(/[^a-z0-9]/g, "");
 const finite = (value) => typeof value === "number" && Number.isFinite(value);
-const n = (value) => finite(value) ? value : 0;
 const nearlyEqual = (left, right) => Math.abs(left - right) < 1e-9;
 
 const sourceFieldByMetric = new Map([
@@ -32,7 +31,6 @@ const sourceFieldByMetric = new Map([
   ["cfb-best-season-sacks", "sacks"],
   ["cfb-best-season-defensive-interceptions", "defensiveInterceptions"],
 ]);
-const sourceFields = [...new Set(sourceFieldByMetric.values())];
 
 // Reviewed context for peak seasons that predate the pinned 2014-2025 player-season corpus.
 // Values intentionally match the existing canonical Football factual ledger; this file does not own or alter facts.
@@ -107,20 +105,19 @@ const cfbPlayers = queryFootballSubjects({
   casualEligible: true,
   includeProjectedSourceSubjects: true,
 });
-const playersById = new Map(cfbPlayers.map((subject) => [subject.id, subject]));
 const playersBySourceId = new Map();
 const playersByName = new Map();
 for (const subject of cfbPlayers) {
   for (const sourceKey of subject.sourceIdentityKeys ?? []) {
     if (sourceKey.provider !== "cfbfastR") continue;
-    const rows = playersBySourceId.get(String(sourceKey.id)) ?? [];
-    rows.push(subject);
-    playersBySourceId.set(String(sourceKey.id), rows);
+    const values = playersBySourceId.get(String(sourceKey.id)) ?? [];
+    values.push(subject);
+    playersBySourceId.set(String(sourceKey.id), values);
   }
-  const nameKey = normalize(subject.name);
-  const rows = playersByName.get(nameKey) ?? [];
-  rows.push(subject);
-  playersByName.set(nameKey, rows);
+  const key = normalize(subject.name);
+  const values = playersByName.get(key) ?? [];
+  values.push(subject);
+  playersByName.set(key, values);
 }
 
 function withinCareerWindow(row, subject) {
@@ -128,8 +125,8 @@ function withinCareerWindow(row, subject) {
     && (subject.endSeason == null || row.season <= subject.endSeason);
 }
 
-function unique(rows) {
-  return rows.length === 1 ? rows[0] : null;
+function unique(values) {
+  return values.length === 1 ? values[0] : null;
 }
 
 function subjectForSourceRow(row) {
@@ -147,24 +144,29 @@ function subjectForSourceRow(row) {
   return unique(schoolMatches);
 }
 
-const seasonTotalsBySubject = new Map();
+const sourceRowsBySubject = new Map();
 for (const row of playerSeasons) {
   if (!Number.isInteger(row.season)) continue;
   const subject = subjectForSourceRow(row);
-  if (!subject || !playersById.has(subject.id)) continue;
-  const bySeason = seasonTotalsBySubject.get(subject.id) ?? new Map();
-  const totals = bySeason.get(row.season) ?? Object.fromEntries(sourceFields.map((field) => [field, 0]));
-  for (const field of sourceFields) totals[field] += n(row[field]);
-  bySeason.set(row.season, totals);
-  seasonTotalsBySubject.set(subject.id, bySeason);
+  if (!subject) continue;
+  const rows = sourceRowsBySubject.get(subject.id) ?? [];
+  rows.push(row);
+  sourceRowsBySubject.set(subject.id, rows);
 }
 
-function sourceSeasonsFor(subjectId, sourceField, canonicalValue) {
-  const bySeason = seasonTotalsBySubject.get(subjectId);
-  if (!bySeason) return [];
-  return [...bySeason.entries()]
-    .filter(([, totals]) => nearlyEqual(totals[sourceField], canonicalValue))
-    .map(([season]) => season)
+function seasonsMatchingValue(subjectId, sourceField, canonicalValue) {
+  const rows = sourceRowsBySubject.get(subjectId) ?? [];
+  return [...new Set(rows
+    .filter((row) => finite(row[sourceField]) && nearlyEqual(row[sourceField], canonicalValue))
+    .map((row) => row.season))]
+    .sort((left, right) => left - right);
+}
+
+function sourcePeakSeasons(subjectId, sourceField) {
+  const rows = (sourceRowsBySubject.get(subjectId) ?? []).filter((row) => finite(row[sourceField]));
+  if (!rows.length) return [];
+  const peak = Math.max(...rows.map((row) => row[sourceField]));
+  return [...new Set(rows.filter((row) => nearlyEqual(row[sourceField], peak)).map((row) => row.season))]
     .sort((left, right) => left - right);
 }
 
@@ -183,7 +185,11 @@ for (const subject of cfbPlayers) {
       }
       seasons = override.seasons;
     } else {
-      seasons = sourceSeasonsFor(subject.id, sourceField, resolved.fact.value);
+      seasons = seasonsMatchingValue(subject.id, sourceField, resolved.fact.value);
+      if (!seasons.length && resolved.fact.evidence.sourceIds.includes("cfr-player-stat-lines")) {
+        // CFR remains the fact owner. The pinned cfbfastR rows only identify which in-window season was the peak.
+        seasons = sourcePeakSeasons(subject.id, sourceField);
+      }
     }
     if (!seasons.length) {
       missing.push(`${key}=${resolved.fact.value}`);
