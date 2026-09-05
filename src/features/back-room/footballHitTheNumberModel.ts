@@ -25,7 +25,7 @@ import {
 } from "./footballSubjectRegistry";
 
 export const FOOTBALL_HIT_THE_NUMBER_GAME_ID = "football-hit-the-number";
-export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v4" as const;
+export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v5" as const;
 export const FOOTBALL_HIT_THE_NUMBER_MIN_PICKS = 4;
 export const FOOTBALL_HIT_THE_NUMBER_MAX_PICKS = 7;
 export const FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE = "random-pool" as const;
@@ -51,7 +51,7 @@ export type FootballHitTheNumberSubjectGroup =
   | "nfl-defense-career"
   | "nfl-qb-season"
   | "nfl-team-season"
-  | "cfb-player-peak"
+  | "cfb-player-awards"
   | "cfb";
 
 type FootballHitTheNumberSubjectDomainId = FootballHitTheNumberSubjectGroup;
@@ -168,7 +168,6 @@ const championSeasons = (...values: number[]): FootballSubjectQuery[] => values.
 export const FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG: readonly FootballHitTheNumberThemeDefinition[] = [
   { id: "nfl-qb-seasons", label: "Notable NFL QB Seasons", league: "NFL", group: "nfl-qb-season", queries: [{ league: "NFL", kind: "player-season", position: "QB", includeProjectedSourceSubjects: true }] },
   { id: "nfl-team-seasons", label: "NFL Team Seasons", league: "NFL", group: "nfl-team-season", queries: [{ league: "NFL", kind: "team-season", includeProjectedSourceSubjects: true }] },
-  { id: "cfb-player-peaks", label: "College Football Peak Seasons", league: "CFB", group: "cfb-player-peak", queries: [{ league: "CFB", kind: "player-career", casualEligible: true }] },
   { id: "nfl-qbs", label: "NFL Quarterbacks", league: "NFL", group: "nfl-qb-career", queries: [{ league: "NFL", kind: "player-career", position: "QB" }] },
   { id: "nfl-qbs-2000s-2020s", label: "2000s–2020s QBs", league: "NFL", group: "nfl-qb-career", queries: decades(2000, 2010, 2020) },
   { id: "nfl-qbs-1990s-2020s", label: "1990s–2020s QBs", league: "NFL", group: "nfl-qb-career", queries: decades(1990, 2000, 2010, 2020) },
@@ -201,12 +200,12 @@ function groupAcceptsSubject(group: FootballHitTheNumberSubjectGroup, subject: F
   if (group === "nfl-defense-career") return subject.kind === "player-career" && subject.league === "NFL" && (subject.position === "DL" || subject.position === "LB" || subject.position === "DB") && careerSpecialSubjectEligible(subject) && hasScope(subject.id, "nfl-player-career");
   if (group === "nfl-qb-season") return subject.kind === "player-season" && subject.league === "NFL" && subject.position === "QB" && hasScope(subject.id, "nfl-player-season");
   if (group === "nfl-team-season") return subject.kind === "team-season" && subject.league === "NFL" && hasScope(subject.id, "nfl-team-season");
-  if (group === "cfb-player-peak") return subject.kind === "player-career" && subject.league === "CFB" && hasScope(subject.id, "cfb-player-career");
+  if (group === "cfb-player-awards") return subject.kind === "player-career" && subject.league === "CFB" && hasScope(subject.id, "cfb-player-career");
   return subject.kind === "team-season" && subject.league === "CFB" && hasScope(subject.id, "cfb-team-season");
 }
 
 function subtitleFor(subject: FootballSubjectProfile, group: FootballHitTheNumberSubjectGroup) {
-  if (group === "cfb-player-peak") return `${subject.position ?? "Player"} peak college season`;
+  if (group === "cfb-player-awards") return `${subject.position ?? "Player"} college awards`;
   if (subject.kind === "player-season") return `${subject.season ?? "Season"} ${subject.position ?? "player"} season`;
   if (subject.kind === "team-season") {
     return subject.nationalChampion
@@ -265,7 +264,7 @@ const groupOrder: readonly FootballHitTheNumberSubjectGroup[] = [
   "nfl-receiving-career",
   "nfl-qb-season",
   "nfl-team-season",
-  "cfb-player-peak",
+  "cfb-player-awards",
   "cfb",
 ];
 
@@ -333,9 +332,6 @@ const domains: readonly FootballHitTheNumberDomain[] = [
       metric("nfl-career-passing-yards", "NFL", "nfl-qb-career", "NFL QB Career Passing Yards", "career-special"),
       metric("nfl-career-rushing-yards", "NFL", "nfl-rb-career", "NFL RB Career Rushing Yards", "career-special"),
       metric("nfl-career-receiving-yards", "NFL", "nfl-receiving-career", "NFL Career Receiving Yards", "career-special"),
-      metric("cfb-best-season-passing-yards", "CFB", "cfb-player-peak", "CFB Player Peak-Season Passing Yards", "peak-season"),
-      metric("cfb-best-season-rushing-yards", "CFB", "cfb-player-peak", "CFB Player Peak-Season Rushing Yards", "peak-season"),
-      metric("cfb-best-season-receiving-yards", "CFB", "cfb-player-peak", "CFB Player Peak-Season Receiving Yards", "peak-season"),
       metric("cfb-team-points-for", "CFB", "cfb", "CFB Team-Season Points Scored", "team-season"),
       metric("cfb-team-points-against", "CFB", "cfb", "CFB Team-Season Points Allowed", "team-season"),
       metric("cfb-team-wins", "CFB", "cfb", "CFB Team-Season Wins", "team-season"),
@@ -360,12 +356,7 @@ const domains: readonly FootballHitTheNumberDomain[] = [
       metric("nfl-career-passing-touchdowns", "NFL", "nfl-qb-career", "NFL QB Career Passing TD", "career-special"),
       metric("nfl-career-rushing-touchdowns", "NFL", "nfl-rb-career", "NFL RB Career Rushing TD", "career-special"),
       metric("nfl-career-receiving-touchdowns", "NFL", "nfl-receiving-career", "NFL Career Receiving TD", "career-special"),
-      metric("cfb-best-season-passing-touchdowns", "CFB", "cfb-player-peak", "CFB Player Peak-Season Passing TD", "peak-season"),
-      metric("cfb-best-season-rushing-touchdowns", "CFB", "cfb-player-peak", "CFB Player Peak-Season Rushing TD", "peak-season"),
-      metric("cfb-best-season-receiving-touchdowns", "CFB", "cfb-player-peak", "CFB Player Peak-Season Receiving TD", "peak-season"),
-      metric("cfb-best-season-sacks", "CFB", "cfb-player-peak", "CFB Player Peak-Season Sacks", "peak-season"),
-      metric("cfb-best-season-defensive-interceptions", "CFB", "cfb-player-peak", "CFB Player Peak-Season Defensive Interceptions", "peak-season"),
-      metric("cfb-heisman-awards", "CFB", "cfb-player-peak", "CFB Heisman Trophies", "accomplishment"),
+      metric("cfb-heisman-awards", "CFB", "cfb-player-awards", "CFB Heisman Trophies", "accomplishment"),
       metric("cfb-team-point-differential", "CFB", "cfb", "CFB Team-Season Point Differential", "team-season"),
       metric("cfb-team-postseason-wins", "CFB", "cfb", "CFB Team-Season Postseason Wins", "accomplishment"),
     ],
