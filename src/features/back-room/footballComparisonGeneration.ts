@@ -311,7 +311,7 @@ function requiredBlindRankRange(
     0,
     MAX_BLIND_RANK_BAD,
     false,
-    true,
+    false,
   ));
   const uniqueReachable = reachable.filter(
     (item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index,
@@ -585,6 +585,27 @@ function ensureReachableKeepCutTargets(
   }
 }
 
+function alignSmallPoolTargets(
+  targets: FootballComparisonTierId[],
+  items: readonly FootballRankFiveItem[],
+) {
+  if (items.length > KEEP_CUT_SMALL_POOL_MAX) return;
+  const availableNonExtreme = TIER_ORDER.filter((tier) => (
+    tier !== "elite"
+    && tier !== "bad"
+    && availableTierCount(items, tier) > 0
+  ));
+  if (!availableNonExtreme.length) return;
+
+  for (let index = 0; index < targets.length; index += 1) {
+    const target = targets[index]!;
+    if (target === "elite" || target === "bad" || availableTierCount(items, target) > 0) continue;
+    const minimumDistance = Math.min(...availableNonExtreme.map((tier) => tierDistance(tier, target)));
+    const nearest = availableNonExtreme.find((tier) => tierDistance(tier, target) === minimumDistance);
+    if (nearest) targets[index] = nearest;
+  }
+}
+
 function keepCutProfileForSeed(
   items: readonly FootballRankFiveItem[],
   scopeId: string,
@@ -649,6 +670,7 @@ function keepCutProfileForSeed(
   }
 
   ensureReachableKeepCutTargets(targets, items, requiredDistinctTiers);
+  alignSmallPoolTargets(targets, items);
 
   return { targets, eliteCount, badCount };
 }
