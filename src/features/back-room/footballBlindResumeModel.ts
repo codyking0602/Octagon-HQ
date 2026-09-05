@@ -253,13 +253,16 @@ function evidenceSubjectNameKey(subjectId: string, archetype: FootballBlindResum
 }
 
 function evidenceSubjectQuery(matchup: FootballBlindResumeMatchup, subjectId: string): FootballSubjectQuery {
+  const collegeQuarterbackSeason = matchup.packId === "college-quarterbacks" && matchup.archetype === "player-season";
   let kind: FootballSubjectKind;
   switch (matchup.archetype) {
     case "player-career":
       kind = "player-career";
       break;
     case "player-season":
-      kind = "player-season";
+      // Historical CFB season evidence predates the source-backed season projection window.
+      // Its canonical identity owner is therefore the CFB player career, while the evidence remains season-scoped.
+      kind = collegeQuarterbackSeason ? "player-career" : "player-season";
       break;
     case "coach":
       kind = "coach";
@@ -271,7 +274,9 @@ function evidenceSubjectQuery(matchup: FootballBlindResumeMatchup, subjectId: st
       kind = matchup.packId === "college-programs" ? "program" : "program-era";
       break;
   }
-  const seasonMatch = matchup.archetype === "player-season" ? /-(\d{4})$/.exec(subjectId) : null;
+  const seasonMatch = matchup.archetype === "player-season" && !collegeQuarterbackSeason
+    ? /-(\d{4})$/.exec(subjectId)
+    : null;
   return {
     kind,
     league: matchup.league,
