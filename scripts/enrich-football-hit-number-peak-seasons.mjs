@@ -142,8 +142,10 @@ for (const subject of cfbPlayers) {
       }
       seasons = override.seasons;
     } else {
-      seasons = [...new Set(sourceRows
-        .filter((row) => finite(row[sourceField]) && nearlyEqual(row[sourceField], resolved.fact.value))
+      const observed = sourceRows.filter((row) => finite(row[sourceField]));
+      const sourcePeak = observed.length ? Math.max(...observed.map((row) => row[sourceField])) : null;
+      seasons = sourcePeak == null ? [] : [...new Set(observed
+        .filter((row) => nearlyEqual(row[sourceField], sourcePeak))
         .map((row) => row.season)
         .filter(Number.isInteger))]
         .sort((left, right) => left - right);
