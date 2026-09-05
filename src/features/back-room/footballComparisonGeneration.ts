@@ -80,6 +80,7 @@ const DEFAULT_MAX_KEEP_CUT_ELITE = 2;
 const MAX_KEEP_CUT_CUTOFF_GAP = 8;
 const TIGHT_KEEP_CUT_CUTOFF_GAP = 4;
 const BLIND_RANK_ATTEMPTS = 120;
+const BLIND_RANK_SPARSE_EXACT_POOL_MAX = 20;
 const KEEP_CUT_ATTEMPTS = 180;
 const KEEP_CUT_TIGHT_CANDIDATES = 12;
 const KEEP_CUT_SMALL_POOL_CANDIDATES = 36;
@@ -354,7 +355,7 @@ function attemptBlindRankBoard(
   let eliteCount = 0;
   let badCount = 0;
   const targets = shuffleLineup([...archetype.targets], random);
-  const includeSparseExact = items.length > KEEP_CUT_SMALL_POOL_MAX;
+  const includeSparseExact = items.length <= BLIND_RANK_SPARSE_EXACT_POOL_MAX;
 
   for (const targetTier of targets) {
     const forceAbsoluteTier = (
