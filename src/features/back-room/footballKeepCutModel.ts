@@ -1,4 +1,3 @@
-import { scoreKeepCutComparisonRatings } from "../play/officialScoreContract";
 import {
   createReplaySeed,
   seededLineupRandom,
@@ -15,6 +14,10 @@ import {
   footballComparisonCategorySpecs,
   footballComparisonEligibilityQuery,
 } from "./footballComparisonAuthority";
+import {
+  orderFootballItemsByGreatnessTier,
+  scoreFootballKeepCutTierSelection,
+} from "./footballGreatnessTier";
 import {
   footballRankFivePacks,
   getFootballRankFivePack,
@@ -44,9 +47,8 @@ export interface FootballKeepCutRun {
 export interface FootballKeepCutResult {
   kept: FootballRankFiveItem[];
   cut: FootballRankFiveItem[];
-  topFour: FootballRankFiveItem[];
+  tierOrder: FootballRankFiveItem[];
   correctComparisons: number;
-  topFourKept: number;
   score: number;
   label: string;
 }
@@ -164,21 +166,13 @@ export function scoreFootballKeepCutSelection(
   const keptSet = new Set(keptIds);
   const kept = board.filter((item) => keptSet.has(item.id));
   const cut = board.filter((item) => !keptSet.has(item.id));
-  const comparisonScore = scoreKeepCutComparisonRatings(
-    kept.map((item) => item.rating),
-    cut.map((item) => item.rating),
-  );
-  const topFour = [...board]
-    .sort((left, right) => right.rating - left.rating || left.id.localeCompare(right.id))
-    .slice(0, KEEP_COUNT);
-  const topFourIds = new Set(topFour.map((item) => item.id));
+  const comparisonScore = scoreFootballKeepCutTierSelection(kept, cut);
 
   return {
     kept,
     cut,
-    topFour,
+    tierOrder: orderFootballItemsByGreatnessTier(board),
     correctComparisons: comparisonScore.correctComparisons,
-    topFourKept: kept.filter((item) => topFourIds.has(item.id)).length,
     score: comparisonScore.normalizedScore,
     label: footballKeepCutScoreLabel(comparisonScore.normalizedScore),
   };
