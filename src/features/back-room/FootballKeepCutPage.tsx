@@ -66,13 +66,14 @@ function ResultList({
   packId: FootballKeepCutRun["pack"]["id"];
   showTiers?: boolean;
 }) {
+  const categoryItems = getFootballKeepCutPack(packId).items;
   return (
     <section className="football-debate-result-list">
       <p className="eyebrow">{title}</p>
       <div>
         {items.map((item, index) => (
           <article key={item.id}>
-            <b>{showTiers ? footballGreatnessTierLabel(footballGreatnessTierForItem(item)) : `#${index + 1}`}</b>
+            <b>{showTiers ? footballGreatnessTierLabel(footballGreatnessTierForItem(item), categoryItems) : `#${index + 1}`}</b>
             <FootballSubjectVisual item={item} packId={packId} />
             <span><strong>{item.name}</strong><small>{item.subtitle}</small></span>
             <em>{item.league}</em>
