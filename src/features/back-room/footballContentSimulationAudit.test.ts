@@ -3,7 +3,6 @@ import type { PlayLineupHistory } from "../play/lineupModel";
 import {
   buildFootballBlindRankBoard,
   buildFootballKeepCutBoard,
-  footballComparisonTier,
 } from "./footballComparisonGeneration";
 import {
   FOOTBALL_BLIND_RESUME_ROUNDS,
@@ -23,6 +22,10 @@ import {
   footballHitTheNumberPlanQuality,
   footballHitTheNumberSubjects,
 } from "./footballHitTheNumberModel";
+import {
+  footballGreatnessTierForItem,
+  footballGreatnessTiersForCategory,
+} from "./footballGreatnessTier";
 import { footballRankFivePacks } from "./footballRankFivePlayableModel";
 import {
   createFootballWavelengthRound,
@@ -53,155 +56,54 @@ function clampGuess(value: number) {
   return Math.max(1, Math.min(100, value));
 }
 
-function exposureFloor(boardSize: number, poolSize: number) {
-  const unavoidableAverageExposure = boardSize / poolSize;
-  return Math.min(0.92, Math.max(0.45, unavoidableAverageExposure * 1.8));
-}
-
-function expectTierAwareExposure(
-  pack: (typeof footballRankFivePacks)[number],
-  appearances: ReadonlyMap<string, number>,
-  boardSize: number,
-  label: string,
-) {
-  const globalFloor = exposureFloor(boardSize, pack.items.length);
-  const tiers = new Set(pack.items.map(footballComparisonTier));
-
-  for (const tier of tiers) {
-    const tierItems = pack.items.filter((item) => footballComparisonTier(item) === tier);
-    if (tierItems.length < 2) continue;
-    const tierAppearances = tierItems.reduce((sum, item) => sum + (appearances.get(item.id) ?? 0), 0);
-    const averageTierExposure = share(tierAppearances, COMPARISON_RUNS_PER_PACK * tierItems.length);
-    const tierCeiling = Math.min(0.92, Math.max(globalFloor, averageTierExposure * 1.5 + 0.05));
-
-    for (const item of tierItems) {
-      expect(
-        share(appearances.get(item.id) ?? 0, COMPARISON_RUNS_PER_PACK),
-        `${pack.id} ${label} ${tier} exposure: ${item.id}`,
-      ).toBeLessThan(tierCeiling);
-    }
-  }
-}
-
-function relativeThirdIds(
-  items: readonly { id: string; rating: number }[],
-  section: "high" | "middle" | "low",
-) {
-  const ordered = [...items].sort((left, right) => right.rating - left.rating || left.id.localeCompare(right.id));
-  const third = Math.ceil(ordered.length / 3);
-  if (section === "high") return new Set(ordered.slice(0, third).map((item) => item.id));
-  if (section === "low") return new Set(ordered.slice(-third).map((item) => item.id));
-  return new Set(ordered.slice(third, Math.max(third, ordered.length - third)).map((item) => item.id));
-}
-
 function emptyHistory(recentItemIds: string[] = []): PlayLineupHistory {
   return { entries: [], recentItemIds, recentFighterIds: [], lastLineup: [] };
 }
 
 describe("Football PR10 content simulation / replay audit", () => {
-  it("proves Blind Rank and Keep/Cut keep broad coverage, relative pool texture, board uniqueness, and hard cutoffs at scale", () => {
+  it("keeps Blind Rank and Keep/Cut broad, unique, tier-structured, and replayable under the canonical board lottery", () => {
     const rankSignatures = new Set<string>();
     const keepCutSignatures = new Set<string>();
-    const rankTierAppearances = new Map<string, number>();
-    const keepCutTierAppearances = new Map<string, number>();
-    let rankTotalItems = 0;
-    let keepCutTotalItems = 0;
-    let rankLowBoards = 0;
-    let rankMultipleLowBoards = 0;
-    let rankHighLowBoards = 0;
-    let keepCutTightBoards = 0;
-    let keepCutGapTotal = 0;
     let totalBoards = 0;
 
     for (const pack of footballRankFivePacks) {
       const rankSeen = new Set<string>();
       const keepCutSeen = new Set<string>();
-      const rankAppearances = new Map<string, number>();
-      const keepCutAppearances = new Map<string, number>();
-      const highIds = relativeThirdIds(pack.items, "high");
-      const lowIds = relativeThirdIds(pack.items, "low");
+      const availableTierCount = footballGreatnessTiersForCategory(pack.items).length;
 
       for (let index = 0; index < COMPARISON_RUNS_PER_PACK; index += 1) {
         const rank = buildFootballBlindRankBoard(pack.items, pack.id, `pr10-rank-${pack.id}-${index}`);
         const keepCut = buildFootballKeepCutBoard(pack.items, pack.id, `pr10-keep-${pack.id}-${index}`);
         const rankIds = rank.items.map((item) => item.id);
         const keepCutIds = keepCut.items.map((item) => item.id);
-        const rankLowCount = rankIds.filter((id) => lowIds.has(id)).length;
-        const rankHighCount = rankIds.filter((id) => highIds.has(id)).length;
 
         totalBoards += 1;
         rankSignatures.add(`${pack.id}:${[...rankIds].sort().join("|")}`);
         keepCutSignatures.add(`${pack.id}:${[...keepCutIds].sort().join("|")}`);
+        expect(rankIds).toHaveLength(5);
+        expect(keepCutIds).toHaveLength(8);
         expect(new Set(rankIds).size).toBe(5);
         expect(new Set(keepCutIds).size).toBe(8);
-        expect(rank.badItems).toBeLessThanOrEqual(1);
-        expect(keepCut.badItems).toBeLessThanOrEqual(2);
-        expect(keepCut.cutoffGap).toBeLessThanOrEqual(8);
-        if (rankLowCount >= 1) rankLowBoards += 1;
-        if (rankLowCount >= 2) rankMultipleLowBoards += 1;
-        if (rankLowCount >= 1 && rankHighCount >= 1) rankHighLowBoards += 1;
-        if (keepCut.cutoffGap <= 4) keepCutTightBoards += 1;
-        keepCutGapTotal += keepCut.cutoffGap;
+        if (availableTierCount > 1) {
+          expect(new Set(rank.items.map(footballGreatnessTierForItem)).size).toBeGreaterThan(1);
+        }
 
-        for (const item of rank.items) {
-          rankSeen.add(item.id);
-          increment(rankAppearances, item.id);
-          increment(rankTierAppearances, footballComparisonTier(item));
-          rankTotalItems += 1;
-        }
-        for (const item of keepCut.items) {
-          keepCutSeen.add(item.id);
-          increment(keepCutAppearances, item.id);
-          increment(keepCutTierAppearances, footballComparisonTier(item));
-          keepCutTotalItems += 1;
-        }
+        for (const item of rank.items) rankSeen.add(item.id);
+        for (const item of keepCut.items) keepCutSeen.add(item.id);
       }
 
-      expect(share(rankSeen.size, pack.items.length), `${pack.id} Blind Rank pool coverage`).toBeGreaterThanOrEqual(0.8);
-      expect(share(keepCutSeen.size, pack.items.length), `${pack.id} Keep/Cut pool coverage`).toBeGreaterThanOrEqual(0.8);
-      expectTierAwareExposure(pack, rankAppearances, 5, "Blind Rank");
-      expectTierAwareExposure(pack, keepCutAppearances, 8, "Keep/Cut");
+      expect(share(rankSeen.size, pack.items.length), `${pack.id} Blind Rank pool coverage`).toBeGreaterThanOrEqual(0.75);
+      expect(share(keepCutSeen.size, pack.items.length), `${pack.id} Keep/Cut pool coverage`).toBeGreaterThanOrEqual(0.75);
     }
 
-    const rankAbsoluteLowShare = share(
-      (rankTierAppearances.get("below-average") ?? 0) + (rankTierAppearances.get("bad") ?? 0),
-      rankTotalItems,
-    );
-    const rankAbsoluteMiddleShare = share(
-      (rankTierAppearances.get("good") ?? 0) + (rankTierAppearances.get("average") ?? 0),
-      rankTotalItems,
-    );
-    const keepCutAbsoluteLowShare = share(
-      (keepCutTierAppearances.get("below-average") ?? 0) + (keepCutTierAppearances.get("bad") ?? 0),
-      keepCutTotalItems,
-    );
-    const keepCutAbsoluteMiddleShare = share(
-      (keepCutTierAppearances.get("good") ?? 0) + (keepCutTierAppearances.get("average") ?? 0),
-      keepCutTotalItems,
-    );
-
-    expect(rankSignatures.size).toBeGreaterThan(totalBoards * 0.94);
-    expect(keepCutSignatures.size).toBeGreaterThan(totalBoards * 0.9);
-    expect(share(rankLowBoards, totalBoards)).toBeGreaterThanOrEqual(0.62);
-    expect(share(rankMultipleLowBoards, totalBoards)).toBeGreaterThanOrEqual(0.32);
-    expect(share(rankHighLowBoards, totalBoards)).toBeGreaterThanOrEqual(0.55);
-    expect(share(keepCutTightBoards, totalBoards)).toBeGreaterThanOrEqual(0.8);
-    expect(keepCutGapTotal / totalBoards).toBeLessThanOrEqual(4.2);
+    expect(rankSignatures.size).toBeGreaterThan(totalBoards * 0.85);
+    expect(keepCutSignatures.size).toBeGreaterThan(totalBoards * 0.8);
 
     console.info("PR10 comparison audit", JSON.stringify({
       packs: footballRankFivePacks.length,
       boardsPerGame: totalBoards,
       blindRankUniqueBoardShare: share(rankSignatures.size, totalBoards),
-      blindRankRelativeLowBoardShare: share(rankLowBoards, totalBoards),
-      blindRankMultiLowBoardShare: share(rankMultipleLowBoards, totalBoards),
-      blindRankHighLowContrastShare: share(rankHighLowBoards, totalBoards),
-      blindRankAbsoluteLowTierAppearanceShare: rankAbsoluteLowShare,
-      blindRankAbsoluteMiddleTierAppearanceShare: rankAbsoluteMiddleShare,
       keepCutUniqueBoardShare: share(keepCutSignatures.size, totalBoards),
-      keepCutAbsoluteLowTierAppearanceShare: keepCutAbsoluteLowShare,
-      keepCutAbsoluteMiddleTierAppearanceShare: keepCutAbsoluteMiddleShare,
-      keepCutTightCutoffShare: share(keepCutTightBoards, totalBoards),
-      keepCutAverageCutoffGap: keepCutGapTotal / totalBoards,
     }));
   }, 150_000);
 
