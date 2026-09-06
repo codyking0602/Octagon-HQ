@@ -1,3 +1,5 @@
+import type { FootballRankingDimension } from "./footballRankingFramework";
+
 export interface FootballReviewedRatingCalibrationSample {
   modelScore: number;
   reviewedRating: number;
@@ -13,8 +15,19 @@ export interface FootballReviewedRatingCalibration {
   points: readonly FootballReviewedRatingCalibrationPoint[];
 }
 
+export interface FootballReviewedRatingProfileSample {
+  dimensionScores: Readonly<Partial<Record<FootballRankingDimension, number>>>;
+  reviewedRating: number;
+  eraMidpoint?: number | null;
+}
+
 const MIN_REVIEWED_ANCHORS = 4;
 const MIN_MODEL_SCORE_SPAN = 0.05;
+const PROFILE_NEIGHBOR_COUNT = 5;
+const MIN_PROFILE_NEIGHBORS = 3;
+const PROFILE_RATING_WEIGHT = 0.85;
+const ERA_DISTANCE_WEIGHT = 0.20;
+const ERA_DISTANCE_FULL_PENALTY_SEASONS = 40;
 
 function clampRating(value: number) {
   return Math.max(0, Math.min(100, value));
@@ -122,4 +135,60 @@ export function reconcileFootballRatingToReviewedAnchors(
   calibration: FootballReviewedRatingCalibration,
 ) {
   return Math.round(clampRating(calibratedValue(modelScore, calibration)));
+}
+
+function reviewedProfileDistance(
+  targetScores: Readonly<Partial<Record<FootballRankingDimension, number>>>,
+  sample: FootballReviewedRatingProfileSample,
+  targetEraMidpoint?: number | null,
+) {
+  const dimensions = Object.keys(targetScores) as FootballRankingDimension[];
+  const common = dimensions.flatMap((dimension) => {
+    const target = targetScores[dimension];
+    const anchor = sample.dimensionScores[dimension];
+    return target == null || anchor == null ? [] : [Math.abs(target - anchor)];
+  });
+  if (common.length < 2) return null;
+
+  const dimensionDistance = common.reduce((sum, value) => sum + value, 0) / common.length;
+  const eraDistance = targetEraMidpoint != null && sample.eraMidpoint != null
+    ? Math.min(1, Math.abs(targetEraMidpoint - sample.eraMidpoint) / ERA_DISTANCE_FULL_PENALTY_SEASONS)
+    : 0;
+  return dimensionDistance + eraDistance * ERA_DISTANCE_WEIGHT;
+}
+
+/**
+ * A scalar model score can hide why two careers differ. This calibration step
+ * compares the model's actual greatness-dimension profile to nearby reviewed
+ * careers, with a light era preference, then blends that neighborhood with the
+ * monotone reviewed scale. Reviewed rows stay exact and generated subjects never
+ * become manual overrides.
+ */
+export function reconcileFootballRatingToReviewedProfiles(
+  dimensionScores: Readonly<Partial<Record<FootballRankingDimension, number>>>,
+  samples: readonly FootballReviewedRatingProfileSample[],
+  scaleRating: number,
+  eraMidpoint?: number | null,
+) {
+  const neighbors = samples
+    .flatMap((sample) => {
+      const distance = reviewedProfileDistance(dimensionScores, sample, eraMidpoint);
+      return distance == null ? [] : [{ sample, distance }];
+    })
+    .sort((left, right) => left.distance - right.distance || right.sample.reviewedRating - left.sample.reviewedRating)
+    .slice(0, PROFILE_NEIGHBOR_COUNT);
+
+  if (neighbors.length < MIN_PROFILE_NEIGHBORS) return Math.round(clampRating(scaleRating));
+
+  const weighted = neighbors.map(({ sample, distance }) => ({
+    rating: clampRating(sample.reviewedRating),
+    weight: 1 / Math.max(0.05, distance),
+  }));
+  const totalWeight = weighted.reduce((sum, row) => sum + row.weight, 0);
+  if (totalWeight <= 0) return Math.round(clampRating(scaleRating));
+
+  const profileRating = weighted.reduce((sum, row) => sum + row.rating * row.weight, 0) / totalWeight;
+  return Math.round(clampRating(
+    profileRating * PROFILE_RATING_WEIGHT + scaleRating * (1 - PROFILE_RATING_WEIGHT),
+  ));
 }
