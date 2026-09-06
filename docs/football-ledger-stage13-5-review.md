@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **4,035**
+Canonical A/B/C subjects: **4,022**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -22,7 +22,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | Player seasons | 764 | 107 | 318 | 339 | 764 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 113 | 4 | 37 | 72 | 113 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 32 | 5 | 27 | 0 | 32 | 0 | 0 | 0 | 0 | 0 |
-| Head coaches | 73 | 17 | 12 | 44 | 0 | 73 | 0 | 146 | 0 | 0 |
+| Head coaches | 72 | 17 | 11 | 44 | 0 | 72 | 0 | 144 | 0 | 0 |
 | Eras / dynasties | 28 | 8 | 16 | 4 | 0 | 28 | 0 | 56 | 0 | 0 |
 | Notable games / misc | 73 | 20 | 49 | 4 | 0 | 73 | 0 | 146 | 0 | 0 |
 
@@ -42,7 +42,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | Player seasons | 316 | 12 | 25 | 279 | 316 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 132 | 6 | 42 | 84 | 132 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 106 | 5 | 13 | 88 | 101 | 5 | 0 | 10 | 0 | 0 |
-| Head coaches | 52 | 13 | 32 | 7 | 52 | 0 | 0 | 0 | 0 | 0 |
+| Head coaches | 40 | 11 | 22 | 7 | 40 | 0 | 0 | 0 | 0 | 0 |
 | Eras / dynasties | 71 | 19 | 24 | 28 | 42 | 29 | 0 | 29 | 0 | 0 |
 | Notable games / misc | 87 | 32 | 47 | 8 | 0 | 87 | 0 | 174 | 0 | 0 |
 
@@ -424,7 +424,6 @@ None.
 - NFL Head coaches: **Bill Cowher** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Bud Grant** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Dick Vermeil** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Dick Vermeil** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results cover only part of this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Don Coryell** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **George Allen** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Hank Stram** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
