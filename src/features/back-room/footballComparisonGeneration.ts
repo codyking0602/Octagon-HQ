@@ -179,7 +179,7 @@ function boardTierTargets(
     case "loaded": {
       const highTierCount = Math.max(1, Math.ceil(tierCount * 0.4));
       const targets = Array.from({ length: size }, () => randomInteger(random, 0, highTierCount - 1));
-      if (game === "blind" && highTierCount === 1) targets[size - 1] = 1;
+      if (highTierCount === 1) targets[size - 1] = 1;
       return targets;
     }
 
