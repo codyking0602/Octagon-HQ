@@ -147,6 +147,7 @@ const FOOTBALL_GREATNESS_TIER_OVERRIDES: Readonly<Record<string, FootballGreatne
   "matt-leinart-2004": "great",
   "baker-mayfield-2017": "great",
   "trevor-lawrence-2018": "good",
+  "cfb-quinn-ewers": "average",
   "jake-fromm-career": "average",
 
   "herschel-walker-cfb": "elite",
