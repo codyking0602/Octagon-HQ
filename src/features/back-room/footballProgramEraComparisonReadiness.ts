@@ -1,4 +1,3 @@
-import { seededLineupRandom } from "../play/lineupModel";
 import type {
   FootballRankFiveItem,
   FootballRankFivePackId,
@@ -94,34 +93,23 @@ export function footballReviewedItemsForComparison(
 
 function canonicalProgramEraBoardKey(item: FootballRankFiveItem) {
   const subject = resolveFootballSubjectReference(item.id, item.name, PROGRAM_ERA_QUERY);
-  if (!subject) return `item:${item.id}`;
+  if (!subject) return null;
   if (subject.teamId) return `team:${String(subject.teamId)}`;
   if (subject.school) return `school:${normalizedIdentity(subject.school)}`;
-  return `item:${subject.id}`;
+  return null;
 }
 
 /**
- * A single Program Era board may compare only one era from a school. The canonical team/program
- * identity owns the collision rule; different eras from that school remain eligible on other plays.
+ * Program Era boards compare at most one era from a canonical school/team. The conflict rule
+ * is consumed by the shared comparison generator so Blind 5 and Keep 4 cannot diverge.
  */
-export function footballComparisonBoardPool(
-  packId: FootballRankFivePackId,
-  items: readonly FootballRankFiveItem[],
-  seed: string,
-): readonly FootballRankFiveItem[] {
-  if (packId !== "college-program-eras") return items;
-
-  const groups = new Map<string, FootballRankFiveItem[]>();
-  for (const item of items) {
-    const key = canonicalProgramEraBoardKey(item);
-    const group = groups.get(key) ?? [];
-    group.push(item);
-    groups.set(key, group);
-  }
-
-  return [...groups.entries()].map(([key, group]) => {
-    if (group.length === 1) return group[0]!;
-    const random = seededLineupRandom("football-program-era-board-pool", seed, key);
-    return group[Math.floor(random() * group.length)]!;
-  });
+export function footballComparisonItemsConflict(
+  scopeId: string,
+  left: FootballRankFiveItem,
+  right: FootballRankFiveItem,
+) {
+  if (scopeId !== "college-program-eras") return false;
+  const leftKey = canonicalProgramEraBoardKey(left);
+  const rightKey = canonicalProgramEraBoardKey(right);
+  return leftKey != null && rightKey != null && leftKey === rightKey;
 }
