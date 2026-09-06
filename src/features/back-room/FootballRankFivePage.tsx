@@ -228,7 +228,7 @@ export default function FootballRankFivePage() {
                 <div className="football-rank-five-results is-canonical">
                   {tierOrder.map((item) => (
                     <article key={item.id}>
-                      <b>{footballGreatnessTierLabel(footballGreatnessTierForItem(item))}</b>
+                      <b>{footballGreatnessTierLabel(footballGreatnessTierForItem(item), run.pack.items)}</b>
                       <FootballSubjectVisual item={item} packId={run.pack.id} />
                       <span><strong>{item.name}</strong><small>{item.subtitle}</small></span>
                       <em>{item.league}</em>
