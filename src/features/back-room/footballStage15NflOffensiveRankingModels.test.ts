@@ -14,7 +14,7 @@ const offensiveProfiles = [
 ] as const;
 
 describe("Football Stage 15 NFL offensive career ranking models", () => {
-  it("uses one normalized canonical score profile per offensive position family", () => {
+  it("uses one normalized canonical fact profile per offensive position family", () => {
     expect(FOOTBALL_RANKING_FRAMEWORK_VERSION).toBe("stage15-v4");
 
     for (const profile of offensiveProfiles) {
@@ -43,11 +43,24 @@ describe("Football Stage 15 NFL offensive career ranking models", () => {
     }
   });
 
-  it("keeps reviewed rows optional while data-derived offensive candidates use the Stage 15 profiles", () => {
+  it("keeps canonical fact eligibility while the approved QB consensus owns QB ratings", () => {
     for (const profile of offensiveProfiles) {
       const pool = buildFootballComparisonCandidatePool(profile.packId, []);
-      const dataDerived = pool.filter((candidate) => candidate.evaluationSource === "canonical-facts");
+      const spec = footballComparisonCategorySpecs[profile.packId];
 
+      if (profile.packId === "nfl-quarterbacks") {
+        const consensusRated = pool.filter((candidate) => candidate.evaluationSource === "historical-consensus");
+        expect(consensusRated.length, "nfl-quarterbacks consensus-rated depth").toBeGreaterThan(0);
+        for (const candidate of consensusRated) {
+          expect(candidate.rankingVersion).toBe("stage15-v4");
+          expect(candidate.rankingSemantic).toBe("career-greatness");
+          expect(candidate.ratingBasis).toContain("historical consensus");
+          expect(candidate.factMetricIds.length).toBeGreaterThanOrEqual(spec.minimumFacts);
+        }
+        continue;
+      }
+
+      const dataDerived = pool.filter((candidate) => candidate.evaluationSource === "canonical-facts");
       expect(dataDerived.length, `${profile.packId} canonical data-derived depth`).toBeGreaterThan(0);
 
       for (const candidate of dataDerived) {
