@@ -1,12 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { footballGameComparisonCandidates } from "../games/gameSourceAuthority";
 import { footballCareerCfbDisplayProgram } from "./footballCareerMediaContext";
-import {
-  nflDefensiveCareers,
-  nflQuarterbackSeasons,
-  nflTeamSeasons,
-} from "./footballComparisonDepthCatalog";
 import {
   buildFootballBlindRankBoard,
   buildFootballKeepCutBoard,
@@ -22,7 +16,6 @@ import {
   scoreFootballBlindRankTierOrder,
 } from "./footballGreatnessTier";
 import { scoreFootballKeepCutSelection } from "./footballKeepCutModel";
-import rankFiveModelSource from "./footballRankFiveModel.ts?raw";
 import {
   footballRankFivePacks,
   getFootballRankFivePack,
@@ -33,60 +26,20 @@ import { footballSubjectAsset } from "./footballSubjectAssets";
 import { getFootballSubject } from "./footballSubjectRegistry";
 
 type RecognizableItem = FootballRankFiveItem & { recognizabilityTier?: "A" | "B" | "C" | "D" };
-type AuditCategory = {
-  id: string;
-  label: string;
-  sourcePackIds?: readonly FootballRankFivePackId[];
-  items?: readonly FootballRankFiveItem[];
-};
 
-function privateCatalogItems(variableName: "collegePrograms" | "collegeTeamSeasons"): readonly FootballRankFiveItem[] {
-  const start = rankFiveModelSource.indexOf(`const ${variableName}: readonly FootballRankFiveItem[] = [`);
-  if (start < 0) throw new Error(`Missing canonical ${variableName} catalog.`);
-  const end = rankFiveModelSource.indexOf("\n];", start);
-  if (end < 0) throw new Error(`Unterminated canonical ${variableName} catalog.`);
-  const block = rankFiveModelSource.slice(start, end);
-  const rows: FootballRankFiveItem[] = [];
-  const rowPattern = /\{ id: "([^"]+)", name: "([^"]+)", subtitle: "([^"]+)", league: "(NFL|CFB)", rating: (\d+)(?:, ratingBasis: "[^"]*")? \}/g;
-  for (const match of block.matchAll(rowPattern)) {
-    rows.push({
-      id: match[1]!,
-      name: match[2]!,
-      subtitle: match[3]!,
-      league: match[4] as "NFL" | "CFB",
-      rating: Number(match[5]),
-    });
-  }
-  if (rows.length < 8) throw new Error(`Canonical ${variableName} catalog parsed only ${rows.length} rows.`);
-  return rows;
-}
+const RETIRED_RANK_FIVE_IDS = [
+  "nfl-defensive-players",
+  "nfl-qb-seasons",
+  "nfl-team-seasons",
+  "college-programs",
+  "college-team-seasons",
+] as const;
 
-const AUDIT_CATEGORIES = [
-  { id: "nfl-quarterbacks", label: "NFL QB Careers", sourcePackIds: ["nfl-quarterbacks"] },
-  { id: "nfl-running-backs", label: "NFL RB Careers", sourcePackIds: ["nfl-running-backs"] },
-  { id: "nfl-wide-receivers", label: "NFL WR Careers", sourcePackIds: ["nfl-wide-receivers"] },
-  { id: "nfl-tight-ends", label: "NFL TE Careers", sourcePackIds: ["nfl-tight-ends"] },
-  { id: "nfl-defensive-careers", label: "NFL Defensive Careers", items: nflDefensiveCareers },
-  { id: "nfl-head-coaches", label: "NFL Head Coaches", sourcePackIds: ["nfl-head-coaches"] },
-  { id: "nfl-qb-seasons", label: "NFL QB Seasons", items: nflQuarterbackSeasons },
-  { id: "nfl-team-seasons", label: "NFL Team Seasons", items: nflTeamSeasons },
-  { id: "college-quarterbacks", label: "College QBs", sourcePackIds: ["college-quarterbacks"] },
-  { id: "college-head-coaches", label: "CFB Head Coaches", sourcePackIds: ["college-head-coaches"] },
-  { id: "college-programs", label: "Programs Since 2000", items: privateCatalogItems("collegePrograms") },
-  { id: "college-program-eras", label: "CFB Program Eras", sourcePackIds: ["college-program-eras"] },
-  { id: "college-team-seasons", label: "CFB Team Seasons", items: privateCatalogItems("collegeTeamSeasons") },
-] as const satisfies readonly AuditCategory[];
-
-function auditPool(category: AuditCategory): readonly RecognizableItem[] {
-  if (category.items) return category.items as readonly RecognizableItem[];
-  const byId = new Map<string, RecognizableItem>();
-  for (const sourcePackId of category.sourcePackIds ?? []) {
-    for (const candidate of footballGameComparisonCandidates(sourcePackId) as readonly RecognizableItem[]) {
-      if (!byId.has(candidate.id)) byId.set(candidate.id, candidate);
-    }
-  }
-  return [...byId.values()];
-}
+const FOCUSED_CONTENT_PACK_IDS = [
+  "college-running-backs",
+  "college-head-coaches",
+  "nfl-team-eras",
+] as const satisfies readonly FootballRankFivePackId[];
 
 function tierSignature(board: readonly FootballRankFiveItem[], pool: readonly FootballRankFiveItem[]) {
   return footballGreatnessTiersForCategory(pool)
@@ -131,7 +84,47 @@ function item(id: string, rating: number, recognizabilityTier?: RecognizableItem
   };
 }
 
+function normalizedName(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+function focusedContentSummary() {
+  return FOCUSED_CONTENT_PACK_IDS.map((packId) => {
+    const pack = getFootballRankFivePack(packId);
+    const tiers = footballGreatnessTiersForCategory(pack.items);
+    const subjectsByTier = Object.fromEntries(tiers.map((tier) => [
+      tier,
+      pack.items
+        .filter((candidate) => footballGreatnessTierForItem(candidate) === tier)
+        .map((candidate) => candidate.name),
+    ]));
+    return {
+      id: pack.id,
+      name: pack.name,
+      subjectCount: pack.items.length,
+      recognizableCount: recognizableCount(pack.items as readonly RecognizableItem[]),
+      tierCounts: Object.fromEntries(tiers.map((tier) => [tier, subjectsByTier[tier]?.length ?? 0])),
+      strongestTier: tiers[0] ?? null,
+      strongestSubjects: tiers[0] ? subjectsByTier[tiers[0]] : [],
+      weakestTier: tiers.at(-1) ?? null,
+      weakestSubjects: tiers.at(-1) ? subjectsByTier[tiers.at(-1)!] : [],
+      subjectsByTier,
+    };
+  });
+}
+
 describe("Football Blind Rank 5 + Keep 4 / Cut 4 readiness", () => {
+  it("derives the readiness universe from the canonical playable pack owner and excludes retired IDs", () => {
+    expect(footballRankFivePacks).toHaveLength(12);
+    expect(new Set(footballRankFivePacks.map((pack) => pack.id)).size).toBe(footballRankFivePacks.length);
+
+    const playableIds = new Set(footballRankFivePacks.map((pack) => pack.id));
+    for (const retiredId of RETIRED_RANK_FIVE_IDS) {
+      expect(playableIds.has(retiredId as FootballRankFivePackId), retiredId).toBe(false);
+      expect(() => getFootballRankFivePack(retiredId as FootballRankFivePackId), retiredId).toThrow();
+    }
+  });
+
   it("uses the requested football-specific weighted board lottery", () => {
     expect(FOOTBALL_BLIND_RANK_ARCHETYPES.map(({ id, weight }) => [id, weight])).toEqual([
       ["wild-card", 0.35],
@@ -195,42 +188,62 @@ describe("Football Blind Rank 5 + Keep 4 / Cut 4 readiness", () => {
     expect(secondEqualChoice.correctComparisons).toBe(16);
   });
 
-  it("audits deterministic boards across all 13 requested canonical comparison categories", () => {
-    expect(AUDIT_CATEGORIES).toHaveLength(13);
+  it("simulates both games deterministically across every current playable pack", () => {
+    const seedsPerPack = 64;
+    let totalBlindBoards = 0;
+    let totalKeepCutBoards = 0;
+    let knifeEdgeBoards = 0;
+    let tiedKnifeEdges = 0;
 
-    for (const category of AUDIT_CATEGORIES) {
-      const pool = auditPool(category);
-      expect(pool.length, `${category.label} pool`).toBeGreaterThanOrEqual(8);
+    for (const pack of footballRankFivePacks) {
+      const pool = pack.items as readonly RecognizableItem[];
+      expect(pool.length, `${pack.name} pool`).toBeGreaterThanOrEqual(8);
+      expect(new Set(pool.map((candidate) => candidate.id)).size, `${pack.name} duplicate IDs`).toBe(pool.length);
+      expect(new Set(pool.map((candidate) => normalizedName(candidate.name))).size, `${pack.name} duplicate names`).toBe(pool.length);
+
       const availableTierCount = footballGreatnessTiersForCategory(pool).length;
       const recognizable = recognizableCount(pool);
       const blindTextures = new Set<string>();
       const keepCutTextures = new Set<string>();
 
-      for (let index = 0; index < 32; index += 1) {
-        const seed = `readiness-${category.id}-${index}`;
-        const blind = buildFootballBlindRankBoard(pool, category.id, seed);
-        const repeatBlind = buildFootballBlindRankBoard(pool, category.id, seed);
-        const keepCut = buildFootballKeepCutBoard(pool, category.id, seed);
-        const repeatKeepCut = buildFootballKeepCutBoard(pool, category.id, seed);
+      for (let index = 0; index < seedsPerPack; index += 1) {
+        const seed = `readiness-${pack.id}-${index}`;
+        const blind = buildFootballBlindRankBoard(pool, pack.id, seed);
+        const repeatBlind = buildFootballBlindRankBoard(pool, pack.id, seed);
+        const keepCut = buildFootballKeepCutBoard(pool, pack.id, seed);
+        const repeatKeepCut = buildFootballKeepCutBoard(pool, pack.id, seed);
 
-        expect(blind.items, `${category.label} blind count`).toHaveLength(5);
-        expect(new Set(blind.items.map((row) => row.id)).size, `${category.label} blind unique`).toBe(5);
-        expect(repeatBlind.items.map((row) => row.id), `${category.label} blind deterministic`)
+        totalBlindBoards += 1;
+        totalKeepCutBoards += 1;
+
+        expect(blind.items, `${pack.name} blind count`).toHaveLength(5);
+        expect(new Set(blind.items.map((row) => row.id)).size, `${pack.name} blind unique`).toBe(5);
+        expect(repeatBlind.items.map((row) => row.id), `${pack.name} blind deterministic`)
           .toEqual(blind.items.map((row) => row.id));
+        expect(repeatBlind.boardType, `${pack.name} blind board type deterministic`).toBe(blind.boardType);
         if (availableTierCount > 1) {
-          expect(new Set(blind.items.map(footballGreatnessTierForItem)).size, `${category.label} blind tier diversity`).toBeGreaterThan(1);
+          expect(new Set(blind.items.map(footballGreatnessTierForItem)).size, `${pack.name} blind tier diversity`).toBeGreaterThan(1);
         }
 
-        expect(keepCut.items, `${category.label} keep/cut count`).toHaveLength(8);
-        expect(new Set(keepCut.items.map((row) => row.id)).size, `${category.label} keep/cut unique`).toBe(8);
-        expect(repeatKeepCut.items.map((row) => row.id), `${category.label} keep/cut deterministic`)
+        expect(keepCut.items, `${pack.name} keep/cut count`).toHaveLength(8);
+        expect(new Set(keepCut.items.map((row) => row.id)).size, `${pack.name} keep/cut unique`).toBe(8);
+        expect(repeatKeepCut.items.map((row) => row.id), `${pack.name} keep/cut deterministic`)
           .toEqual(keepCut.items.map((row) => row.id));
+        expect(repeatKeepCut.boardType, `${pack.name} keep/cut board type deterministic`).toBe(keepCut.boardType);
+        if (availableTierCount > 1) {
+          expect(new Set(keepCut.items.map(footballGreatnessTierForItem)).size, `${pack.name} keep/cut tier diversity`).toBeGreaterThan(1);
+        }
 
         if (pool.length >= 10 && recognizable >= 4) {
-          expect(recognizableCount(blind.items as RecognizableItem[]), `${category.label} blind recognizability`).toBeGreaterThanOrEqual(2);
+          expect(recognizableCount(blind.items as RecognizableItem[]), `${pack.name} blind recognizability`).toBeGreaterThanOrEqual(2);
         }
         if (pool.length >= 16 && recognizable >= 6) {
-          expect(recognizableCount(keepCut.items as RecognizableItem[]), `${category.label} keep/cut recognizability`).toBeGreaterThanOrEqual(3);
+          expect(recognizableCount(keepCut.items as RecognizableItem[]), `${pack.name} keep/cut recognizability`).toBeGreaterThanOrEqual(3);
+        }
+
+        if (keepCut.boardType === "knife-edge") {
+          knifeEdgeBoards += 1;
+          if (keepCut.cutoffGap === 0) tiedKnifeEdges += 1;
         }
 
         blindTextures.add(tierSignature(blind.items, pool));
@@ -238,13 +251,29 @@ describe("Football Blind Rank 5 + Keep 4 / Cut 4 readiness", () => {
       }
 
       if (pool.length >= 16 && availableTierCount >= 3) {
-        expect(blindTextures.size, `${category.label} blind texture variety`).toBeGreaterThan(1);
-        expect(keepCutTextures.size, `${category.label} keep/cut texture variety`).toBeGreaterThan(1);
+        expect(blindTextures.size, `${pack.name} blind texture variety`).toBeGreaterThan(1);
+        expect(keepCutTextures.size, `${pack.name} keep/cut texture variety`).toBeGreaterThan(1);
       }
     }
+
+    expect(totalBlindBoards).toBe(footballRankFivePacks.length * seedsPerPack);
+    expect(totalKeepCutBoards).toBe(footballRankFivePacks.length * seedsPerPack);
+    expect(knifeEdgeBoards).toBeGreaterThan(0);
+    expect(tiedKnifeEdges / knifeEdgeBoards).toBeGreaterThan(0.5);
+
+    console.info("Football Blind/Keep deterministic readiness", JSON.stringify({
+      playablePackCount: footballRankFivePacks.length,
+      seedsPerPack,
+      totalBlindBoards,
+      totalKeepCutBoards,
+      knifeEdgeBoards,
+      tiedKnifeEdges,
+      tiedKnifeEdgeShare: tiedKnifeEdges / knifeEdgeBoards,
+      focusedContent: focusedContentSummary(),
+    }));
   });
 
-  it("keeps reveal position independent from tier strength", () => {
+  it("keeps reveal order variable independently from a fixed board composition", () => {
     const pool = [
       item("tom-brady", 1),
       item("randy-moss", 100),
@@ -260,7 +289,7 @@ describe("Football Blind Rank 5 + Keep 4 / Cut 4 readiness", () => {
     expect(positions).toEqual(new Set([0, 1, 2, 3, 4]));
   });
 
-  it("relaxes shape constraints inside the same generator for genuinely sparse tier distributions", () => {
+  it("relaxes tier-target distance inside the same generator for genuinely sparse tier distributions", () => {
     const blindSparse = [
       item("derrick-brooks", 1),
       item("junior-seau", 2),

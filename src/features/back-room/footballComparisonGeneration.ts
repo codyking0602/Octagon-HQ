@@ -66,7 +66,6 @@ const KEEP_COUNT = 4;
 const BOARD_ATTEMPTS = 180;
 const STRICT_ATTEMPTS = 96;
 const NEIGHBOR_RELAX_ATTEMPTS = 144;
-const SPARSE_CONFLICT_RELAX_POOL_MAX = 15;
 
 export const FOOTBALL_BLIND_RANK_ARCHETYPES: readonly FootballBlindRankArchetype[] = [
   { id: "wild-card", name: "Wild Card", weight: 0.35 },
@@ -179,7 +178,7 @@ function boardTierTargets(
     case "loaded": {
       const highTierCount = Math.max(1, Math.ceil(tierCount * 0.4));
       const targets = Array.from({ length: size }, () => randomInteger(random, 0, highTierCount - 1));
-      if (highTierCount === 1) targets[size - 1] = 1;
+      if (game === "blind" && highTierCount === 1) targets[size - 1] = 1;
       return targets;
     }
 
@@ -263,10 +262,8 @@ function markComparisonItemUsed(
   items: readonly FootballRankFiveItem[],
   scopeId: string,
   picked: FootballRankFiveItem,
-  relaxConflicts: boolean,
 ) {
   used.add(picked.id);
-  if (relaxConflicts) return;
   for (const candidate of items) {
     if (footballComparisonItemsConflict(scopeId, picked, candidate)) used.add(candidate.id);
   }
@@ -303,7 +300,6 @@ function selectBoardComposition(
   const quota = recognizabilityQuota(game, items);
   const tierCap = healthyTierCap(game, items, tiers.length);
   const allowedDistance = relaxedDistanceForAttempt(attempt, tiers.length);
-  const relaxConflicts = attempt >= NEIGHBOR_RELAX_ATTEMPTS && items.length <= SPARSE_CONFLICT_RELAX_POOL_MAX;
 
   for (const targetIndex of targetOrder) {
     const remainingSlots = size - selected.length;
@@ -338,7 +334,7 @@ function selectBoardComposition(
     const picked = shuffleLineup(nearest, random)[0];
     if (!picked) return null;
     selected.push(picked);
-    markComparisonItemUsed(used, items, scopeId, picked, relaxConflicts);
+    markComparisonItemUsed(used, items, scopeId, picked);
   }
 
   if (selected.length !== size) return null;
