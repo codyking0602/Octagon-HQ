@@ -201,7 +201,10 @@ export const nflTeamSeasons = [
 
 export const collegeHeadCoaches = [
   cfb("nick-saban-cfb", "Nick Saban", "7 national titles · Alabama / LSU", 100, "Benchmark modern college coaching career with unmatched titles, sustained contention and roster-cycle dominance.", 333, "Alabama"),
+  cfb("bear-bryant", "Bear Bryant", "6 national titles · 323 wins", 99, "Six national championships, exceptional longevity and decades of major-college dominance make Bryant an inner-circle all-time benchmark.", 333, "Alabama"),
+  cfb("woody-hayes", "Woody Hayes", "Ohio State dynasty · 13 Big Ten titles", 98, "Multiple national-title teams, thirteen conference championships and sustained top-level results across nearly three decades outweigh shorter modern résumés.", 194, "Ohio State"),
   cfb("urban-meyer-cfb", "Urban Meyer", "3 national titles · Florida / Ohio State", 97, "Championship peaks at two programs, elite winning percentage and major offensive influence.", 194, "Ohio State"),
+  cfb("tom-osborne", "Tom Osborne", "3 national titles · 255–49–3 at Nebraska", 97, "Three national titles, twenty-five straight nine-win seasons and extraordinary sustained results place Osborne above modern coaches with shorter or lighter championship résumés.", 158, "Nebraska"),
   cfb("kirby-smart-cfb", "Kirby Smart", "2 national titles · Georgia", 96, "Sustained elite recruiting, defense and championship contention with a modern dynasty-level peak.", 61, "Georgia"),
   cfb("dabo-swinney-cfb", "Dabo Swinney", "2 national titles · Clemson", 94, "Built Clemson into a multi-title national power with a long playoff-era peak.", 228, "Clemson"),
   cfb("pete-carroll-cfb", "Pete Carroll", "2 national titles · USC", 93, "Shorter college tenure but extraordinary peak dominance, recruiting and national-title contention.", 30, "USC"),

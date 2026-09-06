@@ -210,6 +210,11 @@ const projectedCanonicalSubjects: readonly FootballSubjectProfile[] = footballCa
   .map((subject) => enrichFootballSubject(subject, projectedCanonicalKnowledgeOverride(subject)));
 
 const canonicalSubjectIds = new Set(footballSubjects.map((subject) => subject.id));
+const canonicalCoachIdentityKeys = new Set(
+  footballSubjects
+    .filter((subject) => subject.kind === "coach")
+    .map((subject) => `${subject.league}:${normalizedFootballSubjectName(subject.name)}`),
+);
 const reconciledProjectedPlayerIds = new Set(
   footballCanonicalSubjects
     .filter((subject) => subject.kind === "player-career")
@@ -228,7 +233,11 @@ const projectedPlayerSourceSubjects: readonly FootballSubjectProfile[] = footbal
 
 /** Stage 12 adds identity-only franchise/game/coach/era families through the same query owner. */
 const projectedNonPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedNonPlayerRecognitionSubjects
-  .filter(({ subject }) => !canonicalSubjectIds.has(subject.id))
+  .filter(({ subject }) => {
+    if (canonicalSubjectIds.has(subject.id)) return false;
+    if (subject.kind !== "coach") return true;
+    return !canonicalCoachIdentityKeys.has(`${subject.league}:${normalizedFootballSubjectName(subject.name)}`);
+  })
   .map(({ subject, tier, sourceIdentityKey }) => enrichProjectedNonPlayerSubject(subject, tier, sourceIdentityKey));
 
 const projectedSourceSubjects: readonly FootballSubjectProfile[] = [
