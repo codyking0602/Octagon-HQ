@@ -26,8 +26,8 @@ const MIN_MODEL_SCORE_SPAN = 0.05;
 const PROFILE_NEIGHBOR_COUNT = 5;
 const MIN_PROFILE_NEIGHBORS = 3;
 const PROFILE_RATING_WEIGHT = 0.90;
-const ERA_DISTANCE_WEIGHT = 0.75;
-const ERA_DISTANCE_FULL_PENALTY_SEASONS = 40;
+const ERA_DISTANCE_WEIGHT = 2;
+const ERA_DISTANCE_FULL_PENALTY_SEASONS = 30;
 
 function clampRating(value: number) {
   return Math.max(0, Math.min(100, value));
