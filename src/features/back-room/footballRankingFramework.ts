@@ -64,6 +64,10 @@ function clamp01(value: number) {
   return Math.max(0, Math.min(1, value));
 }
 
+export function footballRankingRatingForScore(score: number) {
+  return Math.max(35, Math.min(99, Math.round(35 + clamp01(score) * 64)));
+}
+
 export function scoreFootballAnchoredValue(value: number, anchorValues: readonly number[], direction: FootballRankingDirection = "higher") {
   if (anchorValues.length === 0) return 0.5;
   if (anchorValues.length === 1) {
@@ -135,7 +139,7 @@ export function rateFootballRankingEvidence(
   const score = scoreSignals.length > 0 ? scoreFromProfile(evidence, scoreSignals) : semanticScore;
   const evidenceConfidence = coveredWeight > 0 ? weightedConfidence / coveredWeight : 0;
   const confidence = clamp01(coverage * evidenceConfidence);
-  const rating = Math.max(35, Math.min(99, Math.round(35 + score * 64)));
+  const rating = footballRankingRatingForScore(score);
 
   return { version: FOOTBALL_RANKING_FRAMEWORK_VERSION, semantic, score, rating, coverage, confidence, status: coverage >= contract.minimumCoverage ? "rated" : "low-confidence", dimensionScores };
 }
