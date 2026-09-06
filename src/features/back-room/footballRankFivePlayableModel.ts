@@ -5,6 +5,7 @@ import {
   type PlayLineupIdentity,
 } from "../play/lineupModel";
 import { footballGameComparisonCandidates } from "../games/gameSourceAuthority";
+import { footballCareerCfbDisplayProgram } from "./footballCareerMediaContext";
 import { buildFootballBlindRankBoard } from "./footballComparisonGeneration";
 import { footballReviewedItemsForComparison } from "./footballProgramEraComparisonReadiness";
 import {
@@ -15,6 +16,7 @@ import {
   type FootballRankFivePack,
   type FootballRankFivePackId,
 } from "./footballRankFiveModel";
+import { getFootballSubject } from "./footballSubjectRegistry";
 
 export {
   FOOTBALL_RANK_FIVE_GAME_ID,
@@ -29,6 +31,20 @@ function runtimeLeagueForPack(packId: FootballRankFivePackId): FootballLeague {
   return packId.startsWith("nfl-") ? "NFL" : "CFB";
 }
 
+function runtimeComparisonMetadata(item: FootballRankFiveItem) {
+  const subject = getFootballSubject(item.id);
+  if (subject?.kind !== "player-career" || subject.league !== "CFB") return item;
+
+  const program = footballCareerCfbDisplayProgram(subject);
+  const seasons = subject.startSeason != null && subject.endSeason != null
+    ? `${subject.startSeason}–${subject.endSeason}`
+    : null;
+  return {
+    ...item,
+    subtitle: [subject.position, program, seasons].filter(Boolean).join(" · ") || item.subtitle,
+  };
+}
+
 /**
  * Runtime Blind Rank packs. The legacy Rank Five catalog is calibration/editorial input only;
  * actual membership starts from the deep canonical comparison authority and must satisfy
@@ -40,7 +56,7 @@ export const footballRankFivePacks: readonly FootballRankFivePack[] = footballRe
     pack.id,
     footballReviewedItemsForComparison(pack.id, pack.items),
   ).map((item) => ({
-    ...item,
+    ...runtimeComparisonMetadata(item),
     league: runtimeLeagueForPack(pack.id),
   })),
 }));
