@@ -13,7 +13,7 @@ type CareerMediaProjection = {
   cfbProgramMediaOwners?: readonly (readonly [programName: string, sourceProgramId: string])[];
 };
 
-type FootballCareerMediaSubject = {
+export type FootballCareerMediaSubject = {
   id: string;
   kind: string;
   league: FootballCanonicalSubject["league"];
@@ -28,6 +28,24 @@ export const footballCareerCfbProgramMediaOwners = (projection.cfbProgramMediaOw
   ([programName, sourceProgramId]) => ({ programName, sourceProgramId }),
 );
 
+function projectionIdFor(subject: FootballCareerMediaSubject) {
+  return footballRecognitionProjectionSubjectIdFor(subject as FootballCanonicalSubject);
+}
+
+/**
+ * Canonical CFB player-career display program. The generated relationship owner applies the existing
+ * transfer rule: most seasons with a program, then latest season and program name as deterministic ties.
+ * Copy and logo callers consume this same relationship so they cannot drift apart.
+ */
+export function footballCareerCfbDisplayProgram(subject: FootballCareerMediaSubject): string | null {
+  if (subject.kind !== "player-career" || subject.league !== "CFB") return null;
+  const projectionId = projectionIdFor(subject);
+  return cfbCareerProgramBySubjectId.get(subject.id)
+    ?? (projectionId ? cfbCareerProgramBySubjectId.get(projectionId) : undefined)
+    ?? subject.school
+    ?? null;
+}
+
 /**
  * Relationship-only media context. footballSubjectAssets remains the single public media owner.
  * Source-backed CFB careers use their pinned player-corpus program before canonical-school fallback;
@@ -36,14 +54,12 @@ export const footballCareerCfbProgramMediaOwners = (projection.cfbProgramMediaOw
 export function footballCareerTeamMediaId(subject: FootballCareerMediaSubject): FootballTeamMediaId | null {
   if (subject.kind !== "player-career") return null;
 
-  const projectionId = footballRecognitionProjectionSubjectIdFor(subject as FootballCanonicalSubject);
   if (subject.league === "CFB") {
-    const programName = cfbCareerProgramBySubjectId.get(subject.id)
-      ?? (projectionId ? cfbCareerProgramBySubjectId.get(projectionId) : undefined)
-      ?? subject.school;
+    const programName = footballCareerCfbDisplayProgram(subject);
     return programName ? footballCfbTeamMediaId(programName) : null;
   }
 
+  const projectionId = projectionIdFor(subject);
   const teamCode = nflCareerTeamCodeBySubjectId.get(subject.id)
     ?? (projectionId ? nflCareerTeamCodeBySubjectId.get(projectionId) : undefined);
   return teamCode ? footballNflTeamMediaId(teamCode) : null;
