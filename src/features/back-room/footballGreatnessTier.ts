@@ -20,11 +20,11 @@ export type FootballGreatnessTier =
 // Internal tier ids remain calibration/scoring details and are not user-facing labels.
 export const FOOTBALL_GREATNESS_TIER_LABELS = {
   goat: "TIER 1",
-  legendary: "TIER 2",
-  elite: "TIER 2",
-  "near-elite": "TIER 3",
-  great: "TIER 3",
-  good: "TIER 4",
+  legendary: "TIER 1",
+  elite: "TIER 1",
+  "near-elite": "TIER 2",
+  great: "TIER 2",
+  good: "TIER 3",
   average: "TIER 4",
   "below-average": "TIER 5",
   bad: "TIER 5",
