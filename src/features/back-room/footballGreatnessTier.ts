@@ -179,7 +179,7 @@ const FOOTBALL_GREATNESS_TIER_OVERRIDES: Readonly<Record<string, FootballGreatne
   "gary-patterson-cfb": "good",
   "kyle-whittingham-cfb": "good",
   "mark-richt-cfb": "good",
-  "boise-state-2006-2011": "average",
+  "boise-state-2006-2013": "average",
 };
 
 export function footballGreatnessTierForRating(rating: number): FootballRatingBand {
