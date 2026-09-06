@@ -6,10 +6,7 @@ import {
 } from "../play/lineupModel";
 import { footballGameComparisonCandidates } from "../games/gameSourceAuthority";
 import { buildFootballBlindRankBoard } from "./footballComparisonGeneration";
-import {
-  footballComparisonBoardPool,
-  footballReviewedItemsForComparison,
-} from "./footballProgramEraComparisonReadiness";
+import { footballReviewedItemsForComparison } from "./footballProgramEraComparisonReadiness";
 import {
   FOOTBALL_RANK_FIVE_GAME_ID,
   footballRankFivePacks as footballReviewedRankFivePacks,
@@ -76,8 +73,7 @@ export function buildFootballRankFiveLineup(
   seed: string,
 ) {
   const pack = getFootballRankFivePack(packId);
-  const boardPool = footballComparisonBoardPool(packId, pack.items, seed);
-  return buildFootballBlindRankBoard(boardPool, packId, seed).items;
+  return buildFootballBlindRankBoard(pack.items, packId, seed).items;
 }
 
 export interface FootballPlayableRankFiveRun {
