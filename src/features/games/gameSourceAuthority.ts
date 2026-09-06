@@ -3,6 +3,7 @@ import {
   footballComparisonCategorySpecs,
   type FootballComparisonCandidate,
 } from "../back-room/footballComparisonAuthority";
+import { footballCareerCfbDisplayProgram } from "../back-room/footballCareerMediaContext";
 import {
   footballSubjectMeetsFactRequirements,
   type FootballFactRequirementGroup,
@@ -11,6 +12,7 @@ import type {
   FootballRankFiveItem,
   FootballRankFivePackId,
 } from "../back-room/footballRankFiveModel";
+import { getFootballSubject } from "../back-room/footballSubjectRegistry";
 
 export type GameSourceOwnerId =
   | "ufc-factual-ledger"
@@ -153,11 +155,26 @@ export function footballGameComparisonCandidateIsEligible(
   return candidate.factMetricIds.length >= footballComparisonCategorySpecs[packId].minimumFacts;
 }
 
+function withCanonicalFootballGameMetadata(candidate: FootballComparisonCandidate): FootballComparisonCandidate {
+  const subject = getFootballSubject(candidate.canonicalSubjectId);
+  if (!subject || subject.kind !== "player-career" || subject.league !== "CFB") return candidate;
+  const program = footballCareerCfbDisplayProgram(subject);
+  if (!program) return candidate;
+  const seasons = subject.startSeason != null && subject.endSeason != null
+    ? `${subject.startSeason}–${subject.endSeason}`
+    : null;
+  return {
+    ...candidate,
+    subtitle: [subject.position, program, seasons].filter(Boolean).join(" · ") || program,
+  };
+}
+
 /** One Games-facing path into the canonical Football comparison authority. */
 export function footballGameComparisonCandidates(
   packId: FootballRankFivePackId,
   reviewedItems: readonly FootballRankFiveItem[] = [],
 ) {
   return buildFootballComparisonCandidatePool(packId, reviewedItems)
+    .map(withCanonicalFootballGameMetadata)
     .filter((candidate) => footballGameComparisonCandidateIsEligible(packId, candidate));
 }
