@@ -26,7 +26,9 @@ import {
 import {
   createFootballReviewedRatingCalibration,
   reconcileFootballRatingToReviewedAnchors,
+  reconcileFootballRatingToReviewedProfiles,
   type FootballReviewedRatingCalibrationSample,
+  type FootballReviewedRatingProfileSample,
 } from "./footballReviewedAnchorCalibration";
 
 const CASUAL_TIERS = ["A", "B", "C"] as const;
@@ -707,6 +709,13 @@ function scoreSignalsForSpec(spec: FootballComparisonCategorySpec): readonly Foo
   });
 }
 
+function subjectEraMidpoint(subject: FootballSubjectProfile) {
+  if (subject.startSeason != null && subject.endSeason != null) {
+    return (subject.startSeason + subject.endSeason) / 2;
+  }
+  return subject.startSeason ?? subject.endSeason ?? null;
+}
+
 function subtitleForSubject(subject: FootballSubjectProfile) {
   if (subject.kind === "player-career") {
     const seasons = subject.startSeason != null && subject.endSeason != null ? `${subject.startSeason}–${subject.endSeason}` : null;
@@ -797,12 +806,22 @@ function buildFootballCandidatePoolFromModel({
   });
 
   const ratingSamplesBySpec = new Map<FootballComparisonCategorySpec, FootballReviewedRatingCalibrationSample[]>();
+  const ratingProfileSamplesBySpec = new Map<FootballComparisonCategorySpec, FootballReviewedRatingProfileSample[]>();
   for (const row of evaluated) {
     const anchor = ratingCalibrationAnchors.get(row.subject.id);
     if (!anchor || row.ranking.status !== "rated") continue;
+
     const samples = ratingSamplesBySpec.get(row.spec) ?? [];
     samples.push({ modelScore: row.ranking.score, reviewedRating: anchor.rating });
     ratingSamplesBySpec.set(row.spec, samples);
+
+    const profileSamples = ratingProfileSamplesBySpec.get(row.spec) ?? [];
+    profileSamples.push({
+      dimensionScores: row.ranking.dimensionScores,
+      reviewedRating: anchor.rating,
+      eraMidpoint: subjectEraMidpoint(row.subject),
+    });
+    ratingProfileSamplesBySpec.set(row.spec, profileSamples);
   }
   const ratingCalibrationBySpec = new Map(
     [...ratingSamplesBySpec.entries()].flatMap(([spec, samples]) => {
@@ -828,11 +847,21 @@ function buildFootballCandidatePoolFromModel({
     }
 
     const ratingCalibration = ratingCalibrationBySpec.get(spec);
-    const rating = ratingCalibration
+    const scaleRating = ratingCalibration
       ? reconcileFootballRatingToReviewedAnchors(ranking.score, ratingCalibration)
       : ranking.rating;
-    const reconciliation = ratingCalibration
-      ? ` Reviewed-anchor reconciliation moved private model ${ranking.rating} to ${rating} across ${ratingCalibration.anchorCount} canonical anchors.`
+    const profileSamples = ratingProfileSamplesBySpec.get(spec) ?? [];
+    const rating = profileSamples.length
+      ? reconcileFootballRatingToReviewedProfiles(
+          ranking.dimensionScores,
+          profileSamples,
+          scaleRating,
+          subjectEraMidpoint(subject),
+        )
+      : scaleRating;
+    const anchorCount = ratingCalibration?.anchorCount ?? profileSamples.length;
+    const reconciliation = anchorCount > 0
+      ? ` Reviewed-anchor reconciliation moved private model ${ranking.rating} to ${rating} across ${anchorCount} canonical anchors.`
       : "";
 
     return {
@@ -888,6 +917,9 @@ export function buildFootballNflCareerFamilyCandidatePool(
     query,
     semantic: "career-greatness",
     reviewedItems: [],
+    ratingCalibrationItems: family.calibrationPackId
+      ? getFootballRankFivePack(family.calibrationPackId).items
+      : [],
     specForSubject: (subject) => subject.position ? family.positionSpecs[subject.position] : undefined,
     calibrationForSpec: (spec, subject) => familyCalibrationForSpec(family, spec, subject),
   });
