@@ -7,6 +7,10 @@ import {
 import { footballGameComparisonCandidates } from "../games/gameSourceAuthority";
 import { buildFootballBlindRankBoard } from "./footballComparisonGeneration";
 import {
+  footballComparisonBoardPool,
+  footballReviewedItemsForComparison,
+} from "./footballProgramEraComparisonReadiness";
+import {
   FOOTBALL_RANK_FIVE_GAME_ID,
   footballRankFivePacks as footballReviewedRankFivePacks,
   type FootballLeague,
@@ -35,7 +39,10 @@ function runtimeLeagueForPack(packId: FootballRankFivePackId): FootballLeague {
  */
 export const footballRankFivePacks: readonly FootballRankFivePack[] = footballReviewedRankFivePacks.map((pack) => ({
   ...pack,
-  items: footballGameComparisonCandidates(pack.id, pack.items).map((item) => ({
+  items: footballGameComparisonCandidates(
+    pack.id,
+    footballReviewedItemsForComparison(pack.id, pack.items),
+  ).map((item) => ({
     ...item,
     league: runtimeLeagueForPack(pack.id),
   })),
@@ -69,7 +76,8 @@ export function buildFootballRankFiveLineup(
   seed: string,
 ) {
   const pack = getFootballRankFivePack(packId);
-  return buildFootballBlindRankBoard(pack.items, packId, seed).items;
+  const boardPool = footballComparisonBoardPool(packId, pack.items, seed);
+  return buildFootballBlindRankBoard(boardPool, packId, seed).items;
 }
 
 export interface FootballPlayableRankFiveRun {
