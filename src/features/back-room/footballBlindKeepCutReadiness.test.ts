@@ -125,6 +125,16 @@ describe("Football Blind Rank 5 + Keep 4 / Cut 4 readiness", () => {
     }
   });
 
+  it("keeps the three final-review pools free of duplicate subject names", () => {
+    for (const packId of FOCUSED_CONTENT_PACK_IDS) {
+      const pack = getFootballRankFivePack(packId);
+      expect(
+        new Set(pack.items.map((candidate) => normalizedName(candidate.name))).size,
+        `${pack.name} duplicate names`,
+      ).toBe(pack.items.length);
+    }
+  });
+
   it("uses the requested football-specific weighted board lottery", () => {
     expect(FOOTBALL_BLIND_RANK_ARCHETYPES.map(({ id, weight }) => [id, weight])).toEqual([
       ["wild-card", 0.35],
@@ -199,7 +209,6 @@ describe("Football Blind Rank 5 + Keep 4 / Cut 4 readiness", () => {
       const pool = pack.items as readonly RecognizableItem[];
       expect(pool.length, `${pack.name} pool`).toBeGreaterThanOrEqual(8);
       expect(new Set(pool.map((candidate) => candidate.id)).size, `${pack.name} duplicate IDs`).toBe(pool.length);
-      expect(new Set(pool.map((candidate) => normalizedName(candidate.name))).size, `${pack.name} duplicate names`).toBe(pool.length);
 
       const availableTierCount = footballGreatnessTiersForCategory(pool).length;
       const recognizable = recognizableCount(pool);
