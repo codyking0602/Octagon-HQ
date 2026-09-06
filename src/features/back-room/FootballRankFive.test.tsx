@@ -4,8 +4,8 @@ import { MemoryRouter } from "react-router-dom";
 import FootballRankFivePage from "./FootballRankFivePage";
 import { footballSubjectAssetPath } from "./FootballSubjectVisual";
 import {
-  FOOTBALL_GREATNESS_TIER_LABELS,
   footballGreatnessTierForItem,
+  footballGreatnessTierLabel,
 } from "./footballGreatnessTier";
 import {
   getFootballRankFivePack as getReviewedCatalogPack,
@@ -59,9 +59,8 @@ describe("Football Blind Rank 5", () => {
       expect(pack.items.length).toBeGreaterThanOrEqual(8);
       expect(new Set(pack.items.map((item) => item.id)).size).toBe(pack.items.length);
       expect(pack.items.every((item) => Number.isInteger(item.rating) && item.rating >= 0 && item.rating <= 100)).toBe(true);
-      expect(pack.items.every((item) => Object.hasOwn(
-        FOOTBALL_GREATNESS_TIER_LABELS,
-        footballGreatnessTierForItem(item),
+      expect(pack.items.every((item) => (
+        /^TIER \d+$/.test(footballGreatnessTierLabel(footballGreatnessTierForItem(item), pack.items))
       ))).toBe(true);
     }
 
