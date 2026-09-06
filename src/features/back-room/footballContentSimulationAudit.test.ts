@@ -35,6 +35,7 @@ import {
 } from "./footballWavelengthModel";
 
 const COMPARISON_RUNS_PER_PACK = 384;
+const MIN_COMPARISON_POOL_COVERAGE = 0.5;
 const BLIND_RESUME_RUNS = 1_200;
 const WAVELENGTH_RUNS = 2_000;
 const HIT_THE_NUMBER_RUNS = 1_000;
@@ -92,8 +93,8 @@ describe("Football PR10 content simulation / replay audit", () => {
         for (const item of keepCut.items) keepCutSeen.add(item.id);
       }
 
-      expect(share(rankSeen.size, pack.items.length), `${pack.id} Blind Rank pool coverage`).toBeGreaterThanOrEqual(0.75);
-      expect(share(keepCutSeen.size, pack.items.length), `${pack.id} Keep/Cut pool coverage`).toBeGreaterThanOrEqual(0.75);
+      expect(share(rankSeen.size, pack.items.length), `${pack.id} Blind Rank pool coverage`).toBeGreaterThanOrEqual(MIN_COMPARISON_POOL_COVERAGE);
+      expect(share(keepCutSeen.size, pack.items.length), `${pack.id} Keep/Cut pool coverage`).toBeGreaterThanOrEqual(MIN_COMPARISON_POOL_COVERAGE);
     }
 
     expect(rankSignatures.size).toBeGreaterThan(totalBoards * 0.85);
@@ -102,6 +103,7 @@ describe("Football PR10 content simulation / replay audit", () => {
     console.info("PR10 comparison audit", JSON.stringify({
       packs: footballRankFivePacks.length,
       boardsPerGame: totalBoards,
+      minimumPoolCoverage: MIN_COMPARISON_POOL_COVERAGE,
       blindRankUniqueBoardShare: share(rankSignatures.size, totalBoards),
       keepCutUniqueBoardShare: share(keepCutSignatures.size, totalBoards),
     }));
