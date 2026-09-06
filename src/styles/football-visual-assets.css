@@ -42,17 +42,49 @@
   flex-basis: 62px;
 }
 
-/* Reserve the full visual lane so team marks never sit on top of subject copy. */
+/* Keep/Cut reserves independent media and copy lanes so long names can never collide with a mark. */
 .app-shell--football-room .football-keep-cut-current {
-  grid-template-columns: 74px minmax(0, 1fr) auto !important;
+  grid-template-columns: 74px minmax(0, 1fr) minmax(110px, auto) !important;
+}
+
+.app-shell--football-room .football-keep-cut-current > .football-subject-visual {
+  box-sizing: border-box;
+  width: 74px;
+  min-width: 74px;
+  max-width: 74px;
+  justify-self: center;
+  overflow: hidden;
 }
 
 .app-shell--football-room .football-keep-cut-current > div:not(.football-keep-cut-current__actions) {
   min-width: 0;
+  overflow: hidden;
+}
+
+.app-shell--football-room .football-keep-cut-current h2,
+.app-shell--football-room .football-debate-result-list article strong {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .app-shell--football-room .football-debate-result-list article {
   grid-template-columns: 52px 52px minmax(0, 1fr) auto !important;
+}
+
+.app-shell--football-room .football-debate-result-list article > .football-subject-visual {
+  box-sizing: border-box;
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  height: 52px;
+  justify-self: center;
+  overflow: hidden;
+}
+
+.app-shell--football-room .football-debate-result-list article > span {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .app-shell--football-room .football-rank-five-results article {
@@ -99,6 +131,8 @@
 
   .app-shell--football-room .football-keep-cut-current__actions {
     grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
   }
 }
 
