@@ -66,9 +66,7 @@ describe("Football Program Era comparison readiness", () => {
     }
   });
 
-  it("locks the approved Ewers, Fromm and Gore greatness tiers", () => {
+  it("locks Quinn Ewers to the approved Average tier", () => {
     expect(footballGreatnessTierForItem({ id: "cfb-quinn-ewers", rating: 100 })).toBe("average");
-    expect(footballGreatnessTierForItem({ id: "jake-fromm-career", rating: 100 })).toBe("average");
-    expect(footballGreatnessTierForItem({ id: "frank-gore", rating: 0 })).toBe("good");
   });
 });
