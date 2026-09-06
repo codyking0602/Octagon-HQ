@@ -25,8 +25,8 @@ const MIN_REVIEWED_ANCHORS = 4;
 const MIN_MODEL_SCORE_SPAN = 0.05;
 const PROFILE_NEIGHBOR_COUNT = 5;
 const MIN_PROFILE_NEIGHBORS = 3;
-const PROFILE_RATING_WEIGHT = 0.75;
-const ERA_DISTANCE_WEIGHT = 0.20;
+const PROFILE_RATING_WEIGHT = 0.70;
+const ERA_DISTANCE_WEIGHT = 0.75;
 const ERA_DISTANCE_FULL_PENALTY_SEASONS = 40;
 
 function clampRating(value: number) {
@@ -160,7 +160,7 @@ function reviewedProfileDistance(
 /**
  * A scalar model score can hide why two careers differ. This calibration step
  * compares the model's actual greatness-dimension profile to nearby reviewed
- * careers, with a light era preference, then blends that neighborhood with the
+ * careers, with an era preference, then blends that neighborhood with the
  * monotone reviewed scale. Reviewed rows stay exact and generated subjects never
  * become manual overrides.
  */
