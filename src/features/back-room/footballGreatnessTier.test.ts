@@ -4,6 +4,7 @@ import {
   footballGreatnessTierForItem,
   footballGreatnessTierForRating,
   footballGreatnessTierLabel,
+  footballGreatnessTiersForCategory,
   orderFootballItemsByGreatnessTier,
   scoreFootballBlindRankTierOrder,
   scoreFootballKeepCutTierSelection,
@@ -30,35 +31,53 @@ describe("Football greatness tier truth", () => {
     expect(footballGreatnessTierForRating(0)).toBe("bad");
   });
 
-  it("presents the internal greatness bands as neutral Tier 1-5 labels", () => {
-    expect([
-      footballGreatnessTierLabel("goat"),
-      footballGreatnessTierLabel("legendary"),
-      footballGreatnessTierLabel("elite"),
-      footballGreatnessTierLabel("near-elite"),
-      footballGreatnessTierLabel("great"),
-      footballGreatnessTierLabel("good"),
-      footballGreatnessTierLabel("average"),
-      footballGreatnessTierLabel("below-average"),
-      footballGreatnessTierLabel("bad"),
-    ]).toEqual([
-      "TIER 1",
-      "TIER 1",
-      "TIER 1",
-      "TIER 2",
-      "TIER 2",
-      "TIER 3",
-      "TIER 4",
-      "TIER 5",
-      "TIER 5",
-    ]);
+  it("numbers visible tiers relative to the greatness groups present in the category", () => {
+    const category = [item("top", 92), item("middle", 70), item("bottom", 0)];
+
+    expect(footballGreatnessTiersForCategory(category)).toEqual(["elite", "good", "bad"]);
+    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(category[0]!), category)).toBe("TIER 1");
+    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(category[1]!), category)).toBe("TIER 2");
+    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(category[2]!), category)).toBe("TIER 3");
   });
 
-  it("starts approved top subjects in Tier 1", () => {
-    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(item("bill-belichick", 100)))).toBe("TIER 1");
-    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(item("vince-lombardi", 99)))).toBe("TIER 1");
-    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(item("jim-brown", 100)))).toBe("TIER 1");
-    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(item("jerry-rice", 100)))).toBe("TIER 1");
+  it("allows a category to expose more than five distinct ordinal tiers", () => {
+    const category = [
+      item("elite", 92),
+      item("great", 82),
+      item("good", 70),
+      item("average", 55),
+      item("below-average", 35),
+      item("bad", 0),
+    ];
+
+    expect(footballGreatnessTiersForCategory(category)).toHaveLength(6);
+    expect(footballGreatnessTierLabel("elite", category)).toBe("TIER 1");
+    expect(footballGreatnessTierLabel("bad", category)).toBe("TIER 6");
+  });
+
+  it("lets the same internal greatness group receive a different ordinal across categories", () => {
+    const categoryWithElite = [item("elite", 92), item("great-a", 82), item("average-a", 55)];
+    const categoryLedByGreat = [item("great-b", 82), item("average-b", 55)];
+
+    expect(footballGreatnessTierLabel("great", categoryWithElite)).toBe("TIER 2");
+    expect(footballGreatnessTierLabel("great", categoryLedByGreat)).toBe("TIER 1");
+  });
+
+  it("starts approved top coach subjects in category Tier 1", () => {
+    const category = [
+      item("bill-belichick", 100),
+      item("vince-lombardi", 99),
+      item("mike-tomlin", 88),
+      item("kliff-kingsbury", 40),
+    ];
+
+    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(category[0]!), category)).toBe("TIER 1");
+    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(category[1]!), category)).toBe("TIER 1");
+  });
+
+  it("rejects a visible tier label for a greatness group absent from the category", () => {
+    const category = [item("great", 82), item("average", 55)];
+    expect(() => footballGreatnessTierLabel("elite", category)).toThrow(RangeError);
   });
 
   it("does not penalize Blind Rank swaps inside the same greatness tier", () => {
