@@ -281,7 +281,7 @@ export const NFL_QB_MANUAL_AUDIT_ORDER = [
   "johnny-manziel",
 ] as const;
 
-const manualAuditRankById = new Map(NFL_QB_MANUAL_AUDIT_ORDER.map((id, index) => [id, index + 1] as const));
+const manualAuditRankById = new Map<string, number>(NFL_QB_MANUAL_AUDIT_ORDER.map((id, index) => [id, index + 1]));
 
 function manualAuditPercentile(subjectId: string) {
   const rank = manualAuditRankById.get(subjectId);
