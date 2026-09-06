@@ -735,11 +735,21 @@ function buildNflQbHistoricalConsensusCandidatePool(spec: FootballComparisonCate
     }
     return { subject, consensus };
   });
+  const reviewedAnchors = reviewedByCanonicalId("nfl-quarterbacks", getFootballRankFivePack("nfl-quarterbacks").items);
+  const calibration = createFootballReviewedRatingCalibration(rows.flatMap(({ subject, consensus }) => {
+    const anchor = reviewedAnchors.get(subject.id);
+    return anchor
+      ? [{ modelScore: consensus.score! / 100, reviewedRating: anchor.rating }]
+      : [];
+  }));
+  if (!calibration) {
+    throw new Error("NFL QB historical consensus requires reviewed rating anchors for OVR calibration");
+  }
 
   return [...rows]
     .sort((a, b) => b.consensus.score! - a.consensus.score! || a.subject.name.localeCompare(b.subject.name))
     .map(({ subject, consensus }) => {
-      const rating = Math.round(35 + (consensus.score! / 100) * 64);
+      const rating = reconcileFootballRatingToReviewedAnchors(consensus.score! / 100, calibration);
       const sourceDescription = consensus.calculationSource === "pfr-ranker"
         ? "70% PFR HOF Monitor percentile + 30% Ranker percentile"
         : "explicit audit placement for current or missing-source coverage";
@@ -750,7 +760,7 @@ function buildNflQbHistoricalConsensusCandidatePool(spec: FootballComparisonCate
         subtitle: subtitleForSubject(subject),
         league: subject.league,
         rating,
-        ratingBasis: `${NFL_QB_CONSENSUS_SNAPSHOT_DATE} historical consensus: ${sourceDescription}; score ${consensus.score!.toFixed(1)}. OVR is calibrated from this consensus score and does not use the retired internal QB formula or reviewed-anchor reconciliation.`,
+        ratingBasis: `${NFL_QB_CONSENSUS_SNAPSHOT_DATE} historical consensus: ${sourceDescription}; score ${consensus.score!.toFixed(1)}. OVR is reconciled through ${calibration.anchorCount} reviewed QB anchors after consensus establishes the historical order.`,
         canonicalSubjectId: subject.id,
         evaluationSource: "historical-consensus" as const,
         recognizabilityTier: subject.recognizabilityTier,
