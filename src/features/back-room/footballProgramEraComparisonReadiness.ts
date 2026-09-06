@@ -9,6 +9,7 @@ import {
 } from "./footballSubjectRegistry";
 
 const PROGRAM_ERA_QUERY = { kind: "program-era", league: "CFB" } as const;
+const PROGRAM_ERA_BOARD_KEY_CACHE = new Map<string, string | null>();
 
 function normalizedIdentity(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
@@ -92,11 +93,19 @@ export function footballReviewedItemsForComparison(
 }
 
 function canonicalProgramEraBoardKey(item: FootballRankFiveItem) {
+  const cacheKey = `${item.id}\u0000${item.name}`;
+  if (PROGRAM_ERA_BOARD_KEY_CACHE.has(cacheKey)) {
+    return PROGRAM_ERA_BOARD_KEY_CACHE.get(cacheKey) ?? null;
+  }
+
   const subject = resolveFootballSubjectReference(item.id, item.name, PROGRAM_ERA_QUERY);
-  if (!subject) return null;
-  if (subject.teamId) return `team:${String(subject.teamId)}`;
-  if (subject.school) return `school:${normalizedIdentity(subject.school)}`;
-  return null;
+  const key = subject?.teamId
+    ? `team:${String(subject.teamId)}`
+    : subject?.school
+      ? `school:${normalizedIdentity(subject.school)}`
+      : null;
+  PROGRAM_ERA_BOARD_KEY_CACHE.set(cacheKey, key);
+  return key;
 }
 
 /**
