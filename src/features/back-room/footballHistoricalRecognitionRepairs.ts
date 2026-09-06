@@ -112,6 +112,7 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   ...proHallHistoricalRepairs,
   player("nfl-jim-brown", "Jim Brown", "NFL", "RB", 1957, 1965, "A", "pro-football-hall-of-fame"),
   player("nfl-johnny-unitas", "Johnny Unitas", "NFL", "QB", 1956, 1973, "A", "pro-football-hall-of-fame"),
+  player("joe-namath", "Joe Namath", "NFL", "QB", 1965, 1977, "A", "pro-football-hall-of-fame"),
   player("nfl-otto-graham", "Otto Graham", "NFL", "QB", 1946, 1955, "A", "pro-football-hall-of-fame"),
   player("nfl-don-hutson", "Don Hutson", "NFL", "WR", 1935, 1945, "A", "pro-football-hall-of-fame"),
   player("nfl-walter-payton", "Walter Payton", "NFL", "RB", 1975, 1987, "A", "pro-football-hall-of-fame"),

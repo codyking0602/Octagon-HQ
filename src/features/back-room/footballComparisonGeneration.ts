@@ -307,7 +307,7 @@ function sustainablePoolRange(items: readonly FootballRankFiveItem[]) {
   const ordered = sortedPool(items);
   const highIndex = Math.round((ordered.length - 1) * 0.3);
   const lowIndex = Math.round((ordered.length - 1) * 0.7);
-  return Math.max(4, ordered[highIndex]!.rating - ordered[lowIndex]!.rating);
+  return Math.max(1, ordered[highIndex]!.rating - ordered[lowIndex]!.rating);
 }
 
 function requiredBlindRankRange(
@@ -333,12 +333,12 @@ function requiredBlindRankRange(
     .sort((left, right) => right - left);
   const reachableRange = orderedRatings.length > 1
     ? orderedRatings[0]! - orderedRatings.at(-1)!
-    : 4;
+    : 1;
   const endpointTrimmedRange = orderedRatings.length >= 4
     ? orderedRatings[1]! - orderedRatings.at(-2)!
     : reachableRange;
   const repeatableReach = Math.max(
-    4,
+    1,
     Math.min(Math.floor(reachableRange * 0.85), endpointTrimmedRange),
   );
   return Math.min(archetype.minRange, repeatableReach, sustainablePoolRange(items));
