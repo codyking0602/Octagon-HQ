@@ -2,25 +2,14 @@ import { describe, expect, it } from "vitest";
 import {
   buildFootballComparisonCandidatePool,
   footballComparisonEligibilityQuery,
+  footballDeepPlayerComparisonPackIds,
 } from "./footballComparisonAuthority";
 import { FOOTBALL_RANKING_FRAMEWORK_VERSION } from "./footballRankingFramework";
 import {
   footballRankFivePacks,
   getFootballRankFivePack,
-  type FootballRankFivePackId,
 } from "./footballRankFiveModel";
 import { resolveFootballSubjectReference } from "./footballSubjectRegistry";
-
-const DEEP_PLAYER_PACKS: readonly FootballRankFivePackId[] = [
-  "nfl-quarterbacks",
-  "nfl-running-backs",
-  "nfl-wide-receivers",
-  "nfl-tight-ends",
-  "nfl-front-seven",
-  "nfl-secondary",
-  "college-quarterbacks",
-  "college-running-backs",
-];
 
 describe("Football deep comparison authority", () => {
   it("starts every comparison pool from canonical A-C eligibility and preserves reviewed calibration", () => {
@@ -48,6 +37,10 @@ describe("Football deep comparison authority", () => {
           expect(candidate.factMetricIds.length, `${pack.id}:${candidate.id} fact-backed`).toBeGreaterThan(0);
           expect(candidate.ratingBasis).toContain("dimension coverage");
           expect(candidate.ratingBasis).toContain("confidence");
+          if (footballDeepPlayerComparisonPackIds.includes(pack.id as typeof footballDeepPlayerComparisonPackIds[number])) {
+            expect(candidate.ratingBasis, `${pack.id}:${candidate.id} anchor reconciliation`)
+              .toContain("Reviewed-anchor reconciliation");
+          }
         }
       }
 
@@ -64,7 +57,7 @@ describe("Football deep comparison authority", () => {
   });
 
   it("makes the canonical database the active player candidate source instead of the reviewed rated inventory", () => {
-    for (const packId of DEEP_PLAYER_PACKS) {
+    for (const packId of footballDeepPlayerComparisonPackIds) {
       const reviewed = getFootballRankFivePack(packId);
       const pool = buildFootballComparisonCandidatePool(packId, reviewed.items);
       const reviewedCanonicalIds = new Set(
@@ -76,6 +69,7 @@ describe("Football deep comparison authority", () => {
       const newCandidates = pool.filter((candidate) => !reviewedCanonicalIds.has(candidate.canonicalSubjectId));
       expect(newCandidates.length, `${packId} non-reviewed canonical candidates`).toBeGreaterThan(0);
       expect(newCandidates.some((candidate) => candidate.evaluationSource === "canonical-facts"), `${packId} deep evaluation`).toBe(true);
+      expect(newCandidates.every((candidate) => candidate.ratingBasis?.includes("canonical anchors")), `${packId} anchor-calibrated depth`).toBe(true);
     }
   });
 
@@ -97,7 +91,7 @@ describe("Football deep comparison authority", () => {
     expect(pool.filter((candidate) => !reviewedCanonicalIds.has(candidate.canonicalSubjectId)).length).toBeGreaterThan(10);
   });
 
-  it("keeps a data-derived rating fixed when caller-provided reviewed rows change", () => {
+  it("keeps canonical reviewed anchors as the calibration owner even without caller overrides", () => {
     const packId = "nfl-wide-receivers" as const;
     const reviewed = getFootballRankFivePack(packId).items;
     const withOverrides = buildFootballComparisonCandidatePool(packId, reviewed);
@@ -111,6 +105,7 @@ describe("Football deep comparison authority", () => {
       (candidate) => candidate.evaluationSource === "canonical-facts" && !reviewedCanonicalIds.has(candidate.canonicalSubjectId),
     );
     expect(target).toBeDefined();
+    expect(target?.ratingBasis).toContain("Reviewed-anchor reconciliation");
 
     const withoutOverrides = buildFootballComparisonCandidatePool(packId, []);
     const sameSubject = withoutOverrides.find((candidate) => candidate.canonicalSubjectId === target?.canonicalSubjectId);
@@ -119,6 +114,21 @@ describe("Football deep comparison authority", () => {
     expect(sameSubject?.rankingSemantic).toBe(target?.rankingSemantic);
     expect(sameSubject?.rankingCoverage).toBe(target?.rankingCoverage);
     expect(sameSubject?.rankingConfidence).toBe(target?.rankingConfidence);
+  });
+
+  it("keeps historically accomplished generated QBs above low-end reviewed starter anchors", () => {
+    const packId = "nfl-quarterbacks" as const;
+    const reviewed = getFootballRankFivePack(packId).items;
+    const pool = buildFootballComparisonCandidatePool(packId, reviewed);
+    const steveMcNair = pool.find((candidate) => candidate.name === "Steve McNair");
+    const joeNamath = pool.find((candidate) => candidate.name === "Joe Namath");
+    const andyDalton = pool.find((candidate) => candidate.name === "Andy Dalton");
+
+    expect(steveMcNair?.evaluationSource).toBe("canonical-facts");
+    expect(joeNamath?.evaluationSource).toBe("canonical-facts");
+    expect(andyDalton?.rating).toBe(62);
+    expect(steveMcNair?.rating).toBeGreaterThan(andyDalton!.rating);
+    expect(joeNamath?.rating).toBeGreaterThan(andyDalton!.rating);
   });
 
   it("is deterministic for the same canonical facts and reviewed calibration", () => {
