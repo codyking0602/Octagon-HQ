@@ -69,14 +69,15 @@ describe("football historical consensus", () => {
     expect(audited.score).toBe(97.5);
   });
 
-  it("uses each rule on representative runtime QBs", () => {
+  it("uses each rule on representative canonical QBs", () => {
     expect(getNflQbHistoricalConsensus("tom-brady").calculationSource).toBe("pfr-ranker");
     expect(getNflQbHistoricalConsensus("nflverse-player-00-0008442").calculationSource).toBe("pfr-only");
-    expect(getNflQbHistoricalConsensus("aaron-rodgers").calculationSource).toBe("manual-audit");
+    expect(getNflQbHistoricalConsensus("nfl-aaron-rodgers").calculationSource).toBe("manual-audit");
+    expect(getNflQbHistoricalConsensus("nfl-patrick-mahomes").calculationSource).toBe("manual-audit");
     expect(getNflQbHistoricalConsensus("drew-brees").calculationSource).toBe("manual-audit");
   });
 
-  it("covers the exact canonical 122-QB runtime pool with unique audit placements", () => {
+  it("covers the exact canonical 122-QB playable pool with unique audit placements", () => {
     const canonicalIds = getFootballRankFivePack("nfl-quarterbacks").items.map((item) => item.id);
 
     expect(NFL_QB_MANUAL_AUDIT_ORDER).toHaveLength(122);
