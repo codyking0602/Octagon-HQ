@@ -20,6 +20,7 @@ import {
   orderFootballItemsByGreatnessTier,
   scoreFootballKeepCutTierSelection,
 } from "./footballGreatnessTier";
+import { footballComparisonBoardPool } from "./footballProgramEraComparisonReadiness";
 import {
   footballRankFivePacks,
   getFootballRankFivePack,
@@ -110,7 +111,9 @@ export function getFootballKeepCutPack(packId: FootballKeepCutPackId) {
 }
 
 export function buildFootballKeepCutLineup(packId: FootballKeepCutPackId, seed: string) {
-  return buildFootballKeepCutBoard(getFootballKeepCutPack(packId).items, packId, seed).items;
+  const pack = getFootballKeepCutPack(packId);
+  const boardPool = footballComparisonBoardPool(packId, pack.items, seed);
+  return buildFootballKeepCutBoard(boardPool, packId, seed).items;
 }
 
 export function footballKeepCutPackForSeed(seed: string, exclude?: FootballKeepCutPackId) {
