@@ -3,8 +3,6 @@ import { describe, expect, it } from "vitest";
 import { footballGameComparisonCandidates } from "../games/gameSourceAuthority";
 import { footballCareerCfbDisplayProgram } from "./footballCareerMediaContext";
 import {
-  collegeProgramDepth,
-  collegeTeamSeasonDepth,
   nflDefensiveCareers,
   nflQuarterbackSeasons,
   nflTeamSeasons,
@@ -24,6 +22,7 @@ import {
   scoreFootballBlindRankTierOrder,
 } from "./footballGreatnessTier";
 import { scoreFootballKeepCutSelection } from "./footballKeepCutModel";
+import rankFiveModelSource from "./footballRankFiveModel.ts?raw";
 import {
   footballRankFivePacks,
   getFootballRankFivePack,
@@ -41,6 +40,27 @@ type AuditCategory = {
   items?: readonly FootballRankFiveItem[];
 };
 
+function privateCatalogItems(variableName: "collegePrograms" | "collegeTeamSeasons"): readonly FootballRankFiveItem[] {
+  const start = rankFiveModelSource.indexOf(`const ${variableName}: readonly FootballRankFiveItem[] = [`);
+  if (start < 0) throw new Error(`Missing canonical ${variableName} catalog.`);
+  const end = rankFiveModelSource.indexOf("\n];", start);
+  if (end < 0) throw new Error(`Unterminated canonical ${variableName} catalog.`);
+  const block = rankFiveModelSource.slice(start, end);
+  const rows: FootballRankFiveItem[] = [];
+  const rowPattern = /\{ id: "([^"]+)", name: "([^"]+)", subtitle: "([^"]+)", league: "(NFL|CFB)", rating: (\d+)(?:, ratingBasis: "[^"]*")? \}/g;
+  for (const match of block.matchAll(rowPattern)) {
+    rows.push({
+      id: match[1]!,
+      name: match[2]!,
+      subtitle: match[3]!,
+      league: match[4] as "NFL" | "CFB",
+      rating: Number(match[5]),
+    });
+  }
+  if (rows.length < 8) throw new Error(`Canonical ${variableName} catalog parsed only ${rows.length} rows.`);
+  return rows;
+}
+
 const AUDIT_CATEGORIES = [
   { id: "nfl-quarterbacks", label: "NFL QB Careers", sourcePackIds: ["nfl-quarterbacks"] },
   { id: "nfl-running-backs", label: "NFL RB Careers", sourcePackIds: ["nfl-running-backs"] },
@@ -52,9 +72,9 @@ const AUDIT_CATEGORIES = [
   { id: "nfl-team-seasons", label: "NFL Team Seasons", items: nflTeamSeasons },
   { id: "college-quarterbacks", label: "College QBs", sourcePackIds: ["college-quarterbacks"] },
   { id: "college-head-coaches", label: "CFB Head Coaches", sourcePackIds: ["college-head-coaches"] },
-  { id: "college-programs", label: "Programs Since 2000", items: collegeProgramDepth },
+  { id: "college-programs", label: "Programs Since 2000", items: privateCatalogItems("collegePrograms") },
   { id: "college-program-eras", label: "CFB Program Eras", sourcePackIds: ["college-program-eras"] },
-  { id: "college-team-seasons", label: "CFB Team Seasons", items: collegeTeamSeasonDepth },
+  { id: "college-team-seasons", label: "CFB Team Seasons", items: privateCatalogItems("collegeTeamSeasons") },
 ] as const satisfies readonly AuditCategory[];
 
 function auditPool(category: AuditCategory): readonly RecognizableItem[] {
