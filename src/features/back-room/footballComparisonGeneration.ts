@@ -255,13 +255,11 @@ function selectionCandidates(
   });
   const exactDepth = availableTierCount(pool, targetTier);
   const minimumExactDepth = Math.max(2, Math.ceil(pool.length * 0.08));
-  if (exactDepth >= minimumExactDepth && exact.length) return exact;
-
   const broadened = broadenPool && targetTier !== "bad"
     ? eligible.filter((item) => footballComparisonTier(item) !== "bad")
     : [];
   const combined = [
-    ...(includeSparseExact ? exact : []),
+    ...(includeSparseExact || exactDepth >= minimumExactDepth ? exact : []),
     ...inWindow,
     ...broadened,
   ].filter((item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index);
