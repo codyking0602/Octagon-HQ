@@ -16,20 +16,6 @@ export type FootballGreatnessTier =
   | "below-average"
   | "bad";
 
-// Player-facing Football greatness uses the locked neutral five-tier language.
-// Internal tier ids remain calibration/scoring details and are not user-facing labels.
-export const FOOTBALL_GREATNESS_TIER_LABELS = {
-  goat: "TIER 1",
-  legendary: "TIER 1",
-  elite: "TIER 1",
-  "near-elite": "TIER 2",
-  great: "TIER 2",
-  good: "TIER 3",
-  average: "TIER 4",
-  "below-average": "TIER 5",
-  bad: "TIER 5",
-} as const satisfies Record<FootballGreatnessTier, string>;
-
 const FOOTBALL_GREATNESS_TIER_ORDER: readonly FootballGreatnessTier[] = [
   "goat",
   "legendary",
@@ -205,8 +191,27 @@ export function footballGreatnessTierForItem(
   return FOOTBALL_GREATNESS_TIER_OVERRIDES[item.id] ?? footballGreatnessTierForRating(item.rating);
 }
 
-export function footballGreatnessTierLabel(tier: FootballGreatnessTier) {
-  return FOOTBALL_GREATNESS_TIER_LABELS[tier];
+/**
+ * Player-facing tiers are ordinal inside the complete category pool. Missing greatness
+ * groups are skipped, so the strongest group actually present is always Tier 1 and a
+ * category can expose more or fewer than five distinct tiers.
+ */
+export function footballGreatnessTiersForCategory(
+  items: readonly Pick<FootballRankFiveItem, "id" | "rating">[],
+): FootballGreatnessTier[] {
+  const presentTiers = new Set(items.map((item) => footballGreatnessTierForItem(item)));
+  return FOOTBALL_GREATNESS_TIER_ORDER.filter((tier) => presentTiers.has(tier));
+}
+
+export function footballGreatnessTierLabel(
+  tier: FootballGreatnessTier,
+  categoryItems: readonly Pick<FootballRankFiveItem, "id" | "rating">[],
+) {
+  const categoryTierIndex = footballGreatnessTiersForCategory(categoryItems).indexOf(tier);
+  if (categoryTierIndex < 0) {
+    throw new RangeError(`Football greatness tier ${tier} is not present in the category pool.`);
+  }
+  return `TIER ${categoryTierIndex + 1}`;
 }
 
 export function compareFootballGreatnessTiers(left: FootballGreatnessTier, right: FootballGreatnessTier) {
