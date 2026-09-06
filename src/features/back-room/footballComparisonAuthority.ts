@@ -3,6 +3,10 @@ import {
   type FootballFactMetricId,
 } from "./footballFactualStatsCore";
 import {
+  getNflQbHistoricalConsensus,
+  NFL_QB_CONSENSUS_SNAPSHOT_DATE,
+} from "./footballHistoricalConsensus";
+import {
   FOOTBALL_RANKING_FRAMEWORK_VERSION,
   rateFootballRankingEvidence,
   scoreFootballAnchoredValue,
@@ -72,7 +76,7 @@ interface FootballComparisonSupplementalEvidence {
 
 export interface FootballComparisonCandidate extends FootballRankFiveItem {
   canonicalSubjectId: string;
-  evaluationSource: "reviewed" | "canonical-facts";
+  evaluationSource: "reviewed" | "canonical-facts" | "historical-consensus";
   recognizabilityTier: FootballSubjectProfile["recognizabilityTier"];
   factMetricIds: readonly FootballFactMetricId[];
   rankingVersion: typeof FOOTBALL_RANKING_FRAMEWORK_VERSION;
@@ -734,6 +738,76 @@ function subtitleForSubject(subject: FootballSubjectProfile) {
   return subject.school ?? `${subject.league} program`;
 }
 
+function buildNflQbHistoricalConsensusCandidatePool(spec: FootballComparisonCategorySpec): readonly FootballComparisonCandidate[] {
+  const reviewedAnchors = reviewedByCanonicalId("nfl-quarterbacks", getFootballRankFivePack("nfl-quarterbacks").items);
+  const rows = queryFootballSubjects(spec.query).flatMap((subject) => {
+    const facts = factsForSubject(subject.id, spec.metrics);
+    const reviewedItem = reviewedAnchors.get(subject.id);
+    if (!reviewedItem && facts.length < spec.minimumFacts) return [];
+
+    const consensus = getNflQbHistoricalConsensus(subject.id);
+    if (consensus.score == null) {
+      throw new Error(`NFL QB historical consensus requires an explicit audit for ${subject.id}`);
+    }
+    return [{
+      subject,
+      consensus,
+      reviewedItem,
+      factMetricIds: facts.map((fact) => fact.metric.metricId),
+    }];
+  });
+  const calibration = createFootballReviewedRatingCalibration(rows.flatMap(({ reviewedItem, consensus }) => (
+    reviewedItem ? [{ modelScore: consensus.score! / 100, reviewedRating: reviewedItem.rating }] : []
+  )));
+  if (!calibration) {
+    throw new Error("NFL QB historical consensus requires reviewed rating anchors for OVR calibration");
+  }
+
+  return [...rows]
+    .sort((a, b) => b.consensus.score! - a.consensus.score! || a.subject.name.localeCompare(b.subject.name))
+    .map(({ subject, consensus, reviewedItem, factMetricIds }) => {
+      if (reviewedItem) {
+        return {
+          ...reviewedItem,
+          canonicalSubjectId: subject.id,
+          evaluationSource: "reviewed" as const,
+          recognizabilityTier: subject.recognizabilityTier,
+          factMetricIds,
+          rankingVersion: FOOTBALL_RANKING_FRAMEWORK_VERSION,
+          rankingSemantic: "career-greatness" as const,
+          rankingCoverage: 1,
+          rankingConfidence: 1,
+          rankingStatus: "rated" as const,
+        };
+      }
+
+      const rating = reconcileFootballRatingToReviewedAnchors(consensus.score! / 100, calibration);
+      const sourceDescription = consensus.calculationSource === "pfr-ranker"
+        ? "70% PFR HOF Monitor percentile + 30% Ranker top-50 modifier"
+        : consensus.calculationSource === "pfr-only"
+          ? "PFR HOF Monitor percentile"
+          : "explicit audit placement for current/incomplete or PFR-missing coverage";
+
+      return {
+        id: subject.id,
+        name: subject.name,
+        subtitle: subtitleForSubject(subject),
+        league: subject.league,
+        rating,
+        ratingBasis: `${NFL_QB_CONSENSUS_SNAPSHOT_DATE} historical consensus: ${sourceDescription}; score ${consensus.score!.toFixed(1)}. OVR is reconciled through ${calibration.anchorCount} reviewed canonical QB anchors after consensus establishes the historical order.`,
+        canonicalSubjectId: subject.id,
+        evaluationSource: "historical-consensus" as const,
+        recognizabilityTier: subject.recognizabilityTier,
+        factMetricIds,
+        rankingVersion: FOOTBALL_RANKING_FRAMEWORK_VERSION,
+        rankingSemantic: "career-greatness" as const,
+        rankingCoverage: 1,
+        rankingConfidence: 1,
+        rankingStatus: "rated" as const,
+      };
+    });
+}
+
 interface FootballComparisonModelBuild {
   query: FootballSubjectQuery;
   semantic: FootballRankingSemantic;
@@ -953,6 +1027,11 @@ export function buildFootballNflBoundedEraCandidatePool(): readonly FootballComp
 export function buildFootballComparisonCandidatePool(packId: FootballRankFivePackId, reviewedItems: readonly FootballRankFiveItem[] = []): readonly FootballComparisonCandidate[] {
   const spec = footballComparisonCategorySpecs[packId];
   const semantic = rankingSemanticByPack[packId];
+
+  if (packId === "nfl-quarterbacks") {
+    return buildNflQbHistoricalConsensusCandidatePool(spec);
+  }
+
   const ratingCalibrationItems = footballDeepPlayerComparisonPackIdSet.has(packId)
     ? getFootballRankFivePack(packId).items
     : [];

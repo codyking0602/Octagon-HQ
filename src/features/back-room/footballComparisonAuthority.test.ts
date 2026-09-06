@@ -4,6 +4,7 @@ import {
   footballComparisonEligibilityQuery,
   footballDeepPlayerComparisonPackIds,
 } from "./footballComparisonAuthority";
+import { NFL_QB_MANUAL_AUDIT_ORDER } from "./footballHistoricalConsensus";
 import { FOOTBALL_RANKING_FRAMEWORK_VERSION } from "./footballRankingFramework";
 import {
   footballRankFivePacks,
@@ -42,6 +43,12 @@ describe("Football deep comparison authority", () => {
               .toContain("Reviewed-anchor reconciliation");
           }
         }
+        if (candidate.evaluationSource === "historical-consensus") {
+          expect(pack.id).toBe("nfl-quarterbacks");
+          expect(candidate.factMetricIds.length, `${pack.id}:${candidate.id} canonical fact floor`).toBeGreaterThanOrEqual(3);
+          expect(candidate.ratingBasis).toContain("historical consensus");
+          expect(candidate.ratingBasis).toContain("canonical QB anchors");
+        }
       }
 
       for (const reviewed of pack.items) {
@@ -68,9 +75,23 @@ describe("Football deep comparison authority", () => {
       );
       const newCandidates = pool.filter((candidate) => !reviewedCanonicalIds.has(candidate.canonicalSubjectId));
       expect(newCandidates.length, `${packId} non-reviewed canonical candidates`).toBeGreaterThan(0);
-      expect(newCandidates.some((candidate) => candidate.evaluationSource === "canonical-facts"), `${packId} deep evaluation`).toBe(true);
-      expect(newCandidates.every((candidate) => candidate.ratingBasis?.includes("canonical anchors")), `${packId} anchor-calibrated depth`).toBe(true);
+
+      if (packId === "nfl-quarterbacks") {
+        expect(newCandidates.every((candidate) => candidate.evaluationSource === "historical-consensus")).toBe(true);
+        expect(newCandidates.every((candidate) => candidate.factMetricIds.length >= 3)).toBe(true);
+        expect(newCandidates.every((candidate) => candidate.ratingBasis?.includes("historical consensus"))).toBe(true);
+        expect(newCandidates.every((candidate) => candidate.ratingBasis?.includes("canonical QB anchors"))).toBe(true);
+      } else {
+        expect(newCandidates.some((candidate) => candidate.evaluationSource === "canonical-facts"), `${packId} deep evaluation`).toBe(true);
+        expect(newCandidates.every((candidate) => candidate.ratingBasis?.includes("canonical anchors")), `${packId} anchor-calibrated depth`).toBe(true);
+      }
     }
+  });
+
+  it("uses the exact 122 canonical QB audit identities after the canonical fact gate", () => {
+    const pool = buildFootballComparisonCandidatePool("nfl-quarterbacks", getFootballRankFivePack("nfl-quarterbacks").items);
+    expect(pool).toHaveLength(122);
+    expect(new Set(pool.map((candidate) => candidate.canonicalSubjectId))).toEqual(new Set(NFL_QB_MANUAL_AUDIT_ORDER));
   });
 
   it("eliminates the four-profile WR-style bottleneck at the comparison authority", () => {
@@ -116,7 +137,7 @@ describe("Football deep comparison authority", () => {
     expect(sameSubject?.rankingConfidence).toBe(target?.rankingConfidence);
   });
 
-  it("keeps historically accomplished generated QBs out of the low-end starter band", () => {
+  it("keeps historically accomplished generated QBs above an ordinary reviewed starter", () => {
     const packId = "nfl-quarterbacks" as const;
     const reviewed = getFootballRankFivePack(packId).items;
     const pool = buildFootballComparisonCandidatePool(packId, reviewed);
@@ -124,11 +145,17 @@ describe("Football deep comparison authority", () => {
     const joeNamath = pool.find((candidate) => candidate.name === "Joe Namath");
     const andyDalton = pool.find((candidate) => candidate.name === "Andy Dalton");
 
-    expect(steveMcNair?.evaluationSource).toBe("canonical-facts");
-    expect(joeNamath?.evaluationSource).toBe("canonical-facts");
-    expect(andyDalton?.rating).toBe(62);
-    expect(steveMcNair?.rating).toBeGreaterThanOrEqual(70);
-    expect(joeNamath?.rating).toBeGreaterThanOrEqual(70);
+    expect(steveMcNair).toBeDefined();
+    expect(joeNamath).toBeDefined();
+    expect(andyDalton).toBeDefined();
+    expect(steveMcNair?.evaluationSource).toBe("historical-consensus");
+    expect(joeNamath?.evaluationSource).toBe("historical-consensus");
+    expect(andyDalton?.evaluationSource).toBe("reviewed");
+    expect(steveMcNair?.rating).toBeGreaterThan(andyDalton!.rating);
+    expect(joeNamath?.rating).toBeGreaterThan(andyDalton!.rating);
+    expect(steveMcNair?.factMetricIds.length).toBeGreaterThanOrEqual(3);
+    expect(joeNamath?.factMetricIds.length).toBeGreaterThanOrEqual(3);
+    expect(andyDalton?.factMetricIds.length).toBeGreaterThanOrEqual(3);
   });
 
   it("is deterministic for the same canonical facts and reviewed calibration", () => {
