@@ -14,10 +14,10 @@ function item(id: string, rating: number): FootballRankFiveItem {
 describe("Football comparison board tier quality", () => {
   it("caps healthy Blind Rank tier clumps without using hidden rating separation", () => {
     const pool = [
-      ...[100, 98, 96, 94].map((rating, index) => item(`elite-${index}`, rating)),
-      ...[91, 89, 87, 85].map((rating, index) => item(`great-${index}`, rating)),
-      ...[81, 78, 75, 73].map((rating, index) => item(`good-${index}`, rating)),
-      ...[69, 66, 63, 60].map((rating, index) => item(`average-${index}`, rating)),
+      ...Array.from({ length: 4 }, (_, index) => item(`elite-${index}`, 95)),
+      ...Array.from({ length: 4 }, (_, index) => item(`great-${index}`, 85)),
+      ...Array.from({ length: 4 }, (_, index) => item(`good-${index}`, 75)),
+      ...Array.from({ length: 4 }, (_, index) => item(`average-${index}`, 65)),
     ];
 
     for (let index = 0; index < 48; index += 1) {
@@ -32,17 +32,18 @@ describe("Football comparison board tier quality", () => {
   });
 
   it("rejects an all-one-tier Keep/Cut texture when a healthy multi-tier pool exists", () => {
-    const pool = [
-      ...[100, 98, 96, 94, 92, 92, 91, 90].map((rating, index) => item(`elite-${index}`, rating)),
-      ...[89, 87, 85, 83, 82, 81, 80, 79].map((rating, index) => item(`great-${index}`, rating)),
+    const sameTierBoard = Array.from({ length: 8 }, (_, index) => item(`same-tier-${index}`, 95));
+    const healthyPool = [
+      ...sameTierBoard,
+      ...Array.from({ length: 8 }, (_, index) => item(`other-tier-${index}`, 65)),
     ];
-    expect(footballKeepCutBoardIsCompetitive(pool.slice(0, 8), pool)).toBe(false);
-    expect(buildFootballKeepCutBoard(pool, "healthy-keep", "healthy-seed").items).toHaveLength(8);
+
+    expect(footballKeepCutBoardIsCompetitive(sameTierBoard, healthyPool)).toBe(false);
+    expect(buildFootballKeepCutBoard(healthyPool, "healthy-keep", "healthy-seed").items).toHaveLength(8);
   });
 
   it("relaxes inside the same generator for a genuinely single-tier sparse pool", () => {
-    const sparsePool = [69, 68, 67, 66, 65, 64, 63, 62]
-      .map((rating, index) => item(`sparse-average-${index}`, rating));
+    const sparsePool = Array.from({ length: 8 }, (_, index) => item(`sparse-average-${index}`, 65));
 
     expect(footballKeepCutBoardIsCompetitive(sparsePool, sparsePool)).toBe(true);
     const board = buildFootballKeepCutBoard(sparsePool, "sparse-proof", "sparse-seed");
