@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  FOOTBALL_BLIND_RANK_ARCHETYPES,
+  FOOTBALL_KEEP_CUT_BOARD_STYLES,
+  buildFootballBlindRankBoard,
   buildFootballKeepCutBoard,
   footballKeepCutBoardIsCompetitive,
   footballKeepCutRequiredDistinctTiers,
@@ -10,13 +13,16 @@ import {
 } from "./footballGreatnessTier";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
 
-function item(id: string, rating: number): FootballRankFiveItem {
+type RecognizableItem = FootballRankFiveItem & { recognizabilityTier: "A" | "B" | "C" };
+
+function item(id: string, rating: number, recognizabilityTier: "A" | "B" | "C" = "A"): RecognizableItem {
   return {
     id,
     name: id,
     subtitle: id,
     league: "NFL",
     rating,
+    recognizabilityTier,
   };
 }
 
@@ -37,34 +43,66 @@ function lowerVisibleTierClump(
   return Math.max(tierFour, tierFive);
 }
 
-const deepPool: readonly FootballRankFiveItem[] = [
-  ...[100, 98, 96, 94, 92, 92].map((rating, index) => item(`quality-elite-${index}`, rating)),
-  ...[91, 89, 87, 85, 83, 82].map((rating, index) => item(`quality-great-${index}`, rating)),
-  ...[81, 78, 75, 73, 71, 70].map((rating, index) => item(`quality-good-${index}`, rating)),
-  ...[69, 66, 63, 60, 57, 55].map((rating, index) => item(`quality-average-${index}`, rating)),
-  ...[54, 50, 46, 42, 38, 35].map((rating, index) => item(`quality-below-${index}`, rating)),
-  ...[34, 28, 22, 16, 8, 0].map((rating, index) => item(`quality-bad-${index}`, rating)),
+function highlyRecognizable(items: readonly FootballRankFiveItem[]) {
+  return items.filter((row) => {
+    const tier = (row as RecognizableItem).recognizabilityTier;
+    return tier === "A" || tier === "B";
+  }).length;
+}
+
+const deepPool: readonly RecognizableItem[] = [
+  ...[100, 98, 96, 94, 92, 92].map((rating, index) => item(`quality-elite-${index}`, rating, index % 2 ? "B" : "A")),
+  ...[91, 89, 87, 85, 83, 82].map((rating, index) => item(`quality-great-${index}`, rating, index % 2 ? "C" : "A")),
+  ...[81, 78, 75, 73, 71, 70].map((rating, index) => item(`quality-good-${index}`, rating, index % 2 ? "B" : "C")),
+  ...[69, 66, 63, 60, 57, 55].map((rating, index) => item(`quality-average-${index}`, rating, index % 2 ? "C" : "A")),
+  ...[54, 50, 46, 42, 38, 35].map((rating, index) => item(`quality-below-${index}`, rating, index % 2 ? "B" : "C")),
+  ...[34, 28, 22, 16, 8, 0].map((rating, index) => item(`quality-bad-${index}`, rating, index % 2 ? "C" : "A")),
 ];
 
 describe("Football comparison board tier quality", () => {
-  it("keeps visible Tier 4 / Tier 5 clumping controlled across the Keep/Cut distribution", () => {
-    let nonBottomGrindBoards = 0;
+  it("keeps the weighted football-specific archetype tables normalized", () => {
+    expect(FOOTBALL_BLIND_RANK_ARCHETYPES.reduce((sum, row) => sum + row.weight, 0)).toBeCloseTo(1, 8);
+    expect(FOOTBALL_KEEP_CUT_BOARD_STYLES.reduce((sum, row) => sum + row.weight, 0)).toBeCloseTo(1, 8);
+    expect(FOOTBALL_BLIND_RANK_ARCHETYPES.map((row) => row.id)).toEqual([
+      "wild-card",
+      "loaded",
+      "middle-maze",
+      "top-bottom",
+      "knife-edge",
+      "ladder",
+    ]);
+    expect(FOOTBALL_KEEP_CUT_BOARD_STYLES.map((row) => row.id)).toEqual([
+      "wild-card",
+      "loaded",
+      "middle-maze",
+      "top-bottom",
+      "knife-edge",
+      "ladder",
+    ]);
+  });
+
+  it("keeps lower-tier clumping controlled across the new Keep/Cut distribution", () => {
     let totalClump = 0;
     let severeClumps = 0;
 
-    for (let seedIndex = 0; seedIndex < 96; seedIndex += 1) {
+    for (let seedIndex = 0; seedIndex < 120; seedIndex += 1) {
       const board = buildFootballKeepCutBoard(deepPool, "quality-proof", `texture-${seedIndex}`);
-      if (board.style === "bottom-grind") continue;
-
       const clump = lowerVisibleTierClump(board.items, deepPool);
-      nonBottomGrindBoards += 1;
       totalClump += clump;
       severeClumps += Number(clump >= 6);
     }
 
-    expect(nonBottomGrindBoards).toBeGreaterThan(60);
-    expect(totalClump / nonBottomGrindBoards).toBeLessThan(4.5);
-    expect(severeClumps / nonBottomGrindBoards).toBeLessThan(0.25);
+    expect(totalClump / 120).toBeLessThan(4.5);
+    expect(severeClumps / 120).toBeLessThan(0.25);
+  });
+
+  it("requires recognizable anchors whenever the category has healthy depth", () => {
+    for (let seedIndex = 0; seedIndex < 96; seedIndex += 1) {
+      const blind = buildFootballBlindRankBoard(deepPool, "recognition-proof", `blind-${seedIndex}`);
+      const keepCut = buildFootballKeepCutBoard(deepPool, "recognition-proof", `keep-${seedIndex}`);
+      expect(highlyRecognizable(blind.items)).toBeGreaterThanOrEqual(2);
+      expect(highlyRecognizable(keepCut.items)).toBeGreaterThanOrEqual(3);
+    }
   });
 
   it("keeps the existing internal-tier competitiveness floor instead of hard-rejecting playable boards", () => {
@@ -86,7 +124,7 @@ describe("Football comparison board tier quality", () => {
 
   it("preserves sparse-pool flexibility rather than manufacturing tier diversity", () => {
     const sparsePool = [69, 68, 67, 66, 65, 64, 63, 62]
-      .map((rating, index) => item(`sparse-average-${index}`, rating));
+      .map((rating, index) => item(`sparse-average-${index}`, rating, "C"));
 
     expect(footballKeepCutRequiredDistinctTiers(sparsePool)).toBe(1);
     expect(footballKeepCutBoardIsCompetitive(sparsePool, sparsePool)).toBe(true);
