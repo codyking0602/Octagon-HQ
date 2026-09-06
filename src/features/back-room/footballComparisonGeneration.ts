@@ -11,6 +11,7 @@ import {
   footballGreatnessTierLabel,
   type FootballGreatnessTier,
 } from "./footballGreatnessTier";
+import { footballComparisonItemsConflict } from "./footballProgramEraComparisonReadiness";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
 
 export type FootballComparisonTierId = FootballRatingBand;
@@ -225,6 +226,20 @@ export function footballKeepCutRequiredDistinctTiers(items: readonly FootballRan
   return Math.min(3, availableTiers, Math.max(2, repeatableTiers));
 }
 
+function markComparisonItemUsed(
+  used: Set<string>,
+  items: readonly FootballRankFiveItem[],
+  scopeId: string,
+  picked: FootballRankFiveItem,
+) {
+  used.add(picked.id);
+  for (const candidate of items) {
+    if (footballComparisonItemsConflict(scopeId, picked, candidate)) {
+      used.add(candidate.id);
+    }
+  }
+}
+
 function selectionCandidates(
   pool: readonly FootballRankFiveItem[],
   targetTier: FootballComparisonTierId,
@@ -391,7 +406,7 @@ function attemptBlindRankBoard(
     );
     if (!picked) return null;
     selected.push(picked);
-    used.add(picked.id);
+    markComparisonItemUsed(used, items, scopeId, picked);
     eliteCount += footballComparisonTier(picked) === "elite" ? 1 : 0;
     badCount += footballComparisonTier(picked) === "bad" ? 1 : 0;
   }
@@ -789,7 +804,7 @@ function attemptKeepCutBoard(
     );
     if (!picked) return null;
     selected.push(picked);
-    used.add(picked.id);
+    markComparisonItemUsed(used, items, scopeId, picked);
     selectedElite += footballComparisonTier(picked) === "elite" ? 1 : 0;
     selectedBad += footballComparisonTier(picked) === "bad" ? 1 : 0;
   }

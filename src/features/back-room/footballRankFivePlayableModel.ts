@@ -6,6 +6,7 @@ import {
 } from "../play/lineupModel";
 import { footballGameComparisonCandidates } from "../games/gameSourceAuthority";
 import { buildFootballBlindRankBoard } from "./footballComparisonGeneration";
+import { footballReviewedItemsForComparison } from "./footballProgramEraComparisonReadiness";
 import {
   FOOTBALL_RANK_FIVE_GAME_ID,
   footballRankFivePacks as footballReviewedRankFivePacks,
@@ -35,7 +36,10 @@ function runtimeLeagueForPack(packId: FootballRankFivePackId): FootballLeague {
  */
 export const footballRankFivePacks: readonly FootballRankFivePack[] = footballReviewedRankFivePacks.map((pack) => ({
   ...pack,
-  items: footballGameComparisonCandidates(pack.id, pack.items).map((item) => ({
+  items: footballGameComparisonCandidates(
+    pack.id,
+    footballReviewedItemsForComparison(pack.id, pack.items),
+  ).map((item) => ({
     ...item,
     league: runtimeLeagueForPack(pack.id),
   })),
