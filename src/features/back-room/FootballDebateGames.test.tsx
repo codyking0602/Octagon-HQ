@@ -10,6 +10,7 @@ import {
   footballKeepCutPacks,
   scoreFootballKeepCutSelection,
 } from "./footballKeepCutModel";
+import { orderFootballItemsByGreatnessTier } from "./footballGreatnessTier";
 import {
   FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS,
   createFootballWavelengthRound,
@@ -52,7 +53,7 @@ describe("Football HQ debate games", () => {
       expect(new Set(first.map((item) => item.id)).size).toBe(8);
       expect(footballKeepCutBoardIsCompetitive(first, pack.items)).toBe(true);
 
-      const ordered = [...first].sort((left, right) => right.rating - left.rating || left.id.localeCompare(right.id));
+      const ordered = orderFootballItemsByGreatnessTier(first);
       const perfect = scoreFootballKeepCutSelection(first, ordered.slice(0, 4).map((item) => item.id));
       expect(perfect.score).toBe(100);
       expect(perfect.correctComparisons).toBe(16);

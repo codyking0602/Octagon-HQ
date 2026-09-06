@@ -1,95 +1,53 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildFootballBlindRankBoard,
   buildFootballKeepCutBoard,
   footballKeepCutBoardIsCompetitive,
-  footballKeepCutRequiredDistinctTiers,
 } from "./footballComparisonGeneration";
-import {
-  footballGreatnessTierForItem,
-  footballGreatnessTierLabel,
-} from "./footballGreatnessTier";
+import { footballGreatnessTierForItem } from "./footballGreatnessTier";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
 
 function item(id: string, rating: number): FootballRankFiveItem {
-  return {
-    id,
-    name: id,
-    subtitle: id,
-    league: "NFL",
-    rating,
-  };
+  return { id, name: id, subtitle: id, league: "NFL", rating };
 }
-
-function visibleTierLabel(
-  row: FootballRankFiveItem,
-  categoryItems: readonly FootballRankFiveItem[],
-) {
-  return footballGreatnessTierLabel(footballGreatnessTierForItem(row), categoryItems);
-}
-
-function lowerVisibleTierClump(
-  items: readonly FootballRankFiveItem[],
-  categoryItems: readonly FootballRankFiveItem[],
-) {
-  const labels = items.map((row) => visibleTierLabel(row, categoryItems));
-  const tierFour = labels.filter((label) => label === "TIER 4").length;
-  const tierFive = labels.filter((label) => label === "TIER 5").length;
-  return Math.max(tierFour, tierFive);
-}
-
-const deepPool: readonly FootballRankFiveItem[] = [
-  ...[100, 98, 96, 94, 92, 92].map((rating, index) => item(`quality-elite-${index}`, rating)),
-  ...[91, 89, 87, 85, 83, 82].map((rating, index) => item(`quality-great-${index}`, rating)),
-  ...[81, 78, 75, 73, 71, 70].map((rating, index) => item(`quality-good-${index}`, rating)),
-  ...[69, 66, 63, 60, 57, 55].map((rating, index) => item(`quality-average-${index}`, rating)),
-  ...[54, 50, 46, 42, 38, 35].map((rating, index) => item(`quality-below-${index}`, rating)),
-  ...[34, 28, 22, 16, 8, 0].map((rating, index) => item(`quality-bad-${index}`, rating)),
-];
 
 describe("Football comparison board tier quality", () => {
-  it("keeps visible Tier 4 / Tier 5 clumping controlled across the Keep/Cut distribution", () => {
-    let nonBottomGrindBoards = 0;
-    let totalClump = 0;
-    let severeClumps = 0;
-
-    for (let seedIndex = 0; seedIndex < 96; seedIndex += 1) {
-      const board = buildFootballKeepCutBoard(deepPool, "quality-proof", `texture-${seedIndex}`);
-      if (board.style === "bottom-grind") continue;
-
-      const clump = lowerVisibleTierClump(board.items, deepPool);
-      nonBottomGrindBoards += 1;
-      totalClump += clump;
-      severeClumps += Number(clump >= 6);
-    }
-
-    expect(nonBottomGrindBoards).toBeGreaterThan(60);
-    expect(totalClump / nonBottomGrindBoards).toBeLessThan(4.5);
-    expect(severeClumps / nonBottomGrindBoards).toBeLessThan(0.25);
-  });
-
-  it("keeps the existing internal-tier competitiveness floor instead of hard-rejecting playable boards", () => {
-    expect(footballKeepCutRequiredDistinctTiers(deepPool)).toBe(3);
-
-    const playable = [
-      item("playable-elite", 92),
-      item("playable-great", 82),
-      item("playable-good", 70),
-      item("playable-average-1", 69),
-      item("playable-average-2", 68),
-      item("playable-average-3", 67),
-      item("playable-average-4", 66),
-      item("playable-below", 54),
+  it("caps healthy Blind Rank tier clumps without using hidden rating separation", () => {
+    const pool = [
+      ...Array.from({ length: 4 }, (_, index) => item(`elite-${index}`, 95)),
+      ...Array.from({ length: 4 }, (_, index) => item(`great-${index}`, 85)),
+      ...Array.from({ length: 4 }, (_, index) => item(`good-${index}`, 75)),
+      ...Array.from({ length: 4 }, (_, index) => item(`average-${index}`, 65)),
     ];
 
-    expect(footballKeepCutBoardIsCompetitive(playable, deepPool)).toBe(true);
+    for (let index = 0; index < 48; index += 1) {
+      const board = buildFootballBlindRankBoard(pool, "tier-cap", `seed-${index}`);
+      const counts = new Map<string, number>();
+      for (const row of board.items) {
+        const tier = footballGreatnessTierForItem(row);
+        counts.set(tier, (counts.get(tier) ?? 0) + 1);
+      }
+      expect(Math.max(...counts.values())).toBeLessThanOrEqual(2);
+    }
   });
 
-  it("preserves sparse-pool flexibility rather than manufacturing tier diversity", () => {
-    const sparsePool = [69, 68, 67, 66, 65, 64, 63, 62]
-      .map((rating, index) => item(`sparse-average-${index}`, rating));
+  it("rejects an all-one-tier Keep/Cut texture when a healthy multi-tier pool exists", () => {
+    const sameTierBoard = Array.from({ length: 8 }, (_, index) => item(`same-tier-${index}`, 95));
+    const healthyPool = [
+      ...sameTierBoard,
+      ...Array.from({ length: 8 }, (_, index) => item(`other-tier-${index}`, 65)),
+    ];
 
-    expect(footballKeepCutRequiredDistinctTiers(sparsePool)).toBe(1);
+    expect(footballKeepCutBoardIsCompetitive(sameTierBoard, healthyPool)).toBe(false);
+    expect(buildFootballKeepCutBoard(healthyPool, "healthy-keep", "healthy-seed").items).toHaveLength(8);
+  });
+
+  it("relaxes inside the same generator for a genuinely single-tier sparse pool", () => {
+    const sparsePool = Array.from({ length: 8 }, (_, index) => item(`sparse-average-${index}`, 65));
+
     expect(footballKeepCutBoardIsCompetitive(sparsePool, sparsePool)).toBe(true);
-    expect(buildFootballKeepCutBoard(sparsePool, "sparse-proof", "sparse-seed").items).toHaveLength(8);
+    const board = buildFootballKeepCutBoard(sparsePool, "sparse-proof", "sparse-seed");
+    expect(board.items).toHaveLength(8);
+    expect(new Set(board.items.map((row) => row.id)).size).toBe(8);
   });
 });

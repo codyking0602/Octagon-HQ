@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **4,022**
+Canonical A/B/C subjects: **4,028**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -42,7 +42,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | Player seasons | 316 | 12 | 25 | 279 | 316 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 132 | 6 | 42 | 84 | 132 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 106 | 5 | 13 | 88 | 101 | 5 | 0 | 10 | 0 | 0 |
-| Head coaches | 40 | 11 | 22 | 7 | 40 | 0 | 0 | 0 | 0 | 0 |
+| Head coaches | 46 | 11 | 22 | 13 | 46 | 0 | 0 | 0 | 0 | 0 |
 | Eras / dynasties | 71 | 19 | 24 | 28 | 42 | 29 | 0 | 29 | 0 | 0 |
 | Notable games / misc | 87 | 32 | 47 | 8 | 0 | 87 | 0 | 174 | 0 | 0 |
 

@@ -18,6 +18,8 @@ const status = execFileSync(
 ).trim();
 
 if (status) {
+  const diff = execFileSync("git", ["diff", "--", relativePath], { cwd: root, encoding: "utf8" });
+  console.error(diff);
   throw new Error(`${relativePath} is stale or missing from the repository. Run npm run generate:football-ledger-audit and commit the result.`);
 }
 

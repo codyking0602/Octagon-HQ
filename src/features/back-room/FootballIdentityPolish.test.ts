@@ -42,10 +42,11 @@ describe("Football HQ final identity polish", () => {
   });
 
   it("reserves fixed visual lanes so Keep 4 / Cut 4 labels and names cannot sit under team marks", () => {
-    expect(footballVisualCss).toContain("grid-template-columns: 74px minmax(0, 1fr) auto !important;");
+    expect(footballVisualCss).toContain("grid-template-columns: 74px minmax(0, 1fr) minmax(110px, auto) !important;");
     expect(footballVisualCss).toContain("grid-template-columns: 52px 52px minmax(0, 1fr) auto !important;");
     expect(footballVisualCss).toContain("grid-template-columns: 52px 52px minmax(0, 1fr) !important;");
     expect(footballVisualCss).toContain("grid-template-columns: 74px minmax(0, 1fr) !important;");
+    expect(footballVisualCss).toContain("overflow-wrap: anywhere;");
   });
 
   it("routes shared Football accents through the universal contextual theme path", () => {
