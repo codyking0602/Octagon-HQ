@@ -20,12 +20,18 @@ function item(id: string, rating: number): FootballRankFiveItem {
   };
 }
 
-function visibleTierLabel(row: FootballRankFiveItem) {
-  return footballGreatnessTierLabel(footballGreatnessTierForItem(row));
+function visibleTierLabel(
+  row: FootballRankFiveItem,
+  categoryItems: readonly FootballRankFiveItem[],
+) {
+  return footballGreatnessTierLabel(footballGreatnessTierForItem(row), categoryItems);
 }
 
-function lowerVisibleTierClump(items: readonly FootballRankFiveItem[]) {
-  const labels = items.map(visibleTierLabel);
+function lowerVisibleTierClump(
+  items: readonly FootballRankFiveItem[],
+  categoryItems: readonly FootballRankFiveItem[],
+) {
+  const labels = items.map((row) => visibleTierLabel(row, categoryItems));
   const tierFour = labels.filter((label) => label === "TIER 4").length;
   const tierFive = labels.filter((label) => label === "TIER 5").length;
   return Math.max(tierFour, tierFive);
@@ -50,7 +56,7 @@ describe("Football comparison board tier quality", () => {
       const board = buildFootballKeepCutBoard(deepPool, "quality-proof", `texture-${seedIndex}`);
       if (board.style === "bottom-grind") continue;
 
-      const clump = lowerVisibleTierClump(board.items);
+      const clump = lowerVisibleTierClump(board.items, deepPool);
       nonBottomGrindBoards += 1;
       totalClump += clump;
       severeClumps += Number(clump >= 6);
