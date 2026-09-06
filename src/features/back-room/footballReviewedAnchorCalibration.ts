@@ -25,8 +25,11 @@ const MIN_REVIEWED_ANCHORS = 4;
 const MIN_MODEL_SCORE_SPAN = 0.05;
 const PROFILE_NEIGHBOR_COUNT = 5;
 const MIN_PROFILE_NEIGHBORS = 3;
-const PROFILE_RATING_WEIGHT = 0.55;
-const MAX_PROFILE_RATING_ADJUSTMENT = 14;
+const PROFILE_RATING_WEIGHT = 0.90;
+const SPARSE_PROFILE_MIN_ANCHORS = 4;
+const SPARSE_PROFILE_MAX_ANCHORS = 20;
+const SPARSE_PROFILE_RATING_WEIGHT = 0.25;
+const SPARSE_PROFILE_MAX_ADJUSTMENT = 10;
 const ERA_DISTANCE_WEIGHT = 2;
 const ERA_DISTANCE_FULL_PENALTY_SEASONS = 30;
 
@@ -161,9 +164,9 @@ function reviewedProfileDistance(
 /**
  * A scalar model score can hide why two careers differ. This calibration step
  * compares the model's actual greatness-dimension profile to nearby reviewed
- * careers, with an era preference, then makes a bounded neighborhood adjustment
- * to the monotone reviewed scale. Reviewed rows stay exact and generated subjects
- * never become manual overrides.
+ * careers, with an era preference. Sparse reviewed neighborhoods are deliberately
+ * bounded so a handful of anchors cannot flatten hundreds of generated careers.
+ * Reviewed rows stay exact and generated subjects never become manual overrides.
  */
 export function reconcileFootballRatingToReviewedProfiles(
   dimensionScores: Readonly<Partial<Record<FootballRankingDimension, number>>>,
@@ -189,10 +192,15 @@ export function reconcileFootballRatingToReviewedProfiles(
   if (totalWeight <= 0) return Math.round(clampRating(scaleRating));
 
   const profileRating = weighted.reduce((sum, row) => sum + row.rating * row.weight, 0) / totalWeight;
-  const blendedRating = profileRating * PROFILE_RATING_WEIGHT + scaleRating * (1 - PROFILE_RATING_WEIGHT);
-  const boundedRating = Math.max(
-    scaleRating - MAX_PROFILE_RATING_ADJUSTMENT,
-    Math.min(scaleRating + MAX_PROFILE_RATING_ADJUSTMENT, blendedRating),
-  );
+  const sparseReviewedProfile = samples.length >= SPARSE_PROFILE_MIN_ANCHORS
+    && samples.length <= SPARSE_PROFILE_MAX_ANCHORS;
+  const profileWeight = sparseReviewedProfile ? SPARSE_PROFILE_RATING_WEIGHT : PROFILE_RATING_WEIGHT;
+  const blendedRating = profileRating * profileWeight + scaleRating * (1 - profileWeight);
+  const boundedRating = sparseReviewedProfile
+    ? Math.max(
+        scaleRating - SPARSE_PROFILE_MAX_ADJUSTMENT,
+        Math.min(scaleRating + SPARSE_PROFILE_MAX_ADJUSTMENT, blendedRating),
+      )
+    : blendedRating;
   return Math.round(clampRating(boundedRating));
 }
