@@ -27,26 +27,37 @@ import { footballSubjectAsset } from "./footballSubjectAssets";
 import { getFootballSubject } from "./footballSubjectRegistry";
 
 type RecognizableItem = FootballRankFiveItem & { recognizabilityTier?: "A" | "B" | "C" | "D" };
+type AuditCategory = {
+  id: string;
+  label: string;
+  sourcePackIds: readonly FootballRankFivePackId[];
+};
 
-const AUDIT_PACKS = [
-  ["nfl-quarterbacks", "NFL QB Careers"],
-  ["nfl-running-backs", "NFL RB Careers"],
-  ["nfl-wide-receivers", "NFL WR Careers"],
-  ["nfl-tight-ends", "NFL TE Careers"],
-  ["nfl-defensive-players", "NFL Defensive Careers"],
-  ["nfl-head-coaches", "NFL Head Coaches"],
-  ["nfl-qb-seasons", "NFL QB Seasons"],
-  ["nfl-team-seasons", "NFL Team Seasons"],
-  ["college-quarterbacks", "College QBs"],
-  ["college-head-coaches", "CFB Head Coaches"],
-  ["college-programs", "Programs Since 2000"],
-  ["college-program-eras", "CFB Program Eras"],
-  ["college-team-seasons", "CFB Team Seasons"],
-] as const satisfies readonly (readonly [FootballRankFivePackId, string])[];
+const AUDIT_CATEGORIES = [
+  { id: "nfl-quarterbacks", label: "NFL QB Careers", sourcePackIds: ["nfl-quarterbacks"] },
+  { id: "nfl-running-backs", label: "NFL RB Careers", sourcePackIds: ["nfl-running-backs"] },
+  { id: "nfl-wide-receivers", label: "NFL WR Careers", sourcePackIds: ["nfl-wide-receivers"] },
+  { id: "nfl-tight-ends", label: "NFL TE Careers", sourcePackIds: ["nfl-tight-ends"] },
+  { id: "nfl-defensive-careers", label: "NFL Defensive Careers", sourcePackIds: ["nfl-front-seven", "nfl-secondary"] },
+  { id: "nfl-head-coaches", label: "NFL Head Coaches", sourcePackIds: ["nfl-head-coaches"] },
+  { id: "nfl-qb-seasons", label: "NFL QB Seasons", sourcePackIds: ["nfl-qb-seasons"] },
+  { id: "nfl-team-seasons", label: "NFL Team Seasons", sourcePackIds: ["nfl-team-seasons"] },
+  { id: "college-quarterbacks", label: "College QBs", sourcePackIds: ["college-quarterbacks"] },
+  { id: "college-head-coaches", label: "CFB Head Coaches", sourcePackIds: ["college-head-coaches"] },
+  { id: "college-programs", label: "Programs Since 2000", sourcePackIds: ["college-programs"] },
+  { id: "college-program-eras", label: "CFB Program Eras", sourcePackIds: ["college-program-eras"] },
+  { id: "college-team-seasons", label: "CFB Team Seasons", sourcePackIds: ["college-team-seasons"] },
+] as const satisfies readonly AuditCategory[];
 
-const auditPools = new Map<FootballRankFivePackId, readonly RecognizableItem[]>(
-  AUDIT_PACKS.map(([packId]) => [packId, footballGameComparisonCandidates(packId) as readonly RecognizableItem[]]),
-);
+function auditPool(category: AuditCategory): readonly RecognizableItem[] {
+  const byId = new Map<string, RecognizableItem>();
+  for (const sourcePackId of category.sourcePackIds) {
+    for (const candidate of footballGameComparisonCandidates(sourcePackId) as readonly RecognizableItem[]) {
+      if (!byId.has(candidate.id)) byId.set(candidate.id, candidate);
+    }
+  }
+  return [...byId.values()];
+}
 
 function tierSignature(board: readonly FootballRankFiveItem[], pool: readonly FootballRankFiveItem[]) {
   return footballGreatnessTiersForCategory(pool)
@@ -155,33 +166,42 @@ describe("Football Blind Rank 5 + Keep 4 / Cut 4 readiness", () => {
     expect(secondEqualChoice.correctComparisons).toBe(16);
   });
 
-  it("audits deterministic boards across all 13 canonical comparison packs", () => {
-    for (const [packId, label] of AUDIT_PACKS) {
-      const pool = auditPools.get(packId)!;
-      expect(pool.length, `${label} pool`).toBeGreaterThanOrEqual(8);
+  it("audits deterministic boards across all 13 requested canonical comparison categories", () => {
+    expect(AUDIT_CATEGORIES).toHaveLength(13);
+
+    for (const category of AUDIT_CATEGORIES) {
+      const pool = auditPool(category);
+      expect(pool.length, `${category.label} pool`).toBeGreaterThanOrEqual(8);
       const availableTierCount = footballGreatnessTiersForCategory(pool).length;
       const recognizable = recognizableCount(pool);
       const blindTextures = new Set<string>();
       const keepCutTextures = new Set<string>();
 
       for (let index = 0; index < 32; index += 1) {
-        const seed = `readiness-${packId}-${index}`;
-        const blind = buildFootballBlindRankBoard(pool, packId, seed);
-        const keepCut = buildFootballKeepCutBoard(pool, packId, seed);
+        const seed = `readiness-${category.id}-${index}`;
+        const blind = buildFootballBlindRankBoard(pool, category.id, seed);
+        const repeatBlind = buildFootballBlindRankBoard(pool, category.id, seed);
+        const keepCut = buildFootballKeepCutBoard(pool, category.id, seed);
+        const repeatKeepCut = buildFootballKeepCutBoard(pool, category.id, seed);
 
-        expect(blind.items, `${label} blind count`).toHaveLength(5);
-        expect(new Set(blind.items.map((row) => row.id)).size, `${label} blind unique`).toBe(5);
+        expect(blind.items, `${category.label} blind count`).toHaveLength(5);
+        expect(new Set(blind.items.map((row) => row.id)).size, `${category.label} blind unique`).toBe(5);
+        expect(repeatBlind.items.map((row) => row.id), `${category.label} blind deterministic`)
+          .toEqual(blind.items.map((row) => row.id));
         if (availableTierCount > 1) {
-          expect(new Set(blind.items.map(footballGreatnessTierForItem)).size, `${label} blind tier diversity`).toBeGreaterThan(1);
+          expect(new Set(blind.items.map(footballGreatnessTierForItem)).size, `${category.label} blind tier diversity`).toBeGreaterThan(1);
         }
-        expect(keepCut.items, `${label} keep/cut count`).toHaveLength(8);
-        expect(new Set(keepCut.items.map((row) => row.id)).size, `${label} keep/cut unique`).toBe(8);
+
+        expect(keepCut.items, `${category.label} keep/cut count`).toHaveLength(8);
+        expect(new Set(keepCut.items.map((row) => row.id)).size, `${category.label} keep/cut unique`).toBe(8);
+        expect(repeatKeepCut.items.map((row) => row.id), `${category.label} keep/cut deterministic`)
+          .toEqual(keepCut.items.map((row) => row.id));
 
         if (pool.length >= 10 && recognizable >= 4) {
-          expect(recognizableCount(blind.items as RecognizableItem[]), `${label} blind recognizability`).toBeGreaterThanOrEqual(2);
+          expect(recognizableCount(blind.items as RecognizableItem[]), `${category.label} blind recognizability`).toBeGreaterThanOrEqual(2);
         }
         if (pool.length >= 16 && recognizable >= 6) {
-          expect(recognizableCount(keepCut.items as RecognizableItem[]), `${label} keep/cut recognizability`).toBeGreaterThanOrEqual(3);
+          expect(recognizableCount(keepCut.items as RecognizableItem[]), `${category.label} keep/cut recognizability`).toBeGreaterThanOrEqual(3);
         }
 
         blindTextures.add(tierSignature(blind.items, pool));
@@ -189,8 +209,8 @@ describe("Football Blind Rank 5 + Keep 4 / Cut 4 readiness", () => {
       }
 
       if (pool.length >= 16 && availableTierCount >= 3) {
-        expect(blindTextures.size, `${label} blind texture variety`).toBeGreaterThan(1);
-        expect(keepCutTextures.size, `${label} keep/cut texture variety`).toBeGreaterThan(1);
+        expect(blindTextures.size, `${category.label} blind texture variety`).toBeGreaterThan(1);
+        expect(keepCutTextures.size, `${category.label} keep/cut texture variety`).toBeGreaterThan(1);
       }
     }
   });
