@@ -59,6 +59,11 @@
   grid-template-columns: 34px 52px minmax(0, 1fr) auto !important;
 }
 
+/* Canonical reveal labels contain full tier copy (for example, TIER 1), so reserve a real label lane. */
+.app-shell--football-room .football-rank-five-results.is-canonical article {
+  grid-template-columns: 52px 52px minmax(0, 1fr) auto !important;
+}
+
 .app-shell--football-room .football-blind-resume-identities article {
   grid-template-columns: 62px minmax(0, 1fr);
 }
@@ -108,6 +113,18 @@
   }
 
   .app-shell--football-room .football-debate-result-list article em {
+    display: none;
+  }
+
+  .app-shell--football-room .football-rank-five-results article {
+    grid-template-columns: 34px 52px minmax(0, 1fr) !important;
+  }
+
+  .app-shell--football-room .football-rank-five-results.is-canonical article {
+    grid-template-columns: 52px 52px minmax(0, 1fr) !important;
+  }
+
+  .app-shell--football-room .football-rank-five-results article em {
     display: none;
   }
 }
