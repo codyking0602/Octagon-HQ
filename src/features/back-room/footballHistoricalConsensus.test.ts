@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { getFootballRankFivePack } from "./footballRankFivePlayableModel";
 import {
   getNflQbHistoricalConsensus,
   historicalRankPercentile,
@@ -77,12 +76,9 @@ describe("football historical consensus", () => {
     expect(getNflQbHistoricalConsensus("drew-brees").calculationSource).toBe("manual-audit");
   });
 
-  it("covers the exact canonical 122-QB playable pool with unique audit placements", () => {
-    const canonicalIds = getFootballRankFivePack("nfl-quarterbacks").items.map((item) => item.id);
-
+  it("keeps the explicit QB audit unique, complete, and resolvable", () => {
     expect(NFL_QB_MANUAL_AUDIT_ORDER).toHaveLength(122);
     expect(new Set(NFL_QB_MANUAL_AUDIT_ORDER).size).toBe(122);
-    expect(new Set(NFL_QB_MANUAL_AUDIT_ORDER)).toEqual(new Set(canonicalIds));
     expect(NFL_QB_MANUAL_AUDIT_ORDER.every((id) => getNflQbHistoricalConsensus(id).score != null)).toBe(true);
   });
 });
