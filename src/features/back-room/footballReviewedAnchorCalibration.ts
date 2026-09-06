@@ -1,4 +1,7 @@
-import type { FootballRankingDimension } from "./footballRankingFramework";
+import {
+  footballRankingRatingForScore,
+  type FootballRankingDimension,
+} from "./footballRankingFramework";
 
 export interface FootballReviewedRatingCalibrationSample {
   modelScore: number;
@@ -28,13 +31,16 @@ const MIN_PROFILE_NEIGHBORS = 3;
 const PROFILE_RATING_WEIGHT = 0.90;
 const SPARSE_PROFILE_MIN_ANCHORS = 6;
 const SPARSE_PROFILE_MAX_ANCHORS = 20;
-const SPARSE_PROFILE_RATING_WEIGHT = 0.25;
-const SPARSE_PROFILE_MAX_ADJUSTMENT = 10;
 const ERA_DISTANCE_WEIGHT = 2;
 const ERA_DISTANCE_FULL_PENALTY_SEASONS = 30;
 
 function clampRating(value: number) {
   return Math.max(0, Math.min(100, value));
+}
+
+function isSparseReviewedCalibration(anchorCount: number) {
+  return anchorCount >= SPARSE_PROFILE_MIN_ANCHORS
+    && anchorCount <= SPARSE_PROFILE_MAX_ANCHORS;
 }
 
 /**
@@ -134,10 +140,18 @@ function calibratedValue(
   return left.reviewedRating + ratio * (right.reviewedRating - left.reviewedRating);
 }
 
+/**
+ * Reviewed reconciliation is an optional calibration layer over the canonical ranking
+ * engine. A 6-20 anchor set is too sparse to extrapolate safely across a deep pool, so
+ * those categories retain the ranking framework's canonical 35-99 score mapping.
+ */
 export function reconcileFootballRatingToReviewedAnchors(
   modelScore: number,
   calibration: FootballReviewedRatingCalibration,
 ) {
+  if (isSparseReviewedCalibration(calibration.anchorCount)) {
+    return footballRankingRatingForScore(modelScore);
+  }
   return Math.round(clampRating(calibratedValue(modelScore, calibration)));
 }
 
@@ -164,9 +178,9 @@ function reviewedProfileDistance(
 /**
  * A scalar model score can hide why two careers differ. This calibration step
  * compares the model's actual greatness-dimension profile to nearby reviewed
- * careers, with an era preference. Sparse reviewed neighborhoods are deliberately
- * bounded so a handful of anchors cannot flatten hundreds of generated careers.
- * Reviewed rows stay exact and generated subjects never become manual overrides.
+ * careers, with an era preference. Sparse reviewed neighborhoods do not override
+ * the canonical scale because a handful of anchors cannot safely represent a deep
+ * category. Reviewed rows stay exact and generated subjects never become manual overrides.
  */
 export function reconcileFootballRatingToReviewedProfiles(
   dimensionScores: Readonly<Partial<Record<FootballRankingDimension, number>>>,
@@ -174,6 +188,10 @@ export function reconcileFootballRatingToReviewedProfiles(
   scaleRating: number,
   eraMidpoint?: number | null,
 ) {
+  if (isSparseReviewedCalibration(samples.length)) {
+    return Math.round(clampRating(scaleRating));
+  }
+
   const neighbors = samples
     .flatMap((sample) => {
       const distance = reviewedProfileDistance(dimensionScores, sample, eraMidpoint);
@@ -192,15 +210,7 @@ export function reconcileFootballRatingToReviewedProfiles(
   if (totalWeight <= 0) return Math.round(clampRating(scaleRating));
 
   const profileRating = weighted.reduce((sum, row) => sum + row.rating * row.weight, 0) / totalWeight;
-  const sparseReviewedProfile = samples.length >= SPARSE_PROFILE_MIN_ANCHORS
-    && samples.length <= SPARSE_PROFILE_MAX_ANCHORS;
-  const profileWeight = sparseReviewedProfile ? SPARSE_PROFILE_RATING_WEIGHT : PROFILE_RATING_WEIGHT;
-  const blendedRating = profileRating * profileWeight + scaleRating * (1 - profileWeight);
-  const boundedRating = sparseReviewedProfile
-    ? Math.max(
-        scaleRating - SPARSE_PROFILE_MAX_ADJUSTMENT,
-        Math.min(scaleRating + SPARSE_PROFILE_MAX_ADJUSTMENT, blendedRating),
-      )
-    : blendedRating;
-  return Math.round(clampRating(boundedRating));
+  return Math.round(clampRating(
+    profileRating * PROFILE_RATING_WEIGHT + scaleRating * (1 - PROFILE_RATING_WEIGHT),
+  ));
 }
