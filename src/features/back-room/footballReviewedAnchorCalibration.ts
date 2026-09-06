@@ -25,7 +25,8 @@ const MIN_REVIEWED_ANCHORS = 4;
 const MIN_MODEL_SCORE_SPAN = 0.05;
 const PROFILE_NEIGHBOR_COUNT = 5;
 const MIN_PROFILE_NEIGHBORS = 3;
-const PROFILE_RATING_WEIGHT = 0.90;
+const PROFILE_RATING_WEIGHT = 0.35;
+const MAX_PROFILE_RATING_ADJUSTMENT = 8;
 const ERA_DISTANCE_WEIGHT = 2;
 const ERA_DISTANCE_FULL_PENALTY_SEASONS = 30;
 
@@ -160,9 +161,9 @@ function reviewedProfileDistance(
 /**
  * A scalar model score can hide why two careers differ. This calibration step
  * compares the model's actual greatness-dimension profile to nearby reviewed
- * careers, with an era preference, then blends that neighborhood with the
- * monotone reviewed scale. Reviewed rows stay exact and generated subjects never
- * become manual overrides.
+ * careers, with an era preference, then makes a bounded neighborhood adjustment
+ * to the monotone reviewed scale. Reviewed rows stay exact and generated subjects
+ * never become manual overrides.
  */
 export function reconcileFootballRatingToReviewedProfiles(
   dimensionScores: Readonly<Partial<Record<FootballRankingDimension, number>>>,
@@ -188,7 +189,10 @@ export function reconcileFootballRatingToReviewedProfiles(
   if (totalWeight <= 0) return Math.round(clampRating(scaleRating));
 
   const profileRating = weighted.reduce((sum, row) => sum + row.rating * row.weight, 0) / totalWeight;
-  return Math.round(clampRating(
-    profileRating * PROFILE_RATING_WEIGHT + scaleRating * (1 - PROFILE_RATING_WEIGHT),
-  ));
+  const blendedRating = profileRating * PROFILE_RATING_WEIGHT + scaleRating * (1 - PROFILE_RATING_WEIGHT);
+  const boundedRating = Math.max(
+    scaleRating - MAX_PROFILE_RATING_ADJUSTMENT,
+    Math.min(scaleRating + MAX_PROFILE_RATING_ADJUSTMENT, blendedRating),
+  );
+  return Math.round(clampRating(boundedRating));
 }
