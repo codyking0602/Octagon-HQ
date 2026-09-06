@@ -3,6 +3,10 @@ import {
   type FootballFactMetricId,
 } from "./footballFactualStatsCore";
 import {
+  getNflQbHistoricalConsensus,
+  NFL_QB_CONSENSUS_SNAPSHOT_DATE,
+} from "./footballHistoricalConsensus";
+import {
   FOOTBALL_RANKING_FRAMEWORK_VERSION,
   rateFootballRankingEvidence,
   scoreFootballAnchoredValue,
@@ -72,7 +76,7 @@ interface FootballComparisonSupplementalEvidence {
 
 export interface FootballComparisonCandidate extends FootballRankFiveItem {
   canonicalSubjectId: string;
-  evaluationSource: "reviewed" | "canonical-facts";
+  evaluationSource: "reviewed" | "canonical-facts" | "historical-consensus";
   recognizabilityTier: FootballSubjectProfile["recognizabilityTier"];
   factMetricIds: readonly FootballFactMetricId[];
   rankingVersion: typeof FOOTBALL_RANKING_FRAMEWORK_VERSION;
@@ -336,19 +340,8 @@ const nflCareerFamilyByPosition: Readonly<Partial<Record<FootballSubjectPosition
 export const footballComparisonCategorySpecs: Readonly<Record<FootballRankFivePackId, FootballComparisonCategorySpec>> = {
   "nfl-quarterbacks": category(
     { kind: "player-career", league: "NFL", position: "QB" },
-    [
-      higher("nfl-career-passing-yards", 0.12),
-      higher("nfl-career-passing-touchdowns", 0.12),
-      higher("nfl-career-passer-rating", 0.13),
-      higher("nfl-career-passing-yards-per-attempt", 0.08),
-      higher("nfl-career-completion-percentage", 0.07),
-      higher("nfl-career-passing-touchdown-interception-ratio", 0.13),
-      higher("nfl-career-games", 0.10),
-      higher("nfl-ap-mvp-awards", 0.10),
-      higher("nfl-first-team-all-pros", 0.07),
-      higher("nfl-super-bowl-titles", 0.08),
-    ],
-    3,
+    [],
+    0,
   ),
   "nfl-running-backs": category(
     { kind: "player-career", league: "NFL", position: "RB" },
@@ -734,6 +727,43 @@ function subtitleForSubject(subject: FootballSubjectProfile) {
   return subject.school ?? `${subject.league} program`;
 }
 
+function buildNflQbHistoricalConsensusCandidatePool(spec: FootballComparisonCategorySpec): readonly FootballComparisonCandidate[] {
+  const rows = queryFootballSubjects(spec.query).map((subject) => {
+    const consensus = getNflQbHistoricalConsensus(subject.id);
+    if (consensus.score == null) {
+      throw new Error(`NFL QB historical consensus requires an explicit audit for ${subject.id}`);
+    }
+    return { subject, consensus };
+  });
+
+  return [...rows]
+    .sort((a, b) => b.consensus.score! - a.consensus.score! || a.subject.name.localeCompare(b.subject.name))
+    .map(({ subject, consensus }) => {
+      const rating = Math.round(35 + (consensus.score! / 100) * 64);
+      const sourceDescription = consensus.calculationSource === "pfr-ranker"
+        ? "70% PFR HOF Monitor percentile + 30% Ranker percentile"
+        : "explicit audit placement for current or missing-source coverage";
+
+      return {
+        id: subject.id,
+        name: subject.name,
+        subtitle: subtitleForSubject(subject),
+        league: subject.league,
+        rating,
+        ratingBasis: `${NFL_QB_CONSENSUS_SNAPSHOT_DATE} historical consensus: ${sourceDescription}; score ${consensus.score!.toFixed(1)}. OVR is calibrated from this consensus score and does not use the retired internal QB formula or reviewed-anchor reconciliation.`,
+        canonicalSubjectId: subject.id,
+        evaluationSource: "historical-consensus" as const,
+        recognizabilityTier: subject.recognizabilityTier,
+        factMetricIds: [],
+        rankingVersion: FOOTBALL_RANKING_FRAMEWORK_VERSION,
+        rankingSemantic: "career-greatness" as const,
+        rankingCoverage: 1,
+        rankingConfidence: 1,
+        rankingStatus: "rated" as const,
+      };
+    });
+}
+
 interface FootballComparisonModelBuild {
   query: FootballSubjectQuery;
   semantic: FootballRankingSemantic;
@@ -953,6 +983,11 @@ export function buildFootballNflBoundedEraCandidatePool(): readonly FootballComp
 export function buildFootballComparisonCandidatePool(packId: FootballRankFivePackId, reviewedItems: readonly FootballRankFiveItem[] = []): readonly FootballComparisonCandidate[] {
   const spec = footballComparisonCategorySpecs[packId];
   const semantic = rankingSemanticByPack[packId];
+
+  if (packId === "nfl-quarterbacks") {
+    return buildNflQbHistoricalConsensusCandidatePool(spec);
+  }
+
   const ratingCalibrationItems = footballDeepPlayerComparisonPackIdSet.has(packId)
     ? getFootballRankFivePack(packId).items
     : [];
