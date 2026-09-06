@@ -1,6 +1,14 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { footballGameComparisonCandidates } from "../games/gameSourceAuthority";
+import { footballCareerCfbDisplayProgram } from "./footballCareerMediaContext";
+import {
+  collegeProgramDepth,
+  collegeTeamSeasonDepth,
+  nflDefensiveCareers,
+  nflQuarterbackSeasons,
+  nflTeamSeasons,
+} from "./footballComparisonDepthCatalog";
 import {
   buildFootballBlindRankBoard,
   buildFootballKeepCutBoard,
@@ -10,7 +18,6 @@ import {
   FOOTBALL_KEEP_CUT_BOARD_STYLES,
   type FootballBoardTypeId,
 } from "./footballComparisonGeneration";
-import { footballCareerCfbDisplayProgram } from "./footballCareerMediaContext";
 import {
   footballGreatnessTierForItem,
   footballGreatnessTiersForCategory,
@@ -30,7 +37,8 @@ type RecognizableItem = FootballRankFiveItem & { recognizabilityTier?: "A" | "B"
 type AuditCategory = {
   id: string;
   label: string;
-  sourcePackIds: readonly FootballRankFivePackId[];
+  sourcePackIds?: readonly FootballRankFivePackId[];
+  items?: readonly FootballRankFiveItem[];
 };
 
 const AUDIT_CATEGORIES = [
@@ -38,20 +46,21 @@ const AUDIT_CATEGORIES = [
   { id: "nfl-running-backs", label: "NFL RB Careers", sourcePackIds: ["nfl-running-backs"] },
   { id: "nfl-wide-receivers", label: "NFL WR Careers", sourcePackIds: ["nfl-wide-receivers"] },
   { id: "nfl-tight-ends", label: "NFL TE Careers", sourcePackIds: ["nfl-tight-ends"] },
-  { id: "nfl-defensive-careers", label: "NFL Defensive Careers", sourcePackIds: ["nfl-front-seven", "nfl-secondary"] },
+  { id: "nfl-defensive-careers", label: "NFL Defensive Careers", items: nflDefensiveCareers },
   { id: "nfl-head-coaches", label: "NFL Head Coaches", sourcePackIds: ["nfl-head-coaches"] },
-  { id: "nfl-qb-seasons", label: "NFL QB Seasons", sourcePackIds: ["nfl-qb-seasons"] },
-  { id: "nfl-team-seasons", label: "NFL Team Seasons", sourcePackIds: ["nfl-team-seasons"] },
+  { id: "nfl-qb-seasons", label: "NFL QB Seasons", items: nflQuarterbackSeasons },
+  { id: "nfl-team-seasons", label: "NFL Team Seasons", items: nflTeamSeasons },
   { id: "college-quarterbacks", label: "College QBs", sourcePackIds: ["college-quarterbacks"] },
   { id: "college-head-coaches", label: "CFB Head Coaches", sourcePackIds: ["college-head-coaches"] },
-  { id: "college-programs", label: "Programs Since 2000", sourcePackIds: ["college-programs"] },
+  { id: "college-programs", label: "Programs Since 2000", items: collegeProgramDepth },
   { id: "college-program-eras", label: "CFB Program Eras", sourcePackIds: ["college-program-eras"] },
-  { id: "college-team-seasons", label: "CFB Team Seasons", sourcePackIds: ["college-team-seasons"] },
+  { id: "college-team-seasons", label: "CFB Team Seasons", items: collegeTeamSeasonDepth },
 ] as const satisfies readonly AuditCategory[];
 
 function auditPool(category: AuditCategory): readonly RecognizableItem[] {
+  if (category.items) return category.items as readonly RecognizableItem[];
   const byId = new Map<string, RecognizableItem>();
-  for (const sourcePackId of category.sourcePackIds) {
+  for (const sourcePackId of category.sourcePackIds ?? []) {
     for (const candidate of footballGameComparisonCandidates(sourcePackId) as readonly RecognizableItem[]) {
       if (!byId.has(candidate.id)) byId.set(candidate.id, candidate);
     }
@@ -282,8 +291,10 @@ describe("Football Blind Rank 5 + Keep 4 / Cut 4 readiness", () => {
     const source = readFileSync("src/features/back-room/FootballKeepCutPage.tsx", "utf8");
     expect(source).toContain("sharedRun ?? createRandomFootballKeepCutRun()");
     expect(source).toContain("reset(createRandomFootballKeepCutRun(run.pack.id))");
-    expect(source).toContain("if (sharedRun) reset(run)");
-    expect(source).toContain("const lineup = itemIds.map((id) => pack.items.find((item) => item.id === id))");
+    expect(source).toContain("if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;");
+    expect(source).toContain("setRun(sharedRun);");
+    expect(source).toContain("if (shared) reset(run);");
+    expect(source).toContain("const lineup = lineupIds.flatMap((id) => items.get(id) ? [items.get(id)!] : []);");
   });
 
   it("keeps CFB career text and logos on the same canonical representative-program relationship", () => {
