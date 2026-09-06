@@ -1,8 +1,9 @@
 const PFR_WEIGHT = 0.70;
-const RANKER_WEIGHT = 0.30;
+const RANKER_TOP_50_WEIGHT = 0.30;
 
 export const PFR_HOF_MONITOR_QB_FIELD_SIZE = 250;
 export const RANKER_QB_FIELD_SIZE = 70;
+export const RANKER_QB_MODIFIER_MAX_RANK = 50;
 export const NFL_QB_CONSENSUS_SNAPSHOT_DATE = "2026-09-05";
 export const PFR_HOF_MONITOR_QB_SOURCE_URL = "https://www.pro-football-reference.com/hof/hofm_QB.htm";
 export const RANKER_QB_SOURCE_URL = "https://www.ranker.com/list/the-best-quarterbacks-of-all-time/ranker-nfl";
@@ -21,7 +22,7 @@ export interface HistoricalConsensusInput {
 
 export interface HistoricalConsensusResolution {
   score: number | null;
-  calculationSource: "pfr-ranker" | "manual-audit" | "unresolved";
+  calculationSource: "pfr-ranker" | "pfr-only" | "manual-audit" | "unresolved";
   requiresAudit: boolean;
   pfrPercentile: number | null;
   rankerPercentile: number | null;
@@ -42,16 +43,28 @@ export function historicalRankPercentile(rank: number, fieldSize: number) {
 
 export function resolveHistoricalConsensus(input: HistoricalConsensusInput): HistoricalConsensusResolution {
   const pfrPercentile = input.pfr ? historicalRankPercentile(input.pfr.rank, input.pfr.fieldSize) : null;
-  const rankerPercentile = input.ranker ? historicalRankPercentile(input.ranker.rank, input.ranker.fieldSize) : null;
-  const requiresAudit = Boolean(input.currentCareer) || pfrPercentile == null || rankerPercentile == null;
+  const rankerEligible = input.ranker != null && input.ranker.rank <= RANKER_QB_MODIFIER_MAX_RANK;
+  const rankerPercentile = rankerEligible
+    ? historicalRankPercentile(input.ranker!.rank, PFR_HOF_MONITOR_QB_FIELD_SIZE)
+    : null;
+  const requiresAudit = Boolean(input.currentCareer) || pfrPercentile == null;
 
-  if (!requiresAudit) {
+  if (!requiresAudit && pfrPercentile != null) {
+    if (rankerPercentile != null) {
+      return {
+        score: pfrPercentile * PFR_WEIGHT + rankerPercentile * RANKER_TOP_50_WEIGHT,
+        calculationSource: "pfr-ranker",
+        requiresAudit: false,
+        pfrPercentile,
+        rankerPercentile,
+      };
+    }
     return {
-      score: pfrPercentile * PFR_WEIGHT + rankerPercentile * RANKER_WEIGHT,
-      calculationSource: "pfr-ranker",
+      score: pfrPercentile,
+      calculationSource: "pfr-only",
       requiresAudit: false,
       pfrPercentile,
-      rankerPercentile,
+      rankerPercentile: null,
     };
   }
 
@@ -81,9 +94,10 @@ interface QbSourceSnapshot {
   currentCareer?: boolean;
 }
 
-// Static, dated source evidence. PFR rank is the QB HOF Monitor order (250-player field).
-// Ranker rank is the all-time QB fan-vote order (70-player field). Harlor is intentionally absent.
-// Missing Ranker/PFR entries are never treated as zero and never trigger automatic reweighting.
+// Static, dated source evidence. PFR Hall of Fame Monitor is the backbone.
+// A credible Ranker top-50 placement may modify that baseline; Ranker 51-70 is ignored.
+// Missing Ranker never becomes zero and never penalizes a retired QB with a valid PFR rank.
+// Current/incomplete careers and PFR-missing identities are resolved only by the explicit audit below.
 const NFL_QB_SOURCE_SNAPSHOT: Readonly<Record<string, QbSourceSnapshot>> = {
   "tom-brady": { pfrRank: 1, rankerRank: 1 },
   "peyton-manning": { pfrRank: 2, rankerRank: 2 },
@@ -154,8 +168,7 @@ const NFL_QB_SOURCE_SNAPSHOT: Readonly<Record<string, QbSourceSnapshot>> = {
 };
 
 // Explicit manual audit placement for the exact 122-QB runtime pool. This is not an automatic
-// fallback or a second formula. A player reaches this order only when a source is missing or a
-// career is active/incomplete, and the placement is the human review decision for this snapshot.
+// fallback or a second formula. It is consulted only for current/incomplete careers or PFR-missing identities.
 export const NFL_QB_MANUAL_AUDIT_ORDER = [
   "tom-brady",
   "peyton-manning",
