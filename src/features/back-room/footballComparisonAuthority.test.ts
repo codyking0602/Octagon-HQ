@@ -4,6 +4,7 @@ import {
   footballComparisonEligibilityQuery,
   footballDeepPlayerComparisonPackIds,
 } from "./footballComparisonAuthority";
+import { NFL_QB_MANUAL_AUDIT_ORDER } from "./footballHistoricalConsensus";
 import { FOOTBALL_RANKING_FRAMEWORK_VERSION } from "./footballRankingFramework";
 import {
   footballRankFivePacks,
@@ -87,6 +88,12 @@ describe("Football deep comparison authority", () => {
     }
   });
 
+  it("uses the exact 122 canonical QB audit identities after the canonical fact gate", () => {
+    const pool = buildFootballComparisonCandidatePool("nfl-quarterbacks", getFootballRankFivePack("nfl-quarterbacks").items);
+    expect(pool).toHaveLength(122);
+    expect(new Set(pool.map((candidate) => candidate.canonicalSubjectId))).toEqual(new Set(NFL_QB_MANUAL_AUDIT_ORDER));
+  });
+
   it("eliminates the four-profile WR-style bottleneck at the comparison authority", () => {
     const reviewed = getFootballRankFivePack("nfl-wide-receivers");
     const pool = buildFootballComparisonCandidatePool("nfl-wide-receivers", reviewed.items);
@@ -130,7 +137,7 @@ describe("Football deep comparison authority", () => {
     expect(sameSubject?.rankingConfidence).toBe(target?.rankingConfidence);
   });
 
-  it("keeps historically accomplished generated QBs above ordinary starter depth", () => {
+  it("keeps historically accomplished generated QBs above an ordinary reviewed starter", () => {
     const packId = "nfl-quarterbacks" as const;
     const reviewed = getFootballRankFivePack(packId).items;
     const pool = buildFootballComparisonCandidatePool(packId, reviewed);
@@ -143,7 +150,7 @@ describe("Football deep comparison authority", () => {
     expect(andyDalton).toBeDefined();
     expect(steveMcNair?.evaluationSource).toBe("historical-consensus");
     expect(joeNamath?.evaluationSource).toBe("historical-consensus");
-    expect(andyDalton?.evaluationSource).toBe("historical-consensus");
+    expect(andyDalton?.evaluationSource).toBe("reviewed");
     expect(steveMcNair?.rating).toBeGreaterThan(andyDalton!.rating);
     expect(joeNamath?.rating).toBeGreaterThan(andyDalton!.rating);
     expect(steveMcNair?.factMetricIds.length).toBeGreaterThanOrEqual(3);
