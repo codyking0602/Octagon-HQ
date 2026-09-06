@@ -2,37 +2,32 @@ import {
   seededLineupRandom,
   shuffleLineup,
 } from "../play/lineupModel";
-import {
-  getFootballRatingBand,
-  type FootballRatingBand,
-} from "./footballContentContract";
+import { getFootballRatingBand } from "./footballContentContract";
 import {
   footballGreatnessTierForItem,
-  footballGreatnessTierLabel,
+  footballGreatnessTiersForCategory,
   type FootballGreatnessTier,
 } from "./footballGreatnessTier";
 import { footballComparisonItemsConflict } from "./footballProgramEraComparisonReadiness";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
 
-export type FootballComparisonTierId = FootballRatingBand;
+export type FootballComparisonTierId = FootballGreatnessTier;
 export type FootballBlindRankArchetypeId =
-  | "balanced"
-  | "top-heavy"
-  | "bottom-heavy"
-  | "middle-cluster"
-  | "chaos";
-export type FootballKeepCutBoardStyleId =
+  | "wild-card"
+  | "loaded"
+  | "middle-maze"
+  | "top-bottom"
   | "knife-edge"
-  | "messy-middle"
-  | "one-superstar"
-  | "bottom-grind"
-  | "classic-spread";
+  | "ladder";
+export type FootballKeepCutBoardStyleId = FootballBlindRankArchetypeId;
 
 export interface FootballBlindRankArchetype {
   id: FootballBlindRankArchetypeId;
   name: string;
   weight: number;
+  /** Compatibility only. Board targets are derived from the category's canonical tier ladder. */
   targets: readonly FootballComparisonTierId[];
+  /** Compatibility only. Football board shape is tier-based, never rating-range based. */
   minRange: number;
 }
 
@@ -47,6 +42,7 @@ export interface FootballKeepCutBoardStyle {
   id: FootballKeepCutBoardStyleId;
   name: string;
   weight: number;
+  /** Compatibility only. Board targets are derived from the category's canonical tier ladder. */
   targets: readonly FootballComparisonTierId[];
 }
 
@@ -55,175 +51,84 @@ export interface FootballKeepCutBoard {
   style: FootballKeepCutBoardStyleId;
   badItems: number;
   eliteItems: number;
+  /** Canonical tier distance between fourth and fifth place; zero means a tied cutoff tier. */
   cutoffGap: number;
   distinctTiers: number;
   attemptsUsed: number;
 }
 
-interface RatingWindow {
-  minPercentile: number;
-  maxPercentile: number;
-}
+type RecognizabilityTier = "A" | "B" | "C" | "D";
+type BoardKind = "blind-rank" | "keep-cut";
 
-type KeepCutCandidate = Omit<FootballKeepCutBoard, "style" | "attemptsUsed"> & { attempt: number };
-
-const TIER_ORDER: readonly FootballComparisonTierId[] = [
-  "elite",
-  "great",
-  "good",
-  "average",
-  "below-average",
-  "bad",
-];
 const BLIND_RANK_BOARD_SIZE = 5;
-const BLIND_RANK_COMPACT_POOL_MAX = 75;
 const KEEP_CUT_BOARD_SIZE = 8;
 const KEEP_COUNT = 4;
-const MAX_BLIND_RANK_BAD = 1;
-const MAX_KEEP_CUT_BAD = 2;
-const DEFAULT_MAX_KEEP_CUT_ELITE = 2;
-const MAX_KEEP_CUT_CUTOFF_GAP = 8;
-const TIGHT_KEEP_CUT_CUTOFF_GAP = 4;
-const BLIND_RANK_ATTEMPTS = 120;
-const BLIND_RANK_SPARSE_EXACT_POOL_MAX = 20;
-const KEEP_CUT_ATTEMPTS = 180;
-const KEEP_CUT_TIGHT_CANDIDATES = 12;
-const KEEP_CUT_SMALL_POOL_CANDIDATES = 36;
-const KEEP_CUT_SMALL_POOL_MAX = KEEP_CUT_BOARD_SIZE * 2;
+const MAX_ATTEMPTS = 160;
+const RELAX_AFTER_ATTEMPT = 112;
 
-const TARGET_WINDOWS: Record<FootballComparisonTierId, RatingWindow> = {
-  elite: { minPercentile: 0, maxPercentile: 0.34 },
-  great: { minPercentile: 0.04, maxPercentile: 0.5 },
-  good: { minPercentile: 0.16, maxPercentile: 0.68 },
-  average: { minPercentile: 0.32, maxPercentile: 0.84 },
-  "below-average": { minPercentile: 0.48, maxPercentile: 0.96 },
-  bad: { minPercentile: 0.64, maxPercentile: 1 },
-};
+const EMPTY_TARGETS: readonly FootballComparisonTierId[] = [];
 
 export const FOOTBALL_BLIND_RANK_ARCHETYPES: readonly FootballBlindRankArchetype[] = [
-  {
-    id: "balanced",
-    name: "Balanced",
-    weight: 0.1,
-    targets: ["elite", "great", "good", "average", "below-average"],
-    minRange: 32,
-  },
-  {
-    id: "top-heavy",
-    name: "Top-heavy",
-    weight: 0.1,
-    targets: ["elite", "elite", "great", "good", "average"],
-    minRange: 18,
-  },
-  {
-    id: "bottom-heavy",
-    name: "Bottom-heavy",
-    weight: 0.12,
-    targets: ["great", "average", "below-average", "below-average", "bad"],
-    minRange: 24,
-  },
-  {
-    id: "middle-cluster",
-    name: "Middle cluster",
-    weight: 0.18,
-    targets: ["great", "good", "good", "average", "average"],
-    minRange: 8,
-  },
-  {
-    id: "chaos",
-    name: "Chaos",
-    weight: 0.5,
-    targets: ["elite", "good", "average", "below-average", "bad"],
-    minRange: 45,
-  },
+  { id: "wild-card", name: "Wild Card", weight: 0.35, targets: EMPTY_TARGETS, minRange: 0 },
+  { id: "loaded", name: "Loaded", weight: 0.15, targets: EMPTY_TARGETS, minRange: 0 },
+  { id: "middle-maze", name: "Middle Maze", weight: 0.15, targets: EMPTY_TARGETS, minRange: 0 },
+  { id: "top-bottom", name: "Top + Bottom", weight: 0.10, targets: EMPTY_TARGETS, minRange: 0 },
+  { id: "knife-edge", name: "Knife Edge", weight: 0.15, targets: EMPTY_TARGETS, minRange: 0 },
+  { id: "ladder", name: "Ladder", weight: 0.10, targets: EMPTY_TARGETS, minRange: 0 },
 ] as const;
 
 export const FOOTBALL_KEEP_CUT_BOARD_STYLES: readonly FootballKeepCutBoardStyle[] = [
-  {
-    id: "knife-edge",
-    name: "Knife Edge",
-    weight: 0.4,
-    targets: ["great", "good", "good", "good", "average", "average", "average", "below-average"],
-  },
-  {
-    id: "messy-middle",
-    name: "Messy Middle",
-    weight: 0.3,
-    targets: ["great", "good", "good", "average", "average", "average", "below-average", "below-average"],
-  },
-  {
-    id: "one-superstar",
-    name: "One Superstar",
-    weight: 0.15,
-    targets: ["elite", "good", "good", "average", "average", "average", "below-average", "below-average"],
-  },
-  {
-    id: "bottom-grind",
-    name: "Bottom Grind",
-    weight: 0.1,
-    targets: ["good", "average", "average", "average", "below-average", "below-average", "below-average", "bad"],
-  },
-  {
-    id: "classic-spread",
-    name: "Classic Spread",
-    weight: 0.05,
-    targets: ["elite", "great", "good", "average", "average", "below-average", "below-average", "bad"],
-  },
+  { id: "wild-card", name: "Wild Card", weight: 0.30, targets: EMPTY_TARGETS },
+  { id: "loaded", name: "Loaded", weight: 0.15, targets: EMPTY_TARGETS },
+  { id: "middle-maze", name: "Middle Maze", weight: 0.15, targets: EMPTY_TARGETS },
+  { id: "top-bottom", name: "Top + Bottom", weight: 0.15, targets: EMPTY_TARGETS },
+  { id: "knife-edge", name: "Knife Edge", weight: 0.20, targets: EMPTY_TARGETS },
+  { id: "ladder", name: "Ladder", weight: 0.05, targets: EMPTY_TARGETS },
 ] as const;
-
-function comparisonTierForGreatness(tier: FootballGreatnessTier): FootballComparisonTierId {
-  switch (tier) {
-    case "goat":
-    case "legendary":
-    case "elite":
-      return "elite";
-    case "near-elite":
-    case "great":
-      return "great";
-    case "good":
-    case "average":
-    case "below-average":
-    case "bad":
-      return tier;
-  }
-}
 
 export function footballComparisonTier(itemOrRating: FootballRankFiveItem | number): FootballComparisonTierId {
   return typeof itemOrRating === "number"
     ? getFootballRatingBand(itemOrRating)
-    : comparisonTierForGreatness(footballGreatnessTierForItem(itemOrRating));
+    : footballGreatnessTierForItem(itemOrRating);
 }
 
-function sortedPool(items: readonly FootballRankFiveItem[]) {
-  return [...items].sort((left, right) => right.rating - left.rating || left.id.localeCompare(right.id));
+function availableTiers(items: readonly FootballRankFiveItem[]) {
+  return footballGreatnessTiersForCategory(items);
 }
 
-function percentileById(items: readonly FootballRankFiveItem[]) {
-  const ordered = sortedPool(items);
-  const denominator = Math.max(1, ordered.length - 1);
-  return new Map(ordered.map((item, index) => [item.id, index / denominator]));
+function tierIndexForItem(item: FootballRankFiveItem, tiers: readonly FootballGreatnessTier[]) {
+  return tiers.indexOf(footballGreatnessTierForItem(item));
 }
 
-function tierDistance(left: FootballComparisonTierId, right: FootballComparisonTierId) {
-  return Math.abs(TIER_ORDER.indexOf(left) - TIER_ORDER.indexOf(right));
+function tierCounts(items: readonly FootballRankFiveItem[]) {
+  const counts = new Map<FootballGreatnessTier, number>();
+  for (const item of items) {
+    const tier = footballGreatnessTierForItem(item);
+    counts.set(tier, (counts.get(tier) ?? 0) + 1);
+  }
+  return counts;
 }
 
-function availableTierCount(items: readonly FootballRankFiveItem[], tier: FootballComparisonTierId) {
-  return items.filter((item) => footballComparisonTier(item) === tier).length;
+function recognizabilityTier(item: FootballRankFiveItem): RecognizabilityTier | null {
+  const value = (item as FootballRankFiveItem & { recognizabilityTier?: unknown }).recognizabilityTier;
+  return value === "A" || value === "B" || value === "C" || value === "D" ? value : null;
 }
 
-function repeatableTierCount(items: readonly FootballRankFiveItem[], tier: FootballComparisonTierId) {
-  const minimumDepth = Math.max(3, Math.ceil(items.length * 0.1));
-  return availableTierCount(items, tier) >= minimumDepth ? 1 : 0;
+function highlyRecognizable(item: FootballRankFiveItem) {
+  const tier = recognizabilityTier(item);
+  return tier === "A" || tier === "B";
 }
 
-export function footballKeepCutRequiredDistinctTiers(items: readonly FootballRankFiveItem[]) {
-  const availableTiers = new Set(items.map(footballComparisonTier)).size;
-  const repeatableTiers = TIER_ORDER.reduce(
-    (sum, tier) => sum + repeatableTierCount(items, tier),
-    0,
-  );
-  return Math.min(3, availableTiers, Math.max(2, repeatableTiers));
+function boardRecognizabilityIsHealthy(
+  board: readonly FootballRankFiveItem[],
+  pool: readonly FootballRankFiveItem[],
+  boardKind: BoardKind,
+) {
+  const requestedMinimum = boardKind === "blind-rank" ? 2 : 3;
+  const healthyPool = pool.length >= board.length * 2;
+  const recognizablePool = pool.filter(highlyRecognizable).length;
+  if (!healthyPool || recognizablePool < requestedMinimum) return true;
+  return board.filter(highlyRecognizable).length >= requestedMinimum;
 }
 
 function markComparisonItemUsed(
@@ -234,189 +139,235 @@ function markComparisonItemUsed(
 ) {
   used.add(picked.id);
   for (const candidate of items) {
-    if (footballComparisonItemsConflict(scopeId, picked, candidate)) {
-      used.add(candidate.id);
-    }
+    if (footballComparisonItemsConflict(scopeId, picked, candidate)) used.add(candidate.id);
   }
 }
 
-function selectionCandidates(
+function randomIndex(random: () => number, length: number) {
+  return Math.min(length - 1, Math.floor(random() * length));
+}
+
+function clampTierIndex(index: number, tierCount: number) {
+  return Math.max(0, Math.min(tierCount - 1, index));
+}
+
+function bandIndices(tierCount: number) {
+  const topEnd = Math.max(0, Math.ceil(tierCount / 3) - 1);
+  const bottomStart = Math.min(tierCount - 1, Math.floor((tierCount * 2) / 3));
+  const middleStart = Math.min(tierCount - 1, Math.floor(tierCount * 0.25));
+  const middleEnd = Math.max(middleStart, Math.ceil(tierCount * 0.75) - 1);
+  return { topEnd, bottomStart, middleStart, middleEnd };
+}
+
+function randomInRange(random: () => number, min: number, max: number) {
+  if (max <= min) return min;
+  return min + randomIndex(random, max - min + 1);
+}
+
+function ladderTargets(size: number, tierCount: number) {
+  if (size <= 1 || tierCount <= 1) return Array.from({ length: size }, () => 0);
+  return Array.from({ length: size }, (_, index) => (
+    Math.round((index * (tierCount - 1)) / (size - 1))
+  ));
+}
+
+function blindRankTargets(
+  style: FootballBlindRankArchetypeId,
+  tierCount: number,
+  random: () => number,
+) {
+  const { topEnd, bottomStart, middleStart, middleEnd } = bandIndices(tierCount);
+  switch (style) {
+    case "wild-card":
+      return Array.from({ length: BLIND_RANK_BOARD_SIZE }, () => randomIndex(random, tierCount));
+    case "loaded":
+      return [
+        randomInRange(random, 0, topEnd),
+        randomInRange(random, 0, topEnd),
+        randomInRange(random, 0, topEnd),
+        randomInRange(random, 0, Math.max(topEnd, middleEnd)),
+        randomIndex(random, tierCount),
+      ];
+    case "middle-maze":
+      return [
+        randomInRange(random, middleStart, middleEnd),
+        randomInRange(random, middleStart, middleEnd),
+        randomInRange(random, middleStart, middleEnd),
+        randomInRange(random, middleStart, middleEnd),
+        randomInRange(random, Math.max(0, middleStart - 1), Math.min(tierCount - 1, middleEnd + 1)),
+      ];
+    case "top-bottom":
+      return [
+        randomInRange(random, 0, topEnd),
+        randomInRange(random, 0, topEnd),
+        randomIndex(random, tierCount),
+        randomInRange(random, bottomStart, tierCount - 1),
+        randomInRange(random, bottomStart, tierCount - 1),
+      ];
+    case "knife-edge": {
+      if (tierCount <= 1) return [0, 0, 0, 0, 0];
+      const anchor = randomInRange(random, 0, tierCount - 2);
+      const outside = anchor + 2 < tierCount ? anchor + 2 : Math.max(0, anchor - 1);
+      return [anchor, anchor, anchor + 1, anchor + 1, outside];
+    }
+    case "ladder":
+      return ladderTargets(BLIND_RANK_BOARD_SIZE, tierCount);
+  }
+}
+
+function keepCutTargets(
+  style: FootballKeepCutBoardStyleId,
+  tierCount: number,
+  random: () => number,
+) {
+  const { topEnd, bottomStart, middleStart, middleEnd } = bandIndices(tierCount);
+  switch (style) {
+    case "wild-card":
+      return Array.from({ length: KEEP_CUT_BOARD_SIZE }, () => randomIndex(random, tierCount));
+    case "loaded":
+      return Array.from({ length: KEEP_CUT_BOARD_SIZE }, (_, index) => (
+        index < 6
+          ? randomInRange(random, 0, Math.max(topEnd, Math.min(middleStart, tierCount - 1)))
+          : randomIndex(random, tierCount)
+      ));
+    case "middle-maze":
+      return Array.from({ length: KEEP_CUT_BOARD_SIZE }, (_, index) => (
+        index < 6
+          ? randomInRange(random, middleStart, middleEnd)
+          : randomInRange(random, Math.max(0, middleStart - 1), Math.min(tierCount - 1, middleEnd + 1))
+      ));
+    case "top-bottom":
+      return [
+        randomInRange(random, 0, topEnd),
+        randomInRange(random, 0, topEnd),
+        randomInRange(random, 0, topEnd),
+        randomInRange(random, 0, topEnd),
+        randomInRange(random, bottomStart, tierCount - 1),
+        randomInRange(random, bottomStart, tierCount - 1),
+        randomInRange(random, bottomStart, tierCount - 1),
+        randomInRange(random, bottomStart, tierCount - 1),
+      ];
+    case "knife-edge": {
+      if (tierCount <= 1) return Array.from({ length: KEEP_CUT_BOARD_SIZE }, () => 0);
+      const anchor = tierCount === 2 ? 1 : randomInRange(random, 1, tierCount - 2);
+      const above = Math.max(0, anchor - 1);
+      const below = Math.min(tierCount - 1, anchor + 1);
+      // Two above + four tied at the boundary + two below puts fourth/fifth inside the same canonical tier.
+      return [above, above, anchor, anchor, anchor, anchor, below, below];
+    }
+    case "ladder":
+      return ladderTargets(KEEP_CUT_BOARD_SIZE, tierCount);
+  }
+}
+
+function chooseNearestCandidate(
   pool: readonly FootballRankFiveItem[],
-  targetTier: FootballComparisonTierId,
+  tiers: readonly FootballGreatnessTier[],
+  targetTierIndex: number,
   used: ReadonlySet<string>,
-  eliteCount: number,
-  maxElite: number,
-  badCount: number,
-  maxBad: number,
-  forceAbsoluteTier: boolean,
-  includeSparseExact: boolean,
-  broadenPool: boolean,
+  selectedTierCounts: ReadonlyMap<FootballGreatnessTier, number>,
+  maxPerTier: number,
+  random: () => number,
 ) {
   const eligible = pool.filter((item) => {
     if (used.has(item.id)) return false;
-    const tier = footballComparisonTier(item);
-    if (tier === "elite" && eliteCount >= maxElite) return false;
-    if (tier === "bad" && badCount >= maxBad) return false;
-    return true;
+    const tier = footballGreatnessTierForItem(item);
+    return (selectedTierCounts.get(tier) ?? 0) < maxPerTier;
   });
-  const exact = eligible.filter((item) => footballComparisonTier(item) === targetTier);
-  if (forceAbsoluteTier) return exact;
+  if (!eligible.length) return null;
 
-  const percentiles = percentileById(pool);
-  const window = TARGET_WINDOWS[targetTier];
-  const inWindow = eligible.filter((item) => {
-    const percentile = percentiles.get(item.id) ?? 0.5;
-    return percentile >= window.minPercentile && percentile <= window.maxPercentile;
-  });
-  const exactDepth = availableTierCount(pool, targetTier);
-  const minimumExactDepth = Math.max(2, Math.ceil(pool.length * 0.08));
-  const broadened = broadenPool && targetTier !== "bad"
-    ? eligible.filter((item) => footballComparisonTier(item) !== "bad")
-    : [];
-  const combined = [
-    ...(includeSparseExact || exactDepth >= minimumExactDepth ? exact : []),
-    ...inWindow,
-    ...broadened,
-  ].filter((item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index);
-  if (combined.length) return combined;
-  if (exact.length) return exact;
-  if (!eligible.length) return [];
-
+  const target = clampTierIndex(targetTierIndex, tiers.length);
   const minimumDistance = Math.min(...eligible.map((item) => (
-    tierDistance(footballComparisonTier(item), targetTier)
+    Math.abs(tierIndexForItem(item, tiers) - target)
   )));
-  return eligible.filter((item) => tierDistance(footballComparisonTier(item), targetTier) === minimumDistance);
-}
-
-function chooseItem(
-  pool: readonly FootballRankFiveItem[],
-  targetTier: FootballComparisonTierId,
-  used: ReadonlySet<string>,
-  eliteCount: number,
-  maxElite: number,
-  badCount: number,
-  maxBad: number,
-  random: () => number,
-  forceAbsoluteTier = false,
-  includeSparseExact = true,
-  broadenPool = false,
-) {
-  return shuffleLineup(
-    selectionCandidates(
-      pool,
-      targetTier,
-      used,
-      eliteCount,
-      maxElite,
-      badCount,
-      maxBad,
-      forceAbsoluteTier,
-      includeSparseExact,
-      broadenPool,
-    ),
-    random,
-  )[0] ?? null;
-}
-
-function sustainablePoolRange(items: readonly FootballRankFiveItem[]) {
-  const ordered = sortedPool(items);
-  const highIndex = Math.round((ordered.length - 1) * 0.3);
-  const lowIndex = Math.round((ordered.length - 1) * 0.7);
-  return Math.max(1, ordered[highIndex]!.rating - ordered[lowIndex]!.rating);
-}
-
-function requiredBlindRankRange(
-  items: readonly FootballRankFiveItem[],
-  archetype: FootballBlindRankArchetype,
-) {
-  const reachable = archetype.targets.flatMap((targetTier) => selectionCandidates(
-    items,
-    targetTier,
-    new Set<string>(),
-    0,
-    BLIND_RANK_BOARD_SIZE,
-    0,
-    MAX_BLIND_RANK_BAD,
-    false,
-    false,
-    false,
+  const nearest = eligible.filter((item) => (
+    Math.abs(tierIndexForItem(item, tiers) - target) === minimumDistance
   ));
-  const uniqueReachable = reachable.filter(
-    (item, index, rows) => rows.findIndex((candidate) => candidate.id === item.id) === index,
-  );
-  const orderedRatings = [...new Set(uniqueReachable.map((item) => item.rating))]
-    .sort((left, right) => right - left);
-  const reachableRange = orderedRatings.length > 1
-    ? orderedRatings[0]! - orderedRatings.at(-1)!
-    : 1;
-  const endpointTrimmedRange = orderedRatings.length >= 4
-    ? orderedRatings[1]! - orderedRatings.at(-2)!
-    : reachableRange;
-  const repeatableReach = Math.max(
-    1,
-    Math.min(Math.floor(reachableRange * 0.85), endpointTrimmedRange),
-  );
-  return Math.min(archetype.minRange, repeatableReach, sustainablePoolRange(items));
+  return shuffleLineup(nearest, random)[0] ?? null;
 }
 
-export function footballBlindRankArchetypeForSeed(scopeId: string, seed: string) {
-  const random = seededLineupRandom("football-rank-five", "archetype", scopeId, seed);
-  let cursor = random();
-  for (const archetype of FOOTBALL_BLIND_RANK_ARCHETYPES) {
-    cursor -= archetype.weight;
-    if (cursor <= 0) return archetype;
-  }
-  return FOOTBALL_BLIND_RANK_ARCHETYPES.at(-1)!;
-}
-
-function attemptBlindRankBoard(
+function attemptBoard(
   items: readonly FootballRankFiveItem[],
+  tiers: readonly FootballGreatnessTier[],
   scopeId: string,
   seed: string,
-  archetype: FootballBlindRankArchetype,
+  style: FootballBlindRankArchetypeId,
+  boardKind: BoardKind,
   attempt: number,
 ) {
-  const random = seededLineupRandom("football-rank-five", scopeId, seed, archetype.id, attempt);
+  const boardSize = boardKind === "blind-rank" ? BLIND_RANK_BOARD_SIZE : KEEP_CUT_BOARD_SIZE;
+  const compositionRandom = seededLineupRandom(
+    boardKind === "blind-rank" ? "football-rank-five" : "football-keep-cut",
+    "composition",
+    scopeId,
+    seed,
+    style,
+    attempt,
+  );
+  const requestedTargets = boardKind === "blind-rank"
+    ? blindRankTargets(style, tiers.length, compositionRandom)
+    : keepCutTargets(style, tiers.length, compositionRandom);
+  const targets = shuffleLineup(requestedTargets, compositionRandom);
+  const healthyTierDepth = tiers.length >= 3 && items.length >= boardSize * 2;
+  const relaxed = attempt >= RELAX_AFTER_ATTEMPT;
+  const maxPerTier = boardKind === "blind-rank"
+    ? healthyTierDepth && !relaxed ? 2 : boardSize - 1
+    : style === "knife-edge" ? 4 : healthyTierDepth && !relaxed ? 4 : boardSize - 1;
   const used = new Set<string>();
   const selected: FootballRankFiveItem[] = [];
-  let eliteCount = 0;
-  let badCount = 0;
-  const targets = shuffleLineup([...archetype.targets], random);
-  const includeSparseExact = items.length <= BLIND_RANK_SPARSE_EXACT_POOL_MAX;
-  const broadenPool = items.length <= BLIND_RANK_COMPACT_POOL_MAX;
+  const selectedTierCounts = new Map<FootballGreatnessTier, number>();
 
-  for (const targetTier of targets) {
-    const forceAbsoluteTier = (
-      targetTier === "bad"
-      && availableTierCount(items, "bad") >= 2
-      && random() < 0.72
-    );
-    const picked = chooseItem(
+  for (const target of targets) {
+    const picked = chooseNearestCandidate(
       items,
-      targetTier,
+      tiers,
+      target,
       used,
-      eliteCount,
-      BLIND_RANK_BOARD_SIZE,
-      badCount,
-      MAX_BLIND_RANK_BAD,
-      random,
-      forceAbsoluteTier,
-      includeSparseExact,
-      broadenPool,
+      selectedTierCounts,
+      maxPerTier,
+      compositionRandom,
     );
     if (!picked) return null;
     selected.push(picked);
+    const tier = footballGreatnessTierForItem(picked);
+    selectedTierCounts.set(tier, (selectedTierCounts.get(tier) ?? 0) + 1);
     markComparisonItemUsed(used, items, scopeId, picked);
-    eliteCount += footballComparisonTier(picked) === "elite" ? 1 : 0;
-    badCount += footballComparisonTier(picked) === "bad" ? 1 : 0;
   }
 
-  const ratings = selected.map((item) => item.rating);
-  if (Math.max(...ratings) - Math.min(...ratings) < requiredBlindRankRange(items, archetype)) return null;
-  return {
-    items: shuffleLineup(selected, random),
-    badItems: badCount,
-  };
+  if (selected.length !== boardSize || new Set(selected.map((item) => item.id)).size !== boardSize) return null;
+  const distinctTiers = selectedTierCounts.size;
+  if (boardKind === "blind-rank" && tiers.length > 1 && distinctTiers < 2) return null;
+  if (boardKind === "keep-cut" && tiers.length >= 3 && style !== "knife-edge" && distinctTiers < 2) return null;
+  if (!boardRecognizabilityIsHealthy(selected, items, boardKind) && !relaxed) return null;
+
+  const revealRandom = seededLineupRandom(
+    boardKind === "blind-rank" ? "football-rank-five" : "football-keep-cut",
+    "reveal-order",
+    scopeId,
+    seed,
+    style,
+    attempt,
+  );
+  return shuffleLineup(selected, revealRandom);
+}
+
+function weightedStyleForSeed<T extends { weight: number }>(
+  rows: readonly T[],
+  random: () => number,
+) {
+  let cursor = random();
+  for (const row of rows) {
+    cursor -= row.weight;
+    if (cursor <= 0) return row;
+  }
+  return rows.at(-1)!;
+}
+
+export function footballBlindRankArchetypeForSeed(scopeId: string, seed: string) {
+  return weightedStyleForSeed(
+    FOOTBALL_BLIND_RANK_ARCHETYPES,
+    seededLineupRandom("football-rank-five", "archetype", scopeId, seed),
+  );
 }
 
 export function buildFootballBlindRankBoard(
@@ -428,320 +379,53 @@ export function buildFootballBlindRankBoard(
   if (items.length < BLIND_RANK_BOARD_SIZE) {
     throw new Error(`Football Blind Rank needs at least ${BLIND_RANK_BOARD_SIZE} comparison subjects.`);
   }
+  const tiers = availableTiers(items);
+  if (!tiers.length) throw new Error(`Football Blind Rank has no canonical greatness tiers for ${scopeId}.`);
   const archetype = requestedArchetypeId
     ? FOOTBALL_BLIND_RANK_ARCHETYPES.find((row) => row.id === requestedArchetypeId)
     : footballBlindRankArchetypeForSeed(scopeId, seed);
   if (!archetype) throw new Error(`Unsupported Football Blind Rank archetype: ${String(requestedArchetypeId)}`);
 
-  for (let attempt = 0; attempt < BLIND_RANK_ATTEMPTS; attempt += 1) {
-    const board = attemptBlindRankBoard(items, scopeId, seed, archetype, attempt);
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
+    const board = attemptBoard(items, tiers, scopeId, seed, archetype.id, "blind-rank", attempt);
     if (!board) continue;
     return {
-      ...board,
+      items: board,
       archetype: archetype.id,
+      badItems: board.filter((item) => footballGreatnessTierForItem(item) === "bad").length,
       attemptsUsed: attempt + 1,
     };
   }
-
   throw new Error(`Football Blind Rank could not build a ${archetype.name} five-subject board for ${scopeId}.`);
 }
 
 export function footballKeepCutBoardStyleForSeed(scopeId: string, seed: string) {
-  const random = seededLineupRandom("football-keep-cut", "board-style", scopeId, seed);
-  let cursor = random();
-  for (const style of FOOTBALL_KEEP_CUT_BOARD_STYLES) {
-    cursor -= style.weight;
-    if (cursor <= 0) return style;
-  }
-  return FOOTBALL_KEEP_CUT_BOARD_STYLES.at(-1)!;
+  return weightedStyleForSeed(
+    FOOTBALL_KEEP_CUT_BOARD_STYLES,
+    seededLineupRandom("football-keep-cut", "board-style", scopeId, seed),
+  );
 }
 
-function minimumCompetitiveEliteCount(items: readonly FootballRankFiveItem[]) {
-  const elite = items.filter((item) => footballComparisonTier(item) === "elite");
-  if (elite.length < KEEP_COUNT) return 0;
-  const nonElite = sortedPool(items.filter((item) => footballComparisonTier(item) !== "elite"));
-  const hasTightNonElitePair = nonElite.some((item, index) => (
-    index > 0 && Math.abs(nonElite[index - 1]!.rating - item.rating) <= MAX_KEEP_CUT_CUTOFF_GAP
-  ));
-  if (hasTightNonElitePair || !nonElite.length) return 0;
-  const highestNonElite = nonElite[0]!.rating;
-  const hasEliteBridge = elite.some((item) => (
-    Math.abs(item.rating - highestNonElite) <= MAX_KEEP_CUT_CUTOFF_GAP
-  ));
-  return hasEliteBridge ? KEEP_COUNT : 0;
+export function footballKeepCutRequiredDistinctTiers(items: readonly FootballRankFiveItem[]) {
+  const count = availableTiers(items).length;
+  if (count <= 1) return count;
+  return Math.min(3, count);
 }
 
-function minimumProportionalEliteCount(items: readonly FootballRankFiveItem[]) {
-  const availableElite = availableTierCount(items, "elite");
-  const eliteShare = availableElite / items.length;
-  if (eliteShare < 0.5) return 0;
-  return Math.min(availableElite, Math.round(KEEP_CUT_BOARD_SIZE * eliteShare));
-}
-
+/** Compatibility export now expressed only in canonical-tier terms. */
 export function footballKeepCutEliteCap(items: readonly FootballRankFiveItem[]) {
-  const availableElite = availableTierCount(items, "elite");
-  const availableBad = availableTierCount(items, "bad");
-  const nonExtremeCount = items.length - availableElite - availableBad;
-  const minimumRequiredElite = Math.max(
-    minimumCompetitiveEliteCount(items),
-    minimumProportionalEliteCount(items),
-    KEEP_CUT_BOARD_SIZE - nonExtremeCount - Math.min(availableBad, MAX_KEEP_CUT_BAD),
-    0,
-  );
-  return Math.max(DEFAULT_MAX_KEEP_CUT_ELITE, minimumRequiredElite);
+  const tiers = availableTiers(items);
+  if (!tiers.length) return 0;
+  const topTier = tiers[0]!;
+  const availableTopTier = items.filter((item) => footballGreatnessTierForItem(item) === topTier).length;
+  return Math.min(4, availableTopTier);
 }
 
-function desiredEliteCount(
-  styleId: FootballKeepCutBoardStyleId,
-  availableElite: number,
-  minimumRequiredElite: number,
-  eliteCap: number,
-  random: () => number,
-) {
-  if (availableElite <= 0) return 0;
-  const roll = random();
-  let requested = 0;
-  switch (styleId) {
-    case "knife-edge":
-      requested = roll < 0.125 ? 2 : roll < 0.375 ? 1 : 0;
-      break;
-    case "messy-middle":
-      requested = roll < (1 / 6) ? 1 : 0;
-      break;
-    case "one-superstar":
-    case "classic-spread":
-      requested = 1;
-      break;
-    case "bottom-grind":
-      requested = 0;
-      break;
-  }
-  if (minimumRequiredElite === 0 && requested > 0 && availableElite === 1 && random() >= 0.55) {
-    requested = 0;
-  }
-  return Math.min(availableElite, eliteCap, Math.max(minimumRequiredElite, requested));
-}
-
-function desiredBadCount(
-  styleId: FootballKeepCutBoardStyleId,
-  availableBad: number,
-  random: () => number,
-) {
-  if (availableBad <= 0) return 0;
-  const depthScale = Math.min(1, availableBad / 2);
-  const roll = random();
-  switch (styleId) {
-    case "knife-edge":
-      return roll < 0.15 * depthScale ? 1 : 0;
-    case "messy-middle":
-      return roll < 0.45 * depthScale ? 1 : 0;
-    case "one-superstar":
-      return roll < 0.35 * depthScale ? 1 : 0;
-    case "bottom-grind":
-      return availableBad >= 2 ? 2 : 1;
-    case "classic-spread":
-      return 1;
-  }
-}
-
-function replaceHighestTargets(
-  targets: FootballComparisonTierId[],
-  tier: FootballComparisonTierId,
-  count: number,
-) {
-  const already = targets.filter((target) => target === tier).length;
-  for (let index = 0; index < count - already; index += 1) {
-    const replaceAt = targets.findIndex((target) => target !== tier && target !== "bad");
-    if (replaceAt >= 0) targets[replaceAt] = tier;
-  }
-}
-
-function replaceLowestTargets(
-  targets: FootballComparisonTierId[],
-  tier: FootballComparisonTierId,
-  count: number,
-) {
-  const already = targets.filter((target) => target === tier).length;
-  for (let index = 0; index < count - already; index += 1) {
-    let replaceAt = -1;
-    for (let targetIndex = targets.length - 1; targetIndex >= 0; targetIndex -= 1) {
-      if (targets[targetIndex] !== tier && targets[targetIndex] !== "elite") {
-        replaceAt = targetIndex;
-        break;
-      }
-    }
-    if (replaceAt >= 0) targets[replaceAt] = tier;
-  }
-}
-
-function ensureReachableKeepCutTargets(
-  targets: FootballComparisonTierId[],
-  items: readonly FootballRankFiveItem[],
-  requiredDistinctTiers: number,
-) {
-  const targetedAvailableTiers = new Set(
-    targets.filter((tier) => availableTierCount(items, tier) > 0),
-  );
-  if (targetedAvailableTiers.size >= requiredDistinctTiers) return;
-
-  const missingRepeatableTiers = TIER_ORDER.filter((tier) => (
-    tier !== "elite"
-    && tier !== "bad"
-    && repeatableTierCount(items, tier) > 0
-    && !targetedAvailableTiers.has(tier)
-  ));
-
-  for (const missingTier of missingRepeatableTiers) {
-    if (targetedAvailableTiers.size >= requiredDistinctTiers) break;
-
-    let replaceAt = targets.findIndex((tier) => (
-      tier !== "elite"
-      && tier !== "bad"
-      && availableTierCount(items, tier) === 0
-    ));
-
-    if (replaceAt < 0) {
-      for (let targetIndex = targets.length - 1; targetIndex >= 0; targetIndex -= 1) {
-        const currentTier = targets[targetIndex]!;
-        if (currentTier === "elite" || currentTier === "bad") continue;
-        if (targets.filter((tier) => tier === currentTier).length > 1) {
-          replaceAt = targetIndex;
-          break;
-        }
-      }
-    }
-
-    if (replaceAt < 0) break;
-    targets[replaceAt] = missingTier;
-    targetedAvailableTiers.add(missingTier);
-  }
-}
-
-function alignSmallPoolTargets(
-  targets: FootballComparisonTierId[],
-  items: readonly FootballRankFiveItem[],
-) {
-  if (items.length > KEEP_CUT_SMALL_POOL_MAX) return;
-  const availableNonExtreme = TIER_ORDER.filter((tier) => (
-    tier !== "elite"
-    && tier !== "bad"
-    && availableTierCount(items, tier) > 0
-  ));
-  if (!availableNonExtreme.length) return;
-
-  for (let index = 0; index < targets.length; index += 1) {
-    const target = targets[index]!;
-    if (target === "elite" || target === "bad" || availableTierCount(items, target) > 0) continue;
-    const minimumDistance = Math.min(...availableNonExtreme.map((tier) => tierDistance(tier, target)));
-    const nearest = availableNonExtreme.find((tier) => tierDistance(tier, target) === minimumDistance);
-    if (nearest) targets[index] = nearest;
-  }
-}
-
-function keepCutProfileForSeed(
-  items: readonly FootballRankFiveItem[],
-  scopeId: string,
-  seed: string,
-  style: FootballKeepCutBoardStyle,
-) {
-  const random = seededLineupRandom("football-keep-cut", "board-profile", scopeId, seed, style.id);
-  const availableElite = availableTierCount(items, "elite");
-  const availableBad = availableTierCount(items, "bad");
-  const nonExtremeCount = items.length - availableElite - availableBad;
-  const minimumRequiredElite = Math.max(
-    minimumCompetitiveEliteCount(items),
-    minimumProportionalEliteCount(items),
-    KEEP_CUT_BOARD_SIZE - nonExtremeCount - Math.min(availableBad, MAX_KEEP_CUT_BAD),
-    0,
-  );
-  const eliteCap = footballKeepCutEliteCap(items);
-  let eliteCount = desiredEliteCount(
-    style.id,
-    availableElite,
-    minimumRequiredElite,
-    eliteCap,
-    random,
-  );
-  const minimumRequiredBad = Math.max(0, KEEP_CUT_BOARD_SIZE - nonExtremeCount - eliteCount);
-  let badCount = Math.min(
-    availableBad,
-    MAX_KEEP_CUT_BAD,
-    Math.max(minimumRequiredBad, desiredBadCount(style.id, availableBad, random)),
-  );
-  const requiredDistinctTiers = footballKeepCutRequiredDistinctTiers(items);
-  const nonExtremeTiers = TIER_ORDER
-    .filter((tier) => tier !== "elite" && tier !== "bad")
-    .reduce((sum, tier) => sum + repeatableTierCount(items, tier), 0);
-  let reachableTiers = nonExtremeTiers + Number(eliteCount > 0) + Number(badCount > 0);
-  const prefersBadTexture = style.id === "bottom-grind" || style.id === "classic-spread";
-
-  if (reachableTiers < requiredDistinctTiers && prefersBadTexture && badCount === 0 && availableBad > 0) {
-    badCount = 1;
-    reachableTiers += 1;
-  }
-  if (reachableTiers < requiredDistinctTiers && eliteCount === 0 && availableElite > 0) {
-    eliteCount = Math.min(1, eliteCap);
-    reachableTiers += Number(eliteCount > 0);
-  }
-  if (reachableTiers < requiredDistinctTiers && badCount === 0 && availableBad > 0) {
-    badCount = 1;
-  }
-
-  const targets = [...style.targets];
-
-  replaceHighestTargets(targets, "elite", eliteCount);
-  while (targets.filter((target) => target === "elite").length > eliteCount) {
-    const index = targets.lastIndexOf("elite");
-    targets[index] = style.id === "classic-spread" ? "great" : "good";
-  }
-
-  replaceLowestTargets(targets, "bad", badCount);
-  while (targets.filter((target) => target === "bad").length > badCount) {
-    const index = targets.indexOf("bad");
-    targets[index] = "below-average";
-  }
-
-  ensureReachableKeepCutTargets(targets, items, requiredDistinctTiers);
-  alignSmallPoolTargets(targets, items);
-
-  return { targets, eliteCount, badCount };
-}
-
-function countTier(items: readonly FootballRankFiveItem[], tier: FootballComparisonTierId) {
-  return items.filter((item) => footballComparisonTier(item) === tier).length;
-}
-
-function keepCutVisibleLowerTierClump(
-  items: readonly FootballRankFiveItem[],
-  categoryItems: readonly FootballRankFiveItem[],
-) {
-  let tierFour = 0;
-  let tierFive = 0;
-
-  for (const item of items) {
-    const label = footballGreatnessTierLabel(footballGreatnessTierForItem(item), categoryItems);
-    if (label === "TIER 4") tierFour += 1;
-    if (label === "TIER 5") tierFive += 1;
-  }
-
-  return Math.max(tierFour, tierFive);
-}
-
-function chooseKeepCutTextureCandidate(
-  candidates: readonly KeepCutCandidate[],
-  styleId: FootballKeepCutBoardStyleId,
-  random: () => number,
-  categoryItems: readonly FootballRankFiveItem[],
-) {
-  const shuffled = shuffleLineup([...candidates], random);
-  if (styleId === "bottom-grind" || shuffled.length < 2) return shuffled[0]!;
-
-  const baseline = shuffled[0]!;
-  const challenger = shuffled[1]!;
-  return keepCutVisibleLowerTierClump(challenger.items, categoryItems)
-    <= keepCutVisibleLowerTierClump(baseline.items, categoryItems) - 2
-    ? challenger
-    : baseline;
+function canonicalCutoffGap(items: readonly FootballRankFiveItem[], tiers: readonly FootballGreatnessTier[]) {
+  const orderedTierIndexes = items
+    .map((item) => tierIndexForItem(item, tiers))
+    .sort((left, right) => left - right);
+  return Math.abs(orderedTierIndexes[KEEP_COUNT - 1]! - orderedTierIndexes[KEEP_COUNT]!);
 }
 
 export function footballKeepCutBoardIsCompetitive(
@@ -750,75 +434,14 @@ export function footballKeepCutBoardIsCompetitive(
 ) {
   if (items.length !== KEEP_CUT_BOARD_SIZE) return false;
   if (new Set(items.map((item) => item.id)).size !== KEEP_CUT_BOARD_SIZE) return false;
-  const ordered = sortedPool(items);
-  const poolPercentiles = percentileById(pool);
-  const coreChoices = items.filter((item) => {
-    const percentile = poolPercentiles.get(item.id) ?? 0.5;
-    return percentile >= 0.18 && percentile <= 0.9;
-  }).length;
-  const elite = countTier(items, "elite");
-  const bad = countTier(items, "bad");
-  const distinctTiers = new Set(items.map(footballComparisonTier)).size;
-  const requiredDistinctTiers = footballKeepCutRequiredDistinctTiers(pool);
-  const cutoffGap = Math.abs(ordered[KEEP_COUNT - 1]!.rating - ordered[KEEP_COUNT]!.rating);
-
-  return (
-    coreChoices >= 4
-    && elite <= footballKeepCutEliteCap(pool)
-    && bad <= MAX_KEEP_CUT_BAD
-    && distinctTiers >= requiredDistinctTiers
-    && cutoffGap <= MAX_KEEP_CUT_CUTOFF_GAP
-  );
-}
-
-function attemptKeepCutBoard(
-  items: readonly FootballRankFiveItem[],
-  scopeId: string,
-  seed: string,
-  style: FootballKeepCutBoardStyle,
-  targets: readonly FootballComparisonTierId[],
-  eliteCount: number,
-  badCount: number,
-  attempt: number,
-) {
-  const random = seededLineupRandom("football-keep-cut", scopeId, seed, style.id, attempt);
-  const used = new Set<string>();
-  const selected: FootballRankFiveItem[] = [];
-  let selectedElite = 0;
-  let selectedBad = 0;
-
-  for (const targetTier of targets) {
-    const forceAbsoluteTier = targetTier === "elite" || targetTier === "bad";
-    const picked = chooseItem(
-      items,
-      targetTier,
-      used,
-      selectedElite,
-      eliteCount,
-      selectedBad,
-      badCount,
-      random,
-      forceAbsoluteTier,
-      true,
-      false,
-    );
-    if (!picked) return null;
-    selected.push(picked);
-    markComparisonItemUsed(used, items, scopeId, picked);
-    selectedElite += footballComparisonTier(picked) === "elite" ? 1 : 0;
-    selectedBad += footballComparisonTier(picked) === "bad" ? 1 : 0;
-  }
-
-  if (selectedElite !== eliteCount || selectedBad !== badCount) return null;
-  if (!footballKeepCutBoardIsCompetitive(selected, items)) return null;
-  const ordered = sortedPool(selected);
-  return {
-    items: shuffleLineup(selected, random),
-    badItems: badCount,
-    eliteItems: eliteCount,
-    cutoffGap: Math.abs(ordered[KEEP_COUNT - 1]!.rating - ordered[KEEP_COUNT]!.rating),
-    distinctTiers: new Set(selected.map(footballComparisonTier)).size,
-  };
+  const tiers = availableTiers(pool);
+  if (!tiers.length) return false;
+  const counts = tierCounts(items);
+  const distinctTiers = counts.size;
+  if (tiers.length >= 3 && distinctTiers < 2) return false;
+  const largestTier = Math.max(...counts.values());
+  if (tiers.length >= 3 && pool.length >= KEEP_CUT_BOARD_SIZE * 2 && largestTier > 6) return false;
+  return true;
 }
 
 export function buildFootballKeepCutBoard(
@@ -829,62 +452,24 @@ export function buildFootballKeepCutBoard(
   if (items.length < KEEP_CUT_BOARD_SIZE) {
     throw new Error(`Football Keep/Cut needs at least ${KEEP_CUT_BOARD_SIZE} comparison subjects.`);
   }
+  const tiers = availableTiers(items);
+  if (!tiers.length) throw new Error(`Football Keep/Cut has no canonical greatness tiers for ${scopeId}.`);
   const style = footballKeepCutBoardStyleForSeed(scopeId, seed);
-  const profile = keepCutProfileForSeed(items, scopeId, seed, style);
-  const smallPool = items.length <= KEEP_CUT_SMALL_POOL_MAX;
-  let best: KeepCutCandidate | null = null;
-  const tightCandidates: KeepCutCandidate[] = [];
-  const smallPoolCandidates: KeepCutCandidate[] = [];
-  const smallPoolSignatures = new Set<string>();
 
-  for (let attempt = 0; attempt < KEEP_CUT_ATTEMPTS; attempt += 1) {
-    const board = attemptKeepCutBoard(
-      items,
-      scopeId,
-      seed,
-      style,
-      profile.targets,
-      profile.eliteCount,
-      profile.badCount,
-      attempt,
-    );
-    if (!board) continue;
-    const candidate = { ...board, attempt };
-    if (!best || board.cutoffGap < best.cutoffGap) best = candidate;
-
-    if (smallPool) {
-      const signature = [...board.items.map((item) => item.id)].sort().join("|");
-      if (!smallPoolSignatures.has(signature)) {
-        smallPoolSignatures.add(signature);
-        smallPoolCandidates.push(candidate);
-      }
-      if (smallPoolCandidates.length >= KEEP_CUT_SMALL_POOL_CANDIDATES) break;
-      continue;
-    }
-
-    if (board.cutoffGap <= TIGHT_KEEP_CUT_CUTOFF_GAP) {
-      tightCandidates.push(candidate);
-      if (tightCandidates.length >= KEEP_CUT_TIGHT_CANDIDATES) break;
-    }
-  }
-
-  if (smallPoolCandidates.length) {
-    const random = seededLineupRandom("football-keep-cut", "small-pool-candidate", scopeId, seed, style.id);
-    const selected = chooseKeepCutTextureCandidate(smallPoolCandidates, style.id, random, items);
-    const { attempt, ...board } = selected;
-    return { ...board, style: style.id, attemptsUsed: attempt + 1 };
-  }
-
-  if (tightCandidates.length) {
-    const random = seededLineupRandom("football-keep-cut", "candidate", scopeId, seed, style.id);
-    const selected = chooseKeepCutTextureCandidate(tightCandidates, style.id, random, items);
-    const { attempt, ...board } = selected;
-    return { ...board, style: style.id, attemptsUsed: attempt + 1 };
-  }
-
-  if (best) {
-    const { attempt, ...board } = best;
-    return { ...board, style: style.id, attemptsUsed: attempt + 1 };
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
+    const board = attemptBoard(items, tiers, scopeId, seed, style.id, "keep-cut", attempt);
+    if (!board || !footballKeepCutBoardIsCompetitive(board, items)) continue;
+    const counts = tierCounts(board);
+    const topTier = tiers[0]!;
+    return {
+      items: board,
+      style: style.id,
+      badItems: counts.get("bad") ?? 0,
+      eliteItems: counts.get(topTier) ?? 0,
+      cutoffGap: canonicalCutoffGap(board, tiers),
+      distinctTiers: counts.size,
+      attemptsUsed: attempt + 1,
+    };
   }
   throw new Error(`Football Keep/Cut could not build a ${style.name} eight-subject board for ${scopeId}.`);
 }
