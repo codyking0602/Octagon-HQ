@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { FootballRankFiveItem } from "./footballRankFiveModel";
 import {
+  footballGreatnessTierForItem,
   footballGreatnessTierForRating,
   footballGreatnessTierLabel,
   orderFootballItemsByGreatnessTier,
@@ -42,15 +43,22 @@ describe("Football greatness tier truth", () => {
       footballGreatnessTierLabel("bad"),
     ]).toEqual([
       "TIER 1",
+      "TIER 1",
+      "TIER 1",
       "TIER 2",
       "TIER 2",
       "TIER 3",
-      "TIER 3",
-      "TIER 4",
       "TIER 4",
       "TIER 5",
       "TIER 5",
     ]);
+  });
+
+  it("starts approved top subjects in Tier 1", () => {
+    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(item("bill-belichick", 100)))).toBe("TIER 1");
+    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(item("vince-lombardi", 99)))).toBe("TIER 1");
+    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(item("jim-brown", 100)))).toBe("TIER 1");
+    expect(footballGreatnessTierLabel(footballGreatnessTierForItem(item("jerry-rice", 100)))).toBe("TIER 1");
   });
 
   it("does not penalize Blind Rank swaps inside the same greatness tier", () => {
