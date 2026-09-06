@@ -696,12 +696,15 @@ function countTier(items: readonly FootballRankFiveItem[], tier: FootballCompari
   return items.filter((item) => footballComparisonTier(item) === tier).length;
 }
 
-function keepCutVisibleLowerTierClump(items: readonly FootballRankFiveItem[]) {
+function keepCutVisibleLowerTierClump(
+  items: readonly FootballRankFiveItem[],
+  categoryItems: readonly FootballRankFiveItem[],
+) {
   let tierFour = 0;
   let tierFive = 0;
 
   for (const item of items) {
-    const label = footballGreatnessTierLabel(footballGreatnessTierForItem(item));
+    const label = footballGreatnessTierLabel(footballGreatnessTierForItem(item), categoryItems);
     if (label === "TIER 4") tierFour += 1;
     if (label === "TIER 5") tierFive += 1;
   }
@@ -713,14 +716,15 @@ function chooseKeepCutTextureCandidate(
   candidates: readonly KeepCutCandidate[],
   styleId: FootballKeepCutBoardStyleId,
   random: () => number,
+  categoryItems: readonly FootballRankFiveItem[],
 ) {
   const shuffled = shuffleLineup([...candidates], random);
   if (styleId === "bottom-grind" || shuffled.length < 2) return shuffled[0]!;
 
   const baseline = shuffled[0]!;
   const challenger = shuffled[1]!;
-  return keepCutVisibleLowerTierClump(challenger.items)
-    <= keepCutVisibleLowerTierClump(baseline.items) - 2
+  return keepCutVisibleLowerTierClump(challenger.items, categoryItems)
+    <= keepCutVisibleLowerTierClump(baseline.items, categoryItems) - 2
     ? challenger
     : baseline;
 }
@@ -851,14 +855,14 @@ export function buildFootballKeepCutBoard(
 
   if (smallPoolCandidates.length) {
     const random = seededLineupRandom("football-keep-cut", "small-pool-candidate", scopeId, seed, style.id);
-    const selected = chooseKeepCutTextureCandidate(smallPoolCandidates, style.id, random);
+    const selected = chooseKeepCutTextureCandidate(smallPoolCandidates, style.id, random, items);
     const { attempt, ...board } = selected;
     return { ...board, style: style.id, attemptsUsed: attempt + 1 };
   }
 
   if (tightCandidates.length) {
     const random = seededLineupRandom("football-keep-cut", "candidate", scopeId, seed, style.id);
-    const selected = chooseKeepCutTextureCandidate(tightCandidates, style.id, random);
+    const selected = chooseKeepCutTextureCandidate(tightCandidates, style.id, random, items);
     const { attempt, ...board } = selected;
     return { ...board, style: style.id, attemptsUsed: attempt + 1 };
   }
