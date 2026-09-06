@@ -116,7 +116,7 @@ describe("Football deep comparison authority", () => {
     expect(sameSubject?.rankingConfidence).toBe(target?.rankingConfidence);
   });
 
-  it("keeps historically accomplished generated QBs above low-end reviewed starter anchors", () => {
+  it("keeps historically accomplished generated QBs out of the low-end starter band", () => {
     const packId = "nfl-quarterbacks" as const;
     const reviewed = getFootballRankFivePack(packId).items;
     const pool = buildFootballComparisonCandidatePool(packId, reviewed);
@@ -127,8 +127,8 @@ describe("Football deep comparison authority", () => {
     expect(steveMcNair?.evaluationSource).toBe("canonical-facts");
     expect(joeNamath?.evaluationSource).toBe("canonical-facts");
     expect(andyDalton?.rating).toBe(62);
-    expect(steveMcNair?.rating).toBeGreaterThan(andyDalton!.rating);
-    expect(joeNamath?.rating).toBeGreaterThan(andyDalton!.rating);
+    expect(steveMcNair?.rating).toBeGreaterThanOrEqual(70);
+    expect(joeNamath?.rating).toBeGreaterThanOrEqual(70);
   });
 
   it("is deterministic for the same canonical facts and reviewed calibration", () => {
