@@ -112,6 +112,14 @@ affiliation_path.write_text(affiliation_text)
 
 readiness = Path("src/features/games/twentyQuestionsFactualReadiness.audit.test.ts")
 readiness_text = readiness.read_text()
+readiness_text = readiness_text.replace(
+    "function analyze(pool: readonly Person[], predicates: readonly Predicate[]) {",
+    "function analyze(league: League, pool: readonly Person[], predicates: readonly Predicate[]) {",
+)
+readiness_text = readiness_text.replace(
+    "const result = analyze(pool, buildPredicates(league, pool));",
+    "const result = analyze(league, pool, buildPredicates(league, pool));",
+)
 old_assert = "      expect(result.predicateCoverage.fullyCovered).toBeGreaterThan(0);"
 new_assert = '''      expect(result.predicateCoverage.fullyCovered).toBeGreaterThan(0);
       expect(result.duplicateAnswerFingerprints).toBe(0);
