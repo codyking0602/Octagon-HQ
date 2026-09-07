@@ -30,6 +30,20 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci --silent --no-audit --no-fund
+      - name: Preserve locked Stage 9 metric label
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("src/features/back-room/footballFactualStatsCore.ts")
+          text = path.read_text()
+          old = 'metric("nfl-franchise-best-season-win-percentage-since-1999", "Best franchise season win percentage", "percent", 1),'
+          new = 'metric("nfl-franchise-best-season-win-percentage-since-1999", "Best franchise season win percentage since 1999", "percent", 1),'
+          if old not in text:
+              raise SystemExit("Locked metric label source text was not found exactly once")
+          if text.count(old) != 1:
+              raise SystemExit("Locked metric label source text was not unique")
+          path.write_text(text.replace(old, new))
+          PY
       - name: Regenerate canonical Football artifacts
         run: |
           node scripts/generate-football-recognizability.mjs
@@ -63,8 +77,52 @@ jobs:
         run: npx vitest run src/features/games/twentyQuestionsFactualReadiness.audit.test.ts src/features/back-room/footballCareerAffiliationProjection.test.ts
       - name: Run full test suite
         run: npm test -- --run
+      - name: Resolve public Supabase browser configuration
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing build secret::$name is missing or empty."
+              exit 1
+            fi
+          done
+          api_keys_file="$RUNNER_TEMP/supabase-api-keys.json"
+          public_config_file="$RUNNER_TEMP/octagon-public-config.env"
+          trap 'rm -f "$api_keys_file"' EXIT
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
+            --output "$api_keys_file"
+          node - "$api_keys_file" "$public_config_file" <<'NODE'
+          const fs = require('fs');
+          const keys = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          const publicKey = keys.find((key) => key.type === 'publishable')
+            ?? keys.find((key) => key.type === 'legacy' && /anon/i.test(key.name ?? ''));
+          const projectId = process.env.SUPABASE_PROJECT_ID;
+          if (!/^[a-z0-9-]+$/.test(projectId ?? '')) throw new Error('Invalid Supabase project ID.');
+          if (!publicKey?.api_key) throw new Error('No public browser key was returned.');
+          fs.writeFileSync(process.argv[3], [
+            `VITE_SUPABASE_URL=https://${projectId}.supabase.co`,
+            `VITE_SUPABASE_PUBLISHABLE_KEY=${publicKey.api_key}`,
+            `VITE_EXPECTED_SUPABASE_HOSTNAME=${projectId}.supabase.co`,
+            '',
+          ].join('\n'), { mode: 0o600 });
+          NODE
       - name: Build production bundle
-        run: npm run build
+        shell: bash
+        run: |
+          set -euo pipefail
+          config_file="$RUNNER_TEMP/octagon-public-config.env"
+          trap 'rm -f "$config_file"' EXIT
+          test -s "$config_file"
+          set -a
+          . "$config_file"
+          set +a
+          npm run build
       - name: Push exact verified head
         run: |
           test "$(git rev-parse HEAD)" = "$FINAL_SHA"
