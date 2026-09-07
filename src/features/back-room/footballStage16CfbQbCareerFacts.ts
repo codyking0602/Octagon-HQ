@@ -88,6 +88,7 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   qbCareer("cfb-matt-leinart", 39, 807, 1245, 10693, 99, 23, 132, -70, 9),
   qbCareer("cfb-jim-plunkett", 31, 530, 962, 7544, 52, 47, 211, 343, 10),
   qbCareer("cfb-roger-staubach", 30, 293, 463, 3571, 18, 19, 345, 682, 17),
+  qbCareer("cfb-paul-hornung", 30, 110, 233, 1696, 12, 23, 209, 1051, 6),
 
   historicalRusher("cfb-archie-griffin", 1620, 12, 2),
   historicalRusher("cfb-tony-dorsett", 1948, 21, 1),
@@ -98,13 +99,17 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   historicalRusher("cfb-mike-rozier", 2148, 29, 1),
   historicalRusher("cfb-bo-jackson", 1786, 17, 1),
   historicalRusher("cfb-earl-campbell", 1744, 18, 1),
+  historicalRusher("cfb-o-j-simpson", 1709, 22, 1),
 
+  historicalSkillPlayer("cfb-billy-cannon", [
+    ["cfb-best-season-rushing-yards", 686],
+    ["cfb-best-season-rushing-touchdowns", 10],
+    ["cfb-best-season-receptions", 11],
+    ["cfb-best-season-receiving-yards", 199],
+    ["cfb-best-season-receiving-touchdowns", 1],
+    ["cfb-heisman-awards", 1],
+  ]),
   historicalSkillPlayer("cfb-doak-walker", [
-    ["cfb-best-season-rushing-yards", 532],
-    ["cfb-best-season-rushing-touchdowns", 8],
-    ["cfb-best-season-receptions", 15],
-    ["cfb-best-season-receiving-yards", 277],
-    ["cfb-best-season-receiving-touchdowns", 3],
     ["cfb-heisman-awards", 1],
   ]),
   historicalSkillPlayer("cfb-tim-brown", [
@@ -121,6 +126,9 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
     ["cfb-best-season-receptions", 16],
     ["cfb-best-season-receiving-yards", 157],
     ["cfb-best-season-receiving-touchdowns", 2],
+    ["cfb-heisman-awards", 1],
+  ]),
+  historicalSkillPlayer("cfb-davey-obrien", [
     ["cfb-heisman-awards", 1],
   ]),
 ];
