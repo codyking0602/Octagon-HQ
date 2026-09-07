@@ -1,4 +1,4 @@
-name: Temporary Stage 9 factual batch
+name: Temporary Stage 9 finalizer
 
 on:
   push:
@@ -6,17 +6,16 @@ on:
       - games/20q-football-factual-readiness
     paths:
       - .github/workflows/tmp-stage9-factual-batch.yml
-      - .github/scripts/tmp-stage9-factual-batch.py
-      - .github/scripts/tmp-stage9-pool-fix.py
-      - .github/scripts/tmp-stage9-final-facts.py
-      - .github/scripts/tmp-stage9-collision-fix.py
-      - .github/scripts/tmp-stage9-collision-values.py
 
 permissions:
   contents: write
 
+concurrency:
+  group: stage9-finalizer
+  cancel-in-progress: true
+
 jobs:
-  apply:
+  finalize:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -31,13 +30,6 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci --silent --no-audit --no-fund
-      - name: Apply factual batch
-        run: |
-          python .github/scripts/tmp-stage9-factual-batch.py
-          python .github/scripts/tmp-stage9-pool-fix.py
-          python .github/scripts/tmp-stage9-final-facts.py
-          python .github/scripts/tmp-stage9-collision-fix.py
-          python .github/scripts/tmp-stage9-collision-values.py
       - name: Regenerate canonical Football artifacts
         run: |
           node scripts/generate-football-recognizability.mjs
@@ -45,16 +37,8 @@ jobs:
           npm run generate:football-career-media-context
           npm run generate:football-factual-universe
           npm run generate:football-ledger-audit
-      - name: Diagnose modern OL recognition
-        run: |
-          node - <<'NODE'
-          const fs = require('fs');
-          const data = JSON.parse(fs.readFileSync('data/generated/football/recognizability-projection.json','utf8'));
-          const targets = new Set(['Trent Williams','Zack Martin','Creed Humphrey','Joe Alt']);
-          const rows = data.records.filter(r => r.kind === 'player-career' && ((r.position === 'OL' && ['A','B'].includes(r.tier)) || targets.has(r.name)));
-          console.log('STAGE9_OL_DIAGNOSTIC=' + JSON.stringify(rows.map(r => ({id:r.id,name:r.name,league:r.league,tier:r.tier,position:r.position,startSeason:r.startSeason,endSeason:r.endSeason,sourceProvider:r.sourceProvider,sourceId:r.sourceId}))));
-          NODE
-      - name: Remove temporary runner changes
+          npm run verify:football-ledger-audit
+      - name: Remove temporary Stage 9 tooling
         run: |
           git checkout origin/main -- .github/workflows/fast-pr-feedback.yml
           rm -f .github/workflows/tmp-stage9-factual-batch.yml
@@ -63,12 +47,14 @@ jobs:
           rm -f .github/scripts/tmp-stage9-final-facts.py
           rm -f .github/scripts/tmp-stage9-collision-fix.py
           rm -f .github/scripts/tmp-stage9-collision-values.py
-      - name: Create candidate exact head
+          rm -f src/features/games/twentyQuestionsMetadataCoverage.audit.test.ts
+          rm -f src/features/games/twentyQuestionsCandidateCoverage.audit.test.ts
+      - name: Create exact candidate head
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "data: complete Stage 9 factual readiness batch"
+          git commit -m "Finalize Stage 9 factual readiness"
           echo "FINAL_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
       - name: Typecheck exact candidate head
         run: npm run typecheck
