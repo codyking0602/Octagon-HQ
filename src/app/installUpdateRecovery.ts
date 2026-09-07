@@ -2,6 +2,7 @@ declare const __OCTAGON_DEPLOYMENT_SHA__: string;
 
 const UPDATE_RELOAD_KEY = "octagon-hq:update-reload-at";
 const UPDATE_TARGET_SHA_KEY = "octagon-hq:update-target-sha";
+const UPDATE_CACHE_BUST_PARAM = "hq-update";
 const UPDATE_RELOAD_COOLDOWN_MS = 15_000;
 const SHA_PATTERN = /^[0-9a-f]{40}$/i;
 
@@ -15,16 +16,40 @@ interface UpdateRecoveryOptions {
   fetchDeploymentSha?: () => Promise<string | null>;
 }
 
+interface ForceRefreshLatestBuildOptions {
+  href?: string;
+  storage?: Storage;
+  navigate?: (url: string) => void;
+  now?: () => number;
+}
+
 function normalizedSha(value: unknown) {
   const sha = typeof value === "string" ? value.trim().toLowerCase() : "";
   return SHA_PATTERN.test(sha) ? sha : "";
+}
+
+function latestBuildUrl(href: string, token: string) {
+  const url = new URL(href);
+  url.searchParams.set(UPDATE_CACHE_BUST_PARAM, token);
+  return url.toString();
+}
+
+export function forceRefreshLatestBuild({
+  href = window.location.href,
+  storage = window.sessionStorage,
+  navigate = (url) => window.location.replace(url),
+  now = () => Date.now(),
+}: ForceRefreshLatestBuildOptions = {}) {
+  storage.removeItem(UPDATE_RELOAD_KEY);
+  storage.removeItem(UPDATE_TARGET_SHA_KEY);
+  navigate(latestBuildUrl(href, String(now())));
 }
 
 export function installUpdateRecovery({
   target = window,
   documentTarget = window.document,
   storage = window.sessionStorage,
-  reload = () => window.location.reload(),
+  reload,
   now = () => Date.now(),
   runningSha = __OCTAGON_DEPLOYMENT_SHA__,
   fetchDeploymentSha,
@@ -32,6 +57,14 @@ export function installUpdateRecovery({
   const activeSha = normalizedSha(runningSha);
   let disposed = false;
   let checkingDeployment = false;
+
+  const reloadPage = (targetSha = "") => {
+    if (reload) {
+      reload();
+      return;
+    }
+    target.location.replace(latestBuildUrl(target.location.href, targetSha || String(now())));
+  };
 
   const reloadOnce = (targetSha = "") => {
     const current = now();
@@ -48,7 +81,7 @@ export function installUpdateRecovery({
 
     storage.setItem(UPDATE_RELOAD_KEY, String(current));
     if (targetSha) storage.setItem(UPDATE_TARGET_SHA_KEY, targetSha);
-    reload();
+    reloadPage(targetSha);
   };
 
   const readLiveDeploymentSha = fetchDeploymentSha ?? (async () => {
