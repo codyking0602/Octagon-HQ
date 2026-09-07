@@ -11,8 +11,6 @@ export const PLAY_LANDING_COMMON_GAME_ORDER = [
 export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
   "find-leader",
   "wavelength",
-  "blind-rank",
-  "keep-cut",
   "hit-the-number",
 ] as const satisfies readonly PlayGameId[];
 
@@ -26,8 +24,6 @@ export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
 
 export function playLandingDestination(sport: PlaySport, gameId: PlayGameId) {
   const game = playGameDefinition(gameId, sport);
-  const temporaryFootballComparison = sport === "football" && (gameId === "blind-rank" || gameId === "keep-cut");
-  if (temporaryFootballComparison) return `${game.route}?mode=replayable`;
   return sport === "ufc" && gameId === "find-leader"
     ? `${game.route}?mode=replayable`
     : game.route;
@@ -65,7 +61,6 @@ export function PlayLandingGameLibrary({ sport, onNavigate, footer }: PlayLandin
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
         {games.map((game) => {
           const strategic = sport === "ufc" && game.id === PLAY_LANDING_UFC_STRATEGIC_GAME;
-          const temporaryFootballComparison = sport === "football" && (game.id === "blind-rank" || game.id === "keep-cut");
           return (
             <button
               className={`play-landing-game-card${strategic ? " is-strategic" : ""}`}
@@ -75,7 +70,7 @@ export function PlayLandingGameLibrary({ sport, onNavigate, footer }: PlayLandin
             >
               <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
               <span className="play-landing-game-card__status">
-                {temporaryFootballComparison ? "TEMP CASUAL" : strategic ? "STRATEGY" : "PLAY NOW"}
+                {strategic ? "STRATEGY" : "PLAY NOW"}
               </span>
               <strong>{game.title}</strong>
               <small>{game.description}</small>
