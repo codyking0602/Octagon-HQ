@@ -71,6 +71,10 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   qbCareer("cfb-jim-plunkett", 31, 530, 962, 7544, 52, 47, 211, 343, 10),
   qbCareer("cfb-roger-staubach", 30, 293, 463, 3571, 18, 19, 345, 682, 17),
   qbCareer("cfb-paul-hornung", 30, 110, 233, 1696, 12, 23, 209, 1051, 6),
+  qbCareer("cfb-johnny-manziel", 26, 595, 863, 7820, 63, 22, 345, 2169, 30),
+  qbCareer("cfb-robert-griffin-iii", 41, 800, 1192, 10366, 78, 17, 528, 2254, 33),
+  qbCareer("cfb-marcus-mariota", 41, 779, 1167, 10796, 105, 14, 337, 2237, 29),
+  qbCareer("cfb-jameis-winston", 27, 562, 851, 7964, 65, 28, 145, 284, 7),
 
   facts("cfb-archie-griffin", [
     ["cfb-career-games", 42], ["cfb-career-rushing-attempts", 845], ["cfb-career-rushing-yards", 5177],
