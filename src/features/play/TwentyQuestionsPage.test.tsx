@@ -41,7 +41,6 @@ describe("replayable 20 Questions page", () => {
     const universe = getUfcTwentyQuestionsUniverse();
     const hidden = universe.subjects[0]!;
     const wrong = universe.subjects.find((subject) => subject.id !== hidden.id)!;
-    const question = universe.questions[0]!;
     const { container } = render(<TwentyQuestionsPage sport="ufc" />);
 
     expect(screen.getByText("UFC ROUND")).toBeInTheDocument();
@@ -52,22 +51,26 @@ describe("replayable 20 Questions page", () => {
     expect(screen.getByLabelText("Round status")).toHaveTextContent("0 / 10");
     expect(screen.getByLabelText("Round status")).toHaveTextContent("100.0");
 
-    const questionButton = screen.getByText(question.label, { selector: ".twenty-questions-question-list span" }).closest("button");
-    expect(questionButton).toHaveTextContent(formatTwentyQuestionsScoreImpact(question.internalCost));
+    const questionButton = container.querySelector<HTMLButtonElement>(".twenty-questions-question-list button");
+    const questionLabel = questionButton?.querySelector("span")?.textContent ?? "";
+    const question = universe.questions.find((candidate) => candidate.label === questionLabel);
+    expect(questionButton).not.toBeNull();
+    expect(question).toBeTruthy();
+    expect(questionButton).toHaveTextContent(formatTwentyQuestionsScoreImpact(question!.internalCost));
     expect(questionButton).not.toHaveTextContent(/cost/i);
 
-    clickQuestion(question.label);
+    clickQuestion(question!.label);
     const expectedAfterQuestion = twentyQuestionsScoreAfterQuestion(
       TWENTY_QUESTIONS_START_SCORE,
-      question.internalCost,
+      question!.internalCost,
     );
     expect(screen.getByLabelText("Round status")).toHaveTextContent(expectedAfterQuestion.toFixed(1));
-    expect(screen.getByRole("region", { name: "What you know" })).toHaveTextContent(question.label);
-    expect(screen.getByRole("region", { name: "What you know" })).toHaveTextContent(formatTwentyQuestionsScoreImpact(question.internalCost));
+    expect(screen.getByRole("region", { name: "What you know" })).toHaveTextContent(question!.label);
+    expect(screen.getByRole("region", { name: "What you know" })).toHaveTextContent(formatTwentyQuestionsScoreImpact(question!.internalCost));
     expect(screen.getByRole("region", { name: "What you know" })).not.toHaveTextContent(/cost/i);
     expect(
       [...container.querySelectorAll<HTMLButtonElement>(".twenty-questions-question-list button")]
-        .some((button) => button.textContent?.includes(question.label)),
+        .some((button) => button.textContent?.includes(question!.label)),
     ).toBe(false);
 
     fireEvent.click(screen.getByRole("button", { name: "GUESS" }));
