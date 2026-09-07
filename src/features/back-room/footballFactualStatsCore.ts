@@ -92,7 +92,7 @@ export const footballFactMetricDefinitions = [
   metric("nfl-coach-postseason-resume-since-1999", "NFL head-coach postseason résumé score since 1999", "rating", 2),
   metric("nfl-franchise-seasons-since-1999", "Franchise seasons since 1999", "count", 0),
   metric("nfl-franchise-win-percentage-since-1999", "Franchise win percentage since 1999", "percent", 1),
-  metric("nfl-franchise-best-season-win-percentage-since-1999", "Best franchise season win percentage", "percent", 1),
+  metric("nfl-franchise-best-season-win-percentage-since-1999", "Best franchise season win percentage since 1999", "percent", 1),
   metric("nfl-franchise-postseason-resume-since-1999", "Franchise postseason résumé score since 1999", "rating", 2),
   metric("nfl-franchise-era-season-count", "Bounded-era season count", "count", 0),
   metric("nfl-franchise-era-win-percentage", "Bounded-era win percentage", "percent", 1),
