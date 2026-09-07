@@ -49,6 +49,7 @@ const LIVE_GAME_ROUTES: Partial<Record<PlayGameId, string>> = {
   "keep-cut": "/play/keep-cut",
   "better-than": "/play/better-than",
   auction: "/play/auction",
+  "20-questions": "/play/20-questions",
 };
 
 const DIVISION_ABBREVIATIONS: Record<string, string> = {
@@ -350,7 +351,7 @@ function FindLeaderGame({
                 <article className={`find-reveal__row${fatal ? " is-fatal" : ""}${leaderCard ? " is-leader" : ""}`} key={fighter.id}>
                   <b>{rankLabel}</b>
                   <CandidatePhoto fighter={fighter} className="find-reveal__photo" />
-                  <span><strong>{fighter.name}</strong><small>{fighter.division}</small></span>
+                  <span><strong>{fighter.name}</strong><small>{compactDivision(fighter.division)}</small></span>
                   <em>{fighter.value}<small>{statLabel}</small></em>
                 </article>
               );
