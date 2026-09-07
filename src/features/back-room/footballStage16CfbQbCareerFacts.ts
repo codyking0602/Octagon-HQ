@@ -77,6 +77,7 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   qbCareer("cfb-jameis-winston", 27, 562, 851, 7964, 65, 28, 145, 284, 7),
   qbCareer("cfb-colt-mccoy", 53, 1157, 1645, 13253, 112, 45, 447, 1571, 20),
   qbCareer("cfb-troy-smith", 43, 420, 670, 5720, 54, 13, 293, 1168, 14),
+  qbCareer("cfb-brady-quinn", 49, 929, 1602, 11762, 95, 39, 254, 182, 6),
 
   facts("cfb-archie-griffin", [
     ["cfb-career-games", 42], ["cfb-career-rushing-attempts", 845], ["cfb-career-rushing-yards", 5177],
@@ -252,4 +253,12 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
     ["cfb-career-receiving-touchdowns", 0], ["cfb-career-total-touchdowns", 33], ["cfb-heisman-awards", 1],
   ]),
   facts("cfb-derrick-thomas", [["cfb-career-games", 34]]),
+  facts("cfb-nndamukong-suh", [
+    ["cfb-career-games", 54], ["cfb-career-sacks", 24], ["cfb-career-defensive-interceptions", 4],
+    ["cfb-career-forced-fumbles", 3], ["cfb-career-fumble-recoveries", 0],
+  ]),
+  facts("cfb-patrick-peterson", [
+    ["cfb-career-games", 39], ["cfb-career-defensive-interceptions", 7],
+    ["cfb-career-forced-fumbles", 1], ["cfb-career-fumble-recoveries", 0],
+  ]),
 ];
