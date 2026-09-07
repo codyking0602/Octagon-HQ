@@ -64,9 +64,10 @@ jobs:
           npm run generate:football-career-media-context
           npm run generate:football-factual-universe
           npm run generate:football-ledger-audit
-          echo "=== FOOTBALL_LEDGER_GENERATED_DIFF_BEGIN ==="
-          git diff --no-ext-diff -- docs/football-ledger-stage13-5-review.md
-          echo "=== FOOTBALL_LEDGER_GENERATED_DIFF_END ==="
+          echo "=== FOOTBALL_LEDGER_GENERATED_BASE64_BEGIN ==="
+          base64 -w0 docs/football-ledger-stage13-5-review.md
+          echo
+          echo "=== FOOTBALL_LEDGER_GENERATED_BASE64_END ==="
 
       - name: Typecheck
         run: npm run typecheck
