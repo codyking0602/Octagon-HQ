@@ -1,8 +1,8 @@
 from pathlib import Path
 
+# Keep manual NFL recognizability approvals scoped to the intended player identity, not every same-name source row.
 recognizability = Path("scripts/generate-football-recognizability.mjs")
 text = recognizability.read_text()
-
 position_guard_anchor = '''const approvedBPlayers = new Set([
   "Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "Calvin Johnson", "Andrew Luck",
   "Colt McCoy", "Michael Crabtree", "Darren McFadden", "Justin Blackmon", "Baker Mayfield", "Lamar Jackson",
@@ -22,7 +22,6 @@ position_guards = '''const approvedNflPlayerPositions = new Map([
   ["Christian McCaffrey", ["RB"]], ["Joe Burrow", ["QB"]], ["Trevor Lawrence", ["QB"]], ["Bijan Robinson", ["RB"]],
   ["Ashton Jeanty", ["RB"]], ["Caleb Williams", ["QB"]], ["Jayden Daniels", ["QB"]],
   ["Travis Hunter", ["WR", "DB"]], ["Bo Nix", ["QB"]], ["A.J. Brown", ["WR"]],
-  ["Trent Williams", ["OL"]], ["Zack Martin", ["OL"]],
 ]);
 const approvedNflIdentityMatches = (name, position) => approvedNflPlayerPositions.get(name)?.includes(position) === true;
 '''
@@ -30,19 +29,6 @@ if "approvedNflPlayerPositions" not in text:
     if position_guard_anchor not in text:
         raise SystemExit("recognizability approval anchor missing")
     text = text.replace(position_guard_anchor, position_guard_anchor + position_guards, 1)
-
-# Two deliberately modern, unexposed OL identities per universe. These are recognizability approvals, not greatness tiers.
-text = text.replace(
-    '  "Ashton Jeanty", "Caleb Williams", "Jayden Daniels", "Travis Hunter", "Bo Nix", "A.J. Brown",\n]);',
-    '  "Ashton Jeanty", "Caleb Williams", "Jayden Daniels", "Travis Hunter", "Bo Nix", "A.J. Brown",\n  "Trent Williams", "Zack Martin",\n]);',
-    1,
-)
-cfb_window_anchor = '  ["dalvin-cook", [2014, 2016]], ["todd-gurley", [2014, 2014]],\n]);'
-cfb_window_replacement = '  ["dalvin-cook", [2014, 2016]], ["todd-gurley", [2014, 2014]],\n  ["creed-humphrey", [2017, 2020]], ["joe-alt", [2021, 2023]],\n]);'
-if cfb_window_anchor not in text:
-    raise SystemExit("CFB approval-window anchor missing")
-text = text.replace(cfb_window_anchor, cfb_window_replacement, 1)
-
 text = text.replace(
     'if (approvedBPlayers.has(p.name) && tier !== "A") { tier = "B"; evidence.push("explicit football-culture B approval"); }',
     'if (approvedBPlayers.has(p.name) && approvedNflIdentityMatches(p.name, position) && tier !== "A") { tier = "B"; evidence.push("explicit football-culture B approval"); }',
@@ -52,6 +38,30 @@ text = text.replace(
     'if (approvedAPlayers.has(p.name) && approvedNflIdentityMatches(p.name, position)) { tier = "A"; evidence.push("explicit iconic-player approval"); }',
 )
 recognizability.write_text(text)
+
+# Fill missing canonical career-window metadata for the four reviewed modern OL identities used by the launch census.
+# These remain ordinary canonical subjects; no game-only subject registry is introduced.
+catalog = Path("src/features/back-room/footballFactualStatsCatalog.ts")
+catalog_text = catalog.read_text()
+cfb_anchor = 'const footballCollegePlayerSubjects: readonly FootballCanonicalSubject[] = [\n'
+cfb_rows = '''const footballCollegePlayerSubjects: readonly FootballCanonicalSubject[] = [
+  { id: "cfb-joe-alt", name: "Joe Alt", kind: "player-career", league: "CFB", position: "OL", school: "Notre Dame", startSeason: 2021, endSeason: 2023, activeDecades: [2020] },
+  { id: "cfb-tristan-wirfs", name: "Tristan Wirfs", kind: "player-career", league: "CFB", position: "OL", school: "Iowa", startSeason: 2017, endSeason: 2019, activeDecades: [2010] },
+'''
+if 'id: "cfb-joe-alt"' not in catalog_text:
+    if cfb_anchor not in catalog_text:
+        raise SystemExit("CFB canonical player anchor missing")
+    catalog_text = catalog_text.replace(cfb_anchor, cfb_rows, 1)
+nfl_anchor = 'const footballNflExpansionSubjects: readonly FootballCanonicalSubject[] = [\n'
+nfl_rows = '''const footballNflExpansionSubjects: readonly FootballCanonicalSubject[] = [
+  nflPlayer("nfl-trent-williams", "Trent Williams", "OL", "Oklahoma", ["Washington Redskins", "Washington Football Team", "San Francisco 49ers"], 2010, 1, 4, [2010,2020]),
+  nflPlayer("nfl-zack-martin", "Zack Martin", "OL", "Notre Dame", ["Dallas Cowboys"], 2014, 1, 16, [2010,2020]),
+'''
+if 'nflPlayer("nfl-trent-williams"' not in catalog_text:
+    if nfl_anchor not in catalog_text:
+        raise SystemExit("NFL canonical expansion anchor missing")
+    catalog_text = catalog_text.replace(nfl_anchor, nfl_rows, 1)
+catalog.write_text(catalog_text)
 
 readiness = Path("src/features/games/twentyQuestionsFactualReadiness.audit.test.ts")
 text = readiness.read_text()
@@ -85,8 +95,8 @@ function isLaunchEligibleOl(candidate: PersonCandidate) {
   if (rolePosition(person) !== "OL" || REVEALED_OL_EXCLUSIONS.has(candidate.nameKey)) return false;
   const window = roleWindow(person);
   if (window != null) return window.start >= 2000;
-  const starts = roleRecords(person).flatMap((record) => record.draftYear == null ? [] : [record.draftYear]);
-  return starts.length > 0 && Math.min(...starts) >= 2000;
+  const draftYears = roleRecords(person).flatMap((record) => record.draftYear == null ? [] : [record.draftYear]);
+  return draftYears.length > 0 && Math.min(...draftYears) >= 2000;
 }
 
 function selectPlayerCensus(league: League, candidates: readonly PersonCandidate[]) {
@@ -96,29 +106,7 @@ function selectPlayerCensus(league: League, candidates: readonly PersonCandidate
   const caps = PLAYER_POSITION_CAPS[league];
   const ordered = sortRoleCandidates(candidates, "player");
   const requiredOl = ordered.filter(isLaunchEligibleOl).slice(0, caps.OL ?? 0);
-  if (requiredOl.length !== 2) {
-    const olCandidates = ordered.filter((candidate) => candidate.records.some((record) => record.position === "OL"))
-      .map((candidate) => ({
-        name: candidate.records[0]?.name,
-        key: candidate.key,
-        nameKey: candidate.nameKey,
-        rolePosition: rolePosition({ ...candidate, role: "player" }),
-        roleWindow: roleWindow({ ...candidate, role: "player" }),
-        records: candidate.records.map((record) => ({
-          id: record.id,
-          tier: record.recognizabilityTier,
-          position: record.position,
-          startSeason: record.startSeason,
-          endSeason: record.endSeason,
-          canonicalId: getFootballSubject(record.id)?.id ?? null,
-          canonicalPosition: getFootballSubject(record.id)?.position ?? null,
-          canonicalStart: getFootballSubject(record.id)?.startSeason ?? null,
-          canonicalEnd: getFootballSubject(record.id)?.endSeason ?? null,
-        })),
-      }));
-    console.log(`STAGE9_${league}_RAW_OL_CANDIDATES=${JSON.stringify(olCandidates)}`);
-    throw new Error(`${league} A/B launch census has only ${requiredOl.length}/2 eligible modern offensive linemen`);
-  }
+  if (requiredOl.length !== 2) throw new Error(`${league} A/B launch census has only ${requiredOl.length}/2 eligible modern offensive linemen`);
   for (const candidate of requiredOl) {
     selected.push(candidate);
     selectedKeys.add(candidate.key);
@@ -130,7 +118,7 @@ function selectPlayerCensus(league: League, candidates: readonly PersonCandidate
     const person: Person = { ...candidate, role: "player" };
     const position = rolePosition(person);
     if (!position || caps[position] == null) continue;
-    if (position === "OL" && !isLaunchEligibleOl(candidate)) continue;
+    if (position === "OL") continue;
     const count = counts.get(position) ?? 0;
     if (count >= caps[position]!) continue;
     selected.push(candidate);
@@ -138,9 +126,7 @@ function selectPlayerCensus(league: League, candidates: readonly PersonCandidate
     counts.set(position, count + 1);
     if (selected.length === PLAYER_TARGET) break;
   }
-  if (selected.length !== PLAYER_TARGET) {
-    throw new Error(`${league} A/B launch census has only ${selected.length}/${PLAYER_TARGET} players inside the position caps`);
-  }
+  if (selected.length !== PLAYER_TARGET) throw new Error(`${league} A/B launch census has only ${selected.length}/${PLAYER_TARGET} players inside the position caps`);
   return selected;
 }
 
