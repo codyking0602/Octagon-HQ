@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { installUpdateRecovery } from "./installUpdateRecovery";
+import { forceRefreshLatestBuild, installUpdateRecovery } from "./installUpdateRecovery";
 
 const RUNNING_SHA = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const NEXT_SHA = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -96,5 +96,24 @@ describe("deployment update recovery", () => {
     window.dispatchEvent(new Event("pageshow"));
     await vi.waitFor(() => expect(reload).toHaveBeenCalledTimes(1));
     remove();
+  });
+
+  it("forces the update screen through a cache-busted shell URL instead of repeating a cached reload", () => {
+    const navigate = vi.fn();
+    window.sessionStorage.setItem("octagon-hq:update-reload-at", "40000");
+    window.sessionStorage.setItem("octagon-hq:update-target-sha", NEXT_SHA);
+
+    forceRefreshLatestBuild({
+      href: "https://the.hq-app.workers.dev/play/20-questions?mode=casual#round",
+      storage: window.sessionStorage,
+      navigate,
+      now: () => 42_000,
+    });
+
+    expect(window.sessionStorage.getItem("octagon-hq:update-reload-at")).toBeNull();
+    expect(window.sessionStorage.getItem("octagon-hq:update-target-sha")).toBeNull();
+    expect(navigate).toHaveBeenCalledWith(
+      "https://the.hq-app.workers.dev/play/20-questions?mode=casual&hq-update=42000#round",
+    );
   });
 });
