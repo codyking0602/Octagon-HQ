@@ -57,9 +57,18 @@ const historicalRusher = (
   ],
 });
 
+const historicalSkillPlayer = (
+  subjectId: string,
+  facts: readonly (readonly [FootballFactMetricId, number])[],
+): FootballFactualRecord => ({
+  subjectId,
+  scope: "cfb-player-career",
+  facts: facts.map(([metricId, value]) => reported(metricId, value)),
+});
+
 /**
  * Stage 16 reviewed CFB player facts. Quarterback rows contain complete Sports-Reference
- * career passing/rushing totals; historical rushing rows preserve source-backed best-season
+ * career passing/rushing totals; historical skill-player rows preserve source-backed
  * production and Heisman counts for recognizable pre-cfbfastR subjects.
  */
 export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualRecord[] = [
@@ -88,4 +97,30 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   historicalRusher("cfb-herschel-walker", 1891, 18, 1),
   historicalRusher("cfb-mike-rozier", 2148, 29, 1),
   historicalRusher("cfb-bo-jackson", 1786, 17, 1),
+  historicalRusher("cfb-earl-campbell", 1744, 18, 1),
+
+  historicalSkillPlayer("cfb-doak-walker", [
+    ["cfb-best-season-rushing-yards", 532],
+    ["cfb-best-season-rushing-touchdowns", 8],
+    ["cfb-best-season-receptions", 15],
+    ["cfb-best-season-receiving-yards", 277],
+    ["cfb-best-season-receiving-touchdowns", 3],
+    ["cfb-heisman-awards", 1],
+  ]),
+  historicalSkillPlayer("cfb-tim-brown", [
+    ["cfb-best-season-receptions", 45],
+    ["cfb-best-season-receiving-yards", 910],
+    ["cfb-best-season-receiving-touchdowns", 5],
+    ["cfb-best-season-rushing-yards", 254],
+    ["cfb-best-season-rushing-touchdowns", 2],
+    ["cfb-heisman-awards", 1],
+  ]),
+  historicalSkillPlayer("cfb-ernie-davis", [
+    ["cfb-best-season-rushing-yards", 877],
+    ["cfb-best-season-rushing-touchdowns", 12],
+    ["cfb-best-season-receptions", 16],
+    ["cfb-best-season-receiving-yards", 157],
+    ["cfb-best-season-receiving-touchdowns", 2],
+    ["cfb-heisman-awards", 1],
+  ]),
 ];
