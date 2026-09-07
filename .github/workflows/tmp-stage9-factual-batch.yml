@@ -45,6 +45,15 @@ jobs:
           npm run generate:football-career-media-context
           npm run generate:football-factual-universe
           npm run generate:football-ledger-audit
+      - name: Diagnose modern OL recognition
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('data/generated/football/recognizability-projection.json','utf8'));
+          const targets = new Set(['Trent Williams','Zack Martin','Creed Humphrey','Joe Alt']);
+          const rows = data.records.filter(r => r.kind === 'player-career' && ((r.position === 'OL' && ['A','B'].includes(r.tier)) || targets.has(r.name)));
+          console.log('STAGE9_OL_DIAGNOSTIC=' + JSON.stringify(rows.map(r => ({id:r.id,name:r.name,league:r.league,tier:r.tier,position:r.position,startSeason:r.startSeason,endSeason:r.endSeason,sourceProvider:r.sourceProvider,sourceId:r.sourceId}))));
+          NODE
       - name: Remove temporary runner changes
         run: |
           git checkout origin/main -- .github/workflows/fast-pr-feedback.yml
