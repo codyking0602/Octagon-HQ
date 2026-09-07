@@ -131,4 +131,16 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   historicalSkillPlayer("cfb-davey-obrien", [
     ["cfb-heisman-awards", 1],
   ]),
+  historicalSkillPlayer("cfb-keith-jackson", [
+    ["cfb-career-games", 44],
+    ["cfb-best-season-receptions", 20],
+    ["cfb-best-season-receiving-yards", 486],
+    ["cfb-best-season-receiving-touchdowns", 5],
+    ["cfb-best-season-rushing-yards", 153],
+    ["cfb-best-season-rushing-touchdowns", 3],
+  ]),
+  historicalSkillPlayer("cfb-deion-sanders", [
+    ["cfb-career-games", 44],
+    ["cfb-best-season-defensive-interceptions", 5],
+  ]),
 ];
