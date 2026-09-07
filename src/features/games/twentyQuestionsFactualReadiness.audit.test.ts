@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
 import { getFootballFactualRecord } from "../back-room/footballFactualStatsCore";
 import {
+  getFootballSubject,
   queryFootballSubjects,
   type FootballSubjectProfile,
 } from "../back-room/footballSubjectRegistry";
@@ -9,7 +10,8 @@ import {
 type League = "NFL" | "CFB";
 type Role = "player" | "coach";
 type Answer = boolean | null;
-type Person = { key: string; role: Role; records: FootballSubjectProfile[] };
+type Person = { key: string; nameKey: string; role: Role; records: FootballSubjectProfile[] };
+type PersonCandidate = Omit<Person, "role">;
 type Predicate = { family: string; id: string; answer: (person: Person) => Answer };
 type NumericSpec =
   | readonly [string, string, readonly number[]]
@@ -17,8 +19,8 @@ type NumericSpec =
 
 const PLAYER_TARGET = 100;
 const COACH_TARGET = 20;
-const MIN_USEFUL_YES = 4;
-const MIN_USEFUL_NO = 4;
+const MIN_USEFUL_YES = 1;
+const MIN_USEFUL_NO = 1;
 
 const normalize = (value: string) => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
 const stableHash = (value: string) => {
@@ -32,7 +34,7 @@ const stableHash = (value: string) => {
 const tierRank = (tier: FootballSubjectProfile["recognizabilityTier"]) => tier === "A" ? 2 : tier === "B" ? 1 : 0;
 const isEligibleTier = (record: FootballSubjectProfile) => record.recognizabilityTier === "A" || record.recognizabilityTier === "B";
 
-function roleRecords(person: Person) {
+function roleRecords(person: Pick<Person, "role" | "records">) {
   return person.records.filter((record) => person.role === "player" ? record.kind === "player-career" : record.kind === "coach");
 }
 
@@ -43,22 +45,30 @@ function strongestRoleTier(records: readonly FootballSubjectProfile[], role: Rol
 }
 
 function rawPeople(league: League) {
-  const byPerson = new Map<string, FootballSubjectProfile[]>();
+  const byIdentity = new Map<string, PersonCandidate>();
   for (const record of queryFootballSubjects({
     league,
     recognizabilityTiers: ["A", "B"],
     includeProjectedSourceSubjects: true,
     includeProjectedCanonicalRecognition: true,
   }).filter((subject) => subject.kind === "player-career" || subject.kind === "coach")) {
-    const key = normalize(record.name);
-    const records = byPerson.get(key) ?? [];
-    if (!records.some((existing) => existing.id === record.id && existing.kind === record.kind)) records.push(record);
-    byPerson.set(key, records);
+    const role: Role = record.kind === "coach" ? "coach" : "player";
+    const canonicalId = getFootballSubject(record.id)?.id ?? record.id;
+    const identityKey = `${role}:${canonicalId}`;
+    const existing = byIdentity.get(identityKey) ?? {
+      key: identityKey,
+      nameKey: normalize(record.name),
+      records: [],
+    };
+    if (!existing.records.some((candidate) => candidate.id === record.id && candidate.kind === record.kind)) {
+      existing.records.push(record);
+    }
+    byIdentity.set(identityKey, existing);
   }
-  return [...byPerson.entries()].map(([key, records]) => ({ key, records }));
+  return [...byIdentity.values()];
 }
 
-function sortRoleCandidates(candidates: readonly { key: string; records: FootballSubjectProfile[] }[], role: Role) {
+function sortRoleCandidates(candidates: readonly PersonCandidate[], role: Role) {
   return [...candidates]
     .filter((person) => strongestRoleTier(person.records, role) > 0)
     .sort((a, b) => strongestRoleTier(b.records, role) - strongestRoleTier(a.records, role) || stableHash(a.key) - stableHash(b.key));
@@ -67,8 +77,8 @@ function sortRoleCandidates(candidates: readonly { key: string; records: Footbal
 function selectLaunchPool(league: League) {
   const people = rawPeople(league);
   const coaches = sortRoleCandidates(people, "coach").slice(0, COACH_TARGET);
-  const coachKeys = new Set(coaches.map((person) => person.key));
-  const players = sortRoleCandidates(people.filter((person) => !coachKeys.has(person.key)), "player").slice(0, PLAYER_TARGET);
+  const coachNames = new Set(coaches.map((person) => person.nameKey));
+  const players = sortRoleCandidates(people.filter((person) => !coachNames.has(person.nameKey)), "player").slice(0, PLAYER_TARGET);
   return [
     ...players.map((person): Person => ({ ...person, role: "player" })),
     ...coaches.map((person): Person => ({ ...person, role: "coach" })),
@@ -99,8 +109,21 @@ function roleActiveDecades(person: Person) {
 
 function rolePosition(person: Person) {
   if (person.role === "coach") return "Coach";
-  const positions = [...new Set(roleRecords(person).flatMap((record) => record.position ? [record.position] : []))];
+  const positions = [...new Set(roleRecords(person).flatMap((record) => {
+    const canonical = getFootballSubject(record.id);
+    const position = canonical?.position ?? record.position;
+    return position ? [position] : [];
+  }))];
   return positions.length === 1 ? positions[0]! : null;
+}
+
+function roleSchool(person: Person) {
+  const schools = [...new Set(roleRecords(person).flatMap((record) => {
+    const canonical = getFootballSubject(record.id);
+    const school = canonical?.school ?? record.school;
+    return school ? [school] : [];
+  }))];
+  return schools.length === 1 ? schools[0]! : null;
 }
 
 function numericFact(person: Person, metricId: string) {
@@ -121,6 +144,20 @@ function metricThreshold(person: Person, role: Role, metricId: string, threshold
   }
   const value = numericFact(person, metricId);
   return value == null ? null : value >= threshold;
+}
+
+function winPercentageThreshold(
+  person: Person,
+  role: Role,
+  winsMetricId: string,
+  lossesMetricId: string,
+  threshold: number,
+): Answer {
+  if (person.role !== role) return false;
+  const wins = numericFact(person, winsMetricId);
+  const losses = numericFact(person, lossesMetricId);
+  if (wins == null || losses == null || wins + losses <= 0) return null;
+  return wins / (wins + losses) * 100 >= threshold;
 }
 
 function careerAffiliations(person: Person) {
@@ -149,7 +186,8 @@ function buildPredicates(league: League, pool: readonly Person[]) {
   add("role", "head-coach", (person) => person.role === "coach");
   add("role", "player", (person) => person.role === "player");
 
-  for (const position of ["QB", "RB", "WR", "TE", "OL", "DL", "LB", "DB", "K", "P"] as const) {
+  const playerPositions = ["QB", "RB", "WR", "TE", "OL", "DL", "LB", "DB", "K", "P"] as const;
+  for (const position of playerPositions) {
     add("position", position, (person) => {
       if (person.role === "coach") return false;
       const known = rolePosition(person);
@@ -172,23 +210,45 @@ function buildPredicates(league: League, pool: readonly Person[]) {
     return known == null ? null : ["K", "P"].includes(known);
   });
 
-  for (const cutoff of [1960, 1970, 1980, 1990, 2000, 2010, 2020]) {
-    add("era", `started-before-${cutoff}`, (person) => {
-      const window = roleWindow(person);
-      return window == null ? null : window.start < cutoff;
-    });
+  const eraCutoffs = [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020] as const;
+  for (const role of ["player", "coach"] as const) {
+    for (const cutoff of eraCutoffs) {
+      add(`${role}:era`, `started-before-${cutoff}`, (person) => {
+        if (person.role !== role) return false;
+        const window = roleWindow(person);
+        return window == null ? null : window.start < cutoff;
+      });
+      add(`${role}:era`, `ended-before-${cutoff}`, (person) => {
+        if (person.role !== role) return false;
+        const window = roleWindow(person);
+        return window == null ? null : window.end < cutoff;
+      });
+    }
+    for (const decade of eraCutoffs) {
+      add(`${role}:era`, `active-${decade}s`, (person) => {
+        if (person.role !== role) return false;
+        const decades = roleActiveDecades(person);
+        return decades == null ? null : decades.includes(decade);
+      });
+    }
+    for (const years of [4, 8, 12, 16, 20]) {
+      add(`${role}:longevity`, `${years}-plus-seasons`, (person) => {
+        if (person.role !== role) return false;
+        const window = roleWindow(person);
+        return window == null ? null : window.end - window.start + 1 >= years;
+      });
+    }
   }
-  for (const decade of [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]) {
-    add("era", `active-${decade}s`, (person) => {
-      const decades = roleActiveDecades(person);
-      return decades == null ? null : decades.includes(decade);
-    });
-  }
-  for (const years of [4, 8, 12, 16, 20]) {
-    add("longevity", `${years}-plus-seasons`, (person) => {
-      const window = roleWindow(person);
-      return window == null ? null : window.end - window.start + 1 >= years;
-    });
+
+  if (league === "CFB") {
+    const playerSchools = new Set(pool.flatMap((person) => person.role === "player" ? (roleSchool(person) ? [roleSchool(person)!] : []) : []));
+    for (const school of playerSchools) {
+      add("player-program", normalize(school), (person) => {
+        if (person.role !== "player") return false;
+        const known = roleSchool(person);
+        return known == null ? null : known === school;
+      });
+    }
   }
 
   const affiliationValues = new Set(pool.flatMap((person) => careerAffiliations(person)?.affiliations ?? []));
@@ -202,42 +262,82 @@ function buildPredicates(league: League, pool: readonly Person[]) {
     }
   }
 
+  for (const position of playerPositions) {
+    const thresholds = league === "NFL" ? [25, 50, 75, 100, 125, 150, 175, 200, 225, 250] : [10, 20, 30, 40, 50, 60];
+    for (const threshold of thresholds) {
+      add(`production:${position}:games`, String(threshold), (person) => metricThreshold(
+        person,
+        "player",
+        league === "NFL" ? "nfl-career-games" : "cfb-career-games",
+        threshold,
+        [position],
+      ));
+    }
+  }
+
   const playerSpecs: readonly NumericSpec[] = league === "NFL" ? [
-    ["production:games", "nfl-career-games", [50, 75, 100, 125, 150, 175, 200]],
-    ["production:pass-yards", "nfl-career-passing-yards", [10_000, 20_000, 30_000, 40_000, 50_000, 60_000], ["QB"]],
-    ["production:pass-td", "nfl-career-passing-touchdowns", [100, 200, 300, 400], ["QB"]],
-    ["production:rush-yards", "nfl-career-rushing-yards", [3_000, 5_000, 7_500, 10_000, 12_500], ["RB"]],
-    ["production:rec-yards", "nfl-career-receiving-yards", [3_000, 5_000, 7_500, 10_000, 12_500], ["WR", "TE"]],
-    ["production:sacks", "nfl-career-sacks", [25, 50, 75, 100, 125], ["DL", "LB"]],
-    ["production:interceptions", "nfl-career-interceptions", [10, 20, 30, 40, 50], ["DB", "LB"]],
-    ["award:mvp", "nfl-ap-mvp-awards", [1, 2, 3]],
-    ["award:first-team-all-pro", "nfl-first-team-all-pros", [1, 3, 5, 7]],
-    ["championship:super-bowl", "nfl-super-bowl-titles", [1, 2, 3]],
+    ["production:pass-yards", "nfl-career-passing-yards", [5_000, 10_000, 15_000, 20_000, 25_000, 30_000, 35_000, 40_000, 45_000, 50_000, 55_000, 60_000, 65_000, 70_000, 75_000], ["QB"]],
+    ["production:pass-td", "nfl-career-passing-touchdowns", [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], ["QB"]],
+    ["production:rush-yards", "nfl-career-rushing-yards", [1_000, 2_000, 3_000, 4_000, 5_000, 6_000, 7_500, 9_000, 10_000, 11_000, 12_500, 14_000, 16_000], ["RB"]],
+    ["production:rush-td", "nfl-career-rushing-touchdowns", [10, 20, 30, 40, 50, 60, 75, 100, 125], ["RB"]],
+    ["production:rec-yards", "nfl-career-receiving-yards", [1_000, 2_000, 3_000, 4_000, 5_000, 6_000, 7_500, 9_000, 10_000, 11_000, 12_500, 14_000, 16_000], ["WR", "TE"]],
+    ["production:receptions", "nfl-career-receptions", [100, 200, 300, 400, 500, 600, 750, 900, 1_000, 1_200], ["WR", "TE"]],
+    ["production:rec-td", "nfl-career-receiving-touchdowns", [10, 20, 30, 40, 50, 60, 75, 100, 125], ["WR", "TE"]],
+    ["production:sacks", "nfl-career-sacks", [10, 25, 40, 50, 60, 75, 90, 100, 110, 125, 140, 160], ["DL", "LB"]],
+    ["production:interceptions", "nfl-career-interceptions", [5, 10, 15, 20, 25, 30, 35, 40, 50, 60], ["DB", "LB"]],
+    ["production:field-goals", "nfl-career-field-goals-made", [50, 100, 150, 200, 250, 300, 400, 500], ["K"]],
+    ["production:punts", "nfl-career-punts", [100, 250, 500, 750, 1_000], ["P"]],
+    ["award:mvp", "nfl-ap-mvp-awards", [1, 2, 3, 4, 5]],
   ] : [
-    ["production:games", "cfb-career-games", [20, 30, 40, 50]],
-    ["production:pass-yards", "cfb-career-passing-yards", [3_000, 5_000, 7_500, 10_000], ["QB"]],
-    ["production:rush-yards", "cfb-career-rushing-yards", [1_000, 2_000, 3_000, 4_000], ["RB"]],
-    ["production:rec-yards", "cfb-career-receiving-yards", [1_000, 2_000, 3_000], ["WR", "TE"]],
-    ["production:sacks", "cfb-career-sacks", [5, 10, 15, 20], ["DL", "LB"]],
-    ["production:interceptions", "cfb-career-defensive-interceptions", [3, 5, 10], ["DB", "LB"]],
-    ["award:heisman", "cfb-heisman-awards", [1]],
+    ["production:pass-yards", "cfb-career-passing-yards", [2_000, 3_000, 4_000, 5_000, 6_000, 7_500, 9_000, 10_000, 12_000, 14_000], ["QB"]],
+    ["production:pass-td", "cfb-career-passing-touchdowns", [20, 30, 40, 50, 60, 75, 100, 125], ["QB"]],
+    ["production:rush-yards", "cfb-career-rushing-yards", [500, 1_000, 1_500, 2_000, 2_500, 3_000, 3_500, 4_000, 5_000, 6_000], ["RB"]],
+    ["production:rush-td", "cfb-career-rushing-touchdowns", [10, 20, 30, 40, 50, 60, 75], ["RB"]],
+    ["production:rec-yards", "cfb-career-receiving-yards", [500, 1_000, 1_500, 2_000, 2_500, 3_000, 3_500, 4_000], ["WR", "TE"]],
+    ["production:receptions", "cfb-career-receptions", [25, 50, 75, 100, 150, 200, 250, 300], ["WR", "TE"]],
+    ["production:sacks", "cfb-career-sacks", [5, 10, 15, 20, 25, 30], ["DL", "LB"]],
+    ["production:interceptions", "cfb-career-defensive-interceptions", [3, 5, 7, 10, 12, 15, 20], ["DB", "LB"]],
+    ["award:heisman", "cfb-heisman-awards", [1, 2]],
   ];
   for (const [family, metricId, thresholds, positions] of playerSpecs) {
     for (const threshold of thresholds) add(family, String(threshold), (person) => metricThreshold(person, "player", metricId, threshold, positions));
   }
 
+  if (league === "NFL") {
+    for (const position of playerPositions) {
+      for (const threshold of [1, 2, 3, 4, 5, 6, 7]) {
+        add(`award:${position}:first-team-all-pro`, String(threshold), (person) => metricThreshold(person, "player", "nfl-first-team-all-pros", threshold, [position]));
+      }
+      for (const threshold of [1, 2, 3, 4]) {
+        add(`championship:${position}:super-bowl`, String(threshold), (person) => metricThreshold(person, "player", "nfl-super-bowl-titles", threshold, [position]));
+      }
+    }
+  }
+
   const coachSpecs: readonly NumericSpec[] = league === "NFL" ? [
-    ["coach:seasons", "nfl-coach-seasons-since-1999", [3, 5, 8, 10, 15, 20]],
-    ["coach:win-pct", "nfl-coach-win-percentage-since-1999", [50, 55, 60, 65, 70]],
-    ["coach:best-win-pct", "nfl-coach-best-season-win-percentage-since-1999", [60, 70, 75, 80]],
-    ["coach:postseason", "nfl-coach-postseason-resume-since-1999", [1, 4, 8, 12, 20]],
+    ["coach:seasons", "nfl-coach-seasons-since-1999", [3, 5, 8, 10, 12, 15, 20, 25]],
+    ["coach:win-pct", "nfl-coach-win-percentage-since-1999", [45, 50, 55, 60, 65, 70, 75]],
+    ["coach:best-win-pct", "nfl-coach-best-season-win-percentage-since-1999", [55, 60, 65, 70, 75, 80, 85]],
+    ["coach:postseason", "nfl-coach-postseason-resume-since-1999", [1, 2, 4, 6, 8, 10, 12, 15, 20]],
   ] : [
-    ["coach:wins", "cfb-coach-career-wins", [50, 75, 100, 150, 200, 250]],
-    ["coach:national-titles", "cfb-coach-national-titles", [1, 2, 3, 5]],
-    ["coach:conference-titles", "cfb-coach-conference-titles", [1, 3, 5, 10]],
+    ["coach:wins", "cfb-coach-career-wins", Array.from({ length: 29 }, (_value, index) => 20 + index * 10)],
+    ["coach:losses", "cfb-coach-career-losses", Array.from({ length: 15 }, (_value, index) => 10 + index * 10)],
+    ["coach:national-titles", "cfb-coach-national-titles", [1, 2, 3, 4, 5, 6, 7]],
+    ["coach:conference-titles", "cfb-coach-conference-titles", [1, 2, 3, 4, 5, 7, 10]],
   ];
   for (const [family, metricId, thresholds] of coachSpecs) {
     for (const threshold of thresholds) add(family, String(threshold), (person) => metricThreshold(person, "coach", metricId, threshold));
+  }
+  if (league === "CFB") {
+    for (const threshold of [45, 50, 55, 60, 65, 70, 75, 80, 85]) {
+      add("coach:career-win-pct", String(threshold), (person) => winPercentageThreshold(
+        person,
+        "coach",
+        "cfb-coach-career-wins",
+        "cfb-coach-career-losses",
+        threshold,
+      ));
+    }
   }
   return rows;
 }
