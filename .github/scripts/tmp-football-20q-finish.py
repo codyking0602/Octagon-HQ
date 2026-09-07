@@ -5,7 +5,7 @@ s = p.read_text()
 marker = "  return rows;\n}\n\nfunction percentile"
 extra = '''  for (const position of playerPositions) {
     const fineGameThresholds = league === "NFL"
-      ? Array.from({ length: 70 }, (_value, index) => 5 + index * 5)
+      ? Array.from({ length: 350 }, (_value, index) => 1 + index)
       : Array.from({ length: 60 }, (_value, index) => 1 + index);
     for (const threshold of fineGameThresholds) {
       add(`production:${position}:games-fine`, String(threshold), (person) => metricThreshold(
