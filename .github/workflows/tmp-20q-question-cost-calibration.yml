@@ -1,0 +1,383 @@
+name: Temporary 20Q Question Cost Calibration
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/tmp-20q-question-cost-calibration.yml'
+      - 'src/features/games/**'
+      - 'src/features/back-room/**'
+      - 'data/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Add aggregate-only calibration probes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          football = Path('src/features/games/twentyQuestionsFactualReadiness.audit.test.ts')
+          football.write_text(football.read_text() + r'''
+
+          type CostStrategy = "fast" | "value" | "messy";
+          type CostLiveRow = { id: string; family: string; values: readonly boolean[]; strength: number };
+          const COST_CHECKPOINTS = [8, 10, 11, 12] as const;
+          const COST_EXPONENTS = [0.5, 0.75, 1, 1.25, 1.5, 2] as const;
+
+          function costRng(seed: number) {
+            let state = seed >>> 0 || 0x9e3779b9;
+            return () => {
+              state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+              return state / 0x100000000;
+            };
+          }
+
+          function buildCostLiveRows(pool: readonly Person[], predicates: readonly Predicate[]): CostLiveRow[] {
+            const byPartition = new Map<string, CostLiveRow>();
+            for (const predicate of predicates) {
+              const raw = pool.map(predicate.answer);
+              if (raw.some((value) => value === null)) continue;
+              const values = raw as boolean[];
+              const yes = values.filter(Boolean).length;
+              const no = values.length - yes;
+              if (!yes || !no) continue;
+              const signature = canonicalPartitionSignature(values);
+              if (byPartition.has(signature)) continue;
+              const expectedRemainingRatio = (yes * yes + no * no) / (values.length * values.length);
+              const strength = Math.max(0, Math.min(1, 2 * (1 - expectedRemainingRatio)));
+              byPartition.set(signature, { id: predicate.id, family: predicate.family, values, strength });
+            }
+            return [...byPartition.values()];
+          }
+
+          function questionCost(strength: number, exponent: number) {
+            return Math.max(2, Math.min(8, 2 + Math.round(6 * Math.pow(strength, exponent))));
+          }
+
+          function currentQuestionStats(row: CostLiveRow, candidates: readonly number[], cost: number) {
+            const yes = candidates.filter((candidate) => row.values[candidate]).length;
+            const no = candidates.length - yes;
+            if (!yes || !no) return null;
+            const expectedEliminated = candidates.length - (yes * yes + no * no) / candidates.length;
+            return {
+              worst: Math.max(yes, no),
+              imbalance: Math.abs(yes - no),
+              valuePerPoint: expectedEliminated / cost,
+            };
+          }
+
+          function runCostTarget(
+            target: number,
+            rows: readonly CostLiveRow[],
+            size: number,
+            strategy: CostStrategy,
+            exponent: number,
+            seed: number,
+          ) {
+            let candidates = Array.from({ length: size }, (_value, index) => index);
+            const unused = new Set(rows.map((_row, index) => index));
+            const random = costRng(seed);
+            const checkpoints = new Map<number, number>();
+            let depth = 0;
+            let spend = 0;
+            while (candidates.length > 1 && depth < 12) {
+              const ranked = [...unused].flatMap((index) => {
+                const row = rows[index]!;
+                const cost = questionCost(row.strength, exponent);
+                const stats = currentQuestionStats(row, candidates, cost);
+                return stats ? [{ index, cost, ...stats, hash: stableHash(`${row.family}:${row.id}`) }] : [];
+              });
+              if (!ranked.length) break;
+              if (strategy === "fast") {
+                ranked.sort((a, b) => a.worst - b.worst || a.imbalance - b.imbalance || a.cost - b.cost || a.hash - b.hash);
+              } else {
+                ranked.sort((a, b) => b.valuePerPoint - a.valuePerPoint || a.worst - b.worst || a.cost - b.cost || a.hash - b.hash);
+              }
+              const width = strategy === "messy" ? Math.min(6, ranked.length) : 1;
+              const choice = ranked[Math.floor(random() * width)]!;
+              const row = rows[choice.index]!;
+              const answer = row.values[target]!;
+              candidates = candidates.filter((candidate) => row.values[candidate] === answer);
+              unused.delete(choice.index);
+              spend += choice.cost;
+              depth += 1;
+              if (COST_CHECKPOINTS.includes(depth as (typeof COST_CHECKPOINTS)[number])) checkpoints.set(depth, candidates.length);
+            }
+            for (const checkpoint of COST_CHECKPOINTS) if (!checkpoints.has(checkpoint)) checkpoints.set(checkpoint, candidates.length);
+            return { solved: candidates.length === 1, depth, spend, checkpoints };
+          }
+
+          function summarizeCostStrategy(
+            pool: readonly Person[],
+            rows: readonly CostLiveRow[],
+            strategy: CostStrategy,
+            exponent: number,
+          ) {
+            const repeats = strategy === "messy" ? 5 : 1;
+            const runs = pool.flatMap((_person, target) => Array.from({ length: repeats }, (_value, repeat) =>
+              runCostTarget(target, rows, pool.length, strategy, exponent, stableHash(`${strategy}:${target}:${repeat}`))));
+            const solved = runs.filter((run) => run.solved);
+            const average = (values: number[]) => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+            return {
+              runs: runs.length,
+              solvedBy12Pct: Number((solved.length / runs.length * 100).toFixed(1)),
+              solvedAt: Object.fromEntries(COST_CHECKPOINTS.map((cap) => [cap, Number((runs.filter((run) => run.checkpoints.get(cap) === 1).length / runs.length * 100).toFixed(1))])),
+              avgQuestionsSolved: Number(average(solved.map((run) => run.depth)).toFixed(2)),
+              avgSpendSolved: Number(average(solved.map((run) => run.spend)).toFixed(2)),
+              medianSpendSolved: percentile(solved.map((run) => run.spend), 0.5),
+              p95SpendSolved: percentile(solved.map((run) => run.spend), 0.95),
+            };
+          }
+
+          function headToHeadCost(pool: readonly Person[], rows: readonly CostLiveRow[], exponent: number) {
+            let fast = 0;
+            let value = 0;
+            let tie = 0;
+            let valueLonger = 0;
+            let bothSolved = 0;
+            for (let target = 0; target < pool.length; target += 1) {
+              const a = runCostTarget(target, rows, pool.length, "fast", exponent, stableHash(`fast:${target}:0`));
+              const b = runCostTarget(target, rows, pool.length, "value", exponent, stableHash(`value:${target}:0`));
+              if (!a.solved && !b.solved) { tie += 1; continue; }
+              if (a.solved && !b.solved) { fast += 1; continue; }
+              if (!a.solved && b.solved) { value += 1; continue; }
+              bothSolved += 1;
+              if (b.depth > a.depth) valueLonger += 1;
+              if (a.spend < b.spend) fast += 1;
+              else if (b.spend < a.spend) value += 1;
+              else tie += 1;
+            }
+            return {
+              fastWinPct: Number((fast / pool.length * 100).toFixed(1)),
+              valueWinPct: Number((value / pool.length * 100).toFixed(1)),
+              tiePct: Number((tie / pool.length * 100).toFixed(1)),
+              bothSolved,
+              valueLongerPctOfBoth: bothSolved ? Number((valueLonger / bothSolved * 100).toFixed(1)) : 0,
+            };
+          }
+
+          function footballCostReport(league: League) {
+            const pool = selectLaunchPool(league);
+            const rows = buildCostLiveRows(pool, buildPredicates(league, pool));
+            return {
+              subjectCount: pool.length,
+              liveQuestionCount: rows.length,
+              schemes: COST_EXPONENTS.map((exponent) => {
+                const costCounts = new Map<number, number>();
+                for (const row of rows) {
+                  const cost = questionCost(row.strength, exponent);
+                  costCounts.set(cost, (costCounts.get(cost) ?? 0) + 1);
+                }
+                return {
+                  exponent,
+                  costDistribution: Object.fromEntries([...costCounts.entries()].sort((a, b) => a[0] - b[0])),
+                  fast: summarizeCostStrategy(pool, rows, "fast", exponent),
+                  value: summarizeCostStrategy(pool, rows, "value", exponent),
+                  messy: summarizeCostStrategy(pool, rows, "messy", exponent),
+                  headToHead: headToHeadCost(pool, rows, exponent),
+                };
+              }),
+            };
+          }
+
+          describe("Football 20 Questions visible question-cost calibration", () => {
+            for (const league of ["NFL", "CFB"] as const) {
+              it(`${league} prints aggregate-only cost/cap calibration`, () => {
+                const report = footballCostReport(league);
+                console.log(`TWENTY_QUESTIONS_COST_${league}=${JSON.stringify(report)}`);
+                expect(report.subjectCount).toBe(120);
+              });
+            }
+          });
+          ''')
+
+          ufc = Path('src/features/games/twentyQuestionsCostUfc.tmp.audit.test.ts')
+          ufc.write_text(r'''
+          import { describe, expect, it } from "vitest";
+          import { ufcFactualLedgerSubjects, type UfcFactualSubject } from "../back-room/ufcFactualLedger";
+
+          type Predicate = { id: string; family: string; answer: (subject: UfcFactualSubject) => boolean };
+          type LiveRow = { id: string; family: string; values: readonly boolean[]; strength: number };
+          type Strategy = "fast" | "value" | "messy";
+          const CHECKPOINTS = [8, 10, 11, 12] as const;
+          const EXPONENTS = [0.5, 0.75, 1, 1.25, 1.5, 2] as const;
+
+          const normalize = (value: string) => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+          const stableHash = (value: string) => {
+            let hash = 2166136261;
+            for (const char of value) { hash ^= char.charCodeAt(0); hash = Math.imul(hash, 16777619); }
+            return hash >>> 0;
+          };
+          function rng(seed: number) {
+            let state = seed >>> 0 || 0x9e3779b9;
+            return () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 0x100000000; };
+          }
+          function percentile(values: readonly number[], p: number) {
+            if (!values.length) return null;
+            const sorted = [...values].sort((a, b) => a - b);
+            return sorted[Math.max(0, Math.min(sorted.length - 1, Math.ceil(sorted.length * p) - 1))]!;
+          }
+          function canonicalPartition(values: readonly boolean[]) {
+            const direct = values.map((value) => value ? "1" : "0").join("");
+            const inverse = values.map((value) => value ? "0" : "1").join("");
+            return direct < inverse ? direct : inverse;
+          }
+
+          function buildPredicates(pool: readonly UfcFactualSubject[]): Predicate[] {
+            const rows: Predicate[] = [];
+            const add = (family: string, id: string, answer: Predicate["answer"]) => rows.push({ family, id, answer });
+            const divisions = new Set(pool.flatMap((subject) => [subject.primaryDivision, ...subject.secondaryDivisions]));
+            for (const division of divisions) add("division", normalize(division), (subject) => subject.primaryDivision === division || subject.secondaryDivisions.includes(division));
+            for (const cutoff of [2000, 2005, 2010, 2015, 2020]) {
+              add("debut-before", String(cutoff), (subject) => Number(subject.activeFrom.slice(0, 4)) < cutoff);
+              add("last-fight-before", String(cutoff), (subject) => Number(subject.activeTo.slice(0, 4)) < cutoff);
+            }
+            for (const cutoff of [2016, 2020, 2022, 2024]) add("fought-since", String(cutoff), (subject) => Number(subject.activeTo.slice(0, 4)) >= cutoff);
+            for (const decade of [1990, 2000, 2010, 2020]) add("active-decade", String(decade), (subject) => subject.fights.some((fight) => { const year = Number(fight.date.slice(0, 4)); return year >= decade && year < decade + 10; }));
+            const wins = (subject: UfcFactualSubject) => subject.fights.filter((fight) => fight.result === "win");
+            const losses = (subject: UfcFactualSubject) => subject.fights.filter((fight) => fight.result === "loss");
+            const winsBy = (subject: UfcFactualSubject, method: string) => wins(subject).filter((fight) => fight.methodCategory === method).length;
+            for (const threshold of [5, 10, 15, 20, 25, 30]) add("fights", String(threshold), (subject) => subject.fights.length >= threshold);
+            for (const threshold of [5, 10, 15, 20, 25]) add("wins", String(threshold), (subject) => wins(subject).length >= threshold);
+            for (const threshold of [1, 3, 5, 8, 10]) add("losses", String(threshold), (subject) => losses(subject).length >= threshold);
+            for (const threshold of [1, 3, 5, 8, 10]) add("ko-wins", String(threshold), (subject) => winsBy(subject, "ko-tko") >= threshold);
+            for (const threshold of [1, 3, 5, 8]) add("sub-wins", String(threshold), (subject) => winsBy(subject, "submission") >= threshold);
+            for (const threshold of [1, 3, 5, 8, 10]) add("decision-wins", String(threshold), (subject) => winsBy(subject, "decision") >= threshold);
+            add("loss-method", "lost-by-ko", (subject) => losses(subject).some((fight) => fight.methodCategory === "ko-tko"));
+            add("loss-method", "lost-by-sub", (subject) => losses(subject).some((fight) => fight.methodCategory === "submission"));
+            add("finish-profile", "more-ko-than-sub-wins", (subject) => winsBy(subject, "ko-tko") > winsBy(subject, "submission"));
+            add("finish-profile", "more-sub-than-ko-wins", (subject) => winsBy(subject, "submission") > winsBy(subject, "ko-tko"));
+            const titleFights = (subject: UfcFactualSubject) => subject.fights.filter((fight) => fight.titleFight);
+            const titleWins = (subject: UfcFactualSubject) => titleFights(subject).filter((fight) => fight.result === "win");
+            for (const threshold of [1, 2, 3, 5, 8, 10]) add("title-fights", String(threshold), (subject) => titleFights(subject).length >= threshold);
+            for (const threshold of [1, 2, 3, 5, 8, 10]) add("title-wins", String(threshold), (subject) => titleWins(subject).length >= threshold);
+            add("title", "interim-title-fight", (subject) => subject.fights.some((fight) => fight.interimTitleFight));
+            add("division", "multi-division-career", (subject) => subject.secondaryDivisions.length > 0);
+            const names = new Set(pool.map((subject) => normalize(subject.name)));
+            for (const opponent of names) {
+              const faced = pool.filter((subject) => subject.fights.some((fight) => normalize(fight.opponent) === opponent)).length;
+              if (faced < 2 || faced > Math.floor(pool.length * 0.45)) continue;
+              add("faced-opponent", opponent, (subject) => subject.fights.some((fight) => normalize(fight.opponent) === opponent));
+            }
+            return rows;
+          }
+
+          function liveRows(pool: readonly UfcFactualSubject[], predicates: readonly Predicate[]): LiveRow[] {
+            const byPartition = new Map<string, LiveRow>();
+            for (const predicate of predicates) {
+              const values = pool.map(predicate.answer);
+              const yes = values.filter(Boolean).length;
+              const no = values.length - yes;
+              if (!yes || !no) continue;
+              const signature = canonicalPartition(values);
+              if (byPartition.has(signature)) continue;
+              const expectedRemainingRatio = (yes * yes + no * no) / (values.length * values.length);
+              const strength = Math.max(0, Math.min(1, 2 * (1 - expectedRemainingRatio)));
+              byPartition.set(signature, { id: predicate.id, family: predicate.family, values, strength });
+            }
+            return [...byPartition.values()];
+          }
+
+          function questionCost(strength: number, exponent: number) { return Math.max(2, Math.min(8, 2 + Math.round(6 * Math.pow(strength, exponent)))); }
+          function currentStats(row: LiveRow, candidates: readonly number[], cost: number) {
+            const yes = candidates.filter((candidate) => row.values[candidate]).length;
+            const no = candidates.length - yes;
+            if (!yes || !no) return null;
+            const expectedEliminated = candidates.length - (yes * yes + no * no) / candidates.length;
+            return { worst: Math.max(yes, no), imbalance: Math.abs(yes - no), valuePerPoint: expectedEliminated / cost };
+          }
+          function runTarget(target: number, rows: readonly LiveRow[], size: number, strategy: Strategy, exponent: number, seed: number) {
+            let candidates = Array.from({ length: size }, (_value, index) => index);
+            const unused = new Set(rows.map((_row, index) => index));
+            const random = rng(seed);
+            const checkpoints = new Map<number, number>();
+            let depth = 0;
+            let spend = 0;
+            while (candidates.length > 1 && depth < 12) {
+              const ranked = [...unused].flatMap((index) => {
+                const row = rows[index]!;
+                const cost = questionCost(row.strength, exponent);
+                const stats = currentStats(row, candidates, cost);
+                return stats ? [{ index, cost, ...stats, hash: stableHash(`${row.family}:${row.id}`) }] : [];
+              });
+              if (!ranked.length) break;
+              if (strategy === "fast") ranked.sort((a, b) => a.worst - b.worst || a.imbalance - b.imbalance || a.cost - b.cost || a.hash - b.hash);
+              else ranked.sort((a, b) => b.valuePerPoint - a.valuePerPoint || a.worst - b.worst || a.cost - b.cost || a.hash - b.hash);
+              const width = strategy === "messy" ? Math.min(6, ranked.length) : 1;
+              const choice = ranked[Math.floor(random() * width)]!;
+              const row = rows[choice.index]!;
+              const answer = row.values[target]!;
+              candidates = candidates.filter((candidate) => row.values[candidate] === answer);
+              unused.delete(choice.index);
+              spend += choice.cost;
+              depth += 1;
+              if (CHECKPOINTS.includes(depth as (typeof CHECKPOINTS)[number])) checkpoints.set(depth, candidates.length);
+            }
+            for (const checkpoint of CHECKPOINTS) if (!checkpoints.has(checkpoint)) checkpoints.set(checkpoint, candidates.length);
+            return { solved: candidates.length === 1, depth, spend, checkpoints };
+          }
+          function summarize(pool: readonly UfcFactualSubject[], rows: readonly LiveRow[], strategy: Strategy, exponent: number) {
+            const repeats = strategy === "messy" ? 5 : 1;
+            const runs = pool.flatMap((_subject, target) => Array.from({ length: repeats }, (_value, repeat) => runTarget(target, rows, pool.length, strategy, exponent, stableHash(`${strategy}:${target}:${repeat}`))));
+            const solved = runs.filter((run) => run.solved);
+            const average = (values: number[]) => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+            return {
+              runs: runs.length,
+              solvedBy12Pct: Number((solved.length / runs.length * 100).toFixed(1)),
+              solvedAt: Object.fromEntries(CHECKPOINTS.map((cap) => [cap, Number((runs.filter((run) => run.checkpoints.get(cap) === 1).length / runs.length * 100).toFixed(1))])),
+              avgQuestionsSolved: Number(average(solved.map((run) => run.depth)).toFixed(2)),
+              avgSpendSolved: Number(average(solved.map((run) => run.spend)).toFixed(2)),
+              medianSpendSolved: percentile(solved.map((run) => run.spend), 0.5),
+              p95SpendSolved: percentile(solved.map((run) => run.spend), 0.95),
+            };
+          }
+          function headToHead(pool: readonly UfcFactualSubject[], rows: readonly LiveRow[], exponent: number) {
+            let fast = 0, value = 0, tie = 0, valueLonger = 0, bothSolved = 0;
+            for (let target = 0; target < pool.length; target += 1) {
+              const a = runTarget(target, rows, pool.length, "fast", exponent, stableHash(`fast:${target}:0`));
+              const b = runTarget(target, rows, pool.length, "value", exponent, stableHash(`value:${target}:0`));
+              if (!a.solved && !b.solved) { tie += 1; continue; }
+              if (a.solved && !b.solved) { fast += 1; continue; }
+              if (!a.solved && b.solved) { value += 1; continue; }
+              bothSolved += 1;
+              if (b.depth > a.depth) valueLonger += 1;
+              if (a.spend < b.spend) fast += 1; else if (b.spend < a.spend) value += 1; else tie += 1;
+            }
+            return { fastWinPct: Number((fast / pool.length * 100).toFixed(1)), valueWinPct: Number((value / pool.length * 100).toFixed(1)), tiePct: Number((tie / pool.length * 100).toFixed(1)), bothSolved, valueLongerPctOfBoth: bothSolved ? Number((valueLonger / bothSolved * 100).toFixed(1)) : 0 };
+          }
+
+          describe("UFC 20 Questions visible question-cost calibration", () => {
+            it("prints aggregate-only cost/cap calibration", () => {
+              const pool = ufcFactualLedgerSubjects;
+              const rows = liveRows(pool, buildPredicates(pool));
+              const report = {
+                subjectCount: pool.length,
+                liveQuestionCount: rows.length,
+                schemes: EXPONENTS.map((exponent) => {
+                  const counts = new Map<number, number>();
+                  for (const row of rows) { const cost = questionCost(row.strength, exponent); counts.set(cost, (counts.get(cost) ?? 0) + 1); }
+                  return { exponent, costDistribution: Object.fromEntries([...counts.entries()].sort((a, b) => a[0] - b[0])), fast: summarize(pool, rows, "fast", exponent), value: summarize(pool, rows, "value", exponent), messy: summarize(pool, rows, "messy", exponent), headToHead: headToHead(pool, rows, exponent) };
+                }),
+              };
+              console.log(`TWENTY_QUESTIONS_COST_UFC=${JSON.stringify(report)}`);
+              expect(report.subjectCount).toBe(100);
+            });
+          });
+          ''')
+          PY
+      - name: Run 20Q cost calibration
+        run: npx vitest run src/features/games/twentyQuestionsFactualReadiness.audit.test.ts src/features/games/twentyQuestionsCostUfc.tmp.audit.test.ts --reporter=verbose
