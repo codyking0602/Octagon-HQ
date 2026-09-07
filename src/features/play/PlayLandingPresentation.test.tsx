@@ -14,32 +14,30 @@ import {
 import { playGameDefinition } from "./playRegistry";
 
 describe("Play landing presentation", () => {
-  it("keeps the shared order while temporarily exposing Football comparison games", () => {
+  it("keeps the shared order while Football comparison games remain Daily-only", () => {
     expect(PLAY_LANDING_COMMON_GAME_ORDER).toEqual(["find-leader", "wavelength", "blind-resume", "hit-the-number"]);
     expect(PLAY_LANDING_FOOTBALL_GAME_ORDER).toEqual([
       "find-leader",
       "wavelength",
-      "blind-rank",
-      "keep-cut",
       "hit-the-number",
     ]);
     expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]);
     expect(playLandingGameIds("football")).toEqual(PLAY_LANDING_FOOTBALL_GAME_ORDER);
   });
 
-  it("keeps UFC Daily-only and does not fake future Football games", () => {
+  it("keeps Blind Rank and Keep/Cut out of the casual libraries", () => {
     const ufcIds = [...playLandingGameIds("ufc")];
     const footballIds = [...playLandingGameIds("football")];
     expect(ufcIds).not.toContain("blind-rank");
     expect(ufcIds).not.toContain("keep-cut");
-    expect(footballIds).toContain("blind-rank");
-    expect(footballIds).toContain("keep-cut");
+    expect(footballIds).not.toContain("blind-rank");
+    expect(footballIds).not.toContain("keep-cut");
     expect(footballIds).not.toContain("blind-resume");
 
     render(<PlayLandingGameLibrary sport="football" onNavigate={() => {}} />);
-    expect(screen.getByRole("button", { name: /blind rank 5/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /keep 4, cut 4/i })).toBeInTheDocument();
-    expect(screen.getAllByText("TEMP CASUAL")).toHaveLength(2);
+    expect(screen.queryByRole("button", { name: /blind rank 5/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /keep 4, cut 4/i })).not.toBeInTheDocument();
+    expect(screen.queryByText("TEMP CASUAL")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /blind resume/i })).not.toBeInTheDocument();
     expect(screen.queryByText(/Who Am I/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/20 Questions/i)).not.toBeInTheDocument();
