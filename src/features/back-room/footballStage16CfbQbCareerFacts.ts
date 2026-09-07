@@ -75,6 +75,8 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   qbCareer("cfb-robert-griffin-iii", 41, 800, 1192, 10366, 78, 17, 528, 2254, 33),
   qbCareer("cfb-marcus-mariota", 41, 779, 1167, 10796, 105, 14, 337, 2237, 29),
   qbCareer("cfb-jameis-winston", 27, 562, 851, 7964, 65, 28, 145, 284, 7),
+  qbCareer("cfb-colt-mccoy", 53, 1157, 1645, 13253, 112, 45, 447, 1571, 20),
+  qbCareer("cfb-troy-smith", 43, 420, 670, 5720, 54, 13, 293, 1168, 14),
 
   facts("cfb-archie-griffin", [
     ["cfb-career-games", 42], ["cfb-career-rushing-attempts", 845], ["cfb-career-rushing-yards", 5177],
@@ -164,6 +166,32 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
     ["cfb-career-games", 39], ["cfb-career-rushing-attempts", 602], ["cfb-career-rushing-yards", 3591],
     ["cfb-career-rushing-touchdowns", 42], ["cfb-career-receptions", 17], ["cfb-career-receiving-yards", 285],
     ["cfb-career-receiving-touchdowns", 3], ["cfb-career-total-touchdowns", 45],
+  ]),
+  facts("cfb-mark-ingram-ii", [
+    ["cfb-career-games", 39], ["cfb-career-rushing-attempts", 572], ["cfb-career-rushing-yards", 3261],
+    ["cfb-career-rushing-touchdowns", 42], ["cfb-career-receptions", 60], ["cfb-career-receiving-yards", 670],
+    ["cfb-career-receiving-touchdowns", 4], ["cfb-career-total-touchdowns", 46],
+  ]),
+  facts("cfb-darren-mcfadden", [
+    ["cfb-career-games", 38], ["cfb-career-rushing-attempts", 785], ["cfb-career-rushing-yards", 4590],
+    ["cfb-career-rushing-touchdowns", 41], ["cfb-career-receptions", 46], ["cfb-career-receiving-yards", 365],
+    ["cfb-career-receiving-touchdowns", 2], ["cfb-career-total-touchdowns", 43],
+  ]),
+
+  facts("cfb-larry-fitzgerald", [
+    ["cfb-career-games", 26], ["cfb-career-receptions", 161], ["cfb-career-receiving-yards", 2677],
+    ["cfb-career-receiving-touchdowns", 34], ["cfb-career-rushing-attempts", 1], ["cfb-career-rushing-yards", 7],
+    ["cfb-career-rushing-touchdowns", 0], ["cfb-career-total-touchdowns", 34],
+  ]),
+  facts("cfb-calvin-johnson", [
+    ["cfb-career-games", 38], ["cfb-career-receptions", 178], ["cfb-career-receiving-yards", 2927],
+    ["cfb-career-receiving-touchdowns", 28], ["cfb-career-rushing-attempts", 10], ["cfb-career-rushing-yards", 40],
+    ["cfb-career-rushing-touchdowns", 1], ["cfb-career-total-touchdowns", 29],
+  ]),
+  facts("cfb-michael-crabtree", [
+    ["cfb-career-games", 26], ["cfb-career-receptions", 231], ["cfb-career-receiving-yards", 3127],
+    ["cfb-career-receiving-touchdowns", 41], ["cfb-career-rushing-attempts", 2], ["cfb-career-rushing-yards", 1],
+    ["cfb-career-rushing-touchdowns", 0], ["cfb-career-total-touchdowns", 41],
   ]),
 
   facts("cfb-billy-cannon", [
