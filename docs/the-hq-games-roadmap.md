@@ -2,7 +2,7 @@
 
 **Status:** Sole canonical product and implementation roadmap for UFC + Football Games  
 **Created:** September 3, 2026  
-**Updated:** September 4, 2026  
+**Updated:** September 7, 2026  
 **Scope:** Play landing pages, shared game presentation, UFC games, Football games, Today's Challenge, 20 Questions, Who Am I, Auction, Draft Room, game-source ownership, and Games release readiness.
 
 > **Cross-chat rule:** Read this document before changing UFC Play, Football Play, any shared game mechanic, Today's Challenge, Auction, Draft Room, Blind Rank 5, Keep 4 / Cut 4, 20 Questions, Who Am I, or the data/ranking sources consumed by Games.
@@ -262,21 +262,29 @@ Roadmap PR 8 is complete in #895. Blind Rank + Keep/Cut are **not** the next roa
 
 ### 20 Questions
 
-Normal replayable game for UFC and Football.
+Normal replayable game for UFC and Football with one shared interaction and presentation model across both sport contexts.
 
 Core rules:
 
 - one hidden eligible subject;
-- up to 20 curated yes/no questions;
-- deterministic predicates against canonical identity/factual data;
-- guess identity at any time;
-- wrong guesses carry a meaningful penalty;
-- earlier correct identification scores better;
+- UFC uses the canonical 100-subject factual Games universe;
+- Football selects NFL or CFB 50/50, discloses the league before the first question, and uses the locked 100-player + 20-head-coach launch pool for that league;
+- a hard maximum of 10 curated Yes/No questions;
+- deterministic predicates against canonical identity/factual data only;
+- every live predicate must resolve deterministic Yes or No for every eligible subject, and unknown evidence must never become No;
+- guess identity at any time before the 10-question limit is reached;
+- start every round at 100 points;
+- each question has a static whole-universe internal calibration cost of 5, 6, 7, or 8 based on informativeness, never recalculated from previous answers;
+- player-facing question cards show the actual score deduction rather than the internal cost: `−2.0`, `−2.4`, `−2.8`, or `−3.2` points;
+- question deduction equals internal cost × 0.4;
+- each wrong identity guess deducts 10 points and play continues when questions remain;
+- a correct identity guess ends the round immediately;
+- final score is rounded to the nearest whole number and clamped from 0–100;
 - no runtime LLM truth judgments.
 
-Never show remaining candidate count, candidate lists, eliminated candidates, probability meters, or dynamic narrowing hints. The player does the narrowing mentally.
+Never show remaining candidate count, candidate lists, eliminated candidates, probability meters, dynamic narrowing hints, or any other player-facing narrowing metadata. The player does the narrowing mentally. Normal identity search for guessing is allowed only against the full current sport/league universe.
 
-Football may support NFL and College Football universe selection where the predicate contract remains clear.
+UFC and Football should look and behave like the same game. Sport context changes the factual universe and accent treatment, not the core game shell, scoring presentation, question interaction, guess flow, or result hierarchy.
 
 ### Who Am I?
 
@@ -397,7 +405,7 @@ Completed through #878–#882, including the newer locked Football Daily-only di
 Completed in #885. Canonical factual ownership is preserved, every UFC Random Pool format is quality-gated using legal selections, mature UFC/Football format depth is locked, and deterministic cross-sport source/quality/replay/challenge tests cover the final contract.
 
 ### ✅ PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup
-Completed in #895. Blind Rank 5 + Keep 4 / Cut 4 remain Daily Double-only in both sports; normal Play discovery and plain standalone entry are removed, compatible historical/challenge deep links remain valid, the existing Daily/hydration/history owners and persisted versions are preserved, Football uses the shared official Keep/Cut comparison scorer, and cross-sport presentation recognizes both persisted Daily Double result shapes.
+Completed in #895. Blind Rank 5 + Keep 4 / Cut 4 remain Daily Double-only in both sports; normal Play discovery and plain standalone entry are removed, compatible historical/challenge deep links remain valid, the existing Daily/hydration/history owners and persisted versions are preserved, Football uses the shared official Keep/Cut comparison scorer, and cross-sport presentation recognizes both persisted UFC and Football result shapes.
 
 ### ▶ PR 9 — 20 Questions
 **NEXT.** Implement the replayable cross-sport mechanic, deterministic predicate bank, scoring, no-narrowing-assistance contract, and source/depth/repetition/UI proof. Daily-ready only; do not activate Daily rotation here.

@@ -1,0 +1,406 @@
+.twenty-questions-page {
+  --twenty-questions-accent: var(--ufc-red);
+  padding-bottom: 36px;
+}
+
+.twenty-questions-page[data-sport="football"] {
+  --twenty-questions-accent: #1f4e79;
+}
+
+.twenty-questions-shell {
+  display: grid;
+  gap: 14px;
+  width: min(100%, 820px);
+  margin: 0 auto;
+}
+
+.twenty-questions-header,
+.twenty-questions-start,
+.twenty-questions-scorebar,
+.twenty-questions-guess,
+.twenty-questions-history,
+.twenty-questions-bank,
+.twenty-questions-result {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, var(--surface-raised), var(--surface));
+}
+
+.twenty-questions-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+}
+
+.twenty-questions-header h1,
+.twenty-questions-start h2,
+.twenty-questions-section-heading h2,
+.twenty-questions-result h2 {
+  margin: 3px 0 0;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.twenty-questions-header h1 {
+  font-size: clamp(30px, 7vw, 46px);
+}
+
+.twenty-questions-league-pill,
+.twenty-questions-start__league {
+  color: var(--twenty-questions-accent);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .14em;
+}
+
+.twenty-questions-league-pill {
+  border: 1px solid color-mix(in srgb, var(--twenty-questions-accent) 46%, var(--border));
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: color-mix(in srgb, var(--twenty-questions-accent) 10%, transparent);
+}
+
+.twenty-questions-start,
+.twenty-questions-result {
+  display: grid;
+  justify-items: center;
+  gap: 13px;
+  padding: clamp(22px, 6vw, 42px) 18px;
+  text-align: center;
+}
+
+.twenty-questions-start__mark {
+  display: grid;
+  place-items: center;
+  width: 78px;
+  height: 78px;
+  border-radius: 24px;
+  background: var(--twenty-questions-accent);
+  color: #fff;
+  font-size: 48px;
+  font-weight: 950;
+  line-height: 1;
+  box-shadow: 0 16px 36px color-mix(in srgb, var(--twenty-questions-accent) 28%, transparent);
+}
+
+.twenty-questions-start__league,
+.twenty-questions-start p,
+.twenty-questions-result p,
+.twenty-questions-result small {
+  margin: 0;
+}
+
+.twenty-questions-start h2,
+.twenty-questions-result h2 {
+  max-width: 640px;
+  font-size: clamp(25px, 6vw, 38px);
+}
+
+.twenty-questions-start > p:not(.twenty-questions-start__league):not(.twenty-questions-disclosure),
+.twenty-questions-result > p {
+  max-width: 600px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.twenty-questions-rules,
+.twenty-questions-result__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 560px;
+}
+
+.twenty-questions-rules span,
+.twenty-questions-result__stats span {
+  display: grid;
+  gap: 4px;
+  padding: 11px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+
+.twenty-questions-rules strong,
+.twenty-questions-result__stats strong {
+  color: var(--text-primary);
+  font-size: 18px;
+}
+
+.twenty-questions-disclosure {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.twenty-questions-primary,
+.twenty-questions-more {
+  min-height: 46px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 0 18px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+
+.twenty-questions-primary {
+  min-width: min(100%, 280px);
+  background: var(--twenty-questions-accent);
+  color: #fff;
+}
+
+.twenty-questions-scorebar {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.twenty-questions-scorebar > div {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border-right: 1px solid var(--border);
+}
+
+.twenty-questions-scorebar small,
+.twenty-questions-result > small {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .14em;
+}
+
+.twenty-questions-scorebar strong {
+  font-size: 22px;
+}
+
+.twenty-questions-scorebar button {
+  border: 0;
+  background: var(--twenty-questions-accent);
+  color: #fff;
+  padding: 0 18px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .1em;
+  cursor: pointer;
+}
+
+.twenty-questions-guess,
+.twenty-questions-history,
+.twenty-questions-bank {
+  display: grid;
+  gap: 12px;
+  padding: 15px;
+}
+
+.twenty-questions-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.twenty-questions-section-heading h2 {
+  font-size: clamp(20px, 5vw, 27px);
+}
+
+.twenty-questions-section-heading > span {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.twenty-questions-guess input,
+.twenty-questions-bank input {
+  width: 100%;
+  min-height: 46px;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  padding: 0 13px;
+  font: inherit;
+}
+
+.twenty-questions-guess-list,
+.twenty-questions-question-list,
+.twenty-questions-history-list {
+  display: grid;
+  gap: 8px;
+}
+
+.twenty-questions-guess-list button,
+.twenty-questions-question-list button,
+.twenty-questions-history-list article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  padding: 11px 12px;
+}
+
+.twenty-questions-guess-list button,
+.twenty-questions-question-list button {
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.twenty-questions-guess-list button.is-selected {
+  border-color: var(--twenty-questions-accent);
+  background: color-mix(in srgb, var(--twenty-questions-accent) 11%, var(--surface-soft));
+}
+
+.twenty-questions-guess-list button > span,
+.twenty-questions-guess-list button > div,
+.twenty-questions-question-list button > span,
+.twenty-questions-history-list article > div {
+  min-width: 0;
+}
+
+.twenty-questions-guess-list button {
+  justify-content: flex-start;
+}
+
+.twenty-questions-guess-list button strong,
+.twenty-questions-guess-list button small {
+  display: block;
+}
+
+.twenty-questions-guess-list button small,
+.twenty-questions-history-list article small {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.twenty-questions-question-list button > span {
+  line-height: 1.3;
+}
+
+.twenty-questions-question-list button > strong {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--twenty-questions-accent) 12%, var(--surface-raised));
+  color: var(--twenty-questions-accent);
+  padding: 6px 8px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.twenty-questions-history-list article {
+  justify-content: flex-start;
+}
+
+.twenty-questions-history-list article > span {
+  flex: 0 0 auto;
+  min-width: 42px;
+  border-radius: 999px;
+  padding: 6px 7px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.twenty-questions-history-list article > span.is-yes {
+  background: rgba(35, 160, 84, .14);
+  color: #39b96b;
+}
+
+.twenty-questions-history-list article > span.is-no {
+  background: rgba(205, 58, 58, .14);
+  color: #e15b5b;
+}
+
+.twenty-questions-history-list article strong,
+.twenty-questions-history-list article small {
+  display: block;
+}
+
+.twenty-questions-more {
+  justify-self: center;
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+}
+
+.twenty-questions-wrong-guess {
+  margin: 0;
+  color: #e15b5b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.twenty-questions-result__score {
+  font-size: clamp(70px, 20vw, 116px);
+  font-weight: 950;
+  line-height: .85;
+  letter-spacing: -.07em;
+  color: var(--twenty-questions-accent);
+}
+
+@media (max-width: 560px) {
+  .twenty-questions-header,
+  .twenty-questions-guess,
+  .twenty-questions-history,
+  .twenty-questions-bank {
+    border-radius: var(--radius-md);
+  }
+
+  .twenty-questions-scorebar {
+    position: sticky;
+    top: 6px;
+    z-index: 4;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+  }
+
+  .twenty-questions-scorebar > div {
+    padding: 10px 11px;
+  }
+
+  .twenty-questions-scorebar strong {
+    font-size: 19px;
+  }
+
+  .twenty-questions-scorebar button {
+    padding: 0 13px;
+  }
+
+  .twenty-questions-rules,
+  .twenty-questions-result__stats {
+    gap: 6px;
+  }
+
+  .twenty-questions-rules span,
+  .twenty-questions-result__stats span {
+    padding: 9px 5px;
+    font-size: 9px;
+  }
+
+  .twenty-questions-section-heading {
+    align-items: flex-start;
+  }
+
+  .twenty-questions-section-heading > span {
+    max-width: 100px;
+  }
+}

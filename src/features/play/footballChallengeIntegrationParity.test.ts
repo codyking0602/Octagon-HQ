@@ -43,18 +43,25 @@ function challenge(
 }
 
 describe("Football standalone challenge integration parity", () => {
-  it("makes all six Football games challenge-capable without creating another daily owner", () => {
+  it("keeps the six established Football games challenge-capable while 20 Questions stays replayable-only", () => {
     const games = playGamesForSport("football");
-    expect(games.map((game) => game.id)).toEqual(footballChallengeGames.map((game) => game.id));
+    const challengeGames = games.filter((game) => game.lineup.challengeEligible);
+    expect(challengeGames.map((game) => game.id)).toEqual(footballChallengeGames.map((game) => game.id));
 
-    for (const game of games) {
-      expect(game.lineup.challengeEligible).toBe(true);
+    for (const game of challengeGames) {
       expect(game.lineup.supportedTypes).toContain("curated");
       expect(game.lineup.historyRecording).toBe("casual-and-challenge");
       expect(game.lineup.dailyEligible).toBe(false);
       expect(game.lineup.streakEligible).toBe(false);
       expect(game.lineup.reminderEligible).toBe(false);
     }
+
+    expect(games.find((game) => game.id === "20-questions")?.lineup).toMatchObject({
+      challengeEligible: false,
+      supportedTypes: ["replayable"],
+      historyRecording: "casual-only",
+      dailyEligible: false,
+    });
   });
 
   it("routes every Football profile challenge back into its canonical Football HQ game", () => {

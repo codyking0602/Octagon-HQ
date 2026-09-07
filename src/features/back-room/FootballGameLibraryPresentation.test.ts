@@ -14,6 +14,7 @@ describe("Football HQ game library presentation", () => {
       "find-leader",
       "wavelength",
       "hit-the-number",
+      "20-questions",
     ]);
     expect(new Set(games.map((game) => game.icon)).size).toBe(games.length);
     expect(games.every((game) => game.route.startsWith("/football/"))).toBe(true);

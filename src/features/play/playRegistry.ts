@@ -10,7 +10,8 @@ export type PlayGameId =
   | "keep-cut"
   | "better-than"
   | "auction"
-  | "hit-the-number";
+  | "hit-the-number"
+  | "20-questions";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
 
@@ -40,7 +41,8 @@ export type PlayCompletionState =
   | "eight-decisions-locked"
   | "claim-locked"
   | "auction-complete"
-  | "target-selection-locked";
+  | "target-selection-locked"
+  | "identity-guessed-or-question-limit";
 
 export interface PlayGameLineupDefinition {
   defaultType: PlayLineupType;
@@ -119,6 +121,29 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily-and-casual",
       difficultyModel: "A verified UFC stat target with 4–7 required picks, optional division filtering, and either the full eligible roster or a 12-fighter random pool.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "20-questions",
+    route: "/play/20-questions",
+    icon: "20?",
+    title: "20 Questions",
+    description: "Ask up to 10 factual Yes/No questions and identify the hidden UFC fighter before your score runs down.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
+      lineupSize: 1,
+      completionState: "identity-guessed-or-question-limit",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "One hidden canonical UFC factual-ledger fighter, up to 10 deterministic Yes/No questions with static whole-universe score impacts, and guess-anytime identity search.",
     },
   },
   {
@@ -349,6 +374,29 @@ export const playGameCatalog = [
       reminderEligible: false,
       historyRecording: "casual-and-challenge",
       difficultyModel: "Verified NFL and CFB factual targets across classic, themed, era, and team-build boards.",
+    },
+  },
+  {
+    sport: "football",
+    id: "20-questions",
+    route: "/football/20-questions",
+    icon: "20?",
+    title: "20 Questions",
+    description: "Get NFL or CFB up front, then ask up to 10 factual Yes/No questions and identify the hidden player or head coach.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 1,
+      completionState: "identity-guessed-or-question-limit",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "A disclosed NFL/CFB universe, one hidden canonical player or head coach, up to 10 deterministic Yes/No questions with static whole-universe score impacts, and guess-anytime identity search.",
     },
   },
   {

@@ -25,7 +25,14 @@ describe("Games source authority", () => {
       "ufc-calculated-ranking",
       "ufc-approved-play-ratings",
     ]);
-    expect(GAME_SOURCE_AUTHORITY["20-questions"].Football.status).toBe("future");
+    expect(GAME_SOURCE_AUTHORITY["20-questions"].UFC).toMatchObject({
+      status: "existing",
+      owners: ["ufc-factual-ledger"],
+    });
+    expect(GAME_SOURCE_AUTHORITY["20-questions"].Football).toMatchObject({
+      status: "existing",
+      owners: ["football-factual-registry"],
+    });
     expect(GAME_SOURCE_AUTHORITY["who-am-i"].Football.status).toBe("future");
     expect(GAME_SOURCE_AUTHORITY["draft-room"].Football.status).toBe("future");
   });

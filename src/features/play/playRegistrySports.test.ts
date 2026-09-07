@@ -13,6 +13,7 @@ const footballGamesExpected = [
   { id: "wavelength", route: "/football/wavelength" },
   { id: "blind-resume", route: "/football/blind-resume" },
   { id: "hit-the-number", route: "/football/hit-the-number" },
+  { id: "20-questions", route: "/football/20-questions" },
   { id: "find-leader", route: "/football/find-leader" },
 ] as const;
 
@@ -24,10 +25,10 @@ describe("sport-aware Play registry", () => {
     expect(playGameDefinition("wavelength").route).toBe("/play/wavelength");
   });
 
-  it("registers exactly the six existing Football games on their canonical Football HQ routes", () => {
+  it("registers Football games on their canonical Football HQ routes", () => {
     const footballGames = playGamesForSport("football");
     expect(footballGames.map(({ id, route }) => ({ id, route }))).toEqual(footballGamesExpected);
-    expect(footballGames).toHaveLength(6);
+    expect(footballGames).toHaveLength(7);
 
     for (const game of footballGames) {
       expect(playGameDefinition(game.id, "football")).toBe(game);
@@ -52,8 +53,9 @@ describe("sport-aware Play registry", () => {
     expect(new Set(playGameCatalog.map((game) => `${game.sport}:${game.id}`)).size).toBe(playGameCatalog.length);
   });
 
-  it("turns on shared challenge support for Football without duplicating the daily platform", () => {
-    for (const game of playGamesForSport("football")) {
+  it("preserves shared challenge support for established Football games while 20 Questions stays replayable-only", () => {
+    const footballGames = playGamesForSport("football");
+    for (const game of footballGames.filter((candidate) => candidate.id !== "20-questions")) {
       expect(game.lineup).toMatchObject({
         defaultType: "replayable",
         supportedTypes: ["replayable", "curated"],
@@ -65,5 +67,15 @@ describe("sport-aware Play registry", () => {
         historyRecording: "casual-and-challenge",
       });
     }
+    expect(playGameDefinition("20-questions", "football").lineup).toMatchObject({
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+    });
   });
 });

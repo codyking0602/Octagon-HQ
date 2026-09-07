@@ -111,8 +111,8 @@ export const GAME_SOURCE_AUTHORITY = {
     },
   },
   "20-questions": {
-    UFC: { status: "future", kind: "factual", owners: ["ufc-factual-ledger"], eligibility: "canonical-evidence-required" },
-    Football: { status: "future", kind: "factual", owners: ["football-factual-registry"], eligibility: "canonical-evidence-required" },
+    UFC: { status: "existing", kind: "factual", owners: ["ufc-factual-ledger"], eligibility: "canonical-evidence-required" },
+    Football: { status: "existing", kind: "factual", owners: ["football-factual-registry"], eligibility: "canonical-evidence-required" },
   },
   "who-am-i": {
     UFC: { status: "future", kind: "factual", owners: ["ufc-factual-ledger"], eligibility: "canonical-evidence-required" },
