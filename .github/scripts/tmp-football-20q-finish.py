@@ -5,8 +5,8 @@ s = p.read_text()
 marker = "  return rows;\n}\n\nfunction percentile"
 extra = '''  for (const position of playerPositions) {
     const fineGameThresholds = league === "NFL"
-      ? Array.from({ length: 50 }, (_value, index) => 5 + index * 5)
-      : Array.from({ length: 30 }, (_value, index) => 2 + index * 2);
+      ? Array.from({ length: 70 }, (_value, index) => 5 + index * 5)
+      : Array.from({ length: 60 }, (_value, index) => 1 + index);
     for (const threshold of fineGameThresholds) {
       add(`production:${position}:games-fine`, String(threshold), (person) => metricThreshold(
         person,
@@ -63,28 +63,4 @@ function percentile'''
 if marker not in s:
     raise SystemExit("buildPredicates return marker not found")
 s = s.replace(marker, extra, 1)
-
-diag_marker = '''  const duplicateGroups = [...fingerprintGroups.values()].filter((group) => group.length > 1);
-  const impossibleIndexes = new Set(duplicateGroups.flat());'''
-diag_replacement = '''  const duplicateGroups = [...fingerprintGroups.values()].filter((group) => group.length > 1);
-  if (duplicateGroups.length) {
-    const collisionDiagnostics = duplicateGroups.map((group) => group.map((index) => {
-      const person = pool[index]!;
-      return {
-        key: person.key,
-        role: person.role,
-        position: rolePosition(person),
-        window: roleWindow(person),
-        records: roleRecords(person).map((record) => ({
-          id: record.id,
-          facts: Object.fromEntries((getFootballFactualRecord(record.id)?.facts ?? []).map((fact) => [fact.metricId, fact.value])),
-        })),
-      };
-    }));
-    console.log(`TWENTY_QUESTIONS_COLLISIONS=${JSON.stringify(collisionDiagnostics)}`);
-  }
-  const impossibleIndexes = new Set(duplicateGroups.flat());'''
-if diag_marker not in s:
-    raise SystemExit("collision diagnostic marker not found")
-s = s.replace(diag_marker, diag_replacement, 1)
 p.write_text(s)
