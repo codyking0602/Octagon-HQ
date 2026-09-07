@@ -42,10 +42,25 @@ const qbCareer = (
   ],
 });
 
+const historicalRusher = (
+  subjectId: string,
+  bestSeasonRushingYards: number,
+  bestSeasonRushingTouchdowns: number,
+  heismanAwards: number,
+): FootballFactualRecord => ({
+  subjectId,
+  scope: "cfb-player-career",
+  facts: [
+    reported("cfb-best-season-rushing-yards", bestSeasonRushingYards),
+    reported("cfb-best-season-rushing-touchdowns", bestSeasonRushingTouchdowns),
+    reported("cfb-heisman-awards", heismanAwards),
+  ],
+});
+
 /**
- * Stage 16 reviewed CFB quarterback career totals. These rows extend the existing
- * College Football at Sports-Reference factual owner before generated cfbfastR gap-fill,
- * so pre-2014 seasons and transfer careers are not silently truncated by projection coverage.
+ * Stage 16 reviewed CFB player facts. Quarterback rows contain complete Sports-Reference
+ * career passing/rushing totals; historical rushing rows preserve source-backed best-season
+ * production and Heisman counts for recognizable pre-cfbfastR subjects.
  */
 export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualRecord[] = [
   qbCareer("cfb-cam-newton", 20, 191, 292, 2908, 30, 7, 285, 1586, 24),
@@ -64,4 +79,13 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   qbCareer("cfb-matt-leinart", 39, 807, 1245, 10693, 99, 23, 132, -70, 9),
   qbCareer("cfb-jim-plunkett", 31, 530, 962, 7544, 52, 47, 211, 343, 10),
   qbCareer("cfb-roger-staubach", 30, 293, 463, 3571, 18, 19, 345, 682, 17),
+
+  historicalRusher("cfb-archie-griffin", 1620, 12, 2),
+  historicalRusher("cfb-tony-dorsett", 1948, 21, 1),
+  historicalRusher("cfb-billy-sims", 1762, 22, 1),
+  historicalRusher("cfb-george-rogers", 1781, 14, 1),
+  historicalRusher("cfb-marcus-allen", 2342, 22, 1),
+  historicalRusher("cfb-herschel-walker", 1891, 18, 1),
+  historicalRusher("cfb-mike-rozier", 2148, 29, 1),
+  historicalRusher("cfb-bo-jackson", 1786, 17, 1),
 ];
