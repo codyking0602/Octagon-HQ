@@ -43,20 +43,20 @@
 }
 
 /* Keep/Cut owns three structural lanes: media, wrapping copy, and actions. */
-.app-shell--football-room .football-keep-cut-current {
+.app-shell--football-room .football-keep-cut-page .football-keep-cut-current {
   grid-template-columns: 74px minmax(0, 1fr) minmax(110px, auto) !important;
 }
 
-.app-shell--football-room .football-keep-cut-current > .football-subject-visual {
+.app-shell--football-room .football-keep-cut-page .football-keep-cut-current > .football-subject-visual {
   min-width: 74px;
 }
 
-.app-shell--football-room .football-keep-cut-current > div:not(.football-keep-cut-current__actions) {
+.app-shell--football-room .football-keep-cut-page .football-keep-cut-current > div:not(.football-keep-cut-current__actions) {
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
-.app-shell--football-room .football-keep-cut-current__actions {
+.app-shell--football-room .football-keep-cut-page .football-keep-cut-current__actions {
   min-width: 110px;
 }
 
@@ -102,11 +102,11 @@
 }
 
 @media (max-width: 700px) {
-  .app-shell--football-room .football-keep-cut-current {
+  .app-shell--football-room .football-keep-cut-page .football-keep-cut-current {
     grid-template-columns: 74px minmax(0, 1fr) !important;
   }
 
-  .app-shell--football-room .football-keep-cut-current__actions {
+  .app-shell--football-room .football-keep-cut-page .football-keep-cut-current__actions {
     grid-column: 1 / -1;
     min-width: 0;
     grid-template-columns: repeat(2, minmax(0, 1fr));
