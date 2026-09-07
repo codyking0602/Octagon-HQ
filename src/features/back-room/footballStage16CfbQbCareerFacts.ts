@@ -207,6 +207,26 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
     ["cfb-best-season-rushing-touchdowns", 18],
     ["cfb-heisman-awards", 1],
   ]),
+  historicalSkillPlayer("cfb-barry-sanders", [
+    ["cfb-career-games", 30],
+    ["cfb-career-rushing-attempts", 523],
+    ["cfb-career-rushing-yards", 3556],
+    ["cfb-career-rushing-touchdowns", 48],
+    ["cfb-career-receptions", 23],
+    ["cfb-career-receiving-yards", 381],
+    ["cfb-career-receiving-touchdowns", 3],
+    ["cfb-career-total-touchdowns", 55],
+  ]),
+  historicalSkillPlayer("cfb-ricky-williams", [
+    ["cfb-career-games", 46],
+    ["cfb-career-rushing-attempts", 1011],
+    ["cfb-career-rushing-yards", 6279],
+    ["cfb-career-rushing-touchdowns", 72],
+    ["cfb-career-receptions", 85],
+    ["cfb-career-receiving-yards", 927],
+    ["cfb-career-receiving-touchdowns", 3],
+    ["cfb-career-total-touchdowns", 75],
+  ]),
   historicalRusher("cfb-o-j-simpson", 1709, 22, 1),
 
   historicalSkillPlayer("cfb-billy-cannon", [
