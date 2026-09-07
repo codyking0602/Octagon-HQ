@@ -34,7 +34,7 @@ jobs:
           python .github/scripts/tmp-stage9-pool-fix.py
       - name: Regenerate canonical Football artifacts
         run: |
-          npm run generate:football-recognizability
+          node scripts/generate-football-recognizability.mjs
           npm run generate:football-cfb-player-seasons
           npm run generate:football-career-media-context
           npm run generate:football-factual-universe
