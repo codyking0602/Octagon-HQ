@@ -1,0 +1,59 @@
+name: Temporary 20Q Question Cost Tightening
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/tmp-20q-question-cost-calibration.yml'
+      - '.github/workflows/tmp-20q-question-cost-tightening.yml'
+      - 'src/features/games/**'
+      - 'src/features/back-room/**'
+      - 'data/**'
+
+permissions:
+  contents: read
+
+jobs:
+  calibrate-tight-ranges:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Generate the same aggregate-only probes
+        shell: bash
+        run: |
+          awk '/python - <<'\''PY'\''/{flag=1;next} /^[[:space:]]*PY$/{flag=0} flag{sub(/^          /,""); print}' .github/workflows/tmp-20q-question-cost-calibration.yml > /tmp/generate-probes.py
+          python /tmp/generate-probes.py
+          cp src/features/games/twentyQuestionsFactualReadiness.audit.test.ts /tmp/football-base.ts
+          cp src/features/games/twentyQuestionsCostUfc.tmp.audit.test.ts /tmp/ufc-base.ts
+      - name: Compare tighter visible-cost ranges
+        shell: bash
+        run: |
+          set -euo pipefail
+          for range in 3-8 4-8 5-8 4-7; do
+            cp /tmp/football-base.ts src/features/games/twentyQuestionsFactualReadiness.audit.test.ts
+            cp /tmp/ufc-base.ts src/features/games/twentyQuestionsCostUfc.tmp.audit.test.ts
+            RANGE="$range" python - <<'PY'
+          import os
+          from pathlib import Path
+          lo, hi = map(int, os.environ['RANGE'].split('-'))
+          for filename in [
+              'src/features/games/twentyQuestionsFactualReadiness.audit.test.ts',
+              'src/features/games/twentyQuestionsCostUfc.tmp.audit.test.ts',
+          ]:
+              path = Path(filename)
+              text = path.read_text()
+              text = text.replace('const COST_EXPONENTS = [0.5, 0.75, 1, 1.25, 1.5, 2] as const;', 'const COST_EXPONENTS = [0.5, 0.75] as const;')
+              text = text.replace('const EXPONENTS = [0.5, 0.75, 1, 1.25, 1.5, 2] as const;', 'const EXPONENTS = [0.5, 0.75] as const;')
+              text = text.replace('return Math.max(2, Math.min(8, 2 + Math.round(6 * Math.pow(strength, exponent))));', f'return Math.max({lo}, Math.min({hi}, {lo} + Math.round({hi-lo} * Math.pow(strength, exponent))));')
+              text = text.replace('function questionCost(strength: number, exponent: number) { return Math.max(2, Math.min(8, 2 + Math.round(6 * Math.pow(strength, exponent)))); }', f'function questionCost(strength: number, exponent: number) {{ return Math.max({lo}, Math.min({hi}, {lo} + Math.round({hi-lo} * Math.pow(strength, exponent)))); }}')
+              path.write_text(text)
+          PY
+            echo "QUESTION_COST_RANGE=$range"
+            npx vitest run src/features/games/twentyQuestionsFactualReadiness.audit.test.ts src/features/games/twentyQuestionsCostUfc.tmp.audit.test.ts --reporter=verbose
+          done
