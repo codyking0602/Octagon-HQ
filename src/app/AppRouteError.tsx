@@ -1,3 +1,5 @@
+import { forceRefreshLatestBuild } from "./installUpdateRecovery";
+
 export default function AppRouteError() {
   return (
     <main className="app-error" role="alert">
@@ -5,7 +7,7 @@ export default function AppRouteError() {
       <p className="eyebrow">OCTAGON HQ UPDATE</p>
       <h1>Refresh to load the latest build</h1>
       <p>The app changed while this page was open. Your profile and saved picks are safe.</p>
-      <button className="primary-action" type="button" onClick={() => window.location.reload()}>
+      <button className="primary-action" type="button" onClick={() => forceRefreshLatestBuild()}>
         REFRESH OCTAGON HQ
       </button>
     </main>
