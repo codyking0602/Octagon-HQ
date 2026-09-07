@@ -193,7 +193,7 @@ describe("fight Spotlight content", () => {
     expectThreeQualitativeEdges(spotlight.blue.edges);
   });
 
-  it("builds the Silva-Delgado tale, preview, and qualitative edges", () => {
+  it("builds the Silva-Delgado tale, preview, edges, and single watch moment", () => {
     const spotlight = buildPickSpotlightContent({
       boutId: "main-event-jean-silva-jose-miguel-delgado",
       eventStartsAt: "2026-09-12T21:00:00.000Z",
@@ -258,6 +258,10 @@ describe("fight Spotlight content", () => {
       stance: "Switch",
       edges: ["Reach and frame advantage", "Switch-stance offense", "High-output striking"],
     });
+    expect(spotlight.watchSpotlights).toEqual([{
+      fighterSlug: "jean-silva",
+      url: "https://youtu.be/Ht9emLnMNrQ?is=8EdgTqQQ7hKKe4XK",
+    }]);
     expectThreeQualitativeEdges(spotlight.red.edges);
     expectThreeQualitativeEdges(spotlight.blue.edges);
   });
