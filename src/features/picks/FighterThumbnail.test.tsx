@@ -99,6 +99,23 @@ describe("fighterThumbnailPath", () => {
     );
   });
 
+  it("resolves every missing Noche UFC portrait, including both main-event Spotlight photos", () => {
+    const portraits = new Map([
+      ["jean-silva", "5145766"],
+      ["jose-miguel-delgado", "5223435"],
+      ["joseph-morales", "4238229"],
+      ["marwan-rahiki", "5302274"],
+      ["waldo-cortes-acosta", "4903365"],
+      ["david-martinez", "4503229"],
+    ]);
+
+    for (const [slug, id] of portraits) {
+      expect(fighterThumbnailPath(slug)).toBe(
+        `https://a.espncdn.com/i/headshots/mma/players/full/${id}.png`,
+      );
+    }
+  });
+
   it("uses full-resolution portraits for both Hooker-Parnasse Spotlight fighters", () => {
     expect(fighterThumbnailPath("dan-hooker")).toBe(
       "https://a.espncdn.com/i/headshots/mma/players/full/3109135.png",
