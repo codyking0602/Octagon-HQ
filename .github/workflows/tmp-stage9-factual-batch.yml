@@ -37,7 +37,6 @@ jobs:
           npm run generate:football-career-media-context
           npm run generate:football-factual-universe
           npm run generate:football-ledger-audit
-          npm run verify:football-ledger-audit
       - name: Remove temporary Stage 9 tooling
         run: |
           git checkout origin/main -- .github/workflows/fast-pr-feedback.yml
@@ -56,6 +55,8 @@ jobs:
           git add -A
           git commit -m "Finalize Stage 9 factual readiness"
           echo "FINAL_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Verify canonical Football ledger
+        run: npm run verify:football-ledger-audit
       - name: Typecheck exact candidate head
         run: npm run typecheck
       - name: Run focused Stage 9 verification
