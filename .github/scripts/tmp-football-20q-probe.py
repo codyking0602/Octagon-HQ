@@ -50,11 +50,7 @@ select_new = '''function selectLaunchPool(league: League) {
   const offensiveLine = playerCandidates.filter((candidate) => {
     const person: Person = { ...candidate, role: "player" };
     if (rolePosition(person) !== "OL") return false;
-    const window = roleWindow(person);
-    if (window?.end != null) return window.end >= 2000;
-    const metrics = roleRecords(person).flatMap((record) =>
-      getFootballFactualRecord(record.id)?.facts.map((fact) => fact.metricId) ?? []);
-    return league === "CFB" && metrics.includes("cfb-career-games");
+    return roleActiveDecades(person)?.some((decade) => decade >= 2000) === true;
   }).slice(0, 2);
   const caps: Record<string, number> = { QB: 30, RB: 25, WR: 15, TE: 10, DL: 12, LB: 10, DB: 15, K: 3, P: 3 };
   const counts = new Map<string, number>();
