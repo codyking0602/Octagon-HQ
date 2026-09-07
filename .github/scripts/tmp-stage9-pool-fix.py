@@ -63,19 +63,35 @@ const REVEALED_OL_EXCLUSIONS = new Set([
   "Quenton Nelson",
 ].map(normalize));
 
+function isLaunchEligibleOl(candidate: PersonCandidate) {
+  const person: Person = { ...candidate, role: "player" };
+  if (rolePosition(person) !== "OL") return false;
+  const window = roleWindow(person);
+  return window != null && window.start >= 2000 && !REVEALED_OL_EXCLUSIONS.has(candidate.nameKey);
+}
+
 function selectPlayerCensus(league: League, candidates: readonly PersonCandidate[]) {
   const selected: PersonCandidate[] = [];
   const selectedKeys = new Set<string>();
   const counts = new Map<string, number>();
   const caps = PLAYER_POSITION_CAPS[league];
-  for (const candidate of sortRoleCandidates(candidates, "player")) {
+  const ordered = sortRoleCandidates(candidates, "player");
+  const requiredOl = ordered.filter(isLaunchEligibleOl).slice(0, caps.OL ?? 0);
+  if (requiredOl.length !== 2) {
+    throw new Error(`${league} A/B launch census has only ${requiredOl.length}/2 eligible modern offensive linemen`);
+  }
+  for (const candidate of requiredOl) {
+    selected.push(candidate);
+    selectedKeys.add(candidate.key);
+  }
+  counts.set("OL", requiredOl.length);
+
+  for (const candidate of ordered) {
+    if (selectedKeys.has(candidate.key)) continue;
     const person: Person = { ...candidate, role: "player" };
     const position = rolePosition(person);
     if (!position || caps[position] == null) continue;
-    if (position === "OL") {
-      const window = roleWindow(person);
-      if (!window || window.start < 2000 || REVEALED_OL_EXCLUSIONS.has(candidate.nameKey)) continue;
-    }
+    if (position === "OL" && !isLaunchEligibleOl(candidate)) continue;
     const count = counts.get(position) ?? 0;
     if (count >= caps[position]!) continue;
     selected.push(candidate);
