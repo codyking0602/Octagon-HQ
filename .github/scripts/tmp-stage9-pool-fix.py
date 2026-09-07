@@ -97,6 +97,26 @@ function selectPlayerCensus(league: League, candidates: readonly PersonCandidate
   const ordered = sortRoleCandidates(candidates, "player");
   const requiredOl = ordered.filter(isLaunchEligibleOl).slice(0, caps.OL ?? 0);
   if (requiredOl.length !== 2) {
+    const olCandidates = ordered.filter((candidate) => candidate.records.some((record) => record.position === "OL"))
+      .map((candidate) => ({
+        name: candidate.records[0]?.name,
+        key: candidate.key,
+        nameKey: candidate.nameKey,
+        rolePosition: rolePosition({ ...candidate, role: "player" }),
+        roleWindow: roleWindow({ ...candidate, role: "player" }),
+        records: candidate.records.map((record) => ({
+          id: record.id,
+          tier: record.recognizabilityTier,
+          position: record.position,
+          startSeason: record.startSeason,
+          endSeason: record.endSeason,
+          canonicalId: getFootballSubject(record.id)?.id ?? null,
+          canonicalPosition: getFootballSubject(record.id)?.position ?? null,
+          canonicalStart: getFootballSubject(record.id)?.startSeason ?? null,
+          canonicalEnd: getFootballSubject(record.id)?.endSeason ?? null,
+        })),
+      }));
+    console.log(`STAGE9_${league}_RAW_OL_CANDIDATES=${JSON.stringify(olCandidates)}`);
     throw new Error(`${league} A/B launch census has only ${requiredOl.length}/2 eligible modern offensive linemen`);
   }
   for (const candidate of requiredOl) {
