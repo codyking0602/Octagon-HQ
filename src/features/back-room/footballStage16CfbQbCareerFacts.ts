@@ -130,13 +130,22 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
     ["cfb-career-games", 30], ["cfb-career-rushing-attempts", 523], ["cfb-career-rushing-yards", 3556],
     ["cfb-career-rushing-touchdowns", 48], ["cfb-career-receptions", 23], ["cfb-career-receiving-yards", 381],
     ["cfb-career-receiving-touchdowns", 3], ["cfb-career-total-touchdowns", 55],
+    ["cfb-best-season-rushing-yards", 2628], ["cfb-best-season-rushing-touchdowns", 37],
+    ["cfb-best-season-receptions", 19], ["cfb-best-season-receiving-yards", 106],
+    ["cfb-best-season-receiving-touchdowns", 1], ["cfb-heisman-awards", 1],
   ]),
   facts("cfb-ricky-williams", [
     ["cfb-career-games", 46], ["cfb-career-rushing-attempts", 1011], ["cfb-career-rushing-yards", 6279],
     ["cfb-career-rushing-touchdowns", 72], ["cfb-career-receptions", 85], ["cfb-career-receiving-yards", 927],
     ["cfb-career-receiving-touchdowns", 3], ["cfb-career-total-touchdowns", 75],
+    ["cfb-best-season-rushing-yards", 2124], ["cfb-best-season-rushing-touchdowns", 27],
+    ["cfb-best-season-receptions", 25], ["cfb-best-season-receiving-yards", 291],
+    ["cfb-best-season-receiving-touchdowns", 2], ["cfb-heisman-awards", 1],
   ]),
   facts("cfb-o-j-simpson", [
+    ["cfb-career-games", 20], ["cfb-career-rushing-attempts", 621], ["cfb-career-rushing-yards", 3124],
+    ["cfb-career-rushing-touchdowns", 33], ["cfb-career-receptions", 28], ["cfb-career-receiving-yards", 235],
+    ["cfb-career-receiving-touchdowns", 0], ["cfb-career-total-touchdowns", 33],
     ["cfb-best-season-rushing-yards", 1709], ["cfb-best-season-rushing-touchdowns", 22], ["cfb-heisman-awards", 1],
   ]),
 
