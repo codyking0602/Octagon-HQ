@@ -161,14 +161,15 @@ function winPercentageThreshold(
 }
 
 function careerAffiliations(person: Person) {
-  const histories = roleRecords(person)
+  const records = roleRecords(person);
+  const histories = records
     .map((record) => footballCareerAffiliationHistoryFor(record))
     .filter((history) => history != null);
   if (!histories.length) return null;
   return {
     affiliations: [...new Set(histories.flatMap((history) => history.affiliations))],
     conferences: [...new Set(histories.flatMap((history) => history.conferences))],
-    complete: histories.some((history) => history.complete),
+    complete: histories.length === records.length && histories.every((history) => history.complete),
   };
 }
 
@@ -478,6 +479,17 @@ function analyze(pool: readonly Person[], predicates: readonly Predicate[]) {
 }
 
 describe("Football 20 Questions factual readiness audit", () => {
+  it("allows affiliation No only when every relevant career record is complete", () => {
+    for (const league of ["NFL", "CFB"] as const) {
+      for (const person of selectLaunchPool(league)) {
+        const records = roleRecords(person);
+        const expectedComplete = records.length > 0
+          && records.every((record) => footballCareerAffiliationHistoryFor(record)?.complete === true);
+        expect(careerAffiliations(person)?.complete ?? false).toBe(expectedComplete);
+      }
+    }
+  });
+
   for (const league of ["NFL", "CFB"] as const) {
     it(`${league} measures the hidden A/B player + head-coach census without roster spoilers`, () => {
       const pool = selectLaunchPool(league);
