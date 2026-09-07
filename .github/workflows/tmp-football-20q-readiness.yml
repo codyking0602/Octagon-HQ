@@ -1,0 +1,80 @@
+name: Temporary Football 20Q readiness probe
+
+on:
+  push:
+    branches:
+      - games/20q-factual-readiness-expansion
+    paths:
+      - .github/workflows/tmp-football-20q-readiness.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.0'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build strict-pool probe
+        run: |
+          cp src/features/games/twentyQuestionsFactualReadiness.audit.test.ts src/features/games/twentyQuestionsStrictPool.tmp.audit.test.ts
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('src/features/games/twentyQuestionsStrictPool.tmp.audit.test.ts')
+          s = p.read_text()
+          old = '''function selectLaunchPool(league: League) {
+            const people = rawPeople(league);
+            const coaches = sortRoleCandidates(people, "coach").slice(0, COACH_TARGET);
+            const coachNames = new Set(coaches.map((person) => person.nameKey));
+            const players = sortRoleCandidates(people.filter((person) => !coachNames.has(person.nameKey)), "player").slice(0, PLAYER_TARGET);
+            return [
+              ...players.map((person): Person => ({ ...person, role: "player" })),
+              ...coaches.map((person): Person => ({ ...person, role: "coach" })),
+            ];
+          }'''
+          new = '''function selectLaunchPool(league: League) {
+            const people = rawPeople(league);
+            const ready = (candidate: PersonCandidate, role: Role) => {
+              const person: Person = { ...candidate, role };
+              if (!roleWindow(person)) return false;
+              if (careerAffiliations(person)?.complete !== true) return false;
+              if (role === "player" && !rolePosition(person)) return false;
+              if (league === "CFB" && role === "player" && !roleSchool(person)) return false;
+              return true;
+            };
+            const coaches = sortRoleCandidates(people.filter((person) => ready(person, "coach")), "coach").slice(0, COACH_TARGET);
+            const coachNames = new Set(coaches.map((person) => person.nameKey));
+            const playerCandidates = sortRoleCandidates(
+              people.filter((person) => !coachNames.has(person.nameKey) && ready(person, "player")),
+              "player",
+            );
+            const offensiveLine = playerCandidates.filter((candidate) => {
+              const person: Person = { ...candidate, role: "player" };
+              return rolePosition(person) === "OL" && (roleWindow(person)?.end ?? 0) >= 2000;
+            }).slice(0, 2);
+            const nonOl = playerCandidates.filter((candidate) => {
+              const person: Person = { ...candidate, role: "player" };
+              return rolePosition(person) !== "OL";
+            }).slice(0, PLAYER_TARGET - offensiveLine.length);
+            const players = [...nonOl, ...offensiveLine];
+            return [
+              ...players.map((person): Person => ({ ...person, role: "player" })),
+              ...coaches.map((person): Person => ({ ...person, role: "coach" })),
+            ];
+          }'''
+          if old not in s:
+              raise SystemExit('selector block not found')
+          p.write_text(s.replace(old, new))
+          PY
+      - name: Run strict-pool probe
+        run: npx vitest run src/features/games/twentyQuestionsStrictPool.tmp.audit.test.ts --reporter=verbose
