@@ -92,8 +92,15 @@ for (const record of coachStops) {
 type CoachSeasonTable = { columns: readonly string[]; rows: readonly (readonly unknown[])[] };
 const relationshipPayload = nflCoachSeasonsJson as CoachSeasonTable;
 const relationshipCoachIndex = Object.fromEntries(relationshipPayload.columns.map((column, index) => [column, index]));
+const franchisesByCoachId = new Map<string, Set<string>>();
 for (const values of relationshipPayload.rows) {
   const id = String(values[relationshipCoachIndex.sourceCoachNameKey] ?? "");
+  const franchiseId = String(values[relationshipCoachIndex.franchiseId] ?? "");
+  if (id && franchiseId) {
+    const franchises = franchisesByCoachId.get(id) ?? new Set<string>();
+    franchises.add(franchiseId);
+    franchisesByCoachId.set(id, franchises);
+  }
   if (!id || sourceCoachById.has(id) || !isFootballExplicitlyApprovedIconicSubject(id)) continue;
   const name = String(values[relationshipCoachIndex.coachName] ?? "");
   const season = Number(values[relationshipCoachIndex.season]);
@@ -112,21 +119,25 @@ for (const values of relationshipPayload.rows) {
  * historical recognition-repair path; reviewed Rank Five rows are deliberately absent from membership.
  */
 export const footballNflCoachRecognitionProjectionSubjects: readonly FootballNflCoachRecognitionProjectionRow[] = [...sourceCoachById.entries()]
-  .map(([id, row]) => ({
-    subject: {
-      id,
-      name: row.name,
-      kind: "coach" as const,
-      league: "NFL" as const,
-      ...(hallCoachById.get(id)?.identityAliases ? { aliases: hallCoachById.get(id)!.identityAliases } : {}),
-      startSeason: row.startSeason,
-      endSeason: row.endSeason,
-      activeDecades: activeDecades(row.startSeason, row.endSeason),
-    },
-    tier: applyFootballHistoricalRecognitionPolicy(id, "NFL", row.endSeason, row.tier) as FootballRecognizabilityTier,
-    sourceIdentityKey: {
-      provider: "nflverse" as const,
-      id: `coach-career:${id}`,
-    },
-  }))
+  .map(([id, row]) => {
+    const franchises = [...(franchisesByCoachId.get(id) ?? [])].sort();
+    return {
+      subject: {
+        id,
+        name: row.name,
+        kind: "coach" as const,
+        league: "NFL" as const,
+        ...(hallCoachById.get(id)?.identityAliases ? { aliases: hallCoachById.get(id)!.identityAliases } : {}),
+        startSeason: row.startSeason,
+        endSeason: row.endSeason,
+        activeDecades: activeDecades(row.startSeason, row.endSeason),
+        ...(franchises.length > 0 ? { franchises } : {}),
+      },
+      tier: applyFootballHistoricalRecognitionPolicy(id, "NFL", row.endSeason, row.tier) as FootballRecognizabilityTier,
+      sourceIdentityKey: {
+        provider: "nflverse" as const,
+        id: `coach-career:${id}`,
+      },
+    };
+  })
   .filter((row) => row.tier !== "D");
