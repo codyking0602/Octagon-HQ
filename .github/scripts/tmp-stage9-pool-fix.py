@@ -2,6 +2,7 @@ from pathlib import Path
 
 recognizability = Path("scripts/generate-football-recognizability.mjs")
 text = recognizability.read_text()
+
 position_guard_anchor = '''const approvedBPlayers = new Set([
   "Matt Ryan", "Jamaal Charles", "Dez Bryant", "Luke Kuechly", "Calvin Johnson", "Andrew Luck",
   "Colt McCoy", "Michael Crabtree", "Darren McFadden", "Justin Blackmon", "Baker Mayfield", "Lamar Jackson",
@@ -21,6 +22,7 @@ position_guards = '''const approvedNflPlayerPositions = new Map([
   ["Christian McCaffrey", ["RB"]], ["Joe Burrow", ["QB"]], ["Trevor Lawrence", ["QB"]], ["Bijan Robinson", ["RB"]],
   ["Ashton Jeanty", ["RB"]], ["Caleb Williams", ["QB"]], ["Jayden Daniels", ["QB"]],
   ["Travis Hunter", ["WR", "DB"]], ["Bo Nix", ["QB"]], ["A.J. Brown", ["WR"]],
+  ["Trent Williams", ["OL"]], ["Zack Martin", ["OL"]],
 ]);
 const approvedNflIdentityMatches = (name, position) => approvedNflPlayerPositions.get(name)?.includes(position) === true;
 '''
@@ -28,6 +30,19 @@ if "approvedNflPlayerPositions" not in text:
     if position_guard_anchor not in text:
         raise SystemExit("recognizability approval anchor missing")
     text = text.replace(position_guard_anchor, position_guard_anchor + position_guards, 1)
+
+# Two deliberately modern, unexposed OL identities per universe. These are recognizability approvals, not greatness tiers.
+text = text.replace(
+    '  "Ashton Jeanty", "Caleb Williams", "Jayden Daniels", "Travis Hunter", "Bo Nix", "A.J. Brown",\n]);',
+    '  "Ashton Jeanty", "Caleb Williams", "Jayden Daniels", "Travis Hunter", "Bo Nix", "A.J. Brown",\n  "Trent Williams", "Zack Martin",\n]);',
+    1,
+)
+cfb_window_anchor = '  ["dalvin-cook", [2014, 2016]], ["todd-gurley", [2014, 2014]],\n]);'
+cfb_window_replacement = '  ["dalvin-cook", [2014, 2016]], ["todd-gurley", [2014, 2014]],\n  ["creed-humphrey", [2017, 2020]], ["joe-alt", [2021, 2023]],\n]);'
+if cfb_window_anchor not in text:
+    raise SystemExit("CFB approval-window anchor missing")
+text = text.replace(cfb_window_anchor, cfb_window_replacement, 1)
+
 text = text.replace(
     'if (approvedBPlayers.has(p.name) && tier !== "A") { tier = "B"; evidence.push("explicit football-culture B approval"); }',
     'if (approvedBPlayers.has(p.name) && approvedNflIdentityMatches(p.name, position) && tier !== "A") { tier = "B"; evidence.push("explicit football-culture B approval"); }',
@@ -57,10 +72,12 @@ new = '''const PLAYER_POSITION_CAPS: Readonly<Record<League, Readonly<Record<str
 };
 
 const REVEALED_OL_EXCLUSIONS = new Set([
-  "Orlando Pace",
-  "Michael Oher",
-  "Penei Sewell",
-  "Quenton Nelson",
+  "Orlando Pace", "Michael Oher", "Penei Sewell", "Quenton Nelson",
+  "Taylor Lewan", "John Hannah", "Walter Jones", "Tyron Smith", "Jason Kelce",
+  "Steve Hutchinson", "Will Shields", "Larry Allen", "Tony Boselli", "Dermontti Dawson",
+  "Dan Dierdorf", "Forrest Gregg", "Russ Grimm", "Anthony Munoz", "Bruce Matthews",
+  "Randall McDaniel", "Willie Roaf", "Gene Upshaw", "Mike Webster", "Ron Yary",
+  "Chuck Bednarik", "Joe DeLamielleure", "Gene Hickerson", "Winston Hill", "Jimbo Covert",
 ].map(normalize));
 
 function isLaunchEligibleOl(candidate: PersonCandidate) {
@@ -68,8 +85,8 @@ function isLaunchEligibleOl(candidate: PersonCandidate) {
   if (rolePosition(person) !== "OL" || REVEALED_OL_EXCLUSIONS.has(candidate.nameKey)) return false;
   const window = roleWindow(person);
   if (window != null) return window.start >= 2000;
-  const decades = roleActiveDecades(person);
-  return decades != null && decades.length > 0 && Math.min(...decades) >= 2000;
+  const starts = roleRecords(person).flatMap((record) => record.draftYear == null ? [] : [record.draftYear]);
+  return starts.length > 0 && Math.min(...starts) >= 2000;
 }
 
 function selectPlayerCensus(league: League, candidates: readonly PersonCandidate[]) {
