@@ -243,15 +243,28 @@ function matchupKey(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
 
 function matchupEditorial(red: SpotlightStatsFighter, blue: SpotlightStatsFighter): EditorialMatchup | null {
   const slugs = new Set([red.fighterSlug, blue.fighterSlug]);
-  if (!slugs.has("dan-hooker") || !slugs.has("salahdine-parnasse")) return null;
 
-  return {
-    preview: "Dan Hooker wants to stretch the fight out with reach, volume, and veteran timing. Salahdine Parnasse needs to stay unpredictable, blend his southpaw striking with level changes, and force Hooker to defend every phase.",
-    edgesBySlug: new Map([
-      ["dan-hooker", ["Reach and range control", "Sustained striking volume", "UFC veteran experience"]],
-      ["salahdine-parnasse", ["Dynamic southpaw offense", "Seamless phase changes", "Wrestling and submission threat"]],
-    ]),
-  };
+  if (slugs.has("jean-silva") && slugs.has("jose-miguel-delgado")) {
+    return {
+      preview: "Jean Silva wants to force a pressure fight where his power and pace can break Delgado down. Jose Miguel Delgado brings the longer frame, switch-stance looks, and dangerous counters; the key is whether he can punish Silva’s entries.",
+      edgesBySlug: new Map([
+        ["jean-silva", ["Pressure and finishing power", "Proven UFC competition", "Takedown threat"]],
+        ["jose-miguel-delgado", ["Reach and frame advantage", "Switch-stance offense", "High-output striking"]],
+      ]),
+    };
+  }
+
+  if (slugs.has("dan-hooker") && slugs.has("salahdine-parnasse")) {
+    return {
+      preview: "Dan Hooker wants to stretch the fight out with reach, volume, and veteran timing. Salahdine Parnasse needs to stay unpredictable, blend his southpaw striking with level changes, and force Hooker to defend every phase.",
+      edgesBySlug: new Map([
+        ["dan-hooker", ["Reach and range control", "Sustained striking volume", "UFC veteran experience"]],
+        ["salahdine-parnasse", ["Dynamic southpaw offense", "Seamless phase changes", "Wrestling and submission threat"]],
+      ]),
+    };
+  }
+
+  return null;
 }
 
 function editorialPreview(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
