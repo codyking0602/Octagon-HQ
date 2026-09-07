@@ -84,8 +84,7 @@ function reviewedNflCoachHistory(subject: AffiliationSubject) {
   if (subject.league !== "NFL" || subject.kind !== "coach") return null;
   const seasons = reviewedNflCoachCareerSeasons.get(slug(subject.name));
   if (!seasons) return null;
-  const history = finishHistory(subject, seasons);
-  return { ...history, complete: true } satisfies FootballCareerAffiliationHistory;
+  return finishHistory(subject, seasons);
 }
 
 '''
@@ -123,7 +122,23 @@ new_assert = '''      expect(result.predicateCoverage.fullyCovered).toBeGreaterT
       expect(result.optimalIsolation.p95!).toBeLessThanOrEqual(20);'''
 if old_assert in readiness_text and "expect(result.duplicateAnswerFingerprints).toBe(0);" not in readiness_text:
     readiness_text = readiness_text.replace(old_assert, new_assert, 1)
+# Temporary exact collision names for one diagnostic run only; the workflow never pushes a failing candidate.
+return_anchor = "    collisionGroupSizes: duplicateGroups.map((group) => group.length).sort((a, b) => b - a),"
+if return_anchor in readiness_text and "collisionSubjects:" not in readiness_text:
+    readiness_text = readiness_text.replace(
+        return_anchor,
+        return_anchor + '\n    collisionSubjects: duplicateGroups.map((group) => group.map((index) => ({ name: pool[index]!.records[0]!.name, role: pool[index]!.role, position: rolePosition(pool[index]!) }))),',
+        1,
+    )
 readiness.write_text(readiness_text)
+
+affiliation_test = Path("src/features/back-room/footballCareerAffiliationProjection.test.ts")
+affiliation_test_text = affiliation_test.read_text()
+affiliation_test_text = affiliation_test_text.replace(
+    "          expect(observed.has(season)).toBe(true);",
+    "          expect(observed.has(season), `${subject.name} missing ${season}`).toBe(true);",
+)
+affiliation_test.write_text(affiliation_test_text)
 
 for path in [
     Path("src/features/games/twentyQuestionsMetadataCoverage.audit.test.ts"),
