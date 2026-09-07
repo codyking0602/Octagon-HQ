@@ -5,6 +5,7 @@ import { playGameDefinition, playGames, type PlayGameId } from "./playRegistry";
 const expectedIds: PlayGameId[] = [
   "auction",
   "hit-the-number",
+  "20-questions",
   "find-leader",
   "wavelength",
   "blind-resume",
@@ -59,6 +60,22 @@ describe("Play game lineup contracts", () => {
     }
   });
 
+  it("adds 20 Questions as replayable-only without activating Daily or challenge ownership", () => {
+    expect(playGameDefinition("20-questions").lineup).toMatchObject({
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      lineupSize: 1,
+      completionState: "identity-guessed-or-question-limit",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+    });
+  });
+
   it("declares Hit the Number as the existing replayable game plus official Daily", () => {
     expect(playGameDefinition("hit-the-number").lineup).toMatchObject({
       defaultType: "replayable",
@@ -82,11 +99,11 @@ describe("Play game lineup contracts", () => {
       expect(contract.defaultType).toBe("replayable");
       expect(contract.supportedTypes).toContain("curated");
       expect(contract.replayBehavior).toBe("new-lineup");
+      expect(contract.challengeEligible).toBe(true);
     }
   });
 
-  it("keeps every live game challenge eligible and gives every live game a defined completion state", () => {
-    expect(playGames.every((game) => game.lineup.challengeEligible)).toBe(true);
+  it("gives every live game a defined completion state", () => {
     expect(playGameDefinition("find-leader").lineup.completionState).toBe("leader-eliminated-or-nine-safe");
     expect(playGameDefinition("wavelength").lineup.completionState).toBe("fourth-guess-locked");
     expect(playGameDefinition("blind-resume").lineup.completionState).toBe("five-picks-complete");
@@ -94,6 +111,7 @@ describe("Play game lineup contracts", () => {
     expect(playGameDefinition("keep-cut").lineup.completionState).toBe("eight-decisions-locked");
     expect(playGameDefinition("auction").lineup.completionState).toBe("auction-complete");
     expect(playGameDefinition("hit-the-number").lineup.completionState).toBe("target-selection-locked");
+    expect(playGameDefinition("20-questions").lineup.completionState).toBe("identity-guessed-or-question-limit");
   });
 
   it("keeps Keep Cut blind and locked instead of exposing the full board", () => {
