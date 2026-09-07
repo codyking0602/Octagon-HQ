@@ -208,6 +208,7 @@ const reviewedOlCareerRows: readonly (readonly [string, number, number, number])
   ["nfl-forrest-gregg", 193, 7, 3],
   ["nfl-russ-grimm", 140, 3, 3],
   ["nfl-john-hannah", 183, 7, 0],
+  ["nfl-anthony-munoz", 185, 9, 0],
   ["nfl-bruce-matthews", 296, 7, 0],
   ["nfl-randall-mcdaniel", 222, 7, 0],
   ["nfl-willie-roaf", 189, 4, 0],
