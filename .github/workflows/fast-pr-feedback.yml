@@ -60,7 +60,8 @@ jobs:
       - name: Stage 9 candidate and generated-review probe
         run: |
           npx vitest run src/features/games/twentyQuestionsCandidateCoverage.audit.test.ts || true
-          npm run generate:cfb-adjacent-sources
+          npm run generate:football-cfb-player-seasons
+          npm run generate:football-career-media-context
           npm run generate:football-factual-universe
           npm run generate:football-ledger-audit
           echo "=== FOOTBALL_LEDGER_GENERATED_DIFF_BEGIN ==="
