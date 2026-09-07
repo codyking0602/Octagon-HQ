@@ -23,6 +23,7 @@ type Edge = { score: number; text: string };
 type EditorialMatchup = {
   preview: string;
   edgesBySlug: ReadonlyMap<string, string[]>;
+  watchSpotlights?: PickSpotlight["watchSpotlights"];
 };
 
 function finite(value: number | null): value is number {
@@ -251,6 +252,10 @@ function matchupEditorial(red: SpotlightStatsFighter, blue: SpotlightStatsFighte
         ["jean-silva", ["Pressure and finishing power", "Proven UFC competition", "Takedown threat"]],
         ["jose-miguel-delgado", ["Reach and frame advantage", "Switch-stance offense", "High-output striking"]],
       ]),
+      watchSpotlights: [{
+        fighterSlug: "jean-silva",
+        url: "https://youtu.be/Ht9emLnMNrQ?is=8EdgTqQQ7hKKe4XK",
+      }],
     };
   }
 
@@ -312,7 +317,7 @@ export function buildPickSpotlightContent(input: {
       input.eventStartsAt,
       editorial?.edgesBySlug.get(input.blue.fighterSlug),
     ),
-    watchSpotlights: [],
+    watchSpotlights: editorial?.watchSpotlights ?? [],
     source: "UFCStats",
     generatedAt: input.generatedAt ?? new Date().toISOString(),
   };
