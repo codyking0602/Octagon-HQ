@@ -57,6 +57,16 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --silent --no-audit --no-fund
 
+      - name: Stage 9 candidate and generated-review probe
+        run: |
+          npx vitest run src/features/games/twentyQuestionsCandidateCoverage.audit.test.ts || true
+          npm run generate:cfb-adjacent-sources
+          npm run generate:football-factual-universe
+          npm run generate:football-ledger-audit
+          echo "=== FOOTBALL_LEDGER_GENERATED_DIFF_BEGIN ==="
+          git diff --no-ext-diff -- docs/football-ledger-stage13-5-review.md
+          echo "=== FOOTBALL_LEDGER_GENERATED_DIFF_END ==="
+
       - name: Typecheck
         run: npm run typecheck
 
