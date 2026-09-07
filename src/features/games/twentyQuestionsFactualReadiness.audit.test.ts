@@ -11,7 +11,9 @@ type Role = "player" | "coach";
 type Answer = boolean | null;
 type Person = { key: string; role: Role; records: FootballSubjectProfile[] };
 type Predicate = { family: string; id: string; answer: (person: Person) => Answer };
-type NumericSpec = readonly [string, string, readonly number[], readonly string[]?];
+type NumericSpec =
+  | readonly [string, string, readonly number[]]
+  | readonly [string, string, readonly number[], readonly string[]];
 
 const PLAYER_TARGET = 100;
 const COACH_TARGET = 20;
@@ -256,8 +258,7 @@ function isolationDepths(pool: readonly Person[], live: readonly { values: reado
   const depths: number[] = [];
   let impossible = 0;
   for (const target of indexes) {
-    let candidates = indexes.filter((candidate) => live.every((row) => row.values[candidate] === row.values[target]) ? true : true);
-    candidates = pool.map((_person, index) => index);
+    let candidates = pool.map((_person, index) => index);
     const unused = new Set(live.map((_row, index) => index));
     let depth = 0;
     while (candidates.length > 1 && unused.size) {
