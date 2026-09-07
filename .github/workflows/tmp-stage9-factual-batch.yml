@@ -8,6 +8,7 @@ on:
       - .github/workflows/tmp-stage9-factual-batch.yml
       - .github/scripts/tmp-stage9-factual-batch.py
       - .github/scripts/tmp-stage9-pool-fix.py
+      - .github/scripts/tmp-stage9-final-facts.py
 
 permissions:
   contents: write
@@ -32,6 +33,7 @@ jobs:
         run: |
           python .github/scripts/tmp-stage9-factual-batch.py
           python .github/scripts/tmp-stage9-pool-fix.py
+          python .github/scripts/tmp-stage9-final-facts.py
       - name: Regenerate canonical Football artifacts
         run: |
           node scripts/generate-football-recognizability.mjs
@@ -45,6 +47,7 @@ jobs:
           rm -f .github/workflows/tmp-stage9-factual-batch.yml
           rm -f .github/scripts/tmp-stage9-factual-batch.py
           rm -f .github/scripts/tmp-stage9-pool-fix.py
+          rm -f .github/scripts/tmp-stage9-final-facts.py
       - name: Create candidate exact head
         run: |
           git config user.name "github-actions[bot]"
