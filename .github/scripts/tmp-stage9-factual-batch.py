@@ -122,19 +122,41 @@ new_assert = '''      expect(result.predicateCoverage.fullyCovered).toBeGreaterT
       expect(result.optimalIsolation.p95!).toBeLessThanOrEqual(20);'''
 if old_assert in readiness_text and "expect(result.duplicateAnswerFingerprints).toBe(0);" not in readiness_text:
     readiness_text = readiness_text.replace(old_assert, new_assert, 1)
-# Temporary exact collision names for one diagnostic run only; the workflow never pushes a failing candidate.
 return_anchor = "    collisionGroupSizes: duplicateGroups.map((group) => group.length).sort((a, b) => b - a),"
-if return_anchor in readiness_text and "collisionSubjects:" not in readiness_text:
+if return_anchor in readiness_text and "missingActivationSubjects:" not in readiness_text:
     readiness_text = readiness_text.replace(
         return_anchor,
-        return_anchor + '\n    collisionSubjects: duplicateGroups.map((group) => group.map((index) => ({ name: pool[index]!.records[0]!.name, role: pool[index]!.role, position: rolePosition(pool[index]!) }))),',
+        return_anchor + '''
+    collisionSubjects: duplicateGroups.map((group) => group.map((index) => ({
+      name: pool[index]!.records[0]!.name,
+      role: pool[index]!.role,
+      position: rolePosition(pool[index]!),
+      records: roleRecords(pool[index]!).map((record) => ({
+        id: record.id,
+        name: record.name,
+        position: record.position ?? null,
+        canonicalId: getFootballSubject(record.id)?.id ?? null,
+        canonicalPosition: getFootballSubject(record.id)?.position ?? null,
+      })),
+    }))),
+    missingActivationSubjects: league === "NFL" ? {
+      olGames: pool.filter((person) => person.role === "player" && rolePosition(person) === "OL" && numericFact(person, "nfl-career-games") == null).map((person) => person.records[0]!.name),
+      defensiveSacks: pool.filter((person) => person.role === "player" && ["DL", "LB"].includes(rolePosition(person) ?? "") && numericFact(person, "nfl-career-sacks") == null).map((person) => person.records[0]!.name),
+      defensiveInterceptions: pool.filter((person) => person.role === "player" && ["DB", "LB"].includes(rolePosition(person) ?? "") && numericFact(person, "nfl-career-interceptions") == null).map((person) => person.records[0]!.name),
+      punterGames: pool.filter((person) => person.role === "player" && rolePosition(person) === "P" && numericFact(person, "nfl-career-games") == null).map((person) => person.records[0]!.name),
+      coachStats: pool.filter((person) => person.role === "coach" && numericFact(person, "nfl-coach-seasons-since-1999") == null).map((person) => person.records[0]!.name),
+    } : {
+      qbPassing: pool.filter((person) => person.role === "player" && rolePosition(person) === "QB" && (numericFact(person, "cfb-career-passing-yards") == null || numericFact(person, "cfb-career-passing-touchdowns") == null)).map((person) => person.records[0]!.name),
+      rbRushing: pool.filter((person) => person.role === "player" && rolePosition(person) === "RB" && (numericFact(person, "cfb-career-games") == null || numericFact(person, "cfb-career-rushing-yards") == null || numericFact(person, "cfb-career-rushing-touchdowns") == null)).map((person) => person.records[0]!.name),
+      defensiveSacks: pool.filter((person) => person.role === "player" && ["DL", "LB"].includes(rolePosition(person) ?? "") && numericFact(person, "cfb-career-sacks") == null).map((person) => person.records[0]!.name),
+      defensiveInterceptions: pool.filter((person) => person.role === "player" && ["DB", "LB"].includes(rolePosition(person) ?? "") && numericFact(person, "cfb-career-defensive-interceptions") == null).map((person) => person.records[0]!.name),
+    },''',
         1,
     )
 readiness.write_text(readiness_text)
 
 affiliation_test = Path("src/features/back-room/footballCareerAffiliationProjection.test.ts")
-affiliation_test_text = affiliation_test.read_text()
-affiliation_test_text = affiliation_test_text.replace(
+affiliation_test_text = affiliation_test.read_text().replace(
     "          expect(observed.has(season)).toBe(true);",
     "          expect(observed.has(season), `${subject.name} missing ${season}`).toBe(true);",
 )
