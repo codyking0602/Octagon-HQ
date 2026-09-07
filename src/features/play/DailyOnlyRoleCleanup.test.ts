@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import footballTodaySource from "../back-room/FootballTodayChallengePage.tsx?raw";
+import { buildFootballOfficialDailySetup } from "./footballTodayChallengeRuntime";
 import { playLandingGameIds } from "./PlayLandingPresentation";
 import {
   hasDailyOnlyCompatibilityIntent,
@@ -14,7 +15,14 @@ describe("Blind Rank and Keep/Cut product role", () => {
     expect(playLandingGameIds("football")).not.toContain("keep-cut");
   });
 
-  it("preserves Football Blind Rank and Keep/Cut in the canonical Daily runtime", () => {
+  it("resolves Football Blind Rank and Keep/Cut through the canonical Daily runtime", () => {
+    const day = "2026-09-06";
+    const scheduleVersion = "daily-only-role-cleanup";
+    const blindRank = buildFootballOfficialDailySetup("blind_rank_5", day, scheduleVersion);
+    const keepCut = buildFootballOfficialDailySetup("keep_4_cut_4", day, scheduleVersion);
+
+    expect(blindRank.setupKey).toMatch(/^football-blind-rank:/);
+    expect(keepCut.setupKey).toMatch(/^football-keep-cut:/);
     expect(footballTodaySource).toContain('projection.gameType === "blind_rank_5" ? <BlindRank');
     expect(footballTodaySource).toContain('projection.gameType === "keep_4_cut_4" ? <KeepCut');
     expect(footballTodaySource).toContain("DAILY DOUBLE PART 1");
