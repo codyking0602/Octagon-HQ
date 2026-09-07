@@ -3,6 +3,7 @@ import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  formatTwentyQuestionsScoreImpact,
   TWENTY_QUESTIONS_LIMIT,
   TWENTY_QUESTIONS_START_SCORE,
   twentyQuestionsFinalScore,
@@ -51,6 +52,10 @@ describe("replayable 20 Questions page", () => {
     expect(screen.getByLabelText("Round status")).toHaveTextContent("0 / 10");
     expect(screen.getByLabelText("Round status")).toHaveTextContent("100.0");
 
+    const questionButton = screen.getByText(question.label, { selector: ".twenty-questions-question-list span" }).closest("button");
+    expect(questionButton).toHaveTextContent(formatTwentyQuestionsScoreImpact(question.internalCost));
+    expect(questionButton).not.toHaveTextContent(/cost/i);
+
     clickQuestion(question.label);
     const expectedAfterQuestion = twentyQuestionsScoreAfterQuestion(
       TWENTY_QUESTIONS_START_SCORE,
@@ -58,6 +63,8 @@ describe("replayable 20 Questions page", () => {
     );
     expect(screen.getByLabelText("Round status")).toHaveTextContent(expectedAfterQuestion.toFixed(1));
     expect(screen.getByRole("region", { name: "What you know" })).toHaveTextContent(question.label);
+    expect(screen.getByRole("region", { name: "What you know" })).toHaveTextContent(formatTwentyQuestionsScoreImpact(question.internalCost));
+    expect(screen.getByRole("region", { name: "What you know" })).not.toHaveTextContent(/cost/i);
     expect(
       [...container.querySelectorAll<HTMLButtonElement>(".twenty-questions-question-list button")]
         .some((button) => button.textContent?.includes(question.label)),
