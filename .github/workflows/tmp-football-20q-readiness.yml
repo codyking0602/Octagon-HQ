@@ -25,7 +25,7 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Build strict-pool probe
+      - name: Build direct-facts probe
         run: |
           cp src/features/games/twentyQuestionsFactualReadiness.audit.test.ts src/features/games/twentyQuestionsStrictPool.tmp.audit.test.ts
           python - <<'PY'
@@ -44,20 +44,9 @@ jobs:
           }'''
           new = '''function selectLaunchPool(league: League) {
             const people = rawPeople(league);
-            const ready = (candidate: PersonCandidate, role: Role) => {
-              const person: Person = { ...candidate, role };
-              if (!roleWindow(person)) return false;
-              if (careerAffiliations(person)?.complete !== true) return false;
-              if (role === "player" && !rolePosition(person)) return false;
-              if (league === "CFB" && role === "player" && !roleSchool(person)) return false;
-              return true;
-            };
-            const coaches = sortRoleCandidates(people.filter((person) => ready(person, "coach")), "coach").slice(0, COACH_TARGET);
+            const coaches = sortRoleCandidates(people, "coach").slice(0, COACH_TARGET);
             const coachNames = new Set(coaches.map((person) => person.nameKey));
-            const playerCandidates = sortRoleCandidates(
-              people.filter((person) => !coachNames.has(person.nameKey) && ready(person, "player")),
-              "player",
-            );
+            const playerCandidates = sortRoleCandidates(people.filter((person) => !coachNames.has(person.nameKey)), "player");
             const offensiveLine = playerCandidates.filter((candidate) => {
               const person: Person = { ...candidate, role: "player" };
               return rolePosition(person) === "OL" && (roleWindow(person)?.end ?? 0) >= 2000;
@@ -74,7 +63,45 @@ jobs:
           }'''
           if old not in s:
               raise SystemExit('selector block not found')
-          p.write_text(s.replace(old, new))
+          s = s.replace(old, new)
+          marker = '''  add("position-family", "special-teams", (person) => {
+            if (person.role === "coach") return false;
+            const known = rolePosition(person);
+            return known == null ? null : ["K", "P"].includes(known);
+          });'''
+          extra = marker + '''
+
+          const explicitPlayerBoolean = (person: Person, field: "firstRoundPick" | "firstOverallPick" | "undrafted" | "heismanWinner" | "nationalChampion"): Answer => {
+            if (person.role !== "player") return false;
+            const values = roleRecords(person).map((record) => record[field]);
+            if (values.some((value) => value === true)) return true;
+            if (values.length && values.every((value) => value === false)) return false;
+            return null;
+          };
+          add("draft", "first-round", (person) => explicitPlayerBoolean(person, "firstRoundPick"));
+          add("draft", "first-overall", (person) => explicitPlayerBoolean(person, "firstOverallPick"));
+          add("draft", "undrafted", (person) => explicitPlayerBoolean(person, "undrafted"));
+          if (league === "CFB") {
+            add("award", "heisman", (person) => explicitPlayerBoolean(person, "heismanWinner"));
+            add("championship", "national-champion-player", (person) => explicitPlayerBoolean(person, "nationalChampion"));
+          }
+          if (league === "NFL") {
+            const directFranchises = new Set(pool.flatMap((person) => person.role === "player"
+              ? roleRecords(person).flatMap((record) => record.franchises ?? [])
+              : []));
+            for (const franchise of directFranchises) {
+              add("player-franchise", normalize(franchise), (person) => {
+                if (person.role !== "player") return false;
+                const records = roleRecords(person);
+                const values = records.flatMap((record) => record.franchises ?? []);
+                if (values.includes(franchise)) return true;
+                return records.length && records.every((record) => record.franchises != null) ? false : null;
+              });
+            }
+          }'''
+          if marker not in s:
+              raise SystemExit('predicate marker not found')
+          p.write_text(s.replace(marker, extra))
           PY
-      - name: Run strict-pool probe
+      - name: Run direct-facts probe
         run: npx vitest run src/features/games/twentyQuestionsStrictPool.tmp.audit.test.ts --reporter=verbose
