@@ -64,14 +64,8 @@ jobs:
           if old not in s:
               raise SystemExit('selector block not found')
           s = s.replace(old, new)
-          marker = '''  add("position-family", "special-teams", (person) => {
-            if (person.role === "coach") return false;
-            const known = rolePosition(person);
-            return known == null ? null : ["K", "P"].includes(known);
-          });'''
-          extra = marker + '''
-
-          const explicitPlayerBoolean = (person: Person, field: "firstRoundPick" | "firstOverallPick" | "undrafted" | "heismanWinner" | "nationalChampion"): Answer => {
+          marker = '  const eraCutoffs = [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020] as const;'
+          extra = '''  const explicitPlayerBoolean = (person: Person, field: "firstRoundPick" | "firstOverallPick" | "undrafted" | "heismanWinner" | "nationalChampion"): Answer => {
             if (person.role !== "player") return false;
             const values = roleRecords(person).map((record) => record[field]);
             if (values.some((value) => value === true)) return true;
@@ -98,10 +92,11 @@ jobs:
                 return records.length && records.every((record) => record.franchises != null) ? false : null;
               });
             }
-          }'''
+          }
+          '''
           if marker not in s:
-              raise SystemExit('predicate marker not found')
-          p.write_text(s.replace(marker, extra))
+              raise SystemExit('era marker not found')
+          p.write_text(s.replace(marker, extra + marker, 1))
           PY
       - name: Run direct-facts probe
         run: npx vitest run src/features/games/twentyQuestionsStrictPool.tmp.audit.test.ts --reporter=verbose
