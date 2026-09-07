@@ -128,7 +128,7 @@ export default function TwentyQuestionsPage({ sport }: { sport: TwentyQuestionsS
             <h2>Find the hidden {football ? "player or head coach" : "fighter"}.</h2>
             <p>
               Ask up to 10 factual Yes/No questions, or guess the identity at any time.
-              Every question shows its static 5–8 cost and exact score deduction before you ask it.
+              Every question shows exactly how many score points it will cost before you ask it.
             </p>
             <div className="twenty-questions-rules" aria-label="20 Questions scoring rules">
               <span><strong>100</strong> starting score</span>
@@ -197,7 +197,7 @@ export default function TwentyQuestionsPage({ sport }: { sport: TwentyQuestionsS
                       <span className={entry.answer ? "is-yes" : "is-no"}>{entry.answer ? "YES" : "NO"}</span>
                       <div>
                         <strong>{entry.question.label}</strong>
-                        <small>Question {asked.length - reverseIndex} · Cost {entry.question.internalCost} · {formatTwentyQuestionsScoreImpact(entry.question.internalCost)}</small>
+                        <small>Question {asked.length - reverseIndex} · {formatTwentyQuestionsScoreImpact(entry.question.internalCost)}</small>
                       </div>
                     </article>
                   ))}
@@ -208,7 +208,7 @@ export default function TwentyQuestionsPage({ sport }: { sport: TwentyQuestionsS
             <section className="twenty-questions-bank" aria-labelledby="twenty-questions-bank-title">
               <div className="twenty-questions-section-heading">
                 <div><p className="eyebrow">QUESTION BANK</p><h2 id="twenty-questions-bank-title">Choose your next question</h2></div>
-                <span>Cost + score impact shown first</span>
+                <span>Score impact shown first</span>
               </div>
               <input
                 value={questionSearch}
@@ -223,7 +223,7 @@ export default function TwentyQuestionsPage({ sport }: { sport: TwentyQuestionsS
                 {availableQuestions.slice(0, visibleQuestionLimit).map((question) => (
                   <button type="button" key={question.id} onClick={() => askQuestion(question)}>
                     <span>{question.label}</span>
-                    <strong>Cost {question.internalCost} · {formatTwentyQuestionsScoreImpact(question.internalCost)}</strong>
+                    <strong>{formatTwentyQuestionsScoreImpact(question.internalCost)}</strong>
                   </button>
                 ))}
               </div>
