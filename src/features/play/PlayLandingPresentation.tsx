@@ -6,12 +6,14 @@ export const PLAY_LANDING_COMMON_GAME_ORDER = [
   "wavelength",
   "blind-resume",
   "hit-the-number",
+  "20-questions",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
   "find-leader",
   "wavelength",
   "hit-the-number",
+  "20-questions",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies PlayGameId;
