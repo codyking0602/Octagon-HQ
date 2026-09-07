@@ -25,14 +25,45 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Build direct-facts probe
+      - name: Build factual-depth probe
         run: |
           cp src/features/games/twentyQuestionsFactualReadiness.audit.test.ts src/features/games/twentyQuestionsStrictPool.tmp.audit.test.ts
           python - <<'PY'
           from pathlib import Path
           p = Path('src/features/games/twentyQuestionsStrictPool.tmp.audit.test.ts')
           s = p.read_text()
-          old = '''function selectLaunchPool(league: League) {
+
+          sort_old = '''function sortRoleCandidates(candidates: readonly PersonCandidate[], role: Role) {
+            return [...candidates]
+              .filter((person) => strongestRoleTier(person.records, role) > 0)
+              .sort((a, b) => strongestRoleTier(b.records, role) - strongestRoleTier(a.records, role) || stableHash(a.key) - stableHash(b.key));
+          }'''
+          sort_new = '''function factualDepthForCandidate(candidate: PersonCandidate, role: Role) {
+            const person: Person = { ...candidate, role };
+            const metrics = new Set(roleRecords(person).flatMap((record) =>
+              getFootballFactualRecord(record.id)?.facts.map((fact) => fact.metricId) ?? []));
+            let score = metrics.size * 100;
+            if (roleWindow(person)) score += 30;
+            if (role === "player" && rolePosition(person)) score += 20;
+            if (role === "player" && roleSchool(person)) score += 10;
+            const affiliations = careerAffiliations(person);
+            if (affiliations?.affiliations.length) score += 10;
+            if (affiliations?.complete) score += 20;
+            return score;
+          }
+
+          function sortRoleCandidates(candidates: readonly PersonCandidate[], role: Role) {
+            return [...candidates]
+              .filter((person) => strongestRoleTier(person.records, role) > 0)
+              .sort((a, b) => factualDepthForCandidate(b, role) - factualDepthForCandidate(a, role)
+                || strongestRoleTier(b.records, role) - strongestRoleTier(a.records, role)
+                || stableHash(a.key) - stableHash(b.key));
+          }'''
+          if sort_old not in s:
+              raise SystemExit('sort block not found')
+          s = s.replace(sort_old, sort_new)
+
+          select_old = '''function selectLaunchPool(league: League) {
             const people = rawPeople(league);
             const coaches = sortRoleCandidates(people, "coach").slice(0, COACH_TARGET);
             const coachNames = new Set(coaches.map((person) => person.nameKey));
@@ -42,14 +73,19 @@ jobs:
               ...coaches.map((person): Person => ({ ...person, role: "coach" })),
             ];
           }'''
-          new = '''function selectLaunchPool(league: League) {
+          select_new = '''function selectLaunchPool(league: League) {
             const people = rawPeople(league);
             const coaches = sortRoleCandidates(people, "coach").slice(0, COACH_TARGET);
             const coachNames = new Set(coaches.map((person) => person.nameKey));
             const playerCandidates = sortRoleCandidates(people.filter((person) => !coachNames.has(person.nameKey)), "player");
             const offensiveLine = playerCandidates.filter((candidate) => {
               const person: Person = { ...candidate, role: "player" };
-              return rolePosition(person) === "OL" && (roleWindow(person)?.end ?? 0) >= 2000;
+              if (rolePosition(person) !== "OL") return false;
+              const window = roleWindow(person);
+              if (window?.end != null) return window.end >= 2000;
+              const metrics = roleRecords(person).flatMap((record) =>
+                getFootballFactualRecord(record.id)?.facts.map((fact) => fact.metricId) ?? []);
+              return league === "CFB" && metrics.includes("cfb-career-games");
             }).slice(0, 2);
             const nonOl = playerCandidates.filter((candidate) => {
               const person: Person = { ...candidate, role: "player" };
@@ -61,42 +97,9 @@ jobs:
               ...coaches.map((person): Person => ({ ...person, role: "coach" })),
             ];
           }'''
-          if old not in s:
+          if select_old not in s:
               raise SystemExit('selector block not found')
-          s = s.replace(old, new)
-          marker = '  const eraCutoffs = [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020] as const;'
-          extra = '''  const explicitPlayerBoolean = (person: Person, field: "firstRoundPick" | "firstOverallPick" | "undrafted" | "heismanWinner" | "nationalChampion"): Answer => {
-            if (person.role !== "player") return false;
-            const values = roleRecords(person).map((record) => record[field]);
-            if (values.some((value) => value === true)) return true;
-            if (values.length && values.every((value) => value === false)) return false;
-            return null;
-          };
-          add("draft", "first-round", (person) => explicitPlayerBoolean(person, "firstRoundPick"));
-          add("draft", "first-overall", (person) => explicitPlayerBoolean(person, "firstOverallPick"));
-          add("draft", "undrafted", (person) => explicitPlayerBoolean(person, "undrafted"));
-          if (league === "CFB") {
-            add("award", "heisman", (person) => explicitPlayerBoolean(person, "heismanWinner"));
-            add("championship", "national-champion-player", (person) => explicitPlayerBoolean(person, "nationalChampion"));
-          }
-          if (league === "NFL") {
-            const directFranchises = new Set(pool.flatMap((person) => person.role === "player"
-              ? roleRecords(person).flatMap((record) => record.franchises ?? [])
-              : []));
-            for (const franchise of directFranchises) {
-              add("player-franchise", normalize(franchise), (person) => {
-                if (person.role !== "player") return false;
-                const records = roleRecords(person);
-                const values = records.flatMap((record) => record.franchises ?? []);
-                if (values.includes(franchise)) return true;
-                return records.length && records.every((record) => record.franchises != null) ? false : null;
-              });
-            }
-          }
-          '''
-          if marker not in s:
-              raise SystemExit('era marker not found')
-          p.write_text(s.replace(marker, extra + marker, 1))
+          p.write_text(s.replace(select_old, select_new))
           PY
-      - name: Run direct-facts probe
+      - name: Run factual-depth probe
         run: npx vitest run src/features/games/twentyQuestionsStrictPool.tmp.audit.test.ts --reporter=verbose
