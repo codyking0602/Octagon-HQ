@@ -1,5 +1,7 @@
-import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
-import { deriveUfcCareerStats } from "../play/ufcCareerStats";
+import {
+  ufcFactualLedgerSubjects,
+  type UfcFactualSubject,
+} from "../back-room/ufcFactualLedger";
 import {
   twentyQuestionsCostForSplit,
   type TwentyQuestionsQuestion,
@@ -9,12 +11,24 @@ import {
 
 export const UFC_TWENTY_QUESTIONS_SUBJECT_COUNT = 100;
 
-type UfcInput = (typeof canonicalRankingInputs.fighters)[number];
-
 type CandidateQuestion = {
   id: string;
   label: string;
   values: ReadonlyMap<string, boolean>;
+};
+
+type UfcTwentyQuestionsStats = {
+  fights: number;
+  wins: number;
+  decisionWins: number;
+  finishes: number;
+  koTkoWins: number;
+  submissionWins: number;
+  titleFights: number;
+  titleFightWins: number;
+  activeYears: number;
+  longestWinStreak: number;
+  uniqueOpponentsBeaten: number;
 };
 
 function normalizedId(value: string) {
@@ -26,6 +40,15 @@ function normalizedId(value: string) {
     .replace(/^-|-$/g, "");
 }
 
+function normalizedOpponent(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’‘`]/g, "'")
+    .trim()
+    .toLowerCase();
+}
+
 function partitionSignature(subjects: readonly TwentyQuestionsSubject[], values: ReadonlyMap<string, boolean>) {
   const direct = subjects.map((subject) => values.get(subject.id) ? "1" : "0").join("");
   const inverse = subjects.map((subject) => values.get(subject.id) ? "0" : "1").join("");
@@ -33,66 +56,101 @@ function partitionSignature(subjects: readonly TwentyQuestionsSubject[], values:
 }
 
 function candidate(
-  subjects: readonly TwentyQuestionsSubject[],
   id: string,
   label: string,
-  answer: (fighter: UfcInput) => boolean,
+  answer: (fighter: UfcFactualSubject) => boolean,
 ): CandidateQuestion {
   return {
     id,
     label,
-    values: new Map(canonicalRankingInputs.fighters.map((fighter) => [fighter.presentation.slug, answer(fighter)])),
+    values: new Map(ufcFactualLedgerSubjects.map((fighter) => [fighter.id, answer(fighter)])),
+  };
+}
+
+function distinctCount(values: readonly string[]) {
+  return new Set(values.map(normalizedOpponent).filter(Boolean)).size;
+}
+
+function longestWinStreak(fighter: UfcFactualSubject) {
+  let current = 0;
+  let longest = 0;
+  [...fighter.fights]
+    .sort((left, right) => left.date.localeCompare(right.date) || left.id.localeCompare(right.id))
+    .forEach((fight) => {
+      if (fight.result === "win") {
+        current += 1;
+        longest = Math.max(longest, current);
+      } else {
+        current = 0;
+      }
+    });
+  return longest;
+}
+
+function deriveStats(fighter: UfcFactualSubject): UfcTwentyQuestionsStats {
+  const wins = fighter.fights.filter((fight) => fight.result === "win");
+  const finishes = wins.filter((fight) => fight.methodCategory === "ko-tko" || fight.methodCategory === "submission");
+  const titleFights = fighter.fights.filter((fight) => fight.titleFight);
+  const titleWins = wins.filter((fight) => fight.titleFight);
+  return {
+    fights: fighter.fights.length,
+    wins: wins.length,
+    decisionWins: wins.filter((fight) => fight.methodCategory === "decision").length,
+    finishes: finishes.length,
+    koTkoWins: wins.filter((fight) => fight.methodCategory === "ko-tko").length,
+    submissionWins: wins.filter((fight) => fight.methodCategory === "submission").length,
+    titleFights: titleFights.length,
+    titleFightWins: titleWins.length,
+    activeYears: distinctCount(fighter.fights.map((fight) => fight.date.slice(0, 4))),
+    longestWinStreak: longestWinStreak(fighter),
+    uniqueOpponentsBeaten: distinctCount(wins.map((fight) => fight.opponent)),
   };
 }
 
 function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQuestionsQuestion[] {
   const rows: CandidateQuestion[] = [];
-  const add = (id: string, label: string, answer: (fighter: UfcInput) => boolean) => {
-    rows.push(candidate(subjects, id, label, answer));
+  const add = (id: string, label: string, answer: (fighter: UfcFactualSubject) => boolean) => {
+    rows.push(candidate(id, label, answer));
   };
 
-  const stats = new Map(canonicalRankingInputs.fighters.map((fighter) => [
-    fighter.presentation.slug,
-    deriveUfcCareerStats(fighter.facts.fights, "official"),
-  ]));
-  const statFor = (fighter: UfcInput) => stats.get(fighter.presentation.slug)!;
+  const stats = new Map(ufcFactualLedgerSubjects.map((fighter) => [fighter.id, deriveStats(fighter)]));
+  const statFor = (fighter: UfcFactualSubject) => stats.get(fighter.id)!;
 
-  add("identity:womens", "Is this a women's-division fighter?", (fighter) => fighter.board === "women");
-
-  const divisions = [...new Set(canonicalRankingInputs.fighters.flatMap((fighter) => [
-    fighter.facts.identity.primaryDivision,
-    ...fighter.facts.identity.secondaryDivisions,
-  ]))].sort();
+  const divisions = [...new Set(ufcFactualLedgerSubjects.flatMap((fighter) => [
+    fighter.primaryDivision,
+    ...fighter.secondaryDivisions,
+    ...fighter.fights.map((fight) => fight.division),
+  ]).filter((division) => division && division !== "Unknown"))].sort();
   for (const division of divisions) {
     add(`division:${normalizedId(division)}`, `Has this fighter competed at ${division} in the UFC?`, (fighter) => (
-      fighter.facts.identity.primaryDivision === division || fighter.facts.identity.secondaryDivisions.includes(division)
+      fighter.primaryDivision === division
+      || fighter.secondaryDivisions.includes(division)
+      || fighter.fights.some((fight) => fight.division === division)
     ));
   }
 
-  const firstFightYear = (fighter: UfcInput) => Math.min(...fighter.facts.fights.map((fight) => Number(fight.date.slice(0, 4))));
-  const lastFightYear = (fighter: UfcInput) => Math.max(...fighter.facts.fights.map((fight) => Number(fight.date.slice(0, 4))));
   for (const decade of [1990, 2000, 2010, 2020]) {
     add(`era:active-${decade}s`, `Did this fighter have a UFC fight in the ${decade}s?`, (fighter) => (
-      fighter.facts.fights.some((fight) => Number(fight.date.slice(0, 4)) >= decade && Number(fight.date.slice(0, 4)) < decade + 10)
+      fighter.fights.some((fight) => Number(fight.date.slice(0, 4)) >= decade && Number(fight.date.slice(0, 4)) < decade + 10)
     ));
   }
   for (const cutoff of [2000, 2005, 2010, 2015, 2020, 2025]) {
-    add(`era:debut-before-${cutoff}`, `Did this fighter make their UFC debut before ${cutoff}?`, (fighter) => firstFightYear(fighter) < cutoff);
-    add(`era:last-fight-before-${cutoff}`, `Was this fighter's last UFC fight before ${cutoff}?`, (fighter) => lastFightYear(fighter) < cutoff);
+    add(`era:debut-before-${cutoff}`, `Did this fighter make their UFC debut before ${cutoff}?`, (fighter) => Number(fighter.activeFrom.slice(0, 4)) < cutoff);
+    add(`era:last-fight-before-${cutoff}`, `Was this fighter's last UFC fight before ${cutoff}?`, (fighter) => Number(fighter.activeTo.slice(0, 4)) < cutoff);
   }
 
   const metricSpecs = [
-    ["fights", "UFC fights", (fighter: UfcInput) => statFor(fighter).fights, [5, 10, 15, 20, 25, 30, 35]],
-    ["wins", "UFC wins", (fighter: UfcInput) => statFor(fighter).wins, [5, 10, 15, 20, 25]],
-    ["decision-wins", "UFC decision wins", (fighter: UfcInput) => statFor(fighter).decisionWins, [3, 5, 8, 10, 12]],
-    ["finishes", "UFC finishes", (fighter: UfcInput) => statFor(fighter).finishes, [3, 5, 8, 10, 12, 15]],
-    ["ko-tko-wins", "UFC KO/TKO wins", (fighter: UfcInput) => statFor(fighter).koTkoWins, [3, 5, 8, 10, 12]],
-    ["submission-wins", "UFC submission wins", (fighter: UfcInput) => statFor(fighter).submissionWins, [2, 3, 5, 8, 10]],
-    ["title-fights", "UFC title fights", (fighter: UfcInput) => statFor(fighter).titleFights, [1, 3, 5, 8, 10, 15]],
-    ["title-wins", "UFC title-fight wins", (fighter: UfcInput) => statFor(fighter).titleFightWins, [1, 3, 5, 8, 10]],
-    ["active-years", "UFC active years", (fighter: UfcInput) => statFor(fighter).activeYears, [3, 5, 8, 10, 12, 15]],
-    ["win-streak", "UFC consecutive wins", (fighter: UfcInput) => statFor(fighter).longestWinStreak, [3, 5, 7, 10, 12]],
-    ["opponents-beaten", "unique UFC opponents beaten", (fighter: UfcInput) => statFor(fighter).uniqueOpponentsBeaten, [5, 10, 15, 20]],
+    ["fights", "UFC fights", (fighter: UfcFactualSubject) => statFor(fighter).fights, [5, 10, 15, 20, 25, 30, 35]],
+    ["wins", "UFC wins", (fighter: UfcFactualSubject) => statFor(fighter).wins, [5, 10, 15, 20, 25]],
+    ["decision-wins", "UFC decision wins", (fighter: UfcFactualSubject) => statFor(fighter).decisionWins, [3, 5, 8, 10, 12]],
+    ["finishes", "UFC finishes", (fighter: UfcFactualSubject) => statFor(fighter).finishes, [3, 5, 8, 10, 12, 15]],
+    ["ko-tko-wins", "UFC KO/TKO wins", (fighter: UfcFactualSubject) => statFor(fighter).koTkoWins, [3, 5, 8, 10, 12]],
+    ["submission-wins", "UFC submission wins", (fighter: UfcFactualSubject) => statFor(fighter).submissionWins, [2, 3, 5, 8, 10]],
+    ["title-fights", "UFC title fights", (fighter: UfcFactualSubject) => statFor(fighter).titleFights, [1, 3, 5, 8, 10, 15]],
+    ["title-wins", "UFC title-fight wins", (fighter: UfcFactualSubject) => statFor(fighter).titleFightWins, [1, 3, 5, 8, 10]],
+    ["active-years", "UFC active years", (fighter: UfcFactualSubject) => statFor(fighter).activeYears, [3, 5, 8, 10, 12, 15]],
+    ["win-streak", "UFC consecutive wins", (fighter: UfcFactualSubject) => statFor(fighter).longestWinStreak, [3, 5, 7, 10, 12]],
+    ["opponents-beaten", "unique UFC opponents beaten", (fighter: UfcFactualSubject) => statFor(fighter).uniqueOpponentsBeaten, [5, 10, 15, 20]],
   ] as const;
   for (const [id, label, valueFor, thresholds] of metricSpecs) {
     for (const threshold of thresholds) {
@@ -100,13 +158,19 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
     }
   }
 
-  const opponents = [...new Set(canonicalRankingInputs.fighters.flatMap((fighter) => fighter.facts.fights.map((fight) => fight.opponent.trim())).filter(Boolean))].sort();
-  for (const opponent of opponents) {
-    add(`faced:${normalizedId(opponent)}`, `Has this fighter faced ${opponent} in the UFC?`, (fighter) => (
-      fighter.facts.fights.some((fight) => fight.opponent.trim() === opponent)
+  const opponentNames = new Map<string, string>();
+  for (const fighter of ufcFactualLedgerSubjects) {
+    for (const fight of fighter.fights) {
+      const key = normalizedOpponent(fight.opponent);
+      if (key && !opponentNames.has(key)) opponentNames.set(key, fight.opponent.trim());
+    }
+  }
+  for (const [opponentKey, opponent] of [...opponentNames.entries()].sort((left, right) => left[1].localeCompare(right[1]))) {
+    add(`faced:${normalizedId(opponentKey)}`, `Has this fighter faced ${opponent} in the UFC?`, (fighter) => (
+      fighter.fights.some((fight) => normalizedOpponent(fight.opponent) === opponentKey)
     ));
-    add(`beat:${normalizedId(opponent)}`, `Has this fighter beaten ${opponent} in the UFC?`, (fighter) => (
-      fighter.facts.fights.some((fight) => fight.opponent.trim() === opponent && fight.officialResult === "win")
+    add(`beat:${normalizedId(opponentKey)}`, `Has this fighter beaten ${opponent} in the UFC?`, (fighter) => (
+      fighter.fights.some((fight) => normalizedOpponent(fight.opponent) === opponentKey && fight.result === "win")
     ));
   }
 
@@ -136,13 +200,13 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
 
 let cachedUniverse: TwentyQuestionsUniverse | null = null;
 
-/** Canonical UFC Games factual universe. No rankings or Play-only ratings are consulted. */
+/** Canonical UFC Games factual universe. Rankings remain separate from the 100-subject launch ledger. */
 export function getUfcTwentyQuestionsUniverse(): TwentyQuestionsUniverse {
   if (cachedUniverse) return cachedUniverse;
 
-  const subjects: TwentyQuestionsSubject[] = canonicalRankingInputs.fighters.map((fighter) => ({
-    id: fighter.presentation.slug,
-    name: fighter.fighter,
+  const subjects: TwentyQuestionsSubject[] = ufcFactualLedgerSubjects.map((fighter) => ({
+    id: fighter.id,
+    name: fighter.name,
     kind: "fighter",
     league: "UFC",
   }));
