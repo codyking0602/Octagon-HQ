@@ -1,19 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { playLandingDestination, playLandingGameIds } from "./PlayLandingPresentation";
+import footballTodaySource from "../back-room/FootballTodayChallengePage.tsx?raw";
+import { playLandingGameIds } from "./PlayLandingPresentation";
 import {
   hasDailyOnlyCompatibilityIntent,
   isOfficialDailyRoute,
 } from "./TodayChallengeGameRoute";
 
 describe("Blind Rank and Keep/Cut product role", () => {
-  it("keeps UFC Daily-only while temporarily exposing Football casual comparison games", () => {
+  it("keeps Blind Rank and Keep/Cut out of both casual Play libraries", () => {
     expect(playLandingGameIds("ufc")).not.toContain("blind-rank");
     expect(playLandingGameIds("ufc")).not.toContain("keep-cut");
+    expect(playLandingGameIds("football")).not.toContain("blind-rank");
+    expect(playLandingGameIds("football")).not.toContain("keep-cut");
+  });
 
-    expect(playLandingGameIds("football")).toContain("blind-rank");
-    expect(playLandingGameIds("football")).toContain("keep-cut");
-    expect(playLandingDestination("football", "blind-rank")).toBe("/football/rank-five?mode=replayable");
-    expect(playLandingDestination("football", "keep-cut")).toBe("/football/keep-cut?mode=replayable");
+  it("preserves Football Blind Rank and Keep/Cut in the canonical Daily runtime", () => {
+    expect(footballTodaySource).toContain('projection.gameType === "blind_rank_5" ? <BlindRank');
+    expect(footballTodaySource).toContain('projection.gameType === "keep_4_cut_4" ? <KeepCut');
+    expect(footballTodaySource).toContain("DAILY DOUBLE PART 1");
+    expect(footballTodaySource).toContain("DAILY DOUBLE PART 2");
   });
 
   it("routes plain UFC Blind Rank and Keep/Cut entry points into the official Daily runtime", () => {
