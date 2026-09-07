@@ -21,6 +21,11 @@ const bundles = [
   },
 ];
 
+// The Football runtime imports this generated relationship projection. Keep the
+// bundle command self-contained for clean deployment checkouts instead of relying
+// on pretypecheck/pretest having populated ignored generated files first.
+await import("./generate-football-career-media-context.mjs");
+
 for (const bundle of bundles) {
   const output = resolve(outDir, bundle.fileName);
   await rm(output, { force: true });
