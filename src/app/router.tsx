@@ -32,6 +32,7 @@ const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
 const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
 const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"));
+const TwentyQuestionsPage = lazy(() => import("../features/play/TwentyQuestionsPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
@@ -59,6 +60,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/keep-cut", element: <TodayChallengeGameRoute gameType="keep_4_cut_4" casual={<KeepCutPage />} /> },
       { path: "play/auction", element: <AuctionPage /> },
       { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
+      { path: "play/20-questions", element: <TwentyQuestionsPage sport="ufc" /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
@@ -75,6 +77,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/blind-resume", element: <FootballBlindResumePage /> },
       { path: "football/hit-the-number", element: <FootballHitTheNumberPage /> },
       { path: "football/find-leader", element: <FootballFindLeaderPage /> },
+      { path: "football/20-questions", element: <TwentyQuestionsPage sport="football" /> },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
