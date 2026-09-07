@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const polishStyles = readFileSync(resolve(process.cwd(), "src/styles/football-replayable-polish.css"), "utf8");
+const visualStyles = readFileSync(resolve(process.cwd(), "src/styles/football-visual-assets.css"), "utf8");
 const appEntry = readFileSync(resolve(process.cwd(), "src/main.tsx"), "utf8");
 
 const replayableGameScopes = [
@@ -27,6 +28,18 @@ describe("Football HQ replayable presentation polish", () => {
     expect(polishStyles).toContain("grid-template-columns: repeat(2, minmax(0, 1fr))");
     expect(polishStyles).toContain(".football-hit-number-lock");
     expect(polishStyles).toContain("position: sticky");
+  });
+
+  it("keeps the Keep Cut phone media lane wide enough for its canonical visual", () => {
+    expect(visualStyles).toContain(
+      ".app-shell--football-room .football-keep-cut-page .football-keep-cut-current {\n  grid-template-columns: 74px minmax(0, 1fr) minmax(110px, auto) !important;",
+    );
+    expect(visualStyles).toContain(
+      ".app-shell--football-room .football-keep-cut-page .football-keep-cut-current > .football-subject-visual {\n  min-width: 74px;",
+    );
+    expect(visualStyles).toContain(
+      "@media (max-width: 700px) {\n  .app-shell--football-room .football-keep-cut-page .football-keep-cut-current {\n    grid-template-columns: 74px minmax(0, 1fr) !important;",
+    );
   });
 
   it("loads after the canonical Football visual system as a presentation-only final layer", () => {
