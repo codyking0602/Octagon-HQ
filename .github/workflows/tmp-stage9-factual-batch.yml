@@ -9,6 +9,7 @@ on:
       - .github/scripts/tmp-stage9-factual-batch.py
       - .github/scripts/tmp-stage9-pool-fix.py
       - .github/scripts/tmp-stage9-final-facts.py
+      - .github/scripts/tmp-stage9-collision-fix.py
       - .github/scripts/tmp-stage9-collision-values.py
 
 permissions:
@@ -35,6 +36,7 @@ jobs:
           python .github/scripts/tmp-stage9-factual-batch.py
           python .github/scripts/tmp-stage9-pool-fix.py
           python .github/scripts/tmp-stage9-final-facts.py
+          python .github/scripts/tmp-stage9-collision-fix.py
           python .github/scripts/tmp-stage9-collision-values.py
       - name: Regenerate canonical Football artifacts
         run: |
@@ -50,6 +52,7 @@ jobs:
           rm -f .github/scripts/tmp-stage9-factual-batch.py
           rm -f .github/scripts/tmp-stage9-pool-fix.py
           rm -f .github/scripts/tmp-stage9-final-facts.py
+          rm -f .github/scripts/tmp-stage9-collision-fix.py
           rm -f .github/scripts/tmp-stage9-collision-values.py
       - name: Create candidate exact head
         run: |
