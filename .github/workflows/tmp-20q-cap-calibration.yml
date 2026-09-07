@@ -1,0 +1,304 @@
+name: Temporary 20Q Cap Calibration
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build temporary calibration harness
+        shell: bash
+        run: |
+          cp src/features/games/twentyQuestionsFactualReadiness.audit.test.ts src/features/games/twentyQuestionsCapCalibration.tmp.audit.test.ts
+          cat >> src/features/games/twentyQuestionsCapCalibration.tmp.audit.test.ts <<'TS'
+
+          import { canonicalRankingInputs as capCanonicalRankingInputs } from "../rankings/data/rankingInputs";
+
+          type CapStrategy = "best" | "good" | "messy";
+          type CapPredicate<T> = { id: string; answer: (subject: T) => boolean | null };
+          type CapLiveRow = { id: string; values: readonly boolean[] };
+          const CAP_CHECKPOINTS = [8, 10, 11, 12] as const;
+
+          function capPercentile(values: readonly number[], p: number) {
+            if (!values.length) return null;
+            const sorted = [...values].sort((a, b) => a - b);
+            return sorted[Math.max(0, Math.min(sorted.length - 1, Math.ceil(sorted.length * p) - 1))]!;
+          }
+
+          function capRng(seed: number) {
+            let state = seed >>> 0 || 0x9e3779b9;
+            return () => {
+              state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+              return state / 0x100000000;
+            };
+          }
+
+          function capLiveRows<T>(subjects: readonly T[], predicates: readonly CapPredicate<T>[]) {
+            const byPartition = new Map<string, CapLiveRow>();
+            let incomplete = 0;
+            let uninformative = 0;
+            let redundant = 0;
+            let extreme = 0;
+            for (const predicate of predicates) {
+              const answers = subjects.map(predicate.answer);
+              if (answers.some((answer) => answer === null)) {
+                incomplete += 1;
+                continue;
+              }
+              const values = answers as boolean[];
+              const yes = values.filter(Boolean).length;
+              const no = values.length - yes;
+              if (!yes || !no) {
+                uninformative += 1;
+                continue;
+              }
+              if (Math.min(yes, no) / values.length < 0.05) extreme += 1;
+              const signature = canonicalPartitionSignature(values);
+              if (byPartition.has(signature)) {
+                redundant += 1;
+                continue;
+              }
+              byPartition.set(signature, { id: predicate.id, values });
+            }
+            return {
+              rows: [...byPartition.values()],
+              incomplete,
+              uninformative,
+              redundant,
+              extreme,
+            };
+          }
+
+          function capRankQuestions(rows: readonly CapLiveRow[], unused: ReadonlySet<number>, candidates: readonly number[]) {
+            const ranked: { index: number; worst: number; imbalance: number; hash: number }[] = [];
+            for (const index of unused) {
+              const row = rows[index]!;
+              let yes = 0;
+              for (const candidate of candidates) if (row.values[candidate]) yes += 1;
+              const no = candidates.length - yes;
+              if (!yes || !no) continue;
+              ranked.push({
+                index,
+                worst: Math.max(yes, no),
+                imbalance: Math.abs(yes - no),
+                hash: stableHash(row.id),
+              });
+            }
+            ranked.sort((a, b) => a.worst - b.worst || a.imbalance - b.imbalance || a.hash - b.hash);
+            return ranked;
+          }
+
+          function capRunTarget(
+            target: number,
+            rows: readonly CapLiveRow[],
+            subjectCount: number,
+            strategy: CapStrategy,
+            seed: number,
+          ) {
+            let candidates = Array.from({ length: subjectCount }, (_value, index) => index);
+            const unused = new Set(rows.map((_row, index) => index));
+            const rng = capRng(seed);
+            const checkpoints = new Map<number, number>();
+            let depth = 0;
+
+            while (candidates.length > 1 && depth < 20) {
+              const ranked = capRankQuestions(rows, unused, candidates);
+              if (!ranked.length) break;
+              let rank = 0;
+              if (strategy === "good") rank = Math.floor(rng() * Math.min(4, ranked.length));
+              if (strategy === "messy") rank = Math.floor(rng() * Math.min(12, ranked.length));
+              const chosen = ranked[rank]!;
+              const row = rows[chosen.index]!;
+              const answer = row.values[target]!;
+              candidates = candidates.filter((candidate) => row.values[candidate] === answer);
+              unused.delete(chosen.index);
+              depth += 1;
+              if (CAP_CHECKPOINTS.includes(depth as (typeof CAP_CHECKPOINTS)[number])) checkpoints.set(depth, candidates.length);
+            }
+
+            for (const checkpoint of CAP_CHECKPOINTS) {
+              if (!checkpoints.has(checkpoint)) checkpoints.set(checkpoint, candidates.length === 1 && depth <= checkpoint ? 1 : candidates.length);
+            }
+            return { depth: candidates.length === 1 ? depth : null, checkpoints };
+          }
+
+          function capSimulate<T>(subjects: readonly T[], predicates: readonly CapPredicate<T>[], strategy: CapStrategy) {
+            const live = capLiveRows(subjects, predicates);
+            const repeats = strategy === "best" ? 1 : 3;
+            const runs: ReturnType<typeof capRunTarget>[] = [];
+            for (let target = 0; target < subjects.length; target += 1) {
+              for (let repeat = 0; repeat < repeats; repeat += 1) {
+                runs.push(capRunTarget(
+                  target,
+                  live.rows,
+                  subjects.length,
+                  strategy,
+                  stableHash(`cap:${strategy}:${subjects.length}:${target}:${repeat}`),
+                ));
+              }
+            }
+            const depthsWithTail = runs.map((run) => run.depth ?? 21);
+            const checkpointReport = Object.fromEntries(CAP_CHECKPOINTS.map((checkpoint) => {
+              const counts = runs.map((run) => run.checkpoints.get(checkpoint) ?? subjects.length);
+              const pct = (test: (count: number) => boolean) => Number((counts.filter(test).length / counts.length * 100).toFixed(1));
+              const average = Number((counts.reduce((sum, count) => sum + count, 0) / counts.length).toFixed(2));
+              return [checkpoint, {
+                uniquePct: pct((count) => count === 1),
+                within2Pct: pct((count) => count <= 2),
+                within3Pct: pct((count) => count <= 3),
+                averageCandidates: average,
+              }];
+            }));
+            return {
+              runs: runs.length,
+              livePredicateCount: live.rows.length,
+              incompletePredicateCount: live.incomplete,
+              uninformativePredicateCount: live.uninformative,
+              redundantPartitionCount: live.redundant,
+              extremeSplitCount: live.extreme,
+              solvedBy20Pct: Number((runs.filter((run) => run.depth != null).length / runs.length * 100).toFixed(1)),
+              solveDepth: {
+                median: capPercentile(depthsWithTail, 0.5),
+                p90: capPercentile(depthsWithTail, 0.9),
+                p95: capPercentile(depthsWithTail, 0.95),
+              },
+              checkpoints: checkpointReport,
+            };
+          }
+
+          type CapUfcFighter = (typeof capCanonicalRankingInputs.fighters)[number];
+          const capNormalizeMethod = (value: string) => value.toLowerCase().replace(/[^a-z]/g, "");
+          const capIsKo = (value: string) => {
+            const normalized = capNormalizeMethod(value);
+            return normalized.includes("ko") || normalized.includes("tko");
+          };
+          const capIsSub = (value: string) => capNormalizeMethod(value).includes("sub");
+          const capIsDecision = (value: string) => capNormalizeMethod(value).includes("dec");
+          const capIsTitleFight = (value: string) => {
+            const normalized = value.toLowerCase();
+            return normalized.includes("title") || normalized.includes("champion") || normalized.includes("undisputed") || normalized.includes("interim");
+          };
+
+          function capUfcPredicates(fighters: readonly CapUfcFighter[]): CapPredicate<CapUfcFighter>[] {
+            const predicates: CapPredicate<CapUfcFighter>[] = [];
+            const add = (id: string, answer: CapPredicate<CapUfcFighter>["answer"]) => predicates.push({ id, answer });
+            add("board-women", (fighter) => fighter.board === "women");
+            add("multi-division-career", (fighter) => fighter.facts.identity.secondaryDivisions.length > 0);
+
+            const divisions = new Set(fighters.flatMap((fighter) => [
+              fighter.facts.identity.primaryDivision,
+              ...fighter.facts.identity.secondaryDivisions,
+            ]));
+            for (const division of divisions) add(`division:${normalize(division)}`, (fighter) =>
+              fighter.facts.identity.primaryDivision === division || fighter.facts.identity.secondaryDivisions.includes(division));
+
+            const years = (fighter: CapUfcFighter) => fighter.facts.fights.map((fight) => Number(fight.date.slice(0, 4)));
+            for (const cutoff of [2000, 2005, 2010, 2015, 2020]) {
+              add(`debut-before:${cutoff}`, (fighter) => Math.min(...years(fighter)) < cutoff);
+              add(`last-fight-before:${cutoff}`, (fighter) => Math.max(...years(fighter)) < cutoff);
+            }
+            for (const decade of [1990, 2000, 2010, 2020]) add(`active:${decade}s`, (fighter) =>
+              years(fighter).some((year) => year >= decade && year < decade + 10));
+            for (const cutoff of [2020, 2022, 2024]) add(`fought-since:${cutoff}`, (fighter) => Math.max(...years(fighter)) >= cutoff);
+
+            const winsBy = (fighter: CapUfcFighter, matcher: (method: string) => boolean) =>
+              fighter.facts.fights.filter((fight) => fight.officialResult === "win" && matcher(fight.methodCategory)).length;
+            const lossesBy = (fighter: CapUfcFighter, matcher: (method: string) => boolean) =>
+              fighter.facts.fights.filter((fight) => fight.officialResult === "loss" && matcher(fight.methodCategory)).length;
+            const countWins = (fighter: CapUfcFighter) => fighter.facts.fights.filter((fight) => fight.officialResult === "win").length;
+            const countLosses = (fighter: CapUfcFighter) => fighter.facts.fights.filter((fight) => fight.officialResult === "loss").length;
+
+            for (const threshold of [5, 10, 15, 20, 25, 30]) add(`fights:${threshold}`, (fighter) => fighter.facts.fights.length >= threshold);
+            for (const threshold of [5, 10, 15, 20, 25]) add(`wins:${threshold}`, (fighter) => countWins(fighter) >= threshold);
+            for (const threshold of [1, 3, 5, 8, 10]) add(`losses:${threshold}`, (fighter) => countLosses(fighter) >= threshold);
+            for (const threshold of [1, 3, 5, 8, 10]) add(`ko-wins:${threshold}`, (fighter) => winsBy(fighter, capIsKo) >= threshold);
+            for (const threshold of [1, 3, 5, 8]) add(`sub-wins:${threshold}`, (fighter) => winsBy(fighter, capIsSub) >= threshold);
+            for (const threshold of [1, 3, 5, 8, 10]) add(`decision-wins:${threshold}`, (fighter) => winsBy(fighter, capIsDecision) >= threshold);
+            add("lost-by-ko", (fighter) => lossesBy(fighter, capIsKo) >= 1);
+            add("lost-by-sub", (fighter) => lossesBy(fighter, capIsSub) >= 1);
+            add("more-ko-than-sub-wins", (fighter) => winsBy(fighter, capIsKo) > winsBy(fighter, capIsSub));
+            add("more-sub-than-ko-wins", (fighter) => winsBy(fighter, capIsSub) > winsBy(fighter, capIsKo));
+
+            const titleFights = (fighter: CapUfcFighter) => fighter.facts.fights.filter((fight) => capIsTitleFight(fight.championshipType));
+            const titleWins = (fighter: CapUfcFighter) => titleFights(fighter).filter((fight) => fight.officialResult === "win");
+            for (const threshold of [1, 2, 3, 5, 8, 10]) add(`title-fights:${threshold}`, (fighter) => titleFights(fighter).length >= threshold);
+            for (const threshold of [1, 2, 3, 5, 8, 10]) add(`title-wins:${threshold}`, (fighter) => titleWins(fighter).length >= threshold);
+            add("interim-title-win", (fighter) => titleWins(fighter).some((fight) => fight.championshipType.toLowerCase().includes("interim")));
+            add("title-wins-multiple-divisions", (fighter) => new Set(titleWins(fighter).map((fight) => fight.division).filter(Boolean)).size >= 2);
+
+            const canonicalNames = new Map(fighters.map((fighter) => [normalize(fighter.fighter), fighter.fighter]));
+            for (const [opponentKey] of canonicalNames) {
+              const faced = fighters.filter((fighter) => fighter.facts.fights.some((fight) => normalize(fight.opponent) === opponentKey)).length;
+              if (faced < 2 || faced > Math.floor(fighters.length * 0.45)) continue;
+              add(`faced-ranked:${opponentKey}`, (fighter) => fighter.facts.fights.some((fight) => normalize(fight.opponent) === opponentKey));
+            }
+            return predicates;
+          }
+
+          function capFootballReport(league: League) {
+            const pool = selectLaunchPool(league);
+            const predicates = buildPredicates(league, pool);
+            return {
+              subjectCount: pool.length,
+              best: capSimulate(pool, predicates, "best"),
+              good: capSimulate(pool, predicates, "good"),
+              messy: capSimulate(pool, predicates, "messy"),
+            };
+          }
+
+          function capUfcReport() {
+            const pool = capCanonicalRankingInputs.fighters;
+            const predicates = capUfcPredicates(pool);
+            return {
+              subjectCount: pool.length,
+              best: capSimulate(pool, predicates, "best"),
+              good: capSimulate(pool, predicates, "good"),
+              messy: capSimulate(pool, predicates, "messy"),
+            };
+          }
+
+          describe("20 Questions cap calibration", () => {
+            it("prints aggregate-only solve and ambiguity depth for UFC, NFL, and CFB", () => {
+              const report = {
+                methodology: {
+                  checkpoints: CAP_CHECKPOINTS,
+                  best: "best remaining split each question",
+                  good: "deterministic seeded choice among top 4 remaining splits; 3 runs per subject",
+                  messy: "deterministic seeded choice among top 12 remaining splits; 3 runs per subject",
+                  strictUnique: "one candidate remains",
+                  guessable: "within 2 / within 3 candidates are reported separately; no candidate names are emitted",
+                },
+                UFC: capUfcReport(),
+                NFL: capFootballReport("NFL"),
+                CFB: capFootballReport("CFB"),
+              };
+              console.log(`TWENTY_QUESTIONS_CAP_CALIBRATION=${JSON.stringify(report)}`);
+              expect(report.NFL.subjectCount).toBe(120);
+              expect(report.CFB.subjectCount).toBe(120);
+              expect(report.UFC.subjectCount).toBeGreaterThan(0);
+            });
+          });
+          TS
+
+      - name: Run focused cap calibration
+        run: npx vitest run src/features/games/twentyQuestionsCapCalibration.tmp.audit.test.ts --reporter=verbose
