@@ -33,6 +33,12 @@ const remotePhotoBySlug = new Map([
   ["felipe-lima", "https://a.espncdn.com/i/headshots/mma/players/full/5101694.png"],
   ["losene-keita", "https://a.espncdn.com/i/headshots/mma/players/full/5192314.png"],
   ["muhammad-naimov", "https://a.espncdn.com/i/headshots/mma/players/full/4690540.png"],
+  ["jean-silva", "https://a.espncdn.com/i/headshots/mma/players/full/5145766.png"],
+  ["jose-miguel-delgado", "https://a.espncdn.com/i/headshots/mma/players/full/5223435.png"],
+  ["joseph-morales", "https://a.espncdn.com/i/headshots/mma/players/full/4238229.png"],
+  ["marwan-rahiki", "https://a.espncdn.com/i/headshots/mma/players/full/5302274.png"],
+  ["waldo-cortes-acosta", "https://a.espncdn.com/i/headshots/mma/players/full/4903365.png"],
+  ["david-martinez", "https://a.espncdn.com/i/headshots/mma/players/full/4503229.png"],
 ]);
 
 export function fighterRemotePhotoPath(slug: string) {

@@ -193,6 +193,75 @@ describe("fight Spotlight content", () => {
     expectThreeQualitativeEdges(spotlight.blue.edges);
   });
 
+  it("builds the Silva-Delgado tale, preview, and qualitative edges", () => {
+    const spotlight = buildPickSpotlightContent({
+      boutId: "main-event-jean-silva-jose-miguel-delgado",
+      eventStartsAt: "2026-09-12T21:00:00.000Z",
+      red: {
+        fighterSlug: "jean-silva",
+        name: "Jean Silva",
+        record: "17-3-0",
+        dob: "1996-12-27",
+        height: "5' 7\"",
+        reach: "69\"",
+        stance: "Orthodox",
+        slpm: 4.82,
+        strikingAccuracy: 51,
+        sapm: 4.5,
+        strikingDefense: 53,
+        takedownAverage: 1.2,
+        takedownAccuracy: 60,
+        takedownDefense: 78,
+        submissionAverage: 0.6,
+      },
+      blue: {
+        fighterSlug: "jose-miguel-delgado",
+        name: "Jose Miguel Delgado",
+        record: "12-2-0",
+        dob: "1998-04-21",
+        height: "5' 11\"",
+        reach: "73\"",
+        stance: "Switch",
+        slpm: 6.07,
+        strikingAccuracy: 53,
+        sapm: 4.18,
+        strikingDefense: 53,
+        takedownAverage: 1.37,
+        takedownAccuracy: null,
+        takedownDefense: 63,
+        submissionAverage: 0,
+      },
+      generatedAt: "2026-09-07T18:00:00.000Z",
+    });
+
+    expect(spotlight.preview).toBe(
+      "Jean Silva wants to force a pressure fight where his power and pace can break Delgado down. "
+      + "Jose Miguel Delgado brings the longer frame, switch-stance looks, and dangerous counters; "
+      + "the key is whether he can punish Silva’s entries.",
+    );
+    expect(spotlight.preview.split(/\s+/).length).toBeLessThanOrEqual(40);
+    expect(spotlight.red).toMatchObject({
+      fighterSlug: "jean-silva",
+      record: "17-3-0",
+      age: "29",
+      height: "5' 7\"",
+      reach: "69\"",
+      stance: "Orthodox",
+      edges: ["Pressure and finishing power", "Proven UFC competition", "Takedown threat"],
+    });
+    expect(spotlight.blue).toMatchObject({
+      fighterSlug: "jose-miguel-delgado",
+      record: "12-2-0",
+      age: "28",
+      height: "5' 11\"",
+      reach: "73\"",
+      stance: "Switch",
+      edges: ["Reach and frame advantage", "Switch-stance offense", "High-output striking"],
+    });
+    expectThreeQualitativeEdges(spotlight.red.edges);
+    expectThreeQualitativeEdges(spotlight.blue.edges);
+  });
+
   it("uses placeholders only when UFCStats does not publish a tale field", () => {
     const sparse = buildPickSpotlightContent({
       boutId: "sparse-fight",

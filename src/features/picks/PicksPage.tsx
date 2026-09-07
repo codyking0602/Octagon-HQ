@@ -89,6 +89,11 @@ function choiceClassName(selected: boolean, readOnly: boolean) {
     .join(" ");
 }
 
+function fighterNameStyle(name: string, isMainEvent: boolean): CSSProperties | undefined {
+  if (isMainEvent || name.length <= 17) return undefined;
+  return { minHeight: 31, WebkitLineClamp: 2 };
+}
+
 function savedPickLabel(completed: number) {
   return `${completed} ${completed === 1 ? "PICK" : "PICKS"} SAVED`;
 }
@@ -267,6 +272,7 @@ export default function PicksPage() {
                   const selection = picks.selections[bout.boutId] ?? null;
                   const saving = picks.savingBoutId === bout.boutId;
                   const removed = bout.includedInPicks === false;
+                  const isMainEvent = index === 0;
                   const boutLocked = pickBoutLocked(activeEvent, bout);
                   const redOdds = removed ? null : americanOddsLabel(bout.redAmericanOdds);
                   const blueOdds = removed ? null : americanOddsLabel(bout.blueAmericanOdds);
@@ -296,7 +302,7 @@ export default function PicksPage() {
                   const blueChoiceLabel = choiceLabel(selection === bout.blueFighterSlug, boutLocked, cancelled, removed);
                   return (
                     <article
-                      className={`surface-card pick-bout-card${index === 0 ? " is-main-event" : ""}${cancelled || removed ? " is-cancelled" : ""}${removed ? " is-removed" : ""}`}
+                      className={`surface-card pick-bout-card${isMainEvent ? " is-main-event" : ""}${cancelled || removed ? " is-cancelled" : ""}${removed ? " is-removed" : ""}`}
                       key={bout.boutId}
                     >
                       <header className="pick-bout-card__meta">
@@ -322,7 +328,7 @@ export default function PicksPage() {
                           onClick={() => void picks.setPick(bout.boutId, bout.redFighterSlug)}
                         >
                           <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} />
-                          <span>{bout.redFighterName}</span>
+                          <span style={fighterNameStyle(bout.redFighterName, isMainEvent)}>{bout.redFighterName}</span>
                           <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
                           {redChoiceLabel ? <em>{redChoiceLabel}</em> : null}
                         </button>
@@ -335,7 +341,7 @@ export default function PicksPage() {
                           onClick={() => void picks.setPick(bout.boutId, bout.blueFighterSlug)}
                         >
                           <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} />
-                          <span>{bout.blueFighterName}</span>
+                          <span style={fighterNameStyle(bout.blueFighterName, isMainEvent)}>{bout.blueFighterName}</span>
                           <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>
                           {blueChoiceLabel ? <em>{blueChoiceLabel}</em> : null}
                         </button>
