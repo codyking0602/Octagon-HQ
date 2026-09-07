@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/tmp-stage9-factual-batch.yml
       - .github/scripts/tmp-stage9-factual-batch.py
+      - .github/scripts/tmp-stage9-pool-fix.py
 
 permissions:
   contents: write
@@ -28,9 +29,12 @@ jobs:
           cache-dependency-path: package-lock.json
       - run: npm ci --silent --no-audit --no-fund
       - name: Apply factual batch
-        run: python .github/scripts/tmp-stage9-factual-batch.py
+        run: |
+          python .github/scripts/tmp-stage9-factual-batch.py
+          python .github/scripts/tmp-stage9-pool-fix.py
       - name: Regenerate canonical Football artifacts
         run: |
+          npm run generate:football-recognizability
           npm run generate:football-cfb-player-seasons
           npm run generate:football-career-media-context
           npm run generate:football-factual-universe
@@ -40,6 +44,7 @@ jobs:
           git checkout origin/main -- .github/workflows/fast-pr-feedback.yml
           rm -f .github/workflows/tmp-stage9-factual-batch.yml
           rm -f .github/scripts/tmp-stage9-factual-batch.py
+          rm -f .github/scripts/tmp-stage9-pool-fix.py
       - name: Create candidate exact head
         run: |
           git config user.name "github-actions[bot]"
