@@ -78,6 +78,9 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   qbCareer("cfb-colt-mccoy", 53, 1157, 1645, 13253, 112, 45, 447, 1571, 20),
   qbCareer("cfb-troy-smith", 43, 420, 670, 5720, 54, 13, 293, 1168, 14),
   qbCareer("cfb-brady-quinn", 49, 929, 1602, 11762, 95, 39, 254, 182, 6),
+  qbCareer("cfb-carson-palmer", 51, 895, 1515, 11388, 71, 49, 243, -99, 9),
+  qbCareer("cfb-chris-weinke", 36, 650, 1107, 9839, 79, 32, 110, -366, 2),
+  qbCareer("cfb-jason-white", 40, 627, 990, 7922, 81, 24, 124, -45, 2),
 
   facts("cfb-archie-griffin", [
     ["cfb-career-games", 42], ["cfb-career-rushing-attempts", 845], ["cfb-career-rushing-yards", 5177],
