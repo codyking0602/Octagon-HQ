@@ -28,7 +28,7 @@ export const TWENTY_QUESTIONS_START_SCORE = 100;
 export const TWENTY_QUESTIONS_WRONG_GUESS_PENALTY = 10;
 
 export function twentyQuestionsScoreImpact(cost: TwentyQuestionsQuestionCost) {
-  return cost * 0.4;
+  return Number((cost * 0.4).toFixed(1));
 }
 
 export function formatTwentyQuestionsScoreImpact(cost: TwentyQuestionsQuestionCost) {
