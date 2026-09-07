@@ -84,9 +84,9 @@ function hasCompleteWindow(subject: AffiliationSubject, seasons: readonly Footba
   return true;
 }
 
-function finishHistory(subject: AffiliationSubject, seasons: FootballCareerAffiliationSeason[]) {
+function finishHistory(subject: AffiliationSubject, seasons: readonly FootballCareerAffiliationSeason[]) {
   const deduped = [...new Map(
-    seasons
+    [...seasons]
       .sort((a, b) => a.season - b.season || a.affiliation.localeCompare(b.affiliation))
       .map((row) => [`${row.season}:${normalized(row.affiliation)}`, row]),
   ).values()];
@@ -98,27 +98,31 @@ function finishHistory(subject: AffiliationSubject, seasons: FootballCareerAffil
   } satisfies FootballCareerAffiliationHistory;
 }
 
-function playerHistory(subject: AffiliationSubject) {
-  const table = (subject.league === "NFL" ? nflPlayerSeasonsJson : cfbPlayerSeasonsJson) as ColumnarTable;
-  const indexes = indexesFor(table);
-  const provider = subject.league === "NFL" ? "nflverse" : "cfbfastR";
-  const id = sourceIdentity(subject, provider);
-  if (!id) return null;
+function pushIndex(
+  index: Map<string, FootballCareerAffiliationSeason[]>,
+  key: string,
+  row: FootballCareerAffiliationSeason,
+) {
+  const rows = index.get(key) ?? [];
+  rows.push(row);
+  index.set(key, rows);
+}
 
-  const seasons: FootballCareerAffiliationSeason[] = [];
+function buildPlayerIndex(table: ColumnarTable, league: "NFL" | "CFB") {
+  const indexes = indexesFor(table);
+  const result = new Map<string, FootballCareerAffiliationSeason[]>();
   for (const values of table.rows) {
-    if (String(value(values, indexes, "sourcePlayerId") ?? "") !== id) continue;
+    const id = text(value(values, indexes, "sourcePlayerId"));
     const season = number(value(values, indexes, "season"));
-    if (season == null || !withinCareerWindow(subject, season)) continue;
     const affiliation = text(
-      value(values, indexes, subject.league === "NFL" ? "recentTeam" : "team")
+      value(values, indexes, league === "NFL" ? "recentTeam" : "team")
         ?? value(values, indexes, "team"),
     );
-    if (!affiliation) continue;
-    const conference = subject.league === "CFB" ? text(value(values, indexes, "conference")) ?? undefined : undefined;
-    seasons.push({ season, affiliation, ...(conference ? { conference } : {}) });
+    if (!id || season == null || !affiliation) continue;
+    const conference = league === "CFB" ? text(value(values, indexes, "conference")) ?? undefined : undefined;
+    pushIndex(result, id, { season, affiliation, ...(conference ? { conference } : {}) });
   }
-  return seasons.length ? finishHistory(subject, seasons) : null;
+  return result;
 }
 
 const cfbTeamSeasonTable = cfbTeamSeasonsJson as ColumnarTable;
@@ -133,22 +137,39 @@ for (const values of cfbTeamSeasonTable.rows) {
   }
 }
 
-function coachHistory(subject: AffiliationSubject) {
-  const table = (subject.league === "NFL" ? nflCoachSeasonsJson : cfbCoachSeasonsJson) as ColumnarTable;
+function buildCoachIndex(table: ColumnarTable, league: "NFL" | "CFB") {
   const indexes = indexesFor(table);
-  const coachKey = slug(subject.name);
-  const seasons: FootballCareerAffiliationSeason[] = [];
+  const result = new Map<string, FootballCareerAffiliationSeason[]>();
   for (const values of table.rows) {
-    if (text(value(values, indexes, "sourceCoachNameKey")) !== coachKey) continue;
+    const coachKey = text(value(values, indexes, "sourceCoachNameKey"));
     const season = number(value(values, indexes, "season"));
-    if (season == null || !withinCareerWindow(subject, season)) continue;
-    const affiliation = text(value(values, indexes, subject.league === "NFL" ? "franchiseId" : "programName"));
-    if (!affiliation) continue;
-    const conference = subject.league === "CFB"
+    const affiliation = text(value(values, indexes, league === "NFL" ? "franchiseId" : "programName"));
+    if (!coachKey || season == null || !affiliation) continue;
+    const conference = league === "CFB"
       ? cfbConferenceBySeasonAndProgram.get(`${season}:${normalized(affiliation)}`)
       : undefined;
-    seasons.push({ season, affiliation, ...(conference ? { conference } : {}) });
+    pushIndex(result, coachKey, { season, affiliation, ...(conference ? { conference } : {}) });
   }
+  return result;
+}
+
+const nflPlayerSeasonsById = buildPlayerIndex(nflPlayerSeasonsJson as ColumnarTable, "NFL");
+const cfbPlayerSeasonsById = buildPlayerIndex(cfbPlayerSeasonsJson as ColumnarTable, "CFB");
+const nflCoachSeasonsByKey = buildCoachIndex(nflCoachSeasonsJson as ColumnarTable, "NFL");
+const cfbCoachSeasonsByKey = buildCoachIndex(cfbCoachSeasonsJson as ColumnarTable, "CFB");
+
+function playerHistory(subject: AffiliationSubject) {
+  const provider = subject.league === "NFL" ? "nflverse" : "cfbfastR";
+  const id = sourceIdentity(subject, provider);
+  if (!id) return null;
+  const sourceRows = (subject.league === "NFL" ? nflPlayerSeasonsById : cfbPlayerSeasonsById).get(id) ?? [];
+  const seasons = sourceRows.filter((row) => withinCareerWindow(subject, row.season));
+  return seasons.length ? finishHistory(subject, seasons) : null;
+}
+
+function coachHistory(subject: AffiliationSubject) {
+  const sourceRows = (subject.league === "NFL" ? nflCoachSeasonsByKey : cfbCoachSeasonsByKey).get(slug(subject.name)) ?? [];
+  const seasons = sourceRows.filter((row) => withinCareerWindow(subject, row.season));
   return seasons.length ? finishHistory(subject, seasons) : null;
 }
 
