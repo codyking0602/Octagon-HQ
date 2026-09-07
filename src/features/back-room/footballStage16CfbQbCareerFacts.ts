@@ -53,4 +53,7 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   qbCareer("cfb-vince-young", 37, 444, 718, 6040, 44, 28, 457, 3127, 37),
   qbCareer("cfb-tim-tebow", 55, 661, 995, 9285, 88, 16, 692, 2947, 57),
   qbCareer("cfb-baker-mayfield", 48, 1026, 1497, 14607, 131, 30, 404, 1083, 21),
+  qbCareer("cfb-doug-flutie", 44, 677, 1271, 10579, 67, 54, 287, 739, 7),
+  qbCareer("cfb-vinny-testaverde", 45, 413, 674, 6058, 48, 25, 125, -320, 8),
+  qbCareer("cfb-charlie-ward", 45, 473, 759, 5747, 49, 22, 172, 889, 10),
 ];
