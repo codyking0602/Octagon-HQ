@@ -3,7 +3,6 @@ import cfbCoachSeasonsJson from "../../../data/generated/football/relationships/
 import cfbTeamSeasonsJson from "../../../data/generated/football/relationships/cfb-team-season-results-2002-2025.json";
 import nflPlayerSeasonsJson from "../../../data/generated/football/nfl/player-seasons-1999-2025.json";
 import nflCoachSeasonsJson from "../../../data/generated/football/relationships/nfl-coach-seasons-1999-2025.json";
-import type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";
 import type { FootballSourceIdentityKey } from "./footballSubjectEligibility";
 
 interface ColumnarTable {
@@ -11,12 +10,15 @@ interface ColumnarTable {
   rows: readonly (readonly unknown[])[];
 }
 
-type AffiliationSubject = Pick<
-  FootballCanonicalSubject,
-  "id" | "kind" | "league" | "name" | "startSeason" | "endSeason"
-> & {
+interface AffiliationSubject {
+  id: string;
+  kind: string;
+  league: "NFL" | "CFB";
+  name: string;
+  startSeason?: number;
+  endSeason?: number;
   sourceIdentityKeys?: readonly FootballSourceIdentityKey[];
-};
+}
 
 export interface FootballCareerAffiliationSeason {
   season: number;
