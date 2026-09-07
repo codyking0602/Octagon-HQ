@@ -53,7 +53,7 @@ old = '''function selectLaunchPool(league: League) {
 '''
 new = '''const PLAYER_POSITION_CAPS: Readonly<Record<League, Readonly<Record<string, number>>>> = {
   NFL: { QB: 20, RB: 16, WR: 16, TE: 8, OL: 6, DL: 12, LB: 10, DB: 14, K: 4, P: 3 },
-  CFB: { QB: 20, RB: 18, WR: 16, TE: 8, OL: 6, DL: 14, LB: 12, DB: 14, K: 3, P: 3 },
+  CFB: { QB: 20, RB: 18, WR: 16, TE: 8, OL: 2, DL: 14, LB: 12, DB: 14, K: 3, P: 3 },
 };
 
 function selectPlayerCensus(league: League, candidates: readonly PersonCandidate[]) {
@@ -65,6 +65,10 @@ function selectPlayerCensus(league: League, candidates: readonly PersonCandidate
     const person: Person = { ...candidate, role: "player" };
     const position = rolePosition(person);
     if (!position || caps[position] == null) continue;
+    if (league === "CFB" && position === "OL") {
+      const window = roleWindow(person);
+      if (!window || window.start < 2000) continue;
+    }
     const count = counts.get(position) ?? 0;
     if (count >= caps[position]!) continue;
     selected.push(candidate);
