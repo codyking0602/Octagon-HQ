@@ -62,4 +62,29 @@ extra = '''  for (const position of playerPositions) {
 function percentile'''
 if marker not in s:
     raise SystemExit("buildPredicates return marker not found")
-p.write_text(s.replace(marker, extra, 1))
+s = s.replace(marker, extra, 1)
+
+diag_marker = '''  const duplicateGroups = [...fingerprintGroups.values()].filter((group) => group.length > 1);
+  const impossibleIndexes = new Set(duplicateGroups.flat());'''
+diag_replacement = '''  const duplicateGroups = [...fingerprintGroups.values()].filter((group) => group.length > 1);
+  if (duplicateGroups.length) {
+    const collisionDiagnostics = duplicateGroups.map((group) => group.map((index) => {
+      const person = pool[index]!;
+      return {
+        key: person.key,
+        role: person.role,
+        position: rolePosition(person),
+        window: roleWindow(person),
+        records: roleRecords(person).map((record) => ({
+          id: record.id,
+          facts: Object.fromEntries((getFootballFactualRecord(record.id)?.facts ?? []).map((fact) => [fact.metricId, fact.value])),
+        })),
+      };
+    }));
+    console.log(`TWENTY_QUESTIONS_COLLISIONS=${JSON.stringify(collisionDiagnostics)}`);
+  }
+  const impossibleIndexes = new Set(duplicateGroups.flat());'''
+if diag_marker not in s:
+    raise SystemExit("collision diagnostic marker not found")
+s = s.replace(diag_marker, diag_replacement, 1)
+p.write_text(s)
