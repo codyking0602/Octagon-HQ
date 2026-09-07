@@ -88,13 +88,15 @@ function summarize(people: readonly Person[]) {
 }
 
 describe("Football 20 Questions candidate factual depth probe", () => {
-  for (const league of ["NFL", "CFB"] as const) {
-    it(`${league} reports aggregate A/B factual depth without roster spoilers`, () => {
-      const players = peopleFor(league, "player");
-      const coaches = peopleFor(league, "coach");
-      console.log(`TWENTY_QUESTIONS_CANDIDATE_DEPTH_${league}=${JSON.stringify({ players: summarize(players), coaches: summarize(coaches) })}`);
-      expect(players.length).toBeGreaterThanOrEqual(100);
-      expect(coaches.length).toBeGreaterThanOrEqual(20);
-    });
-  }
+  it("reports aggregate A/B factual depth without roster spoilers", () => {
+    const nfl = {
+      players: summarize(peopleFor("NFL", "player")),
+      coaches: summarize(peopleFor("NFL", "coach")),
+    };
+    const cfb = {
+      players: summarize(peopleFor("CFB", "player")),
+      coaches: summarize(peopleFor("CFB", "coach")),
+    };
+    expect.fail(`TWENTY_QUESTIONS_CANDIDATE_DEPTH_NFL=${JSON.stringify(nfl)}\nTWENTY_QUESTIONS_CANDIDATE_DEPTH_CFB=${JSON.stringify(cfb)}`);
+  });
 });
