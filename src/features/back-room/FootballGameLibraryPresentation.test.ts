@@ -13,27 +13,25 @@ describe("Football HQ game library presentation", () => {
     expect(games.map((game) => game.id)).toEqual([
       "find-leader",
       "wavelength",
-      "blind-rank",
-      "keep-cut",
       "hit-the-number",
     ]);
     expect(new Set(games.map((game) => game.icon)).size).toBe(games.length);
     expect(games.every((game) => game.route.startsWith("/football/"))).toBe(true);
   });
 
-  it("keeps compact shared card copy while Blind Resume stays Daily-only and comparison games are temporary casual", () => {
+  it("keeps Daily-only comparison games out of the casual Football library", () => {
     const games = playLandingGameIds("football").map((id) => playGameDefinition(id, "football"));
     const blindResumeDefinition = playGameDefinition("blind-resume", "football");
 
     expect(playLandingSource).toContain("play-landing-game-card__status");
-    expect(playLandingSource).toContain("TEMP CASUAL");
+    expect(playLandingSource).not.toContain("TEMP CASUAL");
     expect(playLandingSource).toContain("{game.description}");
     expect(blindResumeDefinition.title).toBe("Blind Resume");
     expect(blindResumeDefinition.description).toMatch(/résumé/i);
     expect(blindResumeDefinition.description).not.toMatch(/rank|tier/i);
     expect(games.map((game) => game.id)).not.toContain("blind-resume");
-    expect(games.map((game) => game.id)).toContain("blind-rank");
-    expect(games.map((game) => game.id)).toContain("keep-cut");
+    expect(games.map((game) => game.id)).not.toContain("blind-rank");
+    expect(games.map((game) => game.id)).not.toContain("keep-cut");
   });
 
   it("uses the same Today Challenge presentation owner as UFC", () => {
