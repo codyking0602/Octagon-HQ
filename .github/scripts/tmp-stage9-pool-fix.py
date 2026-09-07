@@ -65,9 +65,11 @@ const REVEALED_OL_EXCLUSIONS = new Set([
 
 function isLaunchEligibleOl(candidate: PersonCandidate) {
   const person: Person = { ...candidate, role: "player" };
-  if (rolePosition(person) !== "OL") return false;
+  if (rolePosition(person) !== "OL" || REVEALED_OL_EXCLUSIONS.has(candidate.nameKey)) return false;
   const window = roleWindow(person);
-  return window != null && window.start >= 2000 && !REVEALED_OL_EXCLUSIONS.has(candidate.nameKey);
+  if (window != null) return window.start >= 2000;
+  const decades = roleActiveDecades(person);
+  return decades != null && decades.length > 0 && Math.min(...decades) >= 2000;
 }
 
 function selectPlayerCensus(league: League, candidates: readonly PersonCandidate[]) {
