@@ -56,4 +56,7 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
   qbCareer("cfb-doug-flutie", 44, 677, 1271, 10579, 67, 54, 287, 739, 7),
   qbCareer("cfb-vinny-testaverde", 45, 413, 674, 6058, 48, 25, 125, -320, 8),
   qbCareer("cfb-charlie-ward", 45, 473, 759, 5747, 49, 22, 172, 889, 10),
+  qbCareer("cfb-danny-wuerffel", 46, 708, 1170, 10875, 114, 42, 185, -375, 8),
+  qbCareer("cfb-ty-detmer", 48, 958, 1530, 15031, 121, 65, 265, -366, 14),
+  qbCareer("cfb-gino-torretta", 44, 555, 991, 7690, 47, 24, 110, 32, 2),
 ];
