@@ -45,7 +45,7 @@ describe("replayable 20 Questions page", () => {
     const { container } = render(<TwentyQuestionsPage sport="ufc" />);
 
     expect(screen.getByText("UFC ROUND")).toBeInTheDocument();
-    expect(screen.getByText(/10 questions max/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("20 Questions scoring rules")).toHaveTextContent("10 questions max");
     expect(screen.queryByLabelText("Round status")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
@@ -94,12 +94,14 @@ describe("replayable 20 Questions page", () => {
 
   it("hard-stops and reveals after ten unique questions", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
-    const universe = getUfcTwentyQuestionsUniverse();
-    const questions = universe.questions.slice(0, TWENTY_QUESTIONS_LIMIT);
     const { container } = render(<TwentyQuestionsPage sport="ufc" />);
 
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
-    for (const question of questions) clickQuestion(question.label);
+    for (let index = 0; index < TWENTY_QUESTIONS_LIMIT; index += 1) {
+      const questionButton = container.querySelector<HTMLButtonElement>(".twenty-questions-question-list button");
+      expect(questionButton).not.toBeNull();
+      fireEvent.click(questionButton!);
+    }
 
     expect(screen.getByText("OUT OF QUESTIONS")).toBeInTheDocument();
     expect(container.querySelector(".twenty-questions-result__stats")).toHaveTextContent("10 questions used");
