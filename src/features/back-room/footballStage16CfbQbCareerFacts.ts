@@ -258,7 +258,17 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
     ["cfb-career-forced-fumbles", 3], ["cfb-career-fumble-recoveries", 0],
   ]),
   facts("cfb-patrick-peterson", [
-    ["cfb-career-games", 39], ["cfb-career-defensive-interceptions", 7],
+    ["cfb-career-games", 39], ["cfb-career-defensive-interceptions", 7], ["cfb-career-sacks", 0],
     ["cfb-career-forced-fumbles", 1], ["cfb-career-fumble-recoveries", 0],
+    ["cfb-best-season-defensive-interceptions", 4],
+  ]),
+  facts("cfb-ed-reed", [
+    ["cfb-career-games", 45], ["cfb-career-defensive-interceptions", 21],
+    ["cfb-best-season-defensive-interceptions", 9],
+  ]),
+  facts("cfb-eric-berry", [
+    ["cfb-career-games", 39], ["cfb-career-defensive-interceptions", 14], ["cfb-career-sacks", 3],
+    ["cfb-career-forced-fumbles", 2], ["cfb-career-fumble-recoveries", 0],
+    ["cfb-best-season-sacks", 3], ["cfb-best-season-defensive-interceptions", 7],
   ]),
 ];
