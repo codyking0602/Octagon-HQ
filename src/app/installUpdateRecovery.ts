@@ -1,4 +1,5 @@
 declare const __OCTAGON_DEPLOYMENT_SHA__: string;
+declare const __OCTAGON_PRODUCTION_ORIGIN__: string;
 
 const UPDATE_RELOAD_KEY = "octagon-hq:update-reload-at";
 const UPDATE_TARGET_SHA_KEY = "octagon-hq:update-target-sha";
@@ -13,6 +14,7 @@ interface UpdateRecoveryOptions {
   reload?: () => void;
   now?: () => number;
   runningSha?: string;
+  productionOrigin?: string;
   fetchDeploymentSha?: () => Promise<string | null>;
 }
 
@@ -21,6 +23,7 @@ interface ForceRefreshLatestBuildOptions {
   storage?: Storage;
   navigate?: (url: string) => void;
   now?: () => number;
+  productionOrigin?: string;
 }
 
 function normalizedSha(value: unknown) {
@@ -28,8 +31,27 @@ function normalizedSha(value: unknown) {
   return SHA_PATTERN.test(sha) ? sha : "";
 }
 
-function latestBuildUrl(href: string, token: string) {
-  const url = new URL(href);
+function runtimeProductionOrigin() {
+  return typeof __OCTAGON_PRODUCTION_ORIGIN__ === "string" ? __OCTAGON_PRODUCTION_ORIGIN__ : "";
+}
+
+function normalizedProductionOrigin(value: unknown) {
+  const candidate = typeof value === "string" ? value.trim() : "";
+  if (!candidate) return "";
+  try {
+    const url = new URL(candidate);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.origin : "";
+  } catch {
+    return "";
+  }
+}
+
+function latestBuildUrl(href: string, token: string, productionOrigin = runtimeProductionOrigin()) {
+  const current = new URL(href);
+  const canonicalOrigin = normalizedProductionOrigin(productionOrigin);
+  const url = canonicalOrigin && current.origin !== canonicalOrigin
+    ? new URL(`${current.pathname}${current.search}${current.hash}`, `${canonicalOrigin}/`)
+    : current;
   url.searchParams.set(UPDATE_CACHE_BUST_PARAM, token);
   return url.toString();
 }
@@ -39,10 +61,11 @@ export function forceRefreshLatestBuild({
   storage = window.sessionStorage,
   navigate = (url) => window.location.replace(url),
   now = () => Date.now(),
+  productionOrigin = runtimeProductionOrigin(),
 }: ForceRefreshLatestBuildOptions = {}) {
   storage.removeItem(UPDATE_RELOAD_KEY);
   storage.removeItem(UPDATE_TARGET_SHA_KEY);
-  navigate(latestBuildUrl(href, String(now())));
+  navigate(latestBuildUrl(href, String(now()), productionOrigin));
 }
 
 export function installUpdateRecovery({
@@ -52,9 +75,11 @@ export function installUpdateRecovery({
   reload,
   now = () => Date.now(),
   runningSha = __OCTAGON_DEPLOYMENT_SHA__,
+  productionOrigin = runtimeProductionOrigin(),
   fetchDeploymentSha,
 }: UpdateRecoveryOptions = {}) {
   const activeSha = normalizedSha(runningSha);
+  const canonicalOrigin = normalizedProductionOrigin(productionOrigin);
   let disposed = false;
   let checkingDeployment = false;
 
@@ -63,7 +88,11 @@ export function installUpdateRecovery({
       reload();
       return;
     }
-    target.location.replace(latestBuildUrl(target.location.href, targetSha || String(now())));
+    target.location.replace(latestBuildUrl(
+      target.location.href,
+      targetSha || String(now()),
+      canonicalOrigin,
+    ));
   };
 
   const reloadOnce = (targetSha = "") => {
@@ -86,7 +115,7 @@ export function installUpdateRecovery({
 
   const readLiveDeploymentSha = fetchDeploymentSha ?? (async () => {
     if (!activeSha) return null;
-    const markerUrl = new URL("/deployment.json", target.location.origin);
+    const markerUrl = new URL("/deployment.json", canonicalOrigin || target.location.origin);
     markerUrl.searchParams.set("running", activeSha);
     markerUrl.searchParams.set("check", String(now()));
     const response = await target.fetch(markerUrl, {

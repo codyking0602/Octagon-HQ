@@ -88,8 +88,15 @@ function richPreviewCatalogPlugin(): Plugin {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const deploymentSha = (env.VITE_DEPLOYMENT_SHA ?? process.env.SOURCE_SHA ?? "").trim().toLowerCase();
+  const productionOrigin = (env.VITE_PRODUCTION_ORIGIN ?? process.env.OCTAGON_PRODUCTION_URL ?? "").trim();
   if (deploymentSha && !/^[0-9a-f]{40}$/.test(deploymentSha)) {
     throw new Error("VITE_DEPLOYMENT_SHA or SOURCE_SHA must be an exact 40-character commit SHA.");
+  }
+  if (productionOrigin) {
+    const parsedProductionOrigin = new URL(productionOrigin);
+    if (parsedProductionOrigin.origin !== productionOrigin.replace(/\/$/, "")) {
+      throw new Error("VITE_PRODUCTION_ORIGIN or OCTAGON_PRODUCTION_URL must be an origin without a path.");
+    }
   }
   if (mode === "production") {
     validatePublicSupabaseConfig({
@@ -105,6 +112,7 @@ export default defineConfig(({ mode }) => {
       ? {
           define: {
             __OCTAGON_DEPLOYMENT_SHA__: JSON.stringify(deploymentSha),
+            __OCTAGON_PRODUCTION_ORIGIN__: JSON.stringify(productionOrigin.replace(/\/$/, "")),
           },
         }
       : {}),
