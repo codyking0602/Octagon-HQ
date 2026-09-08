@@ -10,7 +10,7 @@ import {
   type TwentyQuestionsSport,
   type TwentyQuestionsSubject,
 } from "../games/twentyQuestionsEngine";
-import { createTwentyQuestionsRound, type TwentyQuestionsRound } from "../games/twentyQuestionsRuntime";
+import type { TwentyQuestionsRound } from "../games/twentyQuestionsRuntime";
 
 type Phase = "start" | "playing" | "result";
 type ResultState = "correct" | "out-of-questions";
@@ -28,8 +28,13 @@ function roundLabel(round: TwentyQuestionsRound) {
   return round.universe.league === "UFC" ? "UFC" : round.universe.league;
 }
 
-export default function TwentyQuestionsPage({ sport }: { sport: TwentyQuestionsSport }) {
-  const [round, setRound] = useState(() => createTwentyQuestionsRound(sport));
+interface TwentyQuestionsPageProps {
+  sport: TwentyQuestionsSport;
+  createRound: () => TwentyQuestionsRound;
+}
+
+export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuestionsPageProps) {
+  const [round, setRound] = useState<TwentyQuestionsRound>(() => createRound());
   const [phase, setPhase] = useState<Phase>("start");
   const [resultState, setResultState] = useState<ResultState>("out-of-questions");
   const [score, setScore] = useState(TWENTY_QUESTIONS_START_SCORE);
@@ -60,7 +65,7 @@ export default function TwentyQuestionsPage({ sport }: { sport: TwentyQuestionsS
   }, [guessSearch, round.universe.subjects]);
 
   function resetRound() {
-    setRound(createTwentyQuestionsRound(sport));
+    setRound(createRound());
     setPhase("start");
     setResultState("out-of-questions");
     setScore(TWENTY_QUESTIONS_START_SCORE);
