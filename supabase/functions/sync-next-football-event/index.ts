@@ -8,15 +8,17 @@ import {
 import { buildFootballWeekPreview, footballWeekEspnDateRange, footballWeekRange } from "./week.ts";
 
 type Json = Record<string, any>;
+type FootballLeague = "nfl" | "college-football";
 
+const schedulerHeader = "x-octagon-scheduler-token";
 const headers = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-octagon-scheduler-token",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });
 
-async function fetchEspnWeekEvents(weekStart: string, league: "nfl" | "college-football") {
+async function fetchEspnWeekEvents(weekStart: string, league: FootballLeague) {
   const sportPath = league === "nfl" ? "football/nfl" : "football/college-football";
   const group = league === "college-football" ? "&groups=80" : "";
   const dateRange = footballWeekEspnDateRange(weekStart);
@@ -24,6 +26,76 @@ async function fetchEspnWeekEvents(weekStart: string, league: "nfl" | "college-f
   if (!response.ok) throw new Error(`football ESPN ${league} schedule request failed (${response.status})`);
   const payload = await response.json();
   return Array.isArray(payload?.events) ? payload.events as Json[] : [];
+}
+
+async function fetchEspnEventSummary(eventId: string, league: FootballLeague) {
+  const sportPath = league === "nfl" ? "football/nfl" : "football/college-football";
+  const response = await fetch(`https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${eventId}`);
+  if (!response.ok) throw new Error(`football ESPN ${league} summary request failed (${response.status})`);
+  return response.json();
+}
+
+function footballSourceIdentity(boutId: string) {
+  const match = /^football-(nfl|college-football)-(\d+)$/.exec(boutId);
+  if (!match) return null;
+  return { league: match[1] as FootballLeague, eventId: match[2] };
+}
+
+async function settleScheduledFootballFinals(admin: any) {
+  const activeEvents = await admin
+    .from("pick_events")
+    .select("event_id")
+    .eq("sport", "football")
+    .in("status", ["upcoming", "locked"]);
+  if (activeEvents.error) throw activeEvents.error;
+
+  const eventIds = (activeEvents.data ?? []).map((event: { event_id: string }) => event.event_id);
+  if (!eventIds.length) return { checked: 0, finalized: 0, pending: 0, failed: 0, failures: [] };
+
+  const pendingBouts = await admin
+    .from("pick_bouts")
+    .select("bout_id,event_id,locks_at")
+    .in("event_id", eventIds)
+    .eq("included_in_picks", true)
+    .eq("result_status", "pending")
+    .lte("locks_at", new Date().toISOString());
+  if (pendingBouts.error) throw pendingBouts.error;
+
+  let checked = 0;
+  let finalized = 0;
+  let pending = 0;
+  const failures: string[] = [];
+
+  for (const bout of pendingBouts.data ?? []) {
+    const source = footballSourceIdentity(String(bout.bout_id ?? ""));
+    if (!source) {
+      failures.push(`${bout.bout_id}: invalid canonical football source identity`);
+      continue;
+    }
+
+    checked += 1;
+    try {
+      const summary = await fetchEspnEventSummary(source.eventId, source.league);
+      const finalResult = normalizeFootballFinalResult(summary.header, source.league);
+      if (!finalResult) {
+        pending += 1;
+        continue;
+      }
+      const recorded = await admin.rpc("record_football_pick_final", {
+        p_league: finalResult.league,
+        p_home_team_slug: finalResult.home_team_slug,
+        p_away_team_slug: finalResult.away_team_slug,
+        p_home_final_score: finalResult.home_final_score,
+        p_away_final_score: finalResult.away_final_score,
+      });
+      if (recorded.error) throw recorded.error;
+      finalized += 1;
+    } catch (error) {
+      failures.push(`${bout.bout_id}: ${error instanceof Error ? error.message : "football final sync failed"}`);
+    }
+  }
+
+  return { checked, finalized, pending, failed: failures.length, failures };
 }
 
 async function stageFootballEvents(admin: any, events: Json[]) {
@@ -52,20 +124,33 @@ async function cacheFootballTeamAssets(admin: any, events: Json[]) {
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response(null, { headers });
   if (request.method !== "POST") return json({ error: "method not allowed" }, 405);
+
+  let input: Json = {};
+  try { input = await request.json(); } catch { /* empty input */ }
+  const mode = String(input.mode ?? "apply");
   const url = Deno.env.get("SUPABASE_URL")!;
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const serviceKey = Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const admin = createClient(url, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
+
+  if (mode === "scheduled-finals") {
+    const schedulerToken = request.headers.get(schedulerHeader) ?? "";
+    const authorized = await admin.rpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
+    if (authorized.error || authorized.data !== true) return json({ error: "scheduled football sync authorization required" }, 401);
+    try {
+      return json(await settleScheduledFootballFinals(admin));
+    } catch (error) {
+      return json({ error: error instanceof Error ? error.message : "football final sync failed" }, 502);
+    }
+  }
+
   const auth = request.headers.get("Authorization") ?? "";
   const caller = createClient(url, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: auth } } });
   const { data: user } = await caller.auth.getUser(auth.replace(/^Bearer\s+/i, ""));
   if (!user.user) return json({ error: "authentication required" }, 401);
-  const admin = createClient(url, serviceKey);
   const { data: owner } = await admin.rpc("is_pick_control_owner", { p_profile_id: user.user.id });
   if (!owner) return json({ error: "pick control owner required" }, 403);
 
   try {
-    const input = await request.json();
-    const mode = String(input.mode ?? "apply");
-
     if (mode === "week-preview" || mode === "week-apply") {
       const weekStart = String(input.week_start ?? "").trim();
       if (!/^\d{4}-\d{2}-\d{2}$/.test(weekStart)) return json({ error: "week_start is required" }, 400);
@@ -124,12 +209,9 @@ Deno.serve(async (request) => {
     const league = input.league === "college-football" ? "college-football" : "nfl";
     const eventId = String(input.espn_event_id ?? "").trim();
     if (!/^\d+$/.test(eventId)) return json({ error: "espn_event_id is required" }, 400);
-    const sportPath = league === "nfl" ? "football/nfl" : "football/college-football";
     const oddsSport = league === "nfl" ? "americanfootball_nfl" : "americanfootball_ncaaf";
 
-    const espnResponse = await fetch(`https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${eventId}`);
-    if (!espnResponse.ok) throw new Error("football ESPN request failed");
-    const summary = await espnResponse.json();
+    const summary = await fetchEspnEventSummary(eventId, league);
     const finalResult = normalizeFootballFinalResult(summary.header, league);
     if (finalResult) {
       if (mode === "preview") return json({ final_preview: finalResult });
