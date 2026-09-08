@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   chooseTwentyQuestionsFootballLeague,
+  twentyQuestionsRecommendedQuestions,
   type TwentyQuestionsUniverse,
 } from "./twentyQuestionsEngine";
 import { getFootballTwentyQuestionsUniverse } from "./twentyQuestionsFootballAuthority";
@@ -47,19 +48,26 @@ describe("UFC 20 Questions factual authority", () => {
     expect(new Set(universe.subjects.map((subject) => subject.id)).size).toBe(100);
   });
 
-  it("prioritizes human UFC clues without losing deterministic coverage", () => {
+  it("prioritizes recognizable UFC identity clues without losing deterministic coverage", () => {
     const universe = getUfcTwentyQuestionsUniverse();
     const ids = universe.questions.map((question) => question.id);
     const divisionQuestions = universe.questions.filter((question) => question.id.startsWith("division:"));
+    const styleQuestions = universe.questions.filter((question) => question.id.startsWith("style:"));
 
     expect(universe.questions.length).toBeGreaterThan(50);
     expect(universe.questions.length).toBeLessThanOrEqual(UFC_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS);
     expect(new Set(ids).size).toBe(universe.questions.length);
     expect(ids.some((id) => id.startsWith("era:active-"))).toBe(true);
+    expect(ids).toContain("era:pre-2010");
     expect(ids).toContain("championship:title-challenger");
-    expect(ids).toContain("championship:interim-title-winner");
+    expect(ids).toContain("championship:three-plus-title-fights");
     expect(ids).toContain("division-history:multiple");
     expect(ids.some((id) => id.startsWith("faced:"))).toBe(true);
+    expect(styleQuestions.length).toBeGreaterThanOrEqual(4);
+    expect(styleQuestions.some((question) => question.label.includes("KO/TKO wins than submissions"))).toBe(true);
+    expect(styleQuestions.some((question) => question.label.includes("submissions than KO/TKO wins"))).toBe(true);
+    expect(styleQuestions.some((question) => question.label.includes("60%"))).toBe(true);
+    expect(styleQuestions.every((question) => question.recommendationFamily === "style")).toBe(true);
     expect(ids.some((id) => id.startsWith("stat:losses:"))).toBe(false);
     expect(ids.some((id) => id.includes("active-years"))).toBe(false);
     expect(ids.some((id) => id.includes("opponents-beaten"))).toBe(false);
@@ -67,7 +75,6 @@ describe("UFC 20 Questions factual authority", () => {
     expect(ids.some((id) => id.startsWith("stat:submission-wins:"))).toBe(false);
     expect(divisionQuestions.every((question) => !/\d+(?:\.\d+)?/.test(question.label))).toBe(true);
     expect(divisionQuestions.every((question) => question.humanValue === 4)).toBe(true);
-    expect(universe.questions.filter((question) => question.recommendationFamily === "finishing-style")).toHaveLength(2);
 
     for (const question of universe.questions) {
       expect([5, 6, 7, 8]).toContain(question.internalCost);
@@ -76,6 +83,19 @@ describe("UFC 20 Questions factual authority", () => {
       expect(question.internalCost).toBe(before);
     }
     expectPairwiseSeparable(universe);
+  });
+
+  it("gives the opening Recommended set a mix of UFC clue families", () => {
+    const universe = getUfcTwentyQuestionsUniverse();
+    const recommended = twentyQuestionsRecommendedQuestions(universe.questions, universe.subjects, 5);
+    const families = recommended.map((question) => question.recommendationFamily);
+
+    expect(recommended).toHaveLength(5);
+    expect(new Set(families).size).toBe(5);
+    expect(families).toContain("style");
+    expect(families).toContain("division");
+    expect(families).toContain("era");
+    expect(families).toContain("achievement");
   });
 });
 
