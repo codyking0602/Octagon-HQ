@@ -3,6 +3,7 @@ import { forceRefreshLatestBuild, installUpdateRecovery } from "./installUpdateR
 
 const RUNNING_SHA = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const NEXT_SHA = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+const PRODUCTION_ORIGIN = "https://the.hq-app.workers.dev";
 
 describe("deployment update recovery", () => {
   afterEach(() => {
@@ -108,12 +109,29 @@ describe("deployment update recovery", () => {
       storage: window.sessionStorage,
       navigate,
       now: () => 42_000,
+      productionOrigin: PRODUCTION_ORIGIN,
     });
 
     expect(window.sessionStorage.getItem("octagon-hq:update-reload-at")).toBeNull();
     expect(window.sessionStorage.getItem("octagon-hq:update-target-sha")).toBeNull();
     expect(navigate).toHaveBeenCalledWith(
       "https://the.hq-app.workers.dev/play/20-questions?mode=casual&hq-update=42000#round",
+    );
+  });
+
+  it("escapes a legacy installed origin while preserving the route and query", () => {
+    const navigate = vi.fn();
+
+    forceRefreshLatestBuild({
+      href: "https://octagon.hq-app.workers.dev/play?tab=casual#games",
+      storage: window.sessionStorage,
+      navigate,
+      now: () => 43_000,
+      productionOrigin: PRODUCTION_ORIGIN,
+    });
+
+    expect(navigate).toHaveBeenCalledWith(
+      "https://the.hq-app.workers.dev/play?tab=casual&hq-update=43000#games",
     );
   });
 });
