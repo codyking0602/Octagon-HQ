@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import FootballPushControl from "../picks-control/FootballPushControl";
+import { createPickControlRepository } from "../picks-control/pickControlRepository";
 import type { FootballMatchupBreakdown } from "./footballMatchupBreakdowns";
+import { usePicks } from "./PicksProvider";
 
 export function FootballMatchupBreakdowns({
   breakdowns,
@@ -9,6 +12,12 @@ export function FootballMatchupBreakdowns({
   breakdowns: FootballMatchupBreakdown[];
   requestedBreakdownId?: string | null;
 }) {
+  const picks = usePicks();
+  const footballEvent = picks.event?.sport === "football" ? picks.event : null;
+  const canControl = footballEvent?.canControl === true;
+  const controlRepository = useMemo(() => (
+    canControl ? createPickControlRepository() : null
+  ), [canControl]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const handledRequestedId = useRef<string | null>(null);
   const deepLinkedBreakdownId = requestedBreakdownId
@@ -46,7 +55,7 @@ export function FootballMatchupBreakdowns({
     };
   }, [active]);
 
-  if (!breakdowns.length) return null;
+  if (!breakdowns.length && !canControl) return null;
 
   const modal = active ? createPortal(
     <div className="football-matchup-breakdown-backdrop" role="presentation" onMouseDown={() => setActiveId(null)}>
@@ -164,13 +173,18 @@ export function FootballMatchupBreakdowns({
 
   return (
     <>
-      <button
-        type="button"
-        className="football-matchup-breakdown-entry"
-        onClick={() => setActiveId(breakdowns[0].id)}
-      >
-        MATCHUP BREAKDOWN{breakdowns.length > 1 ? "S" : ""}
-      </button>
+      {breakdowns.length ? (
+        <button
+          type="button"
+          className="football-matchup-breakdown-entry"
+          onClick={() => setActiveId(breakdowns[0].id)}
+        >
+          MATCHUP BREAKDOWN{breakdowns.length > 1 ? "S" : ""}
+        </button>
+      ) : null}
+      {canControl && footballEvent ? (
+        <FootballPushControl eventId={footballEvent.eventId} repository={controlRepository} />
+      ) : null}
       {modal}
     </>
   );
