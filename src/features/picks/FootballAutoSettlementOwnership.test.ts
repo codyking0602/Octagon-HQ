@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const rootFile = (path: string) => readFileSync(new URL(`../../../${path}`, import.meta.url), "utf8");
+const rootFile = (path: string) => readFileSync(path, "utf8");
 
 describe("Football pick auto-settlement ownership", () => {
   it("reuses the canonical monitoring wake and football current-event RPC", () => {
