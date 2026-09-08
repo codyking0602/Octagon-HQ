@@ -152,9 +152,16 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
     ["win-streak", "UFC consecutive wins", (fighter: UfcFactualSubject) => statFor(fighter).longestWinStreak, [3, 5, 7, 10, 12]],
     ["opponents-beaten", "unique UFC opponents beaten", (fighter: UfcFactualSubject) => statFor(fighter).uniqueOpponentsBeaten, [5, 10, 15, 20]],
   ] as const;
+  const singularMetricLabels: Partial<Record<(typeof metricSpecs)[number][0], string>> = {
+    "title-fights": "UFC title fight",
+    "title-wins": "UFC title-fight win",
+  };
   for (const [id, label, valueFor, thresholds] of metricSpecs) {
     for (const threshold of thresholds) {
-      add(`stat:${id}:${threshold}`, `Does this fighter have at least ${threshold} ${label}?`, (fighter) => valueFor(fighter) >= threshold);
+      const quantity = threshold === 1 && singularMetricLabels[id]
+        ? `one ${singularMetricLabels[id]}`
+        : `${threshold} ${label}`;
+      add(`stat:${id}:${threshold}`, `Does this fighter have at least ${quantity}?`, (fighter) => valueFor(fighter) >= threshold);
     }
   }
 
