@@ -170,8 +170,8 @@ describe("Picks current-event compatibility", () => {
     expect(event?.bouts[0]?.resultStatus).toBe("red_win");
     expect(event?.bouts[0]?.resultRecordedAt).toBe("2026-07-26T18:00:00.000Z");
     expect(event?.bouts[0]?.groupPicks).toEqual([
-      { displayName: "CODY", pickedFighterSlug: "red-fighter", isCurrentUser: true },
-      { displayName: "SHANE", pickedFighterSlug: "blue-fighter", isCurrentUser: false },
+      { displayName: "CODY", pickedFighterSlug: "red-fighter", isCurrentUser: true, isLock: false },
+      { displayName: "SHANE", pickedFighterSlug: "blue-fighter", isCurrentUser: false, isLock: false },
     ]);
   });
 
