@@ -48,4 +48,55 @@ describe("footballCareerAffiliationProjection", () => {
     expect(histories.length).toBeGreaterThan(0);
     expect(histories.some((history) => history.seasons.some((row) => row.conference))).toBe(true);
   });
+
+  it("projects an old single-school CFB career into era-correct conferences without claiming complete team history", () => {
+    const history = footballCareerAffiliationHistoryFor({
+      id: "historical-texas-player",
+      kind: "player-career",
+      league: "CFB",
+      name: "Historical Texas Player",
+      school: "Texas",
+      startSeason: 1993,
+      endSeason: 1995,
+      sourceIdentityKeys: [],
+    });
+
+    expect(history?.conferences).toEqual(["SWC"]);
+    expect(history?.conferenceComplete).toBe(true);
+    expect(history?.complete).toBe(false);
+  });
+
+  it("tracks a career across realignment instead of applying the school's present conference", () => {
+    const history = footballCareerAffiliationHistoryFor({
+      id: "texas-realignment-player",
+      kind: "player-career",
+      league: "CFB",
+      name: "Texas Realignment Player",
+      school: "Texas",
+      startSeason: 1995,
+      endSeason: 1997,
+      sourceIdentityKeys: [],
+    });
+
+    expect(history?.seasons.map((row) => [row.season, row.conference])).toEqual([
+      [1995, "SWC"],
+      [1996, "Big 12"],
+      [1997, "Big 12"],
+    ]);
+    expect(history?.conferenceComplete).toBe(true);
+    expect(history?.complete).toBe(false);
+  });
+
+  it("leaves unsupported history unknown instead of turning it into a negative", () => {
+    expect(footballCareerAffiliationHistoryFor({
+      id: "unknown-school-player",
+      kind: "player-career",
+      league: "CFB",
+      name: "Unknown School Player",
+      school: "Unknown Tech",
+      startSeason: 1980,
+      endSeason: 1983,
+      sourceIdentityKeys: [],
+    })).toBeNull();
+  });
 });
