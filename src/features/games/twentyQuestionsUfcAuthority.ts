@@ -208,7 +208,10 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
       },
     };
   });
-  return selectTwentyQuestionsQuestionBank(liveCandidates, subjects);
+  const requiredQuestionIds = liveCandidates
+    .filter((question) => question.id.startsWith("era:") || question.id === "stat:title-wins:1")
+    .map((question) => question.id);
+  return selectTwentyQuestionsQuestionBank(liveCandidates, subjects, undefined, requiredQuestionIds);
 }
 
 let cachedUniverse: TwentyQuestionsUniverse | null = null;
