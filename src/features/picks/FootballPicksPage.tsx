@@ -140,6 +140,7 @@ export default function FootballPicksPage() {
         </section>
       ) : null}
       {!event ? seasonHub : null}
+      {!event && identity.profile ? <FootballFuturesCard /> : null}
 
       {event ? (
         <>
