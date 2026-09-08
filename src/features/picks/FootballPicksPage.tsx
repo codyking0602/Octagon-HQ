@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { FootballFuturesCard } from "./FootballFuturesCard";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
-import { FOOTBALL_FUTURES_MAX_POINTS, FOOTBALL_FUTURES_RULES, footballLockAllowance } from "./footballPicksScoring";
+import { FOOTBALL_FUTURES_MAX_POINTS, FOOTBALL_FUTURES_RULES, footballLockAllowance, gradeFootballAts } from "./footballPicksScoring";
 import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
@@ -38,6 +38,27 @@ function gameStatus(bout: PickBout, locked: boolean) {
   if (bout.resultStatus === "cancelled") return "CANCELLED";
   if (bout.resultStatus && bout.resultStatus !== "pending") return "FINAL";
   return locked ? "LOCKED" : "OPEN";
+}
+
+function gameAtsOutcomeLabel(bout: PickBout, selected: string | null, isLock: boolean) {
+  if (!selected || bout.resultStatus === "cancelled" || !bout.resultStatus || bout.resultStatus === "pending") return null;
+  if (bout.frozenSpreadHome == null || bout.homeFinalScore == null || bout.awayFinalScore == null) return null;
+  const pickedTeam = selected === (bout.homeTeamSlug ?? bout.redFighterSlug)
+    ? "home"
+    : selected === (bout.awayTeamSlug ?? bout.blueFighterSlug) ? "away" : null;
+  if (!pickedTeam) return null;
+  const graded = gradeFootballAts({
+    pickedTeam,
+    homeScore: bout.homeFinalScore,
+    awayScore: bout.awayFinalScore,
+    frozenSpreadHome: bout.frozenSpreadHome,
+    isFinal: true,
+    isLock,
+  });
+  if (graded.outcome === "win") return "✓ COVERED";
+  if (graded.outcome === "loss") return "✕ MISSED";
+  if (graded.outcome === "push") return "PUSH";
+  return null;
 }
 
 function TeamLogo({ logoUrl }: { logoUrl?: string | null }) {
@@ -172,11 +193,13 @@ export default function FootballPicksPage() {
                 const away = { slug: game.blueFighterSlug, name: game.blueFighterName, side: "AWAY", logoUrl: game.awayTeamLogoUrl };
                 const home = { slug: game.redFighterSlug, name: game.redFighterName, side: "HOME", logoUrl: game.homeTeamLogoUrl };
                 const selectedName = selected === away.slug ? away.name : selected === home.slug ? home.name : null;
+                const status = gameStatus(game, locked);
+                const outcomeLabel = gameAtsOutcomeLabel(game, selected, isLock);
                 return (
                   <article className={`football-pick-game${locked ? " is-locked" : ""}${isLock ? " is-lock" : ""}`} key={game.boutId}>
                     <header>
                       <strong>{leagueLabel(game.weightClass)}</strong>
-                      <b className={`football-pick-game__status is-${gameStatus(game, locked).toLowerCase()}`}>{gameStatus(game, locked)}</b>
+                      <b className={`football-pick-game__status is-${status.toLowerCase()}`}>{outcomeLabel ?? status}</b>
                     </header>
                     <div className="football-pick-game__matchup">
                       {[away, home].map((team) => {
