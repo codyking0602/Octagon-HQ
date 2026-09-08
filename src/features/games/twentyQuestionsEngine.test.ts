@@ -8,6 +8,7 @@ import {
   twentyQuestionsCostForSplit,
   twentyQuestionsEligibleQuestions,
   twentyQuestionsFinalScore,
+  twentyQuestionsRecommendedQuestions,
   twentyQuestionsScoreAfterQuestion,
   twentyQuestionsScoreAfterWrongGuess,
   twentyQuestionsScoreImpact,
@@ -55,11 +56,14 @@ describe("20 Questions scoring contract", () => {
   });
 });
 
-describe("20 Questions live question eligibility", () => {
+describe("20 Questions live question intelligence", () => {
   const subjects: readonly TwentyQuestionsSubject[] = [
     { id: "a", name: "A", kind: "player", league: "NFL" },
     { id: "b", name: "B", kind: "player", league: "NFL" },
     { id: "c", name: "C", kind: "coach", league: "NFL" },
+    { id: "d", name: "D", kind: "player", league: "NFL" },
+    { id: "e", name: "E", kind: "player", league: "NFL" },
+    { id: "f", name: "F", kind: "player", league: "NFL" },
   ];
   const questions: readonly TwentyQuestionsQuestion[] = [
     { id: "role:player", label: "Is this a player?", internalCost: 6, answer: (id) => id !== "c" },
@@ -74,6 +78,42 @@ describe("20 Questions live question eligibility", () => {
     expect(twentyQuestionsEligibleQuestions(questions, subjects.slice(0, 2)).map((question) => question.id))
       .toEqual(["position:quarterback"]);
     expect(twentyQuestionsEligibleQuestions(questions, subjects.slice(0, 1))).toEqual([]);
+  });
+
+  it("ranks human-recognizable clues ahead of a mathematically cleaner low-value split", () => {
+    const candidates: readonly TwentyQuestionsQuestion[] = [
+      {
+        id: "stat:fights:15",
+        label: "At least 15 games?",
+        internalCost: 8,
+        humanValue: 1,
+        answer: (id) => ["a", "b", "c"].includes(id),
+      },
+      {
+        id: "era:active-2000s",
+        label: "Active in the 2000s?",
+        internalCost: 5,
+        humanValue: 4,
+        answer: (id) => ["a", "b"].includes(id),
+      },
+    ];
+    expect(twentyQuestionsRecommendedQuestions(candidates, subjects, 2).map((question) => question.id))
+      .toEqual(["era:active-2000s", "stat:fights:15"]);
+  });
+
+  it("diversifies Recommended before repeating a clue family", () => {
+    const candidates: readonly TwentyQuestionsQuestion[] = [
+      { id: "stat:yards:1000", label: "1,000 yards?", internalCost: 8, humanValue: 3, recommendationFamily: "production", answer: (id) => ["a", "b", "c"].includes(id) },
+      { id: "stat:yards:900", label: "900 yards?", internalCost: 8, humanValue: 3, recommendationFamily: "production", answer: (id) => ["a", "b", "d"].includes(id) },
+      { id: "era:2010s", label: "2010s?", internalCost: 6, humanValue: 3, recommendationFamily: "era", answer: (id) => ["a", "d"].includes(id) },
+      { id: "team:dallas", label: "Played for Dallas?", internalCost: 6, humanValue: 3, recommendationFamily: "team", answer: (id) => ["b", "e"].includes(id) },
+    ];
+    const recommended = twentyQuestionsRecommendedQuestions(candidates, subjects, 3);
+    expect(recommended.map((question) => question.id)).toEqual(["stat:yards:1000", "era:2010s", "team:dallas"]);
+  });
+
+  it("does not recommend anything after deduction leaves one identity", () => {
+    expect(twentyQuestionsRecommendedQuestions(questions, subjects.slice(0, 1))).toEqual([]);
   });
 });
 
