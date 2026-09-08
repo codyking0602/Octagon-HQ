@@ -26,6 +26,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   if (originalInnerHeight) Object.defineProperty(window, "innerHeight", originalInnerHeight);
   else Reflect.deleteProperty(window, "innerHeight");
   if (originalVisualViewport) Object.defineProperty(window, "visualViewport", originalVisualViewport);
@@ -206,11 +207,11 @@ describe("BottomNavigation", () => {
     fireEvent.click(play);
     expect(screen.getByTestId("location")).toHaveTextContent("/football");
     expect(screen.getByTestId("football-entry-transition").querySelector("video"))
-      .toHaveAttribute("src", "/assets/football/football-play-reveal.mp4");
+      .toHaveAttribute("src", "/assets/football/vince-young-championship-run.mp4");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
   });
 
-  it("reveals Football Picks only after a second tap on the active Picks tab", () => {
+  it("reveals Football Picks with the HQ slam only after a second tap on the active Picks tab", () => {
     installVisualViewport();
     renderNavigation(["/picks"], <LocationProbe />);
 
@@ -221,20 +222,23 @@ describe("BottomNavigation", () => {
 
     fireEvent.click(picks);
     expect(screen.getByTestId("location")).toHaveTextContent("/football/picks");
-    expect(screen.getByTestId("football-entry-transition").querySelector("video"))
-      .toHaveAttribute("src", "/assets/football/football-picks-reveal.mp4");
+    expect(screen.getByTestId("football-entry-slam")).toBeInTheDocument();
+    expect(screen.getByTestId("football-entry-transition").querySelector("video")).toBeNull();
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
   });
 
-  it("keeps cycling Play between sports without replaying the reveal during the same app session", () => {
+  it("hands the first Play clip into the HQ slam, then does not replay it during the same app session", () => {
+    vi.useFakeTimers();
     installVisualViewport();
     renderNavigation(["/play"], <LocationProbe />);
 
     let play = screen.getByRole("link", { name: "Play" });
     fireEvent.click(play);
     fireEvent.click(play);
-    const firstReveal = screen.getByTestId("football-entry-transition");
-    fireEvent.ended(firstReveal.querySelector("video") as HTMLVideoElement);
+    const video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    fireEvent.ended(video);
+    expect(screen.getByTestId("football-entry-slam")).toBeInTheDocument();
+    act(() => vi.advanceTimersByTime(900));
     expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
 
     play = screen.getByRole("link", { name: "Play" });
