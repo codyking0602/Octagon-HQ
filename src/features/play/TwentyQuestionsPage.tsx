@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import {
   formatTwentyQuestionsScoreImpact,
+  rankTwentyQuestionsRecommendedQuestions,
   TWENTY_QUESTIONS_LIMIT,
   TWENTY_QUESTIONS_START_SCORE,
   twentyQuestionsEligibleQuestions,
@@ -15,6 +16,7 @@ import type { TwentyQuestionsRound } from "../games/twentyQuestionsRuntime";
 
 type Phase = "start" | "playing" | "result";
 type ResultState = "correct" | "incorrect";
+type ResultReason = "guess" | "forfeit";
 
 type AskedQuestion = {
   question: TwentyQuestionsQuestion;
@@ -94,32 +96,6 @@ function remainingSubjectsForAnswers(
   ));
 }
 
-function rankRecommendedQuestions(
-  questions: readonly TwentyQuestionsQuestion[],
-  remainingSubjects: readonly TwentyQuestionsSubject[],
-) {
-  if (remainingSubjects.length <= 1) return [];
-  return [...questions]
-    .map((question) => {
-      const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
-      const no = remainingSubjects.length - yes;
-      return {
-        question,
-        usefulSplit: Math.min(yes, no),
-        imbalance: Math.abs(yes - no),
-      };
-    })
-    .filter((entry) => entry.usefulSplit > 0)
-    .sort((left, right) => (
-      right.usefulSplit - left.usefulSplit
-      || left.imbalance - right.imbalance
-      || left.question.internalCost - right.question.internalCost
-      || left.question.label.localeCompare(right.question.label)
-    ))
-    .slice(0, RECOMMENDED_QUESTION_LIMIT)
-    .map((entry) => entry.question);
-}
-
 interface TwentyQuestionsPageProps {
   sport: TwentyQuestionsSport;
   createRound: () => TwentyQuestionsRound;
@@ -129,6 +105,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
   const [round, setRound] = useState<TwentyQuestionsRound>(() => createRound());
   const [phase, setPhase] = useState<Phase>("start");
   const [resultState, setResultState] = useState<ResultState>("incorrect");
+  const [resultReason, setResultReason] = useState<ResultReason>("guess");
   const [score, setScore] = useState(TWENTY_QUESTIONS_START_SCORE);
   const [asked, setAsked] = useState<AskedQuestion[]>([]);
   const [questionSearch, setQuestionSearch] = useState("");
@@ -155,7 +132,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     [remainingSubjects, unaskedQuestions],
   );
   const recommendedQuestions = useMemo(
-    () => rankRecommendedQuestions(eligibleQuestions, remainingSubjects),
+    () => rankTwentyQuestionsRecommendedQuestions(eligibleQuestions, remainingSubjects, RECOMMENDED_QUESTION_LIMIT),
     [eligibleQuestions, remainingSubjects],
   );
   const recommendedQuestionIds = useMemo(
@@ -193,6 +170,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     setRound(createRound());
     setPhase("start");
     setResultState("incorrect");
+    setResultReason("guess");
     setScore(TWENTY_QUESTIONS_START_SCORE);
     setAsked([]);
     setQuestionSearch("");
@@ -225,6 +203,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
 
   function submitGuess() {
     if (phase !== "playing" || !selectedGuess) return;
+    setResultReason("guess");
     if (selectedGuess.id === round.hiddenSubject.id) {
       setResultState("correct");
       setPhase("result");
@@ -251,6 +230,16 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     });
     setGuessNotice(`${selectedGuess.name} is not the answer. −10 pts.`);
     setGuessSearch("");
+    setSelectedGuess(null);
+  }
+
+  function forfeitRound() {
+    if (phase !== "playing") return;
+    setResultState("incorrect");
+    setResultReason("forfeit");
+    setPhase("result");
+    setGuessOpen(false);
+    setGuessNotice(null);
     setSelectedGuess(null);
   }
 
@@ -371,6 +360,8 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
               </section>
             ) : null}
 
+            <button className="twenty-questions-more" type="button" onClick={forfeitRound}>FORFEIT / REVEAL ANSWER</button>
+
             {asked.length ? (
               <section className="twenty-questions-history" aria-labelledby="twenty-questions-history-title">
                 <div className="twenty-questions-section-heading">
@@ -423,7 +414,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                     <section className="twenty-questions-category twenty-questions-recommended" aria-labelledby="twenty-questions-recommended-title">
                       <div className="twenty-questions-category__heading">
                         <div>
-                          <p className="eyebrow">BEST SPLITS RIGHT NOW</p>
+                          <p className="eyebrow">BEST CLUES RIGHT NOW</p>
                           <h3 id="twenty-questions-recommended-title">Recommended</h3>
                         </div>
                         <span>{recommendedQuestions.length}</span>
@@ -434,7 +425,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                         </div>
                       ) : (
                         <p className="twenty-questions-empty">
-                          {remainingSubjects.length <= 1 ? "One identity remains. Take your guess." : "No remaining question cleanly splits the current pool."}
+                          {remainingSubjects.length <= 1 ? "One identity remains. Take your guess or reveal the answer." : "No remaining question gives useful information on the current pool."}
                         </p>
                       )}
                     </section>
@@ -496,7 +487,13 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
           <section className="twenty-questions-result">
             <p className="eyebrow">{resultState === "correct" ? "SOLVED" : "NOT SOLVED"}</p>
             <h2>{round.hiddenSubject.name}</h2>
-            <p>{resultState === "correct" ? "You found the hidden identity." : "Your final guess missed. This was the hidden identity."}</p>
+            <p>
+              {resultState === "correct"
+                ? "You found the hidden identity."
+                : resultReason === "forfeit"
+                  ? "You forfeited the round. This was the hidden identity."
+                  : "Your final guess missed. This was the hidden identity."}
+            </p>
             <div className="twenty-questions-result__score-block">
               <div className="twenty-questions-result__score">{finalScore}</div>
               <small>FINAL SCORE</small>
