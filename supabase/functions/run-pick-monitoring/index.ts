@@ -103,6 +103,26 @@ Deno.serve(async (request) => {
     }
     notificationDispatch = dispatched.data;
 
+    // Football shares this existing scheduler owner. The football sync owns ESPN
+    // final detection and the canonical record_football_pick_final write path.
+    const footballSettlementResponse = await fetch(`${url}/functions/v1/sync-next-football-event`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: serviceKey,
+        [schedulerHeader]: schedulerToken,
+      },
+      body: JSON.stringify({ mode: "scheduled-finals" }),
+    });
+    if (!footballSettlementResponse.ok) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "football_settlement_failed",
+        providerCalled: false,
+        response: safeError(502, "FOOTBALL_SETTLEMENT_FAILED", "Football finals could not be synchronized safely."),
+      });
+    }
+
     const eventState = await admin.rpc("get_pick_monitoring_event_state");
     if (eventState.error) {
       return finishScheduledDecision({
