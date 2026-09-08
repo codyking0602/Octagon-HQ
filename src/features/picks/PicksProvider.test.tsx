@@ -111,6 +111,7 @@ function Probe() {
       <span>{picks.summary.correct}-{picks.summary.incorrect}</span>
       <span>{picks.history.events.length} RECAP</span>
       <span>{picks.history.events[0]?.name ?? "NO RECAP"}</span>
+      <span>FUTURES {picks.footballFutures?.season ?? "NONE"}</span>
       <button type="button" onClick={() => void picks.setPick("ankalaev-guskov", "magomed-ankalaev")}>PICK ANKALAEV</button>
     </div>
   );
@@ -152,6 +153,38 @@ describe("PicksProvider", () => {
     await waitFor(() => expect(loadMyPicks).toHaveBeenCalledWith("nfl-week-1"));
     expect(loadMySummary).toHaveBeenCalledWith(2026, "football");
     expect(loadMyHistory).toHaveBeenCalledWith(2026, "football");
+  });
+
+  it("loads the canonical Football Futures snapshot even when the next slate is not active", async () => {
+    const currentSeason = new Date().getFullYear();
+    const loadFootballFutures = vi.fn(async () => ({
+      season: currentSeason,
+      locked: true,
+      lockAt: `${currentSeason}-09-03T16:00:00.000Z`,
+      ownPicks: null,
+      groupPicks: [],
+    }));
+    const repository: PicksRepository = {
+      loadCurrentEvent: async () => null,
+      loadMyPicks: vi.fn(async () => []),
+      loadMySummary: async () => ({ correct: 0, incorrect: 0, pending: 0, eventsEntered: 0, basePoints: 0, lockBonus: 0, totalPoints: 0 }),
+      loadMyHistory: async () => ({ ...history, season: currentSeason }),
+      loadFootballFutures,
+      loadMyUnderdogLock: async () => null,
+      setUnderdogLock: vi.fn(),
+      clearUnderdogLock: vi.fn(),
+      savePick: vi.fn(),
+    };
+
+    render(
+      <IdentityProvider gateway={gateway()}>
+        <PicksProvider sport="football" repository={repository}><Probe /></PicksProvider>
+      </IdentityProvider>,
+    );
+
+    expect(await screen.findByText(`FUTURES ${currentSeason}`)).toBeInTheDocument();
+    expect(screen.getByText("NO EVENT")).toBeInTheDocument();
+    expect(loadFootballFutures).toHaveBeenCalledWith(currentSeason);
   });
 
   it("reloads the canonical lock and summary after saving a changed pick", async () => {

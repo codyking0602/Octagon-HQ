@@ -9,6 +9,7 @@ import {
   type PickHistoryBout,
   type PickHistoryEvent,
 } from "./picksModel";
+import "../../styles/football-week-recap.css";
 
 interface GameAnalysis {
   game: PickHistoryBout;
@@ -27,12 +28,8 @@ interface WeekAward {
   detail: string;
 }
 
-function completedDate(value: string) {
-  return new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(value));
+function dateLabel(value: string) {
+  return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(new Date(value));
 }
 
 function leagueLabel(weightClass: string): "NFL" | "CFB" {
@@ -49,23 +46,17 @@ function awaySlug(game: PickHistoryBout) {
 }
 
 function teamName(game: PickHistoryBout, slug: string | null) {
-  if (!slug) return "No pick";
+  if (!slug) return "NO PICK";
   if (slug === homeSlug(game)) return game.redFighterName;
   if (slug === awaySlug(game)) return game.blueFighterName;
-  return "Unknown team";
-}
-
-function signedLine(value: number) {
-  if (value === 0) return "PK";
-  return value > 0 ? `+${value}` : `${value}`;
+  return "UNKNOWN TEAM";
 }
 
 function frozenLineLabel(game: PickHistoryBout) {
   if (game.frozenSpreadHome == null) return "LINE NOT AVAILABLE";
   if (game.frozenSpreadHome === 0) return "PICK’EM";
-  const home = game.frozenSpreadHome;
-  const favorite = home < 0 ? game.redFighterName : game.blueFighterName;
-  return `${favorite} -${Math.abs(home)}`;
+  const favorite = game.frozenSpreadHome < 0 ? game.redFighterName : game.blueFighterName;
+  return `${favorite} -${Math.abs(game.frozenSpreadHome)}`;
 }
 
 function finalScoreLabel(game: PickHistoryBout) {
@@ -73,13 +64,18 @@ function finalScoreLabel(game: PickHistoryBout) {
   return `${game.blueFighterName} ${game.awayFinalScore}, ${game.redFighterName} ${game.homeFinalScore}`;
 }
 
+function compactFinalScore(game: PickHistoryBout) {
+  if (game.homeFinalScore == null || game.awayFinalScore == null) return "FINAL";
+  return `FINAL ${game.awayFinalScore}–${game.homeFinalScore}`;
+}
+
 function verdictLabel(game: PickHistoryBout) {
-  if (game.includedInPicks === false || game.verdict === "excluded") return "Excluded";
-  if (game.verdict === "correct") return "Covered";
-  if (game.verdict === "incorrect") return "Missed";
-  if (game.verdict === "push") return "Push";
-  if (game.verdict === "missing") return "No pick";
-  return "Pending";
+  if (game.includedInPicks === false || game.verdict === "excluded") return "EXCLUDED";
+  if (game.verdict === "correct") return "✓";
+  if (game.verdict === "incorrect") return "✕";
+  if (game.verdict === "push") return "PUSH";
+  if (game.verdict === "missing") return "—";
+  return "PENDING";
 }
 
 function joinNames(names: readonly string[]) {
@@ -143,8 +139,22 @@ function accuracyLabel(correct: number, incorrect: number) {
   return decided ? `${Math.round((correct / decided) * 100)}%` : "—";
 }
 
-function groupPickLabel(game: PickHistoryBout, pick: PickGroupPick) {
-  return `${pick.displayName}${pick.isCurrentUser ? " (YOU)" : ""} — ${teamName(game, pick.pickedFighterSlug)}`;
+function weekIdentity(event: PickHistoryEvent) {
+  const match = `${event.name} ${event.subtitle}`.match(/\bweek\s*(\d+)\b/i);
+  return match ? `WEEK ${match[1]}` : event.name.toUpperCase();
+}
+
+function slateScope(games: readonly PickHistoryBout[]) {
+  const leagues = new Set(games.map((game) => leagueLabel(game.weightClass)));
+  if (leagues.has("NFL") && leagues.has("CFB")) return "NFL + COLLEGE FOOTBALL";
+  if (leagues.has("CFB")) return "COLLEGE FOOTBALL";
+  return "NFL";
+}
+
+function groupPickResult(pick: PickGroupPick, analysis: GameAnalysis | null) {
+  if (!pick.pickedFighterSlug || !analysis) return "—";
+  if (!analysis.coveredSlug) return "—";
+  return pick.pickedFighterSlug === analysis.coveredSlug ? "✓" : "✕";
 }
 
 export function FootballWeekRecap({
@@ -156,6 +166,7 @@ export function FootballWeekRecap({
 }) {
   const [open, setOpen] = useState(requestedOpen);
   const [shareLabel, setShareLabel] = useState("SHARE");
+  const [expandedGameIds, setExpandedGameIds] = useState<string[]>([]);
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const scrollRef = useRef<HTMLElement | null>(null);
@@ -266,6 +277,7 @@ export function FootballWeekRecap({
 
   useEffect(() => {
     setOpen(requestedOpen);
+    setExpandedGameIds([]);
   }, [event.eventId, requestedOpen]);
 
   useEffect(() => {
@@ -291,9 +303,12 @@ export function FootballWeekRecap({
   const championNames = recap.champions.map((result) => result.displayName);
   const championLabel = recap.champions.length > 1 ? "CO-CHAMPIONS" : "WEEK CHAMPION";
   const championCopy = joinNames(championNames);
+  const championResult = recap.champions[0] ?? null;
   const userFinish = recap.current
     ? groupRankLabel(recap.current.rank, event.groupResults)
     : null;
+  const weekLabel = weekIdentity(event);
+  const allExpanded = recap.games.length > 0 && expandedGameIds.length === recap.games.length;
 
   async function shareRecap() {
     setShareLabel("PREPARING…");
@@ -311,6 +326,14 @@ export function FootballWeekRecap({
     setShareLabel(outcome === "copied" ? "COPIED" : outcome === "unavailable" ? "TRY AGAIN" : "SHARE");
   }
 
+  function toggleGame(gameId: string) {
+    setExpandedGameIds((current) => (
+      current.includes(gameId)
+        ? current.filter((id) => id !== gameId)
+        : [...current, gameId]
+    ));
+  }
+
   const overlay = open ? (
     <div
       className="picks-event-recap-overlay"
@@ -319,7 +342,7 @@ export function FootballWeekRecap({
       aria-label={`${event.name} Week Recap`}
       data-pull-refresh-ignore
     >
-      <div className="picks-event-recap">
+      <div className="picks-event-recap football-week-recap">
         <header className="picks-event-recap__header">
           <button ref={closeRef} type="button" aria-label="Close week recap" onClick={() => setOpen(false)}>×</button>
           <span>WEEK RECAP</span>
@@ -327,51 +350,60 @@ export function FootballWeekRecap({
         </header>
 
         <main ref={scrollRef} className="picks-event-recap__scroll" data-testid="football-week-recap-scroll">
-          <section className="picks-event-recap__hero">
-            <div className="picks-event-recap__hero-copy">
-              <span>FINAL RESULTS</span>
-              <h2 id={titleId}>{event.name}</h2>
-              {event.subtitle ? <strong>{event.subtitle}</strong> : null}
-              <p>{completedDate(event.completedAt)}</p>
-              <div className="picks-event-recap__champion">
-                <div><span>{championLabel}</span><strong>{championCopy}</strong></div>
-                <b>{recap.winningPoints}<small>PTS</small></b>
-              </div>
-              <div className="picks-event-recap__quickline" aria-label="Week recap totals">
-                <span>{event.groupResults.length} {event.groupResults.length === 1 ? "PLAYER" : "PLAYERS"}</span>
-                <span>{recap.groupAccuracy} GROUP ATS</span>
-                {recap.current ? (
-                  <span>YOU: {userFinish} · {recap.current.correct}-{recap.current.incorrect} · {recap.current.totalPoints} PTS</span>
-                ) : <span>DID NOT ENTER</span>}
-              </div>
-              {recap.leagueSplits.length ? (
-                <div className="picks-event-recap__quickline" aria-label="League ATS split">
-                  {recap.leagueSplits.map((split) => (
-                    <span key={split.league}>{split.league}: {split.correct}-{split.submitted - split.correct} · {split.accuracy}%</span>
-                  ))}
-                </div>
-              ) : null}
+          <section className="football-week-recap__hero" aria-labelledby={titleId}>
+            <div className="football-week-recap__weekline">
+              <span>{weekLabel} · FINAL</span>
+              <strong>{slateScope(recap.games)}</strong>
+              <small>WEEK OF {dateLabel(event.startsAt).toUpperCase()}</small>
             </div>
+            <div className="football-week-recap__winner">
+              <small>{championLabel}</small>
+              <h2 id={titleId}>
+                {recap.champions.length === 1
+                  ? `${championCopy.toUpperCase()} WINS THE WEEK`
+                  : `${championCopy.toUpperCase()} SHARE THE WEEK`}
+              </h2>
+              <strong>
+                {recap.winningPoints} PTS
+                {championResult && recap.champions.length === 1 ? ` · ${championResult.correct}-${championResult.incorrect} ATS` : ""}
+              </strong>
+            </div>
+            <div className="football-week-recap__quickline" aria-label="Week recap totals">
+              <span>{event.groupResults.length} {event.groupResults.length === 1 ? "PLAYER" : "PLAYERS"}</span>
+              <span>ROOM {recap.groupAccuracy} ATS</span>
+              <span>{recap.games.length} {recap.games.length === 1 ? "GAME" : "GAMES"}</span>
+            </div>
+            {recap.current ? (
+              <div className="football-week-recap__you">
+                YOU · {userFinish} · {recap.current.correct}-{recap.current.incorrect} ATS · {recap.current.totalPoints} PTS
+              </div>
+            ) : null}
+            {recap.leagueSplits.length > 1 ? (
+              <div className="football-week-recap__league-splits" aria-label="League ATS split">
+                {recap.leagueSplits.map((split) => (
+                  <span key={split.league}>{split.league} {split.correct}-{split.submitted - split.correct} · {split.accuracy}%</span>
+                ))}
+              </div>
+            ) : null}
           </section>
 
           {recap.awards.length ? (
-            <section className="picks-event-recap__stories" aria-label="Week awards">
-              <div className="picks-event-recap__compact-heading"><span>WEEK AWARDS</span><small>{recap.awards.length}</small></div>
-              <div className="picks-event-recap__story-strip">
+            <section className="football-week-recap__section" aria-label="Week awards">
+              <div className="football-week-recap__section-heading"><h3>WEEK AWARDS</h3><small>{recap.awards.length}</small></div>
+              <div className="football-week-recap__awards">
                 {recap.awards.map((award) => (
                   <article key={award.label}>
                     <span>{award.label}</span>
-                    <strong>{award.title}</strong>
-                    <p>{award.detail}</p>
+                    <div><strong>{award.title}</strong><p>{award.detail}</p></div>
                   </article>
                 ))}
               </div>
             </section>
           ) : null}
 
-          <section className="picks-event-recap__standings" aria-labelledby={`${titleId}-standings`}>
-            <div className="picks-event-recap__compact-heading">
-              <h3 id={`${titleId}-standings`}>Week Standings</h3>
+          <section className="picks-event-recap__standings football-week-recap__section" aria-labelledby={`${titleId}-standings`}>
+            <div className="football-week-recap__section-heading">
+              <h3 id={`${titleId}-standings`}>WEEK STANDINGS</h3>
               <small>{event.groupResults.length} {event.groupResults.length === 1 ? "PLAYER" : "PLAYERS"}</small>
             </div>
             <div className="picks-event-recap__standing-list">
@@ -380,7 +412,7 @@ export function FootballWeekRecap({
                   <span>{groupRankLabel(result.rank, event.groupResults)}</span>
                   <div>
                     <strong>{result.displayName}{result.isCurrentUser ? <em>YOU</em> : null}</strong>
-                    <small>{result.correct}-{result.incorrect} · {pickWinPercentage(result.correct, result.incorrect).toFixed(1)}% ATS{result.lockBonus ? ` · +${result.lockBonus} LOCK` : ""}</small>
+                    <small>{result.correct}-{result.incorrect} · {pickWinPercentage(result.correct, result.incorrect).toFixed(1)}% ATS{result.lockBonus ? ` · ${result.lockBonus > 0 ? "+" : ""}${result.lockBonus} LOCK` : ""}</small>
                   </div>
                   <b>{result.totalPoints}<small>PTS</small></b>
                 </article>
@@ -388,39 +420,74 @@ export function FootballWeekRecap({
             </div>
           </section>
 
-          <details className="picks-event-recap__fights">
-            <summary>
-              <div><span>GAME RESULTS</span><h3>Game by Game</h3></div>
-              <small>{recap.games.length} {recap.games.length === 1 ? "GAME" : "GAMES"} · VIEW GAMES ›</small>
-            </summary>
-            <div className="picks-event-recap__fight-list" id={`${titleId}-games`}>
+          <section className="football-week-recap__section football-week-recap__games" aria-labelledby={`${titleId}-games-heading`}>
+            <div className="football-week-recap__section-heading">
+              <h3 id={`${titleId}-games-heading`}>GAME RESULTS</h3>
+              <button
+                type="button"
+                onClick={() => setExpandedGameIds(allExpanded ? [] : recap.games.map((game) => game.boutId))}
+              >
+                {allExpanded ? "COLLAPSE ALL" : "EXPAND ALL"}
+              </button>
+            </div>
+            <div className="football-week-recap__game-list" id={`${titleId}-games`}>
               {recap.games.map((game) => {
                 const analysis = recap.analyses.find((item) => item.game.boutId === game.boutId) ?? null;
+                const expanded = expandedGameIds.includes(game.boutId);
+                const currentGroupPick = (game.groupPicks ?? []).find((pick) => pick.isCurrentUser) ?? null;
                 return (
-                  <article key={game.boutId}>
-                    <div className="picks-event-recap__fight-meta"><span>{leagueLabel(game.weightClass)}</span><small>FROZEN ATS · {frozenLineLabel(game)}</small></div>
-                    <div className="picks-event-recap__matchup"><strong>{game.blueFighterName}</strong><span>AT</span><strong>{game.redFighterName}</strong></div>
-                    <div className="picks-event-recap__fight-result">
-                      <div><span>FINAL</span><strong>{finalScoreLabel(game)}</strong></div>
-                      <div><span>COVERED</span><strong>{analysis?.coveredSlug ? teamName(game, analysis.coveredSlug) : analysis ? "PUSH" : "NOT GRADED"}</strong></div>
-                      <div><span>YOUR PICK</span><strong>{teamName(game, game.pickedFighterSlug)}</strong></div>
-                      <em className={`picks-verdict picks-verdict--${game.verdict}`}>{verdictLabel(game)}</em>
-                    </div>
-                    {(game.groupPicks ?? []).length ? (
-                      <div className="picks-group-reveal">
-                        <strong>EVERYONE’S PICKS</strong>
-                        <div>
-                          {(game.groupPicks ?? []).map((pick) => (
-                            <span key={`${pick.displayName}:${pick.pickedFighterSlug ?? "none"}`}>{groupPickLabel(game, pick)}</span>
-                          ))}
+                  <article className={`football-week-recap__game${expanded ? " is-expanded" : ""}`} key={game.boutId}>
+                    <button
+                      type="button"
+                      className="football-week-recap__game-summary"
+                      aria-expanded={expanded}
+                      aria-controls={`${titleId}-${game.boutId}-details`}
+                      onClick={() => toggleGame(game.boutId)}
+                    >
+                      <span className="football-week-recap__game-league">{leagueLabel(game.weightClass)}</span>
+                      <div className="football-week-recap__matchup">
+                        <strong>{game.blueFighterName} <small>AT</small> {game.redFighterName}</strong>
+                        <b>{frozenLineLabel(game)} · FROZEN ATS</b>
+                      </div>
+                      <div className="football-week-recap__game-outcome">
+                        <span>{compactFinalScore(game)}</span>
+                        <strong>{analysis?.coveredSlug ? `${teamName(game, analysis.coveredSlug)} COVERED` : analysis ? "PUSH" : "NOT GRADED"}</strong>
+                        <small className={game.verdict === "incorrect" || game.verdict === "missing" ? "is-missed" : ""}>
+                          YOUR PICK: {currentGroupPick?.isLock ? "🔒 " : ""}{teamName(game, game.pickedFighterSlug)} {verdictLabel(game)}
+                        </small>
+                      </div>
+                      <span className="football-week-recap__chevron" aria-hidden="true">⌄</span>
+                    </button>
+
+                    {expanded ? (
+                      <div className="football-week-recap__game-details" id={`${titleId}-${game.boutId}-details`}>
+                        <div className="football-week-recap__score-detail">
+                          <span>FINAL SCORE</span><strong>{finalScoreLabel(game)}</strong>
                         </div>
+                        {(game.groupPicks ?? []).length ? (
+                          <div className="football-week-recap__everyone">
+                            <strong>EVERYONE’S PICKS</strong>
+                            <div>
+                              {(game.groupPicks ?? []).map((pick) => {
+                                const result = groupPickResult(pick, analysis);
+                                return (
+                                  <div className="football-week-recap__pick-row" key={`${pick.displayName}:${pick.pickedFighterSlug ?? "none"}`}>
+                                    <span>{pick.displayName.toUpperCase()}{pick.isCurrentUser ? " (YOU)" : ""}</span>
+                                    <strong>{pick.isLock ? <b aria-label="Lock pick">🔒</b> : null}{teamName(game, pick.pickedFighterSlug)}</strong>
+                                    <em className={result === "✕" ? "is-missed" : ""}>{result}</em>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
                     ) : null}
                   </article>
                 );
               })}
             </div>
-          </details>
+          </section>
         </main>
       </div>
     </div>
@@ -428,18 +495,14 @@ export function FootballWeekRecap({
 
   return (
     <>
-      <article className="picks-latest-recap-card">
+      <article className="picks-latest-recap-card football-week-archive-card">
         <div>
-          <span>FINAL RESULTS</span>
-          <h3>{event.name} Recap</h3>
-          <p>{event.subtitle}</p>
+          <span>{weekLabel} · FINAL</span>
+          <h3>{championCopy}</h3>
+          <p>{championLabel} · {recap.winningPoints} PTS · ROOM {recap.groupAccuracy} ATS</p>
         </div>
         <div className="picks-latest-recap-card__result">
-          <small>{championLabel}</small>
-          <strong>{championCopy}</strong>
-          <b>{recap.winningPoints} PTS</b>
-          <small>ROOM ATS · {recap.groupAccuracy}</small>
-          {recap.current ? <small>YOU · {userFinish} · {recap.current.correct}-{recap.current.incorrect} · {recap.current.totalPoints} PTS</small> : null}
+          {recap.current ? <small>YOU · {userFinish} · {recap.current.correct}-{recap.current.incorrect} ATS · {recap.current.totalPoints} PTS</small> : <small>DID NOT ENTER</small>}
         </div>
         <button type="button" aria-label="OPEN WEEK RECAP" onClick={() => setOpen(true)}>VIEW WEEK RECAP <span aria-hidden="true">›</span></button>
       </article>

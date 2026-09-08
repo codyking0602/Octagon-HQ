@@ -21,7 +21,12 @@ const americanOddsSchema = z.preprocess((value) => {
   return value;
 }, z.number().int().nullable());
 
-const groupPickSchema = z.object({ display_name: z.string(), picked_fighter_slug: z.string().nullable(), is_current_user: z.boolean() });
+const groupPickSchema = z.object({
+  display_name: z.string(),
+  picked_fighter_slug: z.string().nullable(),
+  is_current_user: z.boolean(),
+  is_lock: z.boolean().optional().default(false),
+});
 const watchMomentSchema = z.object({ title: z.string().min(3).max(120), url: z.string().url() });
 const spotlightWatchSchema = z.object({ fighter_slug: z.string().min(1), url: z.string().url() });
 const spotlightFighterSchema = z.object({
@@ -137,7 +142,12 @@ async function requireRpcSuccess<T>(request: PromiseLike<{ data: T; error: { mes
 }
 
 function mapGroupPick(value: z.infer<typeof groupPickSchema>): PickGroupPick {
-  return { displayName: value.display_name, pickedFighterSlug: value.picked_fighter_slug, isCurrentUser: value.is_current_user };
+  return {
+    displayName: value.display_name,
+    pickedFighterSlug: value.picked_fighter_slug,
+    isCurrentUser: value.is_current_user,
+    isLock: value.is_lock,
+  };
 }
 function mapSpotlightFighter(value: z.infer<typeof spotlightFighterSchema>) {
   return { fighterSlug: value.fighter_slug, record: value.record, age: value.age, height: value.height, reach: value.reach, stance: value.stance, edges: value.edges };

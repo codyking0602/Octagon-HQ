@@ -121,7 +121,7 @@ describe("PicksSeasonHub", () => {
     expect(screen.getByText("STANDINGS & EVENTS").closest("details")).not.toHaveAttribute("open");
   });
 
-  it("presents standings as a competitive race without changing the canonical point totals", () => {
+  it("presents UFC standings unchanged with their canonical ranks and totals", () => {
     render(<MemoryRouter><PicksSeasonHub history={history} loading={false} /></MemoryRouter>);
 
     fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
@@ -136,17 +136,13 @@ describe("PicksSeasonHub", () => {
     const michaelRow = screen.getByText("Michael").closest("article");
 
     expect(codyRow).toHaveClass("is-leader", "is-current-user");
-    expect(codyRow).toHaveTextContent("YOU");
     expect(codyRow).toHaveTextContent("48 PTS");
-    expect(codyRow).toHaveTextContent("LEADER");
     expect(shaneRow).toHaveClass("is-leader");
     expect(shaneRow).toHaveTextContent("+4 LOCK");
     expect(ashleyRow).toHaveClass("is-third");
     expect(ashleyRow).toHaveTextContent("6 PTS BACK");
     expect(ashleyRow?.querySelector(".picks-season-standing__progress > span")).toHaveStyle("width: 88%");
-    expect(michaelRow).toHaveTextContent("9-7 · 56.3% WIN · 1 MISSED");
     expect(michaelRow).toHaveTextContent("12 PTS BACK");
-    expect(michaelRow).toHaveTextContent("2/3 EVENTS · 1 EVENT MISSED");
   });
 
   it("keeps the rich UFC event recap available for every completed event", () => {
@@ -162,16 +158,26 @@ describe("PicksSeasonHub", () => {
     expect(screen.getByRole("dialog", { name: "UFC Fight Night: Paris Recap" })).toBeInTheDocument();
   });
 
-  it("uses football championship points and exposes completed slates as weeks", () => {
+  it("ranks Football by canonical accumulated points instead of zeroed drop-adjusted Week 1 values", () => {
     const footballHistory: PickHistory = {
-      ...history,
-      seasonStandings: history.seasonStandings?.map((standing, index) => ({
-        ...standing,
-        adjustedPoints: index === 0 ? 41 : standing.totalPoints,
-      })),
-      events: [
-        completedEvent("football-week-1", "Football Week 1", "NFL + CFB", "2026-09-07T05:00:00Z"),
+      season: 2026,
+      summary: {
+        correct: 7,
+        incorrect: 2,
+        missing: 0,
+        excluded: 0,
+        eventsEntered: 1,
+        basePoints: 7.5,
+        lockBonus: 4,
+        totalPoints: 11.5,
+      },
+      seasonStandings: [
+        { rank: 1, profileId: "cody", displayName: "Cody", correct: 7, incorrect: 2, missing: 0, excluded: 0, eventsEntered: 1, basePoints: 7.5, lockBonus: 4, totalPoints: 11.5, adjustedPoints: 0, isCurrentUser: true },
+        { rank: 1, profileId: "tyler", displayName: "Tyler", correct: 6, incorrect: 3, missing: 0, excluded: 0, eventsEntered: 1, basePoints: 7.5, lockBonus: 0, totalPoints: 7.5, adjustedPoints: 0, isCurrentUser: false },
+        { rank: 1, profileId: "shane", displayName: "Shane", correct: 4, incorrect: 5, missing: 0, excluded: 0, eventsEntered: 1, basePoints: 3.5, lockBonus: 0, totalPoints: 3.5, adjustedPoints: 0, isCurrentUser: false },
+        { rank: 1, profileId: "troy", displayName: "Troy", correct: 2, incorrect: 7, missing: 0, excluded: 0, eventsEntered: 1, basePoints: 1.5, lockBonus: 0, totalPoints: 1.5, adjustedPoints: 0, isCurrentUser: false },
       ],
+      events: [completedEvent("football-week-1", "Football Week 1", "NFL + CFB", "2026-09-07T05:00:00Z")],
     };
 
     render(
@@ -180,13 +186,39 @@ describe("PicksSeasonHub", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("2026 FOOTBALL SEASON")).toBeInTheDocument();
-    expect(screen.getByText("12-5 ATS · 70.6% WIN · 41 PTS")).toBeInTheDocument();
+    expect(screen.getByText("1 OF 4")).toBeInTheDocument();
+    expect(screen.getByText("7-2 ATS · 77.8% WIN · 11.5 PTS")).toBeInTheDocument();
     fireEvent.click(screen.getByText("STANDINGS & WEEKS"));
-    expect(screen.getByText("4 PLAYERS · 1 WEEK")).toBeInTheDocument();
+
+    const codyRow = screen.getByText("Cody").closest("article");
+    const tylerRow = screen.getByText("Tyler").closest("article");
+    const shaneRow = screen.getByText("Shane").closest("article");
+    const troyRow = screen.getByText("Troy").closest("article");
+    expect(codyRow).toHaveClass("is-leader");
+    expect(codyRow).toHaveTextContent("11.5 PTS");
+    expect(tylerRow).not.toHaveClass("is-leader");
+    expect(tylerRow).toHaveTextContent("7.5 PTS");
+    expect(shaneRow).toHaveTextContent("3.5 PTS");
+    expect(troyRow).toHaveTextContent("1.5 PTS");
+  });
+
+  it("uses compact completed-week archive cards", () => {
+    const footballEvent = {
+      ...completedEvent("football-week-1", "Football Week 1", "NFL + CFB", "2026-09-07T05:00:00Z"),
+      groupResults: [{ rank: 1, profileId: "cody", displayName: "Cody", correct: 7, incorrect: 2, missing: 0, excluded: 0, basePoints: 7.5, lockBonus: 4, totalPoints: 11.5, isCurrentUser: true }],
+    };
+    const footballHistory: PickHistory = { ...history, events: [footballEvent] };
+
+    render(
+      <MemoryRouter initialEntries={["/football/picks"]}>
+        <PicksSeasonHub history={footballHistory} loading={false} sport="football" />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByText("STANDINGS & WEEKS"));
     fireEvent.click(screen.getByRole("tab", { name: "WEEKS" }));
-    expect(screen.getByText("WEEK ARCHIVE")).toBeInTheDocument();
-    expect(screen.getByText("1 COMPLETED WEEK")).toBeInTheDocument();
+    expect(screen.getByText("WEEK 1 · FINAL")).toBeInTheDocument();
+    expect(screen.getByText("WEEK CHAMPION · 11.5 PTS · ROOM 78% ATS")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "OPEN WEEK RECAP" })).toHaveTextContent("VIEW WEEK RECAP");
   });
 

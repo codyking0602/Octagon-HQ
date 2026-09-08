@@ -12,6 +12,7 @@ export interface PickGroupPick {
   displayName: string;
   pickedFighterSlug: string | null;
   isCurrentUser: boolean;
+  isLock?: boolean;
 }
 
 export interface PickWatchMoment {

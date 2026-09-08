@@ -31,9 +31,9 @@ const event = {
 function runtime(overrides: Record<string, unknown> = {}) {
   return {
     configured: true, loading: false, groupProgressLoading: false, savingBoutId: null, savingLock: false,
-    error: "", groupProgressError: "", event, selections: {}, footballLocks: {}, groupProgress: [], underdogLock: null,
-    summary: {}, history: { season: null, summary: {}, events: [] }, refresh: vi.fn(), setPick, setFootballLock,
-    setUnderdogLock: vi.fn(), clearUnderdogLock: vi.fn(), ...overrides,
+    savingFootballFutures: false, error: "", groupProgressError: "", event, selections: {}, footballLocks: {}, footballFutures: null,
+    groupProgress: [], underdogLock: null, summary: {}, history: { season: null, summary: {}, events: [] }, refresh: vi.fn(), setPick, setFootballLock,
+    saveFootballFutures: vi.fn(async () => undefined), setUnderdogLock: vi.fn(), clearUnderdogLock: vi.fn(), ...overrides,
   };
 }
 
@@ -164,7 +164,7 @@ describe("FootballPicksPage", () => {
     expect(screen.queryByRole("button", { name: "Make Lock Texas Longhorns" })).not.toBeInTheDocument();
   });
 
-  it("keeps the football season hub visible when there is no active slate", () => {
+  it("keeps the football season hub and persisted Futures visible when there is no active slate", () => {
     const completed = {
       eventId: "football-week-1",
       name: "Football Week 1",
@@ -191,13 +191,27 @@ describe("FootballPicksPage", () => {
       }],
       events: [completed],
     };
-    vi.mocked(usePicks).mockReturnValue(runtime({ event: null, history }) as never);
+    const footballFutures = {
+      season: 2026,
+      locked: true,
+      lockAt: "2026-09-03T16:00:00Z",
+      ownPicks: null,
+      groupPicks: [],
+    };
+    vi.mocked(usePicks).mockReturnValue(runtime({ event: null, history, footballFutures }) as never);
 
-    render(<MemoryRouter initialEntries={["/football/picks"]}><FootballPicksPage /></MemoryRouter>);
+    const { container } = render(<MemoryRouter initialEntries={["/football/picks"]}><FootballPicksPage /></MemoryRouter>);
 
     expect(screen.getByText("This week’s slate is being set.")).toBeInTheDocument();
     expect(screen.getByText("2026 FOOTBALL SEASON")).toBeInTheDocument();
     expect(screen.getByText("4-2 ATS · 66.7% WIN · 6 PTS")).toBeInTheDocument();
     expect(screen.getByText("STANDINGS & WEEKS")).toBeInTheDocument();
+    expect(screen.getByText("SEASON FUTURES")).toBeInTheDocument();
+    expect(screen.getByText("LOCKED · GROUP REVEALED")).toBeInTheDocument();
+    const seasonHub = container.querySelector(".picks-season-section");
+    const futures = container.querySelector(".football-futures");
+    expect(seasonHub).not.toBeNull();
+    expect(futures).not.toBeNull();
+    expect(Boolean(seasonHub && futures && (seasonHub.compareDocumentPosition(futures) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
   });
 });
