@@ -31,6 +31,7 @@ export interface TwentyQuestionsUniverse {
 export const TWENTY_QUESTIONS_LIMIT = 10;
 export const TWENTY_QUESTIONS_START_SCORE = 100;
 export const TWENTY_QUESTIONS_WRONG_GUESS_PENALTY = 10;
+export const TWENTY_QUESTIONS_ENDGAME_THRESHOLD = 5;
 export const TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT = 12;
 
 export function twentyQuestionsScoreImpact(cost: TwentyQuestionsQuestionCost) {
@@ -110,8 +111,8 @@ function inferredRecommendationFamily(question: TwentyQuestionsQuestion) {
 
 /**
  * Human deduction value is the first ranking lane during normal play. Once the
- * pool is small enough to be a direct final-guess board, exact live separation
- * takes priority so Recommended actively finishes the current candidate set.
+ * pool is down to five identities, exact live separation takes priority so
+ * Recommended actively finishes the current candidate set.
  */
 export function twentyQuestionsRecommendedQuestions(
   questions: readonly TwentyQuestionsQuestion[],
@@ -119,7 +120,7 @@ export function twentyQuestionsRecommendedQuestions(
   limit = 5,
 ) {
   if (limit <= 0 || remainingSubjects.length <= 1) return [];
-  const endgame = remainingSubjects.length <= TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT;
+  const endgame = remainingSubjects.length <= TWENTY_QUESTIONS_ENDGAME_THRESHOLD;
   const ranked = twentyQuestionsEligibleQuestions(questions, remainingSubjects)
     .map((question) => {
       const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
