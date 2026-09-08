@@ -5,6 +5,7 @@ import {
   TWENTY_QUESTIONS_START_SCORE,
   twentyQuestionsEligibleQuestions,
   twentyQuestionsFinalScore,
+  twentyQuestionsRecommendedQuestions,
   twentyQuestionsScoreAfterQuestion,
   twentyQuestionsScoreAfterWrongGuess,
   type TwentyQuestionsQuestion,
@@ -14,7 +15,7 @@ import {
 import type { TwentyQuestionsRound } from "../games/twentyQuestionsRuntime";
 
 type Phase = "start" | "playing" | "result";
-type ResultState = "correct" | "incorrect";
+type ResultState = "correct" | "incorrect" | "forfeit";
 
 type AskedQuestion = {
   question: TwentyQuestionsQuestion;
@@ -94,32 +95,6 @@ function remainingSubjectsForAnswers(
   ));
 }
 
-function rankRecommendedQuestions(
-  questions: readonly TwentyQuestionsQuestion[],
-  remainingSubjects: readonly TwentyQuestionsSubject[],
-) {
-  if (remainingSubjects.length <= 1) return [];
-  return [...questions]
-    .map((question) => {
-      const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
-      const no = remainingSubjects.length - yes;
-      return {
-        question,
-        usefulSplit: Math.min(yes, no),
-        imbalance: Math.abs(yes - no),
-      };
-    })
-    .filter((entry) => entry.usefulSplit > 0)
-    .sort((left, right) => (
-      right.usefulSplit - left.usefulSplit
-      || left.imbalance - right.imbalance
-      || left.question.internalCost - right.question.internalCost
-      || left.question.label.localeCompare(right.question.label)
-    ))
-    .slice(0, RECOMMENDED_QUESTION_LIMIT)
-    .map((entry) => entry.question);
-}
-
 interface TwentyQuestionsPageProps {
   sport: TwentyQuestionsSport;
   createRound: () => TwentyQuestionsRound;
@@ -155,7 +130,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     [remainingSubjects, unaskedQuestions],
   );
   const recommendedQuestions = useMemo(
-    () => rankRecommendedQuestions(eligibleQuestions, remainingSubjects),
+    () => twentyQuestionsRecommendedQuestions(eligibleQuestions, remainingSubjects, RECOMMENDED_QUESTION_LIMIT),
     [eligibleQuestions, remainingSubjects],
   );
   const recommendedQuestionIds = useMemo(
@@ -254,6 +229,14 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     setSelectedGuess(null);
   }
 
+  function forfeitRound() {
+    if (phase !== "playing") return;
+    setResultState("forfeit");
+    setPhase("result");
+    setGuessOpen(false);
+    setGuessNotice(null);
+  }
+
   function renderQuestionButton(question: TwentyQuestionsQuestion) {
     return (
       <button type="button" key={question.id} onClick={() => askQuestion(question)}>
@@ -299,7 +282,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
             <p>
               Ask up to 10 factual Yes/No questions, or guess the identity at any time.
               Every question shows exactly how many score points it will cost before you ask it.
-              After question 10, you must make one final guess.
+              After question 10, you must guess or reveal the answer.
             </p>
             <div className="twenty-questions-rules" aria-label="20 Questions scoring rules">
               <span><strong>100</strong> starting score</span>
@@ -334,10 +317,10 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                     <p className="eyebrow">{finalGuessRequired ? "FINAL GUESS" : "GUESS ANYTIME"}</p>
                     <h2>{finalGuessRequired ? "10 questions used. Who is it?" : "Who is it?"}</h2>
                   </div>
-                  <span>{finalGuessRequired ? "Required to finish · wrong guess −10 pts" : "Wrong guess −10 pts"}</span>
+                  <span>{finalGuessRequired ? "Guess or reveal the answer · wrong guess −10 pts" : "Wrong guess −10 pts"}</span>
                 </div>
                 {finalGuessRequired ? (
-                  <p className="twenty-questions-final-guess-copy">You get one last guess before the identity is revealed.</p>
+                  <p className="twenty-questions-final-guess-copy">You get one last guess, or you can reveal the hidden identity.</p>
                 ) : null}
                 <input
                   value={guessSearch}
@@ -368,6 +351,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                   <button className="twenty-questions-primary" type="button" onClick={submitGuess}>GUESS {selectedGuess.name.toUpperCase()}</button>
                 ) : null}
                 {guessNotice ? <p className="twenty-questions-wrong-guess" role="status">{guessNotice}</p> : null}
+                <button className="twenty-questions-more" type="button" onClick={forfeitRound}>FORFEIT / REVEAL ANSWER</button>
               </section>
             ) : null}
 
@@ -423,7 +407,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                     <section className="twenty-questions-category twenty-questions-recommended" aria-labelledby="twenty-questions-recommended-title">
                       <div className="twenty-questions-category__heading">
                         <div>
-                          <p className="eyebrow">BEST SPLITS RIGHT NOW</p>
+                          <p className="eyebrow">BEST CLUES RIGHT NOW</p>
                           <h3 id="twenty-questions-recommended-title">Recommended</h3>
                         </div>
                         <span>{recommendedQuestions.length}</span>
@@ -434,7 +418,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                         </div>
                       ) : (
                         <p className="twenty-questions-empty">
-                          {remainingSubjects.length <= 1 ? "One identity remains. Take your guess." : "No remaining question cleanly splits the current pool."}
+                          {remainingSubjects.length <= 1 ? "One identity remains. Guess or reveal the answer." : "No remaining question cleanly splits the current pool."}
                         </p>
                       )}
                     </section>
@@ -494,9 +478,13 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
 
         {phase === "result" ? (
           <section className="twenty-questions-result">
-            <p className="eyebrow">{resultState === "correct" ? "SOLVED" : "NOT SOLVED"}</p>
+            <p className="eyebrow">{resultState === "correct" ? "SOLVED" : resultState === "forfeit" ? "FORFEITED" : "NOT SOLVED"}</p>
             <h2>{round.hiddenSubject.name}</h2>
-            <p>{resultState === "correct" ? "You found the hidden identity." : "Your final guess missed. This was the hidden identity."}</p>
+            <p>{resultState === "correct"
+              ? "You found the hidden identity."
+              : resultState === "forfeit"
+                ? "You revealed the hidden identity."
+                : "Your final guess missed. This was the hidden identity."}</p>
             <div className="twenty-questions-result__score-block">
               <div className="twenty-questions-result__score">{finalScore}</div>
               <small>FINAL SCORE</small>
