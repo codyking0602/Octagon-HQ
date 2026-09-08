@@ -31,6 +31,14 @@ function familyForQuestion(question) {
   return parts.length > 1 ? parts.slice(0, -1).join(":") : question.id;
 }
 
+function initialFamilyQuestionLimit(family) {
+  if (family === "role") return 2;
+  if (family === "position") return 10;
+  if (family === "position-family") return 3;
+  if (["franchise", "program", "player-college", "player-program", "historical-conference"].includes(family)) return 12;
+  return MAX_INITIAL_QUESTIONS_PER_FAMILY;
+}
+
 function isEndgameFingerprintQuestion(question) {
   const id = question.id.toLowerCase();
   return id.includes("-fine:") || id.startsWith("coach:losses:");
@@ -151,7 +159,7 @@ function selectRuntimeQuestions(universe) {
     while (categorySelection.length < CATEGORY_LIMIT) {
       let added = false;
       for (const [family, bucket] of familyOrder) {
-        if ((familyCounts.get(family) ?? 0) >= MAX_INITIAL_QUESTIONS_PER_FAMILY) continue;
+        if ((familyCounts.get(family) ?? 0) >= initialFamilyQuestionLimit(family)) continue;
         const next = bucket.shift();
         if (!next) continue;
         categorySelection.push(next);
