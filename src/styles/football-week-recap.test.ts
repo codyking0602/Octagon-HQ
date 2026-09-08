@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const css = readFileSync(fileURLToPath(new URL("./football-week-recap.css", import.meta.url)), "utf8");
+const css = readFileSync(resolve(process.cwd(), "src/styles/football-week-recap.css"), "utf8");
 
 describe("football week recap styles", () => {
   it("uses Football blue for recap chrome and keeps red semantic-only", () => {
