@@ -4,6 +4,7 @@ import cfbTeamSeasonsJson from "../../../data/generated/football/relationships/c
 import nflPlayerSeasonsJson from "../../../data/generated/football/nfl/player-seasons-1999-2025.json";
 import nflCoachSeasonsJson from "../../../data/generated/football/relationships/nfl-coach-seasons-1999-2025.json";
 import type { FootballSourceIdentityKey } from "./footballSubjectEligibility";
+import { footballHistoricalConferenceForProgram } from "./footballTeamSchoolMetadata";
 
 interface ColumnarTable {
   columns: readonly string[];
@@ -15,6 +16,7 @@ interface AffiliationSubject {
   kind: string;
   league: "NFL" | "CFB";
   name: string;
+  school?: string;
   startSeason?: number;
   endSeason?: number;
   sourceIdentityKeys?: readonly FootballSourceIdentityKey[];
@@ -30,8 +32,10 @@ export interface FootballCareerAffiliationHistory {
   seasons: readonly FootballCareerAffiliationSeason[];
   affiliations: readonly string[];
   conferences: readonly string[];
-  /** True only when the source owns every season in the subject's stated career window. */
+  /** True only when the source owns every team/program season in the subject's stated career window. */
   complete: boolean;
+  /** True only when every season in the stated CFB career window has an era-correct conference owner. */
+  conferenceComplete: boolean;
 }
 
 function indexesFor(table: ColumnarTable) {
@@ -84,9 +88,35 @@ function hasCompleteWindow(subject: AffiliationSubject, seasons: readonly Footba
   return true;
 }
 
-function finishHistory(subject: AffiliationSubject, seasons: readonly FootballCareerAffiliationSeason[]) {
+function hasCompleteConferenceWindow(subject: AffiliationSubject, seasons: readonly FootballCareerAffiliationSeason[]) {
+  if (subject.league !== "CFB" || subject.startSeason == null || subject.endSeason == null || subject.endSeason < subject.startSeason) return false;
+  const bySeason = new Map<number, FootballCareerAffiliationSeason[]>();
+  for (const row of seasons) {
+    const rows = bySeason.get(row.season) ?? [];
+    rows.push(row);
+    bySeason.set(row.season, rows);
+  }
+  for (let season = subject.startSeason; season <= subject.endSeason; season += 1) {
+    const rows = bySeason.get(season);
+    if (!rows?.length || rows.some((row) => !row.conference)) return false;
+  }
+  return true;
+}
+
+function withHistoricalConference(row: FootballCareerAffiliationSeason) {
+  if (row.conference) return row;
+  const conference = footballHistoricalConferenceForProgram(row.affiliation, row.season);
+  return conference ? { ...row, conference } : row;
+}
+
+function finishHistory(
+  subject: AffiliationSubject,
+  seasons: readonly FootballCareerAffiliationSeason[],
+  sourceComplete = hasCompleteWindow(subject, seasons),
+) {
   const deduped = [...new Map(
     [...seasons]
+      .map(withHistoricalConference)
       .sort((a, b) => a.season - b.season || a.affiliation.localeCompare(b.affiliation))
       .map((row) => [`${row.season}:${normalized(row.affiliation)}`, row]),
   ).values()];
@@ -94,7 +124,8 @@ function finishHistory(subject: AffiliationSubject, seasons: readonly FootballCa
     seasons: deduped,
     affiliations: [...new Set(deduped.map((row) => row.affiliation))].sort(),
     conferences: [...new Set(deduped.map((row) => row.conference).filter((conference): conference is string => Boolean(conference)))].sort(),
-    complete: hasCompleteWindow(subject, deduped),
+    complete: sourceComplete,
+    conferenceComplete: hasCompleteConferenceWindow(subject, deduped),
   } satisfies FootballCareerAffiliationHistory;
 }
 
@@ -147,6 +178,8 @@ function buildCoachIndex(table: ColumnarTable, league: "NFL" | "CFB") {
     if (!coachKey || season == null || !affiliation) continue;
     const conference = league === "CFB"
       ? cfbConferenceBySeasonAndProgram.get(`${season}:${normalized(affiliation)}`)
+        ?? footballHistoricalConferenceForProgram(affiliation, season)
+        ?? undefined
       : undefined;
     pushIndex(result, coachKey, { season, affiliation, ...(conference ? { conference } : {}) });
   }
@@ -158,13 +191,29 @@ const cfbPlayerSeasonsById = buildPlayerIndex(cfbPlayerSeasonsJson as ColumnarTa
 const nflCoachSeasonsByKey = buildCoachIndex(nflCoachSeasonsJson as ColumnarTable, "NFL");
 const cfbCoachSeasonsByKey = buildCoachIndex(cfbCoachSeasonsJson as ColumnarTable, "CFB");
 
+function historicalSchoolFallback(subject: AffiliationSubject) {
+  if (subject.league !== "CFB" || !subject.school || subject.startSeason == null || subject.endSeason == null) return [];
+  const rows: FootballCareerAffiliationSeason[] = [];
+  for (let season = subject.startSeason; season <= subject.endSeason; season += 1) {
+    const conference = footballHistoricalConferenceForProgram(subject.school, season);
+    if (!conference) return [];
+    rows.push({ season, affiliation: subject.school, conference });
+  }
+  return rows;
+}
+
 function playerHistory(subject: AffiliationSubject) {
   const provider = subject.league === "NFL" ? "nflverse" : "cfbfastR";
   const id = sourceIdentity(subject, provider);
-  if (!id) return null;
-  const sourceRows = (subject.league === "NFL" ? nflPlayerSeasonsById : cfbPlayerSeasonsById).get(id) ?? [];
+  const sourceRows = id ? (subject.league === "NFL" ? nflPlayerSeasonsById : cfbPlayerSeasonsById).get(id) ?? [] : [];
   const seasons = sourceRows.filter((row) => withinCareerWindow(subject, row.season));
-  return seasons.length ? finishHistory(subject, seasons) : null;
+  if (seasons.length) return finishHistory(subject, seasons);
+
+  // Older CFB player-season feeds do not reach the historical stars in the eligible universe. Use only the canonical
+  // single-school identity to own era-correct conference membership. Keep team/program completeness false so this
+  // fallback can never turn an unknown transfer/affiliation into a negative answer.
+  const historical = historicalSchoolFallback(subject);
+  return historical.length ? finishHistory(subject, historical, false) : null;
 }
 
 function coachHistory(subject: AffiliationSubject) {
@@ -174,9 +223,9 @@ function coachHistory(subject: AffiliationSubject) {
 }
 
 /**
- * Canonical source-backed career affiliation owner for player/coach questions. A missing or incomplete history is
- * intentionally not a negative answer: consumers may use positive observed affiliations, but may answer "No" only
- * when `complete` is true.
+ * Canonical source-backed career affiliation owner for player/coach questions. Missing/incomplete histories are not
+ * negative answers. `complete` owns team/program negatives; `conferenceComplete` separately owns historical CFB
+ * conference negatives so an era-correct conference projection never pretends to know an unobserved transfer.
  */
 export function footballCareerAffiliationHistoryFor(subject: AffiliationSubject): FootballCareerAffiliationHistory | null {
   if (subject.kind === "player-career") return playerHistory(subject);
