@@ -9,12 +9,9 @@ import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { pickBoutLocked, pickProgress, type PickBout } from "./picksModel";
+import { PicksSeasonHub } from "./PicksSeasonHub";
 import { usePicks } from "./PicksProvider";
 import { pickEventPosters } from "./picksEventAssets";
-
-function atsPercent(wins: number, losses: number) {
-  return wins + losses ? `${(wins / (wins + losses) * 100).toFixed(1)}%` : "—";
-}
 
 function gameLineLabel(bout: PickBout) {
   const spread = bout.frozenSpreadHome;
@@ -128,6 +125,9 @@ export default function FootballPicksPage() {
     "--picks-event-poster": `url("${poster.src}")`,
     "--picks-event-poster-aspect": poster.aspectRatio,
   } as CSSProperties) : undefined;
+  const seasonHub = picks.history.events.length ? (
+    <PicksSeasonHub history={picks.history} loading={picks.loading} sport="football" />
+  ) : null;
 
   return (
     <div className={`page football-picks-page${poster ? " has-event-atmosphere" : ""}`} style={visualStyle}>
@@ -139,6 +139,7 @@ export default function FootballPicksPage() {
           <p>{picks.error || "Check back when the frozen ATS lines are published."}</p>
         </section>
       ) : null}
+      {!event ? seasonHub : null}
 
       {event ? (
         <>
@@ -264,23 +265,7 @@ export default function FootballPicksPage() {
           {identity.profile && futuresLocked ? <FootballFuturesCard /> : null}
 
           {identity.profile ? <div className="football-picks-group"><GroupPickProgress event={event} locked={event.status !== "upcoming"} mySelections={picks.selections} /></div> : null}
-          {identity.profile ? (
-            <section className="surface-card football-picks-standings" aria-labelledby="football-championship-title">
-              <header><p className="eyebrow">OPENING WEEK → SUPER BOWL</p><h2 id="football-championship-title">Championship standings</h2></header>
-              <p>Points after each player’s automatic lowest-week drop. ATS record is supporting context.</p>
-              <div role="table" aria-label="Football championship standings">
-                <div role="row"><span>RK</span><span>PLAYER</span><span>PTS</span><span>ATS</span><span>DROP</span></div>
-                {(picks.history.seasonStandings ?? []).map((standing) => (
-                  <div role="row" key={standing.profileId ?? standing.displayName} className={standing.isCurrentUser ? "is-current" : ""}>
-                    <strong>{standing.rank}</strong><span>{standing.displayName}</span><b>{standing.adjustedPoints ?? standing.totalPoints}</b>
-                    <span>{standing.correct}-{standing.incorrect}{standing.pushes ? `-${standing.pushes}` : ""} <small>{atsPercent(standing.correct, standing.incorrect)}</small></span>
-                    <span>{standing.droppedWeekLabel ?? "—"}</span>
-                  </div>
-                ))}
-                {!(picks.history.seasonStandings?.length) ? <p>Standings post after the first graded Football week.</p> : null}
-              </div>
-            </section>
-          ) : null}
+          {seasonHub}
           {picks.error ? <p className="picks-error" role="status">{picks.error}</p> : null}
         </>
       ) : null}
