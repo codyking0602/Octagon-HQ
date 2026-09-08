@@ -1,7 +1,20 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
 import { FOOTBALL_MATCHUP_BREAKDOWNS } from "./footballMatchupBreakdowns";
+import { usePicks } from "./PicksProvider";
+
+vi.mock("./PicksProvider", () => ({ usePicks: vi.fn() }));
+vi.mock("../picks-control/pickControlRepository", () => ({
+  createPickControlRepository: vi.fn(() => ({})),
+}));
+vi.mock("../picks-control/FootballPushControl", () => ({
+  default: () => <button type="button">SEND PUSH</button>,
+}));
+
+beforeEach(() => {
+  vi.mocked(usePicks).mockReturnValue({ event: null } as never);
+});
 
 afterEach(() => {
   window.history.replaceState({}, "", "/");
@@ -69,5 +82,19 @@ describe("FootballMatchupBreakdowns", () => {
     const video = screen.getByRole("link", { name: /Team preview/ });
     expect(video).toHaveAttribute("href", "https://www.youtube.com/watch?v=test");
     expect(video).toHaveTextContent("YOUTUBE");
+  });
+
+  it("keeps SEND PUSH visible in the published Football owner tools even without a matchup breakdown", () => {
+    vi.mocked(usePicks).mockReturnValue({
+      event: {
+        eventId: "football-picks-2026-09-08",
+        sport: "football",
+        canControl: true,
+      },
+    } as never);
+
+    render(<FootballMatchupBreakdowns breakdowns={[]} />);
+
+    expect(screen.getByRole("button", { name: "SEND PUSH" })).toBeInTheDocument();
   });
 });
