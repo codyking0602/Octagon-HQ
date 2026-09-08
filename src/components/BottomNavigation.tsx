@@ -4,8 +4,15 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useSport } from "../app/SportProvider";
+import { FOOTBALL_ENTRY_HIGHLIGHT, FOOTBALL_ENTRY_SLAM } from "./footballEntryMedia";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
+type SportSwitchNavigationIcon = Extract<NavigationIconName, "picks" | "play">;
+type FootballEntryStage = "clip" | "slam";
+type FootballEntryTransition = {
+  section: SportSwitchNavigationIcon;
+  stage: FootballEntryStage;
+};
 
 const baseDestinations = [
   { to: "/", label: "Home", icon: "home", end: true },
@@ -14,7 +21,7 @@ const baseDestinations = [
   { to: "/rankings", label: "Rankings", icon: "rankings", end: false },
 ] as const;
 
-const SECRET_PLAY_TAP_WINDOW_MS = 350;
+const SECRET_SPORT_TAP_WINDOW_MS = 350;
 
 function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
   if (icon === "home") return pathname === "/";
@@ -74,12 +81,16 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const navigate = useNavigate();
   const { selectedSport, setSelectedSport } = useSport();
   const keyboardSessionRef = useRef(false);
-  const lastActivePlayTapRef = useRef(0);
+  const lastActiveSportTapRef = useRef<{ icon: SportSwitchNavigationIcon | null; at: number }>({
+    icon: null,
+    at: 0,
+  });
+  const footballRevealShownRef = useRef(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [footballEntryTransition, setFootballEntryTransition] = useState<FootballEntryTransition | null>(null);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const selectedPlayRoot = selectedSport === "football" ? "/football" : "/play";
   const selectedPicksRoot = selectedSport === "football" ? "/football/picks" : "/picks";
-  const activePlayRoot = footballMode ? "/football" : "/play";
   const standardDestinations = baseDestinations.map((destination) => (
     destination.icon === "play" ? { ...destination, to: selectedPlayRoot }
       : destination.icon === "picks" ? { ...destination, to: selectedPicksRoot }
@@ -133,6 +144,28 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     };
   }, []);
 
+  function switchSportFromActiveTab(icon: SportSwitchNavigationIcon) {
+    if (footballMode) {
+      setSelectedSport("ufc");
+      navigate(icon === "picks" ? "/picks" : "/play");
+      return;
+    }
+
+    setSelectedSport("football");
+    if (!footballRevealShownRef.current) {
+      footballRevealShownRef.current = true;
+      setFootballEntryTransition({ section: icon, stage: "clip" });
+    }
+    navigate(icon === "picks" ? "/football/picks" : "/football");
+  }
+
+  function advanceFootballEntryTransition() {
+    setFootballEntryTransition((current) => {
+      if (!current) return current;
+      return current.stage === "clip" ? { ...current, stage: "slam" } : null;
+    });
+  }
+
   const navigation = (
     <nav
       className={`bottom-nav${keyboardOpen ? " is-keyboard-open" : ""}`}
@@ -149,24 +182,20 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
           to={destination.to}
           end={destination.end}
           onClick={(event) => {
-            if (destination.icon === "play") {
-              const activePlay = location.pathname === activePlayRoot || location.pathname.startsWith(`${activePlayRoot}/`);
-              if (activePlay) {
-                const now = Date.now();
-                if (now - lastActivePlayTapRef.current <= SECRET_PLAY_TAP_WINDOW_MS) {
-                  event.preventDefault();
-                  lastActivePlayTapRef.current = 0;
-                  if (footballMode) {
-                    setSelectedSport("ufc");
-                    navigate("/play");
-                  } else {
-                    setSelectedSport("football");
-                    navigate("/football", { state: { footballEntry: true } });
-                  }
-                  return;
-                }
-                lastActivePlayTapRef.current = now;
+            const sportSwitchIcon = destination.icon === "play" || destination.icon === "picks"
+              ? destination.icon
+              : null;
+
+            if (sportSwitchIcon && routeOwnsNavigationItem(sportSwitchIcon, location.pathname)) {
+              const now = Date.now();
+              const lastTap = lastActiveSportTapRef.current;
+              if (lastTap.icon === sportSwitchIcon && now - lastTap.at <= SECRET_SPORT_TAP_WINDOW_MS) {
+                event.preventDefault();
+                lastActiveSportTapRef.current = { icon: null, at: 0 };
+                switchSportFromActiveTab(sportSwitchIcon);
+                return;
               }
+              lastActiveSportTapRef.current = { icon: sportSwitchIcon, at: now };
             }
 
             if (location.pathname !== destination.to) return;
@@ -187,5 +216,34 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     </nav>
   );
 
-  return createPortal(navigation, document.body);
+  const entryTransition = footballEntryTransition ? (
+    <div
+      className={`football-entry-transition football-entry-transition--${footballEntryTransition.stage}`}
+      data-testid="football-entry-transition"
+      role="presentation"
+    >
+      <video
+        key={`${footballEntryTransition.section}:${footballEntryTransition.stage}`}
+        className="football-entry-transition__video"
+        src={footballEntryTransition.stage === "clip"
+          ? FOOTBALL_ENTRY_HIGHLIGHT[footballEntryTransition.section]
+          : FOOTBALL_ENTRY_SLAM}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+        onEnded={advanceFootballEntryTransition}
+        onError={advanceFootballEntryTransition}
+      />
+    </div>
+  ) : null;
+
+  return createPortal(
+    <>
+      {navigation}
+      {entryTransition}
+    </>,
+    document.body,
+  );
 }

@@ -26,6 +26,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   if (originalInnerHeight) Object.defineProperty(window, "innerHeight", originalInnerHeight);
   else Reflect.deleteProperty(window, "innerHeight");
   if (originalVisualViewport) Object.defineProperty(window, "visualViewport", originalVisualViewport);
@@ -53,8 +54,7 @@ function installVisualViewport() {
 
 function LocationProbe() {
   const location = useLocation();
-  const footballEntry = Boolean((location.state as { footballEntry?: boolean } | null)?.footballEntry);
-  return <output data-testid="location">{location.pathname}|{footballEntry ? "entry" : "plain"}</output>;
+  return <output data-testid="location">{location.pathname}</output>;
 }
 
 function renderNavigation(initialEntries: string[] = ["/"], children: ReactNode = null) {
@@ -195,17 +195,91 @@ describe("BottomNavigation", () => {
     expect(navigation).toHaveStyle({ display: "grid" });
   });
 
-  it("enters Football only after a second tap on the active Play tab", () => {
+  it("reveals Football Play with Vince Young and then the shared HQ slam", () => {
     installVisualViewport();
     renderNavigation(["/play"], <LocationProbe />);
 
     const play = screen.getByRole("link", { name: "Play" });
     fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
+    expect(screen.getByTestId("location")).toHaveTextContent("/play");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
 
     fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football|entry");
+    expect(screen.getByTestId("location")).toHaveTextContent("/football");
+    let video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    expect(video).toHaveAttribute("src", "/assets/football/vince-young-championship-run.mp4");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+
+    fireEvent.ended(video);
+    video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    expect(video).toHaveAttribute("src", "/assets/football/football-hq-slam.mp4");
+
+    fireEvent.ended(video);
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+  });
+
+  it("reveals Football Picks with Zeke and then the shared HQ slam", () => {
+    installVisualViewport();
+    renderNavigation(["/picks"], <LocationProbe />);
+
+    const picks = screen.getByRole("link", { name: "Picks" });
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/picks");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks");
+    let video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    expect(video.getAttribute("src")).toMatch(/^data:video\/mp4;base64,AAAAIGZ0/);
+    expect(video.getAttribute("src")?.length).toBeGreaterThan(20_000);
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+
+    fireEvent.ended(video);
+    video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    expect(video).toHaveAttribute("src", "/assets/football/football-hq-slam.mp4");
+
+    fireEvent.ended(video);
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+  });
+
+  it("does not replay the cinematic during the same app session", () => {
+    installVisualViewport();
+    renderNavigation(["/play"], <LocationProbe />);
+
+    let play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    fireEvent.click(play);
+    let video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    fireEvent.ended(video);
+    video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    fireEvent.ended(video);
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+
+    play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/play");
+
+    play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+  });
+
+  it("double-taps the active Football Picks tab back to UFC", () => {
+    installVisualViewport();
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    renderNavigation(["/football/picks"], <LocationProbe />);
+
+    const picks = screen.getByRole("link", { name: "Picks" });
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks");
+
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/picks");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 
   it("double-taps the active Football Play tab back to UFC", () => {
@@ -215,10 +289,11 @@ describe("BottomNavigation", () => {
 
     const play = screen.getByRole("link", { name: "Play" });
     fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football|plain");
+    expect(screen.getByTestId("location")).toHaveTextContent("/football");
 
     fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
+    expect(screen.getByTestId("location")).toHaveTextContent("/play");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 });
