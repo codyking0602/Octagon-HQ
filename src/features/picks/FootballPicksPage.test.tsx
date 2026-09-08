@@ -163,4 +163,41 @@ describe("FootballPicksPage", () => {
     expect(screen.queryByText(/LOCKS 0 \/ 1/)).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Make Lock Texas Longhorns" })).not.toBeInTheDocument();
   });
+
+  it("keeps the football season hub visible when there is no active slate", () => {
+    const completed = {
+      eventId: "football-week-1",
+      name: "Football Week 1",
+      subtitle: "NFL + CFB",
+      venue: "Multiple venues",
+      location: "Nationwide",
+      startsAt: "2026-09-03T16:00:00Z",
+      season: 2026,
+      completedAt: "2026-09-07T05:00:00Z",
+      record: { correct: 4, incorrect: 2, missing: 0, excluded: 0, basePoints: 4, lockBonus: 2, totalPoints: 6 },
+      underdogLock: null,
+      bouts: [],
+      groupResults: [{
+        rank: 1, profileId: "me", displayName: "Cody", correct: 4, incorrect: 2, missing: 0, excluded: 0,
+        basePoints: 4, lockBonus: 2, totalPoints: 6, isCurrentUser: true,
+      }],
+    };
+    const history = {
+      season: 2026,
+      summary: { correct: 4, incorrect: 2, missing: 0, excluded: 0, eventsEntered: 1, basePoints: 4, lockBonus: 2, totalPoints: 6 },
+      seasonStandings: [{
+        rank: 1, profileId: "me", displayName: "Cody", correct: 4, incorrect: 2, missing: 0, excluded: 0,
+        eventsEntered: 1, basePoints: 4, lockBonus: 2, totalPoints: 6, adjustedPoints: 6, isCurrentUser: true,
+      }],
+      events: [completed],
+    };
+    vi.mocked(usePicks).mockReturnValue(runtime({ event: null, history }) as never);
+
+    render(<MemoryRouter initialEntries={["/football/picks"]}><FootballPicksPage /></MemoryRouter>);
+
+    expect(screen.getByText("This week’s slate is being set.")).toBeInTheDocument();
+    expect(screen.getByText("2026 FOOTBALL SEASON")).toBeInTheDocument();
+    expect(screen.getByText("4-2 ATS · 66.7% WIN · 6 PTS")).toBeInTheDocument();
+    expect(screen.getByText("STANDINGS & WEEKS")).toBeInTheDocument();
+  });
 });
