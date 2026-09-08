@@ -17,7 +17,7 @@ describe("Football pick auto-settlement ownership", () => {
   });
 
   it("exposes final scores without creating a second cron invocation", () => {
-    const migration = rootFile("supabase/migrations/20260908133000_football_pick_auto_settlement.sql");
+    const migration = rootFile("supabase/migrations/202612310086_football_pick_auto_settlement.sql");
 
     expect(migration).toContain("'home_final_score', bout.home_final_score");
     expect(migration).toContain("'away_final_score', bout.away_final_score");
