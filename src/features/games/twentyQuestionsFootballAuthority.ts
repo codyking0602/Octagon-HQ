@@ -1,4 +1,3 @@
-import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
 import { getFootballFactualRecord } from "../back-room/footballFactualStatsCore";
 import {
   getFootballSubject,
@@ -6,6 +5,7 @@ import {
   type FootballSubjectProfile,
 } from "../back-room/footballSubjectRegistry";
 import {
+  selectTwentyQuestionsQuestionBank,
   twentyQuestionsCostForSplit,
   type TwentyQuestionsQuestion,
   type TwentyQuestionsSubject,
@@ -110,24 +110,6 @@ function numericFact(person: Person, metricId: string) {
   return unique.length === 1 ? unique[0]! : null;
 }
 
-function careerAffiliations(person: Person) {
-  const records = roleRecords(person);
-  const histories = records.map((record) => footballCareerAffiliationHistoryFor(record)).filter((history) => history != null);
-  if (!histories.length) return null;
-  return {
-    affiliations: [...new Set(histories.flatMap((history) => history.affiliations))],
-    conferences: [...new Set(histories.flatMap((history) => history.conferences))],
-    complete: histories.length === records.length && histories.every((history) => history.complete),
-  };
-}
-
-function affiliationAnswer(person: Person, value: string, field: "affiliations" | "conferences"): Answer {
-  const history = careerAffiliations(person);
-  if (!history) return null;
-  if (history[field].includes(value)) return true;
-  return history.complete ? false : null;
-}
-
 function factualDepthForCandidate(candidate: PersonCandidate, role: Role) {
   const person: Person = { ...candidate, role };
   const metrics = new Set(roleRecords(person).flatMap((record) => getFootballFactualRecord(record.id)?.facts.map((fact) => fact.metricId) ?? []));
@@ -135,9 +117,6 @@ function factualDepthForCandidate(candidate: PersonCandidate, role: Role) {
   if (roleWindow(person)) score += 30;
   if (role === "player" && rolePosition(person)) score += 20;
   if (role === "player" && roleSchool(person)) score += 20;
-  const affiliations = careerAffiliations(person);
-  if (affiliations?.affiliations.length) score += 10;
-  if (affiliations?.complete) score += 20;
   return score;
 }
 
@@ -233,13 +212,6 @@ function buildPredicates(league: FootballTwentyQuestionsLeague, pool: readonly P
   const playerSchools = new Set(pool.flatMap((person) => person.role === "player" && roleSchool(person) ? [roleSchool(person)!] : []));
   for (const school of playerSchools) add(league === "CFB" ? "player-program" : "player-college", school, (person) => person.role !== "player" ? false : roleSchool(person) == null ? null : roleSchool(person) === school);
 
-  const affiliationValues = new Set(pool.flatMap((person) => careerAffiliations(person)?.affiliations ?? []));
-  for (const affiliation of affiliationValues) add(league === "NFL" ? "franchise" : "program", affiliation, (person) => affiliationAnswer(person, affiliation, "affiliations"));
-  if (league === "CFB") {
-    const conferenceValues = new Set(pool.flatMap((person) => careerAffiliations(person)?.conferences ?? []));
-    for (const conference of conferenceValues) add("historical-conference", conference, (person) => affiliationAnswer(person, conference, "conferences"));
-  }
-
   for (const position of playerPositions) {
     const thresholds = league === "NFL" ? Array.from({ length: 25 }, (_value, index) => 10 + index * 10) : Array.from({ length: 12 }, (_value, index) => 5 + index * 5);
     for (const threshold of thresholds) add(`production:${position}:games`, String(threshold), (person) => metricThreshold(person, "player", league === "NFL" ? "nfl-career-games" : "cfb-career-games", threshold, [position]));
@@ -290,21 +262,6 @@ function buildPredicates(league: FootballTwentyQuestionsLeague, pool: readonly P
   for (const [family, metricId, thresholds] of coachSpecs) for (const threshold of thresholds) add(family, String(threshold), (person) => metricThreshold(person, "coach", metricId, threshold));
   if (league === "CFB") for (const threshold of [45, 50, 55, 60, 65, 70, 75, 80, 85]) add("coach:career-win-pct", String(threshold), (person) => winPercentageThreshold(person, "coach", "cfb-coach-career-wins", "cfb-coach-career-losses", threshold));
 
-  for (const position of playerPositions) {
-    const fineGameThresholds = league === "NFL" ? Array.from({ length: 350 }, (_value, index) => index + 1) : Array.from({ length: 60 }, (_value, index) => index + 1);
-    for (const threshold of fineGameThresholds) add(`production:${position}:games-fine`, String(threshold), (person) => metricThreshold(person, "player", league === "NFL" ? "nfl-career-games" : "cfb-career-games", threshold, [position]));
-  }
-  if (league === "NFL") {
-    for (const cutoff of Array.from({ length: 15 }, (_value, index) => 1955 + index * 5)) {
-      add("coach:era-fine", `started-before-${cutoff}`, (person) => person.role !== "coach" ? false : roleWindow(person) == null ? null : roleWindow(person)!.start < cutoff);
-      add("coach:era-fine", `ended-before-${cutoff}`, (person) => person.role !== "coach" ? false : roleWindow(person) == null ? null : roleWindow(person)!.end < cutoff);
-    }
-    for (const years of Array.from({ length: 15 }, (_value, index) => 2 + index * 2)) add("coach:longevity-fine", `${years}-plus-seasons`, (person) => person.role !== "coach" ? false : roleWindow(person) == null ? null : roleWindow(person)!.end - roleWindow(person)!.start + 1 >= years);
-  } else {
-    for (const threshold of Array.from({ length: 57 }, (_value, index) => 20 + index * 5)) add("coach:wins-fine", String(threshold), (person) => metricThreshold(person, "coach", "cfb-coach-career-wins", threshold));
-    for (const threshold of Array.from({ length: 39 }, (_value, index) => 10 + index * 5)) add("coach:losses-fine", String(threshold), (person) => metricThreshold(person, "coach", "cfb-coach-career-losses", threshold));
-    for (const threshold of Array.from({ length: 21 }, (_value, index) => 40 + index * 2.5)) add("coach:career-win-pct-fine", String(threshold), (person) => winPercentageThreshold(person, "coach", "cfb-coach-career-wins", "cfb-coach-career-losses", threshold));
-  }
   return rows;
 }
 
@@ -333,13 +290,10 @@ const metricLabels: Record<string, string> = {
   "coach:best-win-pct": "best-season win percentage since 1999",
   "coach:postseason": "postseason résumé points since 1999",
   "coach:wins": "career head-coaching wins",
-  "coach:wins-fine": "career head-coaching wins",
   "coach:losses": "career head-coaching losses",
-  "coach:losses-fine": "career head-coaching losses",
   "coach:national-titles": "national titles as a head coach",
   "coach:conference-titles": "conference titles as a head coach",
   "coach:career-win-pct": "career head-coaching win percentage",
-  "coach:career-win-pct-fine": "career head-coaching win percentage",
 };
 
 function questionLabel(league: FootballTwentyQuestionsLeague, family: string, id: string) {
@@ -351,14 +305,14 @@ function questionLabel(league: FootballTwentyQuestionsLeague, family: string, id
   if (family === "franchise") return `Did this person play or coach for the ${id}?`;
   if (family === "program") return `Did this person play or coach at ${id}?`;
   if (family === "historical-conference") return `Was this person's college career affiliated with the ${id}?`;
-  if (family.endsWith(":era") || family === "coach:era-fine") {
+  if (family.endsWith(":era")) {
     const role = family.startsWith("player") ? "player" : family.startsWith("coach") ? "coach" : "person";
     if (id.startsWith("active-")) return `Was this ${role} active in the ${id.slice(7)}?`;
     if (id.startsWith("started-before-")) return `Did this ${role}'s career start before ${id.slice(15)}?`;
     if (id.startsWith("ended-before-")) return `Did this ${role}'s career end before ${id.slice(13)}?`;
   }
-  if (family.endsWith(":longevity") || family === "coach:longevity-fine") return `Did this ${family.startsWith("player") ? "player" : "coach"} have a career lasting at least ${id.replace("-plus-seasons", "")} seasons?`;
-  const gameMatch = family.match(/^production:([^:]+):games(?:-fine)?$/);
+  if (family.endsWith(":longevity")) return `Did this ${family.startsWith("player") ? "player" : "coach"} have a career lasting at least ${id.replace("-plus-seasons", "")} seasons?`;
+  const gameMatch = family.match(/^production:([^:]+):games$/);
   if (gameMatch) return `Did this ${gameMatch[1]} play at least ${id} ${league === "NFL" ? "NFL" : "college"} games?`;
   const allProMatch = family.match(/^award:([^:]+):first-team-all-pro$/);
   if (allProMatch) return `Was this ${allProMatch[1]} a first-team All-Pro at least ${id} time${id === "1" ? "" : "s"}?`;
@@ -381,7 +335,7 @@ function buildLiveQuestions(league: FootballTwentyQuestionsLeague, pool: readonl
     const signature = canonicalPartitionSignature(values);
     if (!byPartition.has(signature)) byPartition.set(signature, { predicate, values, yes });
   }
-  return [...byPartition.values()].map(({ predicate, values, yes }) => {
+  const liveCandidates = [...byPartition.values()].map(({ predicate, values, yes }) => {
     const answerById = new Map(pool.map((person, index) => [person.key, values[index]!]));
     return {
       id: `${predicate.family}:${normalize(predicate.id) || predicate.id}`,
@@ -394,6 +348,13 @@ function buildLiveQuestions(league: FootballTwentyQuestionsLeague, pool: readonl
       },
     };
   });
+  const subjects: TwentyQuestionsSubject[] = pool.map((person) => ({
+    id: person.key,
+    name: roleRecords(person)[0]?.name ?? person.records[0]?.name ?? person.key,
+    kind: person.role,
+    league,
+  }));
+  return selectTwentyQuestionsQuestionBank(liveCandidates, subjects);
 }
 
 const cache = new Map<FootballTwentyQuestionsLeague, TwentyQuestionsUniverse>();
