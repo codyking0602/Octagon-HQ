@@ -6,6 +6,7 @@ import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useSport } from "../app/SportProvider";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
+type SportSwitchNavigationIcon = Extract<NavigationIconName, "picks" | "play">;
 
 const baseDestinations = [
   { to: "/", label: "Home", icon: "home", end: true },
@@ -14,7 +15,11 @@ const baseDestinations = [
   { to: "/rankings", label: "Rankings", icon: "rankings", end: false },
 ] as const;
 
-const SECRET_PLAY_TAP_WINDOW_MS = 350;
+const SECRET_SPORT_TAP_WINDOW_MS = 350;
+const FOOTBALL_ENTRY_VIDEO: Record<SportSwitchNavigationIcon, string> = {
+  picks: "/assets/football/football-picks-reveal.mp4",
+  play: "/assets/football/football-play-reveal.mp4",
+};
 
 function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
   if (icon === "home") return pathname === "/";
@@ -74,12 +79,16 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const navigate = useNavigate();
   const { selectedSport, setSelectedSport } = useSport();
   const keyboardSessionRef = useRef(false);
-  const lastActivePlayTapRef = useRef(0);
+  const lastActiveSportTapRef = useRef<{ icon: SportSwitchNavigationIcon | null; at: number }>({
+    icon: null,
+    at: 0,
+  });
+  const footballRevealShownRef = useRef(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [footballEntrySection, setFootballEntrySection] = useState<SportSwitchNavigationIcon | null>(null);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const selectedPlayRoot = selectedSport === "football" ? "/football" : "/play";
   const selectedPicksRoot = selectedSport === "football" ? "/football/picks" : "/picks";
-  const activePlayRoot = footballMode ? "/football" : "/play";
   const standardDestinations = baseDestinations.map((destination) => (
     destination.icon === "play" ? { ...destination, to: selectedPlayRoot }
       : destination.icon === "picks" ? { ...destination, to: selectedPicksRoot }
@@ -133,6 +142,21 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     };
   }, []);
 
+  function switchSportFromActiveTab(icon: SportSwitchNavigationIcon) {
+    if (footballMode) {
+      setSelectedSport("ufc");
+      navigate(icon === "picks" ? "/picks" : "/play");
+      return;
+    }
+
+    setSelectedSport("football");
+    if (!footballRevealShownRef.current) {
+      footballRevealShownRef.current = true;
+      setFootballEntrySection(icon);
+    }
+    navigate(icon === "picks" ? "/football/picks" : "/football");
+  }
+
   const navigation = (
     <nav
       className={`bottom-nav${keyboardOpen ? " is-keyboard-open" : ""}`}
@@ -149,24 +173,20 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
           to={destination.to}
           end={destination.end}
           onClick={(event) => {
-            if (destination.icon === "play") {
-              const activePlay = location.pathname === activePlayRoot || location.pathname.startsWith(`${activePlayRoot}/`);
-              if (activePlay) {
-                const now = Date.now();
-                if (now - lastActivePlayTapRef.current <= SECRET_PLAY_TAP_WINDOW_MS) {
-                  event.preventDefault();
-                  lastActivePlayTapRef.current = 0;
-                  if (footballMode) {
-                    setSelectedSport("ufc");
-                    navigate("/play");
-                  } else {
-                    setSelectedSport("football");
-                    navigate("/football", { state: { footballEntry: true } });
-                  }
-                  return;
-                }
-                lastActivePlayTapRef.current = now;
+            const sportSwitchIcon = destination.icon === "play" || destination.icon === "picks"
+              ? destination.icon
+              : null;
+
+            if (sportSwitchIcon && routeOwnsNavigationItem(sportSwitchIcon, location.pathname)) {
+              const now = Date.now();
+              const lastTap = lastActiveSportTapRef.current;
+              if (lastTap.icon === sportSwitchIcon && now - lastTap.at <= SECRET_SPORT_TAP_WINDOW_MS) {
+                event.preventDefault();
+                lastActiveSportTapRef.current = { icon: null, at: 0 };
+                switchSportFromActiveTab(sportSwitchIcon);
+                return;
               }
+              lastActiveSportTapRef.current = { icon: sportSwitchIcon, at: now };
             }
 
             if (location.pathname !== destination.to) return;
@@ -187,5 +207,27 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     </nav>
   );
 
-  return createPortal(navigation, document.body);
+  const entryTransition = footballEntrySection ? (
+    <div className="football-entry-transition" data-testid="football-entry-transition" role="presentation">
+      <video
+        className="football-entry-transition__video"
+        src={FOOTBALL_ENTRY_VIDEO[footballEntrySection]}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+        onEnded={() => setFootballEntrySection(null)}
+        onError={() => setFootballEntrySection(null)}
+      />
+    </div>
+  ) : null;
+
+  return createPortal(
+    <>
+      {navigation}
+      {entryTransition}
+    </>,
+    document.body,
+  );
 }
