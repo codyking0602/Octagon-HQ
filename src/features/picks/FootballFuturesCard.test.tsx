@@ -41,9 +41,22 @@ describe("FootballFuturesCard", () => {
 
     expect(details).not.toHaveAttribute("open");
     expect(details).toHaveTextContent("Fri, Sep 4, 11:59 PM CT");
+    expect(screen.getByRole("heading", { name: "Pick the season before it starts" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("SEASON FUTURES").closest("summary")!);
     expect(details).toHaveAttribute("open");
+  });
+
+  it("uses season-native copy after Futures have locked and been revealed", () => {
+    const lockedRuntime = runtime();
+    lockedRuntime.footballFutures.locked = true;
+    vi.mocked(usePicks).mockReturnValue(lockedRuntime as never);
+
+    render(<FootballFuturesCard />);
+
+    expect(screen.getByRole("heading", { name: "Your season futures" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Pick the season before it starts" })).not.toBeInTheDocument();
+    expect(screen.getByText("LOCKED · GROUP REVEALED")).toBeInTheDocument();
   });
 
   it("lets a pointer drag start without selecting, then autosaves the clicked conference-aware pick", async () => {
