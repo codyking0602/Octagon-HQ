@@ -6,6 +6,7 @@ import {
   type PickHistory,
   type PickSeasonStanding,
 } from "./picksModel";
+import { FootballWeekRecap } from "./FootballWeekRecap";
 import { LatestEventRecap } from "./LatestEventRecap";
 import { resolvePicksDestination } from "./picksDestination";
 
@@ -99,6 +100,7 @@ export function PicksSeasonHub({
   const football = sport === "football";
   const archiveSingular = football ? "WEEK" : "EVENT";
   const archivePlural = football ? "WEEKS" : "EVENTS";
+  const RecapComponent = football ? FootballWeekRecap : LatestEventRecap;
   const archivedEventIds = useMemo(
     () => history.events.map((event) => event.eventId),
     [history.events],
@@ -186,13 +188,13 @@ export function PicksSeasonHub({
       >
         <summary className="picks-season-hub__summary">
           <div className="picks-season-hub__identity">
-            <span>{season} SEASON</span>
+            <span>{football ? `${season} FOOTBALL SEASON` : `${season} SEASON`}</span>
             <strong id="picks-season-title">{finish}</strong>
             <small>{record.correct}-{record.incorrect} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {recordPoints} PTS</small>
           </div>
           <div className="picks-season-hub__meta">
             <span>{standings.length} {standings.length === 1 ? "PLAYER" : "PLAYERS"}</span>
-            <em>STANDINGS &amp; {archivePlural}</em>
+            {football ? <em>STANDINGS &amp; WEEKS</em> : <em>STANDINGS &amp; EVENTS</em>}
           </div>
         </summary>
 
@@ -282,14 +284,14 @@ export function PicksSeasonHub({
                 <small>NEWEST FIRST</small>
               </div>
               {targetIsLatest && recapRequested ? (
-                <LatestEventRecap event={latestEvent} requestedOpen />
+                <RecapComponent event={latestEvent} requestedOpen />
               ) : (
-                <LatestEventRecap event={latestEvent} />
+                <RecapComponent event={latestEvent} />
               )}
               {olderEvents.length ? (
                 <div className="picks-recap-list">
                   {olderEvents.map((event) => (
-                    <LatestEventRecap
+                    <RecapComponent
                       event={event}
                       requestedOpen={recapRequested && event.eventId === targetEventId}
                       key={event.eventId}
