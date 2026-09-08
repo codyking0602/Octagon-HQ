@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { PickHistoryEvent } from "./picksModel";
 import { FootballWeekRecap } from "./FootballWeekRecap";
@@ -41,8 +41,8 @@ const week: PickHistoryEvent = {
     verdict: "correct",
     includedInPicks: true,
     groupPicks: [
-      { displayName: "Cody", pickedFighterSlug: "dallas", isCurrentUser: true },
-      { displayName: "Shane", pickedFighterSlug: "philadelphia", isCurrentUser: false },
+      { displayName: "Cody", pickedFighterSlug: "dallas", isCurrentUser: true, isLock: true },
+      { displayName: "Shane", pickedFighterSlug: "philadelphia", isCurrentUser: false, isLock: false },
     ],
   }],
   groupResults: [
@@ -55,8 +55,8 @@ const week: PickHistoryEvent = {
       missing: 0,
       excluded: 0,
       basePoints: 1,
-      lockBonus: 0,
-      totalPoints: 1,
+      lockBonus: 4,
+      totalPoints: 5,
       isCurrentUser: true,
     },
     {
@@ -76,24 +76,61 @@ const week: PickHistoryEvent = {
 };
 
 describe("FootballWeekRecap", () => {
-  it("opens a football-native recap with canonical ATS detail", () => {
-    render(<FootballWeekRecap event={week} requestedOpen />);
-
-    expect(screen.getByRole("dialog", { name: "Football Week 2 Week Recap" })).toBeInTheDocument();
-    expect(screen.getByText("WEEK RECAP")).toBeInTheDocument();
-    expect(screen.getByText("WEEK AWARDS")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Week Standings" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Game by Game" })).toBeInTheDocument();
-    expect(screen.getByText("Philadelphia Eagles 24, Dallas Cowboys 27")).toBeInTheDocument();
-    expect(screen.getByText(/FROZEN ATS · Philadelphia Eagles -3\.5/)).toBeInTheDocument();
-    expect(screen.getAllByText("Dallas Cowboys").length).toBeGreaterThan(0);
-    expect(screen.getByText(/Cody \(YOU\) — Dallas Cowboys/)).toBeInTheDocument();
-  });
-
-  it("does not present UFC card terminology", () => {
+  it("opens with a football-native result-first week hero and frozen ATS summary", () => {
     render(<FootballWeekRecap event={week} requestedOpen />);
 
     const dialog = screen.getByRole("dialog", { name: "Football Week 2 Week Recap" });
+    expect(dialog).toHaveTextContent("WEEK 2 · FINAL");
+    expect(dialog).toHaveTextContent("NFL");
+    expect(screen.getByRole("heading", { name: "CODY WINS THE WEEK" })).toBeInTheDocument();
+    expect(dialog).toHaveTextContent("5 PTS · 1-0 ATS");
+    expect(dialog).toHaveTextContent("2 PLAYERS");
+    expect(dialog).toHaveTextContent("1 GAME");
+    expect(screen.getByRole("heading", { name: "WEEK AWARDS" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "WEEK STANDINGS" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "GAME RESULTS" })).toBeInTheDocument();
+    expect(dialog).toHaveTextContent("Philadelphia Eagles -3.5 · FROZEN ATS");
+  });
+
+  it("keeps games collapsed by default, then renders one player per row with exact lock state", () => {
+    render(<FootballWeekRecap event={week} requestedOpen />);
+
+    const dialog = screen.getByRole("dialog", { name: "Football Week 2 Week Recap" });
+    expect(within(dialog).queryByText("EVERYONE’S PICKS")).not.toBeInTheDocument();
+
+    const gameToggle = within(dialog).getByRole("button", { name: /Philadelphia Eagles AT Dallas Cowboys/i });
+    expect(gameToggle).toHaveAttribute("aria-expanded", "false");
+    fireEvent.click(gameToggle);
+
+    expect(gameToggle).toHaveAttribute("aria-expanded", "true");
+    expect(within(dialog).getByText("EVERYONE’S PICKS")).toBeInTheDocument();
+    const codyRow = within(dialog).getByText("CODY (YOU)").closest(".football-week-recap__pick-row");
+    const shaneRow = within(dialog).getByText("SHANE").closest(".football-week-recap__pick-row");
+    expect(codyRow).toHaveTextContent("🔒");
+    expect(codyRow).toHaveTextContent("Dallas Cowboys");
+    expect(codyRow).toHaveTextContent("✓");
+    expect(shaneRow).not.toHaveTextContent("🔒");
+    expect(shaneRow).toHaveTextContent("Philadelphia Eagles");
+    expect(shaneRow).toHaveTextContent("✕");
+  });
+
+  it("supports expand all and collapse all without changing game data", () => {
+    render(<FootballWeekRecap event={week} requestedOpen />);
+
+    const dialog = screen.getByRole("dialog", { name: "Football Week 2 Week Recap" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "EXPAND ALL" }));
+    expect(within(dialog).getByText("EVERYONE’S PICKS")).toBeInTheDocument();
+    expect(within(dialog).getByText("Philadelphia Eagles 24, Dallas Cowboys 27")).toBeInTheDocument();
+    fireEvent.click(within(dialog).getByRole("button", { name: "COLLAPSE ALL" }));
+    expect(within(dialog).queryByText("EVERYONE’S PICKS")).not.toBeInTheDocument();
+  });
+
+  it("uses semantic missed styling without UFC terminology", () => {
+    render(<FootballWeekRecap event={week} requestedOpen />);
+
+    const dialog = screen.getByRole("dialog", { name: "Football Week 2 Week Recap" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "EXPAND ALL" }));
+    expect(within(dialog).getByText("✕")).toHaveClass("is-missed");
     expect(dialog).not.toHaveTextContent(/fight by fight/i);
     expect(dialog).not.toHaveTextContent(/fighter/i);
     expect(dialog).not.toHaveTextContent(/main event/i);
