@@ -1,11 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { notificationSport, notificationSportLabel } from "./notificationModel";
+import { notificationKinds, notificationSport, notificationSportLabel } from "./notificationModel";
 
 describe("notificationSport", () => {
   it("keeps existing UFC notification context visible", () => {
     expect(notificationSport({ kind: "picks_repick_required", route: "/picks" })).toBe("ufc");
     expect(notificationSport({ kind: "ufc_event_starting", route: null })).toBe("ufc");
     expect(notificationSportLabel("ufc")).toBe("UFC");
+  });
+
+  it("accepts the canonical Football Picks notification kind and route", () => {
+    expect(notificationKinds).toContain("football_picks_open");
+    expect(notificationSport({ kind: "football_picks_open", route: "/football/picks" })).toBe("football");
+    expect(notificationSportLabel("football")).toBe("Football");
   });
 
   it("uses the canonical Football destination before legacy Picks kind context", () => {
