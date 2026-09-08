@@ -251,19 +251,21 @@ describe("BottomNavigation", () => {
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 
-  it("plays each Football Picks reveal only once per app session", () => {
+  it("plays the hidden Football reveal only once per app session", () => {
     installVisualViewport();
     renderNavigation(["/picks"], <LocationProbe />);
 
-    const picks = screen.getByRole("link", { name: "Picks" });
+    let picks = screen.getByRole("link", { name: "Picks" });
     fireEvent.click(picks);
     fireEvent.click(picks);
     expect(screen.getByTestId("location")).toHaveTextContent("/football/picks|picks");
 
+    picks = screen.getByRole("link", { name: "Picks" });
     fireEvent.click(picks);
     fireEvent.click(picks);
     expect(screen.getByTestId("location")).toHaveTextContent("/picks|plain");
 
+    picks = screen.getByRole("link", { name: "Picks" });
     fireEvent.click(picks);
     fireEvent.click(picks);
     expect(screen.getByTestId("location")).toHaveTextContent("/football/picks|plain");
