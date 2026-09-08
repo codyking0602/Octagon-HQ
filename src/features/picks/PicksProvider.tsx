@@ -198,7 +198,7 @@ export function PicksProvider({
       const season = nextEvent?.season ?? new Date().getFullYear();
       const footballSeason = footballEventResult.value?.season ?? season;
       setGroupProgressLoading(Boolean(nextEvent));
-      const futuresRequest = nextEvent?.sport === "football" && repository.loadFootballFutures
+      const futuresRequest = sport === "football" && repository.loadFootballFutures
         ? repository.loadFootballFutures(season)
         : Promise.resolve(null);
       const footballSummaryRequest: Promise<{ value: PickSummary | null; error: string }> =
@@ -214,7 +214,7 @@ export function PicksProvider({
         : Promise.resolve({ value: [], error: "" });
       const footballHistoryRequest = includeFootballSummary && sport !== "football"
         ? repository.loadMyHistory(footballSeason, "football")
-            .then((value) => ({ value, error: "" }))
+            .then((value) => ({ value: value, error: "" }))
             .catch((historyError: unknown) => ({ value: emptyPickHistory, error: readableError(historyError) }))
         : Promise.resolve({ value: emptyPickHistory, error: "" });
       const [
@@ -402,7 +402,7 @@ export function PicksProvider({
   const saveFootballFutures = useCallback(async (nextPicks: FootballFuturesPicks) => {
     const expectedProfileId = profileId;
     if (!expectedProfileId) return identity.openDialog();
-    if (!repository || !event || event.sport !== "football") {
+    if (!repository || sport !== "football") {
       setError("Football Futures are not available on this Picks card.");
       return;
     }
@@ -416,9 +416,10 @@ export function PicksProvider({
       setError("Football Futures are locked. Your saved picks are preserved.");
       return;
     }
+    const futuresSeason = footballFutures?.season ?? event?.season ?? new Date().getFullYear();
     setSavingFootballFutures(true);
     try {
-      const saved = await saveFutures(event.season, nextPicks);
+      const saved = await saveFutures(futuresSeason, nextPicks);
       if (profileIdRef.current !== expectedProfileId) return;
       setFootballFutures(saved);
       setError("");
@@ -426,13 +427,13 @@ export function PicksProvider({
       if (profileIdRef.current !== expectedProfileId) return;
       setError(readableError(nextError));
       try {
-        const latest = await loadFutures(event.season);
+        const latest = await loadFutures(futuresSeason);
         if (profileIdRef.current === expectedProfileId) setFootballFutures(latest);
       } catch { /* preserve the save error */ }
     } finally {
       if (profileIdRef.current === expectedProfileId) setSavingFootballFutures(false);
     }
-  }, [event, footballFutures?.locked, identity.openDialog, profileId, repository]);
+  }, [event?.season, footballFutures?.locked, footballFutures?.season, identity.openDialog, profileId, repository, sport]);
 
   const setUnderdogLock = useCallback(async (boutId: string, fighterSlug: string) => {
     const expectedProfileId = profileId;
