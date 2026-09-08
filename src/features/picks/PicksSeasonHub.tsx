@@ -190,7 +190,9 @@ export function PicksSeasonHub({
           <div className="picks-season-hub__identity">
             <span>{football ? `${season} FOOTBALL SEASON` : `${season} SEASON`}</span>
             <strong id="picks-season-title">{finish}</strong>
-            <small>{record.correct}-{record.incorrect} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {recordPoints} PTS</small>
+            <small>
+              {record.correct}-{record.incorrect}{football ? " ATS" : ""} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {recordPoints} PTS
+            </small>
           </div>
           <div className="picks-season-hub__meta">
             <span>{standings.length} {standings.length === 1 ? "PLAYER" : "PLAYERS"}</span>
@@ -257,7 +259,7 @@ export function PicksSeasonHub({
                           {standing.isCurrentUser ? <em>YOU</em> : null}
                         </div>
                         <small>
-                          {standing.correct}-{standing.incorrect} · {winPercentageLabel(standing.correct, standing.incorrect)} WIN
+                          {standing.correct}-{standing.incorrect}{football ? " ATS" : ""} · {winPercentageLabel(standing.correct, standing.incorrect)} WIN
                           {standing.missing ? ` · ${standing.missing} MISSED` : ""}
                         </small>
                       </div>
