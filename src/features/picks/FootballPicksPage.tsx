@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { FootballFuturesCard } from "./FootballFuturesCard";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
-import { FOOTBALL_FUTURES_MAX_POINTS, FOOTBALL_FUTURES_RULES, footballLockAllowance } from "./footballPicksScoring";
+import { FOOTBALL_FUTURES_MAX_POINTS, FOOTBALL_FUTURES_RULES, footballLockAllowance, gradeFootballAts, type AtsOutcome } from "./footballPicksScoring";
 import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
@@ -40,6 +40,13 @@ function gameStatus(bout: PickBout, locked: boolean) {
   return locked ? "LOCKED" : "OPEN";
 }
 
+function atsOutcomeLabel(outcome: AtsOutcome) {
+  if (outcome === "win") return "✓ COVERED";
+  if (outcome === "loss") return "✕ MISSED";
+  if (outcome === "push") return "PUSH";
+  return null;
+}
+
 function TeamLogo({ logoUrl }: { logoUrl?: string | null }) {
   return (
     <span className={`football-pick-team-mark${logoUrl ? "" : " is-empty"}`} aria-hidden="true">
@@ -61,6 +68,33 @@ export default function FootballPicksPage() {
   const lockGameCount = games.filter((game) => game.resultStatus !== "cancelled").length;
   const lockAllowance = footballLockAllowance(lockGameCount);
   const usedLocks = games.filter((game) => game.resultStatus !== "cancelled" && picks.footballLocks[game.boutId] === true).length;
+  const liveAts = useMemo(() => {
+    const outcomes: Record<string, AtsOutcome> = {};
+    let wins = 0;
+    let losses = 0;
+    let pushes = 0;
+
+    for (const game of games) {
+      const selected = picks.selections[game.boutId] ?? null;
+      const pickedTeam = selected === game.redFighterSlug ? "home" : selected === game.blueFighterSlug ? "away" : null;
+      if (!pickedTeam || game.frozenSpreadHome == null) continue;
+      const grade = gradeFootballAts({
+        pickedTeam,
+        homeScore: game.homeFinalScore ?? null,
+        awayScore: game.awayFinalScore ?? null,
+        frozenSpreadHome: game.frozenSpreadHome,
+        isFinal: game.resultStatus !== "pending" && game.resultStatus !== "cancelled",
+        isCancelled: game.resultStatus === "cancelled",
+        isLock: picks.footballLocks[game.boutId] === true,
+      });
+      outcomes[game.boutId] = grade.outcome;
+      if (grade.outcome === "win") wins += 1;
+      if (grade.outcome === "loss") losses += 1;
+      if (grade.outcome === "push") pushes += 1;
+    }
+
+    return { outcomes, wins, losses, pushes, settled: wins + losses + pushes };
+  }, [games, picks.selections, picks.footballLocks]);
   const futuresLocked = picks.footballFutures?.locked === true;
   const posters = useMemo(() => pickEventPosters(event), [event]);
   const matchupBreakdowns = useMemo(() => footballMatchupBreakdownsForEvent(event), [event]);
@@ -135,6 +169,7 @@ export default function FootballPicksPage() {
 
           <section className="surface-card football-picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
             <div><span>YOUR WEEK</span><strong>{progress.completed} / {progress.total} PICKED{lockAllowance ? ` · LOCKS ${usedLocks} / ${lockAllowance}` : ""}</strong></div>
+            {liveAts.settled ? <p><b>LIVE ATS</b> {liveAts.wins}-{liveAts.losses}{liveAts.pushes ? ` · ${liveAts.pushes} PUSH${liveAts.pushes === 1 ? "" : "ES"}` : ""} · {liveAts.settled} FINAL</p> : null}
             <div className="football-picks-progress__track" aria-hidden="true"><span style={{ width: `${percentage}%` }} /></div>
             {!identity.profile ? <p>Sign in to make your weekly picks.</p> : null}
             {!identity.profile ? <button type="button" className="primary-action" onClick={identity.openDialog}>SIGN IN TO PICK</button> : null}
@@ -172,11 +207,16 @@ export default function FootballPicksPage() {
                 const away = { slug: game.blueFighterSlug, name: game.blueFighterName, side: "AWAY", logoUrl: game.awayTeamLogoUrl };
                 const home = { slug: game.redFighterSlug, name: game.redFighterName, side: "HOME", logoUrl: game.homeTeamLogoUrl };
                 const selectedName = selected === away.slug ? away.name : selected === home.slug ? home.name : null;
+                const outcome = liveAts.outcomes[game.boutId] ?? "unresolved";
+                const resultLabel = atsOutcomeLabel(outcome);
+                const statusLabel = resultLabel ?? gameStatus(game, locked);
+                const statusClass = resultLabel ? `is-${outcome}` : `is-${gameStatus(game, locked).toLowerCase()}`;
+                const hasFinalScore = game.homeFinalScore != null && game.awayFinalScore != null && game.resultStatus !== "pending";
                 return (
                   <article className={`football-pick-game${locked ? " is-locked" : ""}${isLock ? " is-lock" : ""}`} key={game.boutId}>
                     <header>
                       <strong>{leagueLabel(game.weightClass)}</strong>
-                      <b className={`football-pick-game__status is-${gameStatus(game, locked).toLowerCase()}`}>{gameStatus(game, locked)}</b>
+                      <b className={`football-pick-game__status ${statusClass}`}>{statusLabel}</b>
                     </header>
                     <div className="football-pick-game__matchup">
                       {[away, home].map((team) => {
@@ -201,7 +241,7 @@ export default function FootballPicksPage() {
                       </div>
                     </div>
                     <footer>
-                      <span>{locked ? "KICKED OFF · PICK LOCKED" : footballDateTimeLabel(kickoff)}</span>
+                      <span>{hasFinalScore ? `FINAL · ${away.name} ${game.awayFinalScore}, ${home.name} ${game.homeFinalScore}` : locked ? "KICKED OFF · PICK LOCKED" : footballDateTimeLabel(kickoff)}</span>
                       {lockAllowance > 0 && !cancelled ? (
                         <button
                           type="button"
