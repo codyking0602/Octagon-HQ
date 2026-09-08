@@ -188,7 +188,7 @@ export function PicksSeasonHub({
           </div>
           <div className="picks-season-hub__meta">
             <span>{standings.length} {standings.length === 1 ? "PLAYER" : "PLAYERS"}</span>
-            <em>STANDINGS &amp; {eventsLabel}</em>
+            <em>{isFootball ? "STANDINGS & WEEKS" : "STANDINGS & EVENTS"}</em>
           </div>
         </summary>
 
