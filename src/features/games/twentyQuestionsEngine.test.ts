@@ -6,10 +6,13 @@ import {
   chooseTwentyQuestionsFootballLeague,
   formatTwentyQuestionsScoreImpact,
   twentyQuestionsCostForSplit,
+  twentyQuestionsEligibleQuestions,
   twentyQuestionsFinalScore,
   twentyQuestionsScoreAfterQuestion,
   twentyQuestionsScoreAfterWrongGuess,
   twentyQuestionsScoreImpact,
+  type TwentyQuestionsQuestion,
+  type TwentyQuestionsSubject,
 } from "./twentyQuestionsEngine";
 
 describe("20 Questions scoring contract", () => {
@@ -49,6 +52,28 @@ describe("20 Questions scoring contract", () => {
     let score = 100;
     for (let index = 0; index < 10; index += 1) score = twentyQuestionsScoreAfterQuestion(score, 5);
     expect(score).toBe(80);
+  });
+});
+
+describe("20 Questions live question eligibility", () => {
+  const subjects: readonly TwentyQuestionsSubject[] = [
+    { id: "a", name: "A", kind: "player", league: "NFL" },
+    { id: "b", name: "B", kind: "player", league: "NFL" },
+    { id: "c", name: "C", kind: "coach", league: "NFL" },
+  ];
+  const questions: readonly TwentyQuestionsQuestion[] = [
+    { id: "role:player", label: "Is this a player?", internalCost: 6, answer: (id) => id !== "c" },
+    { id: "position:quarterback", label: "Is this a quarterback?", internalCost: 6, answer: (id) => id === "a" },
+    { id: "league:nfl", label: "Is this in the NFL?", internalCost: 5, answer: () => true },
+    { id: "impossible", label: "Impossible?", internalCost: 5, answer: () => false },
+  ];
+
+  it("keeps only questions that split the identities still in play", () => {
+    expect(twentyQuestionsEligibleQuestions(questions, subjects).map((question) => question.id))
+      .toEqual(["role:player", "position:quarterback"]);
+    expect(twentyQuestionsEligibleQuestions(questions, subjects.slice(0, 2)).map((question) => question.id))
+      .toEqual(["position:quarterback"]);
+    expect(twentyQuestionsEligibleQuestions(questions, subjects.slice(0, 1))).toEqual([]);
   });
 });
 

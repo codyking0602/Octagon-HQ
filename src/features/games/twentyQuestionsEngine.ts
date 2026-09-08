@@ -51,6 +51,17 @@ export function twentyQuestionsCostForSplit(yes: number, total: number): TwentyQ
   return 5;
 }
 
+export function twentyQuestionsEligibleQuestions(
+  questions: readonly TwentyQuestionsQuestion[],
+  remainingSubjects: readonly TwentyQuestionsSubject[],
+) {
+  if (remainingSubjects.length <= 1) return [];
+  return questions.filter((question) => {
+    const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
+    return yes > 0 && yes < remainingSubjects.length;
+  });
+}
+
 export function twentyQuestionsScoreAfterQuestion(score: number, cost: TwentyQuestionsQuestionCost) {
   return Math.max(0, score - twentyQuestionsScoreImpact(cost));
 }
