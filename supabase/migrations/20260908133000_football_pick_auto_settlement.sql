@@ -17,7 +17,7 @@ begin
     command := $command$
       select
         net.http_post(
-          url := current_setting('app.settings.supabase_url') || '/functions/v1/daily-challenge-runtime',
+          url := 'https://rvbspcjvebgwqzssayts.supabase.co/functions/v1/daily-challenge-runtime',
           headers := jsonb_build_object(
             'Content-Type', 'application/json',
             'x-octagon-scheduler-token', (
@@ -30,7 +30,7 @@ begin
           timeout_milliseconds := 60000
         ) as daily_challenge_request_id,
         net.http_post(
-          url := current_setting('app.settings.supabase_url') || '/functions/v1/sync-next-football-event',
+          url := 'https://rvbspcjvebgwqzssayts.supabase.co/functions/v1/sync-next-football-event',
           headers := jsonb_build_object(
             'Content-Type', 'application/json',
             'x-octagon-scheduler-token', (
@@ -43,7 +43,7 @@ begin
           timeout_milliseconds := 60000
         ) as football_pick_settlement_request_id,
         net.http_post(
-          url := current_setting('app.settings.supabase_url') || '/functions/v1/run-pick-monitoring',
+          url := 'https://rvbspcjvebgwqzssayts.supabase.co/functions/v1/run-pick-monitoring',
           headers := jsonb_build_object(
             'Content-Type', 'application/json',
             'x-octagon-scheduler-token', (
