@@ -47,14 +47,28 @@ describe("UFC 20 Questions factual authority", () => {
     expect(new Set(universe.subjects.map((subject) => subject.id)).size).toBe(100);
   });
 
-  it("ships a deep deterministic UFC bank that can distinguish every fighter pair", () => {
+  it("prioritizes human UFC clues without losing deterministic coverage", () => {
     const universe = getUfcTwentyQuestionsUniverse();
+    const ids = universe.questions.map((question) => question.id);
+    const divisionQuestions = universe.questions.filter((question) => question.id.startsWith("division:"));
+
     expect(universe.questions.length).toBeGreaterThan(50);
     expect(universe.questions.length).toBeLessThanOrEqual(UFC_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS);
-    expect(new Set(universe.questions.map((question) => question.id)).size).toBe(universe.questions.length);
-    expect(universe.questions.some((question) => question.id.startsWith("stat:losses:"))).toBe(true);
-    expect(universe.questions.some((question) => question.id.startsWith("stat:divisions-competed:"))).toBe(true);
-    expect(universe.questions.some((question) => question.id.startsWith("stat:interim-title"))).toBe(true);
+    expect(new Set(ids).size).toBe(universe.questions.length);
+    expect(ids.some((id) => id.startsWith("era:active-"))).toBe(true);
+    expect(ids).toContain("championship:title-challenger");
+    expect(ids).toContain("championship:interim-title-winner");
+    expect(ids).toContain("division-history:multiple");
+    expect(ids.some((id) => id.startsWith("faced:"))).toBe(true);
+    expect(ids.some((id) => id.startsWith("stat:losses:"))).toBe(false);
+    expect(ids.some((id) => id.includes("active-years"))).toBe(false);
+    expect(ids.some((id) => id.includes("opponents-beaten"))).toBe(false);
+    expect(ids.some((id) => id.startsWith("stat:ko-tko-wins:"))).toBe(false);
+    expect(ids.some((id) => id.startsWith("stat:submission-wins:"))).toBe(false);
+    expect(divisionQuestions.every((question) => !/\d+(?:\.\d+)?/.test(question.label))).toBe(true);
+    expect(divisionQuestions.every((question) => question.humanValue === 4)).toBe(true);
+    expect(universe.questions.filter((question) => question.recommendationFamily === "finishing-style")).toHaveLength(2);
+
     for (const question of universe.questions) {
       expect([5, 6, 7, 8]).toContain(question.internalCost);
       const before = question.internalCost;
