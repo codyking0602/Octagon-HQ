@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { FootballWeekRecap } from "./FootballWeekRecap";
+import { LatestEventRecap } from "./LatestEventRecap";
 import {
   groupRankLabel,
   pickWinPercentage,
   type PickHistory,
   type PickSeasonStanding,
+  type PickSport,
 } from "./picksModel";
-import { LatestEventRecap } from "./LatestEventRecap";
 import { resolvePicksDestination } from "./picksDestination";
 
 function winPercentageLabel(correct: number, incorrect: number) {
@@ -82,7 +84,16 @@ function rankContext(rank: number) {
   return null;
 }
 
-export function PicksSeasonHub({ history, loading }: { history: PickHistory; loading: boolean }) {
+export function PicksSeasonHub({
+  history,
+  loading,
+  sport = "mma",
+}: {
+  history: PickHistory;
+  loading: boolean;
+  sport?: PickSport;
+}) {
+  const isFootball = sport === "football";
   const [searchParams] = useSearchParams();
   const archivedEventIds = useMemo(
     () => history.events.map((event) => event.eventId),
@@ -107,16 +118,22 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
     const canonicalStandings = history.seasonStandings ?? [];
     return canonicalStandings.length ? canonicalStandings : aggregateFallbackStandings(history);
   }, [history]);
+  const pointsFor = (standing: PickSeasonStanding) => (
+    isFootball ? standing.adjustedPoints ?? standing.totalPoints : standing.totalPoints
+  );
   const currentStanding = standings.find((standing) => standing.isCurrentUser) ?? null;
-  const leaderPoints = standings.reduce((highest, standing) => Math.max(highest, standing.totalPoints), 0);
+  const leaderPoints = standings.reduce((highest, standing) => Math.max(highest, pointsFor(standing)), 0);
   const season = history.season ?? new Date().getFullYear();
   const finish = currentStanding
     ? `${groupRankLabel(currentStanding.rank, standings)} OF ${standings.length}`
     : standings.length ? `— OF ${standings.length}` : "NO RESULTS";
   const record = currentStanding ?? history.summary;
+  const currentPoints = currentStanding ? pointsFor(currentStanding) : record.totalPoints;
   const latestEvent = history.events[0];
   const olderEvents = history.events.slice(1);
   const targetIsLatest = Boolean(latestEvent && latestEvent.eventId === targetEventId);
+  const eventLabel = isFootball ? "WEEK" : "EVENT";
+  const eventsLabel = isFootball ? "WEEKS" : "EVENTS";
 
   useEffect(() => {
     if (!targetEventId) return;
@@ -144,8 +161,8 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
   if (!history.events.length) {
     return (
       <section className="surface-card picks-history-empty">
-        <strong>No completed Picks events yet.</strong>
-        <p>The group table and event archive will appear after the first scored card.</p>
+        <strong>No completed Picks {isFootball ? "weeks" : "events"} yet.</strong>
+        <p>The group table and {isFootball ? "week" : "event"} archive will appear after the first scored {isFootball ? "slate" : "card"}.</p>
       </section>
     );
   }
@@ -165,13 +182,13 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
       >
         <summary className="picks-season-hub__summary">
           <div className="picks-season-hub__identity">
-            <span>{season} SEASON</span>
+            <span>{season} {isFootball ? "FOOTBALL " : ""}SEASON</span>
             <strong id="picks-season-title">{finish}</strong>
-            <small>{record.correct}-{record.incorrect} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {record.totalPoints} PTS</small>
+            <small>{record.correct}-{record.incorrect} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {currentPoints} PTS</small>
           </div>
           <div className="picks-season-hub__meta">
             <span>{standings.length} {standings.length === 1 ? "PLAYER" : "PLAYERS"}</span>
-            <em>STANDINGS &amp; EVENTS</em>
+            <em>STANDINGS &amp; {eventsLabel}</em>
           </div>
         </summary>
 
@@ -193,7 +210,7 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
               className={activeTab === "events" ? "is-active" : ""}
               onClick={() => setActiveTab("events")}
             >
-              EVENTS
+              {eventsLabel}
             </button>
           </div>
 
@@ -202,15 +219,16 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
               <div className="picks-season-panel-heading">
                 <div>
                   <span>GROUP STANDINGS</span>
-                  <strong>Season leaderboard</strong>
+                  <strong>{isFootball ? "Football championship" : "Season leaderboard"}</strong>
                 </div>
-                <small>{standings.length} PLAYERS · {history.events.length} EVENTS</small>
+                <small>{standings.length} PLAYERS · {history.events.length} {eventsLabel}</small>
               </div>
               <div className="picks-season-standing-list">
                 {standings.map((standing) => {
-                  const pointGap = Math.max(0, leaderPoints - standing.totalPoints);
+                  const standingPoints = pointsFor(standing);
+                  const pointGap = Math.max(0, leaderPoints - standingPoints);
                   const progress = leaderPoints > 0
-                    ? Math.round((standing.totalPoints / leaderPoints) * 100)
+                    ? Math.round((standingPoints / leaderPoints) * 100)
                     : 0;
                   const missedEvents = Math.max(0, history.events.length - standing.eventsEntered);
                   const podiumLabel = rankContext(standing.rank);
@@ -234,15 +252,17 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
                         </div>
                         <small>
                           {standing.correct}-{standing.incorrect} · {winPercentageLabel(standing.correct, standing.incorrect)} WIN
+                          {standing.pushes ? ` · ${standing.pushes} PUSH${standing.pushes === 1 ? "" : "ES"}` : ""}
                           {standing.missing ? ` · ${standing.missing} MISSED` : ""}
                         </small>
                       </div>
                       <div className="picks-season-standing__score">
-                        <b>{standing.totalPoints} PTS</b>
+                        <b>{standingPoints} PTS</b>
                         <em>{pointGap === 0 ? "LEADER" : `${pointGap} PTS BACK`}</em>
                         <small>
-                          +{standing.lockBonus} LOCK · {standing.eventsEntered}/{history.events.length} EVENTS
-                          {missedEvents ? ` · ${missedEvents} ${missedEvents === 1 ? "EVENT" : "EVENTS"} MISSED` : ""}
+                          {isFootball
+                            ? `${standing.eventsEntered}/${history.events.length} WEEKS${standing.droppedWeekLabel ? ` · DROP ${standing.droppedWeekLabel}` : ""}`
+                            : `+${standing.lockBonus} LOCK · ${standing.eventsEntered}/${history.events.length} EVENTS${missedEvents ? ` · ${missedEvents} ${missedEvents === 1 ? "EVENT" : "EVENTS"} MISSED` : ""}`}
                         </small>
                       </div>
                     </article>
@@ -251,30 +271,49 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
               </div>
             </section>
           ) : (
-            <section className="picks-season-events" role="tabpanel" aria-label="Completed event archive">
+            <section className="picks-season-events" role="tabpanel" aria-label={`Completed ${eventLabel.toLowerCase()} archive`}>
               <div className="picks-season-panel-heading">
                 <div>
-                  <span>EVENT ARCHIVE</span>
-                  <strong>{history.events.length} COMPLETED {history.events.length === 1 ? "EVENT" : "EVENTS"}</strong>
+                  <span>{eventLabel} ARCHIVE</span>
+                  <strong>{history.events.length} COMPLETED {history.events.length === 1 ? eventLabel : eventsLabel}</strong>
                 </div>
                 <small>NEWEST FIRST</small>
               </div>
-              {targetIsLatest && recapRequested ? (
-                <LatestEventRecap event={latestEvent} requestedOpen />
+              {isFootball ? (
+                <>
+                  <FootballWeekRecap event={latestEvent} requestedOpen={targetIsLatest && recapRequested} />
+                  {olderEvents.length ? (
+                    <div className="picks-recap-list">
+                      {olderEvents.map((event) => (
+                        <FootballWeekRecap
+                          event={event}
+                          requestedOpen={recapRequested && event.eventId === targetEventId}
+                          key={event.eventId}
+                        />
+                      ))}
+                    </div>
+                  ) : null}
+                </>
               ) : (
-                <LatestEventRecap event={latestEvent} />
+                <>
+                  {targetIsLatest && recapRequested ? (
+                    <LatestEventRecap event={latestEvent} requestedOpen />
+                  ) : (
+                    <LatestEventRecap event={latestEvent} />
+                  )}
+                  {olderEvents.length ? (
+                    <div className="picks-recap-list">
+                      {olderEvents.map((event) => (
+                        <LatestEventRecap
+                          event={event}
+                          requestedOpen={recapRequested && event.eventId === targetEventId}
+                          key={event.eventId}
+                        />
+                      ))}
+                    </div>
+                  ) : null}
+                </>
               )}
-              {olderEvents.length ? (
-                <div className="picks-recap-list">
-                  {olderEvents.map((event) => (
-                    <LatestEventRecap
-                      event={event}
-                      requestedOpen={recapRequested && event.eventId === targetEventId}
-                      key={event.eventId}
-                    />
-                  ))}
-                </div>
-              ) : null}
             </section>
           )}
         </div>
