@@ -15,6 +15,7 @@ export const notificationKinds = [
   "picks_recap_ready",
   "picks_season_result_changed",
   "ufc_event_starting",
+  "football_picks_open",
   "daily_challenge_four_hours",
   "daily_streak_at_risk",
   "daily_challenge_available",
