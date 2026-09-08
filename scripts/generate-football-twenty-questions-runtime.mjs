@@ -7,6 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const target = path.join(root, "src/features/games/generated/twentyQuestionsFootballRuntime.json");
 const CATEGORY_LIMIT = 30;
 const MAX_QUESTIONS = 360;
+const MAX_INITIAL_QUESTIONS_PER_FAMILY = 3;
 const CATEGORY_ORDER = ["role", "era", "career", "achievements", "affiliations", "matchups"];
 
 function categoryForQuestion(question) {
@@ -29,8 +30,26 @@ function familyForQuestion(question) {
   return parts.length > 1 ? parts.slice(0, -1).join(":") : question.id;
 }
 
+function humanValueForQuestion(question) {
+  const id = question.id.toLowerCase();
+  if (id.includes("-fine:") || id.includes("coach:losses:")) return 0;
+  if (
+    id.startsWith("role:")
+    || id.startsWith("position:")
+    || id.startsWith("position-family:")
+    || id.startsWith("era:")
+    || id.includes(":era:")
+    || id.includes("longevity")
+    || /(franchise|program|conference|college|school|team):/.test(id)
+    || /(title|champ|award|mvp|all-pro|pro-bowl|heisman|super-bowl|playoff|trophy|honor)/.test(id)
+  ) return 4;
+  if (id.startsWith("production:") || id.startsWith("coach:")) return 2;
+  return 1;
+}
+
 function compareScored(left, right) {
-  return right.usefulSplit - left.usefulSplit
+  return right.humanValue - left.humanValue
+    || right.usefulSplit - left.usefulSplit
     || left.imbalance - right.imbalance
     || left.question.internalCost - right.question.internalCost
     || left.question.label.localeCompare(right.question.label);
@@ -87,6 +106,7 @@ function selectRuntimeQuestions(universe) {
       answers,
       category: categoryForQuestion(question),
       family: familyForQuestion(question),
+      humanValue: humanValueForQuestion(question),
       usefulSplit: Math.min(yes, answers.length - yes),
       imbalance: Math.abs(yes - (answers.length - yes)),
     };
@@ -94,7 +114,7 @@ function selectRuntimeQuestions(universe) {
 
   const selected = [];
   for (const category of CATEGORY_ORDER) {
-    const categoryRows = scored.filter((row) => row.category === category && row.usefulSplit > 0);
+    const categoryRows = scored.filter((row) => row.category === category && row.usefulSplit > 0 && row.humanValue > 0);
     const byFamily = new Map();
     for (const row of categoryRows) {
       const bucket = byFamily.get(row.family) ?? [];
@@ -105,14 +125,16 @@ function selectRuntimeQuestions(universe) {
 
     const familyOrder = [...byFamily.entries()]
       .sort((left, right) => compareScored(left[1][0], right[1][0]));
-
+    const familyCounts = new Map();
     const categorySelection = [];
     while (categorySelection.length < CATEGORY_LIMIT) {
       let added = false;
-      for (const [, bucket] of familyOrder) {
+      for (const [family, bucket] of familyOrder) {
+        if ((familyCounts.get(family) ?? 0) >= MAX_INITIAL_QUESTIONS_PER_FAMILY) continue;
         const next = bucket.shift();
         if (!next) continue;
         categorySelection.push(next);
+        familyCounts.set(family, (familyCounts.get(family) ?? 0) + 1);
         added = true;
         if (categorySelection.length >= CATEGORY_LIMIT) break;
       }
@@ -140,7 +162,7 @@ try {
   ));
 
   const output = {
-    version: 1,
+    version: 2,
     categoryLimit: CATEGORY_LIMIT,
     maxQuestions: MAX_QUESTIONS,
   };
