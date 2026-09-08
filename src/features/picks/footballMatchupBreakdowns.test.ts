@@ -33,16 +33,16 @@ function footballEvent(teamPairs: Array<[string, string, string, string]>): Pick
 }
 
 describe("football matchup breakdowns", () => {
-  it("discovers authored featured matchups from the canonical slate games without an event-id map", () => {
+  it("discovers this week's authored featured matchups from the canonical slate games without an event-id map", () => {
     const event = footballEvent([
-      ["lsu", "LSU Tigers", "clemson", "Clemson Tigers"],
-      ["ole-miss", "Ole Miss Rebels", "louisville", "Louisville Cardinals"],
+      ["texas-longhorns", "Texas Longhorns", "ohio-state-buckeyes", "Ohio State Buckeyes"],
+      ["new-york-giants", "New York Giants", "dallas-cowboys", "Dallas Cowboys"],
       ["texas", "Texas Longhorns", "texas-state", "Texas State Bobcats"],
     ]);
 
     expect(footballMatchupBreakdownsForEvent(event).map((breakdown) => breakdown.id)).toEqual([
-      "2026-lsu-clemson",
-      "2026-louisville-ole-miss",
+      "2026-texas-ohio-state",
+      "2026-cowboys-giants",
     ]);
   });
 

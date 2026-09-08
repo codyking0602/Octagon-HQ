@@ -187,6 +187,146 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
       },
     ],
   },
+  {
+    id: "2026-texas-ohio-state",
+    title: "Texas vs. Ohio State",
+    venue: "DKR-Texas Memorial Stadium · Austin",
+    teams: [
+      { name: "Texas", aliases: ["texas", "texas-longhorns"] },
+      { name: "Ohio State", aliases: ["ohio-state", "ohio-state-buckeyes"] },
+    ],
+    setup: [
+      "For the third straight season, Texas and Ohio State meet with the national-title picture already in the background. Ohio State has won the last two, including last season’s 14–7 opener in Columbus, and now the rematch comes to Austin with both teams bringing much more experienced quarterbacks into the fight.",
+      "The Week 1 tune-ups could not have looked much cleaner: Ohio State beat Ball State 56–3 behind 320 yards and three passing touchdowns from Julian Sayin, while Texas beat Texas State 59–7 as Arch Manning threw for 305 yards and four scores. The separator here is less about raw talent than which team can keep its quarterback on schedule when the opposing front finally creates real stress.",
+    ],
+    keyMatchups: [
+      {
+        title: "Jeremiah Smith vs. Texas’ coverage plan",
+        body: "Smith needed only one half against Ball State to post eight catches, 151 yards and two touchdowns. Texas has enough talent to avoid simply living in double coverage, but every snap spent tilting a safety toward Smith changes the spacing for Sayin everywhere else. The Longhorns have to make Ohio State earn explosives rather than letting Smith dictate the shell before the snap.",
+        edge: "Ohio State",
+      },
+      {
+        title: "Texas’ protection vs. Ohio State’s front",
+        body: "Texas rotated Dylan Sikorski and Laurence Seymore at left guard in the opener, and neither allowed a pressure, but Ohio State is a completely different test. Kenyatta Jackson Jr., Eddrick Houston and the Buckeyes’ rotating front can attack protections from multiple alignments. If Manning is consistently forced off his launch point, Texas loses the rhythm that made the opener look easy.",
+        edge: "Even",
+      },
+      {
+        title: "Ohio State’s run game vs. Texas’ front seven",
+        body: "The Buckeyes finished with big rushing numbers against Ball State, but much of the damage came after a quiet first half and on two long second-half runs. Texas can counter with Colin Simmons, Rasheem Biles and a front that created negative plays and three takeaways in Week 1. Ohio State does not need to dominate the ground game, but it cannot become a one-dimensional Sayin-to-Smith offense.",
+        edge: "Texas",
+      },
+    ],
+    pathsToWin: [
+      {
+        team: "Texas",
+        body: "Protect Manning well enough to keep the full Sarkisian menu available, stay balanced with Hollywood Smothers and make Ohio State defend Ryan Wingo and Cam Coleman across the field instead of squeezing every snap toward the box. Defensively, Texas has to affect Sayin with four and force the Buckeyes to finish long drives without giving Smith free access to explosives.",
+      },
+      {
+        team: "Ohio State",
+        body: "Make Texas prove its protection for four quarters. If the Buckeyes can create second-and-long and third-and-long without excessive blitzing, the secondary can play from leverage instead of reacting to Sarkisian’s motion. Offensively, feed Smith without forcing the ball, get Bo Jackson involved early and make Texas pay whenever it rotates extra help outside.",
+      },
+    ],
+    playersToWatch: [
+      {
+        team: "Texas",
+        players: [
+          { name: "Arch Manning", position: "QB", body: "He gets another shot at the defense that held him to 170 passing yards in last season’s opener, this time after starting 2026 with 305 yards and four touchdowns." },
+          { name: "Ryan Wingo", position: "WR", body: "Seven catches for 121 yards and a touchdown in Week 1. His ability to win outside keeps Ohio State from compressing the field around Manning." },
+          { name: "Colin Simmons", position: "EDGE", body: "Texas’ premier edge threat is central to the plan against Sayin. The Longhorns need him creating pressure without forcing the secondary to live behind heavy blitz rates." },
+        ],
+      },
+      {
+        team: "Ohio State",
+        players: [
+          { name: "Julian Sayin", position: "QB", body: "He was sharp in the opener and is far more experienced than the quarterback who managed last year’s 14–7 win over Texas. Austin is the first real stress test of that growth." },
+          { name: "Jeremiah Smith", position: "WR", body: "The most dangerous individual matchup on the field. Texas has contained his raw production in the previous meetings, but one missed leverage call can change the game." },
+          { name: "Kenyatta Jackson Jr.", position: "DE", body: "Ohio State’s veteran edge defender is the player most capable of turning Texas’ protection questions into lost downs and speeding Manning up." },
+        ],
+      },
+    ],
+    unitEdges: [
+      {
+        title: "TEXAS OFFENSE vs. OHIO STATE DEFENSE",
+        edge: "EVEN",
+        body: "Manning has more answers and a deeper receiving group than he did a year ago, but Ohio State still has the front and coverage talent to force Texas to execute through long possessions rather than living on easy explosives.",
+      },
+      {
+        title: "OHIO STATE OFFENSE vs. TEXAS DEFENSE",
+        edge: "OHIO STATE — SLIGHT",
+        body: "Texas has enough speed to challenge the Buckeyes everywhere, but Sayin’s efficiency plus Smith’s ability to distort coverage gives Ohio State the one matchup that can force the defense to compromise before the ball is snapped.",
+      },
+    ],
+  },
+  {
+    id: "2026-cowboys-giants",
+    title: "Cowboys vs. Giants",
+    venue: "MetLife Stadium · East Rutherford",
+    teams: [
+      { name: "Dallas Cowboys", aliases: ["dallas", "dallas-cowboys", "cowboys"] },
+      { name: "New York Giants", aliases: ["new-york-giants", "ny-giants", "giants"] },
+    ],
+    setup: [
+      "The NFC East opens under the Sunday-night lights with John Harbaugh making his Giants debut and Jaxson Dart beginning his second season as New York’s quarterback. The teams split last year’s series, and the Giants closed 2025 by beating Dallas 34–17 at MetLife with Dart accounting for 262 total yards and two passing touchdowns.",
+      "Dallas enters with the more established passing-game core in Dak Prescott, CeeDee Lamb and George Pickens, but the matchup changed when All-Pro left guard Tyler Smith was ruled out for the opening stretch after thumb surgery. That puts the Cowboys’ biggest uncertainty directly across from the Giants’ biggest strength: a pressure group built around Brian Burns, Abdul Carter and Kayvon Thibodeaux.",
+    ],
+    keyMatchups: [
+      {
+        title: "Giants’ pass rush vs. Dallas’ protection",
+        body: "This is the matchup New York has to own. T.J. Bass steps in for Tyler Smith while Burns, Carter and Thibodeaux can attack from enough alignments to make protection communication matter as much as individual blocking. Dallas can help with tempo, quick game and chips, but if New York gets home with four, the rest of the defensive plan becomes much easier.",
+        edge: "Giants",
+      },
+      {
+        title: "CeeDee Lamb + George Pickens vs. the Giants’ secondary",
+        body: "New York upgraded the back end with Greg Newsome II and still has Deonte Banks, Paulson Adebo, Dru Phillips and a veteran safety group. That is real depth, but Dallas can force uncomfortable choices by moving Lamb inside and outside while Pickens stresses the boundary. The Giants cannot let their pass rush become an excuse for isolated coverage losses downfield.",
+        edge: "Dallas — slight",
+      },
+      {
+        title: "Jaxson Dart vs. Christian Parker’s new defense",
+        body: "Dart’s movement is the variable Dallas cannot treat like a normal dropback offense. Parker’s new defense is more multiple, and the Cowboys rebuilt the middle around Quinnen Williams and Kenny Clark while adding Von Miller outside. The goal is to compress the pocket without opening escape lanes that turn third-and-long into first downs.",
+        edge: "Dallas — slight",
+      },
+    ],
+    pathsToWin: [
+      {
+        team: "Dallas Cowboys",
+        body: "Protect Prescott with structure rather than asking the reshuffled line to survive endless true pass sets. Get Lamb and Pickens touches before the rush can arrive, make the Giants tackle in space and force Dart to play from obvious passing downs. Defensively, Dallas needs its veteran front to keep Dart contained instead of chasing sacks past the quarterback.",
+      },
+      {
+        team: "New York Giants",
+        body: "Make the Tyler Smith absence the center of the game. If the Giants can pressure Prescott with four, they can keep extra bodies in coverage and shrink the explosive windows for Lamb and Pickens. Offensively, Harbaugh needs movement, play action and Dart’s legs to keep Dallas from teeing off, with Malik Nabers becoming the field-tilter if his return-to-play workload allows it.",
+      },
+    ],
+    playersToWatch: [
+      {
+        team: "Dallas Cowboys",
+        players: [
+          { name: "Dak Prescott", position: "QB", body: "The Giants’ front is designed to make him speed up. Dallas needs Prescott controlling protections and getting the ball to his matchup winners before pressure changes the down." },
+          { name: "CeeDee Lamb", position: "WR", body: "The cleanest Dallas advantage is still moving Lamb around until New York reveals how it plans to match him. His alignment can dictate the coverage before Prescott ever takes the snap." },
+          { name: "Quinnen Williams", position: "DT", body: "A centerpiece of Dallas’ rebuilt defense. His ability to collapse the pocket from the middle is the best way to disrupt Dart without creating easy scramble lanes off the edge." },
+        ],
+      },
+      {
+        team: "New York Giants",
+        players: [
+          { name: "Jaxson Dart", position: "QB", body: "He finished last season by beating Dallas at MetLife. Now the challenge is doing it against a substantially reworked defense while operating Harbaugh’s offense in a real regular-season game for the first time." },
+          { name: "Malik Nabers", position: "WR", body: "His workload has been managed during the return from his knee injury, but if he is available at full speed he is the Giants’ best answer for creating explosives without asking Dart to hold the ball." },
+          { name: "Abdul Carter", position: "OLB", body: "Dallas cannot devote every protection answer to Brian Burns. Carter’s burst gives New York another way to attack the reshuffled Cowboys line and force Prescott off his preferred timing." },
+        ],
+      },
+    ],
+    unitEdges: [
+      {
+        title: "DALLAS OFFENSE vs. GIANTS DEFENSE",
+        edge: "DALLAS — SLIGHT",
+        body: "New York’s pass rush is good enough to wreck the matchup, especially without Tyler Smith, but Prescott throwing to Lamb and Pickens gives Dallas the more proven answers if the protection can survive long enough to use them.",
+      },
+      {
+        title: "GIANTS OFFENSE vs. DALLAS DEFENSE",
+        edge: "DALLAS",
+        body: "Dart’s legs and Nabers’ explosiveness can stress the new scheme, but Dallas has the more proven front-line talent with Williams, Clark and Miller. The Giants need to create easy early-down offense before that group can dictate the game.",
+      },
+    ],
+  },
 ];
 
 function normalizeTeamToken(value: string) {
