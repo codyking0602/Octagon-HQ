@@ -58,15 +58,24 @@ export function twentyQuestionsCostForSplit(yes: number, total: number): TwentyQ
   return 5;
 }
 
+function isEndgameFingerprintQuestion(question: TwentyQuestionsQuestion) {
+  return question.recommendationFamily === "endgame-fingerprint";
+}
+
 export function twentyQuestionsEligibleQuestions(
   questions: readonly TwentyQuestionsQuestion[],
   remainingSubjects: readonly TwentyQuestionsSubject[],
 ) {
   if (remainingSubjects.length <= 1) return [];
-  return questions.filter((question) => {
+  const eligible = questions.filter((question) => {
     const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
     return yes > 0 && yes < remainingSubjects.length;
   });
+  if (remainingSubjects.length > TWENTY_QUESTIONS_ENDGAME_THRESHOLD) {
+    const humanQuestions = eligible.filter((question) => !isEndgameFingerprintQuestion(question));
+    if (humanQuestions.length) return humanQuestions;
+  }
+  return eligible;
 }
 
 export function twentyQuestionsRequiresFinalGuess(questionsAsked: number, remainingSubjectCount: number) {
