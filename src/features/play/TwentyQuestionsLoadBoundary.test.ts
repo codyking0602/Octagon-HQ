@@ -12,6 +12,7 @@ describe("20 Questions lazy-load boundary", () => {
     const runtime = source("src/features/games/twentyQuestionsRuntime.ts");
     const ufcRoute = source("src/features/play/UfcTwentyQuestionsPage.tsx");
     const footballRoute = source("src/features/play/FootballTwentyQuestionsPage.tsx");
+    const footballAuthority = source("src/features/games/twentyQuestionsFootballAuthority.ts");
     const router = source("src/app/router.tsx");
 
     expect(sharedPage).not.toContain("twentyQuestionsFootballAuthority");
@@ -20,6 +21,11 @@ describe("20 Questions lazy-load boundary", () => {
     expect(ufcRoute).toContain("twentyQuestionsUfcAuthority");
     expect(ufcRoute).not.toContain("twentyQuestionsFootballAuthority");
     expect(footballRoute).toContain("twentyQuestionsFootballAuthority");
+    expect(footballAuthority).not.toContain("footballCareerAffiliationProjection");
+    expect(footballAuthority).not.toContain("games-fine");
+    expect(footballAuthority).not.toContain("wins-fine");
+    expect(footballAuthority).not.toContain("losses-fine");
+    expect(footballAuthority).not.toContain("win-pct-fine");
     expect(router).toContain('import("../features/play/UfcTwentyQuestionsPage")');
     expect(router).toContain('import("../features/play/FootballTwentyQuestionsPage")');
   });
