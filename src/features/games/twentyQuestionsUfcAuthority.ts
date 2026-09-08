@@ -55,6 +55,7 @@ type UfcTwentyQuestionsStats = {
   undisputedTitleWins: number;
   interimTitleWins: number;
   sanctionedDivisions: number;
+  activeDecades: number;
 };
 
 function normalizedId(value: string) {
@@ -85,6 +86,10 @@ function fighterDivisions(fighter: UfcFactualSubject) {
     ...fighter.secondaryDivisions,
     ...fighter.fights.map((fight) => fight.division),
   ].map(canonicalUfcDivision).filter((division): division is string => division != null))];
+}
+
+function fighterActiveDecades(fighter: UfcFactualSubject) {
+  return new Set(fighter.fights.map((fight) => Math.floor(Number(fight.date.slice(0, 4)) / 10) * 10)).size;
 }
 
 function partitionSignature(subjects: readonly TwentyQuestionsSubject[], values: ReadonlyMap<string, boolean>) {
@@ -124,6 +129,7 @@ function deriveStats(fighter: UfcFactualSubject): UfcTwentyQuestionsStats {
     undisputedTitleWins: titleWins.filter((fight) => !fight.interimTitleFight).length,
     interimTitleWins: titleWins.filter((fight) => fight.interimTitleFight).length,
     sanctionedDivisions: fighterDivisions(fighter).length,
+    activeDecades: fighterActiveDecades(fighter),
   };
 }
 
@@ -254,9 +260,23 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
     "Has this fighter competed in multiple UFC divisions?",
     (fighter) => statFor(fighter).sanctionedDivisions >= 2,
     4,
-    "division-history",
+    "division",
   );
 
+  add(
+    "era:pre-2010",
+    "Did this fighter compete in the UFC before 2010?",
+    (fighter) => fighter.fights.some((fight) => Number(fight.date.slice(0, 4)) < 2010),
+    4,
+    "era",
+  );
+  add(
+    "era:three-decades",
+    "Has this fighter competed in the UFC across at least three different decades?",
+    (fighter) => statFor(fighter).activeDecades >= 3,
+    4,
+    "era",
+  );
   for (const decade of UFC_DECADES) {
     add(
       `era:active-${decade}s`,
@@ -266,7 +286,7 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
         return year >= decade && year < decade + 10;
       }),
       4,
-      "era-active",
+      "era",
     );
     add(
       `era:debut-${decade}s`,
@@ -275,8 +295,8 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
         const year = Number(fighter.activeFrom.slice(0, 4));
         return year >= decade && year < decade + 10;
       },
-      4,
-      "era-debut",
+      3,
+      "era",
     );
     add(
       `era:last-fight-${decade}s`,
@@ -285,8 +305,8 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
         const year = Number(fighter.activeTo.slice(0, 4));
         return year >= decade && year < decade + 10;
       },
-      4,
-      "era-last-fight",
+      2,
+      "era",
     );
   }
 
@@ -295,42 +315,100 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
     "Has this fighter competed in a UFC title fight?",
     (fighter) => statFor(fighter).titleFights > 0,
     4,
-    "championship-status",
+    "achievement",
   );
   add(
     "championship:title-winner",
     "Has this fighter won a UFC title fight?",
     (fighter) => statFor(fighter).titleFightWins > 0,
     4,
-    "championship-status",
+    "achievement",
   );
   add(
     "championship:undisputed-title-winner",
     "Has this fighter won a non-interim UFC title fight?",
     (fighter) => statFor(fighter).undisputedTitleWins > 0,
     4,
-    "championship-status",
+    "achievement",
   );
   add(
     "championship:interim-title-winner",
     "Has this fighter won an interim UFC title fight?",
     (fighter) => statFor(fighter).interimTitleWins > 0,
-    4,
-    "championship-status",
+    3,
+    "achievement",
   );
   add(
-    "championship:multiple-title-wins",
-    "Has this fighter won multiple UFC title fights?",
-    (fighter) => statFor(fighter).titleFightWins >= 2,
+    "championship:three-plus-title-fights",
+    "Has this fighter competed in at least 3 UFC title fights?",
+    (fighter) => statFor(fighter).titleFights >= 3,
     4,
-    "championship-resume",
+    "achievement",
+  );
+  add(
+    "championship:five-plus-title-fights",
+    "Has this fighter competed in at least 5 UFC title fights?",
+    (fighter) => statFor(fighter).titleFights >= 5,
+    4,
+    "achievement",
+  );
+  add(
+    "championship:three-plus-title-wins",
+    "Has this fighter won at least 3 UFC title fights?",
+    (fighter) => statFor(fighter).titleFightWins >= 3,
+    4,
+    "achievement",
   );
 
-  add("career:20-plus-fights", "Does this fighter have at least 20 UFC fights?", (fighter) => statFor(fighter).fights >= 20, 2, "career-volume");
-  add("career:10-plus-wins", "Does this fighter have at least 10 UFC wins?", (fighter) => statFor(fighter).wins >= 10, 2, "career-wins");
-  add("career:10-plus-finishes", "Does this fighter have at least 10 UFC finishes?", (fighter) => statFor(fighter).finishes >= 10, 2, "career-finishes");
-  add("style:5-plus-ko-tko-wins", "Does this fighter have at least 5 UFC KO/TKO wins?", (fighter) => statFor(fighter).koTkoWins >= 5, 2, "finishing-style");
-  add("style:5-plus-submission-wins", "Does this fighter have at least 5 UFC submission wins?", (fighter) => statFor(fighter).submissionWins >= 5, 2, "finishing-style");
+  add(
+    "style:ko-leaning-finishes",
+    "Does this fighter's UFC finishing record lean more toward KO/TKO wins than submissions?",
+    (fighter) => statFor(fighter).finishes >= 3 && statFor(fighter).koTkoWins > statFor(fighter).submissionWins,
+    4,
+    "style",
+  );
+  add(
+    "style:submission-leaning-finishes",
+    "Does this fighter's UFC finishing record lean more toward submissions than KO/TKO wins?",
+    (fighter) => statFor(fighter).finishes >= 3 && statFor(fighter).submissionWins > statFor(fighter).koTkoWins,
+    4,
+    "style",
+  );
+  add(
+    "style:mixed-finishing-toolkit",
+    "Has this fighter won at least 2 UFC fights by KO/TKO and at least 2 by submission?",
+    (fighter) => statFor(fighter).koTkoWins >= 2 && statFor(fighter).submissionWins >= 2,
+    4,
+    "style",
+  );
+  add(
+    "style:high-finishing-rate",
+    "Have at least 60% of this fighter's UFC wins come by KO/TKO or submission?",
+    (fighter) => statFor(fighter).wins >= 5 && statFor(fighter).finishes / statFor(fighter).wins >= 0.6,
+    4,
+    "style",
+  );
+  add(
+    "style:five-plus-ko-tko-wins",
+    "Does this fighter have at least 5 UFC KO/TKO wins?",
+    (fighter) => statFor(fighter).koTkoWins >= 5,
+    3,
+    "style",
+  );
+  add(
+    "style:five-plus-submission-wins",
+    "Does this fighter have at least 5 UFC submission wins?",
+    (fighter) => statFor(fighter).submissionWins >= 5,
+    3,
+    "style",
+  );
+
+  add("career:10-plus-fights", "Does this fighter have at least 10 UFC fights?", (fighter) => statFor(fighter).fights >= 10, 3, "career");
+  add("career:20-plus-fights", "Does this fighter have at least 20 UFC fights?", (fighter) => statFor(fighter).fights >= 20, 3, "career");
+  add("career:30-plus-fights", "Does this fighter have at least 30 UFC fights?", (fighter) => statFor(fighter).fights >= 30, 3, "career");
+  add("career:10-plus-wins", "Does this fighter have at least 10 UFC wins?", (fighter) => statFor(fighter).wins >= 10, 3, "career");
+  add("career:15-plus-wins", "Does this fighter have at least 15 UFC wins?", (fighter) => statFor(fighter).wins >= 15, 3, "career");
+  add("career:10-plus-finishes", "Does this fighter have at least 10 UFC finishes?", (fighter) => statFor(fighter).finishes >= 10, 3, "career");
 
   const recognizableOpponentNames = new Map(
     ufcFactualLedgerSubjects.map((fighter) => [normalizedOpponent(fighter.name), fighter.name]),
@@ -344,21 +422,21 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
   }
   for (const [opponentKey, opponent] of [...opponentNames.entries()].sort((left, right) => left[1].localeCompare(right[1]))) {
     const recognizableName = recognizableOpponentNames.get(opponentKey);
-    const humanValue: TwentyQuestionsHumanValue = recognizableName ? 3 : 1;
+    const humanValue: TwentyQuestionsHumanValue = recognizableName ? 4 : 1;
     const labelName = recognizableName ?? opponent;
     add(
       `faced:${normalizedId(opponentKey)}`,
       `Has this fighter faced ${labelName} in the UFC?`,
       (fighter) => fighter.fights.some((fight) => normalizedOpponent(fight.opponent) === opponentKey),
       humanValue,
-      "matchups",
+      "matchup",
     );
     add(
       `beat:${normalizedId(opponentKey)}`,
       `Has this fighter beaten ${labelName} in the UFC?`,
       (fighter) => fighter.fights.some((fight) => normalizedOpponent(fight.opponent) === opponentKey && fight.result === "win"),
       humanValue,
-      "matchups",
+      "matchup",
     );
   }
 
