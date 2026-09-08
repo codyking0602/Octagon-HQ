@@ -7,6 +7,11 @@ import { useSport } from "../app/SportProvider";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
 type SportSwitchNavigationIcon = Extract<NavigationIconName, "picks" | "play">;
+type FootballEntryStage = "clip" | "slam";
+type FootballEntryTransition = {
+  section: SportSwitchNavigationIcon;
+  stage: FootballEntryStage;
+};
 
 const baseDestinations = [
   { to: "/", label: "Home", icon: "home", end: true },
@@ -16,9 +21,10 @@ const baseDestinations = [
 ] as const;
 
 const SECRET_SPORT_TAP_WINDOW_MS = 350;
-const FOOTBALL_ENTRY_VIDEO: Record<SportSwitchNavigationIcon, string> = {
-  picks: "/assets/football/football-picks-reveal.mp4",
-  play: "/assets/football/football-play-reveal.mp4",
+const FOOTBALL_ENTRY_SLAM_MS = 900;
+const FOOTBALL_ENTRY_CLIP: Record<SportSwitchNavigationIcon, string | null> = {
+  picks: null,
+  play: "/assets/football/vince-young-championship-run.mp4",
 };
 
 function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
@@ -85,7 +91,7 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   });
   const footballRevealShownRef = useRef(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
-  const [footballEntrySection, setFootballEntrySection] = useState<SportSwitchNavigationIcon | null>(null);
+  const [footballEntryTransition, setFootballEntryTransition] = useState<FootballEntryTransition | null>(null);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const selectedPlayRoot = selectedSport === "football" ? "/football" : "/play";
   const selectedPicksRoot = selectedSport === "football" ? "/football/picks" : "/picks";
@@ -142,6 +148,12 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     };
   }, []);
 
+  useEffect(() => {
+    if (footballEntryTransition?.stage !== "slam") return undefined;
+    const timer = window.setTimeout(() => setFootballEntryTransition(null), FOOTBALL_ENTRY_SLAM_MS);
+    return () => window.clearTimeout(timer);
+  }, [footballEntryTransition]);
+
   function switchSportFromActiveTab(icon: SportSwitchNavigationIcon) {
     if (footballMode) {
       setSelectedSport("ufc");
@@ -152,7 +164,10 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     setSelectedSport("football");
     if (!footballRevealShownRef.current) {
       footballRevealShownRef.current = true;
-      setFootballEntrySection(icon);
+      setFootballEntryTransition({
+        section: icon,
+        stage: FOOTBALL_ENTRY_CLIP[icon] ? "clip" : "slam",
+      });
     }
     navigate(icon === "picks" ? "/football/picks" : "/football");
   }
@@ -207,19 +222,37 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     </nav>
   );
 
-  const entryTransition = footballEntrySection ? (
-    <div className="football-entry-transition" data-testid="football-entry-transition" role="presentation">
-      <video
-        className="football-entry-transition__video"
-        src={FOOTBALL_ENTRY_VIDEO[footballEntrySection]}
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-        onEnded={() => setFootballEntrySection(null)}
-        onError={() => setFootballEntrySection(null)}
-      />
+  const entryTransition = footballEntryTransition ? (
+    <div
+      className={`football-entry-transition football-entry-transition--${footballEntryTransition.stage}`}
+      data-testid="football-entry-transition"
+      role="presentation"
+    >
+      {footballEntryTransition.stage === "clip" && FOOTBALL_ENTRY_CLIP[footballEntryTransition.section] ? (
+        <video
+          className="football-entry-transition__video"
+          src={FOOTBALL_ENTRY_CLIP[footballEntryTransition.section] ?? undefined}
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          onEnded={() => setFootballEntryTransition((current) => (
+            current ? { ...current, stage: "slam" } : current
+          ))}
+          onError={() => setFootballEntryTransition((current) => (
+            current ? { ...current, stage: "slam" } : current
+          ))}
+        />
+      ) : (
+        <div className="football-entry-transition__slam" data-testid="football-entry-slam" aria-hidden="true">
+          <span className="football-entry-transition__flash" />
+          <div className="football-entry-transition__cover">
+            <small>THE HQ</small>
+            <strong>FOOTBALL HQ</strong>
+          </div>
+        </div>
+      )}
     </div>
   ) : null;
 
