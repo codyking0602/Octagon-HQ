@@ -66,6 +66,22 @@ function aggregateFallbackStandings(history: PickHistory): PickSeasonStanding[] 
   });
 }
 
+function footballAccumulatedStandings(standings: readonly PickSeasonStanding[]) {
+  const ordered = standings.slice().sort((left, right) => (
+    right.totalPoints - left.totalPoints
+    || left.displayName.localeCompare(right.displayName)
+  ));
+  let previousPoints: number | null = null;
+  let previousRank = 0;
+
+  return ordered.map((standing, index) => {
+    const rank = previousPoints === standing.totalPoints ? previousRank : index + 1;
+    previousPoints = standing.totalPoints;
+    previousRank = rank;
+    return { ...standing, rank };
+  });
+}
+
 function standingClassName(standing: PickSeasonStanding) {
   return [
     "picks-season-standing",
@@ -83,8 +99,8 @@ function rankContext(rank: number) {
   return null;
 }
 
-function standingPoints(standing: PickSeasonStanding, football: boolean) {
-  return football ? standing.adjustedPoints ?? standing.totalPoints : standing.totalPoints;
+function standingPoints(standing: PickSeasonStanding) {
+  return standing.totalPoints;
 }
 
 export function PicksSeasonHub({
@@ -122,11 +138,12 @@ export function PicksSeasonHub({
   const hubRef = useRef<HTMLElement | null>(null);
   const standings = useMemo(() => {
     const canonicalStandings = history.seasonStandings ?? [];
-    return canonicalStandings.length ? canonicalStandings : aggregateFallbackStandings(history);
-  }, [history]);
+    const source = canonicalStandings.length ? canonicalStandings : aggregateFallbackStandings(history);
+    return football ? footballAccumulatedStandings(source) : source;
+  }, [football, history]);
   const currentStanding = standings.find((standing) => standing.isCurrentUser) ?? null;
   const leaderPoints = standings.reduce(
-    (highest, standing) => Math.max(highest, standingPoints(standing, football)),
+    (highest, standing) => Math.max(highest, standingPoints(standing)),
     0,
   );
   const season = history.season ?? new Date().getFullYear();
@@ -135,7 +152,7 @@ export function PicksSeasonHub({
     : standings.length ? `— OF ${standings.length}` : "NO RESULTS";
   const record = currentStanding ?? history.summary;
   const recordPoints = currentStanding
-    ? standingPoints(currentStanding, football)
+    ? standingPoints(currentStanding)
     : history.summary.totalPoints;
   const latestEvent = history.events[0];
   const olderEvents = history.events.slice(1);
@@ -233,7 +250,7 @@ export function PicksSeasonHub({
               </div>
               <div className="picks-season-standing-list">
                 {standings.map((standing) => {
-                  const points = standingPoints(standing, football);
+                  const points = standingPoints(standing);
                   const pointGap = Math.max(0, leaderPoints - points);
                   const progress = leaderPoints > 0
                     ? Math.round((points / leaderPoints) * 100)
