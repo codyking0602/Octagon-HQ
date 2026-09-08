@@ -1,0 +1,85 @@
+.football-entry-transition--picks {
+  background: #000;
+}
+
+.football-entry-transition__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transform: scale(1.02);
+  animation: football-entry-cut 760ms ease-out both;
+}
+
+.football-entry-transition__frame--1 {
+  animation-delay: 0ms;
+}
+
+.football-entry-transition__frame--2 {
+  animation-delay: 680ms;
+}
+
+.football-entry-transition__frame--3 {
+  animation-delay: 1360ms;
+}
+
+.football-entry-transition__frame--4 {
+  z-index: 2;
+  animation: football-entry-slam 1560ms cubic-bezier(.2, .9, .2, 1) 2040ms both;
+}
+
+@keyframes football-entry-cut {
+  0% {
+    opacity: 0;
+    transform: scale(1.02);
+    filter: brightness(.5) contrast(1.14);
+  }
+
+  8%, 88% {
+    opacity: 1;
+    transform: scale(1.08);
+    filter: brightness(.96) contrast(1.08);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+    filter: brightness(.65) contrast(1.12);
+  }
+}
+
+@keyframes football-entry-slam {
+  0% {
+    opacity: 0;
+    transform: scale(1.2);
+    filter: blur(10px) brightness(1.3);
+  }
+
+  13% {
+    opacity: 1;
+    transform: scale(.985);
+    filter: blur(0) brightness(1.08);
+  }
+
+  22%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .football-entry-transition__frame:not(.football-entry-transition__frame--4) {
+    display: none;
+  }
+
+  .football-entry-transition__frame--4 {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    filter: none;
+  }
+}

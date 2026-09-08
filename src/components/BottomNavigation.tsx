@@ -4,8 +4,10 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useSport } from "../app/SportProvider";
+import { nextFootballEntryState } from "../features/back-room/footballEntrySession";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
+type SecretSportSection = "picks" | "play";
 
 const baseDestinations = [
   { to: "/", label: "Home", icon: "home", end: true },
@@ -14,7 +16,7 @@ const baseDestinations = [
   { to: "/rankings", label: "Rankings", icon: "rankings", end: false },
 ] as const;
 
-const SECRET_PLAY_TAP_WINDOW_MS = 350;
+const SECRET_SPORT_TAP_WINDOW_MS = 350;
 
 function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
   if (icon === "home") return pathname === "/";
@@ -74,12 +76,11 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const navigate = useNavigate();
   const { selectedSport, setSelectedSport } = useSport();
   const keyboardSessionRef = useRef(false);
-  const lastActivePlayTapRef = useRef(0);
+  const lastActiveSportTapRef = useRef<Record<SecretSportSection, number>>({ picks: 0, play: 0 });
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const selectedPlayRoot = selectedSport === "football" ? "/football" : "/play";
   const selectedPicksRoot = selectedSport === "football" ? "/football/picks" : "/picks";
-  const activePlayRoot = footballMode ? "/football" : "/play";
   const standardDestinations = baseDestinations.map((destination) => (
     destination.icon === "play" ? { ...destination, to: selectedPlayRoot }
       : destination.icon === "picks" ? { ...destination, to: selectedPicksRoot }
@@ -149,23 +150,30 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
           to={destination.to}
           end={destination.end}
           onClick={(event) => {
-            if (destination.icon === "play") {
-              const activePlay = location.pathname === activePlayRoot || location.pathname.startsWith(`${activePlayRoot}/`);
-              if (activePlay) {
+            if (destination.icon === "play" || destination.icon === "picks") {
+              const section = destination.icon;
+              const activeSection = routeOwnsNavigationItem(section, location.pathname);
+              if (activeSection) {
                 const now = Date.now();
-                if (now - lastActivePlayTapRef.current <= SECRET_PLAY_TAP_WINDOW_MS) {
+                if (now - lastActiveSportTapRef.current[section] <= SECRET_SPORT_TAP_WINDOW_MS) {
                   event.preventDefault();
-                  lastActivePlayTapRef.current = 0;
+                  lastActiveSportTapRef.current[section] = 0;
+                  const targetPath = section === "play"
+                    ? (footballMode ? "/play" : "/football")
+                    : (footballMode ? "/picks" : "/football/picks");
+
                   if (footballMode) {
                     setSelectedSport("ufc");
-                    navigate("/play");
+                    navigate(targetPath);
                   } else {
                     setSelectedSport("football");
-                    navigate("/football", { state: { footballEntry: true } });
+                    const entryState = nextFootballEntryState(section);
+                    if (entryState) navigate(targetPath, { state: entryState });
+                    else navigate(targetPath);
                   }
                   return;
                 }
-                lastActivePlayTapRef.current = now;
+                lastActiveSportTapRef.current[section] = now;
               }
             }
 
