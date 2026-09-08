@@ -3,6 +3,7 @@ import {
   formatTwentyQuestionsScoreImpact,
   TWENTY_QUESTIONS_LIMIT,
   TWENTY_QUESTIONS_START_SCORE,
+  twentyQuestionsEligibleQuestions,
   twentyQuestionsFinalScore,
   twentyQuestionsScoreAfterQuestion,
   twentyQuestionsScoreAfterWrongGuess,
@@ -144,9 +145,13 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     () => remainingSubjectsForAnswers(round.universe.subjects, asked),
     [asked, round.universe.subjects],
   );
-  const recommendedQuestions = useMemo(
-    () => rankRecommendedQuestions(unaskedQuestions, remainingSubjects),
+  const eligibleQuestions = useMemo(
+    () => twentyQuestionsEligibleQuestions(unaskedQuestions, remainingSubjects),
     [remainingSubjects, unaskedQuestions],
+  );
+  const recommendedQuestions = useMemo(
+    () => rankRecommendedQuestions(eligibleQuestions, remainingSubjects),
+    [eligibleQuestions, remainingSubjects],
   );
   const recommendedQuestionIds = useMemo(
     () => new Set(recommendedQuestions.map((question) => question.id)),
@@ -155,17 +160,17 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
   const searchResults = useMemo(() => {
     const query = normalized(questionSearch);
     if (!query) return [];
-    return unaskedQuestions.filter((question) => normalized(question.label).includes(query));
-  }, [questionSearch, unaskedQuestions]);
+    return eligibleQuestions.filter((question) => normalized(question.label).includes(query));
+  }, [eligibleQuestions, questionSearch]);
   const categorizedQuestions = useMemo(() => QUESTION_CATEGORY_ORDER
     .map((category) => ({
       category,
       label: questionCategoryLabel(category, sport),
-      questions: unaskedQuestions.filter((question) => (
+      questions: eligibleQuestions.filter((question) => (
         !recommendedQuestionIds.has(question.id) && questionCategory(question) === category
       )),
     }))
-    .filter((group) => group.questions.length > 0), [recommendedQuestionIds, sport, unaskedQuestions]);
+    .filter((group) => group.questions.length > 0), [eligibleQuestions, recommendedQuestionIds, sport]);
 
   const guessMatches = useMemo(() => {
     const query = normalized(guessSearch);
@@ -178,7 +183,6 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
   const finalGuessRequired = phase === "playing" && asked.length >= TWENTY_QUESTIONS_LIMIT;
   const finalScore = twentyQuestionsFinalScore(score);
   const football = sport === "football";
-  const subjectNoun = football ? "identities" : "fighters";
 
   function resetRound() {
     setRound(createRound());
@@ -360,7 +364,6 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
               <section className="twenty-questions-history" aria-labelledby="twenty-questions-history-title">
                 <div className="twenty-questions-section-heading">
                   <div><p className="eyebrow">ASKED {asked.length} / {TWENTY_QUESTIONS_LIMIT}</p><h2 id="twenty-questions-history-title">What you know</h2></div>
-                  <span>{remainingSubjects.length} {subjectNoun} remaining</span>
                 </div>
                 <div className="twenty-questions-history-list">
                   {renderAskedEntries(
@@ -385,7 +388,6 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
               <section className="twenty-questions-bank" aria-labelledby="twenty-questions-bank-title">
                 <div className="twenty-questions-section-heading">
                   <div><p className="eyebrow">QUESTION BANK</p><h2 id="twenty-questions-bank-title">Choose your next question</h2></div>
-                  <span>{remainingSubjects.length} {subjectNoun} remaining</span>
                 </div>
                 <input
                   value={questionSearch}
