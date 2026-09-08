@@ -1,8 +1,11 @@
-import { UPDATE_RECOVERY_CACHE_CONTROL, isDeploymentMarkerPath } from "./updateRecoveryHeaders";
-
 const CANONICAL_HOSTNAME = "the.hq-app.workers.dev";
 
 export const LEGACY_REDIRECT_STATUS = 308;
+export const UPDATE_RECOVERY_CACHE_CONTROL = "no-store, no-cache, must-revalidate, max-age=0";
+
+function isDeploymentMarkerPath(pathname: string) {
+  return pathname === "/deployment.json";
+}
 
 export function legacyOctagonRedirect(request: Request) {
   const source = new URL(request.url);
