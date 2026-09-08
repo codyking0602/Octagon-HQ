@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import footballBackRoomSource from "../features/back-room/FootballBackRoomPage.tsx?raw";
+import bottomNavigationSource from "../components/BottomNavigation.tsx?raw";
+import footballEntryRevealCss from "./football-entry-reveal.css?raw";
 import footballShellCss from "./football-shell.css?raw";
 
 const vinceYoungClip = readFileSync(
@@ -9,7 +10,7 @@ const vinceYoungClip = readFileSync(
 );
 
 describe("Football HQ entrance transition", () => {
-  it("fills the viewport with the portrait Vince Young transition", () => {
+  it("fills the viewport with the approved Play clip", () => {
     expect(footballShellCss).toContain(`.football-entry-transition__video {
   display: block;
   width: 100%;
@@ -17,11 +18,13 @@ describe("Football HQ entrance transition", () => {
   object-fit: cover;
   object-position: center;
 }`);
+    expect(bottomNavigationSource).toContain("/assets/football/vince-young-championship-run.mp4");
   });
 
-  it("lets the approved clip own the transition duration", () => {
-    expect(footballBackRoomSource).toContain("onEnded={onComplete}");
-    expect(footballBackRoomSource).not.toContain("window.setTimeout");
+  it("hands the clip into the Football HQ slam instead of a second route owner", () => {
+    expect(bottomNavigationSource).toContain('stage: "slam"');
+    expect(bottomNavigationSource).toContain('data-testid="football-entry-slam"');
+    expect(footballEntryRevealCss).toContain("@keyframes football-entry-cover-slam");
   });
 
   it("ships a real production clip instead of the tiny placeholder", () => {
