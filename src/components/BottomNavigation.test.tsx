@@ -53,8 +53,7 @@ function installVisualViewport() {
 
 function LocationProbe() {
   const location = useLocation();
-  const footballEntry = Boolean((location.state as { footballEntry?: boolean } | null)?.footballEntry);
-  return <output data-testid="location">{location.pathname}|{footballEntry ? "entry" : "plain"}</output>;
+  return <output data-testid="location">{location.pathname}</output>;
 }
 
 function renderNavigation(initialEntries: string[] = ["/"], children: ReactNode = null) {
@@ -195,17 +194,74 @@ describe("BottomNavigation", () => {
     expect(navigation).toHaveStyle({ display: "grid" });
   });
 
-  it("enters Football only after a second tap on the active Play tab", () => {
+  it("reveals Football Play only after a second tap on the active Play tab", () => {
     installVisualViewport();
     renderNavigation(["/play"], <LocationProbe />);
 
     const play = screen.getByRole("link", { name: "Play" });
     fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
+    expect(screen.getByTestId("location")).toHaveTextContent("/play");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
 
     fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football|entry");
+    expect(screen.getByTestId("location")).toHaveTextContent("/football");
+    expect(screen.getByTestId("football-entry-transition").querySelector("video"))
+      .toHaveAttribute("src", "/assets/football/football-play-reveal.mp4");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+  });
+
+  it("reveals Football Picks only after a second tap on the active Picks tab", () => {
+    installVisualViewport();
+    renderNavigation(["/picks"], <LocationProbe />);
+
+    const picks = screen.getByRole("link", { name: "Picks" });
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/picks");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks");
+    expect(screen.getByTestId("football-entry-transition").querySelector("video"))
+      .toHaveAttribute("src", "/assets/football/football-picks-reveal.mp4");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+  });
+
+  it("keeps cycling Play between sports without replaying the reveal during the same app session", () => {
+    installVisualViewport();
+    renderNavigation(["/play"], <LocationProbe />);
+
+    let play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    fireEvent.click(play);
+    const firstReveal = screen.getByTestId("football-entry-transition");
+    fireEvent.ended(firstReveal.querySelector("video") as HTMLVideoElement);
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+
+    play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/play");
+
+    play = screen.getByRole("link", { name: "Play" });
+    fireEvent.click(play);
+    fireEvent.click(play);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+  });
+
+  it("double-taps the active Football Picks tab back to UFC", () => {
+    installVisualViewport();
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    renderNavigation(["/football/picks"], <LocationProbe />);
+
+    const picks = screen.getByRole("link", { name: "Picks" });
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks");
+
+    fireEvent.click(picks);
+    expect(screen.getByTestId("location")).toHaveTextContent("/picks");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 
   it("double-taps the active Football Play tab back to UFC", () => {
@@ -215,10 +271,11 @@ describe("BottomNavigation", () => {
 
     const play = screen.getByRole("link", { name: "Play" });
     fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football|plain");
+    expect(screen.getByTestId("location")).toHaveTextContent("/football");
 
     fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
+    expect(screen.getByTestId("location")).toHaveTextContent("/play");
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 });
