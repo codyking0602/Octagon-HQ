@@ -1,10 +1,20 @@
 import { describe, expect, it } from "vitest";
+import { chooseTwentyQuestionsFootballLeague } from "./twentyQuestionsEngine";
 import { getFootballTwentyQuestionsUniverse } from "./twentyQuestionsFootballAuthority";
 import { createTwentyQuestionsRound } from "./twentyQuestionsRuntime";
 import {
   UFC_TWENTY_QUESTIONS_SUBJECT_COUNT,
   getUfcTwentyQuestionsUniverse,
 } from "./twentyQuestionsUfcAuthority";
+
+function createFootballRound(random: () => number) {
+  const league = chooseTwentyQuestionsFootballLeague(random);
+  return createTwentyQuestionsRound(
+    "football",
+    getFootballTwentyQuestionsUniverse(league),
+    random,
+  );
+}
 
 describe("UFC 20 Questions factual authority", () => {
   it("uses the canonical 100-subject UFC factual universe", () => {
@@ -30,11 +40,11 @@ describe("UFC 20 Questions factual authority", () => {
 
 describe("Football 20 Questions runtime", () => {
   it("discloses NFL or CFB before play and never combines the universes", () => {
-    const nfl = createTwentyQuestionsRound("football", (() => {
+    const nfl = createFootballRound((() => {
       const values = [0.1, 0.2];
       return () => values.shift() ?? 0;
     })());
-    const cfb = createTwentyQuestionsRound("football", (() => {
+    const cfb = createFootballRound((() => {
       const values = [0.9, 0.2];
       return () => values.shift() ?? 0;
     })());

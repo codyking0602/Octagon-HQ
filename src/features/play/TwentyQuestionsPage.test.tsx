@@ -11,7 +11,8 @@ import {
   twentyQuestionsScoreAfterWrongGuess,
 } from "../games/twentyQuestionsEngine";
 import { getUfcTwentyQuestionsUniverse } from "../games/twentyQuestionsUfcAuthority";
-import TwentyQuestionsPage from "./TwentyQuestionsPage";
+import FootballTwentyQuestionsPage from "./FootballTwentyQuestionsPage";
+import UfcTwentyQuestionsPage from "./UfcTwentyQuestionsPage";
 
 function clickQuestion(label: string) {
   const labelNode = screen.getByText(label, { selector: ".twenty-questions-question-list span" });
@@ -41,7 +42,7 @@ describe("replayable 20 Questions page", () => {
     const universe = getUfcTwentyQuestionsUniverse();
     const hidden = universe.subjects[0]!;
     const wrong = universe.subjects.find((subject) => subject.id !== hidden.id)!;
-    const { container } = render(<TwentyQuestionsPage sport="ufc" />);
+    const { container } = render(<UfcTwentyQuestionsPage />);
 
     expect(screen.getByText("UFC ROUND")).toBeInTheDocument();
     expect(screen.getByLabelText("20 Questions scoring rules")).toHaveTextContent("10 questions max");
@@ -97,7 +98,7 @@ describe("replayable 20 Questions page", () => {
 
   it("hard-stops and reveals after ten unique questions", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
-    const { container } = render(<TwentyQuestionsPage sport="ufc" />);
+    const { container } = render(<UfcTwentyQuestionsPage />);
 
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
     for (let index = 0; index < TWENTY_QUESTIONS_LIMIT; index += 1) {
@@ -116,7 +117,7 @@ describe("replayable 20 Questions page", () => {
     vi.spyOn(Math, "random")
       .mockReturnValueOnce(0.2)
       .mockReturnValue(0.3);
-    const { container } = render(<TwentyQuestionsPage sport="football" />);
+    const { container } = render(<FootballTwentyQuestionsPage />);
 
     expect(screen.getByText("NFL ROUND")).toBeInTheDocument();
     expect(screen.getByText(/League is locked and revealed before the first question/i)).toBeInTheDocument();
