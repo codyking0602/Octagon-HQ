@@ -5,7 +5,8 @@ import { createServer } from "vite";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const target = path.join(root, "src/features/games/generated/twentyQuestionsFootballRuntime.json");
-const CATEGORY_LIMIT = 20;
+const CATEGORY_LIMIT = 30;
+const MAX_QUESTIONS = 360;
 const CATEGORY_ORDER = ["role", "era", "career", "achievements", "affiliations", "matchups"];
 
 function categoryForQuestion(question) {
@@ -33,6 +34,48 @@ function compareScored(left, right) {
     || left.imbalance - right.imbalance
     || left.question.internalCost - right.question.internalCost
     || left.question.label.localeCompare(right.question.label);
+}
+
+function unresolvedSubjectPairs(subjectCount, selected) {
+  const unresolved = [];
+  for (let left = 0; left < subjectCount; left += 1) {
+    for (let right = left + 1; right < subjectCount; right += 1) {
+      if (selected.every((row) => row.answers[left] === row.answers[right])) unresolved.push([left, right]);
+    }
+  }
+  return unresolved;
+}
+
+function completePairCoverage(universe, scored, selected) {
+  const selectedIds = new Set(selected.map((row) => row.question.id));
+  let unresolved = unresolvedSubjectPairs(universe.subjects.length, selected);
+
+  while (unresolved.length) {
+    let best = null;
+    let bestCoverage = 0;
+    for (const row of scored) {
+      if (selectedIds.has(row.question.id)) continue;
+      const coverage = unresolved.reduce(
+        (sum, [left, right]) => sum + Number(row.answers[left] !== row.answers[right]),
+        0,
+      );
+      if (coverage > bestCoverage || (coverage === bestCoverage && coverage > 0 && best && compareScored(row, best) < 0)) {
+        best = row;
+        bestCoverage = coverage;
+      }
+    }
+    if (!best || bestCoverage === 0) break;
+    selected.push(best);
+    selectedIds.add(best.question.id);
+    unresolved = unresolved.filter(([left, right]) => best.answers[left] === best.answers[right]);
+  }
+
+  if (unresolved.length) {
+    throw new Error(`${universe.league} Football 20 Questions authority cannot distinguish ${unresolved.length} subject pairs.`);
+  }
+  if (selected.length > MAX_QUESTIONS) {
+    throw new Error(`${universe.league} Football 20 Questions runtime needs ${selected.length} questions, above the ${MAX_QUESTIONS} compact-runtime limit.`);
+  }
 }
 
 function selectRuntimeQuestions(universe) {
@@ -78,6 +121,7 @@ function selectRuntimeQuestions(universe) {
     selected.push(...categorySelection);
   }
 
+  completePairCoverage(universe, scored, selected);
   return selected;
 }
 
@@ -98,6 +142,7 @@ try {
   const output = {
     version: 1,
     categoryLimit: CATEGORY_LIMIT,
+    maxQuestions: MAX_QUESTIONS,
   };
 
   for (const league of ["NFL", "CFB"]) {

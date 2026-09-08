@@ -51,9 +51,9 @@ describe("replayable 20 Questions page", () => {
     expect(screen.queryByLabelText("Round status")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
-    expect(screen.getByLabelText("Round status")).toHaveTextContent("LEFT");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("QUESTIONS LEFT");
     expect(screen.getByLabelText("Round status")).toHaveTextContent("10");
-    expect(screen.getByLabelText("Round status")).toHaveTextContent("REMAINING");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("FIGHTERS LEFT");
     expect(screen.getByLabelText("Round status")).toHaveTextContent("100.0");
     expect(screen.getByRole("region", { name: "Recommended" })).toBeInTheDocument();
 
@@ -102,9 +102,47 @@ describe("replayable 20 Questions page", () => {
     fireEvent.click(screen.getByRole("button", { name: "PLAY AGAIN" }));
     expect(screen.getByRole("button", { name: "START ROUND" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
-    expect(screen.getByLabelText("Round status")).toHaveTextContent("LEFT");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("QUESTIONS LEFT");
     expect(screen.getByLabelText("Round status")).toHaveTextContent("10");
     expect(screen.getByLabelText("Round status")).toHaveTextContent("100.0");
+  });
+
+  it("removes a wrong candidate guess from the remaining pool and prevents guessing it again", () => {
+    const subjects = [
+      { id: "fighter-alpha", name: "Alpha Fighter", kind: "fighter" as const, league: "UFC" as const },
+      { id: "fighter-bravo", name: "Bravo Fighter", kind: "fighter" as const, league: "UFC" as const },
+      { id: "fighter-charlie", name: "Charlie Fighter", kind: "fighter" as const, league: "UFC" as const },
+    ];
+    const universe: TwentyQuestionsUniverse = {
+      league: "UFC",
+      subjects,
+      questions: [{
+        id: "career:alpha-or-bravo",
+        label: "Is this Alpha or Bravo?",
+        internalCost: 5,
+        answer: (subjectId: string) => subjectId !== "fighter-charlie",
+      }],
+    };
+    render(
+      <TwentyQuestionsPage
+        sport="ufc"
+        createRound={() => ({ sport: "ufc", universe, hiddenSubject: subjects[0]! })}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
+    clickQuestion("Is this Alpha or Bravo?");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("FIGHTERS LEFT2");
+
+    fireEvent.click(screen.getByRole("button", { name: "GUESS" }));
+    chooseGuess("Bravo Fighter");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("FIGHTERS LEFT1");
+    expect(screen.getByRole("status")).toHaveTextContent("Bravo Fighter is not the answer");
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Search identities" }), {
+      target: { value: "Bravo Fighter" },
+    });
+    expect(screen.queryByText("Bravo Fighter", { selector: ".twenty-questions-guess-list strong" })).not.toBeInTheDocument();
   });
 
   it("forces one final guess after the tenth question instead of revealing the identity", () => {
@@ -140,7 +178,7 @@ describe("replayable 20 Questions page", () => {
       fireEvent.click(questionButton!);
     }
 
-    expect(screen.getByLabelText("Round status")).toHaveTextContent("LEFT0");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("QUESTIONS LEFT0");
     expect(screen.getByText("10 questions used. Who is it?")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "FINAL GUESS" })).toBeInTheDocument();
     expect(screen.queryByText("NOT SOLVED")).not.toBeInTheDocument();
@@ -183,7 +221,8 @@ describe("replayable 20 Questions page", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
     expect(screen.getByText("NFL")).toBeInTheDocument();
-    expect(screen.getByLabelText("Round status")).toHaveTextContent("REMAINING");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("QUESTIONS LEFT");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("PEOPLE LEFT");
     expect(screen.getByRole("region", { name: "Recommended" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "GUESS" }));
     expect(screen.getByPlaceholderText("Search the full NFL roster…")).toBeInTheDocument();

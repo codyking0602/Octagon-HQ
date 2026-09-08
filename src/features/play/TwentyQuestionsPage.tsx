@@ -86,8 +86,12 @@ function questionCategoryLabel(category: QuestionCategoryKey, sport: TwentyQuest
 function remainingSubjectsForAnswers(
   subjects: readonly TwentyQuestionsSubject[],
   asked: readonly AskedQuestion[],
+  rejectedSubjectIds: ReadonlySet<string>,
 ) {
-  return subjects.filter((subject) => asked.every((entry) => entry.question.answer(subject.id) === entry.answer));
+  return subjects.filter((subject) => (
+    !rejectedSubjectIds.has(subject.id)
+    && asked.every((entry) => entry.question.answer(subject.id) === entry.answer)
+  ));
 }
 
 function rankRecommendedQuestions(
@@ -135,6 +139,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
   const [guessSearch, setGuessSearch] = useState("");
   const [selectedGuess, setSelectedGuess] = useState<TwentyQuestionsSubject | null>(null);
   const [wrongGuesses, setWrongGuesses] = useState(0);
+  const [rejectedSubjectIds, setRejectedSubjectIds] = useState<Set<string>>(() => new Set());
   const [guessNotice, setGuessNotice] = useState<string | null>(null);
 
   const usedQuestionIds = useMemo(() => new Set(asked.map((entry) => entry.question.id)), [asked]);
@@ -142,8 +147,8 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     .filter((question) => !usedQuestionIds.has(question.id))
     .sort((left, right) => left.label.localeCompare(right.label)), [round.universe.questions, usedQuestionIds]);
   const remainingSubjects = useMemo(
-    () => remainingSubjectsForAnswers(round.universe.subjects, asked),
-    [asked, round.universe.subjects],
+    () => remainingSubjectsForAnswers(round.universe.subjects, asked, rejectedSubjectIds),
+    [asked, rejectedSubjectIds, round.universe.subjects],
   );
   const eligibleQuestions = useMemo(
     () => twentyQuestionsEligibleQuestions(unaskedQuestions, remainingSubjects),
@@ -176,9 +181,9 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     const query = normalized(guessSearch);
     if (query.length < 2) return [];
     return round.universe.subjects
-      .filter((subject) => normalized(subject.name).includes(query))
+      .filter((subject) => !rejectedSubjectIds.has(subject.id) && normalized(subject.name).includes(query))
       .slice(0, 12);
-  }, [guessSearch, round.universe.subjects]);
+  }, [guessSearch, rejectedSubjectIds, round.universe.subjects]);
 
   const finalGuessRequired = phase === "playing" && asked.length >= TWENTY_QUESTIONS_LIMIT;
   const finalScore = twentyQuestionsFinalScore(score);
@@ -198,6 +203,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     setGuessSearch("");
     setSelectedGuess(null);
     setWrongGuesses(0);
+    setRejectedSubjectIds(new Set());
     setGuessNotice(null);
   }
 
@@ -238,6 +244,11 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
       return;
     }
 
+    setRejectedSubjectIds((current) => {
+      const next = new Set(current);
+      next.add(selectedGuess.id);
+      return next;
+    });
     setGuessNotice(`${selectedGuess.name} is not the answer. −10 pts.`);
     setGuessSearch("");
     setSelectedGuess(null);
@@ -303,8 +314,8 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
         {phase === "playing" ? (
           <>
             <section className="twenty-questions-scorebar" aria-label="Round status">
-              <div><small>LEFT</small><strong>{TWENTY_QUESTIONS_LIMIT - asked.length}</strong></div>
-              <div><small>REMAINING</small><strong>{remainingSubjects.length}</strong></div>
+              <div><small>QUESTIONS LEFT</small><strong>{TWENTY_QUESTIONS_LIMIT - asked.length}</strong></div>
+              <div><small>{football ? "PEOPLE LEFT" : "FIGHTERS LEFT"}</small><strong>{remainingSubjects.length}</strong></div>
               <div><small>SCORE</small><strong>{score.toFixed(1)}</strong></div>
               <button
                 type="button"
