@@ -9,9 +9,11 @@ import {
   twentyQuestionsFinalScore,
   twentyQuestionsScoreAfterQuestion,
   twentyQuestionsScoreAfterWrongGuess,
+  type TwentyQuestionsUniverse,
 } from "../games/twentyQuestionsEngine";
 import { getUfcTwentyQuestionsUniverse } from "../games/twentyQuestionsUfcAuthority";
 import FootballTwentyQuestionsPage from "./FootballTwentyQuestionsPage";
+import TwentyQuestionsPage from "./TwentyQuestionsPage";
 import UfcTwentyQuestionsPage from "./UfcTwentyQuestionsPage";
 
 function clickQuestion(label: string) {
@@ -106,11 +108,30 @@ describe("replayable 20 Questions page", () => {
   });
 
   it("forces one final guess after the tenth question instead of revealing the identity", () => {
-    vi.spyOn(Math, "random").mockReturnValue(0);
-    const universe = getUfcTwentyQuestionsUniverse();
-    const hidden = universe.subjects[0]!;
-    const wrong = universe.subjects.find((subject) => subject.id !== hidden.id)!;
-    const { container } = render(<UfcTwentyQuestionsPage />);
+    const subjects = Array.from({ length: 12 }, (_, index) => ({
+      id: `fighter-${index}`,
+      name: `Fighter ${index}`,
+      kind: "fighter" as const,
+      league: "UFC" as const,
+    }));
+    const universe: TwentyQuestionsUniverse = {
+      league: "UFC",
+      subjects,
+      questions: Array.from({ length: TWENTY_QUESTIONS_LIMIT }, (_, index) => ({
+        id: `career:filter-${index + 1}`,
+        label: `Is this Fighter ${index + 1}?`,
+        internalCost: 5 as const,
+        answer: (subjectId: string) => subjectId === `fighter-${index + 1}`,
+      })),
+    };
+    const hidden = subjects[0]!;
+    const wrong = subjects[11]!;
+    const { container } = render(
+      <TwentyQuestionsPage
+        sport="ufc"
+        createRound={() => ({ sport: "ufc", universe, hiddenSubject: hidden })}
+      />,
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
     for (let index = 0; index < TWENTY_QUESTIONS_LIMIT; index += 1) {
