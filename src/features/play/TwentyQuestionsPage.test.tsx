@@ -107,7 +107,7 @@ describe("replayable 20 Questions page", () => {
     expect(screen.getByLabelText("Round status")).toHaveTextContent("100.0");
   });
 
-  it("removes a wrong candidate guess from the remaining pool and prevents guessing it again", () => {
+  it("removes a wrong candidate guess from the remaining pool without auto-revealing the last identity", () => {
     const subjects = [
       { id: "fighter-alpha", name: "Alpha Fighter", kind: "fighter" as const, league: "UFC" as const },
       { id: "fighter-bravo", name: "Bravo Fighter", kind: "fighter" as const, league: "UFC" as const },
@@ -138,11 +138,44 @@ describe("replayable 20 Questions page", () => {
     chooseGuess("Bravo Fighter");
     expect(screen.getByLabelText("Round status")).toHaveTextContent("FIGHTERS LEFT1");
     expect(screen.getByRole("status")).toHaveTextContent("Bravo Fighter is not the answer");
+    expect(screen.getByText("One identity remains. Take your guess or reveal the answer.")).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Alpha Fighter" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "FORFEIT / REVEAL ANSWER" })).toBeInTheDocument();
 
     fireEvent.change(screen.getByRole("textbox", { name: "Search identities" }), {
       target: { value: "Bravo Fighter" },
     });
     expect(screen.queryByText("Bravo Fighter", { selector: ".twenty-questions-guess-list strong" })).not.toBeInTheDocument();
+  });
+
+  it("forfeits as a loss and reveals through the normal result path", () => {
+    const subjects = [
+      { id: "fighter-alpha", name: "Alpha Fighter", kind: "fighter" as const, league: "UFC" as const },
+      { id: "fighter-bravo", name: "Bravo Fighter", kind: "fighter" as const, league: "UFC" as const },
+    ];
+    const universe: TwentyQuestionsUniverse = {
+      league: "UFC",
+      subjects,
+      questions: [{
+        id: "division:lightweight",
+        label: "Is this fighter a lightweight?",
+        internalCost: 8,
+        answer: (subjectId: string) => subjectId === "fighter-alpha",
+      }],
+    };
+    render(
+      <TwentyQuestionsPage
+        sport="ufc"
+        createRound={() => ({ sport: "ufc", universe, hiddenSubject: subjects[0]! })}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
+    fireEvent.click(screen.getByRole("button", { name: "FORFEIT / REVEAL ANSWER" }));
+
+    expect(screen.getByText("NOT SOLVED")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Alpha Fighter" })).toBeInTheDocument();
+    expect(screen.getByText("You forfeited the round. This was the hidden identity.")).toBeInTheDocument();
   });
 
   it("forces one final guess after the tenth question instead of revealing the identity", () => {
