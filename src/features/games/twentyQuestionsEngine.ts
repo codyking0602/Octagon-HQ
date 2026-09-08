@@ -16,7 +16,7 @@ export interface TwentyQuestionsQuestion {
   label: string;
   internalCost: TwentyQuestionsQuestionCost;
   answer: (subjectId: string) => boolean;
-  /** Human-recognizable deduction value. Higher values outrank cleaner database splits. */
+  /** Human-recognizable deduction value. Higher values favor better game clues. */
   humanValue?: TwentyQuestionsHumanValue;
   /** Broad clue family used to keep Recommended varied. */
   recommendationFamily?: string;
@@ -110,9 +110,10 @@ function inferredRecommendationFamily(question: TwentyQuestionsQuestion) {
 }
 
 /**
- * Human deduction value is the first ranking lane during normal play. Once the
- * pool is down to five identities, exact live separation takes priority so
- * Recommended actively finishes the current candidate set.
+ * Recommended balances recognizable clues with the number of identities a
+ * question can actually eliminate. That prevents attractive but one-person
+ * affiliation clues from consuming an entire round. Once the pool is down to
+ * five identities, exact live separation takes priority.
  */
 export function twentyQuestionsRecommendedQuestions(
   questions: readonly TwentyQuestionsQuestion[],
@@ -125,11 +126,14 @@ export function twentyQuestionsRecommendedQuestions(
     .map((question) => {
       const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
       const no = remainingSubjects.length - yes;
+      const humanValue = inferredHumanValue(question);
+      const usefulSplit = Math.min(yes, no);
       return {
         question,
-        humanValue: inferredHumanValue(question),
+        humanValue,
         family: inferredRecommendationFamily(question),
-        usefulSplit: Math.min(yes, no),
+        usefulSplit,
+        recommendationScore: usefulSplit * (humanValue + 1),
         imbalance: Math.abs(yes - no),
       };
     })
@@ -140,7 +144,8 @@ export function twentyQuestionsRecommendedQuestions(
           || right.humanValue - left.humanValue
           || left.question.internalCost - right.question.internalCost
           || left.question.label.localeCompare(right.question.label)
-        : right.humanValue - left.humanValue
+        : right.recommendationScore - left.recommendationScore
+          || right.humanValue - left.humanValue
           || right.usefulSplit - left.usefulSplit
           || left.imbalance - right.imbalance
           || left.question.internalCost - right.question.internalCost
