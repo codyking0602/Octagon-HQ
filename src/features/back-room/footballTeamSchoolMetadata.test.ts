@@ -45,6 +45,20 @@ describe("football team and school metadata", () => {
     expect(footballHistoricalConferenceForProgram("Miami", 2004)).toBe("ACC");
   });
 
+  it("keeps western conference history era-correct across the PCC breakup and later renames", () => {
+    expect(footballHistoricalConferenceForProgram("USC", 1958)).toBe("PCC");
+    expect(footballHistoricalConferenceForProgram("USC", 1959)).toBe("AAWU");
+    expect(footballHistoricalConferenceForProgram("USC", 1968)).toBe("Pac-8");
+    expect(footballHistoricalConferenceForProgram("USC", 1978)).toBe("Pac-10");
+    expect(footballHistoricalConferenceForProgram("USC", 2011)).toBe("Pac-12");
+    expect(footballHistoricalConferenceForProgram("USC", 2024)).toBe("Big Ten");
+
+    expect(footballHistoricalConferenceForProgram("Oregon", 1960)).toBe("Independent");
+    expect(footballHistoricalConferenceForProgram("Oregon", 1964)).toBe("AAWU");
+    expect(footballHistoricalConferenceForProgram("Washington State", 1961)).toBe("Independent");
+    expect(footballHistoricalConferenceForProgram("Washington State", 1962)).toBe("AAWU");
+  });
+
   it("returns unknown rather than inventing a conference or metadata record", () => {
     expect(footballHistoricalConferenceForProgram("Unknown Tech", 1999)).toBeNull();
     expect(footballTeamSchoolMetadataFor("Unknown Team")).toBeNull();
