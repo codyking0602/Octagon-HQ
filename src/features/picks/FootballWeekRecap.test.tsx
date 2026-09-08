@@ -1,7 +1,14 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { PickHistoryEvent } from "./picksModel";
 import { FootballWeekRecap } from "./FootballWeekRecap";
+
+vi.mock("./picksEventAssets", () => ({
+  pickEventPosters: () => [{
+    src: "https://example.test/football-week-header.jpg",
+    aspectRatio: "16 / 9",
+  }],
+}));
 
 const week: PickHistoryEvent = {
   eventId: "football-week-2",
@@ -76,12 +83,16 @@ const week: PickHistoryEvent = {
 };
 
 describe("FootballWeekRecap", () => {
-  it("opens with a football-native result-first week hero and frozen ATS summary", () => {
+  it("opens with the canonical Football week header, result-first hero, and frozen ATS summary", () => {
     render(<FootballWeekRecap event={week} requestedOpen />);
 
     const dialog = screen.getByRole("dialog", { name: "Football Week 2 Week Recap" });
     expect(dialog).toHaveTextContent("WEEK 2 · FINAL");
     expect(dialog).toHaveTextContent("NFL");
+    expect(screen.getByRole("img", { name: "WEEK 2 Football Picks header" })).toHaveAttribute(
+      "src",
+      "https://example.test/football-week-header.jpg",
+    );
     expect(screen.getByRole("heading", { name: "CODY WINS THE WEEK" })).toBeInTheDocument();
     expect(dialog).toHaveTextContent("5 PTS · 1-0 ATS");
     expect(dialog).toHaveTextContent("2 PLAYERS");
@@ -90,6 +101,31 @@ describe("FootballWeekRecap", () => {
     expect(screen.getByRole("heading", { name: "WEEK STANDINGS" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "GAME RESULTS" })).toBeInTheDocument();
     expect(dialog).toHaveTextContent("Philadelphia Eagles -3.5 · FROZEN ATS");
+  });
+
+  it("uses the explicit canonical week label instead of a conflicting event start date", () => {
+    const datedWeek: PickHistoryEvent = {
+      ...week,
+      eventId: "football-week-sep-1",
+      name: "Football Picks · Week of Sep 1",
+      subtitle: "College Football",
+      startsAt: "2026-09-04T00:00:00Z",
+    };
+
+    render(<FootballWeekRecap event={datedWeek} requestedOpen />);
+
+    const dialog = screen.getByRole("dialog", { name: "Football Picks · Week of Sep 1 Week Recap" });
+    expect(dialog).toHaveTextContent("WEEK OF SEP 1 · FINAL");
+    expect(dialog).not.toHaveTextContent("WEEK OF SEP 4");
+  });
+
+  it("replaces Biggest Dog Hit with a deterministic award for successful persisted locks", () => {
+    render(<FootballWeekRecap event={week} requestedOpen />);
+
+    const dialog = screen.getByRole("dialog", { name: "Football Week 2 Week Recap" });
+    expect(dialog).toHaveTextContent("LOCKED IN");
+    expect(dialog).toHaveTextContent("1/1 LOCKS HIT · +4 BONUS PTS");
+    expect(dialog).not.toHaveTextContent("BIGGEST DOG HIT");
   });
 
   it("keeps games collapsed by default, then renders one player per row with exact lock state", () => {
