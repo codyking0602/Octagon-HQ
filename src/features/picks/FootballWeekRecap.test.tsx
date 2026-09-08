@@ -85,7 +85,7 @@ describe("FootballWeekRecap", () => {
     expect(screen.getByRole("heading", { name: "Week Standings" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Game by Game" })).toBeInTheDocument();
     expect(screen.getByText("Philadelphia Eagles 24, Dallas Cowboys 27")).toBeInTheDocument();
-    expect(screen.getByText("Philadelphia Eagles -3.5")).toBeInTheDocument();
+    expect(screen.getByText(/FROZEN ATS · Philadelphia Eagles -3\.5/)).toBeInTheDocument();
     expect(screen.getAllByText("Dallas Cowboys").length).toBeGreaterThan(0);
     expect(screen.getByText(/Cody \(YOU\) — Dallas Cowboys/)).toBeInTheDocument();
   });
