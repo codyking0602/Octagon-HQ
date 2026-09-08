@@ -4,6 +4,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useSport } from "../app/SportProvider";
+import { FOOTBALL_ENTRY_HIGHLIGHT, FOOTBALL_ENTRY_SLAM } from "./footballEntryMedia";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
 type SportSwitchNavigationIcon = Extract<NavigationIconName, "picks" | "play">;
@@ -21,11 +22,6 @@ const baseDestinations = [
 ] as const;
 
 const SECRET_SPORT_TAP_WINDOW_MS = 350;
-const FOOTBALL_ENTRY_SLAM_MS = 900;
-const FOOTBALL_ENTRY_CLIP: Record<SportSwitchNavigationIcon, string | null> = {
-  picks: null,
-  play: "/assets/football/vince-young-championship-run.mp4",
-};
 
 function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
   if (icon === "home") return pathname === "/";
@@ -148,12 +144,6 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     };
   }, []);
 
-  useEffect(() => {
-    if (footballEntryTransition?.stage !== "slam") return undefined;
-    const timer = window.setTimeout(() => setFootballEntryTransition(null), FOOTBALL_ENTRY_SLAM_MS);
-    return () => window.clearTimeout(timer);
-  }, [footballEntryTransition]);
-
   function switchSportFromActiveTab(icon: SportSwitchNavigationIcon) {
     if (footballMode) {
       setSelectedSport("ufc");
@@ -164,12 +154,16 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     setSelectedSport("football");
     if (!footballRevealShownRef.current) {
       footballRevealShownRef.current = true;
-      setFootballEntryTransition({
-        section: icon,
-        stage: FOOTBALL_ENTRY_CLIP[icon] ? "clip" : "slam",
-      });
+      setFootballEntryTransition({ section: icon, stage: "clip" });
     }
     navigate(icon === "picks" ? "/football/picks" : "/football");
+  }
+
+  function advanceFootballEntryTransition() {
+    setFootballEntryTransition((current) => {
+      if (!current) return current;
+      return current.stage === "clip" ? { ...current, stage: "slam" } : null;
+    });
   }
 
   const navigation = (
@@ -228,31 +222,20 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
       data-testid="football-entry-transition"
       role="presentation"
     >
-      {footballEntryTransition.stage === "clip" && FOOTBALL_ENTRY_CLIP[footballEntryTransition.section] ? (
-        <video
-          className="football-entry-transition__video"
-          src={FOOTBALL_ENTRY_CLIP[footballEntryTransition.section] ?? undefined}
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-          onEnded={() => setFootballEntryTransition((current) => (
-            current ? { ...current, stage: "slam" } : current
-          ))}
-          onError={() => setFootballEntryTransition((current) => (
-            current ? { ...current, stage: "slam" } : current
-          ))}
-        />
-      ) : (
-        <div className="football-entry-transition__slam" data-testid="football-entry-slam" aria-hidden="true">
-          <span className="football-entry-transition__flash" />
-          <div className="football-entry-transition__cover">
-            <small>THE HQ</small>
-            <strong>FOOTBALL HQ</strong>
-          </div>
-        </div>
-      )}
+      <video
+        key={`${footballEntryTransition.section}:${footballEntryTransition.stage}`}
+        className="football-entry-transition__video"
+        src={footballEntryTransition.stage === "clip"
+          ? FOOTBALL_ENTRY_HIGHLIGHT[footballEntryTransition.section]
+          : FOOTBALL_ENTRY_SLAM}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+        onEnded={advanceFootballEntryTransition}
+        onError={advanceFootballEntryTransition}
+      />
     </div>
   ) : null;
 
