@@ -116,7 +116,7 @@ describe("BottomNavigation", () => {
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBeNull();
   });
 
-  it("does not mistake a resumed stale shrunken viewport for an open keyboard", () => {
+  it("does not move the nav when a resumed page reports a stale shrunken visual viewport", () => {
     const viewport = installVisualViewport();
     renderNavigation();
 
@@ -131,7 +131,7 @@ describe("BottomNavigation", () => {
 
     expect(navigation).not.toHaveClass("is-keyboard-open");
     expect(navigation).toHaveStyle({ display: "grid" });
-    expect(navigation).toHaveStyle({ transform: "translateY(344px)" });
+    expect((navigation as HTMLElement).style.transform).toBe("");
   });
 
   it("still hides the navigation when an editor owns a materially occluded viewport", () => {
@@ -180,7 +180,7 @@ describe("BottomNavigation", () => {
     expect(navigation).toHaveStyle({ display: "grid" });
   });
 
-  it("corrects a stale short layout viewport so the nav stays on the visible bottom edge", () => {
+  it("keeps CSS bottom positioning authoritative when layout and visual viewports disagree", () => {
     const viewport = installVisualViewport();
     renderNavigation();
 
@@ -191,7 +191,7 @@ describe("BottomNavigation", () => {
       viewport.dispatchEvent(new Event("resize"));
     });
 
-    expect(navigation).toHaveStyle({ transform: "translateY(144px)" });
+    expect((navigation as HTMLElement).style.transform).toBe("");
     expect(navigation).toHaveStyle({ display: "grid" });
   });
 
