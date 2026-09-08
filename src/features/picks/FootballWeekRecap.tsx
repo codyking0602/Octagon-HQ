@@ -9,6 +9,7 @@ import {
   type PickHistoryBout,
   type PickHistoryEvent,
 } from "./picksModel";
+import { pickEventPosters } from "./picksEventAssets";
 import "../../styles/football-week-recap.css";
 
 interface GameAnalysis {
@@ -18,12 +19,17 @@ interface GameAnalysis {
   coveredSlug: string | null;
   correct: PickGroupPick[];
   correctPercentage: number;
-  underdogSlug: string | null;
-  underdogSpread: number | null;
+}
+
+interface LockWeekResult {
+  displayName: string;
+  attempted: number;
+  correct: number;
+  lockBonus: number;
 }
 
 interface WeekAward {
-  label: "BEST CALL" | "ROOM TRAP" | "CONSENSUS CASH" | "BIGGEST DOG HIT";
+  label: "BEST CALL" | "ROOM TRAP" | "CONSENSUS CASH" | "LOCKED IN";
   title: string;
   detail: string;
 }
@@ -115,12 +121,6 @@ function gameAnalysis(game: PickHistoryBout): GameAnalysis | null {
   const correctPercentage = submitted.length && coveredSlug
     ? (correct.length / submitted.length) * 100
     : 0;
-  const underdogSlug = game.frozenSpreadHome > 0
-    ? home
-    : game.frozenSpreadHome < 0 ? away : null;
-  const underdogSpread = game.frozenSpreadHome > 0
-    ? game.frozenSpreadHome
-    : game.frozenSpreadHome < 0 ? Math.abs(game.frozenSpreadHome) : null;
 
   return {
     game,
@@ -129,8 +129,6 @@ function gameAnalysis(game: PickHistoryBout): GameAnalysis | null {
     coveredSlug,
     correct,
     correctPercentage,
-    underdogSlug,
-    underdogSpread,
   };
 }
 
@@ -140,8 +138,11 @@ function accuracyLabel(correct: number, incorrect: number) {
 }
 
 function weekIdentity(event: PickHistoryEvent) {
-  const match = `${event.name} ${event.subtitle}`.match(/\bweek\s*(\d+)\b/i);
-  return match ? `WEEK ${match[1]}` : event.name.toUpperCase();
+  const source = `${event.name} ${event.subtitle}`;
+  const weekOf = source.match(/\bweek\s+of\s+([A-Za-z]{3,9})\s+(\d{1,2})\b/i);
+  if (weekOf) return `WEEK OF ${weekOf[1].slice(0, 3).toUpperCase()} ${Number(weekOf[2])}`;
+  const weekNumber = source.match(/\bweek\s*(\d+)\b/i);
+  return weekNumber ? `WEEK ${weekNumber[1]}` : event.name.toUpperCase();
 }
 
 function slateScope(games: readonly PickHistoryBout[]) {
@@ -157,6 +158,10 @@ function groupPickResult(pick: PickGroupPick, analysis: GameAnalysis | null) {
   return pick.pickedFighterSlug === analysis.coveredSlug ? "✓" : "✕";
 }
 
+function lockHitRate(result: LockWeekResult) {
+  return result.attempted ? result.correct / result.attempted : 0;
+}
+
 export function FootballWeekRecap({
   event,
   requestedOpen = false,
@@ -170,6 +175,7 @@ export function FootballWeekRecap({
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const scrollRef = useRef<HTMLElement | null>(null);
+  const poster = useMemo(() => pickEventPosters(event)[0] ?? null, [event]);
 
   const recap = useMemo(() => {
     const games = event.bouts.slice().sort((left, right) => left.position - right.position);
@@ -215,17 +221,42 @@ export function FootballWeekRecap({
         || right.submitted.length - left.submitted.length
         || left.game.position - right.game.position
       ))[0] ?? null;
-    const biggestDogHit = analyses
-      .filter((analysis) => (
-        analysis.underdogSlug
-        && analysis.coveredSlug === analysis.underdogSlug
-        && analysis.submitted.some((pick) => pick.pickedFighterSlug === analysis.underdogSlug)
-      ))
-      .slice()
+
+    const lockResults = new Map<string, LockWeekResult>();
+    for (const analysis of analyses) {
+      for (const pick of analysis.submitted) {
+        if (!pick.isLock) continue;
+        const key = pick.displayName.trim().toLowerCase();
+        const existing = lockResults.get(key) ?? {
+          displayName: pick.displayName,
+          attempted: 0,
+          correct: 0,
+          lockBonus: 0,
+        };
+        existing.attempted += 1;
+        if (analysis.coveredSlug && pick.pickedFighterSlug === analysis.coveredSlug) existing.correct += 1;
+        lockResults.set(key, existing);
+      }
+    }
+    for (const standing of standings) {
+      const key = standing.displayName.trim().toLowerCase();
+      const existing = lockResults.get(key);
+      if (existing) existing.lockBonus = standing.lockBonus;
+    }
+    const lockCandidates = Array.from(lockResults.values())
+      .filter((result) => result.correct > 0)
       .sort((left, right) => (
-        (right.underdogSpread ?? 0) - (left.underdogSpread ?? 0)
-        || left.game.position - right.game.position
-      ))[0] ?? null;
+        right.correct - left.correct
+        || lockHitRate(right) - lockHitRate(left)
+        || right.lockBonus - left.lockBonus
+        || left.displayName.localeCompare(right.displayName)
+      ));
+    const lockLeader = lockCandidates[0] ?? null;
+    const lockedIn = lockLeader
+      ? lockCandidates.filter((result) => (
+        result.correct === lockLeader.correct && lockHitRate(result) === lockHitRate(lockLeader)
+      ))
+      : [];
 
     const awards: WeekAward[] = [];
     if (bestCall?.coveredSlug) {
@@ -251,12 +282,15 @@ export function FootballWeekRecap({
         detail: `${consensusCash.correct.length}/${consensusCash.submitted.length} covered · ${Math.round(consensusCash.correctPercentage)}%`,
       });
     }
-    if (biggestDogHit?.underdogSlug && biggestDogHit.underdogSpread != null) {
-      const dogBackers = biggestDogHit.submitted.filter((pick) => pick.pickedFighterSlug === biggestDogHit.underdogSlug);
+    if (lockLeader && lockedIn.length) {
+      const sameBonus = lockedIn.every((result) => result.lockBonus === lockLeader.lockBonus);
+      const bonusCopy = sameBonus && lockLeader.lockBonus > 0
+        ? ` · +${lockLeader.lockBonus} BONUS PTS${lockedIn.length > 1 ? " EACH" : ""}`
+        : "";
       awards.push({
-        label: "BIGGEST DOG HIT",
-        title: `${teamName(biggestDogHit.game, biggestDogHit.underdogSlug)} +${biggestDogHit.underdogSpread}`,
-        detail: `${joinNames(dogBackers.map((pick) => pick.displayName))} backed the dog`,
+        label: "LOCKED IN",
+        title: joinNames(lockedIn.map((result) => result.displayName)),
+        detail: `${lockLeader.correct}/${lockLeader.attempted} LOCKS HIT${bonusCopy}`,
       });
     }
 
@@ -308,6 +342,7 @@ export function FootballWeekRecap({
     ? groupRankLabel(recap.current.rank, event.groupResults)
     : null;
   const weekLabel = weekIdentity(event);
+  const weekLabelHasDate = weekLabel.startsWith("WEEK OF ");
   const allExpanded = recap.games.length > 0 && expandedGameIds.length === recap.games.length;
 
   async function shareRecap() {
@@ -350,41 +385,48 @@ export function FootballWeekRecap({
         </header>
 
         <main ref={scrollRef} className="picks-event-recap__scroll" data-testid="football-week-recap-scroll">
-          <section className="football-week-recap__hero" aria-labelledby={titleId}>
-            <div className="football-week-recap__weekline">
-              <span>{weekLabel} · FINAL</span>
-              <strong>{slateScope(recap.games)}</strong>
-              <small>WEEK OF {dateLabel(event.startsAt).toUpperCase()}</small>
-            </div>
-            <div className="football-week-recap__winner">
-              <small>{championLabel}</small>
-              <h2 id={titleId}>
-                {recap.champions.length === 1
-                  ? `${championCopy.toUpperCase()} WINS THE WEEK`
-                  : `${championCopy.toUpperCase()} SHARE THE WEEK`}
-              </h2>
-              <strong>
-                {recap.winningPoints} PTS
-                {championResult && recap.champions.length === 1 ? ` · ${championResult.correct}-${championResult.incorrect} ATS` : ""}
-              </strong>
-            </div>
-            <div className="football-week-recap__quickline" aria-label="Week recap totals">
-              <span>{event.groupResults.length} {event.groupResults.length === 1 ? "PLAYER" : "PLAYERS"}</span>
-              <span>ROOM {recap.groupAccuracy} ATS</span>
-              <span>{recap.games.length} {recap.games.length === 1 ? "GAME" : "GAMES"}</span>
-            </div>
-            {recap.current ? (
-              <div className="football-week-recap__you">
-                YOU · {userFinish} · {recap.current.correct}-{recap.current.incorrect} ATS · {recap.current.totalPoints} PTS
+          <section className={`football-week-recap__event-card${poster ? " has-poster" : ""}`} aria-labelledby={titleId}>
+            {poster ? (
+              <div className="football-week-recap__poster" style={{ aspectRatio: poster.aspectRatio }}>
+                <img src={poster.src} alt={`${weekLabel} Football Picks header`} loading="eager" />
               </div>
             ) : null}
-            {recap.leagueSplits.length > 1 ? (
-              <div className="football-week-recap__league-splits" aria-label="League ATS split">
-                {recap.leagueSplits.map((split) => (
-                  <span key={split.league}>{split.league} {split.correct}-{split.submitted - split.correct} · {split.accuracy}%</span>
-                ))}
+            <div className="football-week-recap__hero">
+              <div className="football-week-recap__weekline">
+                <span>{weekLabel} · FINAL</span>
+                <strong>{slateScope(recap.games)}</strong>
+                {!weekLabelHasDate ? <small>{dateLabel(event.startsAt).toUpperCase()}</small> : null}
               </div>
-            ) : null}
+              <div className="football-week-recap__winner">
+                <small>{championLabel}</small>
+                <h2 id={titleId}>
+                  {recap.champions.length === 1
+                    ? `${championCopy.toUpperCase()} WINS THE WEEK`
+                    : `${championCopy.toUpperCase()} SHARE THE WEEK`}
+                </h2>
+                <strong>
+                  {recap.winningPoints} PTS
+                  {championResult && recap.champions.length === 1 ? ` · ${championResult.correct}-${championResult.incorrect} ATS` : ""}
+                </strong>
+              </div>
+              <div className="football-week-recap__quickline" aria-label="Week recap totals">
+                <span>{event.groupResults.length} {event.groupResults.length === 1 ? "PLAYER" : "PLAYERS"}</span>
+                <span>ROOM {recap.groupAccuracy} ATS</span>
+                <span>{recap.games.length} {recap.games.length === 1 ? "GAME" : "GAMES"}</span>
+              </div>
+              {recap.current ? (
+                <div className="football-week-recap__you">
+                  YOU · {userFinish} · {recap.current.correct}-{recap.current.incorrect} ATS · {recap.current.totalPoints} PTS
+                </div>
+              ) : null}
+              {recap.leagueSplits.length > 1 ? (
+                <div className="football-week-recap__league-splits" aria-label="League ATS split">
+                  {recap.leagueSplits.map((split) => (
+                    <span key={split.league}>{split.league} {split.correct}-{split.submitted - split.correct} · {split.accuracy}%</span>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           </section>
 
           {recap.awards.length ? (

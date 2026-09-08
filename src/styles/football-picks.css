@@ -2,8 +2,9 @@
 .football-picks-page.has-event-atmosphere::before { content: ""; position: fixed; inset: -8vw; pointer-events: none; z-index: 0; background: linear-gradient(180deg, rgba(5, 5, 7, .54) 0%, rgba(5, 5, 7, .76) 52%, rgba(5, 5, 7, .96) 100%), var(--picks-event-poster); background-position: center, center top; background-repeat: no-repeat; background-size: cover; filter: blur(48px) saturate(1.32); opacity: .16; transform: translate3d(0, 0, 0) scale(1.06); }
 .football-picks-page.has-event-atmosphere::after { content: ""; position: fixed; inset: -28% -72%; pointer-events: none; z-index: 20; background: linear-gradient(112deg, transparent 0 39%, rgba(255, 255, 255, .04) 43%, rgba(255, 255, 255, .32) 47%, rgba(255, 255, 255, .58) 50%, rgba(255, 255, 255, .3) 53%, rgba(255, 255, 255, .05) 57%, transparent 62% 100%); mix-blend-mode: screen; opacity: 0; transform: translate3d(-38%, 0, 0); will-change: transform, opacity; animation: football-picks-page-sheen 13s ease-in-out infinite; }
 .football-picks-page > * { position: relative; z-index: 1; }
-.football-picks-state { padding: 24px; background: #151719; }
-.football-picks-state h1 { margin: 6px 0; font-size: clamp(1.5rem, 7vw, 2.4rem); }
+.football-picks-state { padding: 15px 18px; background: #151719; }
+.football-picks-state h1 { margin: 4px 0; font-size: clamp(1.15rem, 5vw, 1.55rem); line-height: 1.05; }
+.football-picks-state > p:last-child { margin: 6px 0 0; color: #9fa4a6; font-size: .76rem; line-height: 1.35; }
 .football-picks-hero { position: relative; aspect-ratio: var(--picks-event-poster-aspect, 16 / 9); min-height: 0; overflow: hidden; border: 1px solid #313438; border-radius: 18px; background: #090a0a; isolation: isolate; }
 .football-picks-hero__image { position: absolute; inset: 0; background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0; z-index: 0; transition: opacity 1.8s ease-in-out; will-change: opacity; }
 .football-picks-hero__image.is-active { opacity: 1; }
@@ -73,6 +74,15 @@
 .football-picks-standings [role="row"]:first-child { color: #858b8d; font-size: .53rem; font-weight: 900; letter-spacing: .08em; }
 .football-picks-standings [role="row"].is-current { background: #d8783820; box-shadow: inset 2px 0 var(--football-picks-accent); }
 .football-picks-standings [role="row"] small { color: #858b8d; }
+
+/* Football-only season hub chrome. The shared UFC season hub keeps its red identity. */
+.football-picks-page .picks-season-hub__meta > em { color: #64a2ff; }
+.football-picks-page .picks-season-tabs button.is-active { box-shadow: inset 0 -2px 0 #2f7df6; }
+.football-picks-page .picks-season-standing::before { background: linear-gradient(90deg, rgba(47, 125, 246, .055), transparent 44%); }
+.football-picks-page .picks-season-standing.is-current-user { box-shadow: inset 3px 0 0 #2f7df6, 0 8px 20px rgba(0, 0, 0, .12); }
+.football-picks-page .picks-season-standing__name > em { border-color: rgba(47, 125, 246, .55); background: rgba(47, 125, 246, .14); color: #dceaff; }
+.football-picks-page .picks-season-standing:not(.is-leader):not(.is-second):not(.is-third) .picks-season-standing__progress > span { background: linear-gradient(90deg, rgba(47, 125, 246, .82), rgba(47, 125, 246, .22)); }
+
 @keyframes football-picks-page-sheen { 0% { opacity: .18; transform: translate3d(-38%, 0, 0); } 12% { opacity: .68; } 30% { opacity: .18; transform: translate3d(38%, 0, 0); } 36%, 100% { opacity: 0; transform: translate3d(38%, 0, 0); } }
 @media (min-width: 700px) { .football-picks-page { gap: 12px; padding-top: 20px; } .football-pick-game__matchup { grid-template-columns: repeat(2, minmax(0, 1fr)); min-height: 78px; } .football-pick-team { padding: 11px 16px; } .football-pick-team-mark { flex-basis: 40px; width: 40px; height: 40px; } .football-pick-team-copy strong { font-size: .86rem; } .football-pick-game__line strong { font-size: .7rem; } }
 @media (prefers-reduced-motion: reduce) { .football-picks-page.has-event-atmosphere::after { animation: none; display: none; } .football-picks-hero__image { transition: none; } }

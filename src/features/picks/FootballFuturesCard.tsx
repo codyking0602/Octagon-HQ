@@ -476,7 +476,7 @@ export function FootballFuturesCard() {
       <summary className="football-futures__summary">
         <div className="football-futures__summary-copy">
           <header className="football-futures__header">
-            <div><p className="eyebrow">SEASON FUTURES</p><h2 id="football-futures-title">Pick the season before it starts</h2></div>
+            <div><p className="eyebrow">SEASON FUTURES</p><h2 id="football-futures-title">{locked ? "Your season futures" : "Pick the season before it starts"}</h2></div>
             <strong>{FOOTBALL_FUTURES_MAX_POINTS.total} PTS</strong>
           </header>
           <div className="football-futures__status">
