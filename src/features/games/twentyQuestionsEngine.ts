@@ -110,9 +110,10 @@ function inferredRecommendationFamily(question: TwentyQuestionsQuestion) {
 }
 
 /**
- * Human deduction value is the first ranking lane during normal play. Once the
- * pool is down to five identities, exact live separation takes priority so
- * Recommended actively finishes the current candidate set.
+ * Recommended keeps low-value database fingerprints behind recognizable clues,
+ * but still rewards a useful split inside that human-playable lane. Once the
+ * pool is down to five identities, exact live separation takes priority so the
+ * game actively finishes the current candidate set.
  */
 export function twentyQuestionsRecommendedQuestions(
   questions: readonly TwentyQuestionsQuestion[],
@@ -125,9 +126,11 @@ export function twentyQuestionsRecommendedQuestions(
     .map((question) => {
       const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
       const no = remainingSubjects.length - yes;
+      const humanValue = inferredHumanValue(question);
       return {
         question,
-        humanValue: inferredHumanValue(question),
+        humanValue,
+        recognizable: humanValue >= 3,
         family: inferredRecommendationFamily(question),
         usefulSplit: Math.min(yes, no),
         imbalance: Math.abs(yes - no),
@@ -140,8 +143,9 @@ export function twentyQuestionsRecommendedQuestions(
           || right.humanValue - left.humanValue
           || left.question.internalCost - right.question.internalCost
           || left.question.label.localeCompare(right.question.label)
-        : right.humanValue - left.humanValue
+        : Number(right.recognizable) - Number(left.recognizable)
           || right.usefulSplit - left.usefulSplit
+          || right.humanValue - left.humanValue
           || left.imbalance - right.imbalance
           || left.question.internalCost - right.question.internalCost
           || left.question.label.localeCompare(right.question.label)
