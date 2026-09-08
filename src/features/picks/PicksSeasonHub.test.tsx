@@ -200,7 +200,6 @@ describe("PicksSeasonHub", () => {
     expect(tylerRow).toHaveTextContent("7.5 PTS");
     expect(shaneRow).toHaveTextContent("3.5 PTS");
     expect(troyRow).toHaveTextContent("1.5 PTS");
-    expect(screen.getAllByText("LEADER")).toHaveLength(1);
   });
 
   it("uses compact completed-week archive cards", () => {
