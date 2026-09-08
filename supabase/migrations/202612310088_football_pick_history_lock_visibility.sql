@@ -1,5 +1,9 @@
 -- Keep lock visibility inside the canonical secure group-pick history projection.
-create or replace function public.resolved_bout_group_picks(p_event_id text, p_bout_id text)
+-- Preserve the established per-fight reveal/privacy boundary exactly; only add the persisted lock flag.
+create or replace function public.resolved_bout_group_picks(
+  p_event_id text,
+  p_bout_id text
+)
 returns jsonb
 language sql
 stable
@@ -7,7 +11,19 @@ security definer
 set search_path = ''
 as $$
   select case
-    when auth.uid() is null or bout.result_status = 'pending' then '[]'::jsonb
+    when auth.uid() is null
+      or not exists (
+        select 1 from public.profiles viewer where viewer.id = auth.uid()
+      )
+      or (
+        event.status not in ('locked', 'complete')
+        and now() < coalesce(bout.locks_at, event.locks_at)
+        and (
+          bout.result_status = 'pending'
+          or bout.result_status = 'cancelled'
+        )
+      )
+      then '[]'::jsonb
     else coalesce((
       select jsonb_agg(
         jsonb_build_object(
@@ -31,6 +47,7 @@ as $$
     ), '[]'::jsonb)
   end
   from public.pick_bouts bout
+  join public.pick_events event on event.event_id = bout.event_id
   where bout.event_id = lower(trim(p_event_id))
     and bout.bout_id = lower(trim(p_bout_id));
 $$;
