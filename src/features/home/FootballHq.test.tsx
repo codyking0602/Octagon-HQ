@@ -173,6 +173,77 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getAllByRole("link")).toHaveLength(3);
   });
 
+  it("renders this week's college and NFL features directly from the published Picks slate and opens each exact breakdown", () => {
+    const currentEvent: PickEvent = {
+      ...event,
+      eventId: "football-picks-2026-09-08",
+      name: "Football Picks · Week of Sep 8",
+      league: "mixed",
+      startsAt: "2026-09-10T00:20:00Z",
+      locksAt: "2026-09-10T00:20:00Z",
+      bouts: [
+        {
+          boutId: "football-college-football-401856682",
+          position: 9,
+          weightClass: "COLLEGE-FOOTBALL ATS",
+          redFighterSlug: "texas-longhorns",
+          redFighterName: "Texas Longhorns",
+          blueFighterSlug: "ohio-state-buckeyes",
+          blueFighterName: "Ohio State Buckeyes",
+          homeTeamSlug: "texas-longhorns",
+          awayTeamSlug: "ohio-state-buckeyes",
+          redAmericanOdds: null,
+          blueAmericanOdds: null,
+          winnerFighterSlug: null,
+          includedInPicks: true,
+          locksAt: "2026-09-12T23:30:00Z",
+        },
+        {
+          boutId: "football-nfl-401872930",
+          position: 23,
+          weightClass: "NFL ATS",
+          redFighterSlug: "new-york-giants",
+          redFighterName: "New York Giants",
+          blueFighterSlug: "dallas-cowboys",
+          blueFighterName: "Dallas Cowboys",
+          homeTeamSlug: "new-york-giants",
+          awayTeamSlug: "dallas-cowboys",
+          redAmericanOdds: null,
+          blueAmericanOdds: null,
+          winnerFighterSlug: null,
+          includedInPicks: true,
+          locksAt: "2026-09-14T00:20:00Z",
+        },
+      ],
+    };
+
+    render(
+      <MemoryRouter>
+        <FootballHq
+          event={currentEvent}
+          selections={{}}
+          history={history}
+          summary={summary}
+          loading={false}
+          error=""
+          signedIn
+        />
+      </MemoryRouter>,
+    );
+
+    const hq = screen.getByRole("region", { name: "Football HQ" });
+    const texasOhioState = within(hq).getByText("Texas vs. Ohio State").closest("a");
+    const cowboysGiants = within(hq).getByText("Cowboys vs. Giants").closest("a");
+
+    expect(texasOhioState).toHaveAttribute("href", "/football/picks?matchup=2026-texas-ohio-state");
+    expect(cowboysGiants).toHaveAttribute("href", "/football/picks?matchup=2026-cowboys-giants");
+    expect(within(hq).getByText("Sat, Sep 12, 6:30 PM CT")).toBeInTheDocument();
+    expect(within(hq).getByText("Sun, Sep 13, 7:20 PM CT")).toBeInTheDocument();
+    expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(hq).getAllByText("OPEN MATCHUP →")).toHaveLength(2);
+  });
+
   it("shows a real unpublished state without inventing featured matchup cards", () => {
     render(
       <MemoryRouter>
