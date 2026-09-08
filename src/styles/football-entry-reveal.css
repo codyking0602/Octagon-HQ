@@ -31,6 +31,11 @@
   animation: football-entry-slam 1560ms cubic-bezier(.2, .9, .2, 1) 2040ms both;
 }
 
+.football-entry-transition__slam {
+  z-index: 2;
+  animation: football-entry-slam 1200ms cubic-bezier(.2, .9, .2, 1) both;
+}
+
 @keyframes football-entry-cut {
   0% {
     opacity: 0;
@@ -72,11 +77,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .football-entry-transition__frame:not(.football-entry-transition__frame--4) {
+  .football-entry-transition__frame:not(.football-entry-transition__frame--4):not(.football-entry-transition__slam) {
     display: none;
   }
 
-  .football-entry-transition__frame--4 {
+  .football-entry-transition__frame--4,
+  .football-entry-transition__slam {
     opacity: 1;
     transform: none;
     animation: none;
