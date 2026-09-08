@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { chooseTwentyQuestionsFootballLeague } from "./twentyQuestionsEngine";
 import { getFootballTwentyQuestionsUniverse } from "./twentyQuestionsFootballAuthority";
+import {
+  FOOTBALL_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT,
+  getFootballTwentyQuestionsRuntimeUniverse,
+} from "./twentyQuestionsFootballRuntimeAuthority";
 import { createTwentyQuestionsRound } from "./twentyQuestionsRuntime";
 import {
+  UFC_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT,
   UFC_TWENTY_QUESTIONS_SUBJECT_COUNT,
   getUfcTwentyQuestionsUniverse,
 } from "./twentyQuestionsUfcAuthority";
@@ -26,9 +31,16 @@ describe("UFC 20 Questions factual authority", () => {
     expect(new Set(universe.subjects.map((subject) => subject.id)).size).toBe(100);
   });
 
-  it("keeps every live UFC question deterministic and statically priced", () => {
+  it("keeps the live UFC bank curated instead of exposing the full predicate explosion", () => {
     const universe = getUfcTwentyQuestionsUniverse();
     expect(universe.questions.length).toBeGreaterThan(20);
+    expect(universe.questions.length).toBeLessThanOrEqual(UFC_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT * 5);
+    expect(universe.questions.filter((question) => question.id.startsWith("faced:") || question.id.startsWith("beat:"))).toHaveLength(
+      Math.min(
+        UFC_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT,
+        universe.questions.filter((question) => question.id.startsWith("faced:") || question.id.startsWith("beat:")).length,
+      ),
+    );
     for (const question of universe.questions) {
       expect([5, 6, 7, 8]).toContain(question.internalCost);
       const before = question.internalCost;
@@ -59,6 +71,17 @@ describe("Football 20 Questions runtime", () => {
   for (const league of ["NFL", "CFB"] as const) {
     it(`${league} has no repeated live question ids and no unknown answers`, () => {
       const universe = getFootballTwentyQuestionsUniverse(league);
+      expect(new Set(universe.questions.map((question) => question.id)).size).toBe(universe.questions.length);
+      for (const question of universe.questions) {
+        for (const subject of universe.subjects) expect(typeof question.answer(subject.id)).toBe("boolean");
+      }
+    });
+
+    it(`${league} ships a compact browser runtime instead of the full factual authority`, () => {
+      const universe = getFootballTwentyQuestionsRuntimeUniverse(league);
+      expect(universe.subjects).toHaveLength(120);
+      expect(universe.questions.length).toBeGreaterThan(20);
+      expect(universe.questions.length).toBeLessThanOrEqual(FOOTBALL_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT * 6);
       expect(new Set(universe.questions.map((question) => question.id)).size).toBe(universe.questions.length);
       for (const question of universe.questions) {
         for (const subject of universe.subjects) expect(typeof question.answer(subject.id)).toBe("boolean");
