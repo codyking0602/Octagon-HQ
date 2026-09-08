@@ -10,7 +10,7 @@ export type DirectCanonicalDestination =
   | { kind: "challenge"; challengeId: string }
   | { kind: "auction"; auctionId: string }
   | { kind: "picks-event"; eventId: string }
-  | { kind: "picks-recap"; eventId: string }
+  | { kind: "picks-recap"; eventId: string; sport?: "mma" | "football" }
   | { kind: "daily-challenge"; sport: "ufc" | "football" };
 
 export type CanonicalDestination =
@@ -69,7 +69,7 @@ export function canonicalDestinationPath(destination: CanonicalDestination): str
     case "picks-event":
       return withSearch("/picks", [["event", destination.eventId]]);
     case "picks-recap":
-      return withSearch("/picks", [
+      return withSearch(destination.sport === "football" ? "/picks/football" : "/picks", [
         ["event", destination.eventId],
         ["view", "recap"],
       ]);
