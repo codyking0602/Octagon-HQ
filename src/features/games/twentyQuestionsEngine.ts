@@ -2,6 +2,7 @@ export type TwentyQuestionsSport = "ufc" | "football";
 export type TwentyQuestionsLeague = "UFC" | "NFL" | "CFB";
 export type TwentyQuestionsSubjectKind = "fighter" | "player" | "coach";
 export type TwentyQuestionsQuestionCost = 5 | 6 | 7 | 8;
+export type TwentyQuestionsHumanValue = 1 | 2 | 3 | 4;
 
 export interface TwentyQuestionsSubject {
   id: string;
@@ -15,6 +16,10 @@ export interface TwentyQuestionsQuestion {
   label: string;
   internalCost: TwentyQuestionsQuestionCost;
   answer: (subjectId: string) => boolean;
+  /** Human-recognizable deduction value. Higher values outrank cleaner database splits. */
+  humanValue?: TwentyQuestionsHumanValue;
+  /** Broad clue family used to keep Recommended varied. */
+  recommendationFamily?: string;
 }
 
 export interface TwentyQuestionsUniverse {
@@ -60,6 +65,85 @@ export function twentyQuestionsEligibleQuestions(
     const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
     return yes > 0 && yes < remainingSubjects.length;
   });
+}
+
+function inferredHumanValue(question: TwentyQuestionsQuestion): TwentyQuestionsHumanValue {
+  if (question.humanValue) return question.humanValue;
+  const id = question.id.toLowerCase();
+  if (
+    id.startsWith("division:")
+    || id.startsWith("role:")
+    || id.startsWith("position:")
+    || id.startsWith("position-family:")
+    || id.startsWith("era:")
+    || id.includes(":era:")
+    || /(franchise|program|conference|college|school|team):/.test(id)
+    || /(title|champ|award|mvp|all-pro|pro-bowl|heisman|super-bowl|playoff|hall-of-fame|hof|trophy|honor)/.test(id)
+  ) return 4;
+  if (id.startsWith("faced:") || id.startsWith("beat:") || id.includes("geography") || id.includes("height")) return 3;
+  if (id.startsWith("stat:")) return 1;
+  return 2;
+}
+
+function inferredRecommendationFamily(question: TwentyQuestionsQuestion) {
+  if (question.recommendationFamily) return question.recommendationFamily;
+  const id = question.id.toLowerCase();
+  if (id.startsWith("division:") || id.startsWith("role:") || id.startsWith("position:") || id.startsWith("position-family:")) return "role";
+  if (id.startsWith("era:") || id.includes(":era:") || id.includes("longevity")) return "era";
+  if (id.startsWith("faced:") || id.startsWith("beat:")) return "matchups";
+  if (/(franchise|program|conference|college|school|team):/.test(id)) return "affiliations";
+  if (/(title|champ|award|mvp|all-pro|pro-bowl|heisman|super-bowl|playoff|hall-of-fame|hof|trophy|honor)/.test(id)) return "achievements";
+  if (id.includes("geography") || id.includes("country") || id.includes("nationality") || id.includes("region")) return "geography";
+  if (id.includes("height") || id.includes("size") || id.includes("weight")) return "physical";
+  if (id.startsWith("stat:")) return "career-production";
+  return id.split(":", 1)[0] || "career";
+}
+
+/**
+ * Human deduction value is the first ranking lane. Live information gain only
+ * sorts questions inside that lane, then diversity prevents Recommended from
+ * becoming several versions of the same clue family.
+ */
+export function twentyQuestionsRecommendedQuestions(
+  questions: readonly TwentyQuestionsQuestion[],
+  remainingSubjects: readonly TwentyQuestionsSubject[],
+  limit = 5,
+) {
+  if (limit <= 0 || remainingSubjects.length <= 1) return [];
+  const ranked = twentyQuestionsEligibleQuestions(questions, remainingSubjects)
+    .map((question) => {
+      const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
+      const no = remainingSubjects.length - yes;
+      return {
+        question,
+        humanValue: inferredHumanValue(question),
+        family: inferredRecommendationFamily(question),
+        usefulSplit: Math.min(yes, no),
+        imbalance: Math.abs(yes - no),
+      };
+    })
+    .sort((left, right) => (
+      right.humanValue - left.humanValue
+      || right.usefulSplit - left.usefulSplit
+      || left.imbalance - right.imbalance
+      || left.question.internalCost - right.question.internalCost
+      || left.question.label.localeCompare(right.question.label)
+    ));
+
+  const selected: typeof ranked = [];
+  const usedFamilies = new Set<string>();
+  for (const entry of ranked) {
+    if (usedFamilies.has(entry.family)) continue;
+    selected.push(entry);
+    usedFamilies.add(entry.family);
+    if (selected.length >= limit) return selected.map(({ question }) => question);
+  }
+  for (const entry of ranked) {
+    if (selected.includes(entry)) continue;
+    selected.push(entry);
+    if (selected.length >= limit) break;
+  }
+  return selected.map(({ question }) => question);
 }
 
 export function twentyQuestionsScoreAfterQuestion(score: number, cost: TwentyQuestionsQuestionCost) {
