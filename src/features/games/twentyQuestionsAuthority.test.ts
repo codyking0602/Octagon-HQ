@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { chooseTwentyQuestionsFootballLeague } from "./twentyQuestionsEngine";
+import {
+  chooseTwentyQuestionsFootballLeague,
+  TWENTY_QUESTIONS_BANK_LIMIT,
+  type TwentyQuestionsUniverse,
+} from "./twentyQuestionsEngine";
 import { getFootballTwentyQuestionsUniverse } from "./twentyQuestionsFootballAuthority";
 import { createTwentyQuestionsRound } from "./twentyQuestionsRuntime";
 import {
@@ -16,6 +20,12 @@ function createFootballRound(random: () => number) {
   );
 }
 
+function answerFingerprints(universe: TwentyQuestionsUniverse) {
+  return universe.subjects.map((subject) => universe.questions
+    .map((question) => question.answer(subject.id) ? "1" : "0")
+    .join(""));
+}
+
 describe("UFC 20 Questions factual authority", () => {
   it("uses the canonical 100-subject UFC factual universe", () => {
     const universe = getUfcTwentyQuestionsUniverse();
@@ -26,9 +36,11 @@ describe("UFC 20 Questions factual authority", () => {
     expect(new Set(universe.subjects.map((subject) => subject.id)).size).toBe(100);
   });
 
-  it("keeps every live UFC question deterministic and statically priced", () => {
+  it("keeps the live UFC bank compact, distinguishing, deterministic, and statically priced", () => {
     const universe = getUfcTwentyQuestionsUniverse();
-    expect(universe.questions.length).toBeGreaterThan(20);
+    expect(universe.questions.length).toBeGreaterThan(10);
+    expect(universe.questions.length).toBeLessThanOrEqual(TWENTY_QUESTIONS_BANK_LIMIT);
+    expect(new Set(answerFingerprints(universe)).size).toBe(universe.subjects.length);
     for (const question of universe.questions) {
       expect([5, 6, 7, 8]).toContain(question.internalCost);
       const before = question.internalCost;
@@ -57,9 +69,12 @@ describe("Football 20 Questions runtime", () => {
   });
 
   for (const league of ["NFL", "CFB"] as const) {
-    it(`${league} has no repeated live question ids and no unknown answers`, () => {
+    it(`${league} has a compact distinguishing bank with no repeated ids or unknown answers`, () => {
       const universe = getFootballTwentyQuestionsUniverse(league);
+      expect(universe.questions.length).toBeGreaterThan(10);
+      expect(universe.questions.length).toBeLessThanOrEqual(TWENTY_QUESTIONS_BANK_LIMIT);
       expect(new Set(universe.questions.map((question) => question.id)).size).toBe(universe.questions.length);
+      expect(new Set(answerFingerprints(universe)).size).toBe(universe.subjects.length);
       for (const question of universe.questions) {
         for (const subject of universe.subjects) expect(typeof question.answer(subject.id)).toBe("boolean");
       }
