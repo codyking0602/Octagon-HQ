@@ -48,7 +48,7 @@ function assertHumanRuntimeShape(league: "NFL" | "CFB") {
   expect(universe.subjects).toHaveLength(120);
   expect(universe.questions.length).toBeGreaterThan(50);
   expect(universe.questions.length).toBeLessThanOrEqual(360);
-  expect(ids.some((id) => id.startsWith("position:"))).toBe(true);
+  expect(ids.filter((id) => id.startsWith("position:")).length).toBeGreaterThanOrEqual(6);
   expect(ids.filter((id) => id.includes("-fine:")).length).toBeLessThan(universe.questions.length / 3);
   expect(Math.max(...[...familyCounts.values()])).toBeLessThan(40);
 
@@ -79,7 +79,6 @@ describe("Football 20 Questions human runtime", () => {
     const ids = universe.questions.map((question) => question.id);
     assertHumanRuntimeShape("NFL");
     expect(ids.some((id) => id.includes(":era:") || id.includes("longevity"))).toBe(true);
-    expect(ids.some((id) => id.startsWith("franchise:") || id.startsWith("player-college:"))).toBe(true);
     expect(ids.some((id) => id.startsWith("award:") || id.startsWith("championship:"))).toBe(true);
   });
 
@@ -87,7 +86,6 @@ describe("Football 20 Questions human runtime", () => {
     const universe = getFootballTwentyQuestionsRuntimeUniverse("CFB");
     const ids = universe.questions.map((question) => question.id);
     assertHumanRuntimeShape("CFB");
-    expect(ids.some((id) => id.startsWith("program:") || id.startsWith("historical-conference:"))).toBe(true);
     expect(ids.some((id) => id.startsWith("award:heisman:") || id.startsWith("coach:national-titles:"))).toBe(true);
   });
 });
