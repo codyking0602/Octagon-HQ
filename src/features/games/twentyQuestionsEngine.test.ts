@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  TWENTY_QUESTIONS_ENDGAME_THRESHOLD,
+  TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT,
   TWENTY_QUESTIONS_LIMIT,
   TWENTY_QUESTIONS_START_SCORE,
   TWENTY_QUESTIONS_WRONG_GUESS_PENALTY,
@@ -7,8 +9,10 @@ import {
   formatTwentyQuestionsScoreImpact,
   twentyQuestionsCostForSplit,
   twentyQuestionsEligibleQuestions,
+  twentyQuestionsFinalGuessIsDirectlyPlayable,
   twentyQuestionsFinalScore,
   twentyQuestionsRecommendedQuestions,
+  twentyQuestionsRequiresFinalGuess,
   twentyQuestionsScoreAfterQuestion,
   twentyQuestionsScoreAfterWrongGuess,
   twentyQuestionsScoreImpact,
@@ -56,6 +60,21 @@ describe("20 Questions scoring contract", () => {
   });
 });
 
+describe("20 Questions final-guess contract", () => {
+  it("requires the final guess as soon as one identity remains or the question cap is reached", () => {
+    expect(twentyQuestionsRequiresFinalGuess(2, 1)).toBe(true);
+    expect(twentyQuestionsRequiresFinalGuess(TWENTY_QUESTIONS_LIMIT, 7)).toBe(true);
+    expect(twentyQuestionsRequiresFinalGuess(TWENTY_QUESTIONS_LIMIT - 1, 2)).toBe(false);
+  });
+
+  it("defines a directly playable final board as twelve or fewer live identities", () => {
+    expect(TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT).toBe(12);
+    expect(twentyQuestionsFinalGuessIsDirectlyPlayable(1)).toBe(true);
+    expect(twentyQuestionsFinalGuessIsDirectlyPlayable(12)).toBe(true);
+    expect(twentyQuestionsFinalGuessIsDirectlyPlayable(13)).toBe(false);
+  });
+});
+
 describe("20 Questions live question intelligence", () => {
   const subjects: readonly TwentyQuestionsSubject[] = [
     { id: "a", name: "A", kind: "player", league: "NFL" },
@@ -80,7 +99,7 @@ describe("20 Questions live question intelligence", () => {
     expect(twentyQuestionsEligibleQuestions(questions, subjects.slice(0, 1))).toEqual([]);
   });
 
-  it("ranks human-recognizable clues ahead of a mathematically cleaner low-value split", () => {
+  it("ranks human-recognizable clues ahead of a mathematically cleaner low-value split during normal play", () => {
     const candidates: readonly TwentyQuestionsQuestion[] = [
       {
         id: "stat:fights:15",
@@ -91,12 +110,13 @@ describe("20 Questions live question intelligence", () => {
       },
       {
         id: "era:active-2000s",
-        label: "Active in the 2000s?",
+        label: "2010s?",
         internalCost: 5,
         humanValue: 4,
         answer: (id) => ["a", "b"].includes(id),
       },
     ];
+    expect(subjects.length).toBeGreaterThan(TWENTY_QUESTIONS_ENDGAME_THRESHOLD);
     expect(twentyQuestionsRecommendedQuestions(candidates, subjects, 2).map((question) => question.id))
       .toEqual(["era:active-2000s", "stat:fights:15"]);
   });
@@ -110,6 +130,28 @@ describe("20 Questions live question intelligence", () => {
     ];
     const recommended = twentyQuestionsRecommendedQuestions(candidates, subjects, 3);
     expect(recommended.map((question) => question.id)).toEqual(["stat:yards:1000", "era:2010s", "team:dallas"]);
+  });
+
+  it("switches to exact candidate separation when five or fewer identities remain", () => {
+    const endgameSubjects = subjects.slice(0, TWENTY_QUESTIONS_ENDGAME_THRESHOLD);
+    const candidates: readonly TwentyQuestionsQuestion[] = [
+      {
+        id: "era:recognizable-but-narrow",
+        label: "Recognizable but narrow?",
+        internalCost: 5,
+        humanValue: 4,
+        answer: (id) => id === "a",
+      },
+      {
+        id: "stat:clean-split",
+        label: "Clean split?",
+        internalCost: 8,
+        humanValue: 1,
+        answer: (id) => ["a", "b"].includes(id),
+      },
+    ];
+    expect(twentyQuestionsRecommendedQuestions(candidates, endgameSubjects, 2).map((question) => question.id))
+      .toEqual(["stat:clean-split", "era:recognizable-but-narrow"]);
   });
 
   it("does not recommend anything after deduction leaves one identity", () => {
