@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   formatTwentyQuestionsScoreImpact,
@@ -37,7 +37,7 @@ afterEach(() => {
 });
 
 describe("replayable 20 Questions page", () => {
-  it("supports question history, full-universe guessing, penalties, a correct reveal, and replay reset", () => {
+  it("supports recommended questions, narrowing counts, history, guessing, penalties, a correct reveal, and replay reset", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
     const universe = getUfcTwentyQuestionsUniverse();
     const hidden = universe.subjects[0]!;
@@ -49,10 +49,13 @@ describe("replayable 20 Questions page", () => {
     expect(screen.queryByLabelText("Round status")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
-    expect(screen.getByLabelText("Round status")).toHaveTextContent("0 / 10");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("LEFT");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("10");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("REMAINING");
     expect(screen.getByLabelText("Round status")).toHaveTextContent("100.0");
+    expect(screen.getByRole("region", { name: "Recommended" })).toBeInTheDocument();
 
-    const questionButton = container.querySelector<HTMLButtonElement>(".twenty-questions-question-list button");
+    const questionButton = container.querySelector<HTMLButtonElement>(".twenty-questions-recommended .twenty-questions-question-list button");
     const questionLabel = questionButton?.querySelector("span")?.textContent ?? "";
     const question = universe.questions.find((candidate) => candidate.label === questionLabel);
     expect(questionButton).not.toBeNull();
@@ -65,7 +68,11 @@ describe("replayable 20 Questions page", () => {
       TWENTY_QUESTIONS_START_SCORE,
       question!.internalCost,
     );
+    const expectedRemaining = universe.subjects.filter(
+      (subject) => question!.answer(subject.id) === question!.answer(hidden.id),
+    ).length;
     expect(screen.getByLabelText("Round status")).toHaveTextContent(expectedAfterQuestion.toFixed(1));
+    expect(screen.getByLabelText("Round status")).toHaveTextContent(String(expectedRemaining));
     expect(screen.getByRole("region", { name: "What you know" })).toHaveTextContent(question!.label);
     expect(screen.getByRole("region", { name: "What you know" })).toHaveTextContent(formatTwentyQuestionsScoreImpact(question!.internalCost));
     expect(screen.getByRole("region", { name: "What you know" })).not.toHaveTextContent(/cost/i);
@@ -81,23 +88,28 @@ describe("replayable 20 Questions page", () => {
     expect(screen.getByLabelText("Round status")).toHaveTextContent(expectedAfterWrongGuess.toFixed(1));
 
     chooseGuess(hidden.name);
-    expect(screen.getByText("CORRECT")).toBeInTheDocument();
+    expect(screen.getByText("SOLVED")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: hidden.name })).toBeInTheDocument();
     expect(container.querySelector(".twenty-questions-result__score")).toHaveTextContent(
       String(twentyQuestionsFinalScore(expectedAfterWrongGuess)),
     );
     expect(container.querySelector(".twenty-questions-result__stats")).toHaveTextContent("1 questions used");
     expect(container.querySelector(".twenty-questions-result__stats")).toHaveTextContent("1 wrong guesses");
+    expect(screen.getByRole("button", { name: "REVIEW CLUES" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "PLAY AGAIN" }));
     expect(screen.getByRole("button", { name: "START ROUND" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
-    expect(screen.getByLabelText("Round status")).toHaveTextContent("0 / 10");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("LEFT");
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("10");
     expect(screen.getByLabelText("Round status")).toHaveTextContent("100.0");
   });
 
-  it("hard-stops and reveals after ten unique questions", () => {
+  it("forces one final guess after the tenth question instead of revealing the identity", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
+    const universe = getUfcTwentyQuestionsUniverse();
+    const hidden = universe.subjects[0]!;
+    const wrong = universe.subjects.find((subject) => subject.id !== hidden.id)!;
     const { container } = render(<UfcTwentyQuestionsPage />);
 
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
@@ -107,26 +119,53 @@ describe("replayable 20 Questions page", () => {
       fireEvent.click(questionButton!);
     }
 
-    expect(screen.getByText("OUT OF QUESTIONS")).toBeInTheDocument();
-    expect(container.querySelector(".twenty-questions-result__stats")).toHaveTextContent("10 questions used");
-    expect(screen.queryByLabelText("Round status")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("LEFT0");
+    expect(screen.getByText("10 questions used. Who is it?")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "FINAL GUESS" })).toBeInTheDocument();
+    expect(screen.queryByText("NOT SOLVED")).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: hidden.name })).not.toBeInTheDocument();
     expect(container.querySelector(".twenty-questions-bank")).toBeNull();
+
+    chooseGuess(wrong.name);
+    expect(screen.getByText("NOT SOLVED")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: hidden.name })).toBeInTheDocument();
+    expect(container.querySelector(".twenty-questions-result__stats")).toHaveTextContent("10 questions used");
+    expect(container.querySelector(".twenty-questions-result__stats")).toHaveTextContent("1 wrong guesses");
   });
 
-  it("discloses the Football league before the first question without exposing narrowing metadata", () => {
+  it("starts categories at five questions and expands them five at a time", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    render(<UfcTwentyQuestionsPage />);
+
+    fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
+    const era = screen.getByRole("region", { name: "Era & UFC Tenure" });
+    expect(era.querySelectorAll(".twenty-questions-question-list button").length).toBe(5);
+
+    fireEvent.click(within(era).getByRole("button", { name: "SHOW 5 MORE" }));
+    expect(era.querySelectorAll(".twenty-questions-question-list button").length).toBe(10);
+  });
+
+  it("uses singular wording for one title-fight win", () => {
+    const universe = getUfcTwentyQuestionsUniverse();
+    expect(universe.questions.some((question) => question.label === "Does this fighter have at least one UFC title-fight win?")).toBe(true);
+    expect(universe.questions.some((question) => question.label.includes("1 UFC title-fight wins"))).toBe(false);
+  });
+
+  it("discloses the Football league before the first question and starts directly in the football universe", () => {
     vi.spyOn(Math, "random")
       .mockReturnValueOnce(0.2)
       .mockReturnValue(0.3);
-    const { container } = render(<FootballTwentyQuestionsPage />);
+    render(<FootballTwentyQuestionsPage />);
 
     expect(screen.getByText("NFL ROUND")).toBeInTheDocument();
     expect(screen.getByText(/League is locked and revealed before the first question/i)).toBeInTheDocument();
-    expect(container.textContent?.toLowerCase()).not.toContain("candidate");
-    expect(container.textContent?.toLowerCase()).not.toContain("probability");
 
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
     expect(screen.getByText("NFL")).toBeInTheDocument();
+    expect(screen.getByLabelText("Round status")).toHaveTextContent("REMAINING");
+    expect(screen.getByRole("region", { name: "Recommended" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "GUESS" }));
     expect(screen.getByPlaceholderText("Search the full NFL roster…")).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("Search the full UFC roster…")).not.toBeInTheDocument();
   });
 });

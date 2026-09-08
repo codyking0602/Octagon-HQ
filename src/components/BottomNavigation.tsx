@@ -76,7 +76,6 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const keyboardSessionRef = useRef(false);
   const lastActivePlayTapRef = useRef(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
-  const [viewportBottomCorrection, setViewportBottomCorrection] = useState(0);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const selectedPlayRoot = selectedSport === "football" ? "/football" : "/play";
   const selectedPicksRoot = selectedSport === "football" ? "/football/picks" : "/picks";
@@ -105,9 +104,6 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
       if (keyboardSessionRef.current && !materiallyOccluded) keyboardSessionRef.current = false;
 
       setKeyboardOpen(nextKeyboardOpen);
-      setViewportBottomCorrection(
-        nextKeyboardOpen ? 0 : Math.round(Math.abs(visualBottom - window.innerHeight)),
-      );
     };
     const syncAfterFocus = () => window.setTimeout(syncViewportState, 0);
     const syncAfterResume = () => {
@@ -145,9 +141,6 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
       style={{
         gridTemplateColumns: `repeat(${standardDestinations.length}, minmax(0, 1fr))`,
         display: keyboardOpen ? "none" : "grid",
-        transform: viewportBottomCorrection > 0
-          ? `translateY(${viewportBottomCorrection}px)`
-          : undefined,
       }}
     >
       {standardDestinations.map((destination) => (

@@ -159,21 +159,26 @@
 }
 
 .twenty-questions-scorebar {
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + 6px);
+  z-index: 12;
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
   align-items: stretch;
   overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .24);
 }
 
 .twenty-questions-scorebar > div {
   display: grid;
   gap: 2px;
+  min-width: 0;
   padding: 12px 14px;
   border-right: 1px solid var(--border);
 }
 
 .twenty-questions-scorebar small,
-.twenty-questions-result > small {
+.twenty-questions-result__score-block > small {
   color: var(--text-muted);
   font-size: 9px;
   font-weight: 900;
@@ -181,7 +186,9 @@
 }
 
 .twenty-questions-scorebar strong {
+  overflow: hidden;
   font-size: 22px;
+  text-overflow: ellipsis;
 }
 
 .twenty-questions-scorebar button {
@@ -192,7 +199,8 @@
   font: inherit;
   font-size: 11px;
   font-weight: 950;
-  letter-spacing: .1em;
+  letter-spacing: .08em;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -202,6 +210,19 @@
   display: grid;
   gap: 12px;
   padding: 15px;
+}
+
+.twenty-questions-guess.is-final {
+  border-color: color-mix(in srgb, var(--twenty-questions-accent) 55%, var(--border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--twenty-questions-accent) 14%, transparent);
+}
+
+.twenty-questions-final-guess-copy,
+.twenty-questions-empty {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .twenty-questions-section-heading {
@@ -223,7 +244,7 @@
 }
 
 .twenty-questions-guess input,
-.twenty-questions-bank input {
+.twenty-questions-bank > input {
   width: 100%;
   min-height: 46px;
   box-sizing: border-box;
@@ -233,6 +254,55 @@
   color: var(--text-primary);
   padding: 0 13px;
   font: inherit;
+}
+
+.twenty-questions-category {
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface-soft) 82%, transparent);
+}
+
+.twenty-questions-recommended {
+  border-color: color-mix(in srgb, var(--twenty-questions-accent) 34%, var(--border));
+  background: color-mix(in srgb, var(--twenty-questions-accent) 6%, var(--surface-soft));
+}
+
+.twenty-questions-category__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.twenty-questions-category__heading h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.twenty-questions-category__heading .eyebrow {
+  margin: 0 0 3px;
+}
+
+.twenty-questions-category__heading > span {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  padding: 4px 7px;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.twenty-questions-category__actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .twenty-questions-guess-list,
@@ -338,6 +408,7 @@
 
 .twenty-questions-more {
   justify-self: center;
+  min-height: 38px;
   border: 1px solid var(--border);
   background: var(--surface-soft);
   color: var(--text-secondary);
@@ -350,12 +421,25 @@
   font-weight: 800;
 }
 
+.twenty-questions-result__score-block {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  margin-top: 4px;
+}
+
 .twenty-questions-result__score {
-  font-size: clamp(70px, 20vw, 116px);
+  font-size: clamp(54px, 15vw, 88px);
   font-weight: 950;
   line-height: .85;
   letter-spacing: -.07em;
   color: var(--twenty-questions-accent);
+}
+
+.twenty-questions-result__clues {
+  width: 100%;
+  max-width: 620px;
+  text-align: left;
 }
 
 @media (max-width: 560px) {
@@ -366,23 +450,22 @@
     border-radius: var(--radius-md);
   }
 
-  .twenty-questions-scorebar {
-    position: sticky;
-    top: 6px;
-    z-index: 4;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+  .twenty-questions-scorebar > div {
+    padding: 10px 8px;
   }
 
-  .twenty-questions-scorebar > div {
-    padding: 10px 11px;
+  .twenty-questions-scorebar small {
+    font-size: 8px;
+    letter-spacing: .08em;
   }
 
   .twenty-questions-scorebar strong {
-    font-size: 19px;
+    font-size: 18px;
   }
 
   .twenty-questions-scorebar button {
-    padding: 0 13px;
+    padding: 0 11px;
+    font-size: 10px;
   }
 
   .twenty-questions-rules,
@@ -401,6 +484,10 @@
   }
 
   .twenty-questions-section-heading > span {
-    max-width: 100px;
+    max-width: 112px;
+  }
+
+  .twenty-questions-category {
+    padding: 10px;
   }
 }
