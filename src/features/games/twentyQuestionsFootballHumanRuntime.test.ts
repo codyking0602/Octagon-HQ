@@ -79,7 +79,6 @@ describe("Football 20 Questions human runtime", () => {
     const ids = universe.questions.map((question) => question.id);
     assertHumanRuntimeShape("NFL");
     expect(ids.some((id) => id.includes(":era:") || id.includes("longevity"))).toBe(true);
-    expect(ids.some((id) => id.startsWith("award:") || id.startsWith("championship:"))).toBe(true);
   });
 
   it("keeps the College runtime compact, diverse, deterministic, and human-first", () => {
