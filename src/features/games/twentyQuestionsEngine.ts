@@ -31,6 +31,8 @@ export interface TwentyQuestionsUniverse {
 export const TWENTY_QUESTIONS_LIMIT = 10;
 export const TWENTY_QUESTIONS_START_SCORE = 100;
 export const TWENTY_QUESTIONS_WRONG_GUESS_PENALTY = 10;
+export const TWENTY_QUESTIONS_ENDGAME_THRESHOLD = 5;
+export const TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT = 12;
 
 export function twentyQuestionsScoreImpact(cost: TwentyQuestionsQuestionCost) {
   return Number((cost * 0.4).toFixed(1));
@@ -67,6 +69,14 @@ export function twentyQuestionsEligibleQuestions(
   });
 }
 
+export function twentyQuestionsRequiresFinalGuess(questionsAsked: number, remainingSubjectCount: number) {
+  return remainingSubjectCount === 1 || questionsAsked >= TWENTY_QUESTIONS_LIMIT;
+}
+
+export function twentyQuestionsFinalGuessIsDirectlyPlayable(remainingSubjectCount: number) {
+  return remainingSubjectCount >= 1 && remainingSubjectCount <= TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT;
+}
+
 function inferredHumanValue(question: TwentyQuestionsQuestion): TwentyQuestionsHumanValue {
   if (question.humanValue) return question.humanValue;
   const id = question.id.toLowerCase();
@@ -100,9 +110,9 @@ function inferredRecommendationFamily(question: TwentyQuestionsQuestion) {
 }
 
 /**
- * Human deduction value is the first ranking lane. Live information gain only
- * sorts questions inside that lane, then diversity prevents Recommended from
- * becoming several versions of the same clue family.
+ * Human deduction value is the first ranking lane during normal play. Once the
+ * pool is down to five identities, exact live separation takes priority so
+ * Recommended actively finishes the current candidate set.
  */
 export function twentyQuestionsRecommendedQuestions(
   questions: readonly TwentyQuestionsQuestion[],
@@ -110,6 +120,7 @@ export function twentyQuestionsRecommendedQuestions(
   limit = 5,
 ) {
   if (limit <= 0 || remainingSubjects.length <= 1) return [];
+  const endgame = remainingSubjects.length <= TWENTY_QUESTIONS_ENDGAME_THRESHOLD;
   const ranked = twentyQuestionsEligibleQuestions(questions, remainingSubjects)
     .map((question) => {
       const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
@@ -123,12 +134,20 @@ export function twentyQuestionsRecommendedQuestions(
       };
     })
     .sort((left, right) => (
-      right.humanValue - left.humanValue
-      || right.usefulSplit - left.usefulSplit
-      || left.imbalance - right.imbalance
-      || left.question.internalCost - right.question.internalCost
-      || left.question.label.localeCompare(right.question.label)
+      endgame
+        ? right.usefulSplit - left.usefulSplit
+          || left.imbalance - right.imbalance
+          || right.humanValue - left.humanValue
+          || left.question.internalCost - right.question.internalCost
+          || left.question.label.localeCompare(right.question.label)
+        : right.humanValue - left.humanValue
+          || right.usefulSplit - left.usefulSplit
+          || left.imbalance - right.imbalance
+          || left.question.internalCost - right.question.internalCost
+          || left.question.label.localeCompare(right.question.label)
     ));
+
+  if (endgame) return ranked.slice(0, limit).map(({ question }) => question);
 
   const selected: typeof ranked = [];
   const usedFamilies = new Set<string>();

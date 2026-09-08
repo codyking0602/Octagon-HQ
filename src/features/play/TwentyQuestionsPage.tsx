@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import {
   formatTwentyQuestionsScoreImpact,
+  TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT,
   TWENTY_QUESTIONS_LIMIT,
   TWENTY_QUESTIONS_START_SCORE,
   twentyQuestionsEligibleQuestions,
   twentyQuestionsFinalScore,
   twentyQuestionsRecommendedQuestions,
+  twentyQuestionsRequiresFinalGuess,
   twentyQuestionsScoreAfterQuestion,
   twentyQuestionsScoreAfterWrongGuess,
   type TwentyQuestionsQuestion,
@@ -125,6 +127,8 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     () => remainingSubjectsForAnswers(round.universe.subjects, asked, rejectedSubjectIds),
     [asked, rejectedSubjectIds, round.universe.subjects],
   );
+  const finalGuessRequired = phase === "playing"
+    && twentyQuestionsRequiresFinalGuess(asked.length, remainingSubjects.length);
   const eligibleQuestions = useMemo(
     () => twentyQuestionsEligibleQuestions(unaskedQuestions, remainingSubjects),
     [remainingSubjects, unaskedQuestions],
@@ -154,13 +158,17 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
 
   const guessMatches = useMemo(() => {
     const query = normalized(guessSearch);
+    if (!query) {
+      return finalGuessRequired
+        ? remainingSubjects.slice(0, TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT)
+        : [];
+    }
     if (query.length < 2) return [];
-    return round.universe.subjects
-      .filter((subject) => !rejectedSubjectIds.has(subject.id) && normalized(subject.name).includes(query))
-      .slice(0, 12);
-  }, [guessSearch, rejectedSubjectIds, round.universe.subjects]);
+    return remainingSubjects
+      .filter((subject) => normalized(subject.name).includes(query))
+      .slice(0, TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT);
+  }, [finalGuessRequired, guessSearch, remainingSubjects]);
 
-  const finalGuessRequired = phase === "playing" && asked.length >= TWENTY_QUESTIONS_LIMIT;
   const finalScore = twentyQuestionsFinalScore(score);
   const football = sport === "football";
 
@@ -315,12 +323,20 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                 <div className="twenty-questions-section-heading">
                   <div>
                     <p className="eyebrow">{finalGuessRequired ? "FINAL GUESS" : "GUESS ANYTIME"}</p>
-                    <h2>{finalGuessRequired ? "10 questions used. Who is it?" : "Who is it?"}</h2>
+                    <h2>{finalGuessRequired
+                      ? remainingSubjects.length === 1
+                        ? "One identity remains. Who is it?"
+                        : "10 questions used. Who is it?"
+                      : "Who is it?"}</h2>
                   </div>
                   <span>{finalGuessRequired ? "Guess or reveal the answer · wrong guess −10 pts" : "Wrong guess −10 pts"}</span>
                 </div>
                 {finalGuessRequired ? (
-                  <p className="twenty-questions-final-guess-copy">You get one last guess, or you can reveal the hidden identity.</p>
+                  <p className="twenty-questions-final-guess-copy">
+                    {remainingSubjects.length === 1
+                      ? "Make your final guess from the identity below, or reveal the answer."
+                      : "Choose from the remaining identities below, search them, or reveal the answer."}
+                  </p>
                 ) : null}
                 <input
                   value={guessSearch}
@@ -329,7 +345,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                     setSelectedGuess(null);
                     setGuessNotice(null);
                   }}
-                  placeholder={football ? `Search the full ${roundLabel(round)} roster…` : "Search the full UFC roster…"}
+                  placeholder={football ? `Search remaining ${roundLabel(round)} identities…` : "Search remaining UFC fighters…"}
                   aria-label="Search identities"
                 />
                 {guessMatches.length ? (
