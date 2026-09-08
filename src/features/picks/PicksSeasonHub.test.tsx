@@ -181,7 +181,7 @@ describe("PicksSeasonHub", () => {
     );
 
     expect(screen.getByText("2026 FOOTBALL SEASON")).toBeInTheDocument();
-    expect(screen.getByText("12-5 · 70.6% WIN · 41 PTS")).toBeInTheDocument();
+    expect(screen.getByText("12-5 ATS · 70.6% WIN · 41 PTS")).toBeInTheDocument();
     fireEvent.click(screen.getByText("STANDINGS & WEEKS"));
     expect(screen.getByText("4 PLAYERS · 1 WEEK")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("tab", { name: "WEEKS" }));
