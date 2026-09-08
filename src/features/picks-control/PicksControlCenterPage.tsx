@@ -13,6 +13,7 @@ import {
   createPickSetupRepository,
   type PickSetupRepository,
 } from "../picks-setup/pickSetupRepository";
+import FootballPushControl from "./FootballPushControl";
 import OpenPicksDashboard from "./OpenPicksDashboard";
 import PickEventHeaderControl from "./PickEventHeaderControl";
 import type { PickControlEvent } from "./pickControlModel";
@@ -314,6 +315,7 @@ export default function PicksControlCenterPage({
           <section id="header" className="picks-control-center__section" aria-label="Manage Football event header">
             <PickEventHeaderControl eventId={footballEventId} repository={controlRepository} />
             <div className="picks-control-center__actions">
+              <FootballPushControl eventId={footballEventId} repository={controlRepository} />
               <Link className="secondary-action" to="/football/picks">OPEN PLAYER FOOTBALL PICKS</Link>
             </div>
           </section>

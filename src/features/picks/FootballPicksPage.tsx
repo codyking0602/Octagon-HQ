@@ -137,6 +137,11 @@ export default function FootballPicksPage() {
           <p className="eyebrow">FOOTBALL PICKS</p>
           <h1>This week’s slate is being set.</h1>
           <p>{picks.error || "Check back when the frozen ATS lines are published."}</p>
+          {identity.profile?.canControlPicks === true ? (
+            <Link className="picks-control-entry" to="/picks/control?sport=football#setup">
+              <span aria-hidden="true">⚙</span> MANAGE EVENT / SETUP
+            </Link>
+          ) : null}
         </section>
       ) : null}
       {!event ? seasonHub : null}
