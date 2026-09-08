@@ -13,7 +13,7 @@ type FootballLeague = "nfl" | "college-football";
 const schedulerHeader = "x-octagon-scheduler-token";
 const headers = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-octagon-scheduler-token",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });
@@ -39,6 +39,18 @@ function footballSourceIdentity(boutId: string) {
   const match = /^football-(nfl|college-football)-(\d+)$/.exec(boutId);
   if (!match) return null;
   return { league: match[1] as FootballLeague, eventId: match[2] };
+}
+
+async function recordFootballFinal(admin: any, finalResult: Json) {
+  const recorded = await admin.rpc("record_football_pick_final", {
+    p_league: finalResult.league,
+    p_home_team_slug: finalResult.home_team_slug,
+    p_away_team_slug: finalResult.away_team_slug,
+    p_home_final_score: finalResult.home_final_score,
+    p_away_final_score: finalResult.away_final_score,
+  });
+  if (recorded.error) throw recorded.error;
+  return recorded.data;
 }
 
 async function settleScheduledFootballFinals(admin: any) {
@@ -77,14 +89,7 @@ async function settleScheduledFootballFinals(admin: any) {
         pending += 1;
         continue;
       }
-      const recorded = await admin.rpc("record_football_pick_final", {
-        p_league: finalResult.league,
-        p_home_team_slug: finalResult.home_team_slug,
-        p_away_team_slug: finalResult.away_team_slug,
-        p_home_final_score: finalResult.home_final_score,
-        p_away_final_score: finalResult.away_final_score,
-      });
-      if (recorded.error) throw recorded.error;
+      await recordFootballFinal(admin, finalResult);
       finalized += 1;
     } catch (error) {
       failures.push(`${boutId}: ${error instanceof Error ? error.message : "football final sync failed"}`);
@@ -212,15 +217,8 @@ Deno.serve(async (request) => {
     const finalResult = normalizeFootballFinalResult(summary.header, league);
     if (finalResult) {
       if (mode === "preview") return json({ final_preview: finalResult });
-      const recorded = await admin.rpc("record_football_pick_final", {
-        p_league: finalResult.league,
-        p_home_team_slug: finalResult.home_team_slug,
-        p_away_team_slug: finalResult.away_team_slug,
-        p_home_final_score: finalResult.home_final_score,
-        p_away_final_score: finalResult.away_final_score,
-      });
-      if (recorded.error) throw recorded.error;
-      return json({ result: recorded.data, final_preview: finalResult });
+      const result = await recordFootballFinal(admin, finalResult);
+      return json({ result, final_preview: finalResult });
     }
 
     const oddsEvents = await fetchSpreadEvents(oddsSport);
