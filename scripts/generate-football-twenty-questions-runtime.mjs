@@ -8,6 +8,7 @@ const target = path.join(root, "src/features/games/generated/twentyQuestionsFoot
 const CATEGORY_LIMIT = 30;
 const MAX_QUESTIONS = 360;
 const MAX_INITIAL_QUESTIONS_PER_FAMILY = 3;
+const ENDGAME_FINGERPRINT_FAMILY = "endgame-fingerprint";
 const CATEGORY_ORDER = ["role", "era", "career", "achievements", "affiliations", "matchups"];
 
 function categoryForQuestion(question) {
@@ -30,9 +31,22 @@ function familyForQuestion(question) {
   return parts.length > 1 ? parts.slice(0, -1).join(":") : question.id;
 }
 
+function initialFamilyQuestionLimit(family) {
+  if (family === "role") return 2;
+  if (family === "position") return 10;
+  if (family === "position-family") return 3;
+  if (["franchise", "program", "player-college", "player-program", "historical-conference"].includes(family)) return 12;
+  return MAX_INITIAL_QUESTIONS_PER_FAMILY;
+}
+
+function isEndgameFingerprintQuestion(question) {
+  const id = question.id.toLowerCase();
+  return id.includes("-fine:") || id.startsWith("coach:losses:");
+}
+
 function humanValueForQuestion(question) {
   const id = question.id.toLowerCase();
-  if (id.includes("-fine:") || id.includes("coach:losses:")) return 0;
+  if (isEndgameFingerprintQuestion(question)) return 1;
   if (
     id.startsWith("role:")
     || id.startsWith("position:")
@@ -43,8 +57,12 @@ function humanValueForQuestion(question) {
     || /(franchise|program|conference|college|school|team):/.test(id)
     || /(title|champ|award|mvp|all-pro|pro-bowl|heisman|super-bowl|playoff|trophy|honor)/.test(id)
   ) return 4;
-  if (id.startsWith("production:") || id.startsWith("coach:")) return 2;
-  return 1;
+  if (id.startsWith("production:") || id.startsWith("coach:")) return 3;
+  return 2;
+}
+
+function recommendationFamilyForQuestion(question) {
+  return isEndgameFingerprintQuestion(question) ? ENDGAME_FINGERPRINT_FAMILY : familyForQuestion(question);
 }
 
 function compareScored(left, right) {
@@ -65,23 +83,32 @@ function unresolvedSubjectPairs(subjectCount, selected) {
   return unresolved;
 }
 
+function bestPairCoverageRow(rows, selectedIds, unresolved) {
+  let best = null;
+  let bestCoverage = 0;
+  for (const row of rows) {
+    if (selectedIds.has(row.question.id)) continue;
+    const coverage = unresolved.reduce(
+      (sum, [left, right]) => sum + Number(row.answers[left] !== row.answers[right]),
+      0,
+    );
+    if (coverage > bestCoverage || (coverage === bestCoverage && coverage > 0 && best && compareScored(row, best) < 0)) {
+      best = row;
+      bestCoverage = coverage;
+    }
+  }
+  return { best, bestCoverage };
+}
+
 function completePairCoverage(universe, scored, selected) {
   const selectedIds = new Set(selected.map((row) => row.question.id));
   let unresolved = unresolvedSubjectPairs(universe.subjects.length, selected);
 
   while (unresolved.length) {
-    let best = null;
-    let bestCoverage = 0;
-    for (const row of scored) {
-      if (selectedIds.has(row.question.id)) continue;
-      const coverage = unresolved.reduce(
-        (sum, [left, right]) => sum + Number(row.answers[left] !== row.answers[right]),
-        0,
-      );
-      if (coverage > bestCoverage || (coverage === bestCoverage && coverage > 0 && best && compareScored(row, best) < 0)) {
-        best = row;
-        bestCoverage = coverage;
-      }
+    const humanRows = scored.filter((row) => !row.endgameFingerprint);
+    let { best, bestCoverage } = bestPairCoverageRow(humanRows, selectedIds, unresolved);
+    if (!best || bestCoverage === 0) {
+      ({ best, bestCoverage } = bestPairCoverageRow(scored, selectedIds, unresolved));
     }
     if (!best || bestCoverage === 0) break;
     selected.push(best);
@@ -106,6 +133,8 @@ function selectRuntimeQuestions(universe) {
       answers,
       category: categoryForQuestion(question),
       family: familyForQuestion(question),
+      recommendationFamily: recommendationFamilyForQuestion(question),
+      endgameFingerprint: isEndgameFingerprintQuestion(question),
       humanValue: humanValueForQuestion(question),
       usefulSplit: Math.min(yes, answers.length - yes),
       imbalance: Math.abs(yes - (answers.length - yes)),
@@ -114,7 +143,7 @@ function selectRuntimeQuestions(universe) {
 
   const selected = [];
   for (const category of CATEGORY_ORDER) {
-    const categoryRows = scored.filter((row) => row.category === category && row.usefulSplit > 0 && row.humanValue > 0);
+    const categoryRows = scored.filter((row) => row.category === category && row.usefulSplit > 0 && !row.endgameFingerprint);
     const byFamily = new Map();
     for (const row of categoryRows) {
       const bucket = byFamily.get(row.family) ?? [];
@@ -130,7 +159,7 @@ function selectRuntimeQuestions(universe) {
     while (categorySelection.length < CATEGORY_LIMIT) {
       let added = false;
       for (const [family, bucket] of familyOrder) {
-        if ((familyCounts.get(family) ?? 0) >= MAX_INITIAL_QUESTIONS_PER_FAMILY) continue;
+        if ((familyCounts.get(family) ?? 0) >= initialFamilyQuestionLimit(family)) continue;
         const next = bucket.shift();
         if (!next) continue;
         categorySelection.push(next);
@@ -162,7 +191,7 @@ try {
   ));
 
   const output = {
-    version: 2,
+    version: 3,
     categoryLimit: CATEGORY_LIMIT,
     maxQuestions: MAX_QUESTIONS,
   };
@@ -178,6 +207,8 @@ try {
         id: row.question.id,
         label: row.question.label,
         internalCost: row.question.internalCost,
+        humanValue: row.humanValue,
+        recommendationFamily: row.recommendationFamily,
         answers: row.answers.map((answer) => answer ? "1" : "0").join(""),
       })),
     };
