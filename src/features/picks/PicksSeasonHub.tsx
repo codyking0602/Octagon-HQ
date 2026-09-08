@@ -280,7 +280,7 @@ export function PicksSeasonHub({
             <section className="picks-season-events" role="tabpanel" aria-label={`Completed ${football ? "week" : "event"} archive`}>
               <div className="picks-season-panel-heading">
                 <div>
-                  <span>{archiveSingular} ARCHIVE</span>
+                  {football ? <span>WEEK ARCHIVE</span> : <span>EVENT ARCHIVE</span>}
                   <strong>{history.events.length} COMPLETED {history.events.length === 1 ? archiveSingular : archivePlural}</strong>
                 </div>
                 <small>NEWEST FIRST</small>
