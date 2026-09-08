@@ -6,6 +6,7 @@ import {
   type PickHistory,
   type PickSeasonStanding,
 } from "./picksModel";
+import { FootballWeekRecap } from "./FootballWeekRecap";
 import { LatestEventRecap } from "./LatestEventRecap";
 import { resolvePicksDestination } from "./picksDestination";
 
@@ -82,8 +83,24 @@ function rankContext(rank: number) {
   return null;
 }
 
-export function PicksSeasonHub({ history, loading }: { history: PickHistory; loading: boolean }) {
+function standingPoints(standing: PickSeasonStanding, football: boolean) {
+  return football ? standing.adjustedPoints ?? standing.totalPoints : standing.totalPoints;
+}
+
+export function PicksSeasonHub({
+  history,
+  loading,
+  sport = "ufc",
+}: {
+  history: PickHistory;
+  loading: boolean;
+  sport?: "ufc" | "football";
+}) {
   const [searchParams] = useSearchParams();
+  const football = sport === "football";
+  const archiveSingular = football ? "WEEK" : "EVENT";
+  const archivePlural = football ? "WEEKS" : "EVENTS";
+  const RecapComponent = football ? FootballWeekRecap : LatestEventRecap;
   const archivedEventIds = useMemo(
     () => history.events.map((event) => event.eventId),
     [history.events],
@@ -108,12 +125,18 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
     return canonicalStandings.length ? canonicalStandings : aggregateFallbackStandings(history);
   }, [history]);
   const currentStanding = standings.find((standing) => standing.isCurrentUser) ?? null;
-  const leaderPoints = standings.reduce((highest, standing) => Math.max(highest, standing.totalPoints), 0);
+  const leaderPoints = standings.reduce(
+    (highest, standing) => Math.max(highest, standingPoints(standing, football)),
+    0,
+  );
   const season = history.season ?? new Date().getFullYear();
   const finish = currentStanding
     ? `${groupRankLabel(currentStanding.rank, standings)} OF ${standings.length}`
     : standings.length ? `— OF ${standings.length}` : "NO RESULTS";
   const record = currentStanding ?? history.summary;
+  const recordPoints = currentStanding
+    ? standingPoints(currentStanding, football)
+    : history.summary.totalPoints;
   const latestEvent = history.events[0];
   const olderEvents = history.events.slice(1);
   const targetIsLatest = Boolean(latestEvent && latestEvent.eventId === targetEventId);
@@ -144,8 +167,8 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
   if (!history.events.length) {
     return (
       <section className="surface-card picks-history-empty">
-        <strong>No completed Picks events yet.</strong>
-        <p>The group table and event archive will appear after the first scored card.</p>
+        <strong>No completed Picks {football ? "weeks" : "events"} yet.</strong>
+        <p>The group table and {football ? "week" : "event"} archive will appear after the first scored {football ? "slate" : "card"}.</p>
       </section>
     );
   }
@@ -165,13 +188,15 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
       >
         <summary className="picks-season-hub__summary">
           <div className="picks-season-hub__identity">
-            <span>{season} SEASON</span>
+            <span>{football ? `${season} FOOTBALL SEASON` : `${season} SEASON`}</span>
             <strong id="picks-season-title">{finish}</strong>
-            <small>{record.correct}-{record.incorrect} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {record.totalPoints} PTS</small>
+            <small>
+              {record.correct}-{record.incorrect}{football ? " ATS" : ""} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {recordPoints} PTS
+            </small>
           </div>
           <div className="picks-season-hub__meta">
             <span>{standings.length} {standings.length === 1 ? "PLAYER" : "PLAYERS"}</span>
-            <em>STANDINGS &amp; EVENTS</em>
+            {football ? <em>STANDINGS &amp; WEEKS</em> : <em>STANDINGS &amp; EVENTS</em>}
           </div>
         </summary>
 
@@ -193,7 +218,7 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
               className={activeTab === "events" ? "is-active" : ""}
               onClick={() => setActiveTab("events")}
             >
-              EVENTS
+              {archivePlural}
             </button>
           </div>
 
@@ -204,13 +229,14 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
                   <span>GROUP STANDINGS</span>
                   <strong>Season leaderboard</strong>
                 </div>
-                <small>{standings.length} PLAYERS · {history.events.length} EVENTS</small>
+                <small>{standings.length} PLAYERS · {history.events.length} {history.events.length === 1 ? archiveSingular : archivePlural}</small>
               </div>
               <div className="picks-season-standing-list">
                 {standings.map((standing) => {
-                  const pointGap = Math.max(0, leaderPoints - standing.totalPoints);
+                  const points = standingPoints(standing, football);
+                  const pointGap = Math.max(0, leaderPoints - points);
                   const progress = leaderPoints > 0
-                    ? Math.round((standing.totalPoints / leaderPoints) * 100)
+                    ? Math.round((points / leaderPoints) * 100)
                     : 0;
                   const missedEvents = Math.max(0, history.events.length - standing.eventsEntered);
                   const podiumLabel = rankContext(standing.rank);
@@ -233,16 +259,16 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
                           {standing.isCurrentUser ? <em>YOU</em> : null}
                         </div>
                         <small>
-                          {standing.correct}-{standing.incorrect} · {winPercentageLabel(standing.correct, standing.incorrect)} WIN
+                          {standing.correct}-{standing.incorrect}{football ? " ATS" : ""} · {winPercentageLabel(standing.correct, standing.incorrect)} WIN
                           {standing.missing ? ` · ${standing.missing} MISSED` : ""}
                         </small>
                       </div>
                       <div className="picks-season-standing__score">
-                        <b>{standing.totalPoints} PTS</b>
+                        <b>{points} PTS</b>
                         <em>{pointGap === 0 ? "LEADER" : `${pointGap} PTS BACK`}</em>
                         <small>
-                          +{standing.lockBonus} LOCK · {standing.eventsEntered}/{history.events.length} EVENTS
-                          {missedEvents ? ` · ${missedEvents} ${missedEvents === 1 ? "EVENT" : "EVENTS"} MISSED` : ""}
+                          +{standing.lockBonus} LOCK · {standing.eventsEntered}/{history.events.length} {archivePlural}
+                          {missedEvents ? ` · ${missedEvents} ${missedEvents === 1 ? archiveSingular : archivePlural} MISSED` : ""}
                         </small>
                       </div>
                     </article>
@@ -251,23 +277,23 @@ export function PicksSeasonHub({ history, loading }: { history: PickHistory; loa
               </div>
             </section>
           ) : (
-            <section className="picks-season-events" role="tabpanel" aria-label="Completed event archive">
+            <section className="picks-season-events" role="tabpanel" aria-label={`Completed ${football ? "week" : "event"} archive`}>
               <div className="picks-season-panel-heading">
                 <div>
-                  <span>EVENT ARCHIVE</span>
-                  <strong>{history.events.length} COMPLETED {history.events.length === 1 ? "EVENT" : "EVENTS"}</strong>
+                  {football ? <span>WEEK ARCHIVE</span> : <span>EVENT ARCHIVE</span>}
+                  <strong>{history.events.length} COMPLETED {history.events.length === 1 ? archiveSingular : archivePlural}</strong>
                 </div>
                 <small>NEWEST FIRST</small>
               </div>
               {targetIsLatest && recapRequested ? (
-                <LatestEventRecap event={latestEvent} requestedOpen />
+                <RecapComponent event={latestEvent} requestedOpen />
               ) : (
-                <LatestEventRecap event={latestEvent} />
+                <RecapComponent event={latestEvent} />
               )}
               {olderEvents.length ? (
                 <div className="picks-recap-list">
                   {olderEvents.map((event) => (
-                    <LatestEventRecap
+                    <RecapComponent
                       event={event}
                       requestedOpen={recapRequested && event.eventId === targetEventId}
                       key={event.eventId}

@@ -149,7 +149,7 @@ describe("PicksSeasonHub", () => {
     expect(michaelRow).toHaveTextContent("2/3 EVENTS · 1 EVENT MISSED");
   });
 
-  it("keeps the rich event recap available for every completed event", () => {
+  it("keeps the rich UFC event recap available for every completed event", () => {
     render(<MemoryRouter><PicksSeasonHub history={history} loading={false} /></MemoryRouter>);
 
     fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
@@ -160,5 +160,52 @@ describe("PicksSeasonHub", () => {
 
     fireEvent.click(screen.getAllByRole("button", { name: "OPEN FULL RECAP" })[1]);
     expect(screen.getByRole("dialog", { name: "UFC Fight Night: Paris Recap" })).toBeInTheDocument();
+  });
+
+  it("uses football championship points and exposes completed slates as weeks", () => {
+    const footballHistory: PickHistory = {
+      ...history,
+      seasonStandings: history.seasonStandings?.map((standing, index) => ({
+        ...standing,
+        adjustedPoints: index === 0 ? 41 : standing.totalPoints,
+      })),
+      events: [
+        completedEvent("football-week-1", "Football Week 1", "NFL + CFB", "2026-09-07T05:00:00Z"),
+      ],
+    };
+
+    render(
+      <MemoryRouter initialEntries={["/football/picks"]}>
+        <PicksSeasonHub history={footballHistory} loading={false} sport="football" />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("2026 FOOTBALL SEASON")).toBeInTheDocument();
+    expect(screen.getByText("12-5 ATS · 70.6% WIN · 41 PTS")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("STANDINGS & WEEKS"));
+    expect(screen.getByText("4 PLAYERS · 1 WEEK")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "WEEKS" }));
+    expect(screen.getByText("WEEK ARCHIVE")).toBeInTheDocument();
+    expect(screen.getByText("1 COMPLETED WEEK")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "OPEN WEEK RECAP" })).toHaveTextContent("VIEW WEEK RECAP");
+  });
+
+  it("opens the specifically requested archived football week recap", () => {
+    const footballHistory: PickHistory = {
+      ...history,
+      events: [
+        completedEvent("football-week-2", "Football Week 2", "NFL + CFB", "2026-09-14T05:00:00Z"),
+        completedEvent("football-week-1", "Football Week 1", "NFL + CFB", "2026-09-07T05:00:00Z"),
+      ],
+    };
+
+    render(
+      <MemoryRouter initialEntries={["/football/picks?event=football-week-1&view=recap"]}>
+        <PicksSeasonHub history={footballHistory} loading={false} sport="football" />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("dialog", { name: "Football Week 1 Week Recap" })).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Football Week 2 Week Recap" })).not.toBeInTheDocument();
   });
 });

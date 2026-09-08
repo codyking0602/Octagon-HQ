@@ -110,6 +110,16 @@ export interface PickHistoryBout {
   redFighterName: string;
   blueFighterSlug: string;
   blueFighterName: string;
+  /** Football-only canonical team identity, frozen ATS line, and final score from the shared history projection. */
+  homeTeamSlug?: string | null;
+  awayTeamSlug?: string | null;
+  homeTeamLogoUrl?: string | null;
+  awayTeamLogoUrl?: string | null;
+  frozenSpreadHome?: number | null;
+  spreadSource?: string | null;
+  spreadFrozenAt?: string | null;
+  homeFinalScore?: number | null;
+  awayFinalScore?: number | null;
   resultStatus: PickBoutResultStatus;
   winnerFighterSlug: string | null;
   pickedFighterSlug: string | null;

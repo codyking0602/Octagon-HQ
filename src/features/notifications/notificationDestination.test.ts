@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { notificationDestination } from "./notificationDestination";
 
-function destination(kind: "picks_recap_ready" | "picks_repick_required", route: string | null) {
-  return notificationDestination({ kind, route });
+function destination(
+  kind: "picks_recap_ready" | "picks_repick_required",
+  route: string | null,
+  title = "UFC Picks recap",
+  summary = "The event is final.",
+) {
+  return notificationDestination({ kind, route, title, summary });
 }
 
 describe("notificationDestination", () => {
@@ -13,9 +18,24 @@ describe("notificationDestination", () => {
     )).toBe("/picks?event=ufc-fight-night-belgrade&view=recap");
   });
 
-  it("hands stale generic recap notifications to the latest canonical recap", () => {
+  it("hands stale generic UFC recap notifications to the latest canonical recap", () => {
     expect(destination("picks_recap_ready", "/picks")).toBe("/picks?view=recap");
     expect(destination("picks_recap_ready", null)).toBe("/picks?view=recap");
+  });
+
+  it("routes cached football recap notifications to Football Picks", () => {
+    expect(destination(
+      "picks_recap_ready",
+      "/picks",
+      "Football Picks are final",
+      "Week 1 ATS results are ready.",
+    )).toBe("/football/picks?view=recap");
+    expect(destination(
+      "picks_recap_ready",
+      "/football/picks",
+      "Football Picks are final",
+      "Week 1 ATS results are ready.",
+    )).toBe("/football/picks?view=recap");
   });
 
   it("does not rewrite other Picks notifications", () => {
