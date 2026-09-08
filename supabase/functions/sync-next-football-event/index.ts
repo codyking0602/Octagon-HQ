@@ -42,34 +42,30 @@ function footballSourceIdentity(boutId: string) {
 }
 
 async function settleScheduledFootballFinals(admin: any) {
-  const activeEvents = await admin
-    .from("pick_events")
-    .select("event_id")
-    .eq("sport", "football")
-    .in("status", ["upcoming", "locked"]);
-  if (activeEvents.error) throw activeEvents.error;
+  const current = await admin.rpc("get_current_pick_event", { p_sport: "football" });
+  if (current.error) throw current.error;
 
-  const eventIds = (activeEvents.data ?? []).map((event: { event_id: string }) => event.event_id);
-  if (!eventIds.length) return { checked: 0, finalized: 0, pending: 0, failed: 0, failures: [] };
+  const event = current.data && typeof current.data === "object" ? current.data as Json : null;
+  const bouts = Array.isArray(event?.bouts) ? event.bouts as Json[] : [];
+  const now = Date.now();
+  const pendingBouts = bouts.filter((bout) => {
+    if (bout?.included_in_picks === false || bout?.result_status !== "pending") return false;
+    const locksAt = typeof bout?.locks_at === "string" ? Date.parse(bout.locks_at) : Number.NaN;
+    return Number.isFinite(locksAt) && locksAt <= now;
+  });
 
-  const pendingBouts = await admin
-    .from("pick_bouts")
-    .select("bout_id,event_id,locks_at")
-    .in("event_id", eventIds)
-    .eq("included_in_picks", true)
-    .eq("result_status", "pending")
-    .lte("locks_at", new Date().toISOString());
-  if (pendingBouts.error) throw pendingBouts.error;
+  if (!pendingBouts.length) return { checked: 0, finalized: 0, pending: 0, failed: 0, failures: [] };
 
   let checked = 0;
   let finalized = 0;
   let pending = 0;
   const failures: string[] = [];
 
-  for (const bout of pendingBouts.data ?? []) {
-    const source = footballSourceIdentity(String(bout.bout_id ?? ""));
+  for (const bout of pendingBouts) {
+    const boutId = String(bout?.bout_id ?? "");
+    const source = footballSourceIdentity(boutId);
     if (!source) {
-      failures.push(`${bout.bout_id}: invalid canonical football source identity`);
+      failures.push(`${boutId}: invalid canonical football source identity`);
       continue;
     }
 
@@ -91,7 +87,7 @@ async function settleScheduledFootballFinals(admin: any) {
       if (recorded.error) throw recorded.error;
       finalized += 1;
     } catch (error) {
-      failures.push(`${bout.bout_id}: ${error instanceof Error ? error.message : "football final sync failed"}`);
+      failures.push(`${boutId}: ${error instanceof Error ? error.message : "football final sync failed"}`);
     }
   }
 
@@ -137,7 +133,8 @@ Deno.serve(async (request) => {
     const authorized = await admin.rpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
     if (authorized.error || authorized.data !== true) return json({ error: "scheduled football sync authorization required" }, 401);
     try {
-      return json(await settleScheduledFootballFinals(admin));
+      const result = await settleScheduledFootballFinals(admin);
+      return json(result, result.failed ? 502 : 200);
     } catch (error) {
       return json({ error: error instanceof Error ? error.message : "football final sync failed" }, 502);
     }
