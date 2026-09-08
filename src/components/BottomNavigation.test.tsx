@@ -195,7 +195,7 @@ describe("BottomNavigation", () => {
     expect(navigation).toHaveStyle({ display: "grid" });
   });
 
-  it("reveals Football Play only after a second tap on the active Play tab", () => {
+  it("reveals Football Play with Vince Young and then the shared HQ slam", () => {
     installVisualViewport();
     renderNavigation(["/play"], <LocationProbe />);
 
@@ -206,12 +206,19 @@ describe("BottomNavigation", () => {
 
     fireEvent.click(play);
     expect(screen.getByTestId("location")).toHaveTextContent("/football");
-    expect(screen.getByTestId("football-entry-transition").querySelector("video"))
-      .toHaveAttribute("src", "/assets/football/vince-young-championship-run.mp4");
+    let video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    expect(video).toHaveAttribute("src", "/assets/football/vince-young-championship-run.mp4");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+
+    fireEvent.ended(video);
+    video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    expect(video).toHaveAttribute("src", "/assets/football/football-hq-slam.mp4");
+
+    fireEvent.ended(video);
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
   });
 
-  it("reveals Football Picks with the HQ slam only after a second tap on the active Picks tab", () => {
+  it("reveals Football Picks with Zeke and then the shared HQ slam", () => {
     installVisualViewport();
     renderNavigation(["/picks"], <LocationProbe />);
 
@@ -222,23 +229,30 @@ describe("BottomNavigation", () => {
 
     fireEvent.click(picks);
     expect(screen.getByTestId("location")).toHaveTextContent("/football/picks");
-    expect(screen.getByTestId("football-entry-slam")).toBeInTheDocument();
-    expect(screen.getByTestId("football-entry-transition").querySelector("video")).toBeNull();
+    let video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    expect(video.getAttribute("src")).toMatch(/^data:video\/mp4;base64,AAAAIGZ0/);
+    expect(video.getAttribute("src")?.length).toBeGreaterThan(20_000);
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+
+    fireEvent.ended(video);
+    video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    expect(video).toHaveAttribute("src", "/assets/football/football-hq-slam.mp4");
+
+    fireEvent.ended(video);
+    expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
   });
 
-  it("hands the first Play clip into the HQ slam, then does not replay it during the same app session", () => {
-    vi.useFakeTimers();
+  it("does not replay the cinematic during the same app session", () => {
     installVisualViewport();
     renderNavigation(["/play"], <LocationProbe />);
 
     let play = screen.getByRole("link", { name: "Play" });
     fireEvent.click(play);
     fireEvent.click(play);
-    const video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    let video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
     fireEvent.ended(video);
-    expect(screen.getByTestId("football-entry-slam")).toBeInTheDocument();
-    act(() => vi.advanceTimersByTime(900));
+    video = screen.getByTestId("football-entry-transition").querySelector("video") as HTMLVideoElement;
+    fireEvent.ended(video);
     expect(screen.queryByTestId("football-entry-transition")).not.toBeInTheDocument();
 
     play = screen.getByRole("link", { name: "Play" });
