@@ -4,14 +4,18 @@ export type FootballEntryState = {
   footballEntry: FootballEntrySurface;
 };
 
-let footballRevealPlayed = false;
+const footballRevealPlayed: Record<FootballEntrySurface, boolean> = {
+  play: false,
+  picks: false,
+};
 
 export function nextFootballEntryState(surface: FootballEntrySurface): FootballEntryState | undefined {
-  if (footballRevealPlayed) return undefined;
-  footballRevealPlayed = true;
+  if (footballRevealPlayed[surface]) return undefined;
+  footballRevealPlayed[surface] = true;
   return { footballEntry: surface };
 }
 
 export function resetFootballEntrySessionForTests() {
-  footballRevealPlayed = false;
+  footballRevealPlayed.play = false;
+  footballRevealPlayed.picks = false;
 }

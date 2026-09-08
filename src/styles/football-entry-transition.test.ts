@@ -1,19 +1,19 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import footballBackRoomSource from "../features/back-room/FootballBackRoomPage.tsx?raw";
 import footballEntryTransitionSource from "../features/back-room/FootballEntryTransition.tsx?raw";
+import footballEntryRevealCss from "./football-entry-reveal.css?raw";
 import footballShellCss from "./football-shell.css?raw";
 
-const playRevealClip = readFileSync(
-  resolve(process.cwd(), "public/assets/football/football-play-reveal.mp4"),
+const vinceYoungClip = readFileSync(
+  resolve(process.cwd(), "public/assets/football/vince-young-championship-run.mp4"),
 );
-const picksRevealClip = readFileSync(
-  resolve(process.cwd(), "public/assets/football/football-picks-reveal.mp4"),
-);
+const picksRevealFrames = [1, 2, 3, 4].map((frame) => readFileSync(
+  resolve(process.cwd(), `public/assets/football/football-picks-reveal-0${frame}.jpg`),
+));
 
 describe("Football HQ entrance transition", () => {
-  it("fills the viewport with the portrait Football reveal", () => {
+  it("fills the viewport with the existing portrait Vince Young source", () => {
     expect(footballShellCss).toContain(`.football-entry-transition__video {
   display: block;
   width: 100%;
@@ -21,21 +21,24 @@ describe("Football HQ entrance transition", () => {
   object-fit: cover;
   object-position: center;
 }`);
+    expect(footballEntryTransitionSource).toContain('/assets/football/vince-young-championship-run.mp4');
+    expect(footballEntryTransitionSource).not.toContain("football-play-reveal.mp4");
   });
 
-  it("routes Play and Picks to their section-specific reveal clips", () => {
-    expect(footballBackRoomSource).toContain("<FootballEntryTransition");
-    expect(footballBackRoomSource).toContain('surface="play"');
-    expect(footballEntryTransitionSource).toContain('play: "/assets/football/football-play-reveal.mp4"');
-    expect(footballEntryTransitionSource).toContain('picks: "/assets/football/football-picks-reveal.mp4"');
-    expect(footballEntryTransitionSource).toContain("src={REVEAL_VIDEO[surface]}");
-    expect(footballEntryTransitionSource).toContain("onEnded={() => onCompleteRef.current()}");
+  it("uses the restored Zeke frame sequence instead of the tiny split MP4", () => {
+    expect(footballEntryTransitionSource).toContain("football-picks-reveal-01.jpg");
+    expect(footballEntryTransitionSource).toContain("football-picks-reveal-04.jpg");
+    expect(footballEntryTransitionSource).not.toContain("football-picks-reveal.mp4");
+    expect(footballEntryRevealCss).toContain(".football-entry-transition__frame--4");
   });
 
-  it("ships valid non-empty MP4 reveal clips for both surfaces", () => {
-    expect(playRevealClip.subarray(4, 8).toString("ascii")).toBe("ftyp");
-    expect(picksRevealClip.subarray(4, 8).toString("ascii")).toBe("ftyp");
-    expect(playRevealClip.byteLength).toBeGreaterThan(4_096);
-    expect(picksRevealClip.byteLength).toBeGreaterThan(4_096);
+  it("ships the original higher-quality reveal assets", () => {
+    expect(vinceYoungClip.subarray(4, 8).toString("ascii")).toBe("ftyp");
+    expect(vinceYoungClip.byteLength).toBeGreaterThan(1_000_000);
+
+    for (const frame of picksRevealFrames) {
+      expect(Array.from(frame.subarray(0, 2))).toEqual([0xff, 0xd8]);
+      expect(frame.byteLength).toBeGreaterThan(7_000);
+    }
   });
 });

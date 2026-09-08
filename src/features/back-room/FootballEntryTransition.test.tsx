@@ -8,35 +8,41 @@ afterEach(() => {
 });
 
 describe("FootballEntryTransition", () => {
-  it("plays the isolated Vince Young reveal for Play", () => {
+  it("plays the existing Vince Young source for Play before the Football HQ slam", () => {
     vi.useFakeTimers();
     const onComplete = vi.fn();
     const { container } = render(<FootballEntryTransition surface="play" onComplete={onComplete} />);
     const video = container.querySelector("video");
 
-    expect(video).toHaveAttribute("src", "/assets/football/football-play-reveal.mp4");
+    expect(video).toHaveAttribute("src", "/assets/football/vince-young-championship-run.mp4");
     fireEvent.ended(video!);
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(container.querySelector("img")).toHaveAttribute(
+      "src",
+      "/assets/football/football-picks-reveal-04.jpg",
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(1200);
+    });
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 
-  it("plays the isolated Ezekiel Elliott reveal for Picks", () => {
+  it("plays the restored Ezekiel Elliott frame sequence for Picks", () => {
     vi.useFakeTimers();
     const onComplete = vi.fn();
     const { container } = render(<FootballEntryTransition surface="picks" onComplete={onComplete} />);
-    const video = container.querySelector("video");
+    const frames = Array.from(container.querySelectorAll("img"));
 
-    expect(video).toHaveAttribute("src", "/assets/football/football-picks-reveal.mp4");
-    fireEvent.ended(video!);
-    expect(onComplete).toHaveBeenCalledTimes(1);
-  });
-
-  it("falls through if a reveal clip cannot finish", () => {
-    vi.useFakeTimers();
-    const onComplete = vi.fn();
-    render(<FootballEntryTransition surface="picks" onComplete={onComplete} />);
+    expect(frames.map((frame) => frame.getAttribute("src"))).toEqual([
+      "/assets/football/football-picks-reveal-01.jpg",
+      "/assets/football/football-picks-reveal-02.jpg",
+      "/assets/football/football-picks-reveal-03.jpg",
+      "/assets/football/football-picks-reveal-04.jpg",
+    ]);
 
     act(() => {
-      vi.advanceTimersByTime(4700);
+      vi.advanceTimersByTime(3600);
     });
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
