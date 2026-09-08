@@ -1,0 +1,185 @@
+.football-week-recap {
+  --football-week-blue: #2f7df6;
+  --football-week-blue-soft: rgba(47, 125, 246, .16);
+  --football-week-gold: #d8b15b;
+  --football-week-red: #e45b5b;
+}
+
+.football-week-recap .picks-event-recap__header {
+  border-bottom-color: rgba(47, 125, 246, .45);
+  background: linear-gradient(180deg, #10213d, #0b1424);
+}
+
+.football-week-recap .picks-event-recap__header > span,
+.football-week-recap .picks-event-recap__header > button:last-child,
+.football-week-recap__section-heading h3,
+.football-week-recap__section-heading > button,
+.football-week-archive-card > div:first-child > span,
+.football-week-archive-card > button {
+  color: var(--football-week-blue, #2f7df6);
+}
+
+.football-week-recap__hero {
+  display: grid;
+  gap: 14px;
+  padding: 22px 16px 18px;
+  border-bottom: 1px solid rgba(47, 125, 246, .32);
+  background:
+    radial-gradient(circle at 90% 0%, rgba(47, 125, 246, .24), transparent 36%),
+    linear-gradient(145deg, #111c31 0%, #0b101a 72%);
+}
+
+.football-week-recap__weekline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px 12px;
+  color: #c8d7ee;
+  font-size: .58rem;
+  font-weight: 950;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.football-week-recap__weekline > span {
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: var(--football-week-blue-soft);
+  color: #89b7ff;
+}
+
+.football-week-recap__weekline > strong { color: #f6f8fb; }
+.football-week-recap__weekline > small { margin-left: auto; color: #8391a5; font-size: inherit; }
+
+.football-week-recap__winner { display: grid; gap: 4px; }
+.football-week-recap__winner > small { color: var(--football-week-gold); font-size: .56rem; font-weight: 950; letter-spacing: .12em; }
+.football-week-recap__winner h2 { margin: 0; color: #fff; font-size: clamp(1.55rem, 7vw, 2.55rem); line-height: .98; letter-spacing: -.025em; }
+.football-week-recap__winner > strong { color: var(--football-week-gold); font-size: .86rem; letter-spacing: .05em; }
+
+.football-week-recap__quickline,
+.football-week-recap__league-splits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 13px;
+  color: #aab5c4;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .07em;
+}
+
+.football-week-recap__quickline span + span,
+.football-week-recap__league-splits span + span { position: relative; }
+.football-week-recap__quickline span + span::before,
+.football-week-recap__league-splits span + span::before { content: "·"; position: absolute; left: -8px; color: #4f6481; }
+
+.football-week-recap__you {
+  padding: 7px 9px;
+  border-left: 2px solid var(--football-week-blue);
+  background: rgba(47, 125, 246, .08);
+  color: #dce8f8;
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+.football-week-recap__section { padding: 14px 12px; }
+.football-week-recap__section + .football-week-recap__section { border-top: 1px solid #272e38; }
+.football-week-recap__section-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+.football-week-recap__section-heading h3 { margin: 0; font-size: .7rem; font-weight: 950; letter-spacing: .11em; }
+.football-week-recap__section-heading small { color: #768295; font-size: .52rem; font-weight: 900; }
+.football-week-recap__section-heading > button { border: 0; background: transparent; font-size: .53rem; font-weight: 950; letter-spacing: .09em; }
+
+.football-week-recap__awards { display: grid; gap: 6px; }
+.football-week-recap__awards > article {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 54px;
+  padding: 9px 10px;
+  border: 1px solid #293342;
+  border-left: 3px solid var(--football-week-blue);
+  border-radius: 9px;
+  background: #141923;
+}
+.football-week-recap__awards > article > span { color: #81b1ff; font-size: .52rem; font-weight: 950; letter-spacing: .08em; }
+.football-week-recap__awards > article > div { min-width: 0; }
+.football-week-recap__awards strong { display: block; color: #f4f6f8; font-size: .72rem; }
+.football-week-recap__awards p { margin: 2px 0 0; color: #8995a5; font-size: .59rem; line-height: 1.3; }
+
+.football-week-recap .picks-event-recap__standing-list article.is-current-user { box-shadow: inset 3px 0 var(--football-week-blue); background: rgba(47, 125, 246, .08); }
+.football-week-recap .picks-event-recap__standing-list article:first-child > span,
+.football-week-recap .picks-event-recap__standing-list article:first-child > b { color: var(--football-week-gold); }
+
+.football-week-recap__game-list { display: grid; gap: 7px; }
+.football-week-recap__game { overflow: hidden; border: 1px solid #2b3440; border-radius: 10px; background: #121720; }
+.football-week-recap__game.is-expanded { border-color: rgba(47, 125, 246, .55); }
+.football-week-recap__game-summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto 14px;
+  gap: 8px;
+  width: 100%;
+  min-height: 82px;
+  align-items: center;
+  padding: 9px 10px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+.football-week-recap__game-league { color: #77aaff; font-size: .5rem; font-weight: 950; letter-spacing: .1em; }
+.football-week-recap__matchup { display: grid; gap: 4px; min-width: 0; }
+.football-week-recap__matchup > strong { overflow: hidden; color: #f5f7fa; font-size: .7rem; text-overflow: ellipsis; white-space: nowrap; }
+.football-week-recap__matchup small { color: #697789; font-size: .48rem; }
+.football-week-recap__matchup > b { color: #8eb9ff; font-size: .59rem; line-height: 1.2; }
+.football-week-recap__game-outcome { display: grid; gap: 2px; min-width: 92px; text-align: right; }
+.football-week-recap__game-outcome > span { color: #8490a0; font-size: .5rem; font-weight: 900; }
+.football-week-recap__game-outcome > strong { color: #eef2f6; font-size: .58rem; }
+.football-week-recap__game-outcome > small { color: #b8c2cf; font-size: .52rem; font-weight: 850; }
+.football-week-recap__game-outcome .is-missed,
+.football-week-recap__pick-row .is-missed { color: var(--football-week-red); }
+.football-week-recap__chevron { color: #6e7c8f; transition: transform .16s ease; }
+.football-week-recap__game.is-expanded .football-week-recap__chevron { transform: rotate(180deg); }
+
+.football-week-recap__game-details { padding: 0 10px 10px; border-top: 1px solid #27303b; }
+.football-week-recap__score-detail { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; color: #7f8b9a; font-size: .54rem; }
+.football-week-recap__score-detail strong { color: #dce3ea; text-align: right; }
+.football-week-recap__everyone > strong { display: block; margin: 2px 0 6px; color: #79adff; font-size: .52rem; letter-spacing: .09em; }
+.football-week-recap__everyone > div { display: grid; }
+.football-week-recap__pick-row {
+  display: grid;
+  grid-template-columns: minmax(78px, .8fr) minmax(100px, 1.3fr) 18px;
+  gap: 8px;
+  align-items: center;
+  min-height: 34px;
+  border-top: 1px solid #252d37;
+  font-size: .59rem;
+}
+.football-week-recap__pick-row > span { overflow: hidden; color: #aeb8c5; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
+.football-week-recap__pick-row > strong { display: flex; gap: 5px; align-items: center; color: #f0f3f6; font-size: .61rem; }
+.football-week-recap__pick-row > strong > b { font-size: .68rem; }
+.football-week-recap__pick-row > em { color: #83d09b; font-style: normal; font-weight: 950; text-align: right; }
+
+.football-week-archive-card { gap: 8px; padding: 12px 13px; border-left: 3px solid #2f7df6; }
+.football-week-archive-card > div:first-child h3 { margin: 3px 0 1px; color: #f5f6f8; font-size: .88rem; }
+.football-week-archive-card > div:first-child p { margin: 0; color: #8f99a7; font-size: .59rem; }
+.football-week-archive-card .picks-latest-recap-card__result { padding: 0; border: 0; background: transparent; }
+.football-week-archive-card .picks-latest-recap-card__result small { color: #b5bec9; }
+.football-week-archive-card > button { border-top-color: #293748; }
+
+@media (max-width: 560px) {
+  .football-week-recap__weekline > small { width: 100%; margin-left: 0; }
+  .football-week-recap__game-summary { grid-template-columns: 27px minmax(0, 1fr) 92px 10px; gap: 6px; padding-inline: 8px; }
+  .football-week-recap__matchup > strong { font-size: .63rem; }
+  .football-week-recap__matchup > b { font-size: .53rem; white-space: normal; }
+  .football-week-recap__game-outcome { min-width: 0; }
+  .football-week-recap__game-outcome > strong { font-size: .51rem; }
+  .football-week-recap__game-outcome > small { font-size: .48rem; }
+}
+
+@media (min-width: 700px) {
+  .football-week-recap__hero { padding: 28px 24px 22px; }
+  .football-week-recap__section { padding: 18px 20px; }
+  .football-week-recap__awards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
