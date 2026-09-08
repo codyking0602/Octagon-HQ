@@ -4,14 +4,14 @@ export type FootballEntryState = {
   footballEntry: FootballEntrySurface;
 };
 
-const revealedSurfaces = new Set<FootballEntrySurface>();
+let footballRevealPlayed = false;
 
 export function nextFootballEntryState(surface: FootballEntrySurface): FootballEntryState | undefined {
-  if (revealedSurfaces.has(surface)) return undefined;
-  revealedSurfaces.add(surface);
+  if (footballRevealPlayed) return undefined;
+  footballRevealPlayed = true;
   return { footballEntry: surface };
 }
 
 export function resetFootballEntrySessionForTests() {
-  revealedSurfaces.clear();
+  footballRevealPlayed = false;
 }
