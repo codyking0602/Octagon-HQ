@@ -1,5 +1,5 @@
 import { chooseTwentyQuestionsFootballLeague } from "../games/twentyQuestionsEngine";
-import { getFootballTwentyQuestionsUniverse } from "../games/twentyQuestionsFootballAuthority";
+import { getFootballTwentyQuestionsRuntimeUniverse } from "../games/twentyQuestionsFootballRuntimeAuthority";
 import { createTwentyQuestionsRound } from "../games/twentyQuestionsRuntime";
 import TwentyQuestionsPage from "./TwentyQuestionsPage";
 
@@ -8,7 +8,7 @@ function createFootballTwentyQuestionsRound() {
   const league = chooseTwentyQuestionsFootballLeague(random);
   return createTwentyQuestionsRound(
     "football",
-    getFootballTwentyQuestionsUniverse(league),
+    getFootballTwentyQuestionsRuntimeUniverse(league),
     random,
   );
 }

@@ -10,6 +10,7 @@ import {
 } from "./twentyQuestionsEngine";
 
 export const UFC_TWENTY_QUESTIONS_SUBJECT_COUNT = 100;
+export const UFC_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT = 20;
 
 type CandidateQuestion = {
   id: string;
@@ -107,6 +108,64 @@ function deriveStats(fighter: UfcFactualSubject): UfcTwentyQuestionsStats {
   };
 }
 
+function runtimeCategory(row: CandidateQuestion) {
+  const id = row.id.toLowerCase();
+  if (id.startsWith("division:")) return "role";
+  if (id.startsWith("era:")) return "era";
+  if (id.startsWith("faced:") || id.startsWith("beat:")) return "matchups";
+  if (id.includes("title")) return "achievements";
+  return "career";
+}
+
+function runtimeFamily(row: CandidateQuestion) {
+  const parts = row.id.split(":");
+  return parts.length > 1 ? parts.slice(0, -1).join(":") : row.id;
+}
+
+function selectRuntimeRows(rows: readonly CandidateQuestion[], subjects: readonly TwentyQuestionsSubject[]) {
+  const scored = rows.map((row) => {
+    const yes = subjects.filter((subject) => row.values.get(subject.id) === true).length;
+    return {
+      row,
+      category: runtimeCategory(row),
+      family: runtimeFamily(row),
+      usefulSplit: Math.min(yes, subjects.length - yes),
+      imbalance: Math.abs(yes - (subjects.length - yes)),
+    };
+  });
+  const compare = (left: (typeof scored)[number], right: (typeof scored)[number]) => (
+    right.usefulSplit - left.usefulSplit
+    || left.imbalance - right.imbalance
+    || left.row.label.localeCompare(right.row.label)
+  );
+
+  const selected: CandidateQuestion[] = [];
+  for (const category of ["role", "era", "career", "achievements", "matchups"] as const) {
+    const byFamily = new Map<string, (typeof scored)>();
+    for (const entry of scored.filter((candidateRow) => candidateRow.category === category && candidateRow.usefulSplit > 0)) {
+      const bucket = byFamily.get(entry.family) ?? [];
+      bucket.push(entry);
+      byFamily.set(entry.family, bucket);
+    }
+    for (const bucket of byFamily.values()) bucket.sort(compare);
+    const familyOrder = [...byFamily.entries()].sort((left, right) => compare(left[1][0]!, right[1][0]!));
+    let categoryCount = 0;
+    while (categoryCount < UFC_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT) {
+      let added = false;
+      for (const [, bucket] of familyOrder) {
+        const entry = bucket.shift();
+        if (!entry) continue;
+        selected.push(entry.row);
+        categoryCount += 1;
+        added = true;
+        if (categoryCount >= UFC_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT) break;
+      }
+      if (!added) break;
+    }
+  }
+  return selected;
+}
+
 function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQuestionsQuestion[] {
   const rows: CandidateQuestion[] = [];
   const add = (id: string, label: string, answer: (fighter: UfcFactualSubject) => boolean) => {
@@ -189,7 +248,7 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
     if (!byPartition.has(signature)) byPartition.set(signature, row);
   }
 
-  return [...byPartition.values()].map((row) => {
+  return selectRuntimeRows([...byPartition.values()], subjects).map((row) => {
     const yes = subjects.filter((subject) => row.values.get(subject.id) === true).length;
     const internalCost = twentyQuestionsCostForSplit(yes, subjects.length);
     return {
