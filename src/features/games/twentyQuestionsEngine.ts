@@ -26,7 +26,7 @@ export interface TwentyQuestionsUniverse {
 export const TWENTY_QUESTIONS_LIMIT = 10;
 export const TWENTY_QUESTIONS_START_SCORE = 100;
 export const TWENTY_QUESTIONS_WRONG_GUESS_PENALTY = 10;
-export const TWENTY_QUESTIONS_BANK_LIMIT = 60;
+export const TWENTY_QUESTIONS_BANK_LIMIT = 40;
 
 export function twentyQuestionsScoreImpact(cost: TwentyQuestionsQuestionCost) {
   return Number((cost * 0.4).toFixed(1));
@@ -55,21 +55,34 @@ export function twentyQuestionsCostForSplit(yes: number, total: number): TwentyQ
 /**
  * Keep the player-facing bank compact without inventing a second factual owner.
  * The authority may generate many deterministic candidate predicates for calibration;
- * this greedily keeps the questions that separate the most still-indistinguishable
- * subject pairs, with whole-universe split quality as the tie-breaker.
+ * this keeps a small set that first separates still-indistinguishable subject pairs,
+ * then fills the remaining player-facing slots with the best whole-universe splits so
+ * the player still has multiple useful paths instead of one forced decision tree.
  */
 export function selectTwentyQuestionsQuestionBank(
   questions: readonly TwentyQuestionsQuestion[],
   subjects: readonly TwentyQuestionsSubject[],
   limit: number = TWENTY_QUESTIONS_BANK_LIMIT,
+  requiredQuestionIds: readonly string[] = [],
 ) {
   if (!Number.isInteger(limit) || limit <= 0) throw new Error("20 Questions bank limit must be a positive integer.");
-  const remaining = questions.map((question) => ({
+  const prepared = questions.map((question) => ({
     question,
     answers: subjects.map((subject) => question.answer(subject.id)),
   }));
+  const required = new Set(requiredQuestionIds);
+  if (required.size > limit) throw new Error("20 Questions required bank entries exceed the player-facing limit.");
+
   const signatures = subjects.map(() => "");
   const selected: TwentyQuestionsQuestion[] = [];
+  const remaining = prepared.filter((entry) => {
+    if (!required.has(entry.question.id)) return true;
+    selected.push(entry.question);
+    for (let index = 0; index < signatures.length; index += 1) {
+      signatures[index] += entry.answers[index] ? "1" : "0";
+    }
+    return false;
+  });
 
   while (selected.length < limit && remaining.length) {
     const groups = new Map<string, number[]>();
@@ -107,8 +120,6 @@ export function selectTwentyQuestionsQuestionBank(
         bestBalance = balance;
       }
     }
-
-    if (bestGain <= 0) break;
 
     const [picked] = remaining.splice(bestIndex, 1);
     selected.push(picked!.question);
