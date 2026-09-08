@@ -46,6 +46,19 @@ describe("football matchup breakdowns", () => {
     ]);
   });
 
+  it("selects this week's Texas-Ohio State and Cowboys-Giants features from the exact canonical team slugs", () => {
+    const event = footballEvent([
+      ["texas-longhorns", "Texas Longhorns", "ohio-state-buckeyes", "Ohio State Buckeyes"],
+      ["new-york-giants", "New York Giants", "dallas-cowboys", "Dallas Cowboys"],
+      ["michigan-wolverines", "Michigan Wolverines", "oklahoma-sooners", "Oklahoma Sooners"],
+    ]);
+
+    expect(footballMatchupBreakdownsForEvent(event).map((breakdown) => breakdown.id)).toEqual([
+      "2026-texas-ohio-state",
+      "2026-cowboys-giants",
+    ]);
+  });
+
   it("does not surface a breakdown for an unrelated slate", () => {
     const event = footballEvent([["texas", "Texas Longhorns", "texas-state", "Texas State Bobcats"]]);
     expect(footballMatchupBreakdownsForEvent(event)).toEqual([]);
