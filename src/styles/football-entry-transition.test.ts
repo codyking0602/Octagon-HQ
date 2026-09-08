@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import footballBackRoomSource from "../features/back-room/FootballBackRoomPage.tsx?raw";
+import footballEntryTransitionSource from "../features/back-room/FootballEntryTransition.tsx?raw";
 import footballShellCss from "./football-shell.css?raw";
 
 const vinceYoungClip = readFileSync(
@@ -19,9 +20,13 @@ describe("Football HQ entrance transition", () => {
 }`);
   });
 
-  it("lets the approved clip own the transition duration", () => {
-    expect(footballBackRoomSource).toContain("onEnded={onComplete}");
-    expect(footballBackRoomSource).not.toContain("window.setTimeout");
+  it("lets the Vince clip hand off to the Football HQ slam", () => {
+    expect(footballBackRoomSource).toContain("<FootballEntryTransition");
+    expect(footballBackRoomSource).toContain('surface="play"');
+    expect(footballEntryTransitionSource).toContain('/assets/football/vince-young-championship-run.mp4');
+    expect(footballEntryTransitionSource).toContain('onEnded={() => setPlaySlam(true)}');
+    expect(footballEntryTransitionSource).toContain('FOOTBALL_HQ_SLAM_FRAME');
+    expect(footballEntryTransitionSource).toContain('const PLAY_SLAM_MS = 1200;');
   });
 
   it("ships a real production clip instead of the tiny placeholder", () => {
