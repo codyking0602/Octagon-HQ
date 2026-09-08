@@ -8,13 +8,23 @@ afterEach(() => {
 });
 
 describe("FootballEntryTransition", () => {
-  it("plays the Vince Young video for the Play reveal", () => {
+  it("plays Vince Young and then slams Football HQ for the Play reveal", () => {
+    vi.useFakeTimers();
     const onComplete = vi.fn();
     const { container } = render(<FootballEntryTransition surface="play" onComplete={onComplete} />);
     const video = container.querySelector("video");
 
     expect(video).toHaveAttribute("src", "/assets/football/vince-young-championship-run.mp4");
     fireEvent.ended(video!);
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(container.querySelector("img")).toHaveAttribute(
+      "src",
+      "/assets/football/football-picks-reveal-04.jpg",
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(1200);
+    });
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 
