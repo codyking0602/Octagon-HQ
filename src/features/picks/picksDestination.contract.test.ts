@@ -12,7 +12,8 @@ describe("canonical Picks destination consumption", () => {
     expect(seasonHub).toContain("resolvePicksDestination(searchParams, archivedEventIds)");
     expect(seasonHub).toContain('setActiveTab("events")');
     expect(seasonHub).toContain("setHubOpen(true)");
-    expect(seasonHub).toContain("<LatestEventRecap event={latestEvent} requestedOpen />");
+    expect(seasonHub).toContain("const RecapComponent = football ? FootballWeekRecap : LatestEventRecap");
+    expect(seasonHub).toContain("<RecapComponent event={latestEvent} requestedOpen />");
     expect(seasonHub).toContain("requestedOpen={recapRequested && event.eventId === targetEventId}");
   });
 
