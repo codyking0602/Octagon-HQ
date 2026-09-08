@@ -1,5 +1,6 @@
 import runtimeSnapshotJson from "./generated/twentyQuestionsFootballRuntime.json";
 import type {
+  TwentyQuestionsHumanValue,
   TwentyQuestionsQuestion,
   TwentyQuestionsQuestionCost,
   TwentyQuestionsSubject,
@@ -24,6 +25,8 @@ type SnapshotQuestion = {
   id: string;
   label: string;
   internalCost: number;
+  humanValue?: number;
+  recommendationFamily?: string;
   answers: string;
 };
 
@@ -47,6 +50,10 @@ const cache = new Map<FootballTwentyQuestionsLeague, TwentyQuestionsUniverse>();
 
 function isQuestionCost(value: number): value is TwentyQuestionsQuestionCost {
   return value === 5 || value === 6 || value === 7 || value === 8;
+}
+
+function isHumanValue(value: number): value is TwentyQuestionsHumanValue {
+  return value === 1 || value === 2 || value === 3 || value === 4;
 }
 
 function buildRuntimeUniverse(league: FootballTwentyQuestionsLeague): TwentyQuestionsUniverse {
@@ -76,6 +83,9 @@ function buildRuntimeUniverse(league: FootballTwentyQuestionsLeague): TwentyQues
     if (!isQuestionCost(question.internalCost)) {
       throw new Error(`${league} 20 Questions runtime has an invalid score cost for ${question.id}.`);
     }
+    if (question.humanValue != null && !isHumanValue(question.humanValue)) {
+      throw new Error(`${league} 20 Questions runtime has an invalid human value for ${question.id}.`);
+    }
     if (question.answers.length !== subjects.length) {
       throw new Error(`${league} 20 Questions runtime answer map is incomplete for ${question.id}.`);
     }
@@ -83,6 +93,8 @@ function buildRuntimeUniverse(league: FootballTwentyQuestionsLeague): TwentyQues
       id: question.id,
       label: question.label,
       internalCost: question.internalCost,
+      ...(question.humanValue == null ? {} : { humanValue: question.humanValue }),
+      ...(question.recommendationFamily ? { recommendationFamily: question.recommendationFamily } : {}),
       answer: (subjectId: string) => {
         const index = subjectIndex.get(subjectId);
         if (index == null) throw new Error(`Unknown ${league} 20 Questions subject: ${subjectId}`);
