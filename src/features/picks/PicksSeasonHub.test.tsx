@@ -161,4 +161,30 @@ describe("PicksSeasonHub", () => {
     fireEvent.click(screen.getAllByRole("button", { name: "OPEN FULL RECAP" })[1]);
     expect(screen.getByRole("dialog", { name: "UFC Fight Night: Paris Recap" })).toBeInTheDocument();
   });
+
+  it("uses football championship points and exposes completed slates as weeks", () => {
+    const footballHistory: PickHistory = {
+      ...history,
+      seasonStandings: history.seasonStandings?.map((standing, index) => ({
+        ...standing,
+        adjustedPoints: index === 0 ? 41 : standing.totalPoints,
+      })),
+      events: [
+        completedEvent("football-week-1", "Football Week 1", "NFL + CFB", "2026-09-07T05:00:00Z"),
+      ],
+    };
+
+    render(
+      <MemoryRouter initialEntries={["/football/picks"]}>
+        <PicksSeasonHub history={footballHistory} loading={false} sport="football" />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("12-5 · 70.6% WIN · 41 PTS")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("STANDINGS & WEEKS"));
+    expect(screen.getByText("4 PLAYERS · 1 WEEK")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "WEEKS" }));
+    expect(screen.getByText("WEEK ARCHIVE")).toBeInTheDocument();
+    expect(screen.getByText("1 COMPLETED WEEK")).toBeInTheDocument();
+  });
 });
