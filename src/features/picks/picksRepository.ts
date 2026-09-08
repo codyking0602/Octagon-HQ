@@ -65,6 +65,10 @@ const lockSchema = z.object({ event_id: z.string(), bout_id: z.string(), fighter
 const historyRecordSchema = z.object({ correct: z.number().int().nonnegative(), incorrect: z.number().int().nonnegative(), missing: z.number().int().nonnegative(), excluded: z.number().int().nonnegative(), base_points: z.number().nonnegative(), lock_bonus: z.number().nonnegative(), total_points: z.number().nonnegative() });
 const historyBoutSchema = z.object({
   bout_id: z.string(), position: z.number().int().positive(), weight_class: z.string(), red_fighter_slug: z.string(), red_fighter_name: z.string(), blue_fighter_slug: z.string(), blue_fighter_name: z.string(),
+  home_team_slug: z.string().nullable().optional().default(null), away_team_slug: z.string().nullable().optional().default(null),
+  home_team_logo_url: z.string().url().nullable().optional().default(null), away_team_logo_url: z.string().url().nullable().optional().default(null),
+  frozen_spread_home: z.number().nullable().optional().default(null), spread_source: z.string().nullable().optional().default(null), spread_frozen_at: z.string().nullable().optional().default(null),
+  home_final_score: z.number().int().nonnegative().nullable().optional().default(null), away_final_score: z.number().int().nonnegative().nullable().optional().default(null),
   result_status: z.enum(["pending", "red_win", "blue_win", "draw", "no_contest", "cancelled"]), winner_fighter_slug: z.string().nullable(), picked_fighter_slug: z.string().nullable(), verdict: z.enum(["correct", "incorrect", "push", "missing", "excluded", "pending"]),
   included_in_picks: z.boolean().optional().default(true), group_picks: z.array(groupPickSchema).optional().default([]), repick_required: z.boolean().optional().default(false),
 });
@@ -193,7 +197,15 @@ function mapHistory(value: unknown): PickHistory {
       record: { correct: event.record.correct, incorrect: event.record.incorrect, missing: event.record.missing, excluded: event.record.excluded, basePoints: event.record.base_points, lockBonus: event.record.lock_bonus, totalPoints: event.record.total_points },
       underdogLock: event.underdog_lock ? mapLock(event.underdog_lock) : null,
       watchMoments: event.watch_moments.map((moment) => ({ title: moment.title, url: moment.url })),
-      bouts: event.bouts.map((bout) => ({ boutId: bout.bout_id, position: bout.position, weightClass: bout.weight_class, redFighterSlug: bout.red_fighter_slug, redFighterName: bout.red_fighter_name, blueFighterSlug: bout.blue_fighter_slug, blueFighterName: bout.blue_fighter_name, resultStatus: bout.result_status, winnerFighterSlug: bout.winner_fighter_slug, pickedFighterSlug: bout.picked_fighter_slug, verdict: bout.verdict, includedInPicks: bout.included_in_picks, groupPicks: bout.group_picks.map(mapGroupPick), repickRequired: bout.repick_required })),
+      bouts: event.bouts.map((bout) => ({
+        boutId: bout.bout_id, position: bout.position, weightClass: bout.weight_class,
+        redFighterSlug: bout.red_fighter_slug, redFighterName: bout.red_fighter_name, blueFighterSlug: bout.blue_fighter_slug, blueFighterName: bout.blue_fighter_name,
+        homeTeamSlug: bout.home_team_slug, awayTeamSlug: bout.away_team_slug, homeTeamLogoUrl: bout.home_team_logo_url, awayTeamLogoUrl: bout.away_team_logo_url,
+        frozenSpreadHome: bout.frozen_spread_home, spreadSource: bout.spread_source, spreadFrozenAt: bout.spread_frozen_at,
+        homeFinalScore: bout.home_final_score, awayFinalScore: bout.away_final_score,
+        resultStatus: bout.result_status, winnerFighterSlug: bout.winner_fighter_slug, pickedFighterSlug: bout.picked_fighter_slug, verdict: bout.verdict,
+        includedInPicks: bout.included_in_picks, groupPicks: bout.group_picks.map(mapGroupPick), repickRequired: bout.repick_required,
+      })),
       groupResults: event.group_results.map((result) => ({ rank: result.rank, profileId: result.profile_id, displayName: result.display_name, correct: result.correct, incorrect: result.incorrect, missing: result.missing, excluded: result.excluded, basePoints: result.base_points, lockBonus: result.lock_bonus, totalPoints: result.total_points, isCurrentUser: result.is_current_user })),
     })),
   };
