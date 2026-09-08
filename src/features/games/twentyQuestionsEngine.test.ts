@@ -5,9 +5,11 @@ import {
   TWENTY_QUESTIONS_WRONG_GUESS_PENALTY,
   chooseTwentyQuestionsFootballLeague,
   formatTwentyQuestionsScoreImpact,
+  rankTwentyQuestionsRecommendedQuestions,
   twentyQuestionsCostForSplit,
   twentyQuestionsEligibleQuestions,
   twentyQuestionsFinalScore,
+  twentyQuestionsQuestionFamily,
   twentyQuestionsScoreAfterQuestion,
   twentyQuestionsScoreAfterWrongGuess,
   twentyQuestionsScoreImpact,
@@ -74,6 +76,52 @@ describe("20 Questions live question eligibility", () => {
     expect(twentyQuestionsEligibleQuestions(questions, subjects.slice(0, 2)).map((question) => question.id))
       .toEqual(["position:quarterback"]);
     expect(twentyQuestionsEligibleQuestions(questions, subjects.slice(0, 1))).toEqual([]);
+  });
+});
+
+describe("20 Questions recommendation intelligence", () => {
+  const subjects: readonly TwentyQuestionsSubject[] = Array.from({ length: 10 }, (_, index) => ({
+    id: `p${index}`,
+    name: `Player ${index}`,
+    kind: "player" as const,
+    league: "NFL" as const,
+  }));
+
+  it("puts recognizable human clues ahead of a mathematically cleaner arbitrary threshold", () => {
+    const questions: readonly TwentyQuestionsQuestion[] = [
+      {
+        id: "stat:losses:6",
+        label: "At least 6 losses?",
+        internalCost: 8,
+        answer: (id) => Number(id.slice(1)) < 5,
+      },
+      {
+        id: "era:played-2000s",
+        label: "Did this person play in the 2000s?",
+        internalCost: 6,
+        answer: (id) => Number(id.slice(1)) < 3,
+      },
+    ];
+
+    expect(rankTwentyQuestionsRecommendedQuestions(questions, subjects, 2).map((question) => question.id))
+      .toEqual(["era:played-2000s", "stat:losses:6"]);
+  });
+
+  it("diversifies Recommended before repeating the same stat family", () => {
+    const questions: readonly TwentyQuestionsQuestion[] = [
+      { id: "stat:passing-yards:3000", label: "3,000 yards?", internalCost: 8, answer: (id) => Number(id.slice(1)) < 5 },
+      { id: "stat:passing-yards:3500", label: "3,500 yards?", internalCost: 8, answer: (id) => Number(id.slice(1)) < 4 },
+      { id: "stat:passing-yards:4000", label: "4,000 yards?", internalCost: 7, answer: (id) => Number(id.slice(1)) < 3 },
+      { id: "era:played-2010s", label: "Played in the 2010s?", internalCost: 7, answer: (id) => Number(id.slice(1)) % 2 === 0 },
+      { id: "team:cowboys", label: "Played for Dallas?", internalCost: 7, answer: (id) => Number(id.slice(1)) < 4 },
+      { id: "award:mvp", label: "Won MVP?", internalCost: 6, answer: (id) => Number(id.slice(1)) < 3 },
+      { id: "draft:first-round", label: "First-round pick?", internalCost: 7, answer: (id) => Number(id.slice(1)) >= 5 },
+    ];
+
+    const recommended = rankTwentyQuestionsRecommendedQuestions(questions, subjects, 5);
+    expect(recommended).toHaveLength(5);
+    expect(new Set(recommended.map(twentyQuestionsQuestionFamily)).size).toBe(5);
+    expect(recommended.filter((question) => question.id.startsWith("stat:passing-yards:"))).toHaveLength(1);
   });
 });
 
