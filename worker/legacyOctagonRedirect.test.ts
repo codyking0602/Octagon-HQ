@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { UPDATE_RECOVERY_CACHE_CONTROL } from "./updateRecoveryHeaders";
-import { LEGACY_REDIRECT_STATUS, legacyOctagonRedirect } from "./legacyOctagonRedirect";
+import {
+  LEGACY_REDIRECT_STATUS,
+  UPDATE_RECOVERY_CACHE_CONTROL,
+  legacyOctagonRedirect,
+} from "./legacyOctagonRedirect";
 
 describe("legacyOctagonRedirect", () => {
   it("permanently preserves path and query while redirecting to the canonical The HQ host", () => {
