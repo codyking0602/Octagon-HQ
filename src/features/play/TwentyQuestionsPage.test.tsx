@@ -36,15 +36,16 @@ function renderRound() {
 }
 
 describe("20 Questions round UX", () => {
-  it("keeps the final remaining identity hidden until the player guesses or forfeits", () => {
+  it("immediately opens a playable final guess when one identity remains", () => {
     const { container } = renderRound();
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
     fireEvent.click(screen.getByRole("button", { name: /Was this fighter active in the Alpha era/i }));
 
     expect(container.querySelector(".twenty-questions-scorebar div:nth-child(2) strong")?.textContent).toBe("1");
-    expect(screen.queryByText("Alpha Fighter")).not.toBeInTheDocument();
-    expect(screen.getByText("One identity remains. Guess or reveal the answer.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "GUESS" })).toBeInTheDocument();
+    expect(screen.getByText("One identity remains. Who is it?")).toBeInTheDocument();
+    expect(screen.queryByText("One identity remains. Guess or reveal the answer.")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Alpha Fighter/i })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Recommended" })).not.toBeInTheDocument();
   });
 
   it("forfeits through the normal result reveal path and counts as not solved", () => {
