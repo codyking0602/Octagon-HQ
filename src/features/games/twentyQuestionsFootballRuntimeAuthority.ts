@@ -1,14 +1,16 @@
 import runtimeSnapshotJson from "./generated/twentyQuestionsFootballRuntime.json";
 import type {
   TwentyQuestionsQuestion,
+  TwentyQuestionsQuestionCost,
   TwentyQuestionsSubject,
   TwentyQuestionsUniverse,
 } from "./twentyQuestionsEngine";
-import type { FootballTwentyQuestionsLeague } from "./twentyQuestionsFootballAuthority";
 
 export const FOOTBALL_TWENTY_QUESTIONS_PLAYER_COUNT = 100;
 export const FOOTBALL_TWENTY_QUESTIONS_COACH_COUNT = 20;
 export const FOOTBALL_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT = 20;
+
+type FootballTwentyQuestionsLeague = "NFL" | "CFB";
 
 type SnapshotSubject = {
   id: string;
@@ -41,13 +43,17 @@ type RuntimeSnapshot = {
 const runtimeSnapshot = runtimeSnapshotJson as unknown as RuntimeSnapshot;
 const cache = new Map<FootballTwentyQuestionsLeague, TwentyQuestionsUniverse>();
 
+function isQuestionCost(value: number): value is TwentyQuestionsQuestionCost {
+  return value === 5 || value === 6 || value === 7 || value === 8;
+}
+
 function buildRuntimeUniverse(league: FootballTwentyQuestionsLeague): TwentyQuestionsUniverse {
   const snapshot = runtimeSnapshot[league];
   if (!snapshot || snapshot.league !== league) {
     throw new Error(`${league} 20 Questions runtime snapshot is unavailable.`);
   }
   if (runtimeSnapshot.categoryLimit !== FOOTBALL_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT) {
-    throw new Error(`Football 20 Questions runtime category limit is out of date.`);
+    throw new Error("Football 20 Questions runtime category limit is out of date.");
   }
 
   const subjects: TwentyQuestionsSubject[] = snapshot.subjects.map((subject) => ({ ...subject }));
@@ -62,6 +68,9 @@ function buildRuntimeUniverse(league: FootballTwentyQuestionsLeague): TwentyQues
 
   const subjectIndex = new Map(subjects.map((subject, index) => [subject.id, index]));
   const questions: TwentyQuestionsQuestion[] = snapshot.questions.map((question) => {
+    if (!isQuestionCost(question.internalCost)) {
+      throw new Error(`${league} 20 Questions runtime has an invalid score cost for ${question.id}.`);
+    }
     if (question.answers.length !== subjects.length) {
       throw new Error(`${league} 20 Questions runtime answer map is incomplete for ${question.id}.`);
     }
