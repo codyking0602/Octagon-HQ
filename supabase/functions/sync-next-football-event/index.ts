@@ -5,13 +5,15 @@ import {
   normalizeFootballFinalResult,
   normalizeFootballSlate,
 } from "./normalize.ts";
+import { scheduledFootballFinalChecks } from "./scheduled.ts";
 import { buildFootballWeekPreview, footballWeekEspnDateRange, footballWeekRange } from "./week.ts";
 
 type Json = Record<string, any>;
 
+const schedulerHeader = "x-octagon-scheduler-token";
 const headers = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": `authorization, x-client-info, apikey, content-type, ${schedulerHeader}`,
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });
@@ -54,17 +56,71 @@ Deno.serve(async (request) => {
   if (request.method !== "POST") return json({ error: "method not allowed" }, 405);
   const url = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const auth = request.headers.get("Authorization") ?? "";
-  const caller = createClient(url, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: auth } } });
-  const { data: user } = await caller.auth.getUser(auth.replace(/^Bearer\s+/i, ""));
-  if (!user.user) return json({ error: "authentication required" }, 401);
   const admin = createClient(url, serviceKey);
-  const { data: owner } = await admin.rpc("is_pick_control_owner", { p_profile_id: user.user.id });
-  if (!owner) return json({ error: "pick control owner required" }, 403);
+
+  let input: Json;
+  try {
+    input = await request.json();
+  } catch {
+    return json({ error: "valid JSON body required" }, 400);
+  }
+  const mode = String(input.mode ?? "apply");
+
+  if (mode === "scheduled") {
+    const schedulerToken = request.headers.get(schedulerHeader) ?? "";
+    const authorized = await admin.rpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
+    if (authorized.error || authorized.data !== true) return json({ error: "scheduler authorization required" }, 401);
+  } else {
+    const auth = request.headers.get("Authorization") ?? "";
+    const caller = createClient(url, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: auth } } });
+    const { data: user } = await caller.auth.getUser(auth.replace(/^Bearer\s+/i, ""));
+    if (!user.user) return json({ error: "authentication required" }, 401);
+    const { data: owner } = await admin.rpc("is_pick_control_owner", { p_profile_id: user.user.id });
+    if (!owner) return json({ error: "pick control owner required" }, 403);
+  }
 
   try {
-    const input = await request.json();
-    const mode = String(input.mode ?? "apply");
+    if (mode === "scheduled") {
+      const current = await admin.rpc("get_current_pick_event", { p_sport: "football" });
+      if (current.error) throw current.error;
+      const checks = scheduledFootballFinalChecks(current.data, new Date());
+      let settled = 0;
+      let stillPending = 0;
+      const errors: Array<{ bout_id: string; error: string }> = [];
+
+      for (const check of checks) {
+        try {
+          const sportPath = check.league === "nfl" ? "football/nfl" : "football/college-football";
+          const espnResponse = await fetch(`https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${check.espnEventId}`);
+          if (!espnResponse.ok) throw new Error(`football ESPN request failed (${espnResponse.status})`);
+          const summary = await espnResponse.json();
+          const finalResult = normalizeFootballFinalResult(summary.header, check.league);
+          if (!finalResult) {
+            stillPending += 1;
+            continue;
+          }
+          const recorded = await admin.rpc("record_football_pick_final", {
+            p_league: finalResult.league,
+            p_home_team_slug: finalResult.home_team_slug,
+            p_away_team_slug: finalResult.away_team_slug,
+            p_home_final_score: finalResult.home_final_score,
+            p_away_final_score: finalResult.away_final_score,
+          });
+          if (recorded.error) throw recorded.error;
+          settled += 1;
+        } catch (error) {
+          errors.push({ bout_id: check.boutId, error: error instanceof Error ? error.message : "football final sync failed" });
+        }
+      }
+
+      return json({
+        status: errors.length ? "partial" : "ok",
+        checked: checks.length,
+        settled,
+        still_pending: stillPending,
+        errors,
+      }, errors.length ? 502 : 200);
+    }
 
     if (mode === "week-preview" || mode === "week-apply") {
       const weekStart = String(input.week_start ?? "").trim();
