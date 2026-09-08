@@ -1,12 +1,9 @@
 import {
-  chooseTwentyQuestionsFootballLeague,
   chooseTwentyQuestionsSubject,
   type TwentyQuestionsSport,
   type TwentyQuestionsSubject,
   type TwentyQuestionsUniverse,
 } from "./twentyQuestionsEngine";
-import { getFootballTwentyQuestionsUniverse } from "./twentyQuestionsFootballAuthority";
-import { getUfcTwentyQuestionsUniverse } from "./twentyQuestionsUfcAuthority";
 
 export interface TwentyQuestionsRound {
   sport: TwentyQuestionsSport;
@@ -16,11 +13,9 @@ export interface TwentyQuestionsRound {
 
 export function createTwentyQuestionsRound(
   sport: TwentyQuestionsSport,
+  universe: TwentyQuestionsUniverse,
   random: () => number = Math.random,
 ): TwentyQuestionsRound {
-  const universe = sport === "ufc"
-    ? getUfcTwentyQuestionsUniverse()
-    : getFootballTwentyQuestionsUniverse(chooseTwentyQuestionsFootballLeague(random));
   return {
     sport,
     universe,
