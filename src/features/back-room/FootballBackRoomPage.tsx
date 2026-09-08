@@ -10,7 +10,8 @@ export default function FootballBackRoomPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const entrySurface = (location.state as FootballEntryState | null)?.footballEntry;
-  const showTransition = entrySurface === "play";
+  const entryRequested = entrySurface === "play";
+  const showTransition = entryRequested;
 
   return (
     <div className="page football-room-page">
