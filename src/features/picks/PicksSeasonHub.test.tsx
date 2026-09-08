@@ -219,7 +219,7 @@ describe("PicksSeasonHub", () => {
     fireEvent.click(screen.getByText("STANDINGS & WEEKS"));
     fireEvent.click(screen.getByRole("tab", { name: "WEEKS" }));
     expect(screen.getByText("WEEK 1 · FINAL")).toBeInTheDocument();
-    expect(screen.getByText("WEEK CHAMPION · 11.5 PTS · ROOM 77% ATS")).toBeInTheDocument();
+    expect(screen.getByText("WEEK CHAMPION · 11.5 PTS · ROOM 78% ATS")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "OPEN WEEK RECAP" })).toHaveTextContent("VIEW WEEK RECAP");
   });
 
