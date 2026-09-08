@@ -3,6 +3,7 @@ import {
   type UfcFactualSubject,
 } from "../back-room/ufcFactualLedger";
 import {
+  selectTwentyQuestionsQuestionBank,
   twentyQuestionsCostForSplit,
   type TwentyQuestionsQuestion,
   type TwentyQuestionsSubject,
@@ -165,11 +166,15 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
     }
   }
 
+  // Matchup questions stay tied to recognizable identities in the same 100-fighter game pool.
+  // The factual ledger contains hundreds of one-off opponents; surfacing all of them made the
+  // player-facing bank balloon into the hundreds without improving normal play.
+  const surfacedOpponentKeys = new Set(subjects.map((subject) => normalizedOpponent(subject.name)));
   const opponentNames = new Map<string, string>();
   for (const fighter of ufcFactualLedgerSubjects) {
     for (const fight of fighter.fights) {
       const key = normalizedOpponent(fight.opponent);
-      if (key && !opponentNames.has(key)) opponentNames.set(key, fight.opponent.trim());
+      if (key && surfacedOpponentKeys.has(key) && !opponentNames.has(key)) opponentNames.set(key, fight.opponent.trim());
     }
   }
   for (const [opponentKey, opponent] of [...opponentNames.entries()].sort((left, right) => left[1].localeCompare(right[1]))) {
@@ -189,7 +194,7 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
     if (!byPartition.has(signature)) byPartition.set(signature, row);
   }
 
-  return [...byPartition.values()].map((row) => {
+  const liveCandidates = [...byPartition.values()].map((row) => {
     const yes = subjects.filter((subject) => row.values.get(subject.id) === true).length;
     const internalCost = twentyQuestionsCostForSplit(yes, subjects.length);
     return {
@@ -203,6 +208,7 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
       },
     };
   });
+  return selectTwentyQuestionsQuestionBank(liveCandidates, subjects);
 }
 
 let cachedUniverse: TwentyQuestionsUniverse | null = null;
