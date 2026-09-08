@@ -28,6 +28,14 @@ describe("canonicalDestinationPath", () => {
     ],
     [{ kind: "picks-event", eventId: "ufc-325" }, "/picks?event=ufc-325"],
     [{ kind: "picks-recap", eventId: "ufc-325" }, "/picks?event=ufc-325&view=recap"],
+    [
+      { kind: "picks-event", eventId: "football-week-1", sport: "football" },
+      "/football/picks?event=football-week-1",
+    ],
+    [
+      { kind: "picks-recap", eventId: "football-week-1", sport: "football" },
+      "/football/picks?event=football-week-1&view=recap",
+    ],
   ])("builds the stable route for %o", (destination, expected) => {
     expect(canonicalDestinationPath(destination)).toBe(expected);
   });
@@ -49,6 +57,12 @@ describe("canonicalDestinationPath", () => {
         target: { kind: "picks-recap", eventId: "ufc-325" },
       }),
     ).toBe("/picks?event=ufc-325&view=recap");
+    expect(
+      canonicalDestinationPath({
+        kind: "notification-target",
+        target: { kind: "picks-recap", eventId: "football-week-1", sport: "football" },
+      }),
+    ).toBe("/football/picks?event=football-week-1&view=recap");
   });
 
   it("trims and safely encodes identifiers", () => {
