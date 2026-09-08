@@ -8,7 +8,8 @@ import type {
 
 export const FOOTBALL_TWENTY_QUESTIONS_PLAYER_COUNT = 100;
 export const FOOTBALL_TWENTY_QUESTIONS_COACH_COUNT = 20;
-export const FOOTBALL_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT = 20;
+export const FOOTBALL_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT = 30;
+export const FOOTBALL_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS = 360;
 
 type FootballTwentyQuestionsLeague = "NFL" | "CFB";
 
@@ -36,6 +37,7 @@ type LeagueSnapshot = {
 type RuntimeSnapshot = {
   version: number;
   categoryLimit: number;
+  maxQuestions: number;
   NFL: LeagueSnapshot;
   CFB: LeagueSnapshot;
 };
@@ -54,6 +56,9 @@ function buildRuntimeUniverse(league: FootballTwentyQuestionsLeague): TwentyQues
   }
   if (runtimeSnapshot.categoryLimit !== FOOTBALL_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT) {
     throw new Error("Football 20 Questions runtime category limit is out of date.");
+  }
+  if (runtimeSnapshot.maxQuestions !== FOOTBALL_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS) {
+    throw new Error("Football 20 Questions runtime maximum question count is out of date.");
   }
 
   const subjects: TwentyQuestionsSubject[] = snapshot.subjects.map((subject) => ({ ...subject }));
@@ -86,7 +91,7 @@ function buildRuntimeUniverse(league: FootballTwentyQuestionsLeague): TwentyQues
     };
   });
 
-  if (!questions.length || questions.length > FOOTBALL_TWENTY_QUESTIONS_RUNTIME_CATEGORY_LIMIT * 6) {
+  if (!questions.length || questions.length > FOOTBALL_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS) {
     throw new Error(`${league} 20 Questions runtime question bank is invalid.`);
   }
 
