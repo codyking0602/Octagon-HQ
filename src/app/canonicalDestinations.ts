@@ -9,8 +9,8 @@ export type DirectCanonicalDestination =
   | { kind: "game-result"; gameSlug: string; resultId: string }
   | { kind: "challenge"; challengeId: string }
   | { kind: "auction"; auctionId: string }
-  | { kind: "picks-event"; eventId: string }
-  | { kind: "picks-recap"; eventId: string }
+  | { kind: "picks-event"; eventId: string; sport?: "ufc" | "football" }
+  | { kind: "picks-recap"; eventId: string; sport?: "ufc" | "football" }
   | { kind: "daily-challenge"; sport: "ufc" | "football" };
 
 export type CanonicalDestination =
@@ -36,6 +36,10 @@ function withSearch(pathname: string, entries: ReadonlyArray<readonly [string, s
   const search = new URLSearchParams();
   entries.forEach(([key, value]) => search.set(key, requiredValue(value, key)));
   return `${pathname}?${search.toString()}`;
+}
+
+function picksRoot(sport: "ufc" | "football" | undefined) {
+  return sport === "football" ? "/football/picks" : "/picks";
 }
 
 /**
@@ -67,9 +71,9 @@ export function canonicalDestinationPath(destination: CanonicalDestination): str
     case "auction":
       return withSearch("/play/auction", [["auction", destination.auctionId]]);
     case "picks-event":
-      return withSearch("/picks", [["event", destination.eventId]]);
+      return withSearch(picksRoot(destination.sport), [["event", destination.eventId]]);
     case "picks-recap":
-      return withSearch("/picks", [
+      return withSearch(picksRoot(destination.sport), [
         ["event", destination.eventId],
         ["view", "recap"],
       ]);
