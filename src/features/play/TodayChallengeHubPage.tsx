@@ -15,11 +15,7 @@ export default function TodayChallengeHubPage() {
       <TodayChallengeHub />
       <ChallengeCenter />
 
-      <PlayLandingGameLibrary
-        sport="ufc"
-        onNavigate={navigate}
-        ownerAccess={identity.profile?.canControlPicks === true}
-      />
+      <PlayLandingGameLibrary sport="ufc" onNavigate={navigate} ownerAccess={identity.profile?.canControlPicks === true} />
     </div>
   );
 }
