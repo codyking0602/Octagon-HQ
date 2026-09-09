@@ -171,15 +171,16 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
 }
 
 function footballMetricText(metricId: FootballFactMetricId, value: unknown, label: string) {
-  const formatted = formatFootballFact(metricId, value);
+  const numericValue = Number(value);
+  const formatted = formatFootballFact(metricId, numericValue);
   switch (metricId) {
-    case "cfb-heisman-awards": return Number(value) === 1 ? "I won the Heisman Trophy." : `I won the Heisman Trophy ${formatted} times.`;
-    case "nfl-ap-mvp-awards": return Number(value) === 1 ? "I won the AP NFL MVP award." : `I won ${formatted} AP NFL MVP awards.`;
-    case "nfl-super-bowl-titles": return Number(value) === 1 ? "I won a Super Bowl title." : `I won ${formatted} Super Bowl titles.`;
-    case "nfl-defensive-player-of-year-awards": return Number(value) === 1 ? "I won NFL Defensive Player of the Year." : `I won NFL Defensive Player of the Year ${formatted} times.`;
-    case "nfl-first-team-all-pros": return Number(value) === 1 ? "I was a first-team All-Pro." : `I was a first-team All-Pro ${formatted} times.`;
-    case "cfb-coach-national-titles": return Number(value) === 1 ? "I won a national championship as a head coach." : `I won ${formatted} national championships as a head coach.`;
-    case "cfb-coach-conference-titles": return Number(value) === 1 ? "I won a conference title as a head coach." : `I won ${formatted} conference titles as a head coach.`;
+    case "cfb-heisman-awards": return numericValue === 1 ? "I won the Heisman Trophy." : `I won the Heisman Trophy ${formatted} times.`;
+    case "nfl-ap-mvp-awards": return numericValue === 1 ? "I won the AP NFL MVP award." : `I won ${formatted} AP NFL MVP awards.`;
+    case "nfl-super-bowl-titles": return numericValue === 1 ? "I won a Super Bowl title." : `I won ${formatted} Super Bowl titles.`;
+    case "nfl-defensive-player-of-year-awards": return numericValue === 1 ? "I won NFL Defensive Player of the Year." : `I won NFL Defensive Player of the Year ${formatted} times.`;
+    case "nfl-first-team-all-pros": return numericValue === 1 ? "I was a first-team All-Pro." : `I was a first-team All-Pro ${formatted} times.`;
+    case "cfb-coach-national-titles": return numericValue === 1 ? "I won a national championship as a head coach." : `I won ${formatted} national championships as a head coach.`;
+    case "cfb-coach-conference-titles": return numericValue === 1 ? "I won a conference title as a head coach." : `I won ${formatted} conference titles as a head coach.`;
     default: return `I recorded ${formatted} ${label.toLowerCase()}.`;
   }
 }
