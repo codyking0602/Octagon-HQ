@@ -1,0 +1,31 @@
+name: Temp fix Football reveal binary
+
+on:
+  push:
+    branches:
+      - fix/football-reveal-montage-cuts
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/football-reveal-montage-cuts
+      - name: Decode real Zeke reveal asset and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d public/assets/football/football-picks-reveal.mp4 > /tmp/football-picks-reveal.mp4
+          test "$(dd if=/tmp/football-picks-reveal.mp4 bs=1 skip=4 count=4 2>/dev/null)" = "ftyp"
+          test "$(stat -c%s /tmp/football-picks-reveal.mp4)" -gt 100000
+          mv /tmp/football-picks-reveal.mp4 public/assets/football/football-picks-reveal.mp4
+          git rm .github/workflows/temp-fix-football-reveal-binary.yml
+          git add public/assets/football/football-picks-reveal.mp4
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Fix Zeke reveal binary asset'
+          git push origin HEAD:fix/football-reveal-montage-cuts
