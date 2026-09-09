@@ -1,6 +1,10 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import {
+  normalizeFootballRevealH264Level,
+  readH264AvcLevelIdc,
+} from "../../scripts/normalize-football-reveal-codec.mjs";
 import footballEntryTransitionSource from "../features/back-room/FootballEntryTransition.tsx?raw";
 import footballShellCss from "./football-shell.css?raw";
 
@@ -35,6 +39,16 @@ describe("Football HQ entrance transition", () => {
     for (const clip of [playRevealClip, picksRevealClip]) {
       expect(clip.subarray(4, 8).toString("ascii")).toBe("ftyp");
       expect(clip.byteLength).toBeGreaterThan(100_000);
+    }
+  });
+
+  it("normalizes both reveal assets to mobile-safe H.264 Level 3.1", () => {
+    for (const clip of [playRevealClip, picksRevealClip]) {
+      const normalized = normalizeFootballRevealH264Level(clip);
+      expect(readH264AvcLevelIdc(normalized)).toMatchObject({
+        configLevelIdc: 31,
+        spsLevelIdc: 31,
+      });
     }
   });
 });

@@ -10,7 +10,7 @@
     "predev": "npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-twenty-questions-runtime",
     "dev": "vite",
     "build": "npm run typecheck && npm run build:artifacts",
-    "build:artifacts": "vite build && vite build --config vite.worker.config.ts && npm run verify:artifact",
+    "build:artifacts": "vite build && vite build --config vite.worker.config.ts && node scripts/normalize-football-reveal-codec.mjs && npm run verify:artifact",
     "preview": "vite preview",
     "generate:football-cfb-player-seasons": "node scripts/generate-football-cfb-player-season-recognition.mjs",
     "generate:football-career-media-context": "node scripts/generate-football-career-media-context.mjs",
