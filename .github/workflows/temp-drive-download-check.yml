@@ -1,0 +1,28 @@
+name: Temp Drive download check
+
+on:
+  push:
+    branches:
+      - fix/football-reveal-montage-final
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check temporary Drive files
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --silent --show-error \
+            'https://drive.usercontent.google.com/download?id=18Lr-JL1IDdeCNdFOO4b7MyUXWq1Mur6D&export=download&confirm=t' \
+            -o play.mp4
+          curl -L --fail --silent --show-error \
+            'https://drive.usercontent.google.com/download?id=1547oSbQooGuZkoTb_eRWby6WKVtMX7y7&export=download&confirm=t' \
+            -o picks.mp4
+          test "$(stat -c%s play.mp4)" = "1058822"
+          test "$(stat -c%s picks.mp4)" = "1342927"
+          echo '6ff79235135cb5ef1f1c89b94a014c9e21b6cd1b0198bdb7412697893601a9df  play.mp4' | sha256sum -c -
+          echo '88f4204fd962c7ce2bb0aefbb026101ec3ae9fff797ecb0e61840d0e53241d56  picks.mp4' | sha256sum -c -
