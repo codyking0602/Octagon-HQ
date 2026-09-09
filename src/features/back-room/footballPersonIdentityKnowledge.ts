@@ -333,14 +333,14 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
     fact("fourth-in-heisman", "lineman-heisman-finish", "As a junior he finished fourth in Heisman voting, an exceptionally high finish for an offensive lineman.", ["identity-pace-ohio-state"], ["college", "award"]),
     fact("first-overall-1997", "offensive-lineman-first-overall", "He skipped his senior season and the St. Louis Rams selected him first overall in the 1997 NFL Draft.", ["identity-pace-ohio-state"], ["draft", "career-decision"]),
   ]},
-  { subjectId: "nfl-reggie-white", facts: [
+  { subjectId: "reggie-white", facts: [
     fact("ordained-minister", "minister-before-pro-football", "He was an ordained minister, a real-life identity that became inseparable from his football nickname.", ["identity-reggie-packers-100"], ["faith", "off-field"]),
     fact("minister-of-defense", "minister-of-defense-nickname", "His combination of ministry and pass-rushing dominance produced the enduring nickname 'Minister of Defense.'", ["identity-reggie-packers-100", "identity-reggie-packers-hof"], ["nickname", "identity"]),
     fact("landmark-1993-free-agent", "free-agency-landmark", "His 1993 signing with Green Bay was the signature star move at the dawn of modern unrestricted NFL free agency.", ["identity-reggie-packers-100"], ["career-decision", "league-history"]),
     fact("packers-defense-immediate-rise", "green-bay-defensive-turnaround", "Green Bay's defense jumped from 23rd in the league before his arrival to No. 2 in his first Packers season.", ["identity-reggie-packers-hof"], ["team-impact", "turning-point"]),
     fact("packers-retired-92", "green-bay-number-retirement", "The Packers retired his No. 92 after his death, recognizing the unusually large impact of only six seasons in Green Bay.", ["identity-reggie-packers-hof"], ["legacy", "visual-identity"]),
   ]},
-  { subjectId: "nfl-dick-butkus", facts: [
+  { subjectId: "dick-butkus", facts: [
     fact("chicago-to-illinois-to-bears", "hometown-football-path", "His football path stayed close to home: Chicago high school, the University of Illinois, and then the Chicago Bears.", ["identity-butkus-bears-home"], ["hometown", "career-path"]),
     fact("two-way-center-linebacker", "illinois-two-way-star", "At Illinois he starred on both sides of the ball, playing center on offense and linebacker on defense.", ["identity-butkus-illinois"], ["college", "two-way"]),
     fact("third-1964-heisman", "linebacker-heisman-finish", "He finished third in the 1964 Heisman Trophy voting as a linebacker.", ["identity-butkus-illinois"], ["college", "award"]),
@@ -354,7 +354,7 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
     fact("strong-to-free-safety", "miami-safety-position-move", "Miami moved him from strong safety to free safety for his senior season.", ["identity-reed-miami"], ["college", "position-path"]),
     fact("boston-college-lateral-return", "2001-boston-college-lateral", "Against Boston College in 2001, he took the ball from teammate Matt Walters after an interception and raced 80 yards for the clinching touchdown.", ["identity-reed-miami"], ["college", "iconic-moment"]),
   ]},
-  { subjectId: "nfl-j-j-watt", facts: [
+  { subjectId: "nflverse-player-00-0027949", facts: [
     fact("childhood-hockey", "competitive-hockey-background", "He played organized hockey from early childhood into his teens before football became his full focus.", ["identity-watt-wisconsin-hof"], ["childhood", "hockey"]),
     fact("central-michigan-tight-end", "college-tight-end-origin", "He began college on scholarship as a tight end at Central Michigan rather than as a defensive lineman.", ["identity-watt-wisconsin-journey", "identity-watt-wisconsin-hof"], ["college", "position-path"]),
     fact("left-scholarship-to-walk-on", "wisconsin-walk-on-gamble", "After one Central Michigan season he gave up his scholarship and starting role to pursue a walk-on opportunity at Wisconsin as a defensive end.", ["identity-watt-wisconsin-journey"], ["college", "career-decision"]),
