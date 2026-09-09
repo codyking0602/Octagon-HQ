@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
+import { OwnerOnlyRoute } from "../features/identity/OwnerOnlyRoute";
 import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
 
@@ -61,7 +62,10 @@ export const appRoutes: RouteObject[] = [
       { path: "play/keep-cut", element: <TodayChallengeGameRoute gameType="keep_4_cut_4" casual={<KeepCutPage />} /> },
       { path: "play/auction", element: <AuctionPage /> },
       { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
-      { path: "play/20-questions", element: <UfcTwentyQuestionsPage /> },
+      {
+        path: "play/20-questions",
+        element: <OwnerOnlyRoute fallback="/play"><UfcTwentyQuestionsPage /></OwnerOnlyRoute>,
+      },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
@@ -78,7 +82,10 @@ export const appRoutes: RouteObject[] = [
       { path: "football/blind-resume", element: <FootballBlindResumePage /> },
       { path: "football/hit-the-number", element: <FootballHitTheNumberPage /> },
       { path: "football/find-leader", element: <FootballFindLeaderPage /> },
-      { path: "football/20-questions", element: <FootballTwentyQuestionsPage /> },
+      {
+        path: "football/20-questions",
+        element: <OwnerOnlyRoute fallback="/football"><FootballTwentyQuestionsPage /></OwnerOnlyRoute>,
+      },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
