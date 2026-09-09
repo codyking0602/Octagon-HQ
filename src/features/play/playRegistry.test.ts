@@ -6,7 +6,6 @@ const expectedIds: PlayGameId[] = [
   "auction",
   "hit-the-number",
   "20-questions",
-  "who-am-i",
   "find-leader",
   "wavelength",
   "blind-resume",
@@ -24,9 +23,11 @@ const officialDailyIds: PlayGameId[] = [
 ];
 
 describe("Play game lineup contracts", () => {
-  it("requires an intentional complete contract for every live game", () => {
+  it("keeps preview games out of the default public registry while preserving their explicit definition", () => {
     expect(playGames.map((game) => game.id)).toEqual(expectedIds);
     expect(playGames.map((game) => game.id)).not.toContain("better-than");
+    expect(playGames.map((game) => game.id)).not.toContain("who-am-i");
+    expect(playGameDefinition("who-am-i").availability).toBe("preview");
     expect(new Set(playGames.map((game) => game.id)).size).toBe(playGames.length);
 
     for (const game of playGames) {
@@ -117,7 +118,7 @@ describe("Play game lineup contracts", () => {
     }
   });
 
-  it("gives every live game a defined completion state", () => {
+  it("gives every registered game a defined completion state", () => {
     expect(playGameDefinition("find-leader").lineup.completionState).toBe("leader-eliminated-or-nine-safe");
     expect(playGameDefinition("wavelength").lineup.completionState).toBe("fourth-guess-locked");
     expect(playGameDefinition("blind-resume").lineup.completionState).toBe("five-picks-complete");
