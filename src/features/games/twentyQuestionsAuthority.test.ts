@@ -48,6 +48,24 @@ describe("UFC 20 Questions factual authority", () => {
     expect(new Set(universe.subjects.map((subject) => subject.id)).size).toBe(100);
   });
 
+  it("answers canonical UFC championship history correctly for Topuria and established champions", () => {
+    const universe = getUfcTwentyQuestionsUniverse();
+    const titleFight = universe.questions.find((question) => question.id === "championship:title-challenger");
+    const titleWinner = universe.questions.find((question) => question.id === "championship:title-winner");
+    const titleDefense = universe.questions.find((question) => question.id === "championship:title-defense");
+
+    expect(titleFight).toBeDefined();
+    expect(titleWinner).toBeDefined();
+    expect(titleDefense).toBeDefined();
+    expect(universe.subjects.some((subject) => subject.id === "ufc:ilia-topuria")).toBe(true);
+    expect(universe.subjects.some((subject) => subject.id === "ufc:islam-makhachev")).toBe(true);
+    expect(titleFight!.answer("ufc:ilia-topuria")).toBe(true);
+    expect(titleWinner!.answer("ufc:ilia-topuria")).toBe(true);
+    expect(titleFight!.answer("ufc:islam-makhachev")).toBe(true);
+    expect(titleWinner!.answer("ufc:islam-makhachev")).toBe(true);
+    expect(titleDefense!.answer("ufc:islam-makhachev")).toBe(true);
+  });
+
   it("prioritizes recognizable UFC identity clues without losing deterministic coverage", () => {
     const universe = getUfcTwentyQuestionsUniverse();
     const ids = universe.questions.map((question) => question.id);
@@ -57,9 +75,14 @@ describe("UFC 20 Questions factual authority", () => {
     expect(universe.questions.length).toBeGreaterThan(50);
     expect(universe.questions.length).toBeLessThanOrEqual(UFC_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS);
     expect(new Set(ids).size).toBe(universe.questions.length);
+    expect(ids).toContain("identity:woman");
+    expect(ids).toContain("division:primary-under-175");
+    expect(ids.some((id) => id.startsWith("division:primary:"))).toBe(true);
     expect(ids.some((id) => id.startsWith("era:active-"))).toBe(true);
     expect(ids).toContain("era:pre-2010");
     expect(ids).toContain("championship:title-challenger");
+    expect(ids).toContain("championship:title-winner");
+    expect(ids).toContain("championship:title-defense");
     expect(ids).toContain("championship:three-plus-title-fights");
     expect(ids).toContain("division-history:multiple");
     expect(ids.some((id) => id.startsWith("faced:"))).toBe(true);
