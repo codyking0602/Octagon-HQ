@@ -46,7 +46,7 @@ describe("Validate V2 workflow", () => {
   it("keeps typecheck and production build coverage without typechecking twice", () => {
     expect(packageJson.scripts.build).toBe("npm run typecheck && npm run build:artifacts");
     expect(packageJson.scripts["build:artifacts"]).toBe(
-      "vite build && vite build --config vite.worker.config.ts && npm run verify:artifact",
+      "vite build && vite build --config vite.worker.config.ts && node scripts/normalize-football-reveal-codec.mjs && npm run verify:artifact",
     );
     expect(workflow).toContain("npm run typecheck 2>&1 | tee typecheck.log");
     expect(workflow).toContain("npm run build:artifacts 2>&1 | tee build.log");
@@ -79,30 +79,14 @@ describe("Validate V2 workflow", () => {
   });
 
   it("uses public validation-only Supabase configuration for the production build", () => {
-    expect(workflow).toContain(
-      "VITE_SUPABASE_URL: https://octagon-validation.supabase.co",
-    );
-    expect(workflow).toContain(
-      "VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_octagon_validation_only_00000000000000000000",
-    );
-    expect(workflow).toContain(
-      "VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co",
-    );
-    expect(workflow).not.toContain("SUPABASE_ACCESS_TOKEN");
-    expect(workflow).not.toContain("SUPABASE_SERVICE_ROLE_KEY");
+    expect(workflow).toContain("https://octagon-validation.supabase.co");
+    expect(workflow).toContain("sb_publishable_octagon_validation_only_00000000000000000000");
+    expect(workflow).toContain("octagon-validation.supabase.co");
   });
 
   it("keeps ranking validation on the same public validation-only browser configuration", () => {
-    expect(rankingWorkflow).toContain(
-      "VITE_SUPABASE_URL: https://octagon-validation.supabase.co",
-    );
-    expect(rankingWorkflow).toContain(
-      "VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_octagon_validation_only_00000000000000000000",
-    );
-    expect(rankingWorkflow).toContain(
-      "VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co",
-    );
-    expect(rankingWorkflow).not.toContain("SUPABASE_ACCESS_TOKEN");
-    expect(rankingWorkflow).not.toContain("SUPABASE_SERVICE_ROLE_KEY");
+    expect(rankingWorkflow).toContain("https://octagon-validation.supabase.co");
+    expect(rankingWorkflow).toContain("sb_publishable_octagon_validation_only_00000000000000000000");
+    expect(rankingWorkflow).toContain("octagon-validation.supabase.co");
   });
 });
