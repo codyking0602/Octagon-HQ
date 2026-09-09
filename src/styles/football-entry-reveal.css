@@ -1,91 +1,79 @@
-.football-entry-transition--picks {
-  background: #000;
-}
-
-.football-entry-transition__frame {
+.football-entry-transition__hq-card {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  opacity: 0;
-  transform: scale(1.02);
-  animation: football-entry-cut 760ms ease-out both;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.14), transparent 32%),
+    linear-gradient(180deg, #0b121d 0%, #02060b 68%, #000 100%);
+  animation: football-entry-hq-slam 220ms cubic-bezier(0.18, 0.82, 0.23, 1) both;
 }
 
-.football-entry-transition__frame--1 {
-  animation-delay: 0ms;
-}
-
-.football-entry-transition__frame--2 {
-  animation-delay: 680ms;
-}
-
-.football-entry-transition__frame--3 {
-  animation-delay: 1360ms;
-}
-
-.football-entry-transition__frame--4 {
+.football-entry-transition__hq-wordmark {
+  position: relative;
   z-index: 2;
-  animation: football-entry-slam 1560ms cubic-bezier(.2, .9, .2, 1) 2040ms both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.02em;
+  color: #fff;
+  font-family: Inter, system-ui, sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 0.78;
+  text-align: center;
+  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.8);
+  transform: skewX(-5deg);
 }
 
-.football-entry-transition__slam {
-  z-index: 2;
-  animation: football-entry-slam 1200ms cubic-bezier(.2, .9, .2, 1) both;
+.football-entry-transition__hq-wordmark span {
+  font-size: clamp(2.1rem, 10vw, 4.7rem);
 }
 
-@keyframes football-entry-cut {
-  0% {
-    opacity: 0;
-    transform: scale(1.02);
-    filter: brightness(.5) contrast(1.14);
-  }
-
-  8%, 88% {
-    opacity: 1;
-    transform: scale(1.08);
-    filter: brightness(.96) contrast(1.08);
-  }
-
-  100% {
-    opacity: 0;
-    transform: scale(1.1);
-    filter: brightness(.65) contrast(1.12);
-  }
+.football-entry-transition__hq-wordmark strong {
+  font-size: clamp(5.2rem, 25vw, 11rem);
+  letter-spacing: -0.1em;
 }
 
-@keyframes football-entry-slam {
-  0% {
+.football-entry-transition__hq-helmet {
+  position: absolute;
+  z-index: 1;
+  bottom: 8%;
+  width: min(40vw, 220px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.65));
+  opacity: 0.98;
+}
+
+.football-entry-transition__hq-helmet--cowboys {
+  left: -2%;
+  transform: rotate(-9deg);
+}
+
+.football-entry-transition__hq-helmet--longhorns {
+  right: -2%;
+  transform: rotate(9deg);
+}
+
+@keyframes football-entry-hq-slam {
+  from {
     opacity: 0;
-    transform: scale(1.2);
-    filter: blur(10px) brightness(1.3);
+    transform: scale(1.18);
+    filter: blur(7px);
   }
 
-  13% {
-    opacity: 1;
-    transform: scale(.985);
-    filter: blur(0) brightness(1.08);
-  }
-
-  22%, 100% {
+  to {
     opacity: 1;
     transform: scale(1);
-    filter: none;
+    filter: blur(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .football-entry-transition__frame:not(.football-entry-transition__frame--4):not(.football-entry-transition__slam) {
-    display: none;
-  }
-
-  .football-entry-transition__frame--4,
-  .football-entry-transition__slam {
-    opacity: 1;
-    transform: none;
+  .football-entry-transition__hq-card {
     animation: none;
-    filter: none;
   }
 }
