@@ -155,6 +155,9 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
               const activeSection = routeOwnsNavigationItem(section, location.pathname);
               if (activeSection) {
                 const now = Date.now();
+                const activeRoot = section === "play"
+                  ? (footballMode ? "/football" : "/play")
+                  : (footballMode ? "/football/picks" : "/picks");
                 if (now - lastActiveSportTapRef.current[section] <= SECRET_SPORT_TAP_WINDOW_MS) {
                   event.preventDefault();
                   lastActiveSportTapRef.current[section] = 0;
@@ -174,6 +177,11 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
                   return;
                 }
                 lastActiveSportTapRef.current[section] = now;
+                if (location.pathname === activeRoot) {
+                  event.preventDefault();
+                  scrollPageToTop("smooth");
+                  return;
+                }
               }
             }
 
