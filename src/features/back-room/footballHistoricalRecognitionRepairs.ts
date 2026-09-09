@@ -13,6 +13,18 @@ const activeDecades = (startSeason: number, endSeason: number) => Array.from(
   (_, index) => (Math.floor(startSeason / 10) + index) * 10,
 );
 
+const nflHistoricalCoachFranchises: Readonly<Record<string, readonly string[]>> = {
+  "bill-walsh": ["San Francisco 49ers"],
+  "chuck-noll": ["Pittsburgh Steelers"],
+  "don-shula": ["Baltimore Colts", "Miami Dolphins"],
+  "nfl-earl-curly-lambeau": ["Green Bay Packers", "Chicago Cardinals", "Washington"],
+  "nfl-george-halas": ["Chicago Bears"],
+  "nfl-john-madden": ["Oakland Raiders"],
+  "paul-brown": ["Cleveland Browns", "Cincinnati Bengals"],
+  "tom-landry": ["Dallas Cowboys"],
+  "vince-lombardi": ["Green Bay Packers", "Washington"],
+};
+
 const player = (
   id: string,
   name: string,
@@ -23,6 +35,7 @@ const player = (
   tier: "A" | "B",
   evidenceFamily: FootballHistoricalRecognitionRepair["evidenceFamily"],
   school?: string,
+  franchises?: readonly string[],
 ): FootballHistoricalRecognitionRepair => ({
   subject: {
     id,
@@ -34,6 +47,7 @@ const player = (
     endSeason,
     activeDecades: activeDecades(startSeason, endSeason),
     ...(school ? { school } : {}),
+    ...(franchises?.length ? { franchises } : {}),
   },
   tier,
   evidenceFamily,
@@ -78,6 +92,9 @@ const coach = (
     startSeason,
     endSeason,
     activeDecades: activeDecades(startSeason, endSeason),
+    ...(league === "NFL" && nflHistoricalCoachFranchises[id]?.length
+      ? { franchises: nflHistoricalCoachFranchises[id] }
+      : {}),
   },
   tier,
   evidenceFamily: "championship-coaching",
@@ -99,6 +116,9 @@ const proHallHistoricalRepairs: readonly FootballHistoricalRecognitionRepair[] =
       startSeason: seed.startSeason,
       endSeason: seed.endSeason,
       activeDecades: activeDecades(seed.startSeason, seed.endSeason),
+      ...(seed.kind === "coach" && nflHistoricalCoachFranchises[seed.id]?.length
+        ? { franchises: nflHistoricalCoachFranchises[seed.id] }
+        : {}),
     },
     tier: seed.tier,
     evidenceFamily: "pro-football-hall-of-fame",
@@ -126,7 +146,7 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("nfl-alan-page", "Alan Page", "NFL", "DL", 1967, 1981, "A", "pro-football-hall-of-fame"),
   player("nfl-joe-greene", "Joe Greene", "NFL", "DL", 1969, 1981, "A", "pro-football-hall-of-fame"),
   player("nfl-ronnie-lott", "Ronnie Lott", "NFL", "DB", 1981, 1994, "A", "pro-football-hall-of-fame"),
-  player("nfl-anthony-munoz", "Anthony Munoz", "NFL", "OL", 1980, 1992, "A", "pro-football-hall-of-fame"),
+  player("nfl-anthony-munoz", "Anthony Munoz", "NFL", "OL", 1980, 1992, "A", "pro-football-hall-of-fame", undefined, ["Cincinnati Bengals"]),
   player("nfl-john-mackey", "John Mackey", "NFL", "TE", 1963, 1972, "A", "pro-football-hall-of-fame"),
   player("nfl-ray-guy", "Ray Guy", "NFL", "P", 1973, 1986, "A", "pro-football-hall-of-fame"),
   player("nfl-jan-stenerud", "Jan Stenerud", "NFL", "K", 1967, 1985, "A", "pro-football-hall-of-fame"),
@@ -134,6 +154,7 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("earl-campbell", "Earl Campbell", "NFL", "RB", 1978, 1985, "A", "pro-football-hall-of-fame"),
   player("marcus-allen", "Marcus Allen", "NFL", "RB", 1982, 1997, "A", "pro-football-hall-of-fame"),
   player("tony-dorsett", "Tony Dorsett", "NFL", "RB", 1977, 1988, "A", "pro-football-hall-of-fame"),
+  player("deion-sanders", "Deion Sanders", "NFL", "DB", 1989, 2005, "A", "pro-football-hall-of-fame", "Florida State", ["Atlanta Falcons", "San Francisco 49ers", "Dallas Cowboys", "Washington", "Baltimore Ravens"]),
 
   player("nfl-paul-hornung", "Paul Hornung", "NFL", "RB", 1957, 1966, "A", "mvp-all-pro"),
   player("nfl-ya-tittle", "Y.A. Tittle", "NFL", "QB", 1948, 1964, "A", "mvp-all-pro"),
