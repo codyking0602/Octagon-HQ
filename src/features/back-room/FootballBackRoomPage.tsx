@@ -28,11 +28,7 @@ export default function FootballBackRoomPage() {
       <PlayLandingHeader sport="football" />
       <TodayChallengeHub sport="football" />
       <ChallengeCenter sport="football" />
-      <PlayLandingGameLibrary
-        sport="football"
-        onNavigate={navigate}
-        ownerAccess={identity.profile?.canControlPicks === true}
-      />
+      <PlayLandingGameLibrary sport="football" onNavigate={navigate} ownerAccess={identity.profile?.canControlPicks === true} />
     </div>
   );
 }
