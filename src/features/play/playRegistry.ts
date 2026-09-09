@@ -342,7 +342,7 @@ export const playGameCatalog = [
       supportedTypes: ["replayable", "curated"],
       replayBehavior: "new-lineup",
       newLineupControl: "result-replay",
-      repetitionPolicy: "recent-fighters-deprioritized",
+      repetitionPolicy: "recent-items-deprioritized",
       lineupSize: 10,
       completionState: "five-picks-complete",
       challengeEligible: true,
