@@ -311,7 +311,7 @@ const FOOTBALL_WHO_AM_I_POSITION_GROUPS: readonly FootballWhoAmIPositionGroup[] 
 ];
 
 export const FOOTBALL_WHO_AM_I_PLAYER_TARGETS: Readonly<Record<"NFL" | "CFB", Readonly<Record<FootballWhoAmIPositionGroup, number>>>> = {
-  NFL: { QB: 28, RB: 26, WR: 32, TE: 14, OL: 12, "DL/EDGE": 26, LB: 18, DB: 24 },
+  NFL: { QB: 29, RB: 26, WR: 32, TE: 13, OL: 12, "DL/EDGE": 26, LB: 18, DB: 24 },
   CFB: { QB: 28, RB: 30, WR: 26, TE: 12, OL: 12, "DL/EDGE": 24, LB: 20, DB: 28 },
 };
 
