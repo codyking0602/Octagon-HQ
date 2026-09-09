@@ -1,5 +1,6 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
+import { readH264AvcLevelIdc } from "./normalize-football-reveal-codec.mjs";
 import {
   forbiddenBrowserCredentialPatterns,
   isPublicSupabaseKey,
@@ -93,6 +94,17 @@ export async function verifyProductionArtifact({ dist = "dist", env = process.en
   for (const artwork of requiredShareArtwork) {
     const artworkPath = join(dist, "assets", "share", artwork);
     if (!files.includes(artworkPath)) throw new Error(`${artworkPath} is missing.`);
+  }
+
+  for (const revealFile of ["football-play-reveal.mp4", "football-picks-reveal.mp4"]) {
+    const revealPath = join(dist, "assets", "football", revealFile);
+    if (!files.includes(revealPath)) throw new Error(`${revealPath} is missing.`);
+    const levels = readH264AvcLevelIdc(await readFile(revealPath));
+    if (levels.configLevelIdc !== 31 || levels.spsLevelIdc !== 31) {
+      throw new Error(
+        `${revealPath} uses H.264 levels ${levels.configLevelIdc}/${levels.spsLevelIdc}, expected mobile-safe Level 3.1.`,
+      );
+    }
   }
 
   const worker = await readFile(workerPath, "utf8");
