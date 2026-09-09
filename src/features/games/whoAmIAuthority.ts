@@ -213,7 +213,19 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     clues.push(clue("era", `I was active in the ${decades[0]}s and ${decades[decades.length - 1]}s.`, "broad"));
   }
   if (subject.startSeason != null && subject.endSeason != null) {
-    clues.push(clue("career-span", `My ${subject.league} career lasted ${subject.endSeason - subject.startSeason + 1} seasons.`, "helpful"));
+    clues.push(clue(
+      "career-span",
+      isCoach
+        ? `I spent ${subject.endSeason - subject.startSeason + 1} seasons as a ${subject.league} head coach.`
+        : `My ${subject.league} career lasted ${subject.endSeason - subject.startSeason + 1} seasons.`,
+      "helpful",
+    ));
+  }
+  if (isCoach && subject.startSeason != null) {
+    clues.push(clue("coach-start", `I first became a ${subject.league} head coach in ${subject.startSeason}.`, "helpful"));
+  }
+  if (isCoach && subject.endSeason != null) {
+    clues.push(clue("coach-end", `My ${subject.league} head-coaching career most recently reached ${subject.endSeason}.`, "strong"));
   }
 
   if (subject.school) clues.push(clue("school", `I played college football at ${subject.school}.`, subject.league === "NFL" ? "helpful" : "broad"));
@@ -228,12 +240,23 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   const history = footballCareerAffiliationHistoryFor(subject);
   const affiliations = (history?.affiliations ?? []).map((affiliation) => displayAffiliation(subject.league, affiliation));
   const uniqueAffiliations = [...new Set(affiliations)];
+  if (isCoach && uniqueAffiliations.length) {
+    clues.push(clue(
+      "coach-affiliation-count",
+      `I was a ${subject.league} head coach for ${uniqueAffiliations.length} ${uniqueAffiliations.length === 1 ? "team" : "teams"}.`,
+      "helpful",
+    ));
+  }
   if (uniqueAffiliations.length > 1) {
     clues.push(clue(
       "career-path",
       subject.league === "NFL"
-        ? `I played for ${uniqueAffiliations.join(" and ")} in the NFL.`
-        : `My college career included ${uniqueAffiliations.join(" and ")}.`,
+        ? isCoach
+          ? `I was an NFL head coach for the ${uniqueAffiliations.join(" and ")}.`
+          : `I played for ${uniqueAffiliations.join(" and ")} in the NFL.`
+        : isCoach
+          ? `I was a college head coach at ${uniqueAffiliations.join(" and ")}.`
+          : `My college career included ${uniqueAffiliations.join(" and ")}.`,
       "strong",
     ));
   }
@@ -241,7 +264,13 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     if (subject.league === "CFB" && subject.school && slug(affiliation) === slug(subject.school)) continue;
     clues.push(clue(
       `affiliation:${slug(affiliation)}`,
-      subject.league === "NFL" ? `I played or coached for the ${affiliation}.` : `My college career included ${affiliation}.`,
+      subject.league === "NFL"
+        ? isCoach
+          ? `I was an NFL head coach for the ${affiliation}.`
+          : `I played for the ${affiliation}.`
+        : isCoach
+          ? `I was a college head coach at ${affiliation}.`
+          : `My college career included ${affiliation}.`,
       "giveaway",
     ));
   }
