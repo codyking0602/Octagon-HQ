@@ -1,6 +1,6 @@
 # The HQ — Current Handoff
 
-_Last updated: 2026-09-04_
+_Last updated: 2026-09-09_
 
 This is the cold-start operational handoff for `codyking0602/Octagon-HQ`. Current `main` is always the live source of truth; resolve it from GitHub before every branch rather than trusting a copied SHA in this file.
 
@@ -21,7 +21,8 @@ Do not revive superseded roadmap files or use historical implementation notes as
 
 - Repository: `codyking0602/Octagon-HQ`
 - Production branch: `main`
-- Production app: `https://octagon.hq-app.workers.dev`
+- Canonical production app: `https://the.hq-app.workers.dev`
+- Legacy compatibility URL: `https://octagon.hq-app.workers.dev` — redirect-only Worker; not the authoritative production host.
 - `main` is the live source of truth.
 - Resolve the current `main` HEAD from GitHub before every branch. Never trust a copied SHA in a handoff document.
 - The legacy V1 repository is reference-only.
@@ -111,7 +112,7 @@ The active product is The HQ with UFC and Football sport contexts.
 - Hit the Number
 - Auction
 
-20 Questions and Who Am I remain planned roadmap games and are not exposed as fake placeholders.
+20 Questions is an owner-only prototype and is intentionally parked. Who Am I is an owner-only preview under active rebuild. Neither appears in public Play discovery or Today's Challenge.
 
 Blind Rank 5 and Keep 4 / Cut 4 are removed from normal library discovery but retained for Daily Double/history/deep-link compatibility.
 
@@ -123,7 +124,7 @@ Blind Rank 5 and Keep 4 / Cut 4 are removed from normal library discovery but re
 
 Football Blind Resume is now **Daily-only**. The old standalone route redirects to the canonical Football Today owner rather than maintaining a second runtime.
 
-20 Questions, Who Am I, and Draft Room remain planned roadmap games and are not exposed until implemented.
+20 Questions remains owner-only and parked. Who Am I remains owner-only while its launch pools, knowledge depth, clue progression, replay behavior, and endgame are rebuilt. Draft Room remains planned.
 
 ## Football Today's Challenge
 
@@ -155,20 +156,33 @@ Current Football Blind Resume contract:
 
 `docs/the-hq-games-roadmap.md` is the sole active Games roadmap.
 
-Completed:
+Completed roadmap phases:
 
 - PR 1 — canonical Games roadmap (#863)
 - PR 2 — source authority + eligibility (#864)
 - PR 3 — Play landing/presentation parity (#865, repair #866)
 - PR 4 — Find the Leader parity/source pass (#870)
-- PR 5 — Wavelength parity/calibration (#873; complete)
-- PR 6 — Blind Resume final pass, including the newer Football Daily-only direction (#878–#882)
+- PR 5 — Wavelength parity/calibration (#873)
+- PR 6 — Blind Resume final pass (#878–#882)
+- PR 7 — Hit the Number final parity/source pass (#885)
+- PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup (#895)
+- PR 9 — 20 Questions owner-only prototype is preserved and parked, not public-ready
+
+Roadmap PR 10 is the active **Who Am I owner-only rebuild**. Its first three rebuild slices are complete:
+
+1. football launch pools locked through canonical registry/recognizability owners;
+2. one canonical structured identity fact model established;
+3. NFL A-tier structural/resume enrichment completed at 105/105 identities with at least 15 facts, average 22.97, median 19, and 52 at 20+.
+
+The third slice proved that raw fact count is not enough. Career-window and era derivatives are useful, but the game also needs distinctive source-backed person knowledge that actually feels specific to the identity.
 
 ### Next Games PR
 
-**PR 7 — Hit the Number final parity/source pass.**
+**Who Am I rebuild PR 4 — shared identity knowledge foundation + NFL A-tier research pilot.**
 
-Do not restart Wavelength. Do not infer the next PR from an obsolete roadmap.
+Research roughly 10–15 diverse NFL A-tier identities broadly first, discover genuinely distinctive biographical/person-specific facts, verify provenance, and only then normalize them into one reusable canonical person-knowledge owner. Do not create a Who Am I-only trivia database or a predefined checklist of personal-fact schema fields to fill by search.
+
+After the pilot is approved, continue the research method through NFL A-tier, NFL B-tier, CFB A-tier, CFB B-tier, and UFC before final clue assembly/replay/endgame work. 20 Questions remains parked during this work.
 
 ## Football canonical data ownership
 
@@ -176,7 +190,9 @@ Objective Football facts flow through the canonical Football factual registry/fa
 
 Comparative greatness flows through the canonical Football comparison/ranking authority where the mechanic legitimately requires it. Legacy reviewed packs may calibrate matching canonical identities but must not become a competing source owner.
 
-Missing evidence excludes a subject from that mechanic. Do not create a second factual table, fallback rating catalog, or manual game-only truth layer.
+Distinctive biographical/person-specific research must flow through one shared canonical person-knowledge owner with provenance so Who Am I and other games can reuse it. Structural/resume fact depth and distinctive identity depth are separate quality dimensions; multiple mathematical derivatives of the same career window do not count as multiple personal identity concepts.
+
+Missing evidence excludes a subject from that mechanic. Do not create a second factual table, fallback rating catalog, manual game-only truth layer, or Who Am I-only personal trivia owner.
 
 ## Picks monitoring operations
 
@@ -249,6 +265,6 @@ Relevant Supabase SQL tests, migration-order checks, backend verification, phone
 
 ## Next safe action
 
-For Games work, continue with **The HQ Games PR 7: Hit the Number final parity/source pass** from current `main`.
+For Games work, continue with **Who Am I rebuild PR 4: shared identity knowledge foundation + NFL A-tier research pilot** from current `main`.
 
 For other product areas, read the canonical owner for that scope first and preserve the same one-owner release standard.
