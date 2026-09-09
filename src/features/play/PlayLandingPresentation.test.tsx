@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   PLAY_LANDING_COMMON_GAME_ORDER,
   PLAY_LANDING_FOOTBALL_GAME_ORDER,
@@ -13,7 +13,20 @@ import {
 } from "./PlayLandingPresentation";
 import { playGameDefinition } from "./playRegistry";
 
+const { mockUseIdentity } = vi.hoisted(() => ({ mockUseIdentity: vi.fn() }));
+
+vi.mock("../identity/IdentityProvider", () => ({
+  useIdentity: mockUseIdentity,
+}));
+
 describe("Play landing presentation", () => {
+  beforeEach(() => {
+    mockUseIdentity.mockReturnValue({
+      ready: true,
+      profile: { canControlPicks: true },
+    });
+  });
+
   it("keeps the shared order while Football comparison games remain Daily-only", () => {
     expect(PLAY_LANDING_COMMON_GAME_ORDER).toEqual([
       "find-leader",
@@ -32,7 +45,7 @@ describe("Play landing presentation", () => {
     expect(playLandingGameIds("football")).toEqual(PLAY_LANDING_FOOTBALL_GAME_ORDER);
   });
 
-  it("adds 20 Questions to both normal Play libraries while Daily-only games stay out", () => {
+  it("keeps 20 Questions available to admins while Daily-only games stay out", () => {
     const ufcIds = [...playLandingGameIds("ufc")];
     const footballIds = [...playLandingGameIds("football")];
     expect(ufcIds).toContain("20-questions");
@@ -55,6 +68,19 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/football/20-questions");
   });
 
+  it("hides 20 Questions from non-admin UFC and Football play libraries", () => {
+    mockUseIdentity.mockReturnValue({
+      ready: true,
+      profile: { canControlPicks: false },
+    });
+
+    const { rerender } = render(<PlayLandingGameLibrary sport="ufc" onNavigate={vi.fn()} />);
+    expect(screen.queryByRole("button", { name: /20 questions/i })).not.toBeInTheDocument();
+
+    rerender(<PlayLandingGameLibrary sport="football" onNavigate={vi.fn()} />);
+    expect(screen.queryByRole("button", { name: /20 questions/i })).not.toBeInTheDocument();
+  });
+
   it("opens UFC Find the Leader replayable while preserving its canonical route owner", () => {
     expect(playGameDefinition("find-leader", "ufc").route).toBe("/play/find-leader");
     expect(playLandingDestination("ufc", "find-leader")).toBe("/play/find-leader?mode=replayable");
@@ -65,7 +91,7 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/play/find-leader?mode=replayable");
   });
 
-  it("routes UFC 20 Questions through the UFC Play owner", () => {
+  it("routes UFC 20 Questions through the UFC Play owner for admins", () => {
     expect(playGameDefinition("20-questions", "ufc").route).toBe("/play/20-questions");
     expect(playGameDefinition("20-questions", "football").route).toBe("/football/20-questions");
     const navigate = vi.fn();
