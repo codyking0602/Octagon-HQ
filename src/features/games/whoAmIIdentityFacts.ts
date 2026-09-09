@@ -239,6 +239,13 @@ function nflDraftSelectionBand(subject: FootballSubjectProfile) {
   return null;
 }
 
+function careerDurationBand(seasons: number) {
+  if (seasons >= 15) return "15-plus-seasons";
+  if (seasons >= 10) return "10-to-14-seasons";
+  if (seasons >= 6) return "6-to-9-seasons";
+  return "1-to-5-seasons";
+}
+
 function nflATierEnrichmentFacts(
   subject: FootballSubjectProfile,
   history: FootballCareerAffiliationHistory | null,
@@ -246,15 +253,45 @@ function nflATierEnrichmentFacts(
   if (subject.league !== "NFL" || subject.recognizabilityTier !== "A") return [];
 
   const registry = source("football-subject-registry", subject.id);
+  const affiliationSource = source("football-career-affiliation", subject.id);
   const facts: WhoAmIIdentityFact[] = [];
+  const observedSeasons = history?.seasons.map((row) => row.season) ?? [];
+  const observedStart = observedSeasons.length ? Math.min(...observedSeasons) : null;
+  const observedEnd = observedSeasons.length ? Math.max(...observedSeasons) : null;
+  const startSeason = subject.startSeason ?? observedStart;
+  const endSeason = subject.endSeason ?? observedEnd;
+  const careerSource = subject.startSeason != null && subject.endSeason != null ? registry : affiliationSource;
 
-  if (subject.startSeason != null && subject.endSeason != null) {
-    facts.push(scalar(
-      "career-span-seasons",
-      "era",
-      subject.endSeason - subject.startSeason + 1,
-      registry,
-    ));
+  if (startSeason != null && endSeason != null) {
+    const startDecade = Math.floor(startSeason / 10) * 10;
+    const endDecade = Math.floor(endSeason / 10) * 10;
+    const careerSpan = endSeason - startSeason + 1;
+    const decadeCount = Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1;
+    const midpointSeason = Math.floor((startSeason + endSeason) / 2);
+    const midpointDecade = Math.floor(midpointSeason / 10) * 10;
+
+    if (subject.startSeason == null || subject.endSeason == null) {
+      facts.push(windowFact("career-window", "era", startSeason, endSeason, careerSource));
+    }
+    if (!subject.activeDecades?.length) {
+      facts.push(list(
+        "active-decades",
+        "era",
+        Array.from({ length: decadeCount }, (_, index) => startDecade + index * 10),
+        careerSource,
+      ));
+    }
+    facts.push(
+      scalar("career-span-seasons", "era", careerSpan, careerSource),
+      scalar("career-start-season", "era", startSeason, careerSource),
+      scalar("career-end-season", "era", endSeason, careerSource),
+      scalar("career-start-decade", "era", startDecade, careerSource),
+      scalar("career-end-decade", "era", endDecade, careerSource),
+      scalar("career-decade-count", "era", decadeCount, careerSource),
+      scalar("career-spans-multiple-decades", "era", startDecade !== endDecade, careerSource),
+      scalar("career-duration-band", "era", careerDurationBand(careerSpan), careerSource),
+      scalar("career-midpoint-decade", "era", midpointDecade, careerSource),
+    );
   }
 
   if (subject.draftYear != null) {
@@ -271,7 +308,6 @@ function nflATierEnrichmentFacts(
   }
 
   if (history?.affiliations.length) {
-    const affiliationSource = source("football-career-affiliation", subject.id);
     facts.push(scalar(
       "career-affiliation-count",
       "career-path",
