@@ -39,7 +39,7 @@ function renderAccess(path: string, fallback: string, canControlPicks: boolean) 
             path={path}
             element={(
               <OwnerOnlyRoute fallback={fallback}>
-                <h1>20 Questions</h1>
+                <h1>Private Game</h1>
               </OwnerOnlyRoute>
             )}
           />
@@ -50,21 +50,22 @@ function renderAccess(path: string, fallback: string, canControlPicks: boolean) 
   );
 }
 
+const ownerOnlyRoutes = [
+  ["/play/20-questions", "/play"],
+  ["/football/20-questions", "/football"],
+  ["/play/who-am-i", "/play"],
+  ["/football/who-am-i", "/football"],
+] as const;
+
 describe("OwnerOnlyRoute", () => {
-  it.each([
-    ["/play/20-questions", "/play"],
-    ["/football/20-questions", "/football"],
-  ])("redirects a non-owner from %s", async (path, fallback) => {
+  it.each(ownerOnlyRoutes)("redirects a non-owner from %s", async (path, fallback) => {
     renderAccess(path, fallback, false);
     expect(await screen.findByRole("heading", { name: "Public Play" })).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "20 Questions" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Private Game" })).not.toBeInTheDocument();
   });
 
-  it.each([
-    ["/play/20-questions", "/play"],
-    ["/football/20-questions", "/football"],
-  ])("keeps owner access to %s", async (path, fallback) => {
+  it.each(ownerOnlyRoutes)("keeps owner access to %s", async (path, fallback) => {
     renderAccess(path, fallback, true);
-    expect(await screen.findByRole("heading", { name: "20 Questions" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Private Game" })).toBeInTheDocument();
   });
 });
