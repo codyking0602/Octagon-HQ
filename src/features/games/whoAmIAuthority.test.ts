@@ -33,4 +33,14 @@ describe("Who Am I canonical clue authority", () => {
     expect(createFootballWhoAmIRound(() => 0).league).toBe("NFL");
     expect(createFootballWhoAmIRound(() => 0.99).league).toBe("CFB");
   });
+
+  it("keeps internal data-source language out of UFC clues", () => {
+    const texts = getUfcWhoAmIUniverse().candidates.flatMap((candidate) => candidate.clues.map((entry) => entry.text));
+    expect(texts.some((text) => /HQ factual ledger|recorded data/i.test(text))).toBe(false);
+  });
+
+  it.each(["NFL", "CFB"] as const)("uses fan-facing %s clue language instead of raw total labels", (league) => {
+    const texts = getFootballWhoAmIUniverse(league).candidates.flatMap((candidate) => candidate.clues.map((entry) => entry.text));
+    expect(texts.some((text) => /total is/i.test(text))).toBe(false);
+  });
 });

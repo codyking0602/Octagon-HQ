@@ -18,6 +18,7 @@ import {
   type WhoAmICandidate,
   type WhoAmIClue,
   type WhoAmIClueBand,
+  type WhoAmIEraBand,
   type WhoAmIRound,
   type WhoAmIUniverse,
 } from "./whoAmIEngine";
@@ -61,6 +62,17 @@ const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
   "cfb-coach-conference-titles",
 ]);
 
+const NFL_TEAM_NAMES: Readonly<Record<string, string>> = {
+  ARI: "Arizona Cardinals", ATL: "Atlanta Falcons", BAL: "Baltimore Ravens", BUF: "Buffalo Bills",
+  CAR: "Carolina Panthers", CHI: "Chicago Bears", CIN: "Cincinnati Bengals", CLE: "Cleveland Browns",
+  DAL: "Dallas Cowboys", DEN: "Denver Broncos", DET: "Detroit Lions", GB: "Green Bay Packers",
+  HOU: "Houston Texans", IND: "Indianapolis Colts", JAX: "Jacksonville Jaguars", KC: "Kansas City Chiefs",
+  LAC: "Los Angeles Chargers", LAR: "Los Angeles Rams", LV: "Las Vegas Raiders", MIA: "Miami Dolphins",
+  MIN: "Minnesota Vikings", NE: "New England Patriots", NO: "New Orleans Saints", NYG: "New York Giants",
+  NYJ: "New York Jets", PHI: "Philadelphia Eagles", PIT: "Pittsburgh Steelers", SEA: "Seattle Seahawks",
+  SF: "San Francisco 49ers", TB: "Tampa Bay Buccaneers", TEN: "Tennessee Titans", WAS: "Washington Commanders",
+};
+
 function slug(value: string) {
   return value
     .toLowerCase()
@@ -92,6 +104,21 @@ function ufcDivision(value: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function eraBand(startYear: number, endYear: number): WhoAmIEraBand {
+  return ((startYear + endYear) / 2) >= 2000 ? "modern" : "legacy";
+}
+
+function footballEraBand(subject: FootballSubjectProfile): WhoAmIEraBand | undefined {
+  if (subject.startSeason == null && subject.endSeason == null) return undefined;
+  const start = subject.startSeason ?? subject.endSeason!;
+  const end = subject.endSeason ?? subject.startSeason!;
+  return eraBand(start, end);
+}
+
+function displayAffiliation(league: "NFL" | "CFB", value: string) {
+  return league === "NFL" ? NFL_TEAM_NAMES[value] ?? value : value;
+}
+
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   const wins = subject.fights.filter((fight) => fight.result === "win");
   const losses = subject.fights.filter((fight) => fight.result === "loss");
@@ -109,17 +136,19 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   const clues: WhoAmIClue[] = [
     clue("division", `My primary UFC division is ${ufcDivision(subject.primaryDivision)}.`, "broad"),
     clue("debut-decade", `I made my UFC debut in the ${Math.floor(debutYear / 10) * 10}s.`, "broad"),
-    clue("active-window", `My recorded UFC run spans ${debutYear} to ${lastYear}.`, "helpful"),
-    clue("fight-count", `I have ${subject.fights.length} UFC fights in the HQ factual ledger.`, "helpful"),
-    clue("win-count", `I have ${wins.length} UFC wins in the HQ factual ledger.`, "helpful"),
-    clue("ko-wins", `I have ${koWins.length} UFC wins by KO or TKO.`, "strong"),
-    clue("submission-wins", `I have ${submissionWins.length} UFC submission wins.`, "strong"),
+    clue("active-window", `My UFC career stretched from ${debutYear} to ${lastYear}.`, "helpful"),
+    clue("fight-count", `I had ${subject.fights.length} UFC fights.`, "helpful"),
+    clue("win-count", `I earned ${wins.length} UFC wins.`, "helpful"),
+    clue("ko-wins", `I earned ${koWins.length} UFC wins by KO or TKO.`, "strong"),
+    clue("submission-wins", `I earned ${submissionWins.length} UFC submission wins.`, "strong"),
     clue("title-fights", `I competed in ${titleFights.length} UFC title fights.`, "strong"),
   ];
 
-  if (divisions.length > 1) clues.push(clue("division-count", `I competed across ${divisions.length} UFC divisions in the recorded data.`, "helpful"));
-  if (activeDecades.length > 1) clues.push(clue("decades", `I fought in the UFC across ${activeDecades.length} different decades.`, "helpful"));
+  if (divisions.length > 1) clues.push(clue("division-count", `I competed in ${divisions.length} UFC divisions.`, "helpful"));
+  if (activeDecades.length > 1) clues.push(clue("decades", `My UFC career crossed ${activeDecades.length} decades.`, "helpful"));
   if (titleWins.length) clues.push(clue("title-wins", `I won ${titleWins.length} UFC title fights.`, "strong"));
+  if (koWins.length > submissionWins.length && koWins.length >= 3) clues.push(clue("finish-style", "My UFC wins leaned much more toward knockouts than submissions.", "helpful"));
+  if (submissionWins.length > koWins.length && submissionWins.length >= 3) clues.push(clue("finish-style", "My UFC wins leaned more toward submissions than knockouts.", "helpful"));
 
   for (const fight of recognizableFights) {
     if (fight.result === "win") clues.push(clue(`beat:${fight.id}`, `I defeated ${fight.opponent} in the UFC.`, "giveaway"));
@@ -135,8 +164,25 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
     id: subject.id,
     name: subject.name,
     kind: "fighter",
+    eraBand: eraBand(debutYear, lastYear),
+    rescueGroup: subject.primaryDivision,
     clues: distinctClues(clues),
   };
+}
+
+function footballMetricText(metricId: FootballFactMetricId, value: unknown, label: string) {
+  const numericValue = Number(value);
+  const formatted = formatFootballFact(metricId, numericValue);
+  switch (metricId) {
+    case "cfb-heisman-awards": return numericValue === 1 ? "I won the Heisman Trophy." : `I won the Heisman Trophy ${formatted} times.`;
+    case "nfl-ap-mvp-awards": return numericValue === 1 ? "I won the AP NFL MVP award." : `I won ${formatted} AP NFL MVP awards.`;
+    case "nfl-super-bowl-titles": return numericValue === 1 ? "I won a Super Bowl title." : `I won ${formatted} Super Bowl titles.`;
+    case "nfl-defensive-player-of-year-awards": return numericValue === 1 ? "I won NFL Defensive Player of the Year." : `I won NFL Defensive Player of the Year ${formatted} times.`;
+    case "nfl-first-team-all-pros": return numericValue === 1 ? "I was a first-team All-Pro." : `I was a first-team All-Pro ${formatted} times.`;
+    case "cfb-coach-national-titles": return numericValue === 1 ? "I won a national championship as a head coach." : `I won ${formatted} national championships as a head coach.`;
+    case "cfb-coach-conference-titles": return numericValue === 1 ? "I won a conference title as a head coach." : `I won ${formatted} conference titles as a head coach.`;
+    default: return `I recorded ${formatted} ${label.toLowerCase()}.`;
+  }
 }
 
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
@@ -144,37 +190,47 @@ function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   if (!record) return [];
   return record.facts
     .filter((fact) => FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId))
+    .filter((fact) => Number(fact.value) !== 0)
     .map((fact) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
       const band: WhoAmIClueBand = /mvp|heisman|super-bowl|all-pro|player-of-year|national-titles/.test(fact.metricId)
         ? "strong"
         : "helpful";
-      return clue(
-        `fact:${fact.metricId}`,
-        `My ${label.toLowerCase()} total is ${formatFootballFact(fact.metricId, fact.value)}.`,
-        band,
-      );
+      return clue(`fact:${fact.metricId}`, footballMetricText(fact.metricId, fact.value, label), band);
     });
 }
 
 function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   const isCoach = subject.kind === "coach";
-  const role = isCoach ? "head coach" : "player";
-  const clues: WhoAmIClue[] = [
-    clue("role", `I am a ${role}.`, "broad"),
-  ];
+  const clues: WhoAmIClue[] = [];
 
-  if (!isCoach && subject.position) clues.push(clue("position", `I played ${subject.position}.`, "broad"));
-  if (subject.startSeason != null) clues.push(clue("start-season", `My recorded ${subject.league} career began in ${subject.startSeason}.`, "helpful"));
-  if (subject.endSeason != null) clues.push(clue("end-season", `My recorded ${subject.league} career ended in ${subject.endSeason}.`, "helpful"));
-  if (subject.startSeason != null && subject.endSeason != null) {
-    clues.push(clue("career-span", `My recorded ${subject.league} career spans ${subject.endSeason - subject.startSeason + 1} seasons.`, "helpful"));
+  if (isCoach) clues.push(clue("role", "I am a head coach.", "broad"));
+  else if (subject.position) clues.push(clue("position", `I played ${subject.position}.`, "broad"));
+
+  const decades = subject.activeDecades ?? [];
+  if (decades.length === 1) clues.push(clue("era", `I was active in the ${decades[0]}s.`, "broad"));
+  else if (decades.length > 1) {
+    clues.push(clue("era", `I was active in the ${decades[0]}s and ${decades[decades.length - 1]}s.`, "broad"));
   }
-  for (const decade of subject.activeDecades ?? []) clues.push(clue(`decade:${decade}`, `I was active in the ${decade}s.`, "broad"));
+  if (subject.startSeason != null && subject.endSeason != null) {
+    clues.push(clue(
+      "career-span",
+      isCoach
+        ? `I spent ${subject.endSeason - subject.startSeason + 1} seasons as a ${subject.league} head coach.`
+        : `My ${subject.league} career lasted ${subject.endSeason - subject.startSeason + 1} seasons.`,
+      "helpful",
+    ));
+  }
+  if (isCoach && subject.startSeason != null) {
+    clues.push(clue("coach-start", `I first became a ${subject.league} head coach in ${subject.startSeason}.`, "helpful"));
+  }
+  if (isCoach && subject.endSeason != null) {
+    clues.push(clue("coach-end", `My ${subject.league} head-coaching career most recently reached ${subject.endSeason}.`, "strong"));
+  }
 
-  if (subject.school) clues.push(clue("school", `I played college football at ${subject.school}.`, subject.league === "NFL" ? "strong" : "helpful"));
-  if (subject.conference) clues.push(clue("conference", `My recorded college conference is ${subject.conference}.`, "helpful"));
-  if (subject.draftYear != null) clues.push(clue("draft-year", `I entered the NFL draft in ${subject.draftYear}.`, "strong"));
+  if (subject.school) clues.push(clue("school", `I played college football at ${subject.school}.`, subject.league === "NFL" ? "helpful" : "broad"));
+  if (subject.conference) clues.push(clue("conference", `I competed in the ${subject.conference}.`, "helpful"));
+  if (subject.draftYear != null) clues.push(clue("draft-year", `I entered the NFL draft in ${subject.draftYear}.`, "helpful"));
   if (subject.firstOverallPick) clues.push(clue("first-overall", "I was the No. 1 overall NFL draft pick.", "strong"));
   else if (subject.firstRoundPick) clues.push(clue("first-round", "I was a first-round NFL draft pick.", "strong"));
   else if (subject.undrafted) clues.push(clue("undrafted", "I entered the NFL undrafted.", "strong"));
@@ -182,24 +238,58 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   if (subject.nationalChampion) clues.push(clue("national-champion", "I was part of a college national championship team.", "strong"));
 
   const history = footballCareerAffiliationHistoryFor(subject);
-  for (const affiliation of history?.affiliations ?? []) {
-    clues.push(clue(`affiliation:${slug(affiliation)}`, `My ${subject.league === "NFL" ? "NFL" : "college"} career included ${affiliation}.`, "giveaway"));
+  const affiliations = (history?.affiliations ?? []).map((affiliation) => displayAffiliation(subject.league, affiliation));
+  const uniqueAffiliations = [...new Set(affiliations)];
+  if (isCoach && uniqueAffiliations.length) {
+    clues.push(clue(
+      "coach-affiliation-count",
+      `I was a ${subject.league} head coach for ${uniqueAffiliations.length} ${uniqueAffiliations.length === 1 ? "team" : "teams"}.`,
+      "helpful",
+    ));
+  }
+  if (uniqueAffiliations.length > 1) {
+    clues.push(clue(
+      "career-path",
+      subject.league === "NFL"
+        ? isCoach
+          ? `I was an NFL head coach for the ${uniqueAffiliations.join(" and ")}.`
+          : `I played for ${uniqueAffiliations.join(" and ")} in the NFL.`
+        : isCoach
+          ? `I was a college head coach at ${uniqueAffiliations.join(" and ")}.`
+          : `My college career included ${uniqueAffiliations.join(" and ")}.`,
+      "strong",
+    ));
+  }
+  for (const affiliation of uniqueAffiliations) {
+    if (subject.league === "CFB" && subject.school && slug(affiliation) === slug(subject.school)) continue;
+    clues.push(clue(
+      `affiliation:${slug(affiliation)}`,
+      subject.league === "NFL"
+        ? isCoach
+          ? `I was an NFL head coach for the ${affiliation}.`
+          : `I played for the ${affiliation}.`
+        : isCoach
+          ? `I was a college head coach at ${affiliation}.`
+          : `My college career included ${affiliation}.`,
+      "giveaway",
+    ));
   }
   for (const conference of history?.conferences ?? []) {
+    if (subject.conference && slug(conference) === slug(subject.conference)) continue;
     clues.push(clue(`historical-conference:${slug(conference)}`, `I competed in the ${conference}.`, "strong"));
-  }
-  if ((history?.affiliations.length ?? 0) > 1) {
-    clues.push(clue("affiliation-count", `My recorded career includes ${history!.affiliations.length} different ${subject.league === "NFL" ? "NFL franchises" : "college programs"}.`, "helpful"));
   }
 
   return clues;
 }
 
 function footballCandidate(subject: FootballSubjectProfile): WhoAmICandidate {
+  const kind = subject.kind === "coach" ? "coach" : "player";
   return {
     id: subject.id,
     name: subject.name,
-    kind: subject.kind === "coach" ? "coach" : "player",
+    kind,
+    eraBand: footballEraBand(subject),
+    rescueGroup: kind === "coach" ? `${subject.league}:coach` : `${subject.league}:${subject.position ?? "player"}`,
     clues: distinctClues([
       ...footballIdentityClues(subject),
       ...footballMetricClues(subject),
