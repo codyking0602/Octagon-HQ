@@ -252,7 +252,7 @@ function resolvedFootballHistory(subject: FootballSubjectProfile) {
   if (direct || subject.league !== "NFL" || subject.kind !== "player-career" || subject.recognizabilityTier !== "A") {
     return direct;
   }
-  const sourceIdentityKey = footballRecognitionProjectionFor(subject)?.sourceIdentityKey;
+  const sourceIdentityKey = footballRecognitionProjectionFor({ ...subject, kind: "player-career" })?.sourceIdentityKey;
   if (sourceIdentityKey?.provider !== "nflverse") return null;
   return footballCareerAffiliationHistoryFor({
     ...subject,
