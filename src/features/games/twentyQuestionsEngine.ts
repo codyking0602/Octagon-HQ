@@ -32,7 +32,7 @@ export const TWENTY_QUESTIONS_LIMIT = 10;
 export const TWENTY_QUESTIONS_START_SCORE = 100;
 export const TWENTY_QUESTIONS_WRONG_GUESS_PENALTY = 10;
 export const TWENTY_QUESTIONS_ENDGAME_THRESHOLD = 5;
-export const TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT = 12;
+export const TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT = 10;
 
 export function twentyQuestionsScoreImpact(cost: TwentyQuestionsQuestionCost) {
   return Number((cost * 0.4).toFixed(1));
@@ -62,20 +62,18 @@ function isEndgameFingerprintQuestion(question: TwentyQuestionsQuestion) {
   return question.recommendationFamily === "endgame-fingerprint";
 }
 
+/**
+ * The broader question bank is intentionally independent of the private live
+ * candidate split. A useful identity clue should remain available even when all
+ * currently surviving subjects happen to share the same answer. Fine-grained
+ * fingerprint questions stay out of normal play entirely.
+ */
 export function twentyQuestionsEligibleQuestions(
   questions: readonly TwentyQuestionsQuestion[],
   remainingSubjects: readonly TwentyQuestionsSubject[],
 ) {
   if (remainingSubjects.length <= 1) return [];
-  const eligible = questions.filter((question) => {
-    const yes = remainingSubjects.filter((subject) => question.answer(subject.id)).length;
-    return yes > 0 && yes < remainingSubjects.length;
-  });
-  if (remainingSubjects.length > TWENTY_QUESTIONS_ENDGAME_THRESHOLD) {
-    const humanQuestions = eligible.filter((question) => !isEndgameFingerprintQuestion(question));
-    if (humanQuestions.length) return humanQuestions;
-  }
-  return eligible;
+  return questions.filter((question) => !isEndgameFingerprintQuestion(question));
 }
 
 export function twentyQuestionsRequiresFinalGuess(questionsAsked: number, remainingSubjectCount: number) {
@@ -84,6 +82,58 @@ export function twentyQuestionsRequiresFinalGuess(questionsAsked: number, remain
 
 export function twentyQuestionsFinalGuessIsDirectlyPlayable(remainingSubjectCount: number) {
   return remainingSubjectCount >= 1 && remainingSubjectCount <= TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT;
+}
+
+function stableBoardRank(seed: string, value: string) {
+  let hash = 2166136261;
+  const input = `${seed}:${value}`;
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+/**
+ * Builds a fair final-guess board without exposing the exact private survivor
+ * set. The hidden identity is always present, survivors are represented, and
+ * same-kind distractors are preferred before other subjects from the league.
+ */
+export function twentyQuestionsFinalGuessChoices(
+  allSubjects: readonly TwentyQuestionsSubject[],
+  remainingSubjects: readonly TwentyQuestionsSubject[],
+  hiddenSubjectId: string,
+  limit = TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT,
+) {
+  if (limit <= 0) return [];
+  const hidden = allSubjects.find((subject) => subject.id === hiddenSubjectId);
+  if (!hidden) throw new Error("20 Questions final guess requires the hidden subject in the playable universe.");
+
+  const target = Math.min(limit, allSubjects.length);
+  const remainingIds = new Set(remainingSubjects.map((subject) => subject.id));
+  remainingIds.add(hidden.id);
+
+  const stableSort = (subjects: readonly TwentyQuestionsSubject[]) => [...subjects].sort((left, right) => (
+    Number(right.kind === hidden.kind) - Number(left.kind === hidden.kind)
+    || stableBoardRank(hidden.id, left.id) - stableBoardRank(hidden.id, right.id)
+    || left.name.localeCompare(right.name)
+  ));
+
+  const survivors = stableSort(allSubjects.filter((subject) => remainingIds.has(subject.id) && subject.id !== hidden.id));
+  const distractors = stableSort(allSubjects.filter((subject) => !remainingIds.has(subject.id)));
+  const distractorSlots = distractors.length > 0 && target > 1
+    ? Math.min(distractors.length, Math.max(1, Math.floor(target / 3)))
+    : 0;
+  const survivorSlots = Math.max(0, target - 1 - distractorSlots);
+
+  const selected = [hidden, ...survivors.slice(0, survivorSlots), ...distractors.slice(0, distractorSlots)];
+  if (selected.length < target) {
+    const selectedIds = new Set(selected.map((subject) => subject.id));
+    const fillers = stableSort(allSubjects.filter((subject) => !selectedIds.has(subject.id)));
+    selected.push(...fillers.slice(0, target - selected.length));
+  }
+
+  return stableSort(selected);
 }
 
 function inferredHumanValue(question: TwentyQuestionsQuestion): TwentyQuestionsHumanValue {
@@ -120,9 +170,8 @@ function inferredRecommendationFamily(question: TwentyQuestionsQuestion) {
 
 /**
  * Recommended balances recognizable clues with the number of identities a
- * question can actually eliminate. That prevents attractive but one-person
- * affiliation clues from consuming an entire round. Once the pool is down to
- * five identities, exact live separation takes priority.
+ * question can actually eliminate. Unlike the broader bank, Recommended only
+ * contains questions that split the live pool and never uses fingerprint clues.
  */
 export function twentyQuestionsRecommendedQuestions(
   questions: readonly TwentyQuestionsQuestion[],
@@ -146,6 +195,7 @@ export function twentyQuestionsRecommendedQuestions(
         imbalance: Math.abs(yes - no),
       };
     })
+    .filter(({ usefulSplit }) => usefulSplit > 0)
     .sort((left, right) => (
       endgame
         ? right.usefulSplit - left.usefulSplit

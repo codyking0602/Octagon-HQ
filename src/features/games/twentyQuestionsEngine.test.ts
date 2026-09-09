@@ -9,6 +9,7 @@ import {
   formatTwentyQuestionsScoreImpact,
   twentyQuestionsCostForSplit,
   twentyQuestionsEligibleQuestions,
+  twentyQuestionsFinalGuessChoices,
   twentyQuestionsFinalGuessIsDirectlyPlayable,
   twentyQuestionsFinalScore,
   twentyQuestionsRecommendedQuestions,
@@ -61,17 +62,45 @@ describe("20 Questions scoring contract", () => {
 });
 
 describe("20 Questions final-guess contract", () => {
+  const subjects: readonly TwentyQuestionsSubject[] = [
+    { id: "hidden", name: "Hidden", kind: "player", league: "NFL" },
+    { id: "survivor-a", name: "Survivor A", kind: "player", league: "NFL" },
+    { id: "survivor-b", name: "Survivor B", kind: "player", league: "NFL" },
+    { id: "distractor-a", name: "Distractor A", kind: "player", league: "NFL" },
+    { id: "distractor-b", name: "Distractor B", kind: "player", league: "NFL" },
+    { id: "distractor-c", name: "Distractor C", kind: "player", league: "NFL" },
+    { id: "distractor-d", name: "Distractor D", kind: "player", league: "NFL" },
+    { id: "distractor-e", name: "Distractor E", kind: "player", league: "NFL" },
+    { id: "distractor-f", name: "Distractor F", kind: "player", league: "NFL" },
+    { id: "distractor-g", name: "Distractor G", kind: "player", league: "NFL" },
+    { id: "distractor-h", name: "Distractor H", kind: "coach", league: "NFL" },
+    { id: "distractor-i", name: "Distractor I", kind: "coach", league: "NFL" },
+  ];
+
   it("requires the final guess as soon as one identity remains or the question cap is reached", () => {
     expect(twentyQuestionsRequiresFinalGuess(2, 1)).toBe(true);
     expect(twentyQuestionsRequiresFinalGuess(TWENTY_QUESTIONS_LIMIT, 7)).toBe(true);
     expect(twentyQuestionsRequiresFinalGuess(TWENTY_QUESTIONS_LIMIT - 1, 2)).toBe(false);
   });
 
-  it("defines a directly playable final board as twelve or fewer live identities", () => {
-    expect(TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT).toBe(12);
+  it("uses a roughly ten-name directly playable final board", () => {
+    expect(TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT).toBe(10);
     expect(twentyQuestionsFinalGuessIsDirectlyPlayable(1)).toBe(true);
-    expect(twentyQuestionsFinalGuessIsDirectlyPlayable(12)).toBe(true);
-    expect(twentyQuestionsFinalGuessIsDirectlyPlayable(13)).toBe(false);
+    expect(twentyQuestionsFinalGuessIsDirectlyPlayable(10)).toBe(true);
+    expect(twentyQuestionsFinalGuessIsDirectlyPlayable(11)).toBe(false);
+  });
+
+  it("always includes the hidden identity and mixes survivors with distractors", () => {
+    const remaining = subjects.slice(0, 3);
+    const board = twentyQuestionsFinalGuessChoices(subjects, remaining, "hidden");
+    const ids = board.map((subject) => subject.id);
+    const remainingIds = new Set(remaining.map((subject) => subject.id));
+
+    expect(board).toHaveLength(10);
+    expect(ids).toContain("hidden");
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids.some((id) => !remainingIds.has(id))).toBe(true);
+    expect([...ids].sort()).not.toEqual(remaining.map((subject) => subject.id).sort());
   });
 });
 
@@ -91,12 +120,31 @@ describe("20 Questions live question intelligence", () => {
     { id: "impossible", label: "Impossible?", internalCost: 5, answer: () => false },
   ];
 
-  it("keeps only questions that split the identities still in play", () => {
+  it("keeps human-useful questions visible even when they no longer split the private live pool", () => {
     expect(twentyQuestionsEligibleQuestions(questions, subjects).map((question) => question.id))
-      .toEqual(["role:player", "position:quarterback"]);
+      .toEqual(["role:player", "position:quarterback", "league:nfl", "impossible"]);
     expect(twentyQuestionsEligibleQuestions(questions, subjects.slice(0, 2)).map((question) => question.id))
-      .toEqual(["position:quarterback"]);
+      .toEqual(["role:player", "position:quarterback", "league:nfl", "impossible"]);
     expect(twentyQuestionsEligibleQuestions(questions, subjects.slice(0, 1))).toEqual([]);
+  });
+
+  it("keeps Recommended focused on questions that actually narrow the live pool", () => {
+    const recommended = twentyQuestionsRecommendedQuestions(questions, subjects.slice(0, 2), 5);
+    expect(recommended.map((question) => question.id)).toEqual(["position:quarterback"]);
+  });
+
+  it("never exposes fine numeric fingerprint clues in normal or Recommended play", () => {
+    const fingerprint: TwentyQuestionsQuestion = {
+      id: "stat:exact-fingerprint",
+      label: "Exact fingerprint?",
+      internalCost: 8,
+      humanValue: 1,
+      recommendationFamily: "endgame-fingerprint",
+      answer: (id) => id === "a",
+    };
+    const bank = [...questions, fingerprint];
+    expect(twentyQuestionsEligibleQuestions(bank, subjects).map((question) => question.id)).not.toContain(fingerprint.id);
+    expect(twentyQuestionsRecommendedQuestions(bank, subjects, 10).map((question) => question.id)).not.toContain(fingerprint.id);
   });
 
   it("ranks human-recognizable clues ahead of a mathematically cleaner low-value split during normal play", () => {

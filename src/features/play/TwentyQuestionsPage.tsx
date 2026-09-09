@@ -5,6 +5,7 @@ import {
   TWENTY_QUESTIONS_LIMIT,
   TWENTY_QUESTIONS_START_SCORE,
   twentyQuestionsEligibleQuestions,
+  twentyQuestionsFinalGuessChoices,
   twentyQuestionsFinalScore,
   twentyQuestionsRecommendedQuestions,
   twentyQuestionsRequiresFinalGuess,
@@ -51,7 +52,8 @@ function roundLabel(round: TwentyQuestionsRound) {
 function questionCategory(question: TwentyQuestionsQuestion): QuestionCategoryKey {
   const id = question.id.toLowerCase();
   if (
-    id.startsWith("division:")
+    id.startsWith("identity:")
+    || id.startsWith("division:")
     || id.startsWith("role:")
     || id.startsWith("position:")
     || id.startsWith("position-family:")
@@ -156,18 +158,24 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
     }))
     .filter((group) => group.questions.length > 0), [eligibleQuestions, recommendedQuestionIds, sport]);
 
+  const finalGuessChoices = useMemo(
+    () => twentyQuestionsFinalGuessChoices(
+      round.universe.subjects,
+      remainingSubjects,
+      round.hiddenSubject.id,
+      TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT,
+    ),
+    [remainingSubjects, round.hiddenSubject.id, round.universe.subjects],
+  );
   const guessMatches = useMemo(() => {
     const query = normalized(guessSearch);
-    if (!query) {
-      return finalGuessRequired
-        ? remainingSubjects.slice(0, TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT)
-        : [];
-    }
+    const guessPool = finalGuessRequired ? finalGuessChoices : round.universe.subjects;
+    if (!query) return finalGuessRequired ? finalGuessChoices : [];
     if (query.length < 2) return [];
-    return remainingSubjects
+    return guessPool
       .filter((subject) => normalized(subject.name).includes(query))
       .slice(0, TWENTY_QUESTIONS_FINAL_GUESS_CHOICE_LIMIT);
-  }, [finalGuessRequired, guessSearch, remainingSubjects]);
+  }, [finalGuessChoices, finalGuessRequired, guessSearch, round.universe.subjects]);
 
   const finalScore = twentyQuestionsFinalScore(score);
   const football = sport === "football";
@@ -216,7 +224,7 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
       return;
     }
 
-    const finalGuess = asked.length >= TWENTY_QUESTIONS_LIMIT;
+    const finalGuess = finalGuessRequired;
     setScore((current) => twentyQuestionsScoreAfterWrongGuess(current));
     setWrongGuesses((current) => current + 1);
     if (finalGuess) {
@@ -323,19 +331,13 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                 <div className="twenty-questions-section-heading">
                   <div>
                     <p className="eyebrow">{finalGuessRequired ? "FINAL GUESS" : "GUESS ANYTIME"}</p>
-                    <h2>{finalGuessRequired
-                      ? remainingSubjects.length === 1
-                        ? "One identity remains. Who is it?"
-                        : "10 questions used. Who is it?"
-                      : "Who is it?"}</h2>
+                    <h2>{finalGuessRequired ? "Make your final guess. Who is it?" : "Who is it?"}</h2>
                   </div>
                   <span>{finalGuessRequired ? "Guess or reveal the answer · wrong guess −10 pts" : "Wrong guess −10 pts"}</span>
                 </div>
                 {finalGuessRequired ? (
                   <p className="twenty-questions-final-guess-copy">
-                    {remainingSubjects.length === 1
-                      ? "Make your final guess from the identity below, or reveal the answer."
-                      : "Choose from the remaining identities below, search them, or reveal the answer."}
+                    Choose from the final identity board below, search it, or reveal the answer.
                   </p>
                 ) : null}
                 <input
@@ -345,7 +347,11 @@ export default function TwentyQuestionsPage({ sport, createRound }: TwentyQuesti
                     setSelectedGuess(null);
                     setGuessNotice(null);
                   }}
-                  placeholder={football ? `Search remaining ${roundLabel(round)} identities…` : "Search remaining UFC fighters…"}
+                  placeholder={finalGuessRequired
+                    ? "Search final identity board…"
+                    : football
+                      ? `Search ${roundLabel(round)} identities…`
+                      : "Search UFC fighters…"}
                   aria-label="Search identities"
                 />
                 {guessMatches.length ? (

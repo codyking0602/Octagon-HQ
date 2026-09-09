@@ -77,11 +77,12 @@ function normalizeMethodCategory(value: string): UfcFactualFight["methodCategory
 }
 
 function isTitleFight(value: string) {
-  const normalized = value.toLowerCase();
-  return normalized.includes("title")
+  const normalized = value.trim().toLowerCase();
+  return normalized === "normal"
+    || normalized === "interim"
+    || normalized.includes("title")
     || normalized.includes("champion")
-    || normalized.includes("undisputed")
-    || normalized.includes("interim");
+    || normalized.includes("undisputed");
 }
 
 function rankedSubjects(): UfcFactualSubject[] {

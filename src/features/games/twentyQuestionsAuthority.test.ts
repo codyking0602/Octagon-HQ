@@ -48,18 +48,42 @@ describe("UFC 20 Questions factual authority", () => {
     expect(new Set(universe.subjects.map((subject) => subject.id)).size).toBe(100);
   });
 
+  it("answers canonical UFC championship history correctly for Topuria and established champions", () => {
+    const universe = getUfcTwentyQuestionsUniverse();
+    const titleFight = universe.questions.find((question) => question.id === "championship:title-challenger");
+    const titleWinner = universe.questions.find((question) => question.id === "championship:title-winner");
+    const titleDefense = universe.questions.find((question) => question.id === "championship:title-defense");
+
+    expect(titleFight).toBeDefined();
+    expect(titleWinner).toBeDefined();
+    expect(titleDefense).toBeDefined();
+    expect(universe.subjects.some((subject) => subject.id === "ufc:ilia-topuria")).toBe(true);
+    expect(universe.subjects.some((subject) => subject.id === "ufc:islam-makhachev")).toBe(true);
+    expect(titleFight!.answer("ufc:ilia-topuria")).toBe(true);
+    expect(titleWinner!.answer("ufc:ilia-topuria")).toBe(true);
+    expect(titleFight!.answer("ufc:islam-makhachev")).toBe(true);
+    expect(titleWinner!.answer("ufc:islam-makhachev")).toBe(true);
+    expect(titleDefense!.answer("ufc:islam-makhachev")).toBe(true);
+  });
+
   it("prioritizes recognizable UFC identity clues without losing deterministic coverage", () => {
     const universe = getUfcTwentyQuestionsUniverse();
     const ids = universe.questions.map((question) => question.id);
     const divisionQuestions = universe.questions.filter((question) => question.id.startsWith("division:"));
+    const namedDivisionQuestions = divisionQuestions.filter((question) => question.id !== "division:primary-under-175");
     const styleQuestions = universe.questions.filter((question) => question.id.startsWith("style:"));
 
     expect(universe.questions.length).toBeGreaterThan(50);
     expect(universe.questions.length).toBeLessThanOrEqual(UFC_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS);
     expect(new Set(ids).size).toBe(universe.questions.length);
+    expect(ids).toContain("identity:woman");
+    expect(ids).toContain("division:primary-under-175");
+    expect(ids.some((id) => id.startsWith("division:primary:"))).toBe(true);
     expect(ids.some((id) => id.startsWith("era:active-"))).toBe(true);
     expect(ids).toContain("era:pre-2010");
     expect(ids).toContain("championship:title-challenger");
+    expect(ids).toContain("championship:title-winner");
+    expect(ids).toContain("championship:title-defense");
     expect(ids).toContain("championship:three-plus-title-fights");
     expect(ids).toContain("division-history:multiple");
     expect(ids.some((id) => id.startsWith("faced:"))).toBe(true);
@@ -73,7 +97,7 @@ describe("UFC 20 Questions factual authority", () => {
     expect(ids.some((id) => id.includes("opponents-beaten"))).toBe(false);
     expect(ids.some((id) => id.startsWith("stat:ko-tko-wins:"))).toBe(false);
     expect(ids.some((id) => id.startsWith("stat:submission-wins:"))).toBe(false);
-    expect(divisionQuestions.every((question) => !/\d+(?:\.\d+)?/.test(question.label))).toBe(true);
+    expect(namedDivisionQuestions.every((question) => !/\d+(?:\.\d+)?/.test(question.label))).toBe(true);
     expect(divisionQuestions.every((question) => question.humanValue === 4)).toBe(true);
 
     for (const question of universe.questions) {

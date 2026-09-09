@@ -34,6 +34,21 @@ const UFC_DIVISION_BY_ID = new Map<string, string>([
   ["women-s-featherweight", "Women's Featherweight"],
 ]);
 
+const UFC_DIVISION_LIMITS = new Map<string, number>([
+  ["Women's Strawweight", 115],
+  ["Women's Flyweight", 125],
+  ["Women's Bantamweight", 135],
+  ["Women's Featherweight", 145],
+  ["Flyweight", 125],
+  ["Bantamweight", 135],
+  ["Featherweight", 145],
+  ["Lightweight", 155],
+  ["Welterweight", 170],
+  ["Middleweight", 185],
+  ["Light Heavyweight", 205],
+  ["Heavyweight", 265],
+]);
+
 const UFC_DECADES = [1990, 2000, 2010, 2020] as const;
 
 type CandidateQuestion = {
@@ -52,6 +67,7 @@ type UfcTwentyQuestionsStats = {
   submissionWins: number;
   titleFights: number;
   titleFightWins: number;
+  titleDefenseWins: number;
   undisputedTitleWins: number;
   interimTitleWins: number;
   sanctionedDivisions: number;
@@ -88,8 +104,55 @@ function fighterDivisions(fighter: UfcFactualSubject) {
   ].map(canonicalUfcDivision).filter((division): division is string => division != null))];
 }
 
+function primaryFighterDivision(fighter: UfcFactualSubject) {
+  return canonicalUfcDivision(fighter.primaryDivision);
+}
+
+function isWomanFighter(fighter: UfcFactualSubject) {
+  return fighterDivisions(fighter).some((division) => division.startsWith("Women's "));
+}
+
+function primaryDivisionUnder175(fighter: UfcFactualSubject) {
+  const division = primaryFighterDivision(fighter);
+  if (!division) return false;
+  const limit = UFC_DIVISION_LIMITS.get(division);
+  return limit != null && limit < 175;
+}
+
 function fighterActiveDecades(fighter: UfcFactualSubject) {
   return new Set(fighter.fights.map((fight) => Math.floor(Number(fight.date.slice(0, 4)) / 10) * 10)).size;
+}
+
+function titleDefenseWins(fighter: UfcFactualSubject) {
+  let holdsUndisputedTitle = false;
+  let holdsInterimTitle = false;
+  let defenses = 0;
+  const titleFights = fighter.fights
+    .filter((fight) => fight.titleFight)
+    .slice()
+    .sort((left, right) => left.date.localeCompare(right.date));
+
+  for (const fight of titleFights) {
+    if (fight.interimTitleFight) {
+      if (fight.result === "win") {
+        if (holdsInterimTitle) defenses += 1;
+        holdsInterimTitle = true;
+      } else if (fight.result === "loss") {
+        holdsInterimTitle = false;
+      }
+      continue;
+    }
+
+    if (fight.result === "win") {
+      if (holdsUndisputedTitle) defenses += 1;
+      holdsUndisputedTitle = true;
+      holdsInterimTitle = false;
+    } else if (fight.result === "loss") {
+      holdsUndisputedTitle = false;
+      holdsInterimTitle = false;
+    }
+  }
+  return defenses;
 }
 
 function partitionSignature(subjects: readonly TwentyQuestionsSubject[], values: ReadonlyMap<string, boolean>) {
@@ -126,6 +189,7 @@ function deriveStats(fighter: UfcFactualSubject): UfcTwentyQuestionsStats {
     submissionWins: wins.filter((fight) => fight.methodCategory === "submission").length,
     titleFights: titleFights.length,
     titleFightWins: titleWins.length,
+    titleDefenseWins: titleDefenseWins(fighter),
     undisputedTitleWins: titleWins.filter((fight) => !fight.interimTitleFight).length,
     interimTitleWins: titleWins.filter((fight) => fight.interimTitleFight).length,
     sanctionedDivisions: fighterDivisions(fighter).length,
@@ -135,7 +199,7 @@ function deriveStats(fighter: UfcFactualSubject): UfcTwentyQuestionsStats {
 
 function runtimeCategory(row: CandidateQuestion) {
   const id = row.id.toLowerCase();
-  if (id.startsWith("division:") || id.startsWith("division-history:")) return "role";
+  if (id.startsWith("division:") || id.startsWith("division-history:") || id.startsWith("identity:")) return "role";
   if (id.startsWith("era:")) return "era";
   if (id.startsWith("faced:") || id.startsWith("beat:")) return "matchups";
   if (id.startsWith("championship:")) return "achievements";
@@ -245,6 +309,32 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
   const stats = new Map(ufcFactualLedgerSubjects.map((fighter) => [fighter.id, deriveStats(fighter)]));
   const statFor = (fighter: UfcFactualSubject) => stats.get(fighter.id)!;
 
+  add(
+    "identity:woman",
+    "Is this fighter a woman?",
+    isWomanFighter,
+    4,
+    "identity",
+  );
+  add(
+    "division:primary-under-175",
+    "Is this fighter's main UFC division under 175 lb?",
+    primaryDivisionUnder175,
+    4,
+    "division",
+  );
+
+  const primaryDivisions = [...new Set(ufcFactualLedgerSubjects.map(primaryFighterDivision).filter((division): division is string => division != null))].sort();
+  for (const division of primaryDivisions) {
+    add(
+      `division:primary:${normalizedId(division)}`,
+      `Is ${division} this fighter's main UFC division?`,
+      (fighter) => primaryFighterDivision(fighter) === division,
+      4,
+      "division",
+    );
+  }
+
   const divisions = [...new Set(ufcFactualLedgerSubjects.flatMap(fighterDivisions))].sort();
   for (const division of divisions) {
     add(
@@ -319,8 +409,15 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
   );
   add(
     "championship:title-winner",
-    "Has this fighter won a UFC title fight?",
+    "Has this fighter ever won a UFC championship?",
     (fighter) => statFor(fighter).titleFightWins > 0,
+    4,
+    "achievement",
+  );
+  add(
+    "championship:title-defense",
+    "Has this fighter successfully defended a UFC title?",
+    (fighter) => statFor(fighter).titleDefenseWins > 0,
     4,
     "achievement",
   );

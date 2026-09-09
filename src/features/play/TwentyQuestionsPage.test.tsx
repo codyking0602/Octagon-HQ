@@ -36,15 +36,16 @@ function renderRound() {
 }
 
 describe("20 Questions round UX", () => {
-  it("immediately opens a playable final guess when one identity remains", () => {
+  it("opens a final board with the hidden identity plus distractors when one identity remains", () => {
     const { container } = renderRound();
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
     fireEvent.click(screen.getByRole("button", { name: /Was this fighter active in the Alpha era/i }));
 
     expect(container.querySelector(".twenty-questions-scorebar div:nth-child(2) strong")?.textContent).toBe("1");
-    expect(screen.getByText("One identity remains. Who is it?")).toBeInTheDocument();
-    expect(screen.queryByText("One identity remains. Guess or reveal the answer.")).not.toBeInTheDocument();
+    expect(screen.getByText("Make your final guess. Who is it?")).toBeInTheDocument();
+    expect(screen.getByText("Choose from the final identity board below, search it, or reveal the answer.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Alpha Fighter/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Bravo Fighter/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Recommended" })).not.toBeInTheDocument();
   });
 
