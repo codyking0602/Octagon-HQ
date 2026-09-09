@@ -297,7 +297,79 @@ function footballCandidate(subject: FootballSubjectProfile): WhoAmICandidate {
   };
 }
 
-function footballUniverse(league: "NFL" | "CFB"): WhoAmIUniverse {
+export type FootballWhoAmIPositionGroup = "QB" | "RB" | "WR" | "TE" | "OL" | "DL/EDGE" | "LB" | "DB";
+
+export interface FootballWhoAmILaunchPool {
+  league: "NFL" | "CFB";
+  players: readonly FootballSubjectProfile[];
+  coaches: readonly FootballSubjectProfile[];
+  subjects: readonly FootballSubjectProfile[];
+}
+
+const FOOTBALL_WHO_AM_I_POSITION_GROUPS: readonly FootballWhoAmIPositionGroup[] = [
+  "QB", "RB", "WR", "TE", "OL", "DL/EDGE", "LB", "DB",
+];
+
+export const FOOTBALL_WHO_AM_I_PLAYER_TARGETS: Readonly<Record<"NFL" | "CFB", Readonly<Record<FootballWhoAmIPositionGroup, number>>>> = {
+  NFL: { QB: 29, RB: 26, WR: 32, TE: 13, OL: 12, "DL/EDGE": 26, LB: 18, DB: 24 },
+  CFB: { QB: 31, RB: 30, WR: 23, TE: 12, OL: 12, "DL/EDGE": 24, LB: 20, DB: 28 },
+};
+
+const FOOTBALL_WHO_AM_I_COACH_TARGET = 20;
+const RECOGNITION_TIER_RANK = { A: 0, B: 1 } as const;
+
+export function footballWhoAmIPositionGroup(position: FootballSubjectProfile["position"]): FootballWhoAmIPositionGroup | null {
+  switch (position) {
+    case "QB": return "QB";
+    case "RB": return "RB";
+    case "WR": return "WR";
+    case "TE": return "TE";
+    case "OL": return "OL";
+    case "DL": return "DL/EDGE";
+    case "LB": return "LB";
+    case "DB": return "DB";
+    case "K":
+    case "P":
+    case undefined:
+      return null;
+  }
+}
+
+function stableTextCompare(left: string, right: string) {
+  if (left < right) return -1;
+  if (left > right) return 1;
+  return 0;
+}
+
+function footballLaunchSubjectCompare(left: FootballSubjectProfile, right: FootballSubjectProfile) {
+  const tierDifference = RECOGNITION_TIER_RANK[left.recognizabilityTier as "A" | "B"]
+    - RECOGNITION_TIER_RANK[right.recognizabilityTier as "A" | "B"];
+  if (tierDifference !== 0) return tierDifference;
+  const nameDifference = stableTextCompare(left.name.toLowerCase(), right.name.toLowerCase());
+  return nameDifference || stableTextCompare(left.id, right.id);
+}
+
+function preserveEraDiversityWithinTier(
+  selectedSubjects: readonly FootballSubjectProfile[],
+  availableSubjects: readonly FootballSubjectProfile[],
+) {
+  const selected = [...selectedSubjects];
+  for (const era of ["modern", "legacy"] as const) {
+    if (selected.some((subject) => footballEraBand(subject) === era)) continue;
+    const replacement = [...availableSubjects]
+      .filter((subject) => footballEraBand(subject) === era)
+      .sort(footballLaunchSubjectCompare)
+      .find((candidate) => selected.some((subject) => subject.recognizabilityTier === candidate.recognizabilityTier));
+    if (!replacement) continue;
+    const replaceIndex = [...selected.keys()]
+      .reverse()
+      .find((index) => selected[index]!.recognizabilityTier === replacement.recognizabilityTier);
+    if (replaceIndex != null) selected[replaceIndex] = replacement;
+  }
+  return selected.sort(footballLaunchSubjectCompare);
+}
+
+function selectedFootballSubjects(league: "NFL" | "CFB") {
   const queried = queryFootballSubjects({
     league,
     recognizabilityTiers: ["A", "B"],
@@ -311,13 +383,58 @@ function footballUniverse(league: "NFL" | "CFB"): WhoAmIUniverse {
     const current = byPerson.get(key);
     const currentDepth = current ? (getFootballFactualRecord(current.id)?.facts.length ?? 0) : -1;
     const nextDepth = getFootballFactualRecord(subject.id)?.facts.length ?? 0;
-    if (!current || nextDepth > currentDepth) byPerson.set(key, subject);
+    if (
+      !current
+      || nextDepth > currentDepth
+      || (nextDepth === currentDepth && stableTextCompare(subject.id, current.id) < 0)
+    ) {
+      byPerson.set(key, subject);
+    }
   }
+  return [...byPerson.values()];
+}
 
+function requireLaunchCount(
+  league: "NFL" | "CFB",
+  label: string,
+  available: readonly FootballSubjectProfile[],
+  count: number,
+) {
+  if (available.length < count) {
+    throw new Error(`Who Am I ${league} launch pool needs ${count} ${label}; canonical A/B registry has ${available.length}.`);
+  }
+}
+
+function footballLaunchPool(league: "NFL" | "CFB"): FootballWhoAmILaunchPool {
+  const recognized = selectedFootballSubjects(league);
+  const playerCandidates = recognized.filter((subject) => subject.kind === "player-career");
+  const coachCandidates = recognized.filter((subject) => subject.kind === "coach");
+  const targets = FOOTBALL_WHO_AM_I_PLAYER_TARGETS[league];
+
+  const players = FOOTBALL_WHO_AM_I_POSITION_GROUPS.flatMap((group) => {
+    const available = playerCandidates
+      .filter((subject) => footballWhoAmIPositionGroup(subject.position) === group)
+      .sort(footballLaunchSubjectCompare);
+    const target = targets[group];
+    requireLaunchCount(league, `${group} players`, available, target);
+    return preserveEraDiversityWithinTier(available.slice(0, target), available);
+  });
+
+  const sortedCoaches = [...coachCandidates].sort(footballLaunchSubjectCompare);
+  requireLaunchCount(league, "head coaches", sortedCoaches, FOOTBALL_WHO_AM_I_COACH_TARGET);
+  const coaches = sortedCoaches.slice(0, FOOTBALL_WHO_AM_I_COACH_TARGET);
+
+  return { league, players, coaches, subjects: [...players, ...coaches] };
+}
+
+const nflLaunchPool = footballLaunchPool("NFL");
+const cfbLaunchPool = footballLaunchPool("CFB");
+
+function footballUniverse(launchPool: FootballWhoAmILaunchPool): WhoAmIUniverse {
   return {
     sport: "football",
-    league,
-    candidates: [...byPerson.values()].map(footballCandidate),
+    league: launchPool.league,
+    candidates: launchPool.subjects.map(footballCandidate),
   };
 }
 
@@ -327,11 +444,15 @@ const ufcUniverse: WhoAmIUniverse = {
   candidates: ufcFactualLedgerSubjects.map(ufcCandidate),
 };
 
-const nflUniverse = footballUniverse("NFL");
-const cfbUniverse = footballUniverse("CFB");
+const nflUniverse = footballUniverse(nflLaunchPool);
+const cfbUniverse = footballUniverse(cfbLaunchPool);
 
 export function getUfcWhoAmIUniverse() {
   return ufcUniverse;
+}
+
+export function getFootballWhoAmILaunchPool(league: "NFL" | "CFB") {
+  return league === "NFL" ? nflLaunchPool : cfbLaunchPool;
 }
 
 export function getFootballWhoAmIUniverse(league: "NFL" | "CFB") {
