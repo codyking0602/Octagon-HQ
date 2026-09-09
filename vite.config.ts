@@ -1,8 +1,9 @@
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { defineConfig } from "vitest/config";
 import { loadEnv, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
+import { normalizeFootballRevealH264Level } from "./scripts/normalize-football-reveal-codec.mjs";
 import { validatePublicSupabaseConfig } from "./scripts/public-supabase-config.mjs";
 import { playGames } from "./src/features/play/playRegistry";
 import { allTime } from "./src/features/rankings/rankingModel";
@@ -85,6 +86,27 @@ function richPreviewCatalogPlugin(): Plugin {
   };
 }
 
+function footballRevealCodecCompatibilityPlugin(): Plugin {
+  return {
+    name: "octagon-football-reveal-codec-compatibility",
+    apply: "build",
+    closeBundle() {
+      const revealPath = join(
+        process.cwd(),
+        "dist",
+        "assets",
+        "football",
+        "football-picks-reveal.mp4",
+      );
+      if (!existsSync(revealPath)) throw new Error(`Missing Football Picks reveal asset: ${revealPath}`);
+
+      const source = readFileSync(revealPath);
+      const normalized = normalizeFootballRevealH264Level(source);
+      if (!source.equals(normalized)) writeFileSync(revealPath, normalized);
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const deploymentSha = (env.VITE_DEPLOYMENT_SHA ?? process.env.SOURCE_SHA ?? "").trim().toLowerCase();
@@ -107,7 +129,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [react(), richPreviewCatalogPlugin()],
+    plugins: [react(), richPreviewCatalogPlugin(), footballRevealCodecCompatibilityPlugin()],
     ...(mode === "production"
       ? {
           define: {
