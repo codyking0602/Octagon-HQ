@@ -28,11 +28,21 @@ Completed roadmap sequence:
 7. **PR 7 — Hit the Number final parity/source pass** — completed by #885. UFC Random Pool quality now covers every mature format using only legal player selections; large deterministic parity/source tests lock UFC factual-ledger ownership, Football factual-registry ownership, format breadth, replayability, and challenge/result parity.
 8. **PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup** — completed by #895. Plain entry points now honor the Daily-only product role, compatible historical/challenge deep links remain valid, the existing Daily Double versions are preserved, Football comparison grading uses the shared official Keep/Cut comparison helper, and cross-sport Daily Double presentation recognizes both persisted UFC and Football result shapes.
 
+Who Am I is now in an owner-only rebuild inside roadmap PR 10. The first three rebuild slices are complete:
+
+- launch-pool construction is locked through the existing canonical football registry rather than a manual game roster;
+- one structured, presentation-neutral identity fact model is in place;
+- NFL A-tier structural/resume enrichment is complete at **105/105 identities with at least 15 facts**, average **22.97**, median **19**, and **52 at 20+**.
+
+That depth audit exposed an important product requirement: a high structural fact count alone does not make a person feel recognizable. Career windows, decade math, duration bands, and similar derivatives remain useful inputs, but they must not be treated as substitutes for distinctive biographical/person-specific knowledge.
+
 ### NEXT
 
-**PR 10 — Who Am I? owner-only preview.**
+**Who Am I rebuild PR 4 — shared identity knowledge foundation + NFL A-tier research pilot.**
 
-20 Questions remains owner-only and parked. Do not broaden its access or restart its factual-readiness work unless Cody explicitly chooses to return to it.
+The pilot should cover roughly 10–15 diverse NFL A-tier identities across positions and eras, prove one reusable source-backed identity-knowledge owner, and make the resulting person-specific facts human-reviewable before the research process scales to the full launch universe.
+
+20 Questions remains owner-only and parked. Do not broaden its access or restart its factual-readiness work unless Cody explicitly chooses to return to it. After Who Am I matures, separately evaluate whether 20 Questions should remain in the product at all.
 
 Who Am I must remain owner-only throughout development. It stays absent from public Play discovery, Today's Challenge, Daily rotation, challenges, streaks, and reminders until Cody explicitly approves opening it up.
 
@@ -160,6 +170,21 @@ Football Blind Resume is a deliberate exception to fake exact-ranking behavior: 
 Objective UFC facts continue through established UFC factual/stat owners. Comparative UFC Games continue through the calculated ranking/category owners and approved Play-only rating owner where applicable.
 
 Do not manually enter GOAT ranks, OVRs, totals, or category scores for Games.
+
+### Shared person identity knowledge ownership
+
+Distinctive biographical/person-specific facts are reusable canonical **person knowledge**, not Who Am I-only trivia. Who Am I may consume that knowledge, but 20 Questions, trivia, candidate matching, profile/game surfaces, and future mechanics may reuse the same verified facts when appropriate.
+
+Research must be **person-first and discovery-first**:
+
+1. research the individual broadly using credible sources such as official league/team/college/Hall of Fame material, reputable interviews, retrospectives, and strong journalism;
+2. discover what is actually distinctive about that person;
+3. verify the claim and retain provenance;
+4. only then normalize the discovered fact into the canonical knowledge model.
+
+Do not predefine a long list of narrow schema fields and search the web merely to fill them. Categories such as walk-on background, prior position, unusual high-school sport, family connection, transfer path, nickname origin, draft-day story, iconic moment, or off-field identity are examples of discoveries, not mandatory slots.
+
+Every researched identity fact must retain source provenance. Structural/resume facts and distinctive identity facts are separate quality dimensions. Related derivatives such as career window, start decade, end decade, decade count, midpoint decade, and duration band may all remain valid structured facts, but they do not count as separate distinctive identity concepts merely because they have separate fact IDs.
 
 ### Eligibility rule
 
@@ -307,7 +332,19 @@ Preferred first contract:
 - deterministic/randomized variation within the approved progression;
 - earlier correct guesses score better;
 - wrong guesses carry a meaningful penalty;
-- clues derive from canonical identity/factual evidence.
+- clues derive from canonical factual and shared person-identity knowledge.
+
+Knowledge quality rules:
+
+- structural/resume depth remains useful, with the current enrichment target of at least 15 structured facts and a preference for 20+ where canonical evidence honestly supports it;
+- structural count alone is not a sufficient quality gate;
+- target roughly **5–10 genuinely distinctive, source-backed person-specific facts per identity where credible material exists**;
+- do not manufacture filler merely to reach a personal-fact counter;
+- broad individual research comes before schema normalization;
+- related career/era derivatives must be deduplicated at clue-concept selection so a round cannot pretend five formulations of the same career window are five different revelations;
+- every personal identity fact must be source-backed and reusable outside Who Am I.
+
+The first personal-identity pilot must research roughly 10–15 diverse NFL A-tier identities and produce a human-readable review of the distinctive facts found for each person. Do not scale the same method across hundreds of identities until that pilot demonstrates the facts actually feel specific to the people rather than generic résumé data.
 
 During development, Who Am I is an **owner-only preview**. Direct routes and Play-library discovery must both enforce owner access. Public users must not see the game, and Who Am I must not enter Today's Challenge or any competitive/persistence surface until Cody explicitly approves release.
 
@@ -420,8 +457,29 @@ Completed in #895. Blind Rank 5 + Keep 4 / Cut 4 remain Daily Double-only in bot
 ### ⏸ PR 9 — 20 Questions
 Owner-only prototype is preserved and intentionally parked as of September 9, 2026. Do not treat it as public-ready, activate Daily, or continue expansion until Cody explicitly returns to it.
 
-### ▶ PR 10 — Who Am I?
-**NEXT.** Implement the owner-only preview with progressive clue bands, two-at-a-time reveal cadence, scoring, source derivation, giveaway/repetition tests, and UI proof. Keep both sport routes and Play discovery owner-only. Daily-ready only after fairness proof; do not activate Daily rotation or public access here.
+### ▶ PR 10 — Who Am I? owner-only rebuild
+**IN PROGRESS.** Preserve owner-only access while completing the staged rebuild below. Do not activate Daily rotation or public access during these slices.
+
+Completed rebuild slices:
+
+1. lock NFL/CFB launch pools through canonical recognizability owners rather than a manual game roster;
+2. establish one structured presentation-neutral identity fact model;
+3. enrich NFL A-tier structural/resume depth to 105/105 identities at 15+ facts while preserving canonical factual/registry owners.
+
+Next rebuild slices:
+
+4. **shared identity knowledge foundation + 10–15 person NFL A-tier research pilot** — research each person broadly first, discover distinctive facts, verify provenance, then normalize them into one reusable person-knowledge owner;
+5. finish NFL A-tier person-specific enrichment using the approved pilot method;
+6. enrich NFL B-tier with both structural/resume depth and person-specific research;
+7. enrich CFB A-tier;
+8. enrich CFB B-tier;
+9. enrich UFC identities;
+10. build the clue assembler/reveal progression using structural and distinctive knowledge without duplicate clue concepts;
+11. add replay variation and repetition controls;
+12. add the approved endgame candidate/disguise choice flow, multiple final guesses, and reduced-point recovery path;
+13. evaluate whether the mature Who Am I product makes 20 Questions redundant, but do not remove 20 Questions until that is a separate explicit decision.
+
+The research slices are not complete merely because each identity crosses a raw fact-count threshold. Human review must confirm that the added knowledge actually feels specific to the person.
 
 ### PR 11 — Today's Challenge vNext
 Recalibrate the sport-scoped deterministic Daily product after new-game simulation data exists. Preserve one Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Do not add Auction, Draft Room, or Better Than.
@@ -447,6 +505,9 @@ Do not:
 - wait for every Football subject to have complete rankings/stats before finishing Games;
 - manually fill missing facts/ratings merely to increase game eligibility;
 - create second factual/comparison/ranking owners;
+- create a Who Am I-only personal trivia database when the fact belongs to shared person knowledge;
+- predefine narrow personal-fact fields and then search the web merely to fill those slots;
+- count multiple derived formulations of the same career/era information as multiple distinctive identity concepts;
 - force UFC and Football onto one route/engine merely for symmetry;
 - revive Blind Rank/Keep-Cut as normal library cards;
 - revive Football Blind Resume as a competing standalone runtime without a new explicit product decision;
@@ -468,7 +529,8 @@ The roadmap is complete only when production has:
 - one coherent UFC/Football Play design language;
 - the approved normal Play libraries and Daily-only roles;
 - mature/source-correct Find the Leader, Wavelength, Blind Resume, and Hit the Number contracts;
-- replayable 20 Questions and Who Am I in both sports;
+- replayable 20 Questions and Who Am I in both sports, subject to the later explicit decision on whether 20 Questions remains necessary;
+- shared source-backed person identity knowledge that is reusable across Games rather than trapped inside Who Am I;
 - healthy UFC Auction;
 - live Football Draft Room with approved builders/initial rooms;
 - coherent sport-scoped Today's Challenge competition;
