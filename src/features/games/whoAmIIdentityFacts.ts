@@ -6,6 +6,7 @@ import {
   getFootballFactualRecord,
   type FootballFactMetricId,
 } from "../back-room/footballFactualStatsCore";
+import { footballRecognitionProjectionFor } from "../back-room/footballRecognizabilityProjection";
 import type { FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
 import {
   ufcFactualLedgerSubjects,
@@ -246,6 +247,19 @@ function careerDurationBand(seasons: number) {
   return "1-to-5-seasons";
 }
 
+function resolvedFootballHistory(subject: FootballSubjectProfile) {
+  const direct = footballCareerAffiliationHistoryFor(subject);
+  if (direct || subject.league !== "NFL" || subject.kind !== "player-career" || subject.recognizabilityTier !== "A") {
+    return direct;
+  }
+  const sourceIdentityKey = footballRecognitionProjectionFor(subject)?.sourceIdentityKey;
+  if (sourceIdentityKey?.provider !== "nflverse") return null;
+  return footballCareerAffiliationHistoryFor({
+    ...subject,
+    sourceIdentityKeys: [...subject.sourceIdentityKeys, sourceIdentityKey],
+  });
+}
+
 function nflATierEnrichmentFacts(
   subject: FootballSubjectProfile,
   history: FootballCareerAffiliationHistory | null,
@@ -255,12 +269,26 @@ function nflATierEnrichmentFacts(
   const registry = source("football-subject-registry", subject.id);
   const affiliationSource = source("football-career-affiliation", subject.id);
   const facts: WhoAmIIdentityFact[] = [];
-  const observedSeasons = history?.seasons.map((row) => row.season) ?? [];
-  const observedStart = observedSeasons.length ? Math.min(...observedSeasons) : null;
-  const observedEnd = observedSeasons.length ? Math.max(...observedSeasons) : null;
+  const observedSeasons = [...new Set(history?.seasons.map((row) => row.season) ?? [])].sort((left, right) => left - right);
+  const observedStart = observedSeasons[0] ?? null;
+  const observedEnd = observedSeasons.at(-1) ?? null;
+  const observedEndIsSourceBoundary = subject.endSeason == null && observedEnd === 2025;
   const startSeason = subject.startSeason ?? observedStart;
-  const endSeason = subject.endSeason ?? observedEnd;
+  const endSeason = subject.endSeason ?? (observedEndIsSourceBoundary ? null : observedEnd);
   const careerSource = subject.startSeason != null && subject.endSeason != null ? registry : affiliationSource;
+
+  if (startSeason != null && endSeason == null) {
+    facts.push(
+      scalar("career-start-season", "era", startSeason, careerSource),
+      scalar("career-start-decade", "era", Math.floor(startSeason / 10) * 10, careerSource),
+    );
+  }
+  if (observedEndIsSourceBoundary && observedEnd != null) {
+    facts.push(
+      scalar("career-observed-through-season", "era", observedEnd, affiliationSource),
+      scalar("career-observed-season-count", "era", observedSeasons.length, affiliationSource),
+    );
+  }
 
   if (startSeason != null && endSeason != null) {
     const startDecade = Math.floor(startSeason / 10) * 10;
@@ -338,6 +366,14 @@ function nflATierEnrichmentFacts(
   } else if (subject.franchises?.length) {
     facts.push(list("registered-franchises", "career-path", subject.franchises, registry));
     facts.push(scalar("career-affiliation-count", "career-path", subject.franchises.length, registry));
+    for (const franchise of subject.franchises) {
+      facts.push(scalar(
+        `career-affiliation:${factIdSegment(franchise)}`,
+        "career-path",
+        franchise,
+        source("football-subject-registry", subject.id, franchise),
+      ));
+    }
   }
 
   return facts;
@@ -379,7 +415,7 @@ export function footballWhoAmIIdentityFactBank(subject: FootballSubjectProfile):
     ));
   }
 
-  const history = footballCareerAffiliationHistoryFor(subject);
+  const history = resolvedFootballHistory(subject);
   if (history?.affiliations.length) {
     facts.push(list(
       "career-affiliations",
