@@ -43,11 +43,19 @@ export function PlayLandingHeader({ sport }: { sport: PlaySport }) {
 type PlayLandingGameLibraryProps = {
   sport: PlaySport;
   onNavigate: (route: string) => void;
+  ownerAccess?: boolean;
   footer?: ReactNode;
 };
 
-export function PlayLandingGameLibrary({ sport, onNavigate, footer }: PlayLandingGameLibraryProps) {
-  const games = playLandingGameIds(sport).map((gameId) => playGameDefinition(gameId, sport));
+export function PlayLandingGameLibrary({
+  sport,
+  onNavigate,
+  ownerAccess = false,
+  footer,
+}: PlayLandingGameLibraryProps) {
+  const games = playLandingGameIds(sport)
+    .filter((gameId) => ownerAccess || gameId !== "20-questions")
+    .map((gameId) => playGameDefinition(gameId, sport));
 
   return (
     <section className="play-landing-library" data-sport={sport} aria-labelledby={`${sport}-all-games-title`}>
