@@ -146,11 +146,9 @@ describe("Who Am I canonical identity facts", () => {
       }
     }
 
-    // This deterministic report deliberately exposes canonical gaps rather than lowering
-    // the targets or padding identities with weak, duplicated, presentation-owned facts.
     console.info("Who Am I NFL A-tier canonical fact-depth audit", JSON.stringify(summary));
     expect(summary.auditedIdentities).toBe(auditedSubjects.length);
-    expect(summary.minimumFacts).toBeGreaterThan(0);
     expect(summary.atMinimum + summary.belowMinimum.length).toBe(summary.auditedIdentities);
+    expect(summary.belowMinimum).toEqual([]);
   });
 });
