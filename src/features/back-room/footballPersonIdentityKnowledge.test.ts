@@ -29,12 +29,20 @@ describe("football person identity knowledge pilot", () => {
 
     const launch = getFootballWhoAmILaunchPool("NFL");
     const launchById = new Map(launch.subjects.map((subject) => [subject.id, subject]));
+    const missingFromLaunch = footballPersonIdentityKnowledgeRecords
+      .filter((record) => !launchById.has(record.subjectId))
+      .map((record) => record.subjectId);
+    const nonATier = footballPersonIdentityKnowledgeRecords
+      .filter((record) => launchById.get(record.subjectId)?.recognizabilityTier !== "A")
+      .map((record) => record.subjectId);
+
+    expect(missingFromLaunch).toEqual([]);
+    expect(nonATier).toEqual([]);
 
     for (const record of footballPersonIdentityKnowledgeRecords) {
       const canonical = getFootballSubject(record.subjectId);
       expect(canonical?.id).toBe(record.subjectId);
       expect(canonical?.league).toBe("NFL");
-      expect(launchById.get(record.subjectId)?.recognizabilityTier).toBe("A");
       expect(Object.keys(record).sort()).toEqual(["facts", "subjectId"]);
     }
 
