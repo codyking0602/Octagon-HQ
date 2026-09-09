@@ -14,10 +14,10 @@ describe("FootballEntryTransition", () => {
     const onComplete = vi.fn();
     render(<FootballEntryTransition surface={surface} onComplete={onComplete} />);
 
-    const video = screen.getByTestId(`football-entry-${surface}`);
+    const video = screen.getByTestId(`football-entry-${surface}`) as HTMLVideoElement;
     expect(video).toHaveAttribute("src", src);
     expect(video).toHaveAttribute("autoplay");
-    expect(video).toHaveAttribute("muted");
+    expect(video.muted).toBe(true);
     expect(video).toHaveAttribute("playsinline");
 
     fireEvent.ended(video);
