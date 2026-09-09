@@ -342,7 +342,7 @@ export const playGameCatalog = [
       supportedTypes: ["replayable", "curated"],
       replayBehavior: "new-lineup",
       newLineupControl: "result-replay",
-      repetitionPolicy: "recent-items-deprioritized",
+      repetitionPolicy: "recent-fighters-deprioritized",
       lineupSize: 10,
       completionState: "five-picks-complete",
       challengeEligible: true,
@@ -425,7 +425,7 @@ export const playGameCatalog = [
 ] as const satisfies readonly PlayGameDefinition[];
 
 export const playGames: readonly PlayGameDefinition[] = playGameCatalog.filter(
-  (game) => game.sport === "ufc",
+  (game) => game.sport === "ufc" && game.id !== "20-questions",
 );
 
 export function playGamesForSport(sport: PlaySport): readonly PlayGameDefinition[] {
