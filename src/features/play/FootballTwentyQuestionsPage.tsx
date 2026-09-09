@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { chooseTwentyQuestionsFootballLeague } from "../games/twentyQuestionsEngine";
 import { getFootballTwentyQuestionsRuntimeUniverse } from "../games/twentyQuestionsFootballRuntimeAuthority";
 import { createTwentyQuestionsRound } from "../games/twentyQuestionsRuntime";
+import { useIdentity } from "../identity/IdentityProvider";
 import TwentyQuestionsPage from "./TwentyQuestionsPage";
 
 export type FootballTwentyQuestionsBoard = "NFL" | "CFB" | "RANDOM";
@@ -24,7 +26,11 @@ function createFootballTwentyQuestionsRound(board: FootballTwentyQuestionsBoard)
 }
 
 export default function FootballTwentyQuestionsPage() {
+  const identity = useIdentity();
   const [board, setBoard] = useState<FootballTwentyQuestionsBoard | null>(null);
+
+  if (!identity.ready) return null;
+  if (identity.profile?.canControlPicks !== true) return <Navigate to="/football/play" replace />;
 
   if (!board) {
     return (
