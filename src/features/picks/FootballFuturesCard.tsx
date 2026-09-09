@@ -36,10 +36,6 @@ interface FuturesPickerGroup {
   limit: number;
 }
 
-function listValue(value: readonly string[]) {
-  return value.join(", ");
-}
-
 function selectedValues(value: readonly string[]) {
   return value.filter((item) => item.trim());
 }
@@ -210,7 +206,7 @@ function FuturesTeamField({ label, points, limit, value, disabled, teams, groups
   }
 
   return (
-    <div className="football-futures-field">
+    <div className="football-futures-field" data-selection-limit={limit}>
       <span><b>{label}</b><small>{points} · {selected.length}/{limit} PICKS</small></span>
       <div
         ref={pickerRef}
@@ -282,13 +278,39 @@ function FuturesSingleField({ label, points, value, disabled, onChange }: {
   );
 }
 
+function RevealedFuturesPicks({ picks }: { picks: FootballFuturesPicks }) {
+  return (
+    <div className="football-futures__leagues football-futures__leagues--revealed" data-testid="revealed-football-futures">
+      <section>
+        <header><div><span>CFB</span><small>COLLEGE FUTURES</small></div><strong>{FOOTBALL_FUTURES_MAX_POINTS.cfb} PTS</strong></header>
+        <div className="football-futures__fields">
+          <FuturesTeamField label="Power 4 champions" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.power4Champions.selections} value={picks.cfbPower4Champions} disabled teams={CFB_FUTURES_TEAMS} groups={POWER4_PICKER_GROUPS} groupForTeam={getCfbPower4Conference} onChange={() => {}} />
+          <FuturesTeamField label="12-team CFP" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.cfb.playoffTeams.selections} value={picks.cfbPlayoffTeams} disabled teams={CFB_FUTURES_TEAMS} onChange={() => {}} />
+          <FuturesTeamField label="CFP semifinalists" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.semifinalists.selections} value={picks.cfbSemifinalists} disabled teams={CFB_FUTURES_TEAMS} onChange={() => {}} />
+          <FuturesSingleField label="Heisman Trophy" points="3 PTS" value={picks.cfbHeisman} disabled onChange={() => {}} />
+          <FuturesTeamField label="National champion" points="7 PTS" limit={1} value={picks.cfbNationalChampion ? [picks.cfbNationalChampion] : []} disabled teams={CFB_FUTURES_TEAMS} onChange={() => {}} />
+        </div>
+      </section>
+      <section>
+        <header><div><span>NFL</span><small>PRO FUTURES</small></div><strong>{FOOTBALL_FUTURES_MAX_POINTS.nfl} PTS</strong></header>
+        <div className="football-futures__fields">
+          <FuturesTeamField label="Division champions" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.divisionChampions.selections} value={picks.nflDivisionChampions} disabled teams={NFL_FUTURES_TEAMS} groups={NFL_DIVISION_PICKER_GROUPS} groupForTeam={(team) => getNflTeamGroup(team)?.label ?? null} onChange={() => {}} />
+          <FuturesTeamField label="14-team playoffs" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.playoffTeams.selections} value={picks.nflPlayoffTeams} disabled teams={NFL_FUTURES_TEAMS} groups={NFL_PLAYOFF_PICKER_GROUPS} groupForTeam={getNflConference} onChange={() => {}} />
+          <FuturesTeamField label="Conference title teams" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.nfl.conferenceChampionshipTeams.selections} value={picks.nflConferenceChampionshipTeams} disabled teams={NFL_FUTURES_TEAMS} groups={NFL_TITLE_PICKER_GROUPS} groupForTeam={getNflConference} onChange={() => {}} />
+          <FuturesSingleField label="AP NFL MVP" points="3 PTS" value={picks.nflMvp} disabled onChange={() => {}} />
+          <FuturesTeamField label="Super Bowl champion" points="7 PTS" limit={1} value={picks.nflSuperBowlChampion ? [picks.nflSuperBowlChampion] : []} disabled teams={NFL_FUTURES_TEAMS} onChange={() => {}} />
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function GroupFuture({ name, picks }: { name: string; picks: FootballFuturesPicks }) {
   return (
     <details className="football-futures-group-entry">
       <summary><strong>{name}</strong><span>VIEW PICKS</span></summary>
-      <div>
-        <p><b>CFB:</b> P4 {listValue(picks.cfbPower4Champions) || "—"} · CFP {listValue(picks.cfbPlayoffTeams) || "—"} · Semis {listValue(picks.cfbSemifinalists) || "—"} · Heisman {picks.cfbHeisman || "—"} · Champ {picks.cfbNationalChampion || "—"}</p>
-        <p><b>NFL:</b> Divisions {listValue(picks.nflDivisionChampions) || "—"} · Playoffs {listValue(picks.nflPlayoffTeams) || "—"} · Final 4 {listValue(picks.nflConferenceChampionshipTeams) || "—"} · MVP {picks.nflMvp || "—"} · Champ {picks.nflSuperBowlChampion || "—"}</p>
+      <div className="football-futures-group-entry__picks">
+        <RevealedFuturesPicks picks={picks} />
       </div>
     </details>
   );
@@ -490,28 +512,32 @@ export function FootballFuturesCard() {
       <div className="football-futures__body">
         {loading ? <p className="football-futures__message">Loading Futures…</p> : null}
         {!loading ? (
-          <div className="football-futures__leagues">
-            <section>
-              <header><div><span>CFB</span><small>COLLEGE FUTURES</small></div><strong>{FOOTBALL_FUTURES_MAX_POINTS.cfb} PTS</strong></header>
-              <div className="football-futures__fields">
-                <FuturesTeamField label="Power 4 champions" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.power4Champions.selections} value={draft.cfbPower4Champions} disabled={locked} teams={CFB_FUTURES_TEAMS} groups={POWER4_PICKER_GROUPS} groupForTeam={getCfbPower4Conference} onChange={updateCfbPower4Champions} />
-                <FuturesTeamField label="12-team CFP" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.cfb.playoffTeams.selections} value={draft.cfbPlayoffTeams} disabled={locked} teams={cfbPlayoffPickerTeams(draft)} protectedTeams={draft.cfbPower4Champions} onChange={updateCfbPlayoffTeams} />
-                <FuturesTeamField label="CFP semifinalists" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.semifinalists.selections} value={draft.cfbSemifinalists} disabled={locked} teams={cfbPlayoffOptions.length ? cfbPlayoffOptions : CFB_FUTURES_TEAMS} onChange={updateCfbSemifinalists} />
-                <FuturesSingleField label="Heisman Trophy" points="3 PTS" value={draft.cfbHeisman} disabled={locked} onChange={(value) => update("cfbHeisman", value)} />
-                <FuturesTeamField label="National champion" points="7 PTS" limit={1} value={draft.cfbNationalChampion ? [draft.cfbNationalChampion] : []} disabled={locked} teams={cfbSemifinalOptions.length ? cfbSemifinalOptions : CFB_FUTURES_TEAMS} onChange={(value) => update("cfbNationalChampion", value[0] ?? "")} />
-              </div>
-            </section>
-            <section>
-              <header><div><span>NFL</span><small>PRO FUTURES</small></div><strong>{FOOTBALL_FUTURES_MAX_POINTS.nfl} PTS</strong></header>
-              <div className="football-futures__fields">
-                <FuturesTeamField label="Division champions" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.divisionChampions.selections} value={draft.nflDivisionChampions} disabled={locked} teams={NFL_FUTURES_TEAMS} groups={NFL_DIVISION_PICKER_GROUPS} groupForTeam={(team) => getNflTeamGroup(team)?.label ?? null} onChange={updateNflDivisionChampions} />
-                <FuturesTeamField label="14-team playoffs" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.playoffTeams.selections} value={draft.nflPlayoffTeams} disabled={locked} teams={nflPlayoffPickerTeams(draft)} groups={NFL_PLAYOFF_PICKER_GROUPS} groupForTeam={getNflConference} protectedTeams={draft.nflDivisionChampions} onChange={updateNflPlayoffTeams} />
-                <FuturesTeamField label="Conference title teams" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.nfl.conferenceChampionshipTeams.selections} value={draft.nflConferenceChampionshipTeams} disabled={locked} teams={nflPlayoffOptions.length ? nflPlayoffOptions : NFL_FUTURES_TEAMS} groups={NFL_TITLE_PICKER_GROUPS} groupForTeam={getNflConference} onChange={updateNflConferenceTeams} />
-                <FuturesSingleField label="AP NFL MVP" points="3 PTS" value={draft.nflMvp} disabled={locked} onChange={(value) => update("nflMvp", value)} />
-                <FuturesTeamField label="Super Bowl champion" points="7 PTS" limit={1} value={draft.nflSuperBowlChampion ? [draft.nflSuperBowlChampion] : []} disabled={locked} teams={nflConferenceOptions.length ? nflConferenceOptions : NFL_FUTURES_TEAMS} onChange={(value) => update("nflSuperBowlChampion", value[0] ?? "")} />
-              </div>
-            </section>
-          </div>
+          locked ? (
+            <RevealedFuturesPicks picks={draft} />
+          ) : (
+            <div className="football-futures__leagues">
+              <section>
+                <header><div><span>CFB</span><small>COLLEGE FUTURES</small></div><strong>{FOOTBALL_FUTURES_MAX_POINTS.cfb} PTS</strong></header>
+                <div className="football-futures__fields">
+                  <FuturesTeamField label="Power 4 champions" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.power4Champions.selections} value={draft.cfbPower4Champions} disabled={locked} teams={CFB_FUTURES_TEAMS} groups={POWER4_PICKER_GROUPS} groupForTeam={getCfbPower4Conference} onChange={updateCfbPower4Champions} />
+                  <FuturesTeamField label="12-team CFP" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.cfb.playoffTeams.selections} value={draft.cfbPlayoffTeams} disabled={locked} teams={cfbPlayoffPickerTeams(draft)} protectedTeams={draft.cfbPower4Champions} onChange={updateCfbPlayoffTeams} />
+                  <FuturesTeamField label="CFP semifinalists" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.cfb.semifinalists.selections} value={draft.cfbSemifinalists} disabled={locked} teams={cfbPlayoffOptions.length ? cfbPlayoffOptions : CFB_FUTURES_TEAMS} onChange={updateCfbSemifinalists} />
+                  <FuturesSingleField label="Heisman Trophy" points="3 PTS" value={draft.cfbHeisman} disabled={locked} onChange={(value) => update("cfbHeisman", value)} />
+                  <FuturesTeamField label="National champion" points="7 PTS" limit={1} value={draft.cfbNationalChampion ? [draft.cfbNationalChampion] : []} disabled={locked} teams={cfbSemifinalOptions.length ? cfbSemifinalOptions : CFB_FUTURES_TEAMS} onChange={(value) => update("cfbNationalChampion", value[0] ?? "")} />
+                </div>
+              </section>
+              <section>
+                <header><div><span>NFL</span><small>PRO FUTURES</small></div><strong>{FOOTBALL_FUTURES_MAX_POINTS.nfl} PTS</strong></header>
+                <div className="football-futures__fields">
+                  <FuturesTeamField label="Division champions" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.divisionChampions.selections} value={draft.nflDivisionChampions} disabled={locked} teams={NFL_FUTURES_TEAMS} groups={NFL_DIVISION_PICKER_GROUPS} groupForTeam={(team) => getNflTeamGroup(team)?.label ?? null} onChange={updateNflDivisionChampions} />
+                  <FuturesTeamField label="14-team playoffs" points="1 PT EACH" limit={FOOTBALL_FUTURES_RULES.nfl.playoffTeams.selections} value={draft.nflPlayoffTeams} disabled={locked} teams={nflPlayoffPickerTeams(draft)} groups={NFL_PLAYOFF_PICKER_GROUPS} groupForTeam={getNflConference} protectedTeams={draft.nflDivisionChampions} onChange={updateNflPlayoffTeams} />
+                  <FuturesTeamField label="Conference title teams" points="2 PTS EACH" limit={FOOTBALL_FUTURES_RULES.nfl.conferenceChampionshipTeams.selections} value={draft.nflConferenceChampionshipTeams} disabled={locked} teams={nflPlayoffOptions.length ? nflPlayoffOptions : NFL_FUTURES_TEAMS} groups={NFL_TITLE_PICKER_GROUPS} groupForTeam={getNflConference} onChange={updateNflConferenceTeams} />
+                  <FuturesSingleField label="AP NFL MVP" points="3 PTS" value={draft.nflMvp} disabled={locked} onChange={(value) => update("nflMvp", value)} />
+                  <FuturesTeamField label="Super Bowl champion" points="7 PTS" limit={1} value={draft.nflSuperBowlChampion ? [draft.nflSuperBowlChampion] : []} disabled={locked} teams={nflConferenceOptions.length ? nflConferenceOptions : NFL_FUTURES_TEAMS} onChange={(value) => update("nflSuperBowlChampion", value[0] ?? "")} />
+                </div>
+              </section>
+            </div>
+          )
         ) : null}
         {!locked && !loading ? (
           <footer className="football-futures__footer">
