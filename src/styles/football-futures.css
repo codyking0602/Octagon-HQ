@@ -55,8 +55,9 @@ button.football-futures-team-chip { cursor: pointer; }
 .football-futures-group-entry > summary span { color: #858b8d; font-size: .48rem; font-weight: 900; letter-spacing: .08em; }
 .football-futures-group-entry__picks { padding: 6px; border-top: 1px solid #272a2c; }
 .football-futures__leagues--revealed { gap: 7px; }
-.football-futures__leagues--revealed .football-futures__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: dense; gap: 5px; padding: 6px; }
+.football-futures__leagues--revealed .football-futures__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; padding: 6px; }
 .football-futures__leagues--revealed .football-futures-field { grid-template-columns: minmax(0, 1fr); align-content: start; align-items: stretch; gap: 5px; min-height: 0; padding: 7px; border: 1px solid #292d2f; border-radius: 7px; background: #151718; }
+.football-futures__leagues--revealed .football-futures-field[data-selection-limit="4"],
 .football-futures__leagues--revealed .football-futures-field[data-selection-limit="8"],
 .football-futures__leagues--revealed .football-futures-field[data-selection-limit="12"],
 .football-futures__leagues--revealed .football-futures-field[data-selection-limit="14"] { grid-column: 1 / -1; }
@@ -64,6 +65,7 @@ button.football-futures-team-chip { cursor: pointer; }
 .football-futures__leagues--revealed .football-futures-field b { font-size: .56rem; line-height: 1.08; }
 .football-futures__leagues--revealed .football-futures-field small { flex: 0 0 auto; font-size: .42rem; }
 .football-futures__leagues--revealed .football-futures-team-picker__selected { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; }
+.football-futures__leagues--revealed .football-futures-field[data-selection-limit="4"] .football-futures-team-picker__selected,
 .football-futures__leagues--revealed .football-futures-field[data-selection-limit="8"] .football-futures-team-picker__selected,
 .football-futures__leagues--revealed .football-futures-field[data-selection-limit="12"] .football-futures-team-picker__selected,
 .football-futures__leagues--revealed .football-futures-field[data-selection-limit="14"] .football-futures-team-picker__selected { grid-template-columns: repeat(2, minmax(0, 1fr)); }
