@@ -1,38 +1,13 @@
 name: Temp Football reveal asset bridge
 
 on:
-  push:
-    branches:
-      - fix/football-reveal-montage-final
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  bridge:
+  idle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: fix/football-reveal-montage-final
-
-      - name: Install corrected reveal clips and remove bridge
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -L --fail --silent --show-error \
-            'https://drive.usercontent.google.com/download?id=18Lr-JL1IDdeCNdFOO4b7MyUXWq1Mur6D&export=download&confirm=t' \
-            -o public/assets/football/football-play-reveal.mp4
-          curl -L --fail --silent --show-error \
-            'https://drive.usercontent.google.com/download?id=1547oSbQooGuZkoTb_eRWby6WKVtMX7y7&export=download&confirm=t' \
-            -o public/assets/football/football-picks-reveal.mp4
-          test "$(stat -c%s public/assets/football/football-play-reveal.mp4)" = "1058822"
-          test "$(stat -c%s public/assets/football/football-picks-reveal.mp4)" = "1342927"
-          echo '6ff79235135cb5ef1f1c89b94a014c9e21b6cd1b0198bdb7412697893601a9df  public/assets/football/football-play-reveal.mp4' | sha256sum -c -
-          echo '88f4204fd962c7ce2bb0aefbb026101ec3ae9fff797ecb0e61840d0e53241d56  public/assets/football/football-picks-reveal.mp4' | sha256sum -c -
-          git rm .github/workflows/temp-drive-download-check.yml
-          git add public/assets/football/football-play-reveal.mp4 public/assets/football/football-picks-reveal.mp4
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Install corrected Football reveal clips'
-          git push origin HEAD:fix/football-reveal-montage-final
+      - run: echo ready
