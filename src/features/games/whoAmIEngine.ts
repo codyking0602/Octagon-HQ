@@ -1,7 +1,7 @@
 export type WhoAmISport = "ufc" | "football";
 export type WhoAmILeague = "UFC" | "NFL" | "CFB";
 export type WhoAmISubjectKind = "fighter" | "player" | "coach";
-export type WhoAmIClueBand = "broad" | "helpful" | "strong" | "giveaway";
+export type WhoAmIClueBand = "broad" | "helpful" | "strong" | "near-giveaway" | "giveaway";
 
 export interface WhoAmISubject {
   id: string;
@@ -13,6 +13,7 @@ export interface WhoAmIClue {
   id: string;
   text: string;
   band: WhoAmIClueBand;
+  family?: string;
 }
 
 export interface WhoAmICandidate extends WhoAmISubject {
@@ -38,11 +39,12 @@ export const WHO_AM_I_CLUES_PER_REVEAL = 2;
 export const WHO_AM_I_WRONG_GUESS_PENALTY = 15;
 export const WHO_AM_I_WINDOW_SCORES = [100, 90, 80, 70, 60] as const;
 
-const BAND_ORDER: readonly WhoAmIClueBand[] = ["broad", "helpful", "strong", "giveaway"];
+const BAND_ORDER: readonly WhoAmIClueBand[] = ["broad", "helpful", "strong", "near-giveaway", "giveaway"];
 const BAND_TARGETS: Readonly<Record<WhoAmIClueBand, number>> = {
   broad: 2,
-  helpful: 3,
-  strong: 3,
+  helpful: 2,
+  strong: 2,
+  "near-giveaway": 2,
   giveaway: 2,
 };
 
@@ -55,18 +57,49 @@ function shuffled<T>(values: readonly T[], random: () => number) {
   return copy;
 }
 
+function fallbackBands(target: WhoAmIClueBand) {
+  const targetIndex = BAND_ORDER.indexOf(target);
+  return [...BAND_ORDER].sort((left, right) => {
+    const leftIndex = BAND_ORDER.indexOf(left);
+    const rightIndex = BAND_ORDER.indexOf(right);
+    const distance = Math.abs(leftIndex - targetIndex) - Math.abs(rightIndex - targetIndex);
+    return distance || leftIndex - rightIndex;
+  });
+}
+
 export function whoAmIProgressiveClues(clues: readonly WhoAmIClue[], random: () => number = Math.random) {
+  const pools = new Map<WhoAmIClueBand, WhoAmIClue[]>(
+    BAND_ORDER.map((band) => [band, shuffled(clues.filter((entry) => entry.band === band), random)]),
+  );
   const selected: WhoAmIClue[] = [];
-  const leftovers: WhoAmIClue[] = [];
+  const usedFamilies = new Set<string>();
 
-  for (const band of BAND_ORDER) {
-    const bandClues = shuffled(clues.filter((clue) => clue.band === band), random);
-    selected.push(...bandClues.slice(0, BAND_TARGETS[band]));
-    leftovers.push(...bandClues.slice(BAND_TARGETS[band]));
-  }
+  for (const targetBand of BAND_ORDER) {
+    for (let slot = 0; slot < BAND_TARGETS[targetBand]; slot += 1) {
+      const orderedBands = fallbackBands(targetBand);
+      let pickedBand: WhoAmIClueBand | undefined;
+      let pickedIndex = -1;
 
-  if (selected.length < WHO_AM_I_CLUE_LIMIT) {
-    selected.push(...leftovers.slice(0, WHO_AM_I_CLUE_LIMIT - selected.length));
+      for (const band of orderedBands) {
+        const pool = pools.get(band)!;
+        const index = pool.findIndex((entry) => !usedFamilies.has(entry.family ?? entry.id));
+        if (index >= 0) {
+          pickedBand = band;
+          pickedIndex = index;
+          break;
+        }
+      }
+
+      if (!pickedBand) {
+        pickedBand = orderedBands.find((band) => pools.get(band)!.length > 0);
+        pickedIndex = pickedBand ? 0 : -1;
+      }
+      if (!pickedBand || pickedIndex < 0) return selected;
+
+      const [picked] = pools.get(pickedBand)!.splice(pickedIndex, 1);
+      selected.push(picked!);
+      usedFamilies.add(picked!.family ?? picked!.id);
+    }
   }
 
   return selected.slice(0, WHO_AM_I_CLUE_LIMIT);
