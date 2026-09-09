@@ -32,7 +32,7 @@ PR4 remains unchanged and covers Patrick Mahomes, Barry Sanders, Jerry Rice, Bil
 | LaDainian Tomlinson | RB | 5 |
 | Randy Moss | WR | 5 |
 | Terrell Owens | WR | 5 |
-| Rob Gronkowski | TE | 5 |
+| John Mackey | TE | 5 |
 | Joe Thomas | OL | 5 |
 | Orlando Pace | OL | 5 |
 | Reggie White | DL | 5 |
@@ -163,17 +163,17 @@ Source summary: Chattanooga Athletics, Pro Football Hall of Fame, and NFL.com.
 
 Rejected / not stored: locker-room and personality controversies were excluded as sensational and less useful than his unusual multi-sport, small-school, Rice, and Hall-of-Fame paths.
 
-## Rob Gronkowski — TE — 5 concepts
+## John Mackey — TE — 5 concepts
 
-1. Before his senior high-school move to Pennsylvania, he was also a standout basketball center who averaged 21 points and 18 rebounds.
-2. He grew up in an unusually athletic family: his father played football at Syracuse and his four brothers also pursued high-level sports.
-3. In only two playing seasons he left Arizona with the school's major single-game, season, and career receiving records for a tight end.
-4. A back injury and surgery wiped out his entire 2009 Arizona season before he entered the NFL draft.
-5. Despite the lost season and medical questions, New England traded up to take him 42nd overall in the second round of the 2010 draft.
+1. He played running back for two seasons at Syracuse before moving to tight end, the position he would later help redefine in the NFL.
+2. His breakaway speed helped change the tight end from primarily an extra blocker into a legitimate downfield receiving threat.
+3. In 1966, six of his nine touchdown catches came on plays of at least 51 yards.
+4. In Super Bowl V he caught a deflected Johnny Unitas pass and turned it into a 75-yard touchdown, then a Super Bowl record for touchdown-pass length.
+5. He served as NFLPA president and later became the lead named plaintiff in Mackey v. NFL, the antitrust case that helped break the Rozelle Rule's control over player movement.
 
-Source summary: Arizona Athletics and New England Patriots first-party material.
+Source summary: Pro Football Hall of Fame career and memorial profiles plus the NFLPA's player-labor history.
 
-Rejected / not stored: party-persona anecdotes and generic “Gronk” cultural shorthand were not stored because the batch favors verifiable formative and career-path facts.
+Rejected / not stored: the later “88 Plan” named for Mackey was verified and remains strong supporting identity context, but was not counted as a sixth concept so PR5 keeps the same 20-identity / 100-concept scope.
 
 ## Joe Thomas — OL — 5 concepts
 
