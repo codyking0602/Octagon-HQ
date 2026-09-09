@@ -1,49 +1,34 @@
-import { act, cleanup, fireEvent, render } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { FootballEntryTransition } from "./FootballEntryTransition";
 
 afterEach(() => {
   cleanup();
-  vi.useRealTimers();
 });
 
 describe("FootballEntryTransition", () => {
-  it("plays the existing Vince Young source for Play before the Football HQ slam", () => {
-    vi.useFakeTimers();
+  it.each([
+    ["play", "/assets/football/football-play-reveal.mp4"],
+    ["picks", "/assets/football/football-picks-reveal.mp4"],
+  ] as const)("plays the finished %s reveal video and completes when it ends", (surface, src) => {
     const onComplete = vi.fn();
-    const { container } = render(<FootballEntryTransition surface="play" onComplete={onComplete} />);
-    const video = container.querySelector("video");
+    render(<FootballEntryTransition surface={surface} onComplete={onComplete} />);
 
-    expect(video).toHaveAttribute("src", "/assets/football/vince-young-championship-run.mp4");
-    fireEvent.ended(video!);
-    expect(onComplete).not.toHaveBeenCalled();
-    expect(container.querySelector("img")).toHaveAttribute(
-      "src",
-      "/assets/football/football-picks-reveal-04.jpg",
-    );
+    const video = screen.getByTestId(`football-entry-${surface}`) as HTMLVideoElement;
+    expect(video).toHaveAttribute("src", src);
+    expect(video).toHaveAttribute("autoplay");
+    expect(video.muted).toBe(true);
+    expect(video).toHaveAttribute("playsinline");
 
-    act(() => {
-      vi.advanceTimersByTime(1200);
-    });
+    fireEvent.ended(video);
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 
-  it("plays the restored Ezekiel Elliott frame sequence for Picks", () => {
-    vi.useFakeTimers();
+  it.each(["play", "picks"] as const)("falls through when the %s reveal video errors", (surface) => {
     const onComplete = vi.fn();
-    const { container } = render(<FootballEntryTransition surface="picks" onComplete={onComplete} />);
-    const frames = Array.from(container.querySelectorAll("img"));
+    render(<FootballEntryTransition surface={surface} onComplete={onComplete} />);
 
-    expect(frames.map((frame) => frame.getAttribute("src"))).toEqual([
-      "/assets/football/football-picks-reveal-01.jpg",
-      "/assets/football/football-picks-reveal-02.jpg",
-      "/assets/football/football-picks-reveal-03.jpg",
-      "/assets/football/football-picks-reveal-04.jpg",
-    ]);
-
-    act(() => {
-      vi.advanceTimersByTime(3600);
-    });
+    fireEvent.error(screen.getByTestId(`football-entry-${surface}`));
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 });
