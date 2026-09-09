@@ -26,6 +26,7 @@ const nflHistoricalCoachFranchises: Readonly<Record<string, readonly string[]>> 
 };
 
 const nflHistoricalPlayerFranchises: Readonly<Record<string, readonly string[]>> = {
+  "nfl-chuck-bednarik": ["Philadelphia Eagles"],
   "nfl-sam-huff": ["New York Giants", "Washington"],
 };
 
@@ -162,6 +163,31 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("marcus-allen", "Marcus Allen", "NFL", "RB", 1982, 1997, "A", "pro-football-hall-of-fame"),
   player("tony-dorsett", "Tony Dorsett", "NFL", "RB", 1977, 1988, "A", "pro-football-hall-of-fame"),
   player("deion-sanders", "Deion Sanders", "NFL", "DB", 1989, 2005, "A", "pro-football-hall-of-fame", "Florida State", ["Atlanta Falcons", "San Francisco 49ers", "Dallas Cowboys", "Washington", "Baltimore Ravens"]),
+
+  // Reviewed A-tier offensive-line identity windows and career paths.
+  player("nfl-alan-faneca", "Alan Faneca", "NFL", "OL", 1998, 2010, "A", "mvp-all-pro", undefined, ["Pittsburgh Steelers", "New York Jets", "Arizona Cardinals"]),
+  player("nfl-jason-kelce", "Jason Kelce", "NFL", "OL", 2011, 2023, "A", "mvp-all-pro", undefined, ["Philadelphia Eagles"]),
+  player("nfl-joe-thomas", "Joe Thomas", "NFL", "OL", 2007, 2017, "A", "mvp-all-pro", undefined, ["Cleveland Browns"]),
+  player("nfl-jonathan-ogden", "Jonathan Ogden", "NFL", "OL", 1996, 2007, "A", "mvp-all-pro", undefined, ["Baltimore Ravens"]),
+  player("nfl-kevin-mawae", "Kevin Mawae", "NFL", "OL", 1994, 2009, "A", "mvp-all-pro", undefined, ["Seattle Seahawks", "New York Jets", "Tennessee Titans"]),
+  player("nfl-marshal-yanda", "Marshal Yanda", "NFL", "OL", 2007, 2019, "A", "mvp-all-pro", undefined, ["Baltimore Ravens"]),
+  player("nfl-orlando-pace", "Orlando Pace", "NFL", "OL", 1997, 2009, "A", "mvp-all-pro", undefined, ["St. Louis Rams", "Chicago Bears"]),
+  player("nfl-steve-hutchinson", "Steve Hutchinson", "NFL", "OL", 2001, 2012, "A", "mvp-all-pro", undefined, ["Seattle Seahawks", "Minnesota Vikings", "Tennessee Titans"]),
+  player("nfl-tyron-smith", "Tyron Smith", "NFL", "OL", 2011, 2024, "A", "mvp-all-pro", undefined, ["Dallas Cowboys", "New York Jets"]),
+  historicalSubject({
+    id: "nfl-trent-williams",
+    name: "Trent Williams",
+    kind: "player-career",
+    league: "NFL",
+    position: "OL",
+    startSeason: 2010,
+    activeDecades: [2010, 2020],
+    franchises: ["Washington", "San Francisco 49ers"],
+    draftYear: 2010,
+    draftRound: 1,
+    draftPick: 4,
+    firstRoundPick: true,
+  }, "A"),
 
   player("nfl-paul-hornung", "Paul Hornung", "NFL", "RB", 1957, 1966, "A", "mvp-all-pro"),
   player("nfl-ya-tittle", "Y.A. Tittle", "NFL", "QB", 1948, 1964, "A", "mvp-all-pro"),
