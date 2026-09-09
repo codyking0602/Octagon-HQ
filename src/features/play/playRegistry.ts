@@ -475,11 +475,11 @@ export const playGameCatalog = [
 ] as const satisfies readonly PlayGameDefinition[];
 
 export const playGames: readonly PlayGameDefinition[] = playGameCatalog.filter(
-  (game) => game.sport === "ufc" && game.availability !== "preview",
+  (game) => game.sport === "ufc" && (!("availability" in game) || game.availability !== "preview"),
 );
 
 export function playGamesForSport(sport: PlaySport): readonly PlayGameDefinition[] {
-  return playGameCatalog.filter((game) => game.sport === sport && game.availability !== "preview");
+  return playGameCatalog.filter((game) => game.sport === sport && (!("availability" in game) || game.availability !== "preview"));
 }
 
 export function playGameKey(sport: PlaySport, gameId: PlayGameId): PlayGameKey {
