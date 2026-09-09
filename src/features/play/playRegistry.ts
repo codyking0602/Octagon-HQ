@@ -425,7 +425,7 @@ export const playGameCatalog = [
 ] as const satisfies readonly PlayGameDefinition[];
 
 export const playGames: readonly PlayGameDefinition[] = playGameCatalog.filter(
-  (game) => game.sport === "ufc",
+  (game) => game.sport === "ufc" && game.id !== "20-questions",
 );
 
 export function playGamesForSport(sport: PlaySport): readonly PlayGameDefinition[] {
