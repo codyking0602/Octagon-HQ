@@ -447,7 +447,7 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
     ],
   },
   {
-    subjectId: "nfl-lawrence-taylor",
+    subjectId: "lawrence-taylor",
     facts: [
       fact("unc-1980-breakout", "unc-senior-defensive-takeover", "In 1980 at North Carolina he set the school record with 16 sacks, added 22 tackles for loss, and helped an 11-1 team win the ACC championship.", ["identity-taylor-unc-patterson"], ["college", "breakthrough"]),
       fact("game-saving-plays", "unc-game-saving-moments", "North Carolina credits him with game-saving defensive plays against both Texas Tech and Clemson during that 1980 season.", ["identity-taylor-unc-patterson"], ["college", "iconic-moment"]),
