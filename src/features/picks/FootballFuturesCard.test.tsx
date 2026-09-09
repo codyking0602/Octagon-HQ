@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { EMPTY_FOOTBALL_FUTURES_PICKS } from "./footballFuturesDraft";
 import { FootballFuturesCard } from "./FootballFuturesCard";
@@ -57,6 +57,42 @@ describe("FootballFuturesCard", () => {
     expect(screen.getByRole("heading", { name: "Your season futures" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Pick the season before it starts" })).not.toBeInTheDocument();
     expect(screen.getByText("LOCKED · GROUP REVEALED")).toBeInTheDocument();
+  });
+
+  it("uses the same structured reveal for your locked futures and group futures", () => {
+    const lockedRuntime = runtime();
+    const revealedPicks = {
+      ...EMPTY_FOOTBALL_FUTURES_PICKS,
+      cfbPower4Champions: ["Texas Longhorns", "Oregon Ducks", "Houston Cougars", "Miami Hurricanes"],
+      cfbPlayoffTeams: ["Texas Longhorns", "Oregon Ducks", "Ohio State Buckeyes", "Miami Hurricanes"],
+      cfbSemifinalists: ["Texas Longhorns", "Oregon Ducks"],
+      cfbHeisman: "Darian Mensah",
+      cfbNationalChampion: "Texas Longhorns",
+      nflDivisionChampions: ["Dallas Cowboys", "Buffalo Bills"],
+      nflPlayoffTeams: ["Dallas Cowboys", "Buffalo Bills", "Los Angeles Rams"],
+      nflConferenceChampionshipTeams: ["Dallas Cowboys", "Buffalo Bills"],
+      nflMvp: "Justin Herbert",
+      nflSuperBowlChampion: "Los Angeles Rams",
+    };
+    lockedRuntime.footballFutures.locked = true;
+    lockedRuntime.footballFutures.ownPicks = revealedPicks;
+    lockedRuntime.footballFutures.groupPicks.push({
+      profileId: "shane",
+      displayName: "SHANE",
+      picks: revealedPicks,
+    } as never);
+    vi.mocked(usePicks).mockReturnValue(lockedRuntime as never);
+
+    const { container } = render(<FootballFuturesCard />);
+    const reveals = screen.getAllByTestId("revealed-football-futures");
+    const groupEntry = screen.getByText("SHANE").closest("details")!;
+
+    expect(reveals).toHaveLength(2);
+    expect(within(reveals[0]).getByText("SEC · Texas Longhorns")).toBeInTheDocument();
+    expect(within(groupEntry).getByText("SEC · Texas Longhorns")).toBeInTheDocument();
+    expect(reveals[0].querySelector('[data-selection-limit="12"]')).toBeInTheDocument();
+    expect(reveals[0].querySelector('[data-selection-limit="14"]')).toBeInTheDocument();
+    expect(container.querySelector(".football-futures-group-entry p")).not.toBeInTheDocument();
   });
 
   it("lets a pointer drag start without selecting, then autosaves the clicked conference-aware pick", async () => {
