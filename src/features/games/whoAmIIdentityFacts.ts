@@ -76,43 +76,6 @@ export interface WhoAmIIdentityFactBank {
 export const WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET = 15;
 export const WHO_AM_I_IDENTITY_FACT_PREFERRED_TARGET = 20;
 
-const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
-  "nfl-career-games",
-  "nfl-career-passing-yards",
-  "nfl-career-passing-touchdowns",
-  "nfl-career-rushing-yards",
-  "nfl-career-rushing-touchdowns",
-  "nfl-career-receptions",
-  "nfl-career-receiving-yards",
-  "nfl-career-receiving-touchdowns",
-  "nfl-career-sacks",
-  "nfl-career-interceptions",
-  "nfl-career-field-goals-made",
-  "nfl-career-punts",
-  "nfl-ap-mvp-awards",
-  "nfl-super-bowl-titles",
-  "nfl-defensive-player-of-year-awards",
-  "nfl-first-team-all-pros",
-  "nfl-coach-seasons-since-1999",
-  "nfl-coach-win-percentage-since-1999",
-  "nfl-coach-postseason-resume-since-1999",
-  "cfb-career-games",
-  "cfb-career-passing-yards",
-  "cfb-career-passing-touchdowns",
-  "cfb-career-rushing-yards",
-  "cfb-career-rushing-touchdowns",
-  "cfb-career-receptions",
-  "cfb-career-receiving-yards",
-  "cfb-career-receiving-touchdowns",
-  "cfb-career-defensive-interceptions",
-  "cfb-career-sacks",
-  "cfb-heisman-awards",
-  "cfb-coach-career-wins",
-  "cfb-coach-career-losses",
-  "cfb-coach-national-titles",
-  "cfb-coach-conference-titles",
-]);
-
 const recognizableUfcNames = new Set(ufcFactualLedgerSubjects.map((subject) => subject.name.toLowerCase()));
 
 function source(
@@ -249,7 +212,7 @@ export function ufcWhoAmIIdentityFactBank(subject: UfcFactualSubject): WhoAmIIde
 function footballMetricFamily(metricId: FootballFactMetricId): WhoAmIIdentityFactFamily {
   if (/postseason/.test(metricId)) return "postseason";
   if (/mvp|heisman|all-pro|player-of-year/.test(metricId)) return "awards";
-  if (/super-bowl|national-titles|conference-titles/.test(metricId)) return "championships";
+  if (/super-bowl|national-title|conference-title/.test(metricId)) return "championships";
   return "career-production";
 }
 
@@ -276,9 +239,7 @@ export function footballWhoAmIIdentityFactBank(subject: FootballSubjectProfile):
   if (subject.nationalChampion) facts.push(scalar("national-champion", "championships", true, registry));
 
   const factualRecord = getFootballFactualRecord(subject.id);
-  const metricFacts = (factualRecord?.facts ?? [])
-    .filter((fact) => FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId))
-    .filter((fact) => Number(fact.value) !== 0);
+  const metricFacts = (factualRecord?.facts ?? []).filter((fact) => Number(fact.value) !== 0);
   const hasHeismanMetric = metricFacts.some((fact) => fact.metricId === "cfb-heisman-awards");
   if (subject.heismanWinner && !hasHeismanMetric) facts.push(scalar("heisman", "awards", true, registry));
 
