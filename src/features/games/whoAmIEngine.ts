@@ -2,11 +2,14 @@ export type WhoAmISport = "ufc" | "football";
 export type WhoAmILeague = "UFC" | "NFL" | "CFB";
 export type WhoAmISubjectKind = "fighter" | "player" | "coach";
 export type WhoAmIClueBand = "broad" | "helpful" | "strong" | "giveaway";
+export type WhoAmIEraBand = "modern" | "legacy";
 
 export interface WhoAmISubject {
   id: string;
   name: string;
   kind: WhoAmISubjectKind;
+  eraBand?: WhoAmIEraBand;
+  rescueGroup?: string;
 }
 
 export interface WhoAmIClue {
@@ -37,6 +40,9 @@ export const WHO_AM_I_CLUE_LIMIT = 10;
 export const WHO_AM_I_CLUES_PER_REVEAL = 2;
 export const WHO_AM_I_WRONG_GUESS_PENALTY = 15;
 export const WHO_AM_I_WINDOW_SCORES = [100, 90, 80, 70, 60] as const;
+export const WHO_AM_I_RESCUE_SCORE = 30;
+export const WHO_AM_I_RESCUE_OPTION_COUNT = 4;
+export const WHO_AM_I_MODERN_ERA_SHARE = 0.75;
 
 const BAND_ORDER: readonly WhoAmIClueBand[] = ["broad", "helpful", "strong", "giveaway"];
 const BAND_TARGETS: Readonly<Record<WhoAmIClueBand, number>> = {
@@ -72,21 +78,67 @@ export function whoAmIProgressiveClues(clues: readonly WhoAmIClue[], random: () 
   return selected.slice(0, WHO_AM_I_CLUE_LIMIT);
 }
 
+function subject(candidate: WhoAmICandidate): WhoAmISubject {
+  const { id, name, kind, eraBand, rescueGroup } = candidate;
+  return { id, name, kind, ...(eraBand ? { eraBand } : {}), ...(rescueGroup ? { rescueGroup } : {}) };
+}
+
+function chooseEligibleCandidate(eligible: readonly WhoAmICandidate[], random: () => number) {
+  const modern = eligible.filter((candidate) => candidate.eraBand === "modern");
+  const legacy = eligible.filter((candidate) => candidate.eraBand === "legacy");
+
+  let pool = eligible;
+  if (modern.length && legacy.length) {
+    pool = random() < WHO_AM_I_MODERN_ERA_SHARE ? modern : legacy;
+  }
+
+  return pool[Math.floor(random() * pool.length)]!;
+}
+
 export function createWhoAmIRound(universe: WhoAmIUniverse, random: () => number = Math.random): WhoAmIRound {
   const eligible = universe.candidates.filter((candidate) => (
     whoAmIProgressiveClues(candidate.clues, () => 0.5).length >= WHO_AM_I_CLUE_LIMIT
   ));
   if (!eligible.length) throw new Error(`Who Am I has no eligible ${universe.league} subjects with ${WHO_AM_I_CLUE_LIMIT} clues.`);
-  const hidden = eligible[Math.floor(random() * eligible.length)]!;
+  const hidden = chooseEligibleCandidate(eligible, random);
   const clues = whoAmIProgressiveClues(hidden.clues, random);
   if (clues.length !== WHO_AM_I_CLUE_LIMIT) throw new Error(`Who Am I generated ${clues.length} clues; expected ${WHO_AM_I_CLUE_LIMIT}.`);
   return {
     sport: universe.sport,
     league: universe.league,
-    subjects: eligible.map(({ id, name, kind }) => ({ id, name, kind })),
-    hiddenSubject: { id: hidden.id, name: hidden.name, kind: hidden.kind },
+    subjects: eligible.map(subject),
+    hiddenSubject: subject(hidden),
     clues,
   };
+}
+
+export function whoAmIRescueChoices(round: WhoAmIRound, random: () => number = Math.random) {
+  const hidden = round.hiddenSubject;
+  const distractors = round.subjects.filter((candidate) => candidate.id !== hidden.id);
+  const picked: WhoAmISubject[] = [];
+  const seen = new Set<string>();
+
+  function take(pool: readonly WhoAmISubject[]) {
+    for (const candidate of shuffled(pool, random)) {
+      if (picked.length >= WHO_AM_I_RESCUE_OPTION_COUNT - 1) return;
+      if (seen.has(candidate.id)) continue;
+      seen.add(candidate.id);
+      picked.push(candidate);
+    }
+  }
+
+  if (hidden.rescueGroup) {
+    take(distractors.filter((candidate) => (
+      candidate.kind === hidden.kind
+      && candidate.eraBand === hidden.eraBand
+      && candidate.rescueGroup === hidden.rescueGroup
+    )));
+  }
+  take(distractors.filter((candidate) => candidate.kind === hidden.kind && candidate.eraBand === hidden.eraBand));
+  take(distractors.filter((candidate) => candidate.kind === hidden.kind));
+  take(distractors);
+
+  return shuffled([hidden, ...picked], random);
 }
 
 export function whoAmIBaseScore(revealedClueCount: number) {
