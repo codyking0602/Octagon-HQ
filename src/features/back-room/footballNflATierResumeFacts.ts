@@ -100,6 +100,14 @@ export const footballNflATierResumeFactualRecords: readonly FootballFactualRecor
     ["nfl-career-games", 181],
     ["nfl-defensive-player-of-year-awards", 2],
   ]),
+  record("nfl-dick-butkus", "pfr-defensive-career", [
+    ["nfl-career-games", 119],
+    ["nfl-career-interceptions", 22],
+    ["nfl-first-team-all-pros", 5],
+  ]),
+  record("deion-sanders", "pfr-defensive-career", [
+    ["nfl-career-games", 188],
+  ]),
   record("nfl-dick-night-train-lane", "pfr-defensive-career", [
     ["nfl-career-games", 157],
     ["nfl-first-team-all-pros", 3],
