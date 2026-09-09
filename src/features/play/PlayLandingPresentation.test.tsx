@@ -21,34 +21,40 @@ describe("Play landing presentation", () => {
       "blind-resume",
       "hit-the-number",
       "20-questions",
+      "who-am-i",
     ]);
     expect(PLAY_LANDING_FOOTBALL_GAME_ORDER).toEqual([
       "find-leader",
       "wavelength",
       "hit-the-number",
       "20-questions",
+      "who-am-i",
     ]);
     expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]);
     expect(playLandingGameIds("football")).toEqual(PLAY_LANDING_FOOTBALL_GAME_ORDER);
   });
 
-  it("hides 20 Questions from public UFC and Football game libraries", () => {
+  it("hides owner-preview identity games from public UFC and Football libraries", () => {
     const navigate = vi.fn();
     const { rerender } = render(<PlayLandingGameLibrary sport="ufc" onNavigate={navigate} />);
     expect(screen.queryByRole("button", { name: /20 questions/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /who am i/i })).not.toBeInTheDocument();
 
     rerender(<PlayLandingGameLibrary sport="football" onNavigate={navigate} />);
     expect(screen.queryByRole("button", { name: /20 questions/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /who am i/i })).not.toBeInTheDocument();
   });
 
-  it("keeps 20 Questions visible to the owner in both UFC and Football", () => {
+  it("keeps 20 Questions and Who Am I visible to the owner in both sports", () => {
     const navigate = vi.fn();
     const { rerender } = render(<PlayLandingGameLibrary sport="ufc" onNavigate={navigate} ownerAccess />);
     expect(screen.getByRole("button", { name: /20 questions/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /who am i/i })).toBeInTheDocument();
+    expect(screen.getByText("OWNER PREVIEW")).toBeInTheDocument();
 
     rerender(<PlayLandingGameLibrary sport="football" onNavigate={navigate} ownerAccess />);
-    fireEvent.click(screen.getByRole("button", { name: /20 questions/i }));
-    expect(navigate).toHaveBeenCalledWith("/football/20-questions");
+    fireEvent.click(screen.getByRole("button", { name: /who am i/i }));
+    expect(navigate).toHaveBeenCalledWith("/football/who-am-i");
   });
 
   it("keeps Daily-only games out of normal Football Play", () => {
@@ -58,7 +64,6 @@ describe("Play landing presentation", () => {
     expect(screen.queryByRole("button", { name: /keep 4, cut 4/i })).not.toBeInTheDocument();
     expect(screen.queryByText("TEMP CASUAL")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /blind resume/i })).not.toBeInTheDocument();
-    expect(screen.queryByText(/Who Am I/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Draft Room/i)).not.toBeInTheDocument();
   });
 
@@ -72,13 +77,15 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/play/find-leader?mode=replayable");
   });
 
-  it("routes owner UFC 20 Questions through the UFC Play owner", () => {
+  it("routes owner identity previews through their canonical sport routes", () => {
     expect(playGameDefinition("20-questions", "ufc").route).toBe("/play/20-questions");
     expect(playGameDefinition("20-questions", "football").route).toBe("/football/20-questions");
+    expect(playGameDefinition("who-am-i", "ufc").route).toBe("/play/who-am-i");
+    expect(playGameDefinition("who-am-i", "football").route).toBe("/football/who-am-i");
     const navigate = vi.fn();
     render(<PlayLandingGameLibrary sport="ufc" onNavigate={navigate} ownerAccess />);
-    fireEvent.click(screen.getByRole("button", { name: /20 questions/i }));
-    expect(navigate).toHaveBeenCalledWith("/play/20-questions");
+    fireEvent.click(screen.getByRole("button", { name: /who am i/i }));
+    expect(navigate).toHaveBeenCalledWith("/play/who-am-i");
   });
 
   it("uses the compact shared header without repeating sport context", () => {
