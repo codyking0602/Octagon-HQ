@@ -76,11 +76,11 @@ describe("FootballFuturesCard", () => {
     };
     lockedRuntime.footballFutures.locked = true;
     lockedRuntime.footballFutures.ownPicks = revealedPicks;
-    lockedRuntime.footballFutures.groupPicks = [{
+    lockedRuntime.footballFutures.groupPicks.push({
       profileId: "shane",
       displayName: "SHANE",
       picks: revealedPicks,
-    }];
+    } as never);
     vi.mocked(usePicks).mockReturnValue(lockedRuntime as never);
 
     const { container } = render(<FootballFuturesCard />);
