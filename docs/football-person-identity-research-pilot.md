@@ -13,7 +13,7 @@ The pre-existing Who Am I structured/resume fact bank remains unchanged. The foc
 | Patrick Mahomes | QB | 7 |
 | Barry Sanders | RB | 7 |
 | Jerry Rice | WR | 7 |
-| Rob Gronkowski | TE | 7 |
+| Tony Gonzalez | TE | 7 |
 | Jason Kelce | OL | 7 |
 | Aaron Donald | DL | 6 |
 | Lawrence Taylor | LB | 4 |
@@ -73,21 +73,21 @@ Distinctive researched identity facts: 7
 
 Provenance summary: Pro Football Hall of Fame draft history, NFL.com, San Francisco 49ers, United Press International archival reporting.
 
-## Rob Gronkowski
+## Tony Gonzalez
 
 Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
 
 Distinctive researched identity facts: 7
 
-1. He grew up in suburban Buffalo and played his first three high-school years in New York before moving to Pennsylvania for his senior year.
-2. He was a standout high-school basketball center who averaged 21 points and 18 rebounds in 2006.
-3. Before becoming known solely as a tight end, he also played high-school defense and recorded 73 tackles and six sacks as a junior.
-4. His brother Chris was already at Arizona as a reserve utility player on the baseball team when Rob arrived.
-5. A back injury and surgery kept him out for the entire 2009 Arizona season before he entered the 2010 NFL Draft.
-6. In a college assignment about his dream job, he wrote that he wanted to play pro football in Tampa Bay, with the sunny weather as his top reason; years later he joined the Buccaneers.
-7. He won WWE's 24/7 Championship at WrestleMania 36 and held it for 57 days in 2020.
+1. At Huntington Beach High School he lettered in football, basketball, and baseball.
+2. As a high-school senior he was a first-team All-American at both tight end and linebacker.
+3. In 1994 he shared Orange County High School Athlete of the Year honors with golfer Tiger Woods.
+4. California recruited him to play both basketball and football rather than forcing him to choose one sport before college.
+5. He played in 82 basketball games for Cal and started 16 of them while also building his football career.
+6. During Cal's 1997 NCAA Tournament run to the Sweet 16, he scored 23 points in the second-round win over Villanova.
+7. His football identity included a basketball crossover: he became known for slam-dunking the ball over the goalpost after touchdowns.
 
-Provenance summary: Arizona Athletics player biography and draft coverage, NFL.com retirement retrospective, WWE official title history.
+Provenance summary: Kansas City Chiefs retirement retrospective, California Athletics Hall of Fame, Pro Football Hall of Fame draft spotlight.
 
 ## Jason Kelce
 
