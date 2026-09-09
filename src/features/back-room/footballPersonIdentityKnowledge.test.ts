@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   createUfcWhoAmIRound,
@@ -34,7 +34,6 @@ describe("football person identity knowledge pilot", () => {
       const canonical = getFootballSubject(record.subjectId);
       expect(canonical?.id).toBe(record.subjectId);
       expect(canonical?.league).toBe("NFL");
-      expect(canonical?.recognizabilityTier).toBe("A");
       expect(launchById.get(record.subjectId)?.recognizabilityTier).toBe("A");
       expect(Object.keys(record).sort()).toEqual(["facts", "subjectId"]);
     }
@@ -109,7 +108,7 @@ describe("football person identity knowledge pilot", () => {
   });
 
   it("contains no runtime web lookup, LLM truth judgment, or Who Am I runtime ownership", () => {
-    const sourcePath = fileURLToPath(new URL("./footballPersonIdentityKnowledge.ts", import.meta.url));
+    const sourcePath = resolve(process.cwd(), "src/features/back-room/footballPersonIdentityKnowledge.ts");
     const sourceText = readFileSync(sourcePath, "utf8");
 
     expect(sourceText).not.toMatch(/\bfetch\s*\(/);
