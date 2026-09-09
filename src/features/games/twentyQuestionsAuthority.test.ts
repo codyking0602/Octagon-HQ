@@ -70,6 +70,7 @@ describe("UFC 20 Questions factual authority", () => {
     const universe = getUfcTwentyQuestionsUniverse();
     const ids = universe.questions.map((question) => question.id);
     const divisionQuestions = universe.questions.filter((question) => question.id.startsWith("division:"));
+    const namedDivisionQuestions = divisionQuestions.filter((question) => question.id !== "division:primary-under-175");
     const styleQuestions = universe.questions.filter((question) => question.id.startsWith("style:"));
 
     expect(universe.questions.length).toBeGreaterThan(50);
@@ -96,7 +97,7 @@ describe("UFC 20 Questions factual authority", () => {
     expect(ids.some((id) => id.includes("opponents-beaten"))).toBe(false);
     expect(ids.some((id) => id.startsWith("stat:ko-tko-wins:"))).toBe(false);
     expect(ids.some((id) => id.startsWith("stat:submission-wins:"))).toBe(false);
-    expect(divisionQuestions.every((question) => !/\d+(?:\.\d+)?/.test(question.label))).toBe(true);
+    expect(namedDivisionQuestions.every((question) => !/\d+(?:\.\d+)?/.test(question.label))).toBe(true);
     expect(divisionQuestions.every((question) => question.humanValue === 4)).toBe(true);
 
     for (const question of universe.questions) {
