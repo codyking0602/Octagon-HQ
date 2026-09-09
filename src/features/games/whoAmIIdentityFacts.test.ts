@@ -94,6 +94,25 @@ describe("Who Am I canonical identity facts", () => {
     expect(footballBanks.some((bank) => bank.facts.length < WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET)).toBe(true);
   });
 
+  it("reuses the canonical NFL affiliation owner for modern A-tier linemen without enriching B-tier subjects", () => {
+    const nflLaunchPool = getFootballWhoAmILaunchPool("NFL");
+    for (const subjectId of ["nfl-jason-kelce", "nfl-joe-thomas"] as const) {
+      const subject = nflLaunchPool.subjects.find((candidate) => candidate.id === subjectId)!;
+      expect(subject.recognizabilityTier).toBe("A");
+      const bank = footballWhoAmIIdentityFactBank(subject);
+      expect(bank.facts.some((fact) => (
+        fact.family === "career-path" && fact.source.owner === "football-career-affiliation"
+      ))).toBe(true);
+      expect(bank.facts.some((fact) => fact.id === "metric:nfl-career-games")).toBe(true);
+      expect(bank.facts.some((fact) => fact.id === "metric:nfl-first-team-all-pros")).toBe(true);
+    }
+
+    const bTierSubject = nflLaunchPool.subjects.find((subject) => subject.recognizabilityTier === "B")!;
+    const bTierBank = footballWhoAmIIdentityFactBank(bTierSubject);
+    expect(bTierBank.facts.some((fact) => fact.id === "career-span-seasons")).toBe(false);
+    expect(bTierBank.facts.some((fact) => fact.id === "draft-selection-band")).toBe(false);
+  });
+
   it("audits NFL A-tier launch depth from canonical owners without a duplicated subject list", () => {
     const nflLaunchPool = getFootballWhoAmILaunchPool("NFL");
     const auditedSubjects = nflLaunchPool.subjects.filter((subject) => subject.recognizabilityTier === "A");
