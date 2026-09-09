@@ -2,15 +2,17 @@ import { useMemo, useState } from "react";
 import {
   WHO_AM_I_CLUE_LIMIT,
   WHO_AM_I_CLUES_PER_REVEAL,
+  WHO_AM_I_RESCUE_SCORE,
   WHO_AM_I_WRONG_GUESS_PENALTY,
+  whoAmIRescueChoices,
   whoAmIScore,
   type WhoAmIRound,
   type WhoAmISport,
   type WhoAmISubject,
 } from "../games/whoAmIEngine";
 
-type Phase = "start" | "playing" | "result";
-type ResultState = "correct" | "incorrect" | "forfeit";
+type Phase = "start" | "playing" | "rescue" | "result";
+type ResultState = "correct" | "rescued" | "incorrect" | "forfeit";
 
 function normalized(value: string) {
   return value.trim().toLowerCase();
@@ -32,6 +34,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
   const [selectedGuess, setSelectedGuess] = useState<WhoAmISubject | null>(null);
   const [guessNotice, setGuessNotice] = useState<string | null>(null);
   const [rejectedSubjectIds, setRejectedSubjectIds] = useState<Set<string>>(() => new Set());
+  const [rescueChoices, setRescueChoices] = useState<readonly WhoAmISubject[]>([]);
   const [reviewCluesOpen, setReviewCluesOpen] = useState(false);
 
   const football = sport === "football";
@@ -58,6 +61,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
     setSelectedGuess(null);
     setGuessNotice(null);
     setRejectedSubjectIds(new Set());
+    setRescueChoices([]);
     setReviewCluesOpen(false);
   }
 
@@ -73,6 +77,14 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
     }
   }
 
+  function openRescue() {
+    setRescueChoices(whoAmIRescueChoices(round));
+    setSelectedGuess(null);
+    setGuessOpen(false);
+    setGuessNotice(null);
+    setPhase("rescue");
+  }
+
   function submitGuess() {
     if (phase !== "playing" || !selectedGuess) return;
     if (selectedGuess.id === round.hiddenSubject.id) {
@@ -85,10 +97,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
 
     if (finalGuessRequired) {
       setWrongGuesses((current) => current + 1);
-      setResultState("incorrect");
-      setPhase("result");
-      setGuessOpen(false);
-      setGuessNotice(null);
+      openRescue();
       return;
     }
 
@@ -99,13 +108,27 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
     setSelectedGuess(null);
   }
 
+  function submitRescueGuess(subject: WhoAmISubject) {
+    if (phase !== "rescue") return;
+    setResultState(subject.id === round.hiddenSubject.id ? "rescued" : "incorrect");
+    setPhase("result");
+  }
+
   function forfeitRound() {
+    if (finalGuessRequired) {
+      openRescue();
+      return;
+    }
     setResultState("forfeit");
     setPhase("result");
     setGuessOpen(false);
   }
 
-  const finalScore = resultState === "correct" ? whoAmIScore(revealedCount, wrongGuesses) : 0;
+  const finalScore = resultState === "correct"
+    ? whoAmIScore(revealedCount, wrongGuesses)
+    : resultState === "rescued"
+      ? WHO_AM_I_RESCUE_SCORE
+      : 0;
 
   return (
     <main className="page twenty-questions-page who-am-i-page" data-sport={sport}>
@@ -130,7 +153,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
             <div className="twenty-questions-rules" aria-label="Who Am I scoring rules">
               <span><strong>10</strong> clues max</span>
               <span><strong>5</strong> guess windows</span>
-              <span><strong>−{WHO_AM_I_WRONG_GUESS_PENALTY}</strong> wrong guess</span>
+              <span><strong>{WHO_AM_I_RESCUE_SCORE}</strong> rescue pts</span>
             </div>
             {football ? <p className="twenty-questions-disclosure">League is locked and revealed before the first clue.</p> : null}
             <button className="twenty-questions-primary" type="button" onClick={() => setPhase("playing")}>START ROUND</button>
@@ -169,7 +192,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
               {!finalGuessRequired ? (
                 <button className="twenty-questions-primary" type="button" onClick={revealMore}>REVEAL 2 MORE CLUES</button>
               ) : (
-                <p className="twenty-questions-final-guess-copy">All 10 clues are out. Make your final guess.</p>
+                <p className="twenty-questions-final-guess-copy">All 10 clues are out. Guess now, or use the four-choice rescue for {WHO_AM_I_RESCUE_SCORE} points.</p>
               )}
             </section>
 
@@ -180,7 +203,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
                     <p className="eyebrow">{finalGuessRequired ? "FINAL GUESS" : "GUESS ANYTIME"}</p>
                     <h2>Who am I?</h2>
                   </div>
-                  <span>{finalGuessRequired ? "One guess left" : `Wrong guess −${WHO_AM_I_WRONG_GUESS_PENALTY} pts`}</span>
+                  <span>{finalGuessRequired ? "60 pts" : `Wrong guess −${WHO_AM_I_WRONG_GUESS_PENALTY} pts`}</span>
                 </div>
                 <input
                   value={guessSearch}
@@ -211,21 +234,46 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
                   <button className="twenty-questions-primary" type="button" onClick={submitGuess}>GUESS {selectedGuess.name.toUpperCase()}</button>
                 ) : null}
                 {guessNotice ? <p className="twenty-questions-wrong-guess" role="status">{guessNotice}</p> : null}
-                <button className="twenty-questions-more" type="button" onClick={forfeitRound}>FORFEIT / REVEAL ANSWER</button>
+                <button className="twenty-questions-more" type="button" onClick={forfeitRound}>
+                  {finalGuessRequired ? `SHOW 4 CHOICES — ${WHO_AM_I_RESCUE_SCORE} PTS` : "FORFEIT / REVEAL ANSWER"}
+                </button>
               </section>
             ) : null}
           </>
         ) : null}
 
+        {phase === "rescue" ? (
+          <section className="twenty-questions-guess is-final" aria-label="Who Am I rescue choice">
+            <div className="twenty-questions-section-heading">
+              <div>
+                <p className="eyebrow">ONE LAST SHOT</p>
+                <h2>Pick the answer</h2>
+              </div>
+              <span>{WHO_AM_I_RESCUE_SCORE} pts</span>
+            </div>
+            <p className="twenty-questions-final-guess-copy">One of these four is the hidden identity. Choose carefully.</p>
+            <div className="twenty-questions-guess-list">
+              {rescueChoices.map((subject) => (
+                <button type="button" key={subject.id} onClick={() => submitRescueGuess(subject)}>
+                  <strong>{subject.name}</strong>
+                  <small>{subject.kind === "coach" ? "Head coach" : subject.kind === "fighter" ? "Fighter" : "Player"}</small>
+                </button>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
         {phase === "result" ? (
           <section className="twenty-questions-result">
-            <p className="eyebrow">{resultState === "correct" ? "SOLVED" : resultState === "forfeit" ? "FORFEITED" : "NOT SOLVED"}</p>
+            <p className="eyebrow">{resultState === "correct" ? "SOLVED" : resultState === "rescued" ? "RESCUED" : resultState === "forfeit" ? "FORFEITED" : "NOT SOLVED"}</p>
             <h2>{round.hiddenSubject.name}</h2>
             <p>{resultState === "correct"
               ? `You recognized the hidden ${round.hiddenSubject.kind}.`
-              : resultState === "forfeit"
-                ? "You revealed the hidden identity."
-                : "Your final guess missed. This was the hidden identity."}</p>
+              : resultState === "rescued"
+                ? `You found the hidden ${round.hiddenSubject.kind} on the rescue board.`
+                : resultState === "forfeit"
+                  ? "You revealed the hidden identity."
+                  : "Your last shot missed. This was the hidden identity."}</p>
             <div className="twenty-questions-result__score-block">
               <div className="twenty-questions-result__score">{finalScore}</div>
               <small>FINAL SCORE</small>
