@@ -94,15 +94,16 @@ describe("Who Am I canonical identity facts", () => {
     expect(footballBanks.some((bank) => bank.facts.length < WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET)).toBe(true);
   });
 
-  it("reuses the canonical NFL affiliation owner for modern A-tier linemen without enriching B-tier subjects", () => {
+  it("reuses canonical NFL identity and factual owners for modern A-tier linemen without enriching B-tier subjects", () => {
     const nflLaunchPool = getFootballWhoAmILaunchPool("NFL");
     for (const subjectId of ["nfl-jason-kelce", "nfl-joe-thomas"] as const) {
       const subject = nflLaunchPool.subjects.find((candidate) => candidate.id === subjectId)!;
       expect(subject.recognizabilityTier).toBe("A");
       const bank = footballWhoAmIIdentityFactBank(subject);
       expect(bank.facts.some((fact) => (
-        fact.family === "career-path" && fact.source.owner === "football-career-affiliation"
+        fact.family === "career-path" && fact.source.owner === "football-subject-registry"
       ))).toBe(true);
+      expect(bank.facts.some((fact) => fact.id === "career-window" && fact.source.owner === "football-subject-registry")).toBe(true);
       expect(bank.facts.some((fact) => fact.id === "metric:nfl-career-games")).toBe(true);
       expect(bank.facts.some((fact) => fact.id === "metric:nfl-first-team-all-pros")).toBe(true);
     }
@@ -111,6 +112,15 @@ describe("Who Am I canonical identity facts", () => {
     const bTierBank = footballWhoAmIIdentityFactBank(bTierSubject);
     expect(bTierBank.facts.some((fact) => fact.id === "career-span-seasons")).toBe(false);
     expect(bTierBank.facts.some((fact) => fact.id === "draft-selection-band")).toBe(false);
+  });
+
+  it("does not turn the active Trent Williams source boundary into a retirement date", () => {
+    const subject = getFootballWhoAmILaunchPool("NFL").subjects.find((candidate) => candidate.id === "nfl-trent-williams")!;
+    const bank = footballWhoAmIIdentityFactBank(subject);
+
+    expect(subject.endSeason).toBeUndefined();
+    expect(bank.facts.some((fact) => fact.id === "career-end-season")).toBe(false);
+    expect(bank.facts.some((fact) => fact.id === "career-start-season")).toBe(true);
   });
 
   it("audits NFL A-tier launch depth from canonical owners without a duplicated subject list", () => {
