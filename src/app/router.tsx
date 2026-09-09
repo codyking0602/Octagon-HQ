@@ -35,6 +35,8 @@ const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
 const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"));
 const UfcTwentyQuestionsPage = lazy(() => import("../features/play/UfcTwentyQuestionsPage"));
 const FootballTwentyQuestionsPage = lazy(() => import("../features/play/FootballTwentyQuestionsPage"));
+const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
+const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
@@ -66,6 +68,10 @@ export const appRoutes: RouteObject[] = [
         path: "play/20-questions",
         element: <OwnerOnlyRoute fallback="/play"><UfcTwentyQuestionsPage /></OwnerOnlyRoute>,
       },
+      {
+        path: "play/who-am-i",
+        element: <OwnerOnlyRoute fallback="/play"><UfcWhoAmIPage /></OwnerOnlyRoute>,
+      },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
@@ -85,6 +91,10 @@ export const appRoutes: RouteObject[] = [
       {
         path: "football/20-questions",
         element: <OwnerOnlyRoute fallback="/football"><FootballTwentyQuestionsPage /></OwnerOnlyRoute>,
+      },
+      {
+        path: "football/who-am-i",
+        element: <OwnerOnlyRoute fallback="/football"><FootballWhoAmIPage /></OwnerOnlyRoute>,
       },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlCenterPage /> },

@@ -11,7 +11,8 @@ export type PlayGameId =
   | "better-than"
   | "auction"
   | "hit-the-number"
-  | "20-questions";
+  | "20-questions"
+  | "who-am-i";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
 
@@ -42,7 +43,8 @@ export type PlayCompletionState =
   | "claim-locked"
   | "auction-complete"
   | "target-selection-locked"
-  | "identity-guessed-or-question-limit";
+  | "identity-guessed-or-question-limit"
+  | "identity-guessed-or-clue-limit";
 
 export interface PlayGameLineupDefinition {
   defaultType: PlayLineupType;
@@ -144,6 +146,30 @@ export const playGameCatalog = [
       reminderEligible: false,
       historyRecording: "casual-only",
       difficultyModel: "One hidden canonical UFC factual-ledger fighter, up to 10 deterministic Yes/No questions with static whole-universe score impacts, and guess-anytime identity search.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "who-am-i",
+    route: "/play/who-am-i",
+    icon: "?",
+    title: "Who Am I?",
+    description: "Identify the hidden UFC fighter as two clues at a time move from broad to near-giveaway.",
+    availability: "preview",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
+      lineupSize: 1,
+      completionState: "identity-guessed-or-clue-limit",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "One hidden canonical UFC factual-ledger fighter with 10 source-derived clues revealed two at a time across progressively stronger clue bands.",
     },
   },
   {
@@ -401,6 +427,30 @@ export const playGameCatalog = [
   },
   {
     sport: "football",
+    id: "who-am-i",
+    route: "/football/who-am-i",
+    icon: "?",
+    title: "Who Am I?",
+    description: "Get NFL or CFB up front, then identify the hidden player or head coach from progressively stronger clue pairs.",
+    availability: "preview",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 1,
+      completionState: "identity-guessed-or-clue-limit",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "A disclosed NFL/CFB universe with one canonical player or head coach and 10 source-derived clues revealed two at a time across progressively stronger clue bands.",
+    },
+  },
+  {
+    sport: "football",
     id: "find-leader",
     route: "/football/find-leader",
     icon: "#1",
@@ -425,11 +475,11 @@ export const playGameCatalog = [
 ] as const satisfies readonly PlayGameDefinition[];
 
 export const playGames: readonly PlayGameDefinition[] = playGameCatalog.filter(
-  (game) => game.sport === "ufc",
+  (game) => game.sport === "ufc" && (!("availability" in game) || game.availability !== "preview"),
 );
 
 export function playGamesForSport(sport: PlaySport): readonly PlayGameDefinition[] {
-  return playGameCatalog.filter((game) => game.sport === sport);
+  return playGameCatalog.filter((game) => game.sport === sport && (!("availability" in game) || game.availability !== "preview"));
 }
 
 export function playGameKey(sport: PlaySport, gameId: PlayGameId): PlayGameKey {

@@ -7,6 +7,7 @@ export const PLAY_LANDING_COMMON_GAME_ORDER = [
   "blind-resume",
   "hit-the-number",
   "20-questions",
+  "who-am-i",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
@@ -14,9 +15,12 @@ export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
   "wavelength",
   "hit-the-number",
   "20-questions",
+  "who-am-i",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies PlayGameId;
+
+const OWNER_ONLY_GAME_IDS = new Set<PlayGameId>(["20-questions", "who-am-i"]);
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
   return sport === "ufc"
@@ -54,7 +58,7 @@ export function PlayLandingGameLibrary({
   footer,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
-    .filter((gameId) => ownerAccess || gameId !== "20-questions")
+    .filter((gameId) => ownerAccess || !OWNER_ONLY_GAME_IDS.has(gameId))
     .map((gameId) => playGameDefinition(gameId, sport));
 
   return (
@@ -80,7 +84,7 @@ export function PlayLandingGameLibrary({
             >
               <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
               <span className="play-landing-game-card__status">
-                {strategic ? "STRATEGY" : "PLAY NOW"}
+                {game.availability === "preview" ? "OWNER PREVIEW" : strategic ? "STRATEGY" : "PLAY NOW"}
               </span>
               <strong>{game.title}</strong>
               <small>{game.description}</small>
