@@ -13,7 +13,7 @@ The pre-existing Who Am I structured/resume fact bank remains unchanged. The foc
 | Patrick Mahomes | QB | 7 |
 | Barry Sanders | RB | 7 |
 | Jerry Rice | WR | 7 |
-| Tony Gonzalez | TE | 7 |
+| Bill Belichick | Head coach | 7 |
 | Jason Kelce | OL | 7 |
 | Aaron Donald | DL | 6 |
 | Lawrence Taylor | LB | 4 |
@@ -73,21 +73,21 @@ Distinctive researched identity facts: 7
 
 Provenance summary: Pro Football Hall of Fame draft history, NFL.com, San Francisco 49ers, United Press International archival reporting.
 
-## Tony Gonzalez
+## Bill Belichick
 
 Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
 
 Distinctive researched identity facts: 7
 
-1. At Huntington Beach High School he lettered in football, basketball, and baseball.
-2. As a high-school senior he was a first-team All-American at both tight end and linebacker.
-3. In 1994 he shared Orange County High School Athlete of the Year honors with golfer Tiger Woods.
-4. California recruited him to play both basketball and football rather than forcing him to choose one sport before college.
-5. He played in 82 basketball games for Cal and started 16 of them while also building his football career.
-6. During Cal's 1997 NCAA Tournament run to the Sweet 16, he scored 23 points in the second-round win over Villanova.
-7. His football identity included a basketball crossover: he became known for slam-dunking the ball over the goalpost after touchdowns.
+1. His father, Steve Belichick, spent more than three decades coaching and scouting at the U.S. Naval Academy.
+2. He learned to break down film from his father and remembers questioning him on the ride home from college football games about how he organized every substitution, penalty, and formation.
+3. His father's 1962 book *Football Scouting Methods* became an influential part of the family's football identity and reflected the detailed scouting system Bill grew up around.
+4. Growing up in Annapolis, football was not his favorite sport; he preferred lacrosse.
+5. At Wesleyan he lettered in football, lacrosse, and squash and captained the lacrosse team.
+6. He majored in economics at Wesleyan.
+7. His NFL career began with the 1975 Baltimore Colts at the lowest level of the staff: he initially worked for nothing, then was paid $25 a week after a few weeks of training camp.
 
-Provenance summary: Kansas City Chiefs retirement retrospective, California Athletics Hall of Fame, Pro Football Hall of Fame draft spotlight.
+Provenance summary: NFL.com scouting and Annapolis features; New England Patriots first-party press transcript; Wesleyan University Athletics and alumni records.
 
 ## Jason Kelce
 
