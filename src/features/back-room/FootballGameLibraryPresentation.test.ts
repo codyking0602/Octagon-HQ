@@ -15,7 +15,9 @@ describe("Football HQ game library presentation", () => {
       "wavelength",
       "hit-the-number",
       "20-questions",
+      "who-am-i",
     ]);
+    expect(playGameDefinition("who-am-i", "football").availability).toBe("preview");
     expect(new Set(games.map((game) => game.icon)).size).toBe(games.length);
     expect(games.every((game) => game.route.startsWith("/football/"))).toBe(true);
   });
