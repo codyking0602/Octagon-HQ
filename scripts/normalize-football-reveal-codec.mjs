@@ -1,3 +1,6 @@
+import { readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+
 const AVC_CONFIG_BOX = Buffer.from("avcC", "ascii");
 const MOBILE_H264_LEVEL_IDC = 31;
 const BROKEN_ZEKE_LEVEL_IDC = 62;
@@ -53,4 +56,19 @@ export function normalizeFootballRevealH264Level(source) {
   output[metadata.configLevelOffset] = MOBILE_H264_LEVEL_IDC;
   output[metadata.spsLevelOffset] = MOBILE_H264_LEVEL_IDC;
   return output;
+}
+
+export async function normalizeBuiltFootballReveal({ dist = "dist" } = {}) {
+  const revealPath = join(dist, "assets", "football", "football-picks-reveal.mp4");
+  const source = await readFile(revealPath);
+  const normalized = normalizeFootballRevealH264Level(source);
+  if (!source.equals(normalized)) await writeFile(revealPath, normalized);
+  return readH264AvcLevelIdc(normalized);
+}
+
+if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+  const levels = await normalizeBuiltFootballReveal();
+  console.log(
+    `Football Picks reveal normalized to H.264 levels ${levels.configLevelIdc}/${levels.spsLevelIdc}.`,
+  );
 }
