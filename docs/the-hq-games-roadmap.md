@@ -2,7 +2,7 @@
 
 **Status:** Sole canonical product and implementation roadmap for UFC + Football Games  
 **Created:** September 3, 2026  
-**Updated:** September 7, 2026  
+**Updated:** September 9, 2026  
 **Scope:** Play landing pages, shared game presentation, UFC games, Football games, Today's Challenge, 20 Questions, Who Am I, Auction, Draft Room, game-source ownership, and Games release readiness.
 
 > **Cross-chat rule:** Read this document before changing UFC Play, Football Play, any shared game mechanic, Today's Challenge, Auction, Draft Room, Blind Rank 5, Keep 4 / Cut 4, 20 Questions, Who Am I, or the data/ranking sources consumed by Games.
@@ -15,7 +15,7 @@
 
 ## 1. Current roadmap position
 
-PRs 1 through 8 are complete.
+PRs 1 through 8 are complete. PR 9 produced an owner-only 20 Questions prototype and is intentionally parked for fresh-eyes iteration later rather than being treated as a public-ready game.
 
 Completed roadmap sequence:
 
@@ -30,7 +30,11 @@ Completed roadmap sequence:
 
 ### NEXT
 
-**PR 9 — 20 Questions.**
+**PR 10 — Who Am I? owner-only preview.**
+
+20 Questions remains owner-only and parked. Do not broaden its access or restart its factual-readiness work unless Cody explicitly chooses to return to it.
+
+Who Am I must remain owner-only throughout development. It stays absent from public Play discovery, Today's Challenge, Daily rotation, challenges, streaks, and reminders until Cody explicitly approves opening it up.
 
 Do not reopen an earlier completed mechanic unless a new defect or product decision requires it.
 
@@ -74,6 +78,8 @@ Never create a second factual owner, comparison owner, route owner, challenge ow
 5. Who Am I?
 6. Draft Room
 
+The lists above remain the intended mature product. During the current preview phase, 20 Questions and Who Am I are owner-only and must not appear in public Play libraries.
+
 ### Daily-only mechanics
 
 - Football Blind Resume
@@ -103,8 +109,8 @@ Daily-capable families are:
 - Football Blind Resume under its Football-specific three-round contract
 - Hit the Number
 - Daily Double: Blind Rank 5 + Keep 4 / Cut 4
-- 20 Questions only after fairness/score-distribution proof
-- Who Am I only after fairness/score-distribution proof
+- 20 Questions only after fairness/score-distribution proof and explicit approval to resume/publicly release it
+- Who Am I only after fairness/score-distribution proof and explicit approval to leave owner-only preview
 
 Auction, Draft Room, and Better Than do not enter Today's Challenge.
 
@@ -286,6 +292,8 @@ Never show remaining candidate count, candidate lists, eliminated candidates, pr
 
 UFC and Football should look and behave like the same game. Sport context changes the factual universe and accent treatment, not the core game shell, scoring presentation, question interaction, guess flow, or result hierarchy.
 
+**Current release state:** owner-only prototype, intentionally parked as of September 9, 2026. Preserve the current work, but do not broaden access or resume expansion until an explicit product decision does so.
+
 ### Who Am I?
 
 Normal replayable game for UFC and Football.
@@ -300,6 +308,8 @@ Preferred first contract:
 - earlier correct guesses score better;
 - wrong guesses carry a meaningful penalty;
 - clues derive from canonical identity/factual evidence.
+
+During development, Who Am I is an **owner-only preview**. Direct routes and Play-library discovery must both enforce owner access. Public users must not see the game, and Who Am I must not enter Today's Challenge or any competitive/persistence surface until Cody explicitly approves release.
 
 Do not use race/ethnicity/appearance classification as clue taxonomy. Physical measurements may be used only when canonical evidence is reliable and wording reflects normal measurement variance.
 
@@ -407,11 +417,11 @@ Completed in #885. Canonical factual ownership is preserved, every UFC Random Po
 ### ✅ PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup
 Completed in #895. Blind Rank 5 + Keep 4 / Cut 4 remain Daily Double-only in both sports; normal Play discovery and plain standalone entry are removed, compatible historical/challenge deep links remain valid, the existing Daily/hydration/history owners and persisted versions are preserved, Football uses the shared official Keep/Cut comparison scorer, and cross-sport presentation recognizes both persisted UFC and Football result shapes.
 
-### ▶ PR 9 — 20 Questions
-**NEXT.** Implement the replayable cross-sport mechanic, deterministic predicate bank, scoring, no-narrowing-assistance contract, and source/depth/repetition/UI proof. Daily-ready only; do not activate Daily rotation here.
+### ⏸ PR 9 — 20 Questions
+Owner-only prototype is preserved and intentionally parked as of September 9, 2026. Do not treat it as public-ready, activate Daily, or continue expansion until Cody explicitly returns to it.
 
-### PR 10 — Who Am I?
-Implement progressive clue bands, two-at-a-time reveal cadence, scoring, source derivation, giveaway/repetition tests, and UI proof. Daily-ready only; do not activate Daily rotation here.
+### ▶ PR 10 — Who Am I?
+**NEXT.** Implement the owner-only preview with progressive clue bands, two-at-a-time reveal cadence, scoring, source derivation, giveaway/repetition tests, and UI proof. Keep both sport routes and Play discovery owner-only. Daily-ready only after fairness proof; do not activate Daily rotation or public access here.
 
 ### PR 11 — Today's Challenge vNext
 Recalibrate the sport-scoped deterministic Daily product after new-game simulation data exists. Preserve one Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Do not add Auction, Draft Room, or Better Than.
@@ -443,6 +453,7 @@ Do not:
 - expose candidate narrowing in 20 Questions;
 - let runtime AI decide yes/no truth;
 - use unsupported trivia or race/ethnicity appearance taxonomy in Who Am I;
+- expose Who Am I publicly before explicit owner approval;
 - create Draft Room-only manual trait grades;
 - add Auction/Draft Room/Better Than to Today's Challenge;
 - add a second Daily scheduler, history store, leaderboard owner, reminder owner, or score repository;
