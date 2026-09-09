@@ -1,4 +1,7 @@
-import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
+import {
+  footballCareerAffiliationHistoryFor,
+  type FootballCareerAffiliationHistory,
+} from "../back-room/footballCareerAffiliationProjection";
 import {
   getFootballFactualRecord,
   type FootballFactMetricId,
@@ -216,6 +219,94 @@ function footballMetricFamily(metricId: FootballFactMetricId): WhoAmIIdentityFac
   return "career-production";
 }
 
+function factIdSegment(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function nflDraftSelectionBand(subject: FootballSubjectProfile) {
+  if (subject.undrafted) return "undrafted";
+  if (subject.draftPick != null) {
+    if (subject.draftPick <= 5) return "top-five";
+    if (subject.draftPick <= 10) return "top-ten";
+  }
+  if (subject.draftRound === 1) return "first-round";
+  if (subject.draftRound != null && subject.draftRound <= 3) return "rounds-two-three";
+  if (subject.draftRound != null) return "round-four-or-later";
+  return null;
+}
+
+function nflATierEnrichmentFacts(
+  subject: FootballSubjectProfile,
+  history: FootballCareerAffiliationHistory | null,
+): WhoAmIIdentityFact[] {
+  if (subject.league !== "NFL" || subject.recognizabilityTier !== "A") return [];
+
+  const registry = source("football-subject-registry", subject.id);
+  const facts: WhoAmIIdentityFact[] = [];
+
+  if (subject.startSeason != null && subject.endSeason != null) {
+    facts.push(scalar(
+      "career-span-seasons",
+      "era",
+      subject.endSeason - subject.startSeason + 1,
+      registry,
+    ));
+  }
+
+  if (subject.draftYear != null) {
+    facts.push(scalar(
+      "draft-decade",
+      "draft-path",
+      Math.floor(subject.draftYear / 10) * 10,
+      registry,
+    ));
+  }
+  const draftSelectionBand = nflDraftSelectionBand(subject);
+  if (draftSelectionBand) {
+    facts.push(scalar("draft-selection-band", "draft-path", draftSelectionBand, registry));
+  }
+
+  if (history?.affiliations.length) {
+    const affiliationSource = source("football-career-affiliation", subject.id);
+    facts.push(scalar(
+      "career-affiliation-count",
+      "career-path",
+      history.affiliations.length,
+      affiliationSource,
+    ));
+
+    for (const affiliation of history.affiliations) {
+      const idSegment = factIdSegment(affiliation);
+      const rows = history.seasons.filter((row) => row.affiliation === affiliation);
+      facts.push(scalar(
+        `career-affiliation:${idSegment}`,
+        "career-path",
+        affiliation,
+        source("football-career-affiliation", subject.id, affiliation),
+      ));
+      if (rows.length) {
+        const seasons = rows.map((row) => row.season);
+        facts.push(windowFact(
+          `career-affiliation-window:${idSegment}`,
+          "career-path",
+          Math.min(...seasons),
+          Math.max(...seasons),
+          source("football-career-affiliation", subject.id, affiliation),
+        ));
+      }
+    }
+  } else if (subject.franchises?.length) {
+    facts.push(list("registered-franchises", "career-path", subject.franchises, registry));
+    facts.push(scalar("career-affiliation-count", "career-path", subject.franchises.length, registry));
+  }
+
+  return facts;
+}
+
 export function footballWhoAmIIdentityFactBank(subject: FootballSubjectProfile): WhoAmIIdentityFactBank {
   const registry = source("football-subject-registry", subject.id);
   const facts: WhoAmIIdentityFact[] = [];
@@ -269,6 +360,8 @@ export function footballWhoAmIIdentityFactBank(subject: FootballSubjectProfile):
       source("football-career-affiliation", subject.id),
     ));
   }
+
+  facts.push(...nflATierEnrichmentFacts(subject, history));
 
   return finishBank({ subjectId: subject.id, sport: "football", league: subject.league, facts });
 }
