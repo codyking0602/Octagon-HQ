@@ -478,7 +478,7 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
     ],
   },
   {
-    subjectId: "nfl-walter-payton",
+    subjectId: "walter-payton",
     facts: [
       fact("drums-before-football", "music-before-football", "Before football became his focus, he preferred playing drums in the marching band and did not join organized high-school football until after his older brother Eddie moved on.", ["identity-payton-mississippi-encyclopedia"], ["high-school", "music", "family"]),
       fact("first-play-long-touchdown", "first-football-play-touchdown", "On his first play after joining the high-school football team, he ran 65 yards for a touchdown.", ["identity-payton-mississippi-encyclopedia"], ["high-school", "origin-story"]),
@@ -489,7 +489,7 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
     ],
   },
   {
-    subjectId: "nfl-johnny-unitas",
+    subjectId: "johnny-unitas",
     facts: [
       fact("steelers-cut-ninth-rounder", "pittsburgh-rejection", "Pittsburgh drafted him in the ninth round in 1955 but cut him before he threw a regular-season pass.", ["identity-unitas-pro-hof"], ["draft", "career-turning-point"]),
       fact("six-dollar-semi-pro", "bloomfield-rams-semi-pro", "After being cut, he played semi-pro football for the Bloomfield Rams for $6 a game.", ["identity-unitas-pro-hof", "identity-unitas-hof-high-tops"], ["career-path", "semi-pro"]),
