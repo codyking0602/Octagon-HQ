@@ -17,15 +17,18 @@ import {
 } from "./footballPersonIdentityKnowledge";
 import { getFootballSubject } from "./footballSubjectRegistry";
 
-const PILOT_COUNT = 12;
+const PR4_RESEARCHED_COUNT = 12;
+const PR5_RESEARCHED_COUNT = 30;
+const RESEARCHED_COUNT = PR4_RESEARCHED_COUNT + PR5_RESEARCHED_COUNT;
 
 function normalized(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
-describe("football person identity knowledge pilot", () => {
-  it("uses exactly 12 canonical NFL A-tier launch identities without creating another roster", () => {
-    expect(footballPersonIdentityKnowledgeRecords).toHaveLength(PILOT_COUNT);
+describe("football person identity knowledge", () => {
+  it("uses only canonical NFL A-tier launch identities without creating another roster", () => {
+    expect(footballPersonIdentityKnowledgeRecords).toHaveLength(RESEARCHED_COUNT);
+    expect(new Set(footballPersonIdentityKnowledgeRecords.map((record) => record.subjectId)).size).toBe(RESEARCHED_COUNT);
 
     const launch = getFootballWhoAmILaunchPool("NFL");
     const launchById = new Map(launch.subjects.map((subject) => [subject.id, subject]));
@@ -52,7 +55,7 @@ describe("football person identity knowledge pilot", () => {
     expect(launch.subjects).toHaveLength(200);
   });
 
-  it("requires usable provenance and non-empty verified facts", () => {
+  it("requires usable provenance, globally unique fact ids, and non-empty verified facts", () => {
     expect(footballPersonIdentityKnowledgeSources.length).toBeGreaterThan(0);
     const sourceIds = new Set(footballPersonIdentityKnowledgeSources.map((source) => source.id));
     expect(sourceIds.size).toBe(footballPersonIdentityKnowledgeSources.length);
@@ -65,25 +68,27 @@ describe("football person identity knowledge pilot", () => {
       expect(source.coverage.trim()).not.toBe("");
     }
 
+    const allFactIds: string[] = [];
     for (const record of footballPersonIdentityKnowledgeRecords) {
       for (const fact of record.facts) {
         expect(fact.factId.trim()).not.toBe("");
         expect(fact.conceptId.trim()).not.toBe("");
         expect(fact.value.trim()).not.toBe("");
+        expect(fact.knowledgeClass).toBe("distinctive-identity");
         expect(fact.verification).toBe("verified");
         expect(fact.sourceIds.length).toBeGreaterThan(0);
         expect(fact.sourceIds.every((sourceId) => sourceIds.has(sourceId))).toBe(true);
         expect(getFootballPersonIdentityFactSources(fact)).toHaveLength(fact.sourceIds.length);
+        allFactIds.push(fact.factId);
       }
     }
+    expect(new Set(allFactIds).size).toBe(allFactIds.length);
   });
 
-  it("keeps fact ids, concepts, and fact wording distinct within each person", () => {
+  it("keeps concepts and fact wording distinct within each person", () => {
     for (const record of footballPersonIdentityKnowledgeRecords) {
-      const factIds = record.facts.map((fact) => fact.factId);
       const conceptIds = record.facts.map((fact) => fact.conceptId);
       const values = record.facts.map((fact) => normalized(fact.value));
-      expect(new Set(factIds).size).toBe(factIds.length);
       expect(new Set(conceptIds).size).toBe(conceptIds.length);
       expect(new Set(values).size).toBe(values.length);
     }
@@ -91,7 +96,6 @@ describe("football person identity knowledge pilot", () => {
 
   it("separates distinctive identity depth from the existing structural/resume fact banks", () => {
     for (const record of footballPersonIdentityKnowledgeRecords) {
-      expect(record.facts.every((fact) => fact.knowledgeClass === "distinctive-identity")).toBe(true);
       const subject = getFootballSubject(record.subjectId);
       expect(subject).not.toBeNull();
       const structured = footballWhoAmIIdentityFactBank(subject!);
@@ -100,11 +104,11 @@ describe("football person identity knowledge pilot", () => {
     }
   });
 
-  it("leaves NFL B-tier, CFB, and UFC behavior outside the pilot unchanged", () => {
+  it("leaves NFL B-tier, CFB, UFC, and the locked launch pool outside the research batch unchanged", () => {
     const nflLaunch = getFootballWhoAmILaunchPool("NFL");
-    const nflBTier = nflLaunch.subjects.find((subject) => subject.recognizabilityTier === "B");
-    expect(nflBTier).toBeDefined();
-    expect(getFootballPersonIdentityKnowledge(nflBTier!.id)).toBeNull();
+    const nflBTier = nflLaunch.subjects.filter((subject) => subject.recognizabilityTier === "B");
+    expect(nflBTier.length).toBeGreaterThan(0);
+    expect(nflBTier.every((subject) => getFootballPersonIdentityKnowledge(subject.id) == null)).toBe(true);
 
     const cfbLaunch = getFootballWhoAmILaunchPool("CFB");
     expect(cfbLaunch.players).toHaveLength(180);
@@ -112,6 +116,9 @@ describe("football person identity knowledge pilot", () => {
     expect(cfbLaunch.subjects).toHaveLength(200);
     expect(cfbLaunch.subjects.every((subject) => getFootballPersonIdentityKnowledge(subject.id) == null)).toBe(true);
 
+    expect(nflLaunch.players).toHaveLength(180);
+    expect(nflLaunch.coaches).toHaveLength(20);
+    expect(nflLaunch.subjects).toHaveLength(200);
     expect(createUfcWhoAmIRound(() => 0).clues).toHaveLength(10);
   });
 
