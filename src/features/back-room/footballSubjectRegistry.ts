@@ -116,8 +116,9 @@ function playerIdForSubject(subject: FootballSubjectIdentity) {
 
 /**
  * Reviewed historical recognition identities may reconcile to an older curated canonical player id. The canonical id
- * and authored metadata remain authoritative, but missing identity-window fields must not be discarded. Restrict this
- * merge to the reviewed historical repair owner so ordinary source projection does not silently change public queries.
+ * and authored metadata remain authoritative, but missing reviewed career identity metadata must not be discarded.
+ * Restrict this merge to the reviewed historical repair owner so ordinary source projection does not silently change
+ * public queries.
  */
 function reconcileProjectedPlayerIdentity(subject: FootballCanonicalSubject): FootballCanonicalSubject {
   if (subject.kind !== "player-career") return subject;
@@ -129,9 +130,16 @@ function reconcileProjectedPlayerIdentity(subject: FootballCanonicalSubject): Fo
     ...subject,
     position: subject.position ?? projected.position,
     school: subject.school ?? projected.school,
+    franchises: subject.franchises ?? projected.franchises,
     startSeason: subject.startSeason ?? projected.startSeason,
     endSeason: subject.endSeason ?? projected.endSeason,
     activeDecades: subject.activeDecades ?? projected.activeDecades,
+    draftYear: subject.draftYear ?? projected.draftYear,
+    draftRound: subject.draftRound ?? projected.draftRound,
+    draftPick: subject.draftPick ?? projected.draftPick,
+    firstRoundPick: subject.firstRoundPick ?? projected.firstRoundPick,
+    firstOverallPick: subject.firstOverallPick ?? projected.firstOverallPick,
+    undrafted: subject.undrafted ?? projected.undrafted,
   };
 }
 

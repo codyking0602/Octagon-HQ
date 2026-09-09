@@ -93,4 +93,91 @@ describe("Who Am I canonical identity facts", () => {
     ));
     expect(footballBanks.some((bank) => bank.facts.length < WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET)).toBe(true);
   });
+
+  it("reuses canonical NFL identity and factual owners for modern A-tier linemen without enriching B-tier subjects", () => {
+    const nflLaunchPool = getFootballWhoAmILaunchPool("NFL");
+    for (const subjectId of ["nfl-jason-kelce", "nfl-joe-thomas"] as const) {
+      const subject = nflLaunchPool.subjects.find((candidate) => candidate.id === subjectId)!;
+      expect(subject.recognizabilityTier).toBe("A");
+      const bank = footballWhoAmIIdentityFactBank(subject);
+      expect(bank.facts.some((fact) => (
+        fact.family === "career-path" && fact.source.owner === "football-subject-registry"
+      ))).toBe(true);
+      expect(bank.facts.some((fact) => fact.id === "career-window" && fact.source.owner === "football-subject-registry")).toBe(true);
+      expect(bank.facts.some((fact) => fact.id === "metric:nfl-career-games")).toBe(true);
+      expect(bank.facts.some((fact) => fact.id === "metric:nfl-first-team-all-pros")).toBe(true);
+    }
+
+    const bTierSubject = nflLaunchPool.subjects.find((subject) => subject.recognizabilityTier === "B")!;
+    const bTierBank = footballWhoAmIIdentityFactBank(bTierSubject);
+    expect(bTierBank.facts.some((fact) => fact.id === "career-span-seasons")).toBe(false);
+    expect(bTierBank.facts.some((fact) => fact.id === "draft-selection-band")).toBe(false);
+  });
+
+  it("does not turn the active Trent Williams source boundary into a retirement date", () => {
+    const subject = getFootballWhoAmILaunchPool("NFL").subjects.find((candidate) => candidate.id === "nfl-trent-williams")!;
+    const bank = footballWhoAmIIdentityFactBank(subject);
+
+    expect(subject.endSeason).toBeUndefined();
+    expect(bank.facts.some((fact) => fact.id === "career-end-season")).toBe(false);
+    expect(bank.facts.some((fact) => fact.id === "career-start-season")).toBe(true);
+  });
+
+  it("audits NFL A-tier launch depth from canonical owners without a duplicated subject list", () => {
+    const nflLaunchPool = getFootballWhoAmILaunchPool("NFL");
+    const auditedSubjects = nflLaunchPool.subjects.filter((subject) => subject.recognizabilityTier === "A");
+    const banks = auditedSubjects.map(footballWhoAmIIdentityFactBank);
+    const counts = banks.map((bank) => bank.facts.length).sort((left, right) => left - right);
+    const belowMinimum = banks
+      .filter((bank) => bank.facts.length < WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET)
+      .map((bank) => ({ subjectId: bank.subjectId, factCount: bank.facts.length }));
+    const average = counts.reduce((total, count) => total + count, 0) / counts.length;
+    const middle = Math.floor(counts.length / 2);
+    const median = counts.length % 2 === 0
+      ? (counts[middle - 1]! + counts[middle]!) / 2
+      : counts[middle]!;
+    const summary = {
+      auditedIdentities: banks.length,
+      minimumFacts: counts[0],
+      averageFacts: Number(average.toFixed(2)),
+      medianFacts: median,
+      atMinimum: counts.filter((count) => count >= WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET).length,
+      atPreferred: counts.filter((count) => count >= WHO_AM_I_IDENTITY_FACT_PREFERRED_TARGET).length,
+      belowMinimum,
+    };
+
+    expect(auditedSubjects.length).toBeGreaterThan(0);
+    expect(auditedSubjects.every((subject) => (
+      subject.league === "NFL" && subject.recognizabilityTier === "A"
+    ))).toBe(true);
+    expect(new Set(banks.map((bank) => bank.subjectId)).size).toBe(auditedSubjects.length);
+    expect(banks.map((bank) => bank.subjectId)).toEqual(auditedSubjects.map((subject) => subject.id));
+
+    for (const bank of banks) {
+      expect(new Set(bank.facts.map((fact) => fact.id)).size).toBe(bank.facts.length);
+      for (const fact of bank.facts) {
+        expect(CANONICAL_SOURCE_OWNERS.has(fact.source.owner)).toBe(true);
+        expect(fact.source.subjectId).toBe(bank.subjectId);
+        expect("text" in fact || "band" in fact || "strength" in fact || "order" in fact).toBe(false);
+        if (fact.value.type === "scalar") {
+          expect(typeof fact.value.value === "string" ? fact.value.value.trim().length : Number.isFinite(Number(fact.value.value))).toBeTruthy();
+        } else if (fact.value.type === "list") {
+          expect(fact.value.values.length).toBeGreaterThan(0);
+          expect(fact.value.values.every((value) => (
+            typeof value === "string" ? value.trim().length > 0 : Number.isFinite(value)
+          ))).toBe(true);
+        } else if (fact.value.type === "window") {
+          expect(Number.isFinite(fact.value.start) && Number.isFinite(fact.value.end)).toBe(true);
+          expect(fact.value.end).toBeGreaterThanOrEqual(fact.value.start);
+        } else {
+          expect(fact.value.name.trim().length).toBeGreaterThan(0);
+        }
+      }
+    }
+
+    console.info("Who Am I NFL A-tier canonical fact-depth audit", JSON.stringify(summary));
+    expect(summary.auditedIdentities).toBe(auditedSubjects.length);
+    expect(summary.atMinimum + summary.belowMinimum.length).toBe(summary.auditedIdentities);
+    expect(summary.belowMinimum).toEqual([]);
+  });
 });

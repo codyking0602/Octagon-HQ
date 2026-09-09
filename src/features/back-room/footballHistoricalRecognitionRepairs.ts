@@ -13,6 +13,23 @@ const activeDecades = (startSeason: number, endSeason: number) => Array.from(
   (_, index) => (Math.floor(startSeason / 10) + index) * 10,
 );
 
+const nflHistoricalCoachFranchises: Readonly<Record<string, readonly string[]>> = {
+  "bill-walsh": ["San Francisco 49ers"],
+  "chuck-noll": ["Pittsburgh Steelers"],
+  "don-shula": ["Baltimore Colts", "Miami Dolphins"],
+  "nfl-earl-curly-lambeau": ["Green Bay Packers", "Chicago Cardinals", "Washington"],
+  "nfl-george-halas": ["Chicago Bears"],
+  "nfl-john-madden": ["Oakland Raiders"],
+  "paul-brown": ["Cleveland Browns", "Cincinnati Bengals"],
+  "tom-landry": ["Dallas Cowboys"],
+  "vince-lombardi": ["Green Bay Packers", "Washington"],
+};
+
+const nflHistoricalPlayerFranchises: Readonly<Record<string, readonly string[]>> = {
+  "nfl-chuck-bednarik": ["Philadelphia Eagles"],
+  "nfl-sam-huff": ["New York Giants", "Washington"],
+};
+
 const player = (
   id: string,
   name: string,
@@ -23,6 +40,7 @@ const player = (
   tier: "A" | "B",
   evidenceFamily: FootballHistoricalRecognitionRepair["evidenceFamily"],
   school?: string,
+  franchises?: readonly string[],
 ): FootballHistoricalRecognitionRepair => ({
   subject: {
     id,
@@ -34,6 +52,7 @@ const player = (
     endSeason,
     activeDecades: activeDecades(startSeason, endSeason),
     ...(school ? { school } : {}),
+    ...(franchises?.length ? { franchises } : {}),
   },
   tier,
   evidenceFamily,
@@ -78,6 +97,9 @@ const coach = (
     startSeason,
     endSeason,
     activeDecades: activeDecades(startSeason, endSeason),
+    ...(league === "NFL" && nflHistoricalCoachFranchises[id]?.length
+      ? { franchises: nflHistoricalCoachFranchises[id] }
+      : {}),
   },
   tier,
   evidenceFamily: "championship-coaching",
@@ -99,6 +121,12 @@ const proHallHistoricalRepairs: readonly FootballHistoricalRecognitionRepair[] =
       startSeason: seed.startSeason,
       endSeason: seed.endSeason,
       activeDecades: activeDecades(seed.startSeason, seed.endSeason),
+      ...(seed.kind === "coach" && nflHistoricalCoachFranchises[seed.id]?.length
+        ? { franchises: nflHistoricalCoachFranchises[seed.id] }
+        : {}),
+      ...(seed.kind === "player-career" && nflHistoricalPlayerFranchises[seed.id]?.length
+        ? { franchises: nflHistoricalPlayerFranchises[seed.id] }
+        : {}),
     },
     tier: seed.tier,
     evidenceFamily: "pro-football-hall-of-fame",
@@ -120,13 +148,13 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("nfl-jerry-rice", "Jerry Rice", "NFL", "WR", 1985, 2004, "A", "pro-football-hall-of-fame"),
   player("nfl-lawrence-taylor", "Lawrence Taylor", "NFL", "LB", 1981, 1993, "A", "pro-football-hall-of-fame"),
   player("nfl-reggie-white", "Reggie White", "NFL", "DL", 1985, 1998, "A", "pro-football-hall-of-fame"),
-  player("nfl-dick-butkus", "Dick Butkus", "NFL", "LB", 1965, 1973, "A", "pro-football-hall-of-fame"),
+  player("nfl-dick-butkus", "Dick Butkus", "NFL", "LB", 1965, 1973, "A", "pro-football-hall-of-fame", undefined, ["Chicago Bears"]),
   player("nfl-deacon-jones", "Deacon Jones", "NFL", "DL", 1961, 1974, "A", "pro-football-hall-of-fame"),
   player("nfl-gale-sayers", "Gale Sayers", "NFL", "RB", 1965, 1971, "A", "pro-football-hall-of-fame"),
   player("nfl-alan-page", "Alan Page", "NFL", "DL", 1967, 1981, "A", "pro-football-hall-of-fame"),
   player("nfl-joe-greene", "Joe Greene", "NFL", "DL", 1969, 1981, "A", "pro-football-hall-of-fame"),
   player("nfl-ronnie-lott", "Ronnie Lott", "NFL", "DB", 1981, 1994, "A", "pro-football-hall-of-fame"),
-  player("nfl-anthony-munoz", "Anthony Munoz", "NFL", "OL", 1980, 1992, "A", "pro-football-hall-of-fame"),
+  player("nfl-anthony-munoz", "Anthony Munoz", "NFL", "OL", 1980, 1992, "A", "pro-football-hall-of-fame", undefined, ["Cincinnati Bengals"]),
   player("nfl-john-mackey", "John Mackey", "NFL", "TE", 1963, 1972, "A", "pro-football-hall-of-fame"),
   player("nfl-ray-guy", "Ray Guy", "NFL", "P", 1973, 1986, "A", "pro-football-hall-of-fame"),
   player("nfl-jan-stenerud", "Jan Stenerud", "NFL", "K", 1967, 1985, "A", "pro-football-hall-of-fame"),
@@ -134,6 +162,32 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("earl-campbell", "Earl Campbell", "NFL", "RB", 1978, 1985, "A", "pro-football-hall-of-fame"),
   player("marcus-allen", "Marcus Allen", "NFL", "RB", 1982, 1997, "A", "pro-football-hall-of-fame"),
   player("tony-dorsett", "Tony Dorsett", "NFL", "RB", 1977, 1988, "A", "pro-football-hall-of-fame"),
+  player("deion-sanders", "Deion Sanders", "NFL", "DB", 1989, 2005, "A", "pro-football-hall-of-fame", "Florida State", ["Atlanta Falcons", "San Francisco 49ers", "Dallas Cowboys", "Washington", "Baltimore Ravens"]),
+
+  // Reviewed A-tier offensive-line identity windows and career paths.
+  player("nfl-alan-faneca", "Alan Faneca", "NFL", "OL", 1998, 2010, "A", "mvp-all-pro", undefined, ["Pittsburgh Steelers", "New York Jets", "Arizona Cardinals"]),
+  player("nfl-jason-kelce", "Jason Kelce", "NFL", "OL", 2011, 2023, "A", "mvp-all-pro", undefined, ["Philadelphia Eagles"]),
+  player("nfl-joe-thomas", "Joe Thomas", "NFL", "OL", 2007, 2017, "A", "mvp-all-pro", undefined, ["Cleveland Browns"]),
+  player("nfl-jonathan-ogden", "Jonathan Ogden", "NFL", "OL", 1996, 2007, "A", "mvp-all-pro", undefined, ["Baltimore Ravens"]),
+  player("nfl-kevin-mawae", "Kevin Mawae", "NFL", "OL", 1994, 2009, "A", "mvp-all-pro", undefined, ["Seattle Seahawks", "New York Jets", "Tennessee Titans"]),
+  player("nfl-marshal-yanda", "Marshal Yanda", "NFL", "OL", 2007, 2019, "A", "mvp-all-pro", undefined, ["Baltimore Ravens"]),
+  player("nfl-orlando-pace", "Orlando Pace", "NFL", "OL", 1997, 2009, "A", "mvp-all-pro", undefined, ["St. Louis Rams", "Chicago Bears"]),
+  player("nfl-steve-hutchinson", "Steve Hutchinson", "NFL", "OL", 2001, 2012, "A", "mvp-all-pro", undefined, ["Seattle Seahawks", "Minnesota Vikings", "Tennessee Titans"]),
+  player("nfl-tyron-smith", "Tyron Smith", "NFL", "OL", 2011, 2024, "A", "mvp-all-pro", undefined, ["Dallas Cowboys", "New York Jets"]),
+  historicalSubject({
+    id: "nfl-trent-williams",
+    name: "Trent Williams",
+    kind: "player-career",
+    league: "NFL",
+    position: "OL",
+    startSeason: 2010,
+    activeDecades: [2010, 2020],
+    franchises: ["Washington", "San Francisco 49ers"],
+    draftYear: 2010,
+    draftRound: 1,
+    draftPick: 4,
+    firstRoundPick: true,
+  }, "A"),
 
   player("nfl-paul-hornung", "Paul Hornung", "NFL", "RB", 1957, 1966, "A", "mvp-all-pro"),
   player("nfl-ya-tittle", "Y.A. Tittle", "NFL", "QB", 1948, 1964, "A", "mvp-all-pro"),
