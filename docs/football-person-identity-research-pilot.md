@@ -1,228 +1,301 @@
-# Football person identity research pilot
+# Football person identity research audit
 
 Reviewed: 2026-09-09
 
-This is the PR 4 research-quality pilot for reusable person identity knowledge. It is not a Who Am I clue bank or a second launch roster. Every record is keyed by the existing canonical football subject id, every stored item is neutral factual knowledge, and every item carries reviewed provenance in `footballPersonIdentityKnowledge.ts`.
+This document is the human-reviewable audit for the reusable football person identity knowledge owner in `src/features/back-room/footballPersonIdentityKnowledge.ts`. It is not a Who Am I clue bank or a second launch roster. Every record is keyed by the existing canonical football subject id, every stored item is neutral factual knowledge, and every item carries reviewed provenance through the existing `FootballFactSource` model.
 
-The pre-existing Who Am I structured/resume fact bank remains unchanged. The focused test requires every pilot subject to retain at least the existing 15-fact structured target while the new records are separately marked `distinctive-identity`.
+The pre-existing Who Am I structured/resume fact bank remains unchanged. Structural facts and distinctive identity knowledge are separate quality dimensions.
 
-## Pilot census
+## Coverage
 
-| Person | Canonical role | Distinctive facts |
+| Research slice | NFL A-tier identities | Distinctive concepts |
+| --- | ---: | ---: |
+| PR4 pilot | 12 | 77 |
+| PR5 batch 1 | 20 | 100 |
+| Cumulative | 32 / 105 | 177 |
+
+**NFL A-tier identities still without distinctive-person research after PR5: 73.**
+
+PR4 remains unchanged and covers Patrick Mahomes, Barry Sanders, Jerry Rice, Bill Belichick, Jason Kelce, Aaron Donald, Lawrence Taylor, Ray Lewis, Deion Sanders, Walter Payton, Johnny Unitas, and Bill Walsh. Its 77 source-backed concepts remain in the canonical owner.
+
+## PR5 batch census
+
+| Person | Canonical role | New concepts |
 | --- | --- | ---: |
-| Patrick Mahomes | QB | 7 |
-| Barry Sanders | RB | 7 |
-| Jerry Rice | WR | 7 |
-| Bill Belichick | Head coach | 7 |
-| Jason Kelce | OL | 7 |
-| Aaron Donald | DL | 6 |
-| Lawrence Taylor | LB | 4 |
-| Ray Lewis | LB | 5 |
-| Deion Sanders | DB | 7 |
-| Walter Payton | RB | 6 |
-| Johnny Unitas | QB | 6 |
-| Bill Walsh | Head coach | 8 |
+| Tom Brady | QB | 5 |
+| Peyton Manning | QB | 5 |
+| Brett Favre | QB | 5 |
+| Joe Montana | QB | 5 |
+| Aaron Rodgers | QB | 5 |
+| Jim Brown | RB | 5 |
+| Emmitt Smith | RB | 5 |
+| LaDainian Tomlinson | RB | 5 |
+| Randy Moss | WR | 5 |
+| Terrell Owens | WR | 5 |
+| Rob Gronkowski | TE | 5 |
+| Joe Thomas | OL | 5 |
+| Orlando Pace | OL | 5 |
+| Reggie White | DL | 5 |
+| Dick Butkus | LB | 5 |
+| Ed Reed | DB | 5 |
+| J.J. Watt | DL | 5 |
+| Vince Lombardi | Head coach | 5 |
+| Don Shula | Head coach | 5 |
+| Tom Landry | Head coach | 5 |
 
-**Pilot total: 12 identities / 77 distinctive identity concepts.**
+## Tom Brady — QB — 5 concepts
 
-## Patrick Mahomes
+1. The Montreal Expos selected him as a catcher in the 18th round of the 1995 MLB Draft before he chose Michigan football.
+2. He spent the 1997 national-championship season backing up Brian Griese at Michigan.
+3. Even after becoming a starter, he had to keep competing for snaps with highly touted Drew Henson during his final Michigan seasons.
+4. Michigan teammates elected him a captain for his final season, an honor he later described as especially meaningful.
+5. New England drafted him 199th overall in 2000 and kept him as a fourth quarterback on the roster as a rookie.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+Source summary: MLB.com, NFL.com, and Michigan Athletics.
 
-Distinctive researched identity facts: 7
+Rejected / not stored: the famous combine-photo/body-composition angle was not stored because it is mostly visual shorthand and weaker reusable identity knowledge than the verified baseball, Michigan competition, and late-draft path.
 
-1. His father, Pat Mahomes, pitched in Major League Baseball for 11 seasons across six organizations.
-2. Longtime Major League pitcher LaTroy Hawkins, a former teammate of his father, is his godfather.
-3. At Whitehouse High School he starred in football, baseball, and basketball; as a senior he averaged 19 points and eight rebounds in basketball.
-4. As a high-school pitcher he threw a no-hitter with 16 strikeouts.
-5. The Detroit Tigers selected him in the 37th round of the 2014 MLB Draft before he chose the Texas Tech football-and-baseball path instead of signing.
-6. He played both football and baseball at Texas Tech before committing full time to football after his freshman year.
-7. He grew up around Major League clubhouses, shagging fly balls as a preschooler and even receiving hitting advice from Alex Rodriguez.
+## Peyton Manning — QB — 5 concepts
 
-Provenance summary: Texas Tech Athletics baseball biography/media guide, Kansas City Chiefs first-party feature, MLB.com retrospective.
+1. At Isidore Newman he also starred at shortstop and earned second-team all-state baseball honors.
+2. As a true freshman he moved into Tennessee's quarterback job after injuries first to Jerry Colquitt and then to baseball star Todd Helton.
+3. He went 7-1 in eight starts as a true freshman and was named SEC Freshman of the Year.
+4. He completed his Tennessee bachelor's degree in speech communication in three years.
+5. Already a top NFL prospect and a college graduate, he chose to return to Tennessee for his senior season in 1997.
 
-## Barry Sanders
+Source summary: Tennessee Athletics roster and academic-history material.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+Rejected / not stored: broad Manning-family lineage and generic award totals were left to existing structural/resume knowledge rather than duplicated here.
 
-Distinctive researched identity facts: 7
+## Brett Favre — QB — 5 concepts
 
-1. Wichita North did not give him his first real chance at running back until the fourth game of his senior season.
-2. He spent his first two Oklahoma State seasons backing up future Hall of Famer Thurman Thomas.
-3. While still a backup tailback in 1987, he earned All-America recognition as a kickoff and punt returner.
-4. His 1988 Heisman season was his only complete year as Oklahoma State's starting tailback, and he established 34 NCAA records that season.
-5. He left Oklahoma State for the NFL without playing his senior season.
-6. At his Pro Football Hall of Fame enshrinement, his father William introduced Barry as the third-best running back ever, behind Jim Brown and William himself.
-7. Oklahoma State unveiled a nine-foot statue of him in 2021 and made him one of the first two names in the Cowboy Football Ring of Honor.
+1. His father Irvin coached him in a wishbone offense at Hancock North Central that often asked him to throw only four or five times a game.
+2. That run-heavy high-school role left him little known as a quarterback recruit before Southern Miss signed him.
+3. As a Southern Miss freshman he came off the bench as the third-string quarterback against Tulane and seized the opportunity that launched his college career.
+4. A serious 1990 car crash led to surgery that removed roughly 30 inches of his small intestine.
+5. One month after that crash and surgery, he returned to quarterback Southern Miss in a victory over Alabama.
 
-Provenance summary: Oklahoma State Athletics historical records and statue announcement; Pro Football Hall of Fame feature.
+Source summary: Southern Miss Athletics Hall of Fame material.
 
-## Jerry Rice
+Rejected / not stored: career-volume and iron-man streak facts were treated as resume/structural material rather than distinctive-person concepts for this batch.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+## Joe Montana — QB — 5 concepts
 
-Distinctive researched identity facts: 7
+1. As a young Notre Dame backup he seriously considered leaving before academic adviser Mike DeCicco convinced him to stay.
+2. A shoulder injury cost him the 1976 season and left him third on Notre Dame's depth chart entering 1977.
+3. Called on with Notre Dame down 24-14 at Purdue in 1977, he produced 17 points in the final 11 minutes and took control of the starting job.
+4. In his final college game, the flu-stricken quarterback returned after being warmed with blankets and chicken soup and led a 34-12 comeback to beat Houston 35-34.
+5. San Francisco selected him in the third round of the 1979 draft, 82nd overall.
 
-1. As a child he spent summers helping his brick-mason father and caught bricks while working with his family.
-2. He did not start football until high school, when his speed drew attention after the principal chased him for cutting class.
-3. Major Division I-A programs largely overlooked him, leaving Mississippi Valley State as the school that strongly pursued him.
-4. Mississippi Valley State coach Archie Cooley evaluated him on a basketball court and decided the program had to recruit him.
-5. He developed into a Mississippi Valley State star who set 18 NCAA Division I-AA records.
-6. San Francisco traded up in the 1985 first round to draft him out of Mississippi Valley State.
-7. Roger Craig introduced him to the steep Edgewood Park hill workout that became a signature part of Rice's offseason conditioning.
+Source summary: Notre Dame Athletics historical features and football-banquet history.
 
-Provenance summary: Pro Football Hall of Fame draft history, NFL.com, San Francisco 49ers, United Press International archival reporting.
+Rejected / not stored: a precise origin story for the “Joe Cool” nickname was not retained because the stronger material reviewed established the persona more clearly than a single reliable nickname-origin claim.
 
-## Bill Belichick
+## Aaron Rodgers — QB — 5 concepts
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+1. He received no major college football recruitment out of high school and began at Butte College.
+2. In his only Butte College season he earned junior-college All-America honors after throwing 28 touchdowns and four interceptions.
+3. Cal discovered him while evaluating film of his Butte teammate, tight end Garrett Cross.
+4. At 19, with almost no major-college experience, he immediately emerged as Cal's quarterback and set bowl passing records in the 2003 Insight Bowl.
+5. After entering the 2005 draft with expectations of going near the top, he endured a long first-round wait before Green Bay selected him 24th.
 
-Distinctive researched identity facts: 7
+Source summary: California Athletics and Green Bay Packers first-party draft material.
 
-1. His father, Steve Belichick, spent more than three decades coaching and scouting at the U.S. Naval Academy.
-2. He learned to break down film from his father and remembers questioning him on the ride home from college football games about how he organized every substitution, penalty, and formation.
-3. His father's 1962 book *Football Scouting Methods* became an influential part of the family's football identity and reflected the detailed scouting system Bill grew up around.
-4. Growing up in Annapolis, football was not his favorite sport; he preferred lacrosse.
-5. At Wesleyan he lettered in football, lacrosse, and squash and captained the lacrosse team.
-6. He majored in economics at Wesleyan.
-7. His NFL career began with the 1975 Baltimore Colts at the lowest level of the staff: he initially worked for nothing, then was paid $25 a week after a few weeks of training camp.
+Rejected / not stored: draft-room promises and hindsight claims about which club “should” have selected him were omitted as speculative or evaluative rather than neutral identity facts.
 
-Provenance summary: NFL.com scouting and Annapolis features; New England Patriots first-party press transcript; Wesleyan University Athletics and alumni records.
+## Jim Brown — RB — 5 concepts
 
-## Jason Kelce
+1. In high school he was a multi-sport star who averaged roughly 38 points per game in basketball as a senior.
+2. At Syracuse he lettered in football, lacrosse, basketball, and track.
+3. He became a member of both the College and Pro Football Halls of Fame as well as the National Lacrosse Hall of Fame.
+4. Syracuse Army ROTC commissioned him as a second lieutenant, and he served in the Army Reserve while beginning his NFL career.
+5. He retired from football at age 30 while still at the top of the sport and built a substantial acting career.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+Source summary: Syracuse Athletics biography, high-school Hall of Fame, Army ROTC, and alumni material.
 
-Distinctive researched identity facts: 7
+Rejected / not stored: sensational personal-life material was excluded as unnecessary to football recognition and inappropriate for a reusable identity layer when stronger sports-path facts were available.
 
-1. He joined Cincinnati as a preferred walk-on after arriving as a linebacker without a Division I scholarship.
-2. He was Cincinnati's Scout Team Defensive Player of the Year in 2006.
-3. At Cincinnati he moved from linebacker to fullback and ultimately to the offensive line.
-4. At Cleveland Heights he was a league defensive MVP at linebacker with 105 senior tackles and also averaged 9.5 yards per carry as a running back.
-5. Travis Kelce followed Jason's path to Cincinnati, where the brothers were Bearcats teammates.
-6. He faced his brother Travis in Super Bowl LVII when Philadelphia played Kansas City.
-7. He co-hosts New Heights with his brother Travis Kelce.
+## Emmitt Smith — RB — 5 concepts
 
-Provenance summary: NFL.com Kelce brothers feature; University of Cincinnati roster biography and 2026 Hall of Fame announcement.
+1. At Escambia High School he finished with 8,804 rushing yards and 106 touchdowns, among the highest prep totals of the era.
+2. In only three seasons at Florida he established 58 school records.
+3. Years after leaving for the NFL, he returned to Florida and completed his degree in 1996.
+4. He opened the 1993 season in a contract holdout while the defending champion Cowboys started 0-2 without him.
+5. In the 1993 regular-season finale against the Giants he played through a separated shoulder to help Dallas clinch the division and home-field advantage.
 
-## Aaron Donald
+Source summary: Florida Athletics and Dallas Cowboys historical material.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+Rejected / not stored: career rushing-record totals were not counted as distinctive concepts because they already belong in the structured/resume fact dimension.
 
-Distinctive researched identity facts: 6
+## LaDainian Tomlinson — RB — 5 concepts
 
-1. His father Archie used morning weight workouts to give a young Aaron more discipline, beginning the training habit that became central to his identity.
-2. His older brother Archie played linebacker at Toledo.
-3. At Penn Hills he was known as a dominant defensive lineman but also started at offensive guard.
-4. Pitt planned to redshirt him as a freshman until his first padded scout-team work repeatedly disrupted the first-team offense because blockers could not contain him.
-5. Years into his NFL career he completed a Pitt bachelor's degree in communications because he had promised his parents he would finish it.
-6. He made a historic seven-figure gift to Pitt, the largest donation by a Pitt football letterman at the time, and the program's football performance center was named for him.
+1. At a youth football camp, his idol Emmitt Smith unexpectedly handed him the ball for a rep and encouraged him, a moment Tomlinson later described as confidence-changing.
+2. He played fullback and linebacker through his junior high-school season before getting his first running-back start as a senior.
+3. In that first high-school start at running back, he scored six touchdowns.
+4. TCU initially viewed him as a fullback before coach Dennis Franchione moved him to tailback.
+5. At TCU he became the first major-college player to rush for 400 yards in a game, gaining 406 against UTEP.
 
-Provenance summary: NFL.com family and degree features; Pitt Athletics roster/jersey-retirement history; University of Pittsburgh announcement.
+Source summary: Pro Football Hall of Fame Gold Jacket Spotlight retrospective.
 
-## Lawrence Taylor
+Rejected / not stored: 2006 award totals and touchdown-record summaries were left to resume/structural facts rather than used to inflate distinctive depth.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+## Randy Moss — WR — 5 concepts
 
-Distinctive researched identity facts: 4
+1. In high school he was named West Virginia player of the year in both football and basketball.
+2. His first Marshall team went 15-0 and won the Division I-AA national championship while he caught 28 touchdown passes.
+3. He joined Marshall's track team shortly before its conference meet and immediately won sprint events despite barely practicing with the team.
+4. When Marshall moved to Division I-A in 1997, he remained dominant and became a Heisman finalist rather than fading against the higher level.
+5. Minnesota selected him 21st in the 1998 draft, and he answered with 17 touchdown catches as a rookie.
 
-1. In 1980 at North Carolina he set the school record with 16 sacks, added 22 tackles for loss, and helped an 11-1 team win the ACC championship.
-2. North Carolina credits him with game-saving defensive plays against both Texas Tech and Clemson during that 1980 season.
-3. His speed-and-power attack style is credited with transforming outside-linebacker play from read-and-react toward aggressive attacking football.
-4. In 1988 he played against New Orleans with a badly torn shoulder and pectoral area strapped in a harness and still produced seven tackles, three sacks, and two forced fumbles in a 13-12 Giants win.
+Source summary: Marshall Athletics Hall of Fame and track retrospectives plus Pro Football Hall of Fame biography.
 
-Provenance summary: University of North Carolina Patterson Medal history; Virginia Sports Hall of Fame biography.
+Rejected / not stored: broad retellings of pre-college legal/recruiting controversy were deliberately omitted; they are complex, frequently sensationalized, and not needed to make the identity recognizable.
 
-Research-quality note: the pilot intentionally stops at four for Taylor. Several popular childhood/personality anecdotes appeared in secondary internet sources, but the stronger sources reviewed did not support them well enough to store. Four strong concepts are better than padding the count.
+## Terrell Owens — WR — 5 concepts
 
-## Ray Lewis
+1. At Chattanooga he competed in football, men's basketball, and track and field.
+2. He helped Chattanooga basketball win Southern Conference regular-season and tournament titles and reach consecutive NCAA tournaments.
+3. San Francisco drafted him in the third round out of little-known Tennessee-Chattanooga in 1996.
+4. He developed for most of his first eight San Francisco seasons alongside Jerry Rice.
+5. When inducted into the Pro Football Hall of Fame, he chose to deliver his enshrinement speech at Chattanooga rather than attend the Canton ceremony.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+Source summary: Chattanooga Athletics, Pro Football Hall of Fame, and NFL.com.
 
-Distinctive researched identity facts: 5
+Rejected / not stored: locker-room and personality controversies were excluded as sensational and less useful than his unusual multi-sport, small-school, Rice, and Hall-of-Fame paths.
 
-1. He received the final football scholarship Miami had available in its 1993 class.
-2. He became a true-freshman starter at Miami and built a major program tackle résumé despite playing only three college seasons.
-3. He was the second draft choice in Baltimore Ravens franchise history, selected immediately after Jonathan Ogden in the 1996 first round.
-4. He played his entire 17-year NFL career with the Ravens.
-5. He founded the Ray Lewis 52 Foundation for disadvantaged youth, and Baltimore later renamed part of North Avenue "Ray Lewis Way" in recognition of his charitable work.
+## Rob Gronkowski — TE — 5 concepts
 
-Provenance summary: University of Miami Sports Hall of Fame, Pro Football Hall of Fame, University of Miami Athletics.
+1. Before his senior high-school move to Pennsylvania, he was also a standout basketball center who averaged 21 points and 18 rebounds.
+2. He grew up in an unusually athletic family: his father played football at Syracuse and his four brothers also pursued high-level sports.
+3. In only two playing seasons he left Arizona with the school's major single-game, season, and career receiving records for a tight end.
+4. A back injury and surgery wiped out his entire 2009 Arizona season before he entered the NFL draft.
+5. Despite the lost season and medical questions, New England traded up to take him 42nd overall in the second round of the 2010 draft.
 
-Research-quality note: popular childhood and wrestling-style origin anecdotes were not stored because the reviewed first-party/major sources did not give enough support to justify adding them.
+Source summary: Arizona Athletics and New England Patriots first-party material.
 
-## Deion Sanders
+Rejected / not stored: party-persona anecdotes and generic “Gronk” cultural shorthand were not stored because the batch favors verifiable formative and career-path facts.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+## Joe Thomas — OL — 5 concepts
 
-Distinctive researched identity facts: 7
+1. He played 10,363 consecutive offensive snaps, a streak the Browns describe as the longest believed in NFL history.
+2. During one Cleveland career he blocked for 20 different starting quarterbacks.
+3. He stayed with Cleveland for all 11 seasons even though the Browns produced only one winning season during his career.
+4. He was selected to the Pro Bowl in each of his first 10 NFL seasons.
+5. His durability and dominance made him a first-ballot Pro Football Hall of Famer, only the seventh offensive tackle to receive that distinction at the time.
 
-1. As a Florida State freshman he started at cornerback, played outfield for a nationally successful baseball team, and helped the track team win its conference championship.
-2. At North Fort Myers High School he earned All-State recognition in football, baseball, and basketball.
-3. He became known as "Prime Time," a nickname tied to the showmanship that followed him across sports.
-4. He was drafted professionally by both the Atlanta Falcons and the New York Yankees.
-5. While building his NFL career he also played Major League Baseball for the Yankees, Braves, Reds, and Giants.
-6. In October 1992 he attempted to play an NFL game and an NLCS game on the same day.
-7. He remains the only person to have played in both a World Series and a Super Bowl.
+Source summary: Cleveland Browns official Hall of Fame profile.
 
-Provenance summary: Florida State Athletics Hall of Fame, MLB.com, ESPN Classic.
+Rejected / not stored: the popular story about going fishing instead of attending the draft was not stored in this pass because the reviewed source set did not verify it strongly enough for canonical reuse.
 
-## Walter Payton
+## Orlando Pace — OL — 5 concepts
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+1. He broke into Ohio State's starting lineup on the first day of preseason camp as a freshman and started every game of his three-year college career.
+2. His dominant style made the “pancake block” famous, with Ohio State crediting him with 80 such blocks in his junior season.
+3. He became the first sophomore to win the Lombardi Award and then the first player to win it twice.
+4. As a junior he finished fourth in Heisman voting, an exceptionally high finish for an offensive lineman.
+5. He skipped his senior season and the St. Louis Rams selected him first overall in the 1997 NFL Draft.
 
-Distinctive researched identity facts: 6
+Source summary: Ohio State Athletics historical profile.
 
-1. Before football became his focus, he preferred playing drums in the marching band and did not join organized high-school football until after his older brother Eddie moved on.
-2. On his first play after joining the high-school football team, he ran 65 yards for a touchdown.
-3. He followed his older brother Eddie to Jackson State.
-4. He later wrote that major SEC programs such as Alabama, Mississippi State, and LSU did not recruit him in an era when those schools were only beginning to integrate their football programs, which helped shape his path to Jackson State.
-5. He acquired the nickname "Sweetness" while at Jackson State.
-6. He earned a bachelor's degree in communications at Jackson State in three and a half years and began master's-level work.
+Rejected / not stored: separate “Pancake Man” wording was not added as another concept because it is a derivative of the same pancake-block identity already represented.
 
-Provenance summary: Mississippi Encyclopedia, Chicago Bears historical HBCU feature, Pro Football Hall of Fame feature.
+## Reggie White — DL — 5 concepts
 
-## Johnny Unitas
+1. He was an ordained minister, a real-life identity that became inseparable from his football nickname.
+2. His combination of ministry and pass-rushing dominance produced the enduring nickname “Minister of Defense.”
+3. His 1993 signing with Green Bay was the signature star move at the dawn of modern unrestricted NFL free agency.
+4. Green Bay's defense jumped from 23rd in the league before his arrival to No. 2 in his first Packers season.
+5. The Packers retired his No. 92 after his death, recognizing the unusually large impact of only six seasons in Green Bay.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+Source summary: Green Bay Packers NFL 100 and team Hall of Fame retrospectives.
 
-Distinctive researched identity facts: 6
+Rejected / not stored: theology and personal-belief controversies were excluded as unnecessary to football recognition; the publicly documented minister identity is sufficient.
 
-1. Pittsburgh drafted him in the ninth round in 1955 but cut him before he threw a regular-season pass.
-2. After being cut, he played semi-pro football for the Bloomfield Rams for $6 a game.
-3. He worked construction to make ends meet while trying to keep his football career alive.
-4. A fan's letter helped prompt Baltimore to take a look at him before the Colts brought him in for a tryout.
-5. His first NFL pass was intercepted and returned for a touchdown.
-6. He kept wearing black high-top cleats into the 1970s even after low-cut white shoes had become the norm, making the footwear part of his signature image.
+## Dick Butkus — LB — 5 concepts
 
-Provenance summary: Pro Football Hall of Fame biography/artifact history and Los Angeles Times retrospective.
+1. His football path stayed close to home: Chicago high school, the University of Illinois, and then the Chicago Bears.
+2. At Illinois he starred on both sides of the ball, playing center on offense and linebacker on defense.
+3. He finished third in the 1964 Heisman Trophy voting as a linebacker.
+4. In 1965 both the NFL's Bears and the AFL's Denver Broncos drafted him, giving him a direct choice between rival leagues.
+5. The major annual award for college football's top linebacker carries his name: the Butkus Award.
 
-## Bill Walsh
+Source summary: Illinois Athletics Hall of Fame and Chicago Bears historical material.
 
-Existing structural/resume depth: retained in the existing Who Am I fact bank; focused test requires at least 15 facts.
+Rejected / not stored: intimidation quotations and broad “most feared ever” claims were excluded because they are subjective acclaim rather than neutral identity knowledge.
 
-Distinctive researched identity facts: 8
+## Ed Reed — DB — 5 concepts
 
-1. At San Jose State he described himself as an average end and also boxed.
-2. He began his coaching career at Washington High School in Fremont, where he led both the football and swim teams.
-3. Marv Levy hired him from the high-school ranks into his first college coaching job at California.
-4. The passing system later called the West Coast offense was developed while he worked for Paul Brown in Cincinnati, not after he arrived in San Francisco.
-5. Greg Cook's career-changing shoulder injury pushed Walsh and the Bengals toward the short, high-percentage passing concepts that became the foundation of that offense.
-6. He did not receive his first NFL head-coaching job until age 47, when San Francisco hired him in 1979.
-7. He took over a 49ers team coming off a 2-14 season and delivered the franchise's first NFL championship within three years.
-8. His staff became the root of an unusually influential coaching tree that included future head coaches such as Mike Holmgren, George Seifert, and Dennis Green.
+1. In high school he contributed at defensive back and kick returner while also seeing time at running back and quarterback.
+2. He averaged about 20 points per game in basketball and was a state-level track athlete in events ranging from the javelin to relays and jumps.
+3. He also competed for Miami's track and field program while building his football career.
+4. Miami moved him from strong safety to free safety for his senior season.
+5. Against Boston College in 2001, he took the ball from teammate Matt Walters after an interception and raced 80 yards for the clinching touchdown.
 
-Provenance summary: NFL.com/AP biography and retrospectives; Pro Football Hall of Fame biography.
+Source summary: University of Miami Athletics biography.
 
-## Rejected / not stored
+Rejected / not stored: generic “best safety ever” praise from coaches and opponents was excluded as evaluative rather than factual identity knowledge.
 
-- **Lawrence Taylor:** several circulated childhood/personality anecdotes were rejected because the stronger reviewed sources did not verify them well enough for reusable canonical knowledge.
-- **Ray Lewis:** popular childhood/name/wrestling-inspiration stories were rejected for the same provenance reason.
-- **Aaron Donald:** "retired in 2024" was not used as a stable identity fact. Retirement status is time-sensitive and, by the 2026 review date, no longer safe as timeless personal-identity knowledge.
-- **General:** structural derivatives such as start year, start decade, end decade, span, midpoint decade, and duration band were not counted as distinctive research concepts. They remain useful in the existing structured/resume bank but cannot inflate this pilot's identity-depth count.
+## J.J. Watt — DL — 5 concepts
 
-## Architecture decision
+1. He played organized hockey from early childhood into his teens before football became his full focus.
+2. He began college on scholarship as a tight end at Central Michigan rather than as a defensive lineman.
+3. After one Central Michigan season he gave up his scholarship and starting role to pursue a walk-on opportunity at Wisconsin as a defensive end.
+4. Between schools he took community-college classes, delivered pizzas, and trained from about 245 to 285 pounds before arriving at Wisconsin.
+5. His Wisconsin scout-team work was so strong that he earned a scholarship before playing a regular-season snap for the Badgers.
 
-`src/features/back-room/footballPersonIdentityKnowledge.ts` is the shared reusable owner for this pilot. It is keyed to `footballSubjectRegistry.ts`, reuses the existing `FootballFactSource` provenance shape from `footballFactualStatsCore.ts`, and stores one `conceptId` per underlying idea so paraphrases cannot inflate identity depth.
+Source summary: Wisconsin Athletics long-form journey feature and Hall of Fame profile.
 
-The module does **not** import Who Am I, define launch membership, define recognizability tiers, generate clue prose, fetch the web at runtime, or ask an LLM to judge truth. Who Am I can consume this knowledge in a later PR, and the same owner can support other Games without duplicating the research.
+Rejected / not stored: generalized “hardest worker” language was excluded; the concrete transfer, pizza-delivery, weight-gain, walk-on, and scholarship sequence carries the same identity value without subjective labeling.
+
+## Vince Lombardi — Head coach — 5 concepts
+
+1. At Fordham he played guard on the celebrated “Seven Blocks of Granite” line.
+2. After Fordham he briefly enrolled in law school before moving into teaching and coaching.
+3. At St. Cecilia High School he taught physics, chemistry, and Latin while coaching football and basketball.
+4. His path to Green Bay ran through assistant jobs at Fordham, Army under Red Blaik, and the New York Giants.
+5. After retiring following the 1967 season, he returned to coaching with Washington rather than ending his career in Green Bay.
+
+Source summary: Fordham Athletics Hall of Fame and the official Green Bay Packers media guide.
+
+Rejected / not stored: broad motivational quotations were excluded because they are often detached from reliable original context and are weaker identity facts than his unusual teaching and coaching path.
+
+## Don Shula — Head coach — 5 concepts
+
+1. He forged his parents' signatures so he could play high-school football after they initially forbade it.
+2. After college he spent a year coaching high-school football before the Cleveland Browns drafted him as a player.
+3. Before becoming a famous coach, he played seven NFL seasons as a defensive back for Cleveland, Baltimore, and Washington.
+4. Baltimore made him an NFL head coach at age 33, then the youngest head coach in league history.
+5. His head-coaching legacy began with seven winning seasons in Baltimore before the move to Miami that defined the rest of his career.
+
+Source summary: Pro Football Hall of Fame memorial biography.
+
+Rejected / not stored: restaurant-brand and rivalry-trophy material was judged less useful to recognizing the football person than his unusual player-to-coach path.
+
+## Tom Landry — Head coach — 5 concepts
+
+1. Before coaching, he played professionally as a defensive back, punter, and kick returner.
+2. The Giants made him a player-coach in 1954 and 1955 before he became a full-time defensive coach.
+3. He introduced the flex defense, one of the schematic ideas most closely associated with his coaching identity.
+4. He later revived the shotgun and helped popularize situational substitutions, continuing to change how teams organized offense and personnel.
+5. His fedora became a trademark part of his sideline image during 29 seasons as the Cowboys' original head coach.
+
+Source summary: Pro Football Hall of Fame and Dallas Cowboys Ring of Honor material.
+
+Rejected / not stored: the overly absolute claim that Landry single-handedly “invented the 4-3 defense” was not stored; the reviewed sources support a more nuanced innovation history and directly support the flex, shotgun, and substitution concepts retained here.
+
+## PR5 quality summary
+
+- Identities added: **20**.
+- Distinctive concepts added: **100**.
+- Cumulative NFL A-tier research coverage: **32 / 105 identities (30.5%)**.
+- Cumulative distinctive concepts: **177**.
+- NFL A-tier identities still remaining: **73**.
+- PR5 intentionally stopped at 20 instead of padding toward 30. This is the largest coherent batch completed at the same source and human-review standard in this slice.
+
+## Architecture result
+
+The PR4 model handled the larger batch cleanly. The existing open `tags` metadata, one `conceptId` per underlying idea, neutral fact `value`, canonical `subjectId`, and reusable `FootballFactSource` provenance were sufficient for multi-sport backgrounds, position changes, family/mentor relationships, draft paths, injuries, education, community/off-field identity, coaching innovations, iconic moments, and visual identity.
+
+No recurring research dimension required a schema change. In particular, relationships did not need a new rigid field: source-backed neutral statements plus open tags represented them without turning the model into a checklist.
+
+The module still does not import Who Am I, define launch membership, define recognizability tiers, generate clue prose, fetch the web at runtime, or ask an LLM to judge truth. Who Am I can consume this knowledge in a later PR, and the same owner can support other Games without duplicating the research.
