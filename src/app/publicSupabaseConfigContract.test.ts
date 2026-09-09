@@ -1,7 +1,8 @@
-import { mkdtemp, mkdir, writeFile } from "node:fs/promises";
+import { copyFile, mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { normalizeFootballRevealH264Level } from "../../scripts/normalize-football-reveal-codec.mjs";
 import { validatePublicSupabaseConfig } from "../../scripts/public-supabase-config.mjs";
 import {
   requiredApplicationMarkers,
@@ -35,6 +36,7 @@ describe("production Supabase browser configuration", () => {
     const dist = await mkdtemp(join(tmpdir(), "octagon-artifact-"));
     await mkdir(join(dist, "assets"));
     await mkdir(join(dist, "assets/share"), { recursive: true });
+    await mkdir(join(dist, "assets/football"), { recursive: true });
     await mkdir(join(dist, "preview-data"), { recursive: true });
     await writeFile(join(dist, "index.html"), '<script src="/assets/app.js"></script>');
     await writeFile(
@@ -51,6 +53,15 @@ describe("production Supabase browser configuration", () => {
       fighterAssets: { "jon-jones": "/jon.webp" },
     }));
     await Promise.all(requiredShareArtwork.map((name) => writeFile(join(dist, "assets/share", name), "<svg/>")));
+    await copyFile(
+      join(process.cwd(), "public/assets/football/football-play-reveal.mp4"),
+      join(dist, "assets/football/football-play-reveal.mp4"),
+    );
+    const picksReveal = await readFile(join(process.cwd(), "public/assets/football/football-picks-reveal.mp4"));
+    await writeFile(
+      join(dist, "assets/football/football-picks-reveal.mp4"),
+      normalizeFootballRevealH264Level(picksReveal),
+    );
 
     await expect(verifyProductionArtifact({ dist, env: {
       VITE_SUPABASE_URL: valid.url,
