@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useIdentity } from "../identity/IdentityProvider";
 import { playGameDefinition, type PlayGameId, type PlaySport } from "./playRegistry";
 
 export const PLAY_LANDING_COMMON_GAME_ORDER = [
@@ -47,7 +48,10 @@ type PlayLandingGameLibraryProps = {
 };
 
 export function PlayLandingGameLibrary({ sport, onNavigate, footer }: PlayLandingGameLibraryProps) {
-  const games = playLandingGameIds(sport).map((gameId) => playGameDefinition(gameId, sport));
+  const identity = useIdentity();
+  const games = playLandingGameIds(sport)
+    .filter((gameId) => gameId !== "20-questions" || identity.profile?.canControlPicks === true)
+    .map((gameId) => playGameDefinition(gameId, sport));
 
   return (
     <section className="play-landing-library" data-sport={sport} aria-labelledby={`${sport}-all-games-title`}>
