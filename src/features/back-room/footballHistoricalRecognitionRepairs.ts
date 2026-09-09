@@ -25,6 +25,10 @@ const nflHistoricalCoachFranchises: Readonly<Record<string, readonly string[]>> 
   "vince-lombardi": ["Green Bay Packers", "Washington"],
 };
 
+const nflHistoricalPlayerFranchises: Readonly<Record<string, readonly string[]>> = {
+  "nfl-sam-huff": ["New York Giants", "Washington"],
+};
+
 const player = (
   id: string,
   name: string,
@@ -119,6 +123,9 @@ const proHallHistoricalRepairs: readonly FootballHistoricalRecognitionRepair[] =
       ...(seed.kind === "coach" && nflHistoricalCoachFranchises[seed.id]?.length
         ? { franchises: nflHistoricalCoachFranchises[seed.id] }
         : {}),
+      ...(seed.kind === "player-career" && nflHistoricalPlayerFranchises[seed.id]?.length
+        ? { franchises: nflHistoricalPlayerFranchises[seed.id] }
+        : {}),
     },
     tier: seed.tier,
     evidenceFamily: "pro-football-hall-of-fame",
@@ -140,7 +147,7 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("nfl-jerry-rice", "Jerry Rice", "NFL", "WR", 1985, 2004, "A", "pro-football-hall-of-fame"),
   player("nfl-lawrence-taylor", "Lawrence Taylor", "NFL", "LB", 1981, 1993, "A", "pro-football-hall-of-fame"),
   player("nfl-reggie-white", "Reggie White", "NFL", "DL", 1985, 1998, "A", "pro-football-hall-of-fame"),
-  player("nfl-dick-butkus", "Dick Butkus", "NFL", "LB", 1965, 1973, "A", "pro-football-hall-of-fame"),
+  player("nfl-dick-butkus", "Dick Butkus", "NFL", "LB", 1965, 1973, "A", "pro-football-hall-of-fame", undefined, ["Chicago Bears"]),
   player("nfl-deacon-jones", "Deacon Jones", "NFL", "DL", 1961, 1974, "A", "pro-football-hall-of-fame"),
   player("nfl-gale-sayers", "Gale Sayers", "NFL", "RB", 1965, 1971, "A", "pro-football-hall-of-fame"),
   player("nfl-alan-page", "Alan Page", "NFL", "DL", 1967, 1981, "A", "pro-football-hall-of-fame"),
