@@ -146,13 +146,11 @@ function footballMetricFamily(metricId: FootballFactMetricId) {
   if (/punts/.test(metricId)) return "production:punting";
   if (/mvp|heisman|player-of-year|all-pro/.test(metricId)) return `award:${metricId}`;
   if (/super-bowl|national-titles|conference-titles/.test(metricId)) return `championship:${metricId}`;
-  if (/coach/.test(metricId)) return "coach-resume";
+  if (metricId === "nfl-coach-seasons-since-1999") return "coach-tenure";
+  if (metricId === "nfl-coach-win-percentage-since-1999") return "coach-record";
+  if (metricId === "nfl-coach-postseason-resume-since-1999") return "coach-postseason";
+  if (/cfb-coach-career-(wins|losses)/.test(metricId)) return "coach-record";
   return `metric:${metricId}`;
-}
-
-function countPhrase(value: unknown, singular: string, plural: string) {
-  const count = Number(value);
-  return count === 1 ? singular : `${count} ${plural}`;
 }
 
 function footballMetricText(metricId: FootballFactMetricId, value: unknown) {
@@ -228,6 +226,10 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   if (primaryDecade != null) clues.push(clue("era", `I was active in the ${primaryDecade}s.`, "broad", "era"));
   if (subject.startSeason != null && subject.endSeason != null) {
     clues.push(clue("career-span", `My ${subject.league} career lasted ${subject.endSeason - subject.startSeason + 1} seasons.`, "helpful", "era"));
+    if (isCoach) {
+      clues.push(clue("coach-start", `I became a ${subject.league} head coach in ${subject.startSeason}.`, "helpful", "era"));
+      clues.push(clue("coach-end", `My recorded ${subject.league} head-coaching run ends in ${subject.endSeason}.`, "helpful", "era"));
+    }
   }
 
   if (subject.school) clues.push(clue("school", `I played college football at ${subject.school}.`, subject.league === "NFL" ? "strong" : "helpful", `program:${slug(subject.school)}`));
@@ -240,9 +242,11 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   if (subject.nationalChampion) clues.push(clue("national-champion", "I was part of a college national championship team.", "strong", "championship:college"));
 
   const history = footballCareerAffiliationHistoryFor(subject);
+  const schoolFamily = subject.school ? `program:${slug(subject.school)}` : null;
   for (const affiliation of history?.affiliations ?? []) {
     const display = footballTeamSchoolMetadataFor(affiliation)?.name ?? affiliation;
     const family = subject.league === "NFL" ? `team:${slug(display)}` : `program:${slug(display)}`;
+    if (subject.league === "CFB" && family === schoolFamily) continue;
     const text = subject.league === "NFL"
       ? `I played or coached for the ${display}.`
       : `My college career included ${display}.`;
