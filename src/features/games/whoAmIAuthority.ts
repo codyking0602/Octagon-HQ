@@ -1,4 +1,5 @@
 import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
+import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonIdentityKnowledge";
 import {
   footballFactMetricDefinitions,
   formatFootballFact,
@@ -13,6 +14,8 @@ import {
   ufcFactualLedgerSubjects,
   type UfcFactualSubject,
 } from "../back-room/ufcFactualLedger";
+import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
+import { whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
 import {
   createWhoAmIRound,
   type WhoAmICandidate,
@@ -96,6 +99,34 @@ function distinctClues(clues: readonly WhoAmIClue[]) {
   });
 }
 
+function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
+  const knowledge = getUfcPersonIdentityKnowledge(subject.id);
+  if (!knowledge) return [];
+  return knowledge.facts.map((fact) => whoAmIIdentityKnowledgeClue({
+    subjectId: subject.id,
+    subjectName: subject.name,
+    subjectKind: "fighter",
+    factId: fact.factId,
+    conceptId: fact.conceptId,
+    value: fact.value,
+  }));
+}
+
+function footballPersonIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
+  const knowledge = getFootballPersonIdentityKnowledge(subject.id);
+  if (!knowledge) return [];
+  const subjectKind = subject.kind === "coach" ? "coach" : "player";
+  return knowledge.facts.map((fact) => whoAmIIdentityKnowledgeClue({
+    subjectId: subject.id,
+    subjectName: subject.name,
+    subjectKind,
+    factId: fact.factId,
+    conceptId: fact.conceptId,
+    value: fact.value,
+    tags: fact.tags,
+  }));
+}
+
 function ufcDivision(value: string) {
   return value
     .replace(/^women-s-/, "Women's ")
@@ -166,7 +197,7 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
     kind: "fighter",
     eraBand: eraBand(debutYear, lastYear),
     rescueGroup: subject.primaryDivision,
-    clues: distinctClues(clues),
+    clues: distinctClues([...clues, ...ufcPersonIdentityClues(subject)]),
   };
 }
 
@@ -293,6 +324,7 @@ function footballCandidate(subject: FootballSubjectProfile): WhoAmICandidate {
     clues: distinctClues([
       ...footballIdentityClues(subject),
       ...footballMetricClues(subject),
+      ...footballPersonIdentityClues(subject),
     ]),
   };
 }
