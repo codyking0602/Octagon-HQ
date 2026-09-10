@@ -139,7 +139,7 @@ const EXPECTED_A_RESEARCHED_COUNT = PR4_SUBJECT_IDS.size + PR5_SUBJECT_IDS.size 
 
 const EXPECTED_CFB_A_RESEARCHED_COUNT = 71;
 const EXPECTED_CFB_B_RESEARCHED_COUNT = 129;
-const EXPECTED_CFB_B_PROVENANCE_COUNT = 360;
+const EXPECTED_CFB_B_PROVENANCE_COUNT = 364;
 
 function normalized(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim();
@@ -380,12 +380,11 @@ describe("football person identity knowledge", () => {
     expect(new Set(bConceptIds).size).toBe(bConceptIds.length);
     expect(new Set(bNormalizedValues).size).toBe(bNormalizedValues.length);
 
-    const cfbDeionCoach = cfbLaunch.coaches.find((subject) => subject.name === "Deion Sanders");
-    expect(cfbDeionCoach?.id).toBe("deion-sanders-cfb");
-    expect(getFootballSubject("deion-sanders-cfb")?.league).toBe("CFB");
-    expect(getFootballPersonIdentityKnowledge("deion-sanders-cfb")?.facts).toHaveLength(5);
+    expect(cfbBTierIds.has("cfb-tim-brown")).toBe(true);
+    expect(cfbBTierIds.has("gary-patterson-cfb")).toBe(true);
+    expect(cfbBTierIds.has("cfb-roy-williams-wr")).toBe(false);
+    expect(cfbLaunch.coaches.some((subject) => subject.name === "Deion Sanders")).toBe(false);
     expect(getFootballSubject("deion-sanders")?.league).toBe("NFL");
-    expect(getFootballPersonIdentityKnowledge("deion-sanders")?.facts.length).toBeGreaterThanOrEqual(5);
 
     const cfbKnowledgeIds = new Set(
       footballPersonIdentityKnowledgeRecords
