@@ -118,11 +118,11 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
   if (/brother|sister|father|mother|son|daughter|family|mentor|teammate|friend|caregiver/.test(haystack)) {
     return "relationships";
   }
-  if (/champion|title|record|hall|award|heisman|super-bowl|all-american|all-pro|olympian|olympic|milestone|first-/.test(haystack)) {
-    return "accomplishments";
-  }
   if (/style|strik|grappl|wrestl|boxing|kickbox|jiu|judo|sambo|training|technique|stance|movement|slams|speed|power/.test(haystack)) {
     return "style";
+  }
+  if (/champion|title|record|hall|award|heisman|super-bowl|all-american|all-pro|olympian|olympic|milestone/.test(haystack)) {
+    return "accomplishments";
   }
   if (/born|birth|child|upbring|hometown|town|farm|migration|immig|school|college|degree|education|university|high-school|junior-college|amateur/.test(haystack)) {
     return "background";
