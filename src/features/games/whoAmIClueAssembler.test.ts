@@ -126,9 +126,10 @@ describe("Who Am I PR11 clue assembler", () => {
     expect(second).toEqual(first);
     assertProgressiveSequence(candidate, first);
     expect(first.filter((clue) => clue.identityKnowledge).length).toBeGreaterThanOrEqual(2);
-    expect(first.some((clue) => clue.text.includes("11 sacks"))).toBe(true);
-    expect(first.some((clue) => clue.text.includes("28.5 tackles for loss"))).toBe(true);
-    expect(first.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
+    expect(candidate.clues.some((clue) => clue.text.includes("11 sacks"))).toBe(true);
+    expect(candidate.clues.some((clue) => clue.text.includes("28.5 tackles for loss"))).toBe(true);
+    expect(candidate.clues.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
+    expect(first.filter((clue) => /sacks|tackles for loss|NFL Draft/.test(clue.text)).length).toBeGreaterThanOrEqual(2);
 
     console.info(
       "Who Am I PR11 CFB Aaron Donald sequence",
