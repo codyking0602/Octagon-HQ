@@ -6,6 +6,6 @@ describe("PR7 roster probe", () => {
     const roster = getFootballWhoAmILaunchPool("NFL").subjects
       .filter((subject) => subject.recognizabilityTier === "B")
       .map((subject) => ({ id: subject.id, name: subject.name, role: subject.position ?? subject.kind }));
-    console.log("PR7_ROSTER=" + JSON.stringify(roster));
+    console.log("PR7_ROSTER=" + JSON.stringify(roster)); // recovery rerun
   });
 });
