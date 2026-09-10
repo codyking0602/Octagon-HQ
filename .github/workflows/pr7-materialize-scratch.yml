@@ -29,15 +29,15 @@ jobs:
       - name: Materialize and capture validation evidence
         run: |
           set +e
-          node scripts/pr7-materialize-scratch.mjs > scripts/pr7-materialize-output.log 2>&1
+          node scripts/pr7-materialize-scratch.mjs > scripts/pr7-materialize-output.txt 2>&1
           status=$?
-          echo "exit_status=$status" >> scripts/pr7-materialize-output.log
+          echo "exit_status=$status" >> scripts/pr7-materialize-output.txt
           exit 0
       - name: Commit scratch recovery evidence and any materialized output
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add scripts/pr7-materialize-output.log
+          git add scripts/pr7-materialize-output.txt
           test ! -f scripts/pr7-materialize-validation.json || git add scripts/pr7-materialize-validation.json
           test ! -f docs/who-am-i-pr7-nfl-b-person-identity-audit.md || git add docs/who-am-i-pr7-nfl-b-person-identity-audit.md
           git add src/features/back-room/footballPersonIdentityKnowledge.ts
