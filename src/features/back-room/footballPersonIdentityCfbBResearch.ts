@@ -762,7 +762,7 @@ export const footballPersonIdentityCfbBResearch = [
     ["cfb-deangelo-williams--broken-foot-high-school-recovery", "A broken foot caused Williams to miss much of his sophomore high-school season before he returned to become one of Arkansas’s top players.", 165],
     ["cfb-deangelo-williams--family-breast-cancer-advocacy", "Williams’ mother Sandra and four of his aunts were diagnosed with breast cancer, a family history that drove his long-term public advocacy for breast-cancer awareness.", 167],
   ]],
-  ["deion-sanders", [
+  ["deion-sanders-cfb", [
     ["deion-sanders--prime-time-to-coach-prime", "Sanders carried the “Prime Time” identity from his playing days into coaching as “Coach Prime,” making the Prime persona a deliberate part of his coaching brand.", 168],
     ["deion-sanders--trinity-christian-high-school-coaching-start", "Before becoming a college head coach, Sanders served as offensive coordinator at Trinity Christian School in Texas, where the program won three consecutive state championships during his stint.", 168],
     ["deion-sanders--jackson-state-hbcu-exposure-push", "At Jackson State, Sanders made increasing HBCU player exposure a visible priority, including hosting a multi-school pro day and helping stage a nationally televised spring game.", 168],
