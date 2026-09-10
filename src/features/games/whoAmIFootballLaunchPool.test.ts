@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { buildFootballSubjectKnowledgeMetadata } from "../back-room/footballSubjectEligibility";
+import { getFootballSubject } from "../back-room/footballSubjectRegistry";
 import {
   FOOTBALL_WHO_AM_I_PLAYER_TARGETS,
   createUfcWhoAmIRound,
@@ -64,10 +66,19 @@ describe("Who Am I Football launch pools", () => {
   });
 
   it("keeps reviewed league-context recognition corrections scoped to the NFL identities", () => {
-    const nfl = getFootballWhoAmILaunchPool("NFL");
-    for (const name of ["Johnny Manziel", "Tim Tebow", "Vince Young"] as const) {
-      expect(nfl.players.find((subject) => subject.name === name)?.recognizabilityTier).toBe("B");
+    for (const [subjectId, name] of [
+      ["nflverse-player-00-0031409", "Johnny Manziel"],
+      ["nflverse-player-00-0027876", "Tim Tebow"],
+      ["nflverse-player-00-0024218", "Vince Young"],
+    ] as const) {
+      const subject = getFootballSubject(subjectId);
+      expect(subject?.name).toBe(name);
+      expect(subject?.league).toBe("NFL");
+      expect(subject?.kind).toBe("player-career");
+      expect(buildFootballSubjectKnowledgeMetadata(subject!).recognizabilityTier).toBe("B");
     }
+
+    const nfl = getFootballWhoAmILaunchPool("NFL");
     expect(nfl.coaches.some((subject) => subject.name === "Nick Saban" || subject.name === "Urban Meyer")).toBe(false);
 
     const cfb = getFootballWhoAmILaunchPool("CFB");
