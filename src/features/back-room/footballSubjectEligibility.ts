@@ -41,8 +41,6 @@ const REVIEWED_LEAGUE_CONTEXT_RECOGNITION_TIERS = new Map<string, FootballRecogn
   ["NFL:player-career:johnny manziel", "B"],
   ["NFL:player-career:tim tebow", "B"],
   ["NFL:player-career:vince young", "B"],
-  ["NFL:coach:nick saban", "D"],
-  ["NFL:coach:urban meyer", "D"],
 ]);
 
 function reviewedLeagueContextRecognitionTier(subject: FootballCanonicalSubject) {
