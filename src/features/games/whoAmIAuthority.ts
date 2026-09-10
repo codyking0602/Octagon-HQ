@@ -60,6 +60,7 @@ const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
   "cfb-career-receptions",
   "cfb-career-receiving-yards",
   "cfb-career-receiving-touchdowns",
+  "cfb-career-total-touchdowns",
   "cfb-career-defensive-interceptions",
   "cfb-career-sacks",
   "cfb-career-pass-breakups",
@@ -285,6 +286,20 @@ function footballMetricText(metricId: FootballFactMetricId, value: unknown, labe
   const formatted = formatFootballFact(metricId, numericValue);
   const clueFormatted = Number.isInteger(numericValue) ? numericValue.toLocaleString("en-US") : formatted;
   switch (metricId) {
+    case "cfb-career-games": return `I played in ${clueFormatted} college games.`;
+    case "cfb-career-passing-yards": return `I finished my college career with ${clueFormatted} passing yards.`;
+    case "cfb-career-passing-touchdowns": return `I finished my college career with ${clueFormatted} passing touchdowns.`;
+    case "cfb-career-rushing-yards": return `I finished my college career with ${clueFormatted} rushing yards.`;
+    case "cfb-career-rushing-touchdowns": return `I finished my college career with ${clueFormatted} rushing touchdowns.`;
+    case "cfb-career-receptions": return `I finished my college career with ${clueFormatted} receptions.`;
+    case "cfb-career-receiving-yards": return `I finished my college career with ${clueFormatted} receiving yards.`;
+    case "cfb-career-receiving-touchdowns": return `I finished my college career with ${clueFormatted} receiving touchdowns.`;
+    case "cfb-career-total-touchdowns": return `I finished my college career with ${clueFormatted} total touchdowns.`;
+    case "cfb-career-defensive-interceptions": return `I finished my college career with ${clueFormatted} defensive interceptions.`;
+    case "cfb-career-sacks": return `I finished my college career with ${clueFormatted} sacks.`;
+    case "cfb-career-pass-breakups": return `I finished my college career with ${clueFormatted} pass breakups.`;
+    case "cfb-career-forced-fumbles": return `I finished my college career with ${clueFormatted} forced fumbles.`;
+    case "cfb-career-fumble-recoveries": return `I finished my college career with ${clueFormatted} fumble recoveries.`;
     case "cfb-best-season-passing-yards": return `My best college season produced ${clueFormatted} passing yards.`;
     case "cfb-best-season-passing-touchdowns": return `My best college season produced ${clueFormatted} passing touchdowns.`;
     case "cfb-best-season-interceptions": return `My best college season included ${clueFormatted} interceptions thrown.`;
