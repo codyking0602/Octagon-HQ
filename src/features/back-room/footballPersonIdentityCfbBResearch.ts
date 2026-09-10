@@ -360,6 +360,10 @@ export const footballPersonIdentityCfbBResearchSources = [
   ["https://fightingirish.com/tim-brown-receives-ncaa-silver-anniversary-award/","Notre Dame Athletics — Tim Brown Receives NCAA Silver Anniversary Award"],
   ["https://fightingirish.com/news/2017/09/16/heisman-anniversaries-celebrating-john-lujack-and-tim-brown","Notre Dame Athletics — Heisman Anniversaries: Celebrating John Lujack and Tim Brown"],
   ["https://fightingirish.com/touchdown-timmy-becomes-latest-heisman-winner-to-enter-college-football-hall-of-fame/","Notre Dame Athletics — Touchdown Timmy College Football Hall of Fame feature"],
+  ["https://gofrogs.com/news/2004/7/26/Gary_Patterson_The_Next_Level","TCU Athletics — Gary Patterson: The Next Level"],
+  ["https://gofrogs.com/news/2000/12/8/TCU_Promotes_Patterson_to_Head_Football_Coach","TCU Athletics — TCU Promotes Patterson to Head Football Coach"],
+  ["https://gofrogs.com/sports/football/roster/coaches/gary-patterson/759","TCU Athletics — Gary Patterson coach biography"],
+  ["https://footballfoundation.org/honors/hall-of-fame/gary-patterson/2589","National Football Foundation — Gary Patterson Hall of Fame biography"],
   // PR9_SOURCE_INSERT
 ] as const;
 
