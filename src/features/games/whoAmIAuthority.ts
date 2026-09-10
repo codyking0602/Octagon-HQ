@@ -1,4 +1,6 @@
 import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
+import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonIdentityKnowledge";
+import { footballRecognitionEvidenceFor } from "../back-room/footballRecognitionEvidence";
 import {
   footballFactMetricDefinitions,
   formatFootballFact,
@@ -13,6 +15,8 @@ import {
   ufcFactualLedgerSubjects,
   type UfcFactualSubject,
 } from "../back-room/ufcFactualLedger";
+import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
+import { whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
 import {
   createWhoAmIRound,
   type WhoAmICandidate,
@@ -34,8 +38,12 @@ const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
   "nfl-career-receptions",
   "nfl-career-receiving-yards",
   "nfl-career-receiving-touchdowns",
+  "nfl-career-solo-tackles",
+  "nfl-career-tackles-for-loss",
+  "nfl-career-forced-fumbles",
   "nfl-career-sacks",
   "nfl-career-interceptions",
+  "nfl-career-passes-defended",
   "nfl-career-field-goals-made",
   "nfl-career-punts",
   "nfl-ap-mvp-awards",
@@ -53,8 +61,24 @@ const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
   "cfb-career-receptions",
   "cfb-career-receiving-yards",
   "cfb-career-receiving-touchdowns",
+  "cfb-career-total-touchdowns",
   "cfb-career-defensive-interceptions",
   "cfb-career-sacks",
+  "cfb-career-pass-breakups",
+  "cfb-career-forced-fumbles",
+  "cfb-career-fumble-recoveries",
+  "cfb-best-season-passing-yards",
+  "cfb-best-season-passing-touchdowns",
+  "cfb-best-season-interceptions",
+  "cfb-best-season-passer-rating",
+  "cfb-best-season-rushing-yards",
+  "cfb-best-season-rushing-touchdowns",
+  "cfb-best-season-receptions",
+  "cfb-best-season-receiving-yards",
+  "cfb-best-season-receiving-touchdowns",
+  "cfb-best-season-sacks",
+  "cfb-best-season-tackles-for-loss",
+  "cfb-best-season-defensive-interceptions",
   "cfb-heisman-awards",
   "cfb-coach-career-wins",
   "cfb-coach-career-losses",
@@ -96,6 +120,34 @@ function distinctClues(clues: readonly WhoAmIClue[]) {
   });
 }
 
+function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
+  const knowledge = getUfcPersonIdentityKnowledge(subject.id);
+  if (!knowledge) return [];
+  return knowledge.facts.map((fact) => whoAmIIdentityKnowledgeClue({
+    subjectId: subject.id,
+    subjectName: subject.name,
+    subjectKind: "fighter",
+    factId: fact.factId,
+    conceptId: fact.conceptId,
+    value: fact.value,
+  }));
+}
+
+function footballPersonIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
+  const knowledge = getFootballPersonIdentityKnowledge(subject.id);
+  if (!knowledge) return [];
+  const subjectKind = subject.kind === "coach" ? "coach" : "player";
+  return knowledge.facts.map((fact) => whoAmIIdentityKnowledgeClue({
+    subjectId: subject.id,
+    subjectName: subject.name,
+    subjectKind,
+    factId: fact.factId,
+    conceptId: fact.conceptId,
+    value: fact.value,
+    tags: fact.tags,
+  }));
+}
+
 function ufcDivision(value: string) {
   return value
     .replace(/^women-s-/, "Women's ")
@@ -117,6 +169,59 @@ function footballEraBand(subject: FootballSubjectProfile): WhoAmIEraBand | undef
 
 function displayAffiliation(league: "NFL" | "CFB", value: string) {
   return league === "NFL" ? NFL_TEAM_NAMES[value] ?? value : value;
+}
+
+function normalizedPersonName(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+const nflProfilesByName = new Map<string, FootballSubjectProfile[]>();
+for (const subject of queryFootballSubjects({
+  league: "NFL",
+  includeProjectedSourceSubjects: true,
+  includeProjectedCanonicalRecognition: true,
+})) {
+  if (subject.kind !== "player-career") continue;
+  const key = normalizedPersonName(subject.name);
+  nflProfilesByName.set(key, [...(nflProfilesByName.get(key) ?? []), subject]);
+}
+
+function nflProfileDepth(subject: FootballSubjectProfile) {
+  const recordDepth = getFootballFactualRecord(subject.id)?.facts.length ?? 0;
+  const identityDepth = [
+    subject.startSeason,
+    subject.endSeason,
+    subject.draftYear,
+    subject.draftRound,
+    subject.draftPick,
+    subject.franchises?.length,
+  ].filter((value) => value != null).length;
+  return recordDepth * 10 + identityDepth;
+}
+
+function hasFootballDraftIdentity(subject: FootballSubjectProfile) {
+  return (
+    subject.draftYear != null
+    || subject.draftRound != null
+    || subject.draftPick != null
+    || subject.firstRoundPick
+    || subject.firstOverallPick
+    || subject.undrafted
+  );
+}
+
+function footballDraftProfile(subject: FootballSubjectProfile) {
+  if (hasFootballDraftIdentity(subject)) return subject;
+  if (subject.kind !== "player-career") return subject;
+  return [...(nflProfilesByName.get(normalizedPersonName(subject.name)) ?? [])]
+    .filter(hasFootballDraftIdentity)
+    .sort((left, right) => (
+      Number(right.draftPick != null) - Number(left.draftPick != null)
+      || Number(right.draftRound != null) - Number(left.draftRound != null)
+      || Number(right.draftYear != null) - Number(left.draftYear != null)
+      || nflProfileDepth(right) - nflProfileDepth(left)
+      || left.id.localeCompare(right.id)
+    ))[0] ?? subject;
 }
 
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
@@ -166,14 +271,41 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
     kind: "fighter",
     eraBand: eraBand(debutYear, lastYear),
     rescueGroup: subject.primaryDivision,
-    clues: distinctClues(clues),
+    clues: distinctClues([...clues, ...ufcPersonIdentityClues(subject)]),
   };
 }
 
 function footballMetricText(metricId: FootballFactMetricId, value: unknown, label: string) {
   const numericValue = Number(value);
   const formatted = formatFootballFact(metricId, numericValue);
+  const clueFormatted = Number.isInteger(numericValue) ? numericValue.toLocaleString("en-US") : formatted;
   switch (metricId) {
+    case "cfb-career-games": return `I played in ${clueFormatted} college games.`;
+    case "cfb-career-passing-yards": return `I finished my college career with ${clueFormatted} passing yards.`;
+    case "cfb-career-passing-touchdowns": return `I finished my college career with ${clueFormatted} passing touchdowns.`;
+    case "cfb-career-rushing-yards": return `I finished my college career with ${clueFormatted} rushing yards.`;
+    case "cfb-career-rushing-touchdowns": return `I finished my college career with ${clueFormatted} rushing touchdowns.`;
+    case "cfb-career-receptions": return `I finished my college career with ${clueFormatted} receptions.`;
+    case "cfb-career-receiving-yards": return `I finished my college career with ${clueFormatted} receiving yards.`;
+    case "cfb-career-receiving-touchdowns": return `I finished my college career with ${clueFormatted} receiving touchdowns.`;
+    case "cfb-career-total-touchdowns": return `I finished my college career with ${clueFormatted} total touchdowns.`;
+    case "cfb-career-defensive-interceptions": return `I finished my college career with ${clueFormatted} defensive interceptions.`;
+    case "cfb-career-sacks": return `I finished my college career with ${clueFormatted} sacks.`;
+    case "cfb-career-pass-breakups": return `I finished my college career with ${clueFormatted} pass breakups.`;
+    case "cfb-career-forced-fumbles": return `I finished my college career with ${clueFormatted} forced fumbles.`;
+    case "cfb-career-fumble-recoveries": return `I finished my college career with ${clueFormatted} fumble recoveries.`;
+    case "cfb-best-season-passing-yards": return `My best college season produced ${clueFormatted} passing yards.`;
+    case "cfb-best-season-passing-touchdowns": return `My best college season produced ${clueFormatted} passing touchdowns.`;
+    case "cfb-best-season-interceptions": return `My best college season included ${clueFormatted} interceptions thrown.`;
+    case "cfb-best-season-passer-rating": return `My best college season included a ${clueFormatted} passer rating.`;
+    case "cfb-best-season-rushing-yards": return `My best college season produced ${clueFormatted} rushing yards.`;
+    case "cfb-best-season-rushing-touchdowns": return `My best college season produced ${clueFormatted} rushing touchdowns.`;
+    case "cfb-best-season-receptions": return `My best college season included ${clueFormatted} receptions.`;
+    case "cfb-best-season-receiving-yards": return `My best college season produced ${clueFormatted} receiving yards.`;
+    case "cfb-best-season-receiving-touchdowns": return `My best college season produced ${clueFormatted} receiving touchdowns.`;
+    case "cfb-best-season-sacks": return `My best college season included ${clueFormatted} sacks.`;
+    case "cfb-best-season-tackles-for-loss": return `My best college season included ${clueFormatted} tackles for loss.`;
+    case "cfb-best-season-defensive-interceptions": return `My best college season included ${clueFormatted} defensive interceptions.`;
     case "cfb-heisman-awards": return numericValue === 1 ? "I won the Heisman Trophy." : `I won the Heisman Trophy ${formatted} times.`;
     case "nfl-ap-mvp-awards": return numericValue === 1 ? "I won the AP NFL MVP award." : `I won ${formatted} AP NFL MVP awards.`;
     case "nfl-super-bowl-titles": return numericValue === 1 ? "I won a Super Bowl title." : `I won ${formatted} Super Bowl titles.`;
@@ -198,6 +330,32 @@ function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
         : "helpful";
       return clue(`fact:${fact.metricId}`, footballMetricText(fact.metricId, fact.value, label), band);
     });
+}
+
+function footballRecognitionClues(subject: FootballSubjectProfile): WhoAmIClue[] {
+  if (subject.league !== "CFB" || subject.kind !== "player-career") return [];
+  const evidence = footballRecognitionEvidenceFor(subject);
+  if (!evidence) return [];
+
+  if (evidence.basis === "first-team-all-america") {
+    return [{
+      ...clue("recognition:first-team-all-america", "I earned first-team All-America recognition in college.", "strong"),
+      conceptId: "recognition:first-team-all-america",
+      facet: "accomplishments",
+      revealPriority: 15,
+    }];
+  }
+
+  if (evidence.basis === "major-award-or-hall-of-fame") {
+    return [{
+      ...clue("recognition:major-award-or-hall-of-fame", "My college résumé includes a major national award or Hall of Fame recognition.", "strong"),
+      conceptId: "recognition:major-award-or-hall-of-fame",
+      facet: "accomplishments",
+      revealPriority: 15,
+    }];
+  }
+
+  return [];
 }
 
 function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
@@ -230,10 +388,28 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
 
   if (subject.school) clues.push(clue("school", `I played college football at ${subject.school}.`, subject.league === "NFL" ? "helpful" : "broad"));
   if (subject.conference) clues.push(clue("conference", `I competed in the ${subject.conference}.`, "helpful"));
-  if (subject.draftYear != null) clues.push(clue("draft-year", `I entered the NFL draft in ${subject.draftYear}.`, "helpful"));
-  if (subject.firstOverallPick) clues.push(clue("first-overall", "I was the No. 1 overall NFL draft pick.", "strong"));
-  else if (subject.firstRoundPick) clues.push(clue("first-round", "I was a first-round NFL draft pick.", "strong"));
-  else if (subject.undrafted) clues.push(clue("undrafted", "I entered the NFL undrafted.", "strong"));
+  const draftProfile = footballDraftProfile(subject);
+  if (draftProfile.draftYear != null && draftProfile.draftPick != null) {
+    clues.push(clue(
+      "draft-pick",
+      `I was selected No. ${draftProfile.draftPick} overall in the ${draftProfile.draftYear} NFL Draft.`,
+      "strong",
+    ));
+  } else if (draftProfile.draftYear != null && draftProfile.draftRound != null) {
+    clues.push(clue(
+      "draft-round",
+      `I was selected in round ${draftProfile.draftRound} of the ${draftProfile.draftYear} NFL Draft.`,
+      "strong",
+    ));
+  } else if (draftProfile.draftYear != null) {
+    clues.push(clue("draft-year", `I entered the NFL draft in ${draftProfile.draftYear}.`, "helpful"));
+  } else if (draftProfile.firstOverallPick) {
+    clues.push(clue("first-overall", "I was the No. 1 overall NFL draft pick.", "strong"));
+  } else if (draftProfile.firstRoundPick) {
+    clues.push(clue("first-round", "I was a first-round NFL draft pick.", "strong"));
+  } else if (draftProfile.undrafted) {
+    clues.push(clue("undrafted", "I entered the NFL undrafted.", "strong"));
+  }
   if (subject.heismanWinner) clues.push(clue("heisman", "I won the Heisman Trophy.", "strong"));
   if (subject.nationalChampion) clues.push(clue("national-champion", "I was part of a college national championship team.", "strong"));
 
@@ -293,6 +469,8 @@ function footballCandidate(subject: FootballSubjectProfile): WhoAmICandidate {
     clues: distinctClues([
       ...footballIdentityClues(subject),
       ...footballMetricClues(subject),
+      ...footballRecognitionClues(subject),
+      ...footballPersonIdentityClues(subject),
     ]),
   };
 }
