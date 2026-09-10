@@ -37,8 +37,12 @@ const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
   "nfl-career-receptions",
   "nfl-career-receiving-yards",
   "nfl-career-receiving-touchdowns",
+  "nfl-career-solo-tackles",
+  "nfl-career-tackles-for-loss",
+  "nfl-career-forced-fumbles",
   "nfl-career-sacks",
   "nfl-career-interceptions",
+  "nfl-career-passes-defended",
   "nfl-career-field-goals-made",
   "nfl-career-punts",
   "nfl-ap-mvp-awards",
@@ -58,6 +62,21 @@ const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
   "cfb-career-receiving-touchdowns",
   "cfb-career-defensive-interceptions",
   "cfb-career-sacks",
+  "cfb-career-pass-breakups",
+  "cfb-career-forced-fumbles",
+  "cfb-career-fumble-recoveries",
+  "cfb-best-season-passing-yards",
+  "cfb-best-season-passing-touchdowns",
+  "cfb-best-season-interceptions",
+  "cfb-best-season-passer-rating",
+  "cfb-best-season-rushing-yards",
+  "cfb-best-season-rushing-touchdowns",
+  "cfb-best-season-receptions",
+  "cfb-best-season-receiving-yards",
+  "cfb-best-season-receiving-touchdowns",
+  "cfb-best-season-sacks",
+  "cfb-best-season-tackles-for-loss",
+  "cfb-best-season-defensive-interceptions",
   "cfb-heisman-awards",
   "cfb-coach-career-wins",
   "cfb-coach-career-losses",
@@ -150,6 +169,34 @@ function displayAffiliation(league: "NFL" | "CFB", value: string) {
   return league === "NFL" ? NFL_TEAM_NAMES[value] ?? value : value;
 }
 
+function normalizedPersonName(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+const nflDraftProfileByName = new Map(
+  queryFootballSubjects({
+    league: "NFL",
+    includeProjectedSourceSubjects: true,
+    includeProjectedCanonicalRecognition: true,
+  })
+    .filter((subject) => subject.kind === "player-career")
+    .filter((subject) => (
+      subject.draftYear != null
+      || subject.draftRound != null
+      || subject.draftPick != null
+      || subject.firstRoundPick
+      || subject.firstOverallPick
+      || subject.undrafted
+    ))
+    .map((subject) => [normalizedPersonName(subject.name), subject] as const),
+);
+
+function footballDraftProfile(subject: FootballSubjectProfile) {
+  if (subject.kind !== "player-career") return subject;
+  if (subject.league === "NFL") return subject;
+  return nflDraftProfileByName.get(normalizedPersonName(subject.name)) ?? subject;
+}
+
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   const wins = subject.fights.filter((fight) => fight.result === "win");
   const losses = subject.fights.filter((fight) => fight.result === "loss");
@@ -205,6 +252,18 @@ function footballMetricText(metricId: FootballFactMetricId, value: unknown, labe
   const numericValue = Number(value);
   const formatted = formatFootballFact(metricId, numericValue);
   switch (metricId) {
+    case "cfb-best-season-passing-yards": return `My best college season produced ${formatted} passing yards.`;
+    case "cfb-best-season-passing-touchdowns": return `My best college season produced ${formatted} passing touchdowns.`;
+    case "cfb-best-season-interceptions": return `My best college season included ${formatted} interceptions thrown.`;
+    case "cfb-best-season-passer-rating": return `My best college season included a ${formatted} passer rating.`;
+    case "cfb-best-season-rushing-yards": return `My best college season produced ${formatted} rushing yards.`;
+    case "cfb-best-season-rushing-touchdowns": return `My best college season produced ${formatted} rushing touchdowns.`;
+    case "cfb-best-season-receptions": return `My best college season included ${formatted} receptions.`;
+    case "cfb-best-season-receiving-yards": return `My best college season produced ${formatted} receiving yards.`;
+    case "cfb-best-season-receiving-touchdowns": return `My best college season produced ${formatted} receiving touchdowns.`;
+    case "cfb-best-season-sacks": return `My best college season included ${formatted} sacks.`;
+    case "cfb-best-season-tackles-for-loss": return `My best college season included ${formatted} tackles for loss.`;
+    case "cfb-best-season-defensive-interceptions": return `My best college season included ${formatted} defensive interceptions.`;
     case "cfb-heisman-awards": return numericValue === 1 ? "I won the Heisman Trophy." : `I won the Heisman Trophy ${formatted} times.`;
     case "nfl-ap-mvp-awards": return numericValue === 1 ? "I won the AP NFL MVP award." : `I won ${formatted} AP NFL MVP awards.`;
     case "nfl-super-bowl-titles": return numericValue === 1 ? "I won a Super Bowl title." : `I won ${formatted} Super Bowl titles.`;
@@ -261,10 +320,28 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
 
   if (subject.school) clues.push(clue("school", `I played college football at ${subject.school}.`, subject.league === "NFL" ? "helpful" : "broad"));
   if (subject.conference) clues.push(clue("conference", `I competed in the ${subject.conference}.`, "helpful"));
-  if (subject.draftYear != null) clues.push(clue("draft-year", `I entered the NFL draft in ${subject.draftYear}.`, "helpful"));
-  if (subject.firstOverallPick) clues.push(clue("first-overall", "I was the No. 1 overall NFL draft pick.", "strong"));
-  else if (subject.firstRoundPick) clues.push(clue("first-round", "I was a first-round NFL draft pick.", "strong"));
-  else if (subject.undrafted) clues.push(clue("undrafted", "I entered the NFL undrafted.", "strong"));
+  const draftProfile = footballDraftProfile(subject);
+  if (draftProfile.draftYear != null && draftProfile.draftPick != null) {
+    clues.push(clue(
+      "draft-pick",
+      `I was selected No. ${draftProfile.draftPick} overall in the ${draftProfile.draftYear} NFL Draft.`,
+      "strong",
+    ));
+  } else if (draftProfile.draftYear != null && draftProfile.draftRound != null) {
+    clues.push(clue(
+      "draft-round",
+      `I was selected in round ${draftProfile.draftRound} of the ${draftProfile.draftYear} NFL Draft.`,
+      "strong",
+    ));
+  } else if (draftProfile.draftYear != null) {
+    clues.push(clue("draft-year", `I entered the NFL draft in ${draftProfile.draftYear}.`, "helpful"));
+  } else if (draftProfile.firstOverallPick) {
+    clues.push(clue("first-overall", "I was the No. 1 overall NFL draft pick.", "strong"));
+  } else if (draftProfile.firstRoundPick) {
+    clues.push(clue("first-round", "I was a first-round NFL draft pick.", "strong"));
+  } else if (draftProfile.undrafted) {
+    clues.push(clue("undrafted", "I entered the NFL undrafted.", "strong"));
+  }
   if (subject.heismanWinner) clues.push(clue("heisman", "I won the Heisman Trophy.", "strong"));
   if (subject.nationalChampion) clues.push(clue("national-champion", "I was part of a college national championship team.", "strong"));
 
