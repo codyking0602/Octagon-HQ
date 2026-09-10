@@ -40,6 +40,8 @@ jobs:
           import gzip
           import importlib.util
           import json
+          import struct
+          import zlib
           from pathlib import Path
 
           spec = importlib.util.spec_from_file_location("pr7_recovery", "/tmp/pr7_recover.py")
