@@ -53,50 +53,6 @@ const cfb = (
   provider: FootballSourceProviderId = "sports-reference",
 ): CfbSeed => [id, name, position, school, tier, basis, provider];
 
-const activeDecades = (startSeason: number, endSeason: number) => Array.from(
-  { length: Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1 },
-  (_, index) => (Math.floor(startSeason / 10) + index) * 10,
-);
-
-interface CfbResumeIdentity {
-  startSeason: number;
-  endSeason: number;
-  draftYear: number;
-  draftRound: number;
-  draftPick: number;
-}
-
-const cfbResumeIdentityById: Readonly<Record<string, CfbResumeIdentity>> = {
-  "cfb-aaron-donald": { startSeason: 2010, endSeason: 2013, draftYear: 2014, draftRound: 1, draftPick: 13 },
-  "cfb-colt-brennan": { startSeason: 2005, endSeason: 2007, draftYear: 2008, draftRound: 6, draftPick: 186 },
-  "cfb-lamichael-james": { startSeason: 2009, endSeason: 2011, draftYear: 2012, draftRound: 2, draftPick: 61 },
-  "cfb-jordan-shipley": { startSeason: 2006, endSeason: 2009, draftYear: 2010, draftRound: 3, draftPick: 84 },
-  "cfb-marqise-lee": { startSeason: 2011, endSeason: 2013, draftYear: 2014, draftRound: 2, draftPick: 39 },
-  "cfb-ryan-broyles": { startSeason: 2008, endSeason: 2011, draftYear: 2012, draftRound: 2, draftPick: 54 },
-  "cfb-chase-coffman": { startSeason: 2005, endSeason: 2008, draftYear: 2009, draftRound: 3, draftPick: 98 },
-  "cfb-dwayne-allen": { startSeason: 2009, endSeason: 2011, draftYear: 2012, draftRound: 3, draftPick: 64 },
-  "cfb-kellen-winslow-ii": { startSeason: 2001, endSeason: 2003, draftYear: 2004, draftRound: 1, draftPick: 6 },
-  "cfb-alex-mack": { startSeason: 2005, endSeason: 2008, draftYear: 2009, draftRound: 1, draftPick: 21 },
-  "cfb-barrett-jones": { startSeason: 2009, endSeason: 2012, draftYear: 2013, draftRound: 4, draftPick: 113 },
-  "cfb-brandon-scherff": { startSeason: 2011, endSeason: 2014, draftYear: 2015, draftRound: 1, draftPick: 5 },
-  "cfb-bryant-mckinnie": { startSeason: 2000, endSeason: 2001, draftYear: 2002, draftRound: 1, draftPick: 7 },
-  "cfb-dbrickashaw-ferguson": { startSeason: 2002, endSeason: 2005, draftYear: 2006, draftRound: 1, draftPick: 4 },
-  "cfb-david-decastro": { startSeason: 2009, endSeason: 2011, draftYear: 2012, draftRound: 1, draftPick: 24 },
-  "cfb-jake-long": { startSeason: 2004, endSeason: 2007, draftYear: 2008, draftRound: 1, draftPick: 1 },
-  "cfb-jake-matthews": { startSeason: 2010, endSeason: 2013, draftYear: 2014, draftRound: 1, draftPick: 6 },
-  "cfb-joe-alt": { startSeason: 2021, endSeason: 2023, draftYear: 2024, draftRound: 1, draftPick: 5 },
-  "cfb-david-pollack": { startSeason: 2001, endSeason: 2004, draftYear: 2005, draftRound: 1, draftPick: 17 },
-  "cfb-glenn-dorsey": { startSeason: 2004, endSeason: 2007, draftYear: 2008, draftRound: 1, draftPick: 5 },
-  "cfb-manti-teo": { startSeason: 2009, endSeason: 2012, draftYear: 2013, draftRound: 2, draftPick: 38 },
-  "cfb-dan-morgan": { startSeason: 1997, endSeason: 2000, draftYear: 2001, draftRound: 1, draftPick: 11 },
-  "cfb-jaylon-smith": { startSeason: 2013, endSeason: 2015, draftYear: 2016, draftRound: 2, draftPick: 34 },
-  "cfb-rolando-mcclain": { startSeason: 2007, endSeason: 2009, draftYear: 2010, draftRound: 1, draftPick: 8 },
-  "cfb-sean-taylor": { startSeason: 2001, endSeason: 2003, draftYear: 2004, draftRound: 1, draftPick: 5 },
-  "cfb-darqueze-dennard": { startSeason: 2010, endSeason: 2013, draftYear: 2014, draftRound: 1, draftPick: 24 },
-  "cfb-jeff-okudah": { startSeason: 2017, endSeason: 2019, draftYear: 2020, draftRound: 1, draftPick: 3 },
-  "cfb-morris-claiborne": { startSeason: 2009, endSeason: 2011, draftYear: 2012, draftRound: 1, draftPick: 6 },
-};
-
 const cfbSeeds: readonly CfbSeed[] = [
   // Quarterbacks — college identity is independent from NFL success.
   cfb("cfb-michael-vick", "Michael Vick", "QB", "Virginia Tech", "B", "reviewed-national-recognition"),
@@ -538,34 +494,21 @@ const gameSeeds: readonly GameSeed[] = [
 
 const cfbRecords = cfbSeeds.map(([
   id, name, position, school, tier, basis = "first-team-all-america", provider = "sports-reference",
-]): FootballRecognitionEvidenceRecord => {
-  const resume = cfbResumeIdentityById[id];
-  return {
-    id,
-    name,
-    kind: "player-career",
-    league: "CFB",
-    position,
-    school,
-    ...(resume ? {
-      startSeason: resume.startSeason,
-      endSeason: resume.endSeason,
-      activeDecades: activeDecades(resume.startSeason, resume.endSeason),
-      draftYear: resume.draftYear,
-      draftRound: resume.draftRound,
-      draftPick: resume.draftPick,
-      firstRoundPick: resume.draftRound === 1,
-      firstOverallPick: resume.draftPick === 1,
-    } : {}),
-    tier,
-    basis,
-    sourceProvider: provider,
-    sourceId: `${provider}:${id}`,
-    corroboratingSourceProviders: provider === "official-cfb-awards"
-      ? ["sports-reference"]
-      : ["ncaafb", "official-cfb-awards"].filter((candidate) => candidate !== provider) as FootballSourceProviderId[],
-  };
-});
+]): FootballRecognitionEvidenceRecord => ({
+  id,
+  name,
+  kind: "player-career",
+  league: "CFB",
+  position,
+  school,
+  tier,
+  basis,
+  sourceProvider: provider,
+  sourceId: `${provider}:${id}`,
+  corroboratingSourceProviders: provider === "official-cfb-awards"
+    ? ["sports-reference"]
+    : ["ncaafb", "official-cfb-awards"].filter((candidate) => candidate !== provider) as FootballSourceProviderId[],
+}));
 
 const nflRecords = nflSeeds.map(([id, name, position, tier]): FootballRecognitionEvidenceRecord => ({
   id,
@@ -688,12 +631,6 @@ export const footballRecognitionEvidenceSubjects: readonly FootballRecognitionId
   startSeason: record.startSeason,
   endSeason: record.endSeason,
   activeDecades: record.activeDecades,
-  draftYear: record.draftYear,
-  draftRound: record.draftRound,
-  draftPick: record.draftPick,
-  firstRoundPick: record.firstRoundPick,
-  firstOverallPick: record.firstOverallPick,
-  undrafted: record.undrafted,
   aliases: record.aliases,
 }));
 
