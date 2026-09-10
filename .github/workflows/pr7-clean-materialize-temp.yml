@@ -27,8 +27,13 @@ jobs:
       - name: Fetch preserved PR7 history
         run: git fetch origin feat/who-am-i-nfl-b-person-identity-research
 
-      - name: Restore focused PR7 test
-        run: git show 26e91f9fd7c42b496f16d06ca6253d07edfe8071:src/features/back-room/footballPersonIdentityKnowledge.test.ts > src/features/back-room/footballPersonIdentityKnowledge.test.ts
+      - name: Restore focused PR7 test and print canonical B-tier roster
+        run: |
+          git show 26e91f9fd7c42b496f16d06ca6253d07edfe8071:src/features/back-room/footballPersonIdentityKnowledge.test.ts > src/features/back-room/footballPersonIdentityKnowledge.test.ts
+          git show fbb2f2dfd02efff2a62e4289dea803a590ffb27d:src/features/back-room/pr7RosterProbe.test.ts > src/features/back-room/pr7RosterProbe.test.ts
+          npm ci
+          npx vitest run src/features/back-room/pr7RosterProbe.test.ts --reporter=verbose
+          rm src/features/back-room/pr7RosterProbe.test.ts
 
       - name: Materialize authoritative staged payload
         env:
@@ -94,7 +99,6 @@ jobs:
 
       - name: Validate focused PR7 integration
         run: |
-          npm ci
           npx vitest run src/features/back-room/footballPersonIdentityKnowledge.test.ts
           git diff --check
 
