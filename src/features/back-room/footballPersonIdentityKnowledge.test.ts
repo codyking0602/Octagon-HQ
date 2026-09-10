@@ -55,40 +55,119 @@ const PR5_SUBJECT_IDS = new Set([
   "tom-landry",
 ]);
 
-const EXPECTED_RESEARCHED_COUNT = PR4_SUBJECT_IDS.size + PR5_SUBJECT_IDS.size;
+const PR6_SUBJECT_IDS = new Set([
+  "nfl-bobby-layne",
+  "drew-brees",
+  "nfl-fran-tarkenton",
+  "kurt-warner",
+  "nfl-sammy-baugh",
+  "nfl-bart-starr",
+  "cam-newton",
+  "dan-marino",
+  "nfl-josh-allen",
+  "nfl-roger-staubach",
+  "nflverse-player-00-0021306",
+  "earl-campbell",
+  "gale-sayers",
+  "marshall-faulk",
+  "nflverse-player-00-0025389",
+  "nfl-alan-faneca",
+  "nfl-jonathan-ogden",
+  "nfl-trent-williams",
+  "nfl-alan-page",
+  "joe-greene",
+  "nfl-brian-urlacher",
+  "nflverse-player-00-0018227",
+  "ronnie-lott",
+  "andy-reid",
+  "chuck-noll",
+  "nfl-george-halas",
+  "nfl-jimmy-johnson-coach",
+  "pete-carroll",
+  "nfl-jim-kelly",
+  "joe-namath",
+  "john-elway",
+  "nflverse-player-00-0034796",
+  "nfl-otto-graham",
+  "nfl-sid-luckman",
+  "steve-young",
+  "nfl-terry-bradshaw",
+  "troy-aikman",
+  "nfl-doak-walker",
+  "nfl-frank-gifford",
+  "nfl-harold-red-grange",
+  "marcus-allen",
+  "nfl-paul-hornung",
+  "nflverse-player-00-0024217",
+  "tony-dorsett",
+  "nfl-raymond-berry",
+  "nfl-chuck-bednarik",
+  "nfl-marshal-yanda",
+  "nfl-tyron-smith",
+  "nfl-emlen-tunnell",
+  "joe-gibbs",
+  "paul-brown",
+  "nfl-bronko-nagurski",
+  "eric-dickerson",
+  "nfl-jim-thorpe",
+  "nfl-oj-simpson",
+  "nfl-don-hutson",
+  "nflverse-player-00-0022921",
+  "nfl-anthony-munoz",
+  "nfl-kevin-mawae",
+  "nfl-steve-hutchinson",
+  "bruce-smith",
+  "nfl-deacon-jones",
+  "nfl-sam-huff",
+  "nfl-dick-night-train-lane",
+  "nfl-troy-polamalu",
+  "bill-parcells",
+  "nfl-earl-curly-lambeau",
+  "nfl-john-madden",
+]);
+
+const PR6_DEFERRED_TIER_REVIEW_IDS = new Set([
+  "nflverse-player-00-0031409",
+  "nflverse-player-00-0027876",
+  "nflverse-player-00-0024218",
+  "nick-saban",
+  "urban-meyer",
+]);
+
+const EXPECTED_RESEARCHED_COUNT = PR4_SUBJECT_IDS.size + PR5_SUBJECT_IDS.size + PR6_SUBJECT_IDS.size;
 
 function normalized(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 describe("football person identity knowledge", () => {
-  it("keeps the PR4 pilot and adds only canonical NFL A-tier launch identities in PR5", () => {
+  it("covers the reviewed NFL A-tier research slices with exact canonical ids", () => {
     expect(PR4_SUBJECT_IDS.size).toBe(12);
     expect(PR5_SUBJECT_IDS.size).toBe(20);
-    expect([...PR5_SUBJECT_IDS].filter((id) => PR4_SUBJECT_IDS.has(id))).toEqual([]);
-    expect(footballPersonIdentityKnowledgeRecords).toHaveLength(EXPECTED_RESEARCHED_COUNT);
+    expect(PR6_SUBJECT_IDS.size).toBe(68);
+    expect(PR6_DEFERRED_TIER_REVIEW_IDS.size).toBe(5);
 
-    const recordIds = footballPersonIdentityKnowledgeRecords.map((record) => record.subjectId);
-    expect(new Set(recordIds).size).toBe(recordIds.length);
-    expect(new Set(recordIds)).toEqual(new Set([...PR4_SUBJECT_IDS, ...PR5_SUBJECT_IDS]));
+    const allReviewed = [...PR4_SUBJECT_IDS, ...PR5_SUBJECT_IDS, ...PR6_SUBJECT_IDS];
+    expect(new Set(allReviewed).size).toBe(allReviewed.length);
+    expect(footballPersonIdentityKnowledgeRecords).toHaveLength(EXPECTED_RESEARCHED_COUNT);
+    expect(new Set(footballPersonIdentityKnowledgeRecords.map((record) => record.subjectId))).toEqual(new Set(allReviewed));
 
     const launch = getFootballWhoAmILaunchPool("NFL");
     const launchById = new Map(launch.subjects.map((subject) => [subject.id, subject]));
-    const missingFromLaunch = footballPersonIdentityKnowledgeRecords
-      .filter((record) => !launchById.has(record.subjectId))
-      .map((record) => record.subjectId);
-    const nonATier = footballPersonIdentityKnowledgeRecords
-      .filter((record) => launchById.get(record.subjectId)?.recognizabilityTier !== "A")
-      .map((record) => record.subjectId);
-
-    expect(missingFromLaunch).toEqual([]);
-    expect(nonATier).toEqual([]);
-
-    for (const record of footballPersonIdentityKnowledgeRecords) {
-      const canonical = getFootballSubject(record.subjectId);
-      expect(canonical?.id).toBe(record.subjectId);
+    for (const subjectId of allReviewed) {
+      const launchSubject = launchById.get(subjectId);
+      expect(launchSubject?.recognizabilityTier).toBe("A");
+      const canonical = getFootballSubject(subjectId);
+      expect(canonical?.id).toBe(subjectId);
       expect(canonical?.league).toBe("NFL");
-      expect(Object.keys(record).sort()).toEqual(["facts", "subjectId"]);
+    }
+  });
+
+  it("keeps the five obvious tier-review identities out of PR6 knowledge", () => {
+    const launchById = new Map(getFootballWhoAmILaunchPool("NFL").subjects.map((subject) => [subject.id, subject]));
+    for (const subjectId of PR6_DEFERRED_TIER_REVIEW_IDS) {
+      expect(launchById.get(subjectId)?.recognizabilityTier).toBe("A");
+      expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
     }
   });
 
@@ -114,32 +193,33 @@ describe("football person identity knowledge", () => {
     }
 
     for (const record of footballPersonIdentityKnowledgeRecords) {
-      for (const fact of record.facts) {
-        expect(fact.factId.trim()).not.toBe("");
-        expect(fact.conceptId.trim()).not.toBe("");
-        expect(fact.value.trim()).not.toBe("");
-        expect(fact.knowledgeClass).toBe("distinctive-identity");
-        expect(fact.verification).toBe("verified");
-        expect(fact.sourceIds.length).toBeGreaterThan(0);
-        expect(fact.sourceIds.every((sourceId) => sourceIds.has(sourceId))).toBe(true);
-        expect(getFootballPersonIdentityFactSources(fact)).toHaveLength(fact.sourceIds.length);
+      expect(Object.keys(record).sort()).toEqual(["facts", "subjectId"]);
+      for (const identityFact of record.facts) {
+        expect(identityFact.factId.trim()).not.toBe("");
+        expect(identityFact.conceptId.trim()).not.toBe("");
+        expect(identityFact.value.trim()).not.toBe("");
+        expect(identityFact.knowledgeClass).toBe("distinctive-identity");
+        expect(identityFact.verification).toBe("verified");
+        expect(identityFact.sourceIds.length).toBeGreaterThan(0);
+        expect(identityFact.sourceIds.every((sourceId) => sourceIds.has(sourceId))).toBe(true);
+        expect(getFootballPersonIdentityFactSources(identityFact)).toHaveLength(identityFact.sourceIds.length);
       }
     }
   });
 
   it("keeps fact ids, concepts, and normalized fact wording distinct within each person", () => {
     for (const record of footballPersonIdentityKnowledgeRecords) {
-      const factIds = record.facts.map((fact) => fact.factId);
-      const conceptIds = record.facts.map((fact) => fact.conceptId);
-      const values = record.facts.map((fact) => normalized(fact.value));
+      const factIds = record.facts.map((identityFact) => identityFact.factId);
+      const conceptIds = record.facts.map((identityFact) => identityFact.conceptId);
+      const values = record.facts.map((identityFact) => normalized(identityFact.value));
       expect(new Set(factIds).size).toBe(factIds.length);
       expect(new Set(conceptIds).size).toBe(conceptIds.length);
       expect(new Set(values).size).toBe(values.length);
     }
   });
 
-  it("gives every PR5 identity meaningful distinctive depth without replacing structured resume facts", () => {
-    for (const subjectId of PR5_SUBJECT_IDS) {
+  it("gives every PR6 identity meaningful distinctive depth without replacing structured resume facts", () => {
+    for (const subjectId of PR6_SUBJECT_IDS) {
       const record = getFootballPersonIdentityKnowledge(subjectId);
       expect(record).not.toBeNull();
       expect(record!.facts.length).toBeGreaterThanOrEqual(5);
@@ -150,7 +230,7 @@ describe("football person identity knowledge", () => {
       expect(subject).not.toBeNull();
       const structured = footballWhoAmIIdentityFactBank(subject!);
       expect(structured.facts.length).toBeGreaterThanOrEqual(WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET);
-      expect(structured.facts.every((fact) => !("knowledgeClass" in fact))).toBe(true);
+      expect(structured.facts.every((identityFact) => !("knowledgeClass" in identityFact))).toBe(true);
     }
   });
 
