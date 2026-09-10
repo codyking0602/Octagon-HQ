@@ -283,19 +283,20 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
 function footballMetricText(metricId: FootballFactMetricId, value: unknown, label: string) {
   const numericValue = Number(value);
   const formatted = formatFootballFact(metricId, numericValue);
+  const clueFormatted = Number.isInteger(numericValue) ? numericValue.toLocaleString("en-US") : formatted;
   switch (metricId) {
-    case "cfb-best-season-passing-yards": return `My best college season produced ${formatted} passing yards.`;
-    case "cfb-best-season-passing-touchdowns": return `My best college season produced ${formatted} passing touchdowns.`;
-    case "cfb-best-season-interceptions": return `My best college season included ${formatted} interceptions thrown.`;
-    case "cfb-best-season-passer-rating": return `My best college season included a ${formatted} passer rating.`;
-    case "cfb-best-season-rushing-yards": return `My best college season produced ${formatted} rushing yards.`;
-    case "cfb-best-season-rushing-touchdowns": return `My best college season produced ${formatted} rushing touchdowns.`;
-    case "cfb-best-season-receptions": return `My best college season included ${formatted} receptions.`;
-    case "cfb-best-season-receiving-yards": return `My best college season produced ${formatted} receiving yards.`;
-    case "cfb-best-season-receiving-touchdowns": return `My best college season produced ${formatted} receiving touchdowns.`;
-    case "cfb-best-season-sacks": return `My best college season included ${formatted} sacks.`;
-    case "cfb-best-season-tackles-for-loss": return `My best college season included ${formatted} tackles for loss.`;
-    case "cfb-best-season-defensive-interceptions": return `My best college season included ${formatted} defensive interceptions.`;
+    case "cfb-best-season-passing-yards": return `My best college season produced ${clueFormatted} passing yards.`;
+    case "cfb-best-season-passing-touchdowns": return `My best college season produced ${clueFormatted} passing touchdowns.`;
+    case "cfb-best-season-interceptions": return `My best college season included ${clueFormatted} interceptions thrown.`;
+    case "cfb-best-season-passer-rating": return `My best college season included a ${clueFormatted} passer rating.`;
+    case "cfb-best-season-rushing-yards": return `My best college season produced ${clueFormatted} rushing yards.`;
+    case "cfb-best-season-rushing-touchdowns": return `My best college season produced ${clueFormatted} rushing touchdowns.`;
+    case "cfb-best-season-receptions": return `My best college season included ${clueFormatted} receptions.`;
+    case "cfb-best-season-receiving-yards": return `My best college season produced ${clueFormatted} receiving yards.`;
+    case "cfb-best-season-receiving-touchdowns": return `My best college season produced ${clueFormatted} receiving touchdowns.`;
+    case "cfb-best-season-sacks": return `My best college season included ${clueFormatted} sacks.`;
+    case "cfb-best-season-tackles-for-loss": return `My best college season included ${clueFormatted} tackles for loss.`;
+    case "cfb-best-season-defensive-interceptions": return `My best college season included ${clueFormatted} defensive interceptions.`;
     case "cfb-heisman-awards": return numericValue === 1 ? "I won the Heisman Trophy." : `I won the Heisman Trophy ${formatted} times.`;
     case "nfl-ap-mvp-awards": return numericValue === 1 ? "I won the AP NFL MVP award." : `I won ${formatted} AP NFL MVP awards.`;
     case "nfl-super-bowl-titles": return numericValue === 1 ? "I won a Super Bowl title." : `I won ${formatted} Super Bowl titles.`;
