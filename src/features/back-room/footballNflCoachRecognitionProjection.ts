@@ -24,6 +24,7 @@ export interface FootballNflCoachRecognitionProjectionRow {
 }
 
 const TIER_RANK: Readonly<Record<FootballRecognizabilityTier, number>> = { D: 0, C: 1, B: 2, A: 3 };
+const REVIEWED_NFL_COACH_ARCHIVE_IDS = new Set(["nick-saban", "urban-meyer"]);
 
 function strongestTier(a: FootballRecognizabilityTier, b: FootballRecognizabilityTier) {
   return TIER_RANK[a] >= TIER_RANK[b] ? a : b;
@@ -116,9 +117,10 @@ for (const values of relationshipPayload.rows) {
 
 /**
  * Source-owned modern NFL head-coach projection. Historical identities remain owned by the existing Stage 13.5
- * historical recognition-repair path; reviewed Rank Five rows are deliberately absent from membership.
+ * historical recognition-repair path; reviewed Rank Five rows and reviewed NFL-context archives are absent from membership.
  */
 export const footballNflCoachRecognitionProjectionSubjects: readonly FootballNflCoachRecognitionProjectionRow[] = [...sourceCoachById.entries()]
+  .filter(([id]) => !REVIEWED_NFL_COACH_ARCHIVE_IDS.has(id))
   .map(([id, row]) => {
     const franchises = [...(franchisesByCoachId.get(id) ?? [])].sort();
     return {
