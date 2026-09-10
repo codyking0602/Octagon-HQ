@@ -63,7 +63,7 @@ function effectivelyRepeated(left: string, right: string) {
   for (const token of leftTokens) {
     if (rightTokens.has(token)) overlap += 1;
   }
-  return overlap / Math.min(leftTokens.size, rightTokens.size) >= 0.8;
+  return overlap / Math.min(leftTokens.size, rightTokens.size) >= 0.85;
 }
 
 function inferFacet(clue: WhoAmIClue): WhoAmIClueFacet {
