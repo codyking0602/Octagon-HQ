@@ -143,6 +143,7 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
 
   it("preserves unique person-scoped concepts, global fact ids, and normalized retained wording", () => {
     const globalFactIds = new Set<string>();
+    const globalConceptIds = new Set<string>();
     const qualifiedConceptIds = new Set<string>();
     const normalizedValues = new Set<string>();
 
@@ -153,12 +154,14 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
         expect(fact.knowledgeClass).toBe("distinctive-identity");
         expect(fact.verification).toBe("verified");
         globalFactIds.add(fact.factId);
+        globalConceptIds.add(fact.conceptId);
         qualifiedConceptIds.add(`${record.subjectId}:${fact.conceptId}`);
         normalizedValues.add(normalize(fact.value));
       }
     }
 
     expect(globalFactIds.size).toBe(500);
+    expect(globalConceptIds.size).toBe(500);
     expect(qualifiedConceptIds.size).toBe(500);
     expect(normalizedValues.size).toBe(500);
   });
