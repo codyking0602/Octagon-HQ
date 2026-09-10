@@ -15,7 +15,7 @@ import {
   getFootballPersonIdentityFactSources,
   getFootballPersonIdentityKnowledge,
 } from "./footballPersonIdentityKnowledge";
-import { getFootballSubject } from "./footballSubjectRegistry";
+import { getFootballSubject, queryFootballSubjects } from "./footballSubjectRegistry";
 
 const PR4_SUBJECT_IDS = new Set([
   "nfl-patrick-mahomes",
@@ -163,11 +163,36 @@ describe("football person identity knowledge", () => {
     }
   });
 
-  it("keeps the five obvious tier-review identities out of PR6 knowledge", () => {
-    const launchById = new Map(getFootballWhoAmILaunchPool("NFL").subjects.map((subject) => [subject.id, subject]));
-    for (const subjectId of PR6_DEFERRED_TIER_REVIEW_IDS) {
-      expect(launchById.get(subjectId)?.recognizabilityTier).toBe("A");
+  it("keeps the five deferred identities out of PR6 knowledge after league-context cleanup", () => {
+    const nflRecognizedById = new Map(queryFootballSubjects({
+      league: "NFL",
+      recognizabilityTiers: ["A", "B"],
+      includeProjectedSourceSubjects: true,
+      includeProjectedCanonicalRecognition: true,
+    }).map((subject) => [subject.id, subject]));
+
+    for (const [subjectId, name] of [
+      ["nflverse-player-00-0031409", "Johnny Manziel"],
+      ["nflverse-player-00-0027876", "Tim Tebow"],
+      ["nflverse-player-00-0024218", "Vince Young"],
+    ] as const) {
+      const subject = nflRecognizedById.get(subjectId);
+      expect(subject?.name).toBe(name);
+      expect(subject?.league).toBe("NFL");
+      expect(subject?.recognizabilityTier).toBe("B");
       expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
+    }
+
+    for (const subjectId of ["nick-saban", "urban-meyer"] as const) {
+      expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
+    }
+
+    const nflLaunch = getFootballWhoAmILaunchPool("NFL");
+    expect(nflLaunch.coaches.some((subject) => subject.name === "Nick Saban" || subject.name === "Urban Meyer")).toBe(false);
+
+    const cfbLaunch = getFootballWhoAmILaunchPool("CFB");
+    for (const name of ["Johnny Manziel", "Tim Tebow", "Vince Young", "Nick Saban", "Urban Meyer"] as const) {
+      expect(cfbLaunch.subjects.find((subject) => subject.name === name)?.recognizabilityTier).toBe("A");
     }
   });
 

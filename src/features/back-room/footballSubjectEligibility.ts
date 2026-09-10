@@ -37,6 +37,18 @@ export interface FootballSubjectKnowledgeOverride {
   sourceIdentityKeys?: readonly FootballSourceIdentityKey[];
 }
 
+const REVIEWED_LEAGUE_CONTEXT_RECOGNITION_TIERS = new Map<string, FootballRecognizabilityTier>([
+  ["NFL:player-career:johnny manziel", "B"],
+  ["NFL:player-career:tim tebow", "B"],
+  ["NFL:player-career:vince young", "B"],
+]);
+
+function reviewedLeagueContextRecognitionTier(subject: FootballCanonicalSubject) {
+  return REVIEWED_LEAGUE_CONTEXT_RECOGNITION_TIERS.get(
+    `${subject.league}:${subject.kind}:${subject.name.toLowerCase()}`,
+  );
+}
+
 function conservativeCanonicalTier(subject: FootballCanonicalSubject): FootballRecognizabilityTier {
   if (isFootballExplicitlyApprovedIconicSubject(subject.id)) return "A";
   if (subject.kind === "team-season") return subject.nationalChampion ? "C" : "D";
@@ -61,6 +73,7 @@ export function buildFootballSubjectKnowledgeMetadata(
   const generatedPlayerSeason = footballCfbPlayerSeasonRecognitionFor(subject);
   const reviewedProgramEra = footballProgramEraRecognitionFor(subject);
   const proposedTier = override.recognizabilityTier
+    ?? reviewedLeagueContextRecognitionTier(subject)
     ?? projection?.tier
     ?? generatedPlayerSeason?.tier
     ?? reviewedProgramEra?.tier

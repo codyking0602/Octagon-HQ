@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import {
   FOOTBALL_WHO_AM_I_PLAYER_TARGETS,
   createUfcWhoAmIRound,
@@ -61,6 +62,27 @@ describe("Who Am I Football launch pools", () => {
   it.each(LEAGUES)("selects only canonical A/B recognition subjects for %s", (league) => {
     const pool = getFootballWhoAmILaunchPool(league);
     expect(pool.subjects.every((subject) => subject.recognizabilityTier === "A" || subject.recognizabilityTier === "B")).toBe(true);
+  });
+
+  it("keeps reviewed league-context recognition corrections scoped to the NFL identities", () => {
+    const nflRecognized = queryFootballSubjects({
+      league: "NFL",
+      recognizabilityTiers: ["A", "B"],
+      includeProjectedSourceSubjects: true,
+      includeProjectedCanonicalRecognition: true,
+    });
+    for (const name of ["Johnny Manziel", "Tim Tebow", "Vince Young"] as const) {
+      const subject = nflRecognized.find((candidate) => candidate.kind === "player-career" && candidate.name === name);
+      expect(subject?.recognizabilityTier).toBe("B");
+    }
+
+    const nfl = getFootballWhoAmILaunchPool("NFL");
+    expect(nfl.coaches.some((subject) => subject.name === "Nick Saban" || subject.name === "Urban Meyer")).toBe(false);
+
+    const cfb = getFootballWhoAmILaunchPool("CFB");
+    for (const name of ["Johnny Manziel", "Tim Tebow", "Vince Young", "Nick Saban", "Urban Meyer"] as const) {
+      expect(cfb.subjects.find((subject) => subject.name === name)?.recognizabilityTier).toBe("A");
+    }
   });
 
   it.each(LEAGUES)("keeps %s launch selection deterministic", (league) => {
