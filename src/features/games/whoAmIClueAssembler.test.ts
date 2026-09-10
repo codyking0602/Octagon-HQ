@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonIdentityKnowledge";
-import { getFootballFact } from "../back-room/footballFactualStatsCore";
+import { getFootballFact, getFootballFactualRecord, type FootballFactMetricId } from "../back-room/footballFactualStatsCore";
 import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
 import {
   getFootballWhoAmILaunchPool,
@@ -22,6 +22,36 @@ const BAND_RANK: Readonly<Record<WhoAmIClueBand, number>> = {
   strong: 2,
   giveaway: 3,
 };
+
+const CFB_WHO_AM_I_RESUME_METRICS: ReadonlySet<FootballFactMetricId> = new Set([
+  "cfb-career-games",
+  "cfb-career-passing-yards",
+  "cfb-career-passing-touchdowns",
+  "cfb-career-rushing-yards",
+  "cfb-career-rushing-touchdowns",
+  "cfb-career-receptions",
+  "cfb-career-receiving-yards",
+  "cfb-career-receiving-touchdowns",
+  "cfb-career-total-touchdowns",
+  "cfb-career-defensive-interceptions",
+  "cfb-career-sacks",
+  "cfb-career-pass-breakups",
+  "cfb-career-forced-fumbles",
+  "cfb-career-fumble-recoveries",
+  "cfb-best-season-passing-yards",
+  "cfb-best-season-passing-touchdowns",
+  "cfb-best-season-interceptions",
+  "cfb-best-season-passer-rating",
+  "cfb-best-season-rushing-yards",
+  "cfb-best-season-rushing-touchdowns",
+  "cfb-best-season-receptions",
+  "cfb-best-season-receiving-yards",
+  "cfb-best-season-receiving-touchdowns",
+  "cfb-best-season-sacks",
+  "cfb-best-season-tackles-for-loss",
+  "cfb-best-season-defensive-interceptions",
+  "cfb-heisman-awards",
+]);
 
 function normalize(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
@@ -133,7 +163,9 @@ describe("Who Am I PR11 clue assembler", () => {
     expect(candidate.clues.some((clue) => clue.text.includes("11 sacks"))).toBe(true);
     expect(candidate.clues.some((clue) => clue.text.includes("28.5 tackles for loss"))).toBe(true);
     expect(candidate.clues.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
-    expect(first.filter((clue) => /sacks|tackles for loss|NFL Draft/.test(clue.text)).length).toBeGreaterThanOrEqual(2);
+    expect(first.some((clue) => clue.text === "My best college season included 11 sacks.")).toBe(true);
+    expect(first.some((clue) => clue.text === "My best college season included 28.5 tackles for loss.")).toBe(true);
+    expect(first.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
 
     console.info(
       "Who Am I PR11 CFB Aaron Donald sequence",
@@ -189,7 +221,20 @@ describe("Who Am I PR11 clue assembler", () => {
     expect(identityBackedPlayableCandidates).toBeGreaterThan(0);
     expect(identityBackedPlayableSelections).toBe(identityBackedPlayableCandidates);
 
-    const cfbClueAudit = getFootballWhoAmIUniverse("CFB").candidates
+    const cfbUniverse = getFootballWhoAmIUniverse("CFB");
+    for (const candidate of cfbUniverse.candidates) {
+      const canonicalResumeFacts = (getFootballFactualRecord(candidate.id)?.facts ?? [])
+        .filter((fact) => CFB_WHO_AM_I_RESUME_METRICS.has(fact.metricId))
+        .filter((fact) => Number(fact.value) !== 0);
+      for (const fact of canonicalResumeFacts) {
+        expect(
+          candidate.clues.some((clue) => clue.id === `fact:${fact.metricId}`),
+          `${candidate.id} is dropping canonical Who Am I resume metric ${fact.metricId}`,
+        ).toBe(true);
+      }
+    }
+
+    const cfbClueAudit = cfbUniverse.candidates
       .map((candidate) => ({
         id: candidate.id,
         name: candidate.name,
@@ -208,9 +253,12 @@ describe("Who Am I PR11 clue assembler", () => {
     const shortCfbCandidates = cfbClueAudit
       .filter((candidate) => candidate.assembledClues < WHO_AM_I_CLUE_LIMIT);
     if (shortCfbCandidates.length) {
-      console.info("Who Am I PR11 short CFB candidates", JSON.stringify(shortCfbCandidates));
+      console.info("Who Am I PR11 genuine CFB source-data gaps", JSON.stringify(shortCfbCandidates));
     }
-    expect(shortCfbCandidates).toEqual([]);
+    for (const candidate of shortCfbCandidates) {
+      expect(candidate.availableClues).toBeLessThan(WHO_AM_I_CLUE_LIMIT);
+      expect(candidate.assembledClues).toBe(candidate.availableClues);
+    }
   });
 
   it("does not mutate canonical person-identity source knowledge during assembly", () => {
