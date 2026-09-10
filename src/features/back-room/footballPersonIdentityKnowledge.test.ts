@@ -134,23 +134,22 @@ const PR6_DEFERRED_TIER_REVIEW_IDS = new Set([
   "urban-meyer",
 ]);
 
-const EXPECTED_RESEARCHED_COUNT = PR4_SUBJECT_IDS.size + PR5_SUBJECT_IDS.size + PR6_SUBJECT_IDS.size;
+const EXPECTED_A_RESEARCHED_COUNT = PR4_SUBJECT_IDS.size + PR5_SUBJECT_IDS.size + PR6_SUBJECT_IDS.size;
 
 function normalized(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 describe("football person identity knowledge", () => {
-  it("covers the reviewed NFL A-tier research slices with exact canonical ids", () => {
+  it("keeps the reviewed NFL A-tier research slices intact with exact canonical ids", () => {
     expect(PR4_SUBJECT_IDS.size).toBe(12);
     expect(PR5_SUBJECT_IDS.size).toBe(20);
     expect(PR6_SUBJECT_IDS.size).toBe(68);
     expect(PR6_DEFERRED_TIER_REVIEW_IDS.size).toBe(5);
+    expect(EXPECTED_A_RESEARCHED_COUNT).toBe(100);
 
     const allReviewed = [...PR4_SUBJECT_IDS, ...PR5_SUBJECT_IDS, ...PR6_SUBJECT_IDS];
     expect(new Set(allReviewed).size).toBe(allReviewed.length);
-    expect(footballPersonIdentityKnowledgeRecords).toHaveLength(EXPECTED_RESEARCHED_COUNT);
-    expect(new Set(footballPersonIdentityKnowledgeRecords.map((record) => record.subjectId))).toEqual(new Set(allReviewed));
 
     const launch = getFootballWhoAmILaunchPool("NFL");
     const launchById = new Map(launch.subjects.map((subject) => [subject.id, subject]));
@@ -160,16 +159,19 @@ describe("football person identity knowledge", () => {
       const canonical = getFootballSubject(subjectId);
       expect(canonical?.id).toBe(subjectId);
       expect(canonical?.league).toBe("NFL");
+      expect(getFootballPersonIdentityKnowledge(subjectId)).not.toBeNull();
     }
   });
 
-  it("keeps the five deferred identities out of PR6 knowledge after league-context cleanup", () => {
+  it("preserves the league-context cleanup while allowing intentional NFL B-tier enrichment", () => {
     const nflRecognizedById = new Map(queryFootballSubjects({
       league: "NFL",
       recognizabilityTiers: ["A", "B"],
       includeProjectedSourceSubjects: true,
       includeProjectedCanonicalRecognition: true,
     }).map((subject) => [subject.id, subject]));
+    const nflLaunch = getFootballWhoAmILaunchPool("NFL");
+    const nflLaunchById = new Map(nflLaunch.subjects.map((subject) => [subject.id, subject]));
 
     for (const [subjectId, name] of [
       ["nflverse-player-00-0031409", "Johnny Manziel"],
@@ -180,14 +182,19 @@ describe("football person identity knowledge", () => {
       expect(subject?.name).toBe(name);
       expect(subject?.league).toBe("NFL");
       expect(subject?.recognizabilityTier).toBe("B");
-      expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
+
+      const launchSubject = nflLaunchById.get(subjectId);
+      if (launchSubject) {
+        expect(launchSubject.recognizabilityTier).toBe("B");
+        expect(getFootballPersonIdentityKnowledge(subjectId)?.facts).toHaveLength(5);
+      } else {
+        expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
+      }
     }
 
     for (const subjectId of ["nick-saban", "urban-meyer"] as const) {
       expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
     }
-
-    const nflLaunch = getFootballWhoAmILaunchPool("NFL");
     expect(nflLaunch.coaches.some((subject) => subject.name === "Nick Saban" || subject.name === "Urban Meyer")).toBe(false);
 
     const cfbLaunch = getFootballWhoAmILaunchPool("CFB");
@@ -202,6 +209,48 @@ describe("football person identity knowledge", () => {
     expect(launch.players).toHaveLength(180);
     expect(launch.coaches).toHaveLength(20);
     expect(launch.subjects).toHaveLength(200);
+  });
+
+  it("covers the current canonical NFL B launch population with exactly five distinctive concepts each", () => {
+    const nflLaunch = getFootballWhoAmILaunchPool("NFL");
+    const nflBTier = nflLaunch.subjects.filter((subject) => subject.recognizabilityTier === "B");
+    const nflBTierIds = new Set(nflBTier.map((subject) => subject.id));
+    expect(nflBTierIds.size).toBe(nflBTier.length);
+    expect(nflBTier.length).toBeGreaterThan(0);
+
+
+    for (const launchSubject of nflBTier) {
+      const canonical = getFootballSubject(launchSubject.id);
+      expect(canonical?.id).toBe(launchSubject.id);
+      expect(canonical?.league).toBe("NFL");
+      expect(canonical?.recognizabilityTier).toBe("B");
+
+      const record = getFootballPersonIdentityKnowledge(launchSubject.id);
+      expect(record?.subjectId).toBe(launchSubject.id);
+      expect(record?.facts).toHaveLength(5);
+
+      const factIds = record!.facts.map((identityFact) => identityFact.factId);
+      const conceptIds = record!.facts.map((identityFact) => identityFact.conceptId);
+      expect(factIds.every((id) => id.trim().length > 0)).toBe(true);
+      expect(conceptIds.every((id) => id.trim().length > 0)).toBe(true);
+      expect(new Set(factIds).size).toBe(5);
+      expect(new Set(conceptIds).size).toBe(5);
+
+      for (const identityFact of record!.facts) {
+        expect(identityFact.knowledgeClass).toBe("distinctive-identity");
+        expect(identityFact.verification).toBe("verified");
+        expect(identityFact.sourceIds.length).toBeGreaterThan(0);
+        expect(getFootballPersonIdentityFactSources(identityFact)).toHaveLength(identityFact.sourceIds.length);
+        expect(normalized(identityFact.value).split(" ").length).toBeGreaterThanOrEqual(8);
+      }
+    }
+
+    const bKnowledgeIds = new Set(
+      footballPersonIdentityKnowledgeRecords
+        .filter((record) => getFootballSubject(record.subjectId)?.recognizabilityTier === "B")
+        .map((record) => record.subjectId),
+    );
+    expect(bKnowledgeIds).toEqual(nflBTierIds);
   });
 
   it("requires usable provenance and non-empty verified distinctive facts", () => {
@@ -243,7 +292,7 @@ describe("football person identity knowledge", () => {
     }
   });
 
-  it("gives every PR6 identity meaningful distinctive depth without replacing structured resume facts", () => {
+  it("keeps person knowledge separate from structured resume facts", () => {
     for (const subjectId of PR6_SUBJECT_IDS) {
       const record = getFootballPersonIdentityKnowledge(subjectId);
       expect(record).not.toBeNull();
@@ -259,12 +308,7 @@ describe("football person identity knowledge", () => {
     }
   });
 
-  it("adds no NFL B-tier, CFB, or UFC enrichment", () => {
-    const nflLaunch = getFootballWhoAmILaunchPool("NFL");
-    const nflBTier = nflLaunch.subjects.filter((subject) => subject.recognizabilityTier === "B");
-    expect(nflBTier.length).toBeGreaterThan(0);
-    expect(nflBTier.every((subject) => getFootballPersonIdentityKnowledge(subject.id) == null)).toBe(true);
-
+  it("keeps CFB and UFC behavior untouched", () => {
     const cfbLaunch = getFootballWhoAmILaunchPool("CFB");
     expect(cfbLaunch.players).toHaveLength(180);
     expect(cfbLaunch.coaches).toHaveLength(20);
