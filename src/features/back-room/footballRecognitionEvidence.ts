@@ -53,6 +53,11 @@ const cfb = (
   provider: FootballSourceProviderId = "sports-reference",
 ): CfbSeed => [id, name, position, school, tier, basis, provider];
 
+const activeDecades = (startSeason: number, endSeason: number) => Array.from(
+  { length: Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1 },
+  (_, index) => (Math.floor(startSeason / 10) + index) * 10,
+);
+
 interface CfbResumeIdentity {
   startSeason: number;
   endSeason: number;
