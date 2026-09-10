@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **4,028**
+Canonical A/B/C subjects: **4,026**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -10,7 +10,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 
 | Pool | Universe | A | B | C | Full | Partial | Identity-only | Missing fact groups | Historical review | Omissions |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| QB | 133 | 30 | 41 | 62 | 133 | 0 | 0 | 0 | 0 | 0 |
+| QB | 133 | 27 | 44 | 62 | 133 | 0 | 0 | 0 | 0 | 0 |
 | RB | 179 | 21 | 36 | 122 | 179 | 0 | 0 | 0 | 0 | 0 |
 | WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
 | TE | 74 | 1 | 12 | 61 | 74 | 0 | 0 | 0 | 0 | 0 |
@@ -22,7 +22,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | Player seasons | 764 | 107 | 318 | 339 | 764 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 113 | 4 | 37 | 72 | 113 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 32 | 5 | 27 | 0 | 32 | 0 | 0 | 0 | 0 | 0 |
-| Head coaches | 72 | 17 | 11 | 44 | 0 | 72 | 0 | 144 | 0 | 0 |
+| Head coaches | 70 | 15 | 11 | 44 | 0 | 70 | 0 | 140 | 0 | 0 |
 | Eras / dynasties | 28 | 8 | 16 | 4 | 0 | 28 | 0 | 56 | 0 | 0 |
 | Notable games / misc | 73 | 20 | 49 | 4 | 0 | 73 | 0 | 146 | 0 | 0 |
 
@@ -377,11 +377,9 @@ None.
 - NFL Head coaches: **Jimmy Johnson** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results cover only part of this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Joe Gibbs** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results cover only part of this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **John Madden** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Nick Saban** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Paul Brown** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Pete Carroll** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Tom Landry** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
-- NFL Head coaches: **Urban Meyer** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Vince Lombardi** — A, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Bill Cowher** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Bud Grant** — B, Partial; missing coaching results, coaching championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
