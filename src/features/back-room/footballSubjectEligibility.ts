@@ -1,8 +1,5 @@
 import { footballCfbPlayerSeasonRecognitionFor } from "./footballCfbPlayerSeasonRecognition";
-import {
-  footballExplicitlyReviewedRecognitionTier,
-  isFootballExplicitlyApprovedIconicSubject,
-} from "./footballExplicitRecognitionApprovals";
+import { isFootballExplicitlyApprovedIconicSubject } from "./footballExplicitRecognitionApprovals";
 import type { FootballCanonicalSubject } from "./footballFactualStatsCatalog";
 import { footballProgramEraRecognitionFor } from "./footballProgramEraSeeds";
 import { footballRecognitionProjectionFor } from "./footballRecognizabilityProjection";
@@ -63,9 +60,7 @@ export function buildFootballSubjectKnowledgeMetadata(
   const projection = footballRecognitionProjectionFor(subject);
   const generatedPlayerSeason = footballCfbPlayerSeasonRecognitionFor(subject);
   const reviewedProgramEra = footballProgramEraRecognitionFor(subject);
-  const reviewedRecognitionTier = footballExplicitlyReviewedRecognitionTier(subject.id);
   const proposedTier = override.recognizabilityTier
-    ?? reviewedRecognitionTier
     ?? projection?.tier
     ?? generatedPlayerSeason?.tier
     ?? reviewedProgramEra?.tier
