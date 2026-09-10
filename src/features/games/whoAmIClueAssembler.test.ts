@@ -163,9 +163,11 @@ describe("Who Am I PR11 clue assembler", () => {
     expect(candidate.clues.some((clue) => clue.text.includes("11 sacks"))).toBe(true);
     expect(candidate.clues.some((clue) => clue.text.includes("28.5 tackles for loss"))).toBe(true);
     expect(candidate.clues.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
-    expect(first.some((clue) => clue.text === "My best college season included 11 sacks.")).toBe(true);
-    expect(first.some((clue) => clue.text === "My best college season included 28.5 tackles for loss.")).toBe(true);
-    expect(first.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
+    expect(first.filter((clue) => (
+      clue.text === "My best college season included 11 sacks."
+      || clue.text === "My best college season included 28.5 tackles for loss."
+      || (clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))
+    ))).toHaveLength(2);
 
     console.info(
       "Who Am I PR11 CFB Aaron Donald sequence",
