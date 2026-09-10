@@ -71,6 +71,15 @@ export function whoAmIProgressiveClues(
   return assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT);
 }
 
+function shuffled<T>(values: readonly T[], random: () => number) {
+  const copy = [...values];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [copy[index], copy[swapIndex]] = [copy[swapIndex]!, copy[index]!];
+  }
+  return copy;
+}
+
 function subject(candidate: WhoAmICandidate): WhoAmISubject {
   const { id, name, kind, eraBand, rescueGroup } = candidate;
   return { id, name, kind, ...(eraBand ? { eraBand } : {}), ...(rescueGroup ? { rescueGroup } : {}) };
