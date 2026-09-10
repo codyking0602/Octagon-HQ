@@ -23,15 +23,16 @@
 
 ## Research-ID reconciliation
 
-Five supplied coach research IDs are legacy recognition IDs that resolve to already-existing canonical CFB coach identities on exact base main `38dfaf326140de2db9ef76b7554f3a699b720a5e`. The data-only module maps only the subject key; all retained concept IDs, wording, and provenance remain unchanged:
+Six supplied coach research IDs required CFB canonicalization on exact base main `38dfaf326140de2db9ef76b7554f3a699b720a5e`. The data-only module maps only the subject key; all retained concept IDs, wording, and provenance remain unchanged:
 
 - `bill-snyder` → `bill-snyder-cfb`
 - `bob-stoops` → `bob-stoops-cfb`
 - `brian-kelly` → `brian-kelly-cfb`
 - `chris-petersen` → `chris-petersen-cfb`
 - `frank-beamer` → `frank-beamer-cfb`
+- `deion-sanders` → `deion-sanders-cfb` (separates the CFB coach identity from the existing NFL player identity that already owns `deion-sanders`)
 
-No launch-membership or recognizability changes were made. The focused test requires the post-reconciliation 129-ID research set to equal the current exact CFB B-tier launch set.
+The Deion Sanders source-recognition row was canonicalized to the existing CFB `-cfb` identity namespace to remove the cross-league ID collision; his CFB coach name, tier, and launch membership are unchanged. No recognizability or launch-membership changes were made. The focused test requires the post-reconciliation 129-ID research set to equal the current exact CFB B-tier launch set.
 
 ## Research wording constraints
 
@@ -1493,7 +1494,7 @@ The supplied research already contains its own rejected/softened-claim decisions
      - Routine Memphis rushing records and awards were not retained.
      - NFL production was not retained.
 
-### Deion Sanders — Coach — `deion-sanders`
+### Deion Sanders — Coach — `deion-sanders-cfb`
 
 1. **`deion-sanders--prime-time-to-coach-prime`** — Sanders carried the “Prime Time” identity from his playing days into coaching as “Coach Prime,” making the Prime persona a deliberate part of his coaching brand.
    - Why distinctive: The evolution of a famous personal nickname into a coaching identity is uniquely recognizable and not dependent on wins or championships.
