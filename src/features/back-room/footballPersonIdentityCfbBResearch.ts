@@ -468,14 +468,14 @@ export const footballPersonIdentityCfbBResearch = [
     ["cfb-bijan-robinson--childhood-near-drowning-swim-safety", "A near-drowning experience when Robinson was five later helped inspire swim-safety work through his foundation.", 39],
     ["cfb-bijan-robinson--bijan-mustardson", "While at Texas in the NIL era, Robinson launched his own Dijon mustard brand, “Bijan Mustardson.”", 40],
   ]],
-  ["bill-snyder", [
+  ["bill-snyder-cfb", [
     ["bill-snyder--california-high-school-coaching-start", "Snyder began his full-time coaching career in California high-school football before entering the college ranks.", 41],
     ["bill-snyder--austin-college-swimming-coach", "At Austin College, Snyder served as offensive coordinator while also coaching the school’s swimming team.", 41],
     ["bill-snyder--hayden-fry-apprenticeship", "Snyder worked under Hayden Fry at North Texas and then followed him to Iowa, where Snyder spent a decade as offensive coordinator.", 41],
     ["bill-snyder--miracle-of-manhattan", "Snyder took over a Kansas State program that had gone 0-26-1 immediately before his arrival and led the turnaround widely nicknamed the “Miracle of Manhattan.”", 42],
     ["bill-snyder--retired-then-returned", "After retiring following the 2005 season, Snyder returned as Kansas State head coach in 2009 and rebuilt the program a second time.", 43],
   ]],
-  ["bob-stoops", [
+  ["bob-stoops-cfb", [
     ["bob-stoops--youngstown-coaching-family", "Stoops grew up in Youngstown, Ohio, in a football-coaching family; his father Ron was a longtime defensive coordinator at Cardinal Mooney High School.", 44],
     ["bob-stoops--lightly-recruited-to-iowa", "Stoops has said he was not heavily recruited as a player; Iowa’s connection to his father helped bring him to the Hawkeyes.", 45],
     ["bob-stoops--three-stoops-brothers-at-iowa", "Bob became the oldest of three Stoops brothers to play defensive back at Iowa and later helped recruit younger brothers Mike and Mark there.", 46],
@@ -510,7 +510,7 @@ export const footballPersonIdentityCfbBResearch = [
     ["cfb-braylon-edwards--endowed-no-1-scholarship", "After college, Edwards pledged $500,000 to endow a Michigan scholarship connected to the player wearing No. 1.", 55],
     ["cfb-braylon-edwards--returned-to-finish-degree", "Years after leaving for the NFL, Edwards returned to Michigan to finish his degree after being encouraged to make education his next “No. 1” priority.", 54],
   ]],
-  ["brian-kelly", [
+  ["brian-kelly-cfb", [
     ["brian-kelly--assumption-linebacker-captain", "Kelly was a four-year linebacker at Assumption College and captained the team in his final two seasons.", 57],
     ["brian-kelly--political-science-degree", "Kelly earned a political science degree from Assumption in 1983.", 57],
     ["brian-kelly--coached-assumption-softball", "Early in his career, Kelly coached football defense at Assumption and also served as the school’s head softball coach.", 58],
@@ -629,7 +629,7 @@ export const footballPersonIdentityCfbBResearch = [
     ["cfb-chris-long--howie-did-not-push-football", "His Hall of Fame father Howie Long deliberately did not push him into football; once Chris chose it, Howie became a demanding mentor.", 102],
     ["cfb-chris-long--mayor-of-charlottesville-identity", "Virginia Athletics profiled Long under the nickname-like label “The Mayor of Charlottesville,” reflecting how closely he was identified with the local community and UVA.", 102],
   ]],
-  ["chris-petersen", [
+  ["chris-petersen-cfb", [
     ["chris-petersen--sacramento-city-to-uc-davis-qb", "Petersen began his college playing career at Sacramento City College before transferring to UC Davis, where he became a standout quarterback.", 103],
     ["chris-petersen--psychology-and-educational-psychology", "He earned a bachelor’s degree in psychology and a master’s degree in educational psychology from UC Davis.", 104],
     ["chris-petersen--coaching-started-at-uc-davis", "Petersen began his coaching career at his alma mater as the freshman-team head coach before coaching receivers.", 104],
@@ -888,7 +888,7 @@ export const footballPersonIdentityCfbBResearch = [
     ["cfb-fernando-mendoza--cal-degree-three-years", "Mendoza earned his bachelor's degree in business administration from Cal in three years and personally paid for his final three Cal classes in summer 2025 while he was already enrolled at Indiana.", 226],
     ["cfb-fernando-mendoza--cuban-family-service-trip", "All four of Mendoza's grandparents immigrated to the United States from Cuba; in 2018 he and his brother Alberto traveled to Cuba with their maternal grandparents and did service work with Catholic charities in their grandfather's hometown of Santiago.", 225],
   ]],
-  ["frank-beamer", [
+  ["frank-beamer-cfb", [
     ["frank-beamer--fancy-gap-farm-upbringing", "Beamer was born in Mount Airy, North Carolina, but grew up on a farm near Fancy Gap and Hillsville, Virginia, where he said hard work and the value of higher education were emphasized.", 227],
     ["frank-beamer--eleven-varsity-letters", "At Hillsville High School, Beamer played football, basketball and baseball and graduated with 11 varsity letters.", 227],
     ["frank-beamer--newspaper-articles-led-to-vpi", "Several Roanoke Times articles about Beamer's high-school play caught the attention of VPI coaches and helped lead him to Virginia Tech as a player.", 227],
