@@ -104,7 +104,6 @@ def exact_from_mutation(raw_deflate: bytes, states, first_raw_idx: int, changed_
         return None
     if (zlib.crc32(out, prefix_crc) & 0xFFFFFFFF) != EXPECTED_CRC:
         return None
-    # Only reconstruct the full raw stream for an exact length+CRC candidate.
     rebuilt = zlib.decompress(raw_deflate[:first_raw_idx] + changed_segment + raw_deflate[end_raw_idx:], -15)
     return validate_exact_raw(rebuilt)
 
@@ -113,8 +112,6 @@ def try_fast_base64(payload: str, compressed: bytes, center_byte: int, radius_ch
     center_char = (center_byte * 4) // 3
     lo = max(16, center_char - radius_chars)
     hi = min(len(payload) - 16, center_char + radius_chars + 1)
-
-    # Every changed base64 character only changes bytes in its own 4-char quartet.
     min_full = (lo // 4) * 3
     max_full = ((hi + 3) // 4) * 3 + 3
     min_raw = max(0, min_full - 10)
@@ -136,10 +133,7 @@ def try_fast_base64(payload: str, compressed: bytes, center_byte: int, radius_ch
             if repl == original_char:
                 continue
             candidate_quartet = quartet[:idx-qstart] + repl + quartet[idx-qstart+1:]
-            try:
-                candidate_bytes = base64.b64decode(candidate_quartet)
-            except Exception:
-                continue
+            candidate_bytes = base64.b64decode(candidate_quartet)
             diff_positions = [i for i, (a, b) in enumerate(zip(original_bytes, candidate_bytes)) if a != b]
             if not diff_positions:
                 continue
@@ -177,14 +171,12 @@ def main():
     print_corrupt_context(compressed)
     center = locate_compressed_index(compressed)
 
-    for radius in (96, 256, 768, 2048):
-        repaired, people = try_fast_base64(payload, compressed, center, radius)
-        if repaired:
-            save_payload(repaired)
-            print(f"Exact repaired dataset validates as {len(people)} identities / {sum(len(p['facts']) for p in people)} concepts", flush=True)
-            return
-
-    raise RuntimeError("No exact single-base64-character repair found around localized corruption")
+    repaired, people = try_fast_base64(payload, compressed, center, 16)
+    if repaired:
+        save_payload(repaired)
+        print(f"Exact repaired dataset validates as {len(people)} identities / {sum(len(p['facts']) for p in people)} concepts", flush=True)
+        return
+    raise RuntimeError("No exact single-base64-character repair within ±16 localized chars")
 
 
 if __name__ == "__main__":
