@@ -67,6 +67,7 @@ interface CfbResumeIdentity {
 }
 
 const cfbResumeIdentityById: Readonly<Record<string, CfbResumeIdentity>> = {
+  "cfb-aaron-donald": { startSeason: 2010, endSeason: 2013, draftYear: 2014, draftRound: 1, draftPick: 13 },
   "cfb-colt-brennan": { startSeason: 2005, endSeason: 2007, draftYear: 2008, draftRound: 6, draftPick: 186 },
   "cfb-lamichael-james": { startSeason: 2009, endSeason: 2011, draftYear: 2012, draftRound: 2, draftPick: 61 },
   "cfb-jordan-shipley": { startSeason: 2006, endSeason: 2009, draftYear: 2010, draftRound: 3, draftPick: 84 },
