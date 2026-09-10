@@ -27,10 +27,12 @@ describe("Football Wavelength canonical subject authority", () => {
     }
   });
 
-  it("does not collapse league-ambiguous career names back into one identity", () => {
-    expect(footballSubjects.filter((subject) => subject.name === "Urban Meyer").map(({ league }) => league).sort())
-      .toEqual(["CFB", "NFL"]);
-    expect(footballWavelengthCanonicalSubjectForClue(clue("COACHING CHAOS", "Urban Meyer"))).toBeNull();
+  it("does not recreate an archived NFL coach identity to preserve an old ambiguity", () => {
+    const urbanMeyerSubjects = footballSubjects.filter((subject) => subject.name === "Urban Meyer");
+    expect(urbanMeyerSubjects.map(({ league }) => league)).toEqual(["CFB"]);
+    expect(footballWavelengthCanonicalSubjectForClue(clue("COACHING CHAOS", "Urban Meyer"))?.id).toBe(
+      urbanMeyerSubjects[0]!.id,
+    );
   });
 
   it("collapses category-local aliases onto one canonical subject identity", () => {
