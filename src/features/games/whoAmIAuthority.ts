@@ -204,18 +204,29 @@ function footballNflProfile(subject: FootballSubjectProfile) {
     .sort((left, right) => nflProfileDepth(right) - nflProfileDepth(left) || left.id.localeCompare(right.id))[0] ?? null;
 }
 
-function footballDraftProfile(subject: FootballSubjectProfile) {
-  const nflProfile = footballNflProfile(subject);
-  if (!nflProfile) return subject;
-  const hasDraftIdentity = (
-    nflProfile.draftYear != null
-    || nflProfile.draftRound != null
-    || nflProfile.draftPick != null
-    || nflProfile.firstRoundPick
-    || nflProfile.firstOverallPick
-    || nflProfile.undrafted
+function hasFootballDraftIdentity(subject: FootballSubjectProfile) {
+  return (
+    subject.draftYear != null
+    || subject.draftRound != null
+    || subject.draftPick != null
+    || subject.firstRoundPick
+    || subject.firstOverallPick
+    || subject.undrafted
   );
-  return hasDraftIdentity ? nflProfile : subject;
+}
+
+function footballDraftProfile(subject: FootballSubjectProfile) {
+  if (hasFootballDraftIdentity(subject)) return subject;
+  if (subject.kind !== "player-career") return subject;
+  return [...(nflProfilesByName.get(normalizedPersonName(subject.name)) ?? [])]
+    .filter(hasFootballDraftIdentity)
+    .sort((left, right) => (
+      Number(right.draftPick != null) - Number(left.draftPick != null)
+      || Number(right.draftRound != null) - Number(left.draftRound != null)
+      || Number(right.draftYear != null) - Number(left.draftYear != null)
+      || nflProfileDepth(right) - nflProfileDepth(left)
+      || left.id.localeCompare(right.id)
+    ))[0] ?? subject;
 }
 
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
