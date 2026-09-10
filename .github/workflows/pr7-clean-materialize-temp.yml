@@ -68,7 +68,16 @@ jobs:
                   f"versus body (crc={actual_crc:08x}, size={len(raw)}). "
                   "Proceeding only if the decoded JSON passes all PR7 semantic validation and clean-part cross-checks."
               )
-          people = json.loads(raw.decode("utf-8"))
+          try:
+              decoded = raw.decode("utf-8")
+          except UnicodeDecodeError as exc:
+              start = max(0, exc.start - 700)
+              stop = min(len(raw), exc.end + 700)
+              print(f"UTF-8 corruption at bytes {exc.start}:{exc.end}.")
+              print("CONTEXT_REPLACED=" + raw[start:stop].decode("utf-8", errors="replace"))
+              print("CONTEXT_HEX=" + raw[max(0, exc.start-32):min(len(raw), exc.end+32)].hex())
+              raise
+          people = json.loads(decoded)
           fact_count = module.validate_people(people)
           if fact_count != 495:
               raise ValueError(f"Expected 495 concepts, got {fact_count}.")
