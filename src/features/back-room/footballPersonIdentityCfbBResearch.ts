@@ -1,1269 +1,5696 @@
 // PR9 CFB B-tier research data only. Canonical validation and lookup remain in footballPersonIdentityKnowledge.ts.
 export const footballPersonIdentityCfbBResearchSources = [
-  ["https://www.patriots.com/team/players-roster/a-j-brown/logs/2024/pre/", "New England Patriots player biography", "New England Patriots player biography"],
-  ["https://olemisssports.com/sports/football/roster/a-j-brown/270", "Ole Miss Athletics player biography", "Ole Miss Athletics player biography"],
-  ["https://www.si.com/college/2016/02/03/aj-brown-myers-commits-ole-miss", "Sports Illustrated commitment report", "Sports Illustrated commitment report"],
-  ["https://ohiostatebuckeyes.com/news/2005/9/10/no-time-to-wait", "Ohio State Athletics profile, “No Time To Wait”", "Ohio State Athletics profile, “No Time To Wait”"],
-  ["https://www.nhregister.com/news/article/Connections-run-deep-for-Ohio-St-duo-11654413.php", "New Haven Register", "New Haven Register / Associated Press feature"],
-  ["https://www.espn.com/college-football/story/_/id/14458113/a-lot-changed-ohio-state-buckeyes-notre-dame-fighting-irish-last-met-fiesta-bowl", "ESPN Fiesta Bowl retrospective", "ESPN Fiesta Bowl retrospective"],
-  ["https://texaslonghorns.com/news/2002/2/6/020602aaa_208", "Texas Athletics 2002 recruiting biography", "Texas Athletics 2002 recruiting biography"],
-  ["https://texaslonghorns.com/news/2005/10/5/100505aab_420.aspx", "Texas Athletics feature, “Take it to the house”", "Texas Athletics feature, “Take it to the house”"],
-  ["https://texaslonghorns.com/news/2012/3/30/033112aab_522", "Texas Athletics spring-game feature", "Texas Athletics spring-game feature"],
-  ["https://www.inquirer.com/college-sports/penn-state/penn-state-abdul-carter-football-cfp-lasalle-glenside-north-philly-20241219.html", "Philadelphia Inquirer profile", "Philadelphia Inquirer profile"],
-  ["https://gopsusports.com/sports/football/roster/season/2023/player/abdul-carter", "Penn State Athletics player biography", "Penn State Athletics player biography"],
-  ["https://gopsusports.com/news/2024/12/18/carter-warren-selected-sporting-news-all-americans", "Penn State Athletics All-America release", "Penn State Athletics All-America release"],
-  ["https://mgoblue.com/sports/football/roster/aidan-hutchinson/22005", "Michigan Athletics player biography", "Michigan Athletics player biography"],
-  ["https://www.detroitlions.com/team/players-roster/aidan-hutchinson/logs/", "Detroit Lions player biography", "Detroit Lions player biography"],
-  ["https://calbears.com/sports/football/roster/coaches/alex-mack/194", "California Athletics Alex Mack biography", "California Athletics Alex Mack biography"],
-  ["https://footballfoundation.org/sports/football/roster/alex-mack/573", "National Football Foundation Campbell Trophy biography", "National Football Foundation Campbell Trophy biography"],
-  ["https://static.clubs.nfl.com/image/upload/bills/m8gerv5jb7nkovxkwmb6", "Buffalo Bills player biography", "Buffalo Bills player biography"],
-  ["https://static.clubs.nfl.com/image/upload/raiders/re0vrphviaskzjcnphx1.pdf", "Oakland Raiders feature-clips compilation of Bay Area News Group profile", "Oakland Raiders feature-clips compilation of Bay Area News Group profile"],
-  ["https://www.espn.com/blog/sec/post/_/id/96041/amari-cooper-paved-his-own-way-to-alabama", "ESPN SEC profile on Cooper’s path to Alabama", "ESPN SEC profile on Cooper’s path to Alabama"],
-  ["https://www.umsportshalloffame.com/andre-johnson.html", "University of Miami Sports Hall of Fame biography", "University of Miami Sports Hall of Fame biography"],
-  ["https://miamihurricanes.com/news/2002/05/05/205547137-2/", "Miami Athletics 100-meter title release", "Miami Athletics 100-meter title release"],
-  ["https://miamihurricanes.com/news/2024/02/08/hester-johnson-named-to-pro-football-hall-of-fame/", "Miami Athletics Pro Football Hall of Fame release", "Miami Athletics Pro Football Hall of Fame release"],
-  ["https://miamihurricanes.com/sports/football/roster/season/2001-02/player/andre-johnson/", "Miami Hurricanes player biography", "Miami Hurricanes player biography"],
-  ["https://www.heisman.com/heisman-winners/andre-ware/", "Heisman Trust biography", "Heisman Trust biography"],
-  ["https://gostanford.com/news/2013/04/17/andrew-luck-profile", "Stanford Athletics Andrew Luck profile", "Stanford Athletics Andrew Luck profile"],
-  ["https://gostanford.com/staff/andrew-luck", "Stanford Athletics staff biography", "Stanford Athletics staff biography"],
-  ["https://gophersports.com/news/2016/8/4/Meet_The_Newcomers_Antoine_Winfield_Jr_", "Minnesota Athletics newcomer profile", "Minnesota Athletics newcomer profile"],
-  ["https://gophersports.com/sports/football/roster/antoine-winfield-jr/16427", "Minnesota Athletics player biography", "Minnesota Athletics player biography"],
-  ["https://www.espn.com/college-football/story/_/id/41962943/boise-state-ashton-jeanty-dominant-running-back-heisman-2024", "ESPN profile on Jeanty’s rise", "ESPN profile on Jeanty’s rise"],
-  ["https://www.nfl.com/news/2025-nfl-draft-get-to-know-ashton-jeanty", "NFL.com draft profile feature", "NFL.com draft profile feature"],
-  ["https://www.idahostatesman.com/sports/college/mountain-west/boise-state-university/boise-state-football/article295617584.html", "Idaho Statesman profile", "Idaho Statesman profile"],
-  ["https://broncosports.com/sports/football/roster/jeantyashton/10215", "Boise State Athletics player biography", "Boise State Athletics player biography"],
-  ["https://www.heisman.com/articles/transfers-and-the-heisman/", "Heisman Trust transfer history feature", "Heisman Trust transfer history feature"],
-  ["https://www.heisman.com/heisman-winners/baker-mayfield/", "Heisman Trust Baker Mayfield biography", "Heisman Trust Baker Mayfield biography"],
-  ["https://rolltide.com/news/2012/12/6/Barrett_Jones_Named_Capital_One_Academic_All_America_of_the_Year", "Alabama Athletics Academic All-America release", "Alabama Athletics Academic All-America release"],
-  ["https://footballfoundation.org/sports/football/roster/barrett-jones/569", "National Football Foundation Barrett Jones biography", "National Football Foundation Barrett Jones biography"],
-  ["https://www.espn.com/nfl/draft2013/story/_/id/9197435/2013-nfl-draft-alabama-barrett-jones-espn-magazine", "ESPN The Magazine profile of Barrett Jones", "ESPN The Magazine profile of Barrett Jones"],
-  ["https://www.espn.com/nfl/draft2023/story/_/id/36234668/why-bijan-robinson-break-nfl-draft-running-back-bias", "ESPN profile of Bijan Robinson", "ESPN profile of Bijan Robinson"],
-  ["https://texaslonghorns.com/sports/football/roster/bijan-robinson/11507", "Texas Athletics player biography", "Texas Athletics player biography"],
-  ["https://www.bijanrobinson.com/foundation", "Bijan Robinson Foundation", "Bijan Robinson Foundation"],
-  ["https://www.si.com/college/2022/12/15/college-athletes-top-food-related-nil-deals-2022", "Sports Illustrated NIL feature", "Sports Illustrated NIL feature"],
-  ["https://www.kstatesports.com/sports/football/roster/coaches/bill-snyder/1258", "Kansas State Athletics coach biography", "Kansas State Athletics coach biography"],
-  ["https://www.kshof.org/team/bill-snyder", "Kansas Sports Hall of Fame biography", "Kansas Sports Hall of Fame biography"],
-  ["https://www.kstatesports.com/news/2018/12/2/football-bill-snyder-announces-retirement-from-kansas-state", "Kansas State Athletics retirement release", "Kansas State Athletics retirement release"],
-  ["https://soonersports.com/news/2001/1/3/208366339", "Oklahoma Athletics profile", "Oklahoma Athletics profile"],
-  ["https://hawkeyesports.com/news/2019/08/30/football-stoops", "Iowa Athletics profile", "Iowa Athletics profile"],
-  ["https://hawkeyesports.com/news/2011/12/5/wine-online-a-duel-of-friends-in-the-desert", "Iowa Athletics feature", "Iowa Athletics feature"],
-  ["https://fightingirish.com/news/2006/06/26/summer-football-fix-brady-quinn-feature", "Notre Dame Athletics Brady Quinn feature", "Notre Dame Athletics Brady Quinn feature"],
-  ["https://fightingirish.com/irish-enjoying-the-combo-platter/", "Notre Dame Athletics feature on young combinations", "Notre Dame Athletics feature on young combinations"],
-  ["https://fightingirish.com/news/2006/11/17/player-feature", "Notre Dame Athletics player feature", "Notre Dame Athletics player feature"],
-  ["https://osubeavers.com/sports/football/roster/brandin-cooks/2450", "Oregon State Athletics player biography", "Oregon State Athletics player biography"],
-  ["https://www.nfl.com/news/brandin-cooks-robert-woods-lead-rolling-rams-wr-corps-0ap3000001014625", "NFL.com feature on Brandin Cooks", "NFL.com feature on Brandin Cooks"],
-  ["https://hawkeyesports.com/news/2025/08/6/2025-iowa-athletics-hall-of-fame-spotlight-brandon-scherff", "Iowa Athletics Hall of Fame spotlight", "Iowa Athletics Hall of Fame spotlight"],
-  ["https://hawkeyesports.com/sports/football/roster/player/brandon-scherff", "Iowa Athletics player biography", "Iowa Athletics player biography"],
-  ["https://mgoblue.com/news/2017/4/27/kornacki_braylon_edwards_has_new_no_1", "Michigan Athletics No. 1 jersey feature", "Michigan Athletics No. 1 jersey feature"],
-  ["https://mgoblue.com/news/2006/4/18/edwards_donates_500_000_to_athletic_department", "Michigan Athletics scholarship announcement", "Michigan Athletics scholarship announcement"],
-  ["https://mgoblue.com/news/2003/8/9/2003_U_M_Football_Media_Day_Offensive_Player_Quotes", "Michigan Athletics 2003 media-day quotes", "Michigan Athletics 2003 media-day quotes"],
-  ["https://gobearcats.com/staff/brian-kelly", "University of Cincinnati Athletics coach biography", "University of Cincinnati Athletics coach biography"],
-  ["https://www.assumption.edu/news-and-events/news/multi-sport-stadium-named-notre-dame-football-coach-brian-kelly-83-hd-12", "Assumption University stadium feature", "Assumption University stadium feature"],
-  ["https://gvsulakers.com/honors/hall-of-fame/brian-kelly/26", "Grand Valley State Athletics Hall of Fame biography", "Grand Valley State Athletics Hall of Fame biography"],
-  ["https://www.kellycaresfoundation.org/about/our-story/", "Kelly Cares Foundation history", "Kelly Cares Foundation history"],
-  ["https://texaslonghorns.com/sports/football/roster/brian-orakpo/748", "Texas Athletics player biography", "Texas Athletics player biography"],
-  ["https://texaslonghorns.com/news/2009/4/16/041609aaa_26", "Texas Athletics feature on Orakpo", "Texas Athletics feature on Orakpo"],
-  ["https://golobos.com/news/2013/05/22/209066364", "New Mexico Athletics retirement feature", "New Mexico Athletics retirement feature"],
-  ["https://golobos.com/news/2017/01/09/brian-urlacher-named-to-nff-college-football-hall-of-fame", "New Mexico Athletics Hall of Fame announcement", "New Mexico Athletics Hall of Fame announcement"],
-  ["https://miamihurricanes.com/roster/bryant-mckinnie/", "Miami Hurricanes player biography", "Miami Hurricanes player biography"],
-  ["https://miamihurricanes.com/news/2025/04/18/dorsey-johnson-mckinnie-morgan-selected-to-miami-football-ring-of-honor", "Miami Athletics Ring of Honor announcement", "Miami Athletics Ring of Honor announcement"],
-  ["https://www.latimes.com/sports/highschool/story/2021-12-11/bryce-young-heisman-trophy-roots-la-cathedral-mater-dei", "Los Angeles Times profile of Bryce Young’s roots", "Los Angeles Times profile of Bryce Young’s roots"],
-  ["https://www.latimes.com/sports/highschool/story/2020-01-11/bryce-young-father-scrutinizes-early-recruiting-process", "Los Angeles Times recruiting profile", "Los Angeles Times recruiting profile"],
-  ["https://www.latimes.com/sports/usc/story/2019-09-22/bryce-young-changes-commitment-from-usc-to-alabama", "Los Angeles Times commitment report", "Los Angeles Times commitment report"],
-  ["https://www.heisman.com/heisman-winners/bryce-young/", "Heisman Trust Bryce Young biography", "Heisman Trust Bryce Young biography"],
-  ["https://www.azcardinals.com/news/mirror-image-budda-baker-joins-tyrann-mathieu-18849030", "Arizona Cardinals feature on Budda Baker", "Arizona Cardinals feature on Budda Baker"],
-  ["https://gohuskies.com/sports/football/roster/budda-baker/2117", "Washington Athletics player biography", "Washington Athletics player biography"],
-  ["https://www.azcardinals.com/news/budda-baker-heads-home-to-seattle-as-cardinal-20148657", "Arizona Cardinals homecoming feature", "Arizona Cardinals homecoming feature"],
-  ["https://rolltide.com/news/2010/2/3/Crimson_Tide_Ink_18_on_National_Signing_Day", "Alabama Athletics 2010 signing class release", "Alabama Athletics 2010 signing class release"],
-  ["https://www.newyorkjets.com/news/jets-agree-to-terms-with-16-undrafted-free-agents", "New York Jets undrafted free-agent release", "New York Jets undrafted free-agent release"],
-  ["https://amp.nfl.com/news/michael-bennett-says-returning-to-ohio-state-was-right-choice-0ap3000000452701", "NFL.com report quoting Reggie Ragland", "NFL.com report quoting Reggie Ragland"],
-  ["https://www.espn.com/college-football/story/_/id/8749314/cj-mosley-return-alabama-crimson-tide-senior-season", "ESPN report on Mosley returning to Alabama", "ESPN report on Mosley returning to Alabama"],
-  ["https://www.espn.com/nfl/story/_/id/38834279/houston-texans-rookie-qb-cj-stroud-already-nfl-star", "ESPN long-form profile of C.J. Stroud", "ESPN long-form profile of C.J. Stroud"],
-  ["https://ohiostatebuckeyes.com/sports/football/roster/c-j-stroud/4470", "Ohio State Athletics player biography", "Ohio State Athletics player biography"],
-  ["https://ohiostatebuckeyes.com/sports/football/roster/caleb-downs/12257", "Ohio State Athletics player biography", "Ohio State Athletics player biography"],
-  ["https://rolltide.com/sports/football/roster/caleb-downs/8857", "Alabama Athletics player biography", "Alabama Athletics player biography"],
-  ["https://www.heisman.com/heisman-winners/caleb-williams/", "Heisman Trust Caleb Williams biography", "Heisman Trust Caleb Williams biography"],
-  ["https://soonersports.com/news/2021/10/9/football-sooners-top-longhorns-in-red-river-showdown", "Oklahoma Athletics Red River recap", "Oklahoma Athletics Red River recap"],
-  ["https://www.espn.com/college-football/story/_/id/38243587/2024-draft-the-moment-decision", "ESPN profile of Caleb Williams", "ESPN profile of Caleb Williams"],
-  ["https://www.heisman.com/heisman-winners/6721/", "Heisman Trust Carson Palmer biography", "Heisman Trust Carson Palmer biography"],
-  ["https://usctrojans.com/news/2018/4/18/trojan-athletic-fund-heritage-association-spotlight-carson-palmer", "USC Athletics Heritage Association spotlight", "USC Athletics Heritage Association spotlight"],
-  ["https://usctrojans.com/news/1999/11/22/Football_Closes_1999_Season_Friday", "USC Athletics 1999 season notes", "USC Athletics 1999 season notes"],
-  ["https://usctrojans.com/news/2000/8/21/A_Look_At_Carson_Palmer", "USC Athletics Carson Palmer feature", "USC Athletics Carson Palmer feature"],
-  ["https://usctrojans.com/news/1999/6/21/palmer_poised_to_lead_trojans", "USC Athletics feature", "USC Athletics feature"],
-  ["https://www.texasfootball.com/hof-cedric-benson", "Texas High School Football Hall of Fame biography", "Texas High School Football Hall of Fame biography"],
-  ["https://texaslonghorns.com/news/2004/3/5/030504aab_823", "Texas Athletics announcement on Benson choosing football", "Texas Athletics announcement on Benson choosing football"],
-  ["https://www.espn.com/nfl/playoffs/2013/story/_/id/10355918/super-bowl-xlviii-champ-bailey-gets-chance", "ESPN profile of Champ Bailey", "ESPN profile of Champ Bailey"],
-  ["https://georgiadogs.com/news/2019/10/2/champ-bailey-the-best-ever.aspx", "Georgia Athletics feature on Champ Bailey", "Georgia Athletics feature on Champ Bailey"],
-  ["https://georgiadogs.com/news/2003/4/23/As_athlete_Bailey_is_the_boss", "Georgia Athletics Bailey family feature", "Georgia Athletics Bailey family feature"],
-  ["https://georgiadogs.com/news/2019/2/2/champ-bailey-named-to-pro-football-hall-of-fame", "Georgia Athletics Pro Football Hall of Fame release", "Georgia Athletics Pro Football Hall of Fame release"],
-  ["https://www.heisman.com/articles/25th-anniversary-heisman-winner-charlie-ward/", "Heisman Trust 25th-anniversary profile", "Heisman Trust 25th-anniversary profile"],
-  ["https://seminoles.com/news/2014/6/17/charlie-ward-bio/", "Florida State Athletics Charlie Ward biography", "Florida State Athletics Charlie Ward biography"],
-  ["https://www.espn.com/college-football/story/_/id/38431102/inside-two-sport-florida-state-star-charlie-ward-heisman-season-30-years-later", "ESPN 30-year retrospective on Charlie Ward", "ESPN 30-year retrospective on Charlie Ward"],
-  ["https://mutigers.com/sports/football/roster/season/2005/player/chase-coffman", "Missouri Athletics player biography", "Missouri Athletics player biography"],
-  ["https://mutigers.com/news/2005/02/02/football-announces-2005-recruiting-class", "Missouri Athletics 2005 recruiting class release", "Missouri Athletics 2005 recruiting class release"],
-  ["https://goducks.com/staff-directory/chip-kelly/333", "University of Oregon Athletics Chip Kelly biography", "University of Oregon Athletics Chip Kelly biography"],
-  ["https://virginiasports.com/news/2006/09/17/chris-long-the-mayor-of-charlottesville", "Virginia Athletics profile, “The Mayor of Charlottesville”", "Virginia Athletics profile, “The Mayor of Charlottesville”"],
-  ["https://gohuskies.com/sports/football/roster/coaches/chris-petersen/4183", "Washington Athletics coach biography", "Washington Athletics coach biography"],
-  ["https://broncosports.com/sports/football/roster/coaches/chris-petersen/1117", "Boise State Athletics coach biography", "Boise State Athletics coach biography"],
-  ["https://gohuskies.com/news/2013/12/9/209336083", "Washington Athletics introductory press conference", "Washington Athletics introductory press conference"],
-  ["https://www.heisman.com/heisman-winners/chris-weinke/", "Heisman Trust Chris Weinke biography", "Heisman Trust Chris Weinke biography"],
-  ["https://www.heisman.com/articles/heisman-profile-25th-anniversary-winner-chris-weinke/", "Heisman Trust 25th-anniversary Weinke profile", "Heisman Trust 25th-anniversary Weinke profile"],
-  ["https://gostanford.com/sports/football/roster/season/2016/player/christian-mccaffrey", "Stanford Athletics player biography", "Stanford Athletics player biography"],
-  ["https://www.hawaiinewsnow.com/story/23824344/brennan-signs-with-la-kiss-of-afl/", "Hawaii News Now profile", "Hawaii News Now profile"],
-  ["https://cubuffs.com/sports/football/roster/colt-brennan/3699?path=football", "Colorado Athletics player biography", "Colorado Athletics player biography"],
-  ["https://hawaiiathletics.com/sports/football/roster/colt-brennan/7948", "Hawaii Athletics player biography", "Hawaii Athletics player biography"],
-  ["https://www.hawaii.edu/news/2021/05/11/in-memoriam-colt-brennan/", "University of Hawaii memorial feature", "University of Hawaii memorial feature"],
-  ["https://texaslonghorns.com/sports/football/roster/colt-mccoy/3394", "Texas Athletics player biography", "Texas Athletics player biography"],
-  ["https://texaslonghorns.com/sports/general/roster/colt-mccoy/5057", "Texas Athletics Colt McCoy biography", "Texas Athletics Colt McCoy biography"],
-  ["https://www.espn.com/college-football/story/_/id/39833081/cooper-dejean-latest-nfl-draft-find-iowa", "ESPN", "ESPN — “Cooper DeJean is the latest NFL draft find from Iowa”"],
-  ["https://www.pff.com/news/college-football-iowa-cb-cooper-dejeans-path-to-becoming-one-of-the-best-all-around-defensive-backs-in-college-football", "PFF", "PFF — “Iowa CB Cooper DeJean’s path to becoming one of the best all-around defensive backs in college football”"],
-  ["https://www.inquirer.com/eagles/eagles-cooper-dejean-uncovering-the-birds-20250115.html", "The Philadelphia Inquirer", "The Philadelphia Inquirer — Cooper DeJean Q&A"],
-  ["https://www.inquirer.com/eagles/eagles-cooper-dejean-odebolt-iowa-high-school-highlights-20250110.html", "The Philadelphia Inquirer", "The Philadelphia Inquirer — Cooper DeJean’s Iowa high-school legacy"],
-  ["https://www.newyorkjets.com/news/jets-provide-thrills-on-nickelodeon-2410482", "New York Jets", "New York Jets — Nickelodeon feature"],
-  ["https://www.newyorkjets.com/news/d-brickashaw-ferguson-s-heartfelt-goodbye-17023146", "New York Jets", "New York Jets — Ferguson retirement feature"],
-  ["https://ca.sports.yahoo.com/blogs/nfl-shutdown-corner/shutdown-corner-interview-dbrickashaw-ferguson--nfl.html", "Yahoo Sports", "Yahoo Sports — Shutdown Corner interview with D’Brickashaw Ferguson"],
-  ["https://virginiasports.com/news/2003/04/21/d-brickashaw-ferguson-is-growing-force-on-offensive-line", "Virginia Athletics", "Virginia Athletics — “D’Brickashaw Ferguson Is Growing Force on Offensive Line”"],
-  ["https://virginiasports.com/news/2006/05/20/ferguson-completes-unique-athletic-academic-triple", "Virginia Athletics", "Virginia Athletics — “Ferguson Completes Unique Athletic-Academic Triple”"],
-  ["https://www.si.com/nfl/2017/10/19/dak-prescott-dallas-cowboys-mom-cancer", "Sports Illustrated", "Sports Illustrated — profile of Dak Prescott and his mother Peggy"],
-  ["https://www.si.com/college/2014/10/07/mississippi-state-inside-access", "Sports Illustrated", "Sports Illustrated — Mississippi State inside-access feature"],
-  ["https://www.dallascowboys.com/news/dak-s-road-to-dallas-why-prescott-s-rise-shouldn-t-be-a-surprise-417431", "Dallas Cowboys", "Dallas Cowboys — “Dak’s Road to Dallas”"],
-  ["https://www.espn.com/college-football/recap?gameId=333320344", "ESPN", "ESPN — 2013 Egg Bowl recap"],
-  ["https://hailstate.com/sports/football/roster/prescott-dak/2911", "Mississippi State Athletics", "Mississippi State Athletics — Dak Prescott bio"],
-  ["https://magazine.foriowa.org/story.php?ed=true&storyid=2552", "University of Iowa Magazine", "University of Iowa Magazine — Dallas Clark profile"],
-  ["https://purduesports.com/news/2002/10/5/boilermakers-fall-to-no-24-iowa-31-28", "Purdue Athletics", "Purdue Athletics — 2002 Iowa-Purdue recap"],
-  ["https://www.colts.com/news/where-are-they-now-for-dallas-clark-there-s-no-place-like-home-19547878", "Indianapolis Colts", "Indianapolis Colts — “Where Are They Now? Dallas Clark”"],
-  ["https://www.si.com/college/2016/03/10/dalvin-cook-fast-quiet-and-could-be-nations-top-rb", "Sports Illustrated", "Sports Illustrated — Dalvin Cook profile"],
-  ["https://www.si.com/nfl/2017/04/25/nfl-draft-dalvin-cook-red-flags-character-concerns-scouts-florida-state-miami-dade", "Sports Illustrated", "Sports Illustrated — 2017 Dalvin Cook profile"],
-  ["https://www.cbsnews.com/miami/news/miamis-yearby-fsus-cook-ex-teammates-now-rivals/", "CBS Miami", "CBS Miami — Cook and Yearby, former teammates turned rivals"],
-  ["https://www.espn.com/college-sports/recruiting/football/story/_/id/10391907/examining-pre-signing-day-flipping-epidemic-college-football-recruiting", "ESPN", "ESPN — recruiting flip feature"],
-  ["https://www.iheart.com/podcast/1119-unafraid-show-with-george-43072275/episode/dan-lanning-interview-mahomes-v-allen-145653316/", "Unafraid Show", "Unafraid Show / iHeart — Dan Lanning interview"],
-  ["https://goducks.com/staff-directory/dan-lanning/3041", "Oregon Athletics", "Oregon Athletics — Dan Lanning staff bio"],
-  ["https://www.espn.com/college-football/story/_/id/40781349/dan-lanning-journey-commitment-oregon-big-ten-2024", "ESPN", "ESPN — Dan Lanning journey to Oregon"],
-  ["https://www.espn.com/college-football/story/_/id/39012854/oregon-flashy-dan-lanning-playing-tough-pac-12-championship", "ESPN", "ESPN — Oregon and Dan Lanning culture feature"],
-  ["https://sports.yahoo.com/articles/oregon-ducks-coach-dan-lannings-234500671.html", "Yahoo Sports", "Yahoo Sports — Dan and Sauphia Lanning feature"],
-  ["https://miamihurricanes.com/news/2021/12/08/a-dream-fulfilled-morgan-enshrined-in-cfb-hof/", "Miami Hurricanes", "Miami Hurricanes — “A Dream Fulfilled: Morgan Enshrined in CFB Hall”"],
-  ["https://miamihurricanes.com/news/2021/01/11/morgan-selected-to-cfb-hall-of-fame-class-of-2021/", "Miami Hurricanes", "Miami Hurricanes — Dan Morgan CFB Hall announcement"],
-  ["https://miamihurricanes.com/news/2001/01/01/205540190-2/", "Miami Hurricanes", "Miami Hurricanes — “Even Morgan’s Pain Is Miami’s Gain”"],
-  ["https://www.heisman.com/profiling-our-recent-25th-anniversary-honoree-danny-wuerffel/", "Heisman Trophy", "Heisman Trophy — Danny Wuerffel profile"],
-  ["https://fhsaa.com/hof.aspx?hof=115", "FHSAA Hall of Fame", "FHSAA Hall of Fame — Danny Wuerffel"],
-  ["https://www.heisman.com/heisman-winners/danny-wuerffel/", "Heisman Trophy", "Heisman Trophy — Danny Wuerffel"],
-  ["https://dannywuerffel.com/dannywuerffel/", "DannyWuerffel.com", "DannyWuerffel.com — biography"],
-  ["https://msuspartans.com/news/2024/9/11/darqueze-dennard-enters-the-msu-hall-of-fame", "Michigan State Athletics", "Michigan State Athletics — Darqueze Dennard Hall of Fame feature"],
-  ["https://www.si.com/college/2015/12/28/michigan-state-spartans-secret-success-has-been-finding-hidden-recruiting-gems", "Sports Illustrated", "Sports Illustrated — Michigan State hidden recruiting gems"],
-  ["https://www.nfl.com/news/in-the-green-room-with-michigan-st-cb-darqueze-dennard-0ap2000000335826", "NFL.com", "NFL.com — “In the Green Room with Michigan State CB Darqueze Dennard”"],
-  ["https://www.latimes.com/sports/la-xpm-2013-dec-30-la-sp-rose-bowl-dennard-20131231-story.html", "Los Angeles Times", "Los Angeles Times — Darqueze Dennard Rose Bowl profile"],
-  ["https://www.espn.com/blog/philadelphia-eagles/post/_/id/28197/incredible-heights-darren-sproles-journey-to-nfl-greatness", "ESPN", "ESPN — “Incredible Heights: Darren Sproles’ journey to NFL greatness”"],
-  ["https://www.kstatesports.com/news/2021/10/3/sports-extra-se-class-of-2021-turns-opportunity-into-hall-of-fame-careers", "Kansas State Athletics", "Kansas State Athletics — Hall of Fame feature"],
-  ["https://www.nfl.com/news/rise-above", "NFL.com", "NFL.com — “Rise Above” Davante Adams feature"],
-  ["https://www.espn.com/nfl/story/_/id/34510902/davante-adams-finds-bliss-en-route-las-vegas-raiders", "ESPN", "ESPN — Davante Adams profile"],
-  ["https://www.steelers.com/news/decastro-it-was-amazing-i-would-do-it-again-12696780", "Pittsburgh Steelers", "Pittsburgh Steelers — DeCastro South Africa feature"],
-  ["https://www.steelers.com/news/decastro-likes-to-just-do-his-job-7255993", "Pittsburgh Steelers", "Pittsburgh Steelers — “DeCastro likes to just do his job”"],
-  ["https://gostanford.com/news/2013/04/17/david-decastro-profile", "Stanford Athletics", "Stanford Athletics — David DeCastro profile"],
-  ["https://www.cbsnews.com/pittsburgh/news/steelers-draft-offensive-guard-david-decastro-in-first-round/", "CBS Pittsburgh", "CBS Pittsburgh — David DeCastro draft feature"],
-  ["https://georgiadogs.com/news/2002/10/9/Greene_amp_Pollack_Before_amp_After", "Georgia Athletics", "Georgia Athletics — “Greene & Pollack: Before & After”"],
-  ["https://www.ghsfhf.com/hall-of-fame-classes/2022-inaugural-class/david-pollack", "Georgia High School Football Hall of Fame", "Georgia High School Football Hall of Fame — David Pollack"],
-  ["https://georgiadogs.com/news/2002/9/17/Reactions_From_Tuesday_s_Press_Conference", "Georgia Athletics", "Georgia Athletics — 2002 press conference"],
-  ["https://gahistoricnewspapers.galileo.usg.edu/lccn/gua1179162/2002-09-17/ed-1/seq-10/", "Georgia Historic Newspapers", "Georgia Historic Newspapers — Red & Black, Sept. 17, 2002"],
-  ["https://davidpollack.com/meet-david/", "DavidPollack.com", "DavidPollack.com — biography"],
-  ["https://gotigersgo.com/news/2002/2/25/DeAngelo_Williams_Signs_Scholarship_With_Memphis", "Memphis Athletics", "Memphis Athletics — DeAngelo Williams signing announcement"],
-  ["https://gotigersgo.com/news/2002/2/6/Tigers_Land_24_On_National_Signing_Day", "Memphis Athletics", "Memphis Athletics — 2002 signing class"],
-  ["https://www.si.com/nfl/2014/05/29/nfl-carolina-panthers-deangelo-williams-sandra-kay-hill-breast-cancer-awareness", "Sports Illustrated", "Sports Illustrated — DeAngelo Williams first-person breast-cancer awareness story"],
-  ["https://cubuffs.com/staff-directory/deion-coach-prime-sanders/1138", "Colorado Athletics", "Colorado Athletics — Deion Sanders staff bio"],
-  ["https://gojsutigers.com/sports/football/roster/coaches/deion-sanders/219", "Jackson State Athletics", "Jackson State Athletics — Deion Sanders bio"],
-  ["https://www.espn.com/college-football/story/_/id/38555810/how-deion-sanders-recruits", "ESPN", "ESPN — Deion Sanders recruiting feature"],
-  ["https://texaslonghorns.com/news/2004/10/1/100104aaa_127", "Texas Athletics", "Texas Athletics — “From Waco to Austin: Derrick Johnson”"],
-  ["https://texaslonghorns.com/sports/general/roster/derrick-johnson/5218", "Texas Athletics", "Texas Athletics — Derrick Johnson bio"],
-  ["https://www.nfl.com/news/super-freak", "NFL.com", "NFL.com — “Super Freak” Derwin James profile"],
-  ["https://baynews9.com/fl/tampa/sports/2013/7/17/top_recruit_2015_fsu", "Bay News 9", "Bay News 9 — Derwin James recruiting profile"],
-  ["https://www.espn.com/nfl/story/_/id/11123688/washington-redskins-wr-desean-jackson-refuses-sever-ties-espn-magazine", "ESPN The Magazine", "ESPN The Magazine — DeSean Jackson roots profile"],
-  ["https://calbears.com/sports/football/roster/coaches/desean-jackson/454", "California Athletics", "California Athletics — DeSean Jackson staff bio"],
-  ["https://www.espn.com/espn/feature/story/_/id/29824655/deshaun-watson-ready-heard", "ESPN", "ESPN — Deshaun Watson long-form profile"],
-  ["https://www.theplayerstribune.com/articles/deshaun-watson-texans-what-you-see", "The Players’ Tribune", "The Players’ Tribune — “What You See”"],
-  ["https://www.espn.com/college-football/story/_/id/11939082/clemson-quarterback-deshaun-watson-draws-strength-maturity-past", "ESPN", "ESPN — “Watson’s maturity comes naturally”"],
-  ["https://www.espn.com/college-football/story/_/id/18442248/clemson-tigers-deshaun-watson-cements-legacy-game-winning-drive-ages", "ESPN", "ESPN — Deshaun Watson title-winning drive"],
-  ["https://www.vikings.com/news/prospect-profile-lsu-lb-devin-white", "Minnesota Vikings", "Minnesota Vikings — Devin White prospect profile"],
-  ["https://lsusports.net/sports/fb/roster/player/devin-white", "LSU Athletics", "LSU Athletics — Devin White bio"],
-  ["https://www.ktre.com/story/6368172/15-5a-district-track-results/", "KTRE", "KTRE / Lufkin ISD — District 15-5A track results"],
-  ["https://www.espn.com/college-sports/football/recruiting/player/_/id/36113/dez-bryant", "ESPN Recruiting", "ESPN Recruiting — Dez Bryant profile"],
-  ["https://okstate.com/documents/download/2015/5/26/08mediaguide_section6.pdf", "Oklahoma State Athletics", "Oklahoma State Athletics — 2008 football media guide player profile"],
-  ["https://okstate.com/news/2025/6/2/cowboy-football-dez-bryant-added-to-college-football-hall-of-fame-ballot", "Oklahoma State Athletics", "Oklahoma State Athletics — Dez Bryant College Football Hall of Fame ballot announcement"],
-  ["https://okstate.com/news/2009/9/8/Cowboys_Featured_On_Sports_Illustrated_Cover", "Oklahoma State Athletics", "Oklahoma State Athletics — Cowboys featured on Sports Illustrated cover"],
-  ["https://www.ncaa.org/media-center-how-purdue-changed-drew-brees-life-ncaa-silver-anniversary-award-honors-boilermaker-legend/", "NCAA", "NCAA — “How Purdue changed Drew Brees’ life”"],
-  ["https://purduesports.com/purdue-football-timeline", "Purdue Athletics", "Purdue Athletics — Purdue Football Timeline"],
-  ["https://stories.purdue.edu/podcast/drew-brees/", "Purdue University", "Purdue University — “This Is Purdue” Drew Brees podcast"],
-  ["https://www.colts.com/news/questions-with-the-colts-dwayne-allen-13173114", "Indianapolis Colts", "Indianapolis Colts — Dwayne Allen Q&A"],
-  ["https://clemsontigers.com/news/2013/08/29/football-game-program-feature-nfl-tiger-spotlight-dwayne-allen", "Clemson Athletics", "Clemson Athletics — “NFL Tiger Spotlight: Dwayne Allen”"],
-  ["https://clemsontigers.com/sports/football/roster/player/dwayne-allen", "Clemson Athletics", "Clemson Athletics — Dwayne Allen bio"],
-  ["https://www.profootballhof.com/news/countdown-to-2024-pro-football-hall-of-fame-enshrinement-dwight-freeney", "Pro Football Hall of Fame", "Pro Football Hall of Fame — Dwight Freeney enshrinement profile"],
-  ["https://cuse.com/news/2007/4/2/freeneyhonor32607", "Syracuse Athletics", "Syracuse Athletics — Dwight Freeney Day feature"],
-  ["https://www.colts.com/news/dwight-freeney-reunion-podcast-and1-mixtape-spin-move-pass-rush", "Indianapolis Colts", "Indianapolis Colts — Dwight Freeney Reunion Podcast"],
-  ["https://footballfoundation.org/news/2023/11/5/dwight-freeney-2023-college-football-hall-of-fame-spotlight.aspx", "National Football Foundation", "National Football Foundation — Dwight Freeney CFB Hall spotlight"],
-  ["https://cuse.com/news/2023/12/6/freeney-officially-joins-college-football-hall-of-fame", "Syracuse Athletics", "Syracuse Athletics — Dwight Freeney CFB Hall announcement"],
-  ["https://texaslonghorns.com/news/2014/1/30/FB_0130141857", "Texas Athletics", "Texas Athletics — “Earl Thomas: Never a doubt”"],
-  ["https://texaslonghorns.com/news/2007/2/7/020707aab_651.aspx", "Texas Athletics", "Texas Athletics — 2007 signing class"],
-  ["https://texaslonghorns.com/sports/football/roster/earl-thomas/3417", "Texas Athletics", "Texas Athletics — Earl Thomas bio"],
-  ["https://www.si.com/college/2020/09/18/ed-orgeron-lsu-60-minutes-daily-cover", "Sports Illustrated", "Sports Illustrated — Ed Orgeron Bayou-roots interview"],
-  ["https://www.espn.com/college-football/story/_/id/17701529/lsu-tigers-ed-orgeron-starts-dream-job-audition-win", "ESPN", "ESPN — “Native son Ed Orgeron’s dream job starts with an LSU win”"],
-  ["https://www.espn.com/ncf/features/heisman/_/year/1995/set/7", "ESPN", "ESPN — Eddie George Heisman feature"],
-  ["https://athletics.forkunion.com/news/2017/11/2/football-post-graduate-last-chance-high-the-bleach-report.aspx", "Fork Union Military Academy", "Fork Union Military Academy — Eddie George feature"],
-  ["https://www.cfbhall.com/inductees/eddie-george-2011/", "College Football Hall of Fame", "College Football Hall of Fame — Eddie George"],
-  ["https://www.sportingnews.com/us/ncaa-football/news/unstoppable-eddie-george-reflects-on-annihilating-his-nemesis/19zjelot9xbtr1qy5hapwt48z6", "Sporting News", "Sporting News — Eddie George retrospective"],
-  ["https://www.pbs.org/video/eli-manning-xzwdp9/", "PBS", "PBS — Eli Manning profile"],
-  ["https://www.latimes.com/archives/la-xpm-2001-aug-29-sp-39623-story.html", "Los Angeles Times", "Los Angeles Times — Eli Manning/Ole Miss profile"],
-  ["https://www.nfl.com/news/unflappable-eli-always-has-thrived-in-the-pressure-cooker-09000d5d826853a4", "NFL.com", "NFL.com — Eli Manning profile"],
-  ["https://www.cbsnews.com/news/ole-miss-gets-another-manning/", "CBS News", "CBS News — Ole Miss gets another Manning"],
-  ["https://www.latimes.com/archives/la-xpm-2002-jan-03-sp-crouch03-story.html", "Los Angeles Times", "Los Angeles Times — Eric Crouch profile"],
-  ["https://www.heisman.com/heisman-winners/eric-crouch/", "Heisman Trophy", "Heisman Trophy — Eric Crouch"],
-  ["https://www.latimes.com/archives/la-xpm-1999-aug-31-sp-5499-story.html", "Los Angeles Times", "Los Angeles Times — Nebraska quarterback competition"],
-  ["https://huskers.com/news/2021/09/17/black-41-flash-reverse", "Nebraska Athletics", "Nebraska Athletics — “Black 41 Flash Reverse”"],
-  ["https://www.deseret.com/2013/5/12/20519548/eric-weddle-former-ute-all-american-was-a-punk-freshman/", "Deseret News", "Deseret News — Eric Weddle Utah profile"],
-  ["https://utahutes.com/news/2007/1/12/weddle_is_named_consensus_all_american", "Utah Athletics", "Utah Athletics — Weddle consensus All-American announcement"],
-  ["https://utahutes.com/news/2006/9/24/eric_weddle_is_named_national_player_of_the_week", "Utah Athletics", "Utah Athletics — Eric Weddle National Player of the Week"],
-  ["https://utahutes.com/news/2006/12/23/utes_stretch_bowl_winning_streak_to_six_games_with_25_13_triumph_over_tulsa", "Utah Athletics", "Utah Athletics — 2006 Armed Forces Bowl recap"],
-  ["https://www.si.com/college/2015/11/12/ohio-states-ezekiel-elliott-has-relied-many-blockers-his-path-stardom", "Sports Illustrated", "Sports Illustrated"],
-  ["https://www.si.com/college/2014/03/26/spring-spotlight-ohio-state-ezekiel-elliott", "Sports Illustrated", "Sports Illustrated"],
-  ["https://ohiostatebuckeyes.com/news/2013/2/6/ohio-state-signs-24-to-national-letters-of-intent", "Ohio State Athletics", "Ohio State Athletics"],
-  ["https://ohiostatebuckeyes.com/news/2015/1/2/sweet-as-sugar-buckeyes-defeat-alabama-42-35", "Ohio State Athletics", "Ohio State Athletics"],
-  ["https://www.idsnews.com/article/2025/12/indiana-football-fernando-mendozas-journey-to-the-heisman-trophy", "Indiana Daily Student", "Indiana Daily Student"],
-  ["https://www.sportingnews.com/us/ncaa-football/news/fernando-mendoza-family-tree-qb-brother-mom/c248500f63aaa12e6594d1ae", "Sporting News", "Sporting News"],
-  ["https://iuhoosiers.com/sports/football/roster/fernando-mendoza/20171", "Indiana University Athletics", "Indiana University Athletics"],
-  ["https://digitalsc.lib.vt.edu/Ms2016-015/Ms2016-015_FrankBeamer", "Virginia Tech Special Collections and University Archives", "Virginia Tech Special Collections and University Archives"],
-  ["https://footballfoundation.org/news/2018/10/5/2018-college-football-hall-of-fame-profile-coach-frank-beamer.aspx", "National Football Foundation", "National Football Foundation"],
-  ["https://www.georgerogersfoundationofthecarolinas.org/board-of-directors-ceo", "George Rogers Foundation of the Carolinas", "George Rogers Foundation of the Carolinas"],
-  ["https://www.heisman.com/heisman-winners/george-rogers/", "Heisman", "Heisman"],
-  ["https://gamecocksonline.com/news/2018/06/21/trads-scar-history-html/", "University of South Carolina Athletics", "University of South Carolina Athletics"],
-  ["https://soonersports.com/news/2006/2/2/208390931", "University of Oklahoma Athletics", "University of Oklahoma Athletics"],
-  ["https://www.si.com/college/oklahoma/football/top-20-nfl-sooners-gerald-mccoy", "Sports Illustrated", "Sports Illustrated"],
-  ["https://soonersports.com/news/2009/4/28/208395803", "University of Oklahoma Athletics", "University of Oklahoma Athletics"],
-  ["https://soonersports.com/news/2009/12/18/208367194", "University of Oklahoma Athletics", "University of Oklahoma Athletics"],
-  ["https://lsusports.net/news/2007/10/05/1255525", "LSU Athletics", "LSU Athletics"],
-  ["https://lasportshall.com/2021/08/17/glenn-dorsey-dream-like-lsu-career-destined-him-for-hall-of-fame-immortality/", "Louisiana Sports Hall of Fame", "Louisiana Sports Hall of Fame"],
-  ["https://lsusports.net/sports/fb/roster/season/2004/player/glenn-dorsey", "LSU Athletics", "LSU Athletics"],
-  ["https://lsusports.net/news/2007/12/09/1350708/", "LSU Athletics", "LSU Athletics"],
-  ["https://www.uoalumni.com/article/shout/2022/football-alumni-where-are-they-now", "University of Oregon Alumni Association", "University of Oregon Alumni Association"],
-  ["https://goducks.com/sports/football/roster/haloti-ngata/1535", "University of Oregon Athletics", "University of Oregon Athletics"],
-  ["https://www.washingtonpost.com/archive/sports/2004/10/15/southwestern-va-follows-millers-rising-star/81e29738-3823-4a27-baf2-69adbf5b9316/", "The Washington Post", "The Washington Post"],
-  ["https://www.steelers.com/news/labriola-on-heath-miller-16845875", "Pittsburgh Steelers", "Pittsburgh Steelers"],
-  ["https://www.heraldstandard.com/sports/2005/apr/26/miller-says-all-the-right-things/", "Herald-Standard", "Herald-Standard"],
-  ["https://virginiasports.com/news/2003/11/24/a-trio-of-tight-ends", "Virginia Cavaliers Athletics", "Virginia Cavaliers Athletics"],
-  ["https://www.patriots.com/team/players-roster/hunter-henry/logs/1973/reg/", "New England Patriots", "New England Patriots"],
-  ["https://arkansasrazorbacks.com/roster/hunter-henry/", "Arkansas Razorbacks Athletics", "Arkansas Razorbacks Athletics"],
-  ["https://www.nfl.com/news/wild-play-sparks-arkansas-upset-of-ole-miss-0ap3000000574738", "NFL.com", "NFL.com"],
-  ["https://clemsontigers.com/news/2019/09/20/isaiah-simmons-tiger-spotlight", "Clemson Tigers Athletics", "Clemson Tigers Athletics"],
-  ["https://clemsontigers.com/sports/track-field/roster/player/isaiah-simmons-2", "Clemson Tigers Athletics", "Clemson Tigers Athletics"],
-  ["https://uwbadgers.com/news/2009/4/1/Spring_Spotlight_J_J_Watt", "Wisconsin Badgers Athletics", "Wisconsin Badgers Athletics"],
-  ["https://uwbadgers.com/news/2010/10/8/Journey_has_shaped_Watt_on_and_off_the_field", "Wisconsin Badgers Athletics", "Wisconsin Badgers Athletics"],
-  ["https://uwbadgers.com/news/2014/8/2/Lucas_As_usual_Watt_brothers_are_in_this_together", "Wisconsin Badgers Athletics", "Wisconsin Badgers Athletics"],
-  ["https://www.si.com/nfl/2022/02/12/jamarr-chase-super-bowl-cincinnati-bengals-path-to-success", "Sports Illustrated", "Sports Illustrated"],
-  ["https://www.washingtonpost.com/sports/2022/02/12/jamarr-chase-lsu-bengals-super-bowl/", "The Washington Post", "The Washington Post"],
-  ["https://lsusports.net/news/2019/10/09/football-for-ja-marr-chase-and-derek-stingley-iron-sharpens-iron", "LSU Athletics", "LSU Athletics"],
-  ["https://lsusports.net/sports/fb/roster/season/2020/player/jamarr-chase", "LSU Athletics", "LSU Athletics"],
-  ["https://mgoblue.com/news/2016/12/9/kornacki_mom_jabrill_soak_in_heisman_weekend", "University of Michigan Athletics", "University of Michigan Athletics"],
-  ["https://mgoblue.com/news/2014/2/5/Bios_for_2014_Michigan_Football_Signees", "University of Michigan Athletics", "University of Michigan Athletics"],
-  ["https://mgoblue.com/news/2015/11/6/kornacki_peppers_honors_fallen_brother_who_inspired_him", "University of Michigan Athletics", "University of Michigan Athletics"],
-  ["https://www.si.com/college/2017/01/10/jabrill-peppers-michigan-nfl-draft-2017", "Sports Illustrated", "Sports Illustrated"],
-  ["https://mgoblue.com/sports/football/roster/jake-butt/1408", "Michigan Athletics", "Michigan Athletics — Jake Butt roster"],
-  ["https://mgoblue.com/news/2017/4/20/kornacki_butt_looking_to_change_lives", "Michigan Athletics", "Michigan Athletics — Kornacki: Butt Looking to Change Lives"],
-  ["https://mgoblue.com/news/2017/10/9/football-perry-finds-meaning-in-wearing-butts-no-88", "Michigan Athletics", "Michigan Athletics — Perry Finds Meaning in Wearing Butt's No. 88"],
-  ["https://mgoblue.com/news/2008/4/22/dolphins_sign_long_make_him_top_pick_in_nfl_draft", "Michigan Athletics", "Michigan Athletics — Dolphins Sign Long, Make Him Top Pick in NFL Draft"],
-  ["https://mgoblue.com/news/2003/2/5/2003_signing_day_comments_from_coach_lloyd_carr", "Michigan Athletics", "Michigan Athletics — 2003 Signing Day Comments from Coach Lloyd Carr"],
-  ["https://12thman.com/sports/football/roster/season/2010/player/jake-matthews", "Texas A&M Athletics", "Texas A&M Athletics — Jake Matthews roster"],
-  ["https://12thman.com/news/2023/09/15/2023-texas-am-athletics-hall-of-fame-class-enshrined-at-45th-burgess-banquet", "Texas A&M Athletics", "Texas A&M Athletics — 2023 Hall of Fame class banquet"],
-  ["https://12thman.com/news/2013/09/11/family-first-1", "Texas A&M Athletics", "Texas A&M Athletics — Family First"],
-  ["https://12thman.com/news/2013/08/30/family-tradition", "Texas A&M Athletics", "Texas A&M Athletics — Family Tradition"],
-  ["https://12thman.com/news/2013/01/10/jake-matthews-to-return-to-aggieland", "Texas A&M Athletics", "Texas A&M Athletics — Jake Matthews to Return to Aggieland"],
-  ["https://georgiadogs.com/roster.aspx?rp_id=4881", "Georgia Athletics", "Georgia Athletics — Jalen Carter roster"],
-  ["https://seminoles.com/news/2013/3/12/signee-breakdown-jalen-ramsey", "Florida State Athletics", "Florida State Athletics — Signee Breakdown: Jalen Ramsey"],
-  ["https://seminoles.com/sports/football/roster/jalen-ramsey/809", "Florida State Athletics", "Florida State Athletics — Jalen Ramsey roster"],
-  ["https://www.specialolympics.org/about/ambassadors/jamaal-charles", "Special Olympics", "Special Olympics — Jamaal Charles ambassador profile"],
-  ["https://alcalde.texasexes.org/2016/05/jamaal", "The Alcalde", "The Alcalde — Jamaal"],
-  ["https://texaslonghorns.com/news/2005/2/2/020205aac_656", "Texas Athletics", "Texas Athletics — 2005 signing class"],
-  ["https://tshof.org/inductee/jamaal-charles/", "Texas Sports Hall of Fame", "Texas Sports Hall of Fame — Jamaal Charles"],
-  ["https://lsusports.net/sports/fb/roster/season/2014/player/jamal-adams", "LSU Athletics", "LSU Athletics — Jamal Adams roster"],
-  ["https://www.raiders.com/news/jamal-adams-facts-get-to-know-nfl-transactions-raiders-training-camp", "Las Vegas Raiders", "Las Vegas Raiders — Jamal Adams facts"],
-  ["https://ohiostatebuckeyes.com/news/2006/11/18/under-the-helmet-37", "Ohio State Athletics", "Ohio State Athletics — Under the Helmet"],
-  ["https://ohiostatebuckeyes.com/news/2005/2/2/eighteen-student-athletes-sign-to-play-football-at-ohio-state", "Ohio State Athletics", "Ohio State Athletics — 2005 signing class"],
-  ["https://ohiostatebuckeyes.com/news/2008/3/27/spring-football-player-profile-james-laurinaitis", "Ohio State Athletics", "Ohio State Athletics — Spring Football Player Profile"],
-  ["https://fightingirish.com/news/2014/09/11/coming-of-age", "Notre Dame Athletics", "Notre Dame Athletics — Coming of Age"],
-  ["https://fightingirish.com/sports/football/roster/player/jaylon-smith", "Notre Dame Athletics", "Notre Dame Athletics — Jaylon Smith roster"],
-  ["https://ohiostatebuckeyes.com/sports/football/roster/jeff-okudah/449", "Ohio State Athletics", "Ohio State Athletics — Jeff Okudah roster"],
-  ["https://ohiostatebuckeyes.com/news/2020/1/3/jeff-okudah-departs-dbu-as-an-all-time-top-cb", "Ohio State Athletics", "Ohio State Athletics — Jeff Okudah Departs DBU"],
-  ["https://miamihurricanes.com/sports/football/roster/season/2001-02/player/jeremy-shockey/", "Miami Athletics", "Miami Athletics — Jeremy Shockey roster"],
-  ["https://soonersports.com/news/2006/8/21/208392693", "Oklahoma Athletics", "Oklahoma Athletics — Freshman Tight End Jermaine Gresham"],
-  ["https://fightingirish.com/sports/football/roster/player/joe-alt", "Notre Dame Athletics", "Notre Dame Athletics — Joe Alt roster"],
-  ["https://uwbadgers.com/sports/2015/8/21/GEN_20140101585", "Wisconsin Athletics", "Wisconsin Athletics — Joe Thomas profile"],
-  ["https://uwbadgers.com/news/2019/6/25/athletics-general-news-events-lucas-uw-athletic-hall-of-fame-2019-joe-thomas-football", "Wisconsin Athletics", "Wisconsin Athletics — Hall of Fame feature"],
-  ["https://ohiostatebuckeyes.com/sports/football/roster/nick-bosa/7994", "Ohio State Athletics", "Ohio State Athletics — Nick Bosa roster"],
-  ["https://ohiostatebuckeyes.com/news/2014/9/29/urban-meyer-press-conference-transcript-09-29-14", "Ohio State Athletics", "Ohio State Athletics — Urban Meyer press conference, Sept. 29, 2014"],
-  ["https://utsports.com/sports/football/roster/john-henderson/14190", "Tennessee Athletics", "Tennessee Athletics — John Henderson roster"],
-  ["https://utsports.com/news/2012/5/25/Vols_Jersey_Countdown_98", "Tennessee Athletics", "Tennessee Athletics — Vols Jersey Countdown: 98"],
-  ["https://www.army.mil/article/258443/nfl_football_star_spends_time_with_kids_at_fort_lee_procamp", "U.S. Army", "U.S. Army — Jonathan Allen youth camp feature"],
-  ["https://www.washingtonpost.com/sports/colleges/from-foster-care-to-first-round-alabamas-jonathan-allen-plows-forward/2016/12/22/9f61c5d4-c84f-11e6-bf4b-2c064d32a4bf_story.html", "The Washington Post", "The Washington Post — From foster care to first round"],
-  ["https://rolltide.com/sports/football/roster/jonathan-allen/3077", "Alabama Athletics", "Alabama Athletics — Jonathan Allen roster"],
-  ["https://texaslonghorns.com/news/2008/10/11/101108aaa_21", "Texas Athletics", "Texas Athletics — Texas vs. Oklahoma feature"],
-  ["https://texaslonghorns.com/news/2006/11/16/111606aab_105.aspx", "Texas Athletics", "Texas Athletics — Jordan Shipley Q&A"],
-  ["https://goheels.com/sports/football/roster/julius-peppers/5459", "North Carolina Athletics", "North Carolina Athletics — Julius Peppers football roster"],
-  ["https://goheels.com/news/2000/1/22/205462922", "North Carolina Athletics", "North Carolina Athletics — Peppers joins basketball"],
-  ["https://goducks.com/sports/football/roster/kayvon-thibodeaux/10601", "Oregon Athletics", "Oregon Athletics — Kayvon Thibodeaux roster"],
-  ["https://goducks.com/news/2019/2/5/football-nsd19", "Oregon Athletics", "Oregon Athletics — Oregon Adds To Consensus Top 10 Class"],
-  ["https://www.latimes.com/sports/newsletter/2021-08-02/high-school-football-prep-rally", "Los Angeles Times", "Los Angeles Times — Prep Rally interview"],
-  ["https://footballfoundation.org/hof_search.aspx?hof=2065", "National Football Foundation", "National Football Foundation — Keith Jackson Hall of Fame profile"],
-  ["https://soonersports.com/sports/2025/2/26/black-history-month-spotlight", "Oklahoma Athletics", "Oklahoma Athletics — Black History Month Spotlight"],
-  ["https://www.cfbhall.com/inductees/keith-jackson-2001/", "College Football Hall of Fame", "College Football Hall of Fame — Keith Jackson"],
-  ["https://miamihurricanes.com/sports/football/roster/season/2001-02/player/kellen-winslow", "Miami Athletics", "Miami Athletics — Kellen Winslow roster"],
-  ["https://www.sportingnews.com/us/nfl/news/khalil-mack-college-video-game-rating/1tp13tlo204d115tf2mhhlqkb2", "Sporting News", "Sporting News — Khalil Mack college backstory"],
-  ["https://chicago.suntimes.com/2018/10/31/18480992/the-mack-effect-before-he-was-a-bear-olb-khalil-mack-transformed-buffalo", "Chicago Sun-Times", "Chicago Sun-Times — Before he was a Bear, Mack transformed Buffalo"],
-  ["https://www.si.com/nfl/2014/04/25/2014-nfl-draft-top-64-khalil-mack", "Sports Illustrated", "Sports Illustrated — 2014 NFL Draft Top 64: Khalil Mack"],
-  ["https://www.si.com/college/2013/11/19/khalil-mack-buffalo-bulls", "Sports Illustrated", "Sports Illustrated — Khalil Mack and Buffalo"],
-  ["https://www.ravenspr.com/player_bios/kyle_hamilton.pdf", "Baltimore Ravens", "Baltimore Ravens — Kyle Hamilton media guide bio"],
-  ["https://fightingirish.com/sports/football/roster/season/2020-21/player/kyle-hamilton", "Notre Dame Athletics", "Notre Dame Athletics — Kyle Hamilton roster"],
-  ["https://nsd.floridagators.com/bio/15", "Florida Athletics", "Florida Athletics — Kyle Pitts signing bio"],
-  ["https://floridagators.com/news/2020/10/2/football-gators-tight-end-kyle-pitts-feature-story", "Florida Athletics", "Florida Athletics — Pitts Well-Equipped for Big Stage"],
-  ["https://floridagators.com/news/2020/9/7/football-the-kyle-konnection-trask-and-pitts", "Florida Athletics", "Florida Athletics — The Kyle Konnection: Trask and Pitts"],
-  ["https://www.profootballhof.com/news/2025/03/gold-jacket-spotlight-ladainian-tomlinson-runs-idol%E2%80%99s-handoff-into-nfl-stardom/", "Pro Football Hall of Fame", "Pro Football Hall of Fame — Gold Jacket Spotlight: LaDainian Tomlinson"],
-  ["https://footballfoundation.org/honors/hall-of-fame/ladainian-tomlinson/2370", "National Football Foundation", "National Football Foundation — LaDainian Tomlinson Hall of Fame profile"],
-  ["https://goducks.com/news/2023/12/5/football-james-hall-of-fame-induction-becomes-official-tuesday", "Oregon Athletics", "Oregon Athletics — James Hall of Fame induction feature"],
-  ["https://goducks.com/honors/hall-of-fame/lamichael-james/1253", "Oregon Athletics", "Oregon Athletics — LaMichael James Hall of Fame"],
-  ["https://georgiadogs.com/sports/football/roster/malaki-starks/8131", "Georgia Athletics", "Georgia Athletics — Malaki Starks roster"],
-  ["https://georgiadogs.com/news/2023/9/19/football-quick-chat-malaki-starks", "Georgia Athletics", "Georgia Athletics — Quick Chat: Malaki Starks"],
-  ["https://ohiostatebuckeyes.com/news/2007/5/3/ohio-state-hosts-jesse-owens-classic", "Ohio State Athletics", "Ohio State Athletics — Jesse Owens Classic"],
-  ["https://usctrojans.com/sports/track-and-field/roster/marqise-lee/3998", "USC Athletics", "USC Athletics — Marqise Lee track roster"],
-  ["https://usctrojans.com/sports/2017/6/15/blog-2011-08-meet-marqise-lee-html.aspx", "USC Athletics", "USC Athletics — Meet Marqise Lee"],
-  ["https://www.espn.com/college-football/story/_/id/38703026/marvin-harrison-jr-ohio-state-draft-penn-state", "ESPN", "ESPN — Marvin Harrison Jr. profile"],
-  ["https://www.foxsports.com/stories/college-football/kyle-mccord-and-marvin-harrison-jrs-long-intertwined-paths-to-the-game", "FOX Sports", "FOX Sports — McCord and Harrison's intertwined paths"],
-  ["https://www.phillyvoice.com/marvin-harrison-jr-wide-receiver-prospect-ohio-state-rose-bowl-st-josephs-prep-philadelphia/", "PhillyVoice", "PhillyVoice — Marvin Harrison Jr. at Ohio State"],
-  ["https://gopsusports.com/sports/football/roster/season/2018/player/micah-parsons", "Penn State Athletics", "Penn State Athletics — Micah Parsons roster"],
-  ["https://gopsusports.com/news/2017/12/20/franklin-and-fb-inks-top-5-class", "Penn State Athletics", "Penn State Athletics — 2017 signing class"],
-  ["https://gopsusports.com/news/2019/07/22/brown-and-parsons-on-butkus-preseason-watch-list", "Penn State Athletics", "Penn State Athletics — Brown and Parsons on Butkus Preseason Watch List"],
-  ["https://texaslonghorns.com/news/2004/12/30/123004aaa_665", "Texas Athletics", "Texas Athletics — Family ties add intrigue to Rose Bowl"],
-  ["https://texaslonghorns.com/news/2015/9/24/FB_0924152019", "Texas Athletics", "Texas Athletics — Michael Huff Hall of Honor profile"],
-  ["https://texaslonghorns.com/news/2005/8/30/083005aab_128", "Texas Athletics", "Texas Athletics — Mind over matter"],
-  ["https://12thman.com/sports/football/roster/season/2012/player/mike-evans", "Texas A&M Athletics", "Texas A&M Athletics — Mike Evans roster"],
-  ["https://12thman.com/news/2013/09/04/the-rock-from-the-island", "Texas A&M Athletics", "Texas A&M Athletics — The Rock from the Island"],
-  ["https://lsusports.net/sports/fb/roster/season/2010/player/morris-claiborne", "LSU Athletics", "LSU Athletics — Morris Claiborne roster"],
-  ["https://georgiadogs.com/sports/football/roster/nakobe-dean/5425", "Georgia Athletics", "Georgia Athletics — Nakobe Dean roster"],
-  ["https://georgiadogs.com/news/2023/4/28/football-dean-still-pursuing-mechanical-engineering-degree", "Georgia Athletics", "Georgia Athletics — Dean Still Pursuing Mechanical Engineering Degree"],
-  ["https://olemisssports.com/news/2021/4/12/football-ole-miss-nfl-legend-patrick-willis-to-deliver-commencement-address.aspx", "Ole Miss Athletics", "Ole Miss Athletics — Patrick Willis commencement announcement"],
-  ["https://olemisssports.com/news/2003/2/5/2003_Ole_Miss_Signing_Day_Press_Conference_Transcript", "Ole Miss Athletics", "Ole Miss Athletics — 2003 Signing Day transcript"],
-  ["https://wpial.org/hof.aspx?hof=61", "WPIAL Hall of Fame", "WPIAL Hall of Fame — Paul Posluszny"],
-  ["https://collegesportscommunicators.com/news/2006/11/30/GEN_1354.aspx?path=general", "College Sports Communicators", "College Sports Communicators — Academic All-America announcement"],
-  ["https://footballfoundation.org/honors/hall-of-fame/paul-posluszny/2538", "National Football Foundation", "National Football Foundation — Paul Posluszny Hall of Fame profile"],
-  ["https://gopsusports.com/news/2006/12/10/posluszny-named-mvp-at-nittany-lion-football-banquet", "Penn State Athletics", "Penn State Athletics — Football Banquet"],
-  ["https://seminoles.com/honors/florida-state-athletics-hall-of-fame/peter-warrick/124", "Florida State Athletics", "Florida State Athletics — Peter Warrick Hall of Fame"],
-  ["https://allstatesugarbowl.org/sports/2023/11/28/peter-warrick.aspx", "Sugar Bowl", "Sugar Bowl — Peter Warrick Hall of Fame"],
-  ["https://seminoles.com/news/2026/8/18/football-hall-of-fame-on-campus-salute-for-peter-warrick-set-for-october-31", "Florida State Athletics", "Florida State Athletics — Hall of Fame On-Campus Salute"],
-  ["https://allstatesugarbowl.org/news/2026/1/22/cfb-hall-of-fame.aspx", "Sugar Bowl", "Sugar Bowl — Three Sugar Bowl Alums Headed to College Football Hall of Fame"],
-  ["https://rolltide.com/news/2008/1/8/Rolando_McClain_Named_Freshman_All_American", "Alabama Athletics", "Alabama Athletics — Rolando McClain Freshman All-America"],
-  ["https://www.maxpreps.com/al/decatur/decatur-red-raiders/athletes/rolando-mcclain/bio/?careerid=a03uvbn8dor33", "MaxPreps", "MaxPreps — Rolando McClain basketball bio"],
-  ["https://texaslonghorns.com/honors/hall-of-honor/roy-williams/860", "Texas Athletics", "Texas Athletics — Roy Williams Hall of Honor"],
-  ["https://texaslonghorns.com/news/2002/12/27/122702aaa_114", "Texas Athletics", "Texas Athletics — Still a kid at heart"],
-  ["https://soonersports.com/news/2007/2/7/208402679", "Oklahoma Athletics", "Oklahoma Athletics — 2007 signing class"],
-  ["https://soonersports.com/news/2011/1/6/208390240", "Oklahoma Athletics", "Oklahoma Athletics — Ryan Broyles to Return"],
-  ["https://clemsontigers.com/sports/football/roster/player/sammy-watkins", "Clemson Athletics", "Clemson Athletics — Sammy Watkins roster"],
+  [
+    "https://www.patriots.com/team/players-roster/a-j-brown/logs/2024/pre/",
+    "New England Patriots player biography",
+    "New England Patriots player biography"
+  ],
+  [
+    "https://olemisssports.com/sports/football/roster/a-j-brown/270",
+    "Ole Miss Athletics player biography",
+    "Ole Miss Athletics player biography"
+  ],
+  [
+    "https://www.si.com/college/2016/02/03/aj-brown-myers-commits-ole-miss",
+    "Sports Illustrated commitment report",
+    "Sports Illustrated commitment report"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/news/2005/9/10/no-time-to-wait",
+    "Ohio State Athletics profile, “No Time To Wait”",
+    "Ohio State Athletics profile, “No Time To Wait”"
+  ],
+  [
+    "https://www.nhregister.com/news/article/Connections-run-deep-for-Ohio-St-duo-11654413.php",
+    "New Haven Register",
+    "New Haven Register / Associated Press feature"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/14458113/a-lot-changed-ohio-state-buckeyes-notre-dame-fighting-irish-last-met-fiesta-bowl",
+    "ESPN Fiesta Bowl retrospective",
+    "ESPN Fiesta Bowl retrospective"
+  ],
+  [
+    "https://texaslonghorns.com/news/2002/2/6/020602aaa_208",
+    "Texas Athletics 2002 recruiting biography",
+    "Texas Athletics 2002 recruiting biography"
+  ],
+  [
+    "https://texaslonghorns.com/news/2005/10/5/100505aab_420.aspx",
+    "Texas Athletics feature, “Take it to the house”",
+    "Texas Athletics feature, “Take it to the house”"
+  ],
+  [
+    "https://texaslonghorns.com/news/2012/3/30/033112aab_522",
+    "Texas Athletics spring-game feature",
+    "Texas Athletics spring-game feature"
+  ],
+  [
+    "https://www.inquirer.com/college-sports/penn-state/penn-state-abdul-carter-football-cfp-lasalle-glenside-north-philly-20241219.html",
+    "Philadelphia Inquirer profile",
+    "Philadelphia Inquirer profile"
+  ],
+  [
+    "https://gopsusports.com/sports/football/roster/season/2023/player/abdul-carter",
+    "Penn State Athletics player biography",
+    "Penn State Athletics player biography"
+  ],
+  [
+    "https://gopsusports.com/news/2024/12/18/carter-warren-selected-sporting-news-all-americans",
+    "Penn State Athletics All-America release",
+    "Penn State Athletics All-America release"
+  ],
+  [
+    "https://mgoblue.com/sports/football/roster/aidan-hutchinson/22005",
+    "Michigan Athletics player biography",
+    "Michigan Athletics player biography"
+  ],
+  [
+    "https://www.detroitlions.com/team/players-roster/aidan-hutchinson/logs/",
+    "Detroit Lions player biography",
+    "Detroit Lions player biography"
+  ],
+  [
+    "https://calbears.com/sports/football/roster/coaches/alex-mack/194",
+    "California Athletics Alex Mack biography",
+    "California Athletics Alex Mack biography"
+  ],
+  [
+    "https://footballfoundation.org/sports/football/roster/alex-mack/573",
+    "National Football Foundation Campbell Trophy biography",
+    "National Football Foundation Campbell Trophy biography"
+  ],
+  [
+    "https://static.clubs.nfl.com/image/upload/bills/m8gerv5jb7nkovxkwmb6",
+    "Buffalo Bills player biography",
+    "Buffalo Bills player biography"
+  ],
+  [
+    "https://static.clubs.nfl.com/image/upload/raiders/re0vrphviaskzjcnphx1.pdf",
+    "Oakland Raiders feature-clips compilation of Bay Area News Group profile",
+    "Oakland Raiders feature-clips compilation of Bay Area News Group profile"
+  ],
+  [
+    "https://www.espn.com/blog/sec/post/_/id/96041/amari-cooper-paved-his-own-way-to-alabama",
+    "ESPN SEC profile on Cooper’s path to Alabama",
+    "ESPN SEC profile on Cooper’s path to Alabama"
+  ],
+  [
+    "https://www.umsportshalloffame.com/andre-johnson.html",
+    "University of Miami Sports Hall of Fame biography",
+    "University of Miami Sports Hall of Fame biography"
+  ],
+  [
+    "https://miamihurricanes.com/news/2002/05/05/205547137-2/",
+    "Miami Athletics 100-meter title release",
+    "Miami Athletics 100-meter title release"
+  ],
+  [
+    "https://miamihurricanes.com/news/2024/02/08/hester-johnson-named-to-pro-football-hall-of-fame/",
+    "Miami Athletics Pro Football Hall of Fame release",
+    "Miami Athletics Pro Football Hall of Fame release"
+  ],
+  [
+    "https://miamihurricanes.com/sports/football/roster/season/2001-02/player/andre-johnson/",
+    "Miami Hurricanes player biography",
+    "Miami Hurricanes player biography"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/andre-ware/",
+    "Heisman Trust biography",
+    "Heisman Trust biography"
+  ],
+  [
+    "https://gostanford.com/news/2013/04/17/andrew-luck-profile",
+    "Stanford Athletics Andrew Luck profile",
+    "Stanford Athletics Andrew Luck profile"
+  ],
+  [
+    "https://gostanford.com/staff/andrew-luck",
+    "Stanford Athletics staff biography",
+    "Stanford Athletics staff biography"
+  ],
+  [
+    "https://gophersports.com/news/2016/8/4/Meet_The_Newcomers_Antoine_Winfield_Jr_",
+    "Minnesota Athletics newcomer profile",
+    "Minnesota Athletics newcomer profile"
+  ],
+  [
+    "https://gophersports.com/sports/football/roster/antoine-winfield-jr/16427",
+    "Minnesota Athletics player biography",
+    "Minnesota Athletics player biography"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/41962943/boise-state-ashton-jeanty-dominant-running-back-heisman-2024",
+    "ESPN profile on Jeanty’s rise",
+    "ESPN profile on Jeanty’s rise"
+  ],
+  [
+    "https://www.nfl.com/news/2025-nfl-draft-get-to-know-ashton-jeanty",
+    "NFL.com draft profile feature",
+    "NFL.com draft profile feature"
+  ],
+  [
+    "https://www.idahostatesman.com/sports/college/mountain-west/boise-state-university/boise-state-football/article295617584.html",
+    "Idaho Statesman profile",
+    "Idaho Statesman profile"
+  ],
+  [
+    "https://broncosports.com/sports/football/roster/jeantyashton/10215",
+    "Boise State Athletics player biography",
+    "Boise State Athletics player biography"
+  ],
+  [
+    "https://www.heisman.com/articles/transfers-and-the-heisman/",
+    "Heisman Trust transfer history feature",
+    "Heisman Trust transfer history feature"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/baker-mayfield/",
+    "Heisman Trust Baker Mayfield biography",
+    "Heisman Trust Baker Mayfield biography"
+  ],
+  [
+    "https://rolltide.com/news/2012/12/6/Barrett_Jones_Named_Capital_One_Academic_All_America_of_the_Year",
+    "Alabama Athletics Academic All-America release",
+    "Alabama Athletics Academic All-America release"
+  ],
+  [
+    "https://footballfoundation.org/sports/football/roster/barrett-jones/569",
+    "National Football Foundation Barrett Jones biography",
+    "National Football Foundation Barrett Jones biography"
+  ],
+  [
+    "https://www.espn.com/nfl/draft2013/story/_/id/9197435/2013-nfl-draft-alabama-barrett-jones-espn-magazine",
+    "ESPN The Magazine profile of Barrett Jones",
+    "ESPN The Magazine profile of Barrett Jones"
+  ],
+  [
+    "https://www.espn.com/nfl/draft2023/story/_/id/36234668/why-bijan-robinson-break-nfl-draft-running-back-bias",
+    "ESPN profile of Bijan Robinson",
+    "ESPN profile of Bijan Robinson"
+  ],
+  [
+    "https://texaslonghorns.com/sports/football/roster/bijan-robinson/11507",
+    "Texas Athletics player biography",
+    "Texas Athletics player biography"
+  ],
+  [
+    "https://www.bijanrobinson.com/foundation",
+    "Bijan Robinson Foundation",
+    "Bijan Robinson Foundation"
+  ],
+  [
+    "https://www.si.com/college/2022/12/15/college-athletes-top-food-related-nil-deals-2022",
+    "Sports Illustrated NIL feature",
+    "Sports Illustrated NIL feature"
+  ],
+  [
+    "https://www.kstatesports.com/sports/football/roster/coaches/bill-snyder/1258",
+    "Kansas State Athletics coach biography",
+    "Kansas State Athletics coach biography"
+  ],
+  [
+    "https://www.kshof.org/team/bill-snyder",
+    "Kansas Sports Hall of Fame biography",
+    "Kansas Sports Hall of Fame biography"
+  ],
+  [
+    "https://www.kstatesports.com/news/2018/12/2/football-bill-snyder-announces-retirement-from-kansas-state",
+    "Kansas State Athletics retirement release",
+    "Kansas State Athletics retirement release"
+  ],
+  [
+    "https://soonersports.com/news/2001/1/3/208366339",
+    "Oklahoma Athletics profile",
+    "Oklahoma Athletics profile"
+  ],
+  [
+    "https://hawkeyesports.com/news/2019/08/30/football-stoops",
+    "Iowa Athletics profile",
+    "Iowa Athletics profile"
+  ],
+  [
+    "https://hawkeyesports.com/news/2011/12/5/wine-online-a-duel-of-friends-in-the-desert",
+    "Iowa Athletics feature",
+    "Iowa Athletics feature"
+  ],
+  [
+    "https://fightingirish.com/news/2006/06/26/summer-football-fix-brady-quinn-feature",
+    "Notre Dame Athletics Brady Quinn feature",
+    "Notre Dame Athletics Brady Quinn feature"
+  ],
+  [
+    "https://fightingirish.com/irish-enjoying-the-combo-platter/",
+    "Notre Dame Athletics feature on young combinations",
+    "Notre Dame Athletics feature on young combinations"
+  ],
+  [
+    "https://fightingirish.com/news/2006/11/17/player-feature",
+    "Notre Dame Athletics player feature",
+    "Notre Dame Athletics player feature"
+  ],
+  [
+    "https://osubeavers.com/sports/football/roster/brandin-cooks/2450",
+    "Oregon State Athletics player biography",
+    "Oregon State Athletics player biography"
+  ],
+  [
+    "https://www.nfl.com/news/brandin-cooks-robert-woods-lead-rolling-rams-wr-corps-0ap3000001014625",
+    "NFL.com feature on Brandin Cooks",
+    "NFL.com feature on Brandin Cooks"
+  ],
+  [
+    "https://hawkeyesports.com/news/2025/08/6/2025-iowa-athletics-hall-of-fame-spotlight-brandon-scherff",
+    "Iowa Athletics Hall of Fame spotlight",
+    "Iowa Athletics Hall of Fame spotlight"
+  ],
+  [
+    "https://hawkeyesports.com/sports/football/roster/player/brandon-scherff",
+    "Iowa Athletics player biography",
+    "Iowa Athletics player biography"
+  ],
+  [
+    "https://mgoblue.com/news/2017/4/27/kornacki_braylon_edwards_has_new_no_1",
+    "Michigan Athletics No. 1 jersey feature",
+    "Michigan Athletics No. 1 jersey feature"
+  ],
+  [
+    "https://mgoblue.com/news/2006/4/18/edwards_donates_500_000_to_athletic_department",
+    "Michigan Athletics scholarship announcement",
+    "Michigan Athletics scholarship announcement"
+  ],
+  [
+    "https://mgoblue.com/news/2003/8/9/2003_U_M_Football_Media_Day_Offensive_Player_Quotes",
+    "Michigan Athletics 2003 media-day quotes",
+    "Michigan Athletics 2003 media-day quotes"
+  ],
+  [
+    "https://gobearcats.com/staff/brian-kelly",
+    "University of Cincinnati Athletics coach biography",
+    "University of Cincinnati Athletics coach biography"
+  ],
+  [
+    "https://www.assumption.edu/news-and-events/news/multi-sport-stadium-named-notre-dame-football-coach-brian-kelly-83-hd-12",
+    "Assumption University stadium feature",
+    "Assumption University stadium feature"
+  ],
+  [
+    "https://gvsulakers.com/honors/hall-of-fame/brian-kelly/26",
+    "Grand Valley State Athletics Hall of Fame biography",
+    "Grand Valley State Athletics Hall of Fame biography"
+  ],
+  [
+    "https://www.kellycaresfoundation.org/about/our-story/",
+    "Kelly Cares Foundation history",
+    "Kelly Cares Foundation history"
+  ],
+  [
+    "https://texaslonghorns.com/sports/football/roster/brian-orakpo/748",
+    "Texas Athletics player biography",
+    "Texas Athletics player biography"
+  ],
+  [
+    "https://texaslonghorns.com/news/2009/4/16/041609aaa_26",
+    "Texas Athletics feature on Orakpo",
+    "Texas Athletics feature on Orakpo"
+  ],
+  [
+    "https://golobos.com/news/2013/05/22/209066364",
+    "New Mexico Athletics retirement feature",
+    "New Mexico Athletics retirement feature"
+  ],
+  [
+    "https://golobos.com/news/2017/01/09/brian-urlacher-named-to-nff-college-football-hall-of-fame",
+    "New Mexico Athletics Hall of Fame announcement",
+    "New Mexico Athletics Hall of Fame announcement"
+  ],
+  [
+    "https://miamihurricanes.com/roster/bryant-mckinnie/",
+    "Miami Hurricanes player biography",
+    "Miami Hurricanes player biography"
+  ],
+  [
+    "https://miamihurricanes.com/news/2025/04/18/dorsey-johnson-mckinnie-morgan-selected-to-miami-football-ring-of-honor",
+    "Miami Athletics Ring of Honor announcement",
+    "Miami Athletics Ring of Honor announcement"
+  ],
+  [
+    "https://www.latimes.com/sports/highschool/story/2021-12-11/bryce-young-heisman-trophy-roots-la-cathedral-mater-dei",
+    "Los Angeles Times profile of Bryce Young’s roots",
+    "Los Angeles Times profile of Bryce Young’s roots"
+  ],
+  [
+    "https://www.latimes.com/sports/highschool/story/2020-01-11/bryce-young-father-scrutinizes-early-recruiting-process",
+    "Los Angeles Times recruiting profile",
+    "Los Angeles Times recruiting profile"
+  ],
+  [
+    "https://www.latimes.com/sports/usc/story/2019-09-22/bryce-young-changes-commitment-from-usc-to-alabama",
+    "Los Angeles Times commitment report",
+    "Los Angeles Times commitment report"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/bryce-young/",
+    "Heisman Trust Bryce Young biography",
+    "Heisman Trust Bryce Young biography"
+  ],
+  [
+    "https://www.azcardinals.com/news/mirror-image-budda-baker-joins-tyrann-mathieu-18849030",
+    "Arizona Cardinals feature on Budda Baker",
+    "Arizona Cardinals feature on Budda Baker"
+  ],
+  [
+    "https://gohuskies.com/sports/football/roster/budda-baker/2117",
+    "Washington Athletics player biography",
+    "Washington Athletics player biography"
+  ],
+  [
+    "https://www.azcardinals.com/news/budda-baker-heads-home-to-seattle-as-cardinal-20148657",
+    "Arizona Cardinals homecoming feature",
+    "Arizona Cardinals homecoming feature"
+  ],
+  [
+    "https://rolltide.com/news/2010/2/3/Crimson_Tide_Ink_18_on_National_Signing_Day",
+    "Alabama Athletics 2010 signing class release",
+    "Alabama Athletics 2010 signing class release"
+  ],
+  [
+    "https://www.newyorkjets.com/news/jets-agree-to-terms-with-16-undrafted-free-agents",
+    "New York Jets undrafted free-agent release",
+    "New York Jets undrafted free-agent release"
+  ],
+  [
+    "https://amp.nfl.com/news/michael-bennett-says-returning-to-ohio-state-was-right-choice-0ap3000000452701",
+    "NFL.com report quoting Reggie Ragland",
+    "NFL.com report quoting Reggie Ragland"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/8749314/cj-mosley-return-alabama-crimson-tide-senior-season",
+    "ESPN report on Mosley returning to Alabama",
+    "ESPN report on Mosley returning to Alabama"
+  ],
+  [
+    "https://www.espn.com/nfl/story/_/id/38834279/houston-texans-rookie-qb-cj-stroud-already-nfl-star",
+    "ESPN long-form profile of C.J. Stroud",
+    "ESPN long-form profile of C.J. Stroud"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/sports/football/roster/c-j-stroud/4470",
+    "Ohio State Athletics player biography",
+    "Ohio State Athletics player biography"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/sports/football/roster/caleb-downs/12257",
+    "Ohio State Athletics player biography",
+    "Ohio State Athletics player biography"
+  ],
+  [
+    "https://rolltide.com/sports/football/roster/caleb-downs/8857",
+    "Alabama Athletics player biography",
+    "Alabama Athletics player biography"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/caleb-williams/",
+    "Heisman Trust Caleb Williams biography",
+    "Heisman Trust Caleb Williams biography"
+  ],
+  [
+    "https://soonersports.com/news/2021/10/9/football-sooners-top-longhorns-in-red-river-showdown",
+    "Oklahoma Athletics Red River recap",
+    "Oklahoma Athletics Red River recap"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/38243587/2024-draft-the-moment-decision",
+    "ESPN profile of Caleb Williams",
+    "ESPN profile of Caleb Williams"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/6721/",
+    "Heisman Trust Carson Palmer biography",
+    "Heisman Trust Carson Palmer biography"
+  ],
+  [
+    "https://usctrojans.com/news/2018/4/18/trojan-athletic-fund-heritage-association-spotlight-carson-palmer",
+    "USC Athletics Heritage Association spotlight",
+    "USC Athletics Heritage Association spotlight"
+  ],
+  [
+    "https://usctrojans.com/news/1999/11/22/Football_Closes_1999_Season_Friday",
+    "USC Athletics 1999 season notes",
+    "USC Athletics 1999 season notes"
+  ],
+  [
+    "https://usctrojans.com/news/2000/8/21/A_Look_At_Carson_Palmer",
+    "USC Athletics Carson Palmer feature",
+    "USC Athletics Carson Palmer feature"
+  ],
+  [
+    "https://usctrojans.com/news/1999/6/21/palmer_poised_to_lead_trojans",
+    "USC Athletics feature",
+    "USC Athletics feature"
+  ],
+  [
+    "https://www.texasfootball.com/hof-cedric-benson",
+    "Texas High School Football Hall of Fame biography",
+    "Texas High School Football Hall of Fame biography"
+  ],
+  [
+    "https://texaslonghorns.com/news/2004/3/5/030504aab_823",
+    "Texas Athletics announcement on Benson choosing football",
+    "Texas Athletics announcement on Benson choosing football"
+  ],
+  [
+    "https://www.espn.com/nfl/playoffs/2013/story/_/id/10355918/super-bowl-xlviii-champ-bailey-gets-chance",
+    "ESPN profile of Champ Bailey",
+    "ESPN profile of Champ Bailey"
+  ],
+  [
+    "https://georgiadogs.com/news/2019/10/2/champ-bailey-the-best-ever.aspx",
+    "Georgia Athletics feature on Champ Bailey",
+    "Georgia Athletics feature on Champ Bailey"
+  ],
+  [
+    "https://georgiadogs.com/news/2003/4/23/As_athlete_Bailey_is_the_boss",
+    "Georgia Athletics Bailey family feature",
+    "Georgia Athletics Bailey family feature"
+  ],
+  [
+    "https://georgiadogs.com/news/2019/2/2/champ-bailey-named-to-pro-football-hall-of-fame",
+    "Georgia Athletics Pro Football Hall of Fame release",
+    "Georgia Athletics Pro Football Hall of Fame release"
+  ],
+  [
+    "https://www.heisman.com/articles/25th-anniversary-heisman-winner-charlie-ward/",
+    "Heisman Trust 25th-anniversary profile",
+    "Heisman Trust 25th-anniversary profile"
+  ],
+  [
+    "https://seminoles.com/news/2014/6/17/charlie-ward-bio/",
+    "Florida State Athletics Charlie Ward biography",
+    "Florida State Athletics Charlie Ward biography"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/38431102/inside-two-sport-florida-state-star-charlie-ward-heisman-season-30-years-later",
+    "ESPN 30-year retrospective on Charlie Ward",
+    "ESPN 30-year retrospective on Charlie Ward"
+  ],
+  [
+    "https://mutigers.com/sports/football/roster/season/2005/player/chase-coffman",
+    "Missouri Athletics player biography",
+    "Missouri Athletics player biography"
+  ],
+  [
+    "https://mutigers.com/news/2005/02/02/football-announces-2005-recruiting-class",
+    "Missouri Athletics 2005 recruiting class release",
+    "Missouri Athletics 2005 recruiting class release"
+  ],
+  [
+    "https://goducks.com/staff-directory/chip-kelly/333",
+    "University of Oregon Athletics Chip Kelly biography",
+    "University of Oregon Athletics Chip Kelly biography"
+  ],
+  [
+    "https://virginiasports.com/news/2006/09/17/chris-long-the-mayor-of-charlottesville",
+    "Virginia Athletics profile, “The Mayor of Charlottesville”",
+    "Virginia Athletics profile, “The Mayor of Charlottesville”"
+  ],
+  [
+    "https://gohuskies.com/sports/football/roster/coaches/chris-petersen/4183",
+    "Washington Athletics coach biography",
+    "Washington Athletics coach biography"
+  ],
+  [
+    "https://broncosports.com/sports/football/roster/coaches/chris-petersen/1117",
+    "Boise State Athletics coach biography",
+    "Boise State Athletics coach biography"
+  ],
+  [
+    "https://gohuskies.com/news/2013/12/9/209336083",
+    "Washington Athletics introductory press conference",
+    "Washington Athletics introductory press conference"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/chris-weinke/",
+    "Heisman Trust Chris Weinke biography",
+    "Heisman Trust Chris Weinke biography"
+  ],
+  [
+    "https://www.heisman.com/articles/heisman-profile-25th-anniversary-winner-chris-weinke/",
+    "Heisman Trust 25th-anniversary Weinke profile",
+    "Heisman Trust 25th-anniversary Weinke profile"
+  ],
+  [
+    "https://gostanford.com/sports/football/roster/season/2016/player/christian-mccaffrey",
+    "Stanford Athletics player biography",
+    "Stanford Athletics player biography"
+  ],
+  [
+    "https://www.hawaiinewsnow.com/story/23824344/brennan-signs-with-la-kiss-of-afl/",
+    "Hawaii News Now profile",
+    "Hawaii News Now profile"
+  ],
+  [
+    "https://cubuffs.com/sports/football/roster/colt-brennan/3699?path=football",
+    "Colorado Athletics player biography",
+    "Colorado Athletics player biography"
+  ],
+  [
+    "https://hawaiiathletics.com/sports/football/roster/colt-brennan/7948",
+    "Hawaii Athletics player biography",
+    "Hawaii Athletics player biography"
+  ],
+  [
+    "https://www.hawaii.edu/news/2021/05/11/in-memoriam-colt-brennan/",
+    "University of Hawaii memorial feature",
+    "University of Hawaii memorial feature"
+  ],
+  [
+    "https://texaslonghorns.com/sports/football/roster/colt-mccoy/3394",
+    "Texas Athletics player biography",
+    "Texas Athletics player biography"
+  ],
+  [
+    "https://texaslonghorns.com/sports/general/roster/colt-mccoy/5057",
+    "Texas Athletics Colt McCoy biography",
+    "Texas Athletics Colt McCoy biography"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/39833081/cooper-dejean-latest-nfl-draft-find-iowa",
+    "ESPN",
+    "ESPN — “Cooper DeJean is the latest NFL draft find from Iowa”"
+  ],
+  [
+    "https://www.pff.com/news/college-football-iowa-cb-cooper-dejeans-path-to-becoming-one-of-the-best-all-around-defensive-backs-in-college-football",
+    "PFF",
+    "PFF — “Iowa CB Cooper DeJean’s path to becoming one of the best all-around defensive backs in college football”"
+  ],
+  [
+    "https://www.inquirer.com/eagles/eagles-cooper-dejean-uncovering-the-birds-20250115.html",
+    "The Philadelphia Inquirer",
+    "The Philadelphia Inquirer — Cooper DeJean Q&A"
+  ],
+  [
+    "https://www.inquirer.com/eagles/eagles-cooper-dejean-odebolt-iowa-high-school-highlights-20250110.html",
+    "The Philadelphia Inquirer",
+    "The Philadelphia Inquirer — Cooper DeJean’s Iowa high-school legacy"
+  ],
+  [
+    "https://www.newyorkjets.com/news/jets-provide-thrills-on-nickelodeon-2410482",
+    "New York Jets",
+    "New York Jets — Nickelodeon feature"
+  ],
+  [
+    "https://www.newyorkjets.com/news/d-brickashaw-ferguson-s-heartfelt-goodbye-17023146",
+    "New York Jets",
+    "New York Jets — Ferguson retirement feature"
+  ],
+  [
+    "https://ca.sports.yahoo.com/blogs/nfl-shutdown-corner/shutdown-corner-interview-dbrickashaw-ferguson--nfl.html",
+    "Yahoo Sports",
+    "Yahoo Sports — Shutdown Corner interview with D’Brickashaw Ferguson"
+  ],
+  [
+    "https://virginiasports.com/news/2003/04/21/d-brickashaw-ferguson-is-growing-force-on-offensive-line",
+    "Virginia Athletics",
+    "Virginia Athletics — “D’Brickashaw Ferguson Is Growing Force on Offensive Line”"
+  ],
+  [
+    "https://virginiasports.com/news/2006/05/20/ferguson-completes-unique-athletic-academic-triple",
+    "Virginia Athletics",
+    "Virginia Athletics — “Ferguson Completes Unique Athletic-Academic Triple”"
+  ],
+  [
+    "https://www.si.com/nfl/2017/10/19/dak-prescott-dallas-cowboys-mom-cancer",
+    "Sports Illustrated",
+    "Sports Illustrated — profile of Dak Prescott and his mother Peggy"
+  ],
+  [
+    "https://www.si.com/college/2014/10/07/mississippi-state-inside-access",
+    "Sports Illustrated",
+    "Sports Illustrated — Mississippi State inside-access feature"
+  ],
+  [
+    "https://www.dallascowboys.com/news/dak-s-road-to-dallas-why-prescott-s-rise-shouldn-t-be-a-surprise-417431",
+    "Dallas Cowboys",
+    "Dallas Cowboys — “Dak’s Road to Dallas”"
+  ],
+  [
+    "https://www.espn.com/college-football/recap?gameId=333320344",
+    "ESPN",
+    "ESPN — 2013 Egg Bowl recap"
+  ],
+  [
+    "https://hailstate.com/sports/football/roster/prescott-dak/2911",
+    "Mississippi State Athletics",
+    "Mississippi State Athletics — Dak Prescott bio"
+  ],
+  [
+    "https://magazine.foriowa.org/story.php?ed=true&storyid=2552",
+    "University of Iowa Magazine",
+    "University of Iowa Magazine — Dallas Clark profile"
+  ],
+  [
+    "https://purduesports.com/news/2002/10/5/boilermakers-fall-to-no-24-iowa-31-28",
+    "Purdue Athletics",
+    "Purdue Athletics — 2002 Iowa-Purdue recap"
+  ],
+  [
+    "https://www.colts.com/news/where-are-they-now-for-dallas-clark-there-s-no-place-like-home-19547878",
+    "Indianapolis Colts",
+    "Indianapolis Colts — “Where Are They Now? Dallas Clark”"
+  ],
+  [
+    "https://www.si.com/college/2016/03/10/dalvin-cook-fast-quiet-and-could-be-nations-top-rb",
+    "Sports Illustrated",
+    "Sports Illustrated — Dalvin Cook profile"
+  ],
+  [
+    "https://www.si.com/nfl/2017/04/25/nfl-draft-dalvin-cook-red-flags-character-concerns-scouts-florida-state-miami-dade",
+    "Sports Illustrated",
+    "Sports Illustrated — 2017 Dalvin Cook profile"
+  ],
+  [
+    "https://www.cbsnews.com/miami/news/miamis-yearby-fsus-cook-ex-teammates-now-rivals/",
+    "CBS Miami",
+    "CBS Miami — Cook and Yearby, former teammates turned rivals"
+  ],
+  [
+    "https://www.espn.com/college-sports/recruiting/football/story/_/id/10391907/examining-pre-signing-day-flipping-epidemic-college-football-recruiting",
+    "ESPN",
+    "ESPN — recruiting flip feature"
+  ],
+  [
+    "https://www.iheart.com/podcast/1119-unafraid-show-with-george-43072275/episode/dan-lanning-interview-mahomes-v-allen-145653316/",
+    "Unafraid Show",
+    "Unafraid Show / iHeart — Dan Lanning interview"
+  ],
+  [
+    "https://goducks.com/staff-directory/dan-lanning/3041",
+    "Oregon Athletics",
+    "Oregon Athletics — Dan Lanning staff bio"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/40781349/dan-lanning-journey-commitment-oregon-big-ten-2024",
+    "ESPN",
+    "ESPN — Dan Lanning journey to Oregon"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/39012854/oregon-flashy-dan-lanning-playing-tough-pac-12-championship",
+    "ESPN",
+    "ESPN — Oregon and Dan Lanning culture feature"
+  ],
+  [
+    "https://sports.yahoo.com/articles/oregon-ducks-coach-dan-lannings-234500671.html",
+    "Yahoo Sports",
+    "Yahoo Sports — Dan and Sauphia Lanning feature"
+  ],
+  [
+    "https://miamihurricanes.com/news/2021/12/08/a-dream-fulfilled-morgan-enshrined-in-cfb-hof/",
+    "Miami Hurricanes",
+    "Miami Hurricanes — “A Dream Fulfilled: Morgan Enshrined in CFB Hall”"
+  ],
+  [
+    "https://miamihurricanes.com/news/2021/01/11/morgan-selected-to-cfb-hall-of-fame-class-of-2021/",
+    "Miami Hurricanes",
+    "Miami Hurricanes — Dan Morgan CFB Hall announcement"
+  ],
+  [
+    "https://miamihurricanes.com/news/2001/01/01/205540190-2/",
+    "Miami Hurricanes",
+    "Miami Hurricanes — “Even Morgan’s Pain Is Miami’s Gain”"
+  ],
+  [
+    "https://www.heisman.com/profiling-our-recent-25th-anniversary-honoree-danny-wuerffel/",
+    "Heisman Trophy",
+    "Heisman Trophy — Danny Wuerffel profile"
+  ],
+  [
+    "https://fhsaa.com/hof.aspx?hof=115",
+    "FHSAA Hall of Fame",
+    "FHSAA Hall of Fame — Danny Wuerffel"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/danny-wuerffel/",
+    "Heisman Trophy",
+    "Heisman Trophy — Danny Wuerffel"
+  ],
+  [
+    "https://dannywuerffel.com/dannywuerffel/",
+    "DannyWuerffel.com",
+    "DannyWuerffel.com — biography"
+  ],
+  [
+    "https://msuspartans.com/news/2024/9/11/darqueze-dennard-enters-the-msu-hall-of-fame",
+    "Michigan State Athletics",
+    "Michigan State Athletics — Darqueze Dennard Hall of Fame feature"
+  ],
+  [
+    "https://www.si.com/college/2015/12/28/michigan-state-spartans-secret-success-has-been-finding-hidden-recruiting-gems",
+    "Sports Illustrated",
+    "Sports Illustrated — Michigan State hidden recruiting gems"
+  ],
+  [
+    "https://www.nfl.com/news/in-the-green-room-with-michigan-st-cb-darqueze-dennard-0ap2000000335826",
+    "NFL.com",
+    "NFL.com — “In the Green Room with Michigan State CB Darqueze Dennard”"
+  ],
+  [
+    "https://www.latimes.com/sports/la-xpm-2013-dec-30-la-sp-rose-bowl-dennard-20131231-story.html",
+    "Los Angeles Times",
+    "Los Angeles Times — Darqueze Dennard Rose Bowl profile"
+  ],
+  [
+    "https://www.espn.com/blog/philadelphia-eagles/post/_/id/28197/incredible-heights-darren-sproles-journey-to-nfl-greatness",
+    "ESPN",
+    "ESPN — “Incredible Heights: Darren Sproles’ journey to NFL greatness”"
+  ],
+  [
+    "https://www.kstatesports.com/news/2021/10/3/sports-extra-se-class-of-2021-turns-opportunity-into-hall-of-fame-careers",
+    "Kansas State Athletics",
+    "Kansas State Athletics — Hall of Fame feature"
+  ],
+  [
+    "https://www.nfl.com/news/rise-above",
+    "NFL.com",
+    "NFL.com — “Rise Above” Davante Adams feature"
+  ],
+  [
+    "https://www.espn.com/nfl/story/_/id/34510902/davante-adams-finds-bliss-en-route-las-vegas-raiders",
+    "ESPN",
+    "ESPN — Davante Adams profile"
+  ],
+  [
+    "https://www.steelers.com/news/decastro-it-was-amazing-i-would-do-it-again-12696780",
+    "Pittsburgh Steelers",
+    "Pittsburgh Steelers — DeCastro South Africa feature"
+  ],
+  [
+    "https://www.steelers.com/news/decastro-likes-to-just-do-his-job-7255993",
+    "Pittsburgh Steelers",
+    "Pittsburgh Steelers — “DeCastro likes to just do his job”"
+  ],
+  [
+    "https://gostanford.com/news/2013/04/17/david-decastro-profile",
+    "Stanford Athletics",
+    "Stanford Athletics — David DeCastro profile"
+  ],
+  [
+    "https://www.cbsnews.com/pittsburgh/news/steelers-draft-offensive-guard-david-decastro-in-first-round/",
+    "CBS Pittsburgh",
+    "CBS Pittsburgh — David DeCastro draft feature"
+  ],
+  [
+    "https://georgiadogs.com/news/2002/10/9/Greene_amp_Pollack_Before_amp_After",
+    "Georgia Athletics",
+    "Georgia Athletics — “Greene & Pollack: Before & After”"
+  ],
+  [
+    "https://www.ghsfhf.com/hall-of-fame-classes/2022-inaugural-class/david-pollack",
+    "Georgia High School Football Hall of Fame",
+    "Georgia High School Football Hall of Fame — David Pollack"
+  ],
+  [
+    "https://georgiadogs.com/news/2002/9/17/Reactions_From_Tuesday_s_Press_Conference",
+    "Georgia Athletics",
+    "Georgia Athletics — 2002 press conference"
+  ],
+  [
+    "https://gahistoricnewspapers.galileo.usg.edu/lccn/gua1179162/2002-09-17/ed-1/seq-10/",
+    "Georgia Historic Newspapers",
+    "Georgia Historic Newspapers — Red & Black, Sept. 17, 2002"
+  ],
+  [
+    "https://davidpollack.com/meet-david/",
+    "DavidPollack.com",
+    "DavidPollack.com — biography"
+  ],
+  [
+    "https://gotigersgo.com/news/2002/2/25/DeAngelo_Williams_Signs_Scholarship_With_Memphis",
+    "Memphis Athletics",
+    "Memphis Athletics — DeAngelo Williams signing announcement"
+  ],
+  [
+    "https://gotigersgo.com/news/2002/2/6/Tigers_Land_24_On_National_Signing_Day",
+    "Memphis Athletics",
+    "Memphis Athletics — 2002 signing class"
+  ],
+  [
+    "https://www.si.com/nfl/2014/05/29/nfl-carolina-panthers-deangelo-williams-sandra-kay-hill-breast-cancer-awareness",
+    "Sports Illustrated",
+    "Sports Illustrated — DeAngelo Williams first-person breast-cancer awareness story"
+  ],
+  [
+    "https://texaslonghorns.com/news/2004/10/1/100104aaa_127",
+    "Texas Athletics",
+    "Texas Athletics — “From Waco to Austin: Derrick Johnson”"
+  ],
+  [
+    "https://texaslonghorns.com/sports/general/roster/derrick-johnson/5218",
+    "Texas Athletics",
+    "Texas Athletics — Derrick Johnson bio"
+  ],
+  [
+    "https://www.nfl.com/news/super-freak",
+    "NFL.com",
+    "NFL.com — “Super Freak” Derwin James profile"
+  ],
+  [
+    "https://baynews9.com/fl/tampa/sports/2013/7/17/top_recruit_2015_fsu",
+    "Bay News 9",
+    "Bay News 9 — Derwin James recruiting profile"
+  ],
+  [
+    "https://www.espn.com/nfl/story/_/id/11123688/washington-redskins-wr-desean-jackson-refuses-sever-ties-espn-magazine",
+    "ESPN The Magazine",
+    "ESPN The Magazine — DeSean Jackson roots profile"
+  ],
+  [
+    "https://calbears.com/sports/football/roster/coaches/desean-jackson/454",
+    "California Athletics",
+    "California Athletics — DeSean Jackson staff bio"
+  ],
+  [
+    "https://www.espn.com/espn/feature/story/_/id/29824655/deshaun-watson-ready-heard",
+    "ESPN",
+    "ESPN — Deshaun Watson long-form profile"
+  ],
+  [
+    "https://www.theplayerstribune.com/articles/deshaun-watson-texans-what-you-see",
+    "The Players’ Tribune",
+    "The Players’ Tribune — “What You See”"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/11939082/clemson-quarterback-deshaun-watson-draws-strength-maturity-past",
+    "ESPN",
+    "ESPN — “Watson’s maturity comes naturally”"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/18442248/clemson-tigers-deshaun-watson-cements-legacy-game-winning-drive-ages",
+    "ESPN",
+    "ESPN — Deshaun Watson title-winning drive"
+  ],
+  [
+    "https://www.vikings.com/news/prospect-profile-lsu-lb-devin-white",
+    "Minnesota Vikings",
+    "Minnesota Vikings — Devin White prospect profile"
+  ],
+  [
+    "https://lsusports.net/sports/fb/roster/player/devin-white",
+    "LSU Athletics",
+    "LSU Athletics — Devin White bio"
+  ],
+  [
+    "https://www.ktre.com/story/6368172/15-5a-district-track-results/",
+    "KTRE",
+    "KTRE / Lufkin ISD — District 15-5A track results"
+  ],
+  [
+    "https://www.espn.com/college-sports/football/recruiting/player/_/id/36113/dez-bryant",
+    "ESPN Recruiting",
+    "ESPN Recruiting — Dez Bryant profile"
+  ],
+  [
+    "https://okstate.com/documents/download/2015/5/26/08mediaguide_section6.pdf",
+    "Oklahoma State Athletics",
+    "Oklahoma State Athletics — 2008 football media guide player profile"
+  ],
+  [
+    "https://okstate.com/news/2025/6/2/cowboy-football-dez-bryant-added-to-college-football-hall-of-fame-ballot",
+    "Oklahoma State Athletics",
+    "Oklahoma State Athletics — Dez Bryant College Football Hall of Fame ballot announcement"
+  ],
+  [
+    "https://okstate.com/news/2009/9/8/Cowboys_Featured_On_Sports_Illustrated_Cover",
+    "Oklahoma State Athletics",
+    "Oklahoma State Athletics — Cowboys featured on Sports Illustrated cover"
+  ],
+  [
+    "https://www.ncaa.org/media-center-how-purdue-changed-drew-brees-life-ncaa-silver-anniversary-award-honors-boilermaker-legend/",
+    "NCAA",
+    "NCAA — “How Purdue changed Drew Brees’ life”"
+  ],
+  [
+    "https://purduesports.com/purdue-football-timeline",
+    "Purdue Athletics",
+    "Purdue Athletics — Purdue Football Timeline"
+  ],
+  [
+    "https://stories.purdue.edu/podcast/drew-brees/",
+    "Purdue University",
+    "Purdue University — “This Is Purdue” Drew Brees podcast"
+  ],
+  [
+    "https://www.colts.com/news/questions-with-the-colts-dwayne-allen-13173114",
+    "Indianapolis Colts",
+    "Indianapolis Colts — Dwayne Allen Q&A"
+  ],
+  [
+    "https://clemsontigers.com/news/2013/08/29/football-game-program-feature-nfl-tiger-spotlight-dwayne-allen",
+    "Clemson Athletics",
+    "Clemson Athletics — “NFL Tiger Spotlight: Dwayne Allen”"
+  ],
+  [
+    "https://clemsontigers.com/sports/football/roster/player/dwayne-allen",
+    "Clemson Athletics",
+    "Clemson Athletics — Dwayne Allen bio"
+  ],
+  [
+    "https://www.profootballhof.com/news/countdown-to-2024-pro-football-hall-of-fame-enshrinement-dwight-freeney",
+    "Pro Football Hall of Fame",
+    "Pro Football Hall of Fame — Dwight Freeney enshrinement profile"
+  ],
+  [
+    "https://cuse.com/news/2007/4/2/freeneyhonor32607",
+    "Syracuse Athletics",
+    "Syracuse Athletics — Dwight Freeney Day feature"
+  ],
+  [
+    "https://www.colts.com/news/dwight-freeney-reunion-podcast-and1-mixtape-spin-move-pass-rush",
+    "Indianapolis Colts",
+    "Indianapolis Colts — Dwight Freeney Reunion Podcast"
+  ],
+  [
+    "https://footballfoundation.org/news/2023/11/5/dwight-freeney-2023-college-football-hall-of-fame-spotlight.aspx",
+    "National Football Foundation",
+    "National Football Foundation — Dwight Freeney CFB Hall spotlight"
+  ],
+  [
+    "https://cuse.com/news/2023/12/6/freeney-officially-joins-college-football-hall-of-fame",
+    "Syracuse Athletics",
+    "Syracuse Athletics — Dwight Freeney CFB Hall announcement"
+  ],
+  [
+    "https://texaslonghorns.com/news/2014/1/30/FB_0130141857",
+    "Texas Athletics",
+    "Texas Athletics — “Earl Thomas: Never a doubt”"
+  ],
+  [
+    "https://texaslonghorns.com/news/2007/2/7/020707aab_651.aspx",
+    "Texas Athletics",
+    "Texas Athletics — 2007 signing class"
+  ],
+  [
+    "https://texaslonghorns.com/sports/football/roster/earl-thomas/3417",
+    "Texas Athletics",
+    "Texas Athletics — Earl Thomas bio"
+  ],
+  [
+    "https://www.si.com/college/2020/09/18/ed-orgeron-lsu-60-minutes-daily-cover",
+    "Sports Illustrated",
+    "Sports Illustrated — Ed Orgeron Bayou-roots interview"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/17701529/lsu-tigers-ed-orgeron-starts-dream-job-audition-win",
+    "ESPN",
+    "ESPN — “Native son Ed Orgeron’s dream job starts with an LSU win”"
+  ],
+  [
+    "https://www.espn.com/ncf/features/heisman/_/year/1995/set/7",
+    "ESPN",
+    "ESPN — Eddie George Heisman feature"
+  ],
+  [
+    "https://athletics.forkunion.com/news/2017/11/2/football-post-graduate-last-chance-high-the-bleach-report.aspx",
+    "Fork Union Military Academy",
+    "Fork Union Military Academy — Eddie George feature"
+  ],
+  [
+    "https://www.cfbhall.com/inductees/eddie-george-2011/",
+    "College Football Hall of Fame",
+    "College Football Hall of Fame — Eddie George"
+  ],
+  [
+    "https://www.sportingnews.com/us/ncaa-football/news/unstoppable-eddie-george-reflects-on-annihilating-his-nemesis/19zjelot9xbtr1qy5hapwt48z6",
+    "Sporting News",
+    "Sporting News — Eddie George retrospective"
+  ],
+  [
+    "https://www.pbs.org/video/eli-manning-xzwdp9/",
+    "PBS",
+    "PBS — Eli Manning profile"
+  ],
+  [
+    "https://www.latimes.com/archives/la-xpm-2001-aug-29-sp-39623-story.html",
+    "Los Angeles Times",
+    "Los Angeles Times — Eli Manning/Ole Miss profile"
+  ],
+  [
+    "https://www.nfl.com/news/unflappable-eli-always-has-thrived-in-the-pressure-cooker-09000d5d826853a4",
+    "NFL.com",
+    "NFL.com — Eli Manning profile"
+  ],
+  [
+    "https://www.cbsnews.com/news/ole-miss-gets-another-manning/",
+    "CBS News",
+    "CBS News — Ole Miss gets another Manning"
+  ],
+  [
+    "https://www.latimes.com/archives/la-xpm-2002-jan-03-sp-crouch03-story.html",
+    "Los Angeles Times",
+    "Los Angeles Times — Eric Crouch profile"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/eric-crouch/",
+    "Heisman Trophy",
+    "Heisman Trophy — Eric Crouch"
+  ],
+  [
+    "https://www.latimes.com/archives/la-xpm-1999-aug-31-sp-5499-story.html",
+    "Los Angeles Times",
+    "Los Angeles Times — Nebraska quarterback competition"
+  ],
+  [
+    "https://huskers.com/news/2021/09/17/black-41-flash-reverse",
+    "Nebraska Athletics",
+    "Nebraska Athletics — “Black 41 Flash Reverse”"
+  ],
+  [
+    "https://www.deseret.com/2013/5/12/20519548/eric-weddle-former-ute-all-american-was-a-punk-freshman/",
+    "Deseret News",
+    "Deseret News — Eric Weddle Utah profile"
+  ],
+  [
+    "https://utahutes.com/news/2007/1/12/weddle_is_named_consensus_all_american",
+    "Utah Athletics",
+    "Utah Athletics — Weddle consensus All-American announcement"
+  ],
+  [
+    "https://utahutes.com/news/2006/9/24/eric_weddle_is_named_national_player_of_the_week",
+    "Utah Athletics",
+    "Utah Athletics — Eric Weddle National Player of the Week"
+  ],
+  [
+    "https://utahutes.com/news/2006/12/23/utes_stretch_bowl_winning_streak_to_six_games_with_25_13_triumph_over_tulsa",
+    "Utah Athletics",
+    "Utah Athletics — 2006 Armed Forces Bowl recap"
+  ],
+  [
+    "https://www.si.com/college/2015/11/12/ohio-states-ezekiel-elliott-has-relied-many-blockers-his-path-stardom",
+    "Sports Illustrated",
+    "Sports Illustrated"
+  ],
+  [
+    "https://www.si.com/college/2014/03/26/spring-spotlight-ohio-state-ezekiel-elliott",
+    "Sports Illustrated",
+    "Sports Illustrated"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/news/2013/2/6/ohio-state-signs-24-to-national-letters-of-intent",
+    "Ohio State Athletics",
+    "Ohio State Athletics"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/news/2015/1/2/sweet-as-sugar-buckeyes-defeat-alabama-42-35",
+    "Ohio State Athletics",
+    "Ohio State Athletics"
+  ],
+  [
+    "https://www.idsnews.com/article/2025/12/indiana-football-fernando-mendozas-journey-to-the-heisman-trophy",
+    "Indiana Daily Student",
+    "Indiana Daily Student"
+  ],
+  [
+    "https://www.sportingnews.com/us/ncaa-football/news/fernando-mendoza-family-tree-qb-brother-mom/c248500f63aaa12e6594d1ae",
+    "Sporting News",
+    "Sporting News"
+  ],
+  [
+    "https://iuhoosiers.com/sports/football/roster/fernando-mendoza/20171",
+    "Indiana University Athletics",
+    "Indiana University Athletics"
+  ],
+  [
+    "https://digitalsc.lib.vt.edu/Ms2016-015/Ms2016-015_FrankBeamer",
+    "Virginia Tech Special Collections and University Archives",
+    "Virginia Tech Special Collections and University Archives"
+  ],
+  [
+    "https://footballfoundation.org/news/2018/10/5/2018-college-football-hall-of-fame-profile-coach-frank-beamer.aspx",
+    "National Football Foundation",
+    "National Football Foundation"
+  ],
+  [
+    "https://www.georgerogersfoundationofthecarolinas.org/board-of-directors-ceo",
+    "George Rogers Foundation of the Carolinas",
+    "George Rogers Foundation of the Carolinas"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/george-rogers/",
+    "Heisman",
+    "Heisman"
+  ],
+  [
+    "https://gamecocksonline.com/news/2018/06/21/trads-scar-history-html/",
+    "University of South Carolina Athletics",
+    "University of South Carolina Athletics"
+  ],
+  [
+    "https://soonersports.com/news/2006/2/2/208390931",
+    "University of Oklahoma Athletics",
+    "University of Oklahoma Athletics"
+  ],
+  [
+    "https://www.si.com/college/oklahoma/football/top-20-nfl-sooners-gerald-mccoy",
+    "Sports Illustrated",
+    "Sports Illustrated"
+  ],
+  [
+    "https://soonersports.com/news/2009/4/28/208395803",
+    "University of Oklahoma Athletics",
+    "University of Oklahoma Athletics"
+  ],
+  [
+    "https://soonersports.com/news/2009/12/18/208367194",
+    "University of Oklahoma Athletics",
+    "University of Oklahoma Athletics"
+  ],
+  [
+    "https://lsusports.net/news/2007/10/05/1255525",
+    "LSU Athletics",
+    "LSU Athletics"
+  ],
+  [
+    "https://lasportshall.com/2021/08/17/glenn-dorsey-dream-like-lsu-career-destined-him-for-hall-of-fame-immortality/",
+    "Louisiana Sports Hall of Fame",
+    "Louisiana Sports Hall of Fame"
+  ],
+  [
+    "https://lsusports.net/sports/fb/roster/season/2004/player/glenn-dorsey",
+    "LSU Athletics",
+    "LSU Athletics"
+  ],
+  [
+    "https://lsusports.net/news/2007/12/09/1350708/",
+    "LSU Athletics",
+    "LSU Athletics"
+  ],
+  [
+    "https://www.uoalumni.com/article/shout/2022/football-alumni-where-are-they-now",
+    "University of Oregon Alumni Association",
+    "University of Oregon Alumni Association"
+  ],
+  [
+    "https://goducks.com/sports/football/roster/haloti-ngata/1535",
+    "University of Oregon Athletics",
+    "University of Oregon Athletics"
+  ],
+  [
+    "https://www.washingtonpost.com/archive/sports/2004/10/15/southwestern-va-follows-millers-rising-star/81e29738-3823-4a27-baf2-69adbf5b9316/",
+    "The Washington Post",
+    "The Washington Post"
+  ],
+  [
+    "https://www.steelers.com/news/labriola-on-heath-miller-16845875",
+    "Pittsburgh Steelers",
+    "Pittsburgh Steelers"
+  ],
+  [
+    "https://www.heraldstandard.com/sports/2005/apr/26/miller-says-all-the-right-things/",
+    "Herald-Standard",
+    "Herald-Standard"
+  ],
+  [
+    "https://virginiasports.com/news/2003/11/24/a-trio-of-tight-ends",
+    "Virginia Cavaliers Athletics",
+    "Virginia Cavaliers Athletics"
+  ],
+  [
+    "https://www.patriots.com/team/players-roster/hunter-henry/logs/1973/reg/",
+    "New England Patriots",
+    "New England Patriots"
+  ],
+  [
+    "https://arkansasrazorbacks.com/roster/hunter-henry/",
+    "Arkansas Razorbacks Athletics",
+    "Arkansas Razorbacks Athletics"
+  ],
+  [
+    "https://www.nfl.com/news/wild-play-sparks-arkansas-upset-of-ole-miss-0ap3000000574738",
+    "NFL.com",
+    "NFL.com"
+  ],
+  [
+    "https://clemsontigers.com/news/2019/09/20/isaiah-simmons-tiger-spotlight",
+    "Clemson Tigers Athletics",
+    "Clemson Tigers Athletics"
+  ],
+  [
+    "https://clemsontigers.com/sports/track-field/roster/player/isaiah-simmons-2",
+    "Clemson Tigers Athletics",
+    "Clemson Tigers Athletics"
+  ],
+  [
+    "https://uwbadgers.com/news/2009/4/1/Spring_Spotlight_J_J_Watt",
+    "Wisconsin Badgers Athletics",
+    "Wisconsin Badgers Athletics"
+  ],
+  [
+    "https://uwbadgers.com/news/2010/10/8/Journey_has_shaped_Watt_on_and_off_the_field",
+    "Wisconsin Badgers Athletics",
+    "Wisconsin Badgers Athletics"
+  ],
+  [
+    "https://uwbadgers.com/news/2014/8/2/Lucas_As_usual_Watt_brothers_are_in_this_together",
+    "Wisconsin Badgers Athletics",
+    "Wisconsin Badgers Athletics"
+  ],
+  [
+    "https://www.si.com/nfl/2022/02/12/jamarr-chase-super-bowl-cincinnati-bengals-path-to-success",
+    "Sports Illustrated",
+    "Sports Illustrated"
+  ],
+  [
+    "https://www.washingtonpost.com/sports/2022/02/12/jamarr-chase-lsu-bengals-super-bowl/",
+    "The Washington Post",
+    "The Washington Post"
+  ],
+  [
+    "https://lsusports.net/news/2019/10/09/football-for-ja-marr-chase-and-derek-stingley-iron-sharpens-iron",
+    "LSU Athletics",
+    "LSU Athletics"
+  ],
+  [
+    "https://lsusports.net/sports/fb/roster/season/2020/player/jamarr-chase",
+    "LSU Athletics",
+    "LSU Athletics"
+  ],
+  [
+    "https://mgoblue.com/news/2016/12/9/kornacki_mom_jabrill_soak_in_heisman_weekend",
+    "University of Michigan Athletics",
+    "University of Michigan Athletics"
+  ],
+  [
+    "https://mgoblue.com/news/2014/2/5/Bios_for_2014_Michigan_Football_Signees",
+    "University of Michigan Athletics",
+    "University of Michigan Athletics"
+  ],
+  [
+    "https://mgoblue.com/news/2015/11/6/kornacki_peppers_honors_fallen_brother_who_inspired_him",
+    "University of Michigan Athletics",
+    "University of Michigan Athletics"
+  ],
+  [
+    "https://www.si.com/college/2017/01/10/jabrill-peppers-michigan-nfl-draft-2017",
+    "Sports Illustrated",
+    "Sports Illustrated"
+  ],
+  [
+    "https://mgoblue.com/sports/football/roster/jake-butt/1408",
+    "Michigan Athletics",
+    "Michigan Athletics — Jake Butt roster"
+  ],
+  [
+    "https://mgoblue.com/news/2017/4/20/kornacki_butt_looking_to_change_lives",
+    "Michigan Athletics",
+    "Michigan Athletics — Kornacki: Butt Looking to Change Lives"
+  ],
+  [
+    "https://mgoblue.com/news/2017/10/9/football-perry-finds-meaning-in-wearing-butts-no-88",
+    "Michigan Athletics",
+    "Michigan Athletics — Perry Finds Meaning in Wearing Butt's No. 88"
+  ],
+  [
+    "https://mgoblue.com/news/2008/4/22/dolphins_sign_long_make_him_top_pick_in_nfl_draft",
+    "Michigan Athletics",
+    "Michigan Athletics — Dolphins Sign Long, Make Him Top Pick in NFL Draft"
+  ],
+  [
+    "https://mgoblue.com/news/2003/2/5/2003_signing_day_comments_from_coach_lloyd_carr",
+    "Michigan Athletics",
+    "Michigan Athletics — 2003 Signing Day Comments from Coach Lloyd Carr"
+  ],
+  [
+    "https://12thman.com/sports/football/roster/season/2010/player/jake-matthews",
+    "Texas A&M Athletics",
+    "Texas A&M Athletics — Jake Matthews roster"
+  ],
+  [
+    "https://12thman.com/news/2023/09/15/2023-texas-am-athletics-hall-of-fame-class-enshrined-at-45th-burgess-banquet",
+    "Texas A&M Athletics",
+    "Texas A&M Athletics — 2023 Hall of Fame class banquet"
+  ],
+  [
+    "https://12thman.com/news/2013/09/11/family-first-1",
+    "Texas A&M Athletics",
+    "Texas A&M Athletics — Family First"
+  ],
+  [
+    "https://12thman.com/news/2013/08/30/family-tradition",
+    "Texas A&M Athletics",
+    "Texas A&M Athletics — Family Tradition"
+  ],
+  [
+    "https://12thman.com/news/2013/01/10/jake-matthews-to-return-to-aggieland",
+    "Texas A&M Athletics",
+    "Texas A&M Athletics — Jake Matthews to Return to Aggieland"
+  ],
+  [
+    "https://georgiadogs.com/roster.aspx?rp_id=4881",
+    "Georgia Athletics",
+    "Georgia Athletics — Jalen Carter roster"
+  ],
+  [
+    "https://seminoles.com/news/2013/3/12/signee-breakdown-jalen-ramsey",
+    "Florida State Athletics",
+    "Florida State Athletics — Signee Breakdown: Jalen Ramsey"
+  ],
+  [
+    "https://seminoles.com/sports/football/roster/jalen-ramsey/809",
+    "Florida State Athletics",
+    "Florida State Athletics — Jalen Ramsey roster"
+  ],
+  [
+    "https://www.specialolympics.org/about/ambassadors/jamaal-charles",
+    "Special Olympics",
+    "Special Olympics — Jamaal Charles ambassador profile"
+  ],
+  [
+    "https://alcalde.texasexes.org/2016/05/jamaal",
+    "The Alcalde",
+    "The Alcalde — Jamaal"
+  ],
+  [
+    "https://texaslonghorns.com/news/2005/2/2/020205aac_656",
+    "Texas Athletics",
+    "Texas Athletics — 2005 signing class"
+  ],
+  [
+    "https://tshof.org/inductee/jamaal-charles/",
+    "Texas Sports Hall of Fame",
+    "Texas Sports Hall of Fame — Jamaal Charles"
+  ],
+  [
+    "https://lsusports.net/sports/fb/roster/season/2014/player/jamal-adams",
+    "LSU Athletics",
+    "LSU Athletics — Jamal Adams roster"
+  ],
+  [
+    "https://www.raiders.com/news/jamal-adams-facts-get-to-know-nfl-transactions-raiders-training-camp",
+    "Las Vegas Raiders",
+    "Las Vegas Raiders — Jamal Adams facts"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/news/2006/11/18/under-the-helmet-37",
+    "Ohio State Athletics",
+    "Ohio State Athletics — Under the Helmet"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/news/2005/2/2/eighteen-student-athletes-sign-to-play-football-at-ohio-state",
+    "Ohio State Athletics",
+    "Ohio State Athletics — 2005 signing class"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/news/2008/3/27/spring-football-player-profile-james-laurinaitis",
+    "Ohio State Athletics",
+    "Ohio State Athletics — Spring Football Player Profile"
+  ],
+  [
+    "https://fightingirish.com/news/2014/09/11/coming-of-age",
+    "Notre Dame Athletics",
+    "Notre Dame Athletics — Coming of Age"
+  ],
+  [
+    "https://fightingirish.com/sports/football/roster/player/jaylon-smith",
+    "Notre Dame Athletics",
+    "Notre Dame Athletics — Jaylon Smith roster"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/sports/football/roster/jeff-okudah/449",
+    "Ohio State Athletics",
+    "Ohio State Athletics — Jeff Okudah roster"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/news/2020/1/3/jeff-okudah-departs-dbu-as-an-all-time-top-cb",
+    "Ohio State Athletics",
+    "Ohio State Athletics — Jeff Okudah Departs DBU"
+  ],
+  [
+    "https://miamihurricanes.com/sports/football/roster/season/2001-02/player/jeremy-shockey/",
+    "Miami Athletics",
+    "Miami Athletics — Jeremy Shockey roster"
+  ],
+  [
+    "https://soonersports.com/news/2006/8/21/208392693",
+    "Oklahoma Athletics",
+    "Oklahoma Athletics — Freshman Tight End Jermaine Gresham"
+  ],
+  [
+    "https://fightingirish.com/sports/football/roster/player/joe-alt",
+    "Notre Dame Athletics",
+    "Notre Dame Athletics — Joe Alt roster"
+  ],
+  [
+    "https://uwbadgers.com/sports/2015/8/21/GEN_20140101585",
+    "Wisconsin Athletics",
+    "Wisconsin Athletics — Joe Thomas profile"
+  ],
+  [
+    "https://uwbadgers.com/news/2019/6/25/athletics-general-news-events-lucas-uw-athletic-hall-of-fame-2019-joe-thomas-football",
+    "Wisconsin Athletics",
+    "Wisconsin Athletics — Hall of Fame feature"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/sports/football/roster/nick-bosa/7994",
+    "Ohio State Athletics",
+    "Ohio State Athletics — Nick Bosa roster"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/news/2014/9/29/urban-meyer-press-conference-transcript-09-29-14",
+    "Ohio State Athletics",
+    "Ohio State Athletics — Urban Meyer press conference, Sept. 29, 2014"
+  ],
+  [
+    "https://utsports.com/sports/football/roster/john-henderson/14190",
+    "Tennessee Athletics",
+    "Tennessee Athletics — John Henderson roster"
+  ],
+  [
+    "https://utsports.com/news/2012/5/25/Vols_Jersey_Countdown_98",
+    "Tennessee Athletics",
+    "Tennessee Athletics — Vols Jersey Countdown: 98"
+  ],
+  [
+    "https://www.army.mil/article/258443/nfl_football_star_spends_time_with_kids_at_fort_lee_procamp",
+    "U.S. Army",
+    "U.S. Army — Jonathan Allen youth camp feature"
+  ],
+  [
+    "https://www.washingtonpost.com/sports/colleges/from-foster-care-to-first-round-alabamas-jonathan-allen-plows-forward/2016/12/22/9f61c5d4-c84f-11e6-bf4b-2c064d32a4bf_story.html",
+    "The Washington Post",
+    "The Washington Post — From foster care to first round"
+  ],
+  [
+    "https://rolltide.com/sports/football/roster/jonathan-allen/3077",
+    "Alabama Athletics",
+    "Alabama Athletics — Jonathan Allen roster"
+  ],
+  [
+    "https://texaslonghorns.com/news/2008/10/11/101108aaa_21",
+    "Texas Athletics",
+    "Texas Athletics — Texas vs. Oklahoma feature"
+  ],
+  [
+    "https://texaslonghorns.com/news/2006/11/16/111606aab_105.aspx",
+    "Texas Athletics",
+    "Texas Athletics — Jordan Shipley Q&A"
+  ],
+  [
+    "https://goheels.com/sports/football/roster/julius-peppers/5459",
+    "North Carolina Athletics",
+    "North Carolina Athletics — Julius Peppers football roster"
+  ],
+  [
+    "https://goheels.com/news/2000/1/22/205462922",
+    "North Carolina Athletics",
+    "North Carolina Athletics — Peppers joins basketball"
+  ],
+  [
+    "https://goducks.com/sports/football/roster/kayvon-thibodeaux/10601",
+    "Oregon Athletics",
+    "Oregon Athletics — Kayvon Thibodeaux roster"
+  ],
+  [
+    "https://goducks.com/news/2019/2/5/football-nsd19",
+    "Oregon Athletics",
+    "Oregon Athletics — Oregon Adds To Consensus Top 10 Class"
+  ],
+  [
+    "https://www.latimes.com/sports/newsletter/2021-08-02/high-school-football-prep-rally",
+    "Los Angeles Times",
+    "Los Angeles Times — Prep Rally interview"
+  ],
+  [
+    "https://footballfoundation.org/hof_search.aspx?hof=2065",
+    "National Football Foundation",
+    "National Football Foundation — Keith Jackson Hall of Fame profile"
+  ],
+  [
+    "https://soonersports.com/sports/2025/2/26/black-history-month-spotlight",
+    "Oklahoma Athletics",
+    "Oklahoma Athletics — Black History Month Spotlight"
+  ],
+  [
+    "https://www.cfbhall.com/inductees/keith-jackson-2001/",
+    "College Football Hall of Fame",
+    "College Football Hall of Fame — Keith Jackson"
+  ],
+  [
+    "https://miamihurricanes.com/sports/football/roster/season/2001-02/player/kellen-winslow",
+    "Miami Athletics",
+    "Miami Athletics — Kellen Winslow roster"
+  ],
+  [
+    "https://www.sportingnews.com/us/nfl/news/khalil-mack-college-video-game-rating/1tp13tlo204d115tf2mhhlqkb2",
+    "Sporting News",
+    "Sporting News — Khalil Mack college backstory"
+  ],
+  [
+    "https://chicago.suntimes.com/2018/10/31/18480992/the-mack-effect-before-he-was-a-bear-olb-khalil-mack-transformed-buffalo",
+    "Chicago Sun-Times",
+    "Chicago Sun-Times — Before he was a Bear, Mack transformed Buffalo"
+  ],
+  [
+    "https://www.si.com/nfl/2014/04/25/2014-nfl-draft-top-64-khalil-mack",
+    "Sports Illustrated",
+    "Sports Illustrated — 2014 NFL Draft Top 64: Khalil Mack"
+  ],
+  [
+    "https://www.si.com/college/2013/11/19/khalil-mack-buffalo-bulls",
+    "Sports Illustrated",
+    "Sports Illustrated — Khalil Mack and Buffalo"
+  ],
+  [
+    "https://www.ravenspr.com/player_bios/kyle_hamilton.pdf",
+    "Baltimore Ravens",
+    "Baltimore Ravens — Kyle Hamilton media guide bio"
+  ],
+  [
+    "https://fightingirish.com/sports/football/roster/season/2020-21/player/kyle-hamilton",
+    "Notre Dame Athletics",
+    "Notre Dame Athletics — Kyle Hamilton roster"
+  ],
+  [
+    "https://nsd.floridagators.com/bio/15",
+    "Florida Athletics",
+    "Florida Athletics — Kyle Pitts signing bio"
+  ],
+  [
+    "https://floridagators.com/news/2020/10/2/football-gators-tight-end-kyle-pitts-feature-story",
+    "Florida Athletics",
+    "Florida Athletics — Pitts Well-Equipped for Big Stage"
+  ],
+  [
+    "https://floridagators.com/news/2020/9/7/football-the-kyle-konnection-trask-and-pitts",
+    "Florida Athletics",
+    "Florida Athletics — The Kyle Konnection: Trask and Pitts"
+  ],
+  [
+    "https://www.profootballhof.com/news/2025/03/gold-jacket-spotlight-ladainian-tomlinson-runs-idol%E2%80%99s-handoff-into-nfl-stardom/",
+    "Pro Football Hall of Fame",
+    "Pro Football Hall of Fame — Gold Jacket Spotlight: LaDainian Tomlinson"
+  ],
+  [
+    "https://footballfoundation.org/honors/hall-of-fame/ladainian-tomlinson/2370",
+    "National Football Foundation",
+    "National Football Foundation — LaDainian Tomlinson Hall of Fame profile"
+  ],
+  [
+    "https://goducks.com/news/2023/12/5/football-james-hall-of-fame-induction-becomes-official-tuesday",
+    "Oregon Athletics",
+    "Oregon Athletics — James Hall of Fame induction feature"
+  ],
+  [
+    "https://goducks.com/honors/hall-of-fame/lamichael-james/1253",
+    "Oregon Athletics",
+    "Oregon Athletics — LaMichael James Hall of Fame"
+  ],
+  [
+    "https://georgiadogs.com/sports/football/roster/malaki-starks/8131",
+    "Georgia Athletics",
+    "Georgia Athletics — Malaki Starks roster"
+  ],
+  [
+    "https://georgiadogs.com/news/2023/9/19/football-quick-chat-malaki-starks",
+    "Georgia Athletics",
+    "Georgia Athletics — Quick Chat: Malaki Starks"
+  ],
+  [
+    "https://ohiostatebuckeyes.com/news/2007/5/3/ohio-state-hosts-jesse-owens-classic",
+    "Ohio State Athletics",
+    "Ohio State Athletics — Jesse Owens Classic"
+  ],
+  [
+    "https://usctrojans.com/sports/track-and-field/roster/marqise-lee/3998",
+    "USC Athletics",
+    "USC Athletics — Marqise Lee track roster"
+  ],
+  [
+    "https://usctrojans.com/sports/2017/6/15/blog-2011-08-meet-marqise-lee-html.aspx",
+    "USC Athletics",
+    "USC Athletics — Meet Marqise Lee"
+  ],
+  [
+    "https://www.espn.com/college-football/story/_/id/38703026/marvin-harrison-jr-ohio-state-draft-penn-state",
+    "ESPN",
+    "ESPN — Marvin Harrison Jr. profile"
+  ],
+  [
+    "https://www.foxsports.com/stories/college-football/kyle-mccord-and-marvin-harrison-jrs-long-intertwined-paths-to-the-game",
+    "FOX Sports",
+    "FOX Sports — McCord and Harrison's intertwined paths"
+  ],
+  [
+    "https://www.phillyvoice.com/marvin-harrison-jr-wide-receiver-prospect-ohio-state-rose-bowl-st-josephs-prep-philadelphia/",
+    "PhillyVoice",
+    "PhillyVoice — Marvin Harrison Jr. at Ohio State"
+  ],
+  [
+    "https://gopsusports.com/sports/football/roster/season/2018/player/micah-parsons",
+    "Penn State Athletics",
+    "Penn State Athletics — Micah Parsons roster"
+  ],
+  [
+    "https://gopsusports.com/news/2017/12/20/franklin-and-fb-inks-top-5-class",
+    "Penn State Athletics",
+    "Penn State Athletics — 2017 signing class"
+  ],
+  [
+    "https://gopsusports.com/news/2019/07/22/brown-and-parsons-on-butkus-preseason-watch-list",
+    "Penn State Athletics",
+    "Penn State Athletics — Brown and Parsons on Butkus Preseason Watch List"
+  ],
+  [
+    "https://texaslonghorns.com/news/2004/12/30/123004aaa_665",
+    "Texas Athletics",
+    "Texas Athletics — Family ties add intrigue to Rose Bowl"
+  ],
+  [
+    "https://texaslonghorns.com/news/2015/9/24/FB_0924152019",
+    "Texas Athletics",
+    "Texas Athletics — Michael Huff Hall of Honor profile"
+  ],
+  [
+    "https://texaslonghorns.com/news/2005/8/30/083005aab_128",
+    "Texas Athletics",
+    "Texas Athletics — Mind over matter"
+  ],
+  [
+    "https://12thman.com/sports/football/roster/season/2012/player/mike-evans",
+    "Texas A&M Athletics",
+    "Texas A&M Athletics — Mike Evans roster"
+  ],
+  [
+    "https://12thman.com/news/2013/09/04/the-rock-from-the-island",
+    "Texas A&M Athletics",
+    "Texas A&M Athletics — The Rock from the Island"
+  ],
+  [
+    "https://lsusports.net/sports/fb/roster/season/2010/player/morris-claiborne",
+    "LSU Athletics",
+    "LSU Athletics — Morris Claiborne roster"
+  ],
+  [
+    "https://georgiadogs.com/sports/football/roster/nakobe-dean/5425",
+    "Georgia Athletics",
+    "Georgia Athletics — Nakobe Dean roster"
+  ],
+  [
+    "https://georgiadogs.com/news/2023/4/28/football-dean-still-pursuing-mechanical-engineering-degree",
+    "Georgia Athletics",
+    "Georgia Athletics — Dean Still Pursuing Mechanical Engineering Degree"
+  ],
+  [
+    "https://olemisssports.com/news/2021/4/12/football-ole-miss-nfl-legend-patrick-willis-to-deliver-commencement-address.aspx",
+    "Ole Miss Athletics",
+    "Ole Miss Athletics — Patrick Willis commencement announcement"
+  ],
+  [
+    "https://olemisssports.com/news/2003/2/5/2003_Ole_Miss_Signing_Day_Press_Conference_Transcript",
+    "Ole Miss Athletics",
+    "Ole Miss Athletics — 2003 Signing Day transcript"
+  ],
+  [
+    "https://wpial.org/hof.aspx?hof=61",
+    "WPIAL Hall of Fame",
+    "WPIAL Hall of Fame — Paul Posluszny"
+  ],
+  [
+    "https://collegesportscommunicators.com/news/2006/11/30/GEN_1354.aspx?path=general",
+    "College Sports Communicators",
+    "College Sports Communicators — Academic All-America announcement"
+  ],
+  [
+    "https://footballfoundation.org/honors/hall-of-fame/paul-posluszny/2538",
+    "National Football Foundation",
+    "National Football Foundation — Paul Posluszny Hall of Fame profile"
+  ],
+  [
+    "https://gopsusports.com/news/2006/12/10/posluszny-named-mvp-at-nittany-lion-football-banquet",
+    "Penn State Athletics",
+    "Penn State Athletics — Football Banquet"
+  ],
+  [
+    "https://seminoles.com/honors/florida-state-athletics-hall-of-fame/peter-warrick/124",
+    "Florida State Athletics",
+    "Florida State Athletics — Peter Warrick Hall of Fame"
+  ],
+  [
+    "https://allstatesugarbowl.org/sports/2023/11/28/peter-warrick.aspx",
+    "Sugar Bowl",
+    "Sugar Bowl — Peter Warrick Hall of Fame"
+  ],
+  [
+    "https://seminoles.com/news/2026/8/18/football-hall-of-fame-on-campus-salute-for-peter-warrick-set-for-october-31",
+    "Florida State Athletics",
+    "Florida State Athletics — Hall of Fame On-Campus Salute"
+  ],
+  [
+    "https://allstatesugarbowl.org/news/2026/1/22/cfb-hall-of-fame.aspx",
+    "Sugar Bowl",
+    "Sugar Bowl — Three Sugar Bowl Alums Headed to College Football Hall of Fame"
+  ],
+  [
+    "https://rolltide.com/news/2008/1/8/Rolando_McClain_Named_Freshman_All_American",
+    "Alabama Athletics",
+    "Alabama Athletics — Rolando McClain Freshman All-America"
+  ],
+  [
+    "https://www.maxpreps.com/al/decatur/decatur-red-raiders/athletes/rolando-mcclain/bio/?careerid=a03uvbn8dor33",
+    "MaxPreps",
+    "MaxPreps — Rolando McClain basketball bio"
+  ],
+  [
+    "https://soonersports.com/news/2007/2/7/208402679",
+    "Oklahoma Athletics",
+    "Oklahoma Athletics — 2007 signing class"
+  ],
+  [
+    "https://soonersports.com/news/2011/1/6/208390240",
+    "Oklahoma Athletics",
+    "Oklahoma Athletics — Ryan Broyles to Return"
+  ],
+  [
+    "https://clemsontigers.com/sports/football/roster/player/sammy-watkins",
+    "Clemson Athletics",
+    "Clemson Athletics — Sammy Watkins roster"
+  ],
+  [
+    "https://www.heisman.com/heisman-winners/tim-brown/",
+    "Heisman",
+    "Heisman Trophy — Tim Brown biography"
+  ],
+  [
+    "https://fightingirish.com/news/2006/11/17/heisman-heroes",
+    "Notre Dame Athletics",
+    "Notre Dame Athletics — Heisman Heroes: Tim Brown"
+  ],
+  [
+    "https://fightingirish.com/tim-brown-receives-ncaa-silver-anniversary-award/",
+    "Notre Dame Athletics",
+    "Notre Dame Athletics — Tim Brown Receives NCAA Silver Anniversary Award"
+  ],
+  [
+    "https://fightingirish.com/news/2017/09/16/heisman-anniversaries-celebrating-john-lujack-and-tim-brown",
+    "Notre Dame Athletics",
+    "Notre Dame Athletics — Heisman Anniversaries: Celebrating John Lujack and Tim Brown"
+  ],
+  [
+    "https://fightingirish.com/touchdown-timmy-becomes-latest-heisman-winner-to-enter-college-football-hall-of-fame/",
+    "Notre Dame Athletics",
+    "Notre Dame Athletics — Touchdown Timmy College Football Hall of Fame feature"
+  ],
+  [
+    "https://gofrogs.com/news/2004/7/26/Gary_Patterson_The_Next_Level",
+    "TCU Athletics",
+    "TCU Athletics — Gary Patterson: The Next Level"
+  ],
+  [
+    "https://gofrogs.com/news/2000/12/8/TCU_Promotes_Patterson_to_Head_Football_Coach",
+    "TCU Athletics",
+    "TCU Athletics — TCU Promotes Patterson to Head Football Coach"
+  ],
+  [
+    "https://gofrogs.com/sports/football/roster/coaches/gary-patterson/759",
+    "TCU Athletics",
+    "TCU Athletics — Gary Patterson coach biography"
+  ],
+  [
+    "https://footballfoundation.org/honors/hall-of-fame/gary-patterson/2589",
+    "National Football Foundation",
+    "National Football Foundation — Gary Patterson Hall of Fame biography"
+  ]
 ] as const;
 
 export const footballPersonIdentityCfbBResearch = [
-  ["cfbfast-r-player-4047646-a-j-brown", [
-    ["cfbfast-r-player-4047646-a-j-brown--dual-under-armour-all-american", "Brown was a high-level football and baseball prospect at Starkville High and became the second athlete, after Kyler Murray, to play in both the Under Armour All-America Football Game and the Under Armour All-America Baseball Game.", 0],
-    ["cfbfast-r-player-4047646-a-j-brown--padres-draft-and-summer-baseball", "The San Diego Padres selected Brown in the 19th round of the 2016 MLB Draft; he signed and later participated in extended spring training during his Ole Miss summers.", 1],
-    ["cfbfast-r-player-4047646-a-j-brown--starkville-chooses-ole-miss", "Brown grew up and starred in Starkville, Mississippi, but chose Ole Miss rather than hometown Mississippi State.", 2],
-    ["cfbfast-r-player-4047646-a-j-brown--starkville-state-title", "As a senior, Brown helped Starkville High win a Mississippi Class 6A football state championship.", 0],
-    ["cfbfast-r-player-4047646-a-j-brown--middle-name-spelling-story", "Brown’s middle name appears as “Juan” on his birth certificate, though his family has said “Jauan” was the intended spelling.", 0],
-  ]],
-  ["cfb-aj-hawk", [
-    ["cfb-aj-hawk--basketball-first-love", "Hawk has said basketball was his first love growing up and that he once imagined becoming a point guard at Duke.", 3],
-    ["cfb-aj-hawk--childhood-with-mike-nugent", "Hawk grew up only minutes from future Ohio State kicker Mike Nugent and played football with him from grade-school age before they reunited as Buckeyes.", 4],
-    ["cfb-aj-hawk--played-with-brother-ryan", "At Centerville High, Hawk played running back and linebacker while his older brother Ryan played quarterback; they shared two varsity seasons.", 3],
-    ["cfb-aj-hawk--community-park-upbringing", "Hawk grew up with a community park directly behind the family home, and pickup sports with his brothers and neighborhood athletes were a major part of his childhood.", 3],
-    ["cfb-aj-hawk--quinn-fiesta-family-rivalry", "In the 2006 Fiesta Bowl, Hawk faced Notre Dame quarterback Brady Quinn while dating Quinn’s sister Laura; she famously wore a split Notre Dame/Ohio State jersey, and Hawk sacked Quinn twice.", 5],
-  ]],
-  ["cfb-aaron-ross", [
-    ["cfb-aaron-ross--fox-tech-to-john-tyler", "Ross played at San Antonio Fox Tech as a sophomore before finishing his prep career at John Tyler High in Tyler, Texas.", 6],
-    ["cfb-aaron-ross--three-sport-sprinter", "Ross lettered in football, track and basketball and was a four-year sprinter in track.", 6],
-    ["cfb-aaron-ross--prep-kick-blocker", "Ross was an unusually prolific kick blocker in high school, with his Texas recruiting bio crediting him with double-digit blocked kicks as a sophomore and more in later seasons.", 6],
-    ["cfb-aaron-ross--punt-return-identity", "After becoming Texas’ primary punt returner, Ross scored his first Longhorn punt-return touchdown on an 88-yard return at Missouri.", 7],
-    ["cfb-aaron-ross--met-sanya-at-texas", "Ross met Texas track star Sanya Richards while both were students at the University of Texas; they later married.", 8],
-  ]],
-  ["cfb-abdul-carter", [
-    ["cfb-abdul-carter--11th-street-number-11", "Carter grew up on 11th Street in North Philadelphia and later wore No. 11 at Penn State.", 9],
-    ["cfb-abdul-carter--father-bloomsburg-defender", "His father, Chris Carter, played linebacker and defensive end at Bloomsburg University and is credited by the family with helping shape Abdul’s competitive approach.", 9],
-    ["cfb-abdul-carter--deion-barnes-same-street", "Penn State defensive line coach Deion Barnes grew up only a couple of blocks from Carter on the same North Philadelphia street.", 9],
-    ["cfb-abdul-carter--high-school-basketball-forward", "Carter also lettered in basketball at La Salle College High School as a power forward.", 10],
-    ["cfb-abdul-carter--linebacker-to-edge-switch", "After two seasons at linebacker, Carter moved to defensive end for the 2024 Penn State season.", 11],
-  ]],
-  ["cfb-aidan-hutchinson", [
-    ["cfb-aidan-hutchinson--michigan-legacy-no-97", "Hutchinson’s father Chris was a Michigan captain and team MVP, and Aidan followed him to Michigan wearing the same No. 97.", 12],
-    ["cfb-aidan-hutchinson--four-prep-football-roles", "At Divine Child High School, Hutchinson played defensive end, tight end, offensive line and long snapper.", 13],
-    ["cfb-aidan-hutchinson--lacrosse-captain", "Hutchinson captained Divine Child’s lacrosse team and earned second-team all-state honors in the sport.", 13],
-    ["cfb-aidan-hutchinson--whole-family-michigan-tie", "His mother Melissa also attended Michigan, and both of his sisters were enrolled at Michigan while he played there.", 12],
-    ["cfb-aidan-hutchinson--injury-to-heisman-runner-up", "Hutchinson’s 2020 season ended after only three games because of injury; he returned in 2021 and became only the third defensive player to finish second in Heisman voting.", 13],
-  ]],
-  ["cfb-alex-mack", [
-    ["cfb-alex-mack--two-way-prep-defensive-mvp", "Mack played both ways at San Marcos High and was named his league’s co-MVP on defense after recording 93 tackles and eight sacks as a senior.", 14],
-    ["cfb-alex-mack--cif-heavyweight-wrestler", "Mack wrestled for four years, became a CIF heavyweight champion and went 26-1 as a senior.", 14],
-    ["cfb-alex-mack--legal-studies-magna-cum-laude", "Mack graduated magna cum laude from Cal with a legal studies degree.", 15],
-    ["cfb-alex-mack--graduate-student-education", "He played his final Cal season as a graduate student studying education.", 14],
-    ["cfb-alex-mack--two-time-morris-peer-vote", "Mack won the Morris Trophy twice, an award chosen by opposing Pac-10 defensive linemen for the conference’s top offensive lineman.", 15],
-  ]],
-  ["cfb-amari-cooper", [
-    ["cfb-amari-cooper--teddy-bridgewater-teammate", "Cooper played at Miami Northwestern High School with quarterback Teddy Bridgewater.", 16],
-    ["cfb-amari-cooper--coconut-grove-barnyard-football", "Cooper grew up in Miami’s Coconut Grove area and spent ages 5 to 12 at The Barnyard after-school program, where competitive football games on a blacktop were a formative part of his childhood.", 17],
-    ["cfb-amari-cooper--chess-from-music-teacher", "Cooper learned chess in elementary school from a music teacher who ran the school chess club and later became an avid player.", 16],
-    ["cfb-amari-cooper--route-runner-brand", "Cooper created a clothing brand called “Route Runner.”", 16],
-    ["cfb-amari-cooper--alabama-camp-earned-saban-offer", "At an Alabama camp, Cooper impressed Nick Saban during one-on-one work and was called into Saban’s office for a scholarship offer; his high-school coach had expected him to follow former teammates to Louisville, but Cooper wanted to make his own name.", 18],
-  ]],
-  ["cfb-andre-johnson", [
-    ["cfb-andre-johnson--miami-native-stayed-home", "Johnson attended Miami Senior High and stayed in his hometown to play for the Miami Hurricanes.", 19],
-    ["cfb-andre-johnson--big-east-sprint-double", "While also playing football, Johnson won the Big East indoor 60-meter title and outdoor 100-meter title in 2002.", 20],
-    ["cfb-andre-johnson--rose-bowl-co-mvp", "Johnson shared MVP honors with Ken Dorsey in Miami’s 2002 Rose Bowl national-championship win after a dominant receiving performance.", 21],
-    ["cfb-andre-johnson--shoulder-surgery-return", "During his Miami career, Johnson underwent shoulder surgery shortly after the Florida game and returned later that season.", 22],
-    ["cfb-andre-johnson--foundation-single-parent-youth", "Johnson established the Andre Johnson Foundation early in his pro career to support children and teenagers growing up in single-parent homes.", 19],
-  ]],
-  ["cfb-andre-ware", [
-    ["cfb-andre-ware--insisted-on-playing-quarterback", "Ware drew scholarship interest after high school, but many schools did not want him as a quarterback; he held out for a chance to play the position.", 23],
-    ["cfb-andre-ware--alvin-cc-two-jobs", "After being ruled ineligible for his first Houston season, Ware attended Alvin Community College and worked two jobs to help pay tuition.", 23],
-    ["cfb-andre-ware--run-and-shoot-arrival", "Ware’s arrival as an eligible Houston player coincided with Jack Pardee bringing the run-and-shoot offense to the Cougars.", 23],
-    ["cfb-andre-ware--first-black-heisman-qb", "Ware became the first Black quarterback to win the Heisman Trophy.", 23],
-    ["cfb-andre-ware--heisman-on-probation-team", "Ware remains the only Heisman winner whose team was on NCAA probation during his winning season.", 23],
-  ]],
-  ["cfb-andrew-luck", [
-    ["cfb-andrew-luck--oliver-luck-football-family", "Luck is the son of Oliver Luck, a former West Virginia and NFL quarterback who later became an athletic administrator.", 24],
-    ["cfb-andrew-luck--high-school-valedictorian", "Luck was the valedictorian of Stratford High School’s 2008 graduating class in Houston.", 24],
-    ["cfb-andrew-luck--architectural-design-major", "At Stanford, Luck earned his bachelor’s degree in architectural design.", 25],
-    ["cfb-andrew-luck--academic-father-son-hall", "Luck later joined his father Oliver as the first father-son duo in the College Sports Communicators Academic All-America Hall of Fame.", 25],
-    ["cfb-andrew-luck--returned-to-run-stanford-football", "After his NFL retirement and completion of a Stanford master’s degree in education, Luck returned to Stanford to oversee the football program in a general-manager role.", 25],
-  ]],
-  ["cfb-antoine-winfield-jr", [
-    ["cfb-antoine-winfield-jr--father-ohio-state-thorpe-viking", "Winfield’s father, Antoine Sr., won the Jim Thorpe Award at Ohio State and later played nine seasons for the Minnesota Vikings.", 26],
-    ["cfb-antoine-winfield-jr--minnesota-to-texas-and-back", "Winfield Jr. lived in Minnesota before moving to Texas for his final three years of high school, then returned to the Twin Cities for college.", 26],
-    ["cfb-antoine-winfield-jr--carter-coughlin-childhood-friend", "He grew up playing football with Carter Coughlin, who later reconnected with him and helped persuade him to visit Minnesota.", 26],
-    ["cfb-antoine-winfield-jr--chose-minnesota-over-family-ohio-state-pull", "Some relatives and friends urged Winfield Jr. toward Ohio State because of his father’s legacy, but he chose Minnesota.", 26],
-    ["cfb-antoine-winfield-jr--brother-austin-gopher-db", "His brother Austin also played defensive back for Minnesota.", 27],
-  ]],
-  ["cfb-ashton-jeanty", [
-    ["cfb-ashton-jeanty--military-family-naples-italy", "Jeanty spent part of his youth in Naples, Italy, because his father was stationed there with the U.S. Navy.", 28],
-    ["cfb-ashton-jeanty--football-began-overseas", "His tackle-football journey began with the Naples Wildcats community connected to the U.S. military base in Italy.", 29],
-    ["cfb-ashton-jeanty--moved-to-frisco-for-exposure", "Jeanty’s family moved to Frisco, Texas, before high school in part so he could gain more football exposure.", 30],
-    ["cfb-ashton-jeanty--five-prep-positions", "At Lone Star High School, Jeanty played running back, wide receiver, defensive end, linebacker and safety.", 29],
-    ["cfb-ashton-jeanty--three-sport-high-school-athlete", "Jeanty also competed in basketball and track in high school in addition to football.", 31],
-  ]],
-  ["cfb-baker-mayfield", [
-    ["cfb-baker-mayfield--texas-tech-walk-on", "After being passed over by most major programs for a scholarship, Mayfield walked on at Texas Tech in 2013.", 32],
-    ["cfb-baker-mayfield--walk-on-wins-opening-job", "Mayfield immediately won Texas Tech’s starting quarterback job as a true freshman walk-on.", 32],
-    ["cfb-baker-mayfield--transferred-and-walked-on-oklahoma", "He transferred from Texas Tech to Oklahoma and initially joined the Sooners as a walk-on as well.", 32],
-    ["cfb-baker-mayfield--sat-2014-transfer-rule", "Mayfield had to sit out the 2014 season after his transfer to Oklahoma under the rules then in place.", 32],
-    ["cfb-baker-mayfield--former-walk-on-heisman", "He became the first Heisman Trophy winner of the modern scholarship era to begin his college career as a walk-on.", 33],
-  ]],
-  ["cfb-barrett-jones", [
-    ["cfb-barrett-jones--started-three-line-positions", "Jones started for Alabama at right guard, left tackle and center during his career.", 34],
-    ["cfb-barrett-jones--accounting-bachelors-and-masters", "Jones completed an accounting bachelor’s degree and continued into graduate study while at Alabama.", 35],
-    ["cfb-barrett-jones--four-time-academic-all-american", "Jones became the first Alabama football player to earn Academic All-America recognition four times.", 35],
-    ["cfb-barrett-jones--brothers-alabama-football", "His brothers Harrison and Walker also became Alabama football players.", 36],
-    ["cfb-barrett-jones--haiti-nicaragua-mission-trips", "Jones took part in multiple mission trips to Haiti and Nicaragua while at Alabama, working at schools and orphanages and on construction projects.", 34],
-  ]],
-  ["cfb-bijan-robinson", [
-    ["cfb-bijan-robinson--raised-with-grandfather-cleo", "Robinson grew up in his grandparents’ Tucson home and has described grandfather Cleo Robinson as a father figure who brought football into his life.", 37],
-    ["cfb-bijan-robinson--grandfather-pac12-official", "Cleo Robinson was a former athlete who spent decades as a football and basketball official, including work in the Pac-10/Pac-12 ecosystem.", 38],
-    ["cfb-bijan-robinson--great-uncle-paul-nfl-running-back", "Robinson’s great-uncle Paul Robinson played running back at Arizona and later became a Pro Bowl NFL back.", 38],
-    ["cfb-bijan-robinson--childhood-near-drowning-swim-safety", "A near-drowning experience when Robinson was five later helped inspire swim-safety work through his foundation.", 39],
-    ["cfb-bijan-robinson--bijan-mustardson", "While at Texas in the NIL era, Robinson launched his own Dijon mustard brand, “Bijan Mustardson.”", 40],
-  ]],
-  ["bill-snyder-cfb", [
-    ["bill-snyder--california-high-school-coaching-start", "Snyder began his full-time coaching career in California high-school football before entering the college ranks.", 41],
-    ["bill-snyder--austin-college-swimming-coach", "At Austin College, Snyder served as offensive coordinator while also coaching the school’s swimming team.", 41],
-    ["bill-snyder--hayden-fry-apprenticeship", "Snyder worked under Hayden Fry at North Texas and then followed him to Iowa, where Snyder spent a decade as offensive coordinator.", 41],
-    ["bill-snyder--miracle-of-manhattan", "Snyder took over a Kansas State program that had gone 0-26-1 immediately before his arrival and led the turnaround widely nicknamed the “Miracle of Manhattan.”", 42],
-    ["bill-snyder--retired-then-returned", "After retiring following the 2005 season, Snyder returned as Kansas State head coach in 2009 and rebuilt the program a second time.", 43],
-  ]],
-  ["bob-stoops-cfb", [
-    ["bob-stoops--youngstown-coaching-family", "Stoops grew up in Youngstown, Ohio, in a football-coaching family; his father Ron was a longtime defensive coordinator at Cardinal Mooney High School.", 44],
-    ["bob-stoops--lightly-recruited-to-iowa", "Stoops has said he was not heavily recruited as a player; Iowa’s connection to his father helped bring him to the Hawkeyes.", 45],
-    ["bob-stoops--three-stoops-brothers-at-iowa", "Bob became the oldest of three Stoops brothers to play defensive back at Iowa and later helped recruit younger brothers Mike and Mark there.", 46],
-    ["bob-stoops--player-in-hayden-fry-turnaround", "Stoops’ Iowa playing career began as Hayden Fry was starting the Hawkeyes’ program turnaround.", 45],
-    ["bob-stoops--stayed-at-iowa-to-coach", "After his final Iowa playing season, Stoops stayed with the Hawkeyes as a graduate assistant and volunteer coach.", 46],
-  ]],
-  ["cfb-brady-quinn", [
-    ["cfb-brady-quinn--middle-school-notre-dame-visits", "As a middle-schooler in Dublin, Ohio, Quinn regularly visited Notre Dame on football weekends with friend Chinedum Ndukwe because Ndukwe’s older brother was a student there.", 47],
-    ["cfb-brady-quinn--ndukwe-high-school-teammate", "Quinn and Chinedum Ndukwe were high-school teammates at Dublin Coffman and then entered Notre Dame in the same class.", 48],
-    ["cfb-brady-quinn--finance-political-science-double-major", "Quinn pursued a double major in finance and political science at Notre Dame.", 49],
-    ["cfb-brady-quinn--law-school-aspiration", "While at Notre Dame, Quinn discussed an interest in law school and eventually passing the bar after football.", 49],
-    ["cfb-brady-quinn--aj-hawk-sister-fiesta-bowl", "Quinn’s sister Laura was dating Ohio State linebacker A.J. Hawk when Notre Dame faced Ohio State in the 2006 Fiesta Bowl, creating the game’s famous split-family storyline.", 5],
-  ]],
-  ["cfb-brandin-cooks", [
-    ["cfb-brandin-cooks--sonic-boom-nickname", "Cooks’ Oregon State biography lists his nickname as “Sonic Boom.”", 50],
-    ["cfb-brandin-cooks--junior-olympics-sprinter", "Cooks competed as a sprinter and participated in the Junior Olympics while in high school.", 50],
-    ["cfb-brandin-cooks--six-varsity-letters", "He also played basketball and finished high school with six varsity letters across sports.", 50],
-    ["cfb-brandin-cooks--stepbrother-maurice-washington", "Cooks’ stepbrother Maurice Washington played college football at Texas A&M-Kingsville and later attended an Oakland Raiders training camp.", 50],
-    ["cfb-brandin-cooks--raised-by-mother-after-fathers-death", "Cooks’ father died of a heart attack when Brandin was six, after which his mother Andrea raised Brandin and his three brothers.", 51],
-  ]],
-  ["cfb-brandon-scherff", [
-    ["cfb-brandon-scherff--295-pound-high-school-quarterback", "Scherff played quarterback as a high-school sophomore and threw for roughly 1,200 yards despite already being close to 295 pounds.", 52],
-    ["cfb-brandon-scherff--recruited-at-shot-put-meet", "Iowa assistant Reese Morgan first approached Scherff while Scherff was competing in the shot put at the Iowa state track meet.", 52],
-    ["cfb-brandon-scherff--state-shot-put-champion", "Scherff won an Iowa state high-school shot put championship and held his school’s shot put record.", 53],
-    ["cfb-brandon-scherff--four-sport-prep-athlete", "Beyond football and track, Scherff earned all-state honors in baseball, all-conference recognition in basketball and also lettered in tennis.", 53],
-    ["cfb-brandon-scherff--quarterback-to-two-way-line", "After his sophomore quarterback season, Scherff shifted to offensive and defensive line for his final two high-school seasons before Iowa recruited him as a lineman.", 53],
-  ]],
-  ["cfb-braylon-edwards", [
-    ["cfb-braylon-edwards--father-stan-michigan-player", "Edwards’ father Stan also played football at Michigan.", 54],
-    ["cfb-braylon-edwards--anthony-carter-family-connection", "Michigan receiving legend Anthony Carter had been a teammate of Braylon’s father, giving Edwards a personal connection to the receiver who made Michigan’s No. 1 jersey famous.", 55],
-    ["cfb-braylon-edwards--earned-no-1-jersey", "Edwards specifically asked to wear Michigan’s coveted No. 1, and Lloyd Carr made him earn the switch through his play before granting it.", 56],
-    ["cfb-braylon-edwards--endowed-no-1-scholarship", "After college, Edwards pledged $500,000 to endow a Michigan scholarship connected to the player wearing No. 1.", 55],
-    ["cfb-braylon-edwards--returned-to-finish-degree", "Years after leaving for the NFL, Edwards returned to Michigan to finish his degree after being encouraged to make education his next “No. 1” priority.", 54],
-  ]],
-  ["brian-kelly-cfb", [
-    ["brian-kelly--assumption-linebacker-captain", "Kelly was a four-year linebacker at Assumption College and captained the team in his final two seasons.", 57],
-    ["brian-kelly--political-science-degree", "Kelly earned a political science degree from Assumption in 1983.", 57],
-    ["brian-kelly--coached-assumption-softball", "Early in his career, Kelly coached football defense at Assumption and also served as the school’s head softball coach.", 58],
-    ["brian-kelly--grand-valley-13-year-head-coach", "Kelly’s first college head-coaching job was at Division II Grand Valley State, where he remained head coach for 13 seasons.", 59],
-    ["brian-kelly--kelly-cares-foundation", "Kelly and his family created the Kelly Cares Foundation, which has supported health, education and community causes.", 60],
-  ]],
-  ["cfb-brian-orakpo", [
-    ["cfb-brian-orakpo--prep-basketball-star", "Before fully focusing on football, Orakpo was a prominent high-school basketball player.", 61],
-    ["cfb-brian-orakpo--late-football-focus", "Orakpo shifted his athletic focus toward football relatively late in high school, after spending significant time on basketball.", 62],
-    ["cfb-brian-orakpo--fifty-pound-transformation", "He arrived at Texas around 210 pounds and added roughly 50 pounds while developing into a defensive end.", 62],
-    ["cfb-brian-orakpo--rak-nickname", "Orakpo was widely known by the nickname “Rak.”", 61],
-    ["cfb-brian-orakpo--uncle-chike-iowa-football", "His uncle Chike Orakpo played college football at Iowa.", 61],
-  ]],
-  ["cfb-brian-urlacher", [
-    ["cfb-brian-urlacher--only-fbs-offer-new-mexico", "Urlacher has been described by New Mexico as having only one Division I-A scholarship offer: the Lobos.", 63],
-    ["cfb-brian-urlacher--grew-from-small-receiver-safety", "As a high-school sophomore he was about 5-foot-9 and 160 pounds while playing receiver and safety before a later growth spurt changed his football future.", 63],
-    ["cfb-brian-urlacher--lobo-hybrid-position", "At New Mexico, Rocky Long used Urlacher in the hybrid “Lobo” role, blending middle-linebacker and free-safety responsibilities.", 63],
-    ["cfb-brian-urlacher--three-way-senior-role", "During his senior season he contributed on defense, at wide receiver and in the return game.", 63],
-    ["cfb-brian-urlacher--first-lobo-cfb-hall", "Urlacher became the first New Mexico player inducted into the College Football Hall of Fame.", 64],
-  ]],
-  ["cfb-bryant-mckinnie", [
-    ["cfb-bryant-mckinnie--high-school-defensive-end", "McKinnie played defensive end in high school before becoming an offensive lineman later in his development.", 65],
-    ["cfb-bryant-mckinnie--lackawanna-juco-conversion", "He attended Lackawanna Junior College, where he moved to offensive line before transferring to Miami.", 65],
-    ["cfb-bryant-mckinnie--400-meter-at-giant-size", "In high school track and field, McKinnie threw the shot and discus and also ran the 400 meters despite eventually standing 6-foot-9.", 65],
-    ["cfb-bryant-mckinnie--no-sacks-at-miami", "Miami credits McKinnie with not allowing a sack at left tackle during his two seasons with the Hurricanes.", 66],
-    ["cfb-bryant-mckinnie--knee-surgery-to-rose-bowl", "McKinnie returned from knee surgery in time to play in Miami’s Rose Bowl national-championship victory.", 65],
-  ]],
-  ["cfb-bryce-young", [
-    ["cfb-bryce-young--philadelphia-to-pasadena", "Young was born in Philadelphia and later grew up in the Pasadena, California, area.", 67],
-    ["cfb-bryce-young--cathedral-to-mater-dei", "Young began high school at Cathedral in Los Angeles before transferring to Mater Dei in Santa Ana.", 68],
-    ["cfb-bryce-young--father-craig-quarterback-tutor", "His father, Craig Young, closely tutored and trained him as a quarterback during his youth.", 67],
-    ["cfb-bryce-young--usc-commitment-flipped-to-alabama", "Young was committed to USC for more than a year before flipping his commitment to Alabama late in the 2020 recruiting cycle.", 69],
-    ["cfb-bryce-young--first-alabama-qb-heisman", "Young became the first quarterback from Alabama to win the Heisman Trophy.", 70],
-  ]],
-  ["cfb-budda-baker", [
-    ["cfb-budda-baker--budda-nickname-origin", "Baker’s given name is Bishard, but his family nicknamed him “Budda” as a baby; the nickname became so universal that people sometimes assumed Bishard was someone else.", 71],
-    ["cfb-budda-baker--bellevue-three-way-star", "At Bellevue High, Baker played safety, running back and return specialist on three consecutive undefeated state-championship teams.", 72],
-    ["cfb-budda-baker--state-champion-sprinter", "Baker won Washington state track titles in the 100 meters, 200 meters and relays during high school.", 72],
-    ["cfb-budda-baker--oregon-commitment-to-washington", "Baker originally committed to Oregon before changing course and staying home to attend Washington.", 73],
-    ["cfb-budda-baker--wanted-to-stay-near-family", "Baker has explained that remaining close to his Seattle-area family weighed heavily in choosing Washington.", 73],
-  ]],
-  ["cfb-cj-mosley", [
-    ["cfb-cj-mosley--theodore-hometown-star", "Mosley came to Alabama from Theodore High School in the Mobile area, where he became the school’s all-time leading tackler.", 74],
-    ["cfb-cj-mosley--chose-alabama-over-national-offers", "Despite offers from programs including Auburn, Florida State, Georgia, Stanford, Oklahoma and LSU, Mosley stayed in-state for Alabama.", 74],
-    ["cfb-cj-mosley--younger-brother-jamey-alabama-walkon", "His younger brother Jamey Mosley later joined Alabama as a walk-on linebacker/edge player and earned a scholarship.", 75],
-    ["cfb-cj-mosley--mentored-reggie-ragland", "Reggie Ragland, who succeeded him at Alabama, said Mosley mentored him, taught him about leadership and was the smartest player he had ever played with.", 76],
-    ["cfb-cj-mosley--returned-for-senior-season", "Mosley chose to return to Alabama for his senior season rather than leave early for the NFL.", 77],
-  ]],
-  ["cfbfast-r-player-4432577-c-j-stroud", [
-    ["cfbfast-r-player-4432577-c-j-stroud--multi-sport-childhood", "Before concentrating on football, Stroud played baseball, soccer and basketball; basketball was especially prominent in his family.", 78],
-    ["cfbfast-r-player-4432577-c-j-stroud--youngest-of-four-competitive-siblings", "Stroud is the youngest of four children and has described competing with much older siblings as part of how he developed toughness and confidence.", 78],
-    ["cfbfast-r-player-4432577-c-j-stroud--late-recruiting-rise", "Stroud’s national recruiting profile surged relatively late, especially after a breakout senior season at Rancho Cucamonga.", 79],
-    ["cfbfast-r-player-4432577-c-j-stroud--elite-11-mvp", "He won MVP honors at the Elite 11 Finals before enrolling at Ohio State.", 79],
-    ["cfbfast-r-player-4432577-c-j-stroud--rancho-cucamonga-state-semifinal-run", "In his senior season, Stroud led Rancho Cucamonga to a state-semifinal run while establishing himself as a national quarterback recruit.", 79],
-  ]],
-  ["cfb-caleb-downs", [
-    ["cfb-caleb-downs--deep-football-family", "Downs comes from a prominent football family: his father Gary played NFL running back, his older brother Josh became an NFL receiver, and his uncle Dre Bly was a Pro Bowl cornerback.", 80],
-    ["cfb-caleb-downs--five-different-scoring-methods", "As a high-school junior, Downs scored touchdowns five different ways: rushing, receiving, interception return, kickoff return and passing.", 81],
-    ["cfb-caleb-downs--basketball-and-baseball", "Downs played basketball and baseball in high school in addition to starring in football.", 81],
-    ["cfb-caleb-downs--true-two-way-high-school-role", "At Mill Creek, Downs was a genuine two-way football player, contributing heavily on offense as well as at defensive back.", 81],
-    ["cfb-caleb-downs--alabama-to-ohio-state-transfer", "After a standout true freshman season at Alabama, Downs entered the transfer portal and joined Ohio State in January 2024.", 80],
-  ]],
-  ["cfb-caleb-williams", [
-    ["cfb-caleb-williams--gonzaga-covid-senior-season", "Williams attended Gonzaga College High School in Washington, D.C., and did not have a normal fall senior football season because of the COVID-19 pandemic.", 82],
-    ["cfb-caleb-williams--early-graduate-oklahoma", "He graduated high school a semester early and enrolled at Oklahoma for the spring 2021 term.", 82],
-    ["cfb-caleb-williams--red-river-bench-spark", "As an Oklahoma freshman, Williams replaced starter Spencer Rattler during the 2021 Red River game and helped lead a historic comeback over Texas.", 83],
-    ["cfb-caleb-williams--followed-lincoln-riley-to-usc", "After the season, Williams transferred from Oklahoma to USC, following head coach Lincoln Riley to Los Angeles.", 84],
-    ["cfb-caleb-williams--painted-fingernails-tradition", "Williams has painted his fingernails as a form of self-expression since before college; his mother is a nail technician and helped make nail art part of his personal style.", 84],
-  ]],
-  ["cfb-carson-palmer", [
-    ["cfb-carson-palmer--football-and-basketball-champion", "Palmer starred in both football and basketball at Santa Margarita High, with his school winning major championships during his time there.", 85],
-    ["cfb-carson-palmer--usc-dream-school", "Palmer described USC as the school he most wanted despite recruiting interest from other national programs.", 86],
-    ["cfb-carson-palmer--second-true-freshman-usc-qb-start", "Palmer became only the second true freshman quarterback to start a game for USC at that time.", 87],
-    ["cfb-carson-palmer--collarbone-redshirt-reset", "A broken collarbone in the third game of his sophomore season ended his year early and allowed him to redshirt.", 88],
-    ["cfb-carson-palmer--troy-nickname-after-ucla-qb", "High-school friends nicknamed Palmer “Troy” after Troy Aikman, even though Aikman was a UCLA alumnus and Palmer went on to star at USC.", 89],
-  ]],
-  ["cfb-cedric-benson", [
-    ["cfb-cedric-benson--midland-lee-three-peat", "Benson led Midland Lee to three consecutive Texas state football championships from 1998 through 2000.", 90],
-    ["cfb-cedric-benson--first-high-school-dave-campbell-cover", "In 2000, Benson became the first high-school player ever featured on the cover of Dave Campbell’s Texas Football magazine.", 90],
-    ["cfb-cedric-benson--dodgers-minor-league-baseball", "The Los Angeles Dodgers selected Benson in the 12th round of the 2001 MLB Draft, and he played minor-league baseball during college offseasons.", 91],
-    ["cfb-cedric-benson--dodgers-paid-college-scholarship", "Because he was under contract in baseball, the Dodgers paid Benson’s college scholarship for his first three years rather than Texas football.", 91],
-    ["cfb-cedric-benson--quit-baseball-before-senior-year", "Before his senior Texas season, Benson gave up professional baseball to focus entirely on football, after which Texas took over his scholarship.", 91],
-  ]],
-  ["cfb-champ-bailey", [
-    ["cfb-champ-bailey--roland-champ-nickname", "Bailey’s given name is Roland Bailey Jr.; he received the nickname “Champ” as a baby, reportedly because he was so active.", 92],
-    ["cfb-champ-bailey--folkston-three-sport-star", "Growing up in small-town Folkston, Georgia, Bailey earned all-state recognition in football, basketball and track.", 93],
-    ["cfb-champ-bailey--brother-boss-bailey", "His younger brother Boss Bailey also became a Georgia defensive star and NFL player.", 94],
-    ["cfb-champ-bailey--three-phase-georgia-role", "At Georgia, Champ Bailey played extensively on defense, offense and special teams rather than being limited to cornerback.", 95],
-    ["cfb-champ-bailey--indoor-long-jump-record", "Bailey also competed in Georgia track and set a school indoor long-jump record.", 95],
-  ]],
-  ["cfb-charlie-ward", [
-    ["cfb-charlie-ward--thomasville-near-tallahassee", "Ward grew up in Thomasville, Georgia, only about 35 miles from Tallahassee before attending Florida State.", 96],
-    ["cfb-charlie-ward--many-sport-high-school-athlete", "Ward was an unusually broad high-school athlete, excelling in football and basketball while also playing baseball, tennis, track and golf.", 96],
-    ["cfb-charlie-ward--brewers-draft-out-of-high-school", "Ward was good enough in baseball to be drafted by the Milwaukee Brewers out of high school.", 96],
-    ["cfb-charlie-ward--fsu-basketball-ncaa-run", "While quarterbacking Florida State, Ward also played point guard and helped the Seminoles basketball team reach multiple NCAA tournaments, including an Elite Eight run.", 97],
-    ["cfb-charlie-ward--chose-nba-after-nfl-draft-uncertainty", "After NFL teams declined to use an early pick on him, Ward pursued basketball and became a first-round NBA selection rather than beginning an NFL career.", 98],
-  ]],
-  ["cfb-chase-coffman", [
-    ["cfb-chase-coffman--father-paul-kstate-nfl-te", "Coffman’s father Paul was a standout tight end at Kansas State before a long NFL career.", 99],
-    ["cfb-chase-coffman--chose-missouri-over-kstate", "Chase chose Missouri despite a scholarship option from Kansas State, his father’s alma mater.", 100],
-    ["cfb-chase-coffman--brother-carson-high-school-qb", "At Raymore-Peculiar High, Chase caught passes from younger brother Carson Coffman, who later became a Kansas State quarterback.", 99],
-    ["cfb-chase-coffman--all-four-siblings-c-names", "Coffman is the oldest of four siblings whose first names all begin with C: Chase, Carson, Cameron and Camille.", 100],
-    ["cfb-chase-coffman--basketball-all-conference", "He lettered three years in basketball and earned first-team all-conference honors in the sport.", 100],
-  ]],
-  ["chip-kelly", [
-    ["chip-kelly--new-hampshire-qb-safety", "Kelly is a New Hampshire native who played both quarterback and safety at the University of New Hampshire.", 101],
-    ["chip-kelly--physical-education-degree", "Kelly graduated from New Hampshire with a degree in physical education.", 101],
-    ["chip-kelly--began-coaching-defense-special-teams", "He began coaching at Columbia in the secondary and on special teams, then worked with outside linebackers and safeties.", 101],
-    ["chip-kelly--johns-hopkins-defensive-coordinator", "Kelly spent a season as the defensive coordinator at Johns Hopkins before returning to New Hampshire.", 101],
-    ["chip-kelly--new-hampshire-offensive-apprenticeship", "At New Hampshire he coached running backs, then offensive line, before becoming offensive coordinator and developing the attack that helped lead to his Oregon opportunity.", 101],
-  ]],
-  ["cfb-chris-long", [
-    ["cfb-chris-long--moved-to-charlottesville-age-nine", "Long moved from Los Angeles to Charlottesville at age nine and later attended local St. Anne’s-Belfield before playing for Virginia.", 102],
-    ["cfb-chris-long--preferred-baseball-until-tenth-grade", "Long preferred baseball to football until around 10th grade, when his growth and athletic projection made football look like the better scholarship path.", 102],
-    ["cfb-chris-long--basketball-and-lacrosse-too", "He also played basketball and lacrosse in high school.", 102],
-    ["cfb-chris-long--howie-did-not-push-football", "His Hall of Fame father Howie Long deliberately did not push him into football; once Chris chose it, Howie became a demanding mentor.", 102],
-    ["cfb-chris-long--mayor-of-charlottesville-identity", "Virginia Athletics profiled Long under the nickname-like label “The Mayor of Charlottesville,” reflecting how closely he was identified with the local community and UVA.", 102],
-  ]],
-  ["chris-petersen-cfb", [
-    ["chris-petersen--sacramento-city-to-uc-davis-qb", "Petersen began his college playing career at Sacramento City College before transferring to UC Davis, where he became a standout quarterback.", 103],
-    ["chris-petersen--psychology-and-educational-psychology", "He earned a bachelor’s degree in psychology and a master’s degree in educational psychology from UC Davis.", 104],
-    ["chris-petersen--coaching-started-at-uc-davis", "Petersen began his coaching career at his alma mater as the freshman-team head coach before coaching receivers.", 104],
-    ["chris-petersen--first-boise-season-fiesta", "In his first season as Boise State head coach, Petersen went unbeaten and finished with the famous Fiesta Bowl upset of Oklahoma that used multiple trick plays.", 104],
-    ["chris-petersen--okg-recruiting-philosophy", "Petersen described his recruiting target as “OKGs” — “Our Kind of Guys” — emphasizing character, football ability and academic fit.", 105],
-  ]],
-  ["cfb-chris-weinke", [
-    ["cfb-chris-weinke--same-recruiting-class-charlie-ward", "Weinke originally signed with Florida State in the same recruiting class that included future Heisman winner Charlie Ward.", 106],
-    ["cfb-chris-weinke--left-fsu-for-blue-jays", "After only a few days on the Florida State campus in 1990, Weinke signed with the Toronto Blue Jays organization and chose professional baseball.", 106],
-    ["cfb-chris-weinke--six-years-minor-league-baseball", "Weinke spent six seasons in the Blue Jays minor-league system, reaching Triple-A, before returning to college football.", 107],
-    ["cfb-chris-weinke--bowden-kept-scholarship-open", "Bobby Bowden told Weinke that a Florida State football scholarship would remain available whenever he wanted to return, and honored that promise years later.", 107],
-    ["cfb-chris-weinke--returned-as-25-year-old-freshman", "Weinke returned to Florida State as a 25-year-old freshman and later became the oldest Heisman winner at age 28.", 106],
-  ]],
-  ["cfb-christian-mccaffrey", [
-    ["cfb-christian-mccaffrey--both-parents-stanford-athletes", "McCaffrey followed both parents to Stanford: father Ed played football there and mother Lisa played soccer there.", 108],
-    ["cfb-christian-mccaffrey--grandfather-dave-sime-olympian", "His grandfather Dave Sime was a Duke track star, a 1960 Olympic silver medalist in the 100 meters and a former world-record holder in the 100-yard dash.", 108],
-    ["cfb-christian-mccaffrey--high-school-relay-record", "McCaffrey was a four-year high-school track athlete who won a state 4x100 title and was part of a state-record 4x200 relay.", 108],
-    ["cfb-christian-mccaffrey--pianist", "Stanford’s biography lists McCaffrey as a pianist.", 108],
-    ["cfb-christian-mccaffrey--rwanda-mission-trip", "McCaffrey spent part of the summer of 2013 on a mission trip to Rwanda.", 108],
-  ]],
-  ["cfb-colt-brennan", [
-    ["cfb-colt-brennan--backed-up-matt-leinart", "At Mater Dei High School, Brennan spent time backing up future Heisman quarterback Matt Leinart.", 109],
-    ["cfb-colt-brennan--worcester-academy-merit-scholarship", "Although Utah State offered him a football scholarship out of high school, Brennan chose a postgraduate year at Worcester Academy on a merit scholarship.", 110],
-    ["cfb-colt-brennan--colorado-walk-on", "Brennan first enrolled at Colorado as a walk-on, aided by a prior relationship with offensive coordinator Shawn Watson.", 110],
-    ["cfb-colt-brennan--saddleback-juco-reset", "After Colorado, Brennan rebuilt his football career at Saddleback Community College, where he earned all-conference and state offensive-player recognition.", 111],
-    ["cfb-colt-brennan--hawaii-walk-on-to-island-icon", "Brennan arrived at Hawaii via a walk-on opportunity and became the quarterback most closely associated with the program’s undefeated 2007 run to the Sugar Bowl.", 112],
-  ]],
-  ["cfb-colt-mccoy", [
-    ["cfb-colt-mccoy--coached-by-father-at-jim-ned", "McCoy was coached by his father Brad at Jim Ned High School in Tuscola, Texas.", 113],
-    ["cfb-colt-mccoy--father-former-acu-safety", "Brad McCoy had played safety at Abilene Christian before becoming a high-school coach.", 114],
-    ["cfb-colt-mccoy--shipley-fathers-roommates", "McCoy’s father Brad and Jordan Shipley’s father Bob were college roommates and football teammates at Abilene Christian; their sons later became a star Texas quarterback-receiver pair.", 114],
-    ["cfb-colt-mccoy--three-sport-small-town-athlete", "At Jim Ned, McCoy was also a four-year basketball starter and a regional-level track athlete in addition to playing quarterback and punter.", 113],
-    ["cfb-colt-mccoy--peru-mission-work", "While at Texas, McCoy spent spring break doing missionary work in Peru, following a family tradition established by his grandparents.", 114],
-  ]],
-  ["cfb-cooper-dejean", [
-    ["cfb-cooper-dejean--odebolt-small-town-roots", "DeJean grew up in Odebolt, Iowa, a town of fewer than 1,000 residents, and attended the consolidated OABCIG school system serving several small northwest Iowa communities.", 115],
-    ["cfb-cooper-dejean--four-sport-prep-athlete", "At OABCIG, DeJean played football, basketball, baseball and track; he scored 1,832 career basketball points and won Iowa state titles in the 100 meters and long jump.", 116],
-    ["cfb-cooper-dejean--high-school-quarterback-to-college-db", "DeJean was a high-school quarterback as well as a defensive back, but Iowa recruited him for defense; he has said he initially wanted a chance to play quarterback in college.", 117],
-    ["cfb-cooper-dejean--only-fbs-offer-iowa", "Despite his production and athleticism, Iowa was DeJean’s only FBS scholarship offer; his other major opportunities came from FCS programs in the Dakotas.", 115],
-    ["cfb-cooper-dejean--state-title-two-way-finish", "In OABCIG’s 2020 state championship game, DeJean blocked an extra point that preserved an eight-point deficit, later scored the tying touchdown and then broke tackles for the winning touchdown.", 118],
-  ]],
-  ["cfb-dbrickashaw-ferguson", [
-    ["cfb-dbrickashaw-ferguson--thorn-birds-name-origin", "Ferguson’s first name was inspired by Father Ralph de Bricassart, a central character in the television miniseries “The Thorn Birds.”", 119],
-    ["cfb-dbrickashaw-ferguson--childhood-heart-surgery-football-clearance", "Ferguson had heart surgery as a child and for years was restricted from contact sports; a later cardiology evaluation cleared him without restrictions, opening the door for him to play football.", 120],
-    ["cfb-dbrickashaw-ferguson--karate-black-belt", "Ferguson trained in karate from childhood and earned a black belt, later crediting martial arts with helping develop discipline that carried into football.", 121],
-    ["cfb-dbrickashaw-ferguson--uva-true-freshman-opener-start", "In 2002 Ferguson became the first true freshman offensive lineman in Virginia history to start a season opener, then started all 14 games that year.", 122],
-    ["cfb-dbrickashaw-ferguson--religious-studies-degree-early", "Ferguson completed a Virginia degree in religious studies in three and a half years while becoming a first-team All-American.", 123],
-  ]],
-  ["cfbfast-r-player-512030-dak-prescott", [
-    ["cfbfast-r-player-512030-dak-prescott--peggy-prescott-upbringing", "Prescott was the youngest of three boys raised primarily by his mother, Peggy, and the family spent part of his childhood in a mobile home near Haughton, Louisiana.", 124],
-    ["cfbfast-r-player-512030-dak-prescott--number-15-tim-tebow-tribute", "Prescott wore No. 15 at Mississippi State in tribute to Tim Tebow, one of the SEC quarterbacks he admired; he also named his white Labrador “Tibeaux.”", 125],
-    ["cfbfast-r-player-512030-dak-prescott--mississippi-state-early-faith-recruitment", "Mississippi State offered Prescott before his senior high-school breakout; LSU pursued him later, but he remained committed to the Bulldogs.", 126],
-    ["cfbfast-r-player-512030-dak-prescott--2013-egg-bowl-injury-return", "After missing time with a nerve injury in his non-throwing arm, Prescott entered the 2013 Egg Bowl in the fourth quarter, tied the game and scored the winning overtime touchdown on fourth-and-1; the game came in the same month his mother died.", 127],
-    ["cfbfast-r-player-512030-dak-prescott--two-mississippi-state-degrees", "Prescott earned a bachelor’s degree in educational psychology in December 2014 and a master’s degree in workforce leadership in December 2015 while still at Mississippi State.", 128],
-  ]],
-  ["cfb-dallas-clark", [
-    ["cfb-dallas-clark--mother-died-before-graduation", "Clark’s mother died four days before his high-school graduation; after he arrived at Iowa, he described the football program and teammates as an important support system.", 129],
-    ["cfb-dallas-clark--walk-on-linebacker-brother-motivation", "Clark came to Iowa as a walk-on linebacker and was motivated in part by wanting to become a better linebacker than his older brother Derrik, who had played at Iowa State.", 129],
-    ["cfb-dallas-clark--linebacker-to-tight-end-conversion", "Kirk Ferentz and Bret Bielema convinced Clark to move from linebacker to tight end, a switch he initially resisted; quarterback Kyle McCann then worked with him extensively that summer.", 129],
-    ["cfb-dallas-clark--purdue-95-yard-and-winning-touchdowns", "Against Purdue in 2002, Clark caught a 95-yard touchdown and later caught the winning touchdown on fourth-and-goal from the 7-yard line.", 130],
-    ["cfb-dallas-clark--century-family-farm-return", "After his playing career, Clark bought the century-old family farm near Livermore, Iowa, when his grandmother’s estate required it to be sold, and returned to farming there.", 131],
-  ]],
-  ["cfbfast-r-player-3116593-dalvin-cook", [
-    ["cfbfast-r-player-3116593-dalvin-cook--moved-to-grandmother-for-miami-central", "As a seventh-grader, Cook moved in with his grandmother Betty in Opa-locka so he could attend Miami Central, making a long bus commute to school.", 132],
-    ["cfbfast-r-player-3116593-dalvin-cook--youth-handoffs-from-brother-deandre", "Cook played youth football for the Carol City Chiefs while taking handoffs from his older brother DeAndre Burnett, who played quarterback.", 132],
-    ["cfbfast-r-player-3116593-dalvin-cook--waited-behind-devonta-freeman", "Cook did not join Miami Central’s varsity as a freshman while future Florida State running back Devonta Freeman was the senior feature back; Cook moved up the following year.", 133],
-    ["cfbfast-r-player-3116593-dalvin-cook--joseph-yearby-friend-to-rival", "Cook and Joseph Yearby were close friends and shared the Miami Central backfield before becoming college rivals at Florida State and Miami.", 134],
-    ["cfbfast-r-player-3116593-dalvin-cook--clemson-florida-fsu-recruiting-flips", "Cook’s recruitment moved from a Clemson commitment to Florida and ultimately to Florida State; before signing, he had also signed financial-aid agreements with multiple Florida programs.", 135],
-  ]],
-  ["dan-lanning", [
-    ["dan-lanning--richmond-missouri-small-town-roots", "Lanning grew up around Richmond, Missouri, in a small-town setting with teacher parents and time on his grandfather’s farm, while playing multiple sports.", 136],
-    ["dan-lanning--small-college-player-to-high-school-teacher", "Lanning played linebacker at William Jewell College, earned degrees in physical education and secondary education, and began coaching at Park Hill South High School while working in education.", 137],
-    ["dan-lanning--overnight-drive-to-pitt-opportunity", "While still a high-school teacher and coach, Lanning drove roughly 13 hours overnight from Missouri to Pittsburgh without a scheduled appointment in an effort to create his first Division I coaching opportunity.", 138],
-    ["dan-lanning--oregon-get-real-sessions", "At Oregon, Lanning instituted “get real” sessions in which players and staff discuss personal histories, goals and life beyond football.", 139],
-    ["dan-lanning--outback-relationship-and-story-tattoo", "Lanning met his wife Sauphia while they were both working at Outback Steakhouse, and a large tattoo later incorporated symbols for her, their sons, Kansas City, Outback and stops on his coaching journey.", 140],
-  ]],
-  ["cfb-dan-morgan", [
-    ["cfb-dan-morgan--miami-fan-before-hurricane", "Morgan grew up in the Philadelphia area as a Miami Hurricanes fan and remembered wearing a white Steve Walsh jersey before his family later moved to South Florida.", 141],
-    ["cfb-dan-morgan--recruited-fullback-to-linebacker", "Miami recruited Morgan from Taravella High School as a fullback, but he switched to linebacker only days before the 1997 season opener.", 142],
-    ["cfb-dan-morgan--first-miami-sophomore-captain", "Morgan became the first sophomore in Miami football history to be named a team captain and ultimately served as captain for three seasons.", 142],
-    ["cfb-dan-morgan--played-through-broken-thumb", "As a sophomore in 1998, Morgan broke his left thumb against Boston College, underwent surgery the next day and returned to practice a day later without missing a down in the game.", 143],
-    ["cfb-dan-morgan--first-defensive-award-triple-sweep", "In 2000 Morgan became the first college football player to win the Bednarik, Butkus and Nagurski awards in the same season.", 142],
-  ]],
-  ["cfb-danny-wuerffel", [
-    ["cfb-danny-wuerffel--air-force-chaplain-childhood", "Wuerffel’s father was an Air Force chaplain, and the family moved repeatedly during Danny’s childhood, including spending about three years in Spain before settling in Florida.", 144],
-    ["cfb-danny-wuerffel--valedictorian-multisport-fca-leader", "At Fort Walton Beach High School, Wuerffel was valedictorian, played football and basketball, participated in track, and served for three years as president of the Fellowship of Christian Athletes chapter.", 145],
-    ["cfb-danny-wuerffel--heisman-winner-coached-by-heisman-winner", "Wuerffel won the Heisman while playing for Steve Spurrier, himself a former Florida quarterback and Heisman winner.", 146],
-    ["cfb-danny-wuerffel--heisman-and-campbell-scholar-athlete", "Wuerffel combined the Heisman Trophy with the William V. Campbell Trophy, the National Football Foundation’s premier scholar-athlete honor.", 147],
-    ["cfb-danny-wuerffel--desire-street-ministries", "After football, Wuerffel became deeply associated with Desire Street Ministries and community work connected to New Orleans.", 147],
-  ]],
-  ["cfb-darqueze-dennard", [
-    ["cfb-darqueze-dennard--dry-branch-no-stars-no-offers", "Dennard came from tiny Dry Branch, Georgia, and reached the end of his high-school career with essentially no recruiting profile, no major star ranking and no scholarship offers.", 148],
-    ["cfb-darqueze-dennard--discovered-while-scouting-mumphery", "Michigan State assistant Dave Warner noticed Dennard while visiting to evaluate wide receiver Keith Mumphery; Dennard was not the original reason for the scouting trip, but the Spartans ultimately offered him.", 149],
-    ["cfb-darqueze-dennard--alfonzo-dennard-cousin", "Dennard is a cousin of defensive back Alfonzo Dennard, who played at Nebraska before reaching the NFL.", 150],
-    ["cfb-darqueze-dennard--family-work-ethic-influences", "Dennard has cited the work ethic of his mother and his grandfather, who worked in the kaolin mines around central Georgia, as formative influences.", 151],
-    ["cfb-darqueze-dennard--first-msu-thorpe-winner", "Dennard became Michigan State’s first winner of the Jim Thorpe Award as college football’s top defensive back.", 148],
-  ]],
-  ["cfb-darren-sproles", [
-    ["cfb-darren-sproles--tank-nickname-birthweight", "Sproles’ father Larry nicknamed him “Tank” because Darren weighed about 10 pounds at birth.", 152],
-    ["cfb-darren-sproles--childhood-stutter-public-speaking", "Sproles had a severe childhood stutter and later put significant work into public speaking, including preparing to speak after receiving a major college honor.", 152],
-    ["cfb-darren-sproles--number-43-for-father", "Sproles wore No. 43 because his father Larry had worn the number and Darren wanted to be like him.", 153],
-    ["cfb-darren-sproles--mother-annette-academics", "Sproles credited his mother Annette with insisting on schoolwork and taking particular pride in his degree; she died of cancer before his senior season at Kansas State.", 153],
-    ["cfb-darren-sproles--second-grade-olathe-north-dream", "As a second-grader, Sproles was already telling people he would become the next standout running back at Olathe North; he later helped the school win three consecutive state championships.", 152],
-  ]],
-  ["cfb-davante-adams", [
-    ["cfb-davante-adams--mother-worked-two-jobs", "Adams was raised largely by his mother Pamela, who worked two jobs and also braided hair at night to support the family.", 154],
-    ["cfb-davante-adams--three-broken-arms-delayed-football", "Adams broke the same arm three times growing up and did not play high-school football until his junior year.", 155],
-    ["cfb-davante-adams--basketball-first-point-guard", "Adams initially saw basketball as his primary sport and played point guard; a cousin helped convince him that his size and athletic profile offered a better path at wide receiver.", 155],
-    ["cfb-davante-adams--fresno-state-discovered-scouting-another-player", "Fresno State noticed Adams while a coach was evaluating another player, helping produce the scholarship opportunity that other programs had not yet offered.", 154],
-    ["cfb-davante-adams--first-scholarship-eased-family-burden", "Adams accepted Fresno State’s football scholarship after it became his first scholarship opportunity, with the chance to avoid placing college costs on his mother factoring into the decision.", 155],
-  ]],
-  ["cfb-david-decastro", [
-    ["cfb-david-decastro--south-african-rugby-family", "DeCastro’s parents are from South Africa, and his father Colin played rugby and cricket; the family considered raising David in South Africa before settling in the United States.", 156],
-    ["cfb-david-decastro--mother-delayed-football-start", "DeCastro’s mother initially did not allow him to play youth football, so he played sports such as baseball and basketball and did not begin football until high school; she later learned the sport through books and football clinics.", 157],
-    ["cfb-david-decastro--washington-shot-put-champion", "At Bellevue High School, DeCastro won a Washington Class 3A state championship in the shot put.", 158],
-    ["cfb-david-decastro--management-science-engineering-major", "DeCastro studied management science and engineering at Stanford.", 158],
-    ["cfb-david-decastro--ultra-businesslike-playing-personality", "Stanford teammates and later profiles described DeCastro as unusually businesslike and focused on the field, to the point that celebratory high-fives could be viewed as a distraction from the next assignment.", 159],
-  ]],
-  ["cfb-david-pollack", [
-    ["cfb-david-pollack--pee-wee-teammate-david-greene", "Pollack and future Georgia quarterback David Greene played Pee-Wee football together from about age eight through eighth grade and later became Bulldog teammates, roommates and close friends.", 160],
-    ["cfb-david-pollack--three-star-recruit", "Pollack arrived at Georgia from Shiloh High School as a three-star recruit rather than as one of the nation’s most heavily decorated prospects.", 161],
-    ["cfb-david-pollack--tackle-to-defensive-end-transition", "Pollack moved from defensive tackle to defensive end before the 2002 season and later recalled that the early days of learning the new technique were difficult.", 162],
-    ["cfb-david-pollack--south-carolina-goal-line-takeaway-touchdown", "Against South Carolina in 2002, Pollack created Georgia’s only touchdown by taking the ball from quarterback Corey Jenkins in the end zone on a famous defensive play.", 163],
-    ["cfb-david-pollack--three-time-first-team-all-american", "Pollack became only the second Georgia player after Herschel Walker to earn first-team All-America recognition in three seasons.", 164],
-  ]],
-  ["cfb-deangelo-williams", [
-    ["cfb-deangelo-williams--wynne-to-memphis-over-regional-offers", "Williams starred at Wynne High School in Arkansas but chose Memphis despite recruitment from programs including Arkansas, Ole Miss and Iowa.", 165],
-    ["cfb-deangelo-williams--arkansas-state-sprint-champion", "Williams was an accomplished track sprinter, setting a state-class record in the 100 meters and winning a state title in the 200 meters.", 165],
-    ["cfb-deangelo-williams--state-title-game-three-way-touchdowns", "In Wynne’s state championship run, Williams produced a championship-game performance that included rushing, receiving and return touchdowns.", 166],
-    ["cfb-deangelo-williams--broken-foot-high-school-recovery", "A broken foot caused Williams to miss much of his sophomore high-school season before he returned to become one of Arkansas’s top players.", 165],
-    ["cfb-deangelo-williams--family-breast-cancer-advocacy", "Williams’ mother Sandra and four of his aunts were diagnosed with breast cancer, a family history that drove his long-term public advocacy for breast-cancer awareness.", 167],
-  ]],
-  ["deion-sanders-cfb", [
-    ["deion-sanders--prime-time-to-coach-prime", "Sanders carried the “Prime Time” identity from his playing days into coaching as “Coach Prime,” making the Prime persona a deliberate part of his coaching brand.", 168],
-    ["deion-sanders--trinity-christian-high-school-coaching-start", "Before becoming a college head coach, Sanders served as offensive coordinator at Trinity Christian School in Texas, where the program won three consecutive state championships during his stint.", 168],
-    ["deion-sanders--jackson-state-hbcu-exposure-push", "At Jackson State, Sanders made increasing HBCU player exposure a visible priority, including hosting a multi-school pro day and helping stage a nationally televised spring game.", 168],
-    ["deion-sanders--family-integrated-into-program", "Sanders’ college programs became a family enterprise: sons Shedeur and Shilo played for him, daughter Shelomi was also a Jackson State athlete, and Deion Sanders Jr. contributed to the programs’ media presence.", 169],
-    ["deion-sanders--travis-hunter-jackson-state-flip", "Sanders and Jackson State signed No. 1-caliber prospect Travis Hunter after flipping him from a long-standing Florida State commitment.", 170],
-  ]],
-  ["cfb-derrick-johnson", [
-    ["cfb-derrick-johnson--waco-baylor-brother-upbringing", "Johnson grew up in Waco around the Baylor football program because his older brother Dwight played defensive tackle for the Bears.", 171],
-    ["cfb-derrick-johnson--brother-kept-recruitment-neutral", "During Johnson’s recruitment, Dwight deliberately avoided pushing him toward Baylor and instead encouraged him to decide for himself; Derrick ultimately chose Texas.", 171],
-    ["cfb-derrick-johnson--extended-college-football-family", "Johnson comes from an extensive football family that includes cousins who played at Rice, UCLA, Oklahoma, Florida State and USC in addition to brother Dwight at Baylor.", 172],
-    ["cfb-derrick-johnson--track-speed-and-triple-jump", "At Waco High, Johnson also ran a 10.5-second 100 meters and triple-jumped 48 feet.", 172],
-    ["cfb-derrick-johnson--waco-homesickness-and-tattoo", "Johnson returned to Waco nearly every offseason weekend during his first years at Texas because he missed home, and he carried a tattoo tribute to Waco on his arm.", 171],
-  ]],
-  ["cfb-derwin-james", [
-    ["cfb-derwin-james--offense-to-safety-for-varsity", "James played quarterback, running back and wide receiver in youth football and had never played safety until his freshman year at Auburndale High, when safety was the open varsity position and he chose to learn it rather than play junior varsity.", 173],
-    ["cfb-derwin-james--fsu-offer-at-fourteen", "Florida State coach Jimbo Fisher offered James a scholarship when James was a 14-year-old high-school freshman.", 173],
-    ["cfb-derwin-james--father-blue-football-mentor", "James’ father, Derwin Sr., nicknamed “Blue,” had been a standout linebacker and captain at Haines City High and became an early football coach and film-study influence for his son.", 173],
-    ["cfb-derwin-james--edgerrin-james-family-lineage", "Derwin James is related to former Miami running back Edgerrin James and is part of a broader extended family with multiple high-level football players.", 174],
-    ["cfb-derwin-james--returned-to-haines-city", "After beginning high school at Auburndale, James returned to Haines City, where his mother wanted his hometown attached to his achievements and where he rejoined the community in which he had grown up playing football.", 173],
-  ]],
-  ["cfb-desean-jackson", [
-    ["cfb-desean-jackson--team-jackson-family-training", "Jackson’s father Bill and older brother Byron built a family training operation known as “Team Jackson” around DeSean from about age eight.", 175],
-    ["cfb-desean-jackson--long-commute-to-long-beach-poly", "While living with his father in South Central Los Angeles, Jackson made a demanding combination of walking, bus and train travel to attend Long Beach Poly because his father wanted him in a top football program.", 175],
-    ["cfb-desean-jackson--major-baseball-prospect", "Jackson was also an accomplished baseball player whom Cal described as having big-league potential.", 176],
-    ["cfb-desean-jackson--emergency-defense-title-game-pick-six", "In a high-school championship game, Jackson was pressed into emergency duty on defense and intercepted two passes, including a 68-yard touchdown return.", 176],
-    ["cfb-desean-jackson--tennessee-punt-return-touchdown", "Jackson opened Cal’s 2007 season against Tennessee with a 77-yard punt-return touchdown in a high-profile rematch of the previous season’s loss.", 176],
-  ]],
-  ["cfb-deshaun-watson", [
-    ["cfb-deshaun-watson--815-gainesville-roots", "Watson grew up in apartment 815 of the Harrison Square public-housing complex in Gainesville, Georgia, and later used “815” on game-day wristbands as a reminder of where he came from.", 177],
-    ["cfb-deshaun-watson--habitat-warrick-dunn-home", "Watson’s mother applied for a Habitat for Humanity home and completed required sweat-equity work; the family’s house was also supported through Warrick Dunn’s home-furnishing charity program.", 177],
-    ["cfb-deshaun-watson--michael-perry-quarterback-mentor", "Around age 14, Watson began working closely with Gainesville quarterback coach Michael Perry, a relationship he has credited with helping shape his development at the position.", 178],
-    ["cfb-deshaun-watson--clemson-first-offer-chad-morris-pursuit", "Clemson became Watson’s first scholarship offer after he impressed at a camp while still 14; offensive coordinator Chad Morris then recruited him for years, even attending high-school basketball games and practices.", 179],
-    ["cfb-deshaun-watson--championship-crush-to-renfrow", "On Clemson’s final drive of the 2016 national championship game, Watson executed the play “Crush” and found Hunter Renfrow for the winning touchdown with one second remaining against Alabama.", 180],
-  ]],
-  ["cfb-devin-white", [
-    ["cfb-devin-white--high-school-running-back-linebacker", "White was a two-way star at North Webster High School, playing both running back and linebacker.", 181],
-    ["cfb-devin-white--lsu-running-back-to-linebacker", "White arrived at LSU with a running-back background before converting full-time to linebacker.", 182],
-    ["cfb-devin-white--daisy-mae-horseman", "White was a lifelong horseman and kept his Tennessee Walking Horse, Daisy Mae, stabled only a short distance from LSU’s campus, regularly caring for and riding her during college.", 182],
-    ["cfb-devin-white--rode-horse-to-final-and-stadium", "White once rode Daisy Mae to a final exam and later rode the horse into Tiger Stadium for a feature tied to his LSU career.", 182],
-    ["cfb-devin-white--first-lsu-butkus-winner", "White became the first LSU player to win the Butkus Award as the nation’s top linebacker.", 182],
-  ]],
-  ["cfb-dez-bryant", [
-    ["cfb-dez-bryant--lufkin-track-hurdles-triple-jump", "At Lufkin High School, Bryant competed in track and field as a hurdler and triple jumper; district results show him winning the 110-meter hurdles and finishing second in the triple jump.", 183],
-    ["cfb-dez-bryant--texas-recruit-to-oklahoma-state", "Bryant was a highly regarded receiver from Lufkin, Texas, who signed with Oklahoma State after being recruited by regional powers including Oklahoma, Texas A&M and Texas Tech.", 184],
-    ["cfb-dez-bryant--freshman-role-expanded-after-bowman-injury", "Bryant contributed immediately as a true freshman and became especially important late in the season when Oklahoma State was without injured veteran receiver Adarius Bowman.", 185],
-    ["cfb-dez-bryant--receiver-and-punt-return-star", "In 2008 Bryant was recognized not only as an All-America receiver but also as the Big 12 Special Teams Player of the Year and an all-conference return specialist.", 186],
-    ["cfb-dez-bryant--georgia-catch-sports-illustrated-cover", "Bryant’s diving touchdown catch in Oklahoma State’s 2009 win over Georgia was used on a Sports Illustrated cover during a period when the magazine was featuring the Cowboys prominently.", 187],
-  ]],
-  ["cfb-drew-brees", [
-    ["cfb-drew-brees--texas-am-family-but-no-texas-offer", "Brees grew up in Austin as the son of two Texas A&M graduates and expected to attend a Texas college, but major in-state programs did not offer him a football scholarship.", 188],
-    ["cfb-drew-brees--acl-tear-recruiting-setback", "Brees tore the ACL in his left knee late in his junior year at Westlake High School, entering his senior recruiting cycle as a relatively small quarterback coming off major knee surgery.", 188],
-    ["cfb-drew-brees--joe-tiller-purdue-fit", "New Purdue coach Joe Tiller saw Brees as a fit for the spread passing system he was bringing to West Lafayette and provided the opportunity that Texas programs had not.", 188],
-    ["cfb-drew-brees--holy-toledo-ohio-state-touchdown", "In 2000 against Ohio State, Brees hit Seth Morales for a 64-yard late touchdown on the play remembered by the “Holy Toledo!” radio call, keeping Purdue’s Rose Bowl run alive.", 189],
-    ["cfb-drew-brees--industrial-management-business-expectation", "Brees earned a Purdue degree in industrial management and has said he arrived on campus expecting that his degree and a business career were more realistic long-term outcomes than professional football.", 190],
-  ]],
-  ["cfb-dwayne-allen", [
-    ["cfb-dwayne-allen--basketball-first-sport", "Allen grew up especially devoted to basketball and considered it his favorite sport before football became his main athletic path.", 191],
-    ["cfb-dwayne-allen--wayne-inman-football-mentor", "Terry Sanford coach Wayne Inman introduced Allen to football during his freshman year and became a father-figure mentor to him.", 192],
-    ["cfb-dwayne-allen--late-georgia-to-clemson-switch", "Allen was committed to Georgia, visited Clemson late in his senior year despite barely knowing where the school was, and ultimately changed his decision to Clemson near signing day.", 192],
-    ["cfb-dwayne-allen--mentor-son-georgia-connection", "Allen’s decision was emotionally complicated because mentor Wayne Inman’s own son had been a four-year starter at Georgia, yet Inman supported Allen choosing the school that felt right to him.", 192],
-    ["cfb-dwayne-allen--first-clemson-mackey-winner", "Allen became Clemson’s first winner of the John Mackey Award as the nation’s top tight end.", 193],
-  ]],
-  ["cfb-dwight-freeney", [
-    ["cfb-dwight-freeney--soccer-first-four-sport-athlete", "Freeney was a four-sport high-school athlete in football, basketball, baseball and soccer, and he played varsity soccer before football became his primary sport.", 194],
-    ["cfb-dwight-freeney--coach-jack-cochran-recruited-him-to-football", "At Bloomfield High School in Connecticut, coach Jack Cochran helped draw Freeney into football after seeing the athleticism he had shown in other sports.", 195],
-    ["cfb-dwight-freeney--and1-inspired-spin-move", "Freeney has traced the development of his signature spin move to basketball and streetball footwork, including inspiration from AND1 Mixtape-era moves.", 196],
-    ["cfb-dwight-freeney--syracuse-locker-room-fit", "Freeney said Syracuse appealed to him because the energy and personality in the locker room reminded him of the environment he knew at Bloomfield High School.", 197],
-    ["cfb-dwight-freeney--virginia-tech-four-and-a-half-sacks", "Freeney recorded 4.5 sacks against Virginia Tech in 2001, one of the defining single-game performances of his Syracuse career.", 198],
-  ]],
-  ["cfb-earl-thomas", [
-    ["cfb-earl-thomas--miracle-baby-family-story", "Thomas’ mother Debbie has described him as a “miracle baby” after she had earlier faced a serious medical scare and uncertainty about having another child.", 199],
-    ["cfb-earl-thomas--four-sport-two-way-prep-athlete", "At West Orange-Stark, Thomas lettered in football, basketball, baseball and track and played defensive back, running back and wide receiver in football.", 200],
-    ["cfb-earl-thomas--church-musician", "Thomas was active in the church pastored by his grandfather Earl Thomas and played piano there; he had also played tenor saxophone in band when younger.", 201],
-    ["cfb-earl-thomas--hurricane-rita-home-loss", "Thomas’ family lost its home to Hurricane Rita in 2005, and helping his family obtain a new home became one of his stated goals when he later considered leaving college early.", 199],
-    ["cfb-earl-thomas--pregame-pickle-watermelon-slush", "In his Texas player questionnaire, Thomas listed a pregame ritual of eating a pickle and drinking a watermelon slush.", 201],
-  ]],
-  ["ed-orgeron", [
-    ["ed-orgeron--larose-cajun-lsu-childhood", "Orgeron grew up in Larose, Louisiana, in a Cajun family that organized fall weekends around LSU football; he has said that as a young child he already wanted to coach LSU.", 202],
-    ["ed-orgeron--bear-bryant-visit-turned-away", "When Alabama coach Bear Bryant wanted to recruit Orgeron out of South Lafourche High School, Orgeron’s father told Bryant not to make the trip because his son was going to LSU.", 203],
-    ["ed-orgeron--left-lsu-after-two-weeks-dug-ditches", "Orgeron left LSU after about two weeks as a player because he was homesick; the next day his father put him to work digging telephone-cable ditches before Orgeron eventually continued his career at Northwestern State.", 203],
-    ["ed-orgeron--bobby-hebert-high-school-teammate", "Orgeron and future NFL quarterback Bobby Hebert grew up together and were teammates on South Lafourche High School’s 1977 state championship team.", 203],
-    ["ed-orgeron--coach-o-cajun-recruiting-identity", "Orgeron’s gravelly Cajun voice, Louisiana cultural fluency and high-energy recruiting became defining elements of the “Coach O” persona, particularly at LSU.", 202],
-  ]],
-  ["cfb-eddie-george", [
-    ["cfb-eddie-george--childhood-heisman-speech-practice", "George has said that by childhood he was telling his mother he would play football and win the Heisman, and by about age 11 he practiced a Heisman acceptance speech in the bathroom mirror.", 204],
-    ["cfb-eddie-george--fork-union-reset", "George left the Philadelphia area for Fork Union Military Academy as a teenager, where the structured environment served as an academic and personal reset before college.", 205],
-    ["cfb-eddie-george--ohio-state-kept-him-at-running-back", "Several colleges saw George’s size and projected him at linebacker, while Ohio State was willing to recruit him as a running back.", 206],
-    ["cfb-eddie-george--illinois-fumbles-cooper-stuck-with-him", "As an Ohio State freshman, George lost two goal-line fumbles against Illinois, one of which was returned 96 yards, but coach John Cooper continued to believe in him.", 206],
-    ["cfb-eddie-george--yahtzee-recruiting-visit-horseshoe", "George recalled being underwhelmed when an Ohio State recruiting visit included players sitting around playing Yahtzee, but said the experience of the Horseshoe helped sell him on the program.", 207],
-  ]],
-  ["cfb-eli-manning", [
-    ["cfb-eli-manning--ole-miss-family-legacy-with-hands-off-father", "Eli grew up with Ole Miss as part of the Manning family story, but Archie Manning publicly emphasized allowing his son to make his own college decision rather than requiring him to follow his father.", 208],
-    ["cfb-eli-manning--cutcliffe-hire-sealed-ole-miss", "Manning was seriously considering schools including Virginia and Texas before Ole Miss hired David Cutcliffe, Peyton Manning’s former Tennessee coach; that relationship helped seal Eli’s choice of Ole Miss.", 209],
-    ["cfb-eli-manning--cutcliffe-best-ever-challenge", "As a redshirt freshman, Cutcliffe challenged Manning to define whether he wanted merely to start, become an All-American, or become the best quarterback in Ole Miss history; after several days, Manning chose the highest goal despite the Archie Manning benchmark.", 210],
-    ["cfb-eli-manning--chose-different-jersey-number", "Manning chose a different jersey number from the numbers most associated with Archie and Peyton, another small way he signaled that he intended to create his own identity.", 211],
-    ["cfb-eli-manning--archie-legacy-through-scrapbook", "Because Eli was born long after Archie’s Ole Miss playing career, he learned much of his father’s college legacy through family stories and a scrapbook rather than by seeing Archie play live.", 209],
-  ]],
-  ["cfb-eric-crouch", [
-    ["cfb-eric-crouch--nebraska-dream-from-recruiting-letter", "Crouch grew up in Nebraska and has described a sophomore-year recruiting letter from the Cornhuskers as the moment playing for Nebraska became a concrete dream.", 212],
-    ["cfb-eric-crouch--number-seven-john-elway", "Crouch wore No. 7 in tribute to John Elway, his favorite professional quarterback.", 212],
-    ["cfb-eric-crouch--ankle-redshirt-title-season", "An ankle injury caused Crouch to redshirt during Nebraska’s 1997 national championship season rather than immediately joining the quarterback rotation.", 213],
-    ["cfb-eric-crouch--newcombe-qb-battle-nearly-left", "After losing the quarterback job to Bobby Newcombe in 1999, Crouch briefly went home and considered leaving the team before coach Frank Solich persuaded him to return.", 214],
-    ["cfb-eric-crouch--black-41-flash-reverse", "Against No. 1 Oklahoma in 2001, Nebraska used “Black 41 Flash Reverse,” with Crouch catching a 63-yard touchdown pass on a trick play.", 215],
-  ]],
-  ["cfb-eric-weddle", [
-    ["cfb-eric-weddle--utah-only-scholarship-offer", "Weddle has described Utah as his only college football scholarship offer and said he arrived from Southern California with a major chip on his shoulder.", 216],
-    ["cfb-eric-weddle--lion-den-competitive-mantra", "Weddle adopted a Brian Billick quote about entering a lion’s den with a spear as a competitive mantra while trying to prove programs wrong for overlooking him.", 216],
-    ["cfb-eric-weddle--played-all-three-phases", "At Utah, Weddle played cornerback and safety while also taking snaps at quarterback and running back, returning kicks and punts, holding for kicks, and contributing on coverage teams.", 217],
-    ["cfb-eric-weddle--san-diego-state-three-interception-three-touchdown-game", "Against San Diego State in 2006, Weddle intercepted three passes and scored three touchdowns—two on interception returns and one on an offensive run.", 218],
-    ["cfb-eric-weddle--armed-forces-bowl-final-play-interception", "In his final Utah game, the 2006 Armed Forces Bowl, Weddle contributed on defense, offense and as a holder, then intercepted a pass on the final play of his college career shortly after scoring a rushing touchdown.", 219],
-  ]],
-  ["cfb-ezekiel-elliott", [
-    ["cfb-ezekiel-elliott--missouri-athlete-family", "Elliott grew up in a Missouri athletics family: his father Stacy played football for Missouri, his mother Dawn competed in track and field there, and Elliott attended Missouri spring games as a child.", 220],
-    ["cfb-ezekiel-elliott--four-state-track-titles", "In his final high-school season at John Burroughs, Elliott won Missouri state titles in four different track-and-field events.", 221],
-    ["cfb-ezekiel-elliott--gus-frerotte-high-school-coach", "Elliott played at John Burroughs School for head football coach Gus Frerotte, the former NFL quarterback.", 222],
-    ["cfb-ezekiel-elliott--mizzou-late-recruiting-pull", "Even after Elliott committed to Ohio State, his father kept pressing Urban Meyer about how the Buckeyes would use him, and the family's Missouri ties made Mizzou a serious late threat; Meyer later recalled nearly walking away from the recruitment before running-backs coach Stan Drayton helped steady it.", 220],
-    ["cfb-ezekiel-elliott--sugar-bowl-85-yard-run", "With Ohio State protecting a six-point fourth-quarter lead against No. 1 Alabama in the 2015 Sugar Bowl, Elliott broke an 85-yard touchdown run that effectively clinched the College Football Playoff semifinal.", 223],
-  ]],
-  ["cfb-fernando-mendoza", [
-    ["cfb-fernando-mendoza--fourth-grade-nearly-quit", "As a fourth-grader in Miami, Mendoza joined a park football team as the fourth quarterback on the depth chart and considered quitting midway through the season; his parents required him to finish what he started, and he later said that was when he fell in love with football.", 224],
-    ["cfb-fernando-mendoza--two-star-yale-only-offer", "Late in his high-school development, Mendoza was a two-star prospect who at one point had only one college offer, from Yale, before his recruiting profile expanded.", 224],
-    ["cfb-fernando-mendoza--alberto-indiana-transfer-link", "Mendoza's younger brother Alberto was already a quarterback at Indiana, and Fernando described Alberto as his best friend and one of the people who pushed him hardest; Alberto's experience with the staff and culture was a major factor in Fernando transferring to Indiana.", 225],
-    ["cfb-fernando-mendoza--cal-degree-three-years", "Mendoza earned his bachelor's degree in business administration from Cal in three years and personally paid for his final three Cal classes in summer 2025 while he was already enrolled at Indiana.", 226],
-    ["cfb-fernando-mendoza--cuban-family-service-trip", "All four of Mendoza's grandparents immigrated to the United States from Cuba; in 2018 he and his brother Alberto traveled to Cuba with their maternal grandparents and did service work with Catholic charities in their grandfather's hometown of Santiago.", 225],
-  ]],
-  ["frank-beamer-cfb", [
-    ["frank-beamer--fancy-gap-farm-upbringing", "Beamer was born in Mount Airy, North Carolina, but grew up on a farm near Fancy Gap and Hillsville, Virginia, where he said hard work and the value of higher education were emphasized.", 227],
-    ["frank-beamer--eleven-varsity-letters", "At Hillsville High School, Beamer played football, basketball and baseball and graduated with 11 varsity letters.", 227],
-    ["frank-beamer--newspaper-articles-led-to-vpi", "Several Roanoke Times articles about Beamer's high-school play caught the attention of VPI coaches and helped lead him to Virginia Tech as a player.", 227],
-    ["frank-beamer--vocational-education-to-radford", "Beamer majored in vocational education at Virginia Tech and, after graduating in 1969, taught math at Radford High School so he could begin his coaching career there.", 227],
-    ["frank-beamer--beamer-ball-identity", "Virginia Tech's big-play approach across offense, defense and especially special teams became so associated with Beamer that it was widely known as 'Beamer Ball.'", 228],
-  ]],
-  ["cfb-george-rogers", [
-    ["cfb-george-rogers--two-dollar-insurance-aunt-othella", "As a child, Rogers wanted to play football but his family could not afford the $2 sports-insurance fee; his path changed when his aunt Othella Rogers took him in, required regular church and school attendance, and he then joined the Duluth High football team.", 229],
-    ["cfb-george-rogers--carlen-freshman-playing-time", "Rogers chose South Carolina after coach Jim Carlen told him he would have an opportunity to play as a freshman.", 230],
-    ["cfb-george-rogers--fullback-frame-tailback-role", "At roughly 6-foot-2 and 220 pounds, Rogers was widely viewed as having a fullback's build, but South Carolina used him at tailback and he moved into the starting role during his freshman season.", 230],
-    ["cfb-george-rogers--jersey-retired-while-active", "South Carolina retired Rogers's No. 38 during halftime of his final home game in 1980, making him the first Gamecock to have his jersey retired while he was still an active player.", 231],
-    ["cfb-george-rogers--foundation-first-generation-students", "Rogers later founded the George Rogers Foundation of the Carolinas, which provides financial assistance to first-generation college students and supports community youth-development organizations.", 230],
-  ]],
-  ["cfb-gerald-mccoy", [
-    ["cfb-gerald-mccoy--oklahoma-city-homegrown-sooner", "McCoy was an Oklahoma City native and national-level recruit out of Southeast High School who chose to stay in-state and play for Oklahoma.", 232],
-    ["cfb-gerald-mccoy--elite-recruit-redshirted", "Despite arriving as one of the nation's most celebrated defensive recruits, McCoy redshirted in 2006; he later said he was not technically or mentally ready, and credited the year of varsity practice and scout-team work with preparing him.", 233],
-    ["cfb-gerald-mccoy--mother-patricia-confidence", "McCoy said his mother Patricia predicted that he would become a top-ranked recruit, an All-American and a first-round pick; after she died before his first playing season at Oklahoma, he used her confidence in him as continuing motivation.", 233],
-    ["cfb-gerald-mccoy--title-game-first-interception", "McCoy made the first interception of his college career in the BCS National Championship Game against Florida, returning Tim Tebow's pass 12 yards.", 234],
-    ["cfb-gerald-mccoy--graduation-before-leaving", "McCoy said graduation was his main college goal and timed his decision to leave Oklahoma for professional football around knowing he had enough credits; he participated in graduation and finished his Human Relations degree with online courses.", 235],
-  ]],
-  ["cfb-glenn-dorsey", [
-    ["cfb-glenn-dorsey--band-or-football-choice", "At East Ascension High School, Dorsey participated in both band and football until the practice schedules began overlapping and forced him to choose; he chose football.", 236],
-    ["cfb-glenn-dorsey--florida-state-fan-to-local-lsu", "Dorsey grew up a Florida State fan who enjoyed watching Charlie Ward and Warrick Dunn, but later began attending LSU games and was drawn to playing top-level football only about 20 minutes from home.", 236],
-    ["cfb-glenn-dorsey--miles-recruited-before-saban-offer", "Les Miles and Karl Dunbar recruited Dorsey hard for Oklahoma State before LSU offered; Dorsey said he liked Miles, but once Nick Saban offered him a scholarship to LSU, his decision was effectively made.", 237],
-    ["cfb-glenn-dorsey--first-college-snap-forced-fumble", "On the first collegiate snap of his LSU career, Dorsey forced a fumble against Oregon State.", 238],
-    ["cfb-glenn-dorsey--returned-for-unfinished-business", "Dorsey returned to LSU for his senior season despite being projected as a first-round draft pick, saying he had unfinished business; that season ended with an SEC title, a national title and four major national defensive/lineman awards.", 239],
-  ]],
-  ["cfb-haloti-ngata", [
-    ["cfb-haloti-ngata--tongan-family-california-to-utah", "Ngata was born Etuini Haloti Ngata in Inglewood, California, to Tongan immigrant parents Ofa and Solomone, and his family moved to Utah when he was six.", 240],
-    ["cfb-haloti-ngata--all-state-offensive-guard-too", "Although recruited as an elite defensive lineman, Ngata also earned all-state recognition as an offensive guard at Highland High School.", 241],
-    ["cfb-haloti-ngata--parents-lost-during-oregon-years", "Ngata lost both parents during his Oregon years: his father died in a car accident late in Ngata's freshman season, and his mother died after a kidney illness during the period when Ngata was preparing to leave college.", 240],
-    ["cfb-haloti-ngata--season-ending-2003-knee-injury", "Ngata suffered a season-ending knee injury in the opening quarter of Oregon's 2003 opener at Mississippi State and did not regain full strength until well into the following season.", 241],
-    ["cfb-haloti-ngata--defensive-tackle-blocked-kicks", "Despite playing defensive tackle at roughly 338 pounds, Ngata became a special-teams weapon, with Oregon crediting him with altering the course of five kicks over two seasons.", 241],
-  ]],
-  ["cfb-heath-miller", [
-    ["cfb-heath-miller--fourth-generation-southwest-virginia", "Miller was a fourth-generation southwest Virginian from Swords Creek, a small Appalachian community near the coal fields.", 242],
-    ["cfb-heath-miller--parents-work-ethic-example", "Miller's father Earl was a home builder who was described as never missing a day of work, while his mother Denise was a counselor at Southwest Virginia Community College; their work ethic and family values were repeatedly tied to Miller's upbringing.", 243],
-    ["cfb-heath-miller--three-sport-honaker-athlete", "At tiny Honaker High School, Miller played quarterback in football, power forward in basketball and first base in baseball.", 244],
-    ["cfb-heath-miller--wanted-virginia-as-high-school-qb", "During his senior season as Honaker's quarterback, Miller decided he wanted to play college football at Virginia; he later narrowed his choice to Virginia and Virginia Tech and said he felt most comfortable at UVA.", 245],
-    ["cfb-heath-miller--quarterback-to-tight-end-conversion", "Miller arrived at Virginia as a quarterback, then began working at tight end when the scout team needed help and made the full switch after Al Groh recommended it following fall camp.", 245],
-  ]],
-  ["cfb-hunter-henry", [
-    ["cfb-hunter-henry--arkansas-family-football-lineage", "Henry's father Mark lettered at Arkansas from 1988-91 and was a team captain, and Hunter's brothers Hayden and Hudson also later played football for the Razorbacks.", 246],
-    ["cfb-hunter-henry--chose-arkansas-over-alabama", "Henry, one of the nation's most highly regarded high-school tight ends, chose his home-state Arkansas program over Alabama.", 247],
-    ["cfb-hunter-henry--two-way-high-school-player", "As a sophomore at Pulaski Academy, Henry played on both sides of the ball, contributing as a receiving tight end and as a defender.", 247],
-    ["cfb-hunter-henry--church-fca-food-drive", "At Pulaski Academy, Henry was active in his church youth group and was an FCA leader who helped organize a food drive for people experiencing homelessness.", 247],
-    ["cfb-hunter-henry--fourth-and-25-lateral", "In overtime at Ole Miss in 2015, Henry threw a blind backward lateral just before being tackled short on fourth-and-25; Alex Collins recovered it and ran for the first down, extending the drive that produced Arkansas's 53-52 win.", 248],
-  ]],
-  ["cfb-isaiah-simmons", [
-    ["cfb-isaiah-simmons--track-first-football-after-move", "Simmons was born in Omaha and initially focused on track; after his family moved to Kansas, he began playing football in second grade.", 249],
-    ["cfb-isaiah-simmons--all-state-both-sides", "In high school, Simmons earned first-team all-state recognition on both sides of the ball, starring as a defensive back while also producing as a receiver.", 250],
-    ["cfb-isaiah-simmons--state-long-jump-champion", "Simmons was a two-time Kansas state champion in the long jump, with a high-school best of 23 feet, 8 inches, and he later appeared on Clemson's track-and-field roster as a long jumper.", 250],
-    ["cfb-isaiah-simmons--recruiting-position-split", "During recruiting, some schools wanted Simmons as a receiver while others, including Clemson, recruited him strictly for defense; Simmons said he preferred being the hitter rather than the player getting hit.", 249],
-    ["cfb-isaiah-simmons--roommates-sparked-linebacker-move", "Simmons's move from safety to Clemson's hybrid linebacker role began after a conversation with his roommates convinced him to raise the idea with defensive coordinator Brent Venables.", 249],
-  ]],
-  ["cfb-jj-watt", [
-    ["cfb-jj-watt--hockey-first-sport", "Watt grew up as a serious hockey player in Pewaukee, Wisconsin, said he had been skating about as long as he had been walking, and gave up hockey at age 13; even as a Badger football player, he said hockey was his best sport.", 251],
-    ["cfb-jj-watt--central-michigan-to-wisconsin-walk-on", "Watt began college at Central Michigan as a tight end, left a scholarship and starting role, took community-college classes and delivered pizzas, then asked Wisconsin for a chance to walk on as a defensive end.", 252],
-    ["cfb-jj-watt--childhood-badger-dream", "Watt grew up around Wisconsin athletics, including skating with Badgers hockey players, and recalled wearing a little Badger jersey in his backyard while imagining himself running onto the Camp Randall field.", 251],
-    ["cfb-jj-watt--foundation-started-in-college", "While still a Wisconsin player in 2010, Watt established the Justin J. Watt Foundation to help elementary and middle schools that lacked funding for athletics.", 252],
-    ["cfb-jj-watt--three-watt-brothers-wisconsin", "J.J.'s younger brothers Derek and T.J. Watt both followed him into Wisconsin football, creating a three-brother Badgers lineage.", 253],
-  ]],
-  ["cfb-jamarr-chase", [
-    ["cfb-jamarr-chase--long-jump-state-title-record", "Chase took up the long jump in high school and, as a junior, won the Louisiana state title with a 24-foot-2.5-inch jump that broke a 35-year-old Archbishop Rummel school record; he also played basketball and could dunk.", 254],
-    ["cfb-jamarr-chase--wild-recruiting-path-to-lsu", "Chase's recruitment included LSU coach Les Miles initially suggesting defensive back, a planned live TCU commitment that was bumped from a broadcast, brief commitments to Kansas and Florida, and finally a push from Ed Orgeron and receivers coach Mickey Joseph that brought him to LSU.", 254],
-    ["cfb-jamarr-chase--father-jimmy-football-influence", "Chase's father Jimmy was a former Alcorn State football player and a social worker who closely tracked his son's development, took him to scouting camps and deliberately compared his testing with top national recruits.", 255],
-    ["cfb-jamarr-chase--stingley-practice-rivalry", "Chase and Derek Stingley Jr. had competed against each other since sharing a Louisiana 7-on-7 team, and at LSU their one-on-one practice battles became so notable that Ed Orgeron said their tape was the first thing he watched when he came in.", 256],
-    ["cfb-jamarr-chase--national-title-game-221-two-touchdowns", "In LSU's win over Clemson in the 2019 season's national championship game, Chase caught nine passes for 221 yards and two touchdowns.", 257],
-  ]],
-  ["cfb-jabrill-peppers", [
-    ["cfb-jabrill-peppers--mother-enforced-grades", "Peppers's mother Ivory Bryant enforced an all-A-and-B academic standard and pulled him out of a high-school game during his sophomore season after he received a C-plus in Spanish.", 258],
-    ["cfb-jabrill-peppers--new-jersey-sprint-champion", "Peppers won both the 100- and 200-meter dashes at the New Jersey Meet of Champions as a junior and set a state record of 20.79 seconds in the 200 meters.", 259],
-    ["cfb-jabrill-peppers--four-straight-state-titles-two-schools", "Peppers won four consecutive New Jersey state football championships: two at Don Bosco Prep and two more after transferring to Paramus Catholic.", 260],
-    ["cfb-jabrill-peppers--offense-natural-defense-by-choice", "Peppers was a prolific high-school running back as well as a defensive back and later said offense came more naturally to him, but he preferred defense because he would rather deliver the hit than receive it.", 260],
-    ["cfb-jabrill-peppers--fifteen-michigan-positions", "Michigan said Peppers lined up at 15 different positions during the 2016 season, including quarterback, tailback and receiver on offense and multiple defensive-back and linebacker roles.", 261],
-  ]],
-  ["cfb-jake-butt", [
-    ["cfb-jake-butt--two-way-pickerington-north", "At Pickerington North, Butt played both tight end and defensive end; as a senior he also produced 142 tackles, 39.5 tackles for loss and 20.5 sacks on defense.", 262],
-    ["cfb-jake-butt--army-all-american-injury", "Butt was selected for the U.S. Army All-American Bowl but did not play in the game because of an injury.", 262],
-    ["cfb-jake-butt--second-acl-orange-bowl", "Butt tore the ACL in his right knee in the Orange Bowl against Florida State, requiring the second right-knee surgery of his Michigan career.", 263],
-    ["cfb-jake-butt--medal-speech-rubadeau", "After the Orange Bowl injury, Butt built his Big Ten Medal of Honor acceptance speech around the question of what he would do if football were taken away, refining the speech with English professor John Rubadeau.", 263],
-    ["cfb-jake-butt--grant-perry-number-88-mentor", "After Butt left Michigan, wide receiver Grant Perry wore Butt's No. 88 and described Butt as a mentor who continued helping him when Butt returned to campus.", 264],
-  ]],
-  ["cfb-jake-long", [
-    ["cfb-jake-long--three-sport-high-school-athlete", "Long played football, basketball and baseball in high school.", 265],
-    ["cfb-jake-long--lloyd-carr-basketball-scout", "Michigan coach Lloyd Carr specifically recalled watching Long play basketball while evaluating his size and athleticism.", 266],
-    ["cfb-jake-long--michigan-camp-quick-commit", "Long attended Michigan's football camp and committed to the Wolverines a couple of weeks later.", 266],
-    ["cfb-jake-long--whole-school-leadership-reputation", "Carr recalled that during a high-school visit, students and faculty repeatedly came out to tell him what an unusual leader and person Long was.", 265],
-    ["cfb-jake-long--survived-house-fire", "During Long's Michigan years, he survived a serious house fire in which he was burned and escaped through a window before being hospitalized.", 265],
-  ]],
-  ["cfb-jake-matthews", [
-    ["cfb-jake-matthews--bruce-matthews-son", "Matthews is the son of Pro Football Hall of Fame offensive lineman Bruce Matthews.", 267],
-    ["cfb-jake-matthews--four-brothers-aggies", "Jake was one of four Matthews brothers — Kevin, Jake, Mike and Luke — who played football at Texas A&M.", 268],
-    ["cfb-jake-matthews--fell-for-am-on-kevin-visits", "Matthews said he fell in love with Texas A&M while making frequent visits to College Station when his older brother Kevin was playing there.", 269],
-    ["cfb-jake-matthews--elkins-line-with-brother-mike", "At Elkins High School, Jake and his younger brother Mike spent time together on the offensive line before both eventually became Aggies.", 270],
-    ["cfb-jake-matthews--returned-senior-moved-left-tackle", "Matthews chose to return to Texas A&M for his senior season and moved from right tackle to left tackle after Luke Joeckel departed.", 271],
-  ]],
-  ["cfb-jalen-carter", [
-    ["cfb-jalen-carter--apopka-three-way-football-role", "At Apopka High School, Carter played defensive tackle, tight end and punter.", 272],
-    ["cfb-jalen-carter--state-weightlifting-runner-up", "Carter competed in weightlifting and finished second in the FHSAA Class 2A heavyweight division; Georgia's bio lists a 395-pound bench press in that context.", 272],
-    ["cfb-jalen-carter--apopka-basketball", "Carter also played basketball at Apopka High School.", 272],
-    ["cfb-jalen-carter--goal-line-receiving-touchdown", "Georgia used Carter on offense near the goal line, and he caught a one-yard touchdown pass from Stetson Bennett against Tennessee.", 272],
-    ["cfb-jalen-carter--apopka-warren-sapp-lineage", "Carter came from Apopka High School, the same Central Florida program associated with star defensive tackle Warren Sapp.", 272],
-  ]],
-  ["cfb-jalen-ramsey", [
-    ["cfb-jalen-ramsey--late-usc-to-fsu-flip", "Ramsey had been verbally committed to USC before changing course late and signing with Florida State, with new defensive coordinator Jeremy Pruitt helping establish the connection.", 273],
-    ["cfb-jalen-ramsey--tennessee-decathlon-champion", "In high school, Ramsey won a Tennessee state decathlon championship and was an elite long jumper.", 273],
-    ["cfb-jalen-ramsey--acc-long-jump-and-relay-champion", "While playing football at Florida State, Ramsey also competed in track and won ACC titles in the indoor and outdoor long jump and on a 4x100-meter relay.", 274],
-    ["cfb-jalen-ramsey--first-freshman-corner-start-since-deion", "Ramsey became Florida State's first true freshman to start a season opener at cornerback since Deion Sanders in 1985.", 274],
-    ["cfb-jalen-ramsey--corner-to-safety-after-hunter-injury", "Ramsey began his freshman season at cornerback and shifted to safety after Tyler Hunter was injured.", 274],
-  ]],
-  ["cfb-jamaal-charles", [
-    ["cfb-jamaal-charles--learning-disability-special-olympics", "Charles was diagnosed with a learning disability in elementary school and participated in Special Olympics track before later becoming a Special Olympics Global Ambassador.", 275],
-    ["cfb-jamaal-charles--raised-by-mother-aunt-grandmother", "Charles has described being raised in Port Arthur by his mother, aunt and grandmother.", 276],
-    ["cfb-jamaal-charles--broke-joe-washington-port-arthur-record", "At Memorial High School, Charles broke a Port Arthur rushing record that had been held by Joe Washington for more than 30 years.", 277],
-    ["cfb-jamaal-charles--world-junior-400-hurdles-bronze", "Charles won a bronze medal in the 400-meter hurdles at the World Junior Championships.", 277],
-    ["cfb-jamaal-charles--texas-track-big12-100-champ", "Charles competed for Texas track and field and won the Big 12 100-meter championship in 2006.", 278],
-  ]],
-  ["cfb-jamal-adams", [
-    ["cfb-jamal-adams--father-george-adams", "Adams's father, George Adams, was an All-SEC running back at Kentucky and a first-round NFL Draft pick.", 279],
-    ["cfb-jamal-adams--father-100-yards-at-lsu", "George Adams rushed for 100 yards in Kentucky's 1983 win over LSU in Tiger Stadium, decades before his son became an LSU star.", 279],
-    ["cfb-jamal-adams--president-prez-nickname", "LSU teammates gave Adams the nickname 'President'/'Prez,' a play on sharing a surname with multiple U.S. presidents.", 280],
-    ["cfb-jamal-adams--three-lsu-defensive-coordinators", "Adams played for three different defensive coordinators during his three seasons at LSU.", 279],
-    ["cfb-jamal-adams--vocal-leader-permanent-captain", "LSU described Adams as a vocal, emotional on-field leader, and he finished his career as a permanent team captain.", 279],
-  ]],
-  ["cfb-james-laurinaitis", [
-    ["cfb-james-laurinaitis--father-animal-road-warriors", "Laurinaitis is the son of Joe Laurinaitis, the professional wrestler known as 'Animal' of the Road Warriors/Legion of Doom.", 281],
-    ["cfb-james-laurinaitis--wayzata-hockey-captain-shrek", "Laurinaitis was a standout defenseman and senior captain for Wayzata High School hockey, where teammates and coaches nicknamed him 'Shrek.'", 281],
-    ["cfb-james-laurinaitis--declined-two-sport-hockey-offers", "Minnesota and Notre Dame were among schools that offered Laurinaitis opportunities to play both football and hockey, but he chose to focus fully on football.", 281],
-    ["cfb-james-laurinaitis--first-minnesota-scholarship-buckeye-since-gillman", "Ohio State's signing bio called Laurinaitis the first scholarship football player from Minnesota to join the Buckeyes since Sid Gillman, who played there in the early 1930s.", 282],
-    ["cfb-james-laurinaitis--returned-senior-for-teammates", "After receiving strong NFL interest following his junior year, Laurinaitis returned to Ohio State for his senior season, saying he did not want to leave the teammates he had gone through so much with.", 283],
-  ]],
-  ["cfb-jaylon-smith", [
-    ["cfb-jaylon-smith--older-brother-rod-smith", "Smith's older brother Rod Smith played running back at Ohio State, giving Jaylon an older sibling already in major college football.", 284],
-    ["cfb-jaylon-smith--four-straight-state-titles", "Smith helped Bishop Luers win four consecutive Indiana Class 2A state championships.", 285],
-    ["cfb-jaylon-smith--high-school-running-back-linebacker", "At Bishop Luers, Smith starred on both sides of the ball as a running back and linebacker.", 285],
-    ["cfb-jaylon-smith--basketball-with-deshaun-thomas", "Smith also played high-school basketball alongside future Ohio State basketball standout Deshaun Thomas.", 285],
-    ["cfb-jaylon-smith--freshman-opener-after-spond", "Smith became Notre Dame's first true freshman to start a season opener at linebacker since Kory Minor in 1995 after Danny Spond's medical retirement opened the position.", 284],
-  ]],
-  ["cfb-jeff-okudah", [
-    ["cfb-jeff-okudah--high-school-receiver-production", "Although recruited as an elite defensive back, Okudah was also a productive high-school receiver, averaging more than 24 yards per catch as a junior and producing substantial offensive yardage as a senior.", 286],
-    ["cfb-jeff-okudah--nike-testing-behind-dobbins", "At The Opening, Okudah finished second in Nike+ athletic testing to fellow future Ohio State signee J.K. Dobbins.", 286],
-    ["cfb-jeff-okudah--mother-and-obodo-guardians", "Ohio State's bio identifies Okudah as the son of the late Marie Okudah and lists Jane and Patrick Obodo as his guardians.", 286],
-    ["cfb-jeff-okudah--ranked-top-corner-and-safety", "As a recruit, Okudah was evaluated at the very top of the class at both cornerback and safety rather than being viewed as a one-position defensive back.", 286],
-    ["cfb-jeff-okudah--all-interceptions-junior-season", "Okudah did not record a college interception until his junior season, then collected all three of his Ohio State interceptions that year, including two at Nebraska.", 287],
-  ]],
-  ["cfb-jeremy-shockey", [
-    ["cfb-jeremy-shockey--junior-college-late-miami-signing", "Shockey spent one season at Northeastern Oklahoma A&M before becoming a late-summer 2000 addition to Miami's roster.", 288],
-    ["cfb-jeremy-shockey--first-miami-td-won-fsu-game", "Shockey's first touchdown for Miami was a 13-yard catch in the final minute that proved to be the winning score against Florida State.", 288],
-    ["cfb-jeremy-shockey--returned-from-mcl-for-fsu-winner", "Shockey suffered an MCL injury before the Florida State game, returned to play, and then caught the decisive touchdown.", 288],
-    ["cfb-jeremy-shockey--ada-two-way-returner", "At Ada High School, Shockey played wide receiver and outside linebacker and also returned punts, including four punt-return touchdowns as a senior.", 288],
-    ["cfb-jeremy-shockey--high-school-basketball", "Shockey also played basketball during his senior year at Ada High School.", 288],
-  ]],
-  ["cfb-jermaine-gresham", [
-    ["cfb-jermaine-gresham--ou-decision-day-before-signing", "As a freshman, Gresham told Oklahoma's athletics site that he knew he was going to OU only the day before he signed.", 289],
-    ["cfb-jermaine-gresham--maintenance-job", "Gresham listed maintenance work among the jobs he had held before college.", 289],
-    ["cfb-jermaine-gresham--real-estate-interest", "Gresham listed real estate as an interest outside football when Oklahoma profiled him as a freshman.", 289],
-    ["cfb-jermaine-gresham--grandmother-shaped-life", "Asked what event most shaped his life, Gresham pointed to the death of his grandmother.", 289],
-    ["cfb-jermaine-gresham--ardmore-to-immediate-ou-buzz", "Gresham arrived at Oklahoma directly from Ardmore High School and generated immediate preseason buzz because of the rare size-and-speed mismatch he created at tight end.", 289],
-  ]],
-  ["cfb-joe-alt", [
-    ["cfb-joe-alt--high-school-tight-end-defensive-end", "Alt played both tight end and defensive end in high school before becoming an offensive tackle at Notre Dame.", 290],
-    ["cfb-joe-alt--high-school-basketball", "Alt also played high-school basketball.", 290],
-    ["cfb-joe-alt--father-john-alt", "Alt's father, John Alt, was an offensive lineman at Iowa and a first-round NFL Draft pick who became a Kansas City Chiefs Hall of Famer.", 290],
-    ["cfb-joe-alt--brother-mark-hockey", "Alt's older brother Mark played college hockey at Minnesota and later professional hockey.", 290],
-    ["cfb-joe-alt--mechanical-engineering", "Notre Dame's bio listed mechanical engineering as Alt's intended academic field.", 290],
-  ]],
-  ["cfb-joe-thomas", [
-    ["cfb-joe-thomas--freshman-blocking-tight-end", "Thomas began his Wisconsin career as a blocking tight end wearing No. 82 before becoming an offensive tackle.", 291],
-    ["cfb-joe-thomas--music-city-bowl-defensive-end", "Thomas started at defensive end against Auburn in the Music City Bowl and made seven tackles before his permanent move to offensive tackle.", 291],
-    ["cfb-joe-thomas--wisconsin-shot-put-record", "Thomas competed in track and field at Wisconsin, set the school's indoor shot-put record, and qualified for NCAA championship competition.", 291],
-    ["cfb-joe-thomas--three-sport-high-school-captain", "In high school Thomas participated in football, basketball and track, and captained both the football and basketball teams.", 291],
-    ["cfb-joe-thomas--learned-in-trenches-from-james-buenning", "Wisconsin later highlighted how Thomas learned line play by working around veterans such as defensive end Erasmus James and guard Dan Buenning.", 292],
-  ]],
-  ["cfb-joey-bosa", [
-    ["cfb-joey-bosa--father-john-bosa-first-rounder", "Bosa's father, John Bosa, was a first-round NFL Draft pick out of Boston College.", 222],
-    ["cfb-joey-bosa--mother-and-uncle-ohio-state", "Bosa's mother Cheryl attended Ohio State, and his uncle Eric Kumerow was an Ohio State linebacker and team captain.", 222],
-    ["cfb-joey-bosa--st-thomas-aquinas-state-title", "Bosa led a St. Thomas Aquinas defense that won Florida's Class 7A state championship during his senior season.", 222],
-    ["cfb-joey-bosa--nick-bosa-followed-to-ohio-state", "Joey's younger brother Nick later followed him from St. Thomas Aquinas to Ohio State and also became a Buckeye defensive end.", 293],
-    ["cfb-joey-bosa--urban-meyer-energizer", "Urban Meyer described Bosa as an 'energizer' who practiced with relentless effort from his first days at Ohio State.", 294],
-  ]],
-  ["cfb-john-henderson", [
-    ["cfb-john-henderson--partial-qualifier-1998", "Henderson entered Tennessee as a partial qualifier in 1998 and was not eligible to play that season.", 295],
-    ["cfb-john-henderson--pearl-cohn-tight-end-defensive-tackle", "At Pearl-Cohn High School in Nashville, Henderson played both defensive tackle and tight end.", 295],
-    ["cfb-john-henderson--back-to-back-high-school-state-titles", "Henderson helped Pearl-Cohn win back-to-back Tennessee state championships.", 295],
-    ["cfb-john-henderson--big-john-nickname", "Henderson was widely known at Tennessee as 'Big John.'", 296],
-    ["cfb-john-henderson--played-through-ankle-2001", "Henderson dealt with a lingering ankle injury during the 2001 season but still remained a major part of Tennessee's defensive front.", 296],
-  ]],
-  ["cfb-jonathan-allen", [
-    ["cfb-jonathan-allen--army-family-upbringing", "Allen grew up in a military family; his father served in the U.S. Army for more than two decades, and military moves were part of Allen's childhood.", 297],
-    ["cfb-jonathan-allen--foster-care-father-custody", "Allen spent roughly ten months in foster care as a child before his father secured custody of him and his brother.", 298],
-    ["cfb-jonathan-allen--first-chair-trombone", "Allen played trombone and reached first chair before football became his dominant extracurricular focus.", 298],
-    ["cfb-jonathan-allen--wanted-running-back-before-defensive-line", "Allen initially wanted to play running back or linebacker in high school, tried wide receiver, and eventually was moved to the defensive line.", 298],
-    ["cfb-jonathan-allen--returned-for-senior-season", "Allen chose to return to Alabama for his senior season instead of entering the NFL Draft after 2015, and he became a permanent team captain.", 299],
-  ]],
-  ["cfb-jordan-shipley", [
-    ["cfb-jordan-shipley--childhood-with-colt-mccoy", "Shipley and Colt McCoy knew each other as young children because their fathers had been roommates at Abilene Christian, and they played together during family visits.", 300],
-    ["cfb-jordan-shipley--college-roommates-with-mccoy", "After reconnecting at Texas, Shipley and McCoy became roommates and close friends.", 300],
-    ["cfb-jordan-shipley--injuries-delayed-texas-career", "Shipley's early Texas career was repeatedly delayed by serious knee and hamstring injuries before he finally became a full-time receiving threat.", 300],
-    ["cfb-jordan-shipley--96-yard-red-river-kick-return", "Against No. 1 Oklahoma in 2008, Shipley returned a kickoff 96 yards for a touchdown in Texas's 45-35 Red River victory.", 300],
-    ["cfb-jordan-shipley--west-texas-moves-and-stephen-mcgee", "Shipley spent parts of his childhood in Abilene and Rotan before his family moved to Burnet, where he became close with future Texas A&M quarterback Stephen McGee.", 301],
-  ]],
-  ["cfb-julius-peppers", [
-    ["cfb-julius-peppers--unc-basketball-walk-on", "Peppers played basketball for North Carolina while on a football scholarship, joining the Tar Heels basketball team as a walk-on.", 302],
-    ["cfb-julius-peppers--aau-title-with-haywood-lang", "Before college, Peppers played on an AAU national championship basketball team with future North Carolina players Brendan Haywood and Kris Lang.", 302],
-    ["cfb-julius-peppers--division-one-basketball-recruit", "Peppers was good enough in high-school basketball to be recruited by Division I basketball programs.", 302],
-    ["cfb-julius-peppers--high-school-running-back", "In high school, Peppers was also a major offensive player and finished with more than 3,500 rushing yards and 38 rushing touchdowns.", 303],
-    ["cfb-julius-peppers--north-carolina-male-athlete-of-year", "Peppers was named the North Carolina High School Athletic Association Male Athlete of the Year after excelling across sports.", 302],
-  ]],
-  ["cfb-kayvon-thibodeaux", [
-    ["cfb-kayvon-thibodeaux--dorsey-to-oaks-christian", "Thibodeaux began high school at Dorsey in Los Angeles before transferring to Oaks Christian for his final two seasons.", 304],
-    ["cfb-kayvon-thibodeaux--high-school-tight-end", "In addition to defensive line, Thibodeaux caught nine passes for 134 yards and three touchdowns as a high-school tight end.", 304],
-    ["cfb-kayvon-thibodeaux--four-sack-cif-title-game", "Thibodeaux recorded four sacks in the CIF Southern Section Division 2 championship game while helping Oaks Christian win the title.", 304],
-    ["cfb-kayvon-thibodeaux--highest-rated-oregon-signee", "Oregon described Thibodeaux as the highest-rated football signee in program history when he joined the Ducks.", 305],
-    ["cfb-kayvon-thibodeaux--wants-to-start-school", "While at Oregon, Thibodeaux said he wanted one day to start his own school and described a goal of giving younger people and peers wisdom and hope.", 306],
-  ]],
-  ["cfb-keith-jackson", [
-    ["cfb-keith-jackson--little-rock-parkview", "Jackson came to Oklahoma from Parkview High School in Little Rock, Arkansas.", 307],
-    ["cfb-keith-jackson--88-yard-nebraska-reverse", "Against No. 2 Nebraska in 1985, Jackson scored on an 88-yard rushing play on a tight-end reverse.", 308],
-    ["cfb-keith-jackson--orange-bowl-two-touchdowns", "Jackson caught two touchdowns, including a 71-yard score, in Oklahoma's Orange Bowl win over Penn State that secured the 1985 national championship.", 309],
-    ["cfb-keith-jackson--four-time-academic-all-big-eight", "Jackson was a four-time Academic All-Big Eight selection and later received NCAA Top Six recognition for combining athletics and academics.", 307],
-    ["cfb-keith-jackson--ou-radio-broadcast-crew", "After his playing career, Jackson returned to the Oklahoma football orbit as part of the Sooners' radio broadcast crew.", 308],
-  ]],
-  ["cfb-kellen-winslow-ii", [
-    ["cfb-kellen-winslow-ii--father-kellen-winslow", "Winslow is the son of Pro Football Hall of Fame tight end Kellen Winslow Sr., who played college football at Missouri.", 310],
-    ["cfb-kellen-winslow-ii--miami-receiver-to-tight-end", "Winslow began his Miami career at wide receiver before moving to tight end.", 310],
-    ["cfb-kellen-winslow-ii--true-freshman-title-team-special-teams", "As a true freshman on Miami's 2001 national championship team, Winslow contributed heavily on special teams, including tackles in the Rose Bowl.", 310],
-    ["cfb-kellen-winslow-ii--high-school-multi-role-kicker", "In high school Winslow played receiver, tight end and defensive end and also handled punting, kickoffs, field goals and extra points.", 310],
-    ["cfb-kellen-winslow-ii--uncle-david-basketball", "Winslow's uncle David played professional basketball in the United States and Australia.", 310],
-  ]],
-  ["cfb-khalil-mack", [
-    ["cfb-khalil-mack--basketball-first-patella-injury", "Mack initially viewed basketball as his main sport, but a patella injury helped redirect his athletic path toward football.", 311],
-    ["cfb-khalil-mack--football-only-senior-year", "Mack did not begin playing organized high-school football until late in his high-school career, with his senior season becoming the key recruiting window.", 312],
-    ["cfb-khalil-mack--wimberly-buffalo-connection", "Assistant coach Robert Wimberly first recruited Mack while at Liberty and continued the relationship after joining Buffalo, helping lead Mack to the Bulls.", 312],
-    ["cfb-khalil-mack--number-46-video-game-motivation", "Mack kept No. 46 at Buffalo in part because he remembered being rated only 46 overall in the NCAA football video game and used the number as motivation.", 313],
-    ["cfb-khalil-mack--competitive-multi-sport-family", "Mack has described a highly competitive family sports environment that included basketball along with activities such as baseball, bowling and billiards.", 314],
-  ]],
-  ["cfb-kyle-hamilton", [
-    ["cfb-kyle-hamilton--born-in-greece-father-basketball", "Hamilton was born in Greece while his father, Derrek Hamilton, was playing professional basketball overseas.", 315],
-    ["cfb-kyle-hamilton--lived-across-europe-middle-east", "Before settling in the Atlanta area as a young child, Hamilton's family lived in countries including Greece, Italy, Israel and Russia because of his father's basketball career.", 315],
-    ["cfb-kyle-hamilton--brother-tyler-college-basketball", "Hamilton's older brother Tyler played college basketball at Penn and William & Mary.", 315],
-    ["cfb-kyle-hamilton--first-notre-dame-stadium-snap-pick-six", "On Hamilton's first defensive snap in Notre Dame Stadium, he returned an interception for a touchdown against New Mexico.", 316],
-    ["cfb-kyle-hamilton--inside-the-garage-podcast", "At Notre Dame, Hamilton co-hosted the 'Inside the Garage' podcast with teammates and roommates.", 315],
-  ]],
-  ["cfb-kyle-pitts", [
-    ["cfb-kyle-pitts--archbishop-wood-tight-end-defensive-end", "At Archbishop Wood, Pitts played tight end and also spent time at defensive end.", 317],
-    ["cfb-kyle-pitts--state-title-two-interceptions-and-td", "In Archbishop Wood's state championship game, Pitts recorded two interceptions on defense and a touchdown reception on offense.", 317],
-    ["cfb-kyle-pitts--track-basketball-high-school", "Pitts competed in track and also spent time playing basketball in high school.", 318],
-    ["cfb-kyle-pitts--grew-six-inches-high-school", "Pitts's family recalled that he grew from about 6 feet as a freshman to 6-foot-6 by his senior year of high school.", 318],
-    ["cfb-kyle-pitts--trask-second-team-connection", "Pitts and quarterback Kyle Trask said their on-field chemistry began in 2018 when both worked together with Florida's second-team offense.", 319],
-  ]],
-  ["cfb-ladainian-tomlinson", [
-    ["cfb-ladainian-tomlinson--high-school-linebacker-fullback", "Tomlinson spent much of high school playing linebacker and fullback rather than immediately being used as a featured tailback.", 320],
-    ["cfb-ladainian-tomlinson--first-tailback-start-six-touchdowns", "When Tomlinson finally got a high-school start at tailback as a senior, he scored six touchdowns.", 320],
-    ["cfb-ladainian-tomlinson--tcus-initial-fullback-plan", "TCU initially asked Tomlinson to play fullback before moving him to tailback.", 320],
-    ["cfb-ladainian-tomlinson--406-yards-vs-utep", "Tomlinson rushed for 406 yards against UTEP in 1999, at the time an NCAA single-game rushing record.", 321],
-    ["cfb-ladainian-tomlinson--walter-payton-idol", "Tomlinson has long identified Walter Payton as a childhood football idol.", 320],
-  ]],
-  ["cfb-lamichael-james", [
-    ["cfb-lamichael-james--raised-by-grandmother", "James has described being raised largely by his grandmother after growing up without his father in the home.", 322],
-    ["cfb-lamichael-james--lived-alone-senior-year", "After his grandmother died, James lived on his own during his senior year of high school while completing the path that would take him to Oregon.", 322],
-    ["cfb-lamichael-james--kenjon-barner-friendship", "Oregon teammate Kenjon Barner became one of James's close friends and an important part of his support system in Eugene.", 322],
-    ["cfb-lamichael-james--oregon-national-rise", "James was a central figure in the Oregon teams that won three straight conference championships and reached three consecutive BCS bowls, including a national championship game.", 323],
-    ["cfb-lamichael-james--returned-to-eugene-restaurants", "After his playing career, James returned to the Eugene area and became a restaurant operator, maintaining a visible local connection to Oregon.", 322],
-  ]],
-  ["cfb-malaki-starks", [
-    ["cfb-malaki-starks--high-school-two-way-star", "At Jefferson High School, Starks was a major two-way player, producing heavily as a runner while also starring on defense.", 324],
-    ["cfb-malaki-starks--state-long-jump-champion", "Starks won a Georgia state championship in the long jump in high school.", 324],
-    ["cfb-malaki-starks--elite-sprint-and-jump-marks", "Starks's high-school track profile included a 10.55-second 100 meters and a long jump beyond 24 feet.", 324],
-    ["cfb-malaki-starks--number-one-athlete-recruit", "Recruiting services commonly classified Starks as an 'athlete' rather than locking him into one position, and Georgia's bio notes he was rated No. 1 nationally at that designation by major services.", 324],
-    ["cfb-malaki-starks--jefferson-close-to-athens", "Starks grew up in nearby Jefferson, Georgia, and has joked in a Georgia interview about being close enough to take laundry home.", 325],
-  ]],
-  ["cfb-malcolm-jenkins", [
-    ["cfb-malcolm-jenkins--recruited-as-wr-db", "Ohio State signed Jenkins out of Piscataway as a two-way WR/DB prospect rather than as a one-role defensive back.", 282],
-    ["cfb-malcolm-jenkins--high-school-receiving-role", "As a high-school senior, Jenkins contributed more than 300 receiving yards and seven offensive touchdowns in addition to playing defensive back.", 282],
-    ["cfb-malcolm-jenkins--back-to-back-state-championships", "Jenkins helped Piscataway win state championships in both his junior and senior seasons.", 282],
-    ["cfb-malcolm-jenkins--state-400-meter-champion", "Jenkins won a New Jersey high-school state championship in the 400 meters and also placed at state level in the 200.", 282],
-    ["cfb-malcolm-jenkins--ran-ohio-state-4x100", "Jenkins continued track at Ohio State, running on a Buckeye 4x100-meter relay after spring football in 2007.", 326],
-  ]],
-  ["cfb-marqise-lee", [
-    ["cfb-marqise-lee--deaf-parents-sign-language", "Because both of Lee's parents were deaf, he became proficient in sign language.", 327],
-    ["cfb-marqise-lee--football-basketball-track-star", "At Junipero Serra, Lee excelled in football, basketball and track and was recognized for the breadth of that multi-sport performance.", 328],
-    ["cfb-marqise-lee--usc-long-jump-track", "Lee competed for USC track and field in the long jump while also starring for the football team.", 327],
-    ["cfb-marqise-lee--arrived-in-george-farmer-shadow", "USC's own introduction noted that Lee arrived with less hype than Serra teammate George Farmer, who had been the more heralded recruit.", 328],
-    ["cfb-marqise-lee--earned-preferred-number-nine", "Lee initially wore No. 17 at USC and later switched to his preferred No. 9 after earning the change.", 328],
-  ]],
-  ["cfb-marvin-harrison-jr", [
-    ["cfb-marvin-harrison-jr--father-marvin-harrison", "Harrison is the son of Pro Football Hall of Fame wide receiver Marvin Harrison Sr.", 329],
-    ["cfb-marvin-harrison-jr--st-josephs-with-kyle-mccord", "Harrison transferred from La Salle College High School to St. Joseph's Prep, where he formed a long-running quarterback-receiver partnership with Kyle McCord before both went to Ohio State.", 330],
-    ["cfb-marvin-harrison-jr--grew-during-covid-shutdown", "Harrison grew several inches during the COVID-era shutdown period before his final high-school season.", 329],
-    ["cfb-marvin-harrison-jr--extreme-jugs-work-routine", "Ohio State teammates and coaches repeatedly described Harrison's habit of doing extra JUGS-machine and route work at unusually early and late hours.", 329],
-    ["cfb-marvin-harrison-jr--chris-olave-big-brother-mentor", "When Harrison arrived at Ohio State, Chris Olave was assigned as his 'big brother' in the receiver room and became an early mentor.", 331],
-  ]],
-  ["cfb-micah-parsons", [
-    ["cfb-micah-parsons--central-dauphin-to-harrisburg", "Parsons played at Central Dauphin before transferring to Harrisburg High School, where he finished his prep career.", 332],
-    ["cfb-micah-parsons--high-school-running-back-defensive-end", "At Harrisburg, Parsons was a two-way force who played defensive end and also carried a major rushing workload at running back.", 332],
-    ["cfb-micah-parsons--high-school-basketball", "Parsons also played high-school basketball and was part of a district championship program.", 332],
-    ["cfb-micah-parsons--recruited-athlete-became-linebacker", "Penn State signed Parsons after he had been viewed primarily as an edge/athlete prospect, then developed him as an off-ball linebacker.", 333],
-    ["cfb-micah-parsons--first-penn-state-freshman-tackle-leader", "As a true freshman, Parsons became the first freshman in Penn State history, true or redshirt, to lead the team in tackles for a season.", 334],
-  ]],
-  ["cfb-michael-huff", [
-    ["cfb-michael-huff--grew-up-michigan-fan", "Huff grew up in a family of Michigan fans and identified Charles Woodson as one of his favorite players before eventually starring for Texas.", 335],
-    ["cfb-michael-huff--chose-texas-partly-for-track-weather", "Huff said Texas's warmer weather appealed to him in part because he wanted the chance to keep running track.", 335],
-    ["cfb-michael-huff--track-first-love", "Huff began competing in track at about age five and described track as his first athletic love.", 336],
-    ["cfb-michael-huff--texas-4x100-sprinter", "Huff ran track for Texas and was part of a Longhorn 4x100-meter relay that placed second at the Big 12 meet.", 336],
-    ["cfb-michael-huff--corner-to-safety-football-iq", "Huff arrived at Texas expecting to play cornerback, but the coaching staff moved him to safety because they valued his ability to diagnose the game.", 337],
-  ]],
-  ["cfb-mike-evans", [
-    ["cfb-mike-evans--basketball-first-athlete", "Evans focused primarily on basketball for most of high school and averaged 18.3 points, 8.4 rebounds and 5.2 assists as a senior.", 338],
-    ["cfb-mike-evans--only-one-high-school-football-season", "Evans played only one season of high-school football, joining the team for his senior year.", 338],
-    ["cfb-mike-evans--friends-convinced-him-to-play", "Friends at Ball High School helped convince Evans to give football a try for his senior season.", 339],
-    ["cfb-mike-evans--texas-basketball-vs-am-football-choice", "Evans has said he was weighing a basketball path, including interest from Texas, against the football opportunity at Texas A&M before choosing football.", 339],
-    ["cfb-mike-evans--galveston-island-identity", "Evans grew up in Galveston and played at Ball High School, a background Texas A&M profiled as part of his 'Island' identity.", 339],
-  ]],
-  ["cfb-morris-claiborne", [
-    ["cfb-morris-claiborne--lsu-started-at-wide-receiver", "Claiborne began his first LSU fall camp at wide receiver before moving to cornerback about a week later.", 340],
-    ["cfb-morris-claiborne--high-school-quarterback", "At Fair Park High School, Claiborne played quarterback as a senior and produced both passing and rushing offense.", 340],
-    ["cfb-morris-claiborne--high-school-wr-db", "Before his senior quarterback season, Claiborne also played wide receiver and defensive back in high school.", 340],
-    ["cfb-morris-claiborne--four-sport-high-school-athlete", "Claiborne participated in basketball, baseball and track in addition to football at Fair Park.", 340],
-    ["cfb-morris-claiborne--louisiana-100-meter-champion", "Claiborne won a Louisiana state championship in the 100-meter dash with a 10.76-second time.", 340],
-  ]],
-  ["cfb-nakobe-dean", [
-    ["cfb-nakobe-dean--mechanical-engineering-major", "Dean studied mechanical engineering at Georgia while playing linebacker.", 341],
-    ["cfb-nakobe-dean--returned-to-finish-degree", "After turning professional, Dean returned to Georgia to continue work toward completing his mechanical engineering degree.", 342],
-    ["cfb-nakobe-dean--brother-nikolas-ole-miss", "Dean's older brother Nikolas played tight end at Ole Miss.", 341],
-    ["cfb-nakobe-dean--high-school-running-back-linebacker", "At Horn Lake, Dean played running back as well as linebacker and scored nine rushing touchdowns as a senior.", 341],
-    ["cfb-nakobe-dean--horn-lake-first-state-title", "Dean helped Horn Lake finish 15-0 and win the first state football championship in school history.", 341],
-  ]],
-  ["cfb-patrick-willis", [
-    ["cfb-patrick-willis--worked-young-to-help-family", "Willis has described working from a very young age to help support his younger siblings in rural Tennessee.", 343],
-    ["cfb-patrick-willis--moved-with-siblings-to-coach", "As a teenager, Willis and three younger siblings moved in with his high-school coach's family.", 343],
-    ["cfb-patrick-willis--small-school-light-recruitment", "Willis came from a small Tennessee high school and was lightly recruited compared with the profile he eventually built at Ole Miss.", 343],
-    ["cfb-patrick-willis--two-way-high-school-player", "Willis played on both sides of the ball in high school rather than being developed only as a linebacker.", 344],
-    ["cfb-patrick-willis--played-with-club-cast", "At Ole Miss, Willis played through a hand injury using a large protective club-style cast.", 343],
-  ]],
-  ["cfb-paul-posluszny", [
-    ["cfb-paul-posluszny--high-school-running-back-linebacker", "Posluszny starred at Hopewell High School as both a linebacker and running back.", 345],
-    ["cfb-paul-posluszny--state-title-running-performance", "In Hopewell's state championship season, Posluszny was a major rushing contributor and carried a large share of the offense in the title game.", 345],
-    ["cfb-paul-posluszny--finance-major-academic-all-america", "Posluszny majored in finance, carried a strong GPA and became the Academic All-America Team Member of the Year.", 346],
-    ["cfb-paul-posluszny--national-defense-and-academic-player-of-year", "The National Football Foundation notes that Posluszny became the only defensive player to win a national defensive player-of-the-year honor and the Academic All-America Team Member of the Year in the same season.", 347],
-    ["cfb-paul-posluszny--first-two-time-captain-since-1960s", "Posluszny became Penn State's first two-time football captain since the 1968-69 seasons.", 348],
-  ]],
-  ["cfb-peter-warrick", [
-    ["cfb-peter-warrick--returned-for-senior-season", "Warrick returned to Florida State for his senior season despite being viewed as a likely early NFL Draft entrant.", 349],
-    ["cfb-peter-warrick--wire-to-wire-number-one-season", "Warrick and quarterback Chris Weinke helped Florida State become the first team to remain No. 1 in the AP poll from preseason through the final poll.", 349],
-    ["cfb-peter-warrick--sugar-bowl-three-score-performance", "In the 2000 Sugar Bowl national championship game, Warrick scored on two receptions and a 59-yard punt return and also caught a two-point conversion.", 350],
-    ["cfb-peter-warrick--fsu-number-nine-retired", "Florida State retired Warrick's No. 9 jersey in 2018.", 351],
-    ["cfb-peter-warrick--payton-warrick-foundation", "Warrick later founded the Payton Warrick Foundation, named for his son, to assist children born with disabilities.", 352],
-  ]],
-  ["cfb-rolando-mcclain", [
-    ["cfb-rolando-mcclain--decatur-linebacker-tight-end", "At Decatur High School, McClain played both linebacker and tight end.", 353],
-    ["cfb-rolando-mcclain--high-school-basketball-center", "McClain also played high-school basketball as a center.", 354],
-    ["cfb-rolando-mcclain--true-freshman-opening-day-starter", "McClain became Alabama's first true freshman linebacker to start a season opener since Saleem Rasheed in 1999.", 353],
-    ["cfb-rolando-mcclain--fractured-thumb-bowl-interception", "McClain played the Independence Bowl with a fractured thumb and intercepted Colorado on the first play of the game.", 353],
-    ["cfb-rolando-mcclain--academic-excellence-award", "Alabama recognized McClain with an Academic Excellence Award during his freshman season.", 353],
-  ]],
-  ["cfb-roy-williams-wr", [
-    ["cfb-roy-williams-wr--odessa-permian-product", "Williams came to Texas from Odessa Permian, one of the most recognizable high-school football programs in Texas.", 355],
-    ["cfb-roy-williams-wr--media-guide-record-goal", "As a Permian senior, Williams studied a Texas media guide, saw the school receiving records and told his mother he wanted to own those marks before he left Austin.", 356],
-    ["cfb-roy-williams-wr--older-brother-lloyd-hill", "Williams's older brother Lloyd Hill had been a star wide receiver at Texas Tech before Roy chose Texas.", 356],
-    ["cfb-roy-williams-wr--chose-to-return-senior", "Williams decided to return to Texas for his senior season despite having the option to enter the NFL Draft.", 356],
-    ["cfb-roy-williams-wr--returned-to-odessa-trucking", "After his playing career, Williams returned to the Odessa area and became involved in the family trucking business.", 355],
-  ]],
-  ["cfb-ryan-broyles", [
-    ["cfb-ryan-broyles--norman-hometown-sooner", "Broyles grew up in Norman and played at Norman High before staying home to play for Oklahoma.", 357],
-    ["cfb-ryan-broyles--high-school-running-back-receiver-returner", "As a high-school senior, Broyles scored touchdowns as a running back, receiver and kick returner.", 357],
-    ["cfb-ryan-broyles--high-school-defensive-back-20-interceptions", "Broyles also played defensive back and finished his high-school career with 20 interceptions.", 357],
-    ["cfb-ryan-broyles--basketball-recruit", "Broyles was also a productive high-school basketball player who drew college basketball recruiting interest.", 357],
-    ["cfb-ryan-broyles--returned-senior-to-finish-degree", "Broyles chose to return to Oklahoma for his senior season, citing the team and the goal of finishing his degree among his reasons.", 358],
-  ]],
-  ["cfb-sammy-watkins", [
-    ["cfb-sammy-watkins--brother-jaylen-florida", "Watkins's older brother Jaylen Watkins played defensive back at Florida while Sammy became a star at Clemson.", 359],
-    ["cfb-sammy-watkins--high-school-wildcat-quarterback-role", "At South Fort Myers, Watkins took direct snaps in a Wildcat-style role and had a playoff game in which he ran for three touchdowns and threw another.", 359],
-    ["cfb-sammy-watkins--state-200-meter-champion", "Watkins won a Florida high-school state championship in the 200 meters and also placed second in the 100 meters.", 359],
-    ["cfb-sammy-watkins--lee-county-receiving-records", "Watkins finished high school holding Lee County career receiving marks for receptions, yards and touchdowns.", 359],
-    ["cfb-sammy-watkins--scored-on-kicks-punts-interceptions", "As a high-school senior, Watkins scored touchdowns on kickoff returns, punt returns and interception returns in addition to offense.", 359],
-  ]],
+  [
+    "cfbfast-r-player-4047646-a-j-brown",
+    [
+      [
+        "cfbfast-r-player-4047646-a-j-brown--dual-under-armour-all-american",
+        "Brown was a high-level football and baseball prospect at Starkville High and became the second athlete, after Kyler Murray, to play in both the Under Armour All-America Football Game and the Under Armour All-America Baseball Game.",
+        0
+      ],
+      [
+        "cfbfast-r-player-4047646-a-j-brown--padres-draft-and-summer-baseball",
+        "The San Diego Padres selected Brown in the 19th round of the 2016 MLB Draft; he signed and later participated in extended spring training during his Ole Miss summers.",
+        1
+      ],
+      [
+        "cfbfast-r-player-4047646-a-j-brown--starkville-chooses-ole-miss",
+        "Brown grew up and starred in Starkville, Mississippi, but chose Ole Miss rather than hometown Mississippi State.",
+        2
+      ],
+      [
+        "cfbfast-r-player-4047646-a-j-brown--starkville-state-title",
+        "As a senior, Brown helped Starkville High win a Mississippi Class 6A football state championship.",
+        0
+      ],
+      [
+        "cfbfast-r-player-4047646-a-j-brown--middle-name-spelling-story",
+        "Brown’s middle name appears as “Juan” on his birth certificate, though his family has said “Jauan” was the intended spelling.",
+        0
+      ]
+    ]
+  ],
+  [
+    "cfb-aj-hawk",
+    [
+      [
+        "cfb-aj-hawk--basketball-first-love",
+        "Hawk has said basketball was his first love growing up and that he once imagined becoming a point guard at Duke.",
+        3
+      ],
+      [
+        "cfb-aj-hawk--childhood-with-mike-nugent",
+        "Hawk grew up only minutes from future Ohio State kicker Mike Nugent and played football with him from grade-school age before they reunited as Buckeyes.",
+        4
+      ],
+      [
+        "cfb-aj-hawk--played-with-brother-ryan",
+        "At Centerville High, Hawk played running back and linebacker while his older brother Ryan played quarterback; they shared two varsity seasons.",
+        3
+      ],
+      [
+        "cfb-aj-hawk--community-park-upbringing",
+        "Hawk grew up with a community park directly behind the family home, and pickup sports with his brothers and neighborhood athletes were a major part of his childhood.",
+        3
+      ],
+      [
+        "cfb-aj-hawk--quinn-fiesta-family-rivalry",
+        "In the 2006 Fiesta Bowl, Hawk faced Notre Dame quarterback Brady Quinn while dating Quinn’s sister Laura; she famously wore a split Notre Dame/Ohio State jersey, and Hawk sacked Quinn twice.",
+        5
+      ]
+    ]
+  ],
+  [
+    "cfb-aaron-ross",
+    [
+      [
+        "cfb-aaron-ross--fox-tech-to-john-tyler",
+        "Ross played at San Antonio Fox Tech as a sophomore before finishing his prep career at John Tyler High in Tyler, Texas.",
+        6
+      ],
+      [
+        "cfb-aaron-ross--three-sport-sprinter",
+        "Ross lettered in football, track and basketball and was a four-year sprinter in track.",
+        6
+      ],
+      [
+        "cfb-aaron-ross--prep-kick-blocker",
+        "Ross was an unusually prolific kick blocker in high school, with his Texas recruiting bio crediting him with double-digit blocked kicks as a sophomore and more in later seasons.",
+        6
+      ],
+      [
+        "cfb-aaron-ross--punt-return-identity",
+        "After becoming Texas’ primary punt returner, Ross scored his first Longhorn punt-return touchdown on an 88-yard return at Missouri.",
+        7
+      ],
+      [
+        "cfb-aaron-ross--met-sanya-at-texas",
+        "Ross met Texas track star Sanya Richards while both were students at the University of Texas; they later married.",
+        8
+      ]
+    ]
+  ],
+  [
+    "cfb-abdul-carter",
+    [
+      [
+        "cfb-abdul-carter--11th-street-number-11",
+        "Carter grew up on 11th Street in North Philadelphia and later wore No. 11 at Penn State.",
+        9
+      ],
+      [
+        "cfb-abdul-carter--father-bloomsburg-defender",
+        "His father, Chris Carter, played linebacker and defensive end at Bloomsburg University and is credited by the family with helping shape Abdul’s competitive approach.",
+        9
+      ],
+      [
+        "cfb-abdul-carter--deion-barnes-same-street",
+        "Penn State defensive line coach Deion Barnes grew up only a couple of blocks from Carter on the same North Philadelphia street.",
+        9
+      ],
+      [
+        "cfb-abdul-carter--high-school-basketball-forward",
+        "Carter also lettered in basketball at La Salle College High School as a power forward.",
+        10
+      ],
+      [
+        "cfb-abdul-carter--linebacker-to-edge-switch",
+        "After two seasons at linebacker, Carter moved to defensive end for the 2024 Penn State season.",
+        11
+      ]
+    ]
+  ],
+  [
+    "cfb-aidan-hutchinson",
+    [
+      [
+        "cfb-aidan-hutchinson--michigan-legacy-no-97",
+        "Hutchinson’s father Chris was a Michigan captain and team MVP, and Aidan followed him to Michigan wearing the same No. 97.",
+        12
+      ],
+      [
+        "cfb-aidan-hutchinson--four-prep-football-roles",
+        "At Divine Child High School, Hutchinson played defensive end, tight end, offensive line and long snapper.",
+        13
+      ],
+      [
+        "cfb-aidan-hutchinson--lacrosse-captain",
+        "Hutchinson captained Divine Child’s lacrosse team and earned second-team all-state honors in the sport.",
+        13
+      ],
+      [
+        "cfb-aidan-hutchinson--whole-family-michigan-tie",
+        "His mother Melissa also attended Michigan, and both of his sisters were enrolled at Michigan while he played there.",
+        12
+      ],
+      [
+        "cfb-aidan-hutchinson--injury-to-heisman-runner-up",
+        "Hutchinson’s 2020 season ended after only three games because of injury; he returned in 2021 and became only the third defensive player to finish second in Heisman voting.",
+        13
+      ]
+    ]
+  ],
+  [
+    "cfb-alex-mack",
+    [
+      [
+        "cfb-alex-mack--two-way-prep-defensive-mvp",
+        "Mack played both ways at San Marcos High and was named his league’s co-MVP on defense after recording 93 tackles and eight sacks as a senior.",
+        14
+      ],
+      [
+        "cfb-alex-mack--cif-heavyweight-wrestler",
+        "Mack wrestled for four years, became a CIF heavyweight champion and went 26-1 as a senior.",
+        14
+      ],
+      [
+        "cfb-alex-mack--legal-studies-magna-cum-laude",
+        "Mack graduated magna cum laude from Cal with a legal studies degree.",
+        15
+      ],
+      [
+        "cfb-alex-mack--graduate-student-education",
+        "He played his final Cal season as a graduate student studying education.",
+        14
+      ],
+      [
+        "cfb-alex-mack--two-time-morris-peer-vote",
+        "Mack won the Morris Trophy twice, an award chosen by opposing Pac-10 defensive linemen for the conference’s top offensive lineman.",
+        15
+      ]
+    ]
+  ],
+  [
+    "cfb-amari-cooper",
+    [
+      [
+        "cfb-amari-cooper--teddy-bridgewater-teammate",
+        "Cooper played at Miami Northwestern High School with quarterback Teddy Bridgewater.",
+        16
+      ],
+      [
+        "cfb-amari-cooper--coconut-grove-barnyard-football",
+        "Cooper grew up in Miami’s Coconut Grove area and spent ages 5 to 12 at The Barnyard after-school program, where competitive football games on a blacktop were a formative part of his childhood.",
+        17
+      ],
+      [
+        "cfb-amari-cooper--chess-from-music-teacher",
+        "Cooper learned chess in elementary school from a music teacher who ran the school chess club and later became an avid player.",
+        16
+      ],
+      [
+        "cfb-amari-cooper--route-runner-brand",
+        "Cooper created a clothing brand called “Route Runner.”",
+        16
+      ],
+      [
+        "cfb-amari-cooper--alabama-camp-earned-saban-offer",
+        "At an Alabama camp, Cooper impressed Nick Saban during one-on-one work and was called into Saban’s office for a scholarship offer; his high-school coach had expected him to follow former teammates to Louisville, but Cooper wanted to make his own name.",
+        18
+      ]
+    ]
+  ],
+  [
+    "cfb-andre-johnson",
+    [
+      [
+        "cfb-andre-johnson--miami-native-stayed-home",
+        "Johnson attended Miami Senior High and stayed in his hometown to play for the Miami Hurricanes.",
+        19
+      ],
+      [
+        "cfb-andre-johnson--big-east-sprint-double",
+        "While also playing football, Johnson won the Big East indoor 60-meter title and outdoor 100-meter title in 2002.",
+        20
+      ],
+      [
+        "cfb-andre-johnson--rose-bowl-co-mvp",
+        "Johnson shared MVP honors with Ken Dorsey in Miami’s 2002 Rose Bowl national-championship win after a dominant receiving performance.",
+        21
+      ],
+      [
+        "cfb-andre-johnson--shoulder-surgery-return",
+        "During his Miami career, Johnson underwent shoulder surgery shortly after the Florida game and returned later that season.",
+        22
+      ],
+      [
+        "cfb-andre-johnson--foundation-single-parent-youth",
+        "Johnson established the Andre Johnson Foundation early in his pro career to support children and teenagers growing up in single-parent homes.",
+        19
+      ]
+    ]
+  ],
+  [
+    "cfb-andre-ware",
+    [
+      [
+        "cfb-andre-ware--insisted-on-playing-quarterback",
+        "Ware drew scholarship interest after high school, but many schools did not want him as a quarterback; he held out for a chance to play the position.",
+        23
+      ],
+      [
+        "cfb-andre-ware--alvin-cc-two-jobs",
+        "After being ruled ineligible for his first Houston season, Ware attended Alvin Community College and worked two jobs to help pay tuition.",
+        23
+      ],
+      [
+        "cfb-andre-ware--run-and-shoot-arrival",
+        "Ware’s arrival as an eligible Houston player coincided with Jack Pardee bringing the run-and-shoot offense to the Cougars.",
+        23
+      ],
+      [
+        "cfb-andre-ware--first-black-heisman-qb",
+        "Ware became the first Black quarterback to win the Heisman Trophy.",
+        23
+      ],
+      [
+        "cfb-andre-ware--heisman-on-probation-team",
+        "Ware remains the only Heisman winner whose team was on NCAA probation during his winning season.",
+        23
+      ]
+    ]
+  ],
+  [
+    "cfb-andrew-luck",
+    [
+      [
+        "cfb-andrew-luck--oliver-luck-football-family",
+        "Luck is the son of Oliver Luck, a former West Virginia and NFL quarterback who later became an athletic administrator.",
+        24
+      ],
+      [
+        "cfb-andrew-luck--high-school-valedictorian",
+        "Luck was the valedictorian of Stratford High School’s 2008 graduating class in Houston.",
+        24
+      ],
+      [
+        "cfb-andrew-luck--architectural-design-major",
+        "At Stanford, Luck earned his bachelor’s degree in architectural design.",
+        25
+      ],
+      [
+        "cfb-andrew-luck--academic-father-son-hall",
+        "Luck later joined his father Oliver as the first father-son duo in the College Sports Communicators Academic All-America Hall of Fame.",
+        25
+      ],
+      [
+        "cfb-andrew-luck--returned-to-run-stanford-football",
+        "After his NFL retirement and completion of a Stanford master’s degree in education, Luck returned to Stanford to oversee the football program in a general-manager role.",
+        25
+      ]
+    ]
+  ],
+  [
+    "cfb-antoine-winfield-jr",
+    [
+      [
+        "cfb-antoine-winfield-jr--father-ohio-state-thorpe-viking",
+        "Winfield’s father, Antoine Sr., won the Jim Thorpe Award at Ohio State and later played nine seasons for the Minnesota Vikings.",
+        26
+      ],
+      [
+        "cfb-antoine-winfield-jr--minnesota-to-texas-and-back",
+        "Winfield Jr. lived in Minnesota before moving to Texas for his final three years of high school, then returned to the Twin Cities for college.",
+        26
+      ],
+      [
+        "cfb-antoine-winfield-jr--carter-coughlin-childhood-friend",
+        "He grew up playing football with Carter Coughlin, who later reconnected with him and helped persuade him to visit Minnesota.",
+        26
+      ],
+      [
+        "cfb-antoine-winfield-jr--chose-minnesota-over-family-ohio-state-pull",
+        "Some relatives and friends urged Winfield Jr. toward Ohio State because of his father’s legacy, but he chose Minnesota.",
+        26
+      ],
+      [
+        "cfb-antoine-winfield-jr--brother-austin-gopher-db",
+        "His brother Austin also played defensive back for Minnesota.",
+        27
+      ]
+    ]
+  ],
+  [
+    "cfb-ashton-jeanty",
+    [
+      [
+        "cfb-ashton-jeanty--military-family-naples-italy",
+        "Jeanty spent part of his youth in Naples, Italy, because his father was stationed there with the U.S. Navy.",
+        28
+      ],
+      [
+        "cfb-ashton-jeanty--football-began-overseas",
+        "His tackle-football journey began with the Naples Wildcats community connected to the U.S. military base in Italy.",
+        29
+      ],
+      [
+        "cfb-ashton-jeanty--moved-to-frisco-for-exposure",
+        "Jeanty’s family moved to Frisco, Texas, before high school in part so he could gain more football exposure.",
+        30
+      ],
+      [
+        "cfb-ashton-jeanty--five-prep-positions",
+        "At Lone Star High School, Jeanty played running back, wide receiver, defensive end, linebacker and safety.",
+        29
+      ],
+      [
+        "cfb-ashton-jeanty--three-sport-high-school-athlete",
+        "Jeanty also competed in basketball and track in high school in addition to football.",
+        31
+      ]
+    ]
+  ],
+  [
+    "cfb-baker-mayfield",
+    [
+      [
+        "cfb-baker-mayfield--texas-tech-walk-on",
+        "After being passed over by most major programs for a scholarship, Mayfield walked on at Texas Tech in 2013.",
+        32
+      ],
+      [
+        "cfb-baker-mayfield--walk-on-wins-opening-job",
+        "Mayfield immediately won Texas Tech’s starting quarterback job as a true freshman walk-on.",
+        32
+      ],
+      [
+        "cfb-baker-mayfield--transferred-and-walked-on-oklahoma",
+        "He transferred from Texas Tech to Oklahoma and initially joined the Sooners as a walk-on as well.",
+        32
+      ],
+      [
+        "cfb-baker-mayfield--sat-2014-transfer-rule",
+        "Mayfield had to sit out the 2014 season after his transfer to Oklahoma under the rules then in place.",
+        32
+      ],
+      [
+        "cfb-baker-mayfield--former-walk-on-heisman",
+        "He became the first Heisman Trophy winner of the modern scholarship era to begin his college career as a walk-on.",
+        33
+      ]
+    ]
+  ],
+  [
+    "cfb-barrett-jones",
+    [
+      [
+        "cfb-barrett-jones--started-three-line-positions",
+        "Jones started for Alabama at right guard, left tackle and center during his career.",
+        34
+      ],
+      [
+        "cfb-barrett-jones--accounting-bachelors-and-masters",
+        "Jones completed an accounting bachelor’s degree and continued into graduate study while at Alabama.",
+        35
+      ],
+      [
+        "cfb-barrett-jones--four-time-academic-all-american",
+        "Jones became the first Alabama football player to earn Academic All-America recognition four times.",
+        35
+      ],
+      [
+        "cfb-barrett-jones--brothers-alabama-football",
+        "His brothers Harrison and Walker also became Alabama football players.",
+        36
+      ],
+      [
+        "cfb-barrett-jones--haiti-nicaragua-mission-trips",
+        "Jones took part in multiple mission trips to Haiti and Nicaragua while at Alabama, working at schools and orphanages and on construction projects.",
+        34
+      ]
+    ]
+  ],
+  [
+    "cfb-bijan-robinson",
+    [
+      [
+        "cfb-bijan-robinson--raised-with-grandfather-cleo",
+        "Robinson grew up in his grandparents’ Tucson home and has described grandfather Cleo Robinson as a father figure who brought football into his life.",
+        37
+      ],
+      [
+        "cfb-bijan-robinson--grandfather-pac12-official",
+        "Cleo Robinson was a former athlete who spent decades as a football and basketball official, including work in the Pac-10/Pac-12 ecosystem.",
+        38
+      ],
+      [
+        "cfb-bijan-robinson--great-uncle-paul-nfl-running-back",
+        "Robinson’s great-uncle Paul Robinson played running back at Arizona and later became a Pro Bowl NFL back.",
+        38
+      ],
+      [
+        "cfb-bijan-robinson--childhood-near-drowning-swim-safety",
+        "A near-drowning experience when Robinson was five later helped inspire swim-safety work through his foundation.",
+        39
+      ],
+      [
+        "cfb-bijan-robinson--bijan-mustardson",
+        "While at Texas in the NIL era, Robinson launched his own Dijon mustard brand, “Bijan Mustardson.”",
+        40
+      ]
+    ]
+  ],
+  [
+    "bill-snyder-cfb",
+    [
+      [
+        "bill-snyder--california-high-school-coaching-start",
+        "Snyder began his full-time coaching career in California high-school football before entering the college ranks.",
+        41
+      ],
+      [
+        "bill-snyder--austin-college-swimming-coach",
+        "At Austin College, Snyder served as offensive coordinator while also coaching the school’s swimming team.",
+        41
+      ],
+      [
+        "bill-snyder--hayden-fry-apprenticeship",
+        "Snyder worked under Hayden Fry at North Texas and then followed him to Iowa, where Snyder spent a decade as offensive coordinator.",
+        41
+      ],
+      [
+        "bill-snyder--miracle-of-manhattan",
+        "Snyder took over a Kansas State program that had gone 0-26-1 immediately before his arrival and led the turnaround widely nicknamed the “Miracle of Manhattan.”",
+        42
+      ],
+      [
+        "bill-snyder--retired-then-returned",
+        "After retiring following the 2005 season, Snyder returned as Kansas State head coach in 2009 and rebuilt the program a second time.",
+        43
+      ]
+    ]
+  ],
+  [
+    "bob-stoops-cfb",
+    [
+      [
+        "bob-stoops--youngstown-coaching-family",
+        "Stoops grew up in Youngstown, Ohio, in a football-coaching family; his father Ron was a longtime defensive coordinator at Cardinal Mooney High School.",
+        44
+      ],
+      [
+        "bob-stoops--lightly-recruited-to-iowa",
+        "Stoops has said he was not heavily recruited as a player; Iowa’s connection to his father helped bring him to the Hawkeyes.",
+        45
+      ],
+      [
+        "bob-stoops--three-stoops-brothers-at-iowa",
+        "Bob became the oldest of three Stoops brothers to play defensive back at Iowa and later helped recruit younger brothers Mike and Mark there.",
+        46
+      ],
+      [
+        "bob-stoops--player-in-hayden-fry-turnaround",
+        "Stoops’ Iowa playing career began as Hayden Fry was starting the Hawkeyes’ program turnaround.",
+        45
+      ],
+      [
+        "bob-stoops--stayed-at-iowa-to-coach",
+        "After his final Iowa playing season, Stoops stayed with the Hawkeyes as a graduate assistant and volunteer coach.",
+        46
+      ]
+    ]
+  ],
+  [
+    "cfb-brady-quinn",
+    [
+      [
+        "cfb-brady-quinn--middle-school-notre-dame-visits",
+        "As a middle-schooler in Dublin, Ohio, Quinn regularly visited Notre Dame on football weekends with friend Chinedum Ndukwe because Ndukwe’s older brother was a student there.",
+        47
+      ],
+      [
+        "cfb-brady-quinn--ndukwe-high-school-teammate",
+        "Quinn and Chinedum Ndukwe were high-school teammates at Dublin Coffman and then entered Notre Dame in the same class.",
+        48
+      ],
+      [
+        "cfb-brady-quinn--finance-political-science-double-major",
+        "Quinn pursued a double major in finance and political science at Notre Dame.",
+        49
+      ],
+      [
+        "cfb-brady-quinn--law-school-aspiration",
+        "While at Notre Dame, Quinn discussed an interest in law school and eventually passing the bar after football.",
+        49
+      ],
+      [
+        "cfb-brady-quinn--aj-hawk-sister-fiesta-bowl",
+        "Quinn’s sister Laura was dating Ohio State linebacker A.J. Hawk when Notre Dame faced Ohio State in the 2006 Fiesta Bowl, creating the game’s famous split-family storyline.",
+        5
+      ]
+    ]
+  ],
+  [
+    "cfb-brandin-cooks",
+    [
+      [
+        "cfb-brandin-cooks--sonic-boom-nickname",
+        "Cooks’ Oregon State biography lists his nickname as “Sonic Boom.”",
+        50
+      ],
+      [
+        "cfb-brandin-cooks--junior-olympics-sprinter",
+        "Cooks competed as a sprinter and participated in the Junior Olympics while in high school.",
+        50
+      ],
+      [
+        "cfb-brandin-cooks--six-varsity-letters",
+        "He also played basketball and finished high school with six varsity letters across sports.",
+        50
+      ],
+      [
+        "cfb-brandin-cooks--stepbrother-maurice-washington",
+        "Cooks’ stepbrother Maurice Washington played college football at Texas A&M-Kingsville and later attended an Oakland Raiders training camp.",
+        50
+      ],
+      [
+        "cfb-brandin-cooks--raised-by-mother-after-fathers-death",
+        "Cooks’ father died of a heart attack when Brandin was six, after which his mother Andrea raised Brandin and his three brothers.",
+        51
+      ]
+    ]
+  ],
+  [
+    "cfb-brandon-scherff",
+    [
+      [
+        "cfb-brandon-scherff--295-pound-high-school-quarterback",
+        "Scherff played quarterback as a high-school sophomore and threw for roughly 1,200 yards despite already being close to 295 pounds.",
+        52
+      ],
+      [
+        "cfb-brandon-scherff--recruited-at-shot-put-meet",
+        "Iowa assistant Reese Morgan first approached Scherff while Scherff was competing in the shot put at the Iowa state track meet.",
+        52
+      ],
+      [
+        "cfb-brandon-scherff--state-shot-put-champion",
+        "Scherff won an Iowa state high-school shot put championship and held his school’s shot put record.",
+        53
+      ],
+      [
+        "cfb-brandon-scherff--four-sport-prep-athlete",
+        "Beyond football and track, Scherff earned all-state honors in baseball, all-conference recognition in basketball and also lettered in tennis.",
+        53
+      ],
+      [
+        "cfb-brandon-scherff--quarterback-to-two-way-line",
+        "After his sophomore quarterback season, Scherff shifted to offensive and defensive line for his final two high-school seasons before Iowa recruited him as a lineman.",
+        53
+      ]
+    ]
+  ],
+  [
+    "cfb-braylon-edwards",
+    [
+      [
+        "cfb-braylon-edwards--father-stan-michigan-player",
+        "Edwards’ father Stan also played football at Michigan.",
+        54
+      ],
+      [
+        "cfb-braylon-edwards--anthony-carter-family-connection",
+        "Michigan receiving legend Anthony Carter had been a teammate of Braylon’s father, giving Edwards a personal connection to the receiver who made Michigan’s No. 1 jersey famous.",
+        55
+      ],
+      [
+        "cfb-braylon-edwards--earned-no-1-jersey",
+        "Edwards specifically asked to wear Michigan’s coveted No. 1, and Lloyd Carr made him earn the switch through his play before granting it.",
+        56
+      ],
+      [
+        "cfb-braylon-edwards--endowed-no-1-scholarship",
+        "After college, Edwards pledged $500,000 to endow a Michigan scholarship connected to the player wearing No. 1.",
+        55
+      ],
+      [
+        "cfb-braylon-edwards--returned-to-finish-degree",
+        "Years after leaving for the NFL, Edwards returned to Michigan to finish his degree after being encouraged to make education his next “No. 1” priority.",
+        54
+      ]
+    ]
+  ],
+  [
+    "brian-kelly-cfb",
+    [
+      [
+        "brian-kelly--assumption-linebacker-captain",
+        "Kelly was a four-year linebacker at Assumption College and captained the team in his final two seasons.",
+        57
+      ],
+      [
+        "brian-kelly--political-science-degree",
+        "Kelly earned a political science degree from Assumption in 1983.",
+        57
+      ],
+      [
+        "brian-kelly--coached-assumption-softball",
+        "Early in his career, Kelly coached football defense at Assumption and also served as the school’s head softball coach.",
+        58
+      ],
+      [
+        "brian-kelly--grand-valley-13-year-head-coach",
+        "Kelly’s first college head-coaching job was at Division II Grand Valley State, where he remained head coach for 13 seasons.",
+        59
+      ],
+      [
+        "brian-kelly--kelly-cares-foundation",
+        "Kelly and his family created the Kelly Cares Foundation, which has supported health, education and community causes.",
+        60
+      ]
+    ]
+  ],
+  [
+    "cfb-brian-orakpo",
+    [
+      [
+        "cfb-brian-orakpo--prep-basketball-star",
+        "Before fully focusing on football, Orakpo was a prominent high-school basketball player.",
+        61
+      ],
+      [
+        "cfb-brian-orakpo--late-football-focus",
+        "Orakpo shifted his athletic focus toward football relatively late in high school, after spending significant time on basketball.",
+        62
+      ],
+      [
+        "cfb-brian-orakpo--fifty-pound-transformation",
+        "He arrived at Texas around 210 pounds and added roughly 50 pounds while developing into a defensive end.",
+        62
+      ],
+      [
+        "cfb-brian-orakpo--rak-nickname",
+        "Orakpo was widely known by the nickname “Rak.”",
+        61
+      ],
+      [
+        "cfb-brian-orakpo--uncle-chike-iowa-football",
+        "His uncle Chike Orakpo played college football at Iowa.",
+        61
+      ]
+    ]
+  ],
+  [
+    "cfb-brian-urlacher",
+    [
+      [
+        "cfb-brian-urlacher--only-fbs-offer-new-mexico",
+        "Urlacher has been described by New Mexico as having only one Division I-A scholarship offer: the Lobos.",
+        63
+      ],
+      [
+        "cfb-brian-urlacher--grew-from-small-receiver-safety",
+        "As a high-school sophomore he was about 5-foot-9 and 160 pounds while playing receiver and safety before a later growth spurt changed his football future.",
+        63
+      ],
+      [
+        "cfb-brian-urlacher--lobo-hybrid-position",
+        "At New Mexico, Rocky Long used Urlacher in the hybrid “Lobo” role, blending middle-linebacker and free-safety responsibilities.",
+        63
+      ],
+      [
+        "cfb-brian-urlacher--three-way-senior-role",
+        "During his senior season he contributed on defense, at wide receiver and in the return game.",
+        63
+      ],
+      [
+        "cfb-brian-urlacher--first-lobo-cfb-hall",
+        "Urlacher became the first New Mexico player inducted into the College Football Hall of Fame.",
+        64
+      ]
+    ]
+  ],
+  [
+    "cfb-bryant-mckinnie",
+    [
+      [
+        "cfb-bryant-mckinnie--high-school-defensive-end",
+        "McKinnie played defensive end in high school before becoming an offensive lineman later in his development.",
+        65
+      ],
+      [
+        "cfb-bryant-mckinnie--lackawanna-juco-conversion",
+        "He attended Lackawanna Junior College, where he moved to offensive line before transferring to Miami.",
+        65
+      ],
+      [
+        "cfb-bryant-mckinnie--400-meter-at-giant-size",
+        "In high school track and field, McKinnie threw the shot and discus and also ran the 400 meters despite eventually standing 6-foot-9.",
+        65
+      ],
+      [
+        "cfb-bryant-mckinnie--no-sacks-at-miami",
+        "Miami credits McKinnie with not allowing a sack at left tackle during his two seasons with the Hurricanes.",
+        66
+      ],
+      [
+        "cfb-bryant-mckinnie--knee-surgery-to-rose-bowl",
+        "McKinnie returned from knee surgery in time to play in Miami’s Rose Bowl national-championship victory.",
+        65
+      ]
+    ]
+  ],
+  [
+    "cfb-bryce-young",
+    [
+      [
+        "cfb-bryce-young--philadelphia-to-pasadena",
+        "Young was born in Philadelphia and later grew up in the Pasadena, California, area.",
+        67
+      ],
+      [
+        "cfb-bryce-young--cathedral-to-mater-dei",
+        "Young began high school at Cathedral in Los Angeles before transferring to Mater Dei in Santa Ana.",
+        68
+      ],
+      [
+        "cfb-bryce-young--father-craig-quarterback-tutor",
+        "His father, Craig Young, closely tutored and trained him as a quarterback during his youth.",
+        67
+      ],
+      [
+        "cfb-bryce-young--usc-commitment-flipped-to-alabama",
+        "Young was committed to USC for more than a year before flipping his commitment to Alabama late in the 2020 recruiting cycle.",
+        69
+      ],
+      [
+        "cfb-bryce-young--first-alabama-qb-heisman",
+        "Young became the first quarterback from Alabama to win the Heisman Trophy.",
+        70
+      ]
+    ]
+  ],
+  [
+    "cfb-budda-baker",
+    [
+      [
+        "cfb-budda-baker--budda-nickname-origin",
+        "Baker’s given name is Bishard, but his family nicknamed him “Budda” as a baby; the nickname became so universal that people sometimes assumed Bishard was someone else.",
+        71
+      ],
+      [
+        "cfb-budda-baker--bellevue-three-way-star",
+        "At Bellevue High, Baker played safety, running back and return specialist on three consecutive undefeated state-championship teams.",
+        72
+      ],
+      [
+        "cfb-budda-baker--state-champion-sprinter",
+        "Baker won Washington state track titles in the 100 meters, 200 meters and relays during high school.",
+        72
+      ],
+      [
+        "cfb-budda-baker--oregon-commitment-to-washington",
+        "Baker originally committed to Oregon before changing course and staying home to attend Washington.",
+        73
+      ],
+      [
+        "cfb-budda-baker--wanted-to-stay-near-family",
+        "Baker has explained that remaining close to his Seattle-area family weighed heavily in choosing Washington.",
+        73
+      ]
+    ]
+  ],
+  [
+    "cfb-cj-mosley",
+    [
+      [
+        "cfb-cj-mosley--theodore-hometown-star",
+        "Mosley came to Alabama from Theodore High School in the Mobile area, where he became the school’s all-time leading tackler.",
+        74
+      ],
+      [
+        "cfb-cj-mosley--chose-alabama-over-national-offers",
+        "Despite offers from programs including Auburn, Florida State, Georgia, Stanford, Oklahoma and LSU, Mosley stayed in-state for Alabama.",
+        74
+      ],
+      [
+        "cfb-cj-mosley--younger-brother-jamey-alabama-walkon",
+        "His younger brother Jamey Mosley later joined Alabama as a walk-on linebacker/edge player and earned a scholarship.",
+        75
+      ],
+      [
+        "cfb-cj-mosley--mentored-reggie-ragland",
+        "Reggie Ragland, who succeeded him at Alabama, said Mosley mentored him, taught him about leadership and was the smartest player he had ever played with.",
+        76
+      ],
+      [
+        "cfb-cj-mosley--returned-for-senior-season",
+        "Mosley chose to return to Alabama for his senior season rather than leave early for the NFL.",
+        77
+      ]
+    ]
+  ],
+  [
+    "cfbfast-r-player-4432577-c-j-stroud",
+    [
+      [
+        "cfbfast-r-player-4432577-c-j-stroud--multi-sport-childhood",
+        "Before concentrating on football, Stroud played baseball, soccer and basketball; basketball was especially prominent in his family.",
+        78
+      ],
+      [
+        "cfbfast-r-player-4432577-c-j-stroud--youngest-of-four-competitive-siblings",
+        "Stroud is the youngest of four children and has described competing with much older siblings as part of how he developed toughness and confidence.",
+        78
+      ],
+      [
+        "cfbfast-r-player-4432577-c-j-stroud--late-recruiting-rise",
+        "Stroud’s national recruiting profile surged relatively late, especially after a breakout senior season at Rancho Cucamonga.",
+        79
+      ],
+      [
+        "cfbfast-r-player-4432577-c-j-stroud--elite-11-mvp",
+        "He won MVP honors at the Elite 11 Finals before enrolling at Ohio State.",
+        79
+      ],
+      [
+        "cfbfast-r-player-4432577-c-j-stroud--rancho-cucamonga-state-semifinal-run",
+        "In his senior season, Stroud led Rancho Cucamonga to a state-semifinal run while establishing himself as a national quarterback recruit.",
+        79
+      ]
+    ]
+  ],
+  [
+    "cfb-caleb-downs",
+    [
+      [
+        "cfb-caleb-downs--deep-football-family",
+        "Downs comes from a prominent football family: his father Gary played NFL running back, his older brother Josh became an NFL receiver, and his uncle Dre Bly was a Pro Bowl cornerback.",
+        80
+      ],
+      [
+        "cfb-caleb-downs--five-different-scoring-methods",
+        "As a high-school junior, Downs scored touchdowns five different ways: rushing, receiving, interception return, kickoff return and passing.",
+        81
+      ],
+      [
+        "cfb-caleb-downs--basketball-and-baseball",
+        "Downs played basketball and baseball in high school in addition to starring in football.",
+        81
+      ],
+      [
+        "cfb-caleb-downs--true-two-way-high-school-role",
+        "At Mill Creek, Downs was a genuine two-way football player, contributing heavily on offense as well as at defensive back.",
+        81
+      ],
+      [
+        "cfb-caleb-downs--alabama-to-ohio-state-transfer",
+        "After a standout true freshman season at Alabama, Downs entered the transfer portal and joined Ohio State in January 2024.",
+        80
+      ]
+    ]
+  ],
+  [
+    "cfb-caleb-williams",
+    [
+      [
+        "cfb-caleb-williams--gonzaga-covid-senior-season",
+        "Williams attended Gonzaga College High School in Washington, D.C., and did not have a normal fall senior football season because of the COVID-19 pandemic.",
+        82
+      ],
+      [
+        "cfb-caleb-williams--early-graduate-oklahoma",
+        "He graduated high school a semester early and enrolled at Oklahoma for the spring 2021 term.",
+        82
+      ],
+      [
+        "cfb-caleb-williams--red-river-bench-spark",
+        "As an Oklahoma freshman, Williams replaced starter Spencer Rattler during the 2021 Red River game and helped lead a historic comeback over Texas.",
+        83
+      ],
+      [
+        "cfb-caleb-williams--followed-lincoln-riley-to-usc",
+        "After the season, Williams transferred from Oklahoma to USC, following head coach Lincoln Riley to Los Angeles.",
+        84
+      ],
+      [
+        "cfb-caleb-williams--painted-fingernails-tradition",
+        "Williams has painted his fingernails as a form of self-expression since before college; his mother is a nail technician and helped make nail art part of his personal style.",
+        84
+      ]
+    ]
+  ],
+  [
+    "cfb-carson-palmer",
+    [
+      [
+        "cfb-carson-palmer--football-and-basketball-champion",
+        "Palmer starred in both football and basketball at Santa Margarita High, with his school winning major championships during his time there.",
+        85
+      ],
+      [
+        "cfb-carson-palmer--usc-dream-school",
+        "Palmer described USC as the school he most wanted despite recruiting interest from other national programs.",
+        86
+      ],
+      [
+        "cfb-carson-palmer--second-true-freshman-usc-qb-start",
+        "Palmer became only the second true freshman quarterback to start a game for USC at that time.",
+        87
+      ],
+      [
+        "cfb-carson-palmer--collarbone-redshirt-reset",
+        "A broken collarbone in the third game of his sophomore season ended his year early and allowed him to redshirt.",
+        88
+      ],
+      [
+        "cfb-carson-palmer--troy-nickname-after-ucla-qb",
+        "High-school friends nicknamed Palmer “Troy” after Troy Aikman, even though Aikman was a UCLA alumnus and Palmer went on to star at USC.",
+        89
+      ]
+    ]
+  ],
+  [
+    "cfb-cedric-benson",
+    [
+      [
+        "cfb-cedric-benson--midland-lee-three-peat",
+        "Benson led Midland Lee to three consecutive Texas state football championships from 1998 through 2000.",
+        90
+      ],
+      [
+        "cfb-cedric-benson--first-high-school-dave-campbell-cover",
+        "In 2000, Benson became the first high-school player ever featured on the cover of Dave Campbell’s Texas Football magazine.",
+        90
+      ],
+      [
+        "cfb-cedric-benson--dodgers-minor-league-baseball",
+        "The Los Angeles Dodgers selected Benson in the 12th round of the 2001 MLB Draft, and he played minor-league baseball during college offseasons.",
+        91
+      ],
+      [
+        "cfb-cedric-benson--dodgers-paid-college-scholarship",
+        "Because he was under contract in baseball, the Dodgers paid Benson’s college scholarship for his first three years rather than Texas football.",
+        91
+      ],
+      [
+        "cfb-cedric-benson--quit-baseball-before-senior-year",
+        "Before his senior Texas season, Benson gave up professional baseball to focus entirely on football, after which Texas took over his scholarship.",
+        91
+      ]
+    ]
+  ],
+  [
+    "cfb-champ-bailey",
+    [
+      [
+        "cfb-champ-bailey--roland-champ-nickname",
+        "Bailey’s given name is Roland Bailey Jr.; he received the nickname “Champ” as a baby, reportedly because he was so active.",
+        92
+      ],
+      [
+        "cfb-champ-bailey--folkston-three-sport-star",
+        "Growing up in small-town Folkston, Georgia, Bailey earned all-state recognition in football, basketball and track.",
+        93
+      ],
+      [
+        "cfb-champ-bailey--brother-boss-bailey",
+        "His younger brother Boss Bailey also became a Georgia defensive star and NFL player.",
+        94
+      ],
+      [
+        "cfb-champ-bailey--three-phase-georgia-role",
+        "At Georgia, Champ Bailey played extensively on defense, offense and special teams rather than being limited to cornerback.",
+        95
+      ],
+      [
+        "cfb-champ-bailey--indoor-long-jump-record",
+        "Bailey also competed in Georgia track and set a school indoor long-jump record.",
+        95
+      ]
+    ]
+  ],
+  [
+    "cfb-charlie-ward",
+    [
+      [
+        "cfb-charlie-ward--thomasville-near-tallahassee",
+        "Ward grew up in Thomasville, Georgia, only about 35 miles from Tallahassee before attending Florida State.",
+        96
+      ],
+      [
+        "cfb-charlie-ward--many-sport-high-school-athlete",
+        "Ward was an unusually broad high-school athlete, excelling in football and basketball while also playing baseball, tennis, track and golf.",
+        96
+      ],
+      [
+        "cfb-charlie-ward--brewers-draft-out-of-high-school",
+        "Ward was good enough in baseball to be drafted by the Milwaukee Brewers out of high school.",
+        96
+      ],
+      [
+        "cfb-charlie-ward--fsu-basketball-ncaa-run",
+        "While quarterbacking Florida State, Ward also played point guard and helped the Seminoles basketball team reach multiple NCAA tournaments, including an Elite Eight run.",
+        97
+      ],
+      [
+        "cfb-charlie-ward--chose-nba-after-nfl-draft-uncertainty",
+        "After NFL teams declined to use an early pick on him, Ward pursued basketball and became a first-round NBA selection rather than beginning an NFL career.",
+        98
+      ]
+    ]
+  ],
+  [
+    "cfb-chase-coffman",
+    [
+      [
+        "cfb-chase-coffman--father-paul-kstate-nfl-te",
+        "Coffman’s father Paul was a standout tight end at Kansas State before a long NFL career.",
+        99
+      ],
+      [
+        "cfb-chase-coffman--chose-missouri-over-kstate",
+        "Chase chose Missouri despite a scholarship option from Kansas State, his father’s alma mater.",
+        100
+      ],
+      [
+        "cfb-chase-coffman--brother-carson-high-school-qb",
+        "At Raymore-Peculiar High, Chase caught passes from younger brother Carson Coffman, who later became a Kansas State quarterback.",
+        99
+      ],
+      [
+        "cfb-chase-coffman--all-four-siblings-c-names",
+        "Coffman is the oldest of four siblings whose first names all begin with C: Chase, Carson, Cameron and Camille.",
+        100
+      ],
+      [
+        "cfb-chase-coffman--basketball-all-conference",
+        "He lettered three years in basketball and earned first-team all-conference honors in the sport.",
+        100
+      ]
+    ]
+  ],
+  [
+    "chip-kelly",
+    [
+      [
+        "chip-kelly--new-hampshire-qb-safety",
+        "Kelly is a New Hampshire native who played both quarterback and safety at the University of New Hampshire.",
+        101
+      ],
+      [
+        "chip-kelly--physical-education-degree",
+        "Kelly graduated from New Hampshire with a degree in physical education.",
+        101
+      ],
+      [
+        "chip-kelly--began-coaching-defense-special-teams",
+        "He began coaching at Columbia in the secondary and on special teams, then worked with outside linebackers and safeties.",
+        101
+      ],
+      [
+        "chip-kelly--johns-hopkins-defensive-coordinator",
+        "Kelly spent a season as the defensive coordinator at Johns Hopkins before returning to New Hampshire.",
+        101
+      ],
+      [
+        "chip-kelly--new-hampshire-offensive-apprenticeship",
+        "At New Hampshire he coached running backs, then offensive line, before becoming offensive coordinator and developing the attack that helped lead to his Oregon opportunity.",
+        101
+      ]
+    ]
+  ],
+  [
+    "cfb-chris-long",
+    [
+      [
+        "cfb-chris-long--moved-to-charlottesville-age-nine",
+        "Long moved from Los Angeles to Charlottesville at age nine and later attended local St. Anne’s-Belfield before playing for Virginia.",
+        102
+      ],
+      [
+        "cfb-chris-long--preferred-baseball-until-tenth-grade",
+        "Long preferred baseball to football until around 10th grade, when his growth and athletic projection made football look like the better scholarship path.",
+        102
+      ],
+      [
+        "cfb-chris-long--basketball-and-lacrosse-too",
+        "He also played basketball and lacrosse in high school.",
+        102
+      ],
+      [
+        "cfb-chris-long--howie-did-not-push-football",
+        "His Hall of Fame father Howie Long deliberately did not push him into football; once Chris chose it, Howie became a demanding mentor.",
+        102
+      ],
+      [
+        "cfb-chris-long--mayor-of-charlottesville-identity",
+        "Virginia Athletics profiled Long under the nickname-like label “The Mayor of Charlottesville,” reflecting how closely he was identified with the local community and UVA.",
+        102
+      ]
+    ]
+  ],
+  [
+    "chris-petersen-cfb",
+    [
+      [
+        "chris-petersen--sacramento-city-to-uc-davis-qb",
+        "Petersen began his college playing career at Sacramento City College before transferring to UC Davis, where he became a standout quarterback.",
+        103
+      ],
+      [
+        "chris-petersen--psychology-and-educational-psychology",
+        "He earned a bachelor’s degree in psychology and a master’s degree in educational psychology from UC Davis.",
+        104
+      ],
+      [
+        "chris-petersen--coaching-started-at-uc-davis",
+        "Petersen began his coaching career at his alma mater as the freshman-team head coach before coaching receivers.",
+        104
+      ],
+      [
+        "chris-petersen--first-boise-season-fiesta",
+        "In his first season as Boise State head coach, Petersen went unbeaten and finished with the famous Fiesta Bowl upset of Oklahoma that used multiple trick plays.",
+        104
+      ],
+      [
+        "chris-petersen--okg-recruiting-philosophy",
+        "Petersen described his recruiting target as “OKGs” — “Our Kind of Guys” — emphasizing character, football ability and academic fit.",
+        105
+      ]
+    ]
+  ],
+  [
+    "cfb-chris-weinke",
+    [
+      [
+        "cfb-chris-weinke--same-recruiting-class-charlie-ward",
+        "Weinke originally signed with Florida State in the same recruiting class that included future Heisman winner Charlie Ward.",
+        106
+      ],
+      [
+        "cfb-chris-weinke--left-fsu-for-blue-jays",
+        "After only a few days on the Florida State campus in 1990, Weinke signed with the Toronto Blue Jays organization and chose professional baseball.",
+        106
+      ],
+      [
+        "cfb-chris-weinke--six-years-minor-league-baseball",
+        "Weinke spent six seasons in the Blue Jays minor-league system, reaching Triple-A, before returning to college football.",
+        107
+      ],
+      [
+        "cfb-chris-weinke--bowden-kept-scholarship-open",
+        "Bobby Bowden told Weinke that a Florida State football scholarship would remain available whenever he wanted to return, and honored that promise years later.",
+        107
+      ],
+      [
+        "cfb-chris-weinke--returned-as-25-year-old-freshman",
+        "Weinke returned to Florida State as a 25-year-old freshman and later became the oldest Heisman winner at age 28.",
+        106
+      ]
+    ]
+  ],
+  [
+    "cfb-christian-mccaffrey",
+    [
+      [
+        "cfb-christian-mccaffrey--both-parents-stanford-athletes",
+        "McCaffrey followed both parents to Stanford: father Ed played football there and mother Lisa played soccer there.",
+        108
+      ],
+      [
+        "cfb-christian-mccaffrey--grandfather-dave-sime-olympian",
+        "His grandfather Dave Sime was a Duke track star, a 1960 Olympic silver medalist in the 100 meters and a former world-record holder in the 100-yard dash.",
+        108
+      ],
+      [
+        "cfb-christian-mccaffrey--high-school-relay-record",
+        "McCaffrey was a four-year high-school track athlete who won a state 4x100 title and was part of a state-record 4x200 relay.",
+        108
+      ],
+      [
+        "cfb-christian-mccaffrey--pianist",
+        "Stanford’s biography lists McCaffrey as a pianist.",
+        108
+      ],
+      [
+        "cfb-christian-mccaffrey--rwanda-mission-trip",
+        "McCaffrey spent part of the summer of 2013 on a mission trip to Rwanda.",
+        108
+      ]
+    ]
+  ],
+  [
+    "cfb-colt-brennan",
+    [
+      [
+        "cfb-colt-brennan--backed-up-matt-leinart",
+        "At Mater Dei High School, Brennan spent time backing up future Heisman quarterback Matt Leinart.",
+        109
+      ],
+      [
+        "cfb-colt-brennan--worcester-academy-merit-scholarship",
+        "Although Utah State offered him a football scholarship out of high school, Brennan chose a postgraduate year at Worcester Academy on a merit scholarship.",
+        110
+      ],
+      [
+        "cfb-colt-brennan--colorado-walk-on",
+        "Brennan first enrolled at Colorado as a walk-on, aided by a prior relationship with offensive coordinator Shawn Watson.",
+        110
+      ],
+      [
+        "cfb-colt-brennan--saddleback-juco-reset",
+        "After Colorado, Brennan rebuilt his football career at Saddleback Community College, where he earned all-conference and state offensive-player recognition.",
+        111
+      ],
+      [
+        "cfb-colt-brennan--hawaii-walk-on-to-island-icon",
+        "Brennan arrived at Hawaii via a walk-on opportunity and became the quarterback most closely associated with the program’s undefeated 2007 run to the Sugar Bowl.",
+        112
+      ]
+    ]
+  ],
+  [
+    "cfb-colt-mccoy",
+    [
+      [
+        "cfb-colt-mccoy--coached-by-father-at-jim-ned",
+        "McCoy was coached by his father Brad at Jim Ned High School in Tuscola, Texas.",
+        113
+      ],
+      [
+        "cfb-colt-mccoy--father-former-acu-safety",
+        "Brad McCoy had played safety at Abilene Christian before becoming a high-school coach.",
+        114
+      ],
+      [
+        "cfb-colt-mccoy--shipley-fathers-roommates",
+        "McCoy’s father Brad and Jordan Shipley’s father Bob were college roommates and football teammates at Abilene Christian; their sons later became a star Texas quarterback-receiver pair.",
+        114
+      ],
+      [
+        "cfb-colt-mccoy--three-sport-small-town-athlete",
+        "At Jim Ned, McCoy was also a four-year basketball starter and a regional-level track athlete in addition to playing quarterback and punter.",
+        113
+      ],
+      [
+        "cfb-colt-mccoy--peru-mission-work",
+        "While at Texas, McCoy spent spring break doing missionary work in Peru, following a family tradition established by his grandparents.",
+        114
+      ]
+    ]
+  ],
+  [
+    "cfb-cooper-dejean",
+    [
+      [
+        "cfb-cooper-dejean--odebolt-small-town-roots",
+        "DeJean grew up in Odebolt, Iowa, a town of fewer than 1,000 residents, and attended the consolidated OABCIG school system serving several small northwest Iowa communities.",
+        115
+      ],
+      [
+        "cfb-cooper-dejean--four-sport-prep-athlete",
+        "At OABCIG, DeJean played football, basketball, baseball and track; he scored 1,832 career basketball points and won Iowa state titles in the 100 meters and long jump.",
+        116
+      ],
+      [
+        "cfb-cooper-dejean--high-school-quarterback-to-college-db",
+        "DeJean was a high-school quarterback as well as a defensive back, but Iowa recruited him for defense; he has said he initially wanted a chance to play quarterback in college.",
+        117
+      ],
+      [
+        "cfb-cooper-dejean--only-fbs-offer-iowa",
+        "Despite his production and athleticism, Iowa was DeJean’s only FBS scholarship offer; his other major opportunities came from FCS programs in the Dakotas.",
+        115
+      ],
+      [
+        "cfb-cooper-dejean--state-title-two-way-finish",
+        "In OABCIG’s 2020 state championship game, DeJean blocked an extra point that preserved an eight-point deficit, later scored the tying touchdown and then broke tackles for the winning touchdown.",
+        118
+      ]
+    ]
+  ],
+  [
+    "cfb-dbrickashaw-ferguson",
+    [
+      [
+        "cfb-dbrickashaw-ferguson--thorn-birds-name-origin",
+        "Ferguson’s first name was inspired by Father Ralph de Bricassart, a central character in the television miniseries “The Thorn Birds.”",
+        119
+      ],
+      [
+        "cfb-dbrickashaw-ferguson--childhood-heart-surgery-football-clearance",
+        "Ferguson had heart surgery as a child and for years was restricted from contact sports; a later cardiology evaluation cleared him without restrictions, opening the door for him to play football.",
+        120
+      ],
+      [
+        "cfb-dbrickashaw-ferguson--karate-black-belt",
+        "Ferguson trained in karate from childhood and earned a black belt, later crediting martial arts with helping develop discipline that carried into football.",
+        121
+      ],
+      [
+        "cfb-dbrickashaw-ferguson--uva-true-freshman-opener-start",
+        "In 2002 Ferguson became the first true freshman offensive lineman in Virginia history to start a season opener, then started all 14 games that year.",
+        122
+      ],
+      [
+        "cfb-dbrickashaw-ferguson--religious-studies-degree-early",
+        "Ferguson completed a Virginia degree in religious studies in three and a half years while becoming a first-team All-American.",
+        123
+      ]
+    ]
+  ],
+  [
+    "cfbfast-r-player-512030-dak-prescott",
+    [
+      [
+        "cfbfast-r-player-512030-dak-prescott--peggy-prescott-upbringing",
+        "Prescott was the youngest of three boys raised primarily by his mother, Peggy, and the family spent part of his childhood in a mobile home near Haughton, Louisiana.",
+        124
+      ],
+      [
+        "cfbfast-r-player-512030-dak-prescott--number-15-tim-tebow-tribute",
+        "Prescott wore No. 15 at Mississippi State in tribute to Tim Tebow, one of the SEC quarterbacks he admired; he also named his white Labrador “Tibeaux.”",
+        125
+      ],
+      [
+        "cfbfast-r-player-512030-dak-prescott--mississippi-state-early-faith-recruitment",
+        "Mississippi State offered Prescott before his senior high-school breakout; LSU pursued him later, but he remained committed to the Bulldogs.",
+        126
+      ],
+      [
+        "cfbfast-r-player-512030-dak-prescott--2013-egg-bowl-injury-return",
+        "After missing time with a nerve injury in his non-throwing arm, Prescott entered the 2013 Egg Bowl in the fourth quarter, tied the game and scored the winning overtime touchdown on fourth-and-1; the game came in the same month his mother died.",
+        127
+      ],
+      [
+        "cfbfast-r-player-512030-dak-prescott--two-mississippi-state-degrees",
+        "Prescott earned a bachelor’s degree in educational psychology in December 2014 and a master’s degree in workforce leadership in December 2015 while still at Mississippi State.",
+        128
+      ]
+    ]
+  ],
+  [
+    "cfb-dallas-clark",
+    [
+      [
+        "cfb-dallas-clark--mother-died-before-graduation",
+        "Clark’s mother died four days before his high-school graduation; after he arrived at Iowa, he described the football program and teammates as an important support system.",
+        129
+      ],
+      [
+        "cfb-dallas-clark--walk-on-linebacker-brother-motivation",
+        "Clark came to Iowa as a walk-on linebacker and was motivated in part by wanting to become a better linebacker than his older brother Derrik, who had played at Iowa State.",
+        129
+      ],
+      [
+        "cfb-dallas-clark--linebacker-to-tight-end-conversion",
+        "Kirk Ferentz and Bret Bielema convinced Clark to move from linebacker to tight end, a switch he initially resisted; quarterback Kyle McCann then worked with him extensively that summer.",
+        129
+      ],
+      [
+        "cfb-dallas-clark--purdue-95-yard-and-winning-touchdowns",
+        "Against Purdue in 2002, Clark caught a 95-yard touchdown and later caught the winning touchdown on fourth-and-goal from the 7-yard line.",
+        130
+      ],
+      [
+        "cfb-dallas-clark--century-family-farm-return",
+        "After his playing career, Clark bought the century-old family farm near Livermore, Iowa, when his grandmother’s estate required it to be sold, and returned to farming there.",
+        131
+      ]
+    ]
+  ],
+  [
+    "cfbfast-r-player-3116593-dalvin-cook",
+    [
+      [
+        "cfbfast-r-player-3116593-dalvin-cook--moved-to-grandmother-for-miami-central",
+        "As a seventh-grader, Cook moved in with his grandmother Betty in Opa-locka so he could attend Miami Central, making a long bus commute to school.",
+        132
+      ],
+      [
+        "cfbfast-r-player-3116593-dalvin-cook--youth-handoffs-from-brother-deandre",
+        "Cook played youth football for the Carol City Chiefs while taking handoffs from his older brother DeAndre Burnett, who played quarterback.",
+        132
+      ],
+      [
+        "cfbfast-r-player-3116593-dalvin-cook--waited-behind-devonta-freeman",
+        "Cook did not join Miami Central’s varsity as a freshman while future Florida State running back Devonta Freeman was the senior feature back; Cook moved up the following year.",
+        133
+      ],
+      [
+        "cfbfast-r-player-3116593-dalvin-cook--joseph-yearby-friend-to-rival",
+        "Cook and Joseph Yearby were close friends and shared the Miami Central backfield before becoming college rivals at Florida State and Miami.",
+        134
+      ],
+      [
+        "cfbfast-r-player-3116593-dalvin-cook--clemson-florida-fsu-recruiting-flips",
+        "Cook’s recruitment moved from a Clemson commitment to Florida and ultimately to Florida State; before signing, he had also signed financial-aid agreements with multiple Florida programs.",
+        135
+      ]
+    ]
+  ],
+  [
+    "dan-lanning",
+    [
+      [
+        "dan-lanning--richmond-missouri-small-town-roots",
+        "Lanning grew up around Richmond, Missouri, in a small-town setting with teacher parents and time on his grandfather’s farm, while playing multiple sports.",
+        136
+      ],
+      [
+        "dan-lanning--small-college-player-to-high-school-teacher",
+        "Lanning played linebacker at William Jewell College, earned degrees in physical education and secondary education, and began coaching at Park Hill South High School while working in education.",
+        137
+      ],
+      [
+        "dan-lanning--overnight-drive-to-pitt-opportunity",
+        "While still a high-school teacher and coach, Lanning drove roughly 13 hours overnight from Missouri to Pittsburgh without a scheduled appointment in an effort to create his first Division I coaching opportunity.",
+        138
+      ],
+      [
+        "dan-lanning--oregon-get-real-sessions",
+        "At Oregon, Lanning instituted “get real” sessions in which players and staff discuss personal histories, goals and life beyond football.",
+        139
+      ],
+      [
+        "dan-lanning--outback-relationship-and-story-tattoo",
+        "Lanning met his wife Sauphia while they were both working at Outback Steakhouse, and a large tattoo later incorporated symbols for her, their sons, Kansas City, Outback and stops on his coaching journey.",
+        140
+      ]
+    ]
+  ],
+  [
+    "cfb-dan-morgan",
+    [
+      [
+        "cfb-dan-morgan--miami-fan-before-hurricane",
+        "Morgan grew up in the Philadelphia area as a Miami Hurricanes fan and remembered wearing a white Steve Walsh jersey before his family later moved to South Florida.",
+        141
+      ],
+      [
+        "cfb-dan-morgan--recruited-fullback-to-linebacker",
+        "Miami recruited Morgan from Taravella High School as a fullback, but he switched to linebacker only days before the 1997 season opener.",
+        142
+      ],
+      [
+        "cfb-dan-morgan--first-miami-sophomore-captain",
+        "Morgan became the first sophomore in Miami football history to be named a team captain and ultimately served as captain for three seasons.",
+        142
+      ],
+      [
+        "cfb-dan-morgan--played-through-broken-thumb",
+        "As a sophomore in 1998, Morgan broke his left thumb against Boston College, underwent surgery the next day and returned to practice a day later without missing a down in the game.",
+        143
+      ],
+      [
+        "cfb-dan-morgan--first-defensive-award-triple-sweep",
+        "In 2000 Morgan became the first college football player to win the Bednarik, Butkus and Nagurski awards in the same season.",
+        142
+      ]
+    ]
+  ],
+  [
+    "cfb-danny-wuerffel",
+    [
+      [
+        "cfb-danny-wuerffel--air-force-chaplain-childhood",
+        "Wuerffel’s father was an Air Force chaplain, and the family moved repeatedly during Danny’s childhood, including spending about three years in Spain before settling in Florida.",
+        144
+      ],
+      [
+        "cfb-danny-wuerffel--valedictorian-multisport-fca-leader",
+        "At Fort Walton Beach High School, Wuerffel was valedictorian, played football and basketball, participated in track, and served for three years as president of the Fellowship of Christian Athletes chapter.",
+        145
+      ],
+      [
+        "cfb-danny-wuerffel--heisman-winner-coached-by-heisman-winner",
+        "Wuerffel won the Heisman while playing for Steve Spurrier, himself a former Florida quarterback and Heisman winner.",
+        146
+      ],
+      [
+        "cfb-danny-wuerffel--heisman-and-campbell-scholar-athlete",
+        "Wuerffel combined the Heisman Trophy with the William V. Campbell Trophy, the National Football Foundation’s premier scholar-athlete honor.",
+        147
+      ],
+      [
+        "cfb-danny-wuerffel--desire-street-ministries",
+        "After football, Wuerffel became deeply associated with Desire Street Ministries and community work connected to New Orleans.",
+        147
+      ]
+    ]
+  ],
+  [
+    "cfb-darqueze-dennard",
+    [
+      [
+        "cfb-darqueze-dennard--dry-branch-no-stars-no-offers",
+        "Dennard came from tiny Dry Branch, Georgia, and reached the end of his high-school career with essentially no recruiting profile, no major star ranking and no scholarship offers.",
+        148
+      ],
+      [
+        "cfb-darqueze-dennard--discovered-while-scouting-mumphery",
+        "Michigan State assistant Dave Warner noticed Dennard while visiting to evaluate wide receiver Keith Mumphery; Dennard was not the original reason for the scouting trip, but the Spartans ultimately offered him.",
+        149
+      ],
+      [
+        "cfb-darqueze-dennard--alfonzo-dennard-cousin",
+        "Dennard is a cousin of defensive back Alfonzo Dennard, who played at Nebraska before reaching the NFL.",
+        150
+      ],
+      [
+        "cfb-darqueze-dennard--family-work-ethic-influences",
+        "Dennard has cited the work ethic of his mother and his grandfather, who worked in the kaolin mines around central Georgia, as formative influences.",
+        151
+      ],
+      [
+        "cfb-darqueze-dennard--first-msu-thorpe-winner",
+        "Dennard became Michigan State’s first winner of the Jim Thorpe Award as college football’s top defensive back.",
+        148
+      ]
+    ]
+  ],
+  [
+    "cfb-darren-sproles",
+    [
+      [
+        "cfb-darren-sproles--tank-nickname-birthweight",
+        "Sproles’ father Larry nicknamed him “Tank” because Darren weighed about 10 pounds at birth.",
+        152
+      ],
+      [
+        "cfb-darren-sproles--childhood-stutter-public-speaking",
+        "Sproles had a severe childhood stutter and later put significant work into public speaking, including preparing to speak after receiving a major college honor.",
+        152
+      ],
+      [
+        "cfb-darren-sproles--number-43-for-father",
+        "Sproles wore No. 43 because his father Larry had worn the number and Darren wanted to be like him.",
+        153
+      ],
+      [
+        "cfb-darren-sproles--mother-annette-academics",
+        "Sproles credited his mother Annette with insisting on schoolwork and taking particular pride in his degree; she died of cancer before his senior season at Kansas State.",
+        153
+      ],
+      [
+        "cfb-darren-sproles--second-grade-olathe-north-dream",
+        "As a second-grader, Sproles was already telling people he would become the next standout running back at Olathe North; he later helped the school win three consecutive state championships.",
+        152
+      ]
+    ]
+  ],
+  [
+    "cfb-davante-adams",
+    [
+      [
+        "cfb-davante-adams--mother-worked-two-jobs",
+        "Adams was raised largely by his mother Pamela, who worked two jobs and also braided hair at night to support the family.",
+        154
+      ],
+      [
+        "cfb-davante-adams--three-broken-arms-delayed-football",
+        "Adams broke the same arm three times growing up and did not play high-school football until his junior year.",
+        155
+      ],
+      [
+        "cfb-davante-adams--basketball-first-point-guard",
+        "Adams initially saw basketball as his primary sport and played point guard; a cousin helped convince him that his size and athletic profile offered a better path at wide receiver.",
+        155
+      ],
+      [
+        "cfb-davante-adams--fresno-state-discovered-scouting-another-player",
+        "Fresno State noticed Adams while a coach was evaluating another player, helping produce the scholarship opportunity that other programs had not yet offered.",
+        154
+      ],
+      [
+        "cfb-davante-adams--first-scholarship-eased-family-burden",
+        "Adams accepted Fresno State’s football scholarship after it became his first scholarship opportunity, with the chance to avoid placing college costs on his mother factoring into the decision.",
+        155
+      ]
+    ]
+  ],
+  [
+    "cfb-david-decastro",
+    [
+      [
+        "cfb-david-decastro--south-african-rugby-family",
+        "DeCastro’s parents are from South Africa, and his father Colin played rugby and cricket; the family considered raising David in South Africa before settling in the United States.",
+        156
+      ],
+      [
+        "cfb-david-decastro--mother-delayed-football-start",
+        "DeCastro’s mother initially did not allow him to play youth football, so he played sports such as baseball and basketball and did not begin football until high school; she later learned the sport through books and football clinics.",
+        157
+      ],
+      [
+        "cfb-david-decastro--washington-shot-put-champion",
+        "At Bellevue High School, DeCastro won a Washington Class 3A state championship in the shot put.",
+        158
+      ],
+      [
+        "cfb-david-decastro--management-science-engineering-major",
+        "DeCastro studied management science and engineering at Stanford.",
+        158
+      ],
+      [
+        "cfb-david-decastro--ultra-businesslike-playing-personality",
+        "Stanford teammates and later profiles described DeCastro as unusually businesslike and focused on the field, to the point that celebratory high-fives could be viewed as a distraction from the next assignment.",
+        159
+      ]
+    ]
+  ],
+  [
+    "cfb-david-pollack",
+    [
+      [
+        "cfb-david-pollack--pee-wee-teammate-david-greene",
+        "Pollack and future Georgia quarterback David Greene played Pee-Wee football together from about age eight through eighth grade and later became Bulldog teammates, roommates and close friends.",
+        160
+      ],
+      [
+        "cfb-david-pollack--three-star-recruit",
+        "Pollack arrived at Georgia from Shiloh High School as a three-star recruit rather than as one of the nation’s most heavily decorated prospects.",
+        161
+      ],
+      [
+        "cfb-david-pollack--tackle-to-defensive-end-transition",
+        "Pollack moved from defensive tackle to defensive end before the 2002 season and later recalled that the early days of learning the new technique were difficult.",
+        162
+      ],
+      [
+        "cfb-david-pollack--south-carolina-goal-line-takeaway-touchdown",
+        "Against South Carolina in 2002, Pollack created Georgia’s only touchdown by taking the ball from quarterback Corey Jenkins in the end zone on a famous defensive play.",
+        163
+      ],
+      [
+        "cfb-david-pollack--three-time-first-team-all-american",
+        "Pollack became only the second Georgia player after Herschel Walker to earn first-team All-America recognition in three seasons.",
+        164
+      ]
+    ]
+  ],
+  [
+    "cfb-deangelo-williams",
+    [
+      [
+        "cfb-deangelo-williams--wynne-to-memphis-over-regional-offers",
+        "Williams starred at Wynne High School in Arkansas but chose Memphis despite recruitment from programs including Arkansas, Ole Miss and Iowa.",
+        165
+      ],
+      [
+        "cfb-deangelo-williams--arkansas-state-sprint-champion",
+        "Williams was an accomplished track sprinter, setting a state-class record in the 100 meters and winning a state title in the 200 meters.",
+        165
+      ],
+      [
+        "cfb-deangelo-williams--state-title-game-three-way-touchdowns",
+        "In Wynne’s state championship run, Williams produced a championship-game performance that included rushing, receiving and return touchdowns.",
+        166
+      ],
+      [
+        "cfb-deangelo-williams--broken-foot-high-school-recovery",
+        "A broken foot caused Williams to miss much of his sophomore high-school season before he returned to become one of Arkansas’s top players.",
+        165
+      ],
+      [
+        "cfb-deangelo-williams--family-breast-cancer-advocacy",
+        "Williams’ mother Sandra and four of his aunts were diagnosed with breast cancer, a family history that drove his long-term public advocacy for breast-cancer awareness.",
+        167
+      ]
+    ]
+  ],
+  [
+    "cfb-derrick-johnson",
+    [
+      [
+        "cfb-derrick-johnson--waco-baylor-brother-upbringing",
+        "Johnson grew up in Waco around the Baylor football program because his older brother Dwight played defensive tackle for the Bears.",
+        168
+      ],
+      [
+        "cfb-derrick-johnson--brother-kept-recruitment-neutral",
+        "During Johnson’s recruitment, Dwight deliberately avoided pushing him toward Baylor and instead encouraged him to decide for himself; Derrick ultimately chose Texas.",
+        168
+      ],
+      [
+        "cfb-derrick-johnson--extended-college-football-family",
+        "Johnson comes from an extensive football family that includes cousins who played at Rice, UCLA, Oklahoma, Florida State and USC in addition to brother Dwight at Baylor.",
+        169
+      ],
+      [
+        "cfb-derrick-johnson--track-speed-and-triple-jump",
+        "At Waco High, Johnson also ran a 10.5-second 100 meters and triple-jumped 48 feet.",
+        169
+      ],
+      [
+        "cfb-derrick-johnson--waco-homesickness-and-tattoo",
+        "Johnson returned to Waco nearly every offseason weekend during his first years at Texas because he missed home, and he carried a tattoo tribute to Waco on his arm.",
+        168
+      ]
+    ]
+  ],
+  [
+    "cfb-derwin-james",
+    [
+      [
+        "cfb-derwin-james--offense-to-safety-for-varsity",
+        "James played quarterback, running back and wide receiver in youth football and had never played safety until his freshman year at Auburndale High, when safety was the open varsity position and he chose to learn it rather than play junior varsity.",
+        170
+      ],
+      [
+        "cfb-derwin-james--fsu-offer-at-fourteen",
+        "Florida State coach Jimbo Fisher offered James a scholarship when James was a 14-year-old high-school freshman.",
+        170
+      ],
+      [
+        "cfb-derwin-james--father-blue-football-mentor",
+        "James’ father, Derwin Sr., nicknamed “Blue,” had been a standout linebacker and captain at Haines City High and became an early football coach and film-study influence for his son.",
+        170
+      ],
+      [
+        "cfb-derwin-james--edgerrin-james-family-lineage",
+        "Derwin James is related to former Miami running back Edgerrin James and is part of a broader extended family with multiple high-level football players.",
+        171
+      ],
+      [
+        "cfb-derwin-james--returned-to-haines-city",
+        "After beginning high school at Auburndale, James returned to Haines City, where his mother wanted his hometown attached to his achievements and where he rejoined the community in which he had grown up playing football.",
+        170
+      ]
+    ]
+  ],
+  [
+    "cfb-desean-jackson",
+    [
+      [
+        "cfb-desean-jackson--team-jackson-family-training",
+        "Jackson’s father Bill and older brother Byron built a family training operation known as “Team Jackson” around DeSean from about age eight.",
+        172
+      ],
+      [
+        "cfb-desean-jackson--long-commute-to-long-beach-poly",
+        "While living with his father in South Central Los Angeles, Jackson made a demanding combination of walking, bus and train travel to attend Long Beach Poly because his father wanted him in a top football program.",
+        172
+      ],
+      [
+        "cfb-desean-jackson--major-baseball-prospect",
+        "Jackson was also an accomplished baseball player whom Cal described as having big-league potential.",
+        173
+      ],
+      [
+        "cfb-desean-jackson--emergency-defense-title-game-pick-six",
+        "In a high-school championship game, Jackson was pressed into emergency duty on defense and intercepted two passes, including a 68-yard touchdown return.",
+        173
+      ],
+      [
+        "cfb-desean-jackson--tennessee-punt-return-touchdown",
+        "Jackson opened Cal’s 2007 season against Tennessee with a 77-yard punt-return touchdown in a high-profile rematch of the previous season’s loss.",
+        173
+      ]
+    ]
+  ],
+  [
+    "cfb-deshaun-watson",
+    [
+      [
+        "cfb-deshaun-watson--815-gainesville-roots",
+        "Watson grew up in apartment 815 of the Harrison Square public-housing complex in Gainesville, Georgia, and later used “815” on game-day wristbands as a reminder of where he came from.",
+        174
+      ],
+      [
+        "cfb-deshaun-watson--habitat-warrick-dunn-home",
+        "Watson’s mother applied for a Habitat for Humanity home and completed required sweat-equity work; the family’s house was also supported through Warrick Dunn’s home-furnishing charity program.",
+        174
+      ],
+      [
+        "cfb-deshaun-watson--michael-perry-quarterback-mentor",
+        "Around age 14, Watson began working closely with Gainesville quarterback coach Michael Perry, a relationship he has credited with helping shape his development at the position.",
+        175
+      ],
+      [
+        "cfb-deshaun-watson--clemson-first-offer-chad-morris-pursuit",
+        "Clemson became Watson’s first scholarship offer after he impressed at a camp while still 14; offensive coordinator Chad Morris then recruited him for years, even attending high-school basketball games and practices.",
+        176
+      ],
+      [
+        "cfb-deshaun-watson--championship-crush-to-renfrow",
+        "On Clemson’s final drive of the 2016 national championship game, Watson executed the play “Crush” and found Hunter Renfrow for the winning touchdown with one second remaining against Alabama.",
+        177
+      ]
+    ]
+  ],
+  [
+    "cfb-devin-white",
+    [
+      [
+        "cfb-devin-white--high-school-running-back-linebacker",
+        "White was a two-way star at North Webster High School, playing both running back and linebacker.",
+        178
+      ],
+      [
+        "cfb-devin-white--lsu-running-back-to-linebacker",
+        "White arrived at LSU with a running-back background before converting full-time to linebacker.",
+        179
+      ],
+      [
+        "cfb-devin-white--daisy-mae-horseman",
+        "White was a lifelong horseman and kept his Tennessee Walking Horse, Daisy Mae, stabled only a short distance from LSU’s campus, regularly caring for and riding her during college.",
+        179
+      ],
+      [
+        "cfb-devin-white--rode-horse-to-final-and-stadium",
+        "White once rode Daisy Mae to a final exam and later rode the horse into Tiger Stadium for a feature tied to his LSU career.",
+        179
+      ],
+      [
+        "cfb-devin-white--first-lsu-butkus-winner",
+        "White became the first LSU player to win the Butkus Award as the nation’s top linebacker.",
+        179
+      ]
+    ]
+  ],
+  [
+    "cfb-dez-bryant",
+    [
+      [
+        "cfb-dez-bryant--lufkin-track-hurdles-triple-jump",
+        "At Lufkin High School, Bryant competed in track and field as a hurdler and triple jumper; district results show him winning the 110-meter hurdles and finishing second in the triple jump.",
+        180
+      ],
+      [
+        "cfb-dez-bryant--texas-recruit-to-oklahoma-state",
+        "Bryant was a highly regarded receiver from Lufkin, Texas, who signed with Oklahoma State after being recruited by regional powers including Oklahoma, Texas A&M and Texas Tech.",
+        181
+      ],
+      [
+        "cfb-dez-bryant--freshman-role-expanded-after-bowman-injury",
+        "Bryant contributed immediately as a true freshman and became especially important late in the season when Oklahoma State was without injured veteran receiver Adarius Bowman.",
+        182
+      ],
+      [
+        "cfb-dez-bryant--receiver-and-punt-return-star",
+        "In 2008 Bryant was recognized not only as an All-America receiver but also as the Big 12 Special Teams Player of the Year and an all-conference return specialist.",
+        183
+      ],
+      [
+        "cfb-dez-bryant--georgia-catch-sports-illustrated-cover",
+        "Bryant’s diving touchdown catch in Oklahoma State’s 2009 win over Georgia was used on a Sports Illustrated cover during a period when the magazine was featuring the Cowboys prominently.",
+        184
+      ]
+    ]
+  ],
+  [
+    "cfb-drew-brees",
+    [
+      [
+        "cfb-drew-brees--texas-am-family-but-no-texas-offer",
+        "Brees grew up in Austin as the son of two Texas A&M graduates and expected to attend a Texas college, but major in-state programs did not offer him a football scholarship.",
+        185
+      ],
+      [
+        "cfb-drew-brees--acl-tear-recruiting-setback",
+        "Brees tore the ACL in his left knee late in his junior year at Westlake High School, entering his senior recruiting cycle as a relatively small quarterback coming off major knee surgery.",
+        185
+      ],
+      [
+        "cfb-drew-brees--joe-tiller-purdue-fit",
+        "New Purdue coach Joe Tiller saw Brees as a fit for the spread passing system he was bringing to West Lafayette and provided the opportunity that Texas programs had not.",
+        185
+      ],
+      [
+        "cfb-drew-brees--holy-toledo-ohio-state-touchdown",
+        "In 2000 against Ohio State, Brees hit Seth Morales for a 64-yard late touchdown on the play remembered by the “Holy Toledo!” radio call, keeping Purdue’s Rose Bowl run alive.",
+        186
+      ],
+      [
+        "cfb-drew-brees--industrial-management-business-expectation",
+        "Brees earned a Purdue degree in industrial management and has said he arrived on campus expecting that his degree and a business career were more realistic long-term outcomes than professional football.",
+        187
+      ]
+    ]
+  ],
+  [
+    "cfb-dwayne-allen",
+    [
+      [
+        "cfb-dwayne-allen--basketball-first-sport",
+        "Allen grew up especially devoted to basketball and considered it his favorite sport before football became his main athletic path.",
+        188
+      ],
+      [
+        "cfb-dwayne-allen--wayne-inman-football-mentor",
+        "Terry Sanford coach Wayne Inman introduced Allen to football during his freshman year and became a father-figure mentor to him.",
+        189
+      ],
+      [
+        "cfb-dwayne-allen--late-georgia-to-clemson-switch",
+        "Allen was committed to Georgia, visited Clemson late in his senior year despite barely knowing where the school was, and ultimately changed his decision to Clemson near signing day.",
+        189
+      ],
+      [
+        "cfb-dwayne-allen--mentor-son-georgia-connection",
+        "Allen’s decision was emotionally complicated because mentor Wayne Inman’s own son had been a four-year starter at Georgia, yet Inman supported Allen choosing the school that felt right to him.",
+        189
+      ],
+      [
+        "cfb-dwayne-allen--first-clemson-mackey-winner",
+        "Allen became Clemson’s first winner of the John Mackey Award as the nation’s top tight end.",
+        190
+      ]
+    ]
+  ],
+  [
+    "cfb-dwight-freeney",
+    [
+      [
+        "cfb-dwight-freeney--soccer-first-four-sport-athlete",
+        "Freeney was a four-sport high-school athlete in football, basketball, baseball and soccer, and he played varsity soccer before football became his primary sport.",
+        191
+      ],
+      [
+        "cfb-dwight-freeney--coach-jack-cochran-recruited-him-to-football",
+        "At Bloomfield High School in Connecticut, coach Jack Cochran helped draw Freeney into football after seeing the athleticism he had shown in other sports.",
+        192
+      ],
+      [
+        "cfb-dwight-freeney--and1-inspired-spin-move",
+        "Freeney has traced the development of his signature spin move to basketball and streetball footwork, including inspiration from AND1 Mixtape-era moves.",
+        193
+      ],
+      [
+        "cfb-dwight-freeney--syracuse-locker-room-fit",
+        "Freeney said Syracuse appealed to him because the energy and personality in the locker room reminded him of the environment he knew at Bloomfield High School.",
+        194
+      ],
+      [
+        "cfb-dwight-freeney--virginia-tech-four-and-a-half-sacks",
+        "Freeney recorded 4.5 sacks against Virginia Tech in 2001, one of the defining single-game performances of his Syracuse career.",
+        195
+      ]
+    ]
+  ],
+  [
+    "cfb-earl-thomas",
+    [
+      [
+        "cfb-earl-thomas--miracle-baby-family-story",
+        "Thomas’ mother Debbie has described him as a “miracle baby” after she had earlier faced a serious medical scare and uncertainty about having another child.",
+        196
+      ],
+      [
+        "cfb-earl-thomas--four-sport-two-way-prep-athlete",
+        "At West Orange-Stark, Thomas lettered in football, basketball, baseball and track and played defensive back, running back and wide receiver in football.",
+        197
+      ],
+      [
+        "cfb-earl-thomas--church-musician",
+        "Thomas was active in the church pastored by his grandfather Earl Thomas and played piano there; he had also played tenor saxophone in band when younger.",
+        198
+      ],
+      [
+        "cfb-earl-thomas--hurricane-rita-home-loss",
+        "Thomas’ family lost its home to Hurricane Rita in 2005, and helping his family obtain a new home became one of his stated goals when he later considered leaving college early.",
+        196
+      ],
+      [
+        "cfb-earl-thomas--pregame-pickle-watermelon-slush",
+        "In his Texas player questionnaire, Thomas listed a pregame ritual of eating a pickle and drinking a watermelon slush.",
+        198
+      ]
+    ]
+  ],
+  [
+    "ed-orgeron",
+    [
+      [
+        "ed-orgeron--larose-cajun-lsu-childhood",
+        "Orgeron grew up in Larose, Louisiana, in a Cajun family that organized fall weekends around LSU football; he has said that as a young child he already wanted to coach LSU.",
+        199
+      ],
+      [
+        "ed-orgeron--bear-bryant-visit-turned-away",
+        "When Alabama coach Bear Bryant wanted to recruit Orgeron out of South Lafourche High School, Orgeron’s father told Bryant not to make the trip because his son was going to LSU.",
+        200
+      ],
+      [
+        "ed-orgeron--left-lsu-after-two-weeks-dug-ditches",
+        "Orgeron left LSU after about two weeks as a player because he was homesick; the next day his father put him to work digging telephone-cable ditches before Orgeron eventually continued his career at Northwestern State.",
+        200
+      ],
+      [
+        "ed-orgeron--bobby-hebert-high-school-teammate",
+        "Orgeron and future NFL quarterback Bobby Hebert grew up together and were teammates on South Lafourche High School’s 1977 state championship team.",
+        200
+      ],
+      [
+        "ed-orgeron--coach-o-cajun-recruiting-identity",
+        "Orgeron’s gravelly Cajun voice, Louisiana cultural fluency and high-energy recruiting became defining elements of the “Coach O” persona, particularly at LSU.",
+        199
+      ]
+    ]
+  ],
+  [
+    "cfb-eddie-george",
+    [
+      [
+        "cfb-eddie-george--childhood-heisman-speech-practice",
+        "George has said that by childhood he was telling his mother he would play football and win the Heisman, and by about age 11 he practiced a Heisman acceptance speech in the bathroom mirror.",
+        201
+      ],
+      [
+        "cfb-eddie-george--fork-union-reset",
+        "George left the Philadelphia area for Fork Union Military Academy as a teenager, where the structured environment served as an academic and personal reset before college.",
+        202
+      ],
+      [
+        "cfb-eddie-george--ohio-state-kept-him-at-running-back",
+        "Several colleges saw George’s size and projected him at linebacker, while Ohio State was willing to recruit him as a running back.",
+        203
+      ],
+      [
+        "cfb-eddie-george--illinois-fumbles-cooper-stuck-with-him",
+        "As an Ohio State freshman, George lost two goal-line fumbles against Illinois, one of which was returned 96 yards, but coach John Cooper continued to believe in him.",
+        203
+      ],
+      [
+        "cfb-eddie-george--yahtzee-recruiting-visit-horseshoe",
+        "George recalled being underwhelmed when an Ohio State recruiting visit included players sitting around playing Yahtzee, but said the experience of the Horseshoe helped sell him on the program.",
+        204
+      ]
+    ]
+  ],
+  [
+    "cfb-eli-manning",
+    [
+      [
+        "cfb-eli-manning--ole-miss-family-legacy-with-hands-off-father",
+        "Eli grew up with Ole Miss as part of the Manning family story, but Archie Manning publicly emphasized allowing his son to make his own college decision rather than requiring him to follow his father.",
+        205
+      ],
+      [
+        "cfb-eli-manning--cutcliffe-hire-sealed-ole-miss",
+        "Manning was seriously considering schools including Virginia and Texas before Ole Miss hired David Cutcliffe, Peyton Manning’s former Tennessee coach; that relationship helped seal Eli’s choice of Ole Miss.",
+        206
+      ],
+      [
+        "cfb-eli-manning--cutcliffe-best-ever-challenge",
+        "As a redshirt freshman, Cutcliffe challenged Manning to define whether he wanted merely to start, become an All-American, or become the best quarterback in Ole Miss history; after several days, Manning chose the highest goal despite the Archie Manning benchmark.",
+        207
+      ],
+      [
+        "cfb-eli-manning--chose-different-jersey-number",
+        "Manning chose a different jersey number from the numbers most associated with Archie and Peyton, another small way he signaled that he intended to create his own identity.",
+        208
+      ],
+      [
+        "cfb-eli-manning--archie-legacy-through-scrapbook",
+        "Because Eli was born long after Archie’s Ole Miss playing career, he learned much of his father’s college legacy through family stories and a scrapbook rather than by seeing Archie play live.",
+        206
+      ]
+    ]
+  ],
+  [
+    "cfb-eric-crouch",
+    [
+      [
+        "cfb-eric-crouch--nebraska-dream-from-recruiting-letter",
+        "Crouch grew up in Nebraska and has described a sophomore-year recruiting letter from the Cornhuskers as the moment playing for Nebraska became a concrete dream.",
+        209
+      ],
+      [
+        "cfb-eric-crouch--number-seven-john-elway",
+        "Crouch wore No. 7 in tribute to John Elway, his favorite professional quarterback.",
+        209
+      ],
+      [
+        "cfb-eric-crouch--ankle-redshirt-title-season",
+        "An ankle injury caused Crouch to redshirt during Nebraska’s 1997 national championship season rather than immediately joining the quarterback rotation.",
+        210
+      ],
+      [
+        "cfb-eric-crouch--newcombe-qb-battle-nearly-left",
+        "After losing the quarterback job to Bobby Newcombe in 1999, Crouch briefly went home and considered leaving the team before coach Frank Solich persuaded him to return.",
+        211
+      ],
+      [
+        "cfb-eric-crouch--black-41-flash-reverse",
+        "Against No. 1 Oklahoma in 2001, Nebraska used “Black 41 Flash Reverse,” with Crouch catching a 63-yard touchdown pass on a trick play.",
+        212
+      ]
+    ]
+  ],
+  [
+    "cfb-eric-weddle",
+    [
+      [
+        "cfb-eric-weddle--utah-only-scholarship-offer",
+        "Weddle has described Utah as his only college football scholarship offer and said he arrived from Southern California with a major chip on his shoulder.",
+        213
+      ],
+      [
+        "cfb-eric-weddle--lion-den-competitive-mantra",
+        "Weddle adopted a Brian Billick quote about entering a lion’s den with a spear as a competitive mantra while trying to prove programs wrong for overlooking him.",
+        213
+      ],
+      [
+        "cfb-eric-weddle--played-all-three-phases",
+        "At Utah, Weddle played cornerback and safety while also taking snaps at quarterback and running back, returning kicks and punts, holding for kicks, and contributing on coverage teams.",
+        214
+      ],
+      [
+        "cfb-eric-weddle--san-diego-state-three-interception-three-touchdown-game",
+        "Against San Diego State in 2006, Weddle intercepted three passes and scored three touchdowns—two on interception returns and one on an offensive run.",
+        215
+      ],
+      [
+        "cfb-eric-weddle--armed-forces-bowl-final-play-interception",
+        "In his final Utah game, the 2006 Armed Forces Bowl, Weddle contributed on defense, offense and as a holder, then intercepted a pass on the final play of his college career shortly after scoring a rushing touchdown.",
+        216
+      ]
+    ]
+  ],
+  [
+    "cfb-ezekiel-elliott",
+    [
+      [
+        "cfb-ezekiel-elliott--missouri-athlete-family",
+        "Elliott grew up in a Missouri athletics family: his father Stacy played football for Missouri, his mother Dawn competed in track and field there, and Elliott attended Missouri spring games as a child.",
+        217
+      ],
+      [
+        "cfb-ezekiel-elliott--four-state-track-titles",
+        "In his final high-school season at John Burroughs, Elliott won Missouri state titles in four different track-and-field events.",
+        218
+      ],
+      [
+        "cfb-ezekiel-elliott--gus-frerotte-high-school-coach",
+        "Elliott played at John Burroughs School for head football coach Gus Frerotte, the former NFL quarterback.",
+        219
+      ],
+      [
+        "cfb-ezekiel-elliott--mizzou-late-recruiting-pull",
+        "Even after Elliott committed to Ohio State, his father kept pressing Urban Meyer about how the Buckeyes would use him, and the family's Missouri ties made Mizzou a serious late threat; Meyer later recalled nearly walking away from the recruitment before running-backs coach Stan Drayton helped steady it.",
+        217
+      ],
+      [
+        "cfb-ezekiel-elliott--sugar-bowl-85-yard-run",
+        "With Ohio State protecting a six-point fourth-quarter lead against No. 1 Alabama in the 2015 Sugar Bowl, Elliott broke an 85-yard touchdown run that effectively clinched the College Football Playoff semifinal.",
+        220
+      ]
+    ]
+  ],
+  [
+    "cfb-fernando-mendoza",
+    [
+      [
+        "cfb-fernando-mendoza--fourth-grade-nearly-quit",
+        "As a fourth-grader in Miami, Mendoza joined a park football team as the fourth quarterback on the depth chart and considered quitting midway through the season; his parents required him to finish what he started, and he later said that was when he fell in love with football.",
+        221
+      ],
+      [
+        "cfb-fernando-mendoza--two-star-yale-only-offer",
+        "Late in his high-school development, Mendoza was a two-star prospect who at one point had only one college offer, from Yale, before his recruiting profile expanded.",
+        221
+      ],
+      [
+        "cfb-fernando-mendoza--alberto-indiana-transfer-link",
+        "Mendoza's younger brother Alberto was already a quarterback at Indiana, and Fernando described Alberto as his best friend and one of the people who pushed him hardest; Alberto's experience with the staff and culture was a major factor in Fernando transferring to Indiana.",
+        222
+      ],
+      [
+        "cfb-fernando-mendoza--cal-degree-three-years",
+        "Mendoza earned his bachelor's degree in business administration from Cal in three years and personally paid for his final three Cal classes in summer 2025 while he was already enrolled at Indiana.",
+        223
+      ],
+      [
+        "cfb-fernando-mendoza--cuban-family-service-trip",
+        "All four of Mendoza's grandparents immigrated to the United States from Cuba; in 2018 he and his brother Alberto traveled to Cuba with their maternal grandparents and did service work with Catholic charities in their grandfather's hometown of Santiago.",
+        222
+      ]
+    ]
+  ],
+  [
+    "frank-beamer-cfb",
+    [
+      [
+        "frank-beamer--fancy-gap-farm-upbringing",
+        "Beamer was born in Mount Airy, North Carolina, but grew up on a farm near Fancy Gap and Hillsville, Virginia, where he said hard work and the value of higher education were emphasized.",
+        224
+      ],
+      [
+        "frank-beamer--eleven-varsity-letters",
+        "At Hillsville High School, Beamer played football, basketball and baseball and graduated with 11 varsity letters.",
+        224
+      ],
+      [
+        "frank-beamer--newspaper-articles-led-to-vpi",
+        "Several Roanoke Times articles about Beamer's high-school play caught the attention of VPI coaches and helped lead him to Virginia Tech as a player.",
+        224
+      ],
+      [
+        "frank-beamer--vocational-education-to-radford",
+        "Beamer majored in vocational education at Virginia Tech and, after graduating in 1969, taught math at Radford High School so he could begin his coaching career there.",
+        224
+      ],
+      [
+        "frank-beamer--beamer-ball-identity",
+        "Virginia Tech's big-play approach across offense, defense and especially special teams became so associated with Beamer that it was widely known as 'Beamer Ball.'",
+        225
+      ]
+    ]
+  ],
+  [
+    "cfb-george-rogers",
+    [
+      [
+        "cfb-george-rogers--two-dollar-insurance-aunt-othella",
+        "As a child, Rogers wanted to play football but his family could not afford the $2 sports-insurance fee; his path changed when his aunt Othella Rogers took him in, required regular church and school attendance, and he then joined the Duluth High football team.",
+        226
+      ],
+      [
+        "cfb-george-rogers--carlen-freshman-playing-time",
+        "Rogers chose South Carolina after coach Jim Carlen told him he would have an opportunity to play as a freshman.",
+        227
+      ],
+      [
+        "cfb-george-rogers--fullback-frame-tailback-role",
+        "At roughly 6-foot-2 and 220 pounds, Rogers was widely viewed as having a fullback's build, but South Carolina used him at tailback and he moved into the starting role during his freshman season.",
+        227
+      ],
+      [
+        "cfb-george-rogers--jersey-retired-while-active",
+        "South Carolina retired Rogers's No. 38 during halftime of his final home game in 1980, making him the first Gamecock to have his jersey retired while he was still an active player.",
+        228
+      ],
+      [
+        "cfb-george-rogers--foundation-first-generation-students",
+        "Rogers later founded the George Rogers Foundation of the Carolinas, which provides financial assistance to first-generation college students and supports community youth-development organizations.",
+        227
+      ]
+    ]
+  ],
+  [
+    "cfb-gerald-mccoy",
+    [
+      [
+        "cfb-gerald-mccoy--oklahoma-city-homegrown-sooner",
+        "McCoy was an Oklahoma City native and national-level recruit out of Southeast High School who chose to stay in-state and play for Oklahoma.",
+        229
+      ],
+      [
+        "cfb-gerald-mccoy--elite-recruit-redshirted",
+        "Despite arriving as one of the nation's most celebrated defensive recruits, McCoy redshirted in 2006; he later said he was not technically or mentally ready, and credited the year of varsity practice and scout-team work with preparing him.",
+        230
+      ],
+      [
+        "cfb-gerald-mccoy--mother-patricia-confidence",
+        "McCoy said his mother Patricia predicted that he would become a top-ranked recruit, an All-American and a first-round pick; after she died before his first playing season at Oklahoma, he used her confidence in him as continuing motivation.",
+        230
+      ],
+      [
+        "cfb-gerald-mccoy--title-game-first-interception",
+        "McCoy made the first interception of his college career in the BCS National Championship Game against Florida, returning Tim Tebow's pass 12 yards.",
+        231
+      ],
+      [
+        "cfb-gerald-mccoy--graduation-before-leaving",
+        "McCoy said graduation was his main college goal and timed his decision to leave Oklahoma for professional football around knowing he had enough credits; he participated in graduation and finished his Human Relations degree with online courses.",
+        232
+      ]
+    ]
+  ],
+  [
+    "cfb-glenn-dorsey",
+    [
+      [
+        "cfb-glenn-dorsey--band-or-football-choice",
+        "At East Ascension High School, Dorsey participated in both band and football until the practice schedules began overlapping and forced him to choose; he chose football.",
+        233
+      ],
+      [
+        "cfb-glenn-dorsey--florida-state-fan-to-local-lsu",
+        "Dorsey grew up a Florida State fan who enjoyed watching Charlie Ward and Warrick Dunn, but later began attending LSU games and was drawn to playing top-level football only about 20 minutes from home.",
+        233
+      ],
+      [
+        "cfb-glenn-dorsey--miles-recruited-before-saban-offer",
+        "Les Miles and Karl Dunbar recruited Dorsey hard for Oklahoma State before LSU offered; Dorsey said he liked Miles, but once Nick Saban offered him a scholarship to LSU, his decision was effectively made.",
+        234
+      ],
+      [
+        "cfb-glenn-dorsey--first-college-snap-forced-fumble",
+        "On the first collegiate snap of his LSU career, Dorsey forced a fumble against Oregon State.",
+        235
+      ],
+      [
+        "cfb-glenn-dorsey--returned-for-unfinished-business",
+        "Dorsey returned to LSU for his senior season despite being projected as a first-round draft pick, saying he had unfinished business; that season ended with an SEC title, a national title and four major national defensive/lineman awards.",
+        236
+      ]
+    ]
+  ],
+  [
+    "cfb-haloti-ngata",
+    [
+      [
+        "cfb-haloti-ngata--tongan-family-california-to-utah",
+        "Ngata was born Etuini Haloti Ngata in Inglewood, California, to Tongan immigrant parents Ofa and Solomone, and his family moved to Utah when he was six.",
+        237
+      ],
+      [
+        "cfb-haloti-ngata--all-state-offensive-guard-too",
+        "Although recruited as an elite defensive lineman, Ngata also earned all-state recognition as an offensive guard at Highland High School.",
+        238
+      ],
+      [
+        "cfb-haloti-ngata--parents-lost-during-oregon-years",
+        "Ngata lost both parents during his Oregon years: his father died in a car accident late in Ngata's freshman season, and his mother died after a kidney illness during the period when Ngata was preparing to leave college.",
+        237
+      ],
+      [
+        "cfb-haloti-ngata--season-ending-2003-knee-injury",
+        "Ngata suffered a season-ending knee injury in the opening quarter of Oregon's 2003 opener at Mississippi State and did not regain full strength until well into the following season.",
+        238
+      ],
+      [
+        "cfb-haloti-ngata--defensive-tackle-blocked-kicks",
+        "Despite playing defensive tackle at roughly 338 pounds, Ngata became a special-teams weapon, with Oregon crediting him with altering the course of five kicks over two seasons.",
+        238
+      ]
+    ]
+  ],
+  [
+    "cfb-heath-miller",
+    [
+      [
+        "cfb-heath-miller--fourth-generation-southwest-virginia",
+        "Miller was a fourth-generation southwest Virginian from Swords Creek, a small Appalachian community near the coal fields.",
+        239
+      ],
+      [
+        "cfb-heath-miller--parents-work-ethic-example",
+        "Miller's father Earl was a home builder who was described as never missing a day of work, while his mother Denise was a counselor at Southwest Virginia Community College; their work ethic and family values were repeatedly tied to Miller's upbringing.",
+        240
+      ],
+      [
+        "cfb-heath-miller--three-sport-honaker-athlete",
+        "At tiny Honaker High School, Miller played quarterback in football, power forward in basketball and first base in baseball.",
+        241
+      ],
+      [
+        "cfb-heath-miller--wanted-virginia-as-high-school-qb",
+        "During his senior season as Honaker's quarterback, Miller decided he wanted to play college football at Virginia; he later narrowed his choice to Virginia and Virginia Tech and said he felt most comfortable at UVA.",
+        242
+      ],
+      [
+        "cfb-heath-miller--quarterback-to-tight-end-conversion",
+        "Miller arrived at Virginia as a quarterback, then began working at tight end when the scout team needed help and made the full switch after Al Groh recommended it following fall camp.",
+        242
+      ]
+    ]
+  ],
+  [
+    "cfb-hunter-henry",
+    [
+      [
+        "cfb-hunter-henry--arkansas-family-football-lineage",
+        "Henry's father Mark lettered at Arkansas from 1988-91 and was a team captain, and Hunter's brothers Hayden and Hudson also later played football for the Razorbacks.",
+        243
+      ],
+      [
+        "cfb-hunter-henry--chose-arkansas-over-alabama",
+        "Henry, one of the nation's most highly regarded high-school tight ends, chose his home-state Arkansas program over Alabama.",
+        244
+      ],
+      [
+        "cfb-hunter-henry--two-way-high-school-player",
+        "As a sophomore at Pulaski Academy, Henry played on both sides of the ball, contributing as a receiving tight end and as a defender.",
+        244
+      ],
+      [
+        "cfb-hunter-henry--church-fca-food-drive",
+        "At Pulaski Academy, Henry was active in his church youth group and was an FCA leader who helped organize a food drive for people experiencing homelessness.",
+        244
+      ],
+      [
+        "cfb-hunter-henry--fourth-and-25-lateral",
+        "In overtime at Ole Miss in 2015, Henry threw a blind backward lateral just before being tackled short on fourth-and-25; Alex Collins recovered it and ran for the first down, extending the drive that produced Arkansas's 53-52 win.",
+        245
+      ]
+    ]
+  ],
+  [
+    "cfb-isaiah-simmons",
+    [
+      [
+        "cfb-isaiah-simmons--track-first-football-after-move",
+        "Simmons was born in Omaha and initially focused on track; after his family moved to Kansas, he began playing football in second grade.",
+        246
+      ],
+      [
+        "cfb-isaiah-simmons--all-state-both-sides",
+        "In high school, Simmons earned first-team all-state recognition on both sides of the ball, starring as a defensive back while also producing as a receiver.",
+        247
+      ],
+      [
+        "cfb-isaiah-simmons--state-long-jump-champion",
+        "Simmons was a two-time Kansas state champion in the long jump, with a high-school best of 23 feet, 8 inches, and he later appeared on Clemson's track-and-field roster as a long jumper.",
+        247
+      ],
+      [
+        "cfb-isaiah-simmons--recruiting-position-split",
+        "During recruiting, some schools wanted Simmons as a receiver while others, including Clemson, recruited him strictly for defense; Simmons said he preferred being the hitter rather than the player getting hit.",
+        246
+      ],
+      [
+        "cfb-isaiah-simmons--roommates-sparked-linebacker-move",
+        "Simmons's move from safety to Clemson's hybrid linebacker role began after a conversation with his roommates convinced him to raise the idea with defensive coordinator Brent Venables.",
+        246
+      ]
+    ]
+  ],
+  [
+    "cfb-jj-watt",
+    [
+      [
+        "cfb-jj-watt--hockey-first-sport",
+        "Watt grew up as a serious hockey player in Pewaukee, Wisconsin, said he had been skating about as long as he had been walking, and gave up hockey at age 13; even as a Badger football player, he said hockey was his best sport.",
+        248
+      ],
+      [
+        "cfb-jj-watt--central-michigan-to-wisconsin-walk-on",
+        "Watt began college at Central Michigan as a tight end, left a scholarship and starting role, took community-college classes and delivered pizzas, then asked Wisconsin for a chance to walk on as a defensive end.",
+        249
+      ],
+      [
+        "cfb-jj-watt--childhood-badger-dream",
+        "Watt grew up around Wisconsin athletics, including skating with Badgers hockey players, and recalled wearing a little Badger jersey in his backyard while imagining himself running onto the Camp Randall field.",
+        248
+      ],
+      [
+        "cfb-jj-watt--foundation-started-in-college",
+        "While still a Wisconsin player in 2010, Watt established the Justin J. Watt Foundation to help elementary and middle schools that lacked funding for athletics.",
+        249
+      ],
+      [
+        "cfb-jj-watt--three-watt-brothers-wisconsin",
+        "J.J.'s younger brothers Derek and T.J. Watt both followed him into Wisconsin football, creating a three-brother Badgers lineage.",
+        250
+      ]
+    ]
+  ],
+  [
+    "cfb-jamarr-chase",
+    [
+      [
+        "cfb-jamarr-chase--long-jump-state-title-record",
+        "Chase took up the long jump in high school and, as a junior, won the Louisiana state title with a 24-foot-2.5-inch jump that broke a 35-year-old Archbishop Rummel school record; he also played basketball and could dunk.",
+        251
+      ],
+      [
+        "cfb-jamarr-chase--wild-recruiting-path-to-lsu",
+        "Chase's recruitment included LSU coach Les Miles initially suggesting defensive back, a planned live TCU commitment that was bumped from a broadcast, brief commitments to Kansas and Florida, and finally a push from Ed Orgeron and receivers coach Mickey Joseph that brought him to LSU.",
+        251
+      ],
+      [
+        "cfb-jamarr-chase--father-jimmy-football-influence",
+        "Chase's father Jimmy was a former Alcorn State football player and a social worker who closely tracked his son's development, took him to scouting camps and deliberately compared his testing with top national recruits.",
+        252
+      ],
+      [
+        "cfb-jamarr-chase--stingley-practice-rivalry",
+        "Chase and Derek Stingley Jr. had competed against each other since sharing a Louisiana 7-on-7 team, and at LSU their one-on-one practice battles became so notable that Ed Orgeron said their tape was the first thing he watched when he came in.",
+        253
+      ],
+      [
+        "cfb-jamarr-chase--national-title-game-221-two-touchdowns",
+        "In LSU's win over Clemson in the 2019 season's national championship game, Chase caught nine passes for 221 yards and two touchdowns.",
+        254
+      ]
+    ]
+  ],
+  [
+    "cfb-jabrill-peppers",
+    [
+      [
+        "cfb-jabrill-peppers--mother-enforced-grades",
+        "Peppers's mother Ivory Bryant enforced an all-A-and-B academic standard and pulled him out of a high-school game during his sophomore season after he received a C-plus in Spanish.",
+        255
+      ],
+      [
+        "cfb-jabrill-peppers--new-jersey-sprint-champion",
+        "Peppers won both the 100- and 200-meter dashes at the New Jersey Meet of Champions as a junior and set a state record of 20.79 seconds in the 200 meters.",
+        256
+      ],
+      [
+        "cfb-jabrill-peppers--four-straight-state-titles-two-schools",
+        "Peppers won four consecutive New Jersey state football championships: two at Don Bosco Prep and two more after transferring to Paramus Catholic.",
+        257
+      ],
+      [
+        "cfb-jabrill-peppers--offense-natural-defense-by-choice",
+        "Peppers was a prolific high-school running back as well as a defensive back and later said offense came more naturally to him, but he preferred defense because he would rather deliver the hit than receive it.",
+        257
+      ],
+      [
+        "cfb-jabrill-peppers--fifteen-michigan-positions",
+        "Michigan said Peppers lined up at 15 different positions during the 2016 season, including quarterback, tailback and receiver on offense and multiple defensive-back and linebacker roles.",
+        258
+      ]
+    ]
+  ],
+  [
+    "cfb-jake-butt",
+    [
+      [
+        "cfb-jake-butt--two-way-pickerington-north",
+        "At Pickerington North, Butt played both tight end and defensive end; as a senior he also produced 142 tackles, 39.5 tackles for loss and 20.5 sacks on defense.",
+        259
+      ],
+      [
+        "cfb-jake-butt--army-all-american-injury",
+        "Butt was selected for the U.S. Army All-American Bowl but did not play in the game because of an injury.",
+        259
+      ],
+      [
+        "cfb-jake-butt--second-acl-orange-bowl",
+        "Butt tore the ACL in his right knee in the Orange Bowl against Florida State, requiring the second right-knee surgery of his Michigan career.",
+        260
+      ],
+      [
+        "cfb-jake-butt--medal-speech-rubadeau",
+        "After the Orange Bowl injury, Butt built his Big Ten Medal of Honor acceptance speech around the question of what he would do if football were taken away, refining the speech with English professor John Rubadeau.",
+        260
+      ],
+      [
+        "cfb-jake-butt--grant-perry-number-88-mentor",
+        "After Butt left Michigan, wide receiver Grant Perry wore Butt's No. 88 and described Butt as a mentor who continued helping him when Butt returned to campus.",
+        261
+      ]
+    ]
+  ],
+  [
+    "cfb-jake-long",
+    [
+      [
+        "cfb-jake-long--three-sport-high-school-athlete",
+        "Long played football, basketball and baseball in high school.",
+        262
+      ],
+      [
+        "cfb-jake-long--lloyd-carr-basketball-scout",
+        "Michigan coach Lloyd Carr specifically recalled watching Long play basketball while evaluating his size and athleticism.",
+        263
+      ],
+      [
+        "cfb-jake-long--michigan-camp-quick-commit",
+        "Long attended Michigan's football camp and committed to the Wolverines a couple of weeks later.",
+        263
+      ],
+      [
+        "cfb-jake-long--whole-school-leadership-reputation",
+        "Carr recalled that during a high-school visit, students and faculty repeatedly came out to tell him what an unusual leader and person Long was.",
+        262
+      ],
+      [
+        "cfb-jake-long--survived-house-fire",
+        "During Long's Michigan years, he survived a serious house fire in which he was burned and escaped through a window before being hospitalized.",
+        262
+      ]
+    ]
+  ],
+  [
+    "cfb-jake-matthews",
+    [
+      [
+        "cfb-jake-matthews--bruce-matthews-son",
+        "Matthews is the son of Pro Football Hall of Fame offensive lineman Bruce Matthews.",
+        264
+      ],
+      [
+        "cfb-jake-matthews--four-brothers-aggies",
+        "Jake was one of four Matthews brothers — Kevin, Jake, Mike and Luke — who played football at Texas A&M.",
+        265
+      ],
+      [
+        "cfb-jake-matthews--fell-for-am-on-kevin-visits",
+        "Matthews said he fell in love with Texas A&M while making frequent visits to College Station when his older brother Kevin was playing there.",
+        266
+      ],
+      [
+        "cfb-jake-matthews--elkins-line-with-brother-mike",
+        "At Elkins High School, Jake and his younger brother Mike spent time together on the offensive line before both eventually became Aggies.",
+        267
+      ],
+      [
+        "cfb-jake-matthews--returned-senior-moved-left-tackle",
+        "Matthews chose to return to Texas A&M for his senior season and moved from right tackle to left tackle after Luke Joeckel departed.",
+        268
+      ]
+    ]
+  ],
+  [
+    "cfb-jalen-carter",
+    [
+      [
+        "cfb-jalen-carter--apopka-three-way-football-role",
+        "At Apopka High School, Carter played defensive tackle, tight end and punter.",
+        269
+      ],
+      [
+        "cfb-jalen-carter--state-weightlifting-runner-up",
+        "Carter competed in weightlifting and finished second in the FHSAA Class 2A heavyweight division; Georgia's bio lists a 395-pound bench press in that context.",
+        269
+      ],
+      [
+        "cfb-jalen-carter--apopka-basketball",
+        "Carter also played basketball at Apopka High School.",
+        269
+      ],
+      [
+        "cfb-jalen-carter--goal-line-receiving-touchdown",
+        "Georgia used Carter on offense near the goal line, and he caught a one-yard touchdown pass from Stetson Bennett against Tennessee.",
+        269
+      ],
+      [
+        "cfb-jalen-carter--apopka-warren-sapp-lineage",
+        "Carter came from Apopka High School, the same Central Florida program associated with star defensive tackle Warren Sapp.",
+        269
+      ]
+    ]
+  ],
+  [
+    "cfb-jalen-ramsey",
+    [
+      [
+        "cfb-jalen-ramsey--late-usc-to-fsu-flip",
+        "Ramsey had been verbally committed to USC before changing course late and signing with Florida State, with new defensive coordinator Jeremy Pruitt helping establish the connection.",
+        270
+      ],
+      [
+        "cfb-jalen-ramsey--tennessee-decathlon-champion",
+        "In high school, Ramsey won a Tennessee state decathlon championship and was an elite long jumper.",
+        270
+      ],
+      [
+        "cfb-jalen-ramsey--acc-long-jump-and-relay-champion",
+        "While playing football at Florida State, Ramsey also competed in track and won ACC titles in the indoor and outdoor long jump and on a 4x100-meter relay.",
+        271
+      ],
+      [
+        "cfb-jalen-ramsey--first-freshman-corner-start-since-deion",
+        "Ramsey became Florida State's first true freshman to start a season opener at cornerback since Deion Sanders in 1985.",
+        271
+      ],
+      [
+        "cfb-jalen-ramsey--corner-to-safety-after-hunter-injury",
+        "Ramsey began his freshman season at cornerback and shifted to safety after Tyler Hunter was injured.",
+        271
+      ]
+    ]
+  ],
+  [
+    "cfb-jamaal-charles",
+    [
+      [
+        "cfb-jamaal-charles--learning-disability-special-olympics",
+        "Charles was diagnosed with a learning disability in elementary school and participated in Special Olympics track before later becoming a Special Olympics Global Ambassador.",
+        272
+      ],
+      [
+        "cfb-jamaal-charles--raised-by-mother-aunt-grandmother",
+        "Charles has described being raised in Port Arthur by his mother, aunt and grandmother.",
+        273
+      ],
+      [
+        "cfb-jamaal-charles--broke-joe-washington-port-arthur-record",
+        "At Memorial High School, Charles broke a Port Arthur rushing record that had been held by Joe Washington for more than 30 years.",
+        274
+      ],
+      [
+        "cfb-jamaal-charles--world-junior-400-hurdles-bronze",
+        "Charles won a bronze medal in the 400-meter hurdles at the World Junior Championships.",
+        274
+      ],
+      [
+        "cfb-jamaal-charles--texas-track-big12-100-champ",
+        "Charles competed for Texas track and field and won the Big 12 100-meter championship in 2006.",
+        275
+      ]
+    ]
+  ],
+  [
+    "cfb-jamal-adams",
+    [
+      [
+        "cfb-jamal-adams--father-george-adams",
+        "Adams's father, George Adams, was an All-SEC running back at Kentucky and a first-round NFL Draft pick.",
+        276
+      ],
+      [
+        "cfb-jamal-adams--father-100-yards-at-lsu",
+        "George Adams rushed for 100 yards in Kentucky's 1983 win over LSU in Tiger Stadium, decades before his son became an LSU star.",
+        276
+      ],
+      [
+        "cfb-jamal-adams--president-prez-nickname",
+        "LSU teammates gave Adams the nickname 'President'/'Prez,' a play on sharing a surname with multiple U.S. presidents.",
+        277
+      ],
+      [
+        "cfb-jamal-adams--three-lsu-defensive-coordinators",
+        "Adams played for three different defensive coordinators during his three seasons at LSU.",
+        276
+      ],
+      [
+        "cfb-jamal-adams--vocal-leader-permanent-captain",
+        "LSU described Adams as a vocal, emotional on-field leader, and he finished his career as a permanent team captain.",
+        276
+      ]
+    ]
+  ],
+  [
+    "cfb-james-laurinaitis",
+    [
+      [
+        "cfb-james-laurinaitis--father-animal-road-warriors",
+        "Laurinaitis is the son of Joe Laurinaitis, the professional wrestler known as 'Animal' of the Road Warriors/Legion of Doom.",
+        278
+      ],
+      [
+        "cfb-james-laurinaitis--wayzata-hockey-captain-shrek",
+        "Laurinaitis was a standout defenseman and senior captain for Wayzata High School hockey, where teammates and coaches nicknamed him 'Shrek.'",
+        278
+      ],
+      [
+        "cfb-james-laurinaitis--declined-two-sport-hockey-offers",
+        "Minnesota and Notre Dame were among schools that offered Laurinaitis opportunities to play both football and hockey, but he chose to focus fully on football.",
+        278
+      ],
+      [
+        "cfb-james-laurinaitis--first-minnesota-scholarship-buckeye-since-gillman",
+        "Ohio State's signing bio called Laurinaitis the first scholarship football player from Minnesota to join the Buckeyes since Sid Gillman, who played there in the early 1930s.",
+        279
+      ],
+      [
+        "cfb-james-laurinaitis--returned-senior-for-teammates",
+        "After receiving strong NFL interest following his junior year, Laurinaitis returned to Ohio State for his senior season, saying he did not want to leave the teammates he had gone through so much with.",
+        280
+      ]
+    ]
+  ],
+  [
+    "cfb-jaylon-smith",
+    [
+      [
+        "cfb-jaylon-smith--older-brother-rod-smith",
+        "Smith's older brother Rod Smith played running back at Ohio State, giving Jaylon an older sibling already in major college football.",
+        281
+      ],
+      [
+        "cfb-jaylon-smith--four-straight-state-titles",
+        "Smith helped Bishop Luers win four consecutive Indiana Class 2A state championships.",
+        282
+      ],
+      [
+        "cfb-jaylon-smith--high-school-running-back-linebacker",
+        "At Bishop Luers, Smith starred on both sides of the ball as a running back and linebacker.",
+        282
+      ],
+      [
+        "cfb-jaylon-smith--basketball-with-deshaun-thomas",
+        "Smith also played high-school basketball alongside future Ohio State basketball standout Deshaun Thomas.",
+        282
+      ],
+      [
+        "cfb-jaylon-smith--freshman-opener-after-spond",
+        "Smith became Notre Dame's first true freshman to start a season opener at linebacker since Kory Minor in 1995 after Danny Spond's medical retirement opened the position.",
+        281
+      ]
+    ]
+  ],
+  [
+    "cfb-jeff-okudah",
+    [
+      [
+        "cfb-jeff-okudah--high-school-receiver-production",
+        "Although recruited as an elite defensive back, Okudah was also a productive high-school receiver, averaging more than 24 yards per catch as a junior and producing substantial offensive yardage as a senior.",
+        283
+      ],
+      [
+        "cfb-jeff-okudah--nike-testing-behind-dobbins",
+        "At The Opening, Okudah finished second in Nike+ athletic testing to fellow future Ohio State signee J.K. Dobbins.",
+        283
+      ],
+      [
+        "cfb-jeff-okudah--mother-and-obodo-guardians",
+        "Ohio State's bio identifies Okudah as the son of the late Marie Okudah and lists Jane and Patrick Obodo as his guardians.",
+        283
+      ],
+      [
+        "cfb-jeff-okudah--ranked-top-corner-and-safety",
+        "As a recruit, Okudah was evaluated at the very top of the class at both cornerback and safety rather than being viewed as a one-position defensive back.",
+        283
+      ],
+      [
+        "cfb-jeff-okudah--all-interceptions-junior-season",
+        "Okudah did not record a college interception until his junior season, then collected all three of his Ohio State interceptions that year, including two at Nebraska.",
+        284
+      ]
+    ]
+  ],
+  [
+    "cfb-jeremy-shockey",
+    [
+      [
+        "cfb-jeremy-shockey--junior-college-late-miami-signing",
+        "Shockey spent one season at Northeastern Oklahoma A&M before becoming a late-summer 2000 addition to Miami's roster.",
+        285
+      ],
+      [
+        "cfb-jeremy-shockey--first-miami-td-won-fsu-game",
+        "Shockey's first touchdown for Miami was a 13-yard catch in the final minute that proved to be the winning score against Florida State.",
+        285
+      ],
+      [
+        "cfb-jeremy-shockey--returned-from-mcl-for-fsu-winner",
+        "Shockey suffered an MCL injury before the Florida State game, returned to play, and then caught the decisive touchdown.",
+        285
+      ],
+      [
+        "cfb-jeremy-shockey--ada-two-way-returner",
+        "At Ada High School, Shockey played wide receiver and outside linebacker and also returned punts, including four punt-return touchdowns as a senior.",
+        285
+      ],
+      [
+        "cfb-jeremy-shockey--high-school-basketball",
+        "Shockey also played basketball during his senior year at Ada High School.",
+        285
+      ]
+    ]
+  ],
+  [
+    "cfb-jermaine-gresham",
+    [
+      [
+        "cfb-jermaine-gresham--ou-decision-day-before-signing",
+        "As a freshman, Gresham told Oklahoma's athletics site that he knew he was going to OU only the day before he signed.",
+        286
+      ],
+      [
+        "cfb-jermaine-gresham--maintenance-job",
+        "Gresham listed maintenance work among the jobs he had held before college.",
+        286
+      ],
+      [
+        "cfb-jermaine-gresham--real-estate-interest",
+        "Gresham listed real estate as an interest outside football when Oklahoma profiled him as a freshman.",
+        286
+      ],
+      [
+        "cfb-jermaine-gresham--grandmother-shaped-life",
+        "Asked what event most shaped his life, Gresham pointed to the death of his grandmother.",
+        286
+      ],
+      [
+        "cfb-jermaine-gresham--ardmore-to-immediate-ou-buzz",
+        "Gresham arrived at Oklahoma directly from Ardmore High School and generated immediate preseason buzz because of the rare size-and-speed mismatch he created at tight end.",
+        286
+      ]
+    ]
+  ],
+  [
+    "cfb-joe-alt",
+    [
+      [
+        "cfb-joe-alt--high-school-tight-end-defensive-end",
+        "Alt played both tight end and defensive end in high school before becoming an offensive tackle at Notre Dame.",
+        287
+      ],
+      [
+        "cfb-joe-alt--high-school-basketball",
+        "Alt also played high-school basketball.",
+        287
+      ],
+      [
+        "cfb-joe-alt--father-john-alt",
+        "Alt's father, John Alt, was an offensive lineman at Iowa and a first-round NFL Draft pick who became a Kansas City Chiefs Hall of Famer.",
+        287
+      ],
+      [
+        "cfb-joe-alt--brother-mark-hockey",
+        "Alt's older brother Mark played college hockey at Minnesota and later professional hockey.",
+        287
+      ],
+      [
+        "cfb-joe-alt--mechanical-engineering",
+        "Notre Dame's bio listed mechanical engineering as Alt's intended academic field.",
+        287
+      ]
+    ]
+  ],
+  [
+    "cfb-joe-thomas",
+    [
+      [
+        "cfb-joe-thomas--freshman-blocking-tight-end",
+        "Thomas began his Wisconsin career as a blocking tight end wearing No. 82 before becoming an offensive tackle.",
+        288
+      ],
+      [
+        "cfb-joe-thomas--music-city-bowl-defensive-end",
+        "Thomas started at defensive end against Auburn in the Music City Bowl and made seven tackles before his permanent move to offensive tackle.",
+        288
+      ],
+      [
+        "cfb-joe-thomas--wisconsin-shot-put-record",
+        "Thomas competed in track and field at Wisconsin, set the school's indoor shot-put record, and qualified for NCAA championship competition.",
+        288
+      ],
+      [
+        "cfb-joe-thomas--three-sport-high-school-captain",
+        "In high school Thomas participated in football, basketball and track, and captained both the football and basketball teams.",
+        288
+      ],
+      [
+        "cfb-joe-thomas--learned-in-trenches-from-james-buenning",
+        "Wisconsin later highlighted how Thomas learned line play by working around veterans such as defensive end Erasmus James and guard Dan Buenning.",
+        289
+      ]
+    ]
+  ],
+  [
+    "cfb-joey-bosa",
+    [
+      [
+        "cfb-joey-bosa--father-john-bosa-first-rounder",
+        "Bosa's father, John Bosa, was a first-round NFL Draft pick out of Boston College.",
+        219
+      ],
+      [
+        "cfb-joey-bosa--mother-and-uncle-ohio-state",
+        "Bosa's mother Cheryl attended Ohio State, and his uncle Eric Kumerow was an Ohio State linebacker and team captain.",
+        219
+      ],
+      [
+        "cfb-joey-bosa--st-thomas-aquinas-state-title",
+        "Bosa led a St. Thomas Aquinas defense that won Florida's Class 7A state championship during his senior season.",
+        219
+      ],
+      [
+        "cfb-joey-bosa--nick-bosa-followed-to-ohio-state",
+        "Joey's younger brother Nick later followed him from St. Thomas Aquinas to Ohio State and also became a Buckeye defensive end.",
+        290
+      ],
+      [
+        "cfb-joey-bosa--urban-meyer-energizer",
+        "Urban Meyer described Bosa as an 'energizer' who practiced with relentless effort from his first days at Ohio State.",
+        291
+      ]
+    ]
+  ],
+  [
+    "cfb-john-henderson",
+    [
+      [
+        "cfb-john-henderson--partial-qualifier-1998",
+        "Henderson entered Tennessee as a partial qualifier in 1998 and was not eligible to play that season.",
+        292
+      ],
+      [
+        "cfb-john-henderson--pearl-cohn-tight-end-defensive-tackle",
+        "At Pearl-Cohn High School in Nashville, Henderson played both defensive tackle and tight end.",
+        292
+      ],
+      [
+        "cfb-john-henderson--back-to-back-high-school-state-titles",
+        "Henderson helped Pearl-Cohn win back-to-back Tennessee state championships.",
+        292
+      ],
+      [
+        "cfb-john-henderson--big-john-nickname",
+        "Henderson was widely known at Tennessee as 'Big John.'",
+        293
+      ],
+      [
+        "cfb-john-henderson--played-through-ankle-2001",
+        "Henderson dealt with a lingering ankle injury during the 2001 season but still remained a major part of Tennessee's defensive front.",
+        293
+      ]
+    ]
+  ],
+  [
+    "cfb-jonathan-allen",
+    [
+      [
+        "cfb-jonathan-allen--army-family-upbringing",
+        "Allen grew up in a military family; his father served in the U.S. Army for more than two decades, and military moves were part of Allen's childhood.",
+        294
+      ],
+      [
+        "cfb-jonathan-allen--foster-care-father-custody",
+        "Allen spent roughly ten months in foster care as a child before his father secured custody of him and his brother.",
+        295
+      ],
+      [
+        "cfb-jonathan-allen--first-chair-trombone",
+        "Allen played trombone and reached first chair before football became his dominant extracurricular focus.",
+        295
+      ],
+      [
+        "cfb-jonathan-allen--wanted-running-back-before-defensive-line",
+        "Allen initially wanted to play running back or linebacker in high school, tried wide receiver, and eventually was moved to the defensive line.",
+        295
+      ],
+      [
+        "cfb-jonathan-allen--returned-for-senior-season",
+        "Allen chose to return to Alabama for his senior season instead of entering the NFL Draft after 2015, and he became a permanent team captain.",
+        296
+      ]
+    ]
+  ],
+  [
+    "cfb-jordan-shipley",
+    [
+      [
+        "cfb-jordan-shipley--childhood-with-colt-mccoy",
+        "Shipley and Colt McCoy knew each other as young children because their fathers had been roommates at Abilene Christian, and they played together during family visits.",
+        297
+      ],
+      [
+        "cfb-jordan-shipley--college-roommates-with-mccoy",
+        "After reconnecting at Texas, Shipley and McCoy became roommates and close friends.",
+        297
+      ],
+      [
+        "cfb-jordan-shipley--injuries-delayed-texas-career",
+        "Shipley's early Texas career was repeatedly delayed by serious knee and hamstring injuries before he finally became a full-time receiving threat.",
+        297
+      ],
+      [
+        "cfb-jordan-shipley--96-yard-red-river-kick-return",
+        "Against No. 1 Oklahoma in 2008, Shipley returned a kickoff 96 yards for a touchdown in Texas's 45-35 Red River victory.",
+        297
+      ],
+      [
+        "cfb-jordan-shipley--west-texas-moves-and-stephen-mcgee",
+        "Shipley spent parts of his childhood in Abilene and Rotan before his family moved to Burnet, where he became close with future Texas A&M quarterback Stephen McGee.",
+        298
+      ]
+    ]
+  ],
+  [
+    "cfb-julius-peppers",
+    [
+      [
+        "cfb-julius-peppers--unc-basketball-walk-on",
+        "Peppers played basketball for North Carolina while on a football scholarship, joining the Tar Heels basketball team as a walk-on.",
+        299
+      ],
+      [
+        "cfb-julius-peppers--aau-title-with-haywood-lang",
+        "Before college, Peppers played on an AAU national championship basketball team with future North Carolina players Brendan Haywood and Kris Lang.",
+        299
+      ],
+      [
+        "cfb-julius-peppers--division-one-basketball-recruit",
+        "Peppers was good enough in high-school basketball to be recruited by Division I basketball programs.",
+        299
+      ],
+      [
+        "cfb-julius-peppers--high-school-running-back",
+        "In high school, Peppers was also a major offensive player and finished with more than 3,500 rushing yards and 38 rushing touchdowns.",
+        300
+      ],
+      [
+        "cfb-julius-peppers--north-carolina-male-athlete-of-year",
+        "Peppers was named the North Carolina High School Athletic Association Male Athlete of the Year after excelling across sports.",
+        299
+      ]
+    ]
+  ],
+  [
+    "cfb-kayvon-thibodeaux",
+    [
+      [
+        "cfb-kayvon-thibodeaux--dorsey-to-oaks-christian",
+        "Thibodeaux began high school at Dorsey in Los Angeles before transferring to Oaks Christian for his final two seasons.",
+        301
+      ],
+      [
+        "cfb-kayvon-thibodeaux--high-school-tight-end",
+        "In addition to defensive line, Thibodeaux caught nine passes for 134 yards and three touchdowns as a high-school tight end.",
+        301
+      ],
+      [
+        "cfb-kayvon-thibodeaux--four-sack-cif-title-game",
+        "Thibodeaux recorded four sacks in the CIF Southern Section Division 2 championship game while helping Oaks Christian win the title.",
+        301
+      ],
+      [
+        "cfb-kayvon-thibodeaux--highest-rated-oregon-signee",
+        "Oregon described Thibodeaux as the highest-rated football signee in program history when he joined the Ducks.",
+        302
+      ],
+      [
+        "cfb-kayvon-thibodeaux--wants-to-start-school",
+        "While at Oregon, Thibodeaux said he wanted one day to start his own school and described a goal of giving younger people and peers wisdom and hope.",
+        303
+      ]
+    ]
+  ],
+  [
+    "cfb-keith-jackson",
+    [
+      [
+        "cfb-keith-jackson--little-rock-parkview",
+        "Jackson came to Oklahoma from Parkview High School in Little Rock, Arkansas.",
+        304
+      ],
+      [
+        "cfb-keith-jackson--88-yard-nebraska-reverse",
+        "Against No. 2 Nebraska in 1985, Jackson scored on an 88-yard rushing play on a tight-end reverse.",
+        305
+      ],
+      [
+        "cfb-keith-jackson--orange-bowl-two-touchdowns",
+        "Jackson caught two touchdowns, including a 71-yard score, in Oklahoma's Orange Bowl win over Penn State that secured the 1985 national championship.",
+        306
+      ],
+      [
+        "cfb-keith-jackson--four-time-academic-all-big-eight",
+        "Jackson was a four-time Academic All-Big Eight selection and later received NCAA Top Six recognition for combining athletics and academics.",
+        304
+      ],
+      [
+        "cfb-keith-jackson--ou-radio-broadcast-crew",
+        "After his playing career, Jackson returned to the Oklahoma football orbit as part of the Sooners' radio broadcast crew.",
+        305
+      ]
+    ]
+  ],
+  [
+    "cfb-kellen-winslow-ii",
+    [
+      [
+        "cfb-kellen-winslow-ii--father-kellen-winslow",
+        "Winslow is the son of Pro Football Hall of Fame tight end Kellen Winslow Sr., who played college football at Missouri.",
+        307
+      ],
+      [
+        "cfb-kellen-winslow-ii--miami-receiver-to-tight-end",
+        "Winslow began his Miami career at wide receiver before moving to tight end.",
+        307
+      ],
+      [
+        "cfb-kellen-winslow-ii--true-freshman-title-team-special-teams",
+        "As a true freshman on Miami's 2001 national championship team, Winslow contributed heavily on special teams, including tackles in the Rose Bowl.",
+        307
+      ],
+      [
+        "cfb-kellen-winslow-ii--high-school-multi-role-kicker",
+        "In high school Winslow played receiver, tight end and defensive end and also handled punting, kickoffs, field goals and extra points.",
+        307
+      ],
+      [
+        "cfb-kellen-winslow-ii--uncle-david-basketball",
+        "Winslow's uncle David played professional basketball in the United States and Australia.",
+        307
+      ]
+    ]
+  ],
+  [
+    "cfb-khalil-mack",
+    [
+      [
+        "cfb-khalil-mack--basketball-first-patella-injury",
+        "Mack initially viewed basketball as his main sport, but a patella injury helped redirect his athletic path toward football.",
+        308
+      ],
+      [
+        "cfb-khalil-mack--football-only-senior-year",
+        "Mack did not begin playing organized high-school football until late in his high-school career, with his senior season becoming the key recruiting window.",
+        309
+      ],
+      [
+        "cfb-khalil-mack--wimberly-buffalo-connection",
+        "Assistant coach Robert Wimberly first recruited Mack while at Liberty and continued the relationship after joining Buffalo, helping lead Mack to the Bulls.",
+        309
+      ],
+      [
+        "cfb-khalil-mack--number-46-video-game-motivation",
+        "Mack kept No. 46 at Buffalo in part because he remembered being rated only 46 overall in the NCAA football video game and used the number as motivation.",
+        310
+      ],
+      [
+        "cfb-khalil-mack--competitive-multi-sport-family",
+        "Mack has described a highly competitive family sports environment that included basketball along with activities such as baseball, bowling and billiards.",
+        311
+      ]
+    ]
+  ],
+  [
+    "cfb-kyle-hamilton",
+    [
+      [
+        "cfb-kyle-hamilton--born-in-greece-father-basketball",
+        "Hamilton was born in Greece while his father, Derrek Hamilton, was playing professional basketball overseas.",
+        312
+      ],
+      [
+        "cfb-kyle-hamilton--lived-across-europe-middle-east",
+        "Before settling in the Atlanta area as a young child, Hamilton's family lived in countries including Greece, Italy, Israel and Russia because of his father's basketball career.",
+        312
+      ],
+      [
+        "cfb-kyle-hamilton--brother-tyler-college-basketball",
+        "Hamilton's older brother Tyler played college basketball at Penn and William & Mary.",
+        312
+      ],
+      [
+        "cfb-kyle-hamilton--first-notre-dame-stadium-snap-pick-six",
+        "On Hamilton's first defensive snap in Notre Dame Stadium, he returned an interception for a touchdown against New Mexico.",
+        313
+      ],
+      [
+        "cfb-kyle-hamilton--inside-the-garage-podcast",
+        "At Notre Dame, Hamilton co-hosted the 'Inside the Garage' podcast with teammates and roommates.",
+        312
+      ]
+    ]
+  ],
+  [
+    "cfb-kyle-pitts",
+    [
+      [
+        "cfb-kyle-pitts--archbishop-wood-tight-end-defensive-end",
+        "At Archbishop Wood, Pitts played tight end and also spent time at defensive end.",
+        314
+      ],
+      [
+        "cfb-kyle-pitts--state-title-two-interceptions-and-td",
+        "In Archbishop Wood's state championship game, Pitts recorded two interceptions on defense and a touchdown reception on offense.",
+        314
+      ],
+      [
+        "cfb-kyle-pitts--track-basketball-high-school",
+        "Pitts competed in track and also spent time playing basketball in high school.",
+        315
+      ],
+      [
+        "cfb-kyle-pitts--grew-six-inches-high-school",
+        "Pitts's family recalled that he grew from about 6 feet as a freshman to 6-foot-6 by his senior year of high school.",
+        315
+      ],
+      [
+        "cfb-kyle-pitts--trask-second-team-connection",
+        "Pitts and quarterback Kyle Trask said their on-field chemistry began in 2018 when both worked together with Florida's second-team offense.",
+        316
+      ]
+    ]
+  ],
+  [
+    "cfb-ladainian-tomlinson",
+    [
+      [
+        "cfb-ladainian-tomlinson--high-school-linebacker-fullback",
+        "Tomlinson spent much of high school playing linebacker and fullback rather than immediately being used as a featured tailback.",
+        317
+      ],
+      [
+        "cfb-ladainian-tomlinson--first-tailback-start-six-touchdowns",
+        "When Tomlinson finally got a high-school start at tailback as a senior, he scored six touchdowns.",
+        317
+      ],
+      [
+        "cfb-ladainian-tomlinson--tcus-initial-fullback-plan",
+        "TCU initially asked Tomlinson to play fullback before moving him to tailback.",
+        317
+      ],
+      [
+        "cfb-ladainian-tomlinson--406-yards-vs-utep",
+        "Tomlinson rushed for 406 yards against UTEP in 1999, at the time an NCAA single-game rushing record.",
+        318
+      ],
+      [
+        "cfb-ladainian-tomlinson--walter-payton-idol",
+        "Tomlinson has long identified Walter Payton as a childhood football idol.",
+        317
+      ]
+    ]
+  ],
+  [
+    "cfb-lamichael-james",
+    [
+      [
+        "cfb-lamichael-james--raised-by-grandmother",
+        "James has described being raised largely by his grandmother after growing up without his father in the home.",
+        319
+      ],
+      [
+        "cfb-lamichael-james--lived-alone-senior-year",
+        "After his grandmother died, James lived on his own during his senior year of high school while completing the path that would take him to Oregon.",
+        319
+      ],
+      [
+        "cfb-lamichael-james--kenjon-barner-friendship",
+        "Oregon teammate Kenjon Barner became one of James's close friends and an important part of his support system in Eugene.",
+        319
+      ],
+      [
+        "cfb-lamichael-james--oregon-national-rise",
+        "James was a central figure in the Oregon teams that won three straight conference championships and reached three consecutive BCS bowls, including a national championship game.",
+        320
+      ],
+      [
+        "cfb-lamichael-james--returned-to-eugene-restaurants",
+        "After his playing career, James returned to the Eugene area and became a restaurant operator, maintaining a visible local connection to Oregon.",
+        319
+      ]
+    ]
+  ],
+  [
+    "cfb-malaki-starks",
+    [
+      [
+        "cfb-malaki-starks--high-school-two-way-star",
+        "At Jefferson High School, Starks was a major two-way player, producing heavily as a runner while also starring on defense.",
+        321
+      ],
+      [
+        "cfb-malaki-starks--state-long-jump-champion",
+        "Starks won a Georgia state championship in the long jump in high school.",
+        321
+      ],
+      [
+        "cfb-malaki-starks--elite-sprint-and-jump-marks",
+        "Starks's high-school track profile included a 10.55-second 100 meters and a long jump beyond 24 feet.",
+        321
+      ],
+      [
+        "cfb-malaki-starks--number-one-athlete-recruit",
+        "Recruiting services commonly classified Starks as an 'athlete' rather than locking him into one position, and Georgia's bio notes he was rated No. 1 nationally at that designation by major services.",
+        321
+      ],
+      [
+        "cfb-malaki-starks--jefferson-close-to-athens",
+        "Starks grew up in nearby Jefferson, Georgia, and has joked in a Georgia interview about being close enough to take laundry home.",
+        322
+      ]
+    ]
+  ],
+  [
+    "cfb-malcolm-jenkins",
+    [
+      [
+        "cfb-malcolm-jenkins--recruited-as-wr-db",
+        "Ohio State signed Jenkins out of Piscataway as a two-way WR/DB prospect rather than as a one-role defensive back.",
+        279
+      ],
+      [
+        "cfb-malcolm-jenkins--high-school-receiving-role",
+        "As a high-school senior, Jenkins contributed more than 300 receiving yards and seven offensive touchdowns in addition to playing defensive back.",
+        279
+      ],
+      [
+        "cfb-malcolm-jenkins--back-to-back-state-championships",
+        "Jenkins helped Piscataway win state championships in both his junior and senior seasons.",
+        279
+      ],
+      [
+        "cfb-malcolm-jenkins--state-400-meter-champion",
+        "Jenkins won a New Jersey high-school state championship in the 400 meters and also placed at state level in the 200.",
+        279
+      ],
+      [
+        "cfb-malcolm-jenkins--ran-ohio-state-4x100",
+        "Jenkins continued track at Ohio State, running on a Buckeye 4x100-meter relay after spring football in 2007.",
+        323
+      ]
+    ]
+  ],
+  [
+    "cfb-marqise-lee",
+    [
+      [
+        "cfb-marqise-lee--deaf-parents-sign-language",
+        "Because both of Lee's parents were deaf, he became proficient in sign language.",
+        324
+      ],
+      [
+        "cfb-marqise-lee--football-basketball-track-star",
+        "At Junipero Serra, Lee excelled in football, basketball and track and was recognized for the breadth of that multi-sport performance.",
+        325
+      ],
+      [
+        "cfb-marqise-lee--usc-long-jump-track",
+        "Lee competed for USC track and field in the long jump while also starring for the football team.",
+        324
+      ],
+      [
+        "cfb-marqise-lee--arrived-in-george-farmer-shadow",
+        "USC's own introduction noted that Lee arrived with less hype than Serra teammate George Farmer, who had been the more heralded recruit.",
+        325
+      ],
+      [
+        "cfb-marqise-lee--earned-preferred-number-nine",
+        "Lee initially wore No. 17 at USC and later switched to his preferred No. 9 after earning the change.",
+        325
+      ]
+    ]
+  ],
+  [
+    "cfb-marvin-harrison-jr",
+    [
+      [
+        "cfb-marvin-harrison-jr--father-marvin-harrison",
+        "Harrison is the son of Pro Football Hall of Fame wide receiver Marvin Harrison Sr.",
+        326
+      ],
+      [
+        "cfb-marvin-harrison-jr--st-josephs-with-kyle-mccord",
+        "Harrison transferred from La Salle College High School to St. Joseph's Prep, where he formed a long-running quarterback-receiver partnership with Kyle McCord before both went to Ohio State.",
+        327
+      ],
+      [
+        "cfb-marvin-harrison-jr--grew-during-covid-shutdown",
+        "Harrison grew several inches during the COVID-era shutdown period before his final high-school season.",
+        326
+      ],
+      [
+        "cfb-marvin-harrison-jr--extreme-jugs-work-routine",
+        "Ohio State teammates and coaches repeatedly described Harrison's habit of doing extra JUGS-machine and route work at unusually early and late hours.",
+        326
+      ],
+      [
+        "cfb-marvin-harrison-jr--chris-olave-big-brother-mentor",
+        "When Harrison arrived at Ohio State, Chris Olave was assigned as his 'big brother' in the receiver room and became an early mentor.",
+        328
+      ]
+    ]
+  ],
+  [
+    "cfb-micah-parsons",
+    [
+      [
+        "cfb-micah-parsons--central-dauphin-to-harrisburg",
+        "Parsons played at Central Dauphin before transferring to Harrisburg High School, where he finished his prep career.",
+        329
+      ],
+      [
+        "cfb-micah-parsons--high-school-running-back-defensive-end",
+        "At Harrisburg, Parsons was a two-way force who played defensive end and also carried a major rushing workload at running back.",
+        329
+      ],
+      [
+        "cfb-micah-parsons--high-school-basketball",
+        "Parsons also played high-school basketball and was part of a district championship program.",
+        329
+      ],
+      [
+        "cfb-micah-parsons--recruited-athlete-became-linebacker",
+        "Penn State signed Parsons after he had been viewed primarily as an edge/athlete prospect, then developed him as an off-ball linebacker.",
+        330
+      ],
+      [
+        "cfb-micah-parsons--first-penn-state-freshman-tackle-leader",
+        "As a true freshman, Parsons became the first freshman in Penn State history, true or redshirt, to lead the team in tackles for a season.",
+        331
+      ]
+    ]
+  ],
+  [
+    "cfb-michael-huff",
+    [
+      [
+        "cfb-michael-huff--grew-up-michigan-fan",
+        "Huff grew up in a family of Michigan fans and identified Charles Woodson as one of his favorite players before eventually starring for Texas.",
+        332
+      ],
+      [
+        "cfb-michael-huff--chose-texas-partly-for-track-weather",
+        "Huff said Texas's warmer weather appealed to him in part because he wanted the chance to keep running track.",
+        332
+      ],
+      [
+        "cfb-michael-huff--track-first-love",
+        "Huff began competing in track at about age five and described track as his first athletic love.",
+        333
+      ],
+      [
+        "cfb-michael-huff--texas-4x100-sprinter",
+        "Huff ran track for Texas and was part of a Longhorn 4x100-meter relay that placed second at the Big 12 meet.",
+        333
+      ],
+      [
+        "cfb-michael-huff--corner-to-safety-football-iq",
+        "Huff arrived at Texas expecting to play cornerback, but the coaching staff moved him to safety because they valued his ability to diagnose the game.",
+        334
+      ]
+    ]
+  ],
+  [
+    "cfb-mike-evans",
+    [
+      [
+        "cfb-mike-evans--basketball-first-athlete",
+        "Evans focused primarily on basketball for most of high school and averaged 18.3 points, 8.4 rebounds and 5.2 assists as a senior.",
+        335
+      ],
+      [
+        "cfb-mike-evans--only-one-high-school-football-season",
+        "Evans played only one season of high-school football, joining the team for his senior year.",
+        335
+      ],
+      [
+        "cfb-mike-evans--friends-convinced-him-to-play",
+        "Friends at Ball High School helped convince Evans to give football a try for his senior season.",
+        336
+      ],
+      [
+        "cfb-mike-evans--texas-basketball-vs-am-football-choice",
+        "Evans has said he was weighing a basketball path, including interest from Texas, against the football opportunity at Texas A&M before choosing football.",
+        336
+      ],
+      [
+        "cfb-mike-evans--galveston-island-identity",
+        "Evans grew up in Galveston and played at Ball High School, a background Texas A&M profiled as part of his 'Island' identity.",
+        336
+      ]
+    ]
+  ],
+  [
+    "cfb-morris-claiborne",
+    [
+      [
+        "cfb-morris-claiborne--lsu-started-at-wide-receiver",
+        "Claiborne began his first LSU fall camp at wide receiver before moving to cornerback about a week later.",
+        337
+      ],
+      [
+        "cfb-morris-claiborne--high-school-quarterback",
+        "At Fair Park High School, Claiborne played quarterback as a senior and produced both passing and rushing offense.",
+        337
+      ],
+      [
+        "cfb-morris-claiborne--high-school-wr-db",
+        "Before his senior quarterback season, Claiborne also played wide receiver and defensive back in high school.",
+        337
+      ],
+      [
+        "cfb-morris-claiborne--four-sport-high-school-athlete",
+        "Claiborne participated in basketball, baseball and track in addition to football at Fair Park.",
+        337
+      ],
+      [
+        "cfb-morris-claiborne--louisiana-100-meter-champion",
+        "Claiborne won a Louisiana state championship in the 100-meter dash with a 10.76-second time.",
+        337
+      ]
+    ]
+  ],
+  [
+    "cfb-nakobe-dean",
+    [
+      [
+        "cfb-nakobe-dean--mechanical-engineering-major",
+        "Dean studied mechanical engineering at Georgia while playing linebacker.",
+        338
+      ],
+      [
+        "cfb-nakobe-dean--returned-to-finish-degree",
+        "After turning professional, Dean returned to Georgia to continue work toward completing his mechanical engineering degree.",
+        339
+      ],
+      [
+        "cfb-nakobe-dean--brother-nikolas-ole-miss",
+        "Dean's older brother Nikolas played tight end at Ole Miss.",
+        338
+      ],
+      [
+        "cfb-nakobe-dean--high-school-running-back-linebacker",
+        "At Horn Lake, Dean played running back as well as linebacker and scored nine rushing touchdowns as a senior.",
+        338
+      ],
+      [
+        "cfb-nakobe-dean--horn-lake-first-state-title",
+        "Dean helped Horn Lake finish 15-0 and win the first state football championship in school history.",
+        338
+      ]
+    ]
+  ],
+  [
+    "cfb-patrick-willis",
+    [
+      [
+        "cfb-patrick-willis--worked-young-to-help-family",
+        "Willis has described working from a very young age to help support his younger siblings in rural Tennessee.",
+        340
+      ],
+      [
+        "cfb-patrick-willis--moved-with-siblings-to-coach",
+        "As a teenager, Willis and three younger siblings moved in with his high-school coach's family.",
+        340
+      ],
+      [
+        "cfb-patrick-willis--small-school-light-recruitment",
+        "Willis came from a small Tennessee high school and was lightly recruited compared with the profile he eventually built at Ole Miss.",
+        340
+      ],
+      [
+        "cfb-patrick-willis--two-way-high-school-player",
+        "Willis played on both sides of the ball in high school rather than being developed only as a linebacker.",
+        341
+      ],
+      [
+        "cfb-patrick-willis--played-with-club-cast",
+        "At Ole Miss, Willis played through a hand injury using a large protective club-style cast.",
+        340
+      ]
+    ]
+  ],
+  [
+    "cfb-paul-posluszny",
+    [
+      [
+        "cfb-paul-posluszny--high-school-running-back-linebacker",
+        "Posluszny starred at Hopewell High School as both a linebacker and running back.",
+        342
+      ],
+      [
+        "cfb-paul-posluszny--state-title-running-performance",
+        "In Hopewell's state championship season, Posluszny was a major rushing contributor and carried a large share of the offense in the title game.",
+        342
+      ],
+      [
+        "cfb-paul-posluszny--finance-major-academic-all-america",
+        "Posluszny majored in finance, carried a strong GPA and became the Academic All-America Team Member of the Year.",
+        343
+      ],
+      [
+        "cfb-paul-posluszny--national-defense-and-academic-player-of-year",
+        "The National Football Foundation notes that Posluszny became the only defensive player to win a national defensive player-of-the-year honor and the Academic All-America Team Member of the Year in the same season.",
+        344
+      ],
+      [
+        "cfb-paul-posluszny--first-two-time-captain-since-1960s",
+        "Posluszny became Penn State's first two-time football captain since the 1968-69 seasons.",
+        345
+      ]
+    ]
+  ],
+  [
+    "cfb-peter-warrick",
+    [
+      [
+        "cfb-peter-warrick--returned-for-senior-season",
+        "Warrick returned to Florida State for his senior season despite being viewed as a likely early NFL Draft entrant.",
+        346
+      ],
+      [
+        "cfb-peter-warrick--wire-to-wire-number-one-season",
+        "Warrick and quarterback Chris Weinke helped Florida State become the first team to remain No. 1 in the AP poll from preseason through the final poll.",
+        346
+      ],
+      [
+        "cfb-peter-warrick--sugar-bowl-three-score-performance",
+        "In the 2000 Sugar Bowl national championship game, Warrick scored on two receptions and a 59-yard punt return and also caught a two-point conversion.",
+        347
+      ],
+      [
+        "cfb-peter-warrick--fsu-number-nine-retired",
+        "Florida State retired Warrick's No. 9 jersey in 2018.",
+        348
+      ],
+      [
+        "cfb-peter-warrick--payton-warrick-foundation",
+        "Warrick later founded the Payton Warrick Foundation, named for his son, to assist children born with disabilities.",
+        349
+      ]
+    ]
+  ],
+  [
+    "cfb-rolando-mcclain",
+    [
+      [
+        "cfb-rolando-mcclain--decatur-linebacker-tight-end",
+        "At Decatur High School, McClain played both linebacker and tight end.",
+        350
+      ],
+      [
+        "cfb-rolando-mcclain--high-school-basketball-center",
+        "McClain also played high-school basketball as a center.",
+        351
+      ],
+      [
+        "cfb-rolando-mcclain--true-freshman-opening-day-starter",
+        "McClain became Alabama's first true freshman linebacker to start a season opener since Saleem Rasheed in 1999.",
+        350
+      ],
+      [
+        "cfb-rolando-mcclain--fractured-thumb-bowl-interception",
+        "McClain played the Independence Bowl with a fractured thumb and intercepted Colorado on the first play of the game.",
+        350
+      ],
+      [
+        "cfb-rolando-mcclain--academic-excellence-award",
+        "Alabama recognized McClain with an Academic Excellence Award during his freshman season.",
+        350
+      ]
+    ]
+  ],
+  [
+    "cfb-ryan-broyles",
+    [
+      [
+        "cfb-ryan-broyles--norman-hometown-sooner",
+        "Broyles grew up in Norman and played at Norman High before staying home to play for Oklahoma.",
+        352
+      ],
+      [
+        "cfb-ryan-broyles--high-school-running-back-receiver-returner",
+        "As a high-school senior, Broyles scored touchdowns as a running back, receiver and kick returner.",
+        352
+      ],
+      [
+        "cfb-ryan-broyles--high-school-defensive-back-20-interceptions",
+        "Broyles also played defensive back and finished his high-school career with 20 interceptions.",
+        352
+      ],
+      [
+        "cfb-ryan-broyles--basketball-recruit",
+        "Broyles was also a productive high-school basketball player who drew college basketball recruiting interest.",
+        352
+      ],
+      [
+        "cfb-ryan-broyles--returned-senior-to-finish-degree",
+        "Broyles chose to return to Oklahoma for his senior season, citing the team and the goal of finishing his degree among his reasons.",
+        353
+      ]
+    ]
+  ],
+  [
+    "cfb-sammy-watkins",
+    [
+      [
+        "cfb-sammy-watkins--brother-jaylen-florida",
+        "Watkins's older brother Jaylen Watkins played defensive back at Florida while Sammy became a star at Clemson.",
+        354
+      ],
+      [
+        "cfb-sammy-watkins--high-school-wildcat-quarterback-role",
+        "At South Fort Myers, Watkins took direct snaps in a Wildcat-style role and had a playoff game in which he ran for three touchdowns and threw another.",
+        354
+      ],
+      [
+        "cfb-sammy-watkins--state-200-meter-champion",
+        "Watkins won a Florida high-school state championship in the 200 meters and also placed second in the 100 meters.",
+        354
+      ],
+      [
+        "cfb-sammy-watkins--lee-county-receiving-records",
+        "Watkins finished high school holding Lee County career receiving marks for receptions, yards and touchdowns.",
+        354
+      ],
+      [
+        "cfb-sammy-watkins--scored-on-kicks-punts-interceptions",
+        "As a high-school senior, Watkins scored touchdowns on kickoff returns, punt returns and interception returns in addition to offense.",
+        354
+      ]
+    ]
+  ],
+  [
+    "cfb-tim-brown",
+    [
+      [
+        "cfb-tim-brown--band-to-football-sophomore",
+        "Brown began at Woodrow Wilson High in the school band before playing football from his sophomore year onward; the Dallas school was also the alma mater of 1938 Heisman winner Davey O'Brien.",
+        355
+      ],
+      [
+        "cfb-tim-brown--losing-high-school-team-scholarship-drive",
+        "Woodrow Wilson went 4-25-1 during Brown's three varsity seasons; Brown later said the losing record pushed him to treat every touch as a chance to earn a college scholarship.",
+        356
+      ],
+      [
+        "cfb-tim-brown--multisport-student-leadership",
+        "At Woodrow Wilson, Brown played football, basketball and track, served as vice president of his senior class and worked as sports editor of the school newspaper.",
+        357
+      ],
+      [
+        "cfb-tim-brown--notre-dame-track-sprint-champion",
+        "Brown also earned a Notre Dame track monogram, won the 1986 Midwestern Collegiate Conference indoor 60-meter championship and later ran 20.98 in the outdoor 200 meters.",
+        358
+      ],
+      [
+        "cfb-tim-brown--back-to-back-michigan-state-punt-return-touchdowns",
+        "In Notre Dame's second game of 1987, Brown returned consecutive punts 66 and 71 yards for touchdowns against Michigan State, a performance that helped establish him as the Heisman favorite.",
+        359
+      ]
+    ]
+  ],
+  [
+    "gary-patterson-cfb",
+    [
+      [
+        "gary-patterson-cfb--rozel-farm-work-upbringing",
+        "Patterson grew up in tiny Rozel, Kansas, where his father leveled farmland for irrigation and summer days often meant working from early morning until sundown.",
+        360
+      ],
+      [
+        "gary-patterson-cfb--academic-scholarship-juco-to-kstate-walkon",
+        "Patterson began junior-college football on an academic scholarship, redshirted after a knee injury, then transferred to Kansas State as a walk-on on another academic scholarship.",
+        360
+      ],
+      [
+        "gary-patterson-cfb--franchione-multi-stop-coaching-partnership",
+        "Patterson and Dennis Franchione coached together at Kansas State, Tennessee Tech, Pittsburg State, New Mexico and TCU before Patterson succeeded Franchione as TCU head coach.",
+        361
+      ],
+      [
+        "gary-patterson-cfb--guitar-pep-rallies",
+        "Beyond coaching, Patterson is an accomplished guitar player and has performed for TCU fans at pep rallies around the Fort Worth area.",
+        362
+      ],
+      [
+        "gary-patterson-cfb--big-good-with-leon-bridges",
+        "Patterson co-founded The Big Good Foundation with Grammy-winning Fort Worth artist Leon Bridges to support education, children's health and workforce readiness in the community.",
+        363
+      ]
+    ]
+  ]
 ] as const;
