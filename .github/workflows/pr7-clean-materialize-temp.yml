@@ -1,0 +1,82 @@
+name: PR7 clean materialize
+
+on:
+  push:
+    branches:
+      - feat/who-am-i-pr7-nfl-b-person-identity-clean
+    paths:
+      - .github/workflows/pr7-clean-materialize-temp.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out clean PR7 branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/who-am-i-pr7-nfl-b-person-identity-clean
+          fetch-depth: 0
+
+      - name: Fetch preserved PR7 history
+        run: git fetch origin feat/who-am-i-nfl-b-person-identity-research
+
+      - name: Restore focused PR7 test
+        run: git show 26e91f9fd7c42b496f16d06ca6253d07edfe8071:src/features/back-room/footballPersonIdentityKnowledge.test.ts > src/features/back-room/footballPersonIdentityKnowledge.test.ts
+
+      - name: Materialize authoritative staged payload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git show fbb2f2dfd02efff2a62e4289dea803a590ffb27d:scripts/pr7-recover-temp.py > /tmp/pr7_recover.py
+          cat > /tmp/pr7_entry.py <<'PY'
+          import base64
+          import gzip
+          import importlib.util
+          import json
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("pr7_recovery", "/tmp/pr7_recover.py")
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+
+          parts = [
+              Path(f"scripts/pr7-stage/pr7-data-part{index}.b64").read_text(encoding="utf-8").strip()
+              for index in range(1, 6)
+          ]
+          payload_b64 = "".join(parts)
+          compressed = base64.b64decode(payload_b64, validate=True)
+          people = json.loads(gzip.decompress(compressed).decode("utf-8"))
+          fact_count = module.validate_people(people)
+          if fact_count != 495:
+              raise ValueError(f"Expected 495 concepts, got {fact_count}.")
+          module.assert_cleaned_research_decisions(people)
+          print(f"Validated staged PR7 payload: {len(people)} identities / {fact_count} concepts.")
+          module.integrate(people)
+          PY
+          python3 /tmp/pr7_entry.py
+
+      - name: Remove staging transport and temporary workflow
+        run: |
+          rm -rf scripts/pr7-stage
+          rm .github/workflows/pr7-clean-materialize-temp.yml
+
+      - name: Validate focused PR7 integration
+        run: |
+          npm ci
+          npx vitest run src/features/back-room/footballPersonIdentityKnowledge.test.ts
+          git diff --check
+
+      - name: Commit clean PR7 integration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/features/back-room/footballPersonIdentityKnowledge.ts \
+                  src/features/back-room/footballPersonIdentityKnowledge.test.ts \
+                  docs/who-am-i-pr7-nfl-b-person-identity-audit.md
+          git add -u scripts/pr7-stage .github/workflows/pr7-clean-materialize-temp.yml
+          git commit -m "Integrate NFL B-tier person identity knowledge"
+          git push origin HEAD:feat/who-am-i-pr7-nfl-b-person-identity-clean
