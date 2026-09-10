@@ -17,13 +17,16 @@ jobs:
         with:
           ref: tmp-pr7-integrate-run4
           fetch-depth: 0
+      - name: Repair staged authoritative transport exactly
+        run: python3 scripts/pr7-stage/repair-pr7.py
       - name: Materialize authoritative PR7 data
         run: python3 scripts/pr7-stage/integrate-pr7.py
       - name: Commit materialized output
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/features/back-room/footballPersonIdentityKnowledge.ts \
+          git add scripts/pr7-stage/pr7-data-part*.b64 \
+                  src/features/back-room/footballPersonIdentityKnowledge.ts \
                   src/features/back-room/footballPersonIdentityKnowledge.test.ts \
                   docs/who-am-i-pr7-nfl-b-person-identity-audit.md
           git commit -m "Materialize PR7 NFL B-tier person identity knowledge"
