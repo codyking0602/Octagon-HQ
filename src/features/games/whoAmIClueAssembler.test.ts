@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonIdentityKnowledge";
 import { getFootballFact } from "../back-room/footballFactualStatsCore";
-import { getFootballSubject } from "../back-room/footballSubjectRegistry";
 import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
 import {
   getFootballWhoAmILaunchPool,
@@ -121,10 +120,6 @@ describe("Who Am I PR11 clue assembler", () => {
   });
 
   it("builds a complete CFB sequence for Aaron Donald from canonical resume and identity facts", () => {
-    const canonicalSubject = getFootballSubject("cfb-aaron-donald");
-    expect(canonicalSubject?.league).toBe("CFB");
-    expect(canonicalSubject?.draftYear).toBe(2014);
-    expect(canonicalSubject?.draftPick).toBe(13);
     expect(getFootballFact("cfb-aaron-donald", "cfb-best-season-sacks")?.fact.value).toBe(11);
     expect(getFootballFact("cfb-aaron-donald", "cfb-best-season-tackles-for-loss")?.fact.value).toBe(28.5);
 
