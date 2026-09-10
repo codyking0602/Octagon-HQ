@@ -23,9 +23,15 @@
 
 ## Research-ID reconciliation
 
-The supplied 129 research subject IDs match the current exact CFB B-tier launch population on base main `38dfaf326140de2db9ef76b7554f3a699b720a5e` 129-for-129, so **no research-ID → canonical-ID remappings are required**. Source-projection IDs such as the retained `cfbfast-r-player-...` identities are already the canonical runtime IDs selected by the existing launch owner and therefore remain unchanged.
+Five supplied coach research IDs are legacy recognition IDs that resolve to already-existing canonical CFB coach identities on exact base main `38dfaf326140de2db9ef76b7554f3a699b720a5e`. The data-only module maps only the subject key; all retained concept IDs, wording, and provenance remain unchanged:
 
-No launch-membership or recognizability changes were made.
+- `bill-snyder` → `bill-snyder-cfb`
+- `bob-stoops` → `bob-stoops-cfb`
+- `brian-kelly` → `brian-kelly-cfb`
+- `chris-petersen` → `chris-petersen-cfb`
+- `frank-beamer` → `frank-beamer-cfb`
+
+No launch-membership or recognizability changes were made. The focused test requires the post-reconciliation 129-ID research set to equal the current exact CFB B-tier launch set.
 
 ## Research wording constraints
 
@@ -409,7 +415,7 @@ The supplied research already contains its own rejected/softened-claim decisions
    - Research exclusions/constraints:
      - Rushing totals and draft projections were not retained.
 
-### Bill Snyder — Coach — `bill-snyder`
+### Bill Snyder — Coach — `bill-snyder-cfb`
 
 1. **`bill-snyder--california-high-school-coaching-start`** — Snyder began his full-time coaching career in California high-school football before entering the college ranks.
    - Why distinctive: His path did not begin at a major college, which helps distinguish his long climb to Kansas State.
@@ -434,7 +440,7 @@ The supplied research already contains its own rejected/softened-claim decisions
    - Research exclusions/constraints:
      - Win totals, bowl totals and championship counts were not retained as standalone facts.
 
-### Bob Stoops — Coach — `bob-stoops`
+### Bob Stoops — Coach — `bob-stoops-cfb`
 
 1. **`bob-stoops--youngstown-coaching-family`** — Stoops grew up in Youngstown, Ohio, in a football-coaching family; his father Ron was a longtime defensive coordinator at Cardinal Mooney High School.
    - Why distinctive: The Youngstown coaching household is the root of the Stoops family’s unusually deep coaching tree.
@@ -559,7 +565,7 @@ The supplied research already contains its own rejected/softened-claim decisions
    - Research exclusions/constraints:
      - Receiving records and Biletnikoff Award were not retained as standalone résumé facts.
 
-### Brian Kelly — Coach — `brian-kelly`
+### Brian Kelly — Coach — `brian-kelly-cfb`
 
 1. **`brian-kelly--assumption-linebacker-captain`** — Kelly was a four-year linebacker at Assumption College and captained the team in his final two seasons.
    - Why distinctive: His playing roots are at a small Massachusetts program rather than a major college power.
@@ -984,7 +990,7 @@ The supplied research already contains its own rejected/softened-claim decisions
    - Research exclusions/constraints:
      - Draft pedigree, sacks and award totals were not retained.
 
-### Chris Petersen — Coach — `chris-petersen`
+### Chris Petersen — Coach — `chris-petersen-cfb`
 
 1. **`chris-petersen--sacramento-city-to-uc-davis-qb`** — Petersen began his college playing career at Sacramento City College before transferring to UC Davis, where he became a standout quarterback.
    - Why distinctive: The junior-college-to-Division-II quarterback path is a distinctive origin for a major FBS coach.
@@ -1971,7 +1977,7 @@ The supplied research already contains its own rejected/softened-claim decisions
      - His 2025 Heisman Trophy and ordinary passing statistics were not retained because they are structural résumé information.
      - His mother's medical condition was not retained; stronger football, family, academic and heritage concepts were available.
 
-### Frank Beamer — Coach — `frank-beamer`
+### Frank Beamer — Coach — `frank-beamer-cfb`
 
 1. **`frank-beamer--fancy-gap-farm-upbringing`** — Beamer was born in Mount Airy, North Carolina, but grew up on a farm near Fancy Gap and Hillsville, Virginia, where he said hard work and the value of higher education were emphasized.
    - Why distinctive: His rural southwest-Virginia upbringing became part of the personal identity of the coach most associated with Virginia Tech.
