@@ -63,6 +63,19 @@ describe("Who Am I Football launch pools", () => {
     expect(pool.subjects.every((subject) => subject.recognizabilityTier === "A" || subject.recognizabilityTier === "B")).toBe(true);
   });
 
+  it("keeps reviewed league-context recognition corrections scoped to the NFL identities", () => {
+    const nfl = getFootballWhoAmILaunchPool("NFL");
+    for (const name of ["Johnny Manziel", "Tim Tebow", "Vince Young"] as const) {
+      expect(nfl.players.find((subject) => subject.name === name)?.recognizabilityTier).toBe("B");
+    }
+    expect(nfl.coaches.some((subject) => subject.name === "Nick Saban" || subject.name === "Urban Meyer")).toBe(false);
+
+    const cfb = getFootballWhoAmILaunchPool("CFB");
+    for (const name of ["Johnny Manziel", "Tim Tebow", "Vince Young", "Nick Saban", "Urban Meyer"] as const) {
+      expect(cfb.subjects.find((subject) => subject.name === name)?.recognizabilityTier).toBe("A");
+    }
+  });
+
   it.each(LEAGUES)("keeps %s launch selection deterministic", (league) => {
     const first = getFootballWhoAmILaunchPool(league).subjects.map((subject) => subject.id);
     const second = getFootballWhoAmILaunchPool(league).subjects.map((subject) => subject.id);
