@@ -118,22 +118,21 @@ describe("Who Am I PR11 clue assembler", () => {
     );
   });
 
-  it("builds a curated deterministic CFB sequence from the least clue-rich identity-backed playable subject", () => {
-    const candidate = getFootballWhoAmIUniverse("CFB").candidates
-      .filter((entry) => entry.clues.some((clue) => clue.identityKnowledge))
-      .map((entry) => ({ entry, sequence: whoAmIProgressiveClues(entry.clues) }))
-      .filter(({ sequence }) => sequence.length === WHO_AM_I_CLUE_LIMIT)
-      .sort((left, right) => left.entry.clues.length - right.entry.clues.length || left.entry.id.localeCompare(right.entry.id))[0];
+  it("builds a complete CFB sequence for Aaron Donald from canonical resume and identity facts", () => {
+    const candidate = representativeCandidate("CFB", "cfb-aaron-donald");
+    const first = whoAmIProgressiveClues(candidate.clues, () => 0);
+    const second = whoAmIProgressiveClues(candidate.clues, () => 0.999999);
 
-    expect(candidate).toBeDefined();
-    const { entry, sequence } = candidate!;
-    assertProgressiveSequence(entry, sequence);
-    expect(whoAmIProgressiveClues(entry.clues, () => 0.999999)).toEqual(sequence);
-    expect(sequence.filter((clue) => clue.identityKnowledge).length).toBeGreaterThanOrEqual(2);
+    expect(second).toEqual(first);
+    assertProgressiveSequence(candidate, first);
+    expect(first.filter((clue) => clue.identityKnowledge).length).toBeGreaterThanOrEqual(2);
+    expect(first.some((clue) => clue.text.includes("11 sacks"))).toBe(true);
+    expect(first.some((clue) => clue.text.includes("28.5 tackles for loss"))).toBe(true);
+    expect(first.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
 
     console.info(
-      "Who Am I PR11 CFB representative sequence",
-      JSON.stringify({ id: entry.id, name: entry.name, clues: sequence.map(({ text, band, facet, identityKnowledge }) => ({
+      "Who Am I PR11 CFB Aaron Donald sequence",
+      JSON.stringify({ id: candidate.id, name: candidate.name, clues: first.map(({ text, band, facet, identityKnowledge }) => ({
         text, band, facet, identityKnowledge: Boolean(identityKnowledge),
       })) }),
     );
@@ -184,6 +183,19 @@ describe("Who Am I PR11 clue assembler", () => {
     expect(identityBackedCandidates).toBeGreaterThanOrEqual(100);
     expect(identityBackedPlayableCandidates).toBeGreaterThan(0);
     expect(identityBackedPlayableSelections).toBe(identityBackedPlayableCandidates);
+
+    const shortCfbCandidates = getFootballWhoAmIUniverse("CFB").candidates
+      .map((candidate) => ({
+        id: candidate.id,
+        name: candidate.name,
+        clueCount: whoAmIProgressiveClues(candidate.clues).length,
+      }))
+      .filter((candidate) => candidate.clueCount < WHO_AM_I_CLUE_LIMIT);
+
+    if (shortCfbCandidates.length) {
+      console.info("Who Am I PR11 short CFB candidates", JSON.stringify(shortCfbCandidates));
+    }
+    expect(shortCfbCandidates).toEqual([]);
   });
 
   it("does not mutate canonical person-identity source knowledge during assembly", () => {
