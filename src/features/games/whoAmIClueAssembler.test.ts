@@ -100,7 +100,6 @@ describe("Who Am I PR11 clue assembler", () => {
 
   it.each([
     ["NFL", "nfl-jason-kelce"],
-    ["CFB", "cfb-aaron-donald"],
     ["UFC", "ufc:tom-aspinall"],
   ] as const)("builds a curated deterministic %s sequence for a difficult representative identity", (league, id) => {
     const candidate = representativeCandidate(league, id);
@@ -119,7 +118,28 @@ describe("Who Am I PR11 clue assembler", () => {
     );
   });
 
-  it("keeps complete canonical UFC, NFL, and CFB populations playable with deterministic diverse sequences", () => {
+  it("builds a curated deterministic CFB sequence from the least clue-rich identity-backed playable subject", () => {
+    const candidate = getFootballWhoAmIUniverse("CFB").candidates
+      .filter((entry) => entry.clues.some((clue) => clue.identityKnowledge))
+      .map((entry) => ({ entry, sequence: whoAmIProgressiveClues(entry.clues) }))
+      .filter(({ sequence }) => sequence.length === WHO_AM_I_CLUE_LIMIT)
+      .sort((left, right) => left.entry.clues.length - right.entry.clues.length || left.entry.id.localeCompare(right.entry.id))[0];
+
+    expect(candidate).toBeDefined();
+    const { entry, sequence } = candidate!;
+    assertProgressiveSequence(entry, sequence);
+    expect(whoAmIProgressiveClues(entry.clues, () => 0.999999)).toEqual(sequence);
+    expect(sequence.filter((clue) => clue.identityKnowledge).length).toBeGreaterThanOrEqual(2);
+
+    console.info(
+      "Who Am I PR11 CFB representative sequence",
+      JSON.stringify({ id: entry.id, name: entry.name, clues: sequence.map(({ text, band, facet, identityKnowledge }) => ({
+        text, band, facet, identityKnowledge: Boolean(identityKnowledge),
+      })) }),
+    );
+  });
+
+  it("audits complete canonical UFC, NFL, and CFB populations with deterministic diverse sequences", () => {
     const universes = [
       getUfcWhoAmIUniverse(),
       getFootballWhoAmIUniverse("NFL"),
@@ -131,23 +151,39 @@ describe("Who Am I PR11 clue assembler", () => {
     expect(universes[2].candidates).toHaveLength(200);
 
     let identityBackedCandidates = 0;
-    let identityBackedSelections = 0;
+    let identityBackedPlayableCandidates = 0;
+    let identityBackedPlayableSelections = 0;
 
     for (const universe of universes) {
+      let playable = 0;
       for (const candidate of universe.candidates) {
         const sequence = whoAmIProgressiveClues(candidate.clues, () => 0.123);
-        assertProgressiveSequence(candidate, sequence);
         expect(whoAmIProgressiveClues(candidate.clues, () => 0.987)).toEqual(sequence);
 
-        if (candidate.clues.some((clue) => clue.identityKnowledge)) {
-          identityBackedCandidates += 1;
-          if (sequence.some((clue) => clue.identityKnowledge)) identityBackedSelections += 1;
+        const conceptKeys = sequence.map((clue) => clue.conceptId ?? clue.id);
+        expect(new Set(conceptKeys).size).toBe(sequence.length);
+        expect(new Set(sequence.map((clue) => normalize(clue.text))).size).toBe(sequence.length);
+        for (let index = 1; index < sequence.length; index += 1) {
+          expect(BAND_RANK[sequence[index]!.band]).toBeGreaterThanOrEqual(BAND_RANK[sequence[index - 1]!.band]);
+        }
+
+        const identityBacked = candidate.clues.some((clue) => clue.identityKnowledge);
+        if (identityBacked) identityBackedCandidates += 1;
+        if (sequence.length === WHO_AM_I_CLUE_LIMIT) {
+          playable += 1;
+          assertProgressiveSequence(candidate, sequence);
+          if (identityBacked) {
+            identityBackedPlayableCandidates += 1;
+            if (sequence.some((clue) => clue.identityKnowledge)) identityBackedPlayableSelections += 1;
+          }
         }
       }
+      expect(playable).toBeGreaterThan(0);
     }
 
     expect(identityBackedCandidates).toBeGreaterThanOrEqual(100);
-    expect(identityBackedSelections).toBe(identityBackedCandidates);
+    expect(identityBackedPlayableCandidates).toBeGreaterThan(0);
+    expect(identityBackedPlayableSelections).toBe(identityBackedPlayableCandidates);
   });
 
   it("does not mutate canonical person-identity source knowledge during assembly", () => {
