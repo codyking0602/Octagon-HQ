@@ -14,7 +14,7 @@
 - Research identities: **129**.
 - Retained concepts: **645**.
 - Concepts per identity: **exactly 5**.
-- Unique retained provenance URLs: **360**.
+- Unique retained provenance URLs: **364**.
 - Unique research subject IDs: **129**.
 - Unique concept IDs: **645**.
 - Duplicate normalized retained wording: **0**.
@@ -23,17 +23,17 @@
 
 ## Research-ID reconciliation
 
-Six supplied coach research IDs required CFB canonicalization on exact base main `38dfaf326140de2db9ef76b7554f3a699b720a5e`. The data-only module maps only the subject key; all retained concept IDs, wording, and provenance remain unchanged:
+Exact base main `38dfaf326140de2db9ef76b7554f3a699b720a5e` was probed through the canonical launch owner before integration. The exact CFB B-tier launch population is 129 identities. Five supplied coach slugs required ID-only reconciliation to existing canonical runtime IDs; retained concepts, wording and provenance are unchanged:
 
 - `bill-snyder` → `bill-snyder-cfb`
 - `bob-stoops` → `bob-stoops-cfb`
 - `brian-kelly` → `brian-kelly-cfb`
 - `chris-petersen` → `chris-petersen-cfb`
 - `frank-beamer` → `frank-beamer-cfb`
-- `deion-sanders` → `deion-sanders-cfb` (separates the CFB coach identity from the existing NFL player identity that already owns `deion-sanders`)
 
-The Deion Sanders source-recognition row was canonicalized to the existing CFB `-cfb` identity namespace to remove the cross-league ID collision; his CFB coach name, tier, and launch membership are unchanged. No recognizability or launch-membership changes were made. The focused test requires the post-reconciliation 129-ID research set to equal the current exact CFB B-tier launch set.
+The supplied packages also contained two identities that are not members of the exact current B-tier launch set: `cfb-roy-williams-wr` (Roy Williams) and the CFB-coach use of `deion-sanders`. Current main instead launches `cfb-tim-brown` (Tim Brown) and `gary-patterson-cfb` (Gary Patterson) in those two slots. Per the integration contract, current canonical launch membership is authoritative, so PR9 does **not** change recognizability or launch membership to force the stale rows into runtime.
 
+Only those two launch discrepancies received targeted source verification during integration. The other 127 supplied identities and their retained concepts were ingested without re-research or concept rewriting. Final runtime research-set equality with the exact 129-subject CFB B launch set is enforced by the focused test.
 ## Research wording constraints
 
 The supplied research already contains its own rejected/softened-claim decisions. PR9 preserves those decisions rather than re-researching or independently rewriting the concepts. In particular, controversy, legal/tabloid material, generic résumé statistics, and duplicate facets of one underlying concept were intentionally excluded where the research packages say so.
@@ -1493,33 +1493,6 @@ The supplied research already contains its own rejected/softened-claim decisions
      - The family cancer history was retained only as one advocacy concept and was not split by relative or campaign.
      - Routine Memphis rushing records and awards were not retained.
      - NFL production was not retained.
-
-### Deion Sanders — Coach — `deion-sanders-cfb`
-
-1. **`deion-sanders--prime-time-to-coach-prime`** — Sanders carried the “Prime Time” identity from his playing days into coaching as “Coach Prime,” making the Prime persona a deliberate part of his coaching brand.
-   - Why distinctive: The evolution of a famous personal nickname into a coaching identity is uniquely recognizable and not dependent on wins or championships.
-   - Source: Colorado Athletics — Deion Sanders staff bio
-   - URL: https://cubuffs.com/staff-directory/deion-coach-prime-sanders/1138
-2. **`deion-sanders--trinity-christian-high-school-coaching-start`** — Before becoming a college head coach, Sanders served as offensive coordinator at Trinity Christian School in Texas, where the program won three consecutive state championships during his stint.
-   - Why distinctive: His formal coaching path began in high-school football rather than with an immediate college or NFL staff appointment.
-   - Source: Colorado Athletics — Deion Sanders staff bio
-   - URL: https://cubuffs.com/staff-directory/deion-coach-prime-sanders/1138
-3. **`deion-sanders--jackson-state-hbcu-exposure-push`** — At Jackson State, Sanders made increasing HBCU player exposure a visible priority, including hosting a multi-school pro day and helping stage a nationally televised spring game.
-   - Why distinctive: The exposure push was a distinctive part of his Jackson State coaching mission, separate from game results.
-   - Source: Colorado Athletics — Deion Sanders staff bio
-   - URL: https://cubuffs.com/staff-directory/deion-coach-prime-sanders/1138
-4. **`deion-sanders--family-integrated-into-program`** — Sanders’ college programs became a family enterprise: sons Shedeur and Shilo played for him, daughter Shelomi was also a Jackson State athlete, and Deion Sanders Jr. contributed to the programs’ media presence.
-   - Why distinctive: The unusually visible integration of his children into the football and media ecosystem is a defining part of his coaching-era public identity.
-   - Source: Jackson State Athletics — Deion Sanders bio
-   - URL: https://gojsutigers.com/sports/football/roster/coaches/deion-sanders/219
-5. **`deion-sanders--travis-hunter-jackson-state-flip`** — Sanders and Jackson State signed No. 1-caliber prospect Travis Hunter after flipping him from a long-standing Florida State commitment.
-   - Why distinctive: Landing an elite national recruit at an HBCU became a signature recruiting moment of Sanders’ college-coaching identity.
-   - Source: ESPN — Deion Sanders recruiting feature
-   - URL: https://www.espn.com/college-football/story/_/id/38555810/how-deion-sanders-recruits
-   - Research exclusions/constraints:
-     - Sanders’ playing résumé, two-sport professional career and NFL achievements were not retained because this identity is Coach.
-     - Jackson State and Colorado win-loss records were not retained.
-     - Individual family members’ later professional achievements were not retained.
 
 ### Derrick Johnson — LB — `cfb-derrick-johnson`
 
@@ -3304,32 +3277,6 @@ The supplied research already contains its own rejected/softened-claim decisions
      - All arrests, criminal cases, suspensions and other controversy material were deliberately excluded.
      - Butkus Award, national-title résumé and NFL career were not retained because the assignment calls for distinctive person knowledge rather than a résumé summary.
 
-### Roy Williams — WR — `cfb-roy-williams-wr`
-
-1. **`cfb-roy-williams-wr--odessa-permian-product`** — Williams came to Texas from Odessa Permian, one of the most recognizable high-school football programs in Texas.
-   - Why distinctive: The Permian background immediately anchors him in a distinctive West Texas football culture.
-   - Source: Texas Athletics — Roy Williams Hall of Honor
-   - URL: https://texaslonghorns.com/honors/hall-of-honor/roy-williams/860
-2. **`cfb-roy-williams-wr--media-guide-record-goal`** — As a Permian senior, Williams studied a Texas media guide, saw the school receiving records and told his mother he wanted to own those marks before he left Austin.
-   - Why distinctive: The unusually specific pre-college goal connects his recruitment directly to the records he later chased at Texas.
-   - Source: Texas Athletics — Still a kid at heart
-   - URL: https://texaslonghorns.com/news/2002/12/27/122702aaa_114
-3. **`cfb-roy-williams-wr--older-brother-lloyd-hill`** — Williams's older brother Lloyd Hill had been a star wide receiver at Texas Tech before Roy chose Texas.
-   - Why distinctive: A prominent sibling at a rival in-state program gives Roy's own Longhorn path a strong family contrast.
-   - Source: Texas Athletics — Still a kid at heart
-   - URL: https://texaslonghorns.com/news/2002/12/27/122702aaa_114
-4. **`cfb-roy-williams-wr--chose-to-return-senior`** — Williams decided to return to Texas for his senior season despite having the option to enter the NFL Draft.
-   - Why distinctive: The stay-or-go decision became an explicit part of his Longhorn story and was tied to goals he had set before college.
-   - Source: Texas Athletics — Still a kid at heart
-   - URL: https://texaslonghorns.com/news/2002/12/27/122702aaa_114
-5. **`cfb-roy-williams-wr--returned-to-odessa-trucking`** — After his playing career, Williams returned to the Odessa area and became involved in the family trucking business.
-   - Why distinctive: Returning to West Texas closes the loop on the Permian origin and gives him a lasting hometown identity beyond football.
-   - Source: Texas Athletics — Roy Williams Hall of Honor
-   - URL: https://texaslonghorns.com/honors/hall-of-honor/roy-williams/860
-   - Research exclusions/constraints:
-     - Texas receiving totals and draft position were not retained as résumé statistics.
-     - Film/pop-culture associations with Odessa Permian were not used unless directly tied to Williams by a stronger primary source.
-
 ### Ryan Broyles — WR — `cfb-ryan-broyles`
 
 1. **`cfb-ryan-broyles--norman-hometown-sooner`** — Broyles grew up in Norman and played at Norman High before staying home to play for Oklahoma.
@@ -3381,6 +3328,56 @@ The supplied research already contains its own rejected/softened-claim decisions
    - Research exclusions/constraints:
      - Clemson receiving totals and All-America honors were rejected as structural résumé facts.
      - NFL production and draft position were not needed for the college-centered identity set.
+
+### Tim Brown — WR — `cfb-tim-brown`
+
+1. **`cfb-tim-brown--band-to-football-sophomore`** — Brown began at Woodrow Wilson High in the school band before playing football from his sophomore year onward; the Dallas school was also the alma mater of 1938 Heisman winner Davey O'Brien.
+   - Why distinctive: Brown's route into football began unusually late and at the same Dallas school as another Heisman winner.
+   - Source: Heisman Trophy — Tim Brown biography
+   - URL: https://www.heisman.com/heisman-winners/tim-brown/
+2. **`cfb-tim-brown--losing-high-school-team-scholarship-drive`** — Woodrow Wilson went 4-25-1 during Brown's three varsity seasons; Brown later said the losing record pushed him to treat every touch as a chance to earn a college scholarship.
+   - Why distinctive: The poor team record directly shaped how Brown approached every opportunity before Notre Dame.
+   - Source: Notre Dame Athletics — Heisman Heroes: Tim Brown
+   - URL: https://fightingirish.com/news/2006/11/17/heisman-heroes
+3. **`cfb-tim-brown--multisport-student-leadership`** — At Woodrow Wilson, Brown played football, basketball and track, served as vice president of his senior class and worked as sports editor of the school newspaper.
+   - Why distinctive: The mix of three sports, student leadership and journalism gives a broader pre-college identity than a football résumé alone.
+   - Source: Notre Dame Athletics — Tim Brown Receives NCAA Silver Anniversary Award
+   - URL: https://fightingirish.com/tim-brown-receives-ncaa-silver-anniversary-award/
+4. **`cfb-tim-brown--notre-dame-track-sprint-champion`** — Brown also earned a Notre Dame track monogram, won the 1986 Midwestern Collegiate Conference indoor 60-meter championship and later ran 20.98 in the outdoor 200 meters.
+   - Why distinctive: Championship-level sprinting at Notre Dame makes his track background a real second-sport college identity.
+   - Source: Notre Dame Athletics — Heisman Anniversaries: Celebrating John Lujack and Tim Brown
+   - URL: https://fightingirish.com/news/2017/09/16/heisman-anniversaries-celebrating-john-lujack-and-tim-brown
+5. **`cfb-tim-brown--back-to-back-michigan-state-punt-return-touchdowns`** — In Notre Dame's second game of 1987, Brown returned consecutive punts 66 and 71 yards for touchdowns against Michigan State, a performance that helped establish him as the Heisman favorite.
+   - Why distinctive: Two consecutive punt-return touchdowns in one early-season game are an unusually identifiable signature moment.
+   - Source: Notre Dame Athletics — Touchdown Timmy College Football Hall of Fame feature
+   - URL: https://fightingirish.com/touchdown-timmy-becomes-latest-heisman-winner-to-enter-college-football-hall-of-fame/
+   - Research exclusions/constraints:
+     - Routine Notre Dame receiving and return totals were not retained because the selected concepts better capture Brown's path and public identity.
+
+### Gary Patterson — Coach — `gary-patterson-cfb`
+
+1. **`gary-patterson-cfb--rozel-farm-work-upbringing`** — Patterson grew up in tiny Rozel, Kansas, where his father leveled farmland for irrigation and summer days often meant working from early morning until sundown.
+   - Why distinctive: The rural work routine is a concrete origin story behind the work-ethic identity repeatedly attached to Patterson.
+   - Source: TCU Athletics — Gary Patterson: The Next Level
+   - URL: https://gofrogs.com/news/2004/7/26/Gary_Patterson_The_Next_Level
+2. **`gary-patterson-cfb--academic-scholarship-juco-to-kstate-walkon`** — Patterson began junior-college football on an academic scholarship, redshirted after a knee injury, then transferred to Kansas State as a walk-on on another academic scholarship.
+   - Why distinctive: His playing path depended on academics, recovery from injury and a walk-on transfer rather than a conventional major-college recruitment.
+   - Source: TCU Athletics — Gary Patterson: The Next Level
+   - URL: https://gofrogs.com/news/2004/7/26/Gary_Patterson_The_Next_Level
+3. **`gary-patterson-cfb--franchione-multi-stop-coaching-partnership`** — Patterson and Dennis Franchione coached together at Kansas State, Tennessee Tech, Pittsburg State, New Mexico and TCU before Patterson succeeded Franchione as TCU head coach.
+   - Why distinctive: The repeated partnership across five programs makes Franchione a defining relationship in Patterson's climb to the TCU job.
+   - Source: TCU Athletics — TCU Promotes Patterson to Head Football Coach
+   - URL: https://gofrogs.com/news/2000/12/8/TCU_Promotes_Patterson_to_Head_Football_Coach
+4. **`gary-patterson-cfb--guitar-pep-rallies`** — Beyond coaching, Patterson is an accomplished guitar player and has performed for TCU fans at pep rallies around the Fort Worth area.
+   - Why distinctive: Playing guitar publicly for TCU fans is a distinctive off-field personality marker.
+   - Source: TCU Athletics — Gary Patterson coach biography
+   - URL: https://gofrogs.com/sports/football/roster/coaches/gary-patterson/759
+5. **`gary-patterson-cfb--big-good-with-leon-bridges`** — Patterson co-founded The Big Good Foundation with Grammy-winning Fort Worth artist Leon Bridges to support education, children's health and workforce readiness in the community.
+   - Why distinctive: The partnership with Leon Bridges creates a specific Fort Worth civic identity beyond football.
+   - Source: National Football Foundation — Gary Patterson Hall of Fame biography
+   - URL: https://footballfoundation.org/honors/hall-of-fame/gary-patterson/2589
+   - Research exclusions/constraints:
+     - Routine TCU win totals, rankings and coach-of-the-year awards were not retained because they are structural résumé information.
 
 ## Release boundary
 
