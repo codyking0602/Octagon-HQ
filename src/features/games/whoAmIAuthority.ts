@@ -1,5 +1,6 @@
 import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
 import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonIdentityKnowledge";
+import { footballRecognitionEvidenceFor } from "../back-room/footballRecognitionEvidence";
 import {
   footballFactMetricDefinitions,
   formatFootballFact,
@@ -198,13 +199,6 @@ function nflProfileDepth(subject: FootballSubjectProfile) {
   return recordDepth * 10 + identityDepth;
 }
 
-function footballNflProfile(subject: FootballSubjectProfile) {
-  if (subject.kind !== "player-career") return null;
-  if (subject.league === "NFL") return subject;
-  return [...(nflProfilesByName.get(normalizedPersonName(subject.name)) ?? [])]
-    .sort((left, right) => nflProfileDepth(right) - nflProfileDepth(left) || left.id.localeCompare(right.id))[0] ?? null;
-}
-
 function hasFootballDraftIdentity(subject: FootballSubjectProfile) {
   return (
     subject.draftYear != null
@@ -338,59 +332,30 @@ function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     });
 }
 
-function footballProResumeClues(subject: FootballSubjectProfile): WhoAmIClue[] {
+function footballRecognitionClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   if (subject.league !== "CFB" || subject.kind !== "player-career") return [];
-  const nflProfile = footballNflProfile(subject);
-  if (!nflProfile) return [];
+  const evidence = footballRecognitionEvidenceFor(subject);
+  if (!evidence) return [];
 
-  const clues: WhoAmIClue[] = [
-    clue("pro:nfl-path", "I later played in the NFL.", "helpful"),
-  ];
-
-  if (nflProfile.startSeason != null && nflProfile.endSeason != null) {
-    clues.push(clue(
-      "pro:nfl-window",
-      `My NFL career ran from ${nflProfile.startSeason} through ${nflProfile.endSeason}.`,
-      "strong",
-    ));
+  if (evidence.basis === "first-team-all-america") {
+    return [{
+      ...clue("recognition:first-team-all-america", "I earned first-team All-America recognition in college.", "strong"),
+      conceptId: "recognition:first-team-all-america",
+      facet: "accomplishments",
+      revealPriority: 15,
+    }];
   }
 
-  const record = getFootballFactualRecord(nflProfile.id);
-  for (const fact of record?.facts ?? []) {
-    if (!FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId) || Number(fact.value) === 0) continue;
-    const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
-    const formatted = formatFootballFact(fact.metricId, Number(fact.value));
-    let text = `I recorded ${formatted} NFL career ${label.toLowerCase().replace(/^nfl career /, "")}.`;
-    if (fact.metricId === "nfl-super-bowl-titles") {
-      text = Number(fact.value) === 1 ? "I won a Super Bowl title." : `I won ${formatted} Super Bowl titles.`;
-    } else if (fact.metricId === "nfl-defensive-player-of-year-awards") {
-      text = Number(fact.value) === 1
-        ? "I won NFL Defensive Player of the Year."
-        : `I won NFL Defensive Player of the Year ${formatted} times.`;
-    } else if (fact.metricId === "nfl-first-team-all-pros") {
-      text = Number(fact.value) === 1 ? "I was a first-team NFL All-Pro." : `I was a first-team NFL All-Pro ${formatted} times.`;
-    } else if (fact.metricId === "nfl-ap-mvp-awards") {
-      text = Number(fact.value) === 1 ? "I won the AP NFL MVP award." : `I won ${formatted} AP NFL MVP awards.`;
-    }
-    const band: WhoAmIClueBand = /mvp|super-bowl|all-pro|player-of-year/.test(fact.metricId) ? "giveaway" : "strong";
-    clues.push(clue(`pro:fact:${fact.metricId}`, text, band));
+  if (evidence.basis === "major-award-or-hall-of-fame") {
+    return [{
+      ...clue("recognition:major-award-or-hall-of-fame", "My college résumé includes a major national award or Hall of Fame recognition.", "strong"),
+      conceptId: "recognition:major-award-or-hall-of-fame",
+      facet: "accomplishments",
+      revealPriority: 15,
+    }];
   }
 
-  const history = footballCareerAffiliationHistoryFor(nflProfile);
-  const affiliations = [...new Set(
-    (history?.affiliations ?? nflProfile.franchises ?? []).map((value) => displayAffiliation("NFL", value)),
-  )];
-  if (affiliations.length) {
-    clues.push(clue(
-      "pro:teams",
-      affiliations.length === 1
-        ? `I played in the NFL for the ${affiliations[0]}.`
-        : `My NFL career included the ${affiliations.join(" and ")}.`,
-      "giveaway",
-    ));
-  }
-
-  return clues;
+  return [];
 }
 
 function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
@@ -504,8 +469,8 @@ function footballCandidate(subject: FootballSubjectProfile): WhoAmICandidate {
     clues: distinctClues([
       ...footballIdentityClues(subject),
       ...footballMetricClues(subject),
+      ...footballRecognitionClues(subject),
       ...footballPersonIdentityClues(subject),
-      ...footballProResumeClues(subject),
     ]),
   };
 }
