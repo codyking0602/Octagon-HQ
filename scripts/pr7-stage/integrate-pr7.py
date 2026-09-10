@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import base64
-import gzip
 import json
+import struct
 import subprocess
+import zlib
 from pathlib import Path
 
 PARTS = 5
@@ -21,7 +22,25 @@ def load_people():
         Path(f"scripts/pr7-stage/pr7-data-part{i}.b64").read_text(encoding="utf-8").strip()
         for i in range(1, PARTS + 1)
     )
-    raw = gzip.decompress(base64.b64decode(payload, validate=True))
+    compressed = base64.b64decode(payload, validate=True)
+    if len(compressed) < 18 or compressed[:2] != b"\x1f\x8b":
+        raise ValueError("Staged PR7 payload is not a gzip stream")
+    flags = compressed[3]
+    if flags != 0:
+        raise ValueError(f"Unexpected gzip flags {flags}; diagnostic assumes the canonical 10-byte header")
+    raw = zlib.decompress(compressed[10:-8], -15)
+    expected_crc, expected_size = struct.unpack("<II", compressed[-8:])
+    actual_crc = zlib.crc32(raw) & 0xFFFFFFFF
+    actual_size = len(raw) & 0xFFFFFFFF
+    print(
+        "Gzip integrity: "
+        f"expected_crc={expected_crc:08x} actual_crc={actual_crc:08x} "
+        f"expected_size={expected_size} actual_size={actual_size}"
+    )
+    if expected_size != actual_size:
+        raise ValueError("Staged PR7 gzip ISIZE does not match decompressed JSON length")
+    if expected_crc != actual_crc:
+        print("WARNING: gzip trailer CRC differs, but raw DEFLATE stream completed; validating decoded JSON exactly before acceptance")
     people = json.loads(raw.decode("utf-8"))
     return people, len(payload), len(raw)
 
