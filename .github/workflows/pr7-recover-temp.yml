@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/pr7-recover-temp.yml
       - scripts/pr7-recover-temp.py
+      - scripts/pr7-recover-temp-entry.py
 
 permissions:
   contents: write
@@ -23,7 +24,7 @@ jobs:
       - name: Recover supplied PR7 research and integrate canonical owner
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/pr7-recover-temp.py
+        run: python3 scripts/pr7-recover-temp-entry.py
       - name: Commit only legitimate PR7 files and remove transport
         run: |
           git config user.name "github-actions[bot]"
@@ -31,6 +32,6 @@ jobs:
           git add src/features/back-room/footballPersonIdentityKnowledge.ts \
                   src/features/back-room/footballPersonIdentityKnowledge.test.ts \
                   docs/who-am-i-pr7-nfl-b-person-identity-audit.md
-          git rm .github/workflows/pr7-recover-temp.yml scripts/pr7-recover-temp.py
+          git rm .github/workflows/pr7-recover-temp.yml scripts/pr7-recover-temp.py scripts/pr7-recover-temp-entry.py
           git commit -m "Integrate NFL B-tier person identity knowledge"
           git push origin HEAD:feat/who-am-i-nfl-b-person-identity-research
