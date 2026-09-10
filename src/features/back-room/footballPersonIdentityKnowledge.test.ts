@@ -15,8 +15,7 @@ import {
   getFootballPersonIdentityFactSources,
   getFootballPersonIdentityKnowledge,
 } from "./footballPersonIdentityKnowledge";
-import { buildFootballSubjectKnowledgeMetadata } from "./footballSubjectEligibility";
-import { getFootballSubject } from "./footballSubjectRegistry";
+import { getFootballSubject, queryFootballSubjects } from "./footballSubjectRegistry";
 
 const PR4_SUBJECT_IDS = new Set([
   "nfl-patrick-mahomes",
@@ -165,15 +164,22 @@ describe("football person identity knowledge", () => {
   });
 
   it("keeps the five deferred identities out of PR6 knowledge after league-context cleanup", () => {
+    const nflRecognizedById = new Map(queryFootballSubjects({
+      league: "NFL",
+      recognizabilityTiers: ["A", "B"],
+      includeProjectedSourceSubjects: true,
+      includeProjectedCanonicalRecognition: true,
+    }).map((subject) => [subject.id, subject]));
+
     for (const [subjectId, name] of [
       ["nflverse-player-00-0031409", "Johnny Manziel"],
       ["nflverse-player-00-0027876", "Tim Tebow"],
       ["nflverse-player-00-0024218", "Vince Young"],
     ] as const) {
-      const subject = getFootballSubject(subjectId);
+      const subject = nflRecognizedById.get(subjectId);
       expect(subject?.name).toBe(name);
       expect(subject?.league).toBe("NFL");
-      expect(buildFootballSubjectKnowledgeMetadata(subject!).recognizabilityTier).toBe("B");
+      expect(subject?.recognizabilityTier).toBe("B");
       expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
     }
 
