@@ -23,7 +23,9 @@
 
 ## Research-ID reconciliation
 
-No launch-membership or recognizability changes are permitted. Any research ID that differs from the current launch subject ID must be reconciled to the existing runtime ID in the data-only module and listed here before merge.
+The supplied 129 research subject IDs match the current exact CFB B-tier launch population on base main `38dfaf326140de2db9ef76b7554f3a699b720a5e` 129-for-129, so **no research-ID → canonical-ID remappings are required**. Source-projection IDs such as the retained `cfbfast-r-player-...` identities are already the canonical runtime IDs selected by the existing launch owner and therefore remain unchanged.
+
+No launch-membership or recognizability changes were made.
 
 ## Research wording constraints
 
