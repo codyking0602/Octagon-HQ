@@ -380,6 +380,13 @@ describe("football person identity knowledge", () => {
     expect(new Set(bConceptIds).size).toBe(bConceptIds.length);
     expect(new Set(bNormalizedValues).size).toBe(bNormalizedValues.length);
 
+    const cfbDeionCoach = cfbLaunch.coaches.find((subject) => subject.name === "Deion Sanders");
+    expect(cfbDeionCoach?.id).toBe("deion-sanders-cfb");
+    expect(getFootballSubject("deion-sanders-cfb")?.league).toBe("CFB");
+    expect(getFootballPersonIdentityKnowledge("deion-sanders-cfb")?.facts).toHaveLength(5);
+    expect(getFootballSubject("deion-sanders")?.league).toBe("NFL");
+    expect(getFootballPersonIdentityKnowledge("deion-sanders")?.facts.length).toBeGreaterThanOrEqual(5);
+
     const cfbKnowledgeIds = new Set(
       footballPersonIdentityKnowledgeRecords
         .filter((record) => getFootballSubject(record.subjectId)?.league === "CFB")
