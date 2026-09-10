@@ -9,6 +9,7 @@ import {
   WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET,
   footballWhoAmIIdentityFactBank,
 } from "../games/whoAmIIdentityFacts";
+import { footballPersonIdentityCfbBResearch, footballPersonIdentityCfbBResearchSources } from "./footballPersonIdentityCfbBResearch";
 import {
   footballPersonIdentityKnowledgeRecords,
   footballPersonIdentityKnowledgeSources,
@@ -137,6 +138,8 @@ const PR6_DEFERRED_TIER_REVIEW_IDS = new Set([
 const EXPECTED_A_RESEARCHED_COUNT = PR4_SUBJECT_IDS.size + PR5_SUBJECT_IDS.size + PR6_SUBJECT_IDS.size;
 
 const EXPECTED_CFB_A_RESEARCHED_COUNT = 71;
+const EXPECTED_CFB_B_RESEARCHED_COUNT = 129;
+const EXPECTED_CFB_B_PROVENANCE_COUNT = 360;
 
 function normalized(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim();
@@ -316,7 +319,7 @@ describe("football person identity knowledge", () => {
     }
   });
 
-  it("covers the current canonical CFB A launch population with exactly five distinctive concepts each", () => {
+  it("covers the exact canonical CFB A and B launch populations with five distinctive concepts each", () => {
     const cfbLaunch = getFootballWhoAmILaunchPool("CFB");
     expect(cfbLaunch.players).toHaveLength(180);
     expect(cfbLaunch.coaches).toHaveLength(20);
@@ -336,25 +339,53 @@ describe("football person identity knowledge", () => {
       const record = getFootballPersonIdentityKnowledge(launchSubject.id);
       expect(record?.subjectId).toBe(launchSubject.id);
       expect(record?.facts).toHaveLength(5);
+    }
+
+    const cfbBTier = cfbLaunch.subjects.filter((subject) => subject.recognizabilityTier === "B");
+    expect(cfbBTier).toHaveLength(EXPECTED_CFB_B_RESEARCHED_COUNT);
+    const cfbBTierIds = new Set(cfbBTier.map((subject) => subject.id));
+    expect(cfbBTierIds.size).toBe(EXPECTED_CFB_B_RESEARCHED_COUNT);
+
+    const researchBTierIds = new Set(footballPersonIdentityCfbBResearch.map(([subjectId]) => subjectId));
+    expect(researchBTierIds.size).toBe(EXPECTED_CFB_B_RESEARCHED_COUNT);
+    expect(researchBTierIds).toEqual(cfbBTierIds);
+    expect(footballPersonIdentityCfbBResearchSources).toHaveLength(EXPECTED_CFB_B_PROVENANCE_COUNT);
+    expect(new Set(footballPersonIdentityCfbBResearchSources.map(([url]) => url)).size).toBe(EXPECTED_CFB_B_PROVENANCE_COUNT);
+
+    const bFactIds: string[] = [];
+    const bConceptIds: string[] = [];
+    const bNormalizedValues: string[] = [];
+    for (const launchSubject of cfbBTier) {
+      const canonical = getFootballSubject(launchSubject.id);
+      expect(canonical?.id).toBe(launchSubject.id);
+      expect(canonical?.league).toBe("CFB");
+      expect(canonical?.recognizabilityTier).toBe("B");
+
+      const record = getFootballPersonIdentityKnowledge(launchSubject.id);
+      expect(record?.subjectId).toBe(launchSubject.id);
+      expect(record?.facts).toHaveLength(5);
       for (const identityFact of record!.facts) {
         expect(identityFact.knowledgeClass).toBe("distinctive-identity");
         expect(identityFact.verification).toBe("verified");
         expect(identityFact.sourceIds).toHaveLength(1);
         expect(getFootballPersonIdentityFactSources(identityFact)).toHaveLength(1);
         expect(normalized(identityFact.value).split(" ").length).toBeGreaterThanOrEqual(8);
+        bFactIds.push(identityFact.factId);
+        bConceptIds.push(identityFact.conceptId);
+        bNormalizedValues.push(normalized(identityFact.value));
       }
     }
+    expect(bFactIds).toHaveLength(EXPECTED_CFB_B_RESEARCHED_COUNT * 5);
+    expect(new Set(bFactIds).size).toBe(bFactIds.length);
+    expect(new Set(bConceptIds).size).toBe(bConceptIds.length);
+    expect(new Set(bNormalizedValues).size).toBe(bNormalizedValues.length);
 
     const cfbKnowledgeIds = new Set(
       footballPersonIdentityKnowledgeRecords
         .filter((record) => getFootballSubject(record.subjectId)?.league === "CFB")
         .map((record) => record.subjectId),
     );
-    expect(cfbKnowledgeIds).toEqual(cfbATierIds);
-
-    const cfbBTier = cfbLaunch.subjects.filter((subject) => subject.recognizabilityTier === "B");
-    expect(cfbBTier).toHaveLength(129);
-    expect(cfbBTier.every((subject) => getFootballPersonIdentityKnowledge(subject.id) == null)).toBe(true);
+    expect(cfbKnowledgeIds).toEqual(new Set([...cfbATierIds, ...cfbBTierIds]));
 
     expect(createUfcWhoAmIRound(() => 0).clues).toHaveLength(10);
   });
@@ -363,6 +394,7 @@ describe("football person identity knowledge", () => {
     const sourcePaths = [
       resolve(process.cwd(), "src/features/back-room/footballPersonIdentityKnowledge.ts"),
       resolve(process.cwd(), "src/features/back-room/footballPersonIdentityCfbAResearch.ts"),
+      resolve(process.cwd(), "src/features/back-room/footballPersonIdentityCfbBResearch.ts"),
     ];
     const sourceText = sourcePaths.map((sourcePath) => readFileSync(sourcePath, "utf8")).join("\n");
 
