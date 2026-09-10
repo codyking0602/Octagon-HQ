@@ -6,6 +6,9 @@ on:
       - feat/who-am-i-pr7-nfl-b-person-identity-clean
     paths:
       - .github/workflows/pr7-clean-materialize-temp.yml
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
