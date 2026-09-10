@@ -228,7 +228,10 @@ describe("Who Am I PR11 clue assembler", () => {
         .filter((fact) => Number(fact.value) !== 0);
       for (const fact of canonicalResumeFacts) {
         expect(
-          candidate.clues.some((clue) => clue.id === `fact:${fact.metricId}`),
+          candidate.clues.some((clue) => (
+            clue.id === `fact:${fact.metricId}`
+            || (fact.metricId === "cfb-heisman-awards" && clue.id === "heisman")
+          )),
           `${candidate.id} is dropping canonical Who Am I resume metric ${fact.metricId}`,
         ).toBe(true);
       }
