@@ -1,0 +1,26 @@
+name: PR7 roster probe
+
+on:
+  push:
+    branches:
+      - feat/who-am-i-nfl-b-person-identity-research
+    paths:
+      - .github/workflows/pr7-probe-temp.yml
+      - src/features/back-room/pr7RosterProbe.test.ts
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/who-am-i-nfl-b-person-identity-research
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx vitest run src/features/back-room/pr7RosterProbe.test.ts --reporter=verbose
