@@ -189,14 +189,24 @@ describe("Who Am I PR11 clue assembler", () => {
     expect(identityBackedPlayableCandidates).toBeGreaterThan(0);
     expect(identityBackedPlayableSelections).toBe(identityBackedPlayableCandidates);
 
-    const shortCfbCandidates = getFootballWhoAmIUniverse("CFB").candidates
+    const cfbClueAudit = getFootballWhoAmIUniverse("CFB").candidates
       .map((candidate) => ({
         id: candidate.id,
         name: candidate.name,
-        clueCount: whoAmIProgressiveClues(candidate.clues).length,
+        availableClues: candidate.clues.length,
+        assembledClues: whoAmIProgressiveClues(candidate.clues).length,
+        identityClues: candidate.clues.filter((clue) => clue.identityKnowledge).length,
       }))
-      .filter((candidate) => candidate.clueCount < WHO_AM_I_CLUE_LIMIT);
+      .sort((left, right) => (
+        left.availableClues - right.availableClues
+        || left.assembledClues - right.assembledClues
+        || left.id.localeCompare(right.id)
+      ));
 
+    console.info("Who Am I PR11 lowest-depth CFB candidates", JSON.stringify(cfbClueAudit.slice(0, 5)));
+
+    const shortCfbCandidates = cfbClueAudit
+      .filter((candidate) => candidate.assembledClues < WHO_AM_I_CLUE_LIMIT);
     if (shortCfbCandidates.length) {
       console.info("Who Am I PR11 short CFB candidates", JSON.stringify(shortCfbCandidates));
     }
