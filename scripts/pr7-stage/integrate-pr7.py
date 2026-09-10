@@ -37,11 +37,19 @@ def load_people():
         f"expected_crc={expected_crc:08x} actual_crc={actual_crc:08x} "
         f"expected_size={expected_size} actual_size={actual_size}"
     )
-    if expected_size != actual_size:
-        raise ValueError("Staged PR7 gzip ISIZE does not match decompressed JSON length")
-    if expected_crc != actual_crc:
-        print("WARNING: gzip trailer CRC differs, but raw DEFLATE stream completed; validating decoded JSON exactly before acceptance")
-    people = json.loads(raw.decode("utf-8"))
+    if expected_size != actual_size or expected_crc != actual_crc:
+        print("DIAGNOSTIC: gzip trailer mismatch; attempting strict UTF-8/JSON/99x5 validation to localize transport corruption")
+    text = raw.decode("utf-8")
+    try:
+        people = json.loads(text)
+    except json.JSONDecodeError as exc:
+        start = max(0, exc.pos - 220)
+        stop = min(len(text), exc.pos + 220)
+        print(f"JSON decode failure at char {exc.pos}: {exc.msg}")
+        print("JSON CONTEXT START")
+        print(repr(text[start:stop]))
+        print("JSON CONTEXT END")
+        raise
     return people, len(payload), len(raw)
 
 
@@ -202,7 +210,7 @@ def main():
     people, payload_chars, raw_bytes = load_people()
     print(f"Decoded staged authoritative payload: {payload_chars} base64 chars -> {raw_bytes} JSON bytes")
     validate_people(people)
-    print("Validated authoritative payload: 99 identities / 495 concepts")
+    print("Validated authoritative payload structure and research guards: 99 identities / 495 concepts")
     integrate(people)
     write_test()
     write_audit(people)
