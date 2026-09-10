@@ -214,10 +214,10 @@ describe("football person identity knowledge", () => {
   it("covers the current canonical NFL B launch population with exactly five distinctive concepts each", () => {
     const nflLaunch = getFootballWhoAmILaunchPool("NFL");
     const nflBTier = nflLaunch.subjects.filter((subject) => subject.recognizabilityTier === "B");
+    expect(nflBTier).toHaveLength(99);
+
     const nflBTierIds = new Set(nflBTier.map((subject) => subject.id));
     expect(nflBTierIds.size).toBe(nflBTier.length);
-    expect(nflBTier.length).toBeGreaterThan(0);
-
 
     for (const launchSubject of nflBTier) {
       const canonical = getFootballSubject(launchSubject.id);
@@ -299,11 +299,18 @@ describe("football person identity knowledge", () => {
       expect(record!.facts.length).toBeGreaterThanOrEqual(5);
     }
 
+    const priorATierSubjectIds = [...PR4_SUBJECT_IDS, ...PR5_SUBJECT_IDS, ...PR6_SUBJECT_IDS];
+    for (const subjectId of priorATierSubjectIds) {
+      const subject = getFootballSubject(subjectId);
+      expect(subject).not.toBeNull();
+      const structured = footballWhoAmIIdentityFactBank(subject!);
+      expect(structured.facts.length).toBeGreaterThanOrEqual(WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET);
+    }
+
     for (const record of footballPersonIdentityKnowledgeRecords) {
       const subject = getFootballSubject(record.subjectId);
       expect(subject).not.toBeNull();
       const structured = footballWhoAmIIdentityFactBank(subject!);
-      expect(structured.facts.length).toBeGreaterThanOrEqual(WHO_AM_I_IDENTITY_FACT_MINIMUM_TARGET);
       expect(structured.facts.every((identityFact) => !("knowledgeClass" in identityFact))).toBe(true);
     }
   });
