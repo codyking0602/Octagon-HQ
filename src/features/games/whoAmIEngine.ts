@@ -1,7 +1,21 @@
+import { assembleWhoAmIClues } from "./whoAmIClueAssembler";
+
 export type WhoAmISport = "ufc" | "football";
 export type WhoAmILeague = "UFC" | "NFL" | "CFB";
 export type WhoAmISubjectKind = "fighter" | "player" | "coach";
 export type WhoAmIClueBand = "broad" | "helpful" | "strong" | "giveaway";
+export type WhoAmIClueFacet =
+  | "role"
+  | "era"
+  | "background"
+  | "style"
+  | "career-path"
+  | "accomplishments"
+  | "relationships"
+  | "nickname"
+  | "off-field"
+  | "production"
+  | "identity";
 export type WhoAmIEraBand = "modern" | "legacy";
 
 export interface WhoAmISubject {
@@ -16,6 +30,12 @@ export interface WhoAmIClue {
   id: string;
   text: string;
   band: WhoAmIClueBand;
+  conceptId?: string;
+  facet?: WhoAmIClueFacet;
+  revealPriority?: number;
+  identityKnowledge?: boolean;
+  knowledgeSubjectId?: string;
+  sourceFactId?: string;
 }
 
 export interface WhoAmICandidate extends WhoAmISubject {
@@ -44,38 +64,11 @@ export const WHO_AM_I_RESCUE_SCORE = 30;
 export const WHO_AM_I_RESCUE_OPTION_COUNT = 4;
 export const WHO_AM_I_MODERN_ERA_SHARE = 0.75;
 
-const BAND_ORDER: readonly WhoAmIClueBand[] = ["broad", "helpful", "strong", "giveaway"];
-const BAND_TARGETS: Readonly<Record<WhoAmIClueBand, number>> = {
-  broad: 2,
-  helpful: 3,
-  strong: 3,
-  giveaway: 2,
-};
-
-function shuffled<T>(values: readonly T[], random: () => number) {
-  const copy = [...values];
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(random() * (index + 1));
-    [copy[index], copy[swapIndex]] = [copy[swapIndex]!, copy[index]!];
-  }
-  return copy;
-}
-
-export function whoAmIProgressiveClues(clues: readonly WhoAmIClue[], random: () => number = Math.random) {
-  const selected: WhoAmIClue[] = [];
-  const leftovers: WhoAmIClue[] = [];
-
-  for (const band of BAND_ORDER) {
-    const bandClues = shuffled(clues.filter((clue) => clue.band === band), random);
-    selected.push(...bandClues.slice(0, BAND_TARGETS[band]));
-    leftovers.push(...bandClues.slice(BAND_TARGETS[band]));
-  }
-
-  if (selected.length < WHO_AM_I_CLUE_LIMIT) {
-    selected.push(...leftovers.slice(0, WHO_AM_I_CLUE_LIMIT - selected.length));
-  }
-
-  return selected.slice(0, WHO_AM_I_CLUE_LIMIT);
+export function whoAmIProgressiveClues(
+  clues: readonly WhoAmIClue[],
+  _random: () => number = Math.random,
+) {
+  return assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT);
 }
 
 function subject(candidate: WhoAmICandidate): WhoAmISubject {
