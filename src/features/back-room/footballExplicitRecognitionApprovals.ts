@@ -1,4 +1,4 @@
-import type { FootballRecognizabilityTier } from "./footballSubjectEligibility";
+type ReviewedRecognitionTier = "A" | "B" | "C" | "D";
 
 const iconicIds = new Set([
   "program-alabama", "program-michigan", "program-notre-dame", "program-ohio-state", "program-texas",
@@ -6,7 +6,7 @@ const iconicIds = new Set([
   "2005-texas", "2019-lsu", "2001-miami", "2007-patriots",
 ]);
 
-const reviewedTierOverrides = new Map<string, FootballRecognizabilityTier>([
+const reviewedTierOverrides = new Map<string, ReviewedRecognitionTier>([
   ["nflverse-player-00-0031409", "B"], // Johnny Manziel
   ["nflverse-player-00-0027876", "B"], // Tim Tebow
   ["nflverse-player-00-0024218", "B"], // Vince Young
