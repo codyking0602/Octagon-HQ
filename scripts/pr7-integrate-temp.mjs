@@ -1,10 +1,11 @@
-import { readFileSync, writeFileSync, unlinkSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { gunzipSync } from "node:zlib";
 
 const root = process.cwd();
-const payloadPath = resolve(root, "scripts/pr7-data.b64");
-const payload = JSON.parse(gunzipSync(Buffer.from(readFileSync(payloadPath, "utf8").trim(), "base64")).toString("utf8"));
+const payloadPaths = [1, 2, 3, 4].map((part) => resolve(root, `scripts/pr7-data-${part}.b64`));
+const payloadBase64 = payloadPaths.map((path) => readFileSync(path, "utf8").trim()).join("");
+const payload = JSON.parse(gunzipSync(Buffer.from(payloadBase64, "base64")).toString("utf8"));
 
 const expectedIdentities = 99;
 const expectedConcepts = 495;
@@ -88,11 +89,3 @@ for (const identity of payload) {
   md.push("---", "");
 }
 writeFileSync(auditPath, md.join("\n"));
-
-for (const path of [
-  payloadPath,
-  resolve(root, "scripts/pr7-integrate-temp.mjs"),
-  resolve(root, ".github/workflows/pr7-integrate-temp.yml"),
-]) {
-  if (existsSync(path)) unlinkSync(path);
-}
