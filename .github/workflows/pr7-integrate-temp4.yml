@@ -17,5 +17,5 @@ jobs:
         with:
           ref: tmp-pr7-integrate-run4
           fetch-depth: 0
-      - name: Trace reachable PR7 research history
-        run: node scripts/pr7-stage/trace-history.mjs
+      - name: Inspect historic PR7 staged transport
+        run: node scripts/pr7-stage/decode-historic-stage.mjs
