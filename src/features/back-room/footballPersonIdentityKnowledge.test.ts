@@ -136,6 +136,8 @@ const PR6_DEFERRED_TIER_REVIEW_IDS = new Set([
 
 const EXPECTED_A_RESEARCHED_COUNT = PR4_SUBJECT_IDS.size + PR5_SUBJECT_IDS.size + PR6_SUBJECT_IDS.size;
 
+const EXPECTED_CFB_A_RESEARCHED_COUNT = 71;
+
 function normalized(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim();
 }
@@ -192,14 +194,13 @@ describe("football person identity knowledge", () => {
       }
     }
 
-    for (const subjectId of ["nick-saban", "urban-meyer"] as const) {
-      expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
-    }
     expect(nflLaunch.coaches.some((subject) => subject.name === "Nick Saban" || subject.name === "Urban Meyer")).toBe(false);
 
     const cfbLaunch = getFootballWhoAmILaunchPool("CFB");
     for (const name of ["Johnny Manziel", "Tim Tebow", "Vince Young", "Nick Saban", "Urban Meyer"] as const) {
-      expect(cfbLaunch.subjects.find((subject) => subject.name === name)?.recognizabilityTier).toBe("A");
+      const cfbSubject = cfbLaunch.subjects.find((subject) => subject.name === name);
+      expect(cfbSubject?.recognizabilityTier).toBe("A");
+      expect(getFootballPersonIdentityKnowledge(cfbSubject!.id)?.facts).toHaveLength(5);
     }
   });
 
@@ -315,19 +316,55 @@ describe("football person identity knowledge", () => {
     }
   });
 
-  it("keeps CFB and UFC behavior untouched", () => {
+  it("covers the current canonical CFB A launch population with exactly five distinctive concepts each", () => {
     const cfbLaunch = getFootballWhoAmILaunchPool("CFB");
     expect(cfbLaunch.players).toHaveLength(180);
     expect(cfbLaunch.coaches).toHaveLength(20);
     expect(cfbLaunch.subjects).toHaveLength(200);
-    expect(cfbLaunch.subjects.every((subject) => getFootballPersonIdentityKnowledge(subject.id) == null)).toBe(true);
+
+    const cfbATier = cfbLaunch.subjects.filter((subject) => subject.recognizabilityTier === "A");
+    expect(cfbATier).toHaveLength(EXPECTED_CFB_A_RESEARCHED_COUNT);
+    const cfbATierIds = new Set(cfbATier.map((subject) => subject.id));
+    expect(cfbATierIds.size).toBe(EXPECTED_CFB_A_RESEARCHED_COUNT);
+
+    for (const launchSubject of cfbATier) {
+      const canonical = getFootballSubject(launchSubject.id);
+      expect(canonical?.id).toBe(launchSubject.id);
+      expect(canonical?.league).toBe("CFB");
+      expect(canonical?.recognizabilityTier).toBe("A");
+
+      const record = getFootballPersonIdentityKnowledge(launchSubject.id);
+      expect(record?.subjectId).toBe(launchSubject.id);
+      expect(record?.facts).toHaveLength(5);
+      for (const identityFact of record!.facts) {
+        expect(identityFact.knowledgeClass).toBe("distinctive-identity");
+        expect(identityFact.verification).toBe("verified");
+        expect(identityFact.sourceIds).toHaveLength(1);
+        expect(getFootballPersonIdentityFactSources(identityFact)).toHaveLength(1);
+        expect(normalized(identityFact.value).split(" ").length).toBeGreaterThanOrEqual(8);
+      }
+    }
+
+    const cfbKnowledgeIds = new Set(
+      footballPersonIdentityKnowledgeRecords
+        .filter((record) => getFootballSubject(record.subjectId)?.league === "CFB")
+        .map((record) => record.subjectId),
+    );
+    expect(cfbKnowledgeIds).toEqual(cfbATierIds);
+
+    const cfbBTier = cfbLaunch.subjects.filter((subject) => subject.recognizabilityTier === "B");
+    expect(cfbBTier).toHaveLength(129);
+    expect(cfbBTier.every((subject) => getFootballPersonIdentityKnowledge(subject.id) == null)).toBe(true);
 
     expect(createUfcWhoAmIRound(() => 0).clues).toHaveLength(10);
   });
 
   it("contains no duplicate runtime roster, web lookup, LLM judgment, or Who Am I ownership", () => {
-    const sourcePath = resolve(process.cwd(), "src/features/back-room/footballPersonIdentityKnowledge.ts");
-    const sourceText = readFileSync(sourcePath, "utf8");
+    const sourcePaths = [
+      resolve(process.cwd(), "src/features/back-room/footballPersonIdentityKnowledge.ts"),
+      resolve(process.cwd(), "src/features/back-room/footballPersonIdentityCfbAResearch.ts"),
+    ];
+    const sourceText = sourcePaths.map((sourcePath) => readFileSync(sourcePath, "utf8")).join("\n");
 
     expect(sourceText).not.toMatch(/\bfetch\s*\(/);
     expect(sourceText).not.toMatch(/\b(openai|anthropic|chatgpt|llm)\b/i);

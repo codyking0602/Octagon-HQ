@@ -1,4 +1,5 @@
 import type { FootballFactSource } from "./footballFactualStatsCore";
+import { footballPersonIdentityCfbAResearch, footballPersonIdentityCfbAResearchSources } from "./footballPersonIdentityCfbAResearch";
 import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballPersonIdentityKnowledgeClass = "distinctive-identity";
@@ -34,6 +35,9 @@ const source = (
   url: string,
   coverage: string,
 ): FootballFactSource => ({ id, publisher, title, url, reviewedOn: REVIEWED_ON, coverage });
+
+const pr8CfbASourceId = (sourceIndex: number) =>
+  `identity-pr8-cfb-a-${String(sourceIndex + 1).padStart(3, "0")}`;
 
 export const footballPersonIdentityKnowledgeSources: readonly FootballFactSource[] = [
   source("identity-mahomes-texas-tech-baseball", "Texas Tech Athletics", "Patrick Mahomes II - Baseball", "https://texastech.com/sports/baseball/roster/patrick-mahomes-ii/40", "Patrick Mahomes high-school multi-sport background, baseball draft, family baseball background, and prep accomplishments."),
@@ -695,6 +699,15 @@ export const footballPersonIdentityKnowledgeSources: readonly FootballFactSource
   source("identity-pr7-zach-ertz-tennis-ball-hand-training", "Philadelphia Eagles", "Philadelphia Eagles", "https://www.philadelphiaeagles.com/news/did-you-know-te-zach-ertz-10071528", "Zach Ertz: A highly specific preparation habit using equipment from another sport."),
   source("identity-pr7-zach-ertz-julie-stanford-baseball-meeting", "Ertz Family Foundation", "Ertz Family Foundation", "https://www.ertzfamilyfoundation.org/2019/05/24/diablo-mag-zach-ertz-all-pro-with-a-purpose/", "Zach Ertz: A durable cross-sport personal identity with a precisely documented origin."),
   source("identity-pr7-zach-ertz-haiti-trip-foundation-origin", "Ertz Family Foundation", "Ertz Family Foundation", "https://www.ertzfamilyfoundation.org/our-story/", "Zach Ertz: His organized philanthropy has a specific triggering experience rather than a generic post-success foundation story."),
+  ...footballPersonIdentityCfbAResearchSources.map(([url, publisher, title], sourceIndex) =>
+    source(
+      pr8CfbASourceId(sourceIndex),
+      publisher,
+      title,
+      url,
+      "Who Am I Rebuild PR8 CFB A-tier distinctive-identity research provenance.",
+    ),
+  ),
 ] as const;
 
 const fact = (
@@ -2124,6 +2137,17 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
     fact("pr7-zach-ertz-julie-stanford-baseball-meeting", "zach-ertz-julie-stanford-baseball-meeting", "Ertz met future wife Julie Johnston Ertz, who became a U.S. women's national soccer team star, at a Stanford baseball game; their relationship grew into an unusual marriage between elite athletes from two major sports.", ["identity-pr7-zach-ertz-julie-stanford-baseball-meeting"]),
     fact("pr7-zach-ertz-haiti-trip-foundation-origin", "zach-ertz-haiti-trip-foundation-origin", "A 2018 offseason service trip to Haiti with other Eagles significantly affected Ertz and helped catalyze the charitable foundation he and Julie built around youth opportunities and community work.", ["identity-pr7-zach-ertz-haiti-trip-foundation-origin"]),
   ]},
+  ...footballPersonIdentityCfbAResearch.map(([subjectId, researchFacts]) => ({
+    subjectId,
+    facts: researchFacts.map(([conceptId, value, sourceIndex]) =>
+      fact(
+        `pr8-${conceptId}`,
+        conceptId,
+        value,
+        [pr8CfbASourceId(sourceIndex)],
+      ),
+    ),
+  })),
 ] as const;
 
 const sourceById = new Map(footballPersonIdentityKnowledgeSources.map((item) => [item.id, item]));
