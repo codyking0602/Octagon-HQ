@@ -78,7 +78,7 @@ export const ufcPersonIdentityResearch2 = [
     ["five-thirty-discipline-training", "His father deliberately scheduled 5:30 a.m. karate sessions as a lesson in discipline, a routine Machida continued for years.", 20],
     ["karate-core-in-mma", "Even after branching into MMA, Machida deliberately preserved Shotokan distance, timing and movement as the core of his style rather than abandoning it for a more conventional MMA stance.", 20],
     ["sumo-and-jiu-jitsu-cross-training", "Machida also competed and trained in sumo and began Brazilian jiu-jitsu at 15, adding those arts around his karate base.", 20],
-    ["physical-education-degree", "Machida completed a college degree in physical education while pursuing combat-sports training.", 20],
+    ["lyoto-machida-physical-education-degree", "Machida completed a college degree in physical education while pursuing combat-sports training.", 20],
   ]],
   ["ufc:dricus-du-plessis", [
     ["judo-wrestling-kickboxing-childhood", "Du Plessis' martial-arts path moved from judo as a child to wrestling and then K-1 kickboxing as a teenager before MMA.", 21],
