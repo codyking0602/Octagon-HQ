@@ -446,7 +446,7 @@ const coachSeeds: readonly CoachSeed[] = [
   ["james-franklin", "James Franklin", "CFB", "B"],
   ["luke-fickell", "Luke Fickell", "CFB", "C"],
   ["dan-lanning", "Dan Lanning", "CFB", "B"],
-  ["deion-sanders-cfb", "Deion Sanders", "CFB", "B"],
+  ["deion-sanders", "Deion Sanders", "CFB", "B"],
 ];
 
 const eraSeeds: readonly EraSeed[] = [
