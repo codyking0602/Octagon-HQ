@@ -1,5 +1,6 @@
 import type { FootballFactSource } from "./footballFactualStatsCore";
 import { footballPersonIdentityCfbAResearch, footballPersonIdentityCfbAResearchSources } from "./footballPersonIdentityCfbAResearch";
+import { footballPersonIdentityCfbBResearch, footballPersonIdentityCfbBResearchSources } from "./footballPersonIdentityCfbBResearch";
 import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballPersonIdentityKnowledgeClass = "distinctive-identity";
@@ -38,6 +39,9 @@ const source = (
 
 const pr8CfbASourceId = (sourceIndex: number) =>
   `identity-pr8-cfb-a-${String(sourceIndex + 1).padStart(3, "0")}`;
+
+const pr9CfbBSourceId = (sourceIndex: number) =>
+  `identity-pr9-cfb-b-${String(sourceIndex + 1).padStart(3, "0")}`;
 
 export const footballPersonIdentityKnowledgeSources: readonly FootballFactSource[] = [
   source("identity-mahomes-texas-tech-baseball", "Texas Tech Athletics", "Patrick Mahomes II - Baseball", "https://texastech.com/sports/baseball/roster/patrick-mahomes-ii/40", "Patrick Mahomes high-school multi-sport background, baseball draft, family baseball background, and prep accomplishments."),
@@ -706,6 +710,15 @@ export const footballPersonIdentityKnowledgeSources: readonly FootballFactSource
       title,
       url,
       "Who Am I Rebuild PR8 CFB A-tier distinctive-identity research provenance.",
+    ),
+  ),
+  ...footballPersonIdentityCfbBResearchSources.map(([url, publisher, title], sourceIndex) =>
+    source(
+      pr9CfbBSourceId(sourceIndex),
+      publisher,
+      title,
+      url,
+      "Who Am I Rebuild PR9 CFB B-tier distinctive-identity research provenance.",
     ),
   ),
 ] as const;
@@ -2145,6 +2158,17 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
         conceptId,
         value,
         [pr8CfbASourceId(sourceIndex)],
+      ),
+    ),
+  })),
+  ...footballPersonIdentityCfbBResearch.map(([subjectId, researchFacts]) => ({
+    subjectId,
+    facts: researchFacts.map(([conceptId, value, sourceIndex]) =>
+      fact(
+        `pr9-${conceptId}`,
+        conceptId,
+        value,
+        [pr9CfbBSourceId(sourceIndex)],
       ),
     ),
   })),
