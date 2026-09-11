@@ -299,6 +299,17 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(sequence.filter((clue) => whoAmIClueFacet(clue) === "era")).toHaveLength(1);
   });
 
+  it("keeps shallow first-round college stars playable with a useful draft-status clue instead of junk volume", () => {
+    const candidate = getFootballWhoAmIUniverse("CFB").candidates.find((entry) => entry.id === "cfb-derrick-johnson");
+    expect(candidate).toBeTruthy();
+    expect(candidate!.clues.some((clue) => clue.id === "first-round")).toBe(true);
+    expect(candidate!.clues.some((clue) => clue.id === "draft-pick")).toBe(true);
+
+    const sequence = whoAmIProgressiveClues(candidate!.clues, () => 0.5);
+    expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+    expect(sequence.some((clue) => /fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id))).toBe(false);
+  });
+
   it("repairs the live C.J. Stroud CFB identity and removes the implausible one-game clue", () => {
     const candidate = getFootballWhoAmIUniverse("CFB").candidates.find((entry) => entry.name === "C.J. Stroud");
     expect(candidate).toBeTruthy();
