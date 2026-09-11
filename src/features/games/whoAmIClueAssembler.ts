@@ -349,7 +349,7 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
     "I",
   );
   text = text.replace(new RegExp(`\\bthis ${labelPattern}\\b`, "gi"), "me");
-  text = text.replace(/\\bI's\\b/g, "my");
+  text = text.replace(/\bI's\b/g, "my");
   return sentenceCase(text);
 }
 
