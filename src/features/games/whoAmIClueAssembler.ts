@@ -728,8 +728,8 @@ export function assembleWhoAmIClues(
       .filter((candidate) => candidate.clue.band === current.clue.band)
       .filter((candidate) => candidate.facet === current.facet)
       .filter((candidate) => candidate.selectionClass === current.selectionClass)
-      .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 5)
-      .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 5)
+      .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 10)
+      .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 12)
       .filter((candidate) => !selectedSnapshot.some((other) => (
         other !== current && other.conceptId === candidate.conceptId
       )))
