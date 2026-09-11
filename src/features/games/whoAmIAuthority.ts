@@ -567,7 +567,7 @@ export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfi
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   return footballWhoAmIApplicableMetricFacts(subject)
     .filter(({ fact }) => footballWhoAmIMetricFactIsPlayable(subject, fact))
-    .map(({ fact }) => {
+    .flatMap(({ fact }) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
       const roleRelevant = footballWhoAmIPlayerMetricMatchesRole(subject, fact.metricId);
       const metricClue = clue(
@@ -575,9 +575,28 @@ function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
         footballMetricText(fact.metricId, fact.value, label),
         roleRelevant ? footballMetricBand(fact.metricId) : "helpful",
       );
-      return roleRelevant
+      const playableMetricClue = roleRelevant
         ? metricClue
         : { ...metricClue, facet: "production" as const, revealPriority: 90 };
+
+      if (fact.metricId !== "cfb-nfl-draft-overall-pick") return [playableMetricClue];
+
+      const pick = Number(fact.value);
+      const draftRange = pick <= 10 ? 10 : pick <= 20 ? 20 : pick <= 50 ? 50 : null;
+      if (draftRange == null) return [playableMetricClue];
+
+      return [
+        {
+          ...clue(
+            "fact:cfb-nfl-draft-range",
+            `I was a top-${draftRange} NFL draft pick.`,
+            "strong",
+          ),
+          facet: "career-path" as const,
+          revealPriority: 35,
+        },
+        playableMetricClue,
+      ];
     });
 }
 
@@ -669,20 +688,6 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
       `I was selected No. ${draftProfile.draftPick} overall in the ${draftProfile.draftYear} NFL Draft.`,
       subject.league === "CFB" ? "giveaway" : "strong",
     ));
-    const draftRange = draftProfile.draftPick <= 10
-      ? 10
-      : draftProfile.draftPick <= 20
-        ? 20
-        : draftProfile.draftPick <= 50
-          ? 50
-          : null;
-    if (draftRange != null) {
-      clues.push(clue(
-        "draft-range",
-        `I was a top-${draftRange} NFL draft pick.`,
-        subject.league === "CFB" ? "strong" : "helpful",
-      ));
-    }
   } else if (draftProfile.draftYear != null && draftProfile.draftRound != null) {
     clues.push(clue(
       "draft-round",
