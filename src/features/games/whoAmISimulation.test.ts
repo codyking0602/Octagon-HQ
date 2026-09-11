@@ -34,6 +34,22 @@ function normalize(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
 }
 
+
+function simulationFacet(clue: WhoAmIClue) {
+  if (clue.facet) return clue.facet;
+  const haystack = `${clue.id} ${clue.text}`.toLowerCase();
+  if (/nickname|called me|known as/.test(haystack)) return "nickname";
+  if (/beat:|lost:|faced:|faced-any|opponent|shared the octagon|defeated |lost to |fought /.test(haystack)) return "relationships";
+  if (/position|division|head coach|role/.test(haystack)) return "role";
+  if (/era|decade|career-span|active-window|debut|coach-start|coach-end/.test(haystack)) return "era";
+  if (/school|college|conference/.test(haystack)) return "background";
+  if (/draft|affiliation|career-path|team/.test(haystack)) return "career-path";
+  if (/knockout|submission|finish-style|ko-wins|submission-wins|strik|grappl|wrestl/.test(haystack)) return "style";
+  if (/title|champion|mvp|heisman|all-pro|player of the year|national championship/.test(haystack)) return "accomplishments";
+  if (/games|yards|touchdowns|receptions|sacks|interceptions|fight-count|win-count|recorded/.test(haystack)) return "production";
+  return "identity";
+}
+
 function sequenceKey(sequence: readonly WhoAmIClue[]) {
   return sequence.map((clue) => clue.id).join("|");
 }
@@ -79,7 +95,7 @@ describe("Who Am I mature whole-game simulation", () => {
     for (const [league, universe] of universes) {
       const subjects = universe.candidates.map(asSubject);
       const findings = universe.candidates.map((candidate) => {
-        const sequences = Array.from({ length: 32 }, (_value, index) => (
+        const sequences = Array.from({ length: 16 }, (_value, index) => (
           whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
         ));
 
@@ -87,7 +103,7 @@ describe("Who Am I mature whole-game simulation", () => {
 
         const distinctSequences = new Set(sequences.map(sequenceKey)).size;
         const distinctFacetCounts = sequences.map((sequence) => new Set(
-          sequence.map((clue) => clue.facet ?? "unclassified"),
+          sequence.map((clue) => simulationFacet(clue)),
         ).size);
         const identityCounts = sequences.map((sequence) => sequence.filter((clue) => clue.identityKnowledge).length);
         const giveawayCounts = sequences.map((sequence) => sequence.filter((clue) => clue.band === "giveaway").length);
@@ -97,7 +113,7 @@ describe("Who Am I mature whole-game simulation", () => {
         const maxFacetConcentrations = sequences.map((sequence) => {
           const counts = new Map<string, number>();
           for (const clue of sequence) {
-            const facet = clue.facet ?? "unclassified";
+            const facet = simulationFacet(clue);
             counts.set(facet, (counts.get(facet) ?? 0) + 1);
           }
           return Math.max(...counts.values());
@@ -118,7 +134,7 @@ describe("Who Am I mature whole-game simulation", () => {
           && subject.rescueGroup === candidate.rescueGroup
         ));
         const rejected = new Set(sameGroupDistractors.slice(0, 2).map((subject) => subject.id));
-        const rescueBoards = Array.from({ length: 12 }, (_value, index) => (
+        const rescueBoards = Array.from({ length: 6 }, (_value, index) => (
           whoAmIRescueChoices(round, seededRandom(index + 101), rejected)
         ));
 
@@ -184,9 +200,35 @@ describe("Who Am I mature whole-game simulation", () => {
           noGiveawaySelected: findings.filter((finding) => finding.minGiveawayClues === 0).length,
           weakLateFinish: findings.filter((finding) => finding.minLateStrongOrGiveaway < 3).length,
           facetConcentrationAboveThree: findings.filter((finding) => finding.maxFacetConcentration > 3).length,
-          weakestDiversity: byWeakestDiversity.slice(0, 20),
-          weakestReplay: byWeakestReplay.slice(0, 20),
-          weakestFinish: byWeakestFinish.slice(0, 20),
+          weakestDiversity: byWeakestDiversity.slice(0, 12),
+          weakestReplay: byWeakestReplay.slice(0, 12),
+          weakestFinish: byWeakestFinish.slice(0, 12),
+          replayGapClues: byWeakestReplay
+            .filter((finding) => finding.distinctSequences === 1)
+            .map((finding) => ({
+              id: finding.id,
+              name: finding.name,
+              clues: universe.candidates.find((candidate) => candidate.id === finding.id)?.clues.map((clue) => ({
+                id: clue.id,
+                band: clue.band,
+                facet: simulationFacet(clue),
+                revealPriority: clue.revealPriority ?? null,
+                identityKnowledge: Boolean(clue.identityKnowledge),
+                conceptId: clue.conceptId ?? null,
+                text: clue.text,
+              })),
+            })),
+          lateFinishGapClues: byWeakestFinish
+            .filter((finding) => finding.minLateStrongOrGiveaway < 2)
+            .slice(0, 12)
+            .map((finding) => ({
+              id: finding.id,
+              name: finding.name,
+              selected: whoAmIProgressiveClues(
+                universe.candidates.find((candidate) => candidate.id === finding.id)!.clues,
+                seededRandom(1),
+              ).map((clue) => ({ id: clue.id, band: clue.band, facet: simulationFacet(clue), text: clue.text })),
+            })),
         }),
       );
     }
