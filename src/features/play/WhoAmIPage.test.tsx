@@ -123,7 +123,7 @@ describe("Who Am I mature gameplay loop", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Alpha Fighter/i }));
 
-    expect(screen.getByText("RECOVERED")).toBeInTheDocument();
+    expect(container.querySelector(".twenty-questions-result > .eyebrow")?.textContent).toBe("RECOVERED");
     expect(container.querySelector(".twenty-questions-result__score")?.textContent).toBe("30");
   });
 
@@ -143,7 +143,7 @@ describe("Who Am I mature gameplay loop", () => {
     expect(secondWrong).toBeDefined();
     fireEvent.click(secondWrong!);
 
-    expect(screen.getByText("MISS")).toBeInTheDocument();
+    expect(container.querySelector(".twenty-questions-result > .eyebrow")?.textContent).toBe("MISS");
     expect(screen.getByText("Both recovery picks missed.")).toBeInTheDocument();
     expect(container.querySelector(".twenty-questions-result__score")?.textContent).toBe("0");
   });
@@ -154,7 +154,7 @@ describe("Who Am I mature gameplay loop", () => {
     fireEvent.click(screen.getByRole("button", { name: "GUESS NOW · 100" }));
     guess("Alpha");
 
-    expect(screen.getByText("NATURAL SOLVE")).toBeInTheDocument();
+    expect(container.querySelector(".twenty-questions-result > .eyebrow")?.textContent).toBe("NATURAL SOLVE");
     expect(container.querySelector(".twenty-questions-result__score")?.textContent).toBe("100");
 
     fireEvent.click(screen.getByRole("button", { name: "REVIEW ALL CLUES" }));
