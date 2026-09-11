@@ -103,6 +103,7 @@ function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
     subjectId: subject.id,
     subjectName: subject.name,
     subjectKind: "fighter",
+    league: "UFC",
     factId: fact.factId,
     conceptId: fact.conceptId,
     value: fact.value,
@@ -249,6 +250,7 @@ function footballPersonIdentityClues(subject: FootballSubjectProfile): WhoAmIClu
     subjectId: subject.id,
     subjectName: subject.name,
     subjectKind,
+    league: subject.league,
     factId: fact.factId,
     conceptId: fact.conceptId,
     value: fact.value,
@@ -464,8 +466,9 @@ export function footballWhoAmIApplicableMetricFacts(subject: FootballSubjectProf
 }
 
 function footballMetricBand(metricId: FootballFactMetricId): WhoAmIClueBand {
+  if (/cfb-heisman-awards|cfb-nfl-draft-overall-pick/.test(metricId)) return "giveaway";
   if (
-    /mvp|heisman|super-bowl|all-pro|player-of-year|defensive-player-of-year|national-titles|national-championships|all-america|first-team-all-conference|draft-overall-pick|coach-career-wins|coach-postseason-resume/.test(metricId)
+    /mvp|super-bowl|all-pro|player-of-year|defensive-player-of-year|national-titles|national-championships|all-america|first-team-all-conference|coach-career-wins|coach-postseason-resume/.test(metricId)
   ) return "strong";
 
   if (
@@ -475,8 +478,25 @@ function footballMetricBand(metricId: FootballFactMetricId): WhoAmIClueBand {
   return "strong";
 }
 
+function footballMetricIsPlayable(subject: FootballSubjectProfile, fact: FootballFactValue) {
+  const value = Number(fact.value);
+  if (!Number.isFinite(value)) return false;
+  if (
+    subject.league === "CFB"
+    && subject.kind === "player-career"
+    && subject.startSeason != null
+    && subject.endSeason != null
+  ) {
+    const observedSeasons = Math.max(1, subject.endSeason - subject.startSeason + 1);
+    if (fact.metricId === "cfb-career-games" && value < observedSeasons * 3) return false;
+    if (fact.metricId === "cfb-career-starts" && value < observedSeasons * 2) return false;
+  }
+  return true;
+}
+
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   return footballWhoAmIApplicableMetricFacts(subject)
+    .filter(({ fact }) => footballMetricIsPlayable(subject, fact))
     .map(({ fact }) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
       return clue(
@@ -572,7 +592,7 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     clues.push(clue(
       "draft-pick",
       `I was selected No. ${draftProfile.draftPick} overall in the ${draftProfile.draftYear} NFL Draft.`,
-      "strong",
+      subject.league === "CFB" ? "giveaway" : "strong",
     ));
   } else if (draftProfile.draftYear != null && draftProfile.draftRound != null) {
     clues.push(clue(
@@ -589,7 +609,7 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   } else if (draftProfile.undrafted) {
     clues.push(clue("undrafted", "I entered the NFL undrafted.", "strong"));
   }
-  if (subject.heismanWinner) clues.push(clue("heisman", "I won the Heisman Trophy.", "strong"));
+  if (subject.heismanWinner) clues.push(clue("heisman", "I won the Heisman Trophy.", subject.league === "CFB" ? "giveaway" : "strong"));
   if (subject.nationalChampion) clues.push(clue("national-champion", "I was part of a college national championship team.", "strong"));
 
   // Who Am I keeps player affiliations on compact canonical subject metadata. Coaches use the
