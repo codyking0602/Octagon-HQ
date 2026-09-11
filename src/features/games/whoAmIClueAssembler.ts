@@ -97,6 +97,39 @@ export function whoAmIClueFacet(clue: WhoAmIClue): WhoAmIClueFacet {
   return "identity";
 }
 
+export type WhoAmIClueSelectionClass = "sports-identity" | "identity-color" | "deep-biography";
+
+export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionClass {
+  const facet = whoAmIClueFacet(clue);
+  const haystack = `${clue.conceptId ?? clue.id} ${clue.text}`.toLowerCase();
+  const signatureIdentity = /\b(?:nickname|moniker|signature|celebration|persona|known for|called me|called the)\b/.test(haystack);
+  const strongSportsAnchor = /\b(?:heisman|all-america|all-american|all-pro|mvp|champion|championship|title|draft|drafted|transfer|transferred|jersey|hall of fame|super bowl|record|award|tournament)\b/.test(haystack);
+  const sportsRelationship = /\b(?:teammate|opponent|fought|defeated|lost to|shared the octagon|same team|nfl player|college player|ufc fighter|coach|training partner)\b/.test(haystack);
+  const sportsBackground = /\b(?:school|college|university|conference|recruit|recruited|commit|committed|high-school|high school|junior college|football|wrestling|boxing|kickboxing|judo|sambo)\b/.test(haystack);
+  const sportsIdentity = /\b(?:quarterback|running back|receiver|tight end|lineman|linebacker|defensive back|fighter|striker|grappler|wrestler|position|division|team|gym|touchdowns?|yards?|sacks?|tackles?|receptions?|interceptions?|knockouts?|submissions?)\b/.test(haystack);
+  const deepBiography = /\b(?:childhood|upbringing|foster|group homes?|grandparents?|immigrat\w*|fourth[- ]grade|grade school|elementary school|tuition|classes|academic degree|left home|grew up|birthplace)\b/.test(haystack);
+
+  if (signatureIdentity || sportsRelationship || strongSportsAnchor) return "sports-identity";
+  if (!clue.identityKnowledge) return "sports-identity";
+  if (
+    deepBiography
+    && (facet === "background" || facet === "relationships" || facet === "off-field" || facet === "identity")
+  ) return "deep-biography";
+
+  if (
+    facet === "role"
+    || facet === "era"
+    || facet === "style"
+    || facet === "career-path"
+    || facet === "accomplishments"
+    || facet === "nickname"
+    || facet === "production"
+  ) return "sports-identity";
+  if (facet === "background" && sportsBackground) return "sports-identity";
+  if (facet === "identity" && sportsIdentity) return "sports-identity";
+  return "identity-color";
+}
+
 function defaultRevealPriority(clue: WhoAmIClue, facet: WhoAmIClueFacet) {
   if (clue.revealPriority != null) return clue.revealPriority;
   if (clue.band === "broad") {
@@ -301,6 +334,22 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
   text = text.replace(new RegExp(`^This ${escapeRegExp(label)} `, "i"), "I ");
   text = text.replace(/^His /, "My ").replace(/^Her /, "My ");
   text = text.replace(/^He /, "I ").replace(/^She /, "I ");
+
+  const labelPattern = escapeRegExp(label);
+  text = text.replace(
+    new RegExp(`\\b([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\\s+this ${labelPattern}'s\\b`, "g"),
+    "$1's",
+  );
+  text = text.replace(new RegExp(`\\bthis ${labelPattern}'s\\b`, "gi"), "my");
+  text = text.replace(
+    new RegExp(
+      `\\bthis ${labelPattern}\\b(?=\\s+(?:is|was|has|had|became|left|spent|won|earned|played|fought|transferred|joined|returned|started|made|recorded|served|worked|trained|competed|grew|moved|signed|retired|reached|took|paid))`,
+      "gi",
+    ),
+    "I",
+  );
+  text = text.replace(new RegExp(`\\bthis ${labelPattern}\\b`, "gi"), "me");
+  text = text.replace(/\\bI's\\b/g, "my");
   return sentenceCase(text);
 }
 
@@ -316,6 +365,20 @@ function anonymizeIdentityValue(
   const firstName = nameParts[0] ?? "";
   const lastName = nameParts.at(-1) ?? "";
   let text = value.trim();
+
+  if (firstName.length >= 2) {
+    text = text.replace(
+      new RegExp(`\\bBorn\\s+${escapeRegExp(firstName)}\\s+[A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+\\b`, "gi"),
+      `This ${label} was born under a different surname`,
+    );
+  }
+
+  if (lastName.length >= 3) {
+    text = text.replace(
+      new RegExp(`\\b([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\\s+${escapeRegExp(lastName)}\\b`, "g"),
+      (match, otherFirst: string) => normalize(otherFirst) === normalize(firstName) ? match : otherFirst,
+    );
+  }
 
   if (facet === "relationships" && lastName.length >= 3) {
     const relation = "(?:father|mother|brother|sister|twin brother|twin sister|son|daughter|uncle|aunt)";
@@ -384,6 +447,10 @@ function semanticFamily(entry: Pick<PreparedClue, "facet" | "conceptId" | "clue"
   if (entry.facet === "background" && /\b(?:childhood|upbringing|hometown|born|grew up)\b/.test(haystack)) {
     return "background:origin";
   }
+  if (
+    entry.facet === "accomplishments"
+    && /\b(?:title-fights?|title-wins?|ufc title fights?|title fight wins?)\b/.test(haystack)
+  ) return "accomplishments:title-fight-record";
   if (entry.facet === "career-path" && /\bdraft/.test(haystack)) return "career-path:draft";
   return null;
 }
@@ -414,9 +481,16 @@ function recognitionStrength(entry: Pick<PreparedClue, "facet" | "clue">) {
   };
   let strength = base[entry.facet];
   const text = entry.clue.text.toLowerCase();
-  if (/\b(?:heisman|mvp|hall of fame|no\. 1 overall|first overall|first quarterback|champion|title)\b/.test(text)) strength += 10;
-  if (/\b(?:defeated|lost to|fought|shared the octagon|played for|head coach for|transferred to)\b/.test(text)) strength += 10;
+  const selectionClass = whoAmIClueSelectionClass(entry.clue);
+  if (selectionClass === "sports-identity") strength += 10;
+  else if (selectionClass === "identity-color") strength -= 10;
+  else strength -= 35;
+
+  if (/\b(?:heisman|mvp|hall of fame|no\. 1 overall|first overall|first quarterback|champion|championship|title|all-america|all-american|all-pro)\b/.test(text)) strength += 15;
+  if (/\b(?:defeated|lost to|fought|shared the octagon|played for|head coach for|transferred from|transferred to|drafted|selected no\.)\b/.test(text)) strength += 12;
+  if (/\b(?:signature|celebration|nickname|moniker|jersey number|wore no\.)\b/.test(text)) strength += 18;
   if (/\b\d{2,4}\b/.test(text) && entry.facet === "production") strength -= 5;
+  if (/\b\d+\s+(?:ufc\s+)?(?:wins|fights|games|starts)\b/.test(text) && entry.facet === "production") strength -= 8;
   return strength;
 }
 
@@ -452,6 +526,7 @@ interface PreparedClue {
   variationRank: number;
   semanticFamily: string | null;
   strength: number;
+  selectionClass: WhoAmIClueSelectionClass;
 }
 
 function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
@@ -467,6 +542,7 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
         variationRank: random(),
         semanticFamily: null,
         strength: 0,
+        selectionClass: whoAmIClueSelectionClass(clue),
       };
       base.semanticFamily = semanticFamily(base);
       base.strength = recognitionStrength(base);
@@ -489,7 +565,13 @@ export function assembleWhoAmIClues(
 
   const canUse = (
     entry: PreparedClue,
-    options: { allowNearDuplicate: boolean; relaxFacetLimit: boolean; relaxSemanticFamily: boolean },
+    options: {
+      allowNearDuplicate: boolean;
+      relaxFacetLimit: boolean;
+      relaxSemanticFamily: boolean;
+      relaxPersonalLimit: boolean;
+      relaxBiographyLimit: boolean;
+    },
   ) => {
     if (selectedConcepts.has(entry.conceptId)) return false;
     const normalizedText = normalize(entry.clue.text);
@@ -502,6 +584,10 @@ export function assembleWhoAmIClues(
       ))
     ) return false;
     if (!options.relaxSemanticFamily && entry.semanticFamily && selectedFamilies.has(entry.semanticFamily)) return false;
+    const personalCount = selected.filter((candidate) => candidate.selectionClass !== "sports-identity").length;
+    const biographyCount = selected.filter((candidate) => candidate.selectionClass === "deep-biography").length;
+    if (!options.relaxPersonalLimit && entry.selectionClass !== "sports-identity" && personalCount >= 3) return false;
+    if (!options.relaxBiographyLimit && entry.selectionClass === "deep-biography" && biographyCount >= 1) return false;
     const facetLimit = FACET_LIMITS[entry.facet];
     const facetCount = facetCounts.get(entry.facet) ?? 0;
     if (entry.facet === "relationships" && facetCount >= 1) return false;
@@ -512,17 +598,25 @@ export function assembleWhoAmIClues(
   const take = (
     pool: readonly PreparedClue[],
     count: number,
-    options = { allowNearDuplicate: false, relaxFacetLimit: false, relaxSemanticFamily: false },
+    options = {
+      allowNearDuplicate: false,
+      relaxFacetLimit: false,
+      relaxSemanticFamily: false,
+      relaxPersonalLimit: false,
+      relaxBiographyLimit: false,
+    },
   ) => {
     const remaining = [...pool];
     while (remaining.length && selected.length < limit && count > 0) {
       const usable = remaining.filter((entry) => canUse(entry, options));
       if (!usable.length) return;
       usable.sort((left, right) => {
-        const facetDifference = (facetCounts.get(left.facet) ?? 0) - (facetCounts.get(right.facet) ?? 0);
-        if (facetDifference !== 0) return facetDifference;
+        const strengthDifference = right.strength - left.strength;
+        if (Math.abs(strengthDifference) >= 15) return strengthDifference;
         const priorityDifference = left.priority - right.priority;
         if (Math.abs(priorityDifference) >= 10) return priorityDifference;
+        const facetDifference = (facetCounts.get(left.facet) ?? 0) - (facetCounts.get(right.facet) ?? 0);
+        if (facetDifference !== 0) return facetDifference;
         const identityDifference = Number(Boolean(right.clue.identityKnowledge)) - Number(Boolean(left.clue.identityKnowledge));
         if (identityDifference !== 0) return identityDifference;
         const variationDifference = left.variationRank - right.variationRank;
@@ -562,7 +656,13 @@ export function assembleWhoAmIClues(
     take(
       prepared.filter((entry) => !selected.includes(entry)).sort(lateFirst),
       limit - selected.length,
-      { allowNearDuplicate: false, relaxFacetLimit: true, relaxSemanticFamily: true },
+      {
+        allowNearDuplicate: false,
+        relaxFacetLimit: true,
+        relaxSemanticFamily: true,
+        relaxPersonalLimit: false,
+        relaxBiographyLimit: false,
+      },
     );
   }
 
@@ -570,7 +670,13 @@ export function assembleWhoAmIClues(
     take(
       prepared.filter((entry) => !selected.includes(entry)).sort(lateFirst),
       limit - selected.length,
-      { allowNearDuplicate: true, relaxFacetLimit: true, relaxSemanticFamily: true },
+      {
+        allowNearDuplicate: true,
+        relaxFacetLimit: true,
+        relaxSemanticFamily: true,
+        relaxPersonalLimit: true,
+        relaxBiographyLimit: true,
+      },
     );
   }
 
@@ -621,6 +727,7 @@ export function assembleWhoAmIClues(
       .filter((candidate) => !selectedSnapshot.includes(candidate))
       .filter((candidate) => candidate.clue.band === current.clue.band)
       .filter((candidate) => candidate.facet === current.facet)
+      .filter((candidate) => candidate.selectionClass === current.selectionClass)
       .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 5)
       .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 5)
       .filter((candidate) => !selectedSnapshot.some((other) => (
