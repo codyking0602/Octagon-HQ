@@ -108,6 +108,7 @@ export const footballFactMetricDefinitions = [
   metric("cfb-all-america-selections", "College All-America selections", "count", 0),
   metric("cfb-first-team-all-conference-selections", "College first-team all-conference selections", "count", 0),
   metric("cfb-nfl-draft-overall-pick", "NFL Draft overall pick", "count", 0),
+  metric("cfb-national-championships-won", "College national championships won", "count", 0),
   metric("cfb-career-passing-completions", "College career completions", "count", 0),
   metric("cfb-career-passing-attempts", "College career pass attempts", "count", 0),
   metric("cfb-career-passing-yards", "College career passing yards", "yards", 0),
