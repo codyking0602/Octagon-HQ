@@ -10,6 +10,8 @@ const subjects: readonly WhoAmISubject[] = [
   { id: "delta", name: "Delta Fighter", kind: "fighter", eraBand: "modern", rescueGroup: "lightweight" },
   { id: "echo", name: "Echo Fighter", kind: "fighter", eraBand: "modern", rescueGroup: "lightweight" },
   { id: "foxtrot", name: "Foxtrot Fighter", kind: "fighter", eraBand: "modern", rescueGroup: "lightweight" },
+  { id: "golf", name: "Golf Fighter", kind: "fighter", eraBand: "modern", rescueGroup: "lightweight" },
+  { id: "hotel", name: "Hotel Fighter", kind: "fighter", eraBand: "modern", rescueGroup: "lightweight" },
 ];
 
 function round(): WhoAmIRound {
@@ -39,7 +41,7 @@ function renderRound() {
 
 function revealAllClues() {
   for (let index = 0; index < 4; index += 1) {
-    fireEvent.click(screen.getByRole("button", { name: "REVEAL 2 MORE CLUES" }));
+    fireEvent.click(screen.getByRole("button", { name: /REVEAL 2 MORE/ }));
   }
 }
 
@@ -49,28 +51,52 @@ function guess(name: string) {
   fireEvent.click(screen.getByRole("button", { name: `GUESS ${name.toUpperCase()} FIGHTER` }));
 }
 
-describe("Who Am I endgame recovery UX", () => {
-  it("gives two natural final guesses before the reduced-point recovery board", () => {
+function rescueChoiceButtons() {
+  return screen.getAllByRole("button").filter((button) => button.closest(".twenty-questions-guess-list"));
+}
+
+describe("Who Am I mature gameplay loop", () => {
+  it("makes guessing the primary decision and shows the score cost of another clue pair", () => {
+    const { container } = renderRound();
+    fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
+
+    expect(screen.getByRole("button", { name: "GUESS NOW — 100 PTS" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "REVEAL 2 MORE — NEXT SCORE 95" })).toBeInTheDocument();
+    expect(screen.queryByText("WINDOW")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "GUESS NOW — 100 PTS" }));
+    guess("Bravo");
+
+    expect(screen.getByText("Bravo Fighter is not the answer. −10 pts. Current solve value: 90 pts.")).toBeInTheDocument();
+    expect(container.querySelector(".twenty-questions-scorebar div:nth-child(2) strong")?.textContent).toBe("1");
+    expect(container.querySelector(".twenty-questions-scorebar div:nth-child(3) strong")?.textContent).toBe("90");
+    expect(screen.getByRole("button", { name: "REVEAL 2 MORE — NEXT SCORE 85" })).toBeInTheDocument();
+  });
+
+  it("uses one final natural guess before a five-name, two-pick 45-to-30 recovery", () => {
     const { container } = renderRound();
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
     revealAllClues();
 
-    expect(screen.getByText("FINAL GUESS 1 OF 2")).toBeInTheDocument();
-    expect(screen.getByText("All 10 clues are out. You get 2 final guesses. The four-choice recovery is worth 30 pts.")).toBeInTheDocument();
+    expect(screen.getByText("LAST CHANCE · FINAL GUESS")).toBeInTheDocument();
+    expect(screen.getByText(/one final natural guess worth 70 pts/i)).toBeInTheDocument();
+    expect(screen.queryByText(/FINAL GUESS 2/i)).not.toBeInTheDocument();
 
     guess("Bravo");
 
-    expect(screen.getByText("Bravo Fighter is not the answer. One final guess remains. −15 pts.")).toBeInTheDocument();
-    expect(screen.getByText("FINAL GUESS 2 OF 2")).toBeInTheDocument();
-    expect(container.querySelector(".twenty-questions-scorebar div:nth-child(3) strong")?.textContent).toBe("45");
-
-    guess("Charlie");
-
     expect(screen.getByText("RECOVERY BOARD")).toBeInTheDocument();
-    expect(screen.getByText("One of these four similar identities is the answer. Solving here is worth fewer points than a natural final guess.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Alpha Fighter/i })).toBeInTheDocument();
+    expect(screen.getByText("Five names. Two picks.")).toBeInTheDocument();
+    expect(screen.getByText("45 pts")).toBeInTheDocument();
+    expect(rescueChoiceButtons()).toHaveLength(5);
     expect(screen.queryByRole("button", { name: /Bravo Fighter/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Charlie Fighter/i })).not.toBeInTheDocument();
+
+    const firstWrong = rescueChoiceButtons().find((button) => !button.textContent?.includes("Alpha Fighter"));
+    expect(firstWrong).toBeDefined();
+    fireEvent.click(firstWrong!);
+
+    expect(screen.getByText("One pick left.")).toBeInTheDocument();
+    expect(screen.getByText("30 pts")).toBeInTheDocument();
+    expect(firstWrong).toBeDisabled();
 
     fireEvent.click(screen.getByRole("button", { name: /Alpha Fighter/i }));
 
@@ -78,20 +104,24 @@ describe("Who Am I endgame recovery UX", () => {
     expect(container.querySelector(".twenty-questions-result__score")?.textContent).toBe("30");
   });
 
-  it("makes prior wrong guesses visibly reduce the recovery value", () => {
-    renderRound();
+  it("ends the round at zero after both recovery picks miss", () => {
+    const { container } = renderRound();
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
-    fireEvent.click(screen.getByRole("button", { name: "GUESS" }));
-    guess("Bravo");
     revealAllClues();
+    guess("Bravo");
 
-    expect(screen.getByText("FINAL GUESS 1 OF 2")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "SHOW 4 CHOICES — 15 PTS" })).toBeInTheDocument();
+    const firstWrong = rescueChoiceButtons().find((button) => !button.textContent?.includes("Alpha Fighter"));
+    expect(firstWrong).toBeDefined();
+    fireEvent.click(firstWrong!);
 
-    fireEvent.click(screen.getByRole("button", { name: "SHOW 4 CHOICES — 15 PTS" }));
+    const secondWrong = rescueChoiceButtons().find((button) => (
+      !button.textContent?.includes("Alpha Fighter") && !button.hasAttribute("disabled")
+    ));
+    expect(secondWrong).toBeDefined();
+    fireEvent.click(secondWrong!);
 
-    expect(screen.getByText("RECOVERY BOARD")).toBeInTheDocument();
-    expect(screen.getByText("15 pts")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Bravo Fighter/i })).not.toBeInTheDocument();
+    expect(screen.getByText("NOT SOLVED")).toBeInTheDocument();
+    expect(screen.getByText("Both recovery picks missed. This was the hidden identity.")).toBeInTheDocument();
+    expect(container.querySelector(".twenty-questions-result__score")?.textContent).toBe("0");
   });
 });
