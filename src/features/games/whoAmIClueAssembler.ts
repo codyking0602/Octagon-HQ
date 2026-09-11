@@ -805,7 +805,7 @@ export function assembleWhoAmIClues(
         if (equivalentQuality) return true;
         return current.selectionClass !== "sports-identity"
           && candidate.selectionClass === "sports-identity"
-          && candidate.priority <= current.priority + 20;
+          && candidate.priority <= current.priority + 40;
       })
       .filter((candidate) => {
         const otherSelected = selectedSnapshot.filter((_other, index) => index !== selectedIndex);
