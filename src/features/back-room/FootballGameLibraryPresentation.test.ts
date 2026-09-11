@@ -6,7 +6,11 @@ import todayHubSource from "../play/TodayChallengeHub.tsx?raw";
 import footballHomeSource from "./FootballBackRoomPage.tsx?raw";
 import footballFindLeaderSource from "./FootballFindLeaderPage.tsx?raw";
 import footballFindLeaderPresentationSource from "./FootballFindLeaderPresentation.tsx?raw";
+import footballHitNumberSource from "./FootballHitTheNumberPage.tsx?raw";
+import footballHitNumberPresentationSource from "./FootballHitTheNumberPresentation.tsx?raw";
 import footballTodaySource from "./FootballTodayChallengePage.tsx?raw";
+import footballWavelengthSource from "./FootballWavelengthPage.tsx?raw";
+import footballWavelengthPresentationSource from "./FootballWavelengthPresentation.tsx?raw";
 
 describe("Football HQ game library presentation", () => {
   it("uses the shared Play library while preserving distinct replayable game identities", () => {
@@ -46,6 +50,17 @@ describe("Football HQ game library presentation", () => {
     expect(footballTodaySource).toContain('eyebrow="TODAY’S CHALLENGE"');
     expect(footballFindLeaderPresentationSource).toContain('className="football-find-grid"');
     expect(footballFindLeaderPresentationSource).toContain('className="football-find-reveal"');
+  });
+
+  it("shares replayable Wavelength and Hit the Number presentation owners with official Daily", () => {
+    expect(footballWavelengthSource).toContain("<FootballWavelengthPresentation");
+    expect(footballTodaySource).toContain("<FootballWavelengthPresentation");
+    expect(footballWavelengthPresentationSource).toContain('className="wavelength-guess-panel"');
+
+    expect(footballHitNumberSource).toContain("<FootballHitTheNumberPresentation");
+    expect(footballTodaySource).toContain("<FootballHitTheNumberPresentation");
+    expect(footballHitNumberPresentationSource).toContain('className="hit-number-play-area"');
+    expect(footballHitNumberPresentationSource).toContain('data-testid="hit-number-role-slots"');
   });
 
   it("uses the same Today Challenge presentation owner as UFC", () => {
