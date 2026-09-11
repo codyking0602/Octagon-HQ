@@ -69,15 +69,16 @@ function effectivelyRepeated(left: string, right: string) {
 export function whoAmIClueFacet(clue: WhoAmIClue): WhoAmIClueFacet {
   if (clue.facet) return clue.facet;
   const haystack = `${clue.id} ${clue.text}`.toLowerCase();
-  if (/nickname|called me|known as/.test(haystack)) return "nickname";
-  if (/beat:|lost:|faced:|faced-any|opponent|shared the octagon|defeated |lost to |fought /.test(haystack)) return "relationships";
-  if (/position|division|head coach|role/.test(haystack)) return "role";
-  if (/era|decade|career-span|active-window|debut|coach-start|coach-end/.test(haystack)) return "era";
-  if (/title|champion|mvp|heisman|all-pro|player of the year|national championship/.test(haystack)) return "accomplishments";
-  if (/knockout|submission|finish-style|ko-wins|submission-wins|strik|grappl|wrestl/.test(haystack)) return "style";
-  if (/games|yards|touchdowns|receptions|sacks|interceptions|fight-count|win-count|recorded/.test(haystack)) return "production";
-  if (/draft|affiliation|career-path|team/.test(haystack)) return "career-path";
-  if (/school|college|conference/.test(haystack)) return "background";
+
+  if (/\b(?:nickname|moniker)\b|called me|known as/.test(haystack)) return "nickname";
+  if (/beat:|lost:|faced:|faced-any|\bopponents?\b|shared the octagon|defeated |lost to |fought /.test(haystack)) return "relationships";
+  if (/\b(?:titles?|champions?|championships?|mvp|heisman|all-pro|player of the year)\b|national championship/.test(haystack)) return "accomplishments";
+  if (/\b(?:knockouts?|submissions?|striking|grappling|wrestling)\b|finish-style|ko-wins|submission-wins/.test(haystack)) return "style";
+  if (/\b(?:games?|starts?|yards?|touchdowns?|receptions?|sacks?|interceptions?|tackles?|wins?|losses?|ties?)\b|fight-count|win-count|recorded/.test(haystack)) return "production";
+  if (/\b(?:positions?|divisions?|roles?)\b|head coach/.test(haystack)) return "role";
+  if (/\b(?:era|decades?|debut)\b|career-span|active-window|coach-start|coach-end/.test(haystack)) return "era";
+  if (/\bdraft\b|\baffiliations?\b|career-path|\bteam\b|\bfranchise\b/.test(haystack)) return "career-path";
+  if (/\b(?:school|college|conference|hometown)\b/.test(haystack)) return "background";
   return "identity";
 }
 
@@ -114,34 +115,46 @@ function defaultRevealPriority(clue: WhoAmIClue, facet: WhoAmIClueFacet) {
 
 function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIClueFacet {
   const haystack = `${conceptId} ${tags.join(" ")}`.toLowerCase();
-  if (/nickname|moniker|called-/.test(haystack)) return "nickname";
-  if (/brother|sister|father|mother|son|daughter|family|mentor|teammate|friend|caregiver/.test(haystack)) {
+
+  if (/\b(?:nickname|moniker)\b|called-/.test(haystack)) return "nickname";
+  if (/\b(?:brothers?|sisters?|fathers?|mothers?|sons?|daughters?|family|mentor|teammates?|friends?|caregiver|relationships?)\b/.test(haystack)) {
     return "relationships";
   }
-  if (/style|strik|grappl|wrestl|boxing|kickbox|jiu|judo|sambo|training|technique|stance|movement|slams|speed|power/.test(haystack)) {
+  if (/\b(?:style|boxing|kickboxing|jiu|judo|sambo|training|technique|stance|movement|speed|power)\b|\bstrik\w*|\bgrappl\w*|\bwrestl\w*|\bslams?\b/.test(haystack)) {
     return "style";
   }
-  if (/production|stat|games|starts|tackles|sacks|interceptions|receptions|yards|touchdowns|forced-fumbles|fumble-recoveries|pass-breakups|career-wins|coaching-record|regular-season-record/.test(haystack)) {
+  if (/\b(?:production|stats?|games?|starts?|tackles?|sacks?|interceptions?|receptions?|yards?|touchdowns?)\b|forced-fumbles|fumble-recoveries|pass-breakups|career-wins|coaching-record|regular-season-record/.test(haystack)) {
     return "production";
   }
-  if (/champion|title|record|hall|award|heisman|super-bowl|all-american|all-pro|olympian|olympic|milestone/.test(haystack)) {
+  if (/\b(?:champions?|championships?|titles?|records?|hall|awards?|heisman|all-american|all-pro|olympian|olympic|milestones?)\b|super-bowl/.test(haystack)) {
     return "accomplishments";
   }
-  if (/born|birth|child|upbring|hometown|town|farm|migration|immig|school|college|degree|education|university|high-school|junior-college|amateur/.test(haystack)) {
+  if (/\b(?:born|birth|childhood|upbringing|hometown|town|farm|migration|immigration|school|college|degree|education|university|amateur)\b|high-school|junior-college/.test(haystack)) {
     return "background";
   }
-  if (/job|work|business|acting|media|stream|military|army|foundation|charity|restaurant|barber|bartend|mine|model/.test(haystack)) {
+  if (/\b(?:job|work|business|acting|media|streaming|military|army|foundation|charity|restaurant|barber|bartending|mine|model)\b|off-field/.test(haystack)) {
     return "off-field";
   }
-  if (/draft|team|promotion|camp|gym|career|route|transfer|retire|move|ultimate-fighter|ufc|nfl|cfb/.test(haystack)) {
+  if (/\b(?:draft|team|promotion|camp|gym|career|route|transfer|retire|retired|retirement|move|ufc|nfl|cfb)\b|career-path|ultimate-fighter/.test(haystack)) {
     return "career-path";
   }
   return "identity";
 }
 
-function identityBand(facet: WhoAmIClueFacet, conceptId: string): WhoAmIClueBand {
+function identityBand(
+  facet: WhoAmIClueFacet,
+  conceptId: string,
+  tags: readonly string[] = [],
+  value = "",
+): WhoAmIClueBand {
   if (facet === "nickname") return "giveaway";
   if (facet === "relationships" || facet === "accomplishments" || facet === "identity") return "strong";
+
+  const strengthSignals = `${conceptId} ${tags.join(" ")} ${value}`.toLowerCase();
+  if (
+    /iconic[- ]moment|turning[- ]point|breakthrough|comeback|championship|hall[- ]of[- ]fame|\brecord\b|game[- ]winning|winning touchdown|last[- ]second|final[- ]play|undefeated|retir(?:ed|ement)|suspension|\bdraft(?:ed)?\b|first[- ]round|first overall|historic|milestone/.test(strengthSignals)
+  ) return "strong";
+
   if (facet === "career-path" && /founder|owner|first-|iconic|defining/.test(conceptId.toLowerCase())) return "strong";
   return "helpful";
 }
@@ -174,15 +187,18 @@ function anonymizeIdentityValue(value: string, subjectName: string, subjectKind:
   let text = value.trim();
 
   const protectedNames: Array<[string, string]> = [];
-  if (lastName.length >= 3) {
-    const otherSameSurname = new RegExp(`\\b([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\\s+${escapeRegExp(lastName)}\\b`, "g");
-    text = text.replace(otherSameSurname, (match, givenName: string) => {
-      if (givenName.toLowerCase() === firstName.toLowerCase()) return match;
-      const token = `__WHO_AM_I_PROTECTED_NAME_${protectedNames.length}__`;
-      protectedNames.push([token, match]);
-      return token;
-    });
-  }
+  const otherFullName = /\b([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\s+([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\b/g;
+  text = text.replace(otherFullName, (match, givenName: string, surname: string) => {
+    const normalizedMatch = match.replace(/[“”"]/g, "").trim().toLowerCase();
+    if (normalizedMatch === cleanedName.toLowerCase()) return match;
+    if (
+      givenName.toLowerCase() !== firstName.toLowerCase()
+      && surname.toLowerCase() !== lastName.toLowerCase()
+    ) return match;
+    const token = `__WHO_AM_I_PROTECTED_NAME_${protectedNames.length}__`;
+    protectedNames.push([token, match]);
+    return token;
+  });
 
   const terms = [...new Set([subjectName, cleanedName, firstName, lastName].filter((term) => term.length >= 2))]
     .sort((left, right) => right.length - left.length);
@@ -197,12 +213,17 @@ function anonymizeIdentityValue(value: string, subjectName: string, subjectKind:
     text = text.replace(token, original);
   }
 
+  text = text.replace(
+    new RegExp(`\\bthe this ${escapeRegExp(label)}\\b`, "gi"),
+    `this ${label}'s namesake`,
+  );
+
   return text.replace(/^this /, "This ");
 }
 
 export function whoAmIIdentityKnowledgeClue(input: WhoAmIIdentityKnowledgeClueInput): WhoAmIClue {
   const facet = identityFacet(input.conceptId, input.tags);
-  const band = identityBand(facet, input.conceptId);
+  const band = identityBand(facet, input.conceptId, input.tags, input.value);
   return {
     id: `identity:${input.factId}`,
     text: anonymizeIdentityValue(input.value, input.subjectName, input.subjectKind),
@@ -268,9 +289,10 @@ export function assembleWhoAmIClues(
         const identityDifference = Number(Boolean(right.clue.identityKnowledge)) - Number(Boolean(left.clue.identityKnowledge));
         if (identityDifference !== 0) return identityDifference;
         const priorityDifference = left.priority - right.priority;
-        if (priorityDifference !== 0) return priorityDifference;
+        if (Math.abs(priorityDifference) > 5) return priorityDifference;
         const variationDifference = left.variationRank - right.variationRank;
         if (variationDifference !== 0) return variationDifference;
+        if (priorityDifference !== 0) return priorityDifference;
         return left.index - right.index;
       });
       const picked = usable[0]!;
