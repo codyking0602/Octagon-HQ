@@ -314,6 +314,8 @@ export function footballWhoAmIFactAppliesToSubject(
 
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   const factsByMetric = new Map<FootballFactMetricId, NonNullable<ReturnType<typeof getFootballFactualRecord>>["facts"][number]>();
+  // resolveFootballPersonSubjects returns the gameplay subject first, so its stage-native fact wins when a counterpart
+  // carries a duplicate copy of the same metric. Counterpart-only applicable metrics still fill genuine gaps.
   for (const personSubject of resolveFootballPersonSubjects(subject)) {
     for (const fact of getFootballFactualRecord(personSubject.id)?.facts ?? []) {
       if (!FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId)) continue;
