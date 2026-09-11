@@ -262,6 +262,22 @@ function tightenIdentityCopy(value: string) {
     const firstSentenceEnd = text.indexOf(". ");
     if (firstSentenceEnd >= 45) text = text.slice(0, firstSentenceEnd + 1);
   }
+  if (wordCount(text) > 36) {
+    for (const marker of [", and ", ", but ", ", while ", ", material "]) {
+      const markerIndex = text.indexOf(marker);
+      if (markerIndex < 0) continue;
+      const prefix = text.slice(0, markerIndex).trim();
+      const prefixWords = wordCount(prefix);
+      if (prefixWords >= 14 && prefixWords <= 32) {
+        text = `${prefix.replace(/[,:;]+$/, "")}.`;
+        break;
+      }
+    }
+  }
+  if (wordCount(text) > 36) {
+    const words = text.split(/\s+/).filter(Boolean);
+    text = `${words.slice(0, 34).join(" ").replace(/[,:;]+$/, "")}…`;
+  }
   return text;
 }
 
