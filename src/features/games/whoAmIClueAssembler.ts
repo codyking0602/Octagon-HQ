@@ -487,7 +487,12 @@ function selectionPriorityPenalty(selectionClass: WhoAmIClueSelectionClass) {
 }
 
 function isLowSignalCareerVolume(clue: WhoAmIClue) {
-  return /fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id);
+  if (/fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id)) return true;
+  const text = clue.text.toLowerCase();
+  return (
+    /\b(?:played|appeared in|recorded)\s+[\d,]+\s+(?:regular-season\s+)?(?:nfl\s+|college\s+)?games\b/.test(text)
+    || /\b(?:recorded|had|received)\s+[\d,]+\s+(?:career\s+)?targets\b/.test(text)
+  );
 }
 
 function recognitionStrength(entry: Pick<PreparedClue, "facet" | "clue">) {
@@ -748,7 +753,7 @@ export function assembleWhoAmIClues(
       if (candidate.clue.band !== "strong" && candidate.clue.band !== "giveaway") return [];
 
       return selected.flatMap((current, selectedIndex) => {
-        if (current.clue.band !== "helpful" || current.facet !== candidate.facet) return [];
+        if (current.clue.band !== "helpful") return [];
         const otherSelected = selected.filter((_entry, index) => index !== selectedIndex);
         const otherPersonalCount = otherSelected.filter((entry) => entry.selectionClass !== "sports-identity").length;
         const otherBiographyCount = otherSelected.filter((entry) => entry.selectionClass === "deep-biography").length;
@@ -763,6 +768,10 @@ export function assembleWhoAmIClues(
           candidate.semanticFamily
           && otherSelected.some((entry) => entry.semanticFamily === candidate.semanticFamily)
         ) return [];
+        const otherFacetCount = otherSelected.filter((entry) => entry.facet === candidate.facet).length;
+        if (candidate.facet === "relationships" && otherFacetCount >= 1) return [];
+        const facetLimit = FACET_LIMITS[candidate.facet];
+        if (facetLimit != null && otherFacetCount >= facetLimit) return [];
         return [{ current, candidate, selectedIndex }];
       });
     });
