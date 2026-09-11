@@ -1,13 +1,18 @@
 import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
-import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonIdentityKnowledge";
+import {
+  getFootballPersonIdentityKnowledge,
+  type FootballPersonIdentityFact,
+} from "../back-room/footballPersonIdentityKnowledge";
 import { footballRecognitionEvidenceFor } from "../back-room/footballRecognitionEvidence";
 import {
   footballFactMetricDefinitions,
   formatFootballFact,
   getFootballFactualRecord,
   type FootballFactMetricId,
+  type FootballFactValue,
 } from "../back-room/footballFactualStatsCore";
 import {
+  footballPlayerCareerSubjectsForPerson,
   queryFootballSubjects,
   type FootballSubjectProfile,
 } from "../back-room/footballSubjectRegistry";
@@ -29,62 +34,27 @@ import {
 
 const metricLabelById = new Map(footballFactMetricDefinitions.map((metric) => [metric.id, metric.label]));
 
-const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
-  "nfl-career-games",
-  "nfl-career-passing-yards",
-  "nfl-career-passing-touchdowns",
-  "nfl-career-rushing-yards",
-  "nfl-career-rushing-touchdowns",
-  "nfl-career-receptions",
-  "nfl-career-receiving-yards",
-  "nfl-career-receiving-touchdowns",
-  "nfl-career-solo-tackles",
-  "nfl-career-tackles-for-loss",
-  "nfl-career-forced-fumbles",
-  "nfl-career-sacks",
-  "nfl-career-interceptions",
-  "nfl-career-passes-defended",
-  "nfl-career-field-goals-made",
-  "nfl-career-punts",
-  "nfl-ap-mvp-awards",
-  "nfl-super-bowl-titles",
-  "nfl-defensive-player-of-year-awards",
-  "nfl-first-team-all-pros",
-  "nfl-coach-seasons-since-1999",
-  "nfl-coach-win-percentage-since-1999",
-  "nfl-coach-postseason-resume-since-1999",
-  "cfb-career-games",
-  "cfb-career-passing-yards",
-  "cfb-career-passing-touchdowns",
-  "cfb-career-rushing-yards",
-  "cfb-career-rushing-touchdowns",
-  "cfb-career-receptions",
-  "cfb-career-receiving-yards",
-  "cfb-career-receiving-touchdowns",
-  "cfb-career-total-touchdowns",
-  "cfb-career-defensive-interceptions",
-  "cfb-career-sacks",
-  "cfb-career-pass-breakups",
-  "cfb-career-forced-fumbles",
-  "cfb-career-fumble-recoveries",
-  "cfb-best-season-passing-yards",
-  "cfb-best-season-passing-touchdowns",
-  "cfb-best-season-interceptions",
-  "cfb-best-season-passer-rating",
-  "cfb-best-season-rushing-yards",
-  "cfb-best-season-rushing-touchdowns",
-  "cfb-best-season-receptions",
-  "cfb-best-season-receiving-yards",
-  "cfb-best-season-receiving-touchdowns",
-  "cfb-best-season-sacks",
-  "cfb-best-season-tackles-for-loss",
-  "cfb-best-season-defensive-interceptions",
-  "cfb-heisman-awards",
-  "cfb-coach-career-wins",
-  "cfb-coach-career-losses",
-  "cfb-coach-national-titles",
-  "cfb-coach-conference-titles",
-]);
+const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>(
+  footballFactMetricDefinitions
+    .map((metric) => metric.id as FootballFactMetricId)
+    .filter((metricId) => (
+      metricId.startsWith("nfl-career-")
+      || metricId.startsWith("cfb-career-")
+      || metricId.startsWith("cfb-best-season-")
+      || metricId === "nfl-ap-mvp-awards"
+      || metricId === "nfl-super-bowl-titles"
+      || metricId === "nfl-defensive-player-of-year-awards"
+      || metricId === "nfl-first-team-all-pros"
+      || metricId === "nfl-coach-seasons-since-1999"
+      || metricId === "nfl-coach-win-percentage-since-1999"
+      || metricId === "nfl-coach-postseason-resume-since-1999"
+      || metricId === "cfb-heisman-awards"
+      || metricId === "cfb-coach-career-wins"
+      || metricId === "cfb-coach-career-losses"
+      || metricId === "cfb-coach-national-titles"
+      || metricId === "cfb-coach-conference-titles"
+    )),
+);
 
 const NFL_TEAM_NAMES: Readonly<Record<string, string>> = {
   ARI: "Arizona Cardinals", ATL: "Atlanta Falcons", BAL: "Baltimore Ravens", BUF: "Buffalo Bills",
@@ -133,11 +103,118 @@ function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
   }));
 }
 
+const SHARED_PERSON_IDENTITY_TAGS = new Set([
+  "childhood",
+  "family",
+  "high-school",
+  "multi-sport",
+  "baseball",
+  "basketball",
+  "lacrosse",
+  "track",
+  "hockey",
+  "education",
+  "off-field",
+  "work",
+  "training",
+  "community",
+  "military",
+  "media",
+  "media-identity",
+  "music",
+  "faith",
+  "hometown",
+  "ranching",
+  "personality",
+  "labor",
+  "relationship",
+  "relationships",
+  "teammate",
+  "teammates",
+  "origin-story",
+  "identity",
+]);
+
+const STAGE_SPECIFIC_IDENTITY_TAGS = new Set([
+  "college",
+  "junior-college",
+  "iconic-moment",
+  "franchise",
+  "super-bowl",
+  "award",
+  "hall-of-fame",
+  "championship",
+  "playing-career",
+  "coaching",
+  "coaching-path",
+  "coach",
+  "team-impact",
+  "league-history",
+  "career-start",
+  "career-turning-point",
+  "breakthrough",
+  "turning-point",
+  "special-teams",
+  "career-path",
+  "position-path",
+  "scoring",
+]);
+
+function footballIdentityFactCanCrossStage(fact: FootballPersonIdentityFact) {
+  const tags = new Set(fact.tags ?? []);
+  if (tags.has("draft") || tags.has("transition")) return true;
+  if ([...tags].some((tag) => STAGE_SPECIFIC_IDENTITY_TAGS.has(tag))) return false;
+  return [...tags].some((tag) => SHARED_PERSON_IDENTITY_TAGS.has(tag));
+}
+
+export interface FootballWhoAmIApplicableIdentityFact {
+  sourceSubjectId: string;
+  fact: FootballPersonIdentityFact;
+  applicability: "subject-stage" | "person-shared" | "transition";
+}
+
+export function footballWhoAmIApplicableIdentityFacts(subject: FootballSubjectProfile): FootballWhoAmIApplicableIdentityFact[] {
+  const direct = getFootballPersonIdentityKnowledge(subject.id);
+  const applicable: FootballWhoAmIApplicableIdentityFact[] = [];
+  const seenConcepts = new Set<string>();
+
+  if (direct) {
+    for (const fact of direct.facts) {
+      applicable.push({ sourceSubjectId: direct.subjectId, fact, applicability: "subject-stage" });
+      seenConcepts.add(fact.conceptId);
+    }
+  }
+
+  if (subject.kind !== "player-career") return applicable;
+
+  const relatedKnowledge = new Map<string, ReturnType<typeof getFootballPersonIdentityKnowledge>>();
+  for (const related of footballPlayerCareerSubjectsForPerson(subject)) {
+    if (related.league === subject.league) continue;
+    const knowledge = getFootballPersonIdentityKnowledge(related.id);
+    if (knowledge) relatedKnowledge.set(knowledge.subjectId, knowledge);
+  }
+
+  for (const knowledge of relatedKnowledge.values()) {
+    if (!knowledge || knowledge.subjectId === direct?.subjectId) continue;
+    for (const fact of knowledge.facts) {
+      if (seenConcepts.has(fact.conceptId) || !footballIdentityFactCanCrossStage(fact)) continue;
+      applicable.push({
+        sourceSubjectId: knowledge.subjectId,
+        fact,
+        applicability: (fact.tags ?? []).some((tag) => tag === "draft" || tag === "transition")
+          ? "transition"
+          : "person-shared",
+      });
+      seenConcepts.add(fact.conceptId);
+    }
+  }
+
+  return applicable;
+}
+
 function footballPersonIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
-  const knowledge = getFootballPersonIdentityKnowledge(subject.id);
-  if (!knowledge) return [];
   const subjectKind = subject.kind === "coach" ? "coach" : "player";
-  return knowledge.facts.map((fact) => whoAmIIdentityKnowledgeClue({
+  return footballWhoAmIApplicableIdentityFacts(subject).map(({ fact }) => whoAmIIdentityKnowledgeClue({
     subjectId: subject.id,
     subjectName: subject.name,
     subjectKind,
@@ -171,21 +248,6 @@ function displayAffiliation(league: "NFL" | "CFB", value: string) {
   return league === "NFL" ? NFL_TEAM_NAMES[value] ?? value : value;
 }
 
-function normalizedPersonName(value: string) {
-  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
-}
-
-const nflProfilesByName = new Map<string, FootballSubjectProfile[]>();
-for (const subject of queryFootballSubjects({
-  league: "NFL",
-  includeProjectedSourceSubjects: true,
-  includeProjectedCanonicalRecognition: true,
-})) {
-  if (subject.kind !== "player-career") continue;
-  const key = normalizedPersonName(subject.name);
-  nflProfilesByName.set(key, [...(nflProfilesByName.get(key) ?? []), subject]);
-}
-
 function nflProfileDepth(subject: FootballSubjectProfile) {
   const recordDepth = getFootballFactualRecord(subject.id)?.facts.length ?? 0;
   const identityDepth = [
@@ -213,7 +275,8 @@ function hasFootballDraftIdentity(subject: FootballSubjectProfile) {
 function footballDraftProfile(subject: FootballSubjectProfile) {
   if (hasFootballDraftIdentity(subject)) return subject;
   if (subject.kind !== "player-career") return subject;
-  return [...(nflProfilesByName.get(normalizedPersonName(subject.name)) ?? [])]
+  return [...footballPlayerCareerSubjectsForPerson(subject)]
+    .filter((candidate) => candidate.league === "NFL")
     .filter(hasFootballDraftIdentity)
     .sort((left, right) => (
       Number(right.draftPick != null) - Number(left.draftPick != null)
@@ -317,13 +380,48 @@ function footballMetricText(metricId: FootballFactMetricId, value: unknown, labe
   }
 }
 
+function footballMetricAppliesToSubject(subject: FootballSubjectProfile, metricId: FootballFactMetricId) {
+  if (subject.kind === "player-career") {
+    return metricId.startsWith(subject.league === "NFL" ? "nfl-" : "cfb-");
+  }
+  return true;
+}
+
+export interface FootballWhoAmIApplicableMetricFact {
+  sourceSubjectId: string;
+  fact: FootballFactValue;
+}
+
+export function footballWhoAmIApplicableMetricFacts(subject: FootballSubjectProfile): FootballWhoAmIApplicableMetricFact[] {
+  const related = subject.kind === "player-career"
+    ? footballPlayerCareerSubjectsForPerson(subject)
+    : [subject];
+  const byMetric = new Map<FootballFactMetricId, FootballWhoAmIApplicableMetricFact>();
+
+  for (const relatedSubject of related) {
+    const record = getFootballFactualRecord(relatedSubject.id);
+    if (!record) continue;
+    for (const fact of record.facts) {
+      if (!FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId)) continue;
+      if (!footballMetricAppliesToSubject(subject, fact.metricId)) continue;
+      if (Number(fact.value) === 0) continue;
+
+      const current = byMetric.get(fact.metricId);
+      if (current && current.fact.value !== fact.value) {
+        throw new Error(
+          `Conflicting applicable Who Am I football fact for ${subject.id}:${fact.metricId} (${current.fact.value} vs ${fact.value}).`,
+        );
+      }
+      if (!current) byMetric.set(fact.metricId, { sourceSubjectId: relatedSubject.id, fact });
+    }
+  }
+
+  return [...byMetric.values()];
+}
+
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
-  const record = getFootballFactualRecord(subject.id);
-  if (!record) return [];
-  return record.facts
-    .filter((fact) => FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId))
-    .filter((fact) => Number(fact.value) !== 0)
-    .map((fact) => {
+  return footballWhoAmIApplicableMetricFacts(subject)
+    .map(({ fact }) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
       const band: WhoAmIClueBand = /mvp|heisman|super-bowl|all-pro|player-of-year|national-titles/.test(fact.metricId)
         ? "strong"
