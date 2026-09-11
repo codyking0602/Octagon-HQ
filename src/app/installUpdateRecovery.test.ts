@@ -1,5 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { forceRefreshLatestBuild, installUpdateRecovery } from "./installUpdateRecovery";
+import {
+  forceRefreshLatestBuild,
+  installUpdateRecovery,
+  isRecoverableRouteLoadError,
+  recoverRouteLoadError,
+} from "./installUpdateRecovery";
 
 const RUNNING_SHA = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const NEXT_SHA = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -97,6 +102,55 @@ describe("deployment update recovery", () => {
     window.dispatchEvent(new Event("pageshow"));
     await vi.waitFor(() => expect(reload).toHaveBeenCalledTimes(1));
     remove();
+  });
+
+  it("recognizes the Safari lazy-route failure shown when an open app crosses a deployment", () => {
+    expect(isRecoverableRouteLoadError(new TypeError("Importing a module script failed."))).toBe(true);
+    expect(isRecoverableRouteLoadError(new TypeError("Failed to fetch dynamically imported module: /assets/WhoAmIPage-old.js"))).toBe(true);
+    expect(isRecoverableRouteLoadError(new Error("Who Am I generated 9 clues; expected 10."))).toBe(false);
+  });
+
+  it("automatically cache-busts a stale lazy route once instead of leaving the game on the update screen", () => {
+    const navigate = vi.fn();
+
+    const recovered = recoverRouteLoadError({
+      error: new TypeError("Importing a module script failed."),
+      href: "https://the.hq-app.workers.dev/play/who-am-i",
+      storage: window.sessionStorage,
+      navigate,
+      now: () => 41_000,
+      productionOrigin: PRODUCTION_ORIGIN,
+    });
+
+    expect(recovered).toBe(true);
+    expect(window.sessionStorage.getItem("octagon-hq:route-load-recovery-at")).toBe("41000");
+    expect(navigate).toHaveBeenCalledWith(
+      "https://the.hq-app.workers.dev/play/who-am-i?hq-update=41000",
+    );
+
+    expect(recoverRouteLoadError({
+      error: new TypeError("Importing a module script failed."),
+      href: "https://the.hq-app.workers.dev/football/who-am-i",
+      storage: window.sessionStorage,
+      navigate,
+      now: () => 42_000,
+      productionOrigin: PRODUCTION_ORIGIN,
+    })).toBe(false);
+    expect(navigate).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not turn a real route bug into an automatic refresh loop", () => {
+    const navigate = vi.fn();
+
+    expect(recoverRouteLoadError({
+      error: new Error("Who Am I generated 9 clues; expected 10."),
+      href: "https://the.hq-app.workers.dev/play/who-am-i",
+      storage: window.sessionStorage,
+      navigate,
+      now: () => 41_000,
+      productionOrigin: PRODUCTION_ORIGIN,
+    })).toBe(false);
+    expect(navigate).not.toHaveBeenCalled();
   });
 
   it("forces the update screen through a cache-busted shell URL instead of repeating a cached reload", () => {
