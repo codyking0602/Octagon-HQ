@@ -14,8 +14,12 @@ import {
 import { footballFindLeaderLeagueForDomain } from "../back-room/footballFactualStats";
 import {
   createFootballHitTheNumberPlan,
+  footballHitTheNumberActiveProgressionSlot,
+  footballHitTheNumberAvailableProgressionSubjectIds,
+  footballHitTheNumberSelectionSatisfies,
   footballHitTheNumberValue,
   getFootballHitTheNumberSubject,
+  type FootballHitTheNumberPlan,
 } from "../back-room/footballHitTheNumberModel";
 import {
   buildFootballKeepCutLineup,
@@ -49,7 +53,7 @@ import type {
 export const FOOTBALL_DAILY_RUNTIME_VERSION = "football-official-daily-v1" as const;
 export const FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION = "football-blind-resume-daily-v4" as const;
 export const FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION = "football-blind-resume-score-v4" as const;
-export const FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "football-hit-the-number-daily-v1" as const;
+export const FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "football-hit-the-number-daily-v2" as const;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -291,6 +295,23 @@ function buildIntegerHitTheNumberPlan(day: string, scheduleVersion: string) {
   throw new Error("Football Hit the Number could not build an integer-compatible official board.");
 }
 
+function hitTheNumberPublicState(plan: FootballHitTheNumberPlan, selectedIds: readonly string[], complete = false) {
+  const activeSlot = complete ? null : footballHitTheNumberActiveProgressionSlot(plan, selectedIds);
+  const availableIds = complete
+    ? [...plan.subjectIds]
+    : activeSlot
+      ? footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedIds)
+      : [...plan.subjectIds];
+  return {
+    complete,
+    selected_ids: [...selectedIds],
+    available_subject_ids: availableIds,
+    active_slot: activeSlot
+      ? { ...activeSlot, index: selectedIds.length }
+      : null,
+  };
+}
+
 function buildHitTheNumberSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
   const { plan, values } = buildIntegerHitTheNumberPlan(day, scheduleVersion);
   const candidates = plan.subjectIds.map((id) => {
@@ -308,13 +329,20 @@ function buildHitTheNumberSetup(day: string, scheduleVersion: string): OfficialD
       league: plan.league,
       metric_label: plan.metricLabel,
       domain_label: plan.domainLabel,
+      configuration_label: plan.configurationLabel,
+      format_id: plan.formatId,
       target: plan.target,
       pick_count: plan.pickCount,
+      slots: plan.slots,
       candidates,
-      initial_state: { complete: false, selected_ids: [] },
+      initial_state: hitTheNumberPublicState(plan, []),
     },
     revealSetup: { target: plan.target, values: valueMap },
-    privateSetupEvidence: { fighter_ids: [...plan.subjectIds], pick_count: plan.pickCount },
+    privateSetupEvidence: {
+      fighter_ids: [...plan.subjectIds],
+      pick_count: plan.pickCount,
+      plan,
+    },
     privateGradingEvidence: { fighter_ids: [...plan.subjectIds], target: plan.target, pick_count: plan.pickCount, values: valueMap },
   };
 }
@@ -489,17 +517,61 @@ function advanceHitTheNumber(context: OfficialDailyRuntimeContext, action: JsonR
   const ids = stringArray(context.privateSetupEvidence.fighter_ids, "Football Hit the Number ids");
   const eligible = new Set(ids);
   const pickCount = integer(context.privateSetupEvidence.pick_count, "Football Hit the Number pick count", 4, 7);
-  const selected = stringArray(context.submissionState.selected_ids ?? [], "Football Hit the Number selections");
-  if (action.lock === true) {
-    if (selected.length !== pickCount) throw new Error(`Football Hit the Number requires exactly ${pickCount} selections before lock.`);
-    const finalSubmission = { selected_ids: [...selected] };
-    return { submissionState: { selected_ids: [...selected], final_submission: finalSubmission }, publicState: { complete: true, selected_ids: [...selected] }, complete: true, finalSubmission };
+  const plan = asRecord(context.privateSetupEvidence.plan) as unknown as FootballHitTheNumberPlan;
+  if (!Array.isArray(plan.subjectIds) || plan.subjectIds.length !== ids.length || plan.pickCount !== pickCount) {
+    throw new Error("Football Hit the Number canonical plan is unavailable.");
   }
+  const progression = plan.formatId === "one-from-each" || plan.formatId === "build-the-team";
+  const selected = stringArray(context.submissionState.selected_ids ?? [], "Football Hit the Number selections");
+
+  if (action.lock === true) {
+    if (!footballHitTheNumberSelectionSatisfies(plan, selected)) {
+      throw new Error("Football Hit the Number selections do not satisfy this board.");
+    }
+    const finalSubmission = { selected_ids: [...selected] };
+    return {
+      submissionState: { selected_ids: [...selected], final_submission: finalSubmission },
+      publicState: hitTheNumberPublicState(plan, selected, true),
+      complete: true,
+      finalSubmission,
+    };
+  }
+
+  if (Number.isInteger(action.rewind_to)) {
+    if (!progression) throw new Error("This Football Hit the Number board does not use progression slots.");
+    const index = integer(action.rewind_to, "Football Hit the Number rewind slot", 0, Math.max(0, selected.length - 1));
+    const next = selected.slice(0, index);
+    return {
+      submissionState: { selected_ids: next, final_submission: null },
+      publicState: hitTheNumberPublicState(plan, next),
+      complete: false,
+      finalSubmission: null,
+    };
+  }
+
   const id = String(action.fighter_id ?? "");
   if (!eligible.has(id)) throw new Error("That subject is not on the Football Hit the Number board.");
-  const next = selected.includes(id) ? selected.filter((row) => row !== id) : [...selected, id];
-  if (next.length > pickCount) throw new Error(`Football Hit the Number allows exactly ${pickCount} selections.`);
-  return { submissionState: { selected_ids: next, final_submission: null }, publicState: { complete: false, selected_ids: next }, complete: false, finalSubmission: null };
+
+  let next: string[];
+  if (selected.includes(id)) {
+    if (progression && selected.at(-1) !== id) {
+      throw new Error("Football Hit the Number progression can only rewind from the latest slot.");
+    }
+    next = progression ? selected.slice(0, -1) : selected.filter((row) => row !== id);
+  } else {
+    if (selected.length >= pickCount) throw new Error(`Football Hit the Number allows exactly ${pickCount} selections.`);
+    if (progression && !footballHitTheNumberAvailableProgressionSubjectIds(plan, selected).includes(id)) {
+      throw new Error("That subject is not eligible for the active Football Hit the Number slot.");
+    }
+    next = [...selected, id];
+  }
+
+  return {
+    submissionState: { selected_ids: next, final_submission: null },
+    publicState: hitTheNumberPublicState(plan, next),
+    complete: false,
+    finalSubmission: null,
+  };
 }
 
 export function advanceFootballOfficialDailyRuntime(
