@@ -791,9 +791,9 @@ export function assembleWhoAmIClues(
       && candidate.facet === current.facet
       && candidate.selectionClass === current.selectionClass
     ));
-    const isPriorityAnchor = comparableFacetClues.length > 0 && comparableFacetClues.every((candidate) => (
-      candidate.priority >= current.priority + 10
-    ));
+    const isPriorityAnchor = current.facet === "production"
+      && comparableFacetClues.length > 0
+      && comparableFacetClues.every((candidate) => candidate.priority >= current.priority + 10);
     if (isPriorityAnchor) return [];
 
     return prepared
