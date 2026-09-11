@@ -18,8 +18,10 @@ describe("Today’s Challenge 390×844 presentation contract", () => {
 
   it("keeps the swipe frame content-sized instead of forcing an empty 320px card", () => {
     expect(hubCss).toContain(".today-hub-card,\n.today-hub-leaderboard {\n  min-height: 0;");
-    expect(hubCss).toContain("max-height: 132px");
     expect(hubCss).toContain("min-height: 96px");
+    expect(hubCss).toContain("grid-template-columns: 30px minmax(0, 1fr) auto");
+    expect(hubCss).not.toMatch(/\.today-hub-leaderboard__rows\s*\{[^}]*overflow-y:\s*auto/s);
+    expect(hubCss).not.toMatch(/\.today-hub-leaderboard__rows\s*\{[^}]*max-height:/s);
     expect(hubCss).not.toMatch(/\.today-hub-card,\s*\n\.today-hub-leaderboard\s*\{[^}]*min-height:\s*(?:3\d{2}|[4-9]\d{2})px/s);
   });
 
