@@ -87,9 +87,39 @@ describe("Who Am I mature whole-game simulation", () => {
 
         for (const sequence of sequences) {
           assertSequence(candidate, sequence);
+          const relationshipClues = sequence.filter((clue) => whoAmIClueFacet(clue) === "relationships");
+          expect(
+            relationshipClues.length,
+            `${candidate.id} should not spend multiple round slots on the same relationship/family facet`,
+          ).toBeLessThanOrEqual(1);
+
+          const lastName = normalize(candidate.name).split(" ").at(-1) ?? "";
           for (const clue of sequence) {
             expect(clue.text).not.toMatch(/\bthe this (?:player|fighter|head coach)\b/i);
             expect(clue.text).not.toMatch(/\bthis (?:player|fighter|head coach) this (?:player|fighter|head coach)\b/i);
+            if (clue.identityKnowledge) {
+              expect(clue.text).not.toMatch(/^This (?:player|fighter|head coach)\b/i);
+              expect(
+                clue.text.trim().split(/\s+/).length,
+                `${candidate.id} selected identity clue is too long for mobile game copy: ${clue.text}`,
+              ).toBeLessThanOrEqual(36);
+              if (whoAmIClueFacet(clue) === "relationships" && lastName.length >= 4) {
+                expect(
+                  normalize(clue.text).split(" "),
+                  `${candidate.id} relationship clue leaks the hidden surname: ${clue.text}`,
+                ).not.toContain(lastName);
+              }
+            }
+          }
+
+          const nonProductionGiveaways = sequence.filter((clue) => (
+            clue.band === "giveaway" && whoAmIClueFacet(clue) !== "production"
+          ));
+          if (nonProductionGiveaways.length) {
+            expect(
+              whoAmIClueFacet(sequence.at(-1)!),
+              `${candidate.id} should finish on its strongest identity anchor instead of a raw stat`,
+            ).not.toBe("production");
           }
         }
 

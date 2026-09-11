@@ -1,4 +1,5 @@
 import { footballCoachCareerAffiliationHistoryFor } from "../back-room/footballCoachCareerAffiliationProjection";
+import { footballCfbPlayerSeasonRecognitionRecords } from "../back-room/footballCfbPlayerSeasonRecognition";
 import {
   getFootballPersonIdentityKnowledge,
   getFootballPersonIdentityKnowledgeForPerson,
@@ -103,6 +104,7 @@ function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
     subjectId: subject.id,
     subjectName: subject.name,
     subjectKind: "fighter",
+    league: "UFC",
     factId: fact.factId,
     conceptId: fact.conceptId,
     value: fact.value,
@@ -249,6 +251,7 @@ function footballPersonIdentityClues(subject: FootballSubjectProfile): WhoAmIClu
     subjectId: subject.id,
     subjectName: subject.name,
     subjectKind,
+    league: subject.league,
     factId: fact.factId,
     conceptId: fact.conceptId,
     value: fact.value,
@@ -316,6 +319,33 @@ function footballDraftProfile(subject: FootballSubjectProfile) {
       || nflProfileDepth(right) - nflProfileDepth(left)
       || left.id.localeCompare(right.id)
     ))[0] ?? subject;
+}
+
+const cfbWhoAmISeasonRecognitionBySourceId = new Map<string, typeof footballCfbPlayerSeasonRecognitionRecords[number][]>();
+for (const season of footballCfbPlayerSeasonRecognitionRecords) {
+  const rows = cfbWhoAmISeasonRecognitionBySourceId.get(season.sourceId) ?? [];
+  rows.push(season);
+  cfbWhoAmISeasonRecognitionBySourceId.set(season.sourceId, rows);
+}
+
+function footballWhoAmISchool(subject: FootballSubjectProfile) {
+  if (subject.kind !== "player-career" || subject.league !== "CFB") return subject.school;
+  const sourceIds = (subject.sourceIdentityKeys ?? [])
+    .filter((key) => key.provider === "cfbfastR")
+    .map((key) => String(key.id));
+  const rows = sourceIds.flatMap((sourceId) => cfbWhoAmISeasonRecognitionBySourceId.get(sourceId) ?? [])
+    .filter((season) => (
+      (subject.startSeason == null || season.season >= subject.startSeason)
+      && (subject.endSeason == null || season.season <= subject.endSeason)
+    ));
+  if (!rows.length) return subject.school;
+
+  const observedCareerYears = subject.startSeason != null && subject.endSeason != null
+    ? subject.endSeason - subject.startSeason + 1
+    : 1;
+  if (rows.length < Math.min(2, observedCareerYears)) return undefined;
+  const schools = [...new Set(rows.map((season) => season.school).filter(Boolean))];
+  return schools.length === 1 ? schools[0] : undefined;
 }
 
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
@@ -464,8 +494,9 @@ export function footballWhoAmIApplicableMetricFacts(subject: FootballSubjectProf
 }
 
 function footballMetricBand(metricId: FootballFactMetricId): WhoAmIClueBand {
+  if (/cfb-heisman-awards|cfb-nfl-draft-overall-pick/.test(metricId)) return "giveaway";
   if (
-    /mvp|heisman|super-bowl|all-pro|player-of-year|defensive-player-of-year|national-titles|national-championships|all-america|first-team-all-conference|draft-overall-pick|coach-career-wins|coach-postseason-resume/.test(metricId)
+    /mvp|super-bowl|all-pro|player-of-year|defensive-player-of-year|national-titles|national-championships|all-america|first-team-all-conference|coach-career-wins|coach-postseason-resume/.test(metricId)
   ) return "strong";
 
   if (
@@ -475,8 +506,25 @@ function footballMetricBand(metricId: FootballFactMetricId): WhoAmIClueBand {
   return "strong";
 }
 
+export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfile, fact: FootballFactValue) {
+  const value = Number(fact.value);
+  if (!Number.isFinite(value)) return false;
+  if (
+    subject.league === "CFB"
+    && subject.kind === "player-career"
+    && subject.startSeason != null
+    && subject.endSeason != null
+  ) {
+    const observedSeasons = Math.max(1, subject.endSeason - subject.startSeason + 1);
+    if (fact.metricId === "cfb-career-games" && value < observedSeasons * 3) return false;
+    if (fact.metricId === "cfb-career-starts" && value < observedSeasons * 2) return false;
+  }
+  return true;
+}
+
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   return footballWhoAmIApplicableMetricFacts(subject)
+    .filter(({ fact }) => footballWhoAmIMetricFactIsPlayable(subject, fact))
     .map(({ fact }) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
       return clue(
@@ -565,14 +613,15 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     });
   }
 
-  if (subject.school) clues.push(clue("school", `I played college football at ${subject.school}.`, subject.league === "NFL" ? "helpful" : "broad"));
+  const whoAmISchool = footballWhoAmISchool(subject);
+  if (whoAmISchool) clues.push(clue("school", `I played college football at ${whoAmISchool}.`, subject.league === "NFL" ? "helpful" : "broad"));
   if (subject.conference) clues.push(clue("conference", `I competed in the ${subject.conference}.`, "helpful"));
   const draftProfile = footballDraftProfile(subject);
   if (draftProfile.draftYear != null && draftProfile.draftPick != null) {
     clues.push(clue(
       "draft-pick",
       `I was selected No. ${draftProfile.draftPick} overall in the ${draftProfile.draftYear} NFL Draft.`,
-      "strong",
+      subject.league === "CFB" ? "giveaway" : "strong",
     ));
   } else if (draftProfile.draftYear != null && draftProfile.draftRound != null) {
     clues.push(clue(
@@ -589,7 +638,7 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   } else if (draftProfile.undrafted) {
     clues.push(clue("undrafted", "I entered the NFL undrafted.", "strong"));
   }
-  if (subject.heismanWinner) clues.push(clue("heisman", "I won the Heisman Trophy.", "strong"));
+  if (subject.heismanWinner) clues.push(clue("heisman", "I won the Heisman Trophy.", subject.league === "CFB" ? "giveaway" : "strong"));
   if (subject.nationalChampion) clues.push(clue("national-champion", "I was part of a college national championship team.", "strong"));
 
   // Who Am I keeps player affiliations on compact canonical subject metadata. Coaches use the
@@ -607,7 +656,7 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     ? coachHistory.affiliations
     : [
         ...(subject.franchises ?? []),
-        ...(subject.school ? [subject.school] : []),
+        ...(whoAmISchool ? [whoAmISchool] : []),
         ...relatedPlayerAffiliations,
       ];
   const uniqueAffiliations = [...new Set(
@@ -634,7 +683,7 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     ));
   }
   for (const affiliation of uniqueAffiliations) {
-    if (subject.league === "CFB" && subject.school && slug(affiliation) === slug(subject.school)) continue;
+    if (subject.league === "CFB" && whoAmISchool && slug(affiliation) === slug(whoAmISchool)) continue;
     clues.push(clue(
       `affiliation:${slug(affiliation)}`,
       subject.league === "NFL"

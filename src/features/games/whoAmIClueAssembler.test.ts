@@ -5,6 +5,7 @@ import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKno
 import {
   footballWhoAmIApplicableIdentityFacts,
   footballWhoAmIApplicableMetricFacts,
+  footballWhoAmIMetricFactIsPlayable,
   getFootballWhoAmILaunchPool,
   getFootballWhoAmIUniverse,
   getUfcWhoAmIUniverse,
@@ -413,10 +414,14 @@ describe("Who Am I football scope-aware clue aggregation", () => {
     expect(identityBackedPlayableSelections).toBe(identityBackedPlayableCandidates);
 
     const cfbUniverse = getFootballWhoAmIUniverse("CFB");
+    const cfbLaunchSubjectById = new Map(getFootballWhoAmILaunchPool("CFB").subjects.map((subject) => [subject.id, subject]));
     for (const candidate of cfbUniverse.candidates) {
+      const subject = cfbLaunchSubjectById.get(candidate.id);
+      if (!subject) throw new Error(`Missing CFB launch subject for ${candidate.id}.`);
       const canonicalResumeFacts = (getFootballFactualRecord(candidate.id)?.facts ?? [])
         .filter((fact) => CFB_WHO_AM_I_RESUME_METRICS.has(fact.metricId))
-        .filter((fact) => Number(fact.value) !== 0);
+        .filter((fact) => Number(fact.value) !== 0)
+        .filter((fact) => footballWhoAmIMetricFactIsPlayable(subject, fact));
       for (const fact of canonicalResumeFacts) {
         expect(
           candidate.clues.some((clue) => (
@@ -438,8 +443,9 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         if (!subject) throw new Error(`Missing launch subject for ${candidate.id}.`);
 
         const applicableMetrics = footballWhoAmIApplicableMetricFacts(subject);
+        const playableMetrics = applicableMetrics.filter(({ fact }) => footballWhoAmIMetricFactIsPlayable(subject, fact));
         const applicableIdentity = footballWhoAmIApplicableIdentityFacts(subject);
-        const missingMetrics = applicableMetrics.filter(({ fact }) => !candidate.clues.some((clue) => (
+        const missingMetrics = playableMetrics.filter(({ fact }) => !candidate.clues.some((clue) => (
           clue.id === `fact:${fact.metricId}`
           || (fact.metricId === "cfb-heisman-awards" && clue.id === "heisman")
         )));
@@ -481,8 +487,8 @@ describe("Who Am I football scope-aware clue aggregation", () => {
           league,
           id: candidate.id,
           name: candidate.name,
-          totalApplicableCanonicalFacts: applicableMetrics.length + applicableIdentity.length,
-          metricIds: applicableMetrics.map(({ fact }) => fact.metricId),
+          totalApplicableCanonicalFacts: playableMetrics.length + applicableIdentity.length,
+          metricIds: playableMetrics.map(({ fact }) => fact.metricId),
           generatedCandidateClues: candidate.clues.length,
           identityClues: candidate.clues.filter((clue) => clue.identityKnowledge).length,
           productionClues,
@@ -618,6 +624,82 @@ describe("Who Am I football scope-aware clue aggregation", () => {
       }
       expect(new Set(sequence.map((clue) => clue.conceptId ?? clue.id)).size).toBe(sequence.length);
     }
+  });
+
+  it("keeps thin CFB profiles strong late without losing their distinctive anchors", () => {
+    const urlacher = representativeCandidate("CFB", "cfb-brian-urlacher");
+    const hall = urlacher.clues.find((clue) => clue.id === "identity:pr9-cfb-brian-urlacher--first-lobo-cfb-hall");
+    const draft = urlacher.clues.find((clue) => clue.id === "identity:resume-cfb-brian-urlacher-03");
+    expect(hall?.band).toBe("giveaway");
+    expect(draft?.band).toBe("giveaway");
+
+    const urlacherCopy = urlacher.clues.find((clue) => clue.id === "identity:pr9-cfb-brian-urlacher--only-fbs-offer-new-mexico");
+    expect(urlacherCopy?.text).toMatch(/^I've been described/);
+
+    const patterson = representativeCandidate("CFB", "gary-patterson-cfb");
+    const partnership = patterson.clues.find((clue) => clue.id === "identity:pr9-gary-patterson-cfb--franchione-multi-stop-coaching-partnership");
+    expect(partnership?.band).toBe("strong");
+    expect(partnership?.text).toMatch(/^Dennis Franchione and I coached together/);
+    expect(partnership?.text).not.toContain("Dennis and I Franchione");
+
+    for (const candidate of [urlacher, patterson]) {
+      for (let seed = 1; seed <= 16; seed += 1) {
+        const sequence = assembleWhoAmIClues(candidate.clues, WHO_AM_I_CLUE_LIMIT, seededRandom(seed));
+        expect(sequence.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length).toBeGreaterThanOrEqual(3);
+      }
+    }
+  });
+
+  it("keeps lower-band facet clues from crowding late-game strength", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "Broad role", band: "broad", facet: "role", revealPriority: 10 },
+      { id: "b-era", text: "Broad era", band: "broad", facet: "era", revealPriority: 10 },
+      { id: "b-background", text: "Broad background", band: "broad", facet: "background", revealPriority: 20 },
+      { id: "h-production", text: "Helpful career games", band: "helpful", facet: "production", revealPriority: 20 },
+      { id: "h-style", text: "Helpful style", band: "helpful", facet: "style", revealPriority: 20 },
+      { id: "h-background", text: "Helpful background", band: "helpful", facet: "background", revealPriority: 20 },
+      { id: "h-career", text: "Helpful career path", band: "helpful", facet: "career-path", revealPriority: 20 },
+      { id: "h-off-field", text: "Helpful off field", band: "helpful", facet: "off-field", revealPriority: 20 },
+      { id: "s-production-one", text: "Strong production one", band: "strong", facet: "production", revealPriority: 10 },
+      { id: "s-production-two", text: "Strong production two", band: "strong", facet: "production", revealPriority: 10 },
+      { id: "s-relationship", text: "Strong relationship", band: "strong", facet: "relationships", revealPriority: 10 },
+    ];
+
+    for (let seed = 1; seed <= 16; seed += 1) {
+      const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, seededRandom(seed));
+      const late = sequence.filter((clue) => clue.band === "strong" || clue.band === "giveaway");
+      expect(late).toHaveLength(3);
+      expect(sequence.filter((clue) => clue.facet === "production")).toHaveLength(2);
+    }
+  });
+
+  it("uses seeded variation between equivalent-quality clues without admitting a clearly weaker option", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "Broad role", band: "broad", facet: "role", revealPriority: 10 },
+      { id: "b-era", text: "Broad era", band: "broad", facet: "era", revealPriority: 10 },
+      { id: "h-style", text: "Helpful style", band: "helpful", facet: "style", revealPriority: 20 },
+      { id: "h-background", text: "Helpful background", band: "helpful", facet: "background", revealPriority: 20 },
+      { id: "h-production-identity", text: "Equivalent identity-backed production clue", band: "helpful", facet: "production", revealPriority: 20, identityKnowledge: true },
+      { id: "h-production-canonical", text: "Equivalent canonical production clue", band: "helpful", facet: "production", revealPriority: 20 },
+      { id: "h-production-weaker", text: "Clearly weaker production clue", band: "helpful", facet: "production", revealPriority: 50 },
+      { id: "s-career", text: "Strong career path", band: "strong", facet: "career-path", revealPriority: 10 },
+      { id: "s-accomplishment", text: "Strong accomplishment", band: "strong", facet: "accomplishments", revealPriority: 10 },
+      { id: "s-identity", text: "Strong identity", band: "strong", facet: "identity", revealPriority: 10 },
+      { id: "g-career", text: "Giveaway career path", band: "giveaway", facet: "career-path", revealPriority: 10 },
+      { id: "g-nickname", text: "Giveaway nickname", band: "giveaway", facet: "nickname", revealPriority: 10 },
+    ];
+
+    const chosenProductionIds = new Set<string>();
+    for (let seed = 1; seed <= 32; seed += 1) {
+      const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, seededRandom(seed));
+      expect(sequence.some((clue) => clue.id === "h-production-weaker")).toBe(false);
+      const production = sequence.find((clue) => clue.id.startsWith("h-production-"));
+      expect(production).toBeTruthy();
+      chosenProductionIds.add(production!.id);
+    }
+
+    expect(chosenProductionIds).toContain("h-production-identity");
+    expect(chosenProductionIds).toContain("h-production-canonical");
   });
 
   it("keeps the shallowest completed football clue pools playable across replay seeds", () => {
