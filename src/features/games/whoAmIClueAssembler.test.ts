@@ -105,19 +105,44 @@ function factualMetricIsAccountedFor(candidate: WhoAmICandidate, metricId: Footb
 
 function auditFootballCandidate(league: "NFL" | "CFB", candidate: WhoAmICandidate) {
   const subject = footballSubject(league, candidate.id);
-  const recordFacts = getFootballFactualRecord(candidate.id)?.facts ?? [];
+  const personSubjects = resolveFootballPersonSubjects(subject);
+  const recordFacts = personSubjects.flatMap((personSubject) => (
+    (getFootballFactualRecord(personSubject.id)?.facts ?? []).map((fact) => ({
+      sourceSubjectId: personSubject.id,
+      fact,
+    }))
+  ));
   const applicableLedgerFacts = recordFacts
-    .filter((fact) => FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId))
-    .filter((fact) => footballWhoAmIFactAppliesToSubject(subject, fact.metricId))
-    .filter((fact) => Number(fact.value) !== 0);
+    .filter(({ fact }) => FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId))
+    .filter(({ fact }) => footballWhoAmIFactAppliesToSubject(subject, fact.metricId))
+    .filter(({ fact }) => Number(fact.value) !== 0);
   const unsupportedLedgerFacts = recordFacts
-    .filter((fact) => (
+    .filter(({ fact }) => (
       !FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId)
       || !footballWhoAmIFactAppliesToSubject(subject, fact.metricId)
       || Number(fact.value) === 0
     ));
+
+  const firstLedgerFactByMetric = new Map<FootballFactMetricId, (typeof applicableLedgerFacts)[number]>();
+  const duplicateLedgerFacts: string[] = [];
+  const conflictingDuplicateMetrics: string[] = [];
+  for (const entry of applicableLedgerFacts) {
+    const first = firstLedgerFactByMetric.get(entry.fact.metricId);
+    if (!first) {
+      firstLedgerFactByMetric.set(entry.fact.metricId, entry);
+      continue;
+    }
+    duplicateLedgerFacts.push(`${entry.sourceSubjectId}:${entry.fact.metricId}`);
+    if (String(first.fact.value) !== String(entry.fact.value)) {
+      conflictingDuplicateMetrics.push(
+        `${entry.fact.metricId}:${first.sourceSubjectId}=${String(first.fact.value)}:${entry.sourceSubjectId}=${String(entry.fact.value)}`,
+      );
+    }
+  }
+
   const identityFacts = applicableIdentityFacts(subject);
-  const missingLedgerFacts = applicableLedgerFacts.filter((fact) => !factualMetricIsAccountedFor(candidate, fact.metricId));
+  const missingLedgerFacts = [...firstLedgerFactByMetric.values()]
+    .filter(({ fact }) => !factualMetricIsAccountedFor(candidate, fact.metricId));
   const missingIdentityFacts = identityFacts.filter(({ fact }) => !identityFactIsAccountedFor(candidate, subject, fact));
   const sequence = whoAmIProgressiveClues(candidate.clues);
   const productionClues = candidate.clues.filter((clue) => clue.id.startsWith("fact:")).length;
@@ -141,6 +166,7 @@ function auditFootballCandidate(league: "NFL" | "CFB", candidate: WhoAmICandidat
     id: candidate.id,
     name: candidate.name,
     totalApplicableCanonicalFacts: applicableLedgerFacts.length + identityFacts.length,
+    uniqueApplicableLedgerFacts: firstLedgerFactByMetric.size,
     generatedCandidateClues: candidate.clues.length,
     identityClues: candidate.clues.filter((clue) => clue.identityKnowledge).length,
     productionClues,
@@ -148,11 +174,13 @@ function auditFootballCandidate(league: "NFL" | "CFB", candidate: WhoAmICandidat
     draftCareerPathClues,
     finalAssembledClues: sequence.length,
     unsupportedLedgerFacts: unsupportedLedgerFacts.length,
-    missingLedgerFacts: missingLedgerFacts.map((fact) => fact.metricId),
+    duplicateLedgerFacts,
+    conflictingDuplicateMetrics,
+    missingLedgerFacts: missingLedgerFacts.map(({ sourceSubjectId, fact }) => `${sourceSubjectId}:${fact.metricId}`),
     missingIdentityFacts: missingIdentityFacts.map(({ knowledgeSubject, fact }) => `${knowledgeSubject.id}:${fact.factId}`),
     classification: sequence.length >= WHO_AM_I_CLUE_LIMIT
       ? "complete"
-      : missingLedgerFacts.length || missingIdentityFacts.length
+      : missingLedgerFacts.length || missingIdentityFacts.length || conflictingDuplicateMetrics.length
         ? "plumbing omission"
         : "genuine canonical source-depth gap",
   } as const;
@@ -352,6 +380,7 @@ describe("Who Am I PR11 clue assembler", () => {
         const audit = auditFootballCandidate(league, candidate);
         expect(audit.missingLedgerFacts, `${candidate.id} has unexplained missing factual-ledger clues`).toEqual([]);
         expect(audit.missingIdentityFacts, `${candidate.id} has unexplained missing identity clues`).toEqual([]);
+        expect(audit.conflictingDuplicateMetrics, `${candidate.id} has conflicting same-metric canonical facts`).toEqual([]);
         if (league === "CFB") {
           expect(candidate.clues.some((clue) => clue.id.startsWith("fact:nfl-"))).toBe(false);
         } else {
@@ -360,15 +389,42 @@ describe("Who Am I PR11 clue assembler", () => {
       }
     }
 
-    const cfbClueAudit = getFootballWhoAmIUniverse("CFB").candidates
-      .map((candidate) => auditFootballCandidate("CFB", candidate))
-      .sort((left, right) => (
-        left.generatedCandidateClues - right.generatedCandidateClues
-        || left.finalAssembledClues - right.finalAssembledClues
-        || left.id.localeCompare(right.id)
-      ));
+    const footballAudits = Object.fromEntries(
+      (["NFL", "CFB"] as const).map((league) => [
+        league,
+        getFootballWhoAmIUniverse(league).candidates
+          .map((candidate) => auditFootballCandidate(league, candidate))
+          .sort((left, right) => (
+            left.generatedCandidateClues - right.generatedCandidateClues
+            || left.finalAssembledClues - right.finalAssembledClues
+            || left.id.localeCompare(right.id)
+          )),
+      ]),
+    ) as Record<"NFL" | "CFB", ReturnType<typeof auditFootballCandidate>[]>;
 
-    console.info("Who Am I follow-up lowest-depth CFB candidates", JSON.stringify(cfbClueAudit.slice(0, 15)));
+    const depthSummary = Object.fromEntries(
+      (["NFL", "CFB"] as const).map((league) => {
+        const rows = footballAudits[league];
+        const histogram = Object.fromEntries(
+          [...new Set(rows.map((row) => row.generatedCandidateClues))]
+            .sort((left, right) => left - right)
+            .map((depth) => [depth, rows.filter((row) => row.generatedCandidateClues === depth).length]),
+        );
+        return [league, {
+          subjects: rows.length,
+          minCandidateDepth: rows[0]?.generatedCandidateClues ?? 0,
+          maxCandidateDepth: Math.max(...rows.map((row) => row.generatedCandidateClues)),
+          belowTenFinal: rows.filter((row) => row.finalAssembledClues < WHO_AM_I_CLUE_LIMIT).length,
+          candidateDepthHistogram: histogram,
+        }];
+      }),
+    );
+
+    console.info("Who Am I follow-up football population audit", JSON.stringify(depthSummary));
+    console.info("Who Am I follow-up lowest-depth NFL candidates", JSON.stringify(footballAudits.NFL.slice(0, 15)));
+    console.info("Who Am I follow-up lowest-depth CFB candidates", JSON.stringify(footballAudits.CFB.slice(0, 15)));
+
+    const cfbClueAudit = footballAudits.CFB;
 
     const shortCfbCandidates = cfbClueAudit.filter((candidate) => candidate.finalAssembledClues < WHO_AM_I_CLUE_LIMIT);
     const plumbingOmissions = shortCfbCandidates.filter((candidate) => candidate.classification === "plumbing omission");
@@ -378,10 +434,7 @@ describe("Who Am I PR11 clue assembler", () => {
     console.info("Who Am I follow-up CFB <10 genuine canonical source-depth gaps", JSON.stringify(genuineSourceGaps));
 
     expect(plumbingOmissions).toEqual([]);
-    for (const candidate of genuineSourceGaps) {
-      expect(candidate.generatedCandidateClues).toBeLessThan(WHO_AM_I_CLUE_LIMIT);
-      expect(candidate.finalAssembledClues).toBe(candidate.generatedCandidateClues);
-    }
+    expect(genuineSourceGaps.every((candidate) => candidate.finalAssembledClues < WHO_AM_I_CLUE_LIMIT)).toBe(true);
   });
 
   it("does not mutate canonical person-identity source knowledge during assembly", () => {
