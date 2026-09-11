@@ -59,6 +59,21 @@ function normalize(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
 }
 
+function seededRandom(seed: number) {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function sequenceKey(sequence: readonly WhoAmIClue[]) {
+  return sequence.map((clue) => clue.id).join("|");
+}
+
 function assertProgressiveSequence(candidate: WhoAmICandidate, sequence: readonly WhoAmIClue[]) {
   expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
   for (let index = 1; index < sequence.length; index += 1) {
@@ -410,6 +425,99 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         remainingUnderTwelve: underTwelveFootballCandidates,
       }),
     );
+  });
+
+  it.each([
+    ["UFC", "Jon Jones"],
+    ["NFL", "Tom Brady"],
+    ["CFB", "Tim Tebow"],
+  ] as const)("varies approved %s clue combinations across deterministic replay seeds for %s", (league, name) => {
+    const universe = league === "UFC" ? getUfcWhoAmIUniverse() : getFootballWhoAmIUniverse(league);
+    const candidate = universe.candidates.find((entry) => entry.name === name);
+    if (!candidate) throw new Error(`Missing representative ${league} Who Am I candidate ${name}.`);
+
+    const first = whoAmIProgressiveClues(candidate.clues, seededRandom(20260910));
+    const repeated = whoAmIProgressiveClues(candidate.clues, seededRandom(20260910));
+    expect(repeated).toEqual(first);
+    assertProgressiveSequence(candidate, first);
+
+    const sequences = Array.from({ length: 16 }, (_value, index) => (
+      whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
+    ));
+    for (const sequence of sequences) {
+      assertProgressiveSequence(candidate, sequence);
+      expect(sequence.every((clue) => candidate.clues.includes(clue))).toBe(true);
+    }
+
+    const distinctSequences = new Set(sequences.map(sequenceKey));
+    expect(distinctSequences.size).toBeGreaterThan(1);
+
+    console.info(
+      `Who Am I replay variation ${league} ${name}`,
+      JSON.stringify({
+        candidateClues: candidate.clues.length,
+        distinctSequences: distinctSequences.size,
+        seeds: [1, 2, 3, 4],
+        samples: sequences.slice(0, 4).map((sequence) => sequence.map(({ id, band, facet }) => ({ id, band, facet }))),
+      }),
+    );
+  });
+
+  it("keeps seeded variation inside the existing quality and facet-diversity rules", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "Broad role", band: "broad", facet: "role", revealPriority: 10 },
+      { id: "b-era", text: "Broad era", band: "broad", facet: "era", revealPriority: 10 },
+      { id: "b-background", text: "Broad background", band: "broad", facet: "background", revealPriority: 10 },
+      { id: "h-production-best", text: "Best production clue", band: "helpful", facet: "production", revealPriority: 10 },
+      { id: "h-production-weaker", text: "Weaker production clue", band: "helpful", facet: "production", revealPriority: 50 },
+      { id: "h-style", text: "Helpful style", band: "helpful", facet: "style", revealPriority: 20 },
+      { id: "h-background", text: "Helpful background", band: "helpful", facet: "background", revealPriority: 20 },
+      { id: "h-off-field", text: "Helpful off field", band: "helpful", facet: "off-field", revealPriority: 20 },
+      { id: "h-career", text: "Helpful career path", band: "helpful", facet: "career-path", revealPriority: 20 },
+      { id: "s-accomplishment", text: "Strong accomplishment", band: "strong", facet: "accomplishments", revealPriority: 10 },
+      { id: "s-relationship", text: "Strong relationship", band: "strong", facet: "relationships", revealPriority: 10 },
+      { id: "s-style", text: "Strong style", band: "strong", facet: "style", revealPriority: 10 },
+      { id: "s-identity", text: "Strong identity", band: "strong", facet: "identity", revealPriority: 10 },
+      { id: "g-nickname", text: "Giveaway nickname", band: "giveaway", facet: "nickname", revealPriority: 10 },
+      { id: "g-relationship", text: "Giveaway relationship", band: "giveaway", facet: "relationships", revealPriority: 10 },
+      { id: "g-career", text: "Giveaway career", band: "giveaway", facet: "career-path", revealPriority: 10 },
+    ];
+
+    for (let seed = 1; seed <= 24; seed += 1) {
+      const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, seededRandom(seed));
+      expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+      expect(sequence.some((clue) => clue.id === "h-production-best")).toBe(true);
+      expect(sequence.some((clue) => clue.id === "h-production-weaker")).toBe(false);
+
+      const counts = new Map<string, number>();
+      for (const clue of sequence) {
+        const facet = clue.facet ?? "unknown";
+        counts.set(facet, (counts.get(facet) ?? 0) + 1);
+      }
+      expect(Math.max(...counts.values())).toBeLessThanOrEqual(2);
+
+      for (let index = 1; index < sequence.length; index += 1) {
+        expect(BAND_RANK[sequence[index]!.band]).toBeGreaterThanOrEqual(BAND_RANK[sequence[index - 1]!.band]);
+      }
+      expect(new Set(sequence.map((clue) => clue.conceptId ?? clue.id)).size).toBe(sequence.length);
+    }
+  });
+
+  it("keeps the shallowest completed football clue pools playable across replay seeds", () => {
+    for (const league of ["NFL", "CFB"] as const) {
+      const universe = getFootballWhoAmIUniverse(league);
+      const minimumDepth = Math.min(...universe.candidates.map((candidate) => candidate.clues.length));
+      expect(minimumDepth).toBeGreaterThanOrEqual(12);
+
+      const shallowest = universe.candidates.filter((candidate) => candidate.clues.length === minimumDepth);
+      expect(shallowest.length).toBeGreaterThan(0);
+
+      for (const candidate of shallowest) {
+        for (const seed of [3, 11, 29]) {
+          assertProgressiveSequence(candidate, whoAmIProgressiveClues(candidate.clues, seededRandom(seed)));
+        }
+      }
+    }
   });
 
   it("does not mutate canonical person-identity source knowledge during assembly", () => {
