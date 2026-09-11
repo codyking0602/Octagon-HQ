@@ -85,7 +85,13 @@ describe("Who Am I mature whole-game simulation", () => {
           whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
         ));
 
-        for (const sequence of sequences) assertSequence(candidate, sequence);
+        for (const sequence of sequences) {
+          assertSequence(candidate, sequence);
+          for (const clue of sequence) {
+            expect(clue.text).not.toMatch(/\bthe this (?:player|fighter|head coach)\b/i);
+            expect(clue.text).not.toMatch(/\bthis (?:player|fighter|head coach) this (?:player|fighter|head coach)\b/i);
+          }
+        }
 
         const distinctSequences = new Set(sequences.map(sequenceKey)).size;
         const distinctFacetCounts = sequences.map((sequence) => new Set(
@@ -187,15 +193,25 @@ describe("Who Am I mature whole-game simulation", () => {
         || left.id.localeCompare(right.id)
       ));
 
+      const underFourFacets = findings.filter((finding) => finding.minDistinctFacets < 4);
+      const weakLateFinish = findings.filter((finding) => finding.minLateStrongOrGiveaway < 3);
+      const deepReplayGaps = findings.filter((finding) => (
+        finding.candidateClues > 12 && finding.distinctSequences === 1
+      ));
+
+      expect(underFourFacets, `${league} should preserve at least four clue facets in every simulated sequence`).toEqual([]);
+      expect(weakLateFinish, `${league} should finish with at least three strong/giveaway clues in the final four`).toEqual([]);
+      expect(deepReplayGaps, `${league} candidates deeper than the 12-clue floor should vary across replay seeds`).toEqual([]);
+
       console.info(
         `Who Am I Slice 13 simulation ${league}`,
         JSON.stringify({
           population: findings.length,
           zeroReplayVariation: findings.filter((finding) => finding.distinctSequences === 1).length,
-          underFourFacets: findings.filter((finding) => finding.minDistinctFacets < 4).length,
+          underFourFacets: underFourFacets.length,
           zeroIdentitySelected: findings.filter((finding) => finding.minIdentityClues === 0).length,
           noGiveawaySelected: findings.filter((finding) => finding.minGiveawayClues === 0).length,
-          weakLateFinish: findings.filter((finding) => finding.minLateStrongOrGiveaway < 3).length,
+          weakLateFinish: weakLateFinish.length,
           facetConcentrationAboveThree: findings.filter((finding) => finding.maxFacetConcentration > 3).length,
           weakestDiversity: byWeakestDiversity.slice(0, 12),
           weakestReplay: byWeakestReplay.slice(0, 12),
