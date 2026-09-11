@@ -44,6 +44,16 @@ describe("Who Am I canonical clue authority", () => {
     expect(gates!.clues.some((entry) => entry.id === "undrafted")).toBe(true);
   });
 
+  it("keeps comparison tight ends above the completed clue floor from compact canonical metadata", () => {
+    const nfl = getFootballWhoAmIUniverse("NFL");
+    for (const id of ["antonio-gates", "jason-witten", "shannon-sharpe"]) {
+      const candidate = nfl.candidates.find((entry) => entry.id === id);
+      expect(candidate, id).toBeDefined();
+      expect(candidate!.clues.length, id).toBeGreaterThanOrEqual(12);
+      expect(candidate!.clues.some((entry) => entry.id.startsWith("affiliation:")), id).toBe(true);
+    }
+  });
+
   it("locks and discloses NFL or CFB before the first Football clue", () => {
     expect(createFootballWhoAmIRound(() => 0).league).toBe("NFL");
     expect(createFootballWhoAmIRound(() => 0.99).league).toBe("CFB");
