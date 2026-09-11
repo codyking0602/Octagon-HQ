@@ -193,34 +193,6 @@ function displayAffiliation(league: "NFL" | "CFB", value: string) {
   return league === "NFL" ? NFL_TEAM_NAMES[value] ?? value : value;
 }
 
-function normalizedPersonName(value: string) {
-  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
-}
-
-const nflProfilesByName = new Map<string, FootballSubjectProfile[]>();
-for (const subject of queryFootballSubjects({
-  league: "NFL",
-  includeProjectedSourceSubjects: true,
-  includeProjectedCanonicalRecognition: true,
-})) {
-  if (subject.kind !== "player-career") continue;
-  const key = normalizedPersonName(subject.name);
-  nflProfilesByName.set(key, [...(nflProfilesByName.get(key) ?? []), subject]);
-}
-
-function nflProfileDepth(subject: FootballSubjectProfile) {
-  const recordDepth = getFootballFactualRecord(subject.id)?.facts.length ?? 0;
-  const identityDepth = [
-    subject.startSeason,
-    subject.endSeason,
-    subject.draftYear,
-    subject.draftRound,
-    subject.draftPick,
-    subject.franchises?.length,
-  ].filter((value) => value != null).length;
-  return recordDepth * 10 + identityDepth;
-}
-
 function hasFootballDraftIdentity(subject: FootballSubjectProfile) {
   return (
     subject.draftYear != null
@@ -235,15 +207,9 @@ function hasFootballDraftIdentity(subject: FootballSubjectProfile) {
 function footballDraftProfile(subject: FootballSubjectProfile) {
   if (hasFootballDraftIdentity(subject)) return subject;
   if (subject.kind !== "player-career") return subject;
-  return [...(nflProfilesByName.get(normalizedPersonName(subject.name)) ?? [])]
-    .filter(hasFootballDraftIdentity)
-    .sort((left, right) => (
-      Number(right.draftPick != null) - Number(left.draftPick != null)
-      || Number(right.draftRound != null) - Number(left.draftRound != null)
-      || Number(right.draftYear != null) - Number(left.draftYear != null)
-      || nflProfileDepth(right) - nflProfileDepth(left)
-      || left.id.localeCompare(right.id)
-    ))[0] ?? subject;
+  return resolveFootballPersonSubjects(subject).find((candidate) => (
+    candidate.id !== subject.id && hasFootballDraftIdentity(candidate)
+  )) ?? subject;
 }
 
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
@@ -347,19 +313,23 @@ export function footballWhoAmIFactAppliesToSubject(
 }
 
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
-  const record = getFootballFactualRecord(subject.id);
-  if (!record) return [];
-  return record.facts
-    .filter((fact) => FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId))
-    .filter((fact) => footballWhoAmIFactAppliesToSubject(subject, fact.metricId))
-    .filter((fact) => Number(fact.value) !== 0)
-    .map((fact) => {
-      const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
-      const band: WhoAmIClueBand = /mvp|heisman|super-bowl|all-pro|player-of-year|national-titles/.test(fact.metricId)
-        ? "strong"
-        : "helpful";
-      return clue(`fact:${fact.metricId}`, footballMetricText(fact.metricId, fact.value, label), band);
-    });
+  const factsByMetric = new Map<FootballFactMetricId, NonNullable<ReturnType<typeof getFootballFactualRecord>>["facts"][number]>();
+  for (const personSubject of resolveFootballPersonSubjects(subject)) {
+    for (const fact of getFootballFactualRecord(personSubject.id)?.facts ?? []) {
+      if (!FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId)) continue;
+      if (!footballWhoAmIFactAppliesToSubject(subject, fact.metricId)) continue;
+      if (Number(fact.value) === 0 || factsByMetric.has(fact.metricId)) continue;
+      factsByMetric.set(fact.metricId, fact);
+    }
+  }
+
+  return [...factsByMetric.values()].map((fact) => {
+    const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
+    const band: WhoAmIClueBand = /mvp|heisman|super-bowl|all-pro|player-of-year|national-titles/.test(fact.metricId)
+      ? "strong"
+      : "helpful";
+    return clue(`fact:${fact.metricId}`, footballMetricText(fact.metricId, fact.value, label), band);
+  });
 }
 
 function footballRecognitionClues(subject: FootballSubjectProfile): WhoAmIClue[] {
