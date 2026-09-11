@@ -661,6 +661,13 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
 
   const whoAmISchool = footballWhoAmISchool(subject);
   if (whoAmISchool) clues.push(clue("school", `I played college football at ${whoAmISchool}.`, subject.league === "NFL" ? "helpful" : "broad"));
+  if (!isCoach && subject.league === "CFB" && whoAmISchool && subject.position) {
+    clues.push({
+      ...clue("role-school", `At ${whoAmISchool}, I played ${subject.position}.`, "strong"),
+      facet: "identity",
+      revealPriority: 60,
+    });
+  }
   if (subject.conference) clues.push(clue("conference", `I competed in the ${subject.conference}.`, "helpful"));
   const draftProfile = footballDraftProfile(subject);
   if (draftProfile.draftYear != null && draftProfile.draftPick != null) {
@@ -752,37 +759,18 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
 
 function footballCandidate(subject: FootballSubjectProfile): WhoAmICandidate {
   const kind = subject.kind === "coach" ? "coach" : "player";
-  const baseClues = distinctClues([
-    ...footballIdentityClues(subject),
-    ...footballMetricClues(subject),
-    ...footballRecognitionClues(subject),
-    ...footballPersonIdentityClues(subject),
-  ]);
-
-  // Role + school repeats two facts already exposed separately, so only use the combined
-  // identity anchor as emergency depth for genuinely shallow CFB player pools.
-  const whoAmISchool = footballWhoAmISchool(subject);
-  const shallowRoleSchoolClue = (
-    subject.kind === "player-career"
-    && subject.league === "CFB"
-    && subject.position
-    && whoAmISchool
-    && baseClues.length < 10
-  )
-    ? [{
-        ...clue("role-school", `At ${whoAmISchool}, I played ${subject.position}.`, "strong"),
-        facet: "identity" as const,
-        revealPriority: 60,
-      }]
-    : [];
-
   return {
     id: subject.id,
     name: subject.name,
     kind,
     eraBand: footballEraBand(subject),
     rescueGroup: kind === "coach" ? `${subject.league}:coach` : `${subject.league}:${subject.position ?? "player"}`,
-    clues: distinctClues([...baseClues, ...shallowRoleSchoolClue]),
+    clues: distinctClues([
+      ...footballIdentityClues(subject),
+      ...footballMetricClues(subject),
+      ...footballRecognitionClues(subject),
+      ...footballPersonIdentityClues(subject),
+    ]),
   };
 }
 
