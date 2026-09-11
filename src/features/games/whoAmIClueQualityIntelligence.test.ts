@@ -309,6 +309,18 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(sequence.some((clue) => /fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id))).toBe(false);
   });
 
+  it("keeps shallow NFL résumés centered on sports identity with a late role-and-franchise anchor", () => {
+    const candidate = getFootballWhoAmIUniverse("NFL").candidates.find((entry) => entry.id === "jason-witten");
+    expect(candidate).toBeTruthy();
+    expect(candidate!.clues.some((clue) => clue.id === "role-franchise")).toBe(true);
+
+    for (const seed of [1, 7, 19]) {
+      const sequence = whoAmIProgressiveClues(candidate!.clues, seededRandom(seed));
+      expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+      expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length).toBeGreaterThanOrEqual(7);
+    }
+  });
+
   it("repairs the live C.J. Stroud CFB identity and removes the implausible one-game clue", () => {
     const candidate = getFootballWhoAmIUniverse("CFB").candidates.find((entry) => entry.name === "C.J. Stroud");
     expect(candidate).toBeTruthy();
