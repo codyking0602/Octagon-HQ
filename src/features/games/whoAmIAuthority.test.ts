@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   createFootballWhoAmIRound,
@@ -11,6 +12,13 @@ function eligible(universe: ReturnType<typeof getUfcWhoAmIUniverse> | ReturnType
 }
 
 describe("Who Am I canonical clue authority", () => {
+  it("keeps the full player-season affiliation corpus out of the lazy game runtime", () => {
+    const authoritySource = readFileSync("src/features/games/whoAmIAuthority.ts", "utf8");
+    const coachProjectionSource = readFileSync("src/features/back-room/footballCoachCareerAffiliationProjection.ts", "utf8");
+    expect(authoritySource).not.toContain("footballCareerAffiliationProjection");
+    expect(coachProjectionSource).not.toContain("player-seasons-");
+  });
+
   it("builds UFC rounds only from the canonical factual-ledger universe", () => {
     const universe = getUfcWhoAmIUniverse();
     expect(universe.league).toBe("UFC");
@@ -27,6 +35,23 @@ describe("Who Am I canonical clue authority", () => {
     expect(playable.length).toBeGreaterThan(0);
     expect(playable.some((candidate) => candidate.kind === "player")).toBe(true);
     expect(playable.some((candidate) => candidate.kind === "coach")).toBe(true);
+  });
+
+  it("keeps Antonio Gates above the completed 12-clue floor without the heavyweight player-season corpus", () => {
+    const gates = getFootballWhoAmIUniverse("NFL").candidates.find((candidate) => candidate.id === "antonio-gates");
+    expect(gates).toBeDefined();
+    expect(gates!.clues.length).toBeGreaterThanOrEqual(12);
+    expect(gates!.clues.some((entry) => entry.id === "undrafted")).toBe(true);
+  });
+
+  it("keeps comparison tight ends above the completed clue floor from compact canonical metadata", () => {
+    const nfl = getFootballWhoAmIUniverse("NFL");
+    for (const id of ["antonio-gates", "jason-witten", "shannon-sharpe"]) {
+      const candidate = nfl.candidates.find((entry) => entry.id === id);
+      expect(candidate, id).toBeDefined();
+      expect(candidate!.clues.length, id).toBeGreaterThanOrEqual(12);
+      expect(candidate!.clues.some((entry) => entry.id.startsWith("affiliation:")), id).toBe(true);
+    }
   });
 
   it("locks and discloses NFL or CFB before the first Football clue", () => {

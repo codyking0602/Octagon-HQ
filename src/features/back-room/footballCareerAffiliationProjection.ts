@@ -1,8 +1,6 @@
 import cfbPlayerSeasonsJson from "../../../data/generated/football/cfb/player-seasons-2014-2025.json";
-import cfbCoachSeasonsJson from "../../../data/generated/football/relationships/cfb-coach-seasons-2002-2025.json";
-import cfbTeamSeasonsJson from "../../../data/generated/football/relationships/cfb-team-season-results-2002-2025.json";
 import nflPlayerSeasonsJson from "../../../data/generated/football/nfl/player-seasons-1999-2025.json";
-import nflCoachSeasonsJson from "../../../data/generated/football/relationships/nfl-coach-seasons-1999-2025.json";
+import { footballCoachCareerAffiliationHistoryFor } from "./footballCoachCareerAffiliationProjection";
 import type { FootballSourceIdentityKey } from "./footballSubjectEligibility";
 import { footballHistoricalConferenceForProgram } from "./footballTeamSchoolMetadata";
 
@@ -59,15 +57,6 @@ function number(raw: unknown) {
 
 function normalized(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
-}
-
-function slug(value: string) {
-  return value
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[’']/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 }
 
 function sourceIdentity(subject: AffiliationSubject, provider: "nflverse" | "cfbfastR") {
@@ -156,40 +145,8 @@ function buildPlayerIndex(table: ColumnarTable, league: "NFL" | "CFB") {
   return result;
 }
 
-const cfbTeamSeasonTable = cfbTeamSeasonsJson as ColumnarTable;
-const cfbTeamSeasonIndexes = indexesFor(cfbTeamSeasonTable);
-const cfbConferenceBySeasonAndProgram = new Map<string, string>();
-for (const values of cfbTeamSeasonTable.rows) {
-  const season = number(value(values, cfbTeamSeasonIndexes, "season"));
-  const program = text(value(values, cfbTeamSeasonIndexes, "programName"));
-  const conference = text(value(values, cfbTeamSeasonIndexes, "conference"));
-  if (season != null && program && conference) {
-    cfbConferenceBySeasonAndProgram.set(`${season}:${normalized(program)}`, conference);
-  }
-}
-
-function buildCoachIndex(table: ColumnarTable, league: "NFL" | "CFB") {
-  const indexes = indexesFor(table);
-  const result = new Map<string, FootballCareerAffiliationSeason[]>();
-  for (const values of table.rows) {
-    const coachKey = text(value(values, indexes, "sourceCoachNameKey"));
-    const season = number(value(values, indexes, "season"));
-    const affiliation = text(value(values, indexes, league === "NFL" ? "franchiseId" : "programName"));
-    if (!coachKey || season == null || !affiliation) continue;
-    const conference = league === "CFB"
-      ? cfbConferenceBySeasonAndProgram.get(`${season}:${normalized(affiliation)}`)
-        ?? footballHistoricalConferenceForProgram(affiliation, season)
-        ?? undefined
-      : undefined;
-    pushIndex(result, coachKey, { season, affiliation, ...(conference ? { conference } : {}) });
-  }
-  return result;
-}
-
 const nflPlayerSeasonsById = buildPlayerIndex(nflPlayerSeasonsJson as ColumnarTable, "NFL");
 const cfbPlayerSeasonsById = buildPlayerIndex(cfbPlayerSeasonsJson as ColumnarTable, "CFB");
-const nflCoachSeasonsByKey = buildCoachIndex(nflCoachSeasonsJson as ColumnarTable, "NFL");
-const cfbCoachSeasonsByKey = buildCoachIndex(cfbCoachSeasonsJson as ColumnarTable, "CFB");
 
 function historicalSchoolFallback(subject: AffiliationSubject) {
   if (subject.league !== "CFB" || !subject.school || subject.startSeason == null || subject.endSeason == null) return [];
@@ -216,12 +173,6 @@ function playerHistory(subject: AffiliationSubject) {
   return historical.length ? finishHistory(subject, historical, false) : null;
 }
 
-function coachHistory(subject: AffiliationSubject) {
-  const sourceRows = (subject.league === "NFL" ? nflCoachSeasonsByKey : cfbCoachSeasonsByKey).get(slug(subject.name)) ?? [];
-  const seasons = sourceRows.filter((row) => withinCareerWindow(subject, row.season));
-  return seasons.length ? finishHistory(subject, seasons) : null;
-}
-
 /**
  * Canonical source-backed career affiliation owner for player/coach questions. Missing/incomplete histories are not
  * negative answers. `complete` owns team/program negatives; `conferenceComplete` separately owns historical CFB
@@ -229,6 +180,6 @@ function coachHistory(subject: AffiliationSubject) {
  */
 export function footballCareerAffiliationHistoryFor(subject: AffiliationSubject): FootballCareerAffiliationHistory | null {
   if (subject.kind === "player-career") return playerHistory(subject);
-  if (subject.kind === "coach") return coachHistory(subject);
+  if (subject.kind === "coach") return footballCoachCareerAffiliationHistoryFor(subject);
   return null;
 }
