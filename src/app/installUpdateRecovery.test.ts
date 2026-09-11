@@ -139,6 +139,23 @@ describe("deployment update recovery", () => {
     expect(navigate).toHaveBeenCalledTimes(1);
   });
 
+  it("preserves the Football Who Am I route during the same automatic recovery", () => {
+    const navigate = vi.fn();
+
+    expect(recoverRouteLoadError({
+      error: new TypeError("Failed to fetch dynamically imported module: /assets/FootballWhoAmIPage-old.js"),
+      href: "https://the.hq-app.workers.dev/football/who-am-i?mode=casual#round",
+      storage: window.sessionStorage,
+      navigate,
+      now: () => 43_000,
+      productionOrigin: PRODUCTION_ORIGIN,
+    })).toBe(true);
+
+    expect(navigate).toHaveBeenCalledWith(
+      "https://the.hq-app.workers.dev/football/who-am-i?mode=casual&hq-update=43000#round",
+    );
+  });
+
   it("does not turn a real route bug into an automatic refresh loop", () => {
     const navigate = vi.fn();
 
