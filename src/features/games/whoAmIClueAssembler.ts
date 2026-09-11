@@ -116,11 +116,11 @@ function defaultRevealPriority(clue: WhoAmIClue, facet: WhoAmIClueFacet) {
 function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIClueFacet {
   const haystack = `${conceptId} ${tags.join(" ")}`.toLowerCase();
 
-  if (/\b(?:nickname|moniker)\b|called-/.test(haystack)) return "nickname";
+  if (/\b(?:nickname|moniker)\b|called-|alter-ego/.test(haystack)) return "nickname";
   if (/\b(?:brothers?|sisters?|fathers?|mothers?|sons?|daughters?|family|mentor|teammates?|friends?|caregiver|relationships?)\b/.test(haystack)) {
     return "relationships";
   }
-  if (/\b(?:style|boxing|kickboxing|jiu|judo|sambo|training|technique|stance|movement|speed|power)\b|\bstrik\w*|\bgrappl\w*|\bwrestl\w*|\bslams?\b/.test(haystack)) {
+  if (/\b(?:style|boxing|kickboxing|jiu|judo|sambo|training|technique|stance|movement|speed|power|versatility)\b|free-lance|freelance|\bstrik\w*|\bgrappl\w*|\bwrestl\w*|\bslams?\b/.test(haystack)) {
     return "style";
   }
   if (/\b(?:production|stats?|games?|starts?|tackles?|sacks?|interceptions?|receptions?|yards?|touchdowns?)\b|forced-fumbles|fumble-recoveries|pass-breakups|career-wins|coaching-record|regular-season-record/.test(haystack)) {
@@ -132,10 +132,10 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
   if (/\b(?:born|birth|childhood|upbringing|hometown|town|farm|migration|immigration|school|college|degree|education|university|amateur)\b|high-school|junior-college/.test(haystack)) {
     return "background";
   }
-  if (/\b(?:job|work|business|acting|media|streaming|military|army|foundation|charity|restaurant|barber|bartending|mine|model)\b|off-field/.test(haystack)) {
+  if (/\b(?:job|work|business|acting|media|streaming|military|army|foundation|charity|restaurant|barber|bartending|mine|model|faith)\b|off-field/.test(haystack)) {
     return "off-field";
   }
-  if (/\b(?:draft|team|promotion|camp|gym|career|route|transfer|retire|retired|retirement|move|ufc|nfl|cfb)\b|career-path|ultimate-fighter/.test(haystack)) {
+  if (/\b(?:draft|team|promotion|camp|gym|career|route|transfer|trade|holdout|retire|retired|retirement|move|ufc|nfl|cfb)\b|career-path|ultimate-fighter/.test(haystack)) {
     return "career-path";
   }
   return "identity";
