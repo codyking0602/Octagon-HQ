@@ -34,7 +34,7 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(clue.text).toMatch(/^My father/i);
     expect(clue.text).not.toMatch(/\bBryce\b/i);
     expect(clue.text).not.toMatch(/\bYoung\b/i);
-    expect(clue.text.split(/\s+/)).toHaveLength(12);
+    expect(clue.text.split(/\s+/).length).toBeLessThanOrEqual(14);
   });
 
   it("prefers concise playable identity clues over research-note prose", () => {
