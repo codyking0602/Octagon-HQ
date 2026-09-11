@@ -36,21 +36,6 @@ function normalize(value: string) {
 }
 
 
-function simulationFacet(clue: WhoAmIClue) {
-  if (clue.facet) return clue.facet;
-  const haystack = `${clue.id} ${clue.text}`.toLowerCase();
-  if (/nickname|called me|known as/.test(haystack)) return "nickname";
-  if (/beat:|lost:|faced:|faced-any|opponent|shared the octagon|defeated |lost to |fought /.test(haystack)) return "relationships";
-  if (/position|division|head coach|role/.test(haystack)) return "role";
-  if (/era|decade|career-span|active-window|debut|coach-start|coach-end/.test(haystack)) return "era";
-  if (/school|college|conference/.test(haystack)) return "background";
-  if (/draft|affiliation|career-path|team/.test(haystack)) return "career-path";
-  if (/knockout|submission|finish-style|ko-wins|submission-wins|strik|grappl|wrestl/.test(haystack)) return "style";
-  if (/title|champion|mvp|heisman|all-pro|player of the year|national championship/.test(haystack)) return "accomplishments";
-  if (/games|yards|touchdowns|receptions|sacks|interceptions|fight-count|win-count|recorded/.test(haystack)) return "production";
-  return "identity";
-}
-
 function sequenceKey(sequence: readonly WhoAmIClue[]) {
   return sequence.map((clue) => clue.id).join("|");
 }
@@ -104,7 +89,7 @@ describe("Who Am I mature whole-game simulation", () => {
 
         const distinctSequences = new Set(sequences.map(sequenceKey)).size;
         const distinctFacetCounts = sequences.map((sequence) => new Set(
-          sequence.map((clue) => simulationFacet(clue)),
+          sequence.map((clue) => whoAmIClueFacet(clue)),
         ).size);
         const identityCounts = sequences.map((sequence) => sequence.filter((clue) => clue.identityKnowledge).length);
         const giveawayCounts = sequences.map((sequence) => sequence.filter((clue) => clue.band === "giveaway").length);
@@ -114,7 +99,7 @@ describe("Who Am I mature whole-game simulation", () => {
         const maxFacetConcentrations = sequences.map((sequence) => {
           const counts = new Map<string, number>();
           for (const clue of sequence) {
-            const facet = simulationFacet(clue);
+            const facet = whoAmIClueFacet(clue);
             counts.set(facet, (counts.get(facet) ?? 0) + 1);
           }
           return Math.max(...counts.values());
@@ -223,7 +208,7 @@ describe("Who Am I mature whole-game simulation", () => {
               clues: universe.candidates.find((candidate) => candidate.id === finding.id)?.clues.map((clue) => ({
                 id: clue.id,
                 band: clue.band,
-                facet: simulationFacet(clue),
+                facet: whoAmIClueFacet(clue),
                 revealPriority: clue.revealPriority ?? null,
                 identityKnowledge: Boolean(clue.identityKnowledge),
                 conceptId: clue.conceptId ?? null,
@@ -239,7 +224,7 @@ describe("Who Am I mature whole-game simulation", () => {
               selected: whoAmIProgressiveClues(
                 universe.candidates.find((candidate) => candidate.id === finding.id)!.clues,
                 seededRandom(1),
-              ).map((clue) => ({ id: clue.id, band: clue.band, facet: simulationFacet(clue), text: clue.text })),
+              ).map((clue) => ({ id: clue.id, band: clue.band, facet: whoAmIClueFacet(clue), text: clue.text })),
             })),
         }),
       );
