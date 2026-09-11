@@ -193,6 +193,22 @@ export const expandedFootballFactSources: readonly FootballFactSource[] = [
     coverage: "Completed Penn State career tackles, starts and All-America résumé",
   },
   {
+    id: "michigan-jake-long-career",
+    publisher: "University of Michigan Athletics",
+    title: "Jake Long career honors",
+    url: "https://mgoblue.com/news/2007/11/29/long_on_afca_all_america_team_for_second_straight_year",
+    reviewedOn: "2026-09-10",
+    coverage: "Completed Michigan career starts and two-year first-team honor résumé",
+  },
+  {
+    id: "chargers-joe-alt-college-career",
+    publisher: "Los Angeles Chargers",
+    title: "Joe Alt college career and draft profile",
+    url: "https://www.chargers.com/news/los-angeles-chargers-sign-joe-alt",
+    reviewedOn: "2026-09-10",
+    coverage: "Completed Notre Dame career games, starts, All-America résumé and draft position",
+  },
+  {
     id: "ole-miss-patrick-willis-career",
     publisher: "Ole Miss Athletics",
     title: "Patrick Willis enshrined in Pro Football Hall of Fame",
