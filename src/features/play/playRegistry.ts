@@ -74,7 +74,7 @@ export interface PlayGameDefinition {
   icon: string;
   title: string;
   description: string;
-  availability?: "preview";
+  availability?: "preview" | "retired";
   lineup: PlayGameLineupDefinition;
 }
 
@@ -132,6 +132,7 @@ export const playGameCatalog = [
     icon: "20?",
     title: "20 Questions",
     description: "Ask up to 10 factual Yes/No questions and identify the hidden UFC fighter before your score runs down.",
+    availability: "retired",
     lineup: {
       defaultType: "replayable",
       supportedTypes: ["replayable"],
@@ -409,6 +410,7 @@ export const playGameCatalog = [
     icon: "20?",
     title: "20 Questions",
     description: "Get NFL or CFB up front, then ask up to 10 factual Yes/No questions and identify the hidden player or head coach.",
+    availability: "retired",
     lineup: {
       defaultType: "replayable",
       supportedTypes: ["replayable"],
@@ -475,11 +477,11 @@ export const playGameCatalog = [
 ] as const satisfies readonly PlayGameDefinition[];
 
 export const playGames: readonly PlayGameDefinition[] = playGameCatalog.filter(
-  (game) => game.sport === "ufc" && (!("availability" in game) || game.availability !== "preview"),
+  (game) => game.sport === "ufc" && !("availability" in game),
 );
 
 export function playGamesForSport(sport: PlaySport): readonly PlayGameDefinition[] {
-  return playGameCatalog.filter((game) => game.sport === sport && (!("availability" in game) || game.availability !== "preview"));
+  return playGameCatalog.filter((game) => game.sport === sport && !("availability" in game));
 }
 
 export function playGameKey(sport: PlaySport, gameId: PlayGameId): PlayGameKey {
