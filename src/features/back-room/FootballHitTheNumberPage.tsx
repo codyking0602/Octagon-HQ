@@ -8,7 +8,6 @@ import {
   FOOTBALL_HIT_THE_NUMBER_GAME_ID,
   createFootballHitTheNumberPlan,
   createFootballHitTheNumberRun,
-  footballHitTheNumberActiveProgressionSlot,
   footballHitTheNumberAvailableProgressionSubjectIds,
   footballHitTheNumberSelectionSatisfies,
   footballHitTheNumberValue,
