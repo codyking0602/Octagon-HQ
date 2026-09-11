@@ -1,6 +1,6 @@
 import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
 import {
-  footballPersonIdentityFactAppliesAcrossStages,
+  footballPersonIdentityFactAppliesToLeague,
   getFootballPersonIdentityKnowledge,
 } from "../back-room/footballPersonIdentityKnowledge";
 import { footballRecognitionEvidenceFor } from "../back-room/footballRecognitionEvidence";
@@ -147,7 +147,7 @@ function footballPersonIdentityClues(subject: FootballSubjectProfile): WhoAmIClu
     if (!knowledge) continue;
     for (const fact of knowledge.facts) {
       const direct = knowledgeSubject.id === subject.id;
-      if (!direct && !footballPersonIdentityFactAppliesAcrossStages(fact)) continue;
+      if (!direct && !footballPersonIdentityFactAppliesToLeague(fact, subject.league, knowledgeSubject.league)) continue;
       if (seenConcepts.has(fact.conceptId)) continue;
       seenConcepts.add(fact.conceptId);
 
