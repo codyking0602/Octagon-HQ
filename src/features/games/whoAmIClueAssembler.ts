@@ -222,9 +222,10 @@ interface PreparedClue {
   facet: WhoAmIClueFacet;
   conceptId: string;
   priority: number;
+  variationRank: number;
 }
 
-function preparedClues(clues: readonly WhoAmIClue[]) {
+function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
   return clues
     .map((clue, index): PreparedClue => ({
       clue,
@@ -232,12 +233,17 @@ function preparedClues(clues: readonly WhoAmIClue[]) {
       facet: inferFacet(clue),
       conceptId: clue.conceptId?.trim() || clue.id,
       priority: defaultRevealPriority(clue, inferFacet(clue)),
+      variationRank: random(),
     }))
     .filter((entry) => entry.clue.text.trim().length > 0);
 }
 
-export function assembleWhoAmIClues(clues: readonly WhoAmIClue[], limit: number) {
-  const prepared = preparedClues(clues);
+export function assembleWhoAmIClues(
+  clues: readonly WhoAmIClue[],
+  limit: number,
+  random: () => number = () => 0.5,
+) {
+  const prepared = preparedClues(clues, random);
   const selected: PreparedClue[] = [];
   const selectedConcepts = new Set<string>();
   const selectedTexts: string[] = [];
@@ -263,6 +269,8 @@ export function assembleWhoAmIClues(clues: readonly WhoAmIClue[], limit: number)
         if (identityDifference !== 0) return identityDifference;
         const priorityDifference = left.priority - right.priority;
         if (priorityDifference !== 0) return priorityDifference;
+        const variationDifference = left.variationRank - right.variationRank;
+        if (variationDifference !== 0) return variationDifference;
         return left.index - right.index;
       });
       const picked = usable[0]!;
