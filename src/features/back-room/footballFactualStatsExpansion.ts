@@ -551,6 +551,271 @@ wr("nfl-steve-largent", 819, 13089, 100),
   nflTeam("2020-jacksonville-jaguars", 1, 15, false),
   nflTeam("2017-cleveland-browns", 0, 16, false),
 
+  // Who Am I football resume-depth enrichment: canonical CFB career production and draft facts.
+  // These are stage-specific college facts; NFL production remains isolated to NFL subjects.
+  cfbPlayer("cfb-aaron-ross", [
+    ["cfb-career-games", 50], ["cfb-career-defensive-interceptions", 10],
+    ["cfb-best-season-defensive-interceptions", 6], ["cfb-nfl-draft-overall-pick", 20],
+  ]),
+  cfbPlayer("cfb-aj-hawk", [
+    ["cfb-career-games", 51], ["cfb-career-defensive-interceptions", 7],
+    ["cfb-best-season-sacks", 9.5], ["cfb-nfl-draft-overall-pick", 5],
+  ]),
+  record("cfb-alex-mack", "cfb-player-career", "cal-alex-mack-hof", [
+    ["cfb-career-starts", 39], ["cfb-all-america-selections", 2],
+    ["cfb-first-team-all-conference-selections", 3], ["cfb-nfl-draft-overall-pick", 21],
+  ]),
+  record("cfb-barrett-jones", "cfb-player-career", "alabama-barrett-jones-career", [
+    ["cfb-career-starts", 50], ["cfb-all-america-selections", 2],
+    ["cfb-national-championships-won", 3], ["cfb-nfl-draft-overall-pick", 113],
+  ]),
+  cfbPlayer("cfb-brandin-cooks", [
+    ["cfb-career-games", 38], ["cfb-career-receptions", 226],
+    ["cfb-career-receiving-yards", 3272], ["cfb-career-receiving-touchdowns", 24],
+    ["cfb-nfl-draft-overall-pick", 20],
+  ]),
+  record("cfb-brandon-scherff", "cfb-player-career", "iowa-brandon-scherff-career", [
+    ["cfb-career-games", 43], ["cfb-career-starts", 36],
+    ["cfb-first-team-all-conference-selections", 2],
+  ]),
+  cfbPlayer("cfb-brandon-scherff", [
+    ["cfb-all-america-selections", 1], ["cfb-nfl-draft-overall-pick", 5],
+  ]),
+  cfbPlayer("cfb-braylon-edwards", [
+    ["cfb-career-games", 44], ["cfb-career-receptions", 252],
+    ["cfb-career-receiving-yards", 3541], ["cfb-career-receiving-touchdowns", 39],
+    ["cfb-nfl-draft-overall-pick", 3],
+  ]),
+  cfbPlayer("cfb-brian-orakpo", [
+    ["cfb-career-games", 47], ["cfb-career-tackles", 103],
+    ["cfb-career-tackles-for-loss", 34.5], ["cfb-career-sacks", 23],
+    ["cfb-best-season-sacks", 11.5], ["cfb-best-season-tackles-for-loss", 17.5],
+    ["cfb-nfl-draft-overall-pick", 13],
+  ]),
+  record("cfb-bryant-mckinnie", "cfb-player-career", "miami-bryant-mckinnie-career", [
+    ["cfb-all-america-selections", 2], ["cfb-first-team-all-conference-selections", 2],
+    ["cfb-national-championships-won", 1],
+  ]),
+  cfbPlayer("cfb-bryant-mckinnie", [["cfb-nfl-draft-overall-pick", 7]]),
+  cfbPlayer("cfb-cedric-benson", [
+    ["cfb-career-games", 49], ["cfb-career-rushing-yards", 5540],
+    ["cfb-career-rushing-touchdowns", 64], ["cfb-nfl-draft-overall-pick", 4],
+  ]),
+  cfbPlayer("cfb-chase-coffman", [
+    ["cfb-career-games", 50], ["cfb-career-receptions", 247],
+    ["cfb-career-receiving-yards", 2659], ["cfb-career-receiving-touchdowns", 30],
+    ["cfb-nfl-draft-overall-pick", 98],
+  ]),
+  cfbPlayer("cfb-cj-mosley", [
+    ["cfb-career-games", 51], ["cfb-career-tackles", 317],
+    ["cfb-career-tackles-for-loss", 23], ["cfb-career-sacks", 6.5],
+    ["cfb-nfl-draft-overall-pick", 17],
+  ]),
+  cfbPlayer("cfb-colt-brennan", [
+    ["cfb-career-games", 38], ["cfb-career-passing-yards", 14193],
+    ["cfb-career-passing-touchdowns", 131], ["cfb-nfl-draft-overall-pick", 186],
+  ]),
+  cfbPlayer("cfb-dallas-clark", [
+    ["cfb-career-games", 24], ["cfb-career-receptions", 77],
+    ["cfb-career-receiving-yards", 1251], ["cfb-career-receiving-touchdowns", 8],
+    ["cfb-nfl-draft-overall-pick", 24],
+  ]),
+  record("cfb-dan-morgan", "cfb-player-career", "miami-dan-morgan-career", [
+    ["cfb-career-starts", 42], ["cfb-career-tackles", 512],
+    ["cfb-all-america-selections", 1],
+  ]),
+  cfbPlayer("cfb-dan-morgan", [["cfb-nfl-draft-overall-pick", 11]]),
+  cfbPlayer("cfb-darqueze-dennard", [
+    ["cfb-career-games", 43], ["cfb-career-defensive-interceptions", 10],
+    ["cfb-best-season-defensive-interceptions", 4], ["cfb-nfl-draft-overall-pick", 24],
+  ]),
+  cfbPlayer("cfb-darren-sproles", [
+    ["cfb-career-games", 45], ["cfb-career-rushing-yards", 4979],
+    ["cfb-career-rushing-touchdowns", 45], ["cfb-nfl-draft-overall-pick", 130],
+  ]),
+  record("cfb-david-decastro", "cfb-player-career", "stanford-david-decastro-career", [
+    ["cfb-career-starts", 39], ["cfb-all-america-selections", 1],
+    ["cfb-first-team-all-conference-selections", 2], ["cfb-nfl-draft-overall-pick", 24],
+  ]),
+  cfbPlayer("cfb-david-pollack", [
+    ["cfb-career-games", 40], ["cfb-career-defensive-interceptions", 4],
+    ["cfb-all-america-selections", 2], ["cfb-nfl-draft-overall-pick", 17],
+  ]),
+  record("cfb-dbrickashaw-ferguson", "cfb-player-career", "virginia-dbrickashaw-ferguson-career", [
+    ["cfb-career-starts", 49], ["cfb-all-america-selections", 1],
+    ["cfb-first-team-all-conference-selections", 2], ["cfb-nfl-draft-overall-pick", 4],
+  ]),
+  cfbPlayer("cfb-deangelo-williams", [
+    ["cfb-career-games", 44], ["cfb-career-rushing-yards", 6026],
+    ["cfb-career-rushing-touchdowns", 55], ["cfb-nfl-draft-overall-pick", 27],
+  ]),
+  cfbPlayer("cfb-dwayne-allen", [
+    ["cfb-career-games", 41], ["cfb-career-receptions", 93],
+    ["cfb-career-receiving-yards", 1079], ["cfb-career-receiving-touchdowns", 12],
+    ["cfb-nfl-draft-overall-pick", 64],
+  ]),
+  cfbPlayer("cfb-dwight-freeney", [
+    ["cfb-career-tackles", 104], ["cfb-career-tackles-for-loss", 50.5],
+    ["cfb-career-sacks", 34], ["cfb-nfl-draft-overall-pick", 11],
+  ]),
+  cfbPlayer("cfb-earl-thomas", [
+    ["cfb-career-games", 27], ["cfb-career-defensive-interceptions", 10],
+    ["cfb-best-season-defensive-interceptions", 8], ["cfb-nfl-draft-overall-pick", 14],
+  ]),
+  cfbPlayer("cfb-eric-weddle", [
+    ["cfb-career-games", 48], ["cfb-career-defensive-interceptions", 18],
+    ["cfb-best-season-defensive-interceptions", 7], ["cfb-nfl-draft-overall-pick", 37],
+  ]),
+  cfbPlayer("cfb-gerald-mccoy", [
+    ["cfb-career-games", 40], ["cfb-career-sacks", 14.5],
+    ["cfb-best-season-sacks", 6.5], ["cfb-nfl-draft-overall-pick", 3],
+  ]),
+  cfbPlayer("cfb-glenn-dorsey", [
+    ["cfb-career-games", 40], ["cfb-career-sacks", 13],
+    ["cfb-best-season-sacks", 7], ["cfb-nfl-draft-overall-pick", 5],
+  ]),
+  record("cfb-haloti-ngata", "cfb-player-career", "oregon-haloti-ngata-career", [
+    ["cfb-career-games", 35], ["cfb-career-tackles", 151],
+    ["cfb-career-tackles-for-loss", 24.5], ["cfb-career-sacks", 10],
+  ]),
+  cfbPlayer("cfb-haloti-ngata", [["cfb-nfl-draft-overall-pick", 12]]),
+  cfbPlayer("cfb-heath-miller", [
+    ["cfb-career-games", 39], ["cfb-career-receptions", 144],
+    ["cfb-career-receiving-yards", 1703], ["cfb-career-receiving-touchdowns", 20],
+    ["cfb-nfl-draft-overall-pick", 30],
+  ]),
+  record("cfb-jake-long", "cfb-player-career", "michigan-jake-long-career", [
+    ["cfb-career-starts", 40], ["cfb-all-america-selections", 2],
+    ["cfb-first-team-all-conference-selections", 2],
+  ]),
+  cfbPlayer("cfb-jake-long", [["cfb-nfl-draft-overall-pick", 1]]),
+  cfbPlayer("cfb-jamaal-charles", [
+    ["cfb-career-games", 38], ["cfb-career-rushing-yards", 3328],
+    ["cfb-career-rushing-touchdowns", 36], ["cfb-nfl-draft-overall-pick", 73],
+  ]),
+  cfbPlayer("cfb-james-laurinaitis", [
+    ["cfb-career-games", 51], ["cfb-career-defensive-interceptions", 9],
+    ["cfb-career-sacks", 13], ["cfb-nfl-draft-overall-pick", 35],
+  ]),
+  cfbPlayer("cfb-jaylon-smith", [
+    ["cfb-career-games", 38], ["cfb-career-defensive-interceptions", 1],
+    ["cfb-career-sacks", 4.5], ["cfb-nfl-draft-overall-pick", 34],
+  ]),
+  record("cfb-jeff-okudah", "cfb-player-career", "ohio-state-jeff-okudah-career", [
+    ["cfb-career-games", 41], ["cfb-career-starts", 15], ["cfb-career-tackles", 88],
+    ["cfb-career-pass-breakups", 18],
+  ]),
+  cfbPlayer("cfb-jeff-okudah", [["cfb-nfl-draft-overall-pick", 3]]),
+  cfbPlayer("cfb-jeremy-shockey", [
+    ["cfb-career-games", 21], ["cfb-career-receptions", 61],
+    ["cfb-career-receiving-yards", 815], ["cfb-career-receiving-touchdowns", 10],
+    ["cfb-nfl-draft-overall-pick", 14],
+  ]),
+  cfbPlayer("cfb-jermaine-gresham", [
+    ["cfb-career-games", 41], ["cfb-career-receptions", 111],
+    ["cfb-career-receiving-yards", 1629], ["cfb-career-receiving-touchdowns", 26],
+    ["cfb-nfl-draft-overall-pick", 21],
+  ]),
+  record("cfb-joe-alt", "cfb-player-career", "chargers-joe-alt-college-career", [
+    ["cfb-career-games", 38], ["cfb-career-starts", 33],
+    ["cfb-all-america-selections", 2], ["cfb-nfl-draft-overall-pick", 5],
+  ]),
+  cfbPlayer("cfb-jordan-shipley", [
+    ["cfb-career-games", 53], ["cfb-career-receptions", 248],
+    ["cfb-career-receiving-yards", 3191], ["cfb-career-receiving-touchdowns", 33],
+    ["cfb-nfl-draft-overall-pick", 84],
+  ]),
+  cfbPlayer("cfb-julius-peppers", [
+    ["cfb-career-games", 34], ["cfb-career-defensive-interceptions", 5],
+    ["cfb-best-season-defensive-interceptions", 3], ["cfb-nfl-draft-overall-pick", 2],
+  ]),
+  cfbPlayer("cfb-justin-blackmon", [
+    ["cfb-career-games", 38], ["cfb-career-receptions", 253],
+    ["cfb-career-receiving-yards", 3564], ["cfb-career-receiving-touchdowns", 40],
+    ["cfb-nfl-draft-overall-pick", 5],
+  ]),
+  cfbPlayer("cfb-kellen-winslow-ii", [
+    ["cfb-career-games", 36], ["cfb-career-receptions", 119],
+    ["cfb-career-receiving-yards", 1365], ["cfb-career-receiving-touchdowns", 9],
+    ["cfb-nfl-draft-overall-pick", 6],
+  ]),
+  cfbPlayer("cfb-khalil-mack", [
+    ["cfb-career-games", 48], ["cfb-career-tackles", 327],
+    ["cfb-career-tackles-for-loss", 74.5], ["cfb-career-sacks", 28.5],
+    ["cfb-nfl-draft-overall-pick", 5],
+  ]),
+  cfbPlayer("cfb-lamichael-james", [
+    ["cfb-career-games", 37], ["cfb-career-rushing-yards", 5082],
+    ["cfb-career-rushing-touchdowns", 53], ["cfb-nfl-draft-overall-pick", 61],
+  ]),
+  record("cfb-luke-kuechly", "cfb-player-career", "cfb-hall-luke-kuechly-career", [
+    ["cfb-career-games", 38], ["cfb-career-tackles", 532],
+    ["cfb-career-defensive-interceptions", 7], ["cfb-nfl-draft-overall-pick", 9],
+  ]),
+  cfbPlayer("cfb-malcolm-jenkins", [
+    ["cfb-career-games", 50], ["cfb-career-defensive-interceptions", 11],
+    ["cfb-best-season-defensive-interceptions", 4], ["cfb-nfl-draft-overall-pick", 14],
+  ]),
+  cfbPlayer("cfb-manti-teo", [
+    ["cfb-career-games", 51], ["cfb-career-tackles", 437],
+    ["cfb-career-tackles-for-loss", 34], ["cfb-career-sacks", 8.5],
+    ["cfb-nfl-draft-overall-pick", 38],
+  ]),
+  cfbPlayer("cfb-marqise-lee", [
+    ["cfb-career-games", 36], ["cfb-career-receptions", 248],
+    ["cfb-career-receiving-yards", 3655], ["cfb-career-receiving-touchdowns", 29],
+    ["cfb-nfl-draft-overall-pick", 39],
+  ]),
+  cfbPlayer("cfb-michael-huff", [
+    ["cfb-career-games", 51], ["cfb-career-defensive-interceptions", 7],
+    ["cfb-best-season-defensive-interceptions", 2], ["cfb-nfl-draft-overall-pick", 7],
+  ]),
+  cfbPlayer("cfb-morris-claiborne", [
+    ["cfb-career-games", 33], ["cfb-career-tackles", 95],
+    ["cfb-career-defensive-interceptions", 11], ["cfb-nfl-draft-overall-pick", 6],
+  ]),
+  record("cfb-patrick-willis", "cfb-player-career", "ole-miss-patrick-willis-career", [
+    ["cfb-career-tackles", 355], ["cfb-career-tackles-for-loss", 33],
+    ["cfb-all-america-selections", 2], ["cfb-nfl-draft-overall-pick", 11],
+  ]),
+  record("cfb-paul-posluszny", "cfb-player-career", "penn-state-paul-posluszny-career", [
+    ["cfb-career-starts", 37], ["cfb-career-tackles", 372],
+    ["cfb-all-america-selections", 2], ["cfb-nfl-draft-overall-pick", 34],
+  ]),
+  cfbPlayer("cfb-peter-warrick", [
+    ["cfb-career-games", 54], ["cfb-career-receptions", 207],
+    ["cfb-career-receiving-yards", 3517], ["cfb-career-receiving-touchdowns", 32],
+    ["cfb-nfl-draft-overall-pick", 4],
+  ]),
+  cfbPlayer("cfb-rolando-mcclain", [
+    ["cfb-career-games", 41], ["cfb-career-tackles", 274],
+    ["cfb-career-tackles-for-loss", 31.5], ["cfb-career-sacks", 8],
+    ["cfb-nfl-draft-overall-pick", 8],
+  ]),
+  cfbPlayer("cfb-ryan-broyles", [
+    ["cfb-career-games", 48], ["cfb-career-receptions", 349],
+    ["cfb-career-receiving-yards", 4586], ["cfb-career-receiving-touchdowns", 45],
+    ["cfb-nfl-draft-overall-pick", 54],
+  ]),
+  cfbPlayer("cfb-sammy-watkins", [
+    ["cfb-career-games", 36], ["cfb-career-receptions", 240],
+    ["cfb-career-receiving-yards", 3391], ["cfb-career-receiving-touchdowns", 27],
+    ["cfb-nfl-draft-overall-pick", 4],
+  ]),
+  cfbPlayer("cfb-sean-taylor", [
+    ["cfb-career-games", 25], ["cfb-career-defensive-interceptions", 14],
+    ["cfb-best-season-defensive-interceptions", 10], ["cfb-nfl-draft-overall-pick", 5],
+  ]),
+  cfbPlayer("cfb-tyrann-mathieu", [
+    ["cfb-career-games", 26], ["cfb-career-defensive-interceptions", 4],
+    ["cfb-career-forced-fumbles", 11], ["cfb-nfl-draft-overall-pick", 69],
+  ]),
+  cfbPlayer("cfb-von-miller", [
+    ["cfb-career-games", 47], ["cfb-career-tackles", 181],
+    ["cfb-career-tackles-for-loss", 50.5], ["cfb-career-sacks", 33],
+    ["cfb-nfl-draft-overall-pick", 2],
+  ]),
+
   // CFB player identities own objective best-season facts. Gameplay can only surface canonical CFB subjects,
   // so deeper numerical coverage does not admit obscure database-only players into casual boards.
   cfbPlayer("cfb-cam-newton", [
