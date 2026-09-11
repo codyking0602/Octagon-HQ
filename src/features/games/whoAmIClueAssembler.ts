@@ -66,7 +66,7 @@ function effectivelyRepeated(left: string, right: string) {
   return overlap / Math.min(leftTokens.size, rightTokens.size) >= 0.85;
 }
 
-function inferFacet(clue: WhoAmIClue): WhoAmIClueFacet {
+export function whoAmIClueFacet(clue: WhoAmIClue): WhoAmIClueFacet {
   if (clue.facet) return clue.facet;
   const haystack = `${clue.id} ${clue.text}`.toLowerCase();
   if (/nickname|called me|known as/.test(haystack)) return "nickname";
@@ -230,9 +230,9 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
     .map((clue, index): PreparedClue => ({
       clue,
       index,
-      facet: inferFacet(clue),
+      facet: whoAmIClueFacet(clue),
       conceptId: clue.conceptId?.trim() || clue.id,
-      priority: defaultRevealPriority(clue, inferFacet(clue)),
+      priority: defaultRevealPriority(clue, whoAmIClueFacet(clue)),
       variationRank: random(),
     }))
     .filter((entry) => entry.clue.text.trim().length > 0);
