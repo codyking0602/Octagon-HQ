@@ -493,10 +493,16 @@ export function assembleWhoAmIClues(
         if (facetDifference !== 0) return facetDifference;
         const priorityDifference = left.priority - right.priority;
         if (Math.abs(priorityDifference) >= 10) return priorityDifference;
-        const variationDifference = left.variationRank - right.variationRank;
-        if (variationDifference !== 0) return variationDifference;
         const identityDifference = Number(Boolean(right.clue.identityKnowledge)) - Number(Boolean(left.clue.identityKnowledge));
-        if (identityDifference !== 0) return identityDifference;
+        if (left.facet === right.facet) {
+          const variationDifference = left.variationRank - right.variationRank;
+          if (variationDifference !== 0) return variationDifference;
+          if (identityDifference !== 0) return identityDifference;
+        } else {
+          if (identityDifference !== 0) return identityDifference;
+          const variationDifference = left.variationRank - right.variationRank;
+          if (variationDifference !== 0) return variationDifference;
+        }
         if (priorityDifference !== 0) return priorityDifference;
         return left.index - right.index;
       });
