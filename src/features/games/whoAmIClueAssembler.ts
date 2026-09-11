@@ -317,7 +317,7 @@ function anonymizeIdentityValue(
 
   for (const term of terms) {
     const escaped = escapeRegExp(term);
-    text = text.replace(new RegExp(`${escaped}(?:'s|’s)`, "gi"), `this ${label}'s`);
+    text = text.replace(new RegExp(`${escaped}(?:'s|’s|['’])`, "gi"), `this ${label}'s`);
     text = text.replace(new RegExp(`\\b${escaped}\\b`, "gi"), `this ${label}`);
   }
 
