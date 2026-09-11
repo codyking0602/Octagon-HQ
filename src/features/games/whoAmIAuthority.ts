@@ -506,19 +506,52 @@ function footballMetricBand(metricId: FootballFactMetricId): WhoAmIClueBand {
   return "strong";
 }
 
+function footballWhoAmIPlayerMetricMatchesRole(
+  subject: FootballSubjectProfile,
+  metricId: FootballFactMetricId,
+) {
+  if (subject.kind !== "player-career") return true;
+
+  // Awards and résumé anchors are role-agnostic and should always stay eligible.
+  if (
+    /(?:pro-bowl|all-pro|mvp|player-of-year|super-bowl|all-america|all-conference|draft-overall-pick|national-championships|heisman)/.test(metricId)
+  ) return true;
+
+  // Generic participation/volume columns are factual but poor identity clues.
+  if (/(?:nfl|cfb)-career-(?:games|starts|targets)$/.test(metricId)) return false;
+
+  const position = subject.position;
+  if (!position) return true;
+
+  const passing = /(?:passing|passer|interceptions-thrown)/.test(metricId);
+  const rushing = /rushing/.test(metricId);
+  const receiving = /(?:receptions|receiving)/.test(metricId);
+  const scrimmage = /scrimmage|total-touchdowns/.test(metricId);
+  const tackling = /(?:solo-tackles|tackles-for-loss|career-tackles|best-season-tackles-for-loss)/.test(metricId);
+  const sacks = /sacks/.test(metricId);
+  const coverage = /(?:defensive-interceptions|passes-defended|pass-breakups)/.test(metricId);
+  const takeaways = /(?:forced-fumbles|fumble-recoveries)/.test(metricId);
+  const kicking = /field-goal/.test(metricId);
+  const punting = /punts|punting/.test(metricId);
+
+  switch (position) {
+    case "QB": return passing || rushing || scrimmage;
+    case "RB": return rushing || scrimmage;
+    case "WR":
+    case "TE": return receiving || scrimmage;
+    case "OL": return false;
+    case "DL": return tackling || sacks || takeaways;
+    case "LB": return tackling || sacks || coverage || takeaways;
+    case "DB": return tackling || coverage || takeaways;
+    case "K": return kicking;
+    case "P": return punting;
+  }
+}
+
 export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfile, fact: FootballFactValue) {
   const value = Number(fact.value);
   if (!Number.isFinite(value)) return false;
-  if (
-    subject.league === "CFB"
-    && subject.kind === "player-career"
-    && subject.startSeason != null
-    && subject.endSeason != null
-  ) {
-    const observedSeasons = Math.max(1, subject.endSeason - subject.startSeason + 1);
-    if (fact.metricId === "cfb-career-games" && value < observedSeasons * 3) return false;
-    if (fact.metricId === "cfb-career-starts" && value < observedSeasons * 2) return false;
-  }
+  if (!footballWhoAmIPlayerMetricMatchesRole(subject, fact.metricId)) return false;
   return true;
 }
 
