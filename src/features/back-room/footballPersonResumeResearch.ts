@@ -351,124 +351,152 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
       f("all-nfl-selections", "I earned four All-NFL selections.", ["playing-career", "award"]),
       f("1962-touchdown-record", "I set an NFL single-season record with 33 touchdown passes in 1962.", ["playing-career", "production"]),
       f("1963-touchdown-record", "I broke my own record a year later with 36 touchdown passes.", ["playing-career", "production"]),
-      f("three-giants-division-titles", "I led the Giants to division titles in 1961, 1962 and 1963.", ["playing-career", "championship"])
+      f("three-giants-division-titles", "I led the Giants to division titles in 1961, 1962 and 1963.", ["playing-career", "championship"]),
+      f("nfl-mvp-1961", "I was named the NFL's Most Valuable Player in 1961.", ["playing-career","award"])
     ]),
   r("dick-butkus", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dick-butkus", [
       f("career-games", "I played 119 NFL games.", ["playing-career", "production"]),
       f("career-interceptions", "I intercepted 22 passes during my NFL career.", ["playing-career", "production"]),
-      f("career-fumble-recoveries", "I recovered 27 fumbles during my NFL career.", ["playing-career", "production"])
+      f("career-fumble-recoveries", "I recovered 27 fumbles during my NFL career.", ["playing-career", "production"]),
+      f("eight-pro-bowls", "I was selected to eight straight Pro Bowls from 1966 through 1973.", ["playing-career","award"])
     ]),
   r("nfl-andre-tippett", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/andre-tippett", [
       f("career-games", "I played 151 NFL games.", ["playing-career", "production"]),
       f("career-sacks", "I finished my NFL career with 100 sacks.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"]),
+      f("afc-defensive-player-of-year-1985", "I was named AFC Defensive Player of the Year in 1985.", ["playing-career","award"])
     ]),
   r("nfl-bobby-bell", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/bobby-bell", [
       f("career-games", "I played 168 professional games.", ["playing-career", "production"]),
       f("career-interceptions", "I intercepted 26 passes during my pro career.", ["playing-career", "production"]),
-      f("career-touchdowns", "I scored nine touchdowns during my pro career.", ["playing-career", "production"])
+      f("career-touchdowns", "I scored nine touchdowns during my pro career.", ["playing-career", "production"]),
+      f("super-bowl-iv-title", "I helped Kansas City win Super Bowl IV.", ["playing-career","championship"])
     ]),
   r("nfl-chris-hanburger", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chris-hanburger", [
       f("career-games", "I played 187 NFL games.", ["playing-career", "production"]),
       f("career-interceptions", "I intercepted 19 passes during my NFL career.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to nine Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to nine Pro Bowls.", ["playing-career", "award"]),
+      f("four-first-team-all-pro", "I earned first-team All-Pro honors four times.", ["playing-career","award"])
     ]),
   r("nfl-chuck-howley", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chuck-howley", [
       f("career-games", "I played 180 regular-season NFL games.", ["playing-career", "production"]),
       f("career-interceptions", "I intercepted 25 passes during my NFL career.", ["playing-career", "production"]),
-      f("super-bowl-mvp", "I was named the MVP of Super Bowl V despite my team losing the game.", ["playing-career", "award"])
+      f("super-bowl-mvp", "I was named the MVP of Super Bowl V despite my team losing the game.", ["playing-career", "award"]),
+      f("five-all-nfl-selections", "I earned first-team All-NFL honors five times.", ["playing-career","award"])
     ]),
   r("nfl-dave-robinson", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dave-robinson", [
       f("career-games", "I played 155 regular-season NFL games.", ["playing-career", "production"]),
       f("career-interceptions", "I intercepted 27 passes during my NFL career.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to three Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to three Pro Bowls.", ["playing-career", "award"]),
+      f("two-super-bowl-titles", "I won two Super Bowl championships with Green Bay.", ["playing-career","championship"])
     ]),
   r("nfl-dave-wilcox", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dave-wilcox", [
       f("career-games", "I played 153 NFL games.", ["playing-career", "production"]),
       f("career-interceptions", "I intercepted 14 passes during my NFL career.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to seven Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to seven Pro Bowls.", ["playing-career", "award"]),
+      f("five-all-nfl-selections", "I earned All-NFL honors five times.", ["playing-career","award"])
     ]),
   r("nfl-harry-carson", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/harry-carson", [
       f("career-games", "I played 173 NFL games.", ["playing-career", "production"]),
       f("career-interceptions", "I intercepted 11 passes during my NFL career.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to nine Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to nine Pro Bowls.", ["playing-career", "award"]),
+      f("super-bowl-xxi-title", "I helped the Giants win Super Bowl XXI.", ["playing-career","championship"])
     ]),
   r("nfl-sam-huff", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/sam-huff", [
       f("career-interceptions", "I intercepted 30 passes during my NFL career.", ["playing-career", "production"]),
       f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"]),
-      f("nfl-title-games", "I played in six NFL championship games.", ["playing-career", "championship"])
+      f("nfl-title-games", "I played in six NFL championship games.", ["playing-career", "championship"]),
+      f("two-all-pro-selections", "I earned first-team All-Pro honors twice.", ["playing-career","award"])
     ]),
   r("nfl-alex-karras", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/alex-karras", [
       f("career-games", "I played 161 NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to four Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to four Pro Bowls.", ["playing-career", "award"]),
+      f("four-first-team-all-pro", "I earned first-team All-Pro honors four times.", ["playing-career","award"])
     ]),
   r("nfl-bob-lilly", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/bob-lilly", [
       f("career-games", "I played 196 consecutive regular-season games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to 11 Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to 11 Pro Bowls.", ["playing-career", "award"]),
+      f("seven-first-team-all-pro-seasons", "I earned first-team All-Pro honors in seven seasons.", ["playing-career","award"])
     ]),
   r("nfl-carl-eller", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/carl-eller", [
       f("career-games", "I played 225 regular-season NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"]),
+      f("george-halas-award-1971", "I won the George Halas Award as the NFL's leading defensive player in 1971.", ["playing-career","award"])
     ]),
   r("nfl-charles-haley", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/charles-haley", [
       f("super-bowl-rings", "I became the first player in NFL history to win five Super Bowls.", ["playing-career", "award"]),
-      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"]),
+      f("two-nfc-defensive-player-of-year-awards", "I was named NFC Defensive Player of the Year twice.", ["playing-career","award"])
     ]),
   r("nfl-chris-doleman", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chris-doleman", [
       f("career-games", "I played 232 NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"]),
+      f("three-first-team-all-pro", "I earned first-team All-Pro honors three times.", ["playing-career","award"])
     ]),
   r("nfl-claude-humphrey", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/claude-humphrey", [
       f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"]),
-      f("all-nfl-selections", "I earned five All-NFL selections.", ["playing-career", "award"])
+      f("all-nfl-selections", "I earned five All-NFL selections.", ["playing-career", "award"]),
+      f("defensive-rookie-of-year", "I was named NFL Defensive Rookie of the Year.", ["playing-career","award"])
     ]),
   r("nfl-cliff-harris", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/cliff-harris", [
       f("career-games", "I played 141 NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"]),
+      f("six-all-pro-all-nfc-selections", "I earned first- or second-team All-Pro or All-NFC honors six times.", ["playing-career","award"])
     ]),
   r("nfl-cortez-kennedy", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/cortez-kennedy", [
       f("career-games", "I played 167 NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"]),
+      f("defensive-player-of-year-1992", "I was the AP NFL Defensive Player of the Year in 1992.", ["playing-career","award"])
     ]),
   r("nfl-curley-culp", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/curley-culp", [
       f("career-games", "I played 179 NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to six Pro Bowls or AFL All-Star games.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to six Pro Bowls or AFL All-Star games.", ["playing-career", "award"]),
+      f("first-team-all-pro-1975", "I earned first-team All-Pro honors in 1975.", ["playing-career","award"])
     ]),
   r("nfl-dan-hampton", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dan-hampton", [
       f("pro-bowls", "I was selected to four Pro Bowls.", ["playing-career", "award"]),
-      f("all-pro-selections", "I earned six first- or second-team All-Pro selections.", ["playing-career", "award"])
+      f("all-pro-selections", "I earned six first- or second-team All-Pro selections.", ["playing-career", "award"]),
+      f("super-bowl-xx-title", "I helped Chicago win Super Bowl XX.", ["playing-career","championship"])
     ]),
   r("nfl-darrell-green", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/darrell-green", [
       f("career-games", "I played 295 regular-season NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to seven Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to seven Pro Bowls.", ["playing-career", "award"]),
+      f("two-super-bowl-titles", "I won two Super Bowl championships with Washington.", ["playing-career","championship"])
     ]),
   r("nfl-dick-lebeau", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dick-lebeau", [
       f("career-games", "I played 185 NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to three consecutive Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to three consecutive Pro Bowls.", ["playing-career", "award"]),
+      f("fourteen-nfl-seasons", "I played 14 seasons in the NFL.", ["playing-career","production"])
     ]),
   r("nfl-donnie-shell", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/donnie-shell", [
       f("career-games", "I played 201 NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"]),
+      f("five-all-pro-selections", "I earned first- or second-team All-Pro honors five times.", ["playing-career","award"])
     ]),
   r("nfl-elvin-bethea", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/elvin-bethea", [
       f("career-games", "I played 210 NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"]),
+      f("six-all-afl-afc-selections", "I earned first- or second-team All-AFL or All-AFC honors six times.", ["playing-career","award"])
     ]),
   r("nfl-emmitt-thomas", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/emmitt-thomas", [
       f("career-games", "I played 181 NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"]),
+      f("super-bowl-iv-title", "I helped Kansas City win Super Bowl IV.", ["playing-career","championship"])
     ]),
   r("nfl-eric-allen", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/eric-allen", [
       f("career-games", "I played 217 regular-season NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"]),
+      f("upi-defensive-player-of-year-1993", "I was named UPI's NFC Defensive Player of the Year in 1993.", ["playing-career","award"])
     ]),
   r("nfl-fred-dean", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/fred-dean", [
       f("career-games", "I played 141 regular-season NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to four Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to four Pro Bowls.", ["playing-career", "award"]),
+      f("two-super-bowl-titles", "I won two Super Bowl championships with San Francisco.", ["playing-career","championship"])
     ]),
   r("ozzie-newsome", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/ozzie-newsome", [
       f("career-games", "I played 198 consecutive NFL games.", ["playing-career", "production"]),
-      f("pro-bowls", "I was selected to three Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to three Pro Bowls.", ["playing-career", "award"]),
+      f("two-all-pro-seasons", "I earned All-Pro honors in 1979 and 1984.", ["playing-career","award"])
     ]),
   r("bear-bryant", "Alabama Athletics", "https://rolltide.com/news/2008/11/7/National_College_Football_Day", [
       f("career-wins", "I won 323 games during my college head-coaching career.", ["college", "coaching", "production"])
@@ -500,61 +528,80 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
       f("ohio-state-wins", "I won 205 games as Ohio State's head coach.", ["college", "coaching", "production"])
     ]),
   r("chuck-noll", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chuck-noll", [
-      f("career-coaching-wins", "I won 209 games as an NFL head coach.", ["playing-career", "coaching", "production"])
+      f("career-coaching-wins", "I won 209 games as an NFL head coach.", ["playing-career", "coaching", "production"]),
+      f("four-super-bowl-titles", "I won four Super Bowl championships as Pittsburgh's head coach.", ["playing-career","coaching","championship"])
     ]),
   r("don-shula", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/don-shula", [
-      f("career-coaching-wins", "I retired with 347 career victories as an NFL head coach.", ["playing-career", "coaching", "production"])
+      f("career-coaching-wins", "I retired with 347 career victories as an NFL head coach.", ["playing-career", "coaching", "production"]),
+      f("perfect-season-1972", "I coached the 1972 Dolphins to the NFL's only perfect season.", ["playing-career","coaching","championship"])
     ]),
   r("lawrence-taylor", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/lawrence-taylor", [
-      f("pro-bowls", "I was selected to 10 Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to 10 Pro Bowls.", ["playing-career", "award"]),
+      f("nfl-mvp-1986", "I was named NFL Most Valuable Player in 1986.", ["playing-career","award"])
     ]),
   r("nfl-anthony-munoz", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/anthony-munoz", [
-      f("consecutive-pro-bowls", "I was selected to 11 consecutive Pro Bowls.", ["playing-career", "award"])
+      f("consecutive-pro-bowls", "I was selected to 11 consecutive Pro Bowls.", ["playing-career", "award"]),
+      f("eleven-consecutive-all-pro-selections", "I earned All-Pro honors in 11 consecutive seasons.", ["playing-career","award"])
     ]),
   r("nfl-bud-grant", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/bud-grant", [
-      f("career-coaching-wins", "I won 168 games as a professional head coach.", ["playing-career", "coaching", "production"])
+      f("career-coaching-wins", "I won 168 games as a professional head coach.", ["playing-career", "coaching", "production"]),
+      f("four-super-bowl-appearances", "I coached Minnesota to four Super Bowl appearances.", ["playing-career","coaching","championship"])
     ]),
   r("nfl-chuck-bednarik", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chuck-bednarik", [
-      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"]),
+      f("nine-all-nfl-selections", "I earned All-NFL honors nine times.", ["playing-career","award"])
     ]),
   r("nfl-derrick-thomas", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/derrick-thomas", [
-      f("pro-bowls", "I was selected to nine straight Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to nine straight Pro Bowls.", ["playing-career", "award"]),
+      f("three-all-pro-selections", "I earned All-Pro recognition three times.", ["playing-career","award"])
     ]),
   r("nfl-don-coryell", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/don-coryell", [
-      f("career-coaching-wins", "I won 114 games as an NFL head coach.", ["playing-career", "coaching", "production"])
+      f("career-coaching-wins", "I won 114 games as an NFL head coach.", ["playing-career", "coaching", "production"]),
+      f("nfl-coach-of-year-1974", "I was named NFL Coach of the Year in 1974.", ["playing-career","coaching","award"])
     ]),
   r("nfl-earl-curly-lambeau", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/earl-curly-lambeau", [
-      f("career-coaching-wins", "I won 229 games as a professional head coach.", ["playing-career", "coaching", "production"])
+      f("career-coaching-wins", "I won 229 games as a professional head coach.", ["playing-career", "coaching", "production"]),
+      f("six-nfl-titles", "I coached Green Bay to six NFL championships.", ["playing-career","coaching","championship"])
     ]),
   r("nfl-george-allen", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/george-allen", [
-      f("regular-season-wins", "I won 116 regular-season games as an NFL head coach.", ["playing-career", "coaching", "production"])
+      f("regular-season-wins", "I won 116 regular-season games as an NFL head coach.", ["playing-career", "coaching", "production"]),
+      f("nfl-coach-of-year-1967", "I was named NFL Coach of the Year in 1967.", ["playing-career","coaching","award"])
     ]),
   r("nfl-george-halas", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/george-halas", [
-      f("career-coaching-wins", "I won 324 games as a professional head coach.", ["playing-career", "coaching", "production"])
+      f("career-coaching-wins", "I won 324 games as a professional head coach.", ["playing-career", "coaching", "production"]),
+      f("six-nfl-titles", "I won six NFL championships as Chicago's head coach.", ["playing-career","coaching","championship"])
     ]),
   r("nfl-john-madden", "Pro Football Hall of Fame", "https://www.profootballhof.com/news/one-man-three-hall-worthy-careers-john-madden-1936-2021", [
-      f("regular-season-record", "My NFL regular-season coaching record was 103-32-7.", ["playing-career", "coaching", "production"])
+      f("regular-season-record", "My NFL regular-season coaching record was 103-32-7.", ["playing-career", "coaching", "production"]),
+      f("super-bowl-xi-title", "I coached Oakland to victory in Super Bowl XI.", ["playing-career","coaching","championship"])
     ]),
   r("nfl-kevin-mawae", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/kevin-mawae", [
-      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"]),
+      f("sixteen-nfl-seasons", "I played 16 seasons in the NFL.", ["playing-career","production"])
     ]),
   r("nfl-steve-hutchinson", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/steve-hutchinson", [
-      f("pro-bowls", "I was selected to seven consecutive Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to seven consecutive Pro Bowls.", ["playing-career", "award"]),
+      f("six-first-team-all-pro", "I earned first-team All-Pro honors six times.", ["playing-career","award"])
     ]),
   r("nfl-trent-williams", "San Francisco 49ers", "https://www.49ers.com/news/kittle-mccaffrey-juszczyk-williams-gifford-weeks-moore-selected-to-2026-pro-bowl-games", [
-      f("pro-bowls", "I earned my 12th career Pro Bowl selection for the 2025 season.", ["playing-career", "award"])
+      f("pro-bowls", "I earned my 12th career Pro Bowl selection for the 2025 season.", ["playing-career", "award"]),
+      f("fourth-ol-twelve-pro-bowls", "I became the fourth offensive lineman in NFL history with at least 12 Pro Bowl selections.", ["playing-career","award"])
     ]),
   r("nfl-tyron-smith", "Dallas Cowboys", "https://www.dallascowboys.com/news/8-time-pro-bowl-left-tackle-tyron-smith-to-retire-with-cowboys", [
-      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"]),
+      f("two-first-team-all-pro", "I was a two-time AP first-team All-Pro.", ["playing-career","award"])
     ]),
   r("paul-brown", "Pro Football Hall of Fame", "https://www.profootballhof.com/news/statue-of-hall-of-famer-paul-brown-unveiled-in-ohio-hometown", [
-      f("career-coaching-wins", "I won 213 games as a professional head coach.", ["playing-career", "coaching", "production"])
+      f("career-coaching-wins", "I won 213 games as a professional head coach.", ["playing-career", "coaching", "production"]),
+      f("eight-league-championships", "I won eight league championships during 25 seasons as a professional head coach.", ["playing-career","coaching","championship"])
     ]),
   r("tom-landry", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/tom-landry", [
-      f("career-coaching-wins", "I won 270 games as an NFL head coach.", ["playing-career", "coaching", "production"])
+      f("career-coaching-wins", "I won 270 games as an NFL head coach.", ["playing-career", "coaching", "production"]),
+      f("two-super-bowl-titles", "I coached Dallas to two Super Bowl championships.", ["playing-career","coaching","championship"])
     ]),
   r("vince-lombardi", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/vince-lombardi", [
-      f("career-coaching-record", "My professional head-coaching record was 105-35-6.", ["playing-career", "coaching", "production"])
+      f("career-coaching-record", "My professional head-coaching record was 105-35-6.", ["playing-career", "coaching", "production"]),
+      f("five-nfl-titles", "I coached Green Bay to five NFL championships.", ["playing-career","coaching","championship"])
     ]),
   r("bill-snyder-cfb", "Kansas State Athletics", "https://www.kstatesports.com/news/2018/12/2/football-bill-snyder-announces-retirement-from-kansas-state", [
       f("conference-titles", "I won two conference championships as Kansas State's head coach.", ["college","coaching","championship"])
@@ -600,5 +647,122 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
     ]),
   r("pete-carroll-cfb", "USC Athletics", "https://usctrojans.com/news/2010/1/11/Pete_Carroll_Named_Head_Coach_Of_Seattle_Seahawks", [
       f("national-championships", "I led USC to national championships in 2003 and 2004.", ["college","coaching","championship"])
+    ]),
+  r("joe-greene", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 10 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("john-mackey", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 5 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("mike-ditka", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 5 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-alan-faneca", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 9 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-alan-page", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 9 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-art-monk", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 3 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-bart-starr", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 4 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-bob-hayes", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 3 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-bobby-layne", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 6 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-charley-taylor", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 8 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-charlie-joiner", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 3 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-charlie-sanders", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 7 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-cliff-branch", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 4 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-dave-casper", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 5 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-deacon-jones", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 8 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-dick-night-train-lane", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 7 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-doak-walker", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 5 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-don-hutson", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 4 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-don-maynard", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 4 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-drew-pearson", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 3 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-emlen-tunnell", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 9 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-fran-tarkenton", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 9 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-frank-gifford", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 8 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-fred-biletnikoff", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 6 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-jackie-smith", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 5 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-jim-kelly", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 4 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-jonathan-ogden", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 11 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-oj-simpson", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 6 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-otto-graham", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 5 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-raymond-berry", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 6 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-sammy-baugh", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 5 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-sid-luckman", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 3 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-terry-bradshaw", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 3 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("reggie-white", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 13 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("ronnie-lott", "Pro Football Hall of Fame", "https://www.profootballhof.com/hall-of-famers/hall-of-famers-in-the-pro-bowl", [
+      f("pro-bowls", "I was selected to 10 Pro Bowls.", ["playing-career","award"])
+    ]),
+  r("nfl-bronko-nagurski", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/bronko-nagurski", [
+      f("five-all-nfl-selections", "I earned five All-NFL selections.", ["playing-career","award"])
+    ]),
+  r("nfl-harold-red-grange", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/harold-red-grange", [
+      f("nfl-championship-1933", "I helped Chicago win the 1933 NFL Championship.", ["playing-career","championship"])
+    ]),
+  r("nfl-jim-thorpe", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/jim-thorpe", [
+      f("twelve-pro-seasons", "I played 12 seasons of professional football.", ["playing-career","production"])
+    ]),
+  r("nfl-marshal-yanda", "Baltimore Ravens", "https://www.baltimoreravens.com/news/marshal-yanda-decides-to-retire-after-13-seasons-eight-pro-bowls", [
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career","award"])
     ])
 ] as const;
