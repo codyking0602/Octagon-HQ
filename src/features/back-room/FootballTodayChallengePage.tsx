@@ -7,6 +7,8 @@ import {
   TodayChallengeRepositoryError,
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
+import { FootballFindLeaderPresentation } from "./FootballFindLeaderPresentation";
+import { FootballFindLeaderVisual } from "./FootballFindLeaderPage";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
 import {
   footballBlindResumeFactText,
@@ -87,37 +89,50 @@ function ScoreCard({ projection }: { projection: TodayChallengeProjection }) {
 function FindLeader({ projection, advance }: GameProps) {
   const setup = projection.publicSetup;
   const state = projection.publicState;
-  const eliminated = new Set(strings(state.eliminated_ids));
-  const candidates = records(setup.candidates);
+  const eliminatedIds = strings(state.eliminated_ids);
   const reveal = record(projection.revealSetup);
-  const revealedCandidates = records(reveal.candidates);
+  const progressive = records(state.revealed_candidates);
+  const revealed = projection.officialAttempt ? records(reveal.candidates) : progressive;
+  const revealedById = new Map(revealed.map((candidate) => [String(candidate.id ?? ""), candidate]));
+  const candidates = records(setup.candidates).map((candidate) => {
+    const id = String(candidate.id ?? "");
+    const revealedCandidate = revealedById.get(id);
+    return {
+      id,
+      name: String(candidate.name ?? ""),
+      subtitle: String(candidate.subtitle ?? ""),
+      ...(typeof revealedCandidate?.value === "number" ? { value: revealedCandidate.value } : {}),
+    };
+  });
+  const attempt = projection.officialAttempt;
+  const perfect = attempt?.nativeScore === 10;
+  const fatalId = attempt && !perfect ? eliminatedIds.at(-1) ?? null : null;
+  const league = String(setup.league ?? "FOOTBALL");
+  const statLabel = String(setup.stat_label ?? "OFFICIAL STAT");
+
   return (
-    <>
-      <section className="football-today-copy">
-        <small>{String(setup.league ?? "FOOTBALL")}</small>
-        <h2>{String(setup.question ?? "Find the hidden leader.")}</h2>
-        <p>{String(setup.context ?? "Eliminate the decoys. Leave the leader standing.")}</p>
-      </section>
-      {!projection.officialAttempt ? (
-        <div className="football-today-name-grid">
-          {candidates.map((candidate) => (
-            <button type="button" key={String(candidate.id)} disabled={eliminated.has(String(candidate.id))} onClick={() => advance({ eliminated_id: candidate.id })}>
-              <strong>{String(candidate.name)}</strong><span>{String(candidate.subtitle ?? "")}</span>
-              <em>{eliminated.has(String(candidate.id)) ? "OUT" : "ELIMINATE"}</em>
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div className="football-today-reveal-list">
-          {revealedCandidates.map((candidate) => (
-            <div key={String(candidate.id)} className={candidate.id === reveal.leader_id ? "is-leader" : ""}>
-              <span><strong>{String(candidate.name)}</strong><small>{String(candidate.subtitle ?? "")}</small></span>
-              <b>{String(candidate.value ?? "")}</b>
-            </div>
-          ))}
-        </div>
+    <FootballFindLeaderPresentation
+      question={String(setup.question ?? "Find the hidden leader.")}
+      context={String(setup.context ?? "Eliminate the decoys. Leave the leader standing.")}
+      categoryLabel={`${league} · ${statLabel}`}
+      statLabel={statLabel}
+      shortLabel={statLabel}
+      candidates={candidates}
+      leaderId={attempt ? String(reveal.leader_id ?? "") : null}
+      eliminatedIds={eliminatedIds}
+      result={attempt ? { score: attempt.normalizedScore, perfect, fatalId } : null}
+      eyebrow="TODAY’S CHALLENGE"
+      intro="Eliminate nine decoys until only the leader remains."
+      onEliminate={attempt ? null : (id) => advance({ eliminated_id: id })}
+      renderVisual={(candidate, compact) => (
+        <FootballFindLeaderVisual
+          candidateId={candidate.id}
+          candidateName={candidate.name}
+          league={league}
+          compact={compact}
+        />
       )}
-    </>
+    />
   );
 }
 
