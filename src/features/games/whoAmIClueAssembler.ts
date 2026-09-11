@@ -632,7 +632,7 @@ export function assembleWhoAmIClues(
     const personalCount = selected.filter((candidate) => candidate.selectionClass !== "sports-identity").length;
     const biographyCount = selected.filter((candidate) => candidate.selectionClass === "deep-biography").length;
     if (!options.relaxPersonalLimit && entry.selectionClass !== "sports-identity" && personalCount >= 3) return false;
-    if (!options.relaxBiographyLimit && entry.selectionClass === "deep-biography" && biographyCount >= 1) return false;
+    if (entry.selectionClass === "deep-biography" && biographyCount >= 1) return false;
     const facetLimit = FACET_LIMITS[entry.facet];
     const facetCount = facetCounts.get(entry.facet) ?? 0;
     if (entry.facet === "relationships" && facetCount >= 1) return false;
@@ -722,7 +722,7 @@ export function assembleWhoAmIClues(
         .sort(lateFirst),
       2,
       {
-        allowNearDuplicate: false,
+        allowNearDuplicate: true,
         relaxFacetLimit: true,
         relaxSemanticFamily: true,
         relaxPersonalLimit: false,
