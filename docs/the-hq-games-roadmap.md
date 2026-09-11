@@ -40,15 +40,17 @@ Completed Who Am I rebuild work now includes:
 - full UFC person-identity enrichment for the canonical 100-subject UFC population;
 - the canonical clue assembler with deterministic broad → helpful → strong → giveaway progression and concept/facet deduplication;
 - stage-aware football same-person aggregation that permits legitimate person/shared and draft-transition knowledge without mixing CFB and NFL production;
-- the football résumé-depth follow-up that leaves **0 NFL/CFB launch subjects below 10 candidate clues and 0 below 12**, while preserving the **10-clue gameplay reveal limit**.
+- the football résumé-depth follow-up that leaves **0 NFL/CFB launch subjects below 10 candidate clues and 0 below 12**, while preserving the **10-clue gameplay reveal limit**;
+- deterministic replay variation within approved clue quality/progression, preserving same-context repeatability while producing different valid sequences across replay contexts;
+- the endgame recovery flow with two natural final guesses, then a plausible four-choice disguise board at reduced points, excluding identities already proven wrong.
 
 The current audited launch populations are **100 UFC / 200 NFL / 200 CFB**. The completed aggregation audit reports **0 football plumbing omissions**.
 
 ### NEXT
 
-**Who Am I rebuild slice 11 — replay variation + repetition controls.**
+**Who Am I rebuild slice 13 — mature whole-game simulation + quality tuning.**
 
-Use the deeper canonical candidate pools to vary clue sequences across replays while preserving deterministic generation for the same seed/context, the approved clue-strength progression, stage correctness, concept/facet diversity, and the 10-clue maximum. Do not reopen completed research or create another fact owner.
+Run representative and broad simulations across UFC, NFL, and CFB to find actual gameplay-quality gaps. Preserve the completed research, replay variation, endgame flow, stage ownership, scoring architecture, and owner-only release state. Add facts only when a concrete simulation finding proves a real gap in an existing canonical owner.
 
 20 Questions remains owner-only and parked. Do not broaden its access or restart its factual-readiness work unless Cody explicitly chooses to return to it. After Who Am I matures, separately evaluate whether 20 Questions should remain in the product at all.
 
@@ -481,10 +483,13 @@ Completed rebuild slices:
 9. complete UFC person-specific enrichment for the canonical 100-subject UFC population;
 10. build the canonical clue assembler/reveal progression, then complete stage-aware football aggregation and résumé-depth follow-ups. Current audit: **100 UFC / 200 NFL / 200 CFB**, **0 football subjects below 10 candidate clues**, **0 below 12**, and **0 plumbing omissions**. Gameplay still reveals at most 10 clues.
 
-Remaining rebuild slices:
+Completed gameplay-finish slices:
 
-11. **replay variation + repetition controls** — vary approved clue sequences from the deeper candidate pools without weakening progression, dedupe, stage correctness, or deterministic seeded behavior;
-12. add the approved endgame candidate/disguise choice flow, multiple final guesses, and reduced-point recovery path;
+11. **replay variation + repetition controls** — completed in #996; approved clue sequences now vary across replay contexts while same-context generation stays deterministic and progression/dedupe/stage correctness remain intact;
+12. **endgame candidate/disguise choice + reduced-point recovery** — two natural final guesses remain available after all 10 clues, with the existing wrong-guess penalty reducing the second attempt; after those attempts or by voluntary choice, a four-choice plausible disguise board provides a lower-value recovery path and excludes identities already proven wrong.
+
+Remaining rebuild slice:
+
 13. run mature whole-game simulation/quality tuning, then evaluate whether Who Am I makes 20 Questions redundant. Any 20 Questions removal remains a separate explicit product decision.
 
 Do not restart completed identity research merely to increase counts. New facts should be added only when a concrete quality gap is found during gameplay simulation and the existing canonical owner is extended.

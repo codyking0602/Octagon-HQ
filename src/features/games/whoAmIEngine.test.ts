@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  WHO_AM_I_FINAL_GUESS_COUNT,
   WHO_AM_I_RESCUE_OPTION_COUNT,
   WHO_AM_I_RESCUE_SCORE,
   createWhoAmIRound,
   whoAmIProgressiveClues,
+  whoAmIRecoveryScore,
   whoAmIRescueChoices,
   whoAmIScore,
   type WhoAmICandidate,
@@ -55,7 +57,12 @@ describe("Who Am I engine", () => {
     expect(whoAmIScore(10, 0)).toBe(60);
     expect(whoAmIScore(4, 1)).toBe(75);
     expect(whoAmIScore(10, 4)).toBe(0);
+    expect(WHO_AM_I_FINAL_GUESS_COUNT).toBe(2);
     expect(WHO_AM_I_RESCUE_SCORE).toBe(30);
+    expect(whoAmIRecoveryScore(0, 0)).toBe(30);
+    expect(whoAmIRecoveryScore(1, 0)).toBe(15);
+    expect(whoAmIRecoveryScore(0, 1)).toBe(30);
+    expect(whoAmIRecoveryScore(2, 2)).toBe(30);
   });
 
   it("excludes subjects that cannot support a complete ten-clue round", () => {
@@ -84,6 +91,13 @@ describe("Who Am I engine", () => {
     expect(createWhoAmIRound(universe, () => 0.75).hiddenSubject.id).toBe("legacy");
   });
 
+  it("keeps recovery worth less than the remaining natural final-guess path", () => {
+    expect(whoAmIScore(10, 0)).toBe(60);
+    expect(whoAmIScore(10, 1)).toBe(45);
+    expect(whoAmIRecoveryScore(0, 0)).toBe(30);
+    expect(whoAmIRecoveryScore(1, 1)).toBe(30);
+  });
+
   it("builds the rescue board around similar era and role disguises", () => {
     const hidden = candidate("hidden", 10, { eraBand: "modern", rescueGroup: "NFL:DB", kind: "player" });
     const round = createWhoAmIRound({
@@ -98,9 +112,11 @@ describe("Who Am I engine", () => {
       ],
     }, () => 0);
 
-    const choices = whoAmIRescueChoices(round, () => 0);
+    const choices = whoAmIRescueChoices(round, () => 0, new Set(["db-1"]));
     expect(choices).toHaveLength(WHO_AM_I_RESCUE_OPTION_COUNT);
     expect(choices.some((subject) => subject.id === round.hiddenSubject.id)).toBe(true);
-    expect(choices.every((subject) => subject.rescueGroup === "NFL:DB")).toBe(true);
+    expect(choices.some((subject) => subject.id === "db-1")).toBe(false);
+    expect(choices.every((subject) => subject.kind === "player")).toBe(true);
+    expect(choices.filter((subject) => subject.id !== "qb").every((subject) => subject.rescueGroup === "NFL:DB")).toBe(true);
   });
 });

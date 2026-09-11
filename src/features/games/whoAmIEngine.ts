@@ -62,6 +62,7 @@ export const WHO_AM_I_WRONG_GUESS_PENALTY = 15;
 export const WHO_AM_I_WINDOW_SCORES = [100, 90, 80, 70, 60] as const;
 export const WHO_AM_I_RESCUE_SCORE = 30;
 export const WHO_AM_I_RESCUE_OPTION_COUNT = 4;
+export const WHO_AM_I_FINAL_GUESS_COUNT = 2;
 export const WHO_AM_I_MODERN_ERA_SHARE = 0.75;
 
 export function whoAmIProgressiveClues(
@@ -114,9 +115,15 @@ export function createWhoAmIRound(universe: WhoAmIUniverse, random: () => number
   };
 }
 
-export function whoAmIRescueChoices(round: WhoAmIRound, random: () => number = Math.random) {
+export function whoAmIRescueChoices(
+  round: WhoAmIRound,
+  random: () => number = Math.random,
+  excludedSubjectIds: ReadonlySet<string> = new Set(),
+) {
   const hidden = round.hiddenSubject;
-  const distractors = round.subjects.filter((candidate) => candidate.id !== hidden.id);
+  const distractors = round.subjects.filter((candidate) => (
+    candidate.id !== hidden.id && !excludedSubjectIds.has(candidate.id)
+  ));
   const picked: WhoAmISubject[] = [];
   const seen = new Set<string>();
 
@@ -153,4 +160,12 @@ export function whoAmIBaseScore(revealedClueCount: number) {
 
 export function whoAmIScore(revealedClueCount: number, wrongGuesses: number) {
   return Math.max(0, whoAmIBaseScore(revealedClueCount) - wrongGuesses * WHO_AM_I_WRONG_GUESS_PENALTY);
+}
+
+export function whoAmIRecoveryScore(wrongGuesses: number, finalGuessesUsed: number) {
+  const remainingFinalGuesses = Math.max(0, WHO_AM_I_FINAL_GUESS_COUNT - finalGuessesUsed);
+  return Math.min(
+    WHO_AM_I_RESCUE_SCORE,
+    whoAmIScore(WHO_AM_I_CLUE_LIMIT, wrongGuesses + remainingFinalGuesses),
+  );
 }
