@@ -366,7 +366,7 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
     .replace(/\bI\s+has\b/g, "I have")
     .replace(/\bme\s+myself\b/gi, "I")
     .replace(
-      /\bme\b(?=\s+(?:(?:affectionately|later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:adopted|began|became|called|credited|developed|diversified|earned|felt|grew|hurled|joined|made|moved|played|recorded|returned|said|signed|spoke|spent|started|thought|threw|transferred|won|worked)\b)/gi,
+      /\bme\b(?=\s+(?:(?:affectionately|later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:adopted|began|became|called|credited|developed|diversified|earned|established|felt|grew|hurled|joined|made|moved|played|recorded|returned|said|signed|spoke|spent|started|thought|threw|transferred|won|worked)\b)/gi,
       "I",
     )
     .replace(
