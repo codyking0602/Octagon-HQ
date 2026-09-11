@@ -551,7 +551,10 @@ function footballWhoAmIPlayerMetricMatchesRole(
 export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfile, fact: FootballFactValue) {
   const value = Number(fact.value);
   if (!Number.isFinite(value)) return false;
-  if (!footballWhoAmIPlayerMetricMatchesRole(subject, fact.metricId)) return false;
+  if (
+    subject.kind === "player-career"
+    && /(?:nfl|cfb)-career-(?:games|targets)$/.test(fact.metricId)
+  ) return false;
   return true;
 }
 
@@ -560,11 +563,15 @@ function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     .filter(({ fact }) => footballWhoAmIMetricFactIsPlayable(subject, fact))
     .map(({ fact }) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
-      return clue(
+      const roleRelevant = footballWhoAmIPlayerMetricMatchesRole(subject, fact.metricId);
+      const metricClue = clue(
         `fact:${fact.metricId}`,
         footballMetricText(fact.metricId, fact.value, label),
-        footballMetricBand(fact.metricId),
+        roleRelevant ? footballMetricBand(fact.metricId) : "helpful",
       );
+      return roleRelevant
+        ? metricClue
+        : { ...metricClue, facet: "production" as const, revealPriority: 90 };
     });
 }
 
