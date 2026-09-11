@@ -11,7 +11,7 @@ describe("Football Play favorite-team gate", () => {
     expect(footballPlaySource).not.toContain("footballTeam");
     expect(footballPlaySource).toContain("const showTransition = entryRequested;");
     expect(footballPlaySource).toContain('className="page football-room-page"');
-    expect(footballPlaySource).toContain("!showTransition ? <FootballGamesEarlyAccessBanner /> : null");
+    expect(footballPlaySource).not.toContain("FootballGamesEarlyAccessBanner");
     expect(footballPlaySource).toContain('<TodayChallengeHub sport="football" />');
     expect(todayHubSource).toContain("TODAY’S CHALLENGE");
     expect(footballPlaySource).toContain('<PlayLandingGameLibrary sport="football"');
