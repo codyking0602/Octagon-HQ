@@ -285,6 +285,31 @@ export function getFootballSubject(subjectId: string) {
   return footballSubjectById.get(subjectId) ?? null;
 }
 
+/**
+ * Resolve the canonical football identities that belong to the same real person without collapsing NFL and CFB
+ * careers into one gameplay subject. Cross-stage matches are accepted only when the opposite league has one
+ * unambiguous canonical identity with the same normalized name and subject kind.
+ */
+export function resolveFootballPersonSubjects(subject: FootballSubjectProfile) {
+  if (subject.kind !== "player-career" && subject.kind !== "coach") return [subject] as const;
+
+  const normalizedName = normalizedFootballSubjectName(subject.name);
+  const canonicalMatches = new Map<string, FootballSubjectProfile>();
+  for (const candidate of allRegisteredSubjects) {
+    if (candidate.kind !== subject.kind || normalizedFootballSubjectName(candidate.name) !== normalizedName) continue;
+    const canonical = getFootballSubject(candidate.id) ?? candidate;
+    if (canonical.kind === subject.kind) canonicalMatches.set(canonical.id, canonical);
+  }
+
+  const result: FootballSubjectProfile[] = [subject];
+  for (const league of ["NFL", "CFB"] as const) {
+    if (league === subject.league) continue;
+    const matches = [...canonicalMatches.values()].filter((candidate) => candidate.league === league);
+    if (matches.length === 1) result.push(matches[0]!);
+  }
+  return result;
+}
+
 function matchesFootballSubject(subject: FootballSubjectProfile, query: FootballSubjectQuery) {
   // NFL and CFB careers are separate query identities. `leagues` remains compatibility metadata on older factual rows,
   // but it must not make an NFL career answer a CFB query (or vice versa).
