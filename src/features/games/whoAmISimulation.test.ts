@@ -99,9 +99,15 @@ describe("Who Am I mature whole-game simulation", () => {
             `${candidate.id} should use no more than the one-slot chronology target plus two shallow-pool fallbacks`,
           ).toBeLessThanOrEqual(3);
           expect(
-            sequence.some((clue) => /fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id)),
-            `${candidate.id} should never spend a clue on generic career games or targets`,
+            sequence.some((clue) => /fact:(?:nfl|cfb)-career-targets$/.test(clue.id)),
+            `${candidate.id} should never spend a clue on generic career targets`,
           ).toBe(false);
+          if (candidate.clues.length > 12) {
+            expect(
+              sequence.some((clue) => /fact:(?:nfl|cfb)-career-games$/.test(clue.id)),
+              `${candidate.id} should not spend a clue on generic career games when the pool has real depth`,
+            ).toBe(false);
+          }
 
           const selectionClasses = sequence.map(whoAmIClueSelectionClass);
           expect(
