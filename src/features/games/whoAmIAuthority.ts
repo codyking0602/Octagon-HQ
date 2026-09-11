@@ -567,7 +567,7 @@ export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfi
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   return footballWhoAmIApplicableMetricFacts(subject)
     .filter(({ fact }) => footballWhoAmIMetricFactIsPlayable(subject, fact))
-    .flatMap(({ fact }) => {
+    .map(({ fact }) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
       const roleRelevant = footballWhoAmIPlayerMetricMatchesRole(subject, fact.metricId);
       const metricClue = clue(
@@ -575,28 +575,9 @@ function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
         footballMetricText(fact.metricId, fact.value, label),
         roleRelevant ? footballMetricBand(fact.metricId) : "helpful",
       );
-      const playableMetricClue = roleRelevant
+      return roleRelevant
         ? metricClue
         : { ...metricClue, facet: "production" as const, revealPriority: 90 };
-
-      if (fact.metricId !== "cfb-nfl-draft-overall-pick") return [playableMetricClue];
-
-      const pick = Number(fact.value);
-      const draftRange = pick <= 10 ? 10 : pick <= 20 ? 20 : pick <= 50 ? 50 : null;
-      if (draftRange == null) return [playableMetricClue];
-
-      return [
-        {
-          ...clue(
-            "fact:cfb-nfl-draft-range",
-            `I was a top-${draftRange} NFL draft pick.`,
-            "strong",
-          ),
-          facet: "career-path" as const,
-          revealPriority: 35,
-        },
-        playableMetricClue,
-      ];
     });
 }
 
@@ -680,6 +661,13 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
 
   const whoAmISchool = footballWhoAmISchool(subject);
   if (whoAmISchool) clues.push(clue("school", `I played college football at ${whoAmISchool}.`, subject.league === "NFL" ? "helpful" : "broad"));
+  if (!isCoach && subject.league === "CFB" && whoAmISchool && subject.position) {
+    clues.push({
+      ...clue("role-school", `At ${whoAmISchool}, I played ${subject.position}.`, "strong"),
+      facet: "identity",
+      revealPriority: 60,
+    });
+  }
   if (subject.conference) clues.push(clue("conference", `I competed in the ${subject.conference}.`, "helpful"));
   const draftProfile = footballDraftProfile(subject);
   if (draftProfile.draftYear != null && draftProfile.draftPick != null) {
