@@ -350,6 +350,20 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
   );
   text = text.replace(new RegExp(`\\bthis ${labelPattern}\\b`, "gi"), "me");
   text = text.replace(/\bI's\b/g, "my");
+
+  // Identity knowledge is authored as research prose, but the game speaks in first person.
+  // Normalize residual subject pronouns after answer anonymization without touching named people.
+  text = text
+    .replace(/\b(?:he|she)\s+has\b/gi, "I have")
+    .replace(/\b(?:he|she)\s+is\b/gi, "I am")
+    .replace(/\b(?:he|she)\b/gi, "I")
+    .replace(/\b(?:himself|herself)\b/gi, "myself")
+    .replace(/\bhim\b/gi, "me")
+    .replace(/\b(?:his|hers)\b/gi, "my")
+    .replace(
+      /\bme\b(?=\s+(?:(?:later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:became|developed|diversified|earned|grew|joined|made|moved|played|recorded|returned|signed|spent|started|transferred|won|worked)\b)/gi,
+      "I",
+    );
   return sentenceCase(text);
 }
 
@@ -447,6 +461,7 @@ function semanticFamily(entry: Pick<PreparedClue, "facet" | "conceptId" | "clue"
   if (entry.facet === "background" && /\b(?:childhood|upbringing|hometown|born|grew up)\b/.test(haystack)) {
     return "background:origin";
   }
+  if (entry.facet === "era") return "era:chronology";
   if (
     entry.facet === "accomplishments"
     && /\b(?:title-fights?|title-wins?|ufc title fights?|title fight wins?)\b/.test(haystack)
@@ -592,6 +607,7 @@ export function assembleWhoAmIClues(
         && !tokenOverlapStillDistinct(other, entry)
       ))
     ) return false;
+    if (entry.semanticFamily === "era:chronology" && selectedFamilies.has(entry.semanticFamily)) return false;
     if (!options.relaxSemanticFamily && entry.semanticFamily && selectedFamilies.has(entry.semanticFamily)) return false;
     const personalCount = selected.filter((candidate) => candidate.selectionClass !== "sports-identity").length;
     const biographyCount = selected.filter((candidate) => candidate.selectionClass === "deep-biography").length;
