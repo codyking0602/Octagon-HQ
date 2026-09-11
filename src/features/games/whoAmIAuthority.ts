@@ -669,10 +669,17 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
       `I was selected No. ${draftProfile.draftPick} overall in the ${draftProfile.draftYear} NFL Draft.`,
       subject.league === "CFB" ? "giveaway" : "strong",
     ));
-    if (draftProfile.draftRound === 1 || draftProfile.firstRoundPick) {
+    const draftRange = draftProfile.draftPick <= 10
+      ? 10
+      : draftProfile.draftPick <= 20
+        ? 20
+        : draftProfile.draftPick <= 50
+          ? 50
+          : null;
+    if (draftRange != null) {
       clues.push(clue(
-        "first-round",
-        "I was a first-round NFL draft pick.",
+        "draft-range",
+        `I was a top-${draftRange} NFL draft pick.`,
         subject.league === "CFB" ? "strong" : "helpful",
       ));
     }
