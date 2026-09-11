@@ -93,6 +93,12 @@ describe("Who Am I mature whole-game simulation", () => {
             `${candidate.id} should not spend multiple round slots on the same relationship/family facet`,
           ).toBeLessThanOrEqual(1);
 
+          const chronologyClues = sequence.filter((clue) => whoAmIClueFacet(clue) === "era");
+          expect(
+            chronologyClues.length,
+            `${candidate.id} should use at most one career chronology clue per round`,
+          ).toBeLessThanOrEqual(1);
+
           const selectionClasses = sequence.map(whoAmIClueSelectionClass);
           expect(
             selectionClasses.filter((selectionClass) => selectionClass === "sports-identity").length,
