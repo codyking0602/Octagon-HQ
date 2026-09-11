@@ -9,6 +9,7 @@ import {
   whoAmIRecoveryScore,
   whoAmIRescueChoices,
   whoAmIScore,
+  type WhoAmILeague,
   type WhoAmIRound,
   type WhoAmISport,
   type WhoAmISubject,
@@ -16,6 +17,52 @@ import {
 
 type Phase = "start" | "playing" | "rescue" | "result";
 type ResultState = "correct" | "rescued" | "incorrect";
+type RecentSubjectIdsByLeague = Partial<Record<WhoAmILeague, readonly string[]>>;
+type RecentSubjectExclusions = Partial<Record<WhoAmILeague, ReadonlySet<string>>>;
+
+const WHO_AM_I_RECENT_SUBJECT_LIMIT = 20;
+const WHO_AM_I_RECENT_SUBJECTS_STORAGE_KEY = "octagon-hq:who-am-i:recent-subjects:v1";
+
+function readRecentSubjectIds(): RecentSubjectIdsByLeague {
+  if (typeof window === "undefined") return {};
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(WHO_AM_I_RECENT_SUBJECTS_STORAGE_KEY) ?? "{}") as Record<string, unknown>;
+    const recent: RecentSubjectIdsByLeague = {};
+    for (const league of ["UFC", "NFL", "CFB"] as const) {
+      const ids = parsed[league];
+      if (Array.isArray(ids)) {
+        recent[league] = ids.filter((id): id is string => typeof id === "string").slice(-WHO_AM_I_RECENT_SUBJECT_LIMIT);
+      }
+    }
+    return recent;
+  } catch {
+    return {};
+  }
+}
+
+function recentSubjectExclusions(): RecentSubjectExclusions {
+  const recent = readRecentSubjectIds();
+  return {
+    ...(recent.UFC?.length ? { UFC: new Set(recent.UFC) } : {}),
+    ...(recent.NFL?.length ? { NFL: new Set(recent.NFL) } : {}),
+    ...(recent.CFB?.length ? { CFB: new Set(recent.CFB) } : {}),
+  };
+}
+
+function rememberRecentSubject(league: WhoAmILeague, subjectId: string) {
+  if (typeof window === "undefined") return;
+  const recent = readRecentSubjectIds();
+  const next = [...(recent[league] ?? []).filter((id) => id !== subjectId), subjectId]
+    .slice(-WHO_AM_I_RECENT_SUBJECT_LIMIT);
+  try {
+    window.localStorage.setItem(WHO_AM_I_RECENT_SUBJECTS_STORAGE_KEY, JSON.stringify({
+      ...recent,
+      [league]: next,
+    }));
+  } catch {
+    // Recent-subject memory is a replay-quality enhancement; storage failure must not block gameplay.
+  }
+}
 
 function normalized(value: string) {
   return value.trim().toLowerCase();
@@ -23,11 +70,11 @@ function normalized(value: string) {
 
 interface WhoAmIPageProps {
   sport: WhoAmISport;
-  createRound: () => WhoAmIRound;
+  createRound: (excludedSubjectIdsByLeague: RecentSubjectExclusions) => WhoAmIRound;
 }
 
 export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
-  const [round, setRound] = useState<WhoAmIRound>(() => createRound());
+  const [round, setRound] = useState<WhoAmIRound>(() => createRound(recentSubjectExclusions()));
   const [phase, setPhase] = useState<Phase>("start");
   const [resultState, setResultState] = useState<ResultState>("incorrect");
   const [revealedCount, setRevealedCount] = useState(WHO_AM_I_CLUES_PER_REVEAL);
@@ -44,6 +91,10 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
   const latestClueRef = useRef<HTMLElement | null>(null);
   const shouldScrollAfterReveal = useRef(false);
   const guessInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    rememberRecentSubject(round.league, round.hiddenSubject.id);
+  }, [round.hiddenSubject.id, round.league]);
 
   const football = sport === "football";
   const finalGuessRequired = phase === "playing" && revealedCount >= WHO_AM_I_CLUE_LIMIT;
@@ -83,7 +134,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
   }, [finalGuessRequired, guessOpen, phase]);
 
   function resetRound() {
-    setRound(createRound());
+    setRound(createRound(recentSubjectExclusions()));
     setPhase("start");
     setResultState("incorrect");
     setRevealedCount(WHO_AM_I_CLUES_PER_REVEAL);
