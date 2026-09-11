@@ -217,6 +217,64 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(clue.text).not.toMatch(/\bAlex\b|\bSmith\b/i);
   });
 
+  it("normalizes residual third-person research prose into first-person game copy", () => {
+    const nickname = whoAmIIdentityKnowledgeClue({
+      subjectId: "nfl-pat-example",
+      subjectName: "Pat Example",
+      subjectKind: "player",
+      league: "NFL",
+      factId: "nickname",
+      conceptId: "nickname-anytime",
+      value: "Pat Example's Miami nickname \"Anytime\" was an homage to his childhood idol Deion Sanders; he later developed a mentor relationship with Sanders.",
+    });
+    const style = whoAmIIdentityKnowledgeClue({
+      subjectId: "ufc-pat-example",
+      subjectName: "Pat Example",
+      subjectKind: "fighter",
+      league: "UFC",
+      factId: "style",
+      conceptId: "training-style",
+      value: "Working with Javier Mendez, Pat Example deliberately diversified his striking, wrestling and submission skills.",
+    });
+    const coach = whoAmIIdentityKnowledgeClue({
+      subjectId: "nfl-pat-example-coach",
+      subjectName: "Pat Example",
+      subjectKind: "coach",
+      league: "NFL",
+      factId: "first-college-job",
+      conceptId: "coaching-path",
+      value: "Marv Levy hired Pat Example from the high-school ranks into his first college coaching job.",
+    });
+
+    expect(nickname.text).toMatch(/^My Miami nickname/);
+    expect(nickname.text).toContain("my childhood idol Deion Sanders");
+    expect(nickname.text).toContain("I later developed");
+    expect(style.text).toContain("I deliberately diversified my striking");
+    expect(coach.text).toContain("Marv Levy hired me");
+    expect(coach.text).toContain("my first college coaching job");
+    for (const clue of [nickname, style, coach]) {
+      expect(clue.text).not.toMatch(/\b(?:he|him|his|she)\b/i);
+    }
+  });
+
+  it("keeps generic football career-volume columns out of Who Am I clue pools", () => {
+    for (const league of ["NFL", "CFB"] as const) {
+      for (const candidate of getFootballWhoAmIUniverse(league).candidates) {
+        expect(
+          candidate.clues.filter((clue) => /fact:(?:nfl|cfb)-career-(?:games|starts|targets)$/.test(clue.id)),
+          `${candidate.id} should not expose generic games, starts, or targets as identification clues`,
+        ).toEqual([]);
+      }
+    }
+  });
+
+  it("keeps secondary-position stat lines from outranking a player's real identity", () => {
+    const candidate = getFootballWhoAmIUniverse("CFB").candidates.find((entry) => entry.name === "O.J. Simpson");
+    expect(candidate).toBeTruthy();
+    expect(candidate!.clues.some((clue) => /fact:cfb-career-(?:receptions|receiving)/.test(clue.id))).toBe(false);
+    expect(candidate!.clues.some((clue) => /fact:cfb-career-rushing/.test(clue.id))).toBe(true);
+  });
+
   it("repairs the live C.J. Stroud CFB identity and removes the implausible one-game clue", () => {
     const candidate = getFootballWhoAmIUniverse("CFB").candidates.find((entry) => entry.name === "C.J. Stroud");
     expect(candidate).toBeTruthy();
