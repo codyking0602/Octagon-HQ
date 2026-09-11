@@ -3,6 +3,7 @@ declare const __OCTAGON_PRODUCTION_ORIGIN__: string;
 
 const UPDATE_RELOAD_KEY = "octagon-hq:update-reload-at";
 const UPDATE_TARGET_SHA_KEY = "octagon-hq:update-target-sha";
+const ROUTE_LOAD_RECOVERY_KEY = "octagon-hq:route-load-recovery-at";
 const UPDATE_CACHE_BUST_PARAM = "hq-update";
 const UPDATE_RELOAD_COOLDOWN_MS = 15_000;
 const SHA_PATTERN = /^[0-9a-f]{40}$/i;
@@ -24,6 +25,10 @@ interface ForceRefreshLatestBuildOptions {
   navigate?: (url: string) => void;
   now?: () => number;
   productionOrigin?: string;
+}
+
+interface RecoverRouteLoadErrorOptions extends ForceRefreshLatestBuildOptions {
+  error: unknown;
 }
 
 function normalizedSha(value: unknown) {
@@ -54,6 +59,39 @@ function latestBuildUrl(href: string, token: string, productionOrigin = runtimeP
     : current;
   url.searchParams.set(UPDATE_CACHE_BUST_PARAM, token);
   return url.toString();
+}
+
+function routeLoadErrorMessage(error: unknown) {
+  if (error instanceof Error) return `${error.name}: ${error.message}`;
+  if (typeof error === "string") return error;
+  if (error && typeof error === "object" && "message" in error) {
+    return String((error as { message?: unknown }).message ?? "");
+  }
+  return "";
+}
+
+export function isRecoverableRouteLoadError(error: unknown) {
+  return /failed to fetch dynamically imported module|importing a module script failed|error loading dynamically imported module|unable to preload css|chunkloaderror|loading chunk .* failed/i
+    .test(routeLoadErrorMessage(error));
+}
+
+export function recoverRouteLoadError({
+  error,
+  href = window.location.href,
+  storage = window.sessionStorage,
+  navigate = (url) => window.location.replace(url),
+  now = () => Date.now(),
+  productionOrigin = runtimeProductionOrigin(),
+}: RecoverRouteLoadErrorOptions) {
+  if (!isRecoverableRouteLoadError(error)) return false;
+
+  const current = now();
+  const previous = Number(storage.getItem(ROUTE_LOAD_RECOVERY_KEY) ?? "0");
+  if (previous > 0 && current - previous < UPDATE_RELOAD_COOLDOWN_MS) return false;
+
+  storage.setItem(ROUTE_LOAD_RECOVERY_KEY, String(current));
+  forceRefreshLatestBuild({ href, storage, navigate, now: () => current, productionOrigin });
+  return true;
 }
 
 export function forceRefreshLatestBuild({
