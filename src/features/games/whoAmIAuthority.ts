@@ -1,6 +1,7 @@
 import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
 import {
   getFootballPersonIdentityKnowledge,
+  getFootballPersonIdentityKnowledgeForPerson,
   type FootballPersonIdentityFact,
 } from "../back-room/footballPersonIdentityKnowledge";
 import { footballRecognitionEvidenceFor } from "../back-room/footballRecognitionEvidence";
@@ -160,11 +161,43 @@ const STAGE_SPECIFIC_IDENTITY_TAGS = new Set([
   "scoring",
 ]);
 
-function footballIdentityFactCanCrossStage(fact: FootballPersonIdentityFact) {
+function footballIdentityFactScope(fact: FootballPersonIdentityFact): "person-shared" | "transition" | "stage-specific" {
   const tags = new Set(fact.tags ?? []);
-  if (tags.has("draft") || tags.has("transition")) return true;
-  if ([...tags].some((tag) => STAGE_SPECIFIC_IDENTITY_TAGS.has(tag))) return false;
-  return [...tags].some((tag) => SHARED_PERSON_IDENTITY_TAGS.has(tag));
+  const concept = fact.conceptId.toLowerCase().split("--").at(-1) ?? fact.conceptId.toLowerCase();
+  const words = new Set(concept.split(/[^a-z0-9]+/).filter(Boolean));
+  const hasConcept = (...terms: readonly string[]) => terms.some((term) => (
+    concept.includes(term) || words.has(term)
+  ));
+
+  if (
+    tags.has("draft")
+    || tags.has("transition")
+    || hasConcept("draft", "transition")
+  ) return "transition";
+
+  const sharedByConcept = hasConcept(
+    "childhood", "family", "father", "mother", "parent", "brother", "sister",
+    "high-school", "prep", "multisport", "multi-sport", "baseball", "basketball",
+    "lacrosse", "track", "hockey", "education", "degree", "training", "workout",
+    "upbringing", "hometown", "off-field", "community", "charity", "donation",
+    "gift", "mentor", "nickname", "name", "media", "music", "faith", "military",
+    "ranch", "personality", "book", "lifestyle", "soccer",
+  );
+  if (
+    [...tags].some((tag) => SHARED_PERSON_IDENTITY_TAGS.has(tag))
+    || sharedByConcept
+  ) return "person-shared";
+
+  if (
+    [...tags].some((tag) => STAGE_SPECIFIC_IDENTITY_TAGS.has(tag))
+    || hasConcept(
+      "college", "recruit", "redshirt", "freshman", "scout-team", "award",
+      "heisman", "all-america", "championship", "super-bowl", "franchise",
+      "career", "breakthrough", "turning-point",
+    )
+  ) return "stage-specific";
+
+  return "stage-specific";
 }
 
 export interface FootballWhoAmIApplicableIdentityFact {
@@ -187,23 +220,16 @@ export function footballWhoAmIApplicableIdentityFacts(subject: FootballSubjectPr
 
   if (subject.kind !== "player-career") return applicable;
 
-  const relatedKnowledge = new Map<string, ReturnType<typeof getFootballPersonIdentityKnowledge>>();
-  for (const related of footballPlayerCareerSubjectsForPerson(subject)) {
-    if (related.league === subject.league) continue;
-    const knowledge = getFootballPersonIdentityKnowledge(related.id);
-    if (knowledge) relatedKnowledge.set(knowledge.subjectId, knowledge);
-  }
-
-  for (const knowledge of relatedKnowledge.values()) {
-    if (!knowledge || knowledge.subjectId === direct?.subjectId) continue;
+  for (const knowledge of getFootballPersonIdentityKnowledgeForPerson(subject)) {
+    if (knowledge.subjectId === direct?.subjectId) continue;
     for (const fact of knowledge.facts) {
-      if (seenConcepts.has(fact.conceptId) || !footballIdentityFactCanCrossStage(fact)) continue;
+      if (seenConcepts.has(fact.conceptId)) continue;
+      const scope = footballIdentityFactScope(fact);
+      if (scope === "stage-specific") continue;
       applicable.push({
         sourceSubjectId: knowledge.subjectId,
         fact,
-        applicability: (fact.tags ?? []).some((tag) => tag === "draft" || tag === "transition")
-          ? "transition"
-          : "person-shared",
+        applicability: scope,
       });
       seenConcepts.add(fact.conceptId);
     }
