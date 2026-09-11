@@ -339,11 +339,19 @@ function footballMetricText(metricId: FootballFactMetricId, value: unknown, labe
   }
 }
 
+export function footballWhoAmIFactAppliesToSubject(
+  subject: Pick<FootballSubjectProfile, "league">,
+  metricId: FootballFactMetricId,
+) {
+  return subject.league === "NFL" ? metricId.startsWith("nfl-") : metricId.startsWith("cfb-");
+}
+
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   const record = getFootballFactualRecord(subject.id);
   if (!record) return [];
   return record.facts
     .filter((fact) => FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId))
+    .filter((fact) => footballWhoAmIFactAppliesToSubject(subject, fact.metricId))
     .filter((fact) => Number(fact.value) !== 0)
     .map((fact) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
