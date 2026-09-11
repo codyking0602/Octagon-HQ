@@ -552,9 +552,15 @@ export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfi
   const value = Number(fact.value);
   if (!Number.isFinite(value)) return false;
   if (
-    subject.kind === "player-career"
-    && /(?:nfl|cfb)-career-(?:games|targets)$/.test(fact.metricId)
-  ) return false;
+    subject.league === "CFB"
+    && subject.kind === "player-career"
+    && subject.startSeason != null
+    && subject.endSeason != null
+  ) {
+    const observedSeasons = Math.max(1, subject.endSeason - subject.startSeason + 1);
+    if (fact.metricId === "cfb-career-games" && value < observedSeasons * 3) return false;
+    if (fact.metricId === "cfb-career-starts" && value < observedSeasons * 2) return false;
+  }
   return true;
 }
 
