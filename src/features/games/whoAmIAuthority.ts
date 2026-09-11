@@ -42,6 +42,9 @@ const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>(
       metricId.startsWith("nfl-career-")
       || metricId.startsWith("cfb-career-")
       || metricId.startsWith("cfb-best-season-")
+      || metricId === "cfb-all-america-selections"
+      || metricId === "cfb-first-team-all-conference-selections"
+      || metricId === "cfb-nfl-draft-overall-pick"
       || metricId === "nfl-ap-mvp-awards"
       || metricId === "nfl-super-bowl-titles"
       || metricId === "nfl-defensive-player-of-year-awards"
@@ -370,6 +373,12 @@ function footballMetricText(metricId: FootballFactMetricId, value: unknown, labe
   const clueFormatted = Number.isInteger(numericValue) ? numericValue.toLocaleString("en-US") : formatted;
   switch (metricId) {
     case "cfb-career-games": return `I played in ${clueFormatted} college games.`;
+    case "cfb-career-starts": return `I made ${clueFormatted} career starts in college.`;
+    case "cfb-career-tackles": return `I recorded ${clueFormatted} career tackles in college.`;
+    case "cfb-career-tackles-for-loss": return `I recorded ${clueFormatted} career tackles for loss in college.`;
+    case "cfb-all-america-selections": return numericValue === 1 ? "I earned All-America honors in one college season." : `I earned All-America honors in ${clueFormatted} college seasons.`;
+    case "cfb-first-team-all-conference-selections": return numericValue === 1 ? "I earned first-team all-conference honors once." : `I earned first-team all-conference honors ${clueFormatted} times.`;
+    case "cfb-nfl-draft-overall-pick": return `I was selected No. ${clueFormatted} overall in the NFL Draft.`;
     case "cfb-career-passing-yards": return `I finished my college career with ${clueFormatted} passing yards.`;
     case "cfb-career-passing-touchdowns": return `I finished my college career with ${clueFormatted} passing touchdowns.`;
     case "cfb-career-rushing-yards": return `I finished my college career with ${clueFormatted} rushing yards.`;
@@ -396,6 +405,8 @@ function footballMetricText(metricId: FootballFactMetricId, value: unknown, labe
     case "cfb-best-season-tackles-for-loss": return `My best college season included ${clueFormatted} tackles for loss.`;
     case "cfb-best-season-defensive-interceptions": return `My best college season included ${clueFormatted} defensive interceptions.`;
     case "cfb-heisman-awards": return numericValue === 1 ? "I won the Heisman Trophy." : `I won the Heisman Trophy ${formatted} times.`;
+    case "nfl-career-starts": return `I made ${clueFormatted} career NFL starts.`;
+    case "nfl-career-pro-bowl-selections": return numericValue === 1 ? "I was selected to one Pro Bowl." : `I was selected to ${clueFormatted} Pro Bowls.`;
     case "nfl-ap-mvp-awards": return numericValue === 1 ? "I won the AP NFL MVP award." : `I won ${formatted} AP NFL MVP awards.`;
     case "nfl-super-bowl-titles": return numericValue === 1 ? "I won a Super Bowl title." : `I won ${formatted} Super Bowl titles.`;
     case "nfl-defensive-player-of-year-awards": return numericValue === 1 ? "I won NFL Defensive Player of the Year." : `I won NFL Defensive Player of the Year ${formatted} times.`;
