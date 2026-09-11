@@ -631,7 +631,9 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
       f("nfl-draft-2008", "I was selected 49th overall by the Philadelphia Eagles in the 2008 NFL Draft.", ["college","draft"])
     ]),
   r("cfb-jj-watt", "Wisconsin Athletics", "https://uwbadgers.com/news/2011/4/29/Two_for_one_Watt_Carimi_go_in_first_round", [
-      f("nfl-draft-2011", "I was selected 11th overall by the Houston Texans in the 2011 NFL Draft.", ["college","draft"])
+      f("nfl-draft-2011", "I was selected 11th overall by the Houston Texans in the 2011 NFL Draft.", ["college","draft"]),
+      f("wisconsin-two-first-rounders-2011", "I was one of two Wisconsin players selected in the first round of the 2011 NFL Draft, alongside Gabe Carimi.", ["college","draft","accomplishment"]),
+      f("highest-badger-defender-since-1992", "My No. 11 selection was the highest for a Wisconsin defensive player since Troy Vincent went seventh overall in 1992.", ["college","draft","accomplishment"])
     ]),
   r("cfb-kayvon-thibodeaux", "Oregon Athletics", "https://goducks.com/news/2022/4/28/football-thibodeaux-goes-no-5-overall-to-giants", [
       f("nfl-draft-2022", "I was selected fifth overall by the New York Giants in the 2022 NFL Draft.", ["college","draft"])
