@@ -37,6 +37,13 @@ describe("Who Am I canonical clue authority", () => {
     expect(playable.some((candidate) => candidate.kind === "coach")).toBe(true);
   });
 
+  it("keeps Antonio Gates above the completed 12-clue floor without the heavyweight player-season corpus", () => {
+    const gates = getFootballWhoAmIUniverse("NFL").candidates.find((candidate) => candidate.id === "antonio-gates");
+    expect(gates).toBeDefined();
+    expect(gates!.clues.length).toBeGreaterThanOrEqual(12);
+    expect(gates!.clues.some((entry) => entry.id === "undrafted")).toBe(true);
+  });
+
   it("locks and discloses NFL or CFB before the first Football clue", () => {
     expect(createFootballWhoAmIRound(() => 0).league).toBe("NFL");
     expect(createFootballWhoAmIRound(() => 0.99).league).toBe("CFB");
