@@ -152,7 +152,7 @@ function identityBand(
 
   const strengthSignals = `${conceptId} ${tags.join(" ")} ${value}`.toLowerCase();
   if (
-    /iconic[- ]moment|turning[- ]point|breakthrough|comeback|championship|hall[- ]of[- ]fame|\brecord\b|game[- ]winning|winning touchdown|last[- ]second|final[- ]play|undefeated|retir(?:ed|ement)|suspension|\bdraft(?:ed)?\b|first[- ]round|first overall|historic|milestone/.test(strengthSignals)
+    /iconic[- ]moment|turning[- ]point|breakthrough|comeback|championship|hall[- ]of[- ]fame|all[- ]america|player of the year|\brecord\b|game[- ]winning|winning touchdown|last[- ]second|final[- ]play|undefeated|retir(?:ed|ement)|suspension|\bdraft(?:ed)?\b|first[- ]round|first overall|historic|milestone/.test(strengthSignals)
   ) return "strong";
 
   if (facet === "career-path" && /founder|owner|first-|iconic|defining/.test(conceptId.toLowerCase())) return "strong";
