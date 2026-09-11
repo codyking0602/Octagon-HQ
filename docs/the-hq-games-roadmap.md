@@ -2,7 +2,7 @@
 
 **Status:** Sole canonical product and implementation roadmap for UFC + Football Games  
 **Created:** September 3, 2026  
-**Updated:** September 10, 2026  
+**Updated:** September 11, 2026  
 **Scope:** Play landing pages, shared game presentation, UFC games, Football games, Today's Challenge, 20 Questions, Who Am I, Auction, Draft Room, game-source ownership, and Games release readiness.
 
 > **Cross-chat rule:** Read this document before changing UFC Play, Football Play, any shared game mechanic, Today's Challenge, Auction, Draft Room, Blind Rank 5, Keep 4 / Cut 4, 20 Questions, Who Am I, or the data/ranking sources consumed by Games.
@@ -15,7 +15,7 @@
 
 ## 1. Current roadmap position
 
-PRs 1 through 8 are complete. PR 9 produced an owner-only 20 Questions prototype and is intentionally parked for fresh-eyes iteration later rather than being treated as a public-ready game.
+PRs 1 through 10 are complete. PR 9 produced the 20 Questions prototype, which is now retired as a product after the completed Who Am I rebuild proved to be the stronger identity-game experience. The reusable 20 Questions engine, factual predicates, and research remain preserved as dormant code/data rather than live product ownership. PR 11 — Today's Challenge vNext — is now active.
 
 Completed roadmap sequence:
 
@@ -28,7 +28,7 @@ Completed roadmap sequence:
 7. **PR 7 — Hit the Number final parity/source pass** — completed by #885. UFC Random Pool quality now covers every mature format using only legal player selections; large deterministic parity/source tests lock UFC factual-ledger ownership, Football factual-registry ownership, format breadth, replayability, and challenge/result parity.
 8. **PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup** — completed by #895. Plain entry points now honor the Daily-only product role, compatible historical/challenge deep links remain valid, the existing Daily Double versions are preserved, Football comparison grading uses the shared official Keep/Cut comparison helper, and cross-sport Daily Double presentation recognizes both persisted UFC and Football result shapes.
 
-Who Am I remains owner-only inside roadmap PR 10, but the research/data/plumbing portion of the rebuild is now complete.
+Who Am I PR 10 is complete and remains owner-only pending the explicit Stage 11 release/Daily decision.
 
 Completed Who Am I rebuild work now includes:
 
@@ -48,13 +48,13 @@ The current audited launch populations are **100 UFC / 200 NFL / 200 CFB**. The 
 
 ### NEXT
 
-**Who Am I rebuild slice 13 — mature whole-game simulation + quality tuning.**
+**PR 11 — Today's Challenge vNext, slice 1: Daily eligibility + rotation audit.**
 
-Run representative and broad simulations across UFC, NFL, and CFB to find actual gameplay-quality gaps. Preserve the completed research, replay variation, endgame flow, stage ownership, scoring architecture, and owner-only release state. Add facts only when a concrete simulation finding proves a real gap in an existing canonical owner.
+Treat Who Am I as the sole active identity-game candidate. Audit the current UFC and Football Daily families, score normalization, rotation ownership, deterministic setup/versioning, repetition behavior, and the product role for Who Am I before changing the live schedule. Preserve one Daily owner and immutable first completion.
 
-20 Questions remains owner-only and parked. Do not broaden its access or restart its factual-readiness work unless Cody explicitly chooses to return to it. After Who Am I matures, separately evaluate whether 20 Questions should remain in the product at all.
+20 Questions is retired. Keep its reusable engine/data available for future reuse, but it has no Play-library card, no live game route, no Daily/challenge role, and no roadmap slot unless Cody makes a new explicit product decision to revive it.
 
-Who Am I must remain owner-only throughout development. It stays absent from public Play discovery, Today's Challenge, Daily rotation, challenges, streaks, and reminders until Cody explicitly approves opening it up.
+Who Am I remains owner-only at the start of PR 11. It stays absent from public Play discovery, Today's Challenge, Daily rotation, challenges, streaks, and reminders until Stage 11 explicitly approves those surfaces.
 
 Do not reopen an earlier completed mechanic unless a new defect or product decision requires it.
 
@@ -85,20 +85,18 @@ Never create a second factual owner, comparison owner, route owner, challenge ow
 2. Wavelength
 3. Blind Resume
 4. Hit the Number
-5. 20 Questions
-6. Who Am I?
-7. Auction
+5. Who Am I?
+6. Auction
 
 ### Football Play
 
 1. Find the Leader
 2. Wavelength
 3. Hit the Number
-4. 20 Questions
-5. Who Am I?
-6. Draft Room
+4. Who Am I?
+5. Draft Room
 
-The lists above remain the intended mature product. During the current preview phase, 20 Questions and Who Am I are owner-only and must not appear in public Play libraries.
+The lists above remain the intended mature product. Who Am I remains owner-only at the start of PR 11 and must not appear in public Play libraries until explicitly approved. 20 Questions is retired and is not part of either mature Play library.
 
 ### Daily-only mechanics
 
@@ -129,7 +127,6 @@ Daily-capable families are:
 - Football Blind Resume under its Football-specific three-round contract
 - Hit the Number
 - Daily Double: Blind Rank 5 + Keep 4 / Cut 4
-- 20 Questions only after fairness/score-distribution proof and explicit approval to resume/publicly release it
 - Who Am I only after fairness/score-distribution proof and explicit approval to leave owner-only preview
 
 Auction, Draft Room, and Better Than do not enter Today's Challenge.
@@ -301,33 +298,25 @@ Roadmap PR 8 is complete in #895. Blind Rank + Keep/Cut are **not** the next roa
 
 ## 8. New game contracts — LOCKED
 
-### 20 Questions
+### 20 Questions — RETIRED
 
-Normal replayable game for UFC and Football with one shared interaction and presentation model across both sport contexts.
+20 Questions is retired as a product as of September 11, 2026 after the completed Who Am I rebuild established the preferred identity-game experience.
 
-Core rules:
+Preserve:
 
-- one hidden eligible subject;
-- UFC uses the canonical 100-subject factual Games universe;
-- Football selects NFL or CFB 50/50, discloses the league before the first question, and uses the locked 100-player + 20-head-coach launch pool for that league;
-- a hard maximum of 10 curated Yes/No questions;
-- deterministic predicates against canonical identity/factual data only;
-- every live predicate must resolve deterministic Yes or No for every eligible subject, and unknown evidence must never become No;
-- guess identity at any time before the 10-question limit is reached;
-- start every round at 100 points;
-- each question has a static whole-universe internal calibration cost of 5, 6, 7, or 8 based on informativeness, never recalculated from previous answers;
-- player-facing question cards show the actual score deduction rather than the internal cost: `−2.0`, `−2.4`, `−2.8`, or `−3.2` points;
-- question deduction equals internal cost × 0.4;
-- each wrong identity guess deducts 10 points and play continues when questions remain;
-- a correct identity guess ends the round immediately;
-- final score is rounded to the nearest whole number and clamped from 0–100;
-- no runtime LLM truth judgments.
+- the existing engine and deterministic predicate work where it remains useful as reusable infrastructure;
+- canonical factual/source ownership and any source-backed research already produced;
+- tests that protect reusable engine/data correctness when those modules remain in the repository.
 
-Never show remaining candidate count, candidate lists, eliminated candidates, probability meters, dynamic narrowing hints, or any other player-facing narrowing metadata. The player does the narrowing mentally. Normal identity search for guessing is allowed only against the full current sport/league universe.
+Do not preserve live product ownership:
 
-UFC and Football should look and behave like the same game. Sport context changes the factual universe and accent treatment, not the core game shell, scoring presentation, question interaction, guess flow, or result hierarchy.
+- no Play-library card;
+- no owner-preview card;
+- no live 20 Questions runtime route; legacy direct routes redirect to the corresponding Who Am I route;
+- no Today's Challenge, challenge, streak, reminder, or history role;
+- no future roadmap work unless Cody explicitly makes a new decision to revive the mechanic.
 
-**Current release state:** owner-only prototype, intentionally parked as of September 9, 2026. Preserve the current work, but do not broaden access or resume expansion until an explicit product decision does so.
+Do not delete factual or research assets merely to make the retirement look cleaner. Retirement means the product surface is gone while reusable work can remain dormant.
 
 ### Who Am I?
 
@@ -464,11 +453,11 @@ Completed in #885. Canonical factual ownership is preserved, every UFC Random Po
 ### ✅ PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup
 Completed in #895. Blind Rank 5 + Keep 4 / Cut 4 remain Daily Double-only in both sports; normal Play discovery and plain standalone entry are removed, compatible historical/challenge deep links remain valid, the existing Daily/hydration/history owners and persisted versions are preserved, Football uses the shared official Keep/Cut comparison scorer, and cross-sport presentation recognizes both persisted UFC and Football result shapes.
 
-### ⏸ PR 9 — 20 Questions
-Owner-only prototype is preserved and intentionally parked as of September 9, 2026. Do not treat it as public-ready, activate Daily, or continue expansion until Cody explicitly returns to it.
+### ✅ PR 9 — 20 Questions prototype, later retired
+The owner-only prototype work is preserved as reusable engine/data infrastructure, but 20 Questions was explicitly retired as a product on September 11, 2026. It has no live Play discovery, game runtime, or Daily/challenge role. Legacy direct routes redirect to Who Am I.
 
-### ▶ PR 10 — Who Am I? owner-only rebuild
-**IN PROGRESS — gameplay finish only.** Preserve owner-only access. The research/data/plumbing foundation is complete; do not activate Daily rotation or public access until Cody explicitly approves release.
+### ✅ PR 10 — Who Am I? owner-only rebuild
+**COMPLETE.** Preserve owner-only access at the Stage 11 handoff. The research/data/plumbing foundation, gameplay loop, simulation/quality tuning, clue polish, and persistent recent-subject rotation are complete through PR #1007. Do not activate Daily rotation or public access until PR 11 explicitly approves release.
 
 Completed rebuild slices:
 
@@ -488,14 +477,16 @@ Completed gameplay-finish slices:
 11. **replay variation + repetition controls** — completed in #996; approved clue sequences now vary across replay contexts while same-context generation stays deterministic and progression/dedupe/stage correctness remain intact;
 12. **endgame candidate/disguise choice + reduced-point recovery** — two natural final guesses remain available after all 10 clues, with the existing wrong-guess penalty reducing the second attempt; after those attempts or by voluntary choice, a four-choice plausible disguise board provides a lower-value recovery path and excludes identities already proven wrong.
 
-Remaining rebuild slice:
+Completed final rebuild slice:
 
-13. run mature whole-game simulation/quality tuning, then evaluate whether Who Am I makes 20 Questions redundant. Any 20 Questions removal remains a separate explicit product decision.
+13. mature whole-game simulation/quality tuning, clue-signal polish, first-person grammar cleanup, and persisted recent-subject rotation across UFC/NFL/CFB. The final product decision retired 20 Questions rather than carrying two overlapping identity games.
 
 Do not restart completed identity research merely to increase counts. New facts should be added only when a concrete quality gap is found during gameplay simulation and the existing canonical owner is extended.
 
-### PR 11 — Today's Challenge vNext
-Recalibrate the sport-scoped deterministic Daily product after new-game simulation data exists. Preserve one Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Do not add Auction, Draft Room, or Better Than.
+### ▶ PR 11 — Today's Challenge vNext
+**ACTIVE.** Recalibrate the sport-scoped deterministic Daily product after the completed Who Am I simulation work. Preserve one Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Do not add Auction, Draft Room, Better Than, or retired 20 Questions.
+
+Start with a Daily eligibility + rotation audit before changing the live schedule. Explicitly decide whether Who Am I leaves owner-only preview and whether it belongs in Daily based on fairness/score-distribution evidence.
 
 ### PR 12 — Draft Room foundation + Build a QB
 Extend/reuse the canonical strategic challenge backend safely, launch Football Draft Room and Build a QB, prove canonical trait grading, bankroll/nomination behavior, challenge lifecycle, backend verification, and mobile presentation.
@@ -524,7 +515,8 @@ Do not:
 - force UFC and Football onto one route/engine merely for symmetry;
 - revive Blind Rank/Keep-Cut as normal library cards;
 - revive Football Blind Resume as a competing standalone runtime without a new explicit product decision;
-- expose candidate narrowing in 20 Questions;
+- revive retired 20 Questions without a new explicit product decision;
+- expose candidate narrowing in any future reuse of the retired 20 Questions engine;
 - let runtime AI decide yes/no truth;
 - use unsupported trivia or race/ethnicity appearance taxonomy in Who Am I;
 - expose Who Am I publicly before explicit owner approval;
@@ -542,7 +534,7 @@ The roadmap is complete only when production has:
 - one coherent UFC/Football Play design language;
 - the approved normal Play libraries and Daily-only roles;
 - mature/source-correct Find the Leader, Wavelength, Blind Resume, and Hit the Number contracts;
-- replayable 20 Questions and Who Am I in both sports, subject to the later explicit decision on whether 20 Questions remains necessary;
+- mature Who Am I in both sports, with its public/Daily role explicitly decided during PR 11;
 - shared source-backed person identity knowledge that is reusable across Games rather than trapped inside Who Am I;
 - healthy UFC Auction;
 - live Football Draft Room with approved builders/initial rooms;

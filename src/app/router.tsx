@@ -33,8 +33,6 @@ const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
 const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
 const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"));
-const UfcTwentyQuestionsPage = lazy(() => import("../features/play/UfcTwentyQuestionsPage"));
-const FootballTwentyQuestionsPage = lazy(() => import("../features/play/FootballTwentyQuestionsPage"));
 const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
@@ -64,10 +62,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/keep-cut", element: <TodayChallengeGameRoute gameType="keep_4_cut_4" casual={<KeepCutPage />} /> },
       { path: "play/auction", element: <AuctionPage /> },
       { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
-      {
-        path: "play/20-questions",
-        element: <OwnerOnlyRoute fallback="/play"><UfcTwentyQuestionsPage /></OwnerOnlyRoute>,
-      },
+      { path: "play/20-questions", element: <Navigate to="/play/who-am-i" replace /> },
       {
         path: "play/who-am-i",
         element: <OwnerOnlyRoute fallback="/play"><UfcWhoAmIPage /></OwnerOnlyRoute>,
@@ -88,10 +83,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/blind-resume", element: <FootballBlindResumePage /> },
       { path: "football/hit-the-number", element: <FootballHitTheNumberPage /> },
       { path: "football/find-leader", element: <FootballFindLeaderPage /> },
-      {
-        path: "football/20-questions",
-        element: <OwnerOnlyRoute fallback="/football"><FootballTwentyQuestionsPage /></OwnerOnlyRoute>,
-      },
+      { path: "football/20-questions", element: <Navigate to="/football/who-am-i" replace /> },
       {
         path: "football/who-am-i",
         element: <OwnerOnlyRoute fallback="/football"><FootballWhoAmIPage /></OwnerOnlyRoute>,

@@ -92,12 +92,12 @@ describe("Final Play game presentation", () => {
     Object.defineProperty(window, "scrollTo", { value: vi.fn(), writable: true });
   });
 
-  it("shows all eight registered games and keeps 20 Questions playable", () => {
+  it("shows the seven live registered games and keeps retired 20 Questions out of Play", () => {
     const { container } = renderAt(<PlayPage />, "/play");
     const playableCards = [...container.querySelectorAll<HTMLButtonElement>(".play-games__grid button.play-game-card")];
-    expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(8);
-    expect(playableCards).toHaveLength(7);
-    expect(playableCards.some((card) => card.textContent?.includes("20 Questions"))).toBe(true);
+    expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(7);
+    expect(playableCards).toHaveLength(6);
+    expect(container.textContent).not.toContain("20 Questions");
     expect(container.querySelector(".play-game-card__status.is-preview")).toBeNull();
   });
 

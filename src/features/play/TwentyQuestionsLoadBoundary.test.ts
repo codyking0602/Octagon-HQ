@@ -6,8 +6,8 @@ function source(path: string) {
   return readFileSync(join(process.cwd(), path), "utf8");
 }
 
-describe("20 Questions lazy-load boundary", () => {
-  it("keeps heavy Football factual authority out of both browser game routes", () => {
+describe("retired 20 Questions load boundary", () => {
+  it("preserves reusable authority code without loading the retired product from app routes", () => {
     const sharedPage = source("src/features/play/TwentyQuestionsPage.tsx");
     const runtime = source("src/features/games/twentyQuestionsRuntime.ts");
     const footballRuntime = source("src/features/games/twentyQuestionsFootballRuntimeAuthority.ts");
@@ -23,7 +23,9 @@ describe("20 Questions lazy-load boundary", () => {
     expect(ufcRoute).not.toContain("twentyQuestionsFootballAuthority");
     expect(footballRoute).toContain("twentyQuestionsFootballRuntimeAuthority");
     expect(footballRoute).not.toContain("twentyQuestionsFootballAuthority");
-    expect(router).toContain('import("../features/play/UfcTwentyQuestionsPage")');
-    expect(router).toContain('import("../features/play/FootballTwentyQuestionsPage")');
+    expect(router).not.toContain('import("../features/play/UfcTwentyQuestionsPage")');
+    expect(router).not.toContain('import("../features/play/FootballTwentyQuestionsPage")');
+    expect(router).toContain('path: "play/20-questions", element: <Navigate to="/play/who-am-i" replace />');
+    expect(router).toContain('path: "football/20-questions", element: <Navigate to="/football/who-am-i" replace />');
   });
 });

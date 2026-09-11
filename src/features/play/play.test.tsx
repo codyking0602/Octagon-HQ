@@ -38,7 +38,6 @@ describe("Play registry", () => {
     expect(playGames.map((game) => game.id)).toEqual([
       "auction",
       "hit-the-number",
-      "20-questions",
       "find-leader",
       "wavelength",
       "blind-resume",
@@ -46,7 +45,6 @@ describe("Play registry", () => {
       "keep-cut",
     ]);
     expect(playGames.find((game) => game.id === "hit-the-number")?.description).toContain("without going over");
-    expect(playGames.find((game) => game.id === "20-questions")?.description).toContain("up to 10 factual Yes/No questions");
     expect(playGames.find((game) => game.id === "wavelength")?.description).toContain("hidden 1–100 rating");
     expect(playGames.find((game) => game.id === "blind-resume")?.description).toContain("UFC career");
     expect(playGames.find((game) => game.id === "blind-resume")?.description).not.toContain("UFC-only career");
