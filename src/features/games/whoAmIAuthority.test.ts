@@ -12,9 +12,11 @@ function eligible(universe: ReturnType<typeof getUfcWhoAmIUniverse> | ReturnType
 }
 
 describe("Who Am I canonical clue authority", () => {
-  it("keeps the full season affiliation corpus out of the lazy game runtime", () => {
-    const source = readFileSync("src/features/games/whoAmIAuthority.ts", "utf8");
-    expect(source).not.toContain("footballCareerAffiliationProjection");
+  it("keeps the full player-season affiliation corpus out of the lazy game runtime", () => {
+    const authoritySource = readFileSync("src/features/games/whoAmIAuthority.ts", "utf8");
+    const coachProjectionSource = readFileSync("src/features/back-room/footballCoachCareerAffiliationProjection.ts", "utf8");
+    expect(authoritySource).not.toContain("footballCareerAffiliationProjection");
+    expect(coachProjectionSource).not.toContain("player-seasons-");
   });
 
   it("builds UFC rounds only from the canonical factual-ledger universe", () => {
