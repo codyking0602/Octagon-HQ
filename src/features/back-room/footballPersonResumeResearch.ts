@@ -121,4 +121,104 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
       f("first-team-all-american-2005", "I was a first-team All-American in 2005.", ["college", "award"]),
       f("four-bowl-starts", "I became the first Virginia player to start four bowl games at left tackle.", ["college", "championship"])
     ]),
+  r("cfb-deangelo-williams", "Memphis Athletics", "https://gotigersgo.com/news/2023/12/5/deangelo-williams-inducted-into-college-football-hall-of-fame", [
+      f("career-rushing-yards", "I finished my Memphis career with 6,026 rushing yards.", ["college", "production"]),
+      f("career-rushing-touchdowns", "I scored 55 career rushing touchdowns at Memphis.", ["college", "production"]),
+      f("three-time-cusa-opoy", "I was a three-time Conference USA Offensive Player of the Year.", ["college", "award"])
+    ]),
+  r("cfb-dwayne-allen", "Clemson Athletics", "https://clemsontigers.com/sports/football/roster/player/dwayne-allen", [
+      f("career-receiving-line", "I finished my Clemson career with 93 receptions for 1,079 yards and 12 touchdowns.", ["college", "production"]),
+      f("career-games-starts", "I played in 41 career games at Clemson and started 33 of them.", ["college", "production"]),
+      f("mackey-award-2011", "I won the 2011 John Mackey Award as the nation's top tight end.", ["college", "award"])
+    ]),
+  r("cfb-dwight-freeney", "Syracuse Athletics", "https://cuse.com/sports/football/roster/dwight-freeney/1511", [
+      f("career-sacks", "I finished my Syracuse career with 34 sacks.", ["college", "production"]),
+      f("career-tfl", "I recorded 50.5 career tackles for loss at Syracuse.", ["college", "production"]),
+      f("career-forced-fumbles", "I forced a school-record 14 fumbles during my Syracuse career.", ["college", "production"])
+    ]),
+  r("cfb-earl-thomas", "Texas Athletics", "https://texaslonghorns.com/news/2010/1/8/010810aaa_149", [
+      f("career-starts", "I started all 27 games of my Texas career.", ["college", "production"]),
+      f("career-interceptions", "I finished my Texas career with 10 interceptions.", ["college", "production"]),
+      f("career-pass-breakups", "I recorded 33 pass breakups during my Texas career.", ["college", "production"])
+    ]),
+  r("cfb-eric-weddle", "Utah Athletics", "https://utahutes.com/news/2026/1/14/eric-weddle-named-to-2026-college-football-hall-of-fame-class", [
+      f("career-tackles", "I finished my Utah career with 277 tackles.", ["college", "production"]),
+      f("career-interceptions", "I recorded 18 career interceptions at Utah.", ["college", "production"]),
+      f("career-forced-fumbles", "I forced a school-record nine fumbles during my Utah career.", ["college", "production"])
+    ]),
+  r("cfb-gerald-mccoy", "Oklahoma Athletics", "https://soonersports.com/news/2009/12/15/208403217", [
+      f("career-tfl", "I finished my Oklahoma career with 33.5 tackles for loss.", ["college", "production"]),
+      f("career-sacks", "I recorded 14.5 career sacks at Oklahoma.", ["college", "production"]),
+      f("consecutive-starts-dl", "I set an Oklahoma record for a defensive lineman with 38 consecutive starts.", ["college", "production"])
+    ]),
+  r("cfb-glenn-dorsey", "LSU Athletics", "https://lsusports.net/sports/fb/roster/player/glenn-dorsey", [
+      f("2007-tackles", "I recorded 69 tackles during LSU's 2007 national-championship season.", ["college", "production"]),
+      f("2007-sacks-tfl", "In 2007 I had seven sacks and 12.5 tackles for loss.", ["college", "production"]),
+      f("2007-awards-sweep", "In 2007 I won the Lombardi, Outland, Lott and Nagurski awards.", ["college", "award"])
+    ]),
+  r("cfb-haloti-ngata", "Oregon Athletics", "https://goducks.com/news/2025/1/15/haloti-ngata-selected-to-2025-college-football-hall-of-fame-class", [
+      f("career-tackles", "I finished my Oregon career with 151 tackles.", ["college", "production"]),
+      f("career-tfl-sacks", "My Oregon career included 24.5 tackles for loss and 10 sacks.", ["college", "production"]),
+      f("career-blocked-kicks", "I blocked seven kicks during my Oregon career.", ["college", "production"])
+    ]),
+  r("cfb-heath-miller", "Virginia Athletics", "https://virginiasports.com/news/2018/11/20/football-heath-miller-named-to-virginia-sports-hall-of-fame", [
+      f("career-receptions", "I finished my Virginia career with 144 receptions.", ["college", "production"]),
+      f("career-receiving-yards-touchdowns", "I had 1,703 receiving yards and 20 touchdown catches at Virginia.", ["college", "production"]),
+      f("mackey-award-2004", "I won the 2004 John Mackey Award as the nation's top tight end.", ["college", "award"])
+    ]),
+  r("cfb-jake-long", "Minnesota Vikings", "https://www.vikings.com/news/5-things-to-know-about-vikings-new-t-jake-long-17867494", [
+      f("career-starts", "I started 40 games at Michigan.", ["college", "production"]),
+      f("two-time-all-american", "I was a two-time All-American at Michigan.", ["college", "award"]),
+      f("two-time-big-ten-ol-year", "I won Big Ten Offensive Lineman of the Year in both 2006 and 2007.", ["college", "award"])
+    ]),
+  r("cfb-jamaal-charles", "Texas Sports Hall of Fame", "https://tshof.org/inductee/jamaal-charles/", [
+      f("career-rushing-yards", "I finished my Texas career with 3,328 rushing yards.", ["college", "production"]),
+      f("career-rushing-touchdowns", "I scored 36 career rushing touchdowns at Texas.", ["college", "production"]),
+      f("2005-national-champion", "I was part of Texas' 2005 national championship team.", ["college", "championship"])
+    ]),
+  r("cfb-james-laurinaitis", "Ohio State Athletics", "https://ohiostatebuckeyes.com/news/2026/1/14/james-laurinaitis-to-be-inducted-into-college-football-hall-of-fame", [
+      f("career-tackles", "I finished my Ohio State career with 375 tackles.", ["college", "production"]),
+      f("career-tfl-sacks-interceptions", "My Ohio State career included 24.5 tackles for loss, 13 sacks and nine interceptions.", ["college", "production"]),
+      f("nagurski-butkus-lott", "I won the Nagurski Award, Butkus Award and Lott IMPACT Trophy during my Ohio State career.", ["college", "award"])
+    ]),
+  r("cfb-jaylon-smith", "Notre Dame Athletics", "https://fightingirish.com/sports/football/roster/player/jaylon-smith", [
+      f("2014-tackles", "I recorded 112 tackles for Notre Dame in 2014.", ["college", "production"]),
+      f("2015-tackles-tfl", "I followed with 113 tackles and nine tackles for loss in 2015.", ["college", "production"]),
+      f("butkus-award-2015", "I won the 2015 Butkus Award as the nation's top linebacker.", ["college", "award"])
+    ]),
+  r("cfb-jeff-okudah", "Ohio State Athletics", "https://ohiostatebuckeyes.com/sports/football/roster/okudah-jeff/449", [
+      f("career-games-starts", "I played in 41 games at Ohio State and started 15.", ["college", "production"]),
+      f("career-tackles", "I finished my Ohio State career with 88 tackles.", ["college", "production"]),
+      f("career-passes-defended", "I recorded 21 career passes defended, including three interceptions.", ["college", "production"])
+    ]),
+  r("cfb-jeremy-shockey", "Miami Athletics", "https://miamihurricanes.com/roster/jeremy-shockey/", [
+      f("career-receptions", "I caught 61 passes during my Miami career.", ["college", "production"]),
+      f("career-receiving-yards", "I finished with 815 receiving yards at Miami.", ["college", "production"]),
+      f("career-receiving-touchdowns", "I caught 10 touchdown passes in two seasons at Miami.", ["college", "production"])
+    ]),
+  r("cfb-jermaine-gresham", "Oklahoma Athletics", "https://soonersports.com/news/2009/11/27/208405708", [
+      f("career-receptions", "I finished my Oklahoma career with 111 receptions.", ["college", "production"]),
+      f("career-receiving-yards", "I had 1,629 career receiving yards at Oklahoma.", ["college", "production"]),
+      f("career-receiving-touchdowns", "I scored 26 receiving touchdowns for Oklahoma.", ["college", "production"])
+    ]),
+  r("cfb-joe-alt", "Notre Dame Athletics", "https://fightingirish.com/news/2023/12/14/joe-alt-and-xavier-watts-earn-unanimous-all-america-status", [
+      f("consecutive-starts", "I made 33 consecutive starts at left tackle for Notre Dame.", ["college", "production"]),
+      f("unanimous-all-american-2023", "I was a unanimous first-team All-American in 2023.", ["college", "award"]),
+      f("outland-lombardi-finalist", "I was a finalist for both the Outland Trophy and Lombardi Award in 2023.", ["college", "award"])
+    ]),
+  r("cfb-jordan-shipley", "Texas Athletics", "https://texaslonghorns.com/honors/hall-of-honor/jordan--shipley/930", [
+      f("career-receptions", "I finished as Texas' career leader with 248 receptions.", ["college", "production"]),
+      f("career-yards-touchdowns", "I had 3,191 receiving yards and 33 touchdown catches at Texas.", ["college", "production"]),
+      f("career-games-starts", "I played in 53 career games at Texas and started 35.", ["college", "production"])
+    ]),
+  r("cfb-julius-peppers", "Carolina Panthers", "https://www.panthers.com/team/players-roster/julius-peppers/career", [
+      f("career-sacks", "I finished my North Carolina career with 30.5 sacks.", ["college", "production"]),
+      f("career-tfl", "I recorded 53 tackles for loss at North Carolina.", ["college", "production"]),
+      f("bednarik-lombardi", "I won both the Bednarik Award and Lombardi Award as a junior.", ["college", "award"])
+    ]),
+  r("cfb-justin-blackmon", "Oklahoma State Athletics", "https://okstate.com/news/2024/12/10/cowboy-football-justin-blackmon-inducted-into-college-football-hall-of-fame", [
+      f("career-receptions-yards", "I finished my Oklahoma State career with 253 receptions and 3,564 receiving yards.", ["college", "production"]),
+      f("career-receiving-touchdowns", "I caught 40 career touchdown passes at Oklahoma State.", ["college", "production"]),
+      f("two-biletnikoff-awards", "I became one of only two players ever to win the Biletnikoff Award twice.", ["college", "award"])
+    ]),
 ] as const;
