@@ -296,23 +296,23 @@ function anonymizeIdentityValue(
     );
   }
 
+  const subjectFullName = escapeRegExp(cleanedName);
+  text = text.replace(
+    new RegExp(`${subjectFullName}(?:'s|’s|['’])?`, "gi"),
+    (match) => /(?:'s|’s|['’])$/i.test(match) ? `this ${label}'s` : `this ${label}`,
+  );
+
   const protectedNames: Array<[string, string]> = [];
   const otherFullName = /\b([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\s+([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\b/g;
   text = text.replace(otherFullName, (match, givenName: string, surname: string) => {
     const normalizedMatch = match.replace(/[“”"]/g, "").trim().toLowerCase();
     if (normalizedMatch === cleanedName.toLowerCase()) return match;
-    if (
-      givenName.toLowerCase() !== firstName.toLowerCase()
-      && surname.toLowerCase() !== lastName.toLowerCase()
-    ) {
-      const token = `__WHO_AM_I_PROTECTED_NAME_${protectedNames.length}__`;
-      protectedNames.push([token, match]);
-      return token;
-    }
-    return match;
+    const token = `__WHO_AM_I_PROTECTED_NAME_${protectedNames.length}__`;
+    protectedNames.push([token, match]);
+    return token;
   });
 
-  const terms = [...new Set([subjectName, cleanedName, firstName, lastName].filter((term) => term.length >= 2))]
+  const terms = [...new Set([firstName, lastName].filter((term) => term.length >= 2))]
     .sort((left, right) => right.length - left.length);
 
   for (const term of terms) {
@@ -464,7 +464,7 @@ export function assembleWhoAmIClues(
         if (facetDifference !== 0) return facetDifference;
         const priorityDifference = left.priority - right.priority;
         if (priorityDifference !== 0) return priorityDifference;
-        const identityDifference = Number(Boolean(left.clue.identityKnowledge)) - Number(Boolean(right.clue.identityKnowledge));
+        const identityDifference = Number(Boolean(right.clue.identityKnowledge)) - Number(Boolean(left.clue.identityKnowledge));
         if (identityDifference !== 0) return identityDifference;
         const variationDifference = left.variationRank - right.variationRank;
         if (variationDifference !== 0) return variationDifference;
