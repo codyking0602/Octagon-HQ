@@ -299,11 +299,10 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(sequence.filter((clue) => whoAmIClueFacet(clue) === "era")).toHaveLength(1);
   });
 
-  it("keeps shallow highly drafted college stars playable with a useful draft-range clue instead of junk volume", () => {
+  it("keeps shallow CFB stars playable with a late role-and-school identity anchor instead of junk volume", () => {
     const candidate = getFootballWhoAmIUniverse("CFB").candidates.find((entry) => entry.id === "cfb-derrick-johnson");
     expect(candidate).toBeTruthy();
-    expect(candidate!.clues.some((clue) => clue.id === "fact:cfb-nfl-draft-range")).toBe(true);
-    expect(candidate!.clues.some((clue) => clue.id === "fact:cfb-nfl-draft-overall-pick")).toBe(true);
+    expect(candidate!.clues.some((clue) => clue.id === "role-school")).toBe(true);
 
     const sequence = whoAmIProgressiveClues(candidate!.clues, () => 0.5);
     expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
