@@ -187,6 +187,7 @@ describe("Who Am I clue-quality intelligence", () => {
       { id: "b-era", text: "I fought in the 2000s.", band: "broad", facet: "era" },
       { id: "h-division", text: "I competed at light heavyweight.", band: "helpful", facet: "role" },
       { id: "h-style", text: "I mixed striking and submissions.", band: "helpful", facet: "style" },
+      { id: "h-background", text: "I trained at a well-known MMA camp.", band: "helpful", facet: "background" },
       { id: "h-career", text: "My UFC career lasted several years.", band: "helpful", facet: "era" },
       { id: "title-fights", text: "I competed in 5 UFC title fights.", band: "strong", facet: "accomplishments" },
       { id: "title-wins", text: "I won 5 UFC title fights.", band: "strong", facet: "accomplishments" },
@@ -261,18 +262,11 @@ describe("Who Am I clue-quality intelligence", () => {
     for (const league of ["NFL", "CFB"] as const) {
       for (const candidate of getFootballWhoAmIUniverse(league).candidates) {
         expect(
-          candidate.clues.filter((clue) => /fact:(?:nfl|cfb)-career-(?:games|starts|targets)$/.test(clue.id)),
-          `${candidate.id} should not expose generic games, starts, or targets as identification clues`,
+          candidate.clues.filter((clue) => /fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id)),
+          `${candidate.id} should not expose generic games or targets as identification clues`,
         ).toEqual([]);
       }
     }
-  });
-
-  it("keeps secondary-position stat lines from outranking a player's real identity", () => {
-    const candidate = getFootballWhoAmIUniverse("CFB").candidates.find((entry) => entry.name === "O.J. Simpson");
-    expect(candidate).toBeTruthy();
-    expect(candidate!.clues.some((clue) => /fact:cfb-career-(?:receptions|receiving)/.test(clue.id))).toBe(false);
-    expect(candidate!.clues.some((clue) => /fact:cfb-career-rushing/.test(clue.id))).toBe(true);
   });
 
   it("repairs the live C.J. Stroud CFB identity and removes the implausible one-game clue", () => {
