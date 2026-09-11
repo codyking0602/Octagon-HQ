@@ -2222,7 +2222,7 @@ for (const record of footballPersonIdentityKnowledgeRecords) {
 }
 
 const CROSS_STAGE_TRANSITION_IDENTITY = /\b(?:draft|drafted|undrafted)\b/i;
-const CROSS_STAGE_STAGE_EVENT = /\b(?:super bowl|all[ -]?pro|pro bowl|nfl career|nfl season|heisman|all[ -]?america|national championship|college season|career sacks?|career touchdowns?|career yards?|season sacks?|season touchdowns?|season yards?|hall of fame)\b/i;
+const CROSS_STAGE_STAGE_EVENT = /\b(?:super bowl|all[ -]?pro|pro bowl|defensive player of the year|most valuable player|heisman|all[ -]?america|national championship|college season|career sacks?|career touchdowns?|career yards?|season sacks?|season touchdowns?|season yards?|hall of fame)\b/i;
 const CROSS_STAGE_PERSON_IDENTITY = /\b(?:born|birth|child|childhood|family|father|mother|brother|sister|parent|upbringing|hometown|high school|prep|teen|training|workout|degree|education|graduate|off field|community|charity|foundation|business|work|job|media|nickname|moniker|multi sport|baseball|basketball|track|wrestl|style|technique)\b/i;
 
 /**
