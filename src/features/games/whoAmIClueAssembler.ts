@@ -363,9 +363,14 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
     .replace(/\b(?:his|hers)\b/gi, "my")
     .replace(/\bI\s+is\b/g, "I am")
     .replace(/\bI\s+has\b/g, "I have")
+    .replace(/\bme\s+myself\b/gi, "I")
     .replace(
-      /\bme\b(?=\s+(?:(?:later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:began|became|developed|diversified|earned|grew|joined|made|moved|played|recorded|returned|signed|spent|started|transferred|won|worked)\b)/gi,
+      /\bme\b(?=\s+(?:(?:later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:adopted|began|became|credited|developed|diversified|earned|felt|grew|hurled|joined|made|moved|played|recorded|returned|said|signed|spoke|spent|started|thought|threw|transferred|won|worked)\b)/gi,
       "I",
+    )
+    .replace(
+      /\badopted\s+['"“”‘’]?(?:me|my)\s+myself\b/gi,
+      "adopted a distinctive nickname myself",
     );
   return sentenceCase(text);
 }
@@ -870,7 +875,12 @@ export function assembleWhoAmIClues(
 
   const selectedSnapshot = [...selected];
   const replaySwapOptions = selectedSnapshot.flatMap((current, selectedIndex) => {
-    if (current.clue.band !== "helpful" && current.clue.band !== "strong") return [];
+    const chronologyReplay = current.semanticFamily === "era:chronology";
+    if (
+      current.clue.band !== "helpful"
+      && current.clue.band !== "strong"
+      && !(chronologyReplay && current.clue.band === "broad")
+    ) return [];
 
     const comparableFacetClues = prepared.filter((candidate) => (
       candidate !== current
@@ -885,7 +895,15 @@ export function assembleWhoAmIClues(
 
     return prepared
       .filter((candidate) => !selectedSnapshot.includes(candidate))
-      .filter((candidate) => candidate.clue.band === current.clue.band)
+      .filter((candidate) => (
+        candidate.clue.band === current.clue.band
+        || (
+          chronologyReplay
+          && candidate.semanticFamily === "era:chronology"
+          && bandRank(candidate.clue.band) >= bandRank(current.clue.band)
+          && bandRank(candidate.clue.band) <= Math.min(bandRank(current.clue.band) + 1, bandRank("strong"))
+        )
+      ))
       .filter((candidate) => {
         const equivalentQuality = Math.abs(candidate.priority - current.priority) <= 20
           && Math.abs(candidate.strength - current.strength) <= 20;
@@ -936,7 +954,14 @@ export function assembleWhoAmIClues(
       || left.candidate.index - right.candidate.index
     ));
     const swap = replaySwapOptions[0]!;
-    if (swap.candidate.variationRank < swap.current.variationRank) {
+    const chronologyReplay = (
+      swap.current.semanticFamily === "era:chronology"
+      && swap.candidate.semanticFamily === "era:chronology"
+    );
+    if (
+      swap.candidate.variationRank < swap.current.variationRank
+      || (chronologyReplay && swap.candidate.variationRank < 0.5)
+    ) {
       selected[swap.selectedIndex] = swap.candidate;
     }
   }
