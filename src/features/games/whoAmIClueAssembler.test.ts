@@ -122,6 +122,19 @@ describe("Who Am I Slice 13 quality regressions", () => {
     })).toBe("production");
   });
 
+  it("treats award-bearing identity facts as strong late-round clues", () => {
+    const clue = whoAmIIdentityKnowledgeClue({
+      subjectId: "cfb-dez-bryant",
+      subjectName: "Dez Bryant",
+      subjectKind: "player",
+      factId: "receiver-and-punt-return-star",
+      conceptId: "receiver-and-punt-return-star",
+      value: "In 2008 Dez Bryant was recognized not only as an All-America receiver but also as the Big 12 Special Teams Player of the Year.",
+    });
+
+    expect(clue.band).toBe("strong");
+  });
+
   it("does not turn another person's shared first name into the hidden identity placeholder", () => {
     const clue = whoAmIIdentityKnowledgeClue({
       subjectId: "cfb-kyle-pitts",
