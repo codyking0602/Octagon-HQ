@@ -122,6 +122,27 @@ describe("Who Am I Slice 13 quality regressions", () => {
     })).toBe("production");
   });
 
+  it("classifies trade, alter-ego, faith, and freelance identity concepts into their real facets", () => {
+    const cases = [
+      ["trade-to-rams", "career-path"],
+      ["weapon-x-alter-ego", "nickname"],
+      ["quiet-faith-versus-field-fury", "off-field"],
+      ["free-lance-safety-role", "style"],
+    ] as const;
+
+    for (const [conceptId, expectedFacet] of cases) {
+      const clue = whoAmIIdentityKnowledgeClue({
+        subjectId: "nfl-example",
+        subjectName: "Example Player",
+        subjectKind: "player",
+        factId: conceptId,
+        conceptId,
+        value: "Example Player has a verified identity fact for this concept.",
+      });
+      expect(clue.facet, conceptId).toBe(expectedFacet);
+    }
+  });
+
   it("treats award-bearing identity facts as strong late-round clues", () => {
     const clue = whoAmIIdentityKnowledgeClue({
       subjectId: "cfb-dez-bryant",
