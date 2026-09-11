@@ -1,5 +1,6 @@
 import projectionJson from "../../../data/generated/football/recognizability-projection.json";
 import type { FootballCanonicalSubject, FootballCanonicalPosition } from "./footballFactualStatsCatalog";
+import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";
 import { footballHistoricalPoolRecognitionRecords } from "./footballHistoricalPoolRecognitionEvidence";
 import { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";
 import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecognitionRepairs";
@@ -104,6 +105,27 @@ const promotedPlayerRecords = playerRecords.filter((record) => (
   recognitionTierAtLeast(record.tier, proHallMinimumTierForPlayerRecord(record)) !== "D"
 ));
 
+const cfbSeasonRecognitionBySourceId = new Map<string, typeof footballCfbPlayerSeasonRecognitionRecords[number][]>();
+for (const season of footballCfbPlayerSeasonRecognitionRecords) {
+  const rows = cfbSeasonRecognitionBySourceId.get(season.sourceId) ?? [];
+  rows.push(season);
+  cfbSeasonRecognitionBySourceId.set(season.sourceId, rows);
+}
+
+function trustedGeneratedPlayerSchool(record: ProjectionRecord) {
+  if (record.league !== "CFB") return record.school;
+  const rows = (cfbSeasonRecognitionBySourceId.get(record.sourceId) ?? []).filter((season) => (
+    (record.startSeason == null || season.season >= record.startSeason)
+    && (record.endSeason == null || season.season <= record.endSeason)
+  ));
+  const observedCareerYears = record.startSeason != null && record.endSeason != null
+    ? record.endSeason - record.startSeason + 1
+    : 1;
+  if (rows.length < Math.min(2, observedCareerYears)) return undefined;
+  const schools = [...new Set(rows.map((season) => season.school).filter(Boolean))];
+  return schools.length === 1 ? schools[0] : undefined;
+}
+
 const historicalPlayerRepairs = footballHistoricalRecognitionRepairs.filter(
   (repair) => repair.subject.kind === "player-career",
 );
@@ -139,7 +161,7 @@ const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = pr
   kind: "player-career",
   league: record.league,
   position: record.position,
-  school: record.school,
+  school: trustedGeneratedPlayerSchool(record),
   startSeason: record.startSeason,
   endSeason: record.endSeason,
   activeDecades: activeDecades(record.startSeason, record.endSeason),
