@@ -3,6 +3,8 @@ import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonI
 import { getFootballFact, getFootballFactualRecord, type FootballFactMetricId } from "../back-room/footballFactualStatsCore";
 import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
 import {
+  footballWhoAmIApplicableIdentityFacts,
+  footballWhoAmIApplicableMetricFacts,
   getFootballWhoAmILaunchPool,
   getFootballWhoAmIUniverse,
   getUfcWhoAmIUniverse,
@@ -81,7 +83,7 @@ function representativeCandidate(league: "NFL" | "CFB" | "UFC", id: string) {
   return candidate;
 }
 
-describe("Who Am I PR11 clue assembler", () => {
+describe("Who Am I football scope-aware clue aggregation", () => {
   it("deduplicates concepts and effectively repeated clue values while preserving progressive bands", () => {
     const clues: WhoAmIClue[] = [
       { id: "b1", conceptId: "role", text: "I played defensive back.", band: "broad", facet: "role" },
@@ -122,8 +124,10 @@ describe("Who Am I PR11 clue assembler", () => {
         const source = getFootballPersonIdentityKnowledge(candidate.id);
         if (!source) continue;
         covered += 1;
-        expect(candidate.clues.filter((clue) => clue.identityKnowledge)).toHaveLength(source.facts.length);
-        expect(candidate.clues.filter((clue) => clue.identityKnowledge).every((clue) => clue.knowledgeSubjectId === candidate.id)).toBe(true);
+        const identityClues = candidate.clues.filter((clue) => clue.identityKnowledge);
+        expect(identityClues.length).toBeGreaterThanOrEqual(source.facts.length);
+        expect(source.facts.every((fact) => identityClues.some((clue) => clue.sourceFactId === fact.factId))).toBe(true);
+        expect(identityClues.every((clue) => clue.knowledgeSubjectId === candidate.id)).toBe(true);
       }
       expect(covered).toBeGreaterThan(0);
     }
@@ -149,31 +153,84 @@ describe("Who Am I PR11 clue assembler", () => {
     );
   });
 
-  it("builds a complete CFB sequence for Aaron Donald from canonical resume and identity facts", () => {
+  it("keeps CFB and NFL Aaron Donald separate while sharing only applicable person-level knowledge", () => {
     expect(getFootballFact("cfb-aaron-donald", "cfb-best-season-sacks")?.fact.value).toBe(11);
     expect(getFootballFact("cfb-aaron-donald", "cfb-best-season-tackles-for-loss")?.fact.value).toBe(28.5);
 
-    const candidate = representativeCandidate("CFB", "cfb-aaron-donald");
-    const first = whoAmIProgressiveClues(candidate.clues, () => 0);
-    const second = whoAmIProgressiveClues(candidate.clues, () => 0.999999);
+    const cfbPool = getFootballWhoAmILaunchPool("CFB");
+    const nflPool = getFootballWhoAmILaunchPool("NFL");
+    const cfbSubject = cfbPool.subjects.find((subject) => subject.id === "cfb-aaron-donald");
+    const nflSubject = nflPool.subjects.find((subject) => subject.id === "nfl-aaron-donald");
+    expect(cfbSubject).toBeTruthy();
+    expect(nflSubject).toBeTruthy();
 
-    expect(second).toEqual(first);
-    assertProgressiveSequence(candidate, first);
-    expect(first.filter((clue) => clue.identityKnowledge).length).toBeGreaterThanOrEqual(2);
-    expect(candidate.clues.some((clue) => clue.text.includes("11 sacks"))).toBe(true);
-    expect(candidate.clues.some((clue) => clue.text.includes("28.5 tackles for loss"))).toBe(true);
-    expect(candidate.clues.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
-    expect(first.filter((clue) => (
-      clue.text === "My best college season included 11 sacks."
-      || clue.text === "My best college season included 28.5 tackles for loss."
-      || (clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))
-    ))).toHaveLength(2);
+    const cfbCandidate = representativeCandidate("CFB", "cfb-aaron-donald");
+    const nflCandidate = representativeCandidate("NFL", "nfl-aaron-donald");
+    const cfbSequence = whoAmIProgressiveClues(cfbCandidate.clues, () => 0);
+    const nflSequence = whoAmIProgressiveClues(nflCandidate.clues, () => 0.999999);
+
+    assertProgressiveSequence(cfbCandidate, cfbSequence);
+    assertProgressiveSequence(nflCandidate, nflSequence);
+
+    expect(cfbCandidate.clues.some((clue) => clue.text.includes("11 sacks"))).toBe(true);
+    expect(cfbCandidate.clues.some((clue) => clue.text.includes("28.5 tackles for loss"))).toBe(true);
+    expect(cfbCandidate.clues.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
+
+    expect(cfbCandidate.clues.filter((clue) => clue.id.startsWith("fact:")).every((clue) => clue.id.startsWith("fact:cfb-"))).toBe(true);
+    expect(nflCandidate.clues.filter((clue) => clue.id.startsWith("fact:")).every((clue) => clue.id.startsWith("fact:nfl-"))).toBe(true);
+    expect(cfbCandidate.clues.some((clue) => /Defensive Player of the Year|first-team All-Pro|Super Bowl title/i.test(clue.text))).toBe(false);
+    expect(nflCandidate.clues.some((clue) => /best college season|college career with/i.test(clue.text))).toBe(false);
+
+    const cfbApplicableIdentity = footballWhoAmIApplicableIdentityFacts(cfbSubject!);
+    const sharedFromNfl = cfbApplicableIdentity.filter((entry) => (
+      entry.sourceSubjectId === "nfl-aaron-donald"
+      && (entry.applicability === "person-shared" || entry.applicability === "transition")
+    ));
+    expect(sharedFromNfl.length).toBeGreaterThan(0);
+    expect(sharedFromNfl.every((entry) => (
+      cfbCandidate.clues.some((clue) => clue.sourceFactId === entry.fact.factId)
+      || cfbCandidate.clues.some((clue) => clue.conceptId === `identity:${entry.fact.conceptId}`)
+      || cfbCandidate.clues.some((clue) => normalize(clue.text) === normalize(entry.fact.value))
+    ))).toBe(true);
 
     console.info(
-      "Who Am I PR11 CFB Aaron Donald sequence",
-      JSON.stringify({ id: candidate.id, name: candidate.name, clues: first.map(({ text, band, facet, identityKnowledge }) => ({
-        text, band, facet, identityKnowledge: Boolean(identityKnowledge),
-      })) }),
+      "Who Am I football Aaron Donald candidate pools",
+      JSON.stringify({
+        CFB: {
+          applicableMetrics: footballWhoAmIApplicableMetricFacts(cfbSubject!).map(({ sourceSubjectId, fact }) => ({
+            sourceSubjectId,
+            metricId: fact.metricId,
+            value: fact.value,
+          })),
+          applicableIdentity: cfbApplicableIdentity.map(({ sourceSubjectId, applicability, fact }) => ({
+            sourceSubjectId,
+            applicability,
+            factId: fact.factId,
+            conceptId: fact.conceptId,
+          })),
+          candidates: cfbCandidate.clues.map(({ id, text, band, facet, identityKnowledge, sourceFactId }) => ({
+            id, text, band, facet, identityKnowledge: Boolean(identityKnowledge), sourceFactId,
+          })),
+          final10: cfbSequence.map(({ id, text, band, facet }) => ({ id, text, band, facet })),
+        },
+        NFL: {
+          applicableMetrics: footballWhoAmIApplicableMetricFacts(nflSubject!).map(({ sourceSubjectId, fact }) => ({
+            sourceSubjectId,
+            metricId: fact.metricId,
+            value: fact.value,
+          })),
+          applicableIdentity: footballWhoAmIApplicableIdentityFacts(nflSubject!).map(({ sourceSubjectId, applicability, fact }) => ({
+            sourceSubjectId,
+            applicability,
+            factId: fact.factId,
+            conceptId: fact.conceptId,
+          })),
+          candidates: nflCandidate.clues.map(({ id, text, band, facet, identityKnowledge, sourceFactId }) => ({
+            id, text, band, facet, identityKnowledge: Boolean(identityKnowledge), sourceFactId,
+          })),
+          final10: nflSequence.map(({ id, text, band, facet }) => ({ id, text, band, facet })),
+        },
+      }),
     );
   });
 
@@ -239,31 +296,110 @@ describe("Who Am I PR11 clue assembler", () => {
       }
     }
 
-    const cfbClueAudit = cfbUniverse.candidates
-      .map((candidate) => ({
-        id: candidate.id,
-        name: candidate.name,
-        availableClues: candidate.clues.length,
-        assembledClues: whoAmIProgressiveClues(candidate.clues).length,
-        identityClues: candidate.clues.filter((clue) => clue.identityKnowledge).length,
-      }))
+    const footballAudits = (["NFL", "CFB"] as const).flatMap((league) => {
+      const pool = getFootballWhoAmILaunchPool(league);
+      const universe = getFootballWhoAmIUniverse(league);
+      const subjectById = new Map(pool.subjects.map((subject) => [subject.id, subject]));
+
+      return universe.candidates.map((candidate) => {
+        const subject = subjectById.get(candidate.id);
+        if (!subject) throw new Error(`Missing launch subject for ${candidate.id}.`);
+
+        const applicableMetrics = footballWhoAmIApplicableMetricFacts(subject);
+        const applicableIdentity = footballWhoAmIApplicableIdentityFacts(subject);
+        const missingMetrics = applicableMetrics.filter(({ fact }) => !candidate.clues.some((clue) => (
+          clue.id === `fact:${fact.metricId}`
+          || (fact.metricId === "cfb-heisman-awards" && clue.id === "heisman")
+        )));
+        const missingIdentity = applicableIdentity.filter(({ fact }) => !candidate.clues.some((clue) => (
+          clue.sourceFactId === fact.factId
+          || clue.conceptId === `identity:${fact.conceptId}`
+        )));
+
+        expect(
+          missingMetrics,
+          `${candidate.id} has unexplained missing applicable factual-ledger facts.`,
+        ).toEqual([]);
+        expect(
+          missingIdentity,
+          `${candidate.id} has unexplained missing applicable person-identity facts.`,
+        ).toEqual([]);
+
+        const recognitionClues = candidate.clues.filter((clue) => (
+          clue.id.startsWith("recognition:")
+          || clue.id === "heisman"
+          || clue.id === "national-champion"
+          || /mvp|heisman|super-bowl|all-pro|player-of-year|national-titles/.test(clue.id)
+        )).length;
+        const productionClues = candidate.clues.filter((clue) => (
+          clue.id.startsWith("fact:")
+          && !/mvp|heisman|super-bowl|all-pro|player-of-year|national-titles/.test(clue.id)
+        )).length;
+        const draftCareerPathClues = candidate.clues.filter((clue) => (
+          clue.id.startsWith("draft-")
+          || clue.id.startsWith("affiliation:")
+          || clue.id === "career-path"
+        )).length;
+        const assembledClues = whoAmIProgressiveClues(candidate.clues).length;
+        const classification = assembledClues < WHO_AM_I_CLUE_LIMIT
+          ? (missingMetrics.length || missingIdentity.length ? "plumbing omission" : "genuine canonical source-depth gap")
+          : "complete";
+
+        return {
+          league,
+          id: candidate.id,
+          name: candidate.name,
+          totalApplicableCanonicalFacts: applicableMetrics.length + applicableIdentity.length,
+          generatedCandidateClues: candidate.clues.length,
+          identityClues: candidate.clues.filter((clue) => clue.identityKnowledge).length,
+          productionClues,
+          recognitionClues,
+          draftCareerPathClues,
+          assembledClues,
+          classification,
+        };
+      });
+    });
+
+    const cfbClueAudit = footballAudits
+      .filter((candidate) => candidate.league === "CFB")
       .sort((left, right) => (
-        left.availableClues - right.availableClues
+        left.generatedCandidateClues - right.generatedCandidateClues
         || left.assembledClues - right.assembledClues
         || left.id.localeCompare(right.id)
       ));
 
-    console.info("Who Am I PR11 lowest-depth CFB candidates", JSON.stringify(cfbClueAudit.slice(0, 5)));
+    const exactlyEight = cfbClueAudit.filter((candidate) => candidate.generatedCandidateClues === 8);
 
-    const shortCfbCandidates = cfbClueAudit
-      .filter((candidate) => candidate.assembledClues < WHO_AM_I_CLUE_LIMIT);
-    if (shortCfbCandidates.length) {
-      console.info("Who Am I PR11 genuine CFB source-data gaps", JSON.stringify(shortCfbCandidates));
+    const plumbingOmissions = footballAudits.filter((candidate) => candidate.classification === "plumbing omission");
+    expect(plumbingOmissions).toEqual([]);
+
+    const shortFootballCandidates = footballAudits
+      .filter((candidate) => candidate.assembledClues < WHO_AM_I_CLUE_LIMIT)
+      .sort((left, right) => (
+        left.assembledClues - right.assembledClues
+        || left.generatedCandidateClues - right.generatedCandidateClues
+        || left.id.localeCompare(right.id)
+      ));
+
+    for (const candidate of shortFootballCandidates) {
+      expect(
+        candidate.generatedCandidateClues,
+        `${candidate.id} has enough candidate clues but the assembler still returned fewer than 10.`,
+      ).toBeLessThan(WHO_AM_I_CLUE_LIMIT);
+      expect(candidate.classification).toBe("genuine canonical source-depth gap");
     }
-    for (const candidate of shortCfbCandidates) {
-      expect(candidate.availableClues).toBeLessThan(WHO_AM_I_CLUE_LIMIT);
-      expect(candidate.assembledClues).toBe(candidate.availableClues);
-    }
+
+    console.info(
+      "Who Am I football aggregation audit summary",
+      JSON.stringify({
+        populations: { UFC: 100, NFL: 200, CFB: 200 },
+        cfbExactlyEightCandidatePools: exactlyEight.length,
+        shortFootballCandidates: shortFootballCandidates.length,
+        lowestDepthCfb: cfbClueAudit.slice(0, 15),
+        remainingUnderTen: shortFootballCandidates,
+      }),
+    );
   });
 
   it("does not mutate canonical person-identity source knowledge during assembly", () => {

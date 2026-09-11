@@ -258,6 +258,16 @@ const projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballF
   .map((subject) => enrichFootballSubject(subject, footballFindLeaderProjectedKnowledgeOverride(subject.id) ?? undefined));
 
 const allRegisteredSubjects = [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects];
+
+const footballPlayerCareerSubjectsByPerson = new Map<string, FootballSubjectProfile[]>();
+for (const subject of allRegisteredSubjects) {
+  if (subject.kind !== "player-career") continue;
+  const key = normalizedFootballSubjectName(subject.name);
+  const subjects = footballPlayerCareerSubjectsByPerson.get(key) ?? [];
+  if (!subjects.some((candidate) => candidate.id === subject.id)) subjects.push(subject);
+  footballPlayerCareerSubjectsByPerson.set(key, subjects);
+}
+
 const footballSubjectById = new Map<string, FootballSubjectProfile>();
 // Exact public/source subject IDs own themselves. Legacy aliases fill only unclaimed keys afterwards, so an older
 // cross-level alias can never overwrite a real Stage 12 CFB/NFL career identity with the same id.
@@ -283,6 +293,17 @@ for (const subject of [...footballSubjects, ...projectedPlayerSourceSubjects]) {
 
 export function getFootballSubject(subjectId: string) {
   return footballSubjectById.get(subjectId) ?? null;
+}
+
+/**
+ * Canonical real-person relationship resolver for player-career subjects.
+ * NFL and CFB career subjects remain distinct identities; this only returns the
+ * registered career records that belong to the same normalized person name so
+ * consumers can apply their own league-stage applicability rules.
+ */
+export function footballPlayerCareerSubjectsForPerson(subject: FootballSubjectProfile) {
+  if (subject.kind !== "player-career") return [subject] as const;
+  return footballPlayerCareerSubjectsByPerson.get(normalizedFootballSubjectName(subject.name)) ?? [subject];
 }
 
 function matchesFootballSubject(subject: FootballSubjectProfile, query: FootballSubjectQuery) {
