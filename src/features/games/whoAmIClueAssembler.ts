@@ -799,8 +799,15 @@ export function assembleWhoAmIClues(
     return prepared
       .filter((candidate) => !selectedSnapshot.includes(candidate))
       .filter((candidate) => candidate.clue.band === current.clue.band)
-      .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 30)
-      .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 30)
+      .filter((candidate) => {
+        const equivalentQuality = Math.abs(candidate.priority - current.priority) <= 20
+          && Math.abs(candidate.strength - current.strength) <= 20;
+        if (equivalentQuality) return true;
+        return current.selectionClass !== "sports-identity"
+          && candidate.selectionClass === "sports-identity"
+          && candidate.priority <= current.priority + 20
+          && candidate.strength >= current.strength;
+      })
       .filter((candidate) => {
         const otherSelected = selectedSnapshot.filter((_other, index) => index !== selectedIndex);
         const sportsIdentityCount = otherSelected.filter((entry) => entry.selectionClass === "sports-identity").length
