@@ -594,11 +594,18 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   // Who Am I only needs the compact canonical affiliations already owned by the subject profile.
   // Pulling full season-by-season affiliation history here drags ~19 MB of normalized source corpora
   // into both lazy game routes on mobile without changing launch membership or clue ownership.
-  const profileAffiliations = subject.franchises?.length
-    ? subject.franchises
-    : subject.school
-      ? [subject.school]
-      : [];
+  const relatedPlayerAffiliations = subject.kind === "player-career"
+    ? footballPlayerCareerSubjectsForPerson(subject).flatMap((relatedSubject) => (
+        relatedSubject.league === subject.league
+          ? [...(relatedSubject.franchises ?? []), ...(relatedSubject.school ? [relatedSubject.school] : [])]
+          : []
+      ))
+    : [];
+  const profileAffiliations = [
+    ...(subject.franchises ?? []),
+    ...(subject.school ? [subject.school] : []),
+    ...relatedPlayerAffiliations,
+  ];
   const uniqueAffiliations = [...new Set(
     profileAffiliations.map((affiliation) => displayAffiliation(subject.league, affiliation)),
   )];
