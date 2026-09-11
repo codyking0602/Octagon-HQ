@@ -715,6 +715,18 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   const uniqueAffiliations = [...new Set(
     profileAffiliations.map((affiliation) => displayAffiliation(subject.league, affiliation)),
   )];
+  if (!isCoach && subject.league === "NFL" && subject.position && uniqueAffiliations.length) {
+    clues.push({
+      ...clue(
+        "role-franchise",
+        `I played ${subject.position} for the ${uniqueAffiliations[0]}.`,
+        "strong",
+      ),
+      facet: "identity",
+      revealPriority: 60,
+    });
+  }
+
   if (isCoach && uniqueAffiliations.length) {
     clues.push(clue(
       "coach-affiliation-count",
