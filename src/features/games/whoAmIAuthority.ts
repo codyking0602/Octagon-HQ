@@ -539,6 +539,30 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   if (isCoach && subject.endSeason != null) {
     clues.push(clue("coach-end", `My ${subject.league} head-coaching career most recently reached ${subject.endSeason}.`, "strong"));
   }
+  if (!isCoach && subject.startSeason != null) {
+    clues.push({
+      ...clue(
+        "player-career-start",
+        subject.league === "NFL"
+          ? `My NFL career began in ${subject.startSeason}.`
+          : `My college career began in ${subject.startSeason}.`,
+        "helpful",
+      ),
+      facet: "era",
+    });
+  }
+  if (!isCoach && subject.endSeason != null) {
+    clues.push({
+      ...clue(
+        "player-career-end",
+        subject.league === "NFL"
+          ? `My NFL career ended in ${subject.endSeason}.`
+          : `My college career ended in ${subject.endSeason}.`,
+        "strong",
+      ),
+      facet: "era",
+    });
+  }
 
   if (subject.school) clues.push(clue("school", `I played college football at ${subject.school}.`, subject.league === "NFL" ? "helpful" : "broad"));
   if (subject.conference) clues.push(clue("conference", `I competed in the ${subject.conference}.`, "helpful"));
