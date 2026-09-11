@@ -446,7 +446,9 @@ export function assembleWhoAmIClues(
     if (!options.allowNearDuplicate && selectedTexts.some((text) => effectivelyRepeated(text, entry.clue.text))) return false;
     if (!options.relaxSemanticFamily && entry.semanticFamily && selectedFamilies.has(entry.semanticFamily)) return false;
     const facetLimit = FACET_LIMITS[entry.facet];
-    if (!options.relaxFacetLimit && facetLimit != null && (facetCounts.get(entry.facet) ?? 0) >= facetLimit) return false;
+    const facetCount = facetCounts.get(entry.facet) ?? 0;
+    if (entry.facet === "relationships" && facetCount >= 1) return false;
+    if (!options.relaxFacetLimit && facetLimit != null && facetCount >= facetLimit) return false;
     return true;
   };
 
