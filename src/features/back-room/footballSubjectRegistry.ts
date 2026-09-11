@@ -285,10 +285,25 @@ export function getFootballSubject(subjectId: string) {
   return footballSubjectById.get(subjectId) ?? null;
 }
 
+function footballPersonSubjectsShareIdentityEvidence(
+  subject: FootballSubjectProfile,
+  candidate: FootballSubjectProfile,
+) {
+  const subjectSourceKeys = new Set(subject.sourceIdentityKeys.map((key) => `${key.provider}:${key.id}`));
+  if (candidate.sourceIdentityKeys.some((key) => subjectSourceKeys.has(`${key.provider}:${key.id}`))) return true;
+
+  if (subject.kind !== "player-career" || candidate.kind !== "player-career") return false;
+  if (subject.school && candidate.school) {
+    return normalizedFootballSubjectName(subject.school) === normalizedFootballSubjectName(candidate.school);
+  }
+  if (subject.draftYear != null && candidate.draftYear != null) return subject.draftYear === candidate.draftYear;
+  return false;
+}
+
 /**
- * Resolve the canonical football identities that belong to the same real person without collapsing NFL and CFB
- * careers into one gameplay subject. Cross-stage matches are accepted only when the opposite league has one
- * unambiguous canonical identity with the same normalized name and subject kind.
+ * Resolve every registered storage identity that is safely attributable to the same real football person while keeping
+ * CFB and NFL gameplay subjects separate. Exact normalized-name matches may coexist as curated and source-backed ids;
+ * shared source identity, school, or draft evidence reconciles those duplicates instead of treating them as ambiguity.
  */
 export function resolveFootballPersonSubjects(subject: FootballSubjectProfile) {
   if (subject.kind !== "player-career" && subject.kind !== "coach") return [subject] as const;
@@ -301,12 +316,30 @@ export function resolveFootballPersonSubjects(subject: FootballSubjectProfile) {
     if (canonical.kind === subject.kind) canonicalMatches.set(canonical.id, canonical);
   }
 
-  const result: FootballSubjectProfile[] = [subject];
+  const candidates = [...canonicalMatches.values()]
+    .filter((candidate) => candidate.id !== subject.id)
+    .sort((left, right) => (
+      Number(left.league !== subject.league) - Number(right.league !== subject.league)
+      || left.id.localeCompare(right.id)
+    ));
+  const evidencedMatches = candidates.filter((candidate) => (
+    footballPersonSubjectsShareIdentityEvidence(subject, candidate)
+  ));
+
+  const result: FootballSubjectProfile[] = [subject, ...evidencedMatches];
+  const resolvedIds = new Set(result.map((candidate) => candidate.id));
+
+  // Preserve the prior conservative name-only bridge when there is exactly one opposite-stage identity and no stronger
+  // metadata was available. Never use name alone to absorb an additional same-stage storage identity.
   for (const league of ["NFL", "CFB"] as const) {
-    if (league === subject.league) continue;
-    const matches = [...canonicalMatches.values()].filter((candidate) => candidate.league === league);
-    if (matches.length === 1) result.push(matches[0]!);
+    if (league === subject.league || result.some((candidate) => candidate.league === league)) continue;
+    const matches = candidates.filter((candidate) => candidate.league === league && !resolvedIds.has(candidate.id));
+    if (matches.length === 1) {
+      result.push(matches[0]!);
+      resolvedIds.add(matches[0]!.id);
+    }
   }
+
   return result;
 }
 
