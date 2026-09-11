@@ -1,4 +1,5 @@
 import { footballCoachCareerAffiliationHistoryFor } from "../back-room/footballCoachCareerAffiliationProjection";
+import { footballCfbPlayerSeasonRecognitionRecords } from "../back-room/footballCfbPlayerSeasonRecognition";
 import {
   getFootballPersonIdentityKnowledge,
   getFootballPersonIdentityKnowledgeForPerson,
@@ -320,6 +321,33 @@ function footballDraftProfile(subject: FootballSubjectProfile) {
     ))[0] ?? subject;
 }
 
+const cfbWhoAmISeasonRecognitionBySourceId = new Map<string, typeof footballCfbPlayerSeasonRecognitionRecords[number][]>();
+for (const season of footballCfbPlayerSeasonRecognitionRecords) {
+  const rows = cfbWhoAmISeasonRecognitionBySourceId.get(season.sourceId) ?? [];
+  rows.push(season);
+  cfbWhoAmISeasonRecognitionBySourceId.set(season.sourceId, rows);
+}
+
+function footballWhoAmISchool(subject: FootballSubjectProfile) {
+  if (subject.kind !== "player-career" || subject.league !== "CFB") return subject.school;
+  const sourceIds = (subject.sourceIdentityKeys ?? [])
+    .filter((key) => key.provider === "cfbfastR")
+    .map((key) => String(key.id));
+  const rows = sourceIds.flatMap((sourceId) => cfbWhoAmISeasonRecognitionBySourceId.get(sourceId) ?? [])
+    .filter((season) => (
+      (subject.startSeason == null || season.season >= subject.startSeason)
+      && (subject.endSeason == null || season.season <= subject.endSeason)
+    ));
+  if (!rows.length) return subject.school;
+
+  const observedCareerYears = subject.startSeason != null && subject.endSeason != null
+    ? subject.endSeason - subject.startSeason + 1
+    : 1;
+  if (rows.length < Math.min(2, observedCareerYears)) return undefined;
+  const schools = [...new Set(rows.map((season) => season.school).filter(Boolean))];
+  return schools.length === 1 ? schools[0] : undefined;
+}
+
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   const wins = subject.fights.filter((fight) => fight.result === "win");
   const losses = subject.fights.filter((fight) => fight.result === "loss");
@@ -585,7 +613,8 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     });
   }
 
-  if (subject.school) clues.push(clue("school", `I played college football at ${subject.school}.`, subject.league === "NFL" ? "helpful" : "broad"));
+  const whoAmISchool = footballWhoAmISchool(subject);
+  if (whoAmISchool) clues.push(clue("school", `I played college football at ${whoAmISchool}.`, subject.league === "NFL" ? "helpful" : "broad"));
   if (subject.conference) clues.push(clue("conference", `I competed in the ${subject.conference}.`, "helpful"));
   const draftProfile = footballDraftProfile(subject);
   if (draftProfile.draftYear != null && draftProfile.draftPick != null) {
@@ -627,7 +656,7 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     ? coachHistory.affiliations
     : [
         ...(subject.franchises ?? []),
-        ...(subject.school ? [subject.school] : []),
+        ...(whoAmISchool ? [whoAmISchool] : []),
         ...relatedPlayerAffiliations,
       ];
   const uniqueAffiliations = [...new Set(
@@ -654,7 +683,7 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     ));
   }
   for (const affiliation of uniqueAffiliations) {
-    if (subject.league === "CFB" && subject.school && slug(affiliation) === slug(subject.school)) continue;
+    if (subject.league === "CFB" && whoAmISchool && slug(affiliation) === slug(whoAmISchool)) continue;
     clues.push(clue(
       `affiliation:${slug(affiliation)}`,
       subject.league === "NFL"
