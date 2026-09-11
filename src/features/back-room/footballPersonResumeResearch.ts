@@ -319,4 +319,96 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
       f("senior-sacks", "I recorded 14 sacks during my senior season at Virginia.", ["college", "production"]),
       f("hendricks-award", "I won the 2007 Ted Hendricks Award as the nation's top defensive end.", ["college", "award"])
     ]),
+  r("cfb-derrick-johnson", "Texas Athletics", "https://texaslonghorns.com/sports/general/roster/derrick-johnson/5218", [
+      f("career-tackles", "I finished my Texas career with 458 tackles.", ["college", "production"]),
+      f("career-tackles-for-loss", "I set a Texas career record with 65 tackles for loss.", ["college", "production"])
+    ]),
+  r("cfb-eli-manning", "Ole Miss Athletics", "https://olemisssports.com/news/2024/8/4/football-ole-miss-greats-eli-manning-savante-stringfellow-inducted-into-mississippi-sports-hall-of-fame", [
+      f("career-passing-yards", "I finished my Ole Miss career with a school-record 10,119 passing yards.", ["college", "production"]),
+      f("career-passing-touchdowns", "I threw a school-record 81 career touchdown passes at Ole Miss.", ["college", "production"])
+    ]),
+  r("cfb-jake-matthews", "Texas A&M Athletics", "https://12thman.com/news/2023/08/11/eight-named-to-athletics-2023-hall-of-fame-class", [
+      f("consecutive-starts", "I finished my Texas A&M career with 46 consecutive starts.", ["college", "production"]),
+      f("two-first-team-all-america", "I was a two-time first-team All-American at Texas A&M.", ["college", "award"])
+    ]),
+  r("cfb-joe-thomas", "Wisconsin Athletics", "https://uwbadgers.com/sports/2015/8/21/GEN_20140101585", [
+      f("career-games-starts", "I appeared in 47 games at Wisconsin and started 38.", ["college", "production"]),
+      f("outland-award", "I won the 2006 Outland Trophy as college football's top interior lineman.", ["college", "award"])
+    ]),
+  r("cfb-john-henderson", "Tennessee Athletics", "https://utsports.com/sports/football/roster/john-henderson/14190", [
+      f("career-sacks", "I finished my Tennessee career with 20.5 sacks.", ["college", "production"]),
+      f("outland-award", "I won the 2000 Outland Trophy.", ["college", "award"])
+    ]),
+  r("nfl-ya-tittle", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/ya-tittle", [
+      f("pro-bowls", "I was selected to seven Pro Bowls during my pro career.", ["playing-career", "award"]),
+      f("all-nfl-selections", "I earned four All-NFL selections.", ["playing-career", "award"]),
+      f("1962-touchdown-record", "I set an NFL single-season record with 33 touchdown passes in 1962.", ["playing-career", "production"]),
+      f("1963-touchdown-record", "I broke my own record a year later with 36 touchdown passes.", ["playing-career", "production"]),
+      f("three-giants-division-titles", "I led the Giants to division titles in 1961, 1962 and 1963.", ["playing-career", "championship"])
+    ]),
+  r("dick-butkus", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dick-butkus", [
+      f("career-games", "I played 119 NFL games.", ["playing-career", "production"]),
+      f("career-interceptions", "I intercepted 22 passes during my NFL career.", ["playing-career", "production"]),
+      f("career-fumble-recoveries", "I recovered 27 fumbles during my NFL career.", ["playing-career", "production"])
+    ]),
+  r("nfl-andre-tippett", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/andre-tippett", [
+      f("career-games", "I played 151 NFL games.", ["playing-career", "production"]),
+      f("career-sacks", "I finished my NFL career with 100 sacks.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-bobby-bell", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/bobby-bell", [
+      f("career-games", "I played 168 professional games.", ["playing-career", "production"]),
+      f("career-interceptions", "I intercepted 26 passes during my pro career.", ["playing-career", "production"]),
+      f("career-touchdowns", "I scored nine touchdowns during my pro career.", ["playing-career", "production"])
+    ]),
+  r("nfl-chris-hanburger", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chris-hanburger", [
+      f("career-games", "I played 187 NFL games.", ["playing-career", "production"]),
+      f("career-interceptions", "I intercepted 19 passes during my NFL career.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to nine Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-chuck-howley", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chuck-howley", [
+      f("career-games", "I played 180 regular-season NFL games.", ["playing-career", "production"]),
+      f("career-interceptions", "I intercepted 25 passes during my NFL career.", ["playing-career", "production"]),
+      f("super-bowl-mvp", "I was named the MVP of Super Bowl V despite my team losing the game.", ["playing-career", "award"])
+    ]),
+  r("nfl-dave-robinson", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dave-robinson", [
+      f("career-games", "I played 155 regular-season NFL games.", ["playing-career", "production"]),
+      f("career-interceptions", "I intercepted 27 passes during my NFL career.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to three Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-dave-wilcox", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dave-wilcox", [
+      f("career-games", "I played 153 NFL games.", ["playing-career", "production"]),
+      f("career-interceptions", "I intercepted 14 passes during my NFL career.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to seven Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-harry-carson", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/harry-carson", [
+      f("career-games", "I played 173 NFL games.", ["playing-career", "production"]),
+      f("career-interceptions", "I intercepted 11 passes during my NFL career.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to nine Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-sam-huff", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/sam-huff", [
+      f("career-interceptions", "I intercepted 30 passes during my NFL career.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"]),
+      f("nfl-title-games", "I played in six NFL championship games.", ["playing-career", "championship"])
+    ]),
+  r("nfl-alex-karras", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/alex-karras", [
+      f("career-games", "I played 161 NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to four Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-bob-lilly", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/bob-lilly", [
+      f("career-games", "I played 196 consecutive regular-season games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to 11 Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-carl-eller", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/carl-eller", [
+      f("career-games", "I played 225 regular-season NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-charles-haley", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/charles-haley", [
+      f("super-bowl-rings", "I became the first player in NFL history to win five Super Bowls.", ["playing-career", "award"]),
+      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-chris-doleman", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chris-doleman", [
+      f("career-games", "I played 232 NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+    ]),
 ] as const;
