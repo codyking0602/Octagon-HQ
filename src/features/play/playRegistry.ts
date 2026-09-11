@@ -156,7 +156,6 @@ export const playGameCatalog = [
     icon: "?",
     title: "Who Am I?",
     description: "Identify the hidden UFC fighter as two clues at a time move from broad to near-giveaway.",
-    availability: "preview",
     lineup: {
       defaultType: "replayable",
       supportedTypes: ["replayable"],
