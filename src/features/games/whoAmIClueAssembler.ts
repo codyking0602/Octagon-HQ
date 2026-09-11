@@ -285,6 +285,8 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
   const label = subjectKind === "coach" ? "head coach" : subjectKind;
   let text = value.trim();
   text = text.replace(new RegExp(`^This ${escapeRegExp(label)} and ([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\\b`, "i"), "$1 and I");
+  text = text.replace(new RegExp(`^This ${escapeRegExp(label)}, (?:his|her) `, "i"), "I, my ");
+  text = text.replace(new RegExp(`^This ${escapeRegExp(label)},`, "i"), "I,");
   text = text.replace(new RegExp(`^This ${escapeRegExp(label)}'s `, "i"), "My ");
   text = text.replace(new RegExp(`^This ${escapeRegExp(label)} has described `, "i"), "I've described ");
   text = text.replace(new RegExp(`^This ${escapeRegExp(label)} (?:has|had) `, "i"), "I ");
