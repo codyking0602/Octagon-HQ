@@ -66,9 +66,9 @@ export const WHO_AM_I_MODERN_ERA_SHARE = 0.75;
 
 export function whoAmIProgressiveClues(
   clues: readonly WhoAmIClue[],
-  _random: () => number = Math.random,
+  random: () => number = Math.random,
 ) {
-  return assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT);
+  return assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, random);
 }
 
 function shuffled<T>(values: readonly T[], random: () => number) {
