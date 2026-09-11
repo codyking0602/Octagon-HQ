@@ -544,6 +544,44 @@ export function assembleWhoAmIClues(
     );
   }
 
+  const lateStageCount = () => selected.filter((entry) => (
+    entry.clue.band === "strong" || entry.clue.band === "giveaway"
+  )).length;
+
+  while (lateStageCount() < 3) {
+    const upgrades = prepared.flatMap((candidate) => {
+      if (selected.includes(candidate)) return [];
+      if (candidate.clue.band !== "strong" && candidate.clue.band !== "giveaway") return [];
+
+      return selected.flatMap((current, selectedIndex) => {
+        if (current.clue.band !== "helpful" || current.facet !== candidate.facet) return [];
+        const otherSelected = selected.filter((_entry, index) => index !== selectedIndex);
+        if (otherSelected.some((entry) => entry.conceptId === candidate.conceptId)) return [];
+        if (otherSelected.some((entry) => (
+          normalize(entry.clue.text) === normalize(candidate.clue.text)
+          || effectivelyRepeated(entry.clue.text, candidate.clue.text)
+        ))) return [];
+        if (
+          candidate.semanticFamily
+          && otherSelected.some((entry) => entry.semanticFamily === candidate.semanticFamily)
+        ) return [];
+        return [{ current, candidate, selectedIndex }];
+      });
+    });
+
+    if (!upgrades.length) break;
+    upgrades.sort((left, right) => (
+      bandRank(right.candidate.clue.band) - bandRank(left.candidate.clue.band)
+      || right.candidate.strength - left.candidate.strength
+      || left.candidate.priority - right.candidate.priority
+      || Number(Boolean(right.candidate.clue.identityKnowledge)) - Number(Boolean(left.candidate.clue.identityKnowledge))
+      || right.current.priority - left.current.priority
+      || left.candidate.index - right.candidate.index
+    ));
+    const upgrade = upgrades[0]!;
+    selected[upgrade.selectedIndex] = upgrade.candidate;
+  }
+
   const selectedSnapshot = [...selected];
   const replaySwapOptions = selectedSnapshot.flatMap((current, selectedIndex) => {
     if (current.clue.band !== "helpful" && current.clue.band !== "strong") return [];
