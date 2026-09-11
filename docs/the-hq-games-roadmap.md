@@ -42,21 +42,21 @@ Completed Who Am I rebuild work now includes:
 - stage-aware football same-person aggregation that permits legitimate person/shared and draft-transition knowledge without mixing CFB and NFL production;
 - the football résumé-depth follow-up that leaves **0 NFL/CFB launch subjects below 10 candidate clues and 0 below 12**, while preserving the **10-clue gameplay reveal limit**;
 - deterministic replay variation within approved clue quality/progression, preserving same-context repeatability while producing different valid sequences across replay contexts;
-- the endgame recovery flow with two natural final guesses, then a plausible four-choice disguise board at reduced points, excluding identities already proven wrong.
+- the endgame recovery flow with one final natural guess, then a five-name Recovery Board with two picks at reduced points, excluding identities already proven wrong.
 
 The current audited launch populations are **100 UFC / 200 NFL / 200 CFB**. The completed aggregation audit reports **0 football plumbing omissions**.
 
 ### NEXT
 
-**PR 11 — Today's Challenge vNext, slice 1: Daily eligibility + rotation audit.**
+**PR 11 — Today's Challenge vNext, slice 2: public Who Am I release.**
 
-Treat Who Am I as the sole active identity-game candidate. Audit the current UFC and Football Daily families, score normalization, rotation ownership, deterministic setup/versioning, repetition behavior, and the product role for Who Am I before changing the live schedule. Preserve one Daily owner and immutable first completion.
+Stage 11 slice 1 is complete. The audit is recorded in `docs/todays-challenge-vnext-audit.md`.
 
-20 Questions is retired. Keep its reusable engine/data available for future reuse, but it has no Play-library card, no live game route, no Daily/challenge role, and no roadmap slot unless Cody makes a new explicit product decision to revive it.
+The audit approves Who Am I for normal replayable public Play in UFC and Football, but **not yet for Today's Challenge**. Slice 2 should remove owner-preview gating only. Preserve the current replayable-only contract, scoring, recent-subject rotation, and all existing Daily schedules.
 
-Who Am I remains owner-only at the start of PR 11. It stays absent from public Play discovery, Today's Challenge, Daily rotation, challenges, streaks, and reminders until Stage 11 explicitly approves those surfaces.
+Do not set Who Am I `dailyEligible`, add a Daily adapter/runtime/grader, or change UFC/Football Daily rotation weights in slice 2. Those belong to the later Daily runtime/scoring proof after the public release is clean.
 
-Do not reopen an earlier completed mechanic unless a new defect or product decision requires it.
+20 Questions remains retired. Do not reopen an earlier completed mechanic unless a new defect or product decision requires it.
 
 ---
 
@@ -484,9 +484,16 @@ Completed final rebuild slice:
 Do not restart completed identity research merely to increase counts. New facts should be added only when a concrete quality gap is found during gameplay simulation and the existing canonical owner is extended.
 
 ### ▶ PR 11 — Today's Challenge vNext
-**ACTIVE.** Recalibrate the sport-scoped deterministic Daily product after the completed Who Am I simulation work. Preserve one Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Do not add Auction, Draft Room, Better Than, or retired 20 Questions.
+**ACTIVE — slice 1 audit complete; slice 2 public Who Am I release next.** Preserve one Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Do not add Auction, Draft Room, Better Than, or retired 20 Questions.
 
-Start with a Daily eligibility + rotation audit before changing the live schedule. Explicitly decide whether Who Am I leaves owner-only preview and whether it belongs in Daily based on fairness/score-distribution evidence.
+Stage 11 slice 1 audited the actual production schedule owner and aggregate score distributions. Current live schedules remain unchanged:
+
+- UFC `play-rotation-v6`: 25% Find the Leader, 25% Blind Resume, 20% Wavelength, 20% Hit the Number, 10% Daily Double.
+- Football `football-daily-v3`: equal five-day rotation across Find the Leader, Blind Resume, Wavelength, Daily Double, and Hit the Number.
+
+The audit approves Who Am I to leave owner-only preview as a normal replayable game in both sports. It does **not** approve Who Am I for Daily yet. The existing Daily type/runtime/grader/standings path does not own Who Am I, and Daily needs deterministic shared setup plus cross-day repetition protection rather than the casual local recent-history owner.
+
+See `docs/todays-challenge-vnext-audit.md` for the production score sample and locked slice sequence.
 
 ### PR 12 — Draft Room foundation + Build a QB
 Extend/reuse the canonical strategic challenge backend safely, launch Football Draft Room and Build a QB, prove canonical trait grading, bankroll/nomination behavior, challenge lifecycle, backend verification, and mobile presentation.
