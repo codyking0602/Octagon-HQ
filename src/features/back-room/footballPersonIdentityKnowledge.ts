@@ -2222,7 +2222,8 @@ for (const record of footballPersonIdentityKnowledgeRecords) {
 }
 
 const CROSS_STAGE_TRANSITION_IDENTITY = /\b(?:draft|drafted|undrafted|entered the nfl|turned pro)\b/i;
-const CROSS_STAGE_STAGE_RESULT = /\b(?:super bowl|all[ -]?pro|pro bowl|defensive player of the year|most valuable player|heisman|all[ -]?america|national championship|career sacks?|career touchdowns?|career yards?|season sacks?|season touchdowns?|season yards?|hall of fame)\b/i;
+const CROSS_STAGE_CFB_RESULT = /\b(?:heisman|all[ -]?america|national championship|college football award|ncaa record)\b/i;
+const CROSS_STAGE_NFL_RESULT = /\b(?:super bowl|all[ -]?pro|pro bowl|defensive player of the year|nfl mvp|nfl championship)\b/i;
 const CROSS_STAGE_PERSON_IDENTITY = /\b(?:born|birth|child|childhood|family|father|mother|brother|sister|parent|upbringing|hometown|high[- ]school|prep|teen|training|workout|degree|education|graduate|off[- ]field|community|charity|foundation|business|work|job|media|nickname|moniker|multi[- ]sport|baseball|basketball|track|wrestl|donation|philanthrop)\b/i;
 const CROSS_STAGE_CFB_IDENTITY = /\b(?:cfb|college|collegiate|ncaa|freshman|sophomore|junior|senior season|redshirt|recruit|scholarship|campus|university|school record|bowl game)\b/i;
 const CROSS_STAGE_NFL_IDENTITY = /\b(?:nfl|professional football|pro football|franchise|rookie|playoffs?|postseason)\b/i;
@@ -2239,9 +2240,11 @@ export function footballPersonIdentityFactApplicability(
 ): FootballPersonIdentityApplicability {
   const haystack = `${identityFact.conceptId.replace(/[-_]+/g, " ")} ${(identityFact.tags ?? []).join(" ")} ${identityFact.value}`;
   if (CROSS_STAGE_TRANSITION_IDENTITY.test(haystack)) return "transition";
-  if (CROSS_STAGE_PERSON_IDENTITY.test(haystack) && !CROSS_STAGE_STAGE_RESULT.test(haystack)) return "shared";
+  if (CROSS_STAGE_CFB_RESULT.test(haystack)) return "CFB";
+  if (CROSS_STAGE_NFL_RESULT.test(haystack)) return "NFL";
+  if (CROSS_STAGE_PERSON_IDENTITY.test(haystack)) return "shared";
   if (CROSS_STAGE_CFB_IDENTITY.test(haystack)) return "CFB";
-  if (CROSS_STAGE_NFL_IDENTITY.test(haystack) || CROSS_STAGE_STAGE_RESULT.test(haystack)) return "NFL";
+  if (CROSS_STAGE_NFL_IDENTITY.test(haystack)) return "NFL";
   return "source-stage";
 }
 
