@@ -16,6 +16,8 @@ const metric = (id: string, label: string, unit: FootballFactUnit, decimals: 0 |
 
 export const footballFactMetricDefinitions = [
   metric("nfl-career-games", "Career games", "count", 0),
+  metric("nfl-career-starts", "Career starts", "count", 0),
+  metric("nfl-career-pro-bowl-selections", "Pro Bowl selections", "count", 0),
   metric("nfl-career-passing-completions", "Career completions", "count", 0),
   metric("nfl-career-passing-attempts", "Career pass attempts", "count", 0),
   metric("nfl-career-interceptions-thrown", "Career interceptions thrown", "count", 0),
@@ -100,6 +102,13 @@ export const footballFactMetricDefinitions = [
   metric("nfl-franchise-era-best-season-win-percentage", "Best bounded-era season win percentage", "percent", 1),
   metric("nfl-franchise-era-postseason-resume", "Bounded-era postseason résumé rate", "rating", 2),
   metric("cfb-career-games", "College career games", "count", 0),
+  metric("cfb-career-starts", "College career starts", "count", 0),
+  metric("cfb-career-tackles", "College career tackles", "count", 0),
+  metric("cfb-career-tackles-for-loss", "College career tackles for loss", "count", 1),
+  metric("cfb-all-america-selections", "College All-America selections", "count", 0),
+  metric("cfb-first-team-all-conference-selections", "College first-team all-conference selections", "count", 0),
+  metric("cfb-nfl-draft-overall-pick", "NFL Draft overall pick", "count", 0),
+  metric("cfb-national-championships-won", "College national championships won", "count", 0),
   metric("cfb-career-passing-completions", "College career completions", "count", 0),
   metric("cfb-career-passing-attempts", "College career pass attempts", "count", 0),
   metric("cfb-career-passing-yards", "College career passing yards", "yards", 0),

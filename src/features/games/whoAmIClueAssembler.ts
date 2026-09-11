@@ -121,6 +121,9 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
   if (/style|strik|grappl|wrestl|boxing|kickbox|jiu|judo|sambo|training|technique|stance|movement|slams|speed|power/.test(haystack)) {
     return "style";
   }
+  if (/production|stat|games|starts|tackles|sacks|interceptions|receptions|yards|touchdowns|forced-fumbles|fumble-recoveries|pass-breakups|career-wins|coaching-record|regular-season-record/.test(haystack)) {
+    return "production";
+  }
   if (/champion|title|record|hall|award|heisman|super-bowl|all-american|all-pro|olympian|olympic|milestone/.test(haystack)) {
     return "accomplishments";
   }

@@ -1,9 +1,10 @@
 import type { FootballFactSource } from "./footballFactualStatsCore";
 import { footballPersonIdentityCfbAResearch, footballPersonIdentityCfbAResearchSources } from "./footballPersonIdentityCfbAResearch";
 import { footballPersonIdentityCfbBResearch, footballPersonIdentityCfbBResearchSources } from "./footballPersonIdentityCfbBResearch";
+import { footballPersonResumeResearch, type FootballPersonResumeResearchRecord } from "./footballPersonResumeResearch";
 import { getFootballSubject, type FootballSubjectProfile } from "./footballSubjectRegistry";
 
-export type FootballPersonIdentityKnowledgeClass = "distinctive-identity";
+export type FootballPersonIdentityKnowledgeClass = "distinctive-identity" | "resume";
 export type FootballPersonIdentityVerification = "verified";
 
 /**
@@ -42,6 +43,8 @@ const pr8CfbASourceId = (sourceIndex: number) =>
 
 const pr9CfbBSourceId = (sourceIndex: number) =>
   `identity-pr9-cfb-b-${String(sourceIndex + 1).padStart(3, "0")}`;
+
+const resumeSourceId = (subjectId: string) => `resume-${subjectId}`;
 
 export const footballPersonIdentityKnowledgeSources: readonly FootballFactSource[] = [
   source("identity-mahomes-texas-tech-baseball", "Texas Tech Athletics", "Patrick Mahomes II - Baseball", "https://texastech.com/sports/baseball/roster/patrick-mahomes-ii/40", "Patrick Mahomes high-school multi-sport background, baseball draft, family baseball background, and prep accomplishments."),
@@ -721,6 +724,15 @@ export const footballPersonIdentityKnowledgeSources: readonly FootballFactSource
       "Who Am I Rebuild PR9 CFB B-tier distinctive-identity research provenance.",
     ),
   ),
+  ...footballPersonResumeResearch.map((research) =>
+    source(
+      resumeSourceId(research.subjectId),
+      research.source.publisher,
+      research.source.title,
+      research.source.url,
+      `Stage-scoped football résumé facts for ${research.subjectId}.`,
+    ),
+  ),
 ] as const;
 
 const fact = (
@@ -739,7 +751,7 @@ const fact = (
   ...(tags.length ? { tags } : {}),
 });
 
-export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentityKnowledgeRecord[] = [
+const baseFootballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentityKnowledgeRecord[] = [
   { subjectId: "nfl-patrick-mahomes", facts: [
     fact("father-major-league-pitcher", "baseball-family-background", "His father, Pat Mahomes, pitched in Major League Baseball for 11 seasons across six organizations.", ["identity-mahomes-texas-tech-baseball"], ["family", "baseball"]),
     fact("latroy-hawkins-godfather", "major-league-godfather", "Longtime Major League pitcher LaTroy Hawkins, a former teammate of his father, is his godfather.", ["identity-mahomes-texas-tech-2015-media", "identity-mahomes-mlb-baseball-past"], ["family", "baseball"]),
@@ -2173,6 +2185,41 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
     ),
   })),
 ] as const;
+
+const resumeResearchBySubjectId = new Map(
+  footballPersonResumeResearch.map((research) => [research.subjectId, research] as const),
+);
+const baseKnowledgeSubjectIds = new Set(baseFootballPersonIdentityKnowledgeRecords.map((record) => record.subjectId));
+
+const resumeKnowledgeFacts = (
+  subjectId: string,
+  researchFacts: FootballPersonResumeResearchRecord["facts"],
+): readonly FootballPersonIdentityFact[] => researchFacts.map((resumeFact, index) => ({
+  factId: `resume-${subjectId}-${String(index + 1).padStart(2, "0")}`,
+  conceptId: resumeFact.conceptId,
+  knowledgeClass: "resume",
+  verification: "verified",
+  value: resumeFact.value,
+  sourceIds: [resumeSourceId(subjectId)],
+  tags: resumeFact.tags,
+}));
+
+export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentityKnowledgeRecord[] = [
+  ...baseFootballPersonIdentityKnowledgeRecords.map((record) => {
+    const resume = resumeResearchBySubjectId.get(record.subjectId);
+    if (!resume) return record;
+    return {
+      ...record,
+      facts: [...record.facts, ...resumeKnowledgeFacts(record.subjectId, resume.facts)],
+    };
+  }),
+  ...footballPersonResumeResearch
+    .filter((resume) => !baseKnowledgeSubjectIds.has(resume.subjectId))
+    .map((resume): FootballPersonIdentityKnowledgeRecord => ({
+      subjectId: resume.subjectId,
+      facts: resumeKnowledgeFacts(resume.subjectId, resume.facts),
+    })),
+];
 
 const sourceById = new Map(footballPersonIdentityKnowledgeSources.map((item) => [item.id, item]));
 const recordBySubjectId = new Map<string, FootballPersonIdentityKnowledgeRecord>();

@@ -145,6 +145,10 @@ function normalized(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+function distinctiveIdentityFacts(record: NonNullable<ReturnType<typeof getFootballPersonIdentityKnowledge>>) {
+  return record.facts.filter((identityFact) => identityFact.knowledgeClass === "distinctive-identity");
+}
+
 describe("football person identity knowledge", () => {
   it("keeps the reviewed NFL A-tier research slices intact with exact canonical ids", () => {
     expect(PR4_SUBJECT_IDS.size).toBe(12);
@@ -191,7 +195,7 @@ describe("football person identity knowledge", () => {
       const launchSubject = nflLaunchById.get(subjectId);
       if (launchSubject) {
         expect(launchSubject.recognizabilityTier).toBe("B");
-        expect(getFootballPersonIdentityKnowledge(subjectId)?.facts).toHaveLength(5);
+        expect(distinctiveIdentityFacts(getFootballPersonIdentityKnowledge(subjectId)!)).toHaveLength(5);
       } else {
         expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
       }
@@ -203,7 +207,7 @@ describe("football person identity knowledge", () => {
     for (const name of ["Johnny Manziel", "Tim Tebow", "Vince Young", "Nick Saban", "Urban Meyer"] as const) {
       const cfbSubject = cfbLaunch.subjects.find((subject) => subject.name === name);
       expect(cfbSubject?.recognizabilityTier).toBe("A");
-      expect(getFootballPersonIdentityKnowledge(cfbSubject!.id)?.facts).toHaveLength(5);
+      expect(distinctiveIdentityFacts(getFootballPersonIdentityKnowledge(cfbSubject!.id)!)).toHaveLength(5);
     }
   });
 
@@ -231,16 +235,17 @@ describe("football person identity knowledge", () => {
 
       const record = getFootballPersonIdentityKnowledge(launchSubject.id);
       expect(record?.subjectId).toBe(launchSubject.id);
-      expect(record?.facts).toHaveLength(5);
+      const distinctiveFacts = distinctiveIdentityFacts(record!);
+      expect(distinctiveFacts).toHaveLength(5);
 
-      const factIds = record!.facts.map((identityFact) => identityFact.factId);
-      const conceptIds = record!.facts.map((identityFact) => identityFact.conceptId);
+      const factIds = distinctiveFacts.map((identityFact) => identityFact.factId);
+      const conceptIds = distinctiveFacts.map((identityFact) => identityFact.conceptId);
       expect(factIds.every((id) => id.trim().length > 0)).toBe(true);
       expect(conceptIds.every((id) => id.trim().length > 0)).toBe(true);
       expect(new Set(factIds).size).toBe(5);
       expect(new Set(conceptIds).size).toBe(5);
 
-      for (const identityFact of record!.facts) {
+      for (const identityFact of distinctiveFacts) {
         expect(identityFact.knowledgeClass).toBe("distinctive-identity");
         expect(identityFact.verification).toBe("verified");
         expect(identityFact.sourceIds.length).toBeGreaterThan(0);
@@ -260,7 +265,7 @@ describe("football person identity knowledge", () => {
     expect(bKnowledgeIds).toEqual(nflBTierIds);
   });
 
-  it("requires usable provenance and non-empty verified distinctive facts", () => {
+  it("requires usable provenance and non-empty verified identity and resume facts", () => {
     expect(footballPersonIdentityKnowledgeSources.length).toBeGreaterThan(0);
     const sourceIds = new Set(footballPersonIdentityKnowledgeSources.map((source) => source.id));
     expect(sourceIds.size).toBe(footballPersonIdentityKnowledgeSources.length);
@@ -279,7 +284,7 @@ describe("football person identity knowledge", () => {
         expect(identityFact.factId.trim()).not.toBe("");
         expect(identityFact.conceptId.trim()).not.toBe("");
         expect(identityFact.value.trim()).not.toBe("");
-        expect(identityFact.knowledgeClass).toBe("distinctive-identity");
+        expect(["distinctive-identity", "resume"]).toContain(identityFact.knowledgeClass);
         expect(identityFact.verification).toBe("verified");
         expect(identityFact.sourceIds.length).toBeGreaterThan(0);
         expect(identityFact.sourceIds.every((sourceId) => sourceIds.has(sourceId))).toBe(true);
@@ -341,7 +346,7 @@ describe("football person identity knowledge", () => {
 
       const record = getFootballPersonIdentityKnowledge(launchSubject.id);
       expect(record?.subjectId).toBe(launchSubject.id);
-      expect(record?.facts).toHaveLength(5);
+      expect(distinctiveIdentityFacts(record!)).toHaveLength(5);
     }
 
     const cfbBTier = cfbLaunch.subjects.filter((subject) => subject.recognizabilityTier === "B");
@@ -366,8 +371,9 @@ describe("football person identity knowledge", () => {
 
       const record = getFootballPersonIdentityKnowledge(launchSubject.id);
       expect(record?.subjectId).toBe(launchSubject.id);
-      expect(record?.facts).toHaveLength(5);
-      for (const identityFact of record!.facts) {
+      const distinctiveFacts = distinctiveIdentityFacts(record!);
+      expect(distinctiveFacts).toHaveLength(5);
+      for (const identityFact of distinctiveFacts) {
         expect(identityFact.knowledgeClass).toBe("distinctive-identity");
         expect(identityFact.verification).toBe("verified");
         expect(identityFact.sourceIds).toHaveLength(1);

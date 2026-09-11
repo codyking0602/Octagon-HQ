@@ -350,6 +350,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
           id: candidate.id,
           name: candidate.name,
           totalApplicableCanonicalFacts: applicableMetrics.length + applicableIdentity.length,
+          metricIds: applicableMetrics.map(({ fact }) => fact.metricId),
           generatedCandidateClues: candidate.clues.length,
           identityClues: candidate.clues.filter((clue) => clue.identityKnowledge).length,
           productionClues,
@@ -390,14 +391,23 @@ describe("Who Am I football scope-aware clue aggregation", () => {
       expect(candidate.classification).toBe("genuine canonical source-depth gap");
     }
 
+    const underTwelveFootballCandidates = footballAudits
+      .filter((candidate) => candidate.generatedCandidateClues < 12)
+      .sort((left, right) => (
+        left.generatedCandidateClues - right.generatedCandidateClues
+        || left.id.localeCompare(right.id)
+      ));
+
     console.info(
       "Who Am I football aggregation audit summary",
       JSON.stringify({
         populations: { UFC: 100, NFL: 200, CFB: 200 },
         cfbExactlyEightCandidatePools: exactlyEight.length,
         shortFootballCandidates: shortFootballCandidates.length,
+        underTwelveFootballCandidates: underTwelveFootballCandidates.length,
         lowestDepthCfb: cfbClueAudit.slice(0, 15),
         remainingUnderTen: shortFootballCandidates,
+        remainingUnderTwelve: underTwelveFootballCandidates,
       }),
     );
   });
