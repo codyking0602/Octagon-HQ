@@ -100,12 +100,17 @@ function chooseEligibleCandidate(eligible: readonly WhoAmICandidate[], random: (
   return pool[Math.floor(random() * pool.length)]!;
 }
 
-export function createWhoAmIRound(universe: WhoAmIUniverse, random: () => number = Math.random): WhoAmIRound {
+export function createWhoAmIRound(
+  universe: WhoAmIUniverse,
+  random: () => number = Math.random,
+  excludedSubjectIds: ReadonlySet<string> = new Set(),
+): WhoAmIRound {
   const eligible = universe.candidates.filter((candidate) => (
     whoAmIProgressiveClues(candidate.clues, () => 0.5).length >= WHO_AM_I_CLUE_LIMIT
   ));
   if (!eligible.length) throw new Error(`Who Am I has no eligible ${universe.league} subjects with ${WHO_AM_I_CLUE_LIMIT} clues.`);
-  const hidden = chooseEligibleCandidate(eligible, random);
+  const fresh = eligible.filter((candidate) => !excludedSubjectIds.has(candidate.id));
+  const hidden = chooseEligibleCandidate(fresh.length ? fresh : eligible, random);
   const clues = whoAmIProgressiveClues(hidden.clues, random);
   if (clues.length !== WHO_AM_I_CLUE_LIMIT) throw new Error(`Who Am I generated ${clues.length} clues; expected ${WHO_AM_I_CLUE_LIMIT}.`);
   return {

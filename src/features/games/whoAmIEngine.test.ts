@@ -85,6 +85,19 @@ describe("Who Am I engine", () => {
     expect(round.clues).toHaveLength(10);
   });
 
+  it("excludes recently seen subjects without removing them from the guess universe", () => {
+    const universe = {
+      sport: "ufc" as const,
+      league: "UFC" as const,
+      candidates: [candidate("recent"), candidate("fresh")],
+    };
+
+    const round = createWhoAmIRound(universe, () => 0, new Set(["recent"]));
+
+    expect(round.hiddenSubject.id).toBe("fresh");
+    expect(round.subjects.map((subject) => subject.id)).toEqual(["recent", "fresh"]);
+  });
+
   it("leans modern when modern and legacy subjects are both playable", () => {
     const universe = {
       sport: "ufc" as const,

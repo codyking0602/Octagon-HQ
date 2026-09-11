@@ -936,11 +936,17 @@ export function getFootballWhoAmIUniverse(league: "NFL" | "CFB") {
   return league === "NFL" ? nflUniverse : cfbUniverse;
 }
 
-export function createUfcWhoAmIRound(random: () => number = Math.random): WhoAmIRound {
-  return createWhoAmIRound(ufcUniverse, random);
+export function createUfcWhoAmIRound(
+  random: () => number = Math.random,
+  excludedSubjectIds: ReadonlySet<string> = new Set(),
+): WhoAmIRound {
+  return createWhoAmIRound(ufcUniverse, random, excludedSubjectIds);
 }
 
-export function createFootballWhoAmIRound(random: () => number = Math.random): WhoAmIRound {
+export function createFootballWhoAmIRound(
+  random: () => number = Math.random,
+  excludedSubjectIdsByLeague: Partial<Record<"NFL" | "CFB", ReadonlySet<string>>> = {},
+): WhoAmIRound {
   const league = random() < 0.5 ? "NFL" : "CFB";
-  return createWhoAmIRound(getFootballWhoAmIUniverse(league), random);
+  return createWhoAmIRound(getFootballWhoAmIUniverse(league), random, excludedSubjectIdsByLeague[league]);
 }
