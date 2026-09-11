@@ -221,4 +221,102 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
       f("career-receiving-touchdowns", "I caught 40 career touchdown passes at Oklahoma State.", ["college", "production"]),
       f("two-biletnikoff-awards", "I became one of only two players ever to win the Biletnikoff Award twice.", ["college", "award"])
     ]),
+  r("cfb-kellen-winslow-ii", "Miami Athletics", "https://miamihurricanes.com/news/2011/07/28/205547464-2/", [
+      f("career-receptions", "I finished my Miami career with 119 receptions, a school record for a tight end at the time.", ["college", "production"]),
+      f("career-receiving-yards", "I finished my Miami career with 1,365 receiving yards.", ["college", "production"]),
+      f("mackey-award", "I won the 2003 John Mackey Award as the nation's top tight end.", ["college", "award"])
+    ]),
+  r("cfb-khalil-mack", "Buffalo Athletics", "https://ubbulls.com/news/2024/4/25/football-10-years-later-mack-is-proving-he-was-the-right-pick", [
+      f("career-sacks", "I set Buffalo's career record with 28.5 sacks.", ["college", "production"]),
+      f("career-tackles-for-loss", "I recorded 75 career tackles for loss, tying the NCAA record at the time.", ["college", "production"]),
+      f("career-forced-fumbles", "I forced 16 career fumbles, an NCAA record at the time.", ["college", "production"])
+    ]),
+  r("cfb-lamichael-james", "Oregon Athletics", "https://goducks.com/honors/hall-of-fame/lamichael-james/1253", [
+      f("career-rushing-yards", "I finished my Oregon career with 5,082 rushing yards.", ["college", "production"]),
+      f("career-rushing-touchdowns", "I scored 53 rushing touchdowns at Oregon.", ["college", "production"]),
+      f("three-conference-titles", "I helped Oregon win three straight Pac-10/Pac-12 championships.", ["college", "championship"])
+    ]),
+  r("cfb-luke-kuechly", "Boston College Athletics", "https://bceagles.com/sports/football/roster/l-kuechly/1595", [
+      f("career-tackles", "I finished my Boston College career with 532 tackles.", ["college", "production"]),
+      f("career-tackles-for-loss", "I recorded 44 tackles for loss in college.", ["college", "production"]),
+      f("career-interceptions", "I intercepted seven passes during my Boston College career.", ["college", "production"])
+    ]),
+  r("cfb-malcolm-jenkins", "Ohio State Athletics", "https://ohiostatebuckeyes.com/honors/hall-of-fame-inductees/malcolm-jenkins/485", [
+      f("career-starts-games", "I started 45 of 49 career games at Ohio State.", ["college", "production"]),
+      f("career-tackles", "I recorded 196 career tackles at Ohio State.", ["college", "production"]),
+      f("thorpe-award", "I won the 2008 Jim Thorpe Award as college football's top defensive back.", ["college", "award"])
+    ]),
+  r("cfb-manti-teo", "Notre Dame Athletics", "https://fightingirish.com/roster/manti-teo/", [
+      f("career-tackles", "I finished my Notre Dame career with more than 400 tackles.", ["college", "production"]),
+      f("senior-interceptions", "I intercepted seven passes during my senior season, an extraordinary total for a linebacker.", ["college", "production"]),
+      f("senior-national-awards", "As a senior I won the Bednarik, Butkus, Lombardi, Lott and Nagurski awards.", ["college", "award"])
+    ]),
+  r("cfb-marqise-lee", "USC Athletics", "https://usctrojans.com/news/2014/5/9/Marqise_Lee_Marcus_Martin_Picked_On_Second_Day_Of_2014_NFL_Draft", [
+      f("career-receptions", "I finished my USC career with 248 receptions.", ["college", "production"]),
+      f("career-receiving-yards", "I set a USC career record with 3,655 receiving yards.", ["college", "production"]),
+      f("career-receiving-touchdowns", "I caught 29 touchdown passes at USC.", ["college", "production"])
+    ]),
+  r("cfb-michael-huff", "Texas Athletics", "https://texaslonghorns.com/honors/hall-of-honor/michael-huff/877", [
+      f("career-starts", "I started 50 of 51 career games at Texas.", ["college", "production"]),
+      f("career-tackles", "I recorded 318 career tackles at Texas.", ["college", "production"]),
+      f("thorpe-award", "I won the 2005 Jim Thorpe Award as the nation's top defensive back.", ["college", "award"])
+    ]),
+  r("cfb-morris-claiborne", "LSU Athletics", "https://lsusports.net/sports/fb/roster/season/2011/player/morris-claiborne", [
+      f("career-games-starts", "I played 33 games at LSU and started 26 of them.", ["college", "production"]),
+      f("career-interceptions", "I finished my LSU career with 11 interceptions.", ["college", "production"]),
+      f("thorpe-award", "I won the 2011 Jim Thorpe Award as the nation's top defensive back.", ["college", "award"])
+    ]),
+  r("cfb-patrick-willis", "Ole Miss Athletics", "https://olemisssports.com/news/2024/8/3/ole-miss-football-legend-patrick-willis-enshrined-in-pro-football-hall-of-fame", [
+      f("career-tackles", "I finished my Ole Miss career with 355 tackles.", ["college", "production"]),
+      f("career-tackles-for-loss", "I recorded 33 career tackles for loss at Ole Miss.", ["college", "production"]),
+      f("butkus-award", "I won the 2006 Butkus Award as the nation's top linebacker.", ["college", "award"])
+    ]),
+  r("cfb-paul-posluszny", "Penn State Athletics", "https://gopsusports.com/news/2024/01/8/posluszny-elected-to-college-football-hall-of-fame", [
+      f("career-tackles", "I finished my Penn State career with 372 tackles.", ["college", "production"]),
+      f("two-bednarik-awards", "I became just the second player to win the Bednarik Award twice.", ["college", "award"]),
+      f("butkus-award", "I won the 2005 Butkus Award as the nation's top linebacker.", ["college", "award"])
+    ]),
+  r("cfb-peter-warrick", "Florida State Athletics", "https://seminoles.com/news/2026/1/14/peter-warrick-named-to-college-football-hall-of-fame", [
+      f("career-receptions", "I finished my Florida State career with 207 receptions.", ["college", "production"]),
+      f("career-receiving-yards", "I finished my Florida State career with 3,517 receiving yards.", ["college", "production"]),
+      f("career-receiving-touchdowns", "I set Florida State's career record with 32 receiving touchdowns.", ["college", "production"])
+    ]),
+  r("cfb-rolando-mcclain", "Alabama Athletics", "https://rolltide.com/news/2009/12/8/Rolando_McClain_wins_2009_Butkus_Award", [
+      f("senior-season-tackles", "I had 101 tackles during Alabama's 2009 championship season.", ["college", "production"]),
+      f("senior-season-tfl-sacks", "That season I recorded 12.5 tackles for loss and four sacks.", ["college", "production"]),
+      f("butkus-award", "I won the 2009 Butkus Award as the nation's top linebacker.", ["college", "award"])
+    ]),
+  r("cfb-ryan-broyles", "Las Vegas Raiders", "https://www.raiders.com/news/2012-draft-prospects-series-wide-receivers-7030625", [
+      f("career-receptions", "I finished my Oklahoma career with 349 receptions, then an FBS record.", ["college", "production"]),
+      f("career-receiving-yards", "I finished my Oklahoma career with 4,586 receiving yards.", ["college", "production"]),
+      f("career-receiving-touchdowns", "I caught 45 touchdown passes at Oklahoma.", ["college", "production"])
+    ]),
+  r("cfb-sammy-watkins", "Clemson Athletics", "https://clemsontigers.com/all-americans", [
+      f("career-receptions", "I finished my Clemson career with 240 receptions.", ["college", "production"]),
+      f("career-receiving-yards", "I finished my Clemson career with 3,391 receiving yards.", ["college", "production"]),
+      f("career-receiving-touchdowns", "I caught 27 touchdown passes at Clemson.", ["college", "production"])
+    ]),
+  r("cfb-sean-taylor", "Miami Athletics", "https://miamihurricanes.com/news/2011/07/28/205548328-2/", [
+      f("career-interceptions", "I intercepted 14 passes during my Miami career.", ["college", "production"]),
+      f("senior-interceptions", "I tied Miami's single-season record with 10 interceptions in 2003.", ["college", "production"]),
+      f("big-east-defensive-player", "I was the 2003 Big East Defensive Player of the Year.", ["college", "award"])
+    ]),
+  r("cfb-tyrann-mathieu", "LSU Athletics", "https://lsusports.net/sports/fb/roster/season/2010/player/tyrann-mathieu", [
+      f("career-tackles", "I recorded 133 tackles in only two seasons at LSU.", ["college", "production"]),
+      f("career-forced-fumbles", "I forced a school-record 11 fumbles at LSU.", ["college", "production"]),
+      f("bednarik-award", "I won the 2011 Bednarik Award as the nation's top defensive player.", ["college", "award"])
+    ]),
+  r("cfb-von-miller", "Texas A&M Athletics", "https://12thman.com/news/2010/12/07/big-12-sack-leader-miller-receives-butkus-award", [
+      f("junior-sacks", "I led the nation with 17 sacks in 2009.", ["college", "production"]),
+      f("senior-sacks", "I led the Big 12 in sacks again as a senior.", ["college", "production"]),
+      f("butkus-award", "I won the 2010 Butkus Award as the nation's top linebacker.", ["college", "award"])
+    ]),
+  r("cfb-brian-urlacher", "New Mexico Athletics", "https://golobos.com/news/2017/01/09/brian-urlacher-named-to-nff-college-football-hall-of-fame", [
+      f("career-tackles", "I finished my New Mexico career with 442 tackles.", ["college", "production"]),
+      f("career-forced-fumbles", "I forced 11 fumbles during my New Mexico career.", ["college", "production"])
+    ]),
+  r("cfb-chris-long", "Virginia Athletics", "https://virginiasports.com/news/2007/12/06/long-named-all-american-by-walter-camp-football-foundation", [
+      f("senior-sacks", "I recorded 14 sacks during my senior season at Virginia.", ["college", "production"]),
+      f("hendricks-award", "I won the 2007 Ted Hendricks Award as the nation's top defensive end.", ["college", "award"])
+    ]),
 ] as const;
