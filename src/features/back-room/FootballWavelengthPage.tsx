@@ -75,7 +75,6 @@ export default function FootballWavelengthPage() {
   const [guesses, setGuesses] = useState<number[]>([]);
   const [complete, setComplete] = useState(false);
   const [challengeStatus, setChallengeStatus] = useState("");
-  const clue = round.clues[clueIndex]!;
   const shared = run.identity.type === "curated";
 
   useEffect(() => {
@@ -189,7 +188,6 @@ export default function FootballWavelengthPage() {
 
   if (complete) {
     const finalGuess = guesses[3]!;
-    const distance = Math.abs(finalGuess - round.target);
     const score = wavelengthScore(finalGuess, round.target);
 
     return (
