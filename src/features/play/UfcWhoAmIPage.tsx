@@ -2,5 +2,12 @@ import { createUfcWhoAmIRound } from "../games/whoAmIAuthority";
 import WhoAmIPage from "./WhoAmIPage";
 
 export default function UfcWhoAmIPage() {
-  return <WhoAmIPage sport="ufc" createRound={createUfcWhoAmIRound} />;
+  return (
+    <WhoAmIPage
+      sport="ufc"
+      createRound={(excludedSubjectIdsByLeague) => (
+        createUfcWhoAmIRound(Math.random, excludedSubjectIdsByLeague.UFC)
+      )}
+    />
+  );
 }
