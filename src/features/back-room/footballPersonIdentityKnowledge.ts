@@ -1,7 +1,7 @@
 import type { FootballFactSource } from "./footballFactualStatsCore";
 import { footballPersonIdentityCfbAResearch, footballPersonIdentityCfbAResearchSources } from "./footballPersonIdentityCfbAResearch";
 import { footballPersonIdentityCfbBResearch, footballPersonIdentityCfbBResearchSources } from "./footballPersonIdentityCfbBResearch";
-import { getFootballSubject } from "./footballSubjectRegistry";
+import { getFootballSubject, type FootballSubjectProfile } from "./footballSubjectRegistry";
 
 export type FootballPersonIdentityKnowledgeClass = "distinctive-identity";
 export type FootballPersonIdentityVerification = "verified";
@@ -2224,6 +2224,37 @@ for (const record of footballPersonIdentityKnowledgeRecords) {
 export function getFootballPersonIdentityKnowledge(subjectId: string) {
   const canonicalSubjectId = getFootballSubject(subjectId)?.id ?? subjectId;
   return recordBySubjectId.get(canonicalSubjectId) ?? null;
+}
+
+function normalizedFootballPersonKnowledgeName(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+const personKnowledgeRecordsByName = new Map<string, FootballPersonIdentityKnowledgeRecord[]>();
+for (const record of footballPersonIdentityKnowledgeRecords) {
+  const resolvedSubject = getFootballSubject(record.subjectId);
+  if (!resolvedSubject || resolvedSubject.kind !== "player-career") continue;
+  const key = normalizedFootballPersonKnowledgeName(resolvedSubject.name);
+  const values = personKnowledgeRecordsByName.get(key) ?? [];
+  values.push(record);
+  personKnowledgeRecordsByName.set(key, values);
+}
+
+/**
+ * Resolve every existing person-identity knowledge record attached to the same
+ * canonical football person. This does not decide CFB/NFL applicability; callers
+ * must still apply league-stage scope before using a record's facts.
+ */
+export function getFootballPersonIdentityKnowledgeForPerson(subject: FootballSubjectProfile) {
+  if (subject.kind !== "player-career") {
+    const direct = getFootballPersonIdentityKnowledge(subject.id);
+    return direct ? [direct] : [];
+  }
+  const direct = getFootballPersonIdentityKnowledge(subject.id);
+  const records = personKnowledgeRecordsByName.get(normalizedFootballPersonKnowledgeName(subject.name)) ?? [];
+  return [...new Map(
+    [...(direct ? [direct] : []), ...records].map((record) => [record.subjectId, record]),
+  ).values()];
 }
 
 export function getFootballPersonIdentityKnowledgeSource(sourceId: string) {
