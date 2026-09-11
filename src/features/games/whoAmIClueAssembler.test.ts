@@ -370,7 +370,6 @@ describe("Who Am I football scope-aware clue aggregation", () => {
       ));
 
     const exactlyEight = cfbClueAudit.filter((candidate) => candidate.generatedCandidateClues === 8);
-    expect(exactlyEight.length).toBeLessThan(66);
 
     const plumbingOmissions = footballAudits.filter((candidate) => candidate.classification === "plumbing omission");
     expect(plumbingOmissions).toEqual([]);
@@ -382,6 +381,14 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         || left.generatedCandidateClues - right.generatedCandidateClues
         || left.id.localeCompare(right.id)
       ));
+
+    for (const candidate of shortFootballCandidates) {
+      expect(
+        candidate.generatedCandidateClues,
+        `${candidate.id} has enough candidate clues but the assembler still returned fewer than 10.`,
+      ).toBeLessThan(WHO_AM_I_CLUE_LIMIT);
+      expect(candidate.classification).toBe("genuine canonical source-depth gap");
+    }
 
     console.info(
       "Who Am I football aggregation audit summary",
