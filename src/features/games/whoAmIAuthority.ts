@@ -529,7 +529,7 @@ function footballWhoAmIPlayerMetricMatchesRole(
   const scrimmage = /scrimmage|total-touchdowns/.test(metricId);
   const tackling = /(?:solo-tackles|tackles-for-loss|career-tackles|best-season-tackles-for-loss)/.test(metricId);
   const sacks = /sacks/.test(metricId);
-  const coverage = /(?:defensive-interceptions|passes-defended|pass-breakups)/.test(metricId);
+  const coverage = /(?:career-interceptions|defensive-interceptions|passes-defended|pass-breakups)/.test(metricId);
   const takeaways = /(?:forced-fumbles|fumble-recoveries)/.test(metricId);
   const kicking = /field-goal/.test(metricId);
   const punting = /punts|punting/.test(metricId);
