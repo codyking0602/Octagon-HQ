@@ -298,12 +298,33 @@ describe("Who Am I clue-quality intelligence", () => {
       conceptId: "super-bowl-five-helmet-remorse",
       value: "After losing Super Bowl V, Lilly hurled his helmet in frustration, and Lilly later spoke with embarrassment about the display.",
     });
+    const mentor = whoAmIIdentityKnowledgeClue({
+      subjectId: "cfb-vince-young",
+      subjectName: "Vince Young",
+      subjectKind: "player",
+      league: "CFB",
+      factId: "mentor",
+      conceptId: "steve-mcnair-mentor",
+      value: "Vince Young connected with Steve McNair while still young through football-camp and family connections, and McNair became a mentor whom Young affectionately called \"Pops.\"",
+    });
+    const approach = whoAmIIdentityKnowledgeClue({
+      subjectId: "ufc:tom-aspinall",
+      subjectName: "Tom Aspinall",
+      subjectKind: "fighter",
+      league: "UFC",
+      factId: "influence",
+      conceptId: "training-influence",
+      value: "Aspinall has named his father as an important influence on how he approaches fighting.",
+    });
 
     expect(nickname.text).not.toMatch(/\b(?:me|my) myself\b/i);
     expect(nickname.text).not.toMatch(/\bI (?:is|has)\b/);
     expect(action.text).toContain("I hurled my helmet");
     expect(action.text).toContain("I later spoke");
     expect(action.text).not.toMatch(/\bme (?:hurled|spoke)\b/i);
+    expect(mentor.text.toLowerCase().split(/\W+/)).not.toContain("young");
+    expect(mentor.text).toContain("I affectionately called");
+    expect(approach.text).toContain("I approach fighting");
   });
 
   it("varies the single chronology slot across replays instead of stacking chronology", () => {
