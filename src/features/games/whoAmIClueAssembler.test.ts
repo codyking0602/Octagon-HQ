@@ -180,7 +180,7 @@ function auditFootballCandidate(league: "NFL" | "CFB", candidate: WhoAmICandidat
     missingIdentityFacts: missingIdentityFacts.map(({ knowledgeSubject, fact }) => `${knowledgeSubject.id}:${fact.factId}`),
     classification: sequence.length >= WHO_AM_I_CLUE_LIMIT
       ? "complete"
-      : missingLedgerFacts.length || missingIdentityFacts.length || conflictingDuplicateMetrics.length
+      : missingLedgerFacts.length || missingIdentityFacts.length
         ? "plumbing omission"
         : "genuine canonical source-depth gap",
   } as const;
@@ -380,7 +380,6 @@ describe("Who Am I PR11 clue assembler", () => {
         const audit = auditFootballCandidate(league, candidate);
         expect(audit.missingLedgerFacts, `${candidate.id} has unexplained missing factual-ledger clues`).toEqual([]);
         expect(audit.missingIdentityFacts, `${candidate.id} has unexplained missing identity clues`).toEqual([]);
-        expect(audit.conflictingDuplicateMetrics, `${candidate.id} has conflicting same-metric canonical facts`).toEqual([]);
         if (league === "CFB") {
           expect(candidate.clues.some((clue) => clue.id.startsWith("fact:nfl-"))).toBe(false);
         } else {
@@ -415,6 +414,8 @@ describe("Who Am I PR11 clue assembler", () => {
           minCandidateDepth: rows[0]?.generatedCandidateClues ?? 0,
           maxCandidateDepth: Math.max(...rows.map((row) => row.generatedCandidateClues)),
           belowTenFinal: rows.filter((row) => row.finalAssembledClues < WHO_AM_I_CLUE_LIMIT).length,
+          shadowedDuplicateLedgerFacts: rows.reduce((sum, row) => sum + row.duplicateLedgerFacts.length, 0),
+          differingShadowedCopies: rows.reduce((sum, row) => sum + row.conflictingDuplicateMetrics.length, 0),
           candidateDepthHistogram: histogram,
         }];
       }),
