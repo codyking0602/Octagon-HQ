@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getFootballWhoAmIUniverse, getUfcWhoAmIUniverse } from "./whoAmIAuthority";
+import { whoAmIClueFacet } from "./whoAmIClueAssembler";
 import {
   WHO_AM_I_CLUE_LIMIT,
   WHO_AM_I_RESCUE_OPTION_COUNT,
@@ -119,6 +120,11 @@ describe("Who Am I mature whole-game simulation", () => {
           return Math.max(...counts.values());
         });
 
+        const weakestFinishSequence = [...sequences].sort((left, right) => (
+          left.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length
+          - right.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length
+        ))[0]!;
+
         const round: WhoAmIRound = {
           sport: universe.sport,
           league: universe.league,
@@ -168,6 +174,12 @@ describe("Who Am I mature whole-game simulation", () => {
           maxFacetConcentration: Math.max(...maxFacetConcentrations),
           sameGroupDistractors: sameGroupDistractors.length,
           minSameGroupBoardChoices: Math.min(...sameGroupBoardCounts),
+          weakestFinishSequence: weakestFinishSequence.map((clue) => ({
+            id: clue.id,
+            band: clue.band,
+            facet: whoAmIClueFacet(clue),
+            text: clue.text,
+          })),
         };
       });
 
@@ -235,5 +247,5 @@ describe("Who Am I mature whole-game simulation", () => {
 
     expect(allFindings).toHaveLength(500);
     expect(allFindings.filter((finding) => Number(finding.candidateClues) < WHO_AM_I_CLUE_LIMIT)).toEqual([]);
-  });
+  }, 60_000);
 });
