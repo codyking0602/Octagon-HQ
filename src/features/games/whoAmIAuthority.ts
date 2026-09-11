@@ -394,7 +394,13 @@ export interface FootballWhoAmIApplicableMetricFact {
 
 export function footballWhoAmIApplicableMetricFacts(subject: FootballSubjectProfile): FootballWhoAmIApplicableMetricFact[] {
   const related = subject.kind === "player-career"
-    ? footballPlayerCareerSubjectsForPerson(subject)
+    ? [...footballPlayerCareerSubjectsForPerson(subject)].sort((left, right) => {
+        const leftScopeRank = left.id === subject.id ? 0 : left.league === subject.league ? 1 : 2;
+        const rightScopeRank = right.id === subject.id ? 0 : right.league === subject.league ? 1 : 2;
+        return leftScopeRank - rightScopeRank
+          || (getFootballFactualRecord(right.id)?.facts.length ?? 0) - (getFootballFactualRecord(left.id)?.facts.length ?? 0)
+          || left.id.localeCompare(right.id);
+      })
     : [subject];
   const byMetric = new Map<FootballFactMetricId, FootballWhoAmIApplicableMetricFact>();
 
@@ -406,13 +412,11 @@ export function footballWhoAmIApplicableMetricFacts(subject: FootballSubjectProf
       if (!footballMetricAppliesToSubject(subject, fact.metricId)) continue;
       if (Number(fact.value) === 0) continue;
 
-      const current = byMetric.get(fact.metricId);
-      if (current && current.fact.value !== fact.value) {
-        throw new Error(
-          `Conflicting applicable Who Am I football fact for ${subject.id}:${fact.metricId} (${current.fact.value} vs ${fact.value}).`,
-        );
+      // The selected game subject owns its stage first. Other same-person records are
+      // canonical gap-fill sources only; they never replace an already-owned metric.
+      if (!byMetric.has(fact.metricId)) {
+        byMetric.set(fact.metricId, { sourceSubjectId: relatedSubject.id, fact });
       }
-      if (!current) byMetric.set(fact.metricId, { sourceSubjectId: relatedSubject.id, fact });
     }
   }
 
