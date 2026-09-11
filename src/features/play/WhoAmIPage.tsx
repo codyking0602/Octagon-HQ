@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   WHO_AM_I_CLUE_LIMIT,
   WHO_AM_I_CLUES_PER_REVEAL,
-  WHO_AM_I_FINAL_GUESS_COUNT,
   WHO_AM_I_RESCUE_GUESS_COUNT,
   WHO_AM_I_RESCUE_SCORE,
   WHO_AM_I_RESCUE_SECOND_SCORE,
@@ -75,7 +74,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
   useEffect(() => {
     if (phase !== "playing" || !shouldScrollAfterReveal.current) return;
     shouldScrollAfterReveal.current = false;
-    latestClueRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    latestClueRef.current?.scrollIntoView?.({ behavior: "smooth", block: "center" });
   }, [phase, revealedCount]);
 
   useEffect(() => {
@@ -237,7 +236,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
               <div className="twenty-questions-scorebar__stat"><small>CLUES</small><strong>{revealedCount}</strong></div>
               <div className="twenty-questions-scorebar__stat"><small>MISSES</small><strong>{wrongGuesses}</strong></div>
               <div className="twenty-questions-scorebar__stat"><small>SOLVE</small><strong>{score}</strong></div>
-              <div className="twenty-questions-scorebar__actions" aria-label="Round decisions">
+              <div className={`twenty-questions-scorebar__actions${finalGuessRequired ? " is-final" : ""}`} aria-label="Round decisions">
                 <button className="is-guess" type="button" onClick={openGuess}>
                   {finalGuessRequired ? `FINAL GUESS · ${score}` : `GUESS NOW · ${score}`}
                 </button>
