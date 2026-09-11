@@ -790,6 +790,7 @@ export function assembleWhoAmIClues(
       .filter((candidate) => candidate.clue.band === current.clue.band)
       .filter((candidate) => candidate.selectionClass === current.selectionClass)
       .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 15)
+      .filter((candidate) => candidate.priority <= current.priority + 5)
       .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 15)
       .filter((candidate) => {
         const otherFacetCount = selectedSnapshot.filter((other, index) => (
