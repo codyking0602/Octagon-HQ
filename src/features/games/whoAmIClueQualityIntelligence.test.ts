@@ -279,6 +279,59 @@ describe("Who Am I clue-quality intelligence", () => {
     }
   });
 
+  it("cleans first-person nickname and action grammar after answer anonymization", () => {
+    const nickname = whoAmIIdentityKnowledgeClue({
+      subjectId: "nfl-deacon-jones",
+      subjectName: "Deacon Jones",
+      subjectKind: "player",
+      league: "NFL",
+      factId: "deacon",
+      conceptId: "david-to-deacon-self-nickname",
+      value: "Born David Jones, he adopted 'Deacon' himself because he wanted a distinctive name.",
+    });
+    const action = whoAmIIdentityKnowledgeClue({
+      subjectId: "nfl-bob-lilly",
+      subjectName: "Bob Lilly",
+      subjectKind: "player",
+      league: "NFL",
+      factId: "helmet",
+      conceptId: "super-bowl-five-helmet-remorse",
+      value: "After losing Super Bowl V, Lilly hurled his helmet in frustration, and Lilly later spoke with embarrassment about the display.",
+    });
+
+    expect(nickname.text).not.toMatch(/\b(?:me|my) myself\b/i);
+    expect(nickname.text).not.toMatch(/\bI (?:is|has)\b/);
+    expect(action.text).toContain("I hurled my helmet");
+    expect(action.text).toContain("I later spoke");
+    expect(action.text).not.toMatch(/\bme (?:hurled|spoke)\b/i);
+  });
+
+  it("varies the single chronology slot across replays instead of stacking chronology", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I played defensive back.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I was active in the 1980s and 1990s.", band: "broad", facet: "era" },
+      { id: "h-span", text: "My NFL career lasted 14 seasons.", band: "helpful", facet: "era" },
+      { id: "h-start", text: "My NFL career began in 1985.", band: "helpful", facet: "era" },
+      { id: "h-style", text: "I was known for elite closing speed.", band: "helpful", facet: "style" },
+      { id: "h-path", text: "I became a long-term franchise starter.", band: "helpful", facet: "career-path" },
+      { id: "s-picks", text: "I recorded more than 50 career interceptions.", band: "strong", facet: "production" },
+      { id: "s-pro-bowl", text: "I made multiple Pro Bowls.", band: "strong", facet: "accomplishments" },
+      { id: "s-team", text: "I became a franchise icon.", band: "strong", facet: "identity" },
+      { id: "g-ring", text: "I won a Super Bowl.", band: "giveaway", facet: "accomplishments" },
+      { id: "g-hof", text: "I entered the Pro Football Hall of Fame.", band: "giveaway", facet: "identity" },
+      { id: "s-draft", text: "I was a first-round NFL draft pick.", band: "strong", facet: "career-path" },
+      { id: "h-college", text: "I played college football in Texas.", band: "helpful", facet: "background" },
+    ];
+
+    const sequences = Array.from({ length: 16 }, (_value, index) => (
+      assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, seededRandom(index + 1))
+    ));
+    expect(new Set(sequences.map((sequence) => sequence.map((clue) => clue.id).join("|"))).size).toBeGreaterThan(1);
+    for (const sequence of sequences) {
+      expect(sequence.filter((clue) => whoAmIClueFacet(clue) === "era")).toHaveLength(1);
+    }
+  });
+
   it("never selects generic career games or targets when real identity clues are available", () => {
     const clues: WhoAmIClue[] = [
       { id: "b-role", text: "I played wide receiver.", band: "broad", facet: "role" },
