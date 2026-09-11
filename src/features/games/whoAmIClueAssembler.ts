@@ -704,17 +704,18 @@ export function assembleWhoAmIClues(
   }
 
   // Healthy clue pools keep chronology to one slot. If the canonical pool is genuinely
-  // shallow after the normal quality passes, allow exactly one additional chronology clue
-  // before relaxing personal/biography protections. Generic games/targets remain excluded.
+  // shallow after every normal quality pass, permit up to two extra chronology clues only
+  // to finish the 10-clue board before relaxing personal/biography protections.
+  // Generic games/targets remain excluded in every case.
   if (selected.length < limit) {
     take(
       prepared
         .filter((entry) => !selected.includes(entry) && entry.semanticFamily === "era:chronology")
         .sort(lateFirst),
-      1,
+      2,
       {
         allowNearDuplicate: false,
-        relaxFacetLimit: false,
+        relaxFacetLimit: true,
         relaxSemanticFamily: true,
         relaxPersonalLimit: false,
         relaxBiographyLimit: false,
