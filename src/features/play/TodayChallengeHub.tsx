@@ -8,7 +8,7 @@ import {
 } from "./DailyRankKeepComboStatus";
 import { OfficialTodayChallengeContent } from "./OfficialTodayChallengePage";
 import type { PlaySport } from "./playRegistry";
-import { todayChallengeAdapter, type DailyGameType } from "./todaysChallengeAdapters";
+import { todayChallengeAdapter } from "./todaysChallengeAdapters";
 import type {
   TodayChallengeLeaderboard,
   TodayChallengeProjection,
@@ -103,14 +103,10 @@ function DailyAnswerDetail({
 function DailyLeaderboard({
   leaderboard,
   projection,
-  gameType: _gameType,
-  combo: _combo,
   loading,
 }: {
   leaderboard: TodayChallengeLeaderboard | null;
   projection: TodayChallengeProjection;
-  gameType: DailyGameType;
-  combo: boolean;
   loading: boolean;
 }) {
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
@@ -277,8 +273,6 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
           <DailyLeaderboard
             leaderboard={overview.leaderboard}
             projection={projection}
-            gameType={projection.gameType}
-            combo={combo}
             loading={overview.leaderboardLoading}
           />
           <small className="today-hub-leaderboard__swipe">← SWIPE FOR TODAY’S GAME</small>
