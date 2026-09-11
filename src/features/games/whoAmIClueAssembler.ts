@@ -492,7 +492,7 @@ export function assembleWhoAmIClues(
         const facetDifference = (facetCounts.get(left.facet) ?? 0) - (facetCounts.get(right.facet) ?? 0);
         if (facetDifference !== 0) return facetDifference;
         const priorityDifference = left.priority - right.priority;
-        if (Math.abs(priorityDifference) > 10) return priorityDifference;
+        if (Math.abs(priorityDifference) >= 10) return priorityDifference;
         const identityDifference = Number(Boolean(right.clue.identityKnowledge)) - Number(Boolean(left.clue.identityKnowledge));
         if (identityDifference !== 0) return identityDifference;
         const variationDifference = left.variationRank - right.variationRank;
