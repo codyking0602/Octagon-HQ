@@ -1,5 +1,8 @@
 import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
-import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonIdentityKnowledge";
+import {
+  footballPersonIdentityFactAppliesAcrossStages,
+  getFootballPersonIdentityKnowledge,
+} from "../back-room/footballPersonIdentityKnowledge";
 import { footballRecognitionEvidenceFor } from "../back-room/footballRecognitionEvidence";
 import {
   footballFactMetricDefinitions,
@@ -9,6 +12,7 @@ import {
 } from "../back-room/footballFactualStatsCore";
 import {
   queryFootballSubjects,
+  resolveFootballPersonSubjects,
   type FootballSubjectProfile,
 } from "../back-room/footballSubjectRegistry";
 import {
@@ -29,7 +33,7 @@ import {
 
 const metricLabelById = new Map(footballFactMetricDefinitions.map((metric) => [metric.id, metric.label]));
 
-const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
+export const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
   "nfl-career-games",
   "nfl-career-passing-yards",
   "nfl-career-passing-touchdowns",
@@ -134,18 +138,36 @@ function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
 }
 
 function footballPersonIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
-  const knowledge = getFootballPersonIdentityKnowledge(subject.id);
-  if (!knowledge) return [];
   const subjectKind = subject.kind === "coach" ? "coach" : "player";
-  return knowledge.facts.map((fact) => whoAmIIdentityKnowledgeClue({
-    subjectId: subject.id,
-    subjectName: subject.name,
-    subjectKind,
-    factId: fact.factId,
-    conceptId: fact.conceptId,
-    value: fact.value,
-    tags: fact.tags,
-  }));
+  const seenConcepts = new Set<string>();
+  const clues: WhoAmIClue[] = [];
+
+  for (const knowledgeSubject of resolveFootballPersonSubjects(subject)) {
+    const knowledge = getFootballPersonIdentityKnowledge(knowledgeSubject.id);
+    if (!knowledge) continue;
+    for (const fact of knowledge.facts) {
+      const direct = knowledgeSubject.id === subject.id;
+      if (!direct && !footballPersonIdentityFactAppliesAcrossStages(fact)) continue;
+      if (seenConcepts.has(fact.conceptId)) continue;
+      seenConcepts.add(fact.conceptId);
+
+      const identityClue = whoAmIIdentityKnowledgeClue({
+        subjectId: subject.id,
+        subjectName: subject.name,
+        subjectKind,
+        factId: fact.factId,
+        conceptId: fact.conceptId,
+        value: fact.value,
+        tags: fact.tags,
+      });
+      clues.push(direct ? identityClue : {
+        ...identityClue,
+        id: `identity:${knowledgeSubject.id}:${fact.factId}`,
+      });
+    }
+  }
+
+  return clues;
 }
 
 function ufcDivision(value: string) {
