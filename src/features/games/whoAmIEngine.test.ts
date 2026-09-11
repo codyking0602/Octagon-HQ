@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   WHO_AM_I_FINAL_GUESS_COUNT,
+  WHO_AM_I_RESCUE_GUESS_COUNT,
   WHO_AM_I_RESCUE_OPTION_COUNT,
   WHO_AM_I_RESCUE_SCORE,
+  WHO_AM_I_RESCUE_SECOND_SCORE,
+  WHO_AM_I_WRONG_GUESS_PENALTY,
   createWhoAmIRound,
   whoAmIProgressiveClues,
   whoAmIRecoveryScore,
@@ -49,20 +52,25 @@ describe("Who Am I engine", () => {
     ]);
   });
 
-  it("uses the five-window score ladder and a lower-value rescue finish", () => {
+  it("uses the calibrated natural score ladder and ten-point miss penalty", () => {
     expect(whoAmIScore(2, 0)).toBe(100);
-    expect(whoAmIScore(4, 0)).toBe(90);
-    expect(whoAmIScore(6, 0)).toBe(80);
-    expect(whoAmIScore(8, 0)).toBe(70);
-    expect(whoAmIScore(10, 0)).toBe(60);
-    expect(whoAmIScore(4, 1)).toBe(75);
-    expect(whoAmIScore(10, 4)).toBe(0);
-    expect(WHO_AM_I_FINAL_GUESS_COUNT).toBe(2);
-    expect(WHO_AM_I_RESCUE_SCORE).toBe(30);
-    expect(whoAmIRecoveryScore(0, 0)).toBe(30);
-    expect(whoAmIRecoveryScore(1, 0)).toBe(15);
-    expect(whoAmIRecoveryScore(0, 1)).toBe(30);
-    expect(whoAmIRecoveryScore(2, 2)).toBe(30);
+    expect(whoAmIScore(4, 0)).toBe(95);
+    expect(whoAmIScore(6, 0)).toBe(90);
+    expect(whoAmIScore(8, 0)).toBe(80);
+    expect(whoAmIScore(10, 0)).toBe(70);
+    expect(WHO_AM_I_WRONG_GUESS_PENALTY).toBe(10);
+    expect(whoAmIScore(4, 1)).toBe(85);
+    expect(whoAmIScore(8, 2)).toBe(60);
+  });
+
+  it("uses one final natural guess and a 45-to-30 two-pick recovery", () => {
+    expect(WHO_AM_I_FINAL_GUESS_COUNT).toBe(1);
+    expect(WHO_AM_I_RESCUE_GUESS_COUNT).toBe(2);
+    expect(WHO_AM_I_RESCUE_SCORE).toBe(45);
+    expect(WHO_AM_I_RESCUE_SECOND_SCORE).toBe(30);
+    expect(whoAmIRecoveryScore(0)).toBe(45);
+    expect(whoAmIRecoveryScore(1)).toBe(30);
+    expect(whoAmIRecoveryScore(2)).toBe(0);
   });
 
   it("excludes subjects that cannot support a complete ten-clue round", () => {
@@ -91,14 +99,7 @@ describe("Who Am I engine", () => {
     expect(createWhoAmIRound(universe, () => 0.75).hiddenSubject.id).toBe("legacy");
   });
 
-  it("keeps recovery worth less than the remaining natural final-guess path", () => {
-    expect(whoAmIScore(10, 0)).toBe(60);
-    expect(whoAmIScore(10, 1)).toBe(45);
-    expect(whoAmIRecoveryScore(0, 0)).toBe(30);
-    expect(whoAmIRecoveryScore(1, 1)).toBe(30);
-  });
-
-  it("builds the rescue board around similar era and role disguises", () => {
+  it("builds a five-name rescue board around similar era and role disguises", () => {
     const hidden = candidate("hidden", 10, { eraBand: "modern", rescueGroup: "NFL:DB", kind: "player" });
     const round = createWhoAmIRound({
       sport: "football",
@@ -108,15 +109,16 @@ describe("Who Am I engine", () => {
         candidate("db-1", 10, { eraBand: "modern", rescueGroup: "NFL:DB", kind: "player" }),
         candidate("db-2", 10, { eraBand: "modern", rescueGroup: "NFL:DB", kind: "player" }),
         candidate("db-3", 10, { eraBand: "modern", rescueGroup: "NFL:DB", kind: "player" }),
+        candidate("db-4", 10, { eraBand: "modern", rescueGroup: "NFL:DB", kind: "player" }),
         candidate("qb", 10, { eraBand: "modern", rescueGroup: "NFL:QB", kind: "player" }),
       ],
     }, () => 0);
 
     const choices = whoAmIRescueChoices(round, () => 0, new Set(["db-1"]));
+    expect(WHO_AM_I_RESCUE_OPTION_COUNT).toBe(5);
     expect(choices).toHaveLength(WHO_AM_I_RESCUE_OPTION_COUNT);
     expect(choices.some((subject) => subject.id === round.hiddenSubject.id)).toBe(true);
     expect(choices.some((subject) => subject.id === "db-1")).toBe(false);
     expect(choices.every((subject) => subject.kind === "player")).toBe(true);
-    expect(choices.filter((subject) => subject.id !== "qb").every((subject) => subject.rescueGroup === "NFL:DB")).toBe(true);
   });
 });
