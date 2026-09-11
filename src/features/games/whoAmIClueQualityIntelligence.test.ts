@@ -344,6 +344,19 @@ describe("Who Am I clue-quality intelligence", () => {
     }
   });
 
+  it("treats defensive-back interceptions as role-relevant sports identity production", () => {
+    const candidate = getFootballWhoAmIUniverse("NFL").candidates.find((entry) => entry.id === "nfl-darrell-green");
+    expect(candidate).toBeTruthy();
+    const interceptions = candidate!.clues.find((clue) => clue.id === "fact:nfl-career-interceptions");
+    expect(interceptions).toBeTruthy();
+    expect(interceptions!.band).toBe("strong");
+
+    for (const seed of [1, 7, 19]) {
+      const sequence = whoAmIProgressiveClues(candidate!.clues, seededRandom(seed));
+      expect(sequence.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length).toBeGreaterThanOrEqual(3);
+    }
+  });
+
   it("repairs the live C.J. Stroud CFB identity and removes the implausible one-game clue", () => {
     const candidate = getFootballWhoAmIUniverse("CFB").candidates.find((entry) => entry.name === "C.J. Stroud");
     expect(candidate).toBeTruthy();
