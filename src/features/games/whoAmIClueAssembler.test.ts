@@ -9,7 +9,7 @@ import {
   getFootballWhoAmIUniverse,
   getUfcWhoAmIUniverse,
 } from "./whoAmIAuthority";
-import { assembleWhoAmIClues } from "./whoAmIClueAssembler";
+import { assembleWhoAmIClues, whoAmIClueFacet, whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
 import {
   WHO_AM_I_CLUE_LIMIT,
   whoAmIProgressiveClues,
@@ -98,7 +98,103 @@ function representativeCandidate(league: "NFL" | "CFB" | "UFC", id: string) {
   return candidate;
 }
 
+describe("Who Am I Slice 13 quality regressions", () => {
+  it("classifies draft, production, and accomplishments by meaning instead of substring collisions", () => {
+    expect(whoAmIClueFacet({
+      id: "fact:cfb-nfl-draft-overall-pick",
+      text: "I was selected No. 37 overall in the NFL Draft.",
+      band: "strong",
+    })).toBe("career-path");
+    expect(whoAmIClueFacet({
+      id: "fact:nfl-first-team-all-pros",
+      text: "I was a first-team All-Pro 8 times.",
+      band: "strong",
+    })).toBe("accomplishments");
+    expect(whoAmIClueFacet({
+      id: "fact:cfb-coach-national-titles",
+      text: "I won 3 national championships as a head coach.",
+      band: "strong",
+    })).toBe("accomplishments");
+    expect(whoAmIClueFacet({
+      id: "fact:cfb-career-games",
+      text: "I played in 48 college games.",
+      band: "helpful",
+    })).toBe("production");
+  });
+
+  it("treats award-bearing identity facts as strong late-round clues", () => {
+    const clue = whoAmIIdentityKnowledgeClue({
+      subjectId: "cfb-dez-bryant",
+      subjectName: "Dez Bryant",
+      subjectKind: "player",
+      factId: "receiver-and-punt-return-star",
+      conceptId: "receiver-and-punt-return-star",
+      value: "In 2008 Dez Bryant was recognized not only as an All-America receiver but also as the Big 12 Special Teams Player of the Year.",
+    });
+
+    expect(clue.band).toBe("strong");
+  });
+
+  it("does not turn another person's shared first name into the hidden identity placeholder", () => {
+    const clue = whoAmIIdentityKnowledgeClue({
+      subjectId: "cfb-kyle-pitts",
+      subjectName: "Kyle Pitts",
+      subjectKind: "player",
+      factId: "trask-connection",
+      conceptId: "trask-second-team-connection",
+      value: "Kyle Pitts and quarterback Kyle Trask said their chemistry began with Florida's second-team offense.",
+    });
+
+    expect(clue.text).not.toContain("Kyle Pitts");
+    expect(clue.text).toContain("Kyle Trask");
+    expect(clue.text).not.toContain("this player Trask");
+  });
+
+  it("keeps namesake organizations grammatical after hiding the subject name", () => {
+    const clue = whoAmIIdentityKnowledgeClue({
+      subjectId: "nfl-darrell-green",
+      subjectName: "Darrell Green",
+      subjectKind: "player",
+      factId: "foundation",
+      conceptId: "youth-life-foundation",
+      value: "He founded the Darrell Green Youth Life Foundation around education and literacy.",
+    });
+
+    expect(clue.text).not.toContain("Darrell Green");
+    expect(clue.text).not.toContain("the this player");
+    expect(clue.text).toContain("this player's namesake Youth Life Foundation");
+  });
+});
+
 describe("Who Am I football scope-aware clue aggregation", () => {
+  it("classifies specific clue meaning before generic college or team words", () => {
+    expect(whoAmIClueFacet({
+      id: "fact:cfb-career-passing-yards",
+      text: "I finished my college career with 4,000 passing yards.",
+      band: "helpful",
+    })).toBe("production");
+    expect(whoAmIClueFacet({
+      id: "fact:nfl-first-team-all-pros",
+      text: "I was a first-team All-Pro 5 times.",
+      band: "strong",
+    })).toBe("accomplishments");
+    expect(whoAmIClueFacet({
+      id: "draft-pick",
+      text: "I was selected No. 1 overall in the NFL Draft.",
+      band: "strong",
+    })).toBe("career-path");
+    expect(whoAmIClueFacet({
+      id: "school",
+      text: "I played college football at USC.",
+      band: "broad",
+    })).toBe("background");
+    expect(whoAmIClueFacet({
+      id: "conference",
+      text: "I competed in the SEC.",
+      band: "helpful",
+    })).toBe("background");
+  });
+
   it("deduplicates concepts and effectively repeated clue values while preserving progressive bands", () => {
     const clues: WhoAmIClue[] = [
       { id: "b1", conceptId: "role", text: "I played defensive back.", band: "broad", facet: "role" },

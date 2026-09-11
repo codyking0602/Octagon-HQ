@@ -463,14 +463,27 @@ export function footballWhoAmIApplicableMetricFacts(subject: FootballSubjectProf
   return [...byMetric.values()];
 }
 
+function footballMetricBand(metricId: FootballFactMetricId): WhoAmIClueBand {
+  if (
+    /mvp|heisman|super-bowl|all-pro|player-of-year|defensive-player-of-year|national-titles|national-championships|all-america|first-team-all-conference|draft-overall-pick|coach-career-wins|coach-postseason-resume/.test(metricId)
+  ) return "strong";
+
+  if (
+    /(?:percentage|ratio|career-games|career-starts|coach-career-losses|coach-career-ties|coach-seasons|coach-win-percentage)/.test(metricId)
+  ) return "helpful";
+
+  return "strong";
+}
+
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   return footballWhoAmIApplicableMetricFacts(subject)
     .map(({ fact }) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
-      const band: WhoAmIClueBand = /mvp|heisman|super-bowl|all-pro|player-of-year|national-titles/.test(fact.metricId)
-        ? "strong"
-        : "helpful";
-      return clue(`fact:${fact.metricId}`, footballMetricText(fact.metricId, fact.value, label), band);
+      return clue(
+        `fact:${fact.metricId}`,
+        footballMetricText(fact.metricId, fact.value, label),
+        footballMetricBand(fact.metricId),
+      );
     });
 }
 
