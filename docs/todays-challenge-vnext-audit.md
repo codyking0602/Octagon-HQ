@@ -49,7 +49,7 @@ Each family appears 20% of the time. The September 4 Blind Resume one-day schedu
 
 ## Production score audit
 
-Aggregate official-first results were inspected directly. These are small samples, especially in Football, so they are directional rather than a reason to rewrite scoring immediately.
+Aggregate official-first results were inspected directly. These are small samples, especially in Football, so they are directional rather than a reason to rewrite scoring immediately. The per-game rows below use the current scoring contract where a game has historical scoring versions; older immutable attempts are called out separately.
 
 ### UFC
 
@@ -58,12 +58,12 @@ Aggregate official-first results were inspected directly. These are small sample
 | Game identity | Attempts | Avg | Median | 90+ |
 | --- | ---: | ---: | ---: | ---: |
 | Find the Leader | 57 | 76.3 | 90 | 57.9% |
-| Blind Resume | 15 | 74.7 | 74 | 6.7% |
-| Wavelength | 12 | 89.0 | 90 | 50.0% |
+| Blind Resume (score v3) | 14 | 74.4 | 72.5 | 7.1% |
+| Wavelength (score v2) | 12 | 89.0 | 90 | 50.0% |
 | Hit the Number | 12 | 62.7 | 75 | 0.0% |
-| Daily Double / Keep-Cut identity | 10 | 73.2 | 76 | 0.0% |
+| Daily Double / Keep-Cut identity (score v4) | 8 | 73.5 | 76 | 0.0% |
 
-Two historical standalone Blind Rank attempts exist and are not part of the current rotation.
+Two historical standalone Blind Rank attempts, one Blind Resume v1 attempt, and two pre-combo Keep/Cut v1 attempts exist and are not representative of the current rotation/scoring contracts.
 
 ### Football
 
@@ -72,10 +72,12 @@ Two historical standalone Blind Rank attempts exist and are not part of the curr
 | Game identity | Attempts | Avg | Median | 90+ |
 | --- | ---: | ---: | ---: | ---: |
 | Find the Leader | 4 | 60.0 | 60 | 25.0% |
-| Blind Resume | 7 | 56.9 | 53 | 14.3% |
-| Wavelength | 6 | 82.7 | 90 | 66.7% |
+| Blind Resume (football score v4) | 5 | 68.0 | 57 | 20.0% |
+| Wavelength (score v2) | 6 | 82.7 | 90 | 66.7% |
 | Hit the Number | 3 | 86.0 | 83 | 33.3% |
-| Daily Double / Keep-Cut identity | 4 | 81.8 | 82.5 | 25.0% |
+| Daily Double / Keep-Cut identity (score v4) | 4 | 81.8 | 82.5 | 25.0% |
+
+Two earlier Football Blind Resume attempts used the superseded UFC-style v3 scoring path and are excluded from the current-contract row.
 
 ### Score conclusion
 
