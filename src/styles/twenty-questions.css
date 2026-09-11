@@ -491,3 +491,456 @@
     padding: 10px;
   }
 }
+
+
+/* Who Am I product polish stays on the shared Twenty Questions visual system. */
+.who-am-i-page .twenty-questions-scorebar {
+  grid-template-columns: repeat(3, minmax(72px, 1fr)) minmax(250px, 1.35fr);
+}
+
+.who-am-i-page .twenty-questions-scorebar > .twenty-questions-scorebar__stat {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding: 11px 12px;
+  border-right: 1px solid var(--border);
+}
+
+.who-am-i-page .twenty-questions-scorebar__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  min-width: 0;
+  padding: 0;
+  border-right: 0;
+  background: var(--border);
+}
+
+.who-am-i-page .twenty-questions-scorebar__actions button {
+  min-width: 0;
+  min-height: 54px;
+  padding: 0 12px;
+}
+
+.who-am-i-page .twenty-questions-scorebar__actions .is-guess {
+  background: var(--twenty-questions-accent);
+}
+
+.who-am-i-page .twenty-questions-scorebar__actions .is-reveal {
+  background: color-mix(in srgb, var(--surface-raised) 94%, var(--twenty-questions-accent));
+  color: var(--text-primary);
+}
+
+.who-am-i-page .twenty-questions-scorebar__actions .is-reveal:hover,
+.who-am-i-page .twenty-questions-scorebar__actions .is-reveal:focus-visible {
+  background: color-mix(in srgb, var(--twenty-questions-accent) 12%, var(--surface-raised));
+}
+
+.who-am-i-page .twenty-questions-history {
+  gap: 10px;
+}
+
+.who-am-i-page .who-am-i-clue-stack {
+  gap: 6px;
+}
+
+.who-am-i-page .who-am-i-clue-stack article {
+  position: relative;
+  align-items: flex-start;
+  min-height: 0;
+  padding: 9px 10px;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease,
+    opacity 160ms ease;
+}
+
+.who-am-i-page .who-am-i-clue-stack article > span {
+  min-width: 28px;
+  border-radius: 8px;
+  padding: 4px 5px;
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  font-size: 9px;
+}
+
+.who-am-i-page .who-am-i-clue-stack article strong {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.who-am-i-page .who-am-i-clue-stack article.is-previous {
+  background: color-mix(in srgb, var(--surface-soft) 76%, transparent);
+  opacity: .78;
+}
+
+.who-am-i-page .who-am-i-clue-stack article.is-previous strong {
+  font-weight: 700;
+}
+
+.who-am-i-page .who-am-i-clue-stack article.is-latest {
+  border-color: color-mix(in srgb, var(--twenty-questions-accent) 52%, var(--border));
+  background: color-mix(in srgb, var(--twenty-questions-accent) 8%, var(--surface-soft));
+  box-shadow: inset 3px 0 0 var(--twenty-questions-accent);
+  animation: who-am-i-clue-in 220ms ease-out both;
+  scroll-margin-top: 126px;
+}
+
+.who-am-i-page .who-am-i-clue-stack article.is-latest > span {
+  background: var(--twenty-questions-accent);
+  color: #fff;
+}
+
+.who-am-i-page .twenty-questions-final-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid color-mix(in srgb, var(--twenty-questions-accent) 56%, var(--border));
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  background: color-mix(in srgb, var(--twenty-questions-accent) 9%, var(--surface-soft));
+}
+
+.who-am-i-page .twenty-questions-final-alert strong {
+  flex: 0 0 auto;
+  color: var(--twenty-questions-accent);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+
+.who-am-i-page .twenty-questions-final-alert span {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: right;
+}
+
+.who-am-i-page .twenty-questions-guess {
+  scroll-margin-top: 118px;
+}
+
+.who-am-i-page .twenty-questions-guess.is-final {
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--twenty-questions-accent) 9%, var(--surface-raised)), var(--surface));
+}
+
+.who-am-i-page .twenty-questions-selected-guess {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid color-mix(in srgb, var(--twenty-questions-accent) 50%, var(--border));
+  border-radius: var(--radius-sm);
+  padding: 10px 11px;
+  background: color-mix(in srgb, var(--twenty-questions-accent) 9%, var(--surface-soft));
+}
+
+.who-am-i-page .twenty-questions-selected-guess > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.who-am-i-page .twenty-questions-selected-guess small {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.who-am-i-page .twenty-questions-selected-guess strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.who-am-i-page .twenty-questions-selected-guess button {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  color: var(--twenty-questions-accent);
+  padding: 7px 4px;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+
+.who-am-i-page .twenty-questions-more.is-danger {
+  border-color: color-mix(in srgb, #e15b5b 35%, var(--border));
+  color: #e15b5b;
+}
+
+.who-am-i-page .twenty-questions-wrong-guess {
+  display: grid;
+  gap: 3px;
+  border: 1px solid color-mix(in srgb, #e15b5b 44%, var(--border));
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  background: color-mix(in srgb, #e15b5b 8%, var(--surface));
+}
+
+.who-am-i-page .twenty-questions-wrong-guess strong {
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.who-am-i-page .twenty-questions-wrong-guess span {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.who-am-i-page .twenty-questions-recovery-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.who-am-i-page .twenty-questions-recovery-heading h2 {
+  margin: 3px 0 0;
+  font-size: clamp(22px, 5vw, 30px);
+  letter-spacing: -.035em;
+}
+
+.who-am-i-page .twenty-questions-recovery-value {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  min-width: 68px;
+  border-radius: 18px;
+  padding: 8px 10px;
+  background: var(--twenty-questions-accent);
+  color: #fff;
+}
+
+.who-am-i-page .twenty-questions-recovery-value strong {
+  font-size: 28px;
+  line-height: .95;
+}
+
+.who-am-i-page .twenty-questions-recovery-value small {
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .15em;
+}
+
+.who-am-i-page .twenty-questions-recovery-shift {
+  margin: 0;
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  background: color-mix(in srgb, #e15b5b 10%, var(--surface-soft));
+  color: #e15b5b;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .1em;
+  text-align: center;
+}
+
+.who-am-i-page .twenty-questions-recovery-list button.is-rejected {
+  border-style: dashed;
+  opacity: .48;
+  cursor: not-allowed;
+}
+
+.who-am-i-page .twenty-questions-recovery-list button.is-rejected strong {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.who-am-i-page .twenty-questions-result {
+  gap: 11px;
+}
+
+.who-am-i-page .twenty-questions-result > .eyebrow {
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: color-mix(in srgb, var(--twenty-questions-accent) 10%, var(--surface-soft));
+  color: var(--twenty-questions-accent);
+}
+
+.who-am-i-page .twenty-questions-result__stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 660px;
+}
+
+.who-am-i-page .twenty-questions-result__stats strong {
+  font-size: 14px;
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+.who-am-i-page .twenty-questions-review-grid {
+  display: grid;
+  gap: 7px;
+}
+
+.who-am-i-page .twenty-questions-review-pair {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  background: color-mix(in srgb, var(--surface-soft) 82%, transparent);
+}
+
+.who-am-i-page .twenty-questions-review-pair > small {
+  color: var(--twenty-questions-accent);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .13em;
+}
+
+.who-am-i-page .twenty-questions-review-pair > div {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.who-am-i-page .twenty-questions-review-pair > div + div {
+  border-top: 1px solid var(--border);
+  padding-top: 6px;
+}
+
+.who-am-i-page .twenty-questions-review-pair span {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.who-am-i-page .twenty-questions-review-pair strong {
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+@keyframes who-am-i-clue-in {
+  from {
+    opacity: .45;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 560px) {
+  .who-am-i-page {
+    padding-bottom: 24px;
+  }
+
+  .who-am-i-page .twenty-questions-shell {
+    gap: 10px;
+  }
+
+  .who-am-i-page .twenty-questions-header {
+    padding: 13px 14px;
+  }
+
+  .who-am-i-page .twenty-questions-scorebar {
+    top: calc(env(safe-area-inset-top, 0px) + 4px);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-radius: var(--radius-md);
+  }
+
+  .who-am-i-page .twenty-questions-scorebar > .twenty-questions-scorebar__stat {
+    padding: 8px 7px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .who-am-i-page .twenty-questions-scorebar__actions {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .who-am-i-page .twenty-questions-scorebar__actions:has(.is-guess:only-child) {
+    grid-template-columns: 1fr;
+  }
+
+  .who-am-i-page .twenty-questions-scorebar__actions button {
+    min-height: 40px;
+    font-size: 9px;
+    letter-spacing: .06em;
+  }
+
+  .who-am-i-page .twenty-questions-history,
+  .who-am-i-page .twenty-questions-guess {
+    padding: 12px;
+  }
+
+  .who-am-i-page .twenty-questions-history-list {
+    gap: 5px;
+  }
+
+  .who-am-i-page .who-am-i-clue-stack article {
+    gap: 9px;
+    padding: 8px 9px;
+  }
+
+  .who-am-i-page .who-am-i-clue-stack article strong {
+    font-size: 12px;
+  }
+
+  .who-am-i-page .who-am-i-clue-stack article.is-previous {
+    padding-block: 7px;
+  }
+
+  .who-am-i-page .who-am-i-clue-stack article.is-latest {
+    scroll-margin-top: 138px;
+  }
+
+  .who-am-i-page .twenty-questions-final-alert {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .who-am-i-page .twenty-questions-final-alert span {
+    text-align: left;
+  }
+
+  .who-am-i-page .twenty-questions-guess-list {
+    max-height: min(38vh, 300px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .who-am-i-page .twenty-questions-guess-list button {
+    padding: 9px 10px;
+  }
+
+  .who-am-i-page .twenty-questions-recovery-list {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .who-am-i-page .twenty-questions-recovery-heading {
+    align-items: flex-start;
+  }
+
+  .who-am-i-page .twenty-questions-recovery-value {
+    min-width: 60px;
+    border-radius: 15px;
+  }
+
+  .who-am-i-page .twenty-questions-result__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .who-am-i-page .twenty-questions-result__stats span {
+    min-height: 50px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .who-am-i-page .who-am-i-clue-stack article.is-latest {
+    animation: none;
+  }
+}
