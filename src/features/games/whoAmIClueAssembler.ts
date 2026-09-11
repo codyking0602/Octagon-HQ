@@ -107,9 +107,10 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
   const sportsRelationship = /\b(?:teammate|opponent|fought|defeated|lost to|shared the octagon|same team|nfl player|college player|ufc fighter|coach|training partner)\b/.test(haystack);
   const sportsBackground = /\b(?:school|college|university|conference|recruit|recruited|commit|committed|high-school|high school|junior college|football|wrestling|boxing|kickboxing|judo|sambo)\b/.test(haystack);
   const sportsIdentity = /\b(?:quarterback|running back|receiver|tight end|lineman|linebacker|defensive back|fighter|striker|grappler|wrestler|position|division|team|gym|touchdowns?|yards?|sacks?|tackles?|receptions?|interceptions?|knockouts?|submissions?)\b/.test(haystack);
+  const sportsCareerEvent = /\b(?:injur(?:y|ed)|comeback|preseason|regular-season|postseason|playoff|season opener)\b/.test(haystack);
   const deepBiography = /\b(?:childhood|upbringing|foster|group homes?|grandparents?|immigrat\w*|fourth[- ]grade|grade school|elementary school|tuition|classes|academic degree|left home|grew up|birthplace)\b/.test(haystack);
 
-  if (signatureIdentity || sportsRelationship || strongSportsAnchor) return "sports-identity";
+  if (signatureIdentity || sportsRelationship || strongSportsAnchor || sportsCareerEvent) return "sports-identity";
   if (
     deepBiography
     && (facet === "background" || facet === "relationships" || facet === "off-field" || facet === "identity")
@@ -360,8 +361,10 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
     .replace(/\b(?:himself|herself)\b/gi, "myself")
     .replace(/\bhim\b/gi, "me")
     .replace(/\b(?:his|hers)\b/gi, "my")
+    .replace(/\bI\s+is\b/g, "I am")
+    .replace(/\bI\s+has\b/g, "I have")
     .replace(
-      /\bme\b(?=\s+(?:(?:later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:became|developed|diversified|earned|grew|joined|made|moved|played|recorded|returned|signed|spent|started|transferred|won|worked)\b)/gi,
+      /\bme\b(?=\s+(?:(?:later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:began|became|developed|diversified|earned|grew|joined|made|moved|played|recorded|returned|signed|spent|started|transferred|won|worked)\b)/gi,
       "I",
     );
   return sentenceCase(text);
