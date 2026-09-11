@@ -783,7 +783,6 @@ export function assembleWhoAmIClues(
   const selectedSnapshot = [...selected];
   const replaySwapOptions = selectedSnapshot.flatMap((current, selectedIndex) => {
     if (current.clue.band !== "helpful" && current.clue.band !== "strong") return [];
-    if (current.facet === "relationships") return [];
 
     const comparableFacetClues = prepared.filter((candidate) => (
       candidate !== current
