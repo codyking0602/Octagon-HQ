@@ -411,4 +411,77 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
       f("career-games", "I played 232 NFL games.", ["playing-career", "production"]),
       f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
     ]),
+  r("nfl-claude-humphrey", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/claude-humphrey", [
+      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"]),
+      f("all-nfl-selections", "I earned five All-NFL selections.", ["playing-career", "award"])
+    ]),
+  r("nfl-cliff-harris", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/cliff-harris", [
+      f("career-games", "I played 141 NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-cortez-kennedy", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/cortez-kennedy", [
+      f("career-games", "I played 167 NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-curley-culp", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/curley-culp", [
+      f("career-games", "I played 179 NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to six Pro Bowls or AFL All-Star games.", ["playing-career", "award"])
+    ]),
+  r("nfl-dan-hampton", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dan-hampton", [
+      f("pro-bowls", "I was selected to four Pro Bowls.", ["playing-career", "award"]),
+      f("all-pro-selections", "I earned six first- or second-team All-Pro selections.", ["playing-career", "award"])
+    ]),
+  r("nfl-darrell-green", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/darrell-green", [
+      f("career-games", "I played 295 regular-season NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to seven Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-dick-lebeau", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/dick-lebeau", [
+      f("career-games", "I played 185 NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to three consecutive Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-donnie-shell", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/donnie-shell", [
+      f("career-games", "I played 201 NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-elvin-bethea", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/elvin-bethea", [
+      f("career-games", "I played 210 NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-emmitt-thomas", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/emmitt-thomas", [
+      f("career-games", "I played 181 NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to five Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-eric-allen", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/eric-allen", [
+      f("career-games", "I played 217 regular-season NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to six Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-fred-dean", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/fred-dean", [
+      f("career-games", "I played 141 regular-season NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to four Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("ozzie-newsome", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/ozzie-newsome", [
+      f("career-games", "I played 198 consecutive NFL games.", ["playing-career", "production"]),
+      f("pro-bowls", "I was selected to three Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("bear-bryant", "Alabama Athletics", "https://rolltide.com/news/2008/11/7/National_College_Football_Day", [
+      f("career-wins", "I won 323 games during my college head-coaching career.", ["college", "coaching", "production"])
+    ]),
+  r("cfb-davante-adams", "Fresno State Athletics", "https://gobulldogs.com/news/2014/5/9/Davante_Adams_Drafted_in_Second_Round_by_Packers", [
+      f("career-receptions", "I set a Fresno State career record with 233 receptions in only two playing seasons.", ["college", "production"])
+    ]),
+  r("cfb-dez-bryant", "Oklahoma State Athletics", "https://okstate.com/news/2025/6/2/cowboy-football-dez-bryant-added-to-college-football-hall-of-fame-ballot", [
+      f("career-receiving-line", "I finished my Oklahoma State career with 147 catches for 2,425 yards and 29 touchdowns.", ["college", "production"])
+    ]),
+  r("cfb-jadeveon-clowney", "South Carolina Athletics", "https://gamecocksonline.com/sports/football/roster/player/jadeveon-clowney/", [
+      f("career-tackles-for-loss", "I finished second in South Carolina history with 47 career tackles for loss.", ["college", "production"])
+    ]),
+  r("cfb-john-hannah", "Alabama Athletics", "https://rolltide.com/news/2015/8/20/Alabama_Football_Sports_Four_on_FWAA_75th_Anniversary_All_America_Team", [
+      f("jacobs-trophy-1972", "I won the 1972 Jacobs Trophy as the SEC's best blocker.", ["college", "award"])
+    ]),
+  r("cfb-lee-roy-selmon", "National Football Foundation", "https://footballfoundation.org/hof_search.aspx?hof=1956", [
+      f("outland-lombardi-awards", "I won both the Outland Trophy and Lombardi Award at Oklahoma.", ["college", "award"])
+    ]),
+  r("tom-osborne", "Nebraska Athletics", "https://huskers.com/staff/tom-osborne", [
+      f("career-wins", "I finished my Nebraska head-coaching career with 255 wins.", ["college", "coaching", "production"])
+    ]),
 ] as const;
