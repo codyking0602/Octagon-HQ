@@ -279,6 +279,26 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(sequence.some((clue) => /career-(?:games|targets)$/.test(clue.id))).toBe(false);
   });
 
+  it("uses only one chronology slot when the clue pool has enough sports identity depth", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I played quarterback.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I played in the 2010s.", band: "broad", facet: "era" },
+      { id: "h-start", text: "My NFL career began in 2012.", band: "helpful", facet: "era" },
+      { id: "h-school", text: "I played college football in the Big Ten.", band: "helpful", facet: "background" },
+      { id: "h-style", text: "I was known for extending plays outside the pocket.", band: "helpful", facet: "style" },
+      { id: "h-path", text: "I became a long-term franchise starter.", band: "helpful", facet: "career-path" },
+      { id: "s-award", text: "I earned multiple Pro Bowl selections.", band: "strong", facet: "accomplishments" },
+      { id: "s-team", text: "I led my team to repeated playoff appearances.", band: "strong", facet: "career-path" },
+      { id: "s-production", text: "I threw for more than 30,000 NFL yards.", band: "strong", facet: "production" },
+      { id: "g-team", text: "I spent most of my career with one NFC franchise.", band: "giveaway", facet: "career-path" },
+      { id: "g-identity", text: "I became one of the defining quarterbacks of my franchise era.", band: "giveaway", facet: "identity" },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+    expect(sequence.filter((clue) => whoAmIClueFacet(clue) === "era")).toHaveLength(1);
+  });
+
   it("repairs the live C.J. Stroud CFB identity and removes the implausible one-game clue", () => {
     const candidate = getFootballWhoAmIUniverse("CFB").candidates.find((entry) => entry.name === "C.J. Stroud");
     expect(candidate).toBeTruthy();
