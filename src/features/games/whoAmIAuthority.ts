@@ -1,4 +1,3 @@
-import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
 import {
   getFootballPersonIdentityKnowledge,
   getFootballPersonIdentityKnowledgeForPerson,
@@ -568,9 +567,17 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   if (subject.heismanWinner) clues.push(clue("heisman", "I won the Heisman Trophy.", "strong"));
   if (subject.nationalChampion) clues.push(clue("national-champion", "I was part of a college national championship team.", "strong"));
 
-  const history = footballCareerAffiliationHistoryFor(subject);
-  const affiliations = (history?.affiliations ?? []).map((affiliation) => displayAffiliation(subject.league, affiliation));
-  const uniqueAffiliations = [...new Set(affiliations)];
+  // Who Am I only needs the compact canonical affiliations already owned by the subject profile.
+  // Pulling full season-by-season affiliation history here drags ~19 MB of normalized source corpora
+  // into both lazy game routes on mobile without changing launch membership or clue ownership.
+  const profileAffiliations = subject.franchises?.length
+    ? subject.franchises
+    : subject.school
+      ? [subject.school]
+      : [];
+  const uniqueAffiliations = [...new Set(
+    profileAffiliations.map((affiliation) => displayAffiliation(subject.league, affiliation)),
+  )];
   if (isCoach && uniqueAffiliations.length) {
     clues.push(clue(
       "coach-affiliation-count",
@@ -604,10 +611,6 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
           : `My college career included ${affiliation}.`,
       "giveaway",
     ));
-  }
-  for (const conference of history?.conferences ?? []) {
-    if (subject.conference && slug(conference) === slug(subject.conference)) continue;
-    clues.push(clue(`historical-conference:${slug(conference)}`, `I competed in the ${conference}.`, "strong"));
   }
 
   return clues;
