@@ -246,6 +246,24 @@ describe("Who Am I clue-quality intelligence", () => {
       conceptId: "coaching-path",
       value: "Marv Levy hired Pat Example from the high-school ranks into his first college coaching job.",
     });
+    const began = whoAmIIdentityKnowledgeClue({
+      subjectId: "nfl-pat-example-began",
+      subjectName: "Pat Example",
+      subjectKind: "player",
+      league: "NFL",
+      factId: "coaching-start",
+      conceptId: "career-coaching-start",
+      value: "Despite spending his playing career at cornerback, Pat Example began his NFL coaching career on offense.",
+    });
+    const credited = whoAmIIdentityKnowledgeClue({
+      subjectId: "nfl-pat-example-credited",
+      subjectName: "Pat Example",
+      subjectKind: "player",
+      league: "NFL",
+      factId: "signature-term",
+      conceptId: "signature-term",
+      value: "Pat Example is credited with popularizing a football term.",
+    });
 
     expect(nickname.text).toMatch(/^My Miami nickname/);
     expect(nickname.text).toContain("my childhood idol Deion Sanders");
@@ -253,8 +271,11 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(style.text).toContain("I deliberately diversified my striking");
     expect(coach.text).toContain("Marv Levy hired me");
     expect(coach.text).toContain("my first college coaching job");
-    for (const clue of [nickname, style, coach]) {
+    expect(began.text).toContain("I began my NFL coaching career");
+    expect(credited.text).toContain("I am credited");
+    for (const clue of [nickname, style, coach, began, credited]) {
       expect(clue.text).not.toMatch(/\b(?:he|him|his|she)\b/i);
+      expect(clue.text).not.toMatch(/\b(?:me began|I is|I has)\b/i);
     }
   });
 
@@ -332,10 +353,12 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(sequence.some((clue) => /fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id))).toBe(false);
   });
 
-  it("keeps shallow NFL résumés centered on sports identity with a late role-and-franchise anchor", () => {
+  it("keeps sports injury and comeback clues in the sports-identity bucket", () => {
     const candidate = getFootballWhoAmIUniverse("NFL").candidates.find((entry) => entry.id === "jason-witten");
     expect(candidate).toBeTruthy();
-    expect(candidate!.clues.some((clue) => clue.id === "role-franchise")).toBe(true);
+    const spleenReturn = candidate!.clues.find((clue) => clue.sourceFactId?.includes("lacerated-spleen-return"));
+    expect(spleenReturn).toBeTruthy();
+    expect(whoAmIClueSelectionClass(spleenReturn!)).toBe("sports-identity");
 
     for (const seed of [1, 7, 19]) {
       const sequence = whoAmIProgressiveClues(candidate!.clues, seededRandom(seed));
