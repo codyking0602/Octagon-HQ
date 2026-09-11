@@ -41,24 +41,27 @@ export function footballFindLeaderCandidateAsset(_domainId: FootballFindLeaderDo
   return footballSubjectAsset(candidateId);
 }
 
-function footballFindLeaderFallbackMark(domainId: FootballFindLeaderDomainId) {
+function footballFindLeaderFallbackMark(domainId?: FootballFindLeaderDomainId, league?: string) {
   if (domainId === "nfl-qb-career" || domainId === "nfl-qb-season") return "QB";
   if (domainId === "nfl-rb-career") return "RB";
-  return domainId.startsWith("cfb-") ? "CFB" : "NFL";
+  if (domainId?.startsWith("cfb-")) return "CFB";
+  return league === "CFB" ? "CFB" : "NFL";
 }
 
 export function FootballFindLeaderVisual({
   candidateId,
   candidateName,
   domainId,
+  league,
   compact = false,
 }: {
   candidateId: string;
   candidateName: string;
-  domainId: FootballFindLeaderDomainId;
+  domainId?: FootballFindLeaderDomainId;
+  league?: string;
   compact?: boolean;
 }) {
-  const asset = footballFindLeaderCandidateAsset(domainId, candidateId);
+  const asset = footballSubjectAsset(candidateId);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -68,7 +71,7 @@ export function FootballFindLeaderVisual({
   return (
     <span
       className={`football-find-card__visual${asset && !failed ? " has-logo" : ""}${compact ? " is-compact" : ""}`}
-      aria-label={asset && !failed ? `${asset.label} logo for ${candidateName}` : `${candidateName} ${footballFindLeaderFallbackMark(domainId)} mark`}
+      aria-label={asset && !failed ? `${asset.label} logo for ${candidateName}` : `${candidateName} ${footballFindLeaderFallbackMark(domainId, league)} mark`}
     >
       {asset && !failed ? (
         <img
@@ -80,7 +83,7 @@ export function FootballFindLeaderVisual({
           onError={() => setFailed(true)}
         />
       ) : (
-        <b aria-hidden="true">{footballFindLeaderFallbackMark(domainId)}</b>
+        <b aria-hidden="true">{footballFindLeaderFallbackMark(domainId, league)}</b>
       )}
     </span>
   );
