@@ -731,6 +731,55 @@ export function assembleWhoAmIClues(
     selected[upgrade.selectedIndex] = upgrade.candidate;
   }
 
+  const sportsIdentityTarget = Math.min(
+    7,
+    limit,
+    prepared.filter((entry) => entry.selectionClass === "sports-identity").length,
+  );
+
+  while (selected.filter((entry) => entry.selectionClass === "sports-identity").length < sportsIdentityTarget) {
+    const quotaSwaps = selected.flatMap((current, selectedIndex) => {
+      if (current.selectionClass === "sports-identity") return [];
+      const otherSelected = selected.filter((_entry, index) => index !== selectedIndex);
+
+      return prepared
+        .filter((candidate) => !selected.includes(candidate))
+        .filter((candidate) => candidate.selectionClass === "sports-identity")
+        .filter((candidate) => bandRank(candidate.clue.band) >= bandRank(current.clue.band))
+        .filter((candidate) => !otherSelected.some((entry) => entry.conceptId === candidate.conceptId))
+        .filter((candidate) => !otherSelected.some((entry) => (
+          normalize(entry.clue.text) === normalize(candidate.clue.text)
+          || (
+            effectivelyRepeated(entry.clue.text, candidate.clue.text)
+            && !tokenOverlapStillDistinct(entry, candidate)
+          )
+        )))
+        .filter((candidate) => (
+          !candidate.semanticFamily
+          || !otherSelected.some((entry) => entry.semanticFamily === candidate.semanticFamily)
+        ))
+        .filter((candidate) => {
+          const otherFacetCount = otherSelected.filter((entry) => entry.facet === candidate.facet).length;
+          if (candidate.facet === "relationships" && otherFacetCount >= 1) return false;
+          const facetLimit = FACET_LIMITS[candidate.facet];
+          return facetLimit == null || otherFacetCount < facetLimit;
+        })
+        .map((candidate) => ({ current, candidate, selectedIndex }));
+    });
+
+    if (!quotaSwaps.length) break;
+    quotaSwaps.sort((left, right) => (
+      Number(right.current.selectionClass === "deep-biography") - Number(left.current.selectionClass === "deep-biography")
+      || Math.abs(bandRank(left.candidate.clue.band) - bandRank(left.current.clue.band))
+        - Math.abs(bandRank(right.candidate.clue.band) - bandRank(right.current.clue.band))
+      || left.candidate.priority - right.candidate.priority
+      || right.candidate.strength - left.candidate.strength
+      || left.candidate.index - right.candidate.index
+    ));
+    const quotaSwap = quotaSwaps[0]!;
+    selected[quotaSwap.selectedIndex] = quotaSwap.candidate;
+  }
+
   const selectedSnapshot = [...selected];
   const replaySwapOptions = selectedSnapshot.flatMap((current, selectedIndex) => {
     if (current.clue.band !== "helpful" && current.clue.band !== "strong") return [];
