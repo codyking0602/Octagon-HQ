@@ -13,7 +13,6 @@ import {
   footballFindLeaderCategoryLabel,
   footballFindLeaderQuestions,
   formatFootballFindLeaderValue,
-  sortFootballFindLeaderCandidates,
   type FootballFindLeaderRun,
 } from "./footballFindLeaderModel";
 import {
@@ -127,7 +126,6 @@ export default function FootballFindLeaderPage() {
   const eliminatedSet = new Set(eliminated);
   const shared = run.identity.type === "curated";
   const boardSeed = shared ? (profileSeed ?? querySeed ?? run.identity.seed) : run.identity.seed;
-  const showCandidateContext = new Set(board.candidates.map((candidate) => candidate.subtitle)).size > 1;
 
   useEffect(() => {
     if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
@@ -212,9 +210,6 @@ export default function FootballFindLeaderPage() {
   }
 
   if (result) {
-    const leader = board.candidates.find((candidate) => candidate.id === board.leaderId)!;
-    const sorted = sortFootballFindLeaderCandidates(board);
-    const fatalRound = result.perfect ? null : result.score / 10;
     return (
       <div className="page football-find-leader-page">
         {profileMatch.creator ? (
@@ -235,6 +230,7 @@ export default function FootballFindLeaderPage() {
           eliminatedIds={eliminated}
           result={result}
           eyebrow={shared ? "CHALLENGE BOARD" : "REPLAYABLE GAME"}
+          formatValue={(value) => formatFootballFindLeaderValue(board, value)}
           renderVisual={(candidate, compact) => (
             <FootballFindLeaderVisual
               candidateId={candidate.id}
@@ -279,6 +275,7 @@ export default function FootballFindLeaderPage() {
         intro="Eliminate nine decoys until only the leader remains."
         onNewLineup={shared ? null : startNew}
         onEliminate={eliminate}
+        formatValue={(value) => formatFootballFindLeaderValue(board, value)}
         renderVisual={(candidate, compact) => (
           <FootballFindLeaderVisual
             candidateId={candidate.id}
