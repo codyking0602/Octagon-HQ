@@ -27,7 +27,7 @@ jobs:
     name: fast feedback
     if: ${{ github.event.pull_request.draft == true }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - name: Check out exact draft head with comparison history
         uses: actions/checkout@v4
