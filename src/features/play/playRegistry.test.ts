@@ -5,7 +5,6 @@ import { playGameDefinition, playGames, type PlayGameId } from "./playRegistry";
 const expectedIds: PlayGameId[] = [
   "auction",
   "hit-the-number",
-  "20-questions",
   "find-leader",
   "wavelength",
   "blind-resume",
@@ -23,10 +22,12 @@ const officialDailyIds: PlayGameId[] = [
 ];
 
 describe("Play game lineup contracts", () => {
-  it("keeps preview games out of the default public registry while preserving their explicit definition", () => {
+  it("keeps preview and retired games out of the default public registry while preserving their explicit definitions", () => {
     expect(playGames.map((game) => game.id)).toEqual(expectedIds);
     expect(playGames.map((game) => game.id)).not.toContain("better-than");
+    expect(playGames.map((game) => game.id)).not.toContain("20-questions");
     expect(playGames.map((game) => game.id)).not.toContain("who-am-i");
+    expect(playGameDefinition("20-questions").availability).toBe("retired");
     expect(playGameDefinition("who-am-i").availability).toBe("preview");
     expect(new Set(playGames.map((game) => game.id)).size).toBe(playGames.length);
 
@@ -62,20 +63,7 @@ describe("Play game lineup contracts", () => {
     }
   });
 
-  it("keeps identity games replayable-only without activating Daily or challenge ownership", () => {
-    expect(playGameDefinition("20-questions").lineup).toMatchObject({
-      defaultType: "replayable",
-      supportedTypes: ["replayable"],
-      replayBehavior: "new-lineup",
-      newLineupControl: "result-replay",
-      lineupSize: 1,
-      completionState: "identity-guessed-or-question-limit",
-      challengeEligible: false,
-      dailyEligible: false,
-      streakEligible: false,
-      reminderEligible: false,
-      historyRecording: "casual-only",
-    });
+  it("keeps Who Am I replayable-only without activating Daily or challenge ownership", () => {
     expect(playGameDefinition("who-am-i").lineup).toMatchObject({
       defaultType: "replayable",
       supportedTypes: ["replayable"],
