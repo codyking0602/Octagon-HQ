@@ -329,15 +329,11 @@ function anonymizeIdentityValue(
 
   const protectedNames: Array<[string, string]> = [];
   const otherFullName = /\b([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\s+([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\b/g;
-  text = text.replace(otherFullName, (match, givenName: string, surname: string) => {
+  text = text.replace(otherFullName, (match) => {
     const normalizedMatch = match.replace(/[“”"]/g, "").trim().toLowerCase();
     if (normalizedMatch === cleanedName.toLowerCase()) return match;
-    const normalizedGivenName = normalize(givenName);
-    const normalizedSurname = normalize(surname);
-    if (
-      normalizedGivenName === normalize(lastName)
-      || normalizedSurname === normalize(lastName)
-    ) return match;
+    const normalizedLastName = normalize(lastName);
+    if (normalizedLastName && normalize(match).split(" ").includes(normalizedLastName)) return match;
     const token = `__WHO_AM_I_PROTECTED_NAME_${protectedNames.length}__`;
     protectedNames.push([token, match]);
     return token;
