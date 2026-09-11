@@ -73,11 +73,11 @@ export function whoAmIClueFacet(clue: WhoAmIClue): WhoAmIClueFacet {
   if (/beat:|lost:|faced:|faced-any|opponent|shared the octagon|defeated |lost to |fought /.test(haystack)) return "relationships";
   if (/position|division|head coach|role/.test(haystack)) return "role";
   if (/era|decade|career-span|active-window|debut|coach-start|coach-end/.test(haystack)) return "era";
-  if (/school|college|conference/.test(haystack)) return "background";
-  if (/draft|affiliation|career-path|team/.test(haystack)) return "career-path";
-  if (/knockout|submission|finish-style|ko-wins|submission-wins|strik|grappl|wrestl/.test(haystack)) return "style";
   if (/title|champion|mvp|heisman|all-pro|player of the year|national championship/.test(haystack)) return "accomplishments";
+  if (/knockout|submission|finish-style|ko-wins|submission-wins|strik|grappl|wrestl/.test(haystack)) return "style";
   if (/games|yards|touchdowns|receptions|sacks|interceptions|fight-count|win-count|recorded/.test(haystack)) return "production";
+  if (/draft|affiliation|career-path|team/.test(haystack)) return "career-path";
+  if (/school|college|conference/.test(haystack)) return "background";
   return "identity";
 }
 
