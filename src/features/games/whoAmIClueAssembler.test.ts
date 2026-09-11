@@ -626,6 +626,29 @@ describe("Who Am I football scope-aware clue aggregation", () => {
     }
   });
 
+  it("keeps lower-band facet clues from crowding late-game strength", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "Broad role", band: "broad", facet: "role", revealPriority: 10 },
+      { id: "b-era", text: "Broad era", band: "broad", facet: "era", revealPriority: 10 },
+      { id: "b-background", text: "Broad background", band: "broad", facet: "background", revealPriority: 20 },
+      { id: "h-production", text: "Helpful career games", band: "helpful", facet: "production", revealPriority: 20 },
+      { id: "h-style", text: "Helpful style", band: "helpful", facet: "style", revealPriority: 20 },
+      { id: "h-background", text: "Helpful background", band: "helpful", facet: "background", revealPriority: 20 },
+      { id: "h-career", text: "Helpful career path", band: "helpful", facet: "career-path", revealPriority: 20 },
+      { id: "h-off-field", text: "Helpful off field", band: "helpful", facet: "off-field", revealPriority: 20 },
+      { id: "s-production-one", text: "Strong production one", band: "strong", facet: "production", revealPriority: 10 },
+      { id: "s-production-two", text: "Strong production two", band: "strong", facet: "production", revealPriority: 10 },
+      { id: "s-relationship", text: "Strong relationship", band: "strong", facet: "relationships", revealPriority: 10 },
+    ];
+
+    for (let seed = 1; seed <= 16; seed += 1) {
+      const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, seededRandom(seed));
+      const late = sequence.filter((clue) => clue.band === "strong" || clue.band === "giveaway");
+      expect(late).toHaveLength(3);
+      expect(sequence.filter((clue) => clue.facet === "production")).toHaveLength(2);
+    }
+  });
+
   it("uses seeded variation between equivalent-quality clues without admitting a clearly weaker option", () => {
     const clues: WhoAmIClue[] = [
       { id: "b-role", text: "Broad role", band: "broad", facet: "role", revealPriority: 10 },
