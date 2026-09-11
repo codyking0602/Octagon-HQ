@@ -2237,7 +2237,7 @@ export type FootballPersonIdentityApplicability = "shared" | "transition" | "CFB
 export function footballPersonIdentityFactApplicability(
   identityFact: FootballPersonIdentityFact,
 ): FootballPersonIdentityApplicability {
-  const haystack = \`\${identityFact.conceptId.replace(/[-_]+/g, " ")} \${(identityFact.tags ?? []).join(" ")} \${identityFact.value}\`;
+  const haystack = `${identityFact.conceptId.replace(/[-_]+/g, " ")} ${(identityFact.tags ?? []).join(" ")} ${identityFact.value}`;
   if (CROSS_STAGE_TRANSITION_IDENTITY.test(haystack)) return "transition";
   if (CROSS_STAGE_PERSON_IDENTITY.test(haystack) && !CROSS_STAGE_STAGE_RESULT.test(haystack)) return "shared";
   if (CROSS_STAGE_CFB_IDENTITY.test(haystack)) return "CFB";
