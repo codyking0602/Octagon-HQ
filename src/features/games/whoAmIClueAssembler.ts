@@ -258,6 +258,10 @@ function tightenIdentityCopy(value: string) {
   if (wordCount(text) > 36) {
     text = text.replace(/,\s+which\b.*$/i, ".");
   }
+  if (wordCount(text) > 36) {
+    const firstSentenceEnd = text.indexOf(". ");
+    if (firstSentenceEnd >= 45) text = text.slice(0, firstSentenceEnd + 1);
+  }
   return text;
 }
 
