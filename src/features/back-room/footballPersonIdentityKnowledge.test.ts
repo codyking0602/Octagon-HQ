@@ -371,8 +371,9 @@ describe("football person identity knowledge", () => {
 
       const record = getFootballPersonIdentityKnowledge(launchSubject.id);
       expect(record?.subjectId).toBe(launchSubject.id);
-      expect(distinctiveIdentityFacts(record!)).toHaveLength(5);
-      for (const identityFact of record!.facts) {
+      const distinctiveFacts = distinctiveIdentityFacts(record!);
+      expect(distinctiveFacts).toHaveLength(5);
+      for (const identityFact of distinctiveFacts) {
         expect(identityFact.knowledgeClass).toBe("distinctive-identity");
         expect(identityFact.verification).toBe("verified");
         expect(identityFact.sourceIds).toHaveLength(1);
