@@ -55,14 +55,6 @@ function gameProgress(projection: TodayChallengeProjection) {
   }
 }
 
-function LeaderboardAvatar({ entry }: { entry: TodayChallengeLeaderboard["entries"][number] }) {
-  return entry.avatarPhotoData ? (
-    <img src={entry.avatarPhotoData} alt="" />
-  ) : (
-    <span>{entry.initials}</span>
-  );
-}
-
 function DailyAnswerDetail({
   entry,
   projection,
@@ -111,8 +103,8 @@ function DailyAnswerDetail({
 function DailyLeaderboard({
   leaderboard,
   projection,
-  gameType,
-  combo,
+  gameType: _gameType,
+  combo: _combo,
   loading,
 }: {
   leaderboard: TodayChallengeLeaderboard | null;
@@ -154,14 +146,7 @@ function DailyLeaderboard({
           onClick={() => setSelectedProfileId(entry.profileId)}
         >
           <b>#{entry.rank}</b>
-          <LeaderboardAvatar entry={entry} />
           <strong>{entry.displayName}</strong>
-          <em>{combo
-            ? `${entry.normalizedScore}/100`
-            : todayChallengeAdapter(gameType)?.nativeDisplay({
-              nativeScore: entry.nativeScore,
-              publicResult: {},
-            }) ?? entry.nativeScore}</em>
           <small>{entry.normalizedScore}</small>
         </button>
       ))}
