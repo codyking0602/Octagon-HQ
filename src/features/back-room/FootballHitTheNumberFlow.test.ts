@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import footballHitTheNumberPageSource from "./FootballHitTheNumberPage.tsx?raw";
+import footballHitTheNumberPresentationSource from "./FootballHitTheNumberPresentation.tsx?raw";
 import {
   FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE,
   createFootballHitTheNumberPlan,
@@ -31,12 +32,12 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberPageSource).not.toContain("RANDOM POOL");
     expect(footballHitTheNumberPageSource).not.toContain("hit-number-mode-toggle");
     expect(footballHitTheNumberPageSource).not.toContain("chooseBoardType");
-    expect(footballHitTheNumberPageSource).toContain('className="hit-number-heading"');
-    expect(footballHitTheNumberPageSource).toContain('className="hit-number-target"');
-    expect(footballHitTheNumberPageSource).toContain('className="hit-number-slots"');
-    expect(footballHitTheNumberPageSource).toContain('className="hit-number-role-slots"');
-    expect(footballHitTheNumberPageSource).toContain('className="hit-number-new-board"');
-    expect(footballHitTheNumberPageSource).toContain("NEW BOARD");
+    expect(footballHitTheNumberPresentationSource).toContain('className="hit-number-heading"');
+    expect(footballHitTheNumberPresentationSource).toContain('className="hit-number-target"');
+    expect(footballHitTheNumberPresentationSource).toContain('className="hit-number-slots"');
+    expect(footballHitTheNumberPresentationSource).toContain('className="hit-number-role-slots"');
+    expect(footballHitTheNumberPresentationSource).toContain('className="hit-number-new-board"');
+    expect(footballHitTheNumberPresentationSource).toContain("NEW BOARD");
     expect(footballHitTheNumberPageSource).toContain("plan.configurationLabel");
   });
 
@@ -93,16 +94,17 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberPageSource).toContain("isSlotProgression(plan)");
     expect(footballHitTheNumberPageSource).toContain('plan.formatId === "one-from-each"');
     expect(footballHitTheNumberPageSource).toContain('plan.formatId === "build-the-team"');
-    expect(footballHitTheNumberPageSource).toContain("activeProgressionSlot(plan, selectedIds)");
-    expect(footballHitTheNumberPageSource).toContain("availableProgressionSubjectIds(plan, selectedIds)");
-    expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberActiveProgressionSlot(plan, selectedSubjectIds)");
-    expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedSubjectIds)");
+    expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedIds)");
+    expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedIds)");
+    expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, current)");
+    expect(footballHitTheNumberPageSource).toContain("activeSlotIndex={slotProgression");
     expect(footballHitTheNumberPageSource).not.toContain("oneFromEachSlotAccepts");
     expect(footballHitTheNumberPageSource).not.toContain("oneFromEachSlotSeasonRange");
-    expect(footballHitTheNumberPageSource).toContain("rewindToSlot(index)");
-    expect(footballHitTheNumberPageSource).toContain("plan.slots.map((slot, index)");
-    expect(footballHitTheNumberPageSource).toContain('"CHOOSING"');
-    expect(footballHitTheNumberPageSource).toContain('"CHANGE"');
-    expect(footballHitTheNumberPageSource).toContain('"UP NEXT"');
+    expect(footballHitTheNumberPageSource).toContain("onRewind={rewindToSlot}");
+    expect(footballHitTheNumberPresentationSource).toContain("onRewind?.(index)");
+    expect(footballHitTheNumberPresentationSource).toContain("slots.map((slot, index)");
+    expect(footballHitTheNumberPresentationSource).toContain('"CHOOSING"');
+    expect(footballHitTheNumberPresentationSource).toContain('"CHANGE"');
+    expect(footballHitTheNumberPresentationSource).toContain('"UP NEXT"');
   });
 });

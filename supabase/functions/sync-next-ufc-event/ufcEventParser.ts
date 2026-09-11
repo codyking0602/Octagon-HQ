@@ -118,8 +118,8 @@ function timestampIso(value: unknown) {
 }
 
 function idStart(html: string, id: string) {
-  const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`<[^>]+\\bid\\s*=\\s*["']${escaped}["'][^>]*>`, "i").exec(html)?.index ?? -1;
+  const escaped = id.replace(/[.*+?^\x24{}()|[\]\\]/g, "\\$&");
+  return new RegExp("<[^>]+\\bid\\s*=\\s*[\"']" + escaped + "(?:-[^\"']+)?[\"'][^>]*>", "i").exec(html)?.index ?? -1;
 }
 
 function sectionHtml(html: string, id: string) {
@@ -218,17 +218,36 @@ function weightClass(row: string) {
   return clean(value).replace(/\s+Bout\b.*$/i, "");
 }
 
+function balancedElementHtml(html: string, start: number, tag: string) {
+  const escaped = tag.replace(/[.*+?^\x24{}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp("<\\/?"+ escaped +"\\b[^>]*>", "gi");
+  pattern.lastIndex = start;
+  let depth = 0;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(html))) {
+    const token = match[0];
+    const closing = /^<\//.test(token);
+    const selfClosing = /\/\s*>$/.test(token);
+    if (closing) depth -= 1;
+    else if (!selfClosing) depth += 1;
+    if (depth === 0) return html.slice(start, pattern.lastIndex);
+  }
+  return "";
+}
+
 function rowsForSection(html: string, id: string) {
   const section = sectionHtml(html, id);
   if (!section) return [] as string[];
   const rows: string[] = [];
-  const pattern = /<li\b([^>]*)>([\s\S]*?)<\/li>/gi;
+  const openingTag = /<([a-z0-9]+)\b([^>]*)>/gi;
   let match: RegExpExecArray | null;
-  while ((match = pattern.exec(section))) {
-    const attrs = match[1] ?? "";
-    const classes = attrValue(attrs, "class");
-    if (!/(?:^|\s)(?:l-listing__item|c-listing-fight)(?:\s|$)/i.test(classes)) continue;
-    rows.push(match[0]);
+  while ((match = openingTag.exec(section))) {
+    const classes = attrValue(match[2] ?? "", "class");
+    if (!/(?:^|\s)c-listing-fight(?:\s|$)/i.test(classes)) continue;
+    const row = balancedElementHtml(section, match.index, match[1]!);
+    if (!row) continue;
+    rows.push(row);
+    openingTag.lastIndex = match.index + row.length;
   }
   return rows;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
@@ -8,7 +8,6 @@ import {
   FOOTBALL_HIT_THE_NUMBER_GAME_ID,
   createFootballHitTheNumberPlan,
   createFootballHitTheNumberRun,
-  footballHitTheNumberActiveProgressionSlot,
   footballHitTheNumberAvailableProgressionSubjectIds,
   footballHitTheNumberSelectionSatisfies,
   footballHitTheNumberValue,
@@ -21,7 +20,10 @@ import {
   type FootballHitTheNumberRun,
 } from "./footballHitTheNumberModel";
 import { footballHitTheNumberPeakSeasons } from "./footballHitTheNumberPeakSeasonContext";
-import { footballSubjectAsset } from "./footballSubjectAssets";
+import {
+  FootballHitTheNumberPresentation,
+  footballHitNumberTheme,
+} from "./FootballHitTheNumberPresentation";
 import {
   asChallengeJson,
   challengeRecord,
@@ -30,53 +32,12 @@ import {
   footballCuratedIdentity,
 } from "./footballChallengeRuntime";
 
-const footballHitNumberTheme = {
-  "--ufc-red-strong": "var(--football-accent)",
-} as CSSProperties;
-
-const selectedFootballCardStyle = {
-  borderColor: "rgba(var(--football-accent-rgb), .7)",
-  background: "rgba(var(--football-accent-rgb), .14)",
-} as CSSProperties;
-
-const activeFootballSlotStyle = {
-  borderColor: "rgba(var(--football-accent-rgb), .78)",
-  background: "rgba(var(--football-accent-rgb), .14)",
-  boxShadow: "inset 3px 0 0 var(--football-accent)",
-} as CSSProperties;
-
-function resultTitle(result: FootballHitTheNumberResult) {
-  if (result.status === "perfect") return "PERFECT";
-  if (result.status === "bust") return "BUST";
-  return `${formatDistance(result.distance)} OFF`;
-}
-
-function resultDetail(result: FootballHitTheNumberResult) {
-  if (result.status === "perfect") return `You hit ${formatDistance(result.target)} exactly.`;
-  if (result.status === "bust") return `You went over by ${formatDistance(result.distance)}.`;
-  return `You finished ${formatDistance(result.distance)} below the target.`;
-}
-
-function formatDistance(value: number) {
-  return Number.isInteger(value) ? value.toLocaleString("en-US") : value.toFixed(1);
-}
-
 function boardType(value: string | null): FootballHitTheNumberBoardType | null {
   return value === "open-roster" || value === "random-pool" ? value : null;
 }
 
 function isSlotProgression(plan: FootballHitTheNumberPlan) {
   return plan.formatId === "one-from-each" || plan.formatId === "build-the-team";
-}
-
-function choiceNoun(kind: string | undefined) {
-  if (kind === "team-season" || kind === "program" || kind === "program-era") return "team";
-  if (kind === "player-season" || kind === "player-career") return "player";
-  return "pick";
-}
-
-function pluralChoiceNoun(noun: string) {
-  return noun === "team" ? "teams" : noun === "player" ? "players" : "choices";
 }
 
 function subjectDisplayName(subject: NonNullable<ReturnType<typeof getFootballHitTheNumberSubject>>) {
@@ -98,14 +59,6 @@ function subjectDisplaySubtitle(
     }
   }
   return subject.subtitle;
-}
-
-function activeProgressionSlot(plan: FootballHitTheNumberPlan, selectedSubjectIds: readonly string[]) {
-  return footballHitTheNumberActiveProgressionSlot(plan, selectedSubjectIds);
-}
-
-function availableProgressionSubjectIds(plan: FootballHitTheNumberPlan, selectedSubjectIds: readonly string[]) {
-  return footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedSubjectIds);
 }
 
 function resolveChallengeRun(
@@ -131,40 +84,6 @@ function resolveChallengeRun(
   }
 }
 
-function SubjectMark({ subjectId, className }: { subjectId: string; className: string }) {
-  const asset = footballSubjectAsset(subjectId);
-  const subject = getFootballHitTheNumberSubject(subjectId);
-  if (!asset) {
-    return (
-      <span
-        className={className}
-        aria-hidden="true"
-        style={{ display: "grid", placeItems: "center", background: "rgba(255,255,255,.05)", fontSize: ".58rem", fontWeight: 950 }}
-      >
-        {subject?.group.toUpperCase() ?? "FB"}
-      </span>
-    );
-  }
-  const lightBackplate = asset.darkSurfaceTreatment === "light-backplate";
-  return (
-    <img
-      alt=""
-      className={className}
-      loading="lazy"
-      referrerPolicy="no-referrer"
-      src={asset.src}
-      title={asset.label}
-      style={{
-        objectFit: "contain",
-        padding: lightBackplate ? 3 : 4,
-        background: lightBackplate ? "#fff" : "rgba(255,255,255,.04)",
-        borderRadius: lightBackplate ? "50%" : undefined,
-        boxShadow: lightBackplate ? "0 0 0 1px rgba(255,255,255,.28)" : undefined,
-      }}
-    />
-  );
-}
-
 export default function FootballHitTheNumberPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -188,16 +107,15 @@ export default function FootballHitTheNumberPage() {
   const selectionValid = footballHitTheNumberSelectionSatisfies(plan, selectedIds);
   const shared = run.identity.type === "curated";
   const slotProgression = isSlotProgression(plan);
-  const activeSlot = activeProgressionSlot(plan, selectedIds);
-  const availableSubjectIds = availableProgressionSubjectIds(plan, selectedIds);
-  const displayedSubjectIds = result || !slotProgression ? plan.subjectIds : availableSubjectIds;
-  const representativeSubject = getFootballHitTheNumberSubject(
-    availableSubjectIds[0] ?? plan.subjectIds[0] ?? "",
-  );
-  const poolNoun = choiceNoun(representativeSubject?.kind);
-  const poolPlural = pluralChoiceNoun(poolNoun);
-  const ready = selectionValid;
-  const fullButInvalid = selectedIds.length === plan.pickCount && !selectionValid;
+  const availableSubjectIds = footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedIds);
+  const presentationCandidates = plan.subjectIds.map((subjectId) => {
+    const subject = getFootballHitTheNumberSubject(subjectId)!;
+    return {
+      id: subjectId,
+      name: subjectDisplayName(subject),
+      subtitle: subjectDisplaySubtitle(subject, plan.metricId),
+    };
+  });
 
   useEffect(() => {
     if (!sharedRun || run.identity.challengeId === sharedRun.identity.challengeId) return;
@@ -217,7 +135,7 @@ export default function FootballHitTheNumberPage() {
         return current.filter((id) => id !== subjectId);
       }
       if (current.length >= plan.pickCount) return current;
-      if (slotProgression && !availableProgressionSubjectIds(plan, current).includes(subjectId)) return current;
+      if (slotProgression && !footballHitTheNumberAvailableProgressionSubjectIds(plan, current).includes(subjectId)) return current;
       return [...current, subjectId];
     });
   }
@@ -333,191 +251,27 @@ export default function FootballHitTheNumberPage() {
         </section>
       ) : null}
 
-      <section className="hit-number-heading" style={{ padding: "16px 14px 14px" }}>
-        <button className="hit-number-back" type="button" onClick={() => navigate("/football")}>← ALL GAMES</button>
-        <p className="eyebrow">HIT THE NUMBER</p>
-        <div className="hit-number-target" aria-label={`Target ${formatFootballHitTheNumberValue(plan, plan.target)}`}>
-          <span>TARGET</span>
-          <strong style={{ fontSize: "clamp(3.2rem, 14vw, 5.4rem)" }}>{formatFootballHitTheNumberValue(plan, plan.target)}</strong>
-          <small>{plan.metricLabel.toUpperCase()}</small>
-        </div>
-        <p className="hit-number-rule" style={{ marginTop: 10 }}>Get as close as possible without going over. Go over the target and you bust.</p>
-        <div className="hit-number-meta" aria-label="Current challenge context" style={{ marginTop: 10 }}>
-          <span>{plan.league}</span>
-          {plan.configurationLabel ? <span>{plan.configurationLabel.toUpperCase()}</span> : null}
-        </div>
-      </section>
-
-      {!result && !shared ? (
-        <section
-          className="hit-number-controls surface-card"
-          aria-label="Hit the Number board controls"
-          style={{ gridTemplateColumns: "1fr" }}
-        >
-          <button className="hit-number-new-board" type="button" onClick={startNew}>
-            NEW BOARD
-          </button>
-        </section>
-      ) : null}
-
-      <div className="hit-number-play-area">
-        <section className={`hit-number-selection surface-card${result ? " is-complete" : ""}`}>
-          <div className="hit-number-section-heading">
-            <div>
-              <p className="eyebrow">YOUR PICKS</p>
-              <h2>{selectedIds.length} / {plan.pickCount} selected</h2>
-            </div>
-            {!result ? (
-              <span>{activeSlot ? `NOW: ${activeSlot.label.toUpperCase()}` : "Stats stay hidden until you lock."}</span>
-            ) : null}
-          </div>
-
-          {slotProgression ? (
-            <div className="hit-number-role-slots" data-testid="hit-number-role-slots">
-              {plan.slots.map((slot, index) => {
-                const subjectId = selectedIds[index] ?? null;
-                const subject = subjectId ? getFootballHitTheNumberSubject(subjectId) : null;
-                const value = result && subjectId ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
-                const active = !result && index === selectedIds.length;
-                return (
-                  <button
-                    type="button"
-                    className={`hit-number-role-slot${active ? " is-active" : ""}${subject ? " is-filled" : ""}`}
-                    aria-label={`${slot.label}: ${subject?.name ?? "empty"}`}
-                    aria-pressed={active}
-                    disabled={Boolean(result) || (!subject && !active)}
-                    onClick={() => rewindToSlot(index)}
-                    key={slot.id}
-                    style={active ? activeFootballSlotStyle : undefined}
-                  >
-                    <span className="hit-number-role-slot__index">{index + 1}</span>
-                    {subject && subjectId ? (
-                      <SubjectMark subjectId={subjectId} className="hit-number-role-slot__photo" />
-                    ) : (
-                      <span className="hit-number-role-slot__empty">+</span>
-                    )}
-                    <span className="hit-number-role-slot__copy">
-                      <small>{slot.label}</small>
-                      <strong style={{ whiteSpace: "normal", overflow: "visible", textOverflow: "clip", lineHeight: 1.15 }}>
-                        {subject?.name ?? `Choose ${poolNoun}`}
-                      </strong>
-                    </span>
-                    <span className="hit-number-role-slot__state">
-                      {result
-                        ? <strong className="hit-number-stat-value">{value != null ? formatFootballHitTheNumberValue(plan, value) : "—"}</strong>
-                        : active
-                          ? "CHOOSING"
-                          : subject
-                            ? "CHANGE"
-                            : "UP NEXT"}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="hit-number-slots" data-testid="hit-number-slots">
-              {Array.from({ length: plan.pickCount }, (_, index) => {
-                const subjectId = selectedIds[index];
-                const subject = subjectId ? getFootballHitTheNumberSubject(subjectId) : null;
-                const value = result && subjectId ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
-                return (
-                  <div className={`hit-number-slot${subject ? " is-filled" : ""}`} key={index}>
-                    <b>{index + 1}</b>
-                    {subject && subjectId ? (
-                      <>
-                        <SubjectMark subjectId={subjectId} className="hit-number-slot__photo" />
-                        <span>{subject.name}</span>
-                        {result && value != null
-                          ? <strong className="hit-number-stat-value">{formatFootballHitTheNumberValue(plan, value)}</strong>
-                          : <small>SELECTED</small>}
-                      </>
-                    ) : (
-                      <span className="hit-number-slot__empty">EMPTY</span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {result ? (
-            <div className={`hit-number-result is-${result.status}`}>
-              <p>{resultTitle(result)}</p>
-              <strong className="hit-number-result__total">{formatFootballHitTheNumberValue(plan, result.total)}</strong>
-              <span>TOTAL · TARGET {formatFootballHitTheNumberValue(plan, result.target)}</span>
-              <small>{resultDetail(result)}</small>
-              <div className="hit-number-result__score" aria-label={`Score ${result.score} out of 100`}>
-                <span>SCORE</span>
-                <strong>{result.score}</strong>
-                <small>/100</small>
-              </div>
-              {resultActions}
-            </div>
-          ) : null}
-        </section>
-
-        {!result ? (
-          <div className={`hit-number-lock-dock${ready ? " is-ready" : ""}`}>
-            <button
-              className={`hit-number-lock${ready ? " is-ready" : ""}`}
-              type="button"
-              disabled={!ready}
-              onClick={lockPicks}
-              style={ready ? { boxShadow: "0 8px 24px rgba(var(--football-accent-rgb), .24)" } : undefined}
-            >
-              {ready
-                ? `${selectedIds.length}/${plan.pickCount} SELECTED · LOCK PICKS`
-                : fullButInvalid
-                  ? `${selectedIds.length}/${plan.pickCount} SELECTED · FILL REQUIRED ROLES`
-                  : `${selectedIds.length}/${plan.pickCount} SELECTED`}
-            </button>
-          </div>
-        ) : null}
-
-        <section className="hit-number-roster surface-card">
-          <div className="hit-number-section-heading">
-            <div>
-              <p className="eyebrow">{result ? "POOL RESULTS" : `${poolNoun.toUpperCase()} POOL`}</p>
-              <h2>{activeSlot && !result ? activeSlot.label : `${displayedSubjectIds.length} eligible ${poolPlural}`}</h2>
-            </div>
-            <span>
-              {result
-                ? "All values revealed"
-                : activeSlot
-                  ? `Choose one for this ${plan.formatId === "one-from-each" ? "era" : "tier"}`
-                  : `Pick ${plan.pickCount} from this pool`}
-            </span>
-          </div>
-          <div className="hit-number-fighter-grid" style={{ gridTemplateColumns: "1fr" }}>
-            {displayedSubjectIds.map((subjectId) => {
-              const subject = getFootballHitTheNumberSubject(subjectId)!;
-              const selected = selectedIds.includes(subjectId);
-              const value = result ? footballHitTheNumberValue(subjectId, plan.metricId) : null;
-              return (
-                <button
-                  type="button"
-                  className={`hit-number-fighter-card${selected ? " is-selected" : ""}`}
-                  aria-pressed={selected}
-                  disabled={Boolean(result)}
-                  onClick={() => toggleSubject(subjectId)}
-                  key={subjectId}
-                  style={selected ? selectedFootballCardStyle : undefined}
-                >
-                  <SubjectMark subjectId={subjectId} className="hit-number-fighter-card__photo" />
-                  <span>
-                    <strong style={{ whiteSpace: "normal", overflow: "visible", textOverflow: "clip", lineHeight: 1.15 }}>
-                      {subjectDisplayName(subject)}
-                    </strong>
-                    <small>{result && selected ? `YOUR PICK · ${subjectDisplaySubtitle(subject, plan.metricId)}` : subjectDisplaySubtitle(subject, plan.metricId)}</small>
-                  </span>
-                  <b>{result && value != null ? formatFootballHitTheNumberValue(plan, value) : selected ? "SELECTED" : "+"}</b>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      </div>
+      <FootballHitTheNumberPresentation
+        target={plan.target}
+        metricLabel={plan.metricLabel}
+        league={plan.league}
+        configurationLabel={plan.configurationLabel}
+        pickCount={plan.pickCount}
+        candidates={presentationCandidates}
+        selectedIds={selectedIds}
+        slots={plan.slots}
+        activeSlotIndex={slotProgression && !result && selectedIds.length < plan.pickCount ? selectedIds.length : null}
+        availableIds={slotProgression && !result ? availableSubjectIds : plan.subjectIds}
+        values={result ? Object.fromEntries(plan.subjectIds.map((id) => [id, footballHitTheNumberValue(id, plan.metricId)])) : undefined}
+        result={result}
+        formatValue={(value) => formatFootballHitTheNumberValue(plan, value)}
+        onBack={() => navigate("/football")}
+        onNewBoard={!result && !shared ? startNew : null}
+        onToggle={toggleSubject}
+        onRewind={rewindToSlot}
+        onLock={selectionValid ? lockPicks : null}
+        resultActions={resultActions}
+      />
     </div>
   );
 }

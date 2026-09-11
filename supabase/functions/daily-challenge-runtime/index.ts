@@ -451,6 +451,8 @@ function footballPublicPayload(
   return {
     ...projection,
     id: context.daily_challenge_id,
+    central_day: context.central_day,
+    schedule_version: context.schedule_version,
     progress_revision: Number(context.progress_revision),
     reveal_setup: attempt ? projection.reveal_setup : null,
     official_attempt: attempt,

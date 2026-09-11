@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const footballPage = readFileSync("src/features/back-room/FootballFindLeaderPage.tsx", "utf8");
+const footballPresentation = readFileSync("src/features/back-room/FootballFindLeaderPresentation.tsx", "utf8");
+const footballSurface = `${footballPage}\n${footballPresentation}`;
 const footballModel = readFileSync("src/features/back-room/footballFindLeaderModel.ts", "utf8");
 const footballDailyRuntime = readFileSync("src/features/play/footballTodayChallengeRuntime.ts", "utf8");
 const ufcPage = readFileSync("src/features/play/PlayPage.tsx", "utf8");
@@ -9,7 +11,7 @@ const sourceAuthority = readFileSync("src/features/games/gameSourceAuthority.ts"
 
 describe("Find the Leader final parity and source contract", () => {
   it("keeps the mature UFC and Football interaction hierarchy aligned", () => {
-    for (const source of [ufcPage, footballPage]) {
+    for (const source of [ufcPage, footballSurface]) {
       expect(source).toContain("GameResultActions");
       expect(source).toContain("ROUND");
       expect(source).toContain("STANDING");
@@ -19,6 +21,8 @@ describe("Find the Leader final parity and source contract", () => {
 
     expect(ufcPage).toContain("Eliminate fighters until only the leader remains.");
     expect(footballPage).toContain("Eliminate nine decoys until only the leader remains.");
+    expect(footballPage).toContain("<FootballFindLeaderPresentation");
+    expect(footballPresentation).toContain('className="football-find-grid"');
   });
 
   it("uses the exact canonical Football board version for replayable challenges", () => {

@@ -174,6 +174,37 @@ if (expectedActive) {
     || latestDecision.status === "skipped"
     || healthyPartialCoverage;
   if (!healthyOutcome) {
+    if (latestDecision.decision_reason === "source_preview_failed") {
+      const stateResponse = await fetch(
+        `https://${projectId}.supabase.co/rest/v1/rpc/get_pick_monitoring_event_state`,
+        { method: "POST", headers: serviceHeaders, body: "{}" },
+      );
+      const state = await readBody(stateResponse);
+      const selected = state?.staged ?? state?.current ?? null;
+      if (selected && typeof selected === "object") {
+        const previewResponse = await fetch(
+          `https://${projectId}.supabase.co/functions/v1/sync-next-ufc-event`,
+          {
+            method: "POST",
+            headers: serviceHeaders,
+            body: JSON.stringify({
+              mode: "monitoring-preview",
+              ...(typeof selected.source_url === "string" ? { source_url: selected.source_url } : {}),
+              ...(typeof selected.source_event_key === "string" ? { source_event_key: selected.source_event_key } : {}),
+            }),
+          },
+        );
+        const previewBody = await readBody(previewResponse);
+        console.error("SOURCE_PREVIEW_DIAGNOSTIC", JSON.stringify({
+          status: previewResponse.status,
+          code: previewBody?.code ?? null,
+          stage: previewBody?.stage ?? null,
+          message: previewBody?.message ?? null,
+          safeDetails: previewBody?.safeDetails ?? null,
+          deployment_sha: previewBody?.deployment_sha ?? null,
+        }));
+      }
+    }
     throw new Error(`Production Picks monitoring is unhealthy: ${JSON.stringify(latestDecision)}`);
   }
 }

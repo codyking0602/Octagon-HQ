@@ -7,7 +7,17 @@ import {
   TodayChallengeRepositoryError,
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
+import {
+  FootballFindLeaderPresentation,
+  FootballFindLeaderVisual,
+} from "./FootballFindLeaderPresentation";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
+import {
+  FootballHitTheNumberPresentation,
+  footballHitNumberTheme,
+} from "./FootballHitTheNumberPresentation";
+import { formatFootballFact, type FootballFactMetricId } from "./footballFactualStats";
+import { FootballWavelengthPresentation } from "./FootballWavelengthPresentation";
 import {
   footballBlindResumeFactText,
   footballBlindResumeRevealAsset,
@@ -87,37 +97,50 @@ function ScoreCard({ projection }: { projection: TodayChallengeProjection }) {
 function FindLeader({ projection, advance }: GameProps) {
   const setup = projection.publicSetup;
   const state = projection.publicState;
-  const eliminated = new Set(strings(state.eliminated_ids));
-  const candidates = records(setup.candidates);
+  const eliminatedIds = strings(state.eliminated_ids);
   const reveal = record(projection.revealSetup);
-  const revealedCandidates = records(reveal.candidates);
+  const progressive = records(state.revealed_candidates);
+  const revealed = projection.officialAttempt ? records(reveal.candidates) : progressive;
+  const revealedById = new Map(revealed.map((candidate) => [String(candidate.id ?? ""), candidate]));
+  const candidates = records(setup.candidates).map((candidate) => {
+    const id = String(candidate.id ?? "");
+    const revealedCandidate = revealedById.get(id);
+    return {
+      id,
+      name: String(candidate.name ?? ""),
+      subtitle: String(candidate.subtitle ?? ""),
+      ...(typeof revealedCandidate?.value === "number" ? { value: revealedCandidate.value } : {}),
+    };
+  });
+  const attempt = projection.officialAttempt;
+  const perfect = attempt?.nativeScore === 10;
+  const fatalId = attempt && !perfect ? eliminatedIds.at(-1) ?? null : null;
+  const league = String(setup.league ?? "FOOTBALL");
+  const statLabel = String(setup.stat_label ?? "OFFICIAL STAT");
+
   return (
-    <>
-      <section className="football-today-copy">
-        <small>{String(setup.league ?? "FOOTBALL")}</small>
-        <h2>{String(setup.question ?? "Find the hidden leader.")}</h2>
-        <p>{String(setup.context ?? "Eliminate the decoys. Leave the leader standing.")}</p>
-      </section>
-      {!projection.officialAttempt ? (
-        <div className="football-today-name-grid">
-          {candidates.map((candidate) => (
-            <button type="button" key={String(candidate.id)} disabled={eliminated.has(String(candidate.id))} onClick={() => advance({ eliminated_id: candidate.id })}>
-              <strong>{String(candidate.name)}</strong><span>{String(candidate.subtitle ?? "")}</span>
-              <em>{eliminated.has(String(candidate.id)) ? "OUT" : "ELIMINATE"}</em>
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div className="football-today-reveal-list">
-          {revealedCandidates.map((candidate) => (
-            <div key={String(candidate.id)} className={candidate.id === reveal.leader_id ? "is-leader" : ""}>
-              <span><strong>{String(candidate.name)}</strong><small>{String(candidate.subtitle ?? "")}</small></span>
-              <b>{String(candidate.value ?? "")}</b>
-            </div>
-          ))}
-        </div>
+    <FootballFindLeaderPresentation
+      question={String(setup.question ?? "Find the hidden leader.")}
+      context={String(setup.context ?? "Eliminate the decoys. Leave the leader standing.")}
+      categoryLabel={`${league} · ${statLabel}`}
+      statLabel={statLabel}
+      shortLabel={statLabel}
+      candidates={candidates}
+      leaderId={attempt ? String(reveal.leader_id ?? "") : null}
+      eliminatedIds={eliminatedIds}
+      result={attempt ? { score: attempt.normalizedScore, perfect, fatalId } : null}
+      eyebrow="TODAY’S CHALLENGE"
+      intro="Eliminate nine decoys until only the leader remains."
+      onEliminate={attempt ? null : (id) => advance({ eliminated_id: id })}
+      renderVisual={(candidate, compact) => (
+        <FootballFindLeaderVisual
+          candidateId={candidate.id}
+          candidateName={candidate.name}
+          league={league}
+          compact={compact}
+        />
       )}
-    </>
+    />
   );
 }
 
@@ -285,25 +308,31 @@ function BlindResume({ projection, advance }: GameProps) {
 function Wavelength({ projection, advance }: GameProps) {
   const [guess, setGuess] = useState(50);
   const state = projection.publicState;
-  const clues = records(state.clues);
-  const active = clues.at(-1) ?? {};
   const guesses = Array.isArray(state.guesses) ? state.guesses.map(Number) : [];
   const reveal = record(state.reveal);
+  const rawClues = projection.officialAttempt ? records(reveal.clues) : records(state.clues);
+  const clues = rawClues.map((clue, index) => ({
+    id: String(clue.id ?? index),
+    category: String(clue.category ?? "football"),
+    text: String(clue.text ?? ""),
+    ...(typeof clue.rating === "number" ? { rating: clue.rating } : {}),
+  }));
+  const target = Number(reveal.target ?? projection.officialAttempt?.publicResult.target ?? 0);
+
   return (
-    <section className="football-today-wavelength">
-      <small>CLUE {Math.min(guesses.length + 1, 4)} OF 4</small>
-      <h2>{String(active.text ?? "Read the clue. Find the number.")}</h2>
-      <span>{String(active.category ?? "FOOTBALL")}</span>
-      {!projection.officialAttempt ? (
-        <>
-          <strong className="football-today-guess-number">{guess}</strong>
-          <input aria-label="Wavelength guess" type="range" min="1" max="100" value={guess} onChange={(event) => setGuess(Number(event.target.value))} />
-          <button className="football-today-primary" type="button" onClick={() => advance({ guess })}>LOCK GUESS {guesses.length + 1}</button>
-        </>
-      ) : (
-        <p className="football-today-target">TARGET <b>{String(reveal.target ?? projection.officialAttempt.publicResult.target ?? "")}</b></p>
-      )}
-    </section>
+    <div className="football-debate-page football-wavelength-page wavelength-page wavelength-page--playing wavelength-page--football">
+      <FootballWavelengthPresentation
+        clues={clues}
+        guesses={guesses}
+        guess={guess}
+        onGuessChange={setGuess}
+        onLock={() => advance({ guess })}
+        result={projection.officialAttempt ? {
+          score: projection.officialAttempt.normalizedScore,
+          target,
+        } : null}
+      />
+    </div>
   );
 }
 
@@ -360,28 +389,65 @@ function KeepCut({ projection, advance }: GameProps) {
 function HitTheNumber({ projection, advance }: GameProps) {
   const setup = projection.publicSetup;
   const state = projection.publicState;
-  const candidates = records(setup.candidates);
-  const selected = new Set(strings(state.selected_ids));
-  const pickCount = Number(setup.pick_count ?? 4);
+  const selectedIds = strings(state.selected_ids);
+  const candidates = records(setup.candidates).map((candidate) => ({
+    id: String(candidate.id ?? ""),
+    name: String(candidate.name ?? ""),
+    subtitle: String(candidate.subtitle ?? ""),
+  }));
+  const slots = records(setup.slots).map((slot) => ({
+    id: String(slot.id ?? ""),
+    label: String(slot.label ?? ""),
+  }));
+  const activeSlot = record(state.active_slot);
+  const activeSlotIndex = Number.isInteger(activeSlot.index) ? Number(activeSlot.index) : null;
+  const availableIds = strings(state.available_subject_ids);
   const reveal = record(projection.revealSetup);
-  const values = record(reveal.values);
+  const rawValues = record(reveal.values);
+  const values = Object.fromEntries(
+    Object.entries(rawValues)
+      .filter((entry): entry is [string, number] => typeof entry[1] === "number"),
+  );
+  const target = Number(setup.target ?? 0);
+  const total = selectedIds.reduce((sum, id) => sum + (values[id] ?? 0), 0);
+  const distance = Math.abs(target - total);
+  const status = distance < 1e-9 ? "perfect" : total > target ? "bust" : "under";
+  const metricId = String(setup.metric_id ?? "") as FootballFactMetricId;
+  const formatValue = (value: number) => {
+    try {
+      return formatFootballFact(metricId, value);
+    } catch {
+      return Number.isInteger(value) ? value.toLocaleString("en-US") : value.toFixed(1);
+    }
+  };
+
   return (
-    <section className="football-today-hit">
-      <header><small>{String(setup.league ?? "FOOTBALL")} · {String(setup.domain_label ?? "DAILY BOARD")}</small><h2>{String(setup.target ?? "")} {String(setup.metric_label ?? "")}</h2><p>Pick {pickCount}. Get as close as possible without going over.</p></header>
-      <div className="football-today-name-grid">
-        {candidates.map((candidate) => {
-          const id = String(candidate.id);
-          const isSelected = selected.has(id);
-          return (
-            <button type="button" className={isSelected ? "is-selected" : ""} disabled={Boolean(projection.officialAttempt)} key={id} onClick={() => advance({ fighter_id: id })}>
-              <strong>{String(candidate.name)}</strong><span>{String(candidate.subtitle ?? "")}</span>
-              <em>{projection.officialAttempt ? String(values[id] ?? "") : isSelected ? "SELECTED" : "PICK"}</em>
-            </button>
-          );
-        })}
-      </div>
-      {!projection.officialAttempt ? <button className="football-today-primary" type="button" disabled={selected.size !== pickCount} onClick={() => advance({ lock: true })}>LOCK {selected.size}/{pickCount}</button> : null}
-    </section>
+    <div className="hit-number-page football-hit-number-page" style={footballHitNumberTheme}>
+      <FootballHitTheNumberPresentation
+        target={target}
+        metricLabel={String(setup.metric_label ?? "OFFICIAL STAT")}
+        league={String(setup.league ?? "FOOTBALL")}
+        configurationLabel={typeof setup.configuration_label === "string" ? setup.configuration_label : null}
+        pickCount={Number(setup.pick_count ?? 4)}
+        candidates={candidates}
+        selectedIds={selectedIds}
+        slots={slots}
+        activeSlotIndex={activeSlotIndex}
+        availableIds={availableIds.length ? availableIds : candidates.map((candidate) => candidate.id)}
+        values={projection.officialAttempt ? values : undefined}
+        result={projection.officialAttempt ? {
+          status,
+          target,
+          total,
+          distance,
+          score: projection.officialAttempt.normalizedScore,
+        } : null}
+        formatValue={formatValue}
+        onToggle={projection.officialAttempt ? null : (id) => advance({ fighter_id: id })}
+        onRewind={projection.officialAttempt ? null : (index) => advance({ rewind_to: index })}
+        onLock={projection.officialAttempt ? null : () => advance({ lock: true })}
+      />
+    </div>
   );
 }
 
