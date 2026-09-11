@@ -263,6 +263,7 @@ describe("Who Am I PR11 clue assembler", () => {
     expect(cfbCandidate.clues.some((clue) => clue.text.includes("11 sacks"))).toBe(true);
     expect(cfbCandidate.clues.some((clue) => clue.text.includes("28.5 tackles for loss"))).toBe(true);
     expect(cfbCandidate.clues.some((clue) => clue.text.includes("No. 13 overall") && clue.text.includes("2014 NFL Draft"))).toBe(true);
+    expect(cfbCandidate.clues.some((clue) => clue.id === "identity:nfl-aaron-donald:pitt-redshirt-plan-ended-in-practice")).toBe(true);
     expect(cfbCandidate.clues.some((clue) => clue.id.startsWith("fact:nfl-"))).toBe(false);
     expect(cfbCandidate.clues.some((clue) => /111 sacks|Defensive Player of the Year|All-Pro|Los Angeles Rams|St\. Louis Rams/.test(clue.text))).toBe(false);
 
@@ -271,6 +272,7 @@ describe("Who Am I PR11 clue assembler", () => {
     expect(nflCandidate.clues.some((clue) => clue.text.includes("All-Pro"))).toBe(true);
     expect(nflCandidate.clues.some((clue) => clue.id.startsWith("fact:cfb-"))).toBe(false);
     expect(nflCandidate.clues.some((clue) => /best college season included 11 sacks|28\.5 tackles for loss/.test(clue.text))).toBe(false);
+    expect(nflCandidate.clues.some((clue) => clue.id === "identity:cfb-aaron-donald:pr8-cfb-aaron-donald--overlooked-recruiting")).toBe(false);
 
     const cfbRelated = resolveFootballPersonSubjects(footballSubject("CFB", cfbCandidate.id));
     const nflRelated = resolveFootballPersonSubjects(footballSubject("NFL", nflCandidate.id));
