@@ -98,6 +98,10 @@ describe("Who Am I mature whole-game simulation", () => {
             chronologyClues.length,
             `${candidate.id} should use at most one career chronology clue per round`,
           ).toBeLessThanOrEqual(1);
+          expect(
+            sequence.some((clue) => /fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id)),
+            `${candidate.id} should never spend a clue on generic career games or targets`,
+          ).toBe(false);
 
           const selectionClasses = sequence.map(whoAmIClueSelectionClass);
           expect(
