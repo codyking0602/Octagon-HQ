@@ -4,6 +4,9 @@ import playLandingSource from "../play/PlayLandingPresentation.tsx?raw";
 import { playGameDefinition } from "../play/playRegistry";
 import todayHubSource from "../play/TodayChallengeHub.tsx?raw";
 import footballHomeSource from "./FootballBackRoomPage.tsx?raw";
+import footballFindLeaderSource from "./FootballFindLeaderPage.tsx?raw";
+import footballFindLeaderPresentationSource from "./FootballFindLeaderPresentation.tsx?raw";
+import footballTodaySource from "./FootballTodayChallengePage.tsx?raw";
 
 describe("Football HQ game library presentation", () => {
   it("uses the shared Play library while preserving distinct replayable game identities", () => {
@@ -35,6 +38,14 @@ describe("Football HQ game library presentation", () => {
     expect(games.map((game) => game.id)).not.toContain("blind-resume");
     expect(games.map((game) => game.id)).not.toContain("blind-rank");
     expect(games.map((game) => game.id)).not.toContain("keep-cut");
+  });
+
+  it("shares the casual Football Find the Leader presentation with official Daily", () => {
+    expect(footballFindLeaderSource).toContain("<FootballFindLeaderPresentation");
+    expect(footballTodaySource).toContain("<FootballFindLeaderPresentation");
+    expect(footballTodaySource).toContain('eyebrow="TODAY’S CHALLENGE"');
+    expect(footballFindLeaderPresentationSource).toContain('className="football-find-grid"');
+    expect(footballFindLeaderPresentationSource).toContain('className="football-find-reveal"');
   });
 
   it("uses the same Today Challenge presentation owner as UFC", () => {
