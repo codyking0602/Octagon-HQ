@@ -310,14 +310,14 @@ describe("Who Am I PR11 clue assembler", () => {
     for (const related of cfbRelated.filter((subject) => subject.id !== cfbCandidate.id)) {
       const knowledge = getFootballPersonIdentityKnowledge(related.id);
       for (const fact of knowledge?.facts ?? []) {
-        if (footballPersonIdentityFactAppliesToLeague(fact, cfbCandidate.league, related.league)) continue;
+        if (footballPersonIdentityFactAppliesToLeague(fact, "CFB", related.league)) continue;
         expect(cfbCandidate.clues.some((clue) => clue.id === `identity:${related.id}:${fact.factId}`)).toBe(false);
       }
     }
     for (const related of nflRelated.filter((subject) => subject.id !== nflCandidate.id)) {
       const knowledge = getFootballPersonIdentityKnowledge(related.id);
       for (const fact of knowledge?.facts ?? []) {
-        if (footballPersonIdentityFactAppliesToLeague(fact, nflCandidate.league, related.league)) continue;
+        if (footballPersonIdentityFactAppliesToLeague(fact, "NFL", related.league)) continue;
         expect(nflCandidate.clues.some((clue) => clue.id === `identity:${related.id}:${fact.factId}`)).toBe(false);
       }
     }
