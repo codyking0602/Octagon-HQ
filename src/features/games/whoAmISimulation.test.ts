@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getFootballWhoAmIUniverse, getUfcWhoAmIUniverse } from "./whoAmIAuthority";
-import { whoAmIClueFacet } from "./whoAmIClueAssembler";
+import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import {
   WHO_AM_I_CLUE_LIMIT,
   WHO_AM_I_RESCUE_OPTION_COUNT,
@@ -93,6 +93,16 @@ describe("Who Am I mature whole-game simulation", () => {
             `${candidate.id} should not spend multiple round slots on the same relationship/family facet`,
           ).toBeLessThanOrEqual(1);
 
+          const selectionClasses = sequence.map(whoAmIClueSelectionClass);
+          expect(
+            selectionClasses.filter((selectionClass) => selectionClass === "sports-identity").length,
+            `${candidate.id} should keep the round centered on sports identity`,
+          ).toBeGreaterThanOrEqual(7);
+          expect(
+            selectionClasses.filter((selectionClass) => selectionClass === "deep-biography").length,
+            `${candidate.id} should use at most one deep-biography clue`,
+          ).toBeLessThanOrEqual(1);
+
           const lastName = normalize(candidate.name).split(" ").at(-1) ?? "";
           for (const clue of sequence) {
             expect(clue.text).not.toMatch(/\bthe this (?:player|fighter|head coach)\b/i);
@@ -128,6 +138,12 @@ describe("Who Am I mature whole-game simulation", () => {
           sequence.map((clue) => whoAmIClueFacet(clue)),
         ).size);
         const identityCounts = sequences.map((sequence) => sequence.filter((clue) => clue.identityKnowledge).length);
+        const sportsIdentityCounts = sequences.map((sequence) => (
+          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length
+        ));
+        const deepBiographyCounts = sequences.map((sequence) => (
+          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography").length
+        ));
         const giveawayCounts = sequences.map((sequence) => sequence.filter((clue) => clue.band === "giveaway").length);
         const lateStrengthCounts = sequences.map((sequence) => (
           sequence.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length
@@ -190,6 +206,8 @@ describe("Who Am I mature whole-game simulation", () => {
           distinctSequences,
           minDistinctFacets: Math.min(...distinctFacetCounts),
           minIdentityClues: Math.min(...identityCounts),
+          minSportsIdentityClues: Math.min(...sportsIdentityCounts),
+          maxDeepBiographyClues: Math.max(...deepBiographyCounts),
           minGiveawayClues: Math.min(...giveawayCounts),
           minLateStrongOrGiveaway: Math.min(...lateStrengthCounts),
           maxFacetConcentration: Math.max(...maxFacetConcentrations),
@@ -228,8 +246,12 @@ describe("Who Am I mature whole-game simulation", () => {
       const deepReplayGaps = findings.filter((finding) => (
         finding.candidateClues > 12 && finding.distinctSequences === 1
       ));
+      const sportsIdentityGaps = findings.filter((finding) => finding.minSportsIdentityClues < 7);
+      const biographyHeavyRounds = findings.filter((finding) => finding.maxDeepBiographyClues > 1);
 
       expect(underFourFacets, `${league} should preserve at least four clue facets in every simulated sequence`).toEqual([]);
+      expect(sportsIdentityGaps, `${league} rounds should normally keep at least seven sports-identity clues`).toEqual([]);
+      expect(biographyHeavyRounds, `${league} rounds should never be dominated by deep biography`).toEqual([]);
       expect(weakLateFinish, `${league} should finish with at least three strong/giveaway clues in the final four`).toEqual([]);
       expect(deepReplayGaps, `${league} candidates deeper than the 12-clue floor should vary across replay seeds`).toEqual([]);
 
@@ -240,6 +262,8 @@ describe("Who Am I mature whole-game simulation", () => {
           zeroReplayVariation: findings.filter((finding) => finding.distinctSequences === 1).length,
           underFourFacets: underFourFacets.length,
           zeroIdentitySelected: findings.filter((finding) => finding.minIdentityClues === 0).length,
+          sportsIdentityBelowSeven: findings.filter((finding) => finding.minSportsIdentityClues < 7).length,
+          deepBiographyAboveOne: findings.filter((finding) => finding.maxDeepBiographyClues > 1).length,
           noGiveawaySelected: findings.filter((finding) => finding.minGiveawayClues === 0).length,
           weakLateFinish: weakLateFinish.length,
           facetConcentrationAboveThree: findings.filter((finding) => finding.maxFacetConcentration > 3).length,

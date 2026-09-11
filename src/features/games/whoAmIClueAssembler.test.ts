@@ -184,7 +184,8 @@ describe("Who Am I Slice 13 quality regressions", () => {
 
     expect(clue.text).not.toContain("Darrell Green");
     expect(clue.text).not.toContain("the this player");
-    expect(clue.text).toContain("this player's namesake Youth Life Foundation");
+    expect(clue.text).toContain("my namesake Youth Life Foundation");
+    expect(clue.text).not.toContain("this player");
   });
 });
 

@@ -3,6 +3,7 @@ import { getFootballWhoAmIUniverse } from "./whoAmIAuthority";
 import {
   assembleWhoAmIClues,
   whoAmIClueFacet,
+  whoAmIClueSelectionClass,
   whoAmIIdentityKnowledgeClue,
 } from "./whoAmIClueAssembler";
 import { WHO_AM_I_CLUE_LIMIT, whoAmIProgressiveClues, type WhoAmIClue } from "./whoAmIEngine";
@@ -98,6 +99,122 @@ describe("Who Am I clue-quality intelligence", () => {
 
     const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
     expect(sequence.at(-1)?.id).toBe("g-name");
+  });
+
+  it("prioritizes sports identity over low-value biography while preserving progression", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I played quarterback.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I played in the 2020s.", band: "broad", facet: "era" },
+      { id: "h-transfer", text: "I transferred from one Power Four program to another.", band: "helpful", facet: "career-path" },
+      { id: "h-school", text: "I played college football in the Big Ten.", band: "helpful", facet: "background" },
+      { id: "h-production", text: "I threw for more than 3,000 yards in a season.", band: "helpful", facet: "production" },
+      { id: "s-title", text: "I won a national championship.", band: "strong", facet: "accomplishments" },
+      { id: "s-opponent", text: "I beat another nationally ranked quarterback in a major game.", band: "strong", facet: "relationships" },
+      { id: "s-style", text: "I was known for accurate downfield passing.", band: "strong", facet: "style" },
+      { id: "g-heisman", text: "I won the Heisman Trophy.", band: "giveaway", facet: "accomplishments" },
+      { id: "g-jersey", text: "I wore jersey number 15.", band: "giveaway", facet: "identity" },
+      {
+        id: "bio-childhood",
+        conceptId: "childhood-park-football",
+        text: "I first played organized football in fourth grade at a neighborhood park.",
+        band: "helpful",
+        facet: "background",
+        identityKnowledge: true,
+      },
+      {
+        id: "bio-foster",
+        conceptId: "childhood-foster-homes",
+        text: "I spent part of my childhood moving through foster homes.",
+        band: "strong",
+        facet: "background",
+        identityKnowledge: true,
+      },
+      {
+        id: "bio-grandparents",
+        conceptId: "grandparents-immigration",
+        text: "My grandparents immigrated to the United States before I was born.",
+        band: "strong",
+        facet: "off-field",
+        identityKnowledge: true,
+      },
+      {
+        id: "bio-classes",
+        conceptId: "college-classes-paid-personally",
+        text: "I personally paid for my final college classes.",
+        band: "helpful",
+        facet: "off-field",
+        identityKnowledge: true,
+      },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+    expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length).toBeGreaterThanOrEqual(7);
+    expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography").length).toBeLessThanOrEqual(1);
+    expect(sequence.map((clue) => clue.id)).toEqual(expect.arrayContaining(["h-transfer", "s-title", "g-heisman", "g-jersey"]));
+  });
+
+  it("keeps strongly identifying color such as a signature celebration eligible", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I was a fighter.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I fought in the 2020s.", band: "broad", facet: "era" },
+      { id: "h-division", text: "I competed at middleweight.", band: "helpful", facet: "role" },
+      { id: "h-style", text: "I preferred striking exchanges.", band: "helpful", facet: "style" },
+      { id: "h-span", text: "My UFC run lasted several years.", band: "helpful", facet: "era" },
+      { id: "s-title", text: "I fought in a UFC title eliminator.", band: "strong", facet: "accomplishments" },
+      { id: "s-opponent", text: "I defeated a former UFC champion.", band: "strong", facet: "relationships" },
+      {
+        id: "s-signature",
+        conceptId: "signature-x-celebration",
+        text: "I'm known for my signature X celebration.",
+        band: "strong",
+        facet: "identity",
+        identityKnowledge: true,
+      },
+      { id: "s-generic-style", text: "I was known for solid kickboxing.", band: "strong", facet: "style" },
+      { id: "g-record", text: "I set a UFC divisional record.", band: "giveaway", facet: "accomplishments" },
+      { id: "g-nickname", text: "I was known by a distinctive nickname.", band: "giveaway", facet: "nickname" },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence.some((clue) => clue.id === "s-signature")).toBe(true);
+    expect(whoAmIClueSelectionClass(clues.find((clue) => clue.id === "s-signature")!)).toBe("sports-identity");
+  });
+
+  it("suppresses closely related title-fight count facets", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I was a fighter.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I fought in the 2000s.", band: "broad", facet: "era" },
+      { id: "h-division", text: "I competed at light heavyweight.", band: "helpful", facet: "role" },
+      { id: "h-style", text: "I mixed striking and submissions.", band: "helpful", facet: "style" },
+      { id: "h-career", text: "My UFC career lasted several years.", band: "helpful", facet: "era" },
+      { id: "title-fights", text: "I competed in 5 UFC title fights.", band: "strong", facet: "accomplishments" },
+      { id: "title-wins", text: "I won 5 UFC title fights.", band: "strong", facet: "accomplishments" },
+      { id: "s-opponent", text: "I defeated another UFC champion.", band: "strong", facet: "relationships" },
+      { id: "s-style", text: "I became known for submissions.", band: "strong", facet: "style" },
+      { id: "g-hof", text: "I entered the UFC Hall of Fame.", band: "giveaway", facet: "accomplishments" },
+      { id: "g-nickname", text: "I had a famous fight nickname.", band: "giveaway", facet: "nickname" },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence.filter((clue) => clue.id === "title-fights" || clue.id === "title-wins")).toHaveLength(1);
+  });
+
+  it("sanitizes shared surnames and repeated hidden-subject substitutions generically", () => {
+    const clue = whoAmIIdentityKnowledgeClue({
+      subjectId: "ufc-alex-smith",
+      subjectName: "Alex Smith",
+      subjectKind: "fighter",
+      league: "UFC",
+      factId: "origin-story",
+      conceptId: "childhood-foster-ranch",
+      value: "Born Alex Jones, Alex Smith left home young before Bob Smith took Alex Smith in at his ranch.",
+    });
+
+    expect(clue.text).toMatch(/^I was born under a different surname/i);
+    expect(clue.text).toMatch(/Bob took me in/i);
+    expect(clue.text).not.toMatch(/this fighter/i);
+    expect(clue.text).not.toMatch(/\bAlex\b|\bSmith\b/i);
   });
 
   it("repairs the live C.J. Stroud CFB identity and removes the implausible one-game clue", () => {
