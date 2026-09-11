@@ -330,11 +330,18 @@ export function assembleWhoAmIClues(
   }
 
   return selected
-    .sort((left, right) => (
-      bandRank(left.clue.band) - bandRank(right.clue.band)
-      || left.priority - right.priority
-      || left.index - right.index
-    ))
+    .sort((left, right) => {
+      const bandDifference = bandRank(left.clue.band) - bandRank(right.clue.band);
+      if (bandDifference !== 0) return bandDifference;
+
+      const priorityDifference = left.priority - right.priority;
+      if (Math.abs(priorityDifference) > 5) return priorityDifference;
+
+      const variationDifference = left.variationRank - right.variationRank;
+      if (variationDifference !== 0) return variationDifference;
+      if (priorityDifference !== 0) return priorityDifference;
+      return left.index - right.index;
+    })
     .slice(0, limit)
     .map((entry) => entry.clue);
 }
