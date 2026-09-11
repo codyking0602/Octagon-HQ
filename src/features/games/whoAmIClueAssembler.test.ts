@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  footballPersonIdentityFactAppliesAcrossStages,
+  footballPersonIdentityFactAppliesToLeague,
   getFootballPersonIdentityKnowledge,
 } from "../back-room/footballPersonIdentityKnowledge";
 import { getFootballFact, getFootballFactualRecord, type FootballFactMetricId } from "../back-room/footballFactualStatsCore";
@@ -70,7 +70,7 @@ function applicableIdentityFacts(subject: FootballSubjectProfile) {
     const knowledge = getFootballPersonIdentityKnowledge(knowledgeSubject.id);
     if (!knowledge) return [];
     return knowledge.facts
-      .filter((fact) => knowledgeSubject.id === subject.id || footballPersonIdentityFactAppliesAcrossStages(fact))
+      .filter((fact) => knowledgeSubject.id === subject.id || footballPersonIdentityFactAppliesToLeague(fact, subject.league, knowledgeSubject.league))
       .map((fact) => ({ knowledgeSubject, fact }));
   });
 }
@@ -280,14 +280,14 @@ describe("Who Am I PR11 clue assembler", () => {
     for (const related of cfbRelated.filter((subject) => subject.id !== cfbCandidate.id)) {
       const knowledge = getFootballPersonIdentityKnowledge(related.id);
       for (const fact of knowledge?.facts ?? []) {
-        if (footballPersonIdentityFactAppliesAcrossStages(fact)) continue;
+        if (footballPersonIdentityFactAppliesToLeague(fact, cfbCandidate.league, related.league)) continue;
         expect(cfbCandidate.clues.some((clue) => clue.id === `identity:${related.id}:${fact.factId}`)).toBe(false);
       }
     }
     for (const related of nflRelated.filter((subject) => subject.id !== nflCandidate.id)) {
       const knowledge = getFootballPersonIdentityKnowledge(related.id);
       for (const fact of knowledge?.facts ?? []) {
-        if (footballPersonIdentityFactAppliesAcrossStages(fact)) continue;
+        if (footballPersonIdentityFactAppliesToLeague(fact, nflCandidate.league, related.league)) continue;
         expect(nflCandidate.clues.some((clue) => clue.id === `identity:${related.id}:${fact.factId}`)).toBe(false);
       }
     }
