@@ -486,6 +486,10 @@ function selectionPriorityPenalty(selectionClass: WhoAmIClueSelectionClass) {
   return 0;
 }
 
+function isLowSignalCareerVolume(clue: WhoAmIClue) {
+  return /fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id);
+}
+
 function recognitionStrength(entry: Pick<PreparedClue, "facet" | "clue">) {
   const base: Readonly<Record<WhoAmIClueFacet, number>> = {
     role: 20,
@@ -597,6 +601,7 @@ export function assembleWhoAmIClues(
       relaxBiographyLimit: boolean;
     },
   ) => {
+    if (isLowSignalCareerVolume(entry.clue)) return false;
     if (selectedConcepts.has(entry.conceptId)) return false;
     const normalizedText = normalize(entry.clue.text);
     if (selectedTexts.some((text) => normalize(text) === normalizedText)) return false;
