@@ -307,6 +307,14 @@ function anonymizeIdentityValue(
   text = text.replace(otherFullName, (match, givenName: string, surname: string) => {
     const normalizedMatch = match.replace(/[“”"]/g, "").trim().toLowerCase();
     if (normalizedMatch === cleanedName.toLowerCase()) return match;
+    const normalizedGivenName = normalize(givenName);
+    const normalizedSurname = normalize(surname);
+    if (
+      normalizedGivenName === normalize(firstName)
+      || normalizedGivenName === normalize(lastName)
+      || normalizedSurname === normalize(firstName)
+      || normalizedSurname === normalize(lastName)
+    ) return match;
     const token = `__WHO_AM_I_PROTECTED_NAME_${protectedNames.length}__`;
     protectedNames.push([token, match]);
     return token;
@@ -317,8 +325,8 @@ function anonymizeIdentityValue(
 
   for (const term of terms) {
     const escaped = escapeRegExp(term);
-    text = text.replace(new RegExp(`${escaped}(?:'s|’s|['’])`, "gi"), `this ${label}'s`);
-    text = text.replace(new RegExp(`\\b${escaped}\\b`, "gi"), `this ${label}`);
+    text = text.replace(new RegExp(`\\b${escaped}(?:'s|’s|['’])`, "g"), `this ${label}'s`);
+    text = text.replace(new RegExp(`\\b${escaped}\\b`, "g"), `this ${label}`);
   }
 
   for (const [token, original] of protectedNames) text = text.replace(token, original);
