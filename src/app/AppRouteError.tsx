@@ -1,6 +1,14 @@
-import { forceRefreshLatestBuild } from "./installUpdateRecovery";
+import { useEffect } from "react";
+import { useRouteError } from "react-router-dom";
+import { forceRefreshLatestBuild, recoverRouteLoadError } from "./installUpdateRecovery";
 
 export default function AppRouteError() {
+  const error = useRouteError();
+
+  useEffect(() => {
+    recoverRouteLoadError({ error });
+  }, [error]);
+
   return (
     <main className="app-error" role="alert">
       <img src="/assets/app-icon.png" alt="" aria-hidden="true" />
