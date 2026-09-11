@@ -5,6 +5,7 @@ import { playGameDefinition, playGames, type PlayGameId } from "./playRegistry";
 const expectedIds: PlayGameId[] = [
   "auction",
   "hit-the-number",
+  "who-am-i",
   "find-leader",
   "wavelength",
   "blind-resume",
@@ -22,13 +23,13 @@ const officialDailyIds: PlayGameId[] = [
 ];
 
 describe("Play game lineup contracts", () => {
-  it("keeps preview and retired games out of the default public registry while preserving their explicit definitions", () => {
+  it("keeps retired games out of the default public registry while Who Am I is live", () => {
     expect(playGames.map((game) => game.id)).toEqual(expectedIds);
     expect(playGames.map((game) => game.id)).not.toContain("better-than");
     expect(playGames.map((game) => game.id)).not.toContain("20-questions");
-    expect(playGames.map((game) => game.id)).not.toContain("who-am-i");
+    expect(playGames.map((game) => game.id)).toContain("who-am-i");
     expect(playGameDefinition("20-questions").availability).toBe("retired");
-    expect(playGameDefinition("who-am-i").availability).toBe("preview");
+    expect(playGameDefinition("who-am-i").availability).toBeUndefined();
     expect(new Set(playGames.map((game) => game.id)).size).toBe(playGames.length);
 
     for (const game of playGames) {
