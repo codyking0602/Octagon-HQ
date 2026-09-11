@@ -107,7 +107,7 @@ export default function FootballHitTheNumberPage() {
   const selectionValid = footballHitTheNumberSelectionSatisfies(plan, selectedIds);
   const shared = run.identity.type === "curated";
   const slotProgression = isSlotProgression(plan);
-  const availableSubjectIds = availableProgressionSubjectIds(plan, selectedIds);
+  const availableSubjectIds = footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedIds);
   const presentationCandidates = plan.subjectIds.map((subjectId) => {
     const subject = getFootballHitTheNumberSubject(subjectId)!;
     return {
@@ -135,7 +135,7 @@ export default function FootballHitTheNumberPage() {
         return current.filter((id) => id !== subjectId);
       }
       if (current.length >= plan.pickCount) return current;
-      if (slotProgression && !availableProgressionSubjectIds(plan, current).includes(subjectId)) return current;
+      if (slotProgression && !footballHitTheNumberAvailableProgressionSubjectIds(plan, current).includes(subjectId)) return current;
       return [...current, subjectId];
     });
   }
