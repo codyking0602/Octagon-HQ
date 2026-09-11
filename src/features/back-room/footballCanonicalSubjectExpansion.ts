@@ -26,6 +26,7 @@ export interface FootballExpandedCanonicalSubject {
   season?: number;
   activeDecades?: readonly number[];
   school?: string;
+  franchises?: readonly string[];
   startSeason?: number;
   endSeason?: number;
   undrafted?: boolean;
@@ -82,6 +83,7 @@ const tightEnds: FootballExpandedCanonicalSubject[] = nflTightEnds.map((item) =>
   kind: "player-career",
   league: "NFL",
   position: "TE",
+  franchises: [item.asset.label],
   ...(item.id === "antonio-gates" ? { undrafted: true } : {}),
 }));
 
