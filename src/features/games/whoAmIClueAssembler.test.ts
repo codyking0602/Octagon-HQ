@@ -28,35 +28,7 @@ const BAND_RANK: Readonly<Record<WhoAmIClueBand, number>> = {
   giveaway: 3,
 };
 
-const CFB_WHO_AM_I_RESUME_METRICS: ReadonlySet<FootballFactMetricId> = new Set([
-  "cfb-career-games",
-  "cfb-career-passing-yards",
-  "cfb-career-passing-touchdowns",
-  "cfb-career-rushing-yards",
-  "cfb-career-rushing-touchdowns",
-  "cfb-career-receptions",
-  "cfb-career-receiving-yards",
-  "cfb-career-receiving-touchdowns",
-  "cfb-career-total-touchdowns",
-  "cfb-career-defensive-interceptions",
-  "cfb-career-sacks",
-  "cfb-career-pass-breakups",
-  "cfb-career-forced-fumbles",
-  "cfb-career-fumble-recoveries",
-  "cfb-best-season-passing-yards",
-  "cfb-best-season-passing-touchdowns",
-  "cfb-best-season-interceptions",
-  "cfb-best-season-passer-rating",
-  "cfb-best-season-rushing-yards",
-  "cfb-best-season-rushing-touchdowns",
-  "cfb-best-season-receptions",
-  "cfb-best-season-receiving-yards",
-  "cfb-best-season-receiving-touchdowns",
-  "cfb-best-season-sacks",
-  "cfb-best-season-tackles-for-loss",
-  "cfb-best-season-defensive-interceptions",
-  "cfb-heisman-awards",
-]);
+
 
 function normalize(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
