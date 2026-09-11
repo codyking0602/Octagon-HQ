@@ -701,6 +701,10 @@ export function assembleWhoAmIClues(
       return selected.flatMap((current, selectedIndex) => {
         if (current.clue.band !== "helpful" || current.facet !== candidate.facet) return [];
         const otherSelected = selected.filter((_entry, index) => index !== selectedIndex);
+        const otherPersonalCount = otherSelected.filter((entry) => entry.selectionClass !== "sports-identity").length;
+        const otherBiographyCount = otherSelected.filter((entry) => entry.selectionClass === "deep-biography").length;
+        if (candidate.selectionClass !== "sports-identity" && otherPersonalCount >= 3) return [];
+        if (candidate.selectionClass === "deep-biography" && otherBiographyCount >= 1) return [];
         if (otherSelected.some((entry) => entry.conceptId === candidate.conceptId)) return [];
         if (otherSelected.some((entry) => (
           normalize(entry.clue.text) === normalize(candidate.clue.text)
