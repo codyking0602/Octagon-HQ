@@ -576,7 +576,8 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
       base.strength = recognitionStrength(base);
       return base;
     })
-    .filter((entry) => entry.clue.text.trim().length > 0);
+    .filter((entry) => entry.clue.text.trim().length > 0)
+    .filter((entry) => !isLowSignalCareerVolume(entry.clue));
 }
 
 export function assembleWhoAmIClues(
@@ -599,9 +600,9 @@ export function assembleWhoAmIClues(
       relaxSemanticFamily: boolean;
       relaxPersonalLimit: boolean;
       relaxBiographyLimit: boolean;
+      relaxChronologyLimit?: boolean;
     },
   ) => {
-    if (isLowSignalCareerVolume(entry.clue)) return false;
     if (selectedConcepts.has(entry.conceptId)) return false;
     const normalizedText = normalize(entry.clue.text);
     if (selectedTexts.some((text) => normalize(text) === normalizedText)) return false;
@@ -612,7 +613,11 @@ export function assembleWhoAmIClues(
         && !tokenOverlapStillDistinct(other, entry)
       ))
     ) return false;
-    if (entry.semanticFamily === "era:chronology" && selectedFamilies.has(entry.semanticFamily)) return false;
+    if (
+      entry.semanticFamily === "era:chronology"
+      && selectedFamilies.has(entry.semanticFamily)
+      && !options.relaxChronologyLimit
+    ) return false;
     if (!options.relaxSemanticFamily && entry.semanticFamily && selectedFamilies.has(entry.semanticFamily)) return false;
     const personalCount = selected.filter((candidate) => candidate.selectionClass !== "sports-identity").length;
     const biographyCount = selected.filter((candidate) => candidate.selectionClass === "deep-biography").length;
@@ -692,6 +697,26 @@ export function assembleWhoAmIClues(
         relaxSemanticFamily: true,
         relaxPersonalLimit: false,
         relaxBiographyLimit: false,
+      },
+    );
+  }
+
+  // Healthy clue pools keep chronology to one slot. If the canonical pool is genuinely
+  // shallow after the normal quality passes, allow exactly one additional chronology clue
+  // before relaxing personal/biography protections. Generic games/targets remain excluded.
+  if (selected.length < limit) {
+    take(
+      prepared
+        .filter((entry) => !selected.includes(entry) && entry.semanticFamily === "era:chronology")
+        .sort(lateFirst),
+      1,
+      {
+        allowNearDuplicate: false,
+        relaxFacetLimit: false,
+        relaxSemanticFamily: true,
+        relaxPersonalLimit: false,
+        relaxBiographyLimit: false,
+        relaxChronologyLimit: true,
       },
     );
   }
