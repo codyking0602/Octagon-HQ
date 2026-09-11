@@ -799,13 +799,20 @@ export function assembleWhoAmIClues(
     return prepared
       .filter((candidate) => !selectedSnapshot.includes(candidate))
       .filter((candidate) => candidate.clue.band === current.clue.band)
-      .filter((candidate) => candidate.selectionClass === current.selectionClass)
       .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 20)
       .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 20)
       .filter((candidate) => {
-        const otherFacetCount = selectedSnapshot.filter((other, index) => (
-          index !== selectedIndex && other.facet === candidate.facet
-        )).length;
+        const otherSelected = selectedSnapshot.filter((_other, index) => index !== selectedIndex);
+        const sportsIdentityCount = otherSelected.filter((entry) => entry.selectionClass === "sports-identity").length
+          + Number(candidate.selectionClass === "sports-identity");
+        const personalCount = otherSelected.filter((entry) => entry.selectionClass !== "sports-identity").length
+          + Number(candidate.selectionClass !== "sports-identity");
+        const biographyCount = otherSelected.filter((entry) => entry.selectionClass === "deep-biography").length
+          + Number(candidate.selectionClass === "deep-biography");
+        if (sportsIdentityCount < sportsIdentityTarget) return false;
+        if (personalCount > 3 || biographyCount > 1) return false;
+
+        const otherFacetCount = otherSelected.filter((other) => other.facet === candidate.facet).length;
         if (candidate.facet === "relationships" && otherFacetCount >= 1) return false;
         const replayFacetLimit = FACET_LIMITS[candidate.facet] ?? 2;
         return otherFacetCount < replayFacetLimit;
