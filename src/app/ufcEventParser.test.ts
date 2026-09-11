@@ -81,6 +81,28 @@ describe("official UFC event parser", () => {
     expect(parsed.card.bouts.some((bout) => bout.red_fighter_name === "Removed Fighter")).toBe(false);
   });
 
+  it("parses canonical UFC fight blocks when section instances use suffixed ids and div rows", () => {
+    const currentMarkup = html
+      .replace('id="main-card"', 'id="main-card-1"')
+      .replace('id="prelims-card"', 'id="prelims-card-1"')
+      .replaceAll('<li class="l-listing__item c-listing-fight">', '<div class="c-listing-fight">')
+      .replaceAll('</li>', '</div>');
+
+    const card = parseUfcFightCard(currentMarkup, sourceUrl);
+    expect(card.usedSectionHeadings).toBe(true);
+    expect(card.bouts).toHaveLength(11);
+    expect(card.bouts[0]).toMatchObject({
+      section: "main-event",
+      red_fighter_name: "Anthony Hernandez",
+      blue_fighter_name: "Gregory Rodrigues",
+    });
+    expect(card.bouts.at(-1)).toMatchObject({
+      section: "prelim",
+      red_fighter_name: "Jamall Emmers",
+      blue_fighter_name: "Lerryan Douglas",
+    });
+  });
+
   it("rejects a non-UFC source URL", () => {
     expect(() => parseUfcEventPage(html, "https://www.cbssports.com/ufc/event/1/test"))
       .toThrow("exact UFC.com event URL");
