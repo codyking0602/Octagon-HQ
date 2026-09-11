@@ -1,8 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   WHO_AM_I_CLUE_LIMIT,
   WHO_AM_I_CLUES_PER_REVEAL,
-  WHO_AM_I_FINAL_GUESS_COUNT,
   WHO_AM_I_RESCUE_GUESS_COUNT,
   WHO_AM_I_RESCUE_SCORE,
   WHO_AM_I_RESCUE_SECOND_SCORE,
@@ -37,11 +36,14 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
   const [guessOpen, setGuessOpen] = useState(false);
   const [guessSearch, setGuessSearch] = useState("");
   const [selectedGuess, setSelectedGuess] = useState<WhoAmISubject | null>(null);
-  const [guessNotice, setGuessNotice] = useState<string | null>(null);
+  const [guessNotice, setGuessNotice] = useState<{ name: string; score: number } | null>(null);
   const [rejectedSubjectIds, setRejectedSubjectIds] = useState<Set<string>>(() => new Set());
   const [rejectedRescueSubjectIds, setRejectedRescueSubjectIds] = useState<Set<string>>(() => new Set());
   const [rescueChoices, setRescueChoices] = useState<readonly WhoAmISubject[]>([]);
   const [reviewCluesOpen, setReviewCluesOpen] = useState(false);
+  const latestClueRef = useRef<HTMLElement | null>(null);
+  const shouldScrollAfterReveal = useRef(false);
+  const guessInputRef = useRef<HTMLInputElement | null>(null);
 
   const football = sport === "football";
   const finalGuessRequired = phase === "playing" && revealedCount >= WHO_AM_I_CLUE_LIMIT;
@@ -50,6 +52,16 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
   const nextRevealedCount = Math.min(WHO_AM_I_CLUE_LIMIT, revealedCount + WHO_AM_I_CLUES_PER_REVEAL);
   const nextRevealScore = whoAmIScore(nextRevealedCount, wrongGuesses);
   const revealedClues = round.clues.slice(0, revealedCount);
+  const latestPairStart = Math.max(0, revealedCount - WHO_AM_I_CLUES_PER_REVEAL);
+  const cluePairs = useMemo(() => (
+    Array.from({ length: Math.ceil(round.clues.length / WHO_AM_I_CLUES_PER_REVEAL) }, (_value, pairIndex) => (
+      round.clues.slice(
+        pairIndex * WHO_AM_I_CLUES_PER_REVEAL,
+        pairIndex * WHO_AM_I_CLUES_PER_REVEAL + WHO_AM_I_CLUES_PER_REVEAL,
+      )
+    ))
+  ), [round.clues]);
+
   const guessMatches = useMemo(() => {
     const query = normalized(guessSearch);
     if (query.length < 2) return [];
@@ -58,6 +70,17 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
       .filter((subject) => normalized(subject.name).includes(query))
       .slice(0, 16);
   }, [guessSearch, rejectedSubjectIds, round.subjects]);
+
+  useEffect(() => {
+    if (phase !== "playing" || !shouldScrollAfterReveal.current) return;
+    shouldScrollAfterReveal.current = false;
+    latestClueRef.current?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+  }, [phase, revealedCount]);
+
+  useEffect(() => {
+    if (phase !== "playing" || (!guessOpen && !finalGuessRequired)) return;
+    guessInputRef.current?.focus({ preventScroll: true });
+  }, [finalGuessRequired, guessOpen, phase]);
 
   function resetRound() {
     setRound(createRound());
@@ -74,17 +97,31 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
     setRejectedRescueSubjectIds(new Set());
     setRescueChoices([]);
     setReviewCluesOpen(false);
+    shouldScrollAfterReveal.current = false;
+  }
+
+  function openGuess() {
+    setGuessOpen(true);
+    setGuessSearch("");
+    setSelectedGuess(null);
+    setGuessNotice(null);
+  }
+
+  function closeGuess() {
+    if (finalGuessRequired) return;
+    setGuessOpen(false);
+    setGuessSearch("");
+    setSelectedGuess(null);
   }
 
   function revealMore() {
     if (phase !== "playing" || finalGuessRequired) return;
+    shouldScrollAfterReveal.current = true;
     setRevealedCount(nextRevealedCount);
     setGuessNotice(null);
     setGuessSearch("");
     setSelectedGuess(null);
-    if (nextRevealedCount >= WHO_AM_I_CLUE_LIMIT) {
-      setGuessOpen(true);
-    }
+    setGuessOpen(nextRevealedCount >= WHO_AM_I_CLUE_LIMIT);
   }
 
   function openRescue(excludedSubjectIds = rejectedSubjectIds) {
@@ -107,8 +144,10 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
       return;
     }
 
+    const missedName = selectedGuess.name;
     const nextWrongGuesses = wrongGuesses + 1;
     const nextRejectedSubjectIds = new Set([...rejectedSubjectIds, selectedGuess.id]);
+    const nextScore = whoAmIScore(revealedCount, nextWrongGuesses);
     setWrongGuesses(nextWrongGuesses);
     setRejectedSubjectIds(nextRejectedSubjectIds);
 
@@ -117,11 +156,10 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
       return;
     }
 
-    setGuessNotice(
-      `${selectedGuess.name} is not the answer. −${WHO_AM_I_WRONG_GUESS_PENALTY} pts. Current solve value: ${whoAmIScore(revealedCount, nextWrongGuesses)} pts.`,
-    );
+    setGuessNotice({ name: missedName, score: nextScore });
     setGuessSearch("");
     setSelectedGuess(null);
+    setGuessOpen(false);
   }
 
   function submitRescueGuess(subject: WhoAmISubject) {
@@ -154,6 +192,13 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
     : resultState === "rescued"
       ? recoveryScore
       : 0;
+  const resultLabel = resultState === "correct"
+    ? "NATURAL SOLVE"
+    : resultState === "rescued"
+      ? "RECOVERED"
+      : resultState === "forfeit"
+        ? "FORFEIT"
+        : "MISS";
 
   return (
     <main className="page twenty-questions-page who-am-i-page" data-sport={sport}>
@@ -172,15 +217,15 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
             <p className="twenty-questions-start__league">{round.league} ROUND</p>
             <h2>How early can you recognize the hidden {football ? "player or head coach" : "fighter"}?</h2>
             <p>
-              You get two clues at a time. Guess whenever you know it, or reveal another pair.
-              Each reveal lowers the score on the table, and a wrong natural guess costs {WHO_AM_I_WRONG_GUESS_PENALTY} points.
+              Two clues at a time. Guess when you know it, or reveal the next pair and play for fewer points.
+              A wrong natural guess costs {WHO_AM_I_WRONG_GUESS_PENALTY}.
             </p>
             <div className="twenty-questions-rules" aria-label="Who Am I scoring rules">
               <span><strong>2</strong> clues per reveal</span>
               <span><strong>100</strong> max points</span>
               <span><strong>{WHO_AM_I_RESCUE_SCORE}→{WHO_AM_I_RESCUE_SECOND_SCORE}</strong> recovery</span>
             </div>
-            {football ? <p className="twenty-questions-disclosure">League is locked and revealed before the first clue.</p> : null}
+            {football ? <p className="twenty-questions-disclosure">{round.league} is locked before clue one.</p> : null}
             <button className="twenty-questions-primary" type="button" onClick={() => setPhase("playing")}>START ROUND</button>
           </section>
         ) : null}
@@ -188,13 +233,27 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
         {phase === "playing" ? (
           <>
             <section className="twenty-questions-scorebar" aria-label="Round status">
-              <div><small>CLUES SHOWN</small><strong>{revealedCount}</strong></div>
-              <div><small>MISSES</small><strong>{wrongGuesses}</strong></div>
-              <div><small>SCORE</small><strong>{score}</strong></div>
-              <button type="button" onClick={() => setGuessOpen(true)}>
-                {finalGuessRequired ? "FINAL GUESS" : "GUESS NOW"}
-              </button>
+              <div className="twenty-questions-scorebar__stat"><small>CLUES</small><strong>{revealedCount}</strong></div>
+              <div className="twenty-questions-scorebar__stat"><small>MISSES</small><strong>{wrongGuesses}</strong></div>
+              <div className="twenty-questions-scorebar__stat"><small>SOLVE</small><strong>{score}</strong></div>
+              <div className={`twenty-questions-scorebar__actions${finalGuessRequired ? " is-final" : ""}`} aria-label="Round decisions">
+                <button className="is-guess" type="button" onClick={openGuess}>
+                  {finalGuessRequired ? `FINAL GUESS · ${score}` : `GUESS NOW · ${score}`}
+                </button>
+                {!finalGuessRequired ? (
+                  <button className="is-reveal" type="button" onClick={revealMore}>
+                    REVEAL 2 · {nextRevealScore}
+                  </button>
+                ) : null}
+              </div>
             </section>
+
+            {guessNotice ? (
+              <p className="twenty-questions-wrong-guess" role="status">
+                <strong>MISS · −{WHO_AM_I_WRONG_GUESS_PENALTY} PTS</strong>
+                <span>{guessNotice.name} isn&apos;t the answer. Solve value now {guessNotice.score} pts.</span>
+              </p>
+            ) : null}
 
             <section className="twenty-questions-history" aria-labelledby="who-am-i-clues-title">
               <div className="twenty-questions-section-heading">
@@ -202,62 +261,65 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
                   <p className="eyebrow">CLUES {revealedCount} / {WHO_AM_I_CLUE_LIMIT}</p>
                   <h2 id="who-am-i-clues-title">What you know</h2>
                 </div>
+                {!finalGuessRequired ? <span>Guess {score} · Reveal → {nextRevealScore}</span> : <span>Last chance · {score} pts</span>}
               </div>
-              <div className="twenty-questions-history-list">
-                {revealedClues.map((entry, index) => (
-                  <article key={entry.id}>
-                    <span>{index + 1}</span>
-                    <div>
-                      <strong>{entry.text}</strong>
-                      <small>Clue {index + 1}</small>
-                    </div>
-                  </article>
-                ))}
+              <div className="twenty-questions-history-list who-am-i-clue-stack">
+                {revealedClues.map((entry, index) => {
+                  const latest = index >= latestPairStart;
+                  return (
+                    <article
+                      key={entry.id}
+                      className={latest ? "is-latest" : "is-previous"}
+                      ref={index === latestPairStart ? latestClueRef : undefined}
+                    >
+                      <span aria-label={`Clue ${index + 1}`}>{index + 1}</span>
+                      <div><strong>{entry.text}</strong></div>
+                    </article>
+                  );
+                })}
               </div>
-              {!finalGuessRequired ? (
-                <>
-                  <button className="twenty-questions-primary" type="button" onClick={() => setGuessOpen(true)}>
-                    GUESS NOW — {score} PTS
-                  </button>
-                  <button className="twenty-questions-more" type="button" onClick={revealMore}>
-                    REVEAL 2 MORE — NEXT SCORE {nextRevealScore}
-                  </button>
-                </>
-              ) : (
-                <p className="twenty-questions-final-guess-copy">
-                  All 10 clues are out. You have one final natural guess worth {score} pts.
-                  Miss it and you move to the five-player Recovery Board.
-                </p>
-              )}
+              {finalGuessRequired ? (
+                <div className="twenty-questions-final-alert" role="note">
+                  <strong>LAST CHANCE</strong>
+                  <span>One natural guess for {score} pts. Miss and the five-name Recovery Board takes over.</span>
+                </div>
+              ) : null}
             </section>
 
             {guessOpen || finalGuessRequired ? (
-              <section className={`twenty-questions-guess${finalGuessRequired ? " is-final" : ""}`} aria-label="Guess the identity">
+              <section className={`twenty-questions-guess${finalGuessRequired ? " is-final" : ""}`} aria-label="Guess the answer">
                 <div className="twenty-questions-section-heading">
                   <div>
-                    <p className="eyebrow">{finalGuessRequired ? "LAST CHANCE · FINAL GUESS" : "GUESS ANYTIME"}</p>
+                    <p className="eyebrow">{finalGuessRequired ? "LAST CHANCE · ONE NATURAL GUESS" : "GUESS NOW"}</p>
                     <h2>Who am I?</h2>
                   </div>
-                  <span>{finalGuessRequired ? `${score} pts · one shot` : `Wrong guess −${WHO_AM_I_WRONG_GUESS_PENALTY} pts`}</span>
+                  <span>{finalGuessRequired ? `${score} pts · miss → recovery` : `${score} pts · miss −${WHO_AM_I_WRONG_GUESS_PENALTY}`}</span>
                 </div>
                 <input
+                  ref={guessInputRef}
                   value={guessSearch}
                   onChange={(event) => {
                     setGuessSearch(event.target.value);
                     setSelectedGuess(null);
-                    setGuessNotice(null);
                   }}
-                  placeholder={football ? `Search ${round.league} identities…` : "Search UFC fighters…"}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") event.preventDefault();
+                  }}
+                  placeholder={football ? `Search ${round.league} names…` : "Search UFC fighters…"}
                   aria-label="Search identities"
+                  autoComplete="off"
+                  enterKeyHint="search"
                 />
-                {guessMatches.length ? (
+                {!selectedGuess && guessMatches.length ? (
                   <div className="twenty-questions-guess-list">
                     {guessMatches.map((subject) => (
                       <button
                         type="button"
                         key={subject.id}
-                        className={selectedGuess?.id === subject.id ? "is-selected" : ""}
-                        onClick={() => setSelectedGuess(subject)}
+                        onClick={() => {
+                          setSelectedGuess(subject);
+                          setGuessSearch(subject.name);
+                        }}
                       >
                         <strong>{subject.name}</strong>
                         <small>{subject.kind === "coach" ? "Head coach" : subject.kind === "fighter" ? "Fighter" : "Player"}</small>
@@ -266,11 +328,32 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
                   </div>
                 ) : null}
                 {selectedGuess ? (
-                  <button className="twenty-questions-primary" type="button" onClick={submitGuess}>GUESS {selectedGuess.name.toUpperCase()}</button>
+                  <div className="twenty-questions-selected-guess" aria-label="Selected guess">
+                    <div>
+                      <small>YOUR PICK</small>
+                      <strong>{selectedGuess.name}</strong>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedGuess(null);
+                        guessInputRef.current?.focus();
+                      }}
+                    >
+                      CHANGE
+                    </button>
+                  </div>
                 ) : null}
-                {guessNotice ? <p className="twenty-questions-wrong-guess" role="status">{guessNotice}</p> : null}
-                <button className="twenty-questions-more" type="button" onClick={forfeitRound}>
-                  FORFEIT / REVEAL ANSWER — 0 PTS
+                {selectedGuess ? (
+                  <button className="twenty-questions-primary" type="button" onClick={submitGuess}>
+                    SUBMIT {selectedGuess.name.toUpperCase()} · {score} PTS
+                  </button>
+                ) : null}
+                {!finalGuessRequired ? (
+                  <button className="twenty-questions-more" type="button" onClick={closeGuess}>BACK TO CLUES</button>
+                ) : null}
+                <button className="twenty-questions-more is-danger" type="button" onClick={forfeitRound}>
+                  REVEAL ANSWER · 0 PTS
                 </button>
               </section>
             ) : null}
@@ -278,19 +361,24 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
         ) : null}
 
         {phase === "rescue" ? (
-          <section className="twenty-questions-guess is-final" aria-label="Who Am I rescue choice">
-            <div className="twenty-questions-section-heading">
+          <section className={`twenty-questions-guess is-final is-recovery${rescueMisses ? " has-miss" : ""}`} aria-label="Who Am I rescue choice">
+            <div className="twenty-questions-recovery-heading">
               <div>
-                <p className="eyebrow">RECOVERY BOARD</p>
+                <p className="eyebrow">RECOVERY BOARD · PICK {Math.min(rescueMisses + 1, WHO_AM_I_RESCUE_GUESS_COUNT)} OF {WHO_AM_I_RESCUE_GUESS_COUNT}</p>
                 <h2>{rescueMisses === 0 ? "Five names. Two picks." : "One pick left."}</h2>
               </div>
-              <span>{recoveryScore} pts</span>
+              <div className="twenty-questions-recovery-value">
+                <strong>{recoveryScore}</strong>
+                <small>PTS</small>
+              </div>
             </div>
             <p className="twenty-questions-final-guess-copy">
-              Pick the hidden identity. The first pick is worth {WHO_AM_I_RESCUE_SCORE} pts.
-              Miss once and your last pick is worth {WHO_AM_I_RESCUE_SECOND_SCORE}.
+              {rescueMisses === 0
+                ? `Find the answer for ${WHO_AM_I_RESCUE_SCORE}. Miss once and the last pick drops to ${WHO_AM_I_RESCUE_SECOND_SCORE}.`
+                : `Final pick. Find the answer for ${WHO_AM_I_RESCUE_SECOND_SCORE} points.`}
             </p>
-            <div className="twenty-questions-guess-list">
+            {rescueMisses === 1 ? <p className="twenty-questions-recovery-shift" role="status">MISS · 30 PTS LEFT</p> : null}
+            <div className="twenty-questions-guess-list twenty-questions-recovery-list">
               {rescueChoices.map((subject) => {
                 const rejected = rejectedRescueSubjectIds.has(subject.id);
                 return (
@@ -302,7 +390,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
                     onClick={() => submitRescueGuess(subject)}
                   >
                     <strong>{subject.name}</strong>
-                    <small>{rejected ? "Not the answer" : subject.kind === "coach" ? "Head coach" : subject.kind === "fighter" ? "Fighter" : "Player"}</small>
+                    <small>{rejected ? "Eliminated" : subject.kind === "coach" ? "Head coach" : subject.kind === "fighter" ? "Fighter" : "Player"}</small>
                   </button>
                 );
               })}
@@ -311,16 +399,16 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
         ) : null}
 
         {phase === "result" ? (
-          <section className="twenty-questions-result">
-            <p className="eyebrow">{resultState === "correct" ? "SOLVED" : resultState === "rescued" ? "RESCUED" : resultState === "forfeit" ? "FORFEITED" : "NOT SOLVED"}</p>
+          <section className={`twenty-questions-result is-${resultState}`}>
+            <p className="eyebrow">{resultLabel}</p>
             <h2>{round.hiddenSubject.name}</h2>
             <p>{resultState === "correct"
-              ? `You recognized the hidden ${round.hiddenSubject.kind}.`
+              ? `You solved it naturally with ${revealedCount} clues.`
               : resultState === "rescued"
-                ? `You found the hidden ${round.hiddenSubject.kind} on the Recovery Board.`
+                ? "You saved the round on the Recovery Board."
                 : resultState === "forfeit"
-                  ? "You revealed the hidden identity."
-                  : "Both recovery picks missed. This was the hidden identity."}</p>
+                  ? "Answer revealed."
+                  : "Both recovery picks missed."}</p>
             <div className="twenty-questions-result__score-block">
               <div className="twenty-questions-result__score">{finalScore}</div>
               <small>FINAL SCORE</small>
@@ -328,19 +416,25 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
             <div className="twenty-questions-result__stats">
               <span><strong>{revealedCount}</strong> clues used</span>
               <span><strong>{wrongGuesses}</strong> natural misses</span>
-              <span><strong>{round.league}</strong> universe</span>
+              <span><strong>{resultLabel}</strong> outcome</span>
+              <span><strong>{round.league}</strong> league</span>
             </div>
             <button className="twenty-questions-more" type="button" onClick={() => setReviewCluesOpen((open) => !open)}>
               {reviewCluesOpen ? "HIDE CLUES" : "REVIEW ALL CLUES"}
             </button>
             {reviewCluesOpen ? (
               <div className="twenty-questions-result__clues" aria-label="Round clues">
-                <div className="twenty-questions-history-list">
-                  {round.clues.map((entry, index) => (
-                    <article key={entry.id}>
-                      <span>{index + 1}</span>
-                      <div><strong>{entry.text}</strong><small>Clue {index + 1}</small></div>
-                    </article>
+                <div className="twenty-questions-review-grid">
+                  {cluePairs.map((pair, pairIndex) => (
+                    <section key={`pair-${pairIndex + 1}`} className="twenty-questions-review-pair">
+                      <small>CLUES {pairIndex * WHO_AM_I_CLUES_PER_REVEAL + 1}–{pairIndex * WHO_AM_I_CLUES_PER_REVEAL + pair.length}</small>
+                      {pair.map((entry, clueIndex) => (
+                        <div key={entry.id}>
+                          <span>{pairIndex * WHO_AM_I_CLUES_PER_REVEAL + clueIndex + 1}</span>
+                          <strong>{entry.text}</strong>
+                        </div>
+                      ))}
+                    </section>
                   ))}
                 </div>
               </div>
