@@ -592,16 +592,18 @@ export function assembleWhoAmIClues(
   const selectedTexts: string[] = [];
   const facetCounts = new Map<WhoAmIClueFacet, number>();
 
+  type SelectionOptions = {
+    allowNearDuplicate: boolean;
+    relaxFacetLimit: boolean;
+    relaxSemanticFamily: boolean;
+    relaxPersonalLimit: boolean;
+    relaxBiographyLimit: boolean;
+    relaxChronologyLimit?: boolean;
+  };
+
   const canUse = (
     entry: PreparedClue,
-    options: {
-      allowNearDuplicate: boolean;
-      relaxFacetLimit: boolean;
-      relaxSemanticFamily: boolean;
-      relaxPersonalLimit: boolean;
-      relaxBiographyLimit: boolean;
-      relaxChronologyLimit?: boolean;
-    },
+    options: SelectionOptions,
   ) => {
     if (selectedConcepts.has(entry.conceptId)) return false;
     const normalizedText = normalize(entry.clue.text);
@@ -633,7 +635,7 @@ export function assembleWhoAmIClues(
   const take = (
     pool: readonly PreparedClue[],
     count: number,
-    options = {
+    options: SelectionOptions = {
       allowNearDuplicate: false,
       relaxFacetLimit: false,
       relaxSemanticFamily: false,
