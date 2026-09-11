@@ -313,31 +313,38 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
     ]),
   r("cfb-brian-urlacher", "New Mexico Athletics", "https://golobos.com/news/2017/01/09/brian-urlacher-named-to-nff-college-football-hall-of-fame", [
       f("career-tackles", "I finished my New Mexico career with 442 tackles.", ["college", "production"]),
-      f("career-forced-fumbles", "I forced 11 fumbles during my New Mexico career.", ["college", "production"])
+      f("career-forced-fumbles", "I forced 11 fumbles during my New Mexico career.", ["college", "production"]),
+      f("nfl-draft-2000", "I was selected ninth overall by the Chicago Bears in the 2000 NFL Draft.", ["college","draft"])
     ]),
   r("cfb-chris-long", "Virginia Athletics", "https://virginiasports.com/news/2007/12/06/long-named-all-american-by-walter-camp-football-foundation", [
       f("senior-sacks", "I recorded 14 sacks during my senior season at Virginia.", ["college", "production"]),
-      f("hendricks-award", "I won the 2007 Ted Hendricks Award as the nation's top defensive end.", ["college", "award"])
+      f("hendricks-award", "I won the 2007 Ted Hendricks Award as the nation's top defensive end.", ["college", "award"]),
+      f("acc-defensive-player-of-year-2007", "I was the ACC Defensive Player of the Year in 2007.", ["college","award"])
     ]),
   r("cfb-derrick-johnson", "Texas Athletics", "https://texaslonghorns.com/sports/general/roster/derrick-johnson/5218", [
       f("career-tackles", "I finished my Texas career with 458 tackles.", ["college", "production"]),
-      f("career-tackles-for-loss", "I set a Texas career record with 65 tackles for loss.", ["college", "production"])
+      f("career-tackles-for-loss", "I set a Texas career record with 65 tackles for loss.", ["college", "production"]),
+      f("nfl-draft-2005", "I was selected 15th overall by the Kansas City Chiefs in the 2005 NFL Draft.", ["college","draft"])
     ]),
   r("cfb-eli-manning", "Ole Miss Athletics", "https://olemisssports.com/news/2024/8/4/football-ole-miss-greats-eli-manning-savante-stringfellow-inducted-into-mississippi-sports-hall-of-fame", [
       f("career-passing-yards", "I finished my Ole Miss career with a school-record 10,119 passing yards.", ["college", "production"]),
-      f("career-passing-touchdowns", "I threw a school-record 81 career touchdown passes at Ole Miss.", ["college", "production"])
+      f("career-passing-touchdowns", "I threw a school-record 81 career touchdown passes at Ole Miss.", ["college", "production"]),
+      f("nfl-draft-2004", "I became the highest draft pick in Ole Miss history when I was selected first overall in 2004.", ["college","draft"])
     ]),
   r("cfb-jake-matthews", "Texas A&M Athletics", "https://12thman.com/news/2023/08/11/eight-named-to-athletics-2023-hall-of-fame-class", [
       f("consecutive-starts", "I finished my Texas A&M career with 46 consecutive starts.", ["college", "production"]),
-      f("two-first-team-all-america", "I was a two-time first-team All-American at Texas A&M.", ["college", "award"])
+      f("two-first-team-all-america", "I was a two-time first-team All-American at Texas A&M.", ["college", "award"]),
+      f("jacobs-blocking-trophy-2013", "I won the SEC Jacobs Blocking Trophy in 2013.", ["college","award"])
     ]),
   r("cfb-joe-thomas", "Wisconsin Athletics", "https://uwbadgers.com/sports/2015/8/21/GEN_20140101585", [
       f("career-games-starts", "I appeared in 47 games at Wisconsin and started 38.", ["college", "production"]),
-      f("outland-award", "I won the 2006 Outland Trophy as college football's top interior lineman.", ["college", "award"])
+      f("outland-award", "I won the 2006 Outland Trophy as college football's top interior lineman.", ["college", "award"]),
+      f("consensus-all-american-2006", "I was a consensus All-American in 2006.", ["college","award"])
     ]),
   r("cfb-john-henderson", "Tennessee Athletics", "https://utsports.com/sports/football/roster/john-henderson/14190", [
       f("career-sacks", "I finished my Tennessee career with 20.5 sacks.", ["college", "production"]),
-      f("outland-award", "I won the 2000 Outland Trophy.", ["college", "award"])
+      f("outland-award", "I won the 2000 Outland Trophy.", ["college", "award"]),
+      f("career-tackles", "I finished my Tennessee career with 162 tackles.", ["college","production"])
     ]),
   r("nfl-ya-tittle", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/ya-tittle", [
       f("pro-bowls", "I was selected to seven Pro Bowls during my pro career.", ["playing-career", "award"]),
@@ -467,19 +474,24 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
       f("career-wins", "I won 323 games during my college head-coaching career.", ["college", "coaching", "production"])
     ]),
   r("cfb-davante-adams", "Fresno State Athletics", "https://gobulldogs.com/news/2014/5/9/Davante_Adams_Drafted_in_Second_Round_by_Packers", [
-      f("career-receptions", "I set a Fresno State career record with 233 receptions in only two playing seasons.", ["college", "production"])
+      f("career-receptions", "I set a Fresno State career record with 233 receptions in only two playing seasons.", ["college", "production"]),
+      f("nfl-draft-2014", "I was selected 53rd overall by the Green Bay Packers in the 2014 NFL Draft.", ["college","draft"])
     ]),
   r("cfb-dez-bryant", "Oklahoma State Athletics", "https://okstate.com/news/2025/6/2/cowboy-football-dez-bryant-added-to-college-football-hall-of-fame-ballot", [
-      f("career-receiving-line", "I finished my Oklahoma State career with 147 catches for 2,425 yards and 29 touchdowns.", ["college", "production"])
+      f("career-receiving-line", "I finished my Oklahoma State career with 147 catches for 2,425 yards and 29 touchdowns.", ["college", "production"]),
+      f("2008-receiving-production", "In 2008 I recorded 1,480 receiving yards and 19 receiving touchdowns.", ["college","production"])
     ]),
   r("cfb-jadeveon-clowney", "South Carolina Athletics", "https://gamecocksonline.com/sports/football/roster/player/jadeveon-clowney/", [
-      f("career-tackles-for-loss", "I finished second in South Carolina history with 47 career tackles for loss.", ["college", "production"])
+      f("career-tackles-for-loss", "I finished second in South Carolina history with 47 career tackles for loss.", ["college", "production"]),
+      f("career-sacks", "I finished my South Carolina career with 24 sacks.", ["college","production"])
     ]),
   r("cfb-john-hannah", "Alabama Athletics", "https://rolltide.com/news/2015/8/20/Alabama_Football_Sports_Four_on_FWAA_75th_Anniversary_All_America_Team", [
-      f("jacobs-trophy-1972", "I won the 1972 Jacobs Trophy as the SEC's best blocker.", ["college", "award"])
+      f("jacobs-trophy-1972", "I won the 1972 Jacobs Trophy as the SEC's best blocker.", ["college", "award"]),
+      f("fwaa-all-american-1972", "I was a 1972 FWAA All-American.", ["college","award"])
     ]),
   r("cfb-lee-roy-selmon", "National Football Foundation", "https://footballfoundation.org/hof_search.aspx?hof=1956", [
-      f("outland-lombardi-awards", "I won both the Outland Trophy and Lombardi Award at Oklahoma.", ["college", "award"])
+      f("outland-lombardi-awards", "I won both the Outland Trophy and Lombardi Award at Oklahoma.", ["college", "award"]),
+      f("two-national-championships", "I won two national championships at Oklahoma during my three seasons as a starter.", ["college","championship"])
     ]),
   r("tom-osborne", "Nebraska Athletics", "https://huskers.com/staff/tom-osborne", [
       f("career-wins", "I finished my Nebraska head-coaching career with 255 wins.", ["college", "coaching", "production"])
@@ -544,4 +556,49 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
   r("vince-lombardi", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/vince-lombardi", [
       f("career-coaching-record", "My professional head-coaching record was 105-35-6.", ["playing-career", "coaching", "production"])
     ]),
+  r("bill-snyder-cfb", "Kansas State Athletics", "https://www.kstatesports.com/news/2018/12/2/football-bill-snyder-announces-retirement-from-kansas-state", [
+      f("conference-titles", "I won two conference championships as Kansas State's head coach.", ["college","coaching","championship"])
+    ]),
+  r("bobby-bowden-cfb", "Florida State Athletics", "https://seminoles.com/honors/florida-state-athletics-hall-of-fame/bobby-bowden/220", [
+      f("national-championships", "I won national championships at Florida State in 1993 and 1999.", ["college","coaching","championship"])
+    ]),
+  r("cfb-abdul-carter", "Penn State Athletics", "https://gopsusports.com/news/2025/04/24/carter-warren-selected-in-first-round-of-2025-nfl-draft", [
+      f("nfl-draft-2025", "I was selected third overall by the New York Giants in the 2025 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-aidan-hutchinson", "Michigan Athletics", "https://mgoblue.com/sports/2018/6/11/michigan_national_football_league_draft_history", [
+      f("nfl-draft-2022", "I was selected second overall by the Detroit Lions in the 2022 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-budda-baker", "Washington Athletics", "https://gohuskies.com/news/2017/4/28/football-king-baker-jones-selected-in-second-round-of-nfl-draft", [
+      f("nfl-draft-2017", "I was selected 36th overall by the Arizona Cardinals in the 2017 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-champ-bailey", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/champ-bailey", [
+      f("nfl-draft-1999", "I was selected seventh overall by Washington in the 1999 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-cooper-dejean", "Iowa Athletics", "https://hawkeyesports.com/news/2024/04/26/dejean-selected-by-philadelphia-in-second-round-of-nfl-draft", [
+      f("nfl-draft-2024", "I was selected 40th overall by the Philadelphia Eagles in the 2024 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-davey-obrien", "Pro Football Hall of Fame", "https://www.profootballhof.com/football-history/davey-obrien", [
+      f("nfl-draft-1939", "I was selected fourth overall by the Philadelphia Eagles in the 1939 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-desean-jackson", "California Athletics", "https://calbears.com/sports/2008/4/26/207743905.aspx", [
+      f("nfl-draft-2008", "I was selected 49th overall by the Philadelphia Eagles in the 2008 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-jj-watt", "Wisconsin Athletics", "https://uwbadgers.com/news/2011/4/29/Two_for_one_Watt_Carimi_go_in_first_round", [
+      f("nfl-draft-2011", "I was selected 11th overall by the Houston Texans in the 2011 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-kayvon-thibodeaux", "Oregon Athletics", "https://goducks.com/news/2022/4/28/football-thibodeaux-goes-no-5-overall-to-giants", [
+      f("nfl-draft-2022", "I was selected fifth overall by the New York Giants in the 2022 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-ladainian-tomlinson", "TCU Athletics", "https://gofrogs.com/news/2001/4/23/six_frogs_go_in_nfl_draft", [
+      f("nfl-draft-2001", "I was selected fifth overall by the San Diego Chargers in the 2001 NFL Draft.", ["college","draft"])
+    ]),
+  r("cfb-micah-parsons", "Penn State Athletics", "https://gopsusports.com/news/2021/04/29/parsons-oweh-selected-in-the-first-round-of-the-nfl-draft", [
+      f("nfl-draft-2021", "I was selected 12th overall by the Dallas Cowboys in the 2021 NFL Draft.", ["college","draft"])
+    ]),
+  r("dabo-swinney-cfb", "Clemson Athletics", "https://clemsontigers.com/staff/dabo", [
+      f("national-championships", "I led Clemson to two national championships.", ["college","coaching","championship"])
+    ]),
+  r("pete-carroll-cfb", "USC Athletics", "https://usctrojans.com/news/2010/1/11/Pete_Carroll_Named_Head_Coach_Of_Seattle_Seahawks", [
+      f("national-championships", "I led USC to national championships in 2003 and 2004.", ["college","coaching","championship"])
+    ])
 ] as const;
