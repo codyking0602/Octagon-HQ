@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { WhoAmIRound, WhoAmISubject } from "../games/whoAmIEngine";
 import WhoAmIPage from "./WhoAmIPage";
 
@@ -56,6 +56,29 @@ function rescueChoiceButtons() {
 }
 
 describe("Who Am I mature gameplay loop", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
+  it("remembers recently shown subjects across unmounts and feeds them back into selection", () => {
+    const exclusions: Array<ReadonlySet<string> | undefined> = [];
+    const createRound = (
+      excludedSubjectIdsByLeague: Partial<Record<"UFC" | "NFL" | "CFB", ReadonlySet<string>>>,
+    ) => {
+      exclusions.push(excludedSubjectIdsByLeague.UFC);
+      return round();
+    };
+
+    const firstRender = render(<WhoAmIPage sport="ufc" createRound={createRound} />);
+    expect(exclusions[0]).toBeUndefined();
+    firstRender.unmount();
+
+    render(<WhoAmIPage sport="ufc" createRound={createRound} />);
+
+    expect(exclusions[1]?.has("alpha")).toBe(true);
+  });
+
+
   it("keeps the intro and round decisions clear while making guessing frictionless", () => {
     const { container } = renderRound();
 
