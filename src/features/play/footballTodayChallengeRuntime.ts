@@ -345,7 +345,25 @@ function advanceFindLeader(context: OfficialDailyRuntimeContext, action: JsonRec
   const eliminated = [...prior, eliminatedId];
   const complete = eliminatedId === leaderId || eliminated.length === candidateIds.length - 1;
   const finalSubmission = complete ? { eliminated_ids: eliminated } : null;
-  return { submissionState: { eliminated_ids: eliminated, final_submission: finalSubmission }, publicState: { complete, eliminated_ids: eliminated, native_progress: complete && eliminatedId !== leaderId ? 10 : eliminated.length }, complete, finalSubmission };
+  const revealedCandidates = recordArray(context.revealSetup.candidates, "Football Find the Leader reveal candidates")
+    .filter((candidate) => eliminated.includes(String(candidate.id ?? "")) && String(candidate.id ?? "") !== leaderId)
+    .map((candidate) => ({
+      id: candidate.id,
+      name: candidate.name,
+      subtitle: candidate.subtitle,
+      value: candidate.value,
+    }));
+  return {
+    submissionState: { eliminated_ids: eliminated, final_submission: finalSubmission },
+    publicState: {
+      complete,
+      eliminated_ids: eliminated,
+      native_progress: complete && eliminatedId !== leaderId ? 10 : eliminated.length,
+      revealed_candidates: revealedCandidates,
+    },
+    complete,
+    finalSubmission,
+  };
 }
 
 function advanceWavelength(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
