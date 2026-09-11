@@ -489,12 +489,15 @@ function selectionPriorityPenalty(selectionClass: WhoAmIClueSelectionClass) {
   return 0;
 }
 
-function isLowSignalCareerVolume(clue: WhoAmIClue) {
-  if (/fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id)) return true;
-  const text = clue.text.toLowerCase();
-  return (
-    /\b(?:played|appeared in|recorded)\s+[\d,]+\s+(?:regular-season\s+)?(?:nfl\s+|college\s+)?games\b/.test(text)
-    || /\b(?:recorded|had|received)\s+[\d,]+\s+(?:career\s+)?targets\b/.test(text)
+function isGenericCareerTargets(clue: WhoAmIClue) {
+  if (/fact:(?:nfl|cfb)-career-targets$/.test(clue.id)) return true;
+  return /\b(?:recorded|had|received)\s+[\d,]+\s+(?:career\s+)?targets\b/.test(clue.text.toLowerCase());
+}
+
+function isGenericCareerGames(clue: WhoAmIClue) {
+  if (/fact:(?:nfl|cfb)-career-games$/.test(clue.id)) return true;
+  return /\b(?:played|appeared in|recorded)\s+[\d,]+\s+(?:regular-season\s+)?(?:nfl\s+|college\s+)?games\b/.test(
+    clue.text.toLowerCase(),
   );
 }
 
@@ -574,7 +577,8 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
         conceptId: clue.conceptId?.trim() || clue.id,
         priority: defaultRevealPriority(clue, facet)
           + playabilityPenalty(clue.text, Boolean(clue.identityKnowledge))
-          + selectionPriorityPenalty(selectionClass),
+          + selectionPriorityPenalty(selectionClass)
+          + (isGenericCareerGames(clue) ? 80 : 0),
         variationRank: random(),
         semanticFamily: null,
         strength: 0,
@@ -585,7 +589,7 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
       return base;
     })
     .filter((entry) => entry.clue.text.trim().length > 0)
-    .filter((entry) => !isLowSignalCareerVolume(entry.clue));
+    .filter((entry) => !isGenericCareerTargets(entry.clue));
 }
 
 export function assembleWhoAmIClues(
@@ -607,12 +611,14 @@ export function assembleWhoAmIClues(
     relaxPersonalLimit: boolean;
     relaxBiographyLimit: boolean;
     relaxChronologyLimit?: boolean;
+    allowCareerGamesFallback?: boolean;
   };
 
   const canUse = (
     entry: PreparedClue,
     options: SelectionOptions,
   ) => {
+    if (isGenericCareerGames(entry.clue) && !options.allowCareerGamesFallback) return false;
     if (selectedConcepts.has(entry.conceptId)) return false;
     const normalizedText = normalize(entry.clue.text);
     if (selectedTexts.some((text) => normalize(text) === normalizedText)) return false;
@@ -742,6 +748,27 @@ export function assembleWhoAmIClues(
         relaxSemanticFamily: true,
         relaxPersonalLimit: true,
         relaxBiographyLimit: true,
+      },
+    );
+  }
+
+  // Generic game-count facts are emergency depth only. They should never beat real
+  // identity clues, but a shallow canonical pool may use one rather than add a second
+  // biography/relationship clue or return an incomplete round. Targets stay excluded.
+  if (selected.length < limit) {
+    take(
+      prepared
+        .filter((entry) => !selected.includes(entry) && isGenericCareerGames(entry.clue))
+        .sort(lateFirst),
+      limit - selected.length,
+      {
+        allowNearDuplicate: true,
+        relaxFacetLimit: true,
+        relaxSemanticFamily: true,
+        relaxPersonalLimit: true,
+        relaxBiographyLimit: false,
+        relaxChronologyLimit: false,
+        allowCareerGamesFallback: true,
       },
     );
   }
