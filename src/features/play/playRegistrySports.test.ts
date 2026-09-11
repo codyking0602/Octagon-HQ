@@ -13,6 +13,7 @@ const footballGamesExpected = [
   { id: "wavelength", route: "/football/wavelength" },
   { id: "blind-resume", route: "/football/blind-resume" },
   { id: "hit-the-number", route: "/football/hit-the-number" },
+  { id: "who-am-i", route: "/football/who-am-i" },
   { id: "find-leader", route: "/football/find-leader" },
 ] as const;
 
@@ -27,7 +28,7 @@ describe("sport-aware Play registry", () => {
   it("registers Football games on their canonical Football HQ routes", () => {
     const footballGames = playGamesForSport("football");
     expect(footballGames.map(({ id, route }) => ({ id, route }))).toEqual(footballGamesExpected);
-    expect(footballGames).toHaveLength(6);
+    expect(footballGames).toHaveLength(7);
 
     for (const game of footballGames) {
       expect(playGameDefinition(game.id, "football")).toBe(game);
@@ -52,9 +53,9 @@ describe("sport-aware Play registry", () => {
     expect(new Set(playGameCatalog.map((game) => `${game.sport}:${game.id}`)).size).toBe(playGameCatalog.length);
   });
 
-  it("preserves shared challenge support for established live Football games", () => {
+  it("preserves shared challenge support for established Football games while Who Am I stays replayable-only", () => {
     const footballGames = playGamesForSport("football");
-    for (const game of footballGames) {
+    for (const game of footballGames.filter((candidate) => candidate.id !== "who-am-i")) {
       expect(game.lineup).toMatchObject({
         defaultType: "replayable",
         supportedTypes: ["replayable", "curated"],
@@ -66,5 +67,16 @@ describe("sport-aware Play registry", () => {
         historyRecording: "casual-and-challenge",
       });
     }
+
+    expect(playGameDefinition("who-am-i", "football").lineup).toMatchObject({
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+    });
   });
 });

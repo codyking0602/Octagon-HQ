@@ -69,7 +69,7 @@ describe("Stage 11 Today’s Challenge vNext audit", () => {
   it("keeps Who Am I replayable-only until a separate Daily contract is approved", () => {
     for (const sport of ["ufc", "football"] as const) {
       const game = playGameDefinition("who-am-i", sport);
-      expect(game.availability).toBe("preview");
+      expect(game.availability).toBeUndefined();
       expect(game.lineup).toMatchObject({
         defaultType: "replayable",
         supportedTypes: ["replayable"],

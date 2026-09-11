@@ -18,7 +18,6 @@ export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
 
 export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies PlayGameId;
 
-const OWNER_ONLY_GAME_IDS = new Set<PlayGameId>(["who-am-i"]);
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
   return sport === "ufc"
@@ -52,11 +51,9 @@ type PlayLandingGameLibraryProps = {
 export function PlayLandingGameLibrary({
   sport,
   onNavigate,
-  ownerAccess = false,
   footer,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
-    .filter((gameId) => ownerAccess || !OWNER_ONLY_GAME_IDS.has(gameId))
     .map((gameId) => playGameDefinition(gameId, sport));
 
   return (

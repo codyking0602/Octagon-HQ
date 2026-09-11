@@ -38,6 +38,7 @@ describe("Play registry", () => {
     expect(playGames.map((game) => game.id)).toEqual([
       "auction",
       "hit-the-number",
+      "who-am-i",
       "find-leader",
       "wavelength",
       "blind-resume",

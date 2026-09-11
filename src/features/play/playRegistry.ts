@@ -156,7 +156,6 @@ export const playGameCatalog = [
     icon: "?",
     title: "Who Am I?",
     description: "Identify the hidden UFC fighter as two clues at a time move from broad to near-giveaway.",
-    availability: "preview",
     lineup: {
       defaultType: "replayable",
       supportedTypes: ["replayable"],
@@ -434,7 +433,6 @@ export const playGameCatalog = [
     icon: "?",
     title: "Who Am I?",
     description: "Get NFL or CFB up front, then identify the hidden player or head coach from progressively stronger clue pairs.",
-    availability: "preview",
     lineup: {
       defaultType: "replayable",
       supportedTypes: ["replayable"],
