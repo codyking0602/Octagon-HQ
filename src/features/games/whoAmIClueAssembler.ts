@@ -494,15 +494,9 @@ export function assembleWhoAmIClues(
         const priorityDifference = left.priority - right.priority;
         if (Math.abs(priorityDifference) >= 10) return priorityDifference;
         const identityDifference = Number(Boolean(right.clue.identityKnowledge)) - Number(Boolean(left.clue.identityKnowledge));
-        if (left.facet === right.facet) {
-          const variationDifference = left.variationRank - right.variationRank;
-          if (variationDifference !== 0) return variationDifference;
-          if (identityDifference !== 0) return identityDifference;
-        } else {
-          if (identityDifference !== 0) return identityDifference;
-          const variationDifference = left.variationRank - right.variationRank;
-          if (variationDifference !== 0) return variationDifference;
-        }
+        if (identityDifference !== 0) return identityDifference;
+        const variationDifference = left.variationRank - right.variationRank;
+        if (variationDifference !== 0) return variationDifference;
         if (priorityDifference !== 0) return priorityDifference;
         return left.index - right.index;
       });
@@ -548,6 +542,48 @@ export function assembleWhoAmIClues(
       limit - selected.length,
       { allowNearDuplicate: true, relaxFacetLimit: true, relaxSemanticFamily: true },
     );
+  }
+
+  const selectedSnapshot = [...selected];
+  const replaySwapOptions = selectedSnapshot.flatMap((current, selectedIndex) => {
+    if (current.clue.band !== "helpful" && current.clue.band !== "strong") return [];
+    if (current.facet === "relationships") return [];
+
+    return prepared
+      .filter((candidate) => !selectedSnapshot.includes(candidate))
+      .filter((candidate) => candidate.clue.band === current.clue.band)
+      .filter((candidate) => candidate.facet === current.facet)
+      .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 5)
+      .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 5)
+      .filter((candidate) => !selectedSnapshot.some((other) => (
+        other !== current && other.conceptId === candidate.conceptId
+      )))
+      .filter((candidate) => !selectedSnapshot.some((other) => (
+        other !== current
+        && (
+          normalize(other.clue.text) === normalize(candidate.clue.text)
+          || effectivelyRepeated(other.clue.text, candidate.clue.text)
+        )
+      )))
+      .filter((candidate) => (
+        !candidate.semanticFamily
+        || candidate.semanticFamily === current.semanticFamily
+        || !selectedSnapshot.some((other) => other !== current && other.semanticFamily === candidate.semanticFamily)
+      ))
+      .map((candidate) => ({ current, candidate, selectedIndex }));
+  });
+
+  if (replaySwapOptions.length) {
+    replaySwapOptions.sort((left, right) => (
+      Math.min(left.current.variationRank, left.candidate.variationRank)
+      - Math.min(right.current.variationRank, right.candidate.variationRank)
+      || left.selectedIndex - right.selectedIndex
+      || left.candidate.index - right.candidate.index
+    ));
+    const swap = replaySwapOptions[0]!;
+    if (swap.candidate.variationRank < swap.current.variationRank) {
+      selected[swap.selectedIndex] = swap.candidate;
+    }
   }
 
   return selected
