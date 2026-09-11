@@ -327,6 +327,7 @@ function buildHitTheNumberSetup(day: string, scheduleVersion: string): OfficialD
     publicSetup: {
       runtime_version: FOOTBALL_DAILY_RUNTIME_VERSION,
       league: plan.league,
+      metric_id: plan.metricId,
       metric_label: plan.metricLabel,
       domain_label: plan.domainLabel,
       configuration_label: plan.configurationLabel,
