@@ -107,9 +107,10 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
   const sportsRelationship = /\b(?:teammate|opponent|fought|defeated|lost to|shared the octagon|same team|nfl player|college player|ufc fighter|coach|training partner)\b/.test(haystack);
   const sportsBackground = /\b(?:school|college|university|conference|recruit|recruited|commit|committed|high-school|high school|junior college|football|wrestling|boxing|kickboxing|judo|sambo)\b/.test(haystack);
   const sportsIdentity = /\b(?:quarterback|running back|receiver|tight end|lineman|linebacker|defensive back|fighter|striker|grappler|wrestler|position|division|team|gym|touchdowns?|yards?|sacks?|tackles?|receptions?|interceptions?|knockouts?|submissions?)\b/.test(haystack);
+  const sportsCareerEvent = /\b(?:injur(?:y|ed)|comeback|preseason|regular-season|postseason|playoff|season opener)\b/.test(haystack);
   const deepBiography = /\b(?:childhood|upbringing|foster|group homes?|grandparents?|immigrat\w*|fourth[- ]grade|grade school|elementary school|tuition|classes|academic degree|left home|grew up|birthplace)\b/.test(haystack);
 
-  if (signatureIdentity || sportsRelationship || strongSportsAnchor) return "sports-identity";
+  if (signatureIdentity || sportsRelationship || strongSportsAnchor || sportsCareerEvent) return "sports-identity";
   if (
     deepBiography
     && (facet === "background" || facet === "relationships" || facet === "off-field" || facet === "identity")
@@ -284,6 +285,7 @@ function tightenIdentityCopy(value: string) {
     .replace(/, a detail that .+$/i, ".")
     .replace(/, an episode that .+$/i, ".")
     .replace(/, something that .+$/i, ".")
+    .replace(/\bwhile still young\b/gi, "early in my football development")
     .replace(/\s+/g, " ")
     .trim();
 
@@ -350,6 +352,35 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
   );
   text = text.replace(new RegExp(`\\bthis ${labelPattern}\\b`, "gi"), "me");
   text = text.replace(/\bI's\b/g, "my");
+
+  // Identity knowledge is authored as research prose, but the game speaks in first person.
+  // Normalize residual subject pronouns after answer anonymization without touching named people.
+  text = text
+    .replace(/\b(?:he|she)\s+has\b/gi, "I have")
+    .replace(/\b(?:he|she)\s+is\b/gi, "I am")
+    .replace(/\b(?:he|she)\b/gi, "I")
+    .replace(/\b(?:himself|herself)\b/gi, "myself")
+    .replace(/\bhim\b/gi, "me")
+    .replace(/\b(?:his|hers)\b/gi, "my")
+    .replace(/\bI\s+is\b/g, "I am")
+    .replace(/\bI\s+has\b/g, "I have")
+    .replace(/\bme\s+myself\b/gi, "I")
+    .replace(
+      /\bme\b(?=\s+(?:(?:affectionately|later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:adopted|began|became|called|credited|developed|diversified|earned|established|felt|grew|hurled|joined|made|moved|played|recorded|returned|said|signed|spoke|spent|started|thought|threw|transferred|won|worked)\b)/gi,
+      "I",
+    )
+    .replace(
+      /\badopted\s+['"“”‘’]?(?:me|my)\s+myself\b/gi,
+      "adopted a distinctive nickname myself",
+    )
+    .replace(/\bI\s+approaches\b/gi, "I approach")
+    .replace(/\bI\s+uses\b/gi, "I use")
+    .replace(/\bI\s+trains\b/gi, "I train")
+    .replace(/\bI\s+plays\b/gi, "I play")
+    .replace(/\bI\s+works\b/gi, "I work")
+    .replace(/\bI\s+says\b/gi, "I say")
+    .replace(/\bI\s+credits\b/gi, "I credit")
+    .replace(/\bI\s+calls\b/gi, "I call");
   return sentenceCase(text);
 }
 
@@ -447,6 +478,7 @@ function semanticFamily(entry: Pick<PreparedClue, "facet" | "conceptId" | "clue"
   if (entry.facet === "background" && /\b(?:childhood|upbringing|hometown|born|grew up)\b/.test(haystack)) {
     return "background:origin";
   }
+  if (entry.facet === "era") return "era:chronology";
   if (
     entry.facet === "accomplishments"
     && /\b(?:title-fights?|title-wins?|ufc title fights?|title fight wins?)\b/.test(haystack)
@@ -469,6 +501,18 @@ function selectionPriorityPenalty(selectionClass: WhoAmIClueSelectionClass) {
   if (selectionClass === "identity-color") return 20;
   if (selectionClass === "deep-biography") return 40;
   return 0;
+}
+
+function isGenericCareerTargets(clue: WhoAmIClue) {
+  if (/fact:(?:nfl|cfb)-career-targets$/.test(clue.id)) return true;
+  return /\b(?:recorded|had|received)\s+[\d,]+\s+(?:career\s+)?targets\b/.test(clue.text.toLowerCase());
+}
+
+function isGenericCareerGames(clue: WhoAmIClue) {
+  if (/fact:(?:nfl|cfb)-career-games$/.test(clue.id)) return true;
+  return /\b(?:played|appeared in|recorded)\s+[\d,]+\s+(?:regular-season\s+)?(?:nfl\s+|college\s+)?games\b/.test(
+    clue.text.toLowerCase(),
+  );
 }
 
 function recognitionStrength(entry: Pick<PreparedClue, "facet" | "clue">) {
@@ -547,7 +591,8 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
         conceptId: clue.conceptId?.trim() || clue.id,
         priority: defaultRevealPriority(clue, facet)
           + playabilityPenalty(clue.text, Boolean(clue.identityKnowledge))
-          + selectionPriorityPenalty(selectionClass),
+          + selectionPriorityPenalty(selectionClass)
+          + (isGenericCareerGames(clue) ? 80 : 0),
         variationRank: random(),
         semanticFamily: null,
         strength: 0,
@@ -557,7 +602,8 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
       base.strength = recognitionStrength(base);
       return base;
     })
-    .filter((entry) => entry.clue.text.trim().length > 0);
+    .filter((entry) => entry.clue.text.trim().length > 0)
+    .filter((entry) => !isGenericCareerTargets(entry.clue));
 }
 
 export function assembleWhoAmIClues(
@@ -572,16 +618,21 @@ export function assembleWhoAmIClues(
   const selectedTexts: string[] = [];
   const facetCounts = new Map<WhoAmIClueFacet, number>();
 
+  type SelectionOptions = {
+    allowNearDuplicate: boolean;
+    relaxFacetLimit: boolean;
+    relaxSemanticFamily: boolean;
+    relaxPersonalLimit: boolean;
+    relaxBiographyLimit: boolean;
+    relaxChronologyLimit?: boolean;
+    allowCareerGamesFallback?: boolean;
+  };
+
   const canUse = (
     entry: PreparedClue,
-    options: {
-      allowNearDuplicate: boolean;
-      relaxFacetLimit: boolean;
-      relaxSemanticFamily: boolean;
-      relaxPersonalLimit: boolean;
-      relaxBiographyLimit: boolean;
-    },
+    options: SelectionOptions,
   ) => {
+    if (isGenericCareerGames(entry.clue) && !options.allowCareerGamesFallback) return false;
     if (selectedConcepts.has(entry.conceptId)) return false;
     const normalizedText = normalize(entry.clue.text);
     if (selectedTexts.some((text) => normalize(text) === normalizedText)) return false;
@@ -592,11 +643,16 @@ export function assembleWhoAmIClues(
         && !tokenOverlapStillDistinct(other, entry)
       ))
     ) return false;
+    if (
+      entry.semanticFamily === "era:chronology"
+      && selectedFamilies.has(entry.semanticFamily)
+      && !options.relaxChronologyLimit
+    ) return false;
     if (!options.relaxSemanticFamily && entry.semanticFamily && selectedFamilies.has(entry.semanticFamily)) return false;
     const personalCount = selected.filter((candidate) => candidate.selectionClass !== "sports-identity").length;
     const biographyCount = selected.filter((candidate) => candidate.selectionClass === "deep-biography").length;
     if (!options.relaxPersonalLimit && entry.selectionClass !== "sports-identity" && personalCount >= 3) return false;
-    if (!options.relaxBiographyLimit && entry.selectionClass === "deep-biography" && biographyCount >= 1) return false;
+    if (entry.selectionClass === "deep-biography" && biographyCount >= 1) return false;
     const facetLimit = FACET_LIMITS[entry.facet];
     const facetCount = facetCounts.get(entry.facet) ?? 0;
     if (entry.facet === "relationships" && facetCount >= 1) return false;
@@ -607,7 +663,7 @@ export function assembleWhoAmIClues(
   const take = (
     pool: readonly PreparedClue[],
     count: number,
-    options = {
+    options: SelectionOptions = {
       allowNearDuplicate: false,
       relaxFacetLimit: false,
       relaxSemanticFamily: false,
@@ -675,6 +731,27 @@ export function assembleWhoAmIClues(
     );
   }
 
+  // Healthy clue pools keep chronology to one slot. If the canonical pool is genuinely
+  // shallow after every normal quality pass, permit up to two extra chronology clues only
+  // to finish the 10-clue board before relaxing personal/biography protections.
+  // Generic games/targets remain excluded in every case.
+  if (selected.length < limit) {
+    take(
+      prepared
+        .filter((entry) => !selected.includes(entry) && entry.semanticFamily === "era:chronology")
+        .sort(lateFirst),
+      2,
+      {
+        allowNearDuplicate: true,
+        relaxFacetLimit: true,
+        relaxSemanticFamily: true,
+        relaxPersonalLimit: false,
+        relaxBiographyLimit: false,
+        relaxChronologyLimit: true,
+      },
+    );
+  }
+
   if (selected.length < limit) {
     take(
       prepared.filter((entry) => !selected.includes(entry)).sort(lateFirst),
@@ -689,6 +766,27 @@ export function assembleWhoAmIClues(
     );
   }
 
+  // Generic game-count facts are emergency depth only. They should never beat real
+  // identity clues, but a shallow canonical pool may use one rather than add a second
+  // biography/relationship clue or return an incomplete round. Targets stay excluded.
+  if (selected.length < limit) {
+    take(
+      prepared
+        .filter((entry) => !selected.includes(entry) && isGenericCareerGames(entry.clue))
+        .sort(lateFirst),
+      limit - selected.length,
+      {
+        allowNearDuplicate: true,
+        relaxFacetLimit: true,
+        relaxSemanticFamily: true,
+        relaxPersonalLimit: true,
+        relaxBiographyLimit: false,
+        relaxChronologyLimit: false,
+        allowCareerGamesFallback: true,
+      },
+    );
+  }
+
   const lateStageCount = () => selected.filter((entry) => (
     entry.clue.band === "strong" || entry.clue.band === "giveaway"
   )).length;
@@ -699,7 +797,7 @@ export function assembleWhoAmIClues(
       if (candidate.clue.band !== "strong" && candidate.clue.band !== "giveaway") return [];
 
       return selected.flatMap((current, selectedIndex) => {
-        if (current.clue.band !== "helpful" || current.facet !== candidate.facet) return [];
+        if (current.clue.band !== "helpful") return [];
         const otherSelected = selected.filter((_entry, index) => index !== selectedIndex);
         const otherPersonalCount = otherSelected.filter((entry) => entry.selectionClass !== "sports-identity").length;
         const otherBiographyCount = otherSelected.filter((entry) => entry.selectionClass === "deep-biography").length;
@@ -714,6 +812,10 @@ export function assembleWhoAmIClues(
           candidate.semanticFamily
           && otherSelected.some((entry) => entry.semanticFamily === candidate.semanticFamily)
         ) return [];
+        const otherFacetCount = otherSelected.filter((entry) => entry.facet === candidate.facet).length;
+        if (candidate.facet === "relationships" && otherFacetCount >= 1) return [];
+        const facetLimit = FACET_LIMITS[candidate.facet];
+        if (facetLimit != null && otherFacetCount >= facetLimit) return [];
         return [{ current, candidate, selectedIndex }];
       });
     });
@@ -782,7 +884,12 @@ export function assembleWhoAmIClues(
 
   const selectedSnapshot = [...selected];
   const replaySwapOptions = selectedSnapshot.flatMap((current, selectedIndex) => {
-    if (current.clue.band !== "helpful" && current.clue.band !== "strong") return [];
+    const chronologyReplay = current.semanticFamily === "era:chronology";
+    if (
+      current.clue.band !== "helpful"
+      && current.clue.band !== "strong"
+      && !(chronologyReplay && current.clue.band === "broad")
+    ) return [];
 
     const comparableFacetClues = prepared.filter((candidate) => (
       candidate !== current
@@ -797,7 +904,15 @@ export function assembleWhoAmIClues(
 
     return prepared
       .filter((candidate) => !selectedSnapshot.includes(candidate))
-      .filter((candidate) => candidate.clue.band === current.clue.band)
+      .filter((candidate) => (
+        candidate.clue.band === current.clue.band
+        || (
+          chronologyReplay
+          && candidate.semanticFamily === "era:chronology"
+          && bandRank(candidate.clue.band) >= bandRank(current.clue.band)
+          && bandRank(candidate.clue.band) <= Math.min(bandRank(current.clue.band) + 1, bandRank("strong"))
+        )
+      ))
       .filter((candidate) => {
         const equivalentQuality = Math.abs(candidate.priority - current.priority) <= 20
           && Math.abs(candidate.strength - current.strength) <= 20;
@@ -848,6 +963,10 @@ export function assembleWhoAmIClues(
       || left.candidate.index - right.candidate.index
     ));
     const swap = replaySwapOptions[0]!;
+    const chronologyReplay = (
+      swap.current.semanticFamily === "era:chronology"
+      && swap.candidate.semanticFamily === "era:chronology"
+    );
     if (swap.candidate.variationRank < swap.current.variationRank) {
       selected[swap.selectedIndex] = swap.candidate;
     }

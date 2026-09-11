@@ -506,6 +506,48 @@ function footballMetricBand(metricId: FootballFactMetricId): WhoAmIClueBand {
   return "strong";
 }
 
+function footballWhoAmIPlayerMetricMatchesRole(
+  subject: FootballSubjectProfile,
+  metricId: FootballFactMetricId,
+) {
+  if (subject.kind !== "player-career") return true;
+
+  // Awards and résumé anchors are role-agnostic and should always stay eligible.
+  if (
+    /(?:pro-bowl|all-pro|mvp|player-of-year|super-bowl|all-america|all-conference|draft-overall-pick|national-championships|heisman)/.test(metricId)
+  ) return true;
+
+  // Generic participation/volume columns are factual but poor identity clues.
+  if (/(?:nfl|cfb)-career-(?:games|starts|targets)$/.test(metricId)) return false;
+
+  const position = subject.position;
+  if (!position) return true;
+
+  const passing = /(?:passing|passer|interceptions-thrown)/.test(metricId);
+  const rushing = /rushing/.test(metricId);
+  const receiving = /(?:receptions|receiving)/.test(metricId);
+  const scrimmage = /scrimmage|total-touchdowns/.test(metricId);
+  const tackling = /(?:solo-tackles|tackles-for-loss|career-tackles|best-season-tackles-for-loss)/.test(metricId);
+  const sacks = /sacks/.test(metricId);
+  const coverage = /(?:career-interceptions|defensive-interceptions|passes-defended|pass-breakups)/.test(metricId);
+  const takeaways = /(?:forced-fumbles|fumble-recoveries)/.test(metricId);
+  const kicking = /field-goal/.test(metricId);
+  const punting = /punts|punting/.test(metricId);
+
+  switch (position) {
+    case "QB": return passing || rushing || scrimmage;
+    case "RB": return rushing || scrimmage;
+    case "WR":
+    case "TE": return receiving || scrimmage;
+    case "OL": return false;
+    case "DL": return tackling || sacks || takeaways;
+    case "LB": return tackling || sacks || coverage || takeaways;
+    case "DB": return tackling || coverage || takeaways;
+    case "K": return kicking;
+    case "P": return punting;
+  }
+}
+
 export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfile, fact: FootballFactValue) {
   const value = Number(fact.value);
   if (!Number.isFinite(value)) return false;
@@ -527,11 +569,15 @@ function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
     .filter(({ fact }) => footballWhoAmIMetricFactIsPlayable(subject, fact))
     .map(({ fact }) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
-      return clue(
+      const roleRelevant = footballWhoAmIPlayerMetricMatchesRole(subject, fact.metricId);
+      const metricClue = clue(
         `fact:${fact.metricId}`,
         footballMetricText(fact.metricId, fact.value, label),
-        footballMetricBand(fact.metricId),
+        roleRelevant ? footballMetricBand(fact.metricId) : "helpful",
       );
+      return roleRelevant
+        ? metricClue
+        : { ...metricClue, facet: "production" as const, revealPriority: 90 };
     });
 }
 
@@ -615,6 +661,13 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
 
   const whoAmISchool = footballWhoAmISchool(subject);
   if (whoAmISchool) clues.push(clue("school", `I played college football at ${whoAmISchool}.`, subject.league === "NFL" ? "helpful" : "broad"));
+  if (!isCoach && subject.league === "CFB" && whoAmISchool && subject.position) {
+    clues.push({
+      ...clue("role-school", `At ${whoAmISchool}, I played ${subject.position}.`, "strong"),
+      facet: "identity",
+      revealPriority: 60,
+    });
+  }
   if (subject.conference) clues.push(clue("conference", `I competed in the ${subject.conference}.`, "helpful"));
   const draftProfile = footballDraftProfile(subject);
   if (draftProfile.draftYear != null && draftProfile.draftPick != null) {
