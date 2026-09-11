@@ -9,7 +9,7 @@ import {
   getFootballWhoAmIUniverse,
   getUfcWhoAmIUniverse,
 } from "./whoAmIAuthority";
-import { assembleWhoAmIClues, whoAmIClueFacet } from "./whoAmIClueAssembler";
+import { assembleWhoAmIClues, whoAmIClueFacet, whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
 import {
   WHO_AM_I_CLUE_LIMIT,
   whoAmIProgressiveClues,
