@@ -5,6 +5,7 @@ const migration = readFileSync("supabase/migrations/202612310053_football_daily_
 const routeMigration = readFileSync("supabase/migrations/202612310055_football_hq_daily_route.sql", "utf8");
 const sportOwnerRepair = readFileSync("supabase/migrations/202612310056_repair_football_daily_reminder_sport_owner.sql", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
+const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const hq = readFileSync("src/features/back-room/FootballBackRoomPage.tsx", "utf8");
 const todayHub = readFileSync("src/features/play/TodayChallengeHub.tsx", "utf8");
 const backendTest = readFileSync("supabase/tests/football_daily_product_integration.sql", "utf8");
@@ -42,6 +43,12 @@ describe("Football Daily product integration", () => {
     expect(migration).toContain("attempt.daily_challenge_id = v_daily.id");
     expect(migration).toContain("attempt.attempt_kind = 'official_first'");
     expect(backendTest).toContain("Daily reminder source identity can collide across sports");
+  });
+
+  it("returns the persisted Football schedule identity used by leaderboard and history queries", () => {
+    expect(runtime).toContain("schedule_version: context.schedule_version");
+    expect(runtime).toContain("context = await finalizePending(userClient, admin, context, profileId)");
+    expect(runtime).not.toContain("schedule_version: FOOTBALL_TODAY_SCHEDULE_VERSION");
   });
 
   it("keeps Football HQ and completed result actions on the canonical Today route", () => {
