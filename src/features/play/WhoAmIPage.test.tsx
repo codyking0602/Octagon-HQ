@@ -56,15 +56,21 @@ function rescueChoiceButtons() {
 }
 
 describe("Who Am I mature gameplay loop", () => {
-  it("keeps Guess Now and the next reveal score persistently clear while making guessing frictionless", () => {
+  it("keeps the intro and round decisions clear while making guessing frictionless", () => {
     const { container } = renderRound();
+
+    expect(container.querySelector(".twenty-questions-rules")?.textContent).toContain("2 clues per reveal");
+    expect(container.querySelector(".twenty-questions-rules")?.textContent).toContain("10 total clues");
+    expect(container.querySelector(".twenty-questions-rules")?.textContent).toContain("100 max points");
+    expect(container.querySelector(".twenty-questions-rules")?.textContent).not.toContain("45→30");
+
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
 
-    expect(screen.getByRole("button", { name: "GUESS NOW · 100" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "REVEAL 2 · 95" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "GUESS NOW · 100 PTS" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "REVEAL 2 · 95 PTS" })).toBeInTheDocument();
     expect(screen.queryByText("WINDOW")).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "GUESS NOW · 100" }));
+    fireEvent.click(screen.getByRole("button", { name: "GUESS NOW · 100 PTS" }));
     expect(screen.getByRole("textbox", { name: "Search identities" })).toHaveFocus();
 
     guess("Bravo");
@@ -73,7 +79,7 @@ describe("Who Am I mature gameplay loop", () => {
     expect(screen.getByText("Bravo Fighter isn't the answer. Solve value now 90 pts.")).toBeInTheDocument();
     expect(container.querySelector(".twenty-questions-scorebar__stat:nth-child(2) strong")?.textContent).toBe("1");
     expect(container.querySelector(".twenty-questions-scorebar__stat:nth-child(3) strong")?.textContent).toBe("90");
-    expect(screen.getByRole("button", { name: "REVEAL 2 · 85" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "REVEAL 2 · 85 PTS" })).toBeInTheDocument();
     expect(screen.queryByRole("textbox", { name: "Search identities" })).not.toBeInTheDocument();
   });
 
@@ -85,7 +91,7 @@ describe("Who Am I mature gameplay loop", () => {
     expect(container.querySelectorAll(".who-am-i-clue-stack article.is-previous")).toHaveLength(0);
     expect(screen.queryByText("Clue 1")).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "REVEAL 2 · 95" }));
+    fireEvent.click(screen.getByRole("button", { name: "REVEAL 2 · 95 PTS" }));
 
     expect(container.querySelectorAll(".who-am-i-clue-stack article.is-latest")).toHaveLength(2);
     expect(container.querySelectorAll(".who-am-i-clue-stack article.is-previous")).toHaveLength(2);
@@ -99,8 +105,11 @@ describe("Who Am I mature gameplay loop", () => {
     revealAllClues();
 
     expect(screen.getByText("LAST CHANCE · ONE NATURAL GUESS")).toBeInTheDocument();
-    expect(screen.getByText("One natural guess for 70 pts. Miss and the five-name Recovery Board takes over.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "FINAL GUESS · 70" })).toBeInTheDocument();
+    expect(screen.getByText("PAIR 5 OF 5")).toBeInTheDocument();
+    expect(container.querySelector(".twenty-questions-final-alert")?.textContent).toContain("One final open guess for 70 points.");
+    expect(container.querySelector(".twenty-questions-final-alert")?.textContent).toContain("Recovery Board at 45 points.");
+    expect(screen.getByRole("button", { name: "FINAL GUESS · 70 PTS" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "SKIP TO RECOVERY · 45 PTS" })).toBeInTheDocument();
 
     guess("Bravo");
 
@@ -127,6 +136,18 @@ describe("Who Am I mature gameplay loop", () => {
     expect(container.querySelector(".twenty-questions-result__score")?.textContent).toBe("30");
   });
 
+  it("lets the player skip the final open guess into the 45-point Recovery Board", () => {
+    renderRound();
+    fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
+    revealAllClues();
+
+    fireEvent.click(screen.getByRole("button", { name: "SKIP TO RECOVERY · 45 PTS" }));
+
+    expect(screen.getByText("RECOVERY BOARD · PICK 1 OF 2")).toBeInTheDocument();
+    expect(screen.getByText("45")).toBeInTheDocument();
+    expect(rescueChoiceButtons()).toHaveLength(5);
+  });
+
   it("ends the round at zero after both recovery picks miss", () => {
     const { container } = renderRound();
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
@@ -151,7 +172,7 @@ describe("Who Am I mature gameplay loop", () => {
   it("makes result review show the clue progression as compact reveal pairs", () => {
     const { container } = renderRound();
     fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
-    fireEvent.click(screen.getByRole("button", { name: "GUESS NOW · 100" }));
+    fireEvent.click(screen.getByRole("button", { name: "GUESS NOW · 100 PTS" }));
     guess("Alpha");
 
     expect(container.querySelector(".twenty-questions-result > .eyebrow")?.textContent).toBe("NATURAL SOLVE");
