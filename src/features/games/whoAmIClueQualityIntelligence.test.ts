@@ -258,15 +258,25 @@ describe("Who Am I clue-quality intelligence", () => {
     }
   });
 
-  it("keeps generic football career-volume columns out of Who Am I clue pools", () => {
-    for (const league of ["NFL", "CFB"] as const) {
-      for (const candidate of getFootballWhoAmIUniverse(league).candidates) {
-        expect(
-          candidate.clues.filter((clue) => /fact:(?:nfl|cfb)-career-(?:games|targets)$/.test(clue.id)),
-          `${candidate.id} should not expose generic games or targets as identification clues`,
-        ).toEqual([]);
-      }
-    }
+  it("never selects generic career games or targets when real identity clues are available", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I played wide receiver.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I played in the 2000s.", band: "broad", facet: "era" },
+      { id: "h-school", text: "I played college football in the ACC.", band: "helpful", facet: "background" },
+      { id: "h-style", text: "I was known for explosive returns.", band: "helpful", facet: "style" },
+      { id: "h-path", text: "I became a major special-teams weapon.", band: "helpful", facet: "career-path" },
+      { id: "s-all-pro", text: "I was a first-team All-Pro.", band: "strong", facet: "accomplishments" },
+      { id: "s-team", text: "I became a franchise icon in Chicago.", band: "strong", facet: "career-path" },
+      { id: "s-record", text: "I set a major NFL return record.", band: "strong", facet: "accomplishments" },
+      { id: "g-hof", text: "I entered the Pro Football Hall of Fame.", band: "giveaway", facet: "accomplishments" },
+      { id: "g-returner", text: "I am remembered as one of football's defining return specialists.", band: "giveaway", facet: "identity" },
+      { id: "fact:nfl-career-games", text: "I recorded 156 career games.", band: "helpful", facet: "production" },
+      { id: "fact:nfl-career-targets", text: "I recorded 319 career targets.", band: "helpful", facet: "production" },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+    expect(sequence.some((clue) => /career-(?:games|targets)$/.test(clue.id))).toBe(false);
   });
 
   it("repairs the live C.J. Stroud CFB identity and removes the implausible one-game clue", () => {
