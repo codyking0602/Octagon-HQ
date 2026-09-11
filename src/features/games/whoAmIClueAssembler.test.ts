@@ -626,6 +626,35 @@ describe("Who Am I football scope-aware clue aggregation", () => {
     }
   });
 
+  it("uses seeded variation between equivalent-quality clues without admitting a clearly weaker option", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "Broad role", band: "broad", facet: "role", revealPriority: 10 },
+      { id: "b-era", text: "Broad era", band: "broad", facet: "era", revealPriority: 10 },
+      { id: "h-style", text: "Helpful style", band: "helpful", facet: "style", revealPriority: 20 },
+      { id: "h-background", text: "Helpful background", band: "helpful", facet: "background", revealPriority: 20 },
+      { id: "h-production-identity", text: "Equivalent identity-backed production clue", band: "helpful", facet: "production", revealPriority: 20, identityKnowledge: true },
+      { id: "h-production-canonical", text: "Equivalent canonical production clue", band: "helpful", facet: "production", revealPriority: 20 },
+      { id: "h-production-weaker", text: "Clearly weaker production clue", band: "helpful", facet: "production", revealPriority: 50 },
+      { id: "s-career", text: "Strong career path", band: "strong", facet: "career-path", revealPriority: 10 },
+      { id: "s-accomplishment", text: "Strong accomplishment", band: "strong", facet: "accomplishments", revealPriority: 10 },
+      { id: "s-identity", text: "Strong identity", band: "strong", facet: "identity", revealPriority: 10 },
+      { id: "g-career", text: "Giveaway career path", band: "giveaway", facet: "career-path", revealPriority: 10 },
+      { id: "g-nickname", text: "Giveaway nickname", band: "giveaway", facet: "nickname", revealPriority: 10 },
+    ];
+
+    const chosenProductionIds = new Set<string>();
+    for (let seed = 1; seed <= 32; seed += 1) {
+      const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, seededRandom(seed));
+      expect(sequence.some((clue) => clue.id === "h-production-weaker")).toBe(false);
+      const production = sequence.find((clue) => clue.id.startsWith("h-production-"));
+      expect(production).toBeTruthy();
+      chosenProductionIds.add(production!.id);
+    }
+
+    expect(chosenProductionIds).toContain("h-production-identity");
+    expect(chosenProductionIds).toContain("h-production-canonical");
+  });
+
   it("keeps the shallowest completed football clue pools playable across replay seeds", () => {
     for (const league of ["NFL", "CFB"] as const) {
       const universe = getFootballWhoAmIUniverse(league);
