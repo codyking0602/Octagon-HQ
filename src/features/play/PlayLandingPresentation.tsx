@@ -6,7 +6,6 @@ export const PLAY_LANDING_COMMON_GAME_ORDER = [
   "wavelength",
   "blind-resume",
   "hit-the-number",
-  "20-questions",
   "who-am-i",
 ] as const satisfies readonly PlayGameId[];
 
@@ -14,13 +13,12 @@ export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
   "find-leader",
   "wavelength",
   "hit-the-number",
-  "20-questions",
   "who-am-i",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies PlayGameId;
 
-const OWNER_ONLY_GAME_IDS = new Set<PlayGameId>(["20-questions", "who-am-i"]);
+const OWNER_ONLY_GAME_IDS = new Set<PlayGameId>(["who-am-i"]);
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
   return sport === "ufc"
