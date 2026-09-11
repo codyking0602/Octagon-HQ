@@ -38,6 +38,7 @@ export function FootballFindLeaderPresentation({
   onNewLineup,
   onEliminate,
   renderVisual,
+  formatValue = (value) => value.toLocaleString("en-US"),
 }: {
   question: string;
   context: string;
@@ -54,6 +55,7 @@ export function FootballFindLeaderPresentation({
   onNewLineup?: (() => void) | null;
   onEliminate?: ((id: string) => void) | null;
   renderVisual: (candidate: FootballFindLeaderPresentationCandidate, compact?: boolean) => ReactNode;
+  formatValue?: (value: number) => string;
 }) {
   const eliminatedSet = new Set(eliminatedIds);
   const showCandidateContext = new Set(candidates.map((candidate) => candidate.subtitle)).size > 1;
@@ -82,7 +84,7 @@ export function FootballFindLeaderPresentation({
                 <small>GROUP LEADER</small>
                 <strong>{leader.name}</strong>
                 {showCandidateContext ? <em>{leader.subtitle}</em> : null}
-                <b>{leader.value.toLocaleString("en-US")} {shortLabel}</b>
+                <b>{formatValue(leader.value)} {shortLabel}</b>
               </span>
             </article>
           ) : null}
@@ -98,7 +100,7 @@ export function FootballFindLeaderPresentation({
                   <strong>{candidate.name}</strong>
                   {showCandidateContext ? <small>{candidate.subtitle}</small> : null}
                 </span>
-                <b>{candidate.value.toLocaleString("en-US")}<small>{shortLabel || statLabel}</small></b>
+                <b>{formatValue(candidate.value)}<small>{shortLabel || statLabel}</small></b>
               </article>
             ))}
           </div>
@@ -147,7 +149,7 @@ export function FootballFindLeaderPresentation({
               </span>
               <em>{safe
                 ? typeof candidate.value === "number"
-                  ? <>SAFE · <b>{candidate.value.toLocaleString("en-US")} {shortLabel}</b></>
+                  ? <>SAFE · <b>{formatValue(candidate.value)} {shortLabel}</b></>
                   : "SAFE"
                 : busy ? "LOCKING…" : "ELIMINATE"}</em>
             </button>
