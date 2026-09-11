@@ -846,6 +846,11 @@ export function assembleWhoAmIClues(
       const bandDifference = bandRank(left.clue.band) - bandRank(right.clue.band);
       if (bandDifference !== 0) return bandDifference;
 
+      if (left.clue.band === "giveaway") {
+        const productionDifference = Number(right.facet === "production") - Number(left.facet === "production");
+        if (productionDifference !== 0) return productionDifference;
+      }
+
       if (left.clue.band === "strong" || left.clue.band === "giveaway") {
         const strengthDifference = left.strength - right.strength;
         if (strengthDifference !== 0) return strengthDifference;
