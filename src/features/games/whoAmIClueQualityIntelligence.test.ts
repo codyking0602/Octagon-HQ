@@ -272,11 +272,34 @@ describe("Who Am I clue-quality intelligence", () => {
       { id: "g-returner", text: "I am remembered as one of football's defining return specialists.", band: "giveaway", facet: "identity" },
       { id: "fact:nfl-career-games", text: "I recorded 156 career games.", band: "helpful", facet: "production" },
       { id: "fact:nfl-career-targets", text: "I recorded 319 career targets.", band: "helpful", facet: "production" },
+      { id: "identity:resume-games", text: "I played 295 regular-season NFL games.", band: "helpful", facet: "production", identityKnowledge: true },
+      { id: "identity:resume-targets", text: "I had 319 career targets.", band: "helpful", facet: "production", identityKnowledge: true },
     ];
 
     const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
     expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
     expect(sequence.some((clue) => /career-(?:games|targets)$/.test(clue.id))).toBe(false);
+    expect(sequence.some((clue) => /regular-season NFL games|career targets/i.test(clue.text))).toBe(false);
+  });
+
+  it("can promote a different facet to preserve three strong late anchors", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I played defensive back.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I played in the 1980s.", band: "broad", facet: "era" },
+      { id: "h-style", text: "I was known for elite speed.", band: "helpful", facet: "style" },
+      { id: "h-path", text: "I spent my career with one franchise.", band: "helpful", facet: "career-path" },
+      { id: "h-background", text: "I also competed in track.", band: "helpful", facet: "background" },
+      { id: "h-off-field", text: "I founded a youth charity.", band: "helpful", facet: "off-field" },
+      { id: "h-production", text: "I recorded many interceptions.", band: "helpful", facet: "production" },
+      { id: "s-pro-bowls", text: "I was selected to seven Pro Bowls.", band: "strong", facet: "accomplishments" },
+      { id: "s-franchise", text: "I became a franchise icon in Washington.", band: "strong", facet: "identity" },
+      { id: "g-rings", text: "I won two Super Bowl championships.", band: "giveaway", facet: "accomplishments" },
+      { id: "g-hof", text: "I entered the Pro Football Hall of Fame.", band: "giveaway", facet: "identity" },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+    expect(sequence.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length).toBeGreaterThanOrEqual(3);
   });
 
   it("uses only one chronology slot when the clue pool has enough sports identity depth", () => {
