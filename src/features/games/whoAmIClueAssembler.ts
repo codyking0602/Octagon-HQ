@@ -785,12 +785,22 @@ export function assembleWhoAmIClues(
     if (current.clue.band !== "helpful" && current.clue.band !== "strong") return [];
     if (current.facet === "relationships") return [];
 
+    const comparableFacetClues = prepared.filter((candidate) => (
+      candidate !== current
+      && candidate.clue.band === current.clue.band
+      && candidate.facet === current.facet
+      && candidate.selectionClass === current.selectionClass
+    ));
+    const isPriorityAnchor = comparableFacetClues.length > 0 && comparableFacetClues.every((candidate) => (
+      candidate.priority >= current.priority + 10
+    ));
+    if (isPriorityAnchor) return [];
+
     return prepared
       .filter((candidate) => !selectedSnapshot.includes(candidate))
       .filter((candidate) => candidate.clue.band === current.clue.band)
       .filter((candidate) => candidate.selectionClass === current.selectionClass)
       .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 15)
-      .filter((candidate) => candidate.priority <= current.priority + 5)
       .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 15)
       .filter((candidate) => {
         const otherFacetCount = selectedSnapshot.filter((other, index) => (
