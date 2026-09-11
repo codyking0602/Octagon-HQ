@@ -100,7 +100,8 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberPageSource).toContain("activeSlotIndex={slotProgression");
     expect(footballHitTheNumberPageSource).not.toContain("oneFromEachSlotAccepts");
     expect(footballHitTheNumberPageSource).not.toContain("oneFromEachSlotSeasonRange");
-    expect(footballHitTheNumberPageSource).toContain("rewindToSlot(index)");
+    expect(footballHitTheNumberPageSource).toContain("onRewind={rewindToSlot}");
+    expect(footballHitTheNumberPresentationSource).toContain("onRewind?.(index)");
     expect(footballHitTheNumberPresentationSource).toContain("slots.map((slot, index)");
     expect(footballHitTheNumberPresentationSource).toContain('"CHOOSING"');
     expect(footballHitTheNumberPresentationSource).toContain('"CHANGE"');
