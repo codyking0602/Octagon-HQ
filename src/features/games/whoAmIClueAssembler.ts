@@ -255,6 +255,9 @@ function tightenIdentityCopy(value: string) {
     const semicolon = text.indexOf(";");
     if (semicolon > 45) text = `${text.slice(0, semicolon).trim()}.`;
   }
+  if (wordCount(text) > 36) {
+    text = text.replace(/,\s+which\b.*$/i, ".");
+  }
   return text;
 }
 
@@ -310,9 +313,7 @@ function anonymizeIdentityValue(
     const normalizedGivenName = normalize(givenName);
     const normalizedSurname = normalize(surname);
     if (
-      normalizedGivenName === normalize(firstName)
-      || normalizedGivenName === normalize(lastName)
-      || normalizedSurname === normalize(firstName)
+      normalizedGivenName === normalize(lastName)
       || normalizedSurname === normalize(lastName)
     ) return match;
     const token = `__WHO_AM_I_PROTECTED_NAME_${protectedNames.length}__`;
