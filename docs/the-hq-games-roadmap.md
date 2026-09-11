@@ -28,7 +28,7 @@ Completed roadmap sequence:
 7. **PR 7 — Hit the Number final parity/source pass** — completed by #885. UFC Random Pool quality now covers every mature format using only legal player selections; large deterministic parity/source tests lock UFC factual-ledger ownership, Football factual-registry ownership, format breadth, replayability, and challenge/result parity.
 8. **PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup** — completed by #895. Plain entry points now honor the Daily-only product role, compatible historical/challenge deep links remain valid, the existing Daily Double versions are preserved, Football comparison grading uses the shared official Keep/Cut comparison helper, and cross-sport Daily Double presentation recognizes both persisted UFC and Football result shapes.
 
-Who Am I PR 10 is complete and remains owner-only pending the explicit Stage 11 release/Daily decision.
+Who Am I PR 10 is complete. Stage 11 Slice 1 now approves it for the next normal public replayable release, while competitive Daily remains unapproved pending a separate server-owned contract and human score-distribution evidence.
 
 Completed Who Am I rebuild work now includes:
 
@@ -48,15 +48,19 @@ The current audited launch populations are **100 UFC / 200 NFL / 200 CFB**. The 
 
 ### NEXT
 
-**PR 11 — Today's Challenge vNext, slice 1: Daily eligibility + rotation audit.**
+**PR 11 — Today's Challenge vNext, slice 2: public Who Am I release + Daily readiness measurement.**
 
-Treat Who Am I as the sole active identity-game candidate. Audit the current UFC and Football Daily families, score normalization, rotation ownership, deterministic setup/versioning, repetition behavior, and the product role for Who Am I before changing the live schedule. Preserve one Daily owner and immutable first completion.
+Stage 11 Slice 1 is complete. The audit is recorded in `docs/todays-challenge-vnext-audit.md` and locks these decisions:
 
-20 Questions is retired. Keep its reusable engine/data available for future reuse, but it has no Play-library card, no live game route, no Daily/challenge role, and no roadmap slot unless Cody makes a new explicit product decision to revive it.
+- keep the current UFC and Football Daily schedules unchanged;
+- keep the current scoring formulas unchanged; the production sample is too small to justify recalibration;
+- preserve the one shared sport-aware Daily owner, immutable first completion, deterministic/versioned setup, and cross-device progress;
+- approve Who Am I to leave owner-only preview as a normal public replayable game in the next slice;
+- do **not** add Who Am I to Today's Challenge yet.
 
-Who Am I remains owner-only at the start of PR 11. It stays absent from public Play discovery, Today's Challenge, Daily rotation, challenges, streaks, and reminders until Stage 11 explicitly approves those surfaces.
+Slice 2 should remove only the Who Am I public preview gate, preserve its current engine and score ladder, keep Daily/challenge/streak/reminder ownership off, and add the minimum measurement/readiness contract needed to evaluate solve-window and recovery outcomes. A later slice may build a versioned server-owned Who Am I Daily contract only after evidence supports it.
 
-Do not reopen an earlier completed mechanic unless a new defect or product decision requires it.
+20 Questions remains retired. Do not reopen an earlier completed mechanic unless a new defect or explicit product decision requires it.
 
 ---
 
@@ -484,9 +488,11 @@ Completed final rebuild slice:
 Do not restart completed identity research merely to increase counts. New facts should be added only when a concrete quality gap is found during gameplay simulation and the existing canonical owner is extended.
 
 ### ▶ PR 11 — Today's Challenge vNext
-**ACTIVE.** Recalibrate the sport-scoped deterministic Daily product after the completed Who Am I simulation work. Preserve one Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Do not add Auction, Draft Room, Better Than, or retired 20 Questions.
+**ACTIVE.** Preserve one sport-aware Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Do not add Auction, Draft Room, Better Than, or retired 20 Questions.
 
-Start with a Daily eligibility + rotation audit before changing the live schedule. Explicitly decide whether Who Am I leaves owner-only preview and whether it belongs in Daily based on fairness/score-distribution evidence.
+**Slice 1 — Daily eligibility + rotation audit: COMPLETE.** The canonical audit is `docs/todays-challenge-vnext-audit.md`. Current UFC and Football schedules remain unchanged; current scoring remains unchanged; Who Am I is approved for public replayable Play but not yet for competitive Daily.
+
+**Slice 2 — NEXT: public Who Am I release + Daily readiness measurement.** Remove owner-only preview gating without changing Who Am I gameplay, keep `dailyEligible: false` and every Daily/challenge/streak/reminder surface off, and establish the minimum measurement/readiness evidence for a later explicit Daily decision.
 
 ### PR 12 — Draft Room foundation + Build a QB
 Extend/reuse the canonical strategic challenge backend safely, launch Football Draft Room and Build a QB, prove canonical trait grading, bankroll/nomination behavior, challenge lifecycle, backend verification, and mobile presentation.
