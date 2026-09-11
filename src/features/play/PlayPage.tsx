@@ -49,6 +49,7 @@ const LIVE_GAME_ROUTES: Partial<Record<PlayGameId, string>> = {
   "keep-cut": "/play/keep-cut",
   "better-than": "/play/better-than",
   auction: "/play/auction",
+  "who-am-i": "/play/who-am-i",
 };
 
 const DIVISION_ABBREVIATIONS: Record<string, string> = {
