@@ -1,5 +1,8 @@
 import { footballCareerAffiliationHistoryFor } from "../back-room/footballCareerAffiliationProjection";
-import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonIdentityKnowledge";
+import {
+  footballPersonIdentityFactAppliesToLeague,
+  getFootballPersonIdentityKnowledge,
+} from "../back-room/footballPersonIdentityKnowledge";
 import { footballRecognitionEvidenceFor } from "../back-room/footballRecognitionEvidence";
 import {
   footballFactMetricDefinitions,
@@ -9,6 +12,7 @@ import {
 } from "../back-room/footballFactualStatsCore";
 import {
   queryFootballSubjects,
+  resolveFootballPersonSubjects,
   type FootballSubjectProfile,
 } from "../back-room/footballSubjectRegistry";
 import {
@@ -29,7 +33,7 @@ import {
 
 const metricLabelById = new Map(footballFactMetricDefinitions.map((metric) => [metric.id, metric.label]));
 
-const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
+export const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>([
   "nfl-career-games",
   "nfl-career-passing-yards",
   "nfl-career-passing-touchdowns",
@@ -134,18 +138,36 @@ function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
 }
 
 function footballPersonIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
-  const knowledge = getFootballPersonIdentityKnowledge(subject.id);
-  if (!knowledge) return [];
   const subjectKind = subject.kind === "coach" ? "coach" : "player";
-  return knowledge.facts.map((fact) => whoAmIIdentityKnowledgeClue({
-    subjectId: subject.id,
-    subjectName: subject.name,
-    subjectKind,
-    factId: fact.factId,
-    conceptId: fact.conceptId,
-    value: fact.value,
-    tags: fact.tags,
-  }));
+  const seenConcepts = new Set<string>();
+  const clues: WhoAmIClue[] = [];
+
+  for (const knowledgeSubject of resolveFootballPersonSubjects(subject)) {
+    const knowledge = getFootballPersonIdentityKnowledge(knowledgeSubject.id);
+    if (!knowledge) continue;
+    for (const fact of knowledge.facts) {
+      const direct = knowledgeSubject.id === subject.id;
+      if (!direct && !footballPersonIdentityFactAppliesToLeague(fact, subject.league, knowledgeSubject.league)) continue;
+      if (seenConcepts.has(fact.conceptId)) continue;
+      seenConcepts.add(fact.conceptId);
+
+      const identityClue = whoAmIIdentityKnowledgeClue({
+        subjectId: subject.id,
+        subjectName: subject.name,
+        subjectKind,
+        factId: fact.factId,
+        conceptId: fact.conceptId,
+        value: fact.value,
+        tags: fact.tags,
+      });
+      clues.push(direct ? identityClue : {
+        ...identityClue,
+        id: `identity:${knowledgeSubject.id}:${fact.factId}`,
+      });
+    }
+  }
+
+  return clues;
 }
 
 function ufcDivision(value: string) {
@@ -171,34 +193,6 @@ function displayAffiliation(league: "NFL" | "CFB", value: string) {
   return league === "NFL" ? NFL_TEAM_NAMES[value] ?? value : value;
 }
 
-function normalizedPersonName(value: string) {
-  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
-}
-
-const nflProfilesByName = new Map<string, FootballSubjectProfile[]>();
-for (const subject of queryFootballSubjects({
-  league: "NFL",
-  includeProjectedSourceSubjects: true,
-  includeProjectedCanonicalRecognition: true,
-})) {
-  if (subject.kind !== "player-career") continue;
-  const key = normalizedPersonName(subject.name);
-  nflProfilesByName.set(key, [...(nflProfilesByName.get(key) ?? []), subject]);
-}
-
-function nflProfileDepth(subject: FootballSubjectProfile) {
-  const recordDepth = getFootballFactualRecord(subject.id)?.facts.length ?? 0;
-  const identityDepth = [
-    subject.startSeason,
-    subject.endSeason,
-    subject.draftYear,
-    subject.draftRound,
-    subject.draftPick,
-    subject.franchises?.length,
-  ].filter((value) => value != null).length;
-  return recordDepth * 10 + identityDepth;
-}
-
 function hasFootballDraftIdentity(subject: FootballSubjectProfile) {
   return (
     subject.draftYear != null
@@ -213,15 +207,9 @@ function hasFootballDraftIdentity(subject: FootballSubjectProfile) {
 function footballDraftProfile(subject: FootballSubjectProfile) {
   if (hasFootballDraftIdentity(subject)) return subject;
   if (subject.kind !== "player-career") return subject;
-  return [...(nflProfilesByName.get(normalizedPersonName(subject.name)) ?? [])]
-    .filter(hasFootballDraftIdentity)
-    .sort((left, right) => (
-      Number(right.draftPick != null) - Number(left.draftPick != null)
-      || Number(right.draftRound != null) - Number(left.draftRound != null)
-      || Number(right.draftYear != null) - Number(left.draftYear != null)
-      || nflProfileDepth(right) - nflProfileDepth(left)
-      || left.id.localeCompare(right.id)
-    ))[0] ?? subject;
+  return resolveFootballPersonSubjects(subject).find((candidate) => (
+    candidate.id !== subject.id && hasFootballDraftIdentity(candidate)
+  )) ?? subject;
 }
 
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
@@ -317,19 +305,33 @@ function footballMetricText(metricId: FootballFactMetricId, value: unknown, labe
   }
 }
 
+export function footballWhoAmIFactAppliesToSubject(
+  subject: Pick<FootballSubjectProfile, "league">,
+  metricId: FootballFactMetricId,
+) {
+  return subject.league === "NFL" ? metricId.startsWith("nfl-") : metricId.startsWith("cfb-");
+}
+
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
-  const record = getFootballFactualRecord(subject.id);
-  if (!record) return [];
-  return record.facts
-    .filter((fact) => FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId))
-    .filter((fact) => Number(fact.value) !== 0)
-    .map((fact) => {
-      const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
-      const band: WhoAmIClueBand = /mvp|heisman|super-bowl|all-pro|player-of-year|national-titles/.test(fact.metricId)
-        ? "strong"
-        : "helpful";
-      return clue(`fact:${fact.metricId}`, footballMetricText(fact.metricId, fact.value, label), band);
-    });
+  const factsByMetric = new Map<FootballFactMetricId, NonNullable<ReturnType<typeof getFootballFactualRecord>>["facts"][number]>();
+  // resolveFootballPersonSubjects returns the gameplay subject first, so its stage-native fact wins when a counterpart
+  // carries a duplicate copy of the same metric. Counterpart-only applicable metrics still fill genuine gaps.
+  for (const personSubject of resolveFootballPersonSubjects(subject)) {
+    for (const fact of getFootballFactualRecord(personSubject.id)?.facts ?? []) {
+      if (!FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId)) continue;
+      if (!footballWhoAmIFactAppliesToSubject(subject, fact.metricId)) continue;
+      if (Number(fact.value) === 0 || factsByMetric.has(fact.metricId)) continue;
+      factsByMetric.set(fact.metricId, fact);
+    }
+  }
+
+  return [...factsByMetric.values()].map((fact) => {
+    const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
+    const band: WhoAmIClueBand = /mvp|heisman|super-bowl|all-pro|player-of-year|national-titles/.test(fact.metricId)
+      ? "strong"
+      : "helpful";
+    return clue(`fact:${fact.metricId}`, footballMetricText(fact.metricId, fact.value, label), band);
+  });
 }
 
 function footballRecognitionClues(subject: FootballSubjectProfile): WhoAmIClue[] {

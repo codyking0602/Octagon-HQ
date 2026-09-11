@@ -2221,6 +2221,43 @@ for (const record of footballPersonIdentityKnowledgeRecords) {
   recordBySubjectId.set(record.subjectId, record);
 }
 
+const CROSS_STAGE_TRANSITION_IDENTITY = /\b(?:draft|drafted|undrafted|entered the nfl|turned pro)\b/i;
+const CROSS_STAGE_CFB_RESULT = /\b(?:heisman|all[ -]?america|national championship|college football award|ncaa record)\b/i;
+const CROSS_STAGE_NFL_RESULT = /\b(?:super bowl|all[ -]?pro|pro bowl|defensive player of the year|nfl mvp|nfl championship)\b/i;
+const CROSS_STAGE_PERSON_IDENTITY = /\b(?:born|birth|child|childhood|family|father|mother|brother|sister|parent|upbringing|hometown|high[- ]school|prep|teen|training|workout|degree|education|graduate|off[- ]field|community|charity|foundation|business|work|job|media|nickname|moniker|multi[- ]sport|baseball|basketball|track|wrestl|donation|philanthrop)\b/i;
+const CROSS_STAGE_CFB_IDENTITY = /\b(?:cfb|college|collegiate|ncaa|freshman|sophomore|junior|senior season|redshirt|recruit|scholarship|campus|university|school record|bowl game)\b/i;
+const CROSS_STAGE_NFL_IDENTITY = /\b(?:nfl|professional football|pro football|franchise|rookie|playoffs?|postseason)\b/i;
+
+export type FootballPersonIdentityApplicability = "shared" | "transition" | "CFB" | "NFL" | "source-stage";
+
+/**
+ * Person knowledge is classified independently from the subject record that stores it. A CFB identity may consume
+ * college-stage facts held on the same NFL person record, while NFL-only results remain out of CFB. Unknown cross-stage
+ * facts stay with their source stage rather than leaking by name.
+ */
+export function footballPersonIdentityFactApplicability(
+  identityFact: FootballPersonIdentityFact,
+): FootballPersonIdentityApplicability {
+  const haystack = `${identityFact.conceptId.replace(/[-_]+/g, " ")} ${(identityFact.tags ?? []).join(" ")} ${identityFact.value}`;
+  if (CROSS_STAGE_TRANSITION_IDENTITY.test(haystack)) return "transition";
+  if (CROSS_STAGE_CFB_RESULT.test(haystack)) return "CFB";
+  if (CROSS_STAGE_NFL_RESULT.test(haystack)) return "NFL";
+  if (CROSS_STAGE_PERSON_IDENTITY.test(haystack)) return "shared";
+  if (CROSS_STAGE_CFB_IDENTITY.test(haystack)) return "CFB";
+  if (CROSS_STAGE_NFL_IDENTITY.test(haystack)) return "NFL";
+  return "source-stage";
+}
+
+export function footballPersonIdentityFactAppliesToLeague(
+  identityFact: FootballPersonIdentityFact,
+  targetLeague: "NFL" | "CFB",
+  sourceLeague: "NFL" | "CFB",
+) {
+  if (targetLeague === sourceLeague) return true;
+  const applicability = footballPersonIdentityFactApplicability(identityFact);
+  return applicability === "shared" || applicability === "transition" || applicability === targetLeague;
+}
+
 export function getFootballPersonIdentityKnowledge(subjectId: string) {
   const canonicalSubjectId = getFootballSubject(subjectId)?.id ?? subjectId;
   return recordBySubjectId.get(canonicalSubjectId) ?? null;
