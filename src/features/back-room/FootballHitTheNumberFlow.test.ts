@@ -96,7 +96,7 @@ describe("Football Hit the Number slot progression", () => {
     expect(footballHitTheNumberPageSource).toContain('plan.formatId === "build-the-team"');
     expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedIds)");
     expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedIds)");
-    expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedSubjectIds)");
+    expect(footballHitTheNumberPageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, current)");
     expect(footballHitTheNumberPageSource).toContain("activeSlotIndex={slotProgression");
     expect(footballHitTheNumberPageSource).not.toContain("oneFromEachSlotAccepts");
     expect(footballHitTheNumberPageSource).not.toContain("oneFromEachSlotSeasonRange");
