@@ -178,7 +178,10 @@ function identityBand(
   if (
     /turning[- ]point|breakthrough|comeback|all[- ]america|player of the year|\brecord\b|undefeated|retir(?:ed|ement)|suspension|\bdraft(?:ed)?\b|first[- ]round|milestone/.test(strengthSignals)
   ) return "strong";
-  if (facet === "career-path" && /founder|owner|first-|iconic|defining/.test(conceptId.toLowerCase())) return "strong";
+  if (
+    facet === "career-path"
+    && /founder|owner|first-|iconic|defining|multi[- ]stop|coaching[- ]partnership|\bsucceeded\b/.test(strengthSignals)
+  ) return "strong";
   return "helpful";
 }
 
@@ -284,7 +287,12 @@ function tightenIdentityCopy(value: string) {
 function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) {
   const label = subjectKind === "coach" ? "head coach" : subjectKind;
   let text = value.trim();
+  text = text.replace(
+    new RegExp(`^This ${escapeRegExp(label)} and ([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+(?:\\s+[A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)+)\\b`),
+    "$1 and I",
+  );
   text = text.replace(new RegExp(`^This ${escapeRegExp(label)} and ([A-Z][A-Za-zÀ-ÖØ-öø-ÿ.'’-]+)\\b`, "i"), "$1 and I");
+  text = text.replace(new RegExp(`^This ${escapeRegExp(label)} has been `, "i"), "I've been ");
   text = text.replace(new RegExp(`^This ${escapeRegExp(label)}, (?:his|her) `, "i"), "I, my ");
   text = text.replace(new RegExp(`^This ${escapeRegExp(label)},`, "i"), "I,");
   text = text.replace(new RegExp(`^This ${escapeRegExp(label)}'s `, "i"), "My ");
@@ -380,6 +388,16 @@ function semanticFamily(entry: Pick<PreparedClue, "facet" | "conceptId" | "clue"
   return null;
 }
 
+function tokenOverlapStillDistinct(left: PreparedClue, right: PreparedClue) {
+  const pair = new Set([left.facet, right.facet]);
+  if (!pair.has("accomplishments")) return false;
+  if (!pair.has("background") && !pair.has("career-path")) return false;
+  const accomplishment = left.facet === "accomplishments" ? left : right;
+  return /\b(?:hall of fame|heisman|all-america|all-american|championship|title|mvp)\b/i.test(
+    accomplishment.clue.text,
+  );
+}
+
 function recognitionStrength(entry: Pick<PreparedClue, "facet" | "clue">) {
   const base: Readonly<Record<WhoAmIClueFacet, number>> = {
     role: 20,
@@ -404,7 +422,13 @@ function recognitionStrength(entry: Pick<PreparedClue, "facet" | "clue">) {
 
 export function whoAmIIdentityKnowledgeClue(input: WhoAmIIdentityKnowledgeClueInput): WhoAmIClue {
   const facet = identityFacet(input.conceptId, input.tags);
-  const band = identityBand(facet, input.conceptId, input.tags, input.value);
+  let band = identityBand(facet, input.conceptId, input.tags, input.value);
+  if (
+    input.league === "CFB"
+    && /\b(?:selected|drafted)\b.*\boverall\b.*\bNFL Draft\b/i.test(input.value)
+  ) {
+    band = "giveaway";
+  }
   const text = anonymizeIdentityValue(input.value, input.subjectName, input.subjectKind, facet);
   return {
     id: `identity:${input.factId}`,
@@ -470,7 +494,13 @@ export function assembleWhoAmIClues(
     if (selectedConcepts.has(entry.conceptId)) return false;
     const normalizedText = normalize(entry.clue.text);
     if (selectedTexts.some((text) => normalize(text) === normalizedText)) return false;
-    if (!options.allowNearDuplicate && selectedTexts.some((text) => effectivelyRepeated(text, entry.clue.text))) return false;
+    if (
+      !options.allowNearDuplicate
+      && selected.some((other) => (
+        effectivelyRepeated(other.clue.text, entry.clue.text)
+        && !tokenOverlapStillDistinct(other, entry)
+      ))
+    ) return false;
     if (!options.relaxSemanticFamily && entry.semanticFamily && selectedFamilies.has(entry.semanticFamily)) return false;
     const facetLimit = FACET_LIMITS[entry.facet];
     const facetCount = facetCounts.get(entry.facet) ?? 0;
