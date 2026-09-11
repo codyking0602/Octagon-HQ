@@ -9,6 +9,8 @@ import {
   FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION,
   FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION,
   FOOTBALL_DAILY_RUNTIME_VERSION,
+  FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION,
+  advanceFootballOfficialDailyRuntime,
 } from "./footballTodayChallengeRuntime";
 import {
   buildFootballTodayProjection,
@@ -223,6 +225,59 @@ describe("Football Today’s Challenge session", () => {
 
     expect(blindRankExpanded).toBe(true);
     expect(keepCutExpanded).toBe(true);
+  });
+
+  it("keeps Football Daily Hit the Number on the replayable progression rules", () => {
+    let setup: ReturnType<typeof buildFootballOfficialDailySetup> | null = null;
+    for (let offset = 0; offset < 240; offset += 1) {
+      const candidate = buildFootballOfficialDailySetup("hit_the_number", isoDay(offset), FOOTBALL_TODAY_SCHEDULE_VERSION);
+      const formatId = candidate.publicSetup.format_id;
+      if (formatId === "one-from-each" || formatId === "build-the-team") {
+        setup = candidate;
+        break;
+      }
+    }
+
+    expect(setup).not.toBeNull();
+    if (!setup) return;
+    expect(setup.contentVersion).toBe(FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION);
+    expect(setup.publicSetup.slots).toBeTruthy();
+
+    const initialState = setup.publicSetup.initial_state as JsonRecord;
+    const firstAvailable = initialState.available_subject_ids as string[];
+    expect(firstAvailable.length).toBeGreaterThan(0);
+
+    const context = {
+      gameType: "hit_the_number" as const,
+      setupKey: setup.setupKey,
+      publicSetup: setup.publicSetup,
+      revealSetup: setup.revealSetup,
+      privateSetupEvidence: setup.privateSetupEvidence,
+      privateGradingEvidence: setup.privateGradingEvidence,
+      submissionState: {},
+      publicState: initialState,
+    };
+    const first = advanceFootballOfficialDailyRuntime(context, { fighter_id: firstAvailable[0] });
+    const firstState = first.publicState as JsonRecord;
+    expect((firstState.selected_ids as string[])).toEqual([firstAvailable[0]]);
+    expect((firstState.active_slot as JsonRecord).index).toBe(1);
+
+    const nextAvailable = firstState.available_subject_ids as string[];
+    const allIds = setup.privateSetupEvidence.fighter_ids as string[];
+    const illegalForSlot = allIds.find((id) => id !== firstAvailable[0] && !nextAvailable.includes(id));
+    expect(illegalForSlot).toBeTruthy();
+    if (illegalForSlot) {
+      expect(() => advanceFootballOfficialDailyRuntime({
+        ...context,
+        submissionState: first.submissionState,
+        publicState: first.publicState,
+      }, { fighter_id: illegalForSlot })).toThrow(/active Football Hit the Number slot/);
+    }
+    expect(() => advanceFootballOfficialDailyRuntime({
+      ...context,
+      submissionState: first.submissionState,
+      publicState: first.publicState,
+    }, { lock: true })).toThrow(/do not satisfy this board/);
   });
 
   it("keeps Hit the Number subject values private before the final lock", () => {
