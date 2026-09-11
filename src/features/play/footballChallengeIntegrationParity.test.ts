@@ -6,7 +6,7 @@ import {
   challengeResultScoreLabel,
 } from "../challenges/ChallengeResultDetails";
 import type { ChallengeJson, PlayChallenge } from "../challenges/challengeModel";
-import { playGamesForSport, type PlayGameId } from "./playRegistry";
+import { playGameDefinition, playGamesForSport, type PlayGameId } from "./playRegistry";
 
 const footballChallengeGames: readonly { id: PlayGameId; route: string }[] = [
   { id: "blind-rank", route: "/football/rank-five" },
@@ -43,7 +43,7 @@ function challenge(
 }
 
 describe("Football standalone challenge integration parity", () => {
-  it("keeps the six established Football games challenge-capable while 20 Questions stays replayable-only", () => {
+  it("keeps the six established live Football games challenge-capable while 20 Questions stays retired", () => {
     const games = playGamesForSport("football");
     const challengeGames = games.filter((game) => game.lineup.challengeEligible);
     expect(challengeGames.map((game) => game.id)).toEqual(footballChallengeGames.map((game) => game.id));
@@ -56,12 +56,8 @@ describe("Football standalone challenge integration parity", () => {
       expect(game.lineup.reminderEligible).toBe(false);
     }
 
-    expect(games.find((game) => game.id === "20-questions")?.lineup).toMatchObject({
-      challengeEligible: false,
-      supportedTypes: ["replayable"],
-      historyRecording: "casual-only",
-      dailyEligible: false,
-    });
+    expect(games.map((game) => game.id)).not.toContain("20-questions");
+    expect(playGameDefinition("20-questions", "football").availability).toBe("retired");
   });
 
   it("routes every Football profile challenge back into its canonical Football HQ game", () => {
