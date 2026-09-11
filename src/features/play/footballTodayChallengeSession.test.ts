@@ -89,6 +89,23 @@ describe("Football Today’s Challenge session", () => {
     expect(JSON.stringify(first)).not.toContain("leader_value");
   });
 
+  it("reveals only safely eliminated Find the Leader values before completion", () => {
+    const day = "2026-08-22";
+    const setup = buildFootballOfficialDailySetup("find_leader", day, FOOTBALL_TODAY_SCHEDULE_VERSION);
+    const candidateIds = setup.privateSetupEvidence.candidate_ids as string[];
+    const leaderId = String(setup.privateSetupEvidence.leader_id);
+    const safeId = candidateIds.find((id) => id !== leaderId)!;
+    const projection = buildFootballTodayProjection(day, [{ eliminated_id: safeId }]);
+    const revealed = projection.public_state.revealed_candidates as Array<Record<string, unknown>>;
+
+    expect(projection.official_attempt).toBeNull();
+    expect(projection.reveal_setup).toBeNull();
+    expect(revealed).toHaveLength(1);
+    expect(revealed[0]?.id).toBe(safeId);
+    expect(typeof revealed[0]?.value).toBe("number");
+    expect(JSON.stringify(projection)).not.toContain(`"leader_id":"${leaderId}"`);
+  });
+
   it("opens Football Blind Resume as three anonymous rounds with a matchup-specific first reveal", () => {
     const projection = buildFootballTodayProjection("2026-09-04");
     const round = projection.public_state.current_round as Record<string, unknown>;
