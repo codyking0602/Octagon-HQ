@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   createFootballWhoAmIRound,
@@ -11,6 +13,11 @@ function eligible(universe: ReturnType<typeof getUfcWhoAmIUniverse> | ReturnType
 }
 
 describe("Who Am I canonical clue authority", () => {
+  it("keeps the full season affiliation corpus out of the lazy game runtime", () => {
+    const source = readFileSync(fileURLToPath(new URL("./whoAmIAuthority.ts", import.meta.url)), "utf8");
+    expect(source).not.toContain("footballCareerAffiliationProjection");
+  });
+
   it("builds UFC rounds only from the canonical factual-ledger universe", () => {
     const universe = getUfcWhoAmIUniverse();
     expect(universe.league).toBe("UFC");
