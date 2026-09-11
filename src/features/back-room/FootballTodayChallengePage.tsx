@@ -12,6 +12,7 @@ import {
   FootballFindLeaderVisual,
 } from "./FootballFindLeaderPresentation";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
+import { FootballWavelengthPresentation } from "./FootballWavelengthPresentation";
 import {
   footballBlindResumeFactText,
   footballBlindResumeRevealAsset,
@@ -302,25 +303,31 @@ function BlindResume({ projection, advance }: GameProps) {
 function Wavelength({ projection, advance }: GameProps) {
   const [guess, setGuess] = useState(50);
   const state = projection.publicState;
-  const clues = records(state.clues);
-  const active = clues.at(-1) ?? {};
   const guesses = Array.isArray(state.guesses) ? state.guesses.map(Number) : [];
   const reveal = record(state.reveal);
+  const rawClues = projection.officialAttempt ? records(reveal.clues) : records(state.clues);
+  const clues = rawClues.map((clue, index) => ({
+    id: String(clue.id ?? index),
+    category: String(clue.category ?? "football"),
+    text: String(clue.text ?? ""),
+    ...(typeof clue.rating === "number" ? { rating: clue.rating } : {}),
+  }));
+  const target = Number(reveal.target ?? projection.officialAttempt?.publicResult.target ?? 0);
+
   return (
-    <section className="football-today-wavelength">
-      <small>CLUE {Math.min(guesses.length + 1, 4)} OF 4</small>
-      <h2>{String(active.text ?? "Read the clue. Find the number.")}</h2>
-      <span>{String(active.category ?? "FOOTBALL")}</span>
-      {!projection.officialAttempt ? (
-        <>
-          <strong className="football-today-guess-number">{guess}</strong>
-          <input aria-label="Wavelength guess" type="range" min="1" max="100" value={guess} onChange={(event) => setGuess(Number(event.target.value))} />
-          <button className="football-today-primary" type="button" onClick={() => advance({ guess })}>LOCK GUESS {guesses.length + 1}</button>
-        </>
-      ) : (
-        <p className="football-today-target">TARGET <b>{String(reveal.target ?? projection.officialAttempt.publicResult.target ?? "")}</b></p>
-      )}
-    </section>
+    <div className="football-debate-page football-wavelength-page wavelength-page wavelength-page--playing wavelength-page--football">
+      <FootballWavelengthPresentation
+        clues={clues}
+        guesses={guesses}
+        guess={guess}
+        onGuessChange={setGuess}
+        onLock={() => advance({ guess })}
+        result={projection.officialAttempt ? {
+          score: projection.officialAttempt.normalizedScore,
+          target,
+        } : null}
+      />
+    </div>
   );
 }
 
