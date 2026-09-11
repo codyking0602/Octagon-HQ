@@ -15,7 +15,7 @@ import {
 } from "../games/whoAmIEngine";
 
 type Phase = "start" | "playing" | "rescue" | "result";
-type ResultState = "correct" | "rescued" | "incorrect" | "forfeit";
+type ResultState = "correct" | "rescued" | "incorrect";
 
 function normalized(value: string) {
   return value.trim().toLowerCase();
@@ -181,12 +181,6 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
     setRescueMisses(nextMisses);
   }
 
-  function forfeitRound() {
-    setResultState("forfeit");
-    setPhase("result");
-    setGuessOpen(false);
-  }
-
   const finalScore = resultState === "correct"
     ? whoAmIScore(revealedCount, wrongGuesses)
     : resultState === "rescued"
@@ -196,9 +190,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
     ? "NATURAL SOLVE"
     : resultState === "rescued"
       ? "RECOVERED"
-      : resultState === "forfeit"
-        ? "FORFEIT"
-        : "MISS";
+      : "MISS";
 
   return (
     <main className="page twenty-questions-page who-am-i-page" data-sport={sport}>
@@ -217,13 +209,13 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
             <p className="twenty-questions-start__league">{round.league} ROUND</p>
             <h2>How early can you recognize the hidden {football ? "player or head coach" : "fighter"}?</h2>
             <p>
-              Two clues at a time. Guess when you know it, or reveal the next pair and play for fewer points.
-              A wrong natural guess costs {WHO_AM_I_WRONG_GUESS_PENALTY}.
+              Two clues at a time. Guess when you know it. Every reveal lowers the score, and a wrong guess costs{" "}
+              {WHO_AM_I_WRONG_GUESS_PENALTY} points.
             </p>
             <div className="twenty-questions-rules" aria-label="Who Am I scoring rules">
-              <span><strong>2</strong> clues per reveal</span>
+              <span><strong>{WHO_AM_I_CLUES_PER_REVEAL}</strong> clues per reveal</span>
+              <span><strong>{WHO_AM_I_CLUE_LIMIT}</strong> total clues</span>
               <span><strong>100</strong> max points</span>
-              <span><strong>{WHO_AM_I_RESCUE_SCORE}→{WHO_AM_I_RESCUE_SECOND_SCORE}</strong> recovery</span>
             </div>
             {football ? <p className="twenty-questions-disclosure">{round.league} is locked before clue one.</p> : null}
             <button className="twenty-questions-primary" type="button" onClick={() => setPhase("playing")}>START ROUND</button>
@@ -238,11 +230,11 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
               <div className="twenty-questions-scorebar__stat"><small>SOLVE</small><strong>{score}</strong></div>
               <div className={`twenty-questions-scorebar__actions${finalGuessRequired ? " is-final" : ""}`} aria-label="Round decisions">
                 <button className="is-guess" type="button" onClick={openGuess}>
-                  {finalGuessRequired ? `FINAL GUESS · ${score}` : `GUESS NOW · ${score}`}
+                  {finalGuessRequired ? `FINAL GUESS · ${score} PTS` : `GUESS NOW · ${score} PTS`}
                 </button>
                 {!finalGuessRequired ? (
                   <button className="is-reveal" type="button" onClick={revealMore}>
-                    REVEAL 2 · {nextRevealScore}
+                    REVEAL 2 · {nextRevealScore} PTS
                   </button>
                 ) : null}
               </div>
@@ -261,7 +253,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
                   <p className="eyebrow">CLUES {revealedCount} / {WHO_AM_I_CLUE_LIMIT}</p>
                   <h2 id="who-am-i-clues-title">What you know</h2>
                 </div>
-                {!finalGuessRequired ? <span>Guess {score} · Reveal → {nextRevealScore}</span> : <span>Last chance · {score} pts</span>}
+                <span>PAIR {Math.ceil(revealedCount / WHO_AM_I_CLUES_PER_REVEAL)} OF {Math.ceil(WHO_AM_I_CLUE_LIMIT / WHO_AM_I_CLUES_PER_REVEAL)}</span>
               </div>
               <div className="twenty-questions-history-list who-am-i-clue-stack">
                 {revealedClues.map((entry, index) => {
@@ -281,7 +273,10 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
               {finalGuessRequired ? (
                 <div className="twenty-questions-final-alert" role="note">
                   <strong>LAST CHANCE</strong>
-                  <span>One natural guess for {score} pts. Miss and the five-name Recovery Board takes over.</span>
+                  <span>
+                    One final open guess for {score} points. Miss or skip it, and you&apos;ll move to the Recovery Board
+                    at {WHO_AM_I_RESCUE_SCORE} points.
+                  </span>
                 </div>
               ) : null}
             </section>
@@ -293,7 +288,9 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
                     <p className="eyebrow">{finalGuessRequired ? "LAST CHANCE · ONE NATURAL GUESS" : "GUESS NOW"}</p>
                     <h2>Who am I?</h2>
                   </div>
-                  <span>{finalGuessRequired ? `${score} pts · miss → recovery` : `${score} pts · miss −${WHO_AM_I_WRONG_GUESS_PENALTY}`}</span>
+                  <span>{finalGuessRequired
+                    ? `${score} PTS · MISS → ${WHO_AM_I_RESCUE_SCORE} PTS`
+                    : `${score} PTS · MISS −${WHO_AM_I_WRONG_GUESS_PENALTY}`}</span>
                 </div>
                 <input
                   ref={guessInputRef}
@@ -352,9 +349,11 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
                 {!finalGuessRequired ? (
                   <button className="twenty-questions-more" type="button" onClick={closeGuess}>BACK TO CLUES</button>
                 ) : null}
-                <button className="twenty-questions-more is-danger" type="button" onClick={forfeitRound}>
-                  REVEAL ANSWER · 0 PTS
-                </button>
+                {finalGuessRequired ? (
+                  <button className="twenty-questions-more is-danger" type="button" onClick={() => openRescue()}>
+                    SKIP TO RECOVERY · {WHO_AM_I_RESCUE_SCORE} PTS
+                  </button>
+                ) : null}
               </section>
             ) : null}
           </>
@@ -406,9 +405,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
               ? `You solved it naturally with ${revealedCount} clues.`
               : resultState === "rescued"
                 ? "You saved the round on the Recovery Board."
-                : resultState === "forfeit"
-                  ? "Answer revealed."
-                  : "Both recovery picks missed."}</p>
+                : "Both recovery picks missed."}</p>
             <div className="twenty-questions-result__score-block">
               <div className="twenty-questions-result__score">{finalScore}</div>
               <small>FINAL SCORE</small>
