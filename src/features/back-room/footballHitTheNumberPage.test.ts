@@ -28,7 +28,7 @@ describe("Football Hit the Number selection presentation", () => {
     expect(presentationSource).toContain("candidates.filter((candidate) => availableIds.includes(candidate.id))");
     expect(surfaceSource).not.toContain("[...selectedIds, ...availableSubjectIds]");
     expect(pageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedIds)");
-    expect(pageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedSubjectIds)");
+    expect(pageSource).toContain("footballHitTheNumberAvailableProgressionSubjectIds(plan, current)");
     expect(surfaceSource).not.toContain("oneFromEachSlotAccepts");
     expect(surfaceSource).not.toContain("oneFromEachSlotSeasonRange");
   });
