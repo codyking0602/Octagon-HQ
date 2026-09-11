@@ -4,8 +4,12 @@ import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { GameResultActions } from "../play/GameResultActions";
 import { recordLineupCompletion, replayLabelFor, type PlayLineupType } from "../play/lineupModel";
-import { FootballFindLeaderPresentation } from "./FootballFindLeaderPresentation";
-export { footballFindLeaderRankLabel } from "./FootballFindLeaderPresentation";
+import { FootballFindLeaderPresentation, FootballFindLeaderVisual } from "./FootballFindLeaderPresentation";
+export {
+  FootballFindLeaderVisual,
+  footballFindLeaderCandidateAsset,
+  footballFindLeaderRankLabel,
+} from "./FootballFindLeaderPresentation";
 import {
   FOOTBALL_FIND_LEADER_GAME_ID,
   buildFootballFindLeaderBoard,
@@ -22,7 +26,6 @@ import {
   footballChallengeUrl,
   footballCuratedIdentity,
 } from "./footballChallengeRuntime";
-import { footballSubjectAsset } from "./footballSubjectAssets";
 import "../../styles/football-find-leader.css";
 
 interface ResultState {
@@ -35,58 +38,6 @@ type FootballFindLeaderDomainId = FootballFindLeaderRun["board"]["domainId"];
 
 export function footballFindLeaderReplayLabel(type: PlayLineupType) {
   return type === "replayable" ? "NEW LINEUP" : replayLabelFor(type);
-}
-
-export function footballFindLeaderCandidateAsset(_domainId: FootballFindLeaderDomainId, candidateId: string) {
-  return footballSubjectAsset(candidateId);
-}
-
-function footballFindLeaderFallbackMark(domainId?: FootballFindLeaderDomainId, league?: string) {
-  if (domainId === "nfl-qb-career" || domainId === "nfl-qb-season") return "QB";
-  if (domainId === "nfl-rb-career") return "RB";
-  if (domainId?.startsWith("cfb-")) return "CFB";
-  return league === "CFB" ? "CFB" : "NFL";
-}
-
-export function FootballFindLeaderVisual({
-  candidateId,
-  candidateName,
-  domainId,
-  league,
-  compact = false,
-}: {
-  candidateId: string;
-  candidateName: string;
-  domainId?: FootballFindLeaderDomainId;
-  league?: string;
-  compact?: boolean;
-}) {
-  const asset = footballSubjectAsset(candidateId);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    setFailed(false);
-  }, [asset?.src, candidateId]);
-
-  return (
-    <span
-      className={`football-find-card__visual${asset && !failed ? " has-logo" : ""}${compact ? " is-compact" : ""}`}
-      aria-label={asset && !failed ? `${asset.label} logo for ${candidateName}` : `${candidateName} ${footballFindLeaderFallbackMark(domainId, league)} mark`}
-    >
-      {asset && !failed ? (
-        <img
-          alt=""
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          src={asset.src}
-          title={asset.label}
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <b aria-hidden="true">{footballFindLeaderFallbackMark(domainId, league)}</b>
-      )}
-    </span>
-  );
 }
 
 function resolveChallengeRun(seed: string | null, definitionId: string | null, challengeId: string): FootballFindLeaderRun | null {
