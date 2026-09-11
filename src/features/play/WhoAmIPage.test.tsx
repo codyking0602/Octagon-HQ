@@ -106,7 +106,8 @@ describe("Who Am I mature gameplay loop", () => {
 
     expect(screen.getByText("LAST CHANCE · ONE NATURAL GUESS")).toBeInTheDocument();
     expect(screen.getByText("PAIR 5 OF 5")).toBeInTheDocument();
-    expect(container.querySelector(".twenty-questions-final-alert")?.textContent).toContain("One final open guess for 70 points. Miss or skip it, and you’ll move to the Recovery Board at 45 points.");
+    expect(container.querySelector(".twenty-questions-final-alert")?.textContent).toContain("One final open guess for 70 points.");
+    expect(container.querySelector(".twenty-questions-final-alert")?.textContent).toContain("Recovery Board at 45 points.");
     expect(screen.getByRole("button", { name: "FINAL GUESS · 70 PTS" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SKIP TO RECOVERY · 45 PTS" })).toBeInTheDocument();
 
