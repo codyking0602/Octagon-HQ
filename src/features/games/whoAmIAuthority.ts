@@ -506,7 +506,7 @@ function footballMetricBand(metricId: FootballFactMetricId): WhoAmIClueBand {
   return "strong";
 }
 
-function footballMetricIsPlayable(subject: FootballSubjectProfile, fact: FootballFactValue) {
+export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfile, fact: FootballFactValue) {
   const value = Number(fact.value);
   if (!Number.isFinite(value)) return false;
   if (
@@ -524,7 +524,7 @@ function footballMetricIsPlayable(subject: FootballSubjectProfile, fact: Footbal
 
 function footballMetricClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   return footballWhoAmIApplicableMetricFacts(subject)
-    .filter(({ fact }) => footballMetricIsPlayable(subject, fact))
+    .filter(({ fact }) => footballWhoAmIMetricFactIsPlayable(subject, fact))
     .map(({ fact }) => {
       const label = metricLabelById.get(fact.metricId) ?? fact.metricId;
       return clue(
