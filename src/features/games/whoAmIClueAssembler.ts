@@ -285,6 +285,7 @@ function tightenIdentityCopy(value: string) {
     .replace(/, a detail that .+$/i, ".")
     .replace(/, an episode that .+$/i, ".")
     .replace(/, something that .+$/i, ".")
+    .replace(/\bwhile still young\b/gi, "early in my football development")
     .replace(/\s+/g, " ")
     .trim();
 
@@ -365,13 +366,21 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
     .replace(/\bI\s+has\b/g, "I have")
     .replace(/\bme\s+myself\b/gi, "I")
     .replace(
-      /\bme\b(?=\s+(?:(?:later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:adopted|began|became|credited|developed|diversified|earned|felt|grew|hurled|joined|made|moved|played|recorded|returned|said|signed|spoke|spent|started|thought|threw|transferred|won|worked)\b)/gi,
+      /\bme\b(?=\s+(?:(?:affectionately|later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:adopted|began|became|called|credited|developed|diversified|earned|felt|grew|hurled|joined|made|moved|played|recorded|returned|said|signed|spoke|spent|started|thought|threw|transferred|won|worked)\b)/gi,
       "I",
     )
     .replace(
       /\badopted\s+['"“”‘’]?(?:me|my)\s+myself\b/gi,
       "adopted a distinctive nickname myself",
-    );
+    )
+    .replace(/\bI\s+approaches\b/gi, "I approach")
+    .replace(/\bI\s+uses\b/gi, "I use")
+    .replace(/\bI\s+trains\b/gi, "I train")
+    .replace(/\bI\s+plays\b/gi, "I play")
+    .replace(/\bI\s+works\b/gi, "I work")
+    .replace(/\bI\s+says\b/gi, "I say")
+    .replace(/\bI\s+credits\b/gi, "I credit")
+    .replace(/\bI\s+calls\b/gi, "I call");
   return sentenceCase(text);
 }
 
@@ -958,10 +967,7 @@ export function assembleWhoAmIClues(
       swap.current.semanticFamily === "era:chronology"
       && swap.candidate.semanticFamily === "era:chronology"
     );
-    if (
-      swap.candidate.variationRank < swap.current.variationRank
-      || (chronologyReplay && swap.candidate.variationRank < 0.5)
-    ) {
+    if (swap.candidate.variationRank < swap.current.variationRank) {
       selected[swap.selectedIndex] = swap.candidate;
     }
   }
