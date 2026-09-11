@@ -484,4 +484,64 @@ export const footballPersonResumeResearch: readonly FootballPersonResumeResearch
   r("tom-osborne", "Nebraska Athletics", "https://huskers.com/staff/tom-osborne", [
       f("career-wins", "I finished my Nebraska head-coaching career with 255 wins.", ["college", "coaching", "production"])
     ]),
+  r("woody-hayes", "Ohio State Athletics", "https://ohiostatebuckeyes.com/news/2020/1/1/football-woody-hayes", [
+      f("ohio-state-wins", "I won 205 games as Ohio State's head coach.", ["college", "coaching", "production"])
+    ]),
+  r("chuck-noll", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chuck-noll", [
+      f("career-coaching-wins", "I won 209 games as an NFL head coach.", ["playing-career", "coaching", "production"])
+    ]),
+  r("don-shula", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/don-shula", [
+      f("career-coaching-wins", "I retired with 347 career victories as an NFL head coach.", ["playing-career", "coaching", "production"])
+    ]),
+  r("lawrence-taylor", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/lawrence-taylor", [
+      f("pro-bowls", "I was selected to 10 Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-anthony-munoz", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/anthony-munoz", [
+      f("consecutive-pro-bowls", "I was selected to 11 consecutive Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-bud-grant", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/bud-grant", [
+      f("career-coaching-wins", "I won 168 games as a professional head coach.", ["playing-career", "coaching", "production"])
+    ]),
+  r("nfl-chuck-bednarik", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/chuck-bednarik", [
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-derrick-thomas", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/derrick-thomas", [
+      f("pro-bowls", "I was selected to nine straight Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-don-coryell", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/don-coryell", [
+      f("career-coaching-wins", "I won 114 games as an NFL head coach.", ["playing-career", "coaching", "production"])
+    ]),
+  r("nfl-earl-curly-lambeau", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/earl-curly-lambeau", [
+      f("career-coaching-wins", "I won 229 games as a professional head coach.", ["playing-career", "coaching", "production"])
+    ]),
+  r("nfl-george-allen", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/george-allen", [
+      f("regular-season-wins", "I won 116 regular-season games as an NFL head coach.", ["playing-career", "coaching", "production"])
+    ]),
+  r("nfl-george-halas", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/george-halas", [
+      f("career-coaching-wins", "I won 324 games as a professional head coach.", ["playing-career", "coaching", "production"])
+    ]),
+  r("nfl-john-madden", "Pro Football Hall of Fame", "https://www.profootballhof.com/news/one-man-three-hall-worthy-careers-john-madden-1936-2021", [
+      f("regular-season-record", "My NFL regular-season coaching record was 103-32-7.", ["playing-career", "coaching", "production"])
+    ]),
+  r("nfl-kevin-mawae", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/kevin-mawae", [
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-steve-hutchinson", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/steve-hutchinson", [
+      f("pro-bowls", "I was selected to seven consecutive Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("nfl-trent-williams", "San Francisco 49ers", "https://www.49ers.com/news/kittle-mccaffrey-juszczyk-williams-gifford-weeks-moore-selected-to-2026-pro-bowl-games", [
+      f("pro-bowls", "I earned my 12th career Pro Bowl selection for the 2025 season.", ["playing-career", "award"])
+    ]),
+  r("nfl-tyron-smith", "Dallas Cowboys", "https://www.dallascowboys.com/news/8-time-pro-bowl-left-tackle-tyron-smith-to-retire-with-cowboys", [
+      f("pro-bowls", "I was selected to eight Pro Bowls.", ["playing-career", "award"])
+    ]),
+  r("paul-brown", "Pro Football Hall of Fame", "https://www.profootballhof.com/news/statue-of-hall-of-famer-paul-brown-unveiled-in-ohio-hometown", [
+      f("career-coaching-wins", "I won 213 games as a professional head coach.", ["playing-career", "coaching", "production"])
+    ]),
+  r("tom-landry", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/tom-landry", [
+      f("career-coaching-wins", "I won 270 games as an NFL head coach.", ["playing-career", "coaching", "production"])
+    ]),
+  r("vince-lombardi", "Pro Football Hall of Fame", "https://www.profootballhof.com/players/vince-lombardi", [
+      f("career-coaching-record", "My professional head-coaching record was 105-35-6.", ["playing-career", "coaching", "production"])
+    ]),
 ] as const;
