@@ -7,8 +7,10 @@ import {
   TodayChallengeRepositoryError,
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
-import { FootballFindLeaderPresentation } from "./FootballFindLeaderPresentation";
-import { FootballFindLeaderVisual } from "./FootballFindLeaderPage";
+import {
+  FootballFindLeaderPresentation,
+  FootballFindLeaderVisual,
+} from "./FootballFindLeaderPresentation";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
 import {
   footballBlindResumeFactText,
