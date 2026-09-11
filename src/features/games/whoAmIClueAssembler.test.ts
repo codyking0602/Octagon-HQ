@@ -626,6 +626,30 @@ describe("Who Am I football scope-aware clue aggregation", () => {
     }
   });
 
+  it("keeps thin CFB profiles strong late without losing their distinctive anchors", () => {
+    const urlacher = representativeCandidate("CFB", "cfb-brian-urlacher");
+    const hall = urlacher.clues.find((clue) => clue.id === "identity:pr9-cfb-brian-urlacher--first-lobo-cfb-hall");
+    const draft = urlacher.clues.find((clue) => clue.id === "identity:resume-cfb-brian-urlacher-03");
+    expect(hall?.band).toBe("giveaway");
+    expect(draft?.band).toBe("giveaway");
+
+    const urlacherCopy = urlacher.clues.find((clue) => clue.id === "identity:pr9-cfb-brian-urlacher--only-fbs-offer-new-mexico");
+    expect(urlacherCopy?.text).toMatch(/^I've been described/);
+
+    const patterson = representativeCandidate("CFB", "gary-patterson-cfb");
+    const partnership = patterson.clues.find((clue) => clue.id === "identity:pr9-gary-patterson-cfb--franchione-multi-stop-coaching-partnership");
+    expect(partnership?.band).toBe("strong");
+    expect(partnership?.text).toMatch(/^Dennis Franchione and I coached together/);
+    expect(partnership?.text).not.toContain("Dennis and I Franchione");
+
+    for (const candidate of [urlacher, patterson]) {
+      for (let seed = 1; seed <= 16; seed += 1) {
+        const sequence = assembleWhoAmIClues(candidate.clues, WHO_AM_I_CLUE_LIMIT, seededRandom(seed));
+        expect(sequence.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length).toBeGreaterThanOrEqual(3);
+      }
+    }
+  });
+
   it("keeps lower-band facet clues from crowding late-game strength", () => {
     const clues: WhoAmIClue[] = [
       { id: "b-role", text: "Broad role", band: "broad", facet: "role", revealPriority: 10 },
