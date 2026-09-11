@@ -350,6 +350,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
           id: candidate.id,
           name: candidate.name,
           totalApplicableCanonicalFacts: applicableMetrics.length + applicableIdentity.length,
+          metricIds: applicableMetrics.map(({ fact }) => fact.metricId),
           generatedCandidateClues: candidate.clues.length,
           identityClues: candidate.clues.filter((clue) => clue.identityKnowledge).length,
           productionClues,
