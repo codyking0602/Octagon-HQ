@@ -9,7 +9,7 @@ import {
   getFootballWhoAmIUniverse,
   getUfcWhoAmIUniverse,
 } from "./whoAmIAuthority";
-import { assembleWhoAmIClues } from "./whoAmIClueAssembler";
+import { assembleWhoAmIClues, whoAmIClueFacet } from "./whoAmIClueAssembler";
 import {
   WHO_AM_I_CLUE_LIMIT,
   whoAmIProgressiveClues,
@@ -99,6 +99,34 @@ function representativeCandidate(league: "NFL" | "CFB" | "UFC", id: string) {
 }
 
 describe("Who Am I football scope-aware clue aggregation", () => {
+  it("classifies specific clue meaning before generic college or team words", () => {
+    expect(whoAmIClueFacet({
+      id: "fact:cfb-career-passing-yards",
+      text: "I finished my college career with 4,000 passing yards.",
+      band: "helpful",
+    })).toBe("production");
+    expect(whoAmIClueFacet({
+      id: "fact:nfl-first-team-all-pros",
+      text: "I was a first-team All-Pro 5 times.",
+      band: "strong",
+    })).toBe("accomplishments");
+    expect(whoAmIClueFacet({
+      id: "draft-pick",
+      text: "I was selected No. 1 overall in the NFL Draft.",
+      band: "strong",
+    })).toBe("career-path");
+    expect(whoAmIClueFacet({
+      id: "school",
+      text: "I played college football at USC.",
+      band: "broad",
+    })).toBe("background");
+    expect(whoAmIClueFacet({
+      id: "conference",
+      text: "I competed in the SEC.",
+      band: "helpful",
+    })).toBe("background");
+  });
+
   it("deduplicates concepts and effectively repeated clue values while preserving progressive bands", () => {
     const clues: WhoAmIClue[] = [
       { id: "b1", conceptId: "role", text: "I played defensive back.", band: "broad", facet: "role" },
