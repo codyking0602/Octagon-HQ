@@ -110,11 +110,11 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
   const deepBiography = /\b(?:childhood|upbringing|foster|group homes?|grandparents?|immigrat\w*|fourth[- ]grade|grade school|elementary school|tuition|classes|academic degree|left home|grew up|birthplace)\b/.test(haystack);
 
   if (signatureIdentity || sportsRelationship || strongSportsAnchor) return "sports-identity";
-  if (!clue.identityKnowledge) return "sports-identity";
   if (
     deepBiography
     && (facet === "background" || facet === "relationships" || facet === "off-field" || facet === "identity")
   ) return "deep-biography";
+  if (!clue.identityKnowledge) return "sports-identity";
 
   if (
     facet === "role"
@@ -465,6 +465,12 @@ function tokenOverlapStillDistinct(left: PreparedClue, right: PreparedClue) {
   );
 }
 
+function selectionPriorityPenalty(selectionClass: WhoAmIClueSelectionClass) {
+  if (selectionClass === "identity-color") return 20;
+  if (selectionClass === "deep-biography") return 40;
+  return 0;
+}
+
 function recognitionStrength(entry: Pick<PreparedClue, "facet" | "clue">) {
   const base: Readonly<Record<WhoAmIClueFacet, number>> = {
     role: 20,
@@ -533,16 +539,19 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
   return clues
     .map((clue, index): PreparedClue => {
       const facet = whoAmIClueFacet(clue);
+      const selectionClass = whoAmIClueSelectionClass(clue);
       const base: PreparedClue = {
         clue,
         index,
         facet,
         conceptId: clue.conceptId?.trim() || clue.id,
-        priority: defaultRevealPriority(clue, facet) + playabilityPenalty(clue.text, Boolean(clue.identityKnowledge)),
+        priority: defaultRevealPriority(clue, facet)
+          + playabilityPenalty(clue.text, Boolean(clue.identityKnowledge))
+          + selectionPriorityPenalty(selectionClass),
         variationRank: random(),
         semanticFamily: null,
         strength: 0,
-        selectionClass: whoAmIClueSelectionClass(clue),
+        selectionClass,
       };
       base.semanticFamily = semanticFamily(base);
       base.strength = recognitionStrength(base);
@@ -611,10 +620,10 @@ export function assembleWhoAmIClues(
       const usable = remaining.filter((entry) => canUse(entry, options));
       if (!usable.length) return;
       usable.sort((left, right) => {
-        const strengthDifference = right.strength - left.strength;
-        if (Math.abs(strengthDifference) >= 15) return strengthDifference;
         const priorityDifference = left.priority - right.priority;
         if (Math.abs(priorityDifference) >= 10) return priorityDifference;
+        const strengthDifference = right.strength - left.strength;
+        if (Math.abs(strengthDifference) >= 15) return strengthDifference;
         const facetDifference = (facetCounts.get(left.facet) ?? 0) - (facetCounts.get(right.facet) ?? 0);
         if (facetDifference !== 0) return facetDifference;
         const identityDifference = Number(Boolean(right.clue.identityKnowledge)) - Number(Boolean(left.clue.identityKnowledge));
@@ -726,10 +735,17 @@ export function assembleWhoAmIClues(
     return prepared
       .filter((candidate) => !selectedSnapshot.includes(candidate))
       .filter((candidate) => candidate.clue.band === current.clue.band)
-      .filter((candidate) => candidate.facet === current.facet)
       .filter((candidate) => candidate.selectionClass === current.selectionClass)
-      .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 10)
-      .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 12)
+      .filter((candidate) => Math.abs(candidate.priority - current.priority) <= 15)
+      .filter((candidate) => Math.abs(candidate.strength - current.strength) <= 15)
+      .filter((candidate) => {
+        const otherFacetCount = selectedSnapshot.filter((other, index) => (
+          index !== selectedIndex && other.facet === candidate.facet
+        )).length;
+        if (candidate.facet === "relationships" && otherFacetCount >= 1) return false;
+        const replayFacetLimit = FACET_LIMITS[candidate.facet] ?? 2;
+        return otherFacetCount < replayFacetLimit;
+      })
       .filter((candidate) => !selectedSnapshot.some((other) => (
         other !== current && other.conceptId === candidate.conceptId
       )))
