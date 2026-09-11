@@ -5,6 +5,7 @@ import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKno
 import {
   footballWhoAmIApplicableIdentityFacts,
   footballWhoAmIApplicableMetricFacts,
+  footballWhoAmIMetricFactIsPlayable,
   getFootballWhoAmILaunchPool,
   getFootballWhoAmIUniverse,
   getUfcWhoAmIUniverse,
@@ -413,10 +414,14 @@ describe("Who Am I football scope-aware clue aggregation", () => {
     expect(identityBackedPlayableSelections).toBe(identityBackedPlayableCandidates);
 
     const cfbUniverse = getFootballWhoAmIUniverse("CFB");
+    const cfbLaunchSubjectById = new Map(getFootballWhoAmILaunchPool("CFB").subjects.map((subject) => [subject.id, subject]));
     for (const candidate of cfbUniverse.candidates) {
+      const subject = cfbLaunchSubjectById.get(candidate.id);
+      if (!subject) throw new Error(`Missing CFB launch subject for ${candidate.id}.`);
       const canonicalResumeFacts = (getFootballFactualRecord(candidate.id)?.facts ?? [])
         .filter((fact) => CFB_WHO_AM_I_RESUME_METRICS.has(fact.metricId))
-        .filter((fact) => Number(fact.value) !== 0);
+        .filter((fact) => Number(fact.value) !== 0)
+        .filter((fact) => footballWhoAmIMetricFactIsPlayable(subject, fact));
       for (const fact of canonicalResumeFacts) {
         expect(
           candidate.clues.some((clue) => (
@@ -438,8 +443,9 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         if (!subject) throw new Error(`Missing launch subject for ${candidate.id}.`);
 
         const applicableMetrics = footballWhoAmIApplicableMetricFacts(subject);
+        const playableMetrics = applicableMetrics.filter(({ fact }) => footballWhoAmIMetricFactIsPlayable(subject, fact));
         const applicableIdentity = footballWhoAmIApplicableIdentityFacts(subject);
-        const missingMetrics = applicableMetrics.filter(({ fact }) => !candidate.clues.some((clue) => (
+        const missingMetrics = playableMetrics.filter(({ fact }) => !candidate.clues.some((clue) => (
           clue.id === `fact:${fact.metricId}`
           || (fact.metricId === "cfb-heisman-awards" && clue.id === "heisman")
         )));
@@ -481,8 +487,8 @@ describe("Who Am I football scope-aware clue aggregation", () => {
           league,
           id: candidate.id,
           name: candidate.name,
-          totalApplicableCanonicalFacts: applicableMetrics.length + applicableIdentity.length,
-          metricIds: applicableMetrics.map(({ fact }) => fact.metricId),
+          totalApplicableCanonicalFacts: playableMetrics.length + applicableIdentity.length,
+          metricIds: playableMetrics.map(({ fact }) => fact.metricId),
           generatedCandidateClues: candidate.clues.length,
           identityClues: candidate.clues.filter((clue) => clue.identityKnowledge).length,
           productionClues,
