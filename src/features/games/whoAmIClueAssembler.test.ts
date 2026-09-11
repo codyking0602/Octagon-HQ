@@ -8,6 +8,7 @@ import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKno
 import { resolveFootballPersonSubjects, type FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
 import {
   FOOTBALL_WHO_AM_I_METRICS,
+  footballWhoAmIFactAppliesToSubject,
   getFootballWhoAmILaunchPool,
   getFootballWhoAmIUniverse,
   getUfcWhoAmIUniverse,
@@ -107,9 +108,14 @@ function auditFootballCandidate(league: "NFL" | "CFB", candidate: WhoAmICandidat
   const recordFacts = getFootballFactualRecord(candidate.id)?.facts ?? [];
   const applicableLedgerFacts = recordFacts
     .filter((fact) => FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId))
+    .filter((fact) => footballWhoAmIFactAppliesToSubject(subject, fact.metricId))
     .filter((fact) => Number(fact.value) !== 0);
   const unsupportedLedgerFacts = recordFacts
-    .filter((fact) => !FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId) || Number(fact.value) === 0);
+    .filter((fact) => (
+      !FOOTBALL_WHO_AM_I_METRICS.has(fact.metricId)
+      || !footballWhoAmIFactAppliesToSubject(subject, fact.metricId)
+      || Number(fact.value) === 0
+    ));
   const identityFacts = applicableIdentityFacts(subject);
   const missingLedgerFacts = applicableLedgerFacts.filter((fact) => !factualMetricIsAccountedFor(candidate, fact.metricId));
   const missingIdentityFacts = identityFacts.filter(({ fact }) => !identityFactIsAccountedFor(candidate, subject, fact));
