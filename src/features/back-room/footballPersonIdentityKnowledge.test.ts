@@ -246,7 +246,7 @@ describe("football person identity knowledge", () => {
       expect(new Set(conceptIds).size).toBe(5);
 
       for (const identityFact of distinctiveFacts) {
-        expect(["distinctive-identity", "resume"]).toContain(identityFact.knowledgeClass);
+        expect(identityFact.knowledgeClass).toBe("distinctive-identity");
         expect(identityFact.verification).toBe("verified");
         expect(identityFact.sourceIds.length).toBeGreaterThan(0);
         expect(getFootballPersonIdentityFactSources(identityFact)).toHaveLength(identityFact.sourceIds.length);
@@ -284,7 +284,7 @@ describe("football person identity knowledge", () => {
         expect(identityFact.factId.trim()).not.toBe("");
         expect(identityFact.conceptId.trim()).not.toBe("");
         expect(identityFact.value.trim()).not.toBe("");
-        expect(identityFact.knowledgeClass).toBe("distinctive-identity");
+        expect(["distinctive-identity", "resume"]).toContain(identityFact.knowledgeClass);
         expect(identityFact.verification).toBe("verified");
         expect(identityFact.sourceIds.length).toBeGreaterThan(0);
         expect(identityFact.sourceIds.every((sourceId) => sourceIds.has(sourceId))).toBe(true);
