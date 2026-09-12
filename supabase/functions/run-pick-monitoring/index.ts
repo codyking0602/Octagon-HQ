@@ -87,7 +87,16 @@ Deno.serve(async (request) => {
   if (scheduled) {
     const schedulerToken = request.headers.get(schedulerHeader) ?? "";
     const authorized = await admin.rpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
-    if (authorized.error || authorized.data !== true) return safeError(401, "SCHEDULER_AUTH_REQUIRED", "Scheduled monitoring authorization required.");
+    if (authorized.error) {
+      return safeError(
+        503,
+        "SCHEDULER_AUTH_CHECK_FAILED",
+        "Scheduled monitoring authorization could not be verified.",
+      );
+    }
+    if (authorized.data !== true) {
+      return safeError(401, "SCHEDULER_AUTH_REQUIRED", "Scheduled monitoring authorization required.");
+    }
 
     // Reuse the one trusted hourly wake-up for all due in-app reminders and owner actions.
     // The database function owns timing and idempotency; this Edge Function adds no scheduler.
