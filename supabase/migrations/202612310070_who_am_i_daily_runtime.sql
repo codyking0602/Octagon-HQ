@@ -537,137 +537,7 @@ begin
       raise exception 'Who Am I hidden subject evidence is invalid';
     end if;
 
-    if coalesce(p_submission->>'revealed_count', '') !~ '^[0-9]+      raise exception 'Who Am I revealed clue count is invalid';
-    end if;
-    v_revealed_count := (p_submission->>'revealed_count')::integer;
-    v_base_score := case v_revealed_count
-      when 2 then 100
-      when 4 then 95
-      when 6 then 90
-      when 8 then 80
-      when 10 then 70
-      else null
-    end;
-    if v_base_score is null then
-      raise exception 'Who Am I completion must use 2, 4, 6, 8, or 10 clues';
-    end if;
-
-    v_submitted := private.daily_challenge_text_array(
-      coalesce(p_submission->'natural_guesses', '[]'::jsonb),
-      'Who Am I natural guesses',
-      null,
-      true
-    );
-    if exists (
-      select 1 from unnest(v_submitted) submitted
-      where not (submitted = any(v_board))
-    ) then
-      raise exception 'Who Am I natural guess contains an unknown subject';
-    end if;
-
-    v_outcome := nullif(trim(p_submission->>'outcome'), '');
-    if v_outcome = 'natural' then
-      if coalesce(array_length(v_submitted, 1), 0) < 1
-        or v_submitted[array_length(v_submitted, 1)] <> v_hidden_subject then
-        raise exception 'Who Am I natural completion must end on the hidden subject';
-      end if;
-      if coalesce(jsonb_array_length(coalesce(p_submission->'recovery_guesses', '[]'::jsonb)), 0) <> 0
-        or coalesce(jsonb_array_length(coalesce(p_submission->'recovery_choices', '[]'::jsonb)), 0) <> 0 then
-        raise exception 'Who Am I natural completion cannot contain Recovery Board evidence';
-      end if;
-
-      v_count := greatest(coalesce(array_length(v_submitted, 1), 0) - 1, 0);
-      native_score := greatest(0, v_base_score - (v_count * 10));
-      normalized_score := native_score;
-      public_result := jsonb_build_object(
-        'outcome', 'natural',
-        'subject_id', v_hidden_subject,
-        'revealed_count', v_revealed_count,
-        'wrong_guesses', v_count,
-        'recovery_misses', 0
-      );
-
-    elsif v_outcome in ('recovered', 'miss') then
-      if v_revealed_count <> 10 then
-        raise exception 'Who Am I Recovery Board requires all ten clues';
-      end if;
-      if v_hidden_subject = any(v_submitted) then
-        raise exception 'Who Am I Recovery Board cannot follow a correct natural guess';
-      end if;
-
-      v_recovery_choices := private.daily_challenge_text_array(
-        p_submission->'recovery_choices',
-        'Who Am I Recovery Board choices',
-        5,
-        true
-      );
-      if not (v_hidden_subject = any(v_recovery_choices)) then
-        raise exception 'Who Am I Recovery Board must contain the hidden subject';
-      end if;
-      if exists (
-        select 1 from unnest(v_recovery_choices) choice
-        where not (choice = any(v_board))
-          or choice = any(v_submitted)
-      ) then
-        raise exception 'Who Am I Recovery Board choices are invalid';
-      end if;
-
-      v_recovery_guesses := private.daily_challenge_text_array(
-        p_submission->'recovery_guesses',
-        'Who Am I Recovery guesses',
-        null,
-        true
-      );
-      if exists (
-        select 1 from unnest(v_recovery_guesses) guess
-        where not (guess = any(v_recovery_choices))
-      ) then
-        raise exception 'Who Am I Recovery guess is not on the Recovery Board';
-      end if;
-
-      if v_outcome = 'recovered' then
-        if coalesce(array_length(v_recovery_guesses, 1), 0) not in (1, 2)
-          or v_recovery_guesses[array_length(v_recovery_guesses, 1)] <> v_hidden_subject then
-          raise exception 'Who Am I recovered completion must find the hidden subject within two picks';
-        end if;
-        v_count := array_length(v_recovery_guesses, 1) - 1;
-        native_score := case v_count when 0 then 45 else 30 end;
-        normalized_score := native_score;
-        public_result := jsonb_build_object(
-          'outcome', 'recovered',
-          'subject_id', v_hidden_subject,
-          'revealed_count', 10,
-          'wrong_guesses', coalesce(array_length(v_submitted, 1), 0),
-          'recovery_misses', v_count
-        );
-      else
-        if coalesce(array_length(v_recovery_guesses, 1), 0) <> 2
-          or v_hidden_subject = any(v_recovery_guesses) then
-          raise exception 'Who Am I miss requires two incorrect Recovery Board picks';
-        end if;
-        native_score := 0;
-        normalized_score := 0;
-        public_result := jsonb_build_object(
-          'outcome', 'miss',
-          'subject_id', v_hidden_subject,
-          'revealed_count', 10,
-          'wrong_guesses', coalesce(array_length(v_submitted, 1), 0),
-          'recovery_misses', 2
-        );
-      end if;
-    else
-      raise exception 'unsupported Who Am I outcome %', coalesce(v_outcome, '<null>');
-    end if;
-
-  else
-    raise exception 'unsupported daily game type %', p_game_type;
-  end if;
-
-  grading_snapshot := p_grading_evidence;
-  return next;
-end;
-$$;
- then
+    if coalesce(p_submission->>'revealed_count', '') !~ '^[0-9]+$' then
       raise exception 'Who Am I revealed clue count is invalid';
     end if;
     v_revealed_count := (p_submission->>'revealed_count')::integer;
@@ -690,7 +560,8 @@ $$;
       true
     );
     if exists (
-      select 1 from unnest(v_submitted) submitted
+      select 1
+      from unnest(v_submitted) submitted
       where not (submitted = any(v_board))
     ) then
       raise exception 'Who Am I natural guess contains an unknown subject';
@@ -736,7 +607,8 @@ $$;
         raise exception 'Who Am I Recovery Board must contain the hidden subject';
       end if;
       if exists (
-        select 1 from unnest(v_recovery_choices) choice
+        select 1
+        from unnest(v_recovery_choices) choice
         where not (choice = any(v_board))
           or choice = any(v_submitted)
       ) then
@@ -750,7 +622,8 @@ $$;
         true
       );
       if exists (
-        select 1 from unnest(v_recovery_guesses) guess
+        select 1
+        from unnest(v_recovery_guesses) guess
         where not (guess = any(v_recovery_choices))
       ) then
         raise exception 'Who Am I Recovery guess is not on the Recovery Board';
