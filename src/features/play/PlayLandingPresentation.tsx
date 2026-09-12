@@ -17,11 +17,12 @@ export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies PlayGameId;
+export const PLAY_LANDING_FOOTBALL_STRATEGIC_GAME = "draft-room" as const satisfies PlayGameId;
 
-
-export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
-  return sport === "ufc"
-    ? [PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]
+export function playLandingGameIds(sport: PlaySport, ownerAccess = false): readonly PlayGameId[] {
+  if (sport === "ufc") return [PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER];
+  return ownerAccess
+    ? [...PLAY_LANDING_FOOTBALL_GAME_ORDER, PLAY_LANDING_FOOTBALL_STRATEGIC_GAME]
     : PLAY_LANDING_FOOTBALL_GAME_ORDER;
 }
 
@@ -51,9 +52,10 @@ type PlayLandingGameLibraryProps = {
 export function PlayLandingGameLibrary({
   sport,
   onNavigate,
+  ownerAccess = false,
   footer,
 }: PlayLandingGameLibraryProps) {
-  const games = playLandingGameIds(sport)
+  const games = playLandingGameIds(sport, ownerAccess)
     .map((gameId) => playGameDefinition(gameId, sport));
 
   return (
@@ -69,7 +71,8 @@ export function PlayLandingGameLibrary({
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
         {games.map((game) => {
-          const strategic = sport === "ufc" && game.id === PLAY_LANDING_UFC_STRATEGIC_GAME;
+          const strategic = (sport === "ufc" && game.id === PLAY_LANDING_UFC_STRATEGIC_GAME)
+            || (sport === "football" && game.id === PLAY_LANDING_FOOTBALL_STRATEGIC_GAME);
           return (
             <button
               className={`play-landing-game-card${strategic ? " is-strategic" : ""}`}
