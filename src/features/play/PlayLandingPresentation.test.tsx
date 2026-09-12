@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   PLAY_LANDING_COMMON_GAME_ORDER,
   PLAY_LANDING_FOOTBALL_GAME_ORDER,
+  PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
   PLAY_LANDING_UFC_STRATEGIC_GAME,
   PlayLandingGameLibrary,
   PlayLandingHeader,
@@ -30,6 +31,10 @@ describe("Play landing presentation", () => {
     ]);
     expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]);
     expect(playLandingGameIds("football")).toEqual(PLAY_LANDING_FOOTBALL_GAME_ORDER);
+    expect(playLandingGameIds("football", true)).toEqual([
+      ...PLAY_LANDING_FOOTBALL_GAME_ORDER,
+      PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
+    ]);
   });
 
   it("shows public Who Am I in both sports without reviving retired 20 Questions or preview treatment", () => {
@@ -49,14 +54,21 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/football/who-am-i");
   });
 
-  it("keeps Daily-only games out of normal Football Play", () => {
+  it("keeps Daily-only games out of normal Football Play and Draft Room admin-only", () => {
     const navigate = vi.fn();
-    render(<PlayLandingGameLibrary sport="football" onNavigate={navigate} ownerAccess />);
+    const { rerender } = render(<PlayLandingGameLibrary sport="football" onNavigate={navigate} />);
     expect(screen.queryByRole("button", { name: /blind rank 5/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /keep 4, cut 4/i })).not.toBeInTheDocument();
     expect(screen.queryByText("TEMP CASUAL")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /blind resume/i })).not.toBeInTheDocument();
-    expect(screen.queryByText(/Draft Room/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /draft room/i })).not.toBeInTheDocument();
+
+    rerender(<PlayLandingGameLibrary sport="football" onNavigate={navigate} ownerAccess />);
+    const draftRoom = screen.getByRole("button", { name: /draft room/i });
+    expect(draftRoom).toBeInTheDocument();
+    expect(screen.getByText("OWNER PREVIEW")).toBeInTheDocument();
+    fireEvent.click(draftRoom);
+    expect(navigate).toHaveBeenCalledWith("/football/draft-room");
   });
 
   it("opens UFC Find the Leader replayable while preserving its canonical route owner", () => {
