@@ -289,7 +289,7 @@ for (const subject of [...footballSubjects, ...projectedPlayerSourceSubjects]) {
     // An exact projected source placeholder may be replaced by the curated
     // canonical subject that explicitly resolves to that same source identity.
     // Other same-name source athletes keep owning their exact ids.
-    if (canonicalSubjectIds.has(subject.id) && existing.id === projectionId) {
+    if (existing.id === projectionId) {
       footballSubjectById.set(projectionId, subject);
       continue;
     }
