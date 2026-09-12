@@ -104,12 +104,41 @@ function nflRowsFor(subject) {
   }
   return rows.filter((row) => withinWindow(row, subject));
 }
+const cfbSeasonIdentityVolume = (row) => n(row.gamesPlayed) * 100
+  + n(row.passAttempts)
+  + n(row.rushAttempts)
+  + n(row.receptions)
+  + n(row.sacks) * 10
+  + n(row.defensiveInterceptions) * 20
+  + n(row.passBreakups) * 5;
+
+function dominantCfbIdentitySeasonRows(rows) {
+  const dominant = new Map();
+  for (const row of rows) {
+    const key = `${normalized(row.playerName)}:${row.season}`;
+    const current = dominant.get(key);
+    if (
+      !current
+      || cfbSeasonIdentityVolume(row) > cfbSeasonIdentityVolume(current)
+      || (
+        cfbSeasonIdentityVolume(row) === cfbSeasonIdentityVolume(current)
+        && String(row.team ?? "").localeCompare(String(current.team ?? "")) < 0
+      )
+    ) {
+      dominant.set(key, row);
+    }
+  }
+  return [...dominant.values()];
+}
+
 function cfbRowsFor(subject) {
+  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
   const cfbIdentity = subject.sourceIdentityKeys?.find((key) => key.provider === "cfbfastR");
   const exactSourceId = cfbIdentity?.id ?? subject.sourceId ?? null;
-  let rows = exactSourceId == null ? [] : (cfbPlayersById.get(String(exactSourceId)) ?? []);
+  let rows = exactSourceId == null
+    ? []
+    : (cfbPlayersById.get(String(exactSourceId)) ?? []).filter((row) => normalized(row.playerName) === normalized(lookupName));
   if (!rows.length) {
-    const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
     let identityRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
     if (subject.school) {
       const schoolRows = identityRows.filter((row) => normalized(row.team) === normalized(subject.school));
@@ -118,7 +147,7 @@ function cfbRowsFor(subject) {
     const ids = new Set(identityRows.map((row) => String(row.sourcePlayerId)));
     if (ids.size === 1) rows = identityRows;
   }
-  return rows.filter((row) => withinWindow(row, subject));
+  return dominantCfbIdentitySeasonRows(rows).filter((row) => withinWindow(row, subject));
 }
 
 function nflPlayerFacts(subject) {
