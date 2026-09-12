@@ -10,6 +10,10 @@ describe("Cloudflare production artifact handoff", () => {
     expect(workflow).toContain('grep -Fxq "_worker.js" dist/.assetsignore');
   });
 
+  it("does not require the retired Your HQ sign-in CTA in production artifacts", () => {
+    expect(workflow).not.toContain('grep -FRq "SIGN IN TO YOUR HQ"');
+  });
+
   it("uses the canonical live-shell verifier instead of racing every lazy chunk", () => {
     expect(workflow).toContain("scripts/verify-live-frontend-delivery.mjs");
     expect(workflow).toContain("node scripts/verify-live-frontend-delivery.mjs");

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { PlaySport } from "./playRegistry";
 import {
   createTodayChallengeRepository,
+  loadHqDailyChallengeStreak,
   type TodayChallengeProjection,
   type TodayChallengeRepository,
 } from "./todayChallengeRepository";
@@ -13,6 +14,11 @@ export const todayChallengeStandingsQueryKey = (
 ) => [
   "daily-challenge-standings",
   sport,
+  profileId,
+] as const;
+
+export const hqDailyChallengeStreakQueryKey = (profileId: string) => [
+  "hq-daily-challenge-streak",
   profileId,
 ] as const;
 
@@ -87,5 +93,30 @@ export function useTodayChallengeOverview({
         projection ? leaderboard.refetch() : Promise.resolve(),
       ]);
     },
+  };
+}
+
+export function useHqDailyChallengeStreak({
+  profileId,
+  enabled,
+}: {
+  profileId: string;
+  enabled: boolean;
+}) {
+  const query = useQuery({
+    queryKey: hqDailyChallengeStreakQueryKey(profileId),
+    queryFn: async () => {
+      const streak = await loadHqDailyChallengeStreak();
+      if (!streak) throw new Error("Octagon HQ could not load the HQ Daily Streak.");
+      return streak;
+    },
+    enabled: enabled && Boolean(profileId),
+  });
+
+  return {
+    streak: query.data ?? { currentStreak: 0, bestStreak: 0 },
+    loading: query.isLoading,
+    error: query.error ?? null,
+    refresh: query.refetch,
   };
 }

@@ -49,7 +49,7 @@ Deno.serve(async (request) => {
 
   const url = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
-  const serviceKey = Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SECRET_KEY");
   if (!url || !anonKey || !serviceKey) return safeError(503, "MONITORING_NOT_CONFIGURED", "Monitoring credentials are not configured.");
 
   const admin = createClient(url, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
@@ -87,7 +87,16 @@ Deno.serve(async (request) => {
   if (scheduled) {
     const schedulerToken = request.headers.get(schedulerHeader) ?? "";
     const authorized = await admin.rpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
-    if (authorized.error || authorized.data !== true) return safeError(401, "SCHEDULER_AUTH_REQUIRED", "Scheduled monitoring authorization required.");
+    if (authorized.error) {
+      return safeError(
+        503,
+        "SCHEDULER_AUTH_CHECK_FAILED",
+        "Scheduled monitoring authorization could not be verified.",
+      );
+    }
+    if (authorized.data !== true) {
+      return safeError(401, "SCHEDULER_AUTH_REQUIRED", "Scheduled monitoring authorization required.");
+    }
 
     // Reuse the one trusted hourly wake-up for all due in-app reminders and owner actions.
     // The database function owns timing and idempotency; this Edge Function adds no scheduler.

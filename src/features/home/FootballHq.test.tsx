@@ -4,13 +4,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { FootballHq } from "./FootballHq";
 
-vi.mock("../picks/picksEventAssets", () => ({
-  pickEventPosters: () => [
-    { src: "https://example.com/texas-ohio-state.webp", aspectRatio: "16 / 9" },
-    { src: "https://example.com/cowboys-giants.webp", aspectRatio: "16 / 9" },
-  ],
-}));
-
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
@@ -29,9 +22,6 @@ const event: PickEvent = {
   locksAt: "2026-09-10T00:20:00Z",
   season: 2026,
   status: "upcoming",
-  headerStoragePath: "football/2026/event-header-gallery-2-1",
-  headerNaturalWidth: 1600,
-  headerNaturalHeight: 900,
   bouts: [
     {
       boutId: "stale-first-college-game",
@@ -43,6 +33,8 @@ const event: PickEvent = {
       blueFighterName: "Miami Hurricanes",
       homeTeamSlug: "stanford-cardinal",
       awayTeamSlug: "miami-hurricanes",
+      homeTeamLogoUrl: "https://example.com/stanford.png",
+      awayTeamLogoUrl: "https://example.com/miami.png",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
@@ -59,6 +51,8 @@ const event: PickEvent = {
       blueFighterName: "Ohio State Buckeyes",
       homeTeamSlug: "texas-longhorns",
       awayTeamSlug: "ohio-state-buckeyes",
+      homeTeamLogoUrl: "https://example.com/texas.png",
+      awayTeamLogoUrl: "https://example.com/ohio-state.png",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
@@ -75,6 +69,8 @@ const event: PickEvent = {
       blueFighterName: "Dallas Cowboys",
       homeTeamSlug: "new-york-giants",
       awayTeamSlug: "dallas-cowboys",
+      homeTeamLogoUrl: "https://example.com/giants.png",
+      awayTeamLogoUrl: "https://example.com/cowboys.png",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
@@ -140,7 +136,7 @@ const summary: PickSummary = {
 };
 
 describe("Football HQ Home summary", () => {
-  it("uses this week's authored Matchup HQ games for featured card copy and deep links instead of the first league game", () => {
+  it("uses UFC-style Picks, one Daily row, Player Spotlight, and canonical authored matchup rows", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-09-08T19:30:00Z"));
 
@@ -154,6 +150,7 @@ describe("Football HQ Home summary", () => {
           loading={false}
           error=""
           signedIn
+          dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
         />
       </MemoryRouter>,
     );
@@ -161,25 +158,37 @@ describe("Football HQ Home summary", () => {
     const hq = screen.getByRole("region", { name: "Football HQ" });
     expect(within(hq).getByRole("heading", { name: "This week" })).toBeInTheDocument();
     expect(hq).toHaveClass("home-sport-hq");
+    expect(within(hq).getByText("FOOTBALL PICKS")).toBeInTheDocument();
+    expect(within(hq).getByText("1 OF 3")).toBeInTheDocument();
     expect(within(hq).getByText("2 PICKS LEFT")).toBeInTheDocument();
-    expect(within(hq).getByText("#2")).toBeInTheDocument();
+    expect(within(hq).getByText("#2 OF 2")).toBeInTheDocument();
+    expect(within(hq).getByText("DAILY CHALLENGE")).toBeInTheDocument();
 
-    const texasOhioState = within(hq).getByText("Texas vs. Ohio State").closest("a");
-    const cowboysGiants = within(hq).getByText("Cowboys vs. Giants").closest("a");
-    expect(texasOhioState).toHaveAttribute("href", "/football/picks?matchup=2026-texas-ohio-state");
-    expect(cowboysGiants).toHaveAttribute("href", "/football/picks?matchup=2026-cowboys-giants");
+    expect(within(hq).getByText("Kamario Taylor")).toBeInTheDocument();
+    expect(within(hq).getByText("LAST WEEK · 413 TOT YDS · 5 TD")).toBeInTheDocument();
+    expect(within(hq).getByText("VS ULM · W 62–13")).toBeInTheDocument();
+    expect(within(hq).getByText("6'4\" · 230 LB")).toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://www.youtube.com/watch?v=QxpXjmhoaTE",
+    );
+    expect(within(hq).queryByRole("link", { name: /VIEW PLAYER/i })).not.toBeInTheDocument();
+
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Texas vs. Ohio State" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-texas-ohio-state");
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Cowboys vs. Giants" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-cowboys-giants");
     expect(within(hq).getByText("Sat, Sep 12, 6:30 PM CT")).toBeInTheDocument();
     expect(within(hq).getByText("Sun, Sep 13, 7:20 PM CT")).toBeInTheDocument();
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
-    expect(within(hq).queryByText("Weekly feature")).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
-    expect(within(hq).getAllByRole("link")).toHaveLength(3);
+    expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toHaveAttribute("href", "/football/picks");
   });
 
-  it("shows a real unpublished state without inventing featured matchup cards", () => {
+  it("keeps the Picks and Player Spotlight structure when the weekly slate is not published", () => {
     render(
       <MemoryRouter>
         <FootballHq
@@ -190,12 +199,15 @@ describe("Football HQ Home summary", () => {
           loading={false}
           error=""
           signedIn={false}
+          dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
         />
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole("heading", { name: "Next slate not published" })).toBeInTheDocument();
-    expect(screen.queryByLabelText("Football Games of the Week")).not.toBeInTheDocument();
-    expect(screen.queryByText("Weekly feature")).not.toBeInTheDocument();
+    const hq = screen.getByRole("region", { name: "Football HQ" });
+    expect(within(hq).getByText("FOOTBALL PICKS")).toBeInTheDocument();
+    expect(within(hq).getByText("WAITING")).toBeInTheDocument();
+    expect(within(hq).getByText("Kamario Taylor")).toBeInTheDocument();
+    expect(within(hq).queryByLabelText("Football Games of the Week")).not.toBeInTheDocument();
   });
 });

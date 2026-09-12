@@ -216,7 +216,6 @@ jobs:
           grep -FRq "identity-overlay--viewport" dist/assets/*.js
           grep -FRq "NO PROFILE FOUND WITH THAT EXACT NAME" dist/assets/*.js
           grep -FRq "SIGN IN TO CHALLENGE" dist/assets/*.js
-          grep -FRq "SIGN IN TO YOUR HQ" dist/assets/*.js
           grep -FRq "SIGN IN TO MAKE PICKS" dist/assets/*.js
           grep -FRq "vite:preloadError" dist/assets/*.js
           grep -FRq "list_my_find_leader_history" dist/assets/*.js

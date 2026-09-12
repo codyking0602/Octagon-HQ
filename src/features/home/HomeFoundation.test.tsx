@@ -1,23 +1,26 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SELECTED_SPORT_STORAGE_KEY, type SelectedSport } from "../../app/SportProvider";
 import { AppProviders } from "../../app/providers";
 import { appRoutes } from "../../app/router";
 
-const LOCKED_HOME_ORDER = [
+const FOOTBALL_SEASON_HOME_ORDER = [
   "your-hq",
-  "whats-new",
-  "todays-challenges",
-  "ufc-hq",
   "football-hq",
+  "ufc-hq",
 ];
 
 beforeEach(() => {
   window.localStorage.clear();
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  vi.setSystemTime(new Date("2026-09-12T12:00:00Z"));
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 function renderHome() {
   const router = createMemoryRouter(appRoutes, { initialEntries: ["/"] });
@@ -40,17 +43,18 @@ function expectNeutralHome() {
 }
 
 describe("The HQ universal Home foundation", () => {
-  it("renders the five Home section boundaries in the approved order with Up Next removed", async () => {
+  it("renders the approved football-season Home hierarchy without standalone feed sections", async () => {
     const router = renderHome();
 
     expect(await screen.findByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
     expect(router.state.location.pathname).toBe("/");
 
     const sections = screen.getAllByTestId("home-section");
-    expect(sections).toHaveLength(5);
-    expect(sections.map((section) => section.getAttribute("data-home-section"))).toEqual(LOCKED_HOME_ORDER);
+    expect(sections).toHaveLength(3);
+    expect(sections.map((section) => section.getAttribute("data-home-section"))).toEqual(FOOTBALL_SEASON_HOME_ORDER);
+    expect(screen.queryByRole("region", { name: "What’s New" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Today’s Challenges" })).not.toBeInTheDocument();
     expect(screen.queryByRole("region", { name: "Up Next" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "Your command center" })).not.toBeInTheDocument();
   });
 
   it.each(["ufc", "football"] as const)(
@@ -64,26 +68,22 @@ describe("The HQ universal Home foundation", () => {
     },
   );
 
-  it("keeps both sport HQs distinct but structurally consistent", async () => {
+  it("keeps each Daily Challenge inside its sport HQ", async () => {
     renderHome();
     await screen.findByRole("heading", { name: "Your HQ" });
 
     const sections = screen.getAllByTestId("home-section");
-    const challenges = screen.getByRole("region", { name: "Today’s Challenges" });
     const ufcHq = screen.getByRole("region", { name: "UFC HQ" });
     const footballHq = screen.getByRole("region", { name: "Football HQ" });
 
     expect(within(sections[0]).getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
-    expect(screen.getByRole("region", { name: "What’s New" })).toBeInTheDocument();
-    expect(within(challenges).getByRole("heading", { name: "Today’s Challenges" })).toBeInTheDocument();
-    expect(within(challenges).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toHaveAttribute("href", "/play");
-    expect(within(challenges).getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
     expect(within(ufcHq).getByRole("heading", { name: "Fight week" })).toBeInTheDocument();
     expect(within(footballHq).getByRole("heading", { name: "This week" })).toBeInTheDocument();
+    expect(within(ufcHq).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toHaveAttribute("href", "/play");
+    expect(within(footballHq).getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
     expect(ufcHq).toHaveClass("home-sport-hq");
     expect(footballHq).toHaveClass("home-sport-hq");
-    expect(within(footballHq).queryByLabelText("Football Games of the Week")).not.toBeInTheDocument();
-    expect(within(footballHq).queryByText("Weekly feature")).not.toBeInTheDocument();
+    expect(within(footballHq).getByText("Kamario Taylor")).toBeInTheDocument();
     expect(within(footballHq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
   });
 
