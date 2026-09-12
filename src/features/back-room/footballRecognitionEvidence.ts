@@ -38,7 +38,14 @@ type CfbSeed = readonly [
   basis?: FootballRecognitionEvidenceBasis,
   provider?: FootballSourceProviderId,
 ];
-type NflSeed = readonly [id: string, name: string, position: FootballCanonicalPosition, tier: FootballRecognizabilityTier];
+type NflSeed = readonly [
+  id: string,
+  name: string,
+  position: FootballCanonicalPosition,
+  tier: FootballRecognizabilityTier,
+  basis?: FootballRecognitionEvidenceBasis,
+  provider?: FootballSourceProviderId,
+];
 type CoachSeed = readonly [id: string, name: string, league: FootballCanonicalLeague, tier: FootballRecognizabilityTier];
 type EraSeed = readonly [id: string, name: string, startSeason: number, endSeason: number, tier: FootballRecognizabilityTier, franchises: readonly string[]];
 type GameSeed = readonly [id: string, name: string, season: number, tier: FootballRecognizabilityTier];
@@ -417,6 +424,7 @@ const nflSeeds: readonly NflSeed[] = [
   ["nfl-thomas-morstead", "Thomas Morstead", "P", "B"],
   ["nfl-sam-koch", "Sam Koch", "P", "C"],
   ["nfl-pat-mcafee", "Pat McAfee", "P", "A"],
+  ["nfl-morris-claiborne", "Morris Claiborne", "DB", "C", "reviewed-national-recognition", "sports-reference"],
 ] as const;
 
 const coachSeeds: readonly CoachSeed[] = [
@@ -514,17 +522,19 @@ const cfbRecords = cfbSeeds.map(([
     : ["ncaafb", "official-cfb-awards"].filter((candidate) => candidate !== provider) as FootballSourceProviderId[],
 }));
 
-const nflRecords = nflSeeds.map(([id, name, position, tier]): FootballRecognitionEvidenceRecord => ({
+const nflRecords = nflSeeds.map(([
+  id, name, position, tier, basis = "major-award-or-hall-of-fame", provider = "nfl-honors",
+]): FootballRecognitionEvidenceRecord => ({
   id,
   name,
   kind: "player-career",
   league: "NFL",
   position,
   tier,
-  basis: "major-award-or-hall-of-fame",
-  sourceProvider: "nfl-honors",
-  sourceId: `nfl-honors:${id}`,
-  corroboratingSourceProviders: ["sports-reference"],
+  basis,
+  sourceProvider: provider,
+  sourceId: `${provider}:${id}`,
+  corroboratingSourceProviders: provider === "sports-reference" ? ["nfl-honors"] : ["sports-reference"],
 }));
 
 const coachRecords = coachSeeds.map(([id, name, league, tier]): FootballRecognitionEvidenceRecord => ({
