@@ -3,6 +3,8 @@ import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 
 export const FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEY = "football-player-spotlight";
+export const HOME_FEATURE_MEDIA_BUCKET = "home-feature-media";
+export const FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATH = "football/player-spotlight";
 
 const mediaSchema = z.object({
   content_key: z.literal(FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEY),
