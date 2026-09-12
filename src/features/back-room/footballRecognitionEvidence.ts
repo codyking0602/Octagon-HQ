@@ -297,6 +297,10 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-jack-campbell", "Jack Campbell", "LB", "Iowa"),
   cfb("cfb-payton-wilson", "Payton Wilson", "LB", "NC State"),
   cfb("cfb-edgerrin-cooper", "Edgerrin Cooper", "LB", "Texas A&M"),
+  cfb("cfb-tj-watt", "T.J. Watt", "LB", "Wisconsin", "C", "reviewed-national-recognition"),
+  cfb("cfb-tremaine-edmunds", "Tremaine Edmunds", "LB", "Virginia Tech", "C", "reviewed-national-recognition"),
+  cfb("cfb-haason-reddick", "Haason Reddick", "LB", "Temple", "C", "reviewed-national-recognition"),
+  cfb("cfb-uchenna-nwosu", "Uchenna Nwosu", "LB", "USC", "C", "reviewed-national-recognition"),
 
   // Secondary.
   cfb("cfb-champ-bailey", "Champ Bailey", "DB", "Georgia", "B"),
