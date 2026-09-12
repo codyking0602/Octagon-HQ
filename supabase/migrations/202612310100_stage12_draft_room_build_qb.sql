@@ -262,7 +262,7 @@ begin
     and version.game_id = v_game_id;
 
   if v_content_version is null then
-    raise exception 'sealed-bid catalog version is unavailable';
+    raise exception 'Auction catalog version is unavailable';
   end if;
 
   v_rounds := private.auction_round_count(p_mode_id, v_content_version);
@@ -351,7 +351,7 @@ begin
     v_bankroll := p_game.recipient_bankroll;
     v_count := p_game.recipient_selection_count;
   else
-    raise exception 'not a sealed-bid participant';
+    raise exception 'not an Auction participant';
   end if;
 
   if v_count >= v_required then
@@ -410,11 +410,11 @@ begin
   for update;
 
   if v_game.id is null then
-    raise exception 'sealed-bid game not found';
+    raise exception 'Auction not found';
   end if;
 
   if v_game.lifecycle_state not in ('sent', 'active') then
-    raise exception 'sealed-bid game is not resolvable';
+    raise exception 'Auction is not resolvable';
   end if;
 
   if exists (
@@ -449,7 +449,7 @@ begin
     and deck.deck_position = v_game.current_round;
 
   if v_deck.id is null then
-    raise exception 'sealed-bid current item is unavailable';
+    raise exception 'Auction current item is unavailable';
   end if;
 
   if v_challenger_bid.amount > v_recipient_bid.amount then
@@ -520,7 +520,7 @@ begin
         and deck.deck_position = v_position;
 
       if v_deck.id is null then
-        raise exception 'sealed-bid forced item is unavailable';
+        raise exception 'Auction forced item is unavailable';
       end if;
 
       if cardinality(v_categories) > 0 then
@@ -594,7 +594,7 @@ begin
   for update;
 
   if v_game.id is null then
-    raise exception 'sealed-bid game not found';
+    raise exception 'Auction not found';
   end if;
 
   if v_game.lifecycle_state = 'completed' then
@@ -602,7 +602,7 @@ begin
   end if;
 
   if v_game.lifecycle_state <> 'active' then
-    raise exception 'sealed-bid grading boundary is invalid';
+    raise exception 'Auction grading boundary is invalid';
   end if;
 
   if v_game.grading_version = 'grader-contract-v1' then
@@ -643,7 +643,7 @@ begin
       and v_game.rarity_version = 'football-draft-room-rarity-2026-09-v1'
       and v_game.grading_version = 'football-build-qb-traits-2026-09-v1')
   ) then
-    raise exception 'sealed-bid grading version is unsupported';
+    raise exception 'Auction grading version is unsupported';
   end if;
 
   v_required := private.auction_required_selections(v_game.mode_id, v_game.content_version);
@@ -706,7 +706,7 @@ begin
     or v_challenger_score not between 0 and 100
     or v_recipient_score not between 0 and 100
   then
-    raise exception 'sealed-bid grading inputs are incomplete or invalid';
+    raise exception 'Auction grading inputs are incomplete or invalid';
   end if;
 
   v_winner := case
@@ -774,7 +774,7 @@ begin
   end if;
 
   if v_game.lifecycle_state <> 'prepared' then
-    raise exception 'sealed-bid game already sent';
+    raise exception 'Auction already sent';
   end if;
 
   if v_game.revision <> p_expected_revision then
@@ -903,7 +903,7 @@ begin
   if v_game.id is null
     or v_actor not in (v_game.challenger_id, v_game.recipient_id)
   then
-    raise exception 'not a sealed-bid participant';
+    raise exception 'not an Auction participant';
   end if;
 
   v_is_draft := v_game.mode_id = 'build-qb';
@@ -919,7 +919,7 @@ begin
   end if;
 
   if v_game.lifecycle_state not in ('sent', 'active') then
-    raise exception 'sealed-bid game is not accepting bids';
+    raise exception 'Auction is not accepting bids';
   end if;
 
   v_was_sent := v_game.lifecycle_state = 'sent';
@@ -1093,7 +1093,7 @@ begin
   if v_game.id is null
     or v_actor not in (v_game.challenger_id, v_game.recipient_id)
   then
-    raise exception 'not a sealed-bid participant';
+    raise exception 'not an Auction participant';
   end if;
 
   if v_game.lifecycle_state = 'cancelled' then
@@ -1102,7 +1102,7 @@ begin
 
   if v_game.lifecycle_state = 'sent' then
     if v_actor <> v_game.challenger_id then
-      raise exception 'only the challenger can cancel a pending sealed-bid game';
+      raise exception 'only the challenger can cancel a pending Auction';
     end if;
 
     select challenge.opened_at into v_challenge_opened_at
@@ -1110,10 +1110,10 @@ begin
     where challenge.id = v_game.challenge_id;
 
     if v_challenge_opened_at is not null then
-      raise exception 'pending sealed-bid game has already been opened';
+      raise exception 'pending Auction has already been opened';
     end if;
   elsif v_game.lifecycle_state <> 'active' then
-    raise exception 'only a pending or active sealed-bid game can be cancelled';
+    raise exception 'only a pending or active Auction can be cancelled';
   end if;
 
   if v_game.revision <> p_expected_revision then
@@ -1209,11 +1209,11 @@ begin
   for update;
 
   if v_auction.id is null then
-    raise exception 'sealed-bid challenge linkage is missing';
+    raise exception 'Auction challenge linkage is missing';
   end if;
 
   if v_auction.lifecycle_state = 'active' then
-    raise exception 'Use the sealed-bid cancellation command for an active game';
+    raise exception 'Use the Auction cancellation command for an active Auction';
   end if;
 
   if v_auction.lifecycle_state = 'sent'
