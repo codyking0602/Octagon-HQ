@@ -64,7 +64,7 @@ function aggregate(corpus, league) {
     const personKey = league === "CFB" ? `${sourceId}:${normalize(name)}` : sourceId;
     const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };
     const season = n(at(row, ix, "season")); if (season) p.seasons.add(season);
-    const team = at(row, ix, "recentTeam") ?? at(row, ix, "team"); if (team) p.teams.add(String(team));
+    const team = league === "CFB" ? at(row, ix, "team") : at(row, ix, "recentTeam") ?? at(row, ix, "team"); if (team) p.teams.add(String(team));
     p.position ||= String(at(row, ix, "positionGroup") ?? at(row, ix, "position") ?? "");
     for (const field of ["games", "gamesPlayed", "attempts", "passAttempts", "passingYards", "passYards", "passingTouchdowns", "passTouchdowns", "carries", "rushAttempts", "rushingYards", "rushYards", "rushingTouchdowns", "rushTouchdowns", "receptions", "receivingYards", "receivingTouchdowns", "defensiveSacks", "sacks", "defensiveInterceptions", "fieldGoalsMade", "puntingAttempts"]) {
       const value = n(at(row, ix, field));
@@ -105,6 +105,24 @@ const yearsFor = (p) => [...p.seasons].filter(Boolean).sort((a, b) => a - b);
 const total = (p, ...fields) => fields.reduce((sum, field) => sum + n(p.totals[field]), 0);
 const peak = (p, ...fields) => Math.max(0, ...fields.map((field) => n(p.peaks[field])));
 
+const nflPeople = aggregate(nfl, "NFL");
+const nflSourceIdentityCountByName = new Map();
+for (const person of nflPeople) {
+  const key = normalize(person.name);
+  nflSourceIdentityCountByName.set(key, (nflSourceIdentityCountByName.get(key) ?? 0) + 1);
+}
+const approvedNflSourceIdentityByName = new Map([
+  ["adrian-peterson", "00-0025394"],
+  ["cam-newton", "00-0027939"],
+  ["lamar-jackson", "00-0034796"],
+]);
+function isApprovedNflIdentity(p, approvedNames) {
+  if (!approvedNames.has(p.name)) return false;
+  const key = normalize(p.name);
+  if ((nflSourceIdentityCountByName.get(key) ?? 0) <= 1) return true;
+  return approvedNflSourceIdentityByName.get(key) === p.sourceId;
+}
+
 function projectNflPlayer(p) {
   const position = exactPosition(p);
   const games = total(p, "games");
@@ -139,13 +157,12 @@ function projectNflPlayer(p) {
     (position === "P" && games >= 120 && punts >= 500);
   if (b) { tier = "B"; evidence.push("sustained nationally prominent NFL career"); }
   else if (c) { tier = "C"; evidence.push("substantial multi-year NFL role"); }
-  if (approvedBPlayers.has(p.name) && tier !== "A") { tier = "B"; evidence.push("explicit football-culture B approval"); }
-  if (approvedAPlayers.has(p.name)) { tier = "A"; evidence.push("explicit iconic-player approval"); }
+  if (isApprovedNflIdentity(p, approvedBPlayers) && tier !== "A") { tier = "B"; evidence.push("explicit football-culture B approval"); }
+  if (isApprovedNflIdentity(p, approvedAPlayers)) { tier = "A"; evidence.push("explicit iconic-player approval"); }
   const years = yearsFor(p);
   return { id: `nflverse-player-${p.sourceId}`, kind: "player-career", name: p.name, league: "NFL", position, startSeason: years[0], endSeason: years.at(-1), tier, evidence, sourceProvider: "nflverse", sourceId: p.sourceId, manualA: tier === "A" };
 }
 
-const nflPeople = aggregate(nfl, "NFL");
 const nflProjected = nflPeople.map(projectNflPlayer);
 const nflByNormalizedName = new Map();
 for (const record of nflProjected) {
