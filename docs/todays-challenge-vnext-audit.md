@@ -1,8 +1,8 @@
 # Today’s Challenge vNext — Stage 11 Final Audit
 
-**Status:** Complete  
+**Status:** Complete
 **Date:** September 11, 2026  
-**Future schedule cutover:** September 12, 2026 Central  
+**Future schedule cutover:** September 12, 2026 Central
 **Canonical production host:** `https://the.hq-app.workers.dev`
 
 ## Final state
