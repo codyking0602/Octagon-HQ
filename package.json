@@ -7,7 +7,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "predev": "npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-twenty-questions-runtime",
+    "predev": "npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe",
     "dev": "vite",
     "build": "npm run typecheck && npm run build:artifacts",
     "build:artifacts": "vite build && vite build --config vite.worker.config.ts && node scripts/normalize-football-reveal-codec.mjs && npm run verify:artifact",
