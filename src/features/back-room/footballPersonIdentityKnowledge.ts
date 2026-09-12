@@ -2,6 +2,7 @@ import type { FootballFactSource } from "./footballFactualStatsCore";
 import { footballPersonIdentityCfbAResearch, footballPersonIdentityCfbAResearchSources } from "./footballPersonIdentityCfbAResearch";
 import { footballPersonIdentityCfbBResearch, footballPersonIdentityCfbBResearchSources } from "./footballPersonIdentityCfbBResearch";
 import { footballPersonResumeResearch, type FootballPersonResumeResearchRecord } from "./footballPersonResumeResearch";
+import { footballCanonicalPlayerSubjectIdForSourceSubjectId } from "./footballRecognizabilityProjection";
 import {
   footballPlayerCareerSubjectsForPerson,
   getFootballSubject,
@@ -2227,8 +2228,9 @@ const rawFootballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentity
 
 const canonicalKnowledgeRecordsBySubjectId = new Map<string, FootballPersonIdentityKnowledgeRecord>();
 for (const record of rawFootballPersonIdentityKnowledgeRecords) {
-  const canonicalSubject = getFootballSubject(record.subjectId);
-  const subjectId = canonicalSubject?.id ?? record.subjectId;
+  const subjectId = footballCanonicalPlayerSubjectIdForSourceSubjectId(record.subjectId)
+    ?? getFootballSubject(record.subjectId)?.id
+    ?? record.subjectId;
   const existing = canonicalKnowledgeRecordsBySubjectId.get(subjectId);
   canonicalKnowledgeRecordsBySubjectId.set(subjectId, {
     subjectId,
