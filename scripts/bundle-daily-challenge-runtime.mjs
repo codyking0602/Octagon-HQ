@@ -17,7 +17,7 @@ const bundles = [
     label: "Football daily runtime",
     entry: resolve(repoRoot, "src/features/play/footballTodayChallengeSession.ts"),
     fileName: "football-runtime.generated.mjs",
-    requiredExports: ["buildFootballTodayPersistenceSetup", "buildFootballTodayRuntimeSnapshot"],
+    requiredExports: ["advanceFootballOfficialDailyRuntime", "buildFootballTodayPersistenceSetup", "buildFootballTodayRuntimeSnapshot"],
   },
 ];
 
