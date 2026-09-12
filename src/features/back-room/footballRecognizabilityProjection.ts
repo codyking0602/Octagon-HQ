@@ -124,17 +124,6 @@ function optionalPosition(value: string) {
 }
 
 const promotedRecords = projectionJson.records as readonly ProjectionRecord[];
-const canonicalPlayerSourceBindings = (
-  projectionJson as typeof projectionJson & {
-    canonicalPlayerSourceBindings?: readonly CanonicalPlayerSourceBinding[];
-  }
-).canonicalPlayerSourceBindings ?? [];
-const canonicalPlayerSourceBindingByCanonicalId = new Map(
-  canonicalPlayerSourceBindings.map((binding) => [binding.canonicalId, binding]),
-);
-const canonicalPlayerSourceBindingBySourceSubjectId = new Map(
-  canonicalPlayerSourceBindings.map((binding) => [binding.sourceSubjectId, binding]),
-);
 
 const canonicalCatalogPlayerIdByIdentityId = new Map<string, string>();
 for (const subject of footballCanonicalSubjects) {
@@ -150,6 +139,36 @@ for (const subject of footballCanonicalSubjects) {
 
 function canonicalCatalogPlayerId(subjectId: string) {
   return canonicalCatalogPlayerIdByIdentityId.get(subjectId) ?? subjectId;
+}
+
+const rawCanonicalPlayerSourceBindings = (
+  projectionJson as typeof projectionJson & {
+    canonicalPlayerSourceBindings?: readonly CanonicalPlayerSourceBinding[];
+  }
+).canonicalPlayerSourceBindings ?? [];
+
+// The generator may create a normalized stage id for a source-backed subject whose
+// product-owned catalog id predates the nfl-/cfb- convention. Collapse that stage
+// spelling here before any runtime consumer sees the binding. This is an id/alias
+// reconciliation only; display names never participate.
+const canonicalPlayerSourceBindings = rawCanonicalPlayerSourceBindings.map((binding) => ({
+  ...binding,
+  canonicalId: canonicalCatalogPlayerId(binding.canonicalId),
+}));
+
+const canonicalPlayerSourceBindingByCanonicalId = new Map<string, CanonicalPlayerSourceBinding>();
+const canonicalPlayerSourceBindingBySourceSubjectId = new Map<string, CanonicalPlayerSourceBinding>();
+for (const binding of canonicalPlayerSourceBindings) {
+  const canonicalExisting = canonicalPlayerSourceBindingByCanonicalId.get(binding.canonicalId);
+  if (canonicalExisting && canonicalExisting.sourceSubjectId !== binding.sourceSubjectId) {
+    throw new Error(`Conflicting exact source owners for canonical Football player ${binding.canonicalId}.`);
+  }
+  const sourceExisting = canonicalPlayerSourceBindingBySourceSubjectId.get(binding.sourceSubjectId);
+  if (sourceExisting && sourceExisting.canonicalId !== binding.canonicalId) {
+    throw new Error(`Exact Football source identity ${binding.sourceSubjectId} has multiple canonical owners.`);
+  }
+  canonicalPlayerSourceBindingByCanonicalId.set(binding.canonicalId, binding);
+  canonicalPlayerSourceBindingBySourceSubjectId.set(binding.sourceSubjectId, binding);
 }
 const nflPlayerSourceRegistry = parseNflPlayerSourceTuples(projectionJson.playerSourceRegistry?.nfl ?? []);
 const cfbPlayerSourceRegistry = parseCfbPlayerSourceTuples(projectionJson.playerSourceRegistry?.cfb ?? []);
