@@ -101,8 +101,10 @@ function aggregate(corpus, league) {
     const team = league === "CFB" ? at(row, ix, "team") : at(row, ix, "recentTeam") ?? at(row, ix, "team");
     if (team) {
       p.teams.add(String(team));
-      p.teamVolumes[String(team)] = n(p.teamVolumes[String(team)])
-        + (league === "CFB" ? cfbIdentitySeasonVolume(row, ix) : n(at(row, ix, "games")));
+      p.teamVolumes[String(team)] = Math.max(
+        n(p.teamVolumes[String(team)]),
+        league === "CFB" ? cfbIdentitySeasonVolume(row, ix) : n(at(row, ix, "games")),
+      );
     }
     p.position ||= String(at(row, ix, "positionGroup") ?? at(row, ix, "position") ?? "");
     for (const field of ["games", "gamesPlayed", "attempts", "passAttempts", "passingYards", "passYards", "passingTouchdowns", "passTouchdowns", "carries", "rushAttempts", "rushingYards", "rushYards", "rushingTouchdowns", "rushTouchdowns", "receptions", "receivingYards", "receivingTouchdowns", "defensiveSacks", "sacks", "defensiveInterceptions", "fieldGoalsMade", "puntingAttempts"]) {
