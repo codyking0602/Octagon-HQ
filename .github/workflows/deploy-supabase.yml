@@ -252,6 +252,8 @@ jobs:
               > supabase/functions/daily-challenge-runtime/deployment.ts
             node scripts/bundle-daily-challenge-runtime.mjs
             test -f supabase/functions/daily-challenge-runtime/runtime.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs
             supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
           else
             echo "daily-challenge-runtime is not present in this exact deployment source; skipping."

@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 const migration = readFileSync("supabase/migrations/202612310053_football_daily_product_integration.sql", "utf8");
 const routeMigration = readFileSync("supabase/migrations/202612310055_football_hq_daily_route.sql", "utf8");
 const sportOwnerRepair = readFileSync("supabase/migrations/202612310056_repair_football_daily_reminder_sport_owner.sql", "utf8");
+const persistedRuntimeRepair = readFileSync("supabase/migrations/202612310099_football_daily_persisted_runtime.sql", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const hq = readFileSync("src/features/back-room/FootballBackRoomPage.tsx", "utf8");
@@ -49,6 +50,17 @@ describe("Football Daily product integration", () => {
     expect(runtime).toContain("schedule_version: context.schedule_version");
     expect(runtime).toContain("context = await finalizePending(userClient, admin, context, profileId)");
     expect(runtime).not.toContain("schedule_version: FOOTBALL_TODAY_SCHEDULE_VERSION");
+  });
+
+  it("reuses an already-published Football Daily before loading generated game code", () => {
+    expect(persistedRuntimeRepair).toContain("get_daily_challenge_materialization_request");
+    expect(persistedRuntimeRepair).toContain("private.daily_challenge_schedule_for_day(v_day, p_sport)");
+    expect(runtime).toContain('p_sport: "football"');
+    expect(runtime).toContain("if (request.required !== true)");
+    expect(runtime).toContain("return json(footballPublicPayload(context))");
+    expect(runtime).toContain("normalizeLegacyFootballProgress(context, footballRuntime)");
+    expect(runtime).toContain("footballRuntime.advanceFootballOfficialDailyRuntime(context, action)");
+    expect(runtime).not.toContain("buildFootballTodayRuntimeSnapshot(materialized.centralDay");
   });
 
   it("keeps Football HQ and completed result actions on the canonical Today route", () => {

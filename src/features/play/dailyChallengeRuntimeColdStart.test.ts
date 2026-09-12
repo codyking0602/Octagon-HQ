@@ -33,23 +33,34 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(footballRuntime).toContain('from "../games/footballWhoAmIAuthority"');
   });
 
-  it("loads the Football runtime only through the Football request path", () => {
-    expect(runtime).toContain('function loadFootballRuntime()');
-    expect(runtime).toContain('import("./football-runtime.generated.mjs")');
-    expect(runtime).toContain('if (body.sport === "football") {\n      const footballRuntime = await loadFootballRuntime();');
+  it("serves published Football Daily reads before loading a generated Football runtime", () => {
+    expect(runtime).toContain('function loadFootballPublicationRuntime()');
+    expect(runtime).toContain('function loadFootballAdvanceRuntime()');
+    expect(runtime).toContain('import("./football-publication.generated.mjs")');
+    expect(runtime).toContain('import("./football-advance.generated.mjs")');
+    expect(runtime).toContain('if (body.sport === "football") {\n      const materialized = await materializeFootballToday(admin);');
+    expect(runtime).toContain('if (request.required !== true)');
+    expect(runtime).toContain('const footballRuntime = await loadFootballPublicationRuntime();');
+    expect(runtime).toContain('const footballRuntime = await loadFootballAdvanceRuntime();');
+    expect(runtime).not.toContain('import("./football-runtime.generated.mjs")');
   });
 
-  it("builds separate standalone UFC and Football artifacts under the canonical function owner", () => {
+  it("builds separate UFC, Football publication, and Football advance artifacts under one function owner", () => {
     expect(bundler).toContain('src/features/play/todaysChallengeRuntime.ts');
-    expect(bundler).toContain('src/features/play/footballTodayChallengeSession.ts');
+    expect(bundler).toContain('src/features/play/footballTodayChallengePublicationRuntime.ts');
+    expect(bundler).toContain('src/features/play/footballTodayChallengeAdvanceRuntime.ts');
     expect(bundler).toContain('fileName: "runtime.generated.mjs"');
-    expect(bundler).toContain('fileName: "football-runtime.generated.mjs"');
+    expect(bundler).toContain('fileName: "football-publication.generated.mjs"');
+    expect(bundler).toContain('fileName: "football-advance.generated.mjs"');
+    expect(bundler).not.toContain('fileName: "football-runtime.generated.mjs"');
     expect(bundler).not.toContain('src/features/play/dailyRuntimeBundle.ts');
     expect(bundler).toContain('inlineDynamicImports: true');
   });
 
   it("keeps GitHub Actions as the single deployment owner", () => {
     expect(backendWorkflow).toContain('node scripts/bundle-daily-challenge-runtime.mjs');
+    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs');
+    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs');
     expect(backendWorkflow).toContain('supabase functions deploy daily-challenge-runtime');
   });
 });

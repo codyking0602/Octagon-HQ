@@ -43,6 +43,7 @@ on:
       - "supabase/migrations/202612310094_repair_football_daily_cutover.sql"
       - "supabase/migrations/202612310095_home_hq_cross_sport_streak.sql"
       - "supabase/migrations/202612310098_reset_football_weekly_titles.sql"
+      - "supabase/migrations/202612310099_football_daily_persisted_runtime.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -55,6 +56,7 @@ on:
       - "supabase/tests/home_hq_cross_sport_streak.sql"
       - "supabase/tests/who_am_i_daily_runtime.sql"
       - "supabase/tests/future_daily_schedule.sql"
+      - "supabase/tests/football_daily_persisted_runtime.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_seed.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_assert.sql"
   workflow_dispatch:
@@ -193,6 +195,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/future_daily_schedule.sql
 
+      - name: Execute persisted Football Daily runtime proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/football_daily_persisted_runtime.sql
+
       - name: Execute progressive reveal, cross-device progress, and scheduler proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/daily_challenge_runtime_progress.sql
@@ -234,6 +240,7 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310092_who_am_i_daily_runtime.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310095_home_hq_cross_sport_streak.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310098_reset_football_weekly_titles.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310099_football_daily_persisted_runtime.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -386,6 +393,7 @@ jobs:
           require_remote_migration "202612310094"
           require_remote_migration "202612310095"
           require_remote_migration "202612310098"
+          require_remote_migration "202612310099"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
@@ -395,6 +403,6 @@ jobs:
             echo "### Generalized Today’s Challenge backend deployment verified"
             echo "- Canonical deploy workflow run: ${{ github.event.workflow_run.html_url }}"
             echo "- Exact deployed source SHA: \`$SOURCE_SHA\`"
-            echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`, \`202609080001\`, \`202609090001\`, \`202609140003\`, \`202612310025\`, \`202612310026\`, \`202612310027\`, \`202612310028\`, \`202612310052\`, \`202612310069\`, \`202612310092\`, \`202612310093\`, \`202612310094\`, \`202612310095\`, \`202612310098\` all present"
+            echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`, \`202609080001\`, \`202609090001\`, \`202609140003\`, \`202612310025\`, \`202612310026\`, \`202612310027\`, \`202612310028\`, \`202612310052\`, \`202612310069\`, \`202612310092\`, \`202612310093\`, \`202612310094\`, \`202612310095\`, \`202612310098\`, \`202612310099\` all present"
             echo "- Pending linked migrations: none"
           } >> "$GITHUB_STEP_SUMMARY"
