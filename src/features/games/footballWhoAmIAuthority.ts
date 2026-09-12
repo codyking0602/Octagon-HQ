@@ -758,29 +758,25 @@ function preserveEraDiversityWithinTier(
   return selected.sort(footballLaunchSubjectCompare);
 }
 
+const FOOTBALL_WHO_AM_I_MIN_RAW_CLUES = 12;
+
 function selectedFootballSubjects(league: "NFL" | "CFB") {
   const queried = queryFootballSubjects({
     league,
     recognizabilityTiers: ["A", "B"],
     includeProjectedSourceSubjects: true,
     includeProjectedCanonicalRecognition: true,
-  }).filter((subject) => subject.kind === "player-career" || subject.kind === "coach");
+  })
+    .filter((subject) => subject.kind === "player-career" || subject.kind === "coach")
+    .filter((subject) => footballCandidate(subject).clues.length >= FOOTBALL_WHO_AM_I_MIN_RAW_CLUES);
 
-  const byPerson = new Map<string, FootballSubjectProfile>();
+  // Canonical subject IDs own launch identity. Display names are presentation only and
+  // must never collapse same-name people or choose between source identities.
+  const bySubjectId = new Map<string, FootballSubjectProfile>();
   for (const subject of queried) {
-    const key = `${subject.kind}:${subject.name.toLowerCase()}`;
-    const current = byPerson.get(key);
-    const currentDepth = current ? (getFootballFactualRecord(current.id)?.facts.length ?? 0) : -1;
-    const nextDepth = getFootballFactualRecord(subject.id)?.facts.length ?? 0;
-    if (
-      !current
-      || nextDepth > currentDepth
-      || (nextDepth === currentDepth && stableTextCompare(subject.id, current.id) < 0)
-    ) {
-      byPerson.set(key, subject);
-    }
+    if (!bySubjectId.has(subject.id)) bySubjectId.set(subject.id, subject);
   }
-  return [...byPerson.values()];
+  return [...bySubjectId.values()];
 }
 
 function requireLaunchCount(
