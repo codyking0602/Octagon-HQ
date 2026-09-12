@@ -214,7 +214,7 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
   const title = combo ? "Blind Rank + Keep/Cut" : adapter.title;
   const instructions = combo
     ? "Blind Rank five, then immediately Keep 4, Cut 4. Both halves count equally toward one official Daily score."
-    : adapter.instructions;
+    : sport === "football" ? adapter.footballInstructions : adapter.instructions;
   const cta = combo
     ? dailyRankKeepComboStage(projection) === 2 ? "CONTINUE PART 2" : "START PART 1"
     : adapter.cta.toUpperCase();
