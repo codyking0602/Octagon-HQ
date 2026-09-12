@@ -693,6 +693,30 @@ const output = {
   playerSourceRegistry,
   canonicalPlayerSourceBindings,
 };
+const debugDefensiveSourceOwnership = allProjectedPlayerSourceRecords
+  .filter((record) => record.league === "CFB" && ["DL", "LB", "DB"].includes(record.position) && record.tier !== "D")
+  .map((record) => ({
+    sourceSubjectId: record.id,
+    name: record.name,
+    position: record.position,
+    tier: record.tier,
+    school: record.school,
+    canonicalOwner: canonicalPlayerSourceBindings.find((binding) => binding.sourceSubjectId === record.id)?.canonicalId ?? null,
+  }));
+const debugNflOwnershipGaps = allProjectedPlayerSourceRecords
+  .filter((record) => record.league === "NFL" && ["RB", "TE", "DL", "DB"].includes(record.position) && record.tier !== "D")
+  .map((record) => ({
+    sourceSubjectId: record.id,
+    name: record.name,
+    position: record.position,
+    tier: record.tier,
+    canonicalOwner: canonicalPlayerSourceBindings.find((binding) => binding.sourceSubjectId === record.id)?.canonicalId ?? null,
+  }))
+  .filter((record) => record.canonicalOwner == null);
+console.log("FOOTBALL_IDENTITY_DEBUG", JSON.stringify({
+  defensive: debugDefensiveSourceOwnership,
+  nflUnownedPromoted: debugNflOwnershipGaps,
+}));
 fs.writeFileSync(new URL("data/generated/football/recognizability-projection.json", root), `${JSON.stringify(output)}\n`);
 
 const detailSamples = (league, tier, amount) => allRecords.filter((r) => r.kind === "player-career" && r.league === league && r.tier === tier).sort((a, b) => `${a.name}:${a.id}`.localeCompare(`${b.name}:${b.id}`)).slice(0, amount).map((r) => `- ${r.name} (${r.position ?? "unknown"}, ${r.startSeason}–${r.endSeason}; ${r.evidence.join(", ")})`).join("\n");
