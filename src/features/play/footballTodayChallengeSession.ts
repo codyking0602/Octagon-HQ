@@ -12,6 +12,8 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
+export { advanceFootballOfficialDailyRuntime };
+
 const FOOTBALL_LEGACY_SCHEDULE_VERSION = "football-daily-v1" as const;
 const FOOTBALL_MIDDAY_SCHEDULE_VERSION = "football-daily-v2" as const;
 const FOOTBALL_RESUMED_SCHEDULE_VERSION = "football-daily-v3" as const;
@@ -55,6 +57,16 @@ const SHARED_DAILY_DOUBLE_GRADING_VERSION = "daily-rank-keep-combo-v1";
 const SHARED_DAILY_DOUBLE_SCORING_VERSION = "play-official-score-v4" as const;
 
 type JsonRecord = Record<string, unknown>;
+
+function persistenceChild(publication: OfficialDailySetupPublication) {
+  return {
+    setup_key: publication.setupKey,
+    public_setup: publication.publicSetup,
+    reveal_setup: publication.revealSetup,
+    private_setup_evidence: publication.privateSetupEvidence,
+    private_grading_evidence: publication.privateGradingEvidence,
+  };
+}
 
 export interface FootballTodayProjection {
   available: true;
@@ -421,7 +433,12 @@ export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPe
     publicSetup: {
       runtime_version: "football-official-daily-v1",
       combo_version: SHARED_DAILY_DOUBLE_GRADING_VERSION,
-      initial_state: rank.publicSetup.initial_state,
+      stage_count: 2,
+      initial_state: {
+        complete: false,
+        combo_stage: "blind_rank_5",
+        blind_rank_5: rank.publicSetup.initial_state,
+      },
     },
     revealSetup: {
       blind_rank_5: rank.revealSetup,
@@ -429,8 +446,8 @@ export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPe
     },
     privateSetupEvidence: {
       combo_version: SHARED_DAILY_DOUBLE_GRADING_VERSION,
-      blind_rank_5: rank.privateSetupEvidence,
-      keep_4_cut_4: keep.privateSetupEvidence,
+      blind_rank_5: persistenceChild(rank),
+      keep_4_cut_4: persistenceChild(keep),
     },
     privateGradingEvidence: {
       combo_version: SHARED_DAILY_DOUBLE_GRADING_VERSION,
