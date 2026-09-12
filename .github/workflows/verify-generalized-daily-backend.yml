@@ -13,6 +13,12 @@ on:
       - "src/features/play/footballTodayChallengeSession.ts"
       - "src/features/play/hitTheNumberDailyRuntime.ts"
       - "src/features/play/hitTheNumberDailyRuntime.test.ts"
+      - "src/features/play/whoAmIDailyRuntime.ts"
+      - "src/features/play/whoAmIDailyRuntime.test.ts"
+      - "src/features/games/whoAmIEngine.ts"
+      - "src/features/games/ufcWhoAmIAuthority.ts"
+      - "src/features/games/footballWhoAmIAuthority.ts"
+      - "src/features/games/whoAmIAuthorityShared.ts"
       - "supabase/config.toml"
       - "supabase/functions/daily-challenge-runtime/**"
       - "supabase/migrations/202609050001_generalized_todays_challenge_backend.sql"
@@ -27,6 +33,7 @@ on:
       - "supabase/migrations/202612310028_activate_six_game_daily_rotation.sql"
       - "supabase/migrations/202612310052_football_daily_challenge_persistence.sql"
       - "supabase/migrations/202612310069_reroll_august_30_daily_double.sql"
+      - "supabase/migrations/202612310070_who_am_i_daily_runtime.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -35,6 +42,7 @@ on:
       - "supabase/tests/hit_the_number_daily_runtime.sql"
       - "supabase/tests/blind_resume_v3_daily_runtime.sql"
       - "supabase/tests/football_daily_challenge_persistence.sql"
+      - "supabase/tests/who_am_i_daily_runtime.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_seed.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_assert.sql"
   workflow_dispatch:
@@ -165,6 +173,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/blind_resume_v3_daily_runtime.sql
 
+      - name: Execute Who Am I Daily scoring and supported-game proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/who_am_i_daily_runtime.sql
+
       - name: Execute progressive reveal, cross-device progress, and scheduler proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/daily_challenge_runtime_progress.sql
@@ -191,6 +203,7 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310027_blind_resume_v3_publication.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310028_activate_six_game_daily_rotation.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310052_football_daily_challenge_persistence.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310070_who_am_i_daily_runtime.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -211,10 +224,11 @@ jobs:
             echo "- Exact source SHA: \`$SOURCE_SHA\`"
             echo "- Fresh database migrations: passed"
             echo "- Daily runtime Edge Function local bundle and execution: passed"
-            echo "- Six server-owned graders: passed"
-            echo "- Six deterministic runtime setup adapters: passed"
+            echo "- Seven server-owned graders: passed"
+            echo "- Seven deterministic runtime setup adapters: passed"
             echo "- Hit the Number hidden-value, explicit-lock, and normalized scoring contract: passed"
             echo "- Blind Resume V3 staged reveal, 100-point scoring, and V2 compatibility: passed"
+            echo "- Who Am I deterministic setup, Recovery Board parity, and server grading: passed"
             echo "- Calibrated Wavelength v2 publication: passed"
             echo "- Legacy 20-day rotation/fallback and new 60-day six-game rotation: passed"
             echo "- Progressive reveal and hidden-evidence boundaries: passed"
@@ -335,6 +349,7 @@ jobs:
           require_remote_migration "202612310028"
           require_remote_migration "202612310052"
           require_remote_migration "202612310069"
+          require_remote_migration "202612310070"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
