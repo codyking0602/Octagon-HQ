@@ -6,6 +6,7 @@ import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecogn
 import { footballProHallRecognitionCandidates } from "./footballProHallRecognitionCompletenessEvidence";
 import {
   footballRecognitionEvidenceFor,
+  footballRecognitionEvidenceRecords,
   footballRecognitionEvidenceSubjects,
   type FootballRecognitionIdentitySubject,
 } from "./footballRecognitionEvidence";
@@ -206,6 +207,7 @@ const historicalNonPlayerRepairs = footballHistoricalRecognitionRepairs.filter(
   (repair) => repair.subject.kind !== "player-career",
 );
 const historicalById = new Map(footballHistoricalRecognitionRepairs.map((repair) => [repair.subject.id, repair]));
+const recognitionEvidenceById = new Map(footballRecognitionEvidenceRecords.map((record) => [record.id, record]));
 const historicalByKindLeagueAndName = new Map<string, typeof footballHistoricalRecognitionRepairs[number][]>();
 for (const repair of footballHistoricalRecognitionRepairs) {
   const key = `${repair.subject.kind}:${repair.subject.league}:${normalizedProjectionName(repair.subject.name)}`;
@@ -217,6 +219,9 @@ for (const repair of footballHistoricalRecognitionRepairs) {
 function historicalRepairFor(subject: FootballCanonicalSubject) {
   const direct = historicalById.get(subject.id);
   if (direct) return direct;
+  // Exact generated source identities own themselves. A source-only athlete may
+  // share a display name with a reviewed star without inheriting that star's repair.
+  if (subject.kind === "player-career" && byId.has(subject.id)) return null;
   const matches = historicalByKindLeagueAndName.get(
     `${subject.kind}:${subject.league}:${normalizedProjectionName(subject.name)}`,
   ) ?? [];
@@ -314,8 +319,19 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
 }
 
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
+  const exactPlayerRecord = subject.kind === "player-career" ? byId.get(subject.id) : undefined;
+  const directHistorical = historicalById.get(subject.id);
+  const directEvidence = recognitionEvidenceById.get(subject.id);
+  if (exactPlayerRecord && !directHistorical && !directEvidence) {
+    const provider: FootballSourceProviderId = exactPlayerRecord.league === "NFL" ? "nflverse" : "cfbfastR";
+    return {
+      tier: exactPlayerRecord.tier,
+      sourceIdentityKey: { provider, id: exactPlayerRecord.sourceId } as const,
+    };
+  }
+
   const proHallMinimumTier = proHallMinimumTierFor(subject);
-  const historical = historicalRepairFor(subject);
+  const historical = directHistorical ?? historicalRepairFor(subject);
   if (historical) {
     const tier = recognitionTierAtLeast(historical.tier, proHallMinimumTier);
     const production = resolveProjectionRecordFor(subject);
@@ -331,7 +347,7 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
       } as const,
     };
   }
-  const evidence = footballRecognitionEvidenceFor(subject);
+  const evidence = directEvidence ?? footballRecognitionEvidenceFor(subject);
   if (evidence) {
     return {
       tier: recognitionTierAtLeast(evidence.tier, proHallMinimumTier),
@@ -354,6 +370,13 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
       id: `pro-football-hall:${normalizedProjectionName(subject.name)}`,
     },
   };
+}
+
+export function footballProjectedPlayerRegistrationTier(subjectId: string): FootballRecognizabilityTier {
+  return historicalById.get(subjectId)?.tier
+    ?? recognitionEvidenceById.get(subjectId)?.tier
+    ?? byId.get(subjectId)?.tier
+    ?? "D";
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
