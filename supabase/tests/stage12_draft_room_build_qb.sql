@@ -88,17 +88,28 @@ begin
     raise exception 'regular member prepared an admin-only Draft Room';
   exception
     when others then
-      if sqlerrm not like '%Draft Room admin preview access required%' then
+      if sqlerrm not like '%Draft Room admin preview access required for both players%' then
         raise;
       end if;
   end;
 
   perform set_config('request.jwt.claim.sub',v_admin_a::text,true);
-  v_preview := public.prepare_auction(v_member, 'build-qb');
+
+  begin
+    perform public.prepare_auction(v_member, 'build-qb');
+    raise exception 'admin prepared Draft Room against a non-admin';
+  exception
+    when others then
+      if sqlerrm not like '%Draft Room admin preview access required for both players%' then
+        raise;
+      end if;
+  end;
+
+  v_game := public.prepare_auction(v_admin_b, 'build-qb');
 
   select auction.* into v_state
   from private.auction_games auction
-  where auction.id = v_preview;
+  where auction.id = v_game;
 
   if v_state.content_version <> 'football-draft-room-2026-09-v1'
     or v_state.challenger_bankroll <> 50
@@ -111,7 +122,7 @@ begin
   if (
     select count(*)
     from private.auction_deck_entries deck
-    where deck.auction_id = v_preview
+    where deck.auction_id = v_game
   ) <> 10 then
     raise exception 'Build a QB deck must contain exactly ten QBs';
   end if;
@@ -119,24 +130,10 @@ begin
   if (
     select count(distinct deck.private_item_reference)
     from private.auction_deck_entries deck
-    where deck.auction_id = v_preview
+    where deck.auction_id = v_game
   ) <> 10 then
     raise exception 'Build a QB deck rerolled or duplicated QB identities';
   end if;
-
-  begin
-    perform public.send_auction_first_bid(v_preview, v_state.revision, 5, 'Arm');
-    raise exception 'admin preview sent Draft Room to a non-admin';
-  exception
-    when others then
-      if sqlerrm not like '%Draft Room is admin-only until public release%' then
-        raise;
-      end if;
-  end;
-
-  perform public.abandon_prepared_auction(v_preview, v_state.revision);
-
-  v_game := public.prepare_auction(v_admin_b, 'build-qb');
 
   select auction.revision into v_revision
   from private.auction_games auction
