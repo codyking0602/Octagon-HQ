@@ -35,7 +35,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | WR | 85 | 6 | 18 | 61 | 75 | 10 | 0 | 10 | 0 | 0 |
 | TE | 35 | 1 | 20 | 14 | 24 | 11 | 0 | 11 | 0 | 0 |
 | OL | 58 | 2 | 24 | 32 | 58 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 46 | 8 | 22 | 16 | 28 | 18 | 0 | 18 | 0 | 0 |
+| DL / EDGE | 46 | 8 | 22 | 16 | 29 | 17 | 0 | 17 | 0 | 0 |
 | LB | 45 | 5 | 15 | 25 | 33 | 12 | 0 | 12 | 0 | 0 |
 | Secondary | 46 | 9 | 25 | 12 | 36 | 10 | 0 | 10 | 0 | 0 |
 | K / P | 29 | 0 | 14 | 15 | 5 | 24 | 0 | 24 | 0 | 0 |
@@ -60,7 +60,6 @@ None.
 
 - CFB DL / EDGE: **Bruce Smith** — A, Partial; missing DL/EDGE disruption facts; source limits: CFB normalized player stats do not reach this career/season; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **Lee Roy Selmon** — A, Partial; missing DL/EDGE disruption facts; source limits: CFB normalized player stats do not reach this career/season; normalized CFB player production begins in 2014.
-- CFB DL / EDGE: **Ndamukong Suh** — A, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **Chris Long** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **David Pollack** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **J.J. Watt** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
@@ -283,7 +282,7 @@ None.
 - CFB TE: **Michael Egnew** — C, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB TE: **Todd Heap** — C, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB TE: **Zach Miller** — C, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- CFB WR: **Andre Johnson** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB WR: **Andre Johnson** — B, Partial; missing WR receiving facts; source limits: CFB normalized player stats do not reach this career/season; normalized CFB player production begins in 2014.
 - CFB WR: **Davante Adams** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **DeSean Jackson** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Dez Bryant** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
