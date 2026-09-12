@@ -179,9 +179,10 @@ describe("Wavelength official privacy projection", () => {
     expect(wavelengthScore(68, 75)).toBe(adaptWavelengthOfficialScore(86).score);
   });
 
-  it("preserves Wavelength privacy while joining the six-game official daily lineup", () => {
+  it("preserves Wavelength privacy while joining the seven-game official daily lineup", () => {
     expect(playGames.filter((game) => game.lineup.dailyEligible).map((game) => game.id)).toEqual([
       "hit-the-number",
+      "who-am-i",
       "find-leader",
       "wavelength",
       "blind-resume",
