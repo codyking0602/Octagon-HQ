@@ -90,6 +90,11 @@ describe("automatic Picks monitoring deployment", () => {
     expect(runtimeVerificationMigration).not.toContain("'command', v_job.command");
   });
 
+  it("uses the JWT service-role credential first for scheduler RPC authorization", () => {
+    expect(runner).toContain('Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SECRET_KEY")');
+    expect(runner).not.toContain('Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")');
+  });
+
   it("uses server authorization for scheduled and manual requests", () => {
     expect(config).toContain("[functions.run-pick-monitoring]\nverify_jwt = false");
     expect(config).toContain("[functions.sync-next-ufc-event]\nverify_jwt = false");

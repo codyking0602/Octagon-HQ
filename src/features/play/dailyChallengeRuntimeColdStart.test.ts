@@ -48,6 +48,11 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(bundler).toContain('inlineDynamicImports: true');
   });
 
+  it("uses the JWT service-role credential first for scheduled database authorization", () => {
+    expect(runtime).toContain('Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SECRET_KEY")');
+    expect(runtime).not.toContain('Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")');
+  });
+
   it("keeps GitHub Actions as the single deployment owner", () => {
     expect(backendWorkflow).toContain('node scripts/bundle-daily-challenge-runtime.mjs');
     expect(backendWorkflow).toContain('supabase functions deploy daily-challenge-runtime');
