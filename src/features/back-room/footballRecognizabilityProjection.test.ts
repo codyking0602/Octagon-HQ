@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import { describe, expect, it } from "vitest";
 import projection from "../../../data/generated/football/recognizability-projection.json";
+import cfbSeasonRecognition from "../../../data/generated/football/cfb/player-season-recognition.json";
 import { footballSubjects, getFootballSubject, queryFootballSubjects } from "./footballSubjectRegistry";
 import { buildFootballSubjectKnowledgeMetadata } from "./footballSubjectEligibility";
 
@@ -75,6 +76,43 @@ describe("Football recognizability projection", () => {
     const promotedCfbNames = new Set(projection.records.filter((record) => record.kind === "player-career" && record.league === "CFB").map((record) => record.name));
     for (const obscureKicker of ["Aaron Beckham", "Aaron Bickerton", "Aaron Blom"]) {
       expect(promotedCfbNames.has(obscureKicker)).toBe(false);
+    }
+  });
+
+  it("binds projected CFB schools to observed source-season affiliations", () => {
+    const schoolsBySourceId = new Map<string, Set<string>>();
+    for (const row of cfbSeasonRecognition.records) {
+      const schools = schoolsBySourceId.get(row.sourceId) ?? new Set<string>();
+      schools.add(row.school);
+      schoolsBySourceId.set(row.sourceId, schools);
+    }
+    const projected = projection.records.filter((record) => (
+      record.kind === "player-career"
+      && record.league === "CFB"
+      && (record.tier === "A" || record.tier === "B")
+      && record.sourceProvider === "cfbfastR"
+      && record.school
+    ));
+    expect(projected.length).toBeGreaterThan(20);
+    for (const record of projected) {
+      const observedSchools = schoolsBySourceId.get(record.sourceId);
+      if (!observedSchools?.size) continue;
+      expect(observedSchools.has(record.school!)).toBe(true);
+    }
+  });
+
+  it("keeps manual NFL recognition attached to the approved source identity when names collide", () => {
+    const expected = new Map([
+      ["Adrian Peterson", "00-0025394"],
+      ["Cam Newton", "00-0027939"],
+      ["Lamar Jackson", "00-0034796"],
+    ]);
+    for (const [name, sourceId] of expected) {
+      const sameName = projection.records.filter((record) => record.kind === "player-career" && record.league === "NFL" && record.name === name);
+      expect(sameName.length).toBeGreaterThan(1);
+      const promoted = sameName.filter((record) => record.tier === "A" || record.tier === "B");
+      expect(promoted).toHaveLength(1);
+      expect(promoted[0]!.sourceId).toBe(sourceId);
     }
   });
 
