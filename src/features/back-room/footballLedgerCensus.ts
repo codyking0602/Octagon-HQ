@@ -4,6 +4,10 @@ import {
   type FootballLedgerAuditPool,
   type FootballLedgerSubjectAuditRow,
 } from "./footballLedgerAudit";
+import {
+  footballCanonicalPlayerSourceBindingFor,
+  footballProjectedPlayerSourceSubjects,
+} from "./footballRecognizabilityProjection";
 import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballLedgerCensusTier = "A" | "B" | "C";
@@ -37,6 +41,9 @@ const TIERS = ["A", "B", "C"] as const;
 const ERA_IDS = ["historical", "middle", "modern", "unknown", "timeless"] as const;
 const recognitionProjectionRecords = recognitionProjectionJson.records as readonly RecognitionProjectionRecord[];
 const recognitionProjectionById = new Map(recognitionProjectionRecords.map((record) => [record.id, record]));
+const projectedPlayerSourceById = new Map(
+  footballProjectedPlayerSourceSubjects.map((subject) => [subject.id, subject]),
+);
 const recognitionProjectionByIdentity = new Map<string, RecognitionProjectionRecord[]>();
 
 function normalizedIdentity(value: string) {
@@ -105,6 +112,12 @@ function projectionKindFor(row: FootballLedgerSubjectAuditRow) {
 }
 
 function sourceProjectionWindowFor(row: FootballLedgerSubjectAuditRow) {
+  if (row.kind === "player-career") {
+    const binding = footballCanonicalPlayerSourceBindingFor(row.subjectId);
+    if (binding) return projectedPlayerSourceById.get(binding.sourceSubjectId) ?? null;
+    return projectedPlayerSourceById.get(row.subjectId) ?? null;
+  }
+
   const direct = recognitionProjectionById.get(row.subjectId);
   if (direct) return direct;
 
