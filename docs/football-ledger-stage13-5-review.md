@@ -13,9 +13,9 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | QB | 133 | 27 | 44 | 62 | 133 | 0 | 0 | 0 | 0 | 0 |
 | RB | 178 | 20 | 36 | 122 | 178 | 0 | 0 | 0 | 0 | 0 |
 | WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
-| TE | 73 | 1 | 12 | 60 | 72 | 1 | 0 | 1 | 0 | 0 |
+| TE | 73 | 1 | 12 | 60 | 73 | 0 | 0 | 0 | 0 | 0 |
 | OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 318 | 7 | 41 | 270 | 317 | 1 | 0 | 1 | 0 | 0 |
+| DL / EDGE | 318 | 7 | 41 | 270 | 318 | 0 | 0 | 0 | 0 | 0 |
 | LB | 240 | 5 | 38 | 197 | 220 | 20 | 0 | 20 | 0 | 0 |
 | Secondary | 414 | 7 | 49 | 358 | 414 | 0 | 0 | 0 | 0 | 0 |
 | K / P | 19 | 6 | 12 | 1 | 19 | 0 | 0 | 0 | 0 | 0 |
@@ -292,7 +292,6 @@ None.
 - CFB WR: **Golden Tate** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Jeff Samardzija** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Robert Woods** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- NFL DL / EDGE: **Joe Greene** — A, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Eras / dynasties: **Cleveland Browns — Paul Brown NFL dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Eras / dynasties: **Dallas Cowboys — Triplets dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Eras / dynasties: **Green Bay Packers — Lombardi dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
@@ -484,4 +483,3 @@ None.
 - NFL Notable games / misc: **2025 Rams at Seahawks — Week 16 overtime comeback** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Notable games / misc: **Super Bowl LIX — Chiefs vs Eagles** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Notable games / misc: **Super Bowl LX — Seahawks vs Patriots** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL TE: **John Mackey** — A, Partial; missing TE receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
