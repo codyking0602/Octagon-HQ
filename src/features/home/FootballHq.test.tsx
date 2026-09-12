@@ -174,8 +174,7 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("191.0")).toBeInTheDocument();
     expect(within(hq).getByText("QB RTG")).toBeInTheDocument();
     expect(within(hq).queryByText(/LAST WEEK/)).not.toBeInTheDocument();
-    expect(within(hq).getByText("VS ULM · W 62–13")).toBeInTheDocument();
-    expect(within(hq).getByText("6'4\" · 230 LB")).toBeInTheDocument();
+    expect(within(hq).getByText("VS ULM · W 62–13 · 6'4\" · 230 LB")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
       "https://youtu.be/g-rXa8_YAZw?is=iqhMr2kCswMHKGLO",
@@ -191,7 +190,11 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(hq).getByText("Texas Longhorns")).toBeInTheDocument();
+    expect(within(hq).getByText("Ohio State Buckeyes")).toBeInTheDocument();
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(hq).getByText("Dallas Cowboys")).toBeInTheDocument();
+    expect(within(hq).getByText("New York Giants")).toBeInTheDocument();
     expect(within(hq).queryByText("DKR-Texas Memorial Stadium · Austin")).not.toBeInTheDocument();
     expect(within(hq).queryByText("MetLife Stadium · East Rutherford")).not.toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");

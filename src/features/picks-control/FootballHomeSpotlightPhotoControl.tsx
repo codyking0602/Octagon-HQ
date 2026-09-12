@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { getSupabaseClient } from "../../lib/supabase";
 import {
+  FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATH,
+  HOME_FEATURE_MEDIA_BUCKET,
   createHomeFeatureMediaRepository,
   type HomeFeatureMediaRepository,
 } from "../home/homeFeatureMedia";
 
-const MAX_INPUT_BYTES = 12 * 1024 * 1024;
-const MAX_SAVED_CHARACTERS = 450_000;
-const ACCEPTED_TYPES = /^image\/(jpeg|png|webp)$/i;
+const MAX_INPUT_BYTES = 20 * 1024 * 1024;
+const ACCEPTED_TYPES = /^image\/(jpeg|png|webp|avif)$/i;
 
 function readableError(error: unknown) {
   return error instanceof Error ? error.message : "The Home Spotlight photo could not be saved.";
@@ -27,13 +29,7 @@ async function loadImage(file: File) {
   }
 }
 
-function renderPhoto(image: HTMLImageElement, width: number, height: number, quality: number) {
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const context = canvas.getContext("2d", { alpha: false });
-  if (!context) throw new Error("Photo editing is not available on this device.");
-
+function cropGeometry(image: HTMLImageElement, width: number, height: number) {
   const sourceRatio = image.naturalWidth / image.naturalHeight;
   const targetRatio = width / height;
   let sx = 0;
@@ -49,32 +45,76 @@ function renderPhoto(image: HTMLImageElement, width: number, height: number, qua
     sy = (image.naturalHeight - sh) / 2;
   }
 
-  context.fillStyle = "#0b0b0d";
-  context.fillRect(0, 0, width, height);
-  context.drawImage(image, sx, sy, sw, sh, 0, 0, width, height);
-  return canvas.toDataURL("image/webp", quality);
+  return { sx, sy, sw, sh };
+}
+
+function canvasBlob(canvas: HTMLCanvasElement, type: string, quality: number) {
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("That photo could not be prepared."));
+    }, type, quality);
+  });
 }
 
 export async function prepareFootballHomeSpotlightPhoto(file: File) {
-  if (!ACCEPTED_TYPES.test(file.type)) throw new Error("Choose a JPG, PNG, or WebP photo.");
-  if (file.size > MAX_INPUT_BYTES) throw new Error("Choose a photo smaller than 12 MB.");
+  if (!ACCEPTED_TYPES.test(file.type)) {
+    throw new Error("Choose a JPG, PNG, WebP, or AVIF photo.");
+  }
+  if (file.size > MAX_INPUT_BYTES) {
+    throw new Error("Choose a photo smaller than 20 MB.");
+  }
 
   const image = await loadImage(file);
-  if (!image.naturalWidth || !image.naturalHeight) throw new Error("That photo has invalid dimensions.");
-
-  for (const [width, height] of [[720, 900], [600, 750], [480, 600]] as const) {
-    for (const quality of [0.82, 0.72, 0.62, 0.52]) {
-      const photoSource = renderPhoto(image, width, height, quality);
-      if (photoSource.length <= MAX_SAVED_CHARACTERS) return photoSource;
-    }
+  if (!image.naturalWidth || !image.naturalHeight) {
+    throw new Error("That photo has invalid dimensions.");
   }
-  throw new Error("That photo is still too large after processing. Choose a simpler image.");
+
+  const width = 720;
+  const height = 900;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d", { alpha: false });
+  if (!context) throw new Error("Photo editing is not available on this device.");
+
+  const { sx, sy, sw, sh } = cropGeometry(image, width, height);
+  context.fillStyle = "#0b0b0d";
+  context.fillRect(0, 0, width, height);
+  context.drawImage(image, sx, sy, sw, sh, 0, 0, width, height);
+
+  try {
+    return await canvasBlob(canvas, "image/webp", 0.84);
+  } catch {
+    return canvasBlob(canvas, "image/jpeg", 0.82);
+  }
+}
+
+export async function uploadFootballHomeSpotlightPhoto(file: File) {
+  const client = getSupabaseClient();
+  if (!client) throw new Error("Home Spotlight media storage is not connected on this build.");
+
+  const prepared = await prepareFootballHomeSpotlightPhoto(file);
+  const bucket = client.storage.from(HOME_FEATURE_MEDIA_BUCKET);
+  const { error } = await bucket.upload(FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATH, prepared, {
+    cacheControl: "0",
+    contentType: prepared.type || "image/webp",
+    upsert: true,
+  });
+  if (error) throw new Error(error.message);
+
+  const publicUrl = bucket.getPublicUrl(FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATH).data.publicUrl;
+  if (!publicUrl) throw new Error("Home Spotlight photo URL could not be resolved.");
+
+  return `${publicUrl}?v=${Date.now()}`;
 }
 
 export default function FootballHomeSpotlightPhotoControl({
   repository: suppliedRepository,
+  uploadPhoto = uploadFootballHomeSpotlightPhoto,
 }: {
   repository?: HomeFeatureMediaRepository | null;
+  uploadPhoto?: (file: File) => Promise<string>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [repository] = useState<HomeFeatureMediaRepository | null>(() => (
@@ -110,8 +150,8 @@ export default function FootballHomeSpotlightPhotoControl({
     setBusy(true);
     setStatus("Preparing Home Spotlight photo…");
     try {
-      const prepared = await prepareFootballHomeSpotlightPhoto(file);
-      const saved = await repository.saveFootballSpotlightPhoto(prepared);
+      const uploadedPhotoSource = await uploadPhoto(file);
+      const saved = await repository.saveFootballSpotlightPhoto(uploadedPhotoSource);
       setPhotoSource(saved.photoSource);
       setStatus("Football Home Spotlight photo updated.");
     } catch (error) {
@@ -148,7 +188,7 @@ export default function FootballHomeSpotlightPhotoControl({
           ref={inputRef}
           className="picks-event-header-control__input"
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept="image/jpeg,image/png,image/webp,image/avif"
           onChange={choosePhoto}
           disabled={busy || !repository}
         />
