@@ -323,16 +323,19 @@ function footballPlayerCareerCrossStageCandidates(
     return { candidate, chronology, schoolMatch };
   });
 
-  const supported = scored.filter(({ chronology, schoolMatch }) => chronology === true || schoolMatch);
-  if (supported.length === 1) return [supported[0]!.candidate];
-  if (supported.length > 1) {
-    const both = supported.filter(({ chronology, schoolMatch }) => chronology === true && schoolMatch);
-    return both.length === 1 ? [both[0]!.candidate] : [];
-  }
+  const supported = scored.filter(({ candidate, chronology, schoolMatch }) => {
+    const cfb = subject.league === "CFB" ? subject : candidate;
+    const nfl = subject.league === "NFL" ? subject : candidate;
+    const bothOwnSchool = Boolean(cfb.school && nfl.school);
 
-  // When neither side owns a usable school/window, a unique cross-stage same-name
-  // + same-position candidate may still link. Ambiguous names never auto-merge.
-  return candidates.length === 1 ? candidates : [];
+    if (chronology === false) return false;
+    if (bothOwnSchool && !schoolMatch) return false;
+
+    // Normalized name plus role is only the candidate-discovery key. At least one
+    // independent stage-identity signal must support the actual person relationship.
+    return chronology === true || schoolMatch;
+  });
+  return supported.length === 1 ? [supported[0]!.candidate] : [];
 }
 
 /**
