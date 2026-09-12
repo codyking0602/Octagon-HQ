@@ -443,29 +443,21 @@ const findLeaderCanonicalSubjects: readonly FootballCanonicalSubject[] = footbal
     position: subject.domainId === "nfl-qb-career" ? "QB" : "RB" };
 });
 
-const normalizedCanonicalPlayerName = (name: string) =>
-  name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
-
-const legacyFindLeaderOwnerByNflExpansionId = new Map(
-  footballNflExpansionSubjects.flatMap((subject) => {
-    const matches = findLeaderCanonicalSubjects.filter((candidate) => (
-      candidate.kind === "player-career"
-      && candidate.league === "NFL"
-      && candidate.position === subject.position
-      && normalizedCanonicalPlayerName(candidate.name) === normalizedCanonicalPlayerName(subject.name)
-    ));
-    return matches.length === 1 ? [[subject.id, matches[0]!.id] as const] : [];
-  }),
-);
+const canonicalPlayerIdentitySlug = (subject: FootballCanonicalSubject) =>
+  subject.id
+    .replace(/^(?:nfl|cfb)-/, "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]/g, "");
 
 function mergeCanonicalSubjects(subjects: readonly FootballCanonicalSubject[]) {
   const byIdentity = new Map<string, FootballCanonicalSubject>();
   for (const subject of subjects) {
-    // NFL expansion metadata may enrich one pre-existing Find Leader career owner.
-    // Every other player-career id remains a distinct stage/source identity; display
-    // name equality is never sufficient to merge two football people or CFB/NFL stages.
+    // Curated legacy player ids such as "tony-gonzalez" and "nfl-tony-gonzalez"
+    // are two ids for the same stage identity. Reconcile only through their
+    // explicit stage-scoped canonical id slug, never through display name.
     const key = subject.kind === "player-career"
-      ? (legacyFindLeaderOwnerByNflExpansionId.get(subject.id) ?? subject.id)
+      ? `${subject.league}:${canonicalPlayerIdentitySlug(subject)}`
       : subject.id;
     const current = byIdentity.get(key);
     if (!current) {
