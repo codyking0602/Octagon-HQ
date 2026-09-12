@@ -326,6 +326,11 @@ const projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballF
 
 const allRegisteredSubjects = [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects];
 
+function playerPersonIdentityKey(subject: Pick<FootballSubjectProfile, "id" | "kind">) {
+  if (subject.kind !== "player-career") return null;
+  return subject.id.replace(/^(?:nfl|cfb)-/, "");
+}
+
 const footballPlayerCareerSubjectsByPerson = new Map<string, FootballSubjectProfile[]>();
 const personRelationshipSubjects = [
   ...footballSubjects,
@@ -333,8 +338,8 @@ const personRelationshipSubjects = [
   ...projectedAdditionalSubjects,
 ];
 for (const subject of personRelationshipSubjects) {
-  if (subject.kind !== "player-career") continue;
-  const key = normalizedFootballSubjectName(subject.name);
+  const key = playerPersonIdentityKey(subject);
+  if (!key) continue;
   const subjects = footballPlayerCareerSubjectsByPerson.get(key) ?? [];
   if (!subjects.some((candidate) => candidate.id === subject.id)) subjects.push(subject);
   footballPlayerCareerSubjectsByPerson.set(key, subjects);
@@ -367,67 +372,25 @@ export function getFootballSubject(subjectId: string) {
   return footballSubjectById.get(subjectId) ?? null;
 }
 
-function footballPlayerCareerCrossStageCandidates(
-  subject: FootballSubjectProfile,
-  sameName: readonly FootballSubjectProfile[],
-) {
-  const candidates = sameName.filter((candidate) => (
-    candidate.id !== subject.id
-    && candidate.kind === "player-career"
-    && candidate.league !== subject.league
-    && (!subject.position || !candidate.position || subject.position === candidate.position)
-  ));
-  if (!candidates.length) return [];
-
-  const scored = candidates.map((candidate) => {
-    const cfb = subject.league === "CFB" ? subject : candidate;
-    const nfl = subject.league === "NFL" ? subject : candidate;
-    const cfbEnd = cfb.endSeason;
-    const nflStart = nfl.draftYear ?? nfl.startSeason;
-    const chronology = cfbEnd != null && nflStart != null
-      ? (nflStart >= cfbEnd && nflStart <= cfbEnd + 2)
-      : null;
-    const schoolMatch = Boolean(
-      cfb.school
-      && nfl.school
-      && normalizedFootballSubjectName(cfb.school) === normalizedFootballSubjectName(nfl.school)
-    );
-    const canonicalStageIdentityMatch = (
-      cfb.id.startsWith("cfb-")
-      && nfl.id.startsWith("nfl-")
-      && cfb.id.slice("cfb-".length) === nfl.id.slice("nfl-".length)
-    );
-    return { candidate, chronology, schoolMatch, canonicalStageIdentityMatch };
-  });
-
-  const supported = scored.filter(({ candidate, chronology, schoolMatch, canonicalStageIdentityMatch }) => {
-    const cfb = subject.league === "CFB" ? subject : candidate;
-    const nfl = subject.league === "NFL" ? subject : candidate;
-    const bothOwnSchool = Boolean(cfb.school && nfl.school);
-
-    if (chronology === false) return false;
-    if (bothOwnSchool && !schoolMatch) return false;
-
-    // Display name plus role only discovers candidates. The relationship itself
-    // requires chronology, school, or matching canonical stage IDs. The latter is
-    // product-owned identity evidence, not a runtime display-name fallback.
-    return chronology === true || schoolMatch || canonicalStageIdentityMatch;
-  });
-  return supported.length === 1 ? [supported[0]!.candidate] : [];
-}
-
 /**
  * Canonical real-person relationship resolver for player-career subjects.
- * NFL and CFB career subjects remain distinct stage identities. Same-stage same-name
- * careers never merge, and ambiguous cross-stage names require position plus source
- * chronology/school support instead of normalized-name recovery.
+ * NFL and CFB career subjects remain distinct stage identities. Cross-stage linkage
+ * is owned only by the product's canonical stage IDs (for example, andrew-luck /
+ * cfb-andrew-luck); display names and exact external source IDs never own person identity.
  */
 export function footballPlayerCareerSubjectsForPerson(subject: FootballSubjectProfile) {
   if (subject.kind !== "player-career") return [subject] as const;
-  const sameName = footballPlayerCareerSubjectsByPerson.get(normalizedFootballSubjectName(subject.name)) ?? [subject];
+  const key = playerPersonIdentityKey(subject);
+  if (!key) return [subject] as const;
+
+  const related = footballPlayerCareerSubjectsByPerson.get(key) ?? [];
   return [
     subject,
-    ...footballPlayerCareerCrossStageCandidates(subject, sameName),
+    ...related.filter((candidate) => (
+      candidate.id !== subject.id
+      && candidate.league !== subject.league
+      && (!subject.position || !candidate.position || subject.position === candidate.position)
+    )),
   ];
 }
 
