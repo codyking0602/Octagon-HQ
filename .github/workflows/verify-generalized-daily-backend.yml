@@ -40,6 +40,7 @@ on:
       - "supabase/migrations/202612310069_reroll_august_30_daily_double.sql"
       - "supabase/migrations/202612310092_who_am_i_daily_runtime.sql"
       - "supabase/migrations/202612310093_future_daily_schedule.sql"
+      - "supabase/migrations/202612310094_repair_football_daily_cutover.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -219,7 +220,6 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310052_football_daily_challenge_persistence.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310081_football_daily_midday_release.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310092_who_am_i_daily_runtime.sql
-            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310093_future_daily_schedule.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -367,6 +367,7 @@ jobs:
           require_remote_migration "202612310069"
           require_remote_migration "202612310092"
           require_remote_migration "202612310093"
+          require_remote_migration "202612310094"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
@@ -376,6 +377,6 @@ jobs:
             echo "### Generalized Today’s Challenge backend deployment verified"
             echo "- Canonical deploy workflow run: ${{ github.event.workflow_run.html_url }}"
             echo "- Exact deployed source SHA: \`$SOURCE_SHA\`"
-            echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`, \`202609080001\`, \`202609090001\`, \`202609140003\`, \`202612310025\`, \`202612310026\`, \`202612310027\`, \`202612310028\`, \`202612310052\`, \`202612310069\`, \`202612310092\`, \`202612310093\` all present"
+            echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`, \`202609080001\`, \`202609090001\`, \`202609140003\`, \`202612310025\`, \`202612310026\`, \`202612310027\`, \`202612310028\`, \`202612310052\`, \`202612310069\`, \`202612310092\`, \`202612310093\`, \`202612310094\` all present"
             echo "- Pending linked migrations: none"
           } >> "$GITHUB_STEP_SUMMARY"

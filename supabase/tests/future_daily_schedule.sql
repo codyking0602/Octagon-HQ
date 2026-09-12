@@ -15,7 +15,7 @@ declare
   v_entry jsonb;
 begin
   select * into v_ufc from private.daily_challenge_schedule_versions where version = 'play-rotation-v7';
-  select * into v_football from private.daily_challenge_schedule_versions where version = 'football-daily-v4';
+  select * into v_football from private.daily_challenge_schedule_versions where version = 'football-daily-v5';
 
   if v_ufc.version is null or v_ufc.sport <> 'ufc'
     or v_ufc.anchor_day <> date '2026-09-12' or v_ufc.starts_on <> date '2026-09-12'
@@ -49,7 +49,7 @@ begin
   if private.daily_challenge_schedule_for_day(date '2026-09-11', 'ufc') <> 'play-rotation-v6'
     or private.daily_challenge_schedule_for_day(date '2026-09-12', 'ufc') <> 'play-rotation-v7'
     or private.daily_challenge_schedule_for_day(date '2026-09-11', 'football') <> 'football-daily-v3'
-    or private.daily_challenge_schedule_for_day(date '2026-09-12', 'football') <> 'football-daily-v4' then
+    or private.daily_challenge_schedule_for_day(date '2026-09-12', 'football') <> 'football-daily-v5' then
     raise exception 'future Daily schedule starts outside the approved September 12 Central cutover';
   end if;
 
@@ -61,17 +61,23 @@ begin
   if exists (
     select 1 from private.daily_challenges
     where central_day < date '2026-09-12'
-      and schedule_version in ('play-rotation-v7', 'football-daily-v4')
+      and schedule_version in ('play-rotation-v7', 'football-daily-v4', 'football-daily-v5')
   ) then
     raise exception 'future schedule identity leaked into historical Daily rows';
   end if;
 
+  if private.daily_challenge_expected_game('football-daily-v5', date '2026-09-12') <> 'wavelength'
+    or private.daily_challenge_expected_game('football-daily-v5', date '2026-09-13') <> 'hit_the_number'
+    or private.daily_challenge_expected_game('football-daily-v3', date '2026-09-11') <> 'find_leader' then
+    raise exception 'Football Daily cutover still repeats a game or shifted incorrectly';
+  end if;
+
   v_publication := public.publish_daily_challenge_setup(
-    date '2026-09-12', 'football-daily-v1', 'find_leader',
+    date '2026-09-12', 'football-daily-v1', 'wavelength',
     'slice5-football-cutover', 'slice5-schedule-proof-v1', 'play-official-score-v1',
     '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, null
   );
-  if v_publication->>'schedule_version' <> 'football-daily-v4' then
+  if v_publication->>'schedule_version' <> 'football-daily-v5' then
     raise exception 'canonical Football publisher did not resolve the new active schedule: %', v_publication;
   end if;
 
