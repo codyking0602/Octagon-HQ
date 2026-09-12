@@ -3,6 +3,8 @@ import { queryFootballSubjects } from "./footballSubjectRegistry";
 import { buildFootballComparisonCandidatePool } from "./footballComparisonAuthority";
 import { getFootballRankFivePack as getReviewedRankFivePack } from "./footballRankFiveModel";
 import { footballGreatnessTierForItem } from "./footballGreatnessTier";
+import { footballPersonIdentityCfbBResearch } from "./footballPersonIdentityCfbBResearch";
+import { getFootballWhoAmILaunchPool, getFootballWhoAmIUniverse } from "../games/footballWhoAmIAuthority";
 
 describe("temporary Who Am I registry diagnostics", () => {
   it("prints CFB A/B wide receiver candidates", () => {
@@ -31,6 +33,31 @@ describe("temporary Who Am I registry diagnostics", () => {
       [...byName.entries()]
         .filter(([, group]) => group.length > 1)
         .map(([name, group]) => ({ name, ids: group.map((row) => row.id) })),
+    ));
+  });
+
+  it("prints remaining Who Am I identity and clue gaps", () => {
+    const cfbLaunch = getFootballWhoAmILaunchPool("CFB");
+    const launchB = cfbLaunch.subjects.filter((subject) => subject.recognizabilityTier === "B");
+    const researchedB = new Set(footballPersonIdentityCfbBResearch.map(([subjectId]) => subjectId));
+    console.log("WHO_AM_I_DIAG_CFB_B_GAP", JSON.stringify({
+      launchBCount: launchB.length,
+      researchBCount: researchedB.size,
+      missingResearch: launchB.filter((subject) => !researchedB.has(subject.id)).map(({ id, name, position, school, startSeason, endSeason }) => ({ id, name, position, school, startSeason, endSeason })),
+      extraResearch: [...researchedB].filter((id) => !launchB.some((subject) => subject.id === id)),
+    }));
+    const universe = getFootballWhoAmIUniverse("CFB");
+    console.log("WHO_AM_I_DIAG_THIN_CFB", JSON.stringify(
+      ["cfb-jj-watt", "cfb-nakobe-dean"].map((id) => {
+        const candidate = universe.candidates.find((row) => row.id === id);
+        const subject = cfbLaunch.subjects.find((row) => row.id === id);
+        return {
+          id,
+          subject,
+          clueCount: candidate?.clues.length,
+          clues: candidate?.clues.map(({ id: clueId, text, band, facet, sourceFactId }) => ({ id: clueId, text, band, facet, sourceFactId })),
+        };
+      }),
     ));
   });
 
