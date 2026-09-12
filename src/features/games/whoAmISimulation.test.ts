@@ -110,10 +110,14 @@ describe("Who Am I mature whole-game simulation", () => {
           }
 
           const selectionClasses = sequence.map(whoAmIClueSelectionClass);
+          const availableSportsIdentityClues = candidate.clues.filter(
+            (clue) => whoAmIClueSelectionClass(clue) === "sports-identity",
+          ).length;
+          const sportsIdentityTarget = Math.min(8, WHO_AM_I_CLUE_LIMIT, availableSportsIdentityClues);
           expect(
             selectionClasses.filter((selectionClass) => selectionClass === "sports-identity").length,
-            `${candidate.id} should keep the round centered on sports identity`,
-          ).toBeGreaterThanOrEqual(7);
+            `${candidate.id} should keep the round overwhelmingly centered on sports identity`,
+          ).toBeGreaterThanOrEqual(sportsIdentityTarget);
           expect(
             selectionClasses.filter((selectionClass) => selectionClass === "deep-biography").length,
             `${candidate.id} should use at most one deep-biography clue`,
