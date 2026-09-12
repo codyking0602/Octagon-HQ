@@ -4,7 +4,7 @@ import { expandedFootballFactSources, expandedFootballFactualRecords } from "./f
 import { footballFactualUniverseProjectedRecords, footballFactualUniverseSources } from "./footballFactualUniverseProjection";
 import { footballNflATierResumeFactualRecords } from "./footballNflATierResumeFacts";
 import { footballStage16CfbQbCareerFactualRecords } from "./footballStage16CfbQbCareerFacts";
-import { getFootballSubject } from "./footballSubjectRegistry";
+import { footballPlayerCareerSubjectsForPerson, getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballFactScope =
   | "nfl-player-career" | "nfl-player-season" | "nfl-team-season" | "nfl-franchise" | "nfl-coach-career" | "nfl-franchise-era" | "nfl-game"
@@ -285,7 +285,55 @@ export const footballFactualRecords: readonly FootballFactualRecord[]=mergeCanon
 const findLeaderGapFillFactualRecords=projectedGapFillRecords(footballFindLeaderProjectedFactualRecords,footballFactualRecords);
 const footballFactualLookupRecords: readonly FootballFactualRecord[]=mergeCanonicalFactualRecords([...footballFactualRecords,...findLeaderGapFillFactualRecords]);
 const recordIds=footballFactualLookupRecords.map((record)=>record.subjectId); if (new Set(recordIds).size !== recordIds.length) throw new Error("Canonical Football factual lookup ledger contains duplicate subject records.");
-const recordsBySubjectId=new Map(footballFactualLookupRecords.map((record)=>[record.subjectId,record]));
+
+function buildFactualLookupBySubjectId(records: readonly FootballFactualRecord[]) {
+  const lookup = new Map(records.map((record) => [record.subjectId, record]));
+  const processedPeople = new Set<string>();
+
+  for (const record of records) {
+    const subject = getFootballSubject(record.subjectId);
+    if (!subject || subject.kind !== "player-career") continue;
+    const personSubjects = footballPlayerCareerSubjectsForPerson(subject);
+    if (personSubjects.length < 2) continue;
+
+    const personKey = personSubjects.map((candidate) => candidate.id).sort().join("|");
+    if (processedPeople.has(personKey)) continue;
+    processedPeople.add(personKey);
+
+    const linkedRecords = personSubjects
+      .map((candidate) => lookup.get(candidate.id))
+      .filter((candidate): candidate is FootballFactualRecord => candidate != null);
+    if (linkedRecords.length < 2) continue;
+
+    // Stage identities remain distinct in the registry. The factual facade alone
+    // provides a shared real-person view so an NFL metric can be requested through
+    // the independently linked CFB career (and vice versa) without name merging.
+    const cfbAnchor = personSubjects.find((candidate) => candidate.league === "CFB" && lookup.has(candidate.id));
+    const anchorId = cfbAnchor?.id ?? linkedRecords[0]!.subjectId;
+    const factByMetric = new Map<string, FootballFact>();
+    for (const linked of linkedRecords) {
+      for (const fact of linked.facts) {
+        const existing = factByMetric.get(fact.metricId);
+        if (existing && existing.value !== fact.value) {
+          throw new Error(`Conflicting cross-stage Football fact: ${anchorId}:${fact.metricId}`);
+        }
+        if (!existing) factByMetric.set(fact.metricId, fact);
+      }
+    }
+    const anchorRecord = lookup.get(anchorId) ?? linkedRecords[0]!;
+    const merged: FootballFactualRecord = {
+      ...anchorRecord,
+      subjectId: anchorId,
+      scopes: [...new Set(linkedRecords.flatMap((linked) => linked.scopes ?? [linked.scope]))],
+      facts: [...factByMetric.values()],
+    };
+    for (const personSubject of personSubjects) lookup.set(personSubject.id, merged);
+  }
+
+  return lookup;
+}
+
+const recordsBySubjectId=buildFactualLookupBySubjectId(footballFactualLookupRecords);
 const metricDefinitionsById=new Map(footballFactMetricDefinitions.map((row)=>[row.id,row]));
 const sourcesById=new Map(footballFactSources.map((source)=>[source.id,source]));
 export function getFootballFactualRecord(subjectId: string) { return recordsBySubjectId.get(canonicalFactSubjectId(subjectId)) ?? null; }
