@@ -86,7 +86,7 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-09-05")).toBe("football-daily-v3");
     expect(footballTodayScheduleVersionForDay("2026-09-11")).toBe("football-daily-v3");
     expect(footballTodayScheduleVersionForDay("2026-09-12")).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
-    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v4");
+    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v5");
 
     const future = Array.from({ length: 20 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 8, 12 + offset)).toISOString().slice(0, 10);
@@ -109,9 +109,18 @@ describe("Football Today’s Challenge session", () => {
     expect(historicalPersistence.setupKey).toBe(historicalProjection.setup_key);
 
     const projection = buildFootballTodayProjection("2026-09-12");
-    expect(projection.schedule_version).toBe("football-daily-v4");
-    expect(projection.game_type).toBe("find_leader");
-    expect(projection.setup_key).toContain("football-daily-v4");
+    expect(projection.schedule_version).toBe("football-daily-v5");
+    expect(projection.game_type).toBe("wavelength");
+    expect(projection.setup_key).toContain("football-daily-v5");
+    expect(footballTodayGameForDay("2026-09-13")).toBe("hit_the_number");
+
+    const transition = Array.from({ length: 42 }, (_unused, offset) => {
+      const day = new Date(Date.UTC(2026, 8, 11 + offset)).toISOString().slice(0, 10);
+      return footballTodayGameForDay(day);
+    });
+    for (let index = 1; index < transition.length; index += 1) {
+      expect(transition[index]).not.toBe(transition[index - 1]);
+    }
   });
 
   it("builds the same public board for the same Central day without leaking Find the Leader evidence", () => {
