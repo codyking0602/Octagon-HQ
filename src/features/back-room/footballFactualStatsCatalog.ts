@@ -446,7 +446,7 @@ const findLeaderCanonicalSubjects: readonly FootballCanonicalSubject[] = footbal
 function mergeCanonicalSubjects(subjects: readonly FootballCanonicalSubject[]) {
   const byName = new Map<string, FootballCanonicalSubject>();
   for (const subject of subjects) {
-    const key = subject.kind === "player-career" ? `${subject.league}:${subject.name.toLowerCase().replace(/[^a-z0-9]/g, "")}` : subject.id;
+    const key = subject.kind === "player-career" ? subject.name.toLowerCase().replace(/[^a-z0-9]/g, "") : subject.id;
     const current = byName.get(key);
     if (!current) {
       byName.set(key, { ...subject, leagues: subject.leagues ?? [subject.league] });
