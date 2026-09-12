@@ -7,10 +7,19 @@ import {
   type AuctionModeId,
   type UltimateFighterCategory,
 } from "./auctionContract";
+import {
+  BUILD_QB_TRAITS,
+  draftRoomModeDefinition,
+  isDraftRoomModeId,
+  type BuildQbTrait,
+  type DraftRoomModeId,
+} from "./draftRoomContract";
 
 const uuid = z.string().uuid();
 const lifecycleSchema = z.enum(["prepared", "sent", "active", "completed", "declined", "cancelled"]);
-const categorySchema = z.enum(ULTIMATE_FIGHTER_CATEGORIES);
+const ultimateFighterCategorySchema = z.enum(ULTIMATE_FIGHTER_CATEGORIES);
+const buildQbTraitSchema = z.enum(BUILD_QB_TRAITS);
+const strategicCategorySchema = z.union([ultimateFighterCategorySchema, buildQbTraitSchema]);
 const itemSchema = z.object({
   deck_position: z.number().int().positive(),
   item_reference: z.string().min(1).nullable().optional(),
@@ -18,7 +27,7 @@ const itemSchema = z.object({
 }).strict();
 const awardSchema = itemSchema.extend({
   awarded_to: uuid,
-  category: categorySchema.nullable(),
+  category: strategicCategorySchema.nullable(),
   resolved_round: z.number().int().positive(),
 }).strict();
 const resolvedRoundSchema = z.object({
@@ -30,7 +39,7 @@ const resolvedRoundSchema = z.object({
   charged_amount: z.number().int().positive(),
 }).strict();
 const fightBreakdownSelectionSchema = z.object({
-  category: categorySchema,
+  category: ultimateFighterCategorySchema,
   fighter: z.string().min(1),
   code: z.string().regex(/^[A-Z]{6}$/),
 }).strict();
@@ -47,9 +56,16 @@ export const auctionFightBreakdownPacketSchema = z.object({
   recipient: fightBreakdownSideSchema,
 }).strict();
 
+export type StrategicModeId = AuctionModeId | DraftRoomModeId;
+export type StrategicBidCategory = UltimateFighterCategory | BuildQbTrait;
+
+function isStrategicModeId(value: string): value is StrategicModeId {
+  return isAuctionModeId(value) || isDraftRoomModeId(value);
+}
+
 export const auctionProjectionSchema = z.object({
   auction_id: uuid,
-  mode_id: z.string().refine(isAuctionModeId, "Unknown Auction mode"),
+  mode_id: z.string().refine(isStrategicModeId, "Unknown sealed-bid mode"),
   challenger_id: uuid,
   challenger_display_name: z.string().min(1),
   recipient_id: uuid,
@@ -77,19 +93,22 @@ export const auctionProjectionSchema = z.object({
   resolved_rounds: z.array(resolvedRoundSchema),
 }).strict();
 
-type AuctionProjectionRow = z.infer<typeof auctionProjectionSchema>;
+type StrategicProjectionRow = z.infer<typeof auctionProjectionSchema>;
 export type AuctionLifecycle = z.infer<typeof lifecycleSchema>;
 export type AuctionItem = z.infer<typeof itemSchema>;
 export type AuctionAward = z.infer<typeof awardSchema>;
 export type AuctionResolvedRound = z.infer<typeof resolvedRoundSchema>;
 export type AuctionFightBreakdownPacket = z.infer<typeof auctionFightBreakdownPacketSchema>;
-export type AuctionProjection = Omit<AuctionProjectionRow, "mode_id"> & { mode_id: AuctionModeId };
+export type StrategicAuctionProjection = Omit<StrategicProjectionRow, "mode_id"> & { mode_id: StrategicModeId };
+export type StrategicProjectionFor<T extends StrategicModeId> = Omit<StrategicAuctionProjection, "mode_id"> & { mode_id: T };
+export type AuctionProjection = StrategicProjectionFor<AuctionModeId>;
+export type DraftRoomProjection = StrategicProjectionFor<DraftRoomModeId>;
 
 export class AuctionRepositoryError extends Error {
   stale: boolean;
   constructor(message: string) {
     const stale = /stale revision|wrong round|already sent|locked/i.test(message);
-    super(stale ? "This Auction changed elsewhere. We reloaded the latest round." : message);
+    super(stale ? "This sealed-bid game changed elsewhere. We reloaded the latest round." : message);
     this.name = "AuctionRepositoryError";
     this.stale = stale;
   }
@@ -99,53 +118,55 @@ type RpcClient = { rpc: (name: string, args?: Record<string, unknown>) => Promis
 
 async function rpc(client: RpcClient, name: string, args: Record<string, unknown>) {
   const { data, error } = await client.rpc(name, args);
-  if (error) throw new AuctionRepositoryError(error.message || "Auction could not be updated.");
+  if (error) throw new AuctionRepositoryError(error.message || "The sealed-bid game could not be updated.");
   return data;
 }
 
 export interface AuctionRepository {
-  prepare(recipientId: string, modeId: AuctionModeId): Promise<AuctionProjection>;
-  read(auctionId: string): Promise<AuctionProjection>;
+  prepare<T extends StrategicModeId>(recipientId: string, modeId: T): Promise<StrategicProjectionFor<T>>;
+  read<T extends StrategicModeId = AuctionModeId>(auctionId: string): Promise<StrategicProjectionFor<T>>;
   fightBreakdownPacket(auctionId: string): Promise<AuctionFightBreakdownPacket>;
-  bid(state: AuctionProjection, amount: number, category?: UltimateFighterCategory): Promise<AuctionProjection>;
-  abandon(state: AuctionProjection): Promise<void>;
-  cancel(state: AuctionProjection): Promise<AuctionProjection>;
+  bid<T extends StrategicModeId>(state: StrategicProjectionFor<T>, amount: number, category?: StrategicBidCategory): Promise<StrategicProjectionFor<T>>;
+  abandon<T extends StrategicModeId>(state: StrategicProjectionFor<T>): Promise<void>;
+  cancel<T extends StrategicModeId>(state: StrategicProjectionFor<T>): Promise<StrategicProjectionFor<T>>;
 }
 
 export function createAuctionRepository(client: RpcClient | null = getSupabaseClient()): AuctionRepository | null {
   if (!client) return null;
-  const read = async (auctionId: string) => {
+
+  const read = async <T extends StrategicModeId = AuctionModeId>(auctionId: string): Promise<StrategicProjectionFor<T>> => {
     const data = await rpc(client, "get_auction_participant_state", { p_auction_id: auctionId });
     const row = Array.isArray(data) ? data[0] : data;
-    if (!row) throw new AuctionRepositoryError("That Auction is unavailable.");
-    return auctionProjectionSchema.parse(row) as AuctionProjection;
+    if (!row) throw new AuctionRepositoryError("That sealed-bid game is unavailable.");
+    return auctionProjectionSchema.parse(row) as StrategicProjectionFor<T>;
   };
+
   return {
-    async prepare(recipientId, modeId) {
+    async prepare<T extends StrategicModeId>(recipientId: string, modeId: T) {
       const id = await rpc(client, "prepare_auction", { p_recipient_id: recipientId, p_mode_id: modeId });
-      if (typeof id !== "string") throw new AuctionRepositoryError("Auction preparation returned an invalid game.");
-      return read(id);
+      if (typeof id !== "string") throw new AuctionRepositoryError("Game preparation returned an invalid game.");
+      return read<T>(id);
     },
     read,
     async fightBreakdownPacket(auctionId) {
       const data = await rpc(client, "get_auction_fight_breakdown_packet", { p_auction_id: auctionId });
       return auctionFightBreakdownPacketSchema.parse(data);
     },
-    async bid(state, amount, category) {
+    async bid<T extends StrategicModeId>(state: StrategicProjectionFor<T>, amount: number, category?: StrategicBidCategory) {
       const common = { p_auction_id: state.auction_id, p_expected_revision: state.revision, p_amount: amount, p_category: category ?? null };
       if (state.lifecycle_state === "prepared") {
         await rpc(client, "send_auction_first_bid", common);
       } else {
         await rpc(client, "submit_auction_bid", { ...common, p_round: state.current_round });
       }
-      return read(state.auction_id);
+      return read<T>(state.auction_id);
     },
-    async abandon(state) {
+    async abandon<T extends StrategicModeId>(state: StrategicProjectionFor<T>) {
       await rpc(client, "abandon_prepared_auction", { p_auction_id: state.auction_id, p_expected_revision: state.revision });
     },
-    async cancel(state) {
+    async cancel<T extends StrategicModeId>(state: StrategicProjectionFor<T>) {
       await rpc(client, "cancel_auction", { p_auction_id: state.auction_id, p_expected_revision: state.revision });
-      return read(state.auction_id);
+      return read<T>(state.auction_id);
     },
   };
 }
@@ -183,17 +204,32 @@ export function formatOctagonVerdictPrompt(packet: AuctionFightBreakdownPacket) 
   ].join("\n");
 }
 
-export function maximumLegalAuctionBid(state: AuctionProjection, profileId: string) {
+function strategicRequiredSelections(modeId: StrategicModeId) {
+  return isDraftRoomModeId(modeId)
+    ? draftRoomModeDefinition(modeId).requiredSelectionsPerPlayer
+    : auctionModeDefinition(modeId).requiredSelectionsPerPlayer;
+}
+
+export function maximumLegalAuctionBid(
+  state: Pick<StrategicAuctionProjection, "mode_id" | "challenger_id" | "challenger_bankroll" | "recipient_bankroll" | "challenger_selection_count" | "recipient_selection_count">,
+  profileId: string,
+) {
   const challenger = state.challenger_id === profileId;
   const bankroll = challenger ? state.challenger_bankroll : state.recipient_bankroll;
   const selections = challenger ? state.challenger_selection_count : state.recipient_selection_count;
-  const required = auctionModeDefinition(state.mode_id).requiredSelectionsPerPlayer;
+  const required = strategicRequiredSelections(state.mode_id);
   return bankroll - Math.max(0, required - selections - 1);
 }
 
-export function validateAuctionBid(amount: string, maximum: number, categoryRequired: boolean, category: string) {
+export function validateAuctionBid(
+  amount: string,
+  maximum: number,
+  categoryRequired: boolean,
+  category: string,
+  allowedCategories: readonly string[] = ULTIMATE_FIGHTER_CATEGORIES,
+) {
   if (!/^\d+$/.test(amount) || Number(amount) < 1) return "Enter a whole-dollar bid of at least $1.";
   if (Number(amount) > maximum) return `Keep at least $1 for every open slot. Maximum bid: $${maximum}.`;
-  if (categoryRequired && !ULTIMATE_FIGHTER_CATEGORIES.includes(category as UltimateFighterCategory)) return "Choose an available category.";
+  if (categoryRequired && !allowedCategories.includes(category)) return "Choose an available category.";
   return "";
 }
