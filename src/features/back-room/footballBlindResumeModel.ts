@@ -281,6 +281,7 @@ function evidenceSubjectQuery(matchup: FootballBlindResumeMatchup, subjectId: st
     kind,
     league: matchup.league,
     ...(seasonMatch ? { season: Number(seasonMatch[1]) } : {}),
+    casualEligible: true,
     includeProjectedSourceSubjects: true,
     includeProjectedCanonicalRecognition: true,
   };
