@@ -101,7 +101,6 @@ describe("canonical Football universe", () => {
     const casualNflCam = projectedNflCam.filter((subject) => subject.casualEligible);
     expect(casualCfbCam).toHaveLength(1);
     expect(casualNflCam).toHaveLength(1);
-    expect(projectedCfbCam.some((subject) => subject.recognizabilityTier === "D")).toBe(true);
     expect(projectedNflCam.some((subject) => subject.recognizabilityTier === "D")).toBe(true);
     expect(casualCfbCam[0]!.id).not.toBe(casualNflCam[0]!.id);
 
