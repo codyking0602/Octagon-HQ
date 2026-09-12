@@ -320,7 +320,8 @@ function manualAuditPercentile(subjectId: string) {
 }
 
 export function getNflQbHistoricalConsensus(subjectId: string): HistoricalConsensusResolution {
-  const source = NFL_QB_SOURCE_SNAPSHOT[subjectId];
+  const canonicalSubjectId = canonicalHistoricalSubjectId(subjectId);
+  const source = NFL_QB_SOURCE_SNAPSHOT[canonicalSubjectId];
   const pfr = source?.pfrRank
     ? { rank: source.pfrRank, fieldSize: PFR_HOF_MONITOR_QB_FIELD_SIZE }
     : undefined;
@@ -330,7 +331,7 @@ export function getNflQbHistoricalConsensus(subjectId: string): HistoricalConsen
   const base = resolveHistoricalConsensus({ pfr, ranker, currentCareer: source?.currentCareer });
   if (!base.requiresAudit) return base;
 
-  const auditedPercentile = manualAuditPercentile(subjectId);
+  const auditedPercentile = manualAuditPercentile(canonicalSubjectId);
   if (auditedPercentile == null) return base;
   return resolveHistoricalConsensus({
     pfr,
