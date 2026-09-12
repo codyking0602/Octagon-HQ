@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   createTodayChallengeRepository,
+  loadHqDailyChallengeStreak,
   parseTodayChallengeProjection,
 } from "./todayChallengeRepository";
 
@@ -76,6 +77,21 @@ describe("Today’s Challenge runtime repository", () => {
       },
     });
     expect(advanced.progressRevision).toBe(3);
+  });
+
+  it("loads one cross-sport HQ streak through the canonical daily repository client", async () => {
+    const { client } = clientWithResponses([]);
+    const rpc = vi.fn().mockResolvedValue({
+      data: { current_streak: 7, best_streak: 11 },
+      error: null,
+    });
+    client.rpc = rpc;
+
+    await expect(loadHqDailyChallengeStreak(client as never)).resolves.toEqual({
+      currentStreak: 7,
+      bestStreak: 11,
+    });
+    expect(rpc).toHaveBeenCalledWith("get_my_hq_daily_challenge_streak", undefined);
   });
 
   it("surfaces stale cross-device revisions without inventing a fallback write", async () => {
