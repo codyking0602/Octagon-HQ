@@ -67,12 +67,23 @@ function aggregate(corpus, league) {
     const name = at(row, ix, "playerDisplayName") ?? at(row, ix, "playerName");
     if (!sourceId || sourceId === "0" || !name) continue;
     const personKey = league === "CFB" ? `${sourceId}:${normalize(name)}` : sourceId;
-    const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };
+    const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), seasonTeams: new Map(), position: "", totals: {}, peaks: {} };
     const season = n(at(row, ix, "season")); if (season) p.seasons.add(season);
-    const team = league === "CFB"
-      ? at(row, ix, "team") ?? at(row, ix, "recentTeam")
-      : at(row, ix, "recentTeam") ?? at(row, ix, "team");
+    const team = at(row, ix, "recentTeam") ?? at(row, ix, "team");
     if (team) p.teams.add(String(team));
+    if (league === "CFB" && season && team) {
+      const volume = n(at(row, ix, "gamesPlayed")) * 100
+        + n(at(row, ix, "passAttempts"))
+        + n(at(row, ix, "rushAttempts"))
+        + n(at(row, ix, "receptions"))
+        + n(at(row, ix, "sacks")) * 10
+        + n(at(row, ix, "defensiveInterceptions")) * 20
+        + n(at(row, ix, "passBreakups")) * 5;
+      const current = p.seasonTeams.get(season);
+      if (!current || volume > current.volume || (volume === current.volume && String(team).localeCompare(current.team) < 0)) {
+        p.seasonTeams.set(season, { team: String(team), volume });
+      }
+    }
     p.position ||= String(at(row, ix, "positionGroup") ?? at(row, ix, "position") ?? "");
     for (const field of ["games", "gamesPlayed", "attempts", "passAttempts", "passingYards", "passYards", "passingTouchdowns", "passTouchdowns", "carries", "rushAttempts", "rushingYards", "rushYards", "rushingTouchdowns", "rushTouchdowns", "receptions", "receivingYards", "receivingTouchdowns", "defensiveSacks", "sacks", "defensiveInterceptions", "fieldGoalsMade", "puntingAttempts"]) {
       const value = n(at(row, ix, field));
@@ -190,7 +201,7 @@ function projectCfbPlayer(p) {
   const receptions = total(p, "receptions");
   const recYards = total(p, "receivingYards");
   const defensiveImpact = total(p, "sacks", "defensiveInterceptions");
-  const schools = [...p.teams].sort();
+  const schools = [...new Set([...p.seasonTeams.values()].map((row) => row.team))].sort();
   const school = schools.length === 1 ? schools[0] : undefined;
   const major = [...p.teams].some((team) => majorCfbPrograms.has(normalize(team)));
   const singleMajorProgram = p.teams.size === 1 && major;
