@@ -63,6 +63,39 @@ try {
     }));
   console.log("FOOTBALL_LEDGER_DEBUG_DROPPED_NFL_FACT_OWNERS", JSON.stringify(droppedFactOwners));
 
+  const cfbLaunchPlayers = whoAmI.getFootballWhoAmILaunchPool("CFB").players;
+  const cfbSourceBacked = cfbLaunchPlayers
+    .filter((subject) => ["QB", "RB", "WR", "TE"].includes(subject.position ?? ""))
+    .filter((subject) => subject.startSeason != null && subject.endSeason != null)
+    .flatMap((subject) => {
+      const sourceId = subject.sourceIdentityKeys.find((key) => key.provider === "cfbfastR")?.id;
+      if (!sourceId) return [];
+      const required = subject.position === "QB"
+        ? ["cfb-career-passing-attempts", "cfb-career-passing-yards", "cfb-best-season-passing-yards"]
+        : subject.position === "RB"
+          ? ["cfb-career-rushing-attempts", "cfb-career-rushing-yards", "cfb-best-season-rushing-yards"]
+          : ["cfb-career-receptions", "cfb-career-receiving-yards", "cfb-best-season-receiving-yards"];
+      const present = required.filter((metricId) => factual.getFootballFact(subject.id, metricId) != null);
+      return [{
+        id: subject.id,
+        name: subject.name,
+        position: subject.position,
+        tier: subject.recognizabilityTier,
+        school: subject.school,
+        sourceId,
+        startSeason: subject.startSeason,
+        endSeason: subject.endSeason,
+        required,
+        present,
+        complete: present.length === required.length,
+      }];
+    });
+  console.log("FOOTBALL_LEDGER_DEBUG_CFB_SOURCE_FACTS", JSON.stringify({
+    checked: cfbSourceBacked.filter((row) => row.complete).length,
+    totalSourceBacked: cfbSourceBacked.length,
+    incomplete: cfbSourceBacked.filter((row) => !row.complete),
+  }));
+
   const cfbUniverse = whoAmI.getFootballWhoAmIUniverse("CFB");
   console.log("FOOTBALL_LEDGER_DEBUG_CFB_SHALLOW_CLUES", JSON.stringify(
     cfbUniverse.candidates
