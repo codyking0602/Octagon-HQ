@@ -109,14 +109,15 @@ jobs:
             supabase/tests/auction_launch_notification.sql \
             supabase/tests/auction_catalog_expansion.sql \
             supabase/tests/auction_standard_format.sql \
-            supabase/tests/pick_monitoring_truthful_decisions.sql
+            supabase/tests/pick_monitoring_truthful_decisions.sql \
+            supabase/tests/home_football_spotlight_media.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
           done
 
           echo "Auction lifecycle and launch-notification SQL tests executed successfully against a fresh local database."
-          echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
+          echo "Truthful Picks monitoring and Home Spotlight media SQL tests executed successfully against the same fresh local database."
 
   live_backend:
     name: live Supabase proof
