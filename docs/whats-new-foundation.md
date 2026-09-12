@@ -4,9 +4,9 @@
 
 What's New is Octagon HQ's global activity layer.
 
-- Home owns the permanent What's New preview directly below Your HQ.
+- Home does not render a What's New preview; the universal Home is reserved for Your HQ and the sport HQ sections.
 - `/whats-new` continues to own the complete feed, including Latest, Archive, read state, and deep links.
-- The top-right header slot now belongs to the personal notification bell instead of duplicating the Home feed entry.
+- The top-right personal notification bell owns discovery and unread attention instead of duplicating a Home feed entry.
 - What's New is not part of Your HQ and is not a bottom-navigation destination.
 - Feed items deep-link to the permanent fighter, ranking, Picks, game, challenge, or community destination whenever one exists.
 
