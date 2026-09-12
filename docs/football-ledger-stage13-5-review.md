@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **3,990**
+Canonical A/B/C subjects: **3,997**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -16,9 +16,9 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | TE | 73 | 1 | 12 | 60 | 73 | 0 | 0 | 0 | 0 | 0 |
 | OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
 | DL / EDGE | 320 | 8 | 41 | 271 | 319 | 1 | 0 | 1 | 0 | 0 |
-| LB | 242 | 6 | 38 | 198 | 222 | 20 | 0 | 20 | 0 | 0 |
+| LB | 240 | 5 | 37 | 198 | 220 | 20 | 0 | 20 | 0 | 0 |
 | Secondary | 414 | 7 | 49 | 358 | 414 | 0 | 0 | 0 | 0 | 0 |
-| K / P | 20 | 6 | 13 | 1 | 19 | 1 | 0 | 1 | 0 | 0 |
+| K / P | 19 | 6 | 12 | 1 | 19 | 0 | 0 | 0 | 0 | 0 |
 | Player seasons | 764 | 107 | 318 | 339 | 764 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 113 | 4 | 37 | 72 | 113 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 32 | 5 | 27 | 0 | 32 | 0 | 0 | 0 | 0 | 0 |
@@ -32,11 +32,11 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | QB | 63 | 12 | 36 | 15 | 51 | 12 | 0 | 12 | 0 | 0 |
 | RB | 84 | 17 | 30 | 37 | 68 | 16 | 0 | 16 | 0 | 0 |
-| WR | 62 | 6 | 18 | 38 | 52 | 10 | 0 | 10 | 0 | 0 |
-| TE | 35 | 1 | 20 | 14 | 24 | 11 | 0 | 11 | 0 | 0 |
+| WR | 63 | 6 | 19 | 38 | 53 | 10 | 0 | 10 | 0 | 0 |
+| TE | 39 | 1 | 20 | 18 | 28 | 11 | 0 | 11 | 0 | 0 |
 | OL | 58 | 2 | 24 | 32 | 58 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 52 | 8 | 22 | 22 | 35 | 17 | 0 | 17 | 0 | 0 |
-| LB | 51 | 5 | 15 | 31 | 41 | 10 | 0 | 10 | 0 | 0 |
+| DL / EDGE | 56 | 8 | 24 | 24 | 39 | 17 | 0 | 17 | 0 | 0 |
+| LB | 52 | 5 | 16 | 31 | 42 | 10 | 0 | 10 | 0 | 0 |
 | Secondary | 51 | 9 | 24 | 18 | 41 | 10 | 0 | 10 | 0 | 0 |
 | K / P | 29 | 0 | 14 | 15 | 5 | 24 | 0 | 24 | 0 | 0 |
 | Player seasons | 294 | 12 | 25 | 257 | 294 | 0 | 0 | 0 | 0 | 0 |
@@ -388,7 +388,6 @@ None.
 - NFL Head coaches: **Sean Payton** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Tom Coughlin** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Zac Taylor** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL K / P: **Morten Andersen** — B, Partial; missing specialist kicking/punting facts; source limits: normalized NFL player production begins in 1999.
 - NFL LB: **Dick Butkus** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Sam Huff** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Andre Tippett** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
