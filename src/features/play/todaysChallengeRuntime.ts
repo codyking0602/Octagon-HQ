@@ -11,6 +11,7 @@ import {
   blindRankTier,
   createBlindRankLineup,
 } from "./blindRankEngine";
+import { createUfcWhoAmIRound } from "../games/ufcWhoAmIAuthority";
 import { dailyFindLeaderBoard } from "./findLeaderEngine";
 import {
   advanceOfficialHitTheNumberDailyRuntime,
@@ -23,6 +24,10 @@ import {
   keepCutTier,
 } from "./keepCutEngine";
 import { seededLineupRandom } from "./lineupModel";
+import {
+  advanceWhoAmIDailyRuntime,
+  buildWhoAmIDailyPublication,
+} from "./whoAmIDailyRuntime";
 import {
   blindRankRating,
   getPlayFighter,
@@ -49,7 +54,8 @@ export type OfficialDailyGameType =
   | "wavelength"
   | "blind_rank_5"
   | "keep_4_cut_4"
-  | "hit_the_number";
+  | "hit_the_number"
+  | "who_am_i";
 
 export const OFFICIAL_DAILY_RUNTIME_VERSION = "official-daily-runtime-v1";
 export const OFFICIAL_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;
@@ -554,6 +560,16 @@ export function buildOfficialDailySetup(
       OFFICIAL_DAILY_RUNTIME_VERSION,
       OFFICIAL_DAILY_SCORING_VERSION,
     ) as OfficialDailySetupPublication;
+    case "who_am_i": return buildWhoAmIDailyPublication(
+      createUfcWhoAmIRound(
+        seededLineupRandom(OFFICIAL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
+        new Set(),
+      ),
+      day,
+      scheduleVersion,
+      OFFICIAL_DAILY_RUNTIME_VERSION,
+      OFFICIAL_DAILY_SCORING_VERSION,
+    );
     default: throw new Error(`Unsupported official daily game ${String(gameType)}.`);
   }
 }
@@ -866,6 +882,7 @@ export function advanceOfficialDailyRuntime(
     case "blind_rank_5": return advanceBlindRank(context, parsedAction);
     case "keep_4_cut_4": return advanceKeepCut(context, parsedAction);
     case "hit_the_number": return advanceOfficialHitTheNumberDailyRuntime(context, parsedAction);
+    case "who_am_i": return advanceWhoAmIDailyRuntime(context, parsedAction);
     default: throw new Error(`Unsupported official daily game ${String(context.gameType)}.`);
   }
 }
