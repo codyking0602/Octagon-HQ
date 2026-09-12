@@ -150,7 +150,11 @@ function reconcileProjectedPlayerIdentity(subject: FootballCanonicalSubject): Fo
 
   const stageProjection = projectedPlayerCanonicalSubjectByStageKey.get(playerStageIdentityKey(subject)!);
   const stageAliases = stageProjection
-    ? [...new Set([...(subject.aliases ?? []), ...(stageProjection.aliases ?? [])])]
+    ? [...new Set([
+        ...(subject.aliases ?? []),
+        ...(stageProjection.id !== subject.id ? [stageProjection.id] : []),
+        ...(stageProjection.aliases ?? []),
+      ])]
     : subject.aliases;
   const withReviewedMetadata = stageProjection ? {
     ...subject,
