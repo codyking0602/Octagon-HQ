@@ -286,12 +286,13 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
 
   // Display name is discovery only. Curated identities reconcile to an exact
   // generated source row only when an independent stage signal supports it.
+  const historicalWindow = historicalById.get(subject.id)?.subject;
+  const knownStart = subject.startSeason ?? historicalWindow?.startSeason;
+  const knownEnd = subject.endSeason ?? historicalWindow?.endSeason;
   const expectedNflStart = subject.league === "NFL"
-    ? (subject.draftYear ?? subject.startSeason)
+    ? (subject.draftYear ?? knownStart)
     : undefined;
-  const hasTimingSignal = expectedNflStart != null
-    || subject.startSeason != null
-    || subject.endSeason != null;
+  const hasTimingSignal = expectedNflStart != null || knownStart != null || knownEnd != null;
   const hasSchoolSignal = Boolean(subject.school);
 
   const supported = samePosition.filter((record) => {
@@ -303,20 +304,27 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
 
     let timingMatch = false;
     if (subject.league === "NFL" && expectedNflStart != null && record.startSeason != null) {
-      timingMatch = record.startSeason >= expectedNflStart && record.startSeason <= expectedNflStart + 1;
+      const sourceFloorMatch = record.startSeason === 1999
+        && expectedNflStart <= 1999
+        && (
+          (knownEnd != null && knownEnd >= 1999)
+          || (subject.activeDecades ?? []).includes(2000)
+        );
+      timingMatch = sourceFloorMatch
+        || (record.startSeason >= expectedNflStart && record.startSeason <= expectedNflStart + 1);
     }
     if (
       !timingMatch
-      && subject.startSeason != null
-      && subject.endSeason != null
+      && knownStart != null
+      && knownEnd != null
       && record.startSeason != null
       && record.endSeason != null
     ) {
-      timingMatch = record.startSeason <= subject.endSeason && record.endSeason >= subject.startSeason;
-    } else if (!timingMatch && subject.startSeason != null && record.startSeason != null) {
-      timingMatch = record.startSeason === subject.startSeason;
-    } else if (!timingMatch && subject.endSeason != null && record.endSeason != null) {
-      timingMatch = record.endSeason === subject.endSeason;
+      timingMatch = record.startSeason <= knownEnd && record.endSeason >= knownStart;
+    } else if (!timingMatch && knownStart != null && record.startSeason != null) {
+      timingMatch = record.startSeason === knownStart;
+    } else if (!timingMatch && knownEnd != null && record.endSeason != null) {
+      timingMatch = record.endSeason === knownEnd;
     }
 
     return schoolMatch || timingMatch;
@@ -331,6 +339,18 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   return uniqueProjectionMatch(samePosition);
 }
 
+function exactSourceProHallMinimumTier(record: ProjectionRecord) {
+  if (record.league !== "NFL") return null;
+  const sameName = byLeagueAndName.get(`${record.league}:${record.name.toLowerCase()}`) ?? [];
+  if (sameName.length !== 1) return null;
+  return proHallMinimumTierFor({
+    id: record.id,
+    name: record.name,
+    kind: "player-career",
+    league: record.league,
+  });
+}
+
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
   const exactPlayerRecord = subject.kind === "player-career" ? byId.get(subject.id) : undefined;
   const directHistorical = historicalById.get(subject.id);
@@ -338,7 +358,7 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
   if (exactPlayerRecord && !directHistorical && !directEvidence) {
     const provider: FootballSourceProviderId = exactPlayerRecord.league === "NFL" ? "nflverse" : "cfbfastR";
     return {
-      tier: exactPlayerRecord.tier,
+      tier: recognitionTierAtLeast(exactPlayerRecord.tier, exactSourceProHallMinimumTier(exactPlayerRecord)),
       sourceIdentityKey: { provider, id: exactPlayerRecord.sourceId } as const,
     };
   }
@@ -386,10 +406,13 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
 }
 
 export function footballProjectedPlayerRegistrationTier(subjectId: string): FootballRecognizabilityTier {
-  return historicalById.get(subjectId)?.tier
-    ?? recognitionEvidenceById.get(subjectId)?.tier
-    ?? byId.get(subjectId)?.tier
-    ?? "D";
+  const directHistorical = historicalById.get(subjectId)?.tier;
+  if (directHistorical) return directHistorical;
+  const directEvidence = recognitionEvidenceById.get(subjectId)?.tier;
+  if (directEvidence) return directEvidence;
+  const exactRecord = byId.get(subjectId);
+  if (!exactRecord) return "D";
+  return recognitionTierAtLeast(exactRecord.tier, exactSourceProHallMinimumTier(exactRecord));
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
