@@ -165,9 +165,6 @@ for (const record of promotedRecords) {
   if (record.kind === "player-career") playerRecordById.set(record.id, record);
 }
 const playerRecords = [...playerRecordById.values()];
-const promotedPlayerRecordIds = new Set(
-  promotedRecords.filter((record) => record.kind === "player-career").map((record) => record.id),
-);
 const nonPlayerRecords = promotedRecords.filter((record) => record.kind !== "player-career");
 
 function activeDecades(startSeason?: number, endSeason?: number) {
