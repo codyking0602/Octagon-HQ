@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
@@ -165,12 +165,20 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("DAILY CHALLENGE")).toBeInTheDocument();
 
     expect(within(hq).getByText("Kamario Taylor")).toBeInTheDocument();
-    expect(within(hq).getByText("LAST WEEK · 413 TOT YDS · 5 TD")).toBeInTheDocument();
+    expect(within(hq).getByText("354")).toBeInTheDocument();
+    expect(within(hq).getByText("PYDS")).toBeInTheDocument();
+    expect(within(hq).getByText("59")).toBeInTheDocument();
+    expect(within(hq).getByText("RYDS")).toBeInTheDocument();
+    expect(within(hq).getByText("5")).toBeInTheDocument();
+    expect(within(hq).getByText("TOTAL TDS")).toBeInTheDocument();
+    expect(within(hq).getByText("191.0")).toBeInTheDocument();
+    expect(within(hq).getByText("QB RTG")).toBeInTheDocument();
+    expect(within(hq).queryByText(/LAST WEEK/)).not.toBeInTheDocument();
     expect(within(hq).getByText("VS ULM · W 62–13")).toBeInTheDocument();
     expect(within(hq).getByText("6'4\" · 230 LB")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
-      "https://www.youtube.com/watch?v=QxpXjmhoaTE",
+      "https://youtu.be/g-rXa8_YAZw?is=iqhMr2kCswMHKGLO",
     );
     expect(within(hq).queryByRole("link", { name: /VIEW PLAYER/i })).not.toBeInTheDocument();
 
@@ -184,8 +192,51 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(hq).queryByText("DKR-Texas Memorial Stadium · Austin")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("MetLife Stadium · East Rutherford")).not.toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
     expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toHaveAttribute("href", "/football/picks");
+  });
+
+
+  it("shows tied first correctly and opens owner photo management only after a hold", () => {
+    vi.useFakeTimers();
+    const onManagePlayerPhoto = vi.fn();
+    const tiedHistory: PickHistory = {
+      ...history,
+      seasonStandings: [
+        { ...history.seasonStandings![0]!, rank: 1, isCurrentUser: false },
+        { ...history.seasonStandings![1]!, rank: 1, isCurrentUser: true },
+      ],
+    };
+
+    render(
+      <MemoryRouter>
+        <FootballHq
+          event={event}
+          selections={{}}
+          history={tiedHistory}
+          summary={summary}
+          loading={false}
+          error=""
+          signedIn
+          dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
+          playerPhotoSource="https://example.com/kamario.webp"
+          canManagePlayerPhoto
+          onManagePlayerPhoto={onManagePlayerPhoto}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("T-1 OF 2")).toBeInTheDocument();
+    expect(screen.queryByText("#T-1 OF 2")).not.toBeInTheDocument();
+
+    const photo = screen.getByRole("button", { name: "Manage player spotlight photo" });
+    fireEvent.pointerDown(photo);
+    vi.advanceTimersByTime(649);
+    expect(onManagePlayerPhoto).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(1);
+    expect(onManagePlayerPhoto).toHaveBeenCalledTimes(1);
   });
 
   it("keeps the Picks and Player Spotlight structure when the weekly slate is not published", () => {
