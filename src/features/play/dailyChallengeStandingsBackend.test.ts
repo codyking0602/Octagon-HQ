@@ -27,6 +27,14 @@ describe("Daily Challenge Standings backend contract", () => {
     "src/features/play/DailyChallengeStandings.tsx",
     "utf8",
   );
+  const futureScheduleMigration = readFileSync(
+    "supabase/migrations/202612310093_future_daily_schedule.sql",
+    "utf8",
+  );
+  const futureScheduleSqlTest = readFileSync(
+    "supabase/tests/future_daily_schedule.sql",
+    "utf8",
+  );
 
   it("uses one authenticated cumulative projection over official daily history", () => {
     expect(migration).toContain("create or replace function public.get_daily_challenge_standings()");
@@ -109,6 +117,21 @@ describe("Daily Challenge Standings backend contract", () => {
     expect(generalizedSuite).toContain(
       "\\ir ../migrations/202612310021_daily_challenge_weekly_championship_standings.sql",
     );
+  });
+
+  it("keeps the final Stage 11 schedule and Who Am I projection on the existing canonical owners", () => {
+    expect(futureScheduleMigration).toContain("'play-rotation-v7'");
+    expect(futureScheduleMigration).toContain("'football-daily-v4'");
+    expect(futureScheduleMigration).toContain("date '2026-09-12'");
+    expect(futureScheduleMigration).toContain("'who_am_i'");
+    expect(futureScheduleMigration).toContain("'public.get_daily_challenge_standings(text)'::regprocedure");
+    expect(futureScheduleMigration).not.toContain("create table");
+    expect(futureScheduleMigration).not.toContain("create or replace function private.daily_challenge_schedule_for_day");
+    expect(futureScheduleSqlTest).toContain("UFC future Daily mix is not Find 5 / Wavelength 5 / Blind Resume 4 / Hit 4 / Who Am I 4 / Daily Double 2");
+    expect(futureScheduleSqlTest).toContain("Football future Daily mix is not Find 5 / Wavelength 5 / Hit 4 / Who Am I 4 / Daily Double 2 with no Blind Resume");
+    expect(futureScheduleSqlTest).toContain("historical UFC or Football schedule mapping changed");
+    expect(futureScheduleSqlTest).toContain("Who Am I is missing from the canonical per-game standings projection");
+    expect(component).toContain('["Who Am I", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.whoAmI]');
   });
 
   it("replaces the old history accordion with only the approved collapsed standings and member detail", () => {
