@@ -101,7 +101,7 @@ describe("Who Am I canonical identity facts", () => {
       expect(subject.recognizabilityTier).toBe("A");
       const bank = footballWhoAmIIdentityFactBank(subject);
       expect(bank.facts.some((fact) => (
-        fact.family === "career-path" && fact.source.owner === "football-subject-registry"
+        fact.family === "career-path" && fact.source.owner === "football-career-affiliation"
       ))).toBe(true);
       expect(bank.facts.some((fact) => fact.id === "career-window" && fact.source.owner === "football-subject-registry")).toBe(true);
       expect(bank.facts.some((fact) => fact.id === "metric:nfl-career-games")).toBe(true);
