@@ -19,8 +19,10 @@
 }
 
 .home-sport-hq--football {
-  --home-sport-accent: #8ebce6;
-  --home-sport-accent-rgb: 31, 78, 121;
+  --home-football-blue: #1F4E79;
+  --home-football-blue-rgb: 31, 78, 121;
+  --home-sport-accent: var(--home-football-blue);
+  --home-sport-accent-rgb: var(--home-football-blue-rgb);
 }
 
 .home-sport-hq__heading {
