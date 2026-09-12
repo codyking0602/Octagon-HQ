@@ -38,6 +38,18 @@ describe("Today’s Challenge adapters", () => {
     expect(TODAY_CHALLENGE_ADAPTERS.who_am_i.casualRoute).not.toContain("mode=daily");
   });
 
+  it("requires Football-safe instructions for every official Daily game", () => {
+    for (const adapter of Object.values(TODAY_CHALLENGE_ADAPTERS)) {
+      expect(adapter.footballInstructions).toBeTruthy();
+      expect(adapter.footballInstructions).not.toMatch(/\bUFC\b|\bfighters?\b/i);
+    }
+
+    expect(TODAY_CHALLENGE_ADAPTERS.find_leader.footballInstructions)
+      .toBe("Eliminate nine players without removing today’s verified stat leader.");
+    expect(TODAY_CHALLENGE_ADAPTERS.blind_resume.footballInstructions)
+      .toBe("Choose the stronger football résumé three times without seeing either name.");
+  });
+
   it("states the corrected blind Keep 4, Cut 4 contract", () => {
     const copy = TODAY_CHALLENGE_ADAPTERS.keep_4_cut_4.instructions;
     expect(copy).toMatch(/one fighter at a time/i);
