@@ -1,4 +1,5 @@
 import projectionJson from "../../../data/generated/football/recognizability-projection.json";
+import { footballCareerAffiliationHistoryFor } from "./footballCareerAffiliationProjection";
 import type { FootballCanonicalSubject, FootballCanonicalPosition } from "./footballFactualStatsCatalog";
 import { footballHistoricalPoolRecognitionRecords } from "./footballHistoricalPoolRecognitionEvidence";
 import { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";
@@ -296,10 +297,29 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   const hasSchoolSignal = Boolean(subject.school);
 
   const supported = samePosition.filter((record) => {
+    const sourceAffiliations = subject.league === "CFB" && subject.school
+      ? footballCareerAffiliationHistoryFor({
+          id: record.id,
+          kind: "player-career",
+          league: "CFB",
+          name: record.name,
+          startSeason: record.startSeason,
+          endSeason: record.endSeason,
+          sourceIdentityKeys: [{ provider: "cfbfastR", id: record.sourceId }],
+        })?.affiliations ?? []
+      : [];
     const schoolMatch = Boolean(
       subject.school
-      && record.school
-      && normalizedProjectionName(subject.school) === normalizedProjectionName(record.school),
+      && (
+        sourceAffiliations.some((affiliation) => (
+          normalizedProjectionName(affiliation) === normalizedProjectionName(subject.school!)
+        ))
+        || (
+          sourceAffiliations.length === 0
+          && record.school
+          && normalizedProjectionName(subject.school) === normalizedProjectionName(record.school)
+        )
+      ),
     );
 
     let timingMatch = false;
