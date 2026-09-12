@@ -61,12 +61,41 @@ type CfbPlayerSourceTuple = readonly [
   startSeason: number,
   endSeason: number,
 ];
-interface ProjectionJsonV3 {
-  records: readonly ProjectionRecord[];
-  playerSourceRegistry?: {
-    nfl: readonly NflPlayerSourceTuple[];
-    cfb: readonly CfbPlayerSourceTuple[];
-  };
+function parseNflPlayerSourceTuples(
+  rows: readonly (readonly (string | number)[])[],
+): readonly NflPlayerSourceTuple[] {
+  return rows.map((row, index) => {
+    if (
+      row.length !== 5
+      || typeof row[0] !== "string"
+      || typeof row[1] !== "string"
+      || typeof row[2] !== "string"
+      || typeof row[3] !== "number"
+      || typeof row[4] !== "number"
+    ) {
+      throw new Error(`Invalid NFL player source tuple at index ${index}.`);
+    }
+    return [row[0], row[1], row[2], row[3], row[4]];
+  });
+}
+
+function parseCfbPlayerSourceTuples(
+  rows: readonly (readonly (string | number)[])[],
+): readonly CfbPlayerSourceTuple[] {
+  return rows.map((row, index) => {
+    if (
+      row.length !== 6
+      || typeof row[0] !== "string"
+      || typeof row[1] !== "string"
+      || typeof row[2] !== "string"
+      || typeof row[3] !== "string"
+      || typeof row[4] !== "number"
+      || typeof row[5] !== "number"
+    ) {
+      throw new Error(`Invalid CFB player source tuple at index ${index}.`);
+    }
+    return [row[0], row[1], row[2], row[3], row[4], row[5]];
+  });
 }
 
 function projectionSourceSlug(name: string) {
@@ -81,10 +110,11 @@ function optionalPosition(value: string) {
   return value ? value as FootballCanonicalPosition : undefined;
 }
 
-const projection = projectionJson as ProjectionJsonV3;
-const promotedRecords = projection.records;
+const promotedRecords = projectionJson.records as readonly ProjectionRecord[];
+const nflPlayerSourceRegistry = parseNflPlayerSourceTuples(projectionJson.playerSourceRegistry?.nfl ?? []);
+const cfbPlayerSourceRegistry = parseCfbPlayerSourceTuples(projectionJson.playerSourceRegistry?.cfb ?? []);
 const registryPlayerRecords: ProjectionRecord[] = [
-  ...(projection.playerSourceRegistry?.nfl ?? []).map(([sourceId, name, position, startSeason, endSeason]) => ({
+  ...nflPlayerSourceRegistry.map(([sourceId, name, position, startSeason, endSeason]) => ({
     id: `nflverse-player-${sourceId}`,
     kind: "player-career",
     name,
@@ -96,7 +126,7 @@ const registryPlayerRecords: ProjectionRecord[] = [
     sourceProvider: "nflverse",
     sourceId,
   })),
-  ...(projection.playerSourceRegistry?.cfb ?? []).map(([sourceId, name, position, school, startSeason, endSeason]) => ({
+  ...cfbPlayerSourceRegistry.map(([sourceId, name, position, school, startSeason, endSeason]) => ({
     id: `cfbfast-r-player-${sourceId}-${projectionSourceSlug(name)}`,
     kind: "player-career",
     name,
