@@ -13,6 +13,7 @@ import {
   createPickSetupRepository,
   type PickSetupRepository,
 } from "../picks-setup/pickSetupRepository";
+import FootballHomeSpotlightPhotoControl from "./FootballHomeSpotlightPhotoControl";
 import FootballPushControl from "./FootballPushControl";
 import OpenPicksDashboard from "./OpenPicksDashboard";
 import PickEventHeaderControl from "./PickEventHeaderControl";
@@ -311,6 +312,11 @@ export default function PicksControlCenterPage({
     return (
       <div className="picks-control-center">
         {ownerSportSwitch}
+        {identity.profile?.canControlPicks ? (
+          <section id="home-spotlight" className="picks-control-center__section" aria-label="Manage Football Home Player Spotlight">
+            <FootballHomeSpotlightPhotoControl />
+          </section>
+        ) : null}
         {footballEventId && identity.profile ? (
           <section id="header" className="picks-control-center__section" aria-label="Manage Football event header">
             <PickEventHeaderControl eventId={footballEventId} repository={controlRepository} />

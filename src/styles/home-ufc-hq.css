@@ -57,8 +57,8 @@
 }
 
 .home-sport-hq .home-event-card {
-  gap: 9px;
-  padding: 12px;
+  gap: 7px;
+  padding: 10px;
   border-color: rgba(var(--home-sport-accent-rgb), .24);
   border-radius: 16px;
   background: rgba(255, 255, 255, .025);
@@ -87,7 +87,7 @@
 .home-event-card__picks-grid .picks-progress,
 .home-event-card__standing {
   min-width: 0;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: rgba(255, 255, 255, .02);
@@ -95,7 +95,7 @@
 
 .home-event-card__picks-grid .picks-progress {
   display: grid;
-  gap: 7px;
+  gap: 5px;
 }
 
 .home-event-card__picks-grid .picks-progress > div:first-child {
@@ -132,7 +132,7 @@
 .home-event-card__standing {
   display: grid;
   align-content: center;
-  gap: 4px;
+  gap: 3px;
 }
 
 .home-event-card__standing b {
@@ -152,8 +152,8 @@
 
 .home-event-card--compact .secondary-action {
   width: fit-content;
-  min-height: 38px;
-  margin-top: 1px;
+  min-height: 34px;
+  margin-top: 0;
   padding-inline: 13px;
   font-size: 9px;
 }
@@ -165,23 +165,23 @@
 }
 
 .home-section--ufc-hq .ranking-spotlight {
-  gap: 10px;
-  padding: 12px;
+  gap: 8px;
+  padding: 10px;
   background:
     radial-gradient(circle at 0% 50%, rgba(229, 9, 20, .12), transparent 44%),
     rgba(255, 255, 255, .018);
 }
 
 .home-section--ufc-hq .ranking-spotlight__fighter {
-  grid-template-columns: minmax(116px, .82fr) minmax(0, 1.18fr);
+  grid-template-columns: minmax(110px, .8fr) minmax(0, 1.2fr);
   align-items: stretch;
-  gap: 12px;
+  gap: 10px;
 }
 
 .home-section--ufc-hq .ranking-spotlight__photo {
   width: 100%;
-  height: 150px;
-  border-radius: 13px;
+  height: 135px;
+  border-radius: 12px;
 }
 
 .home-section--ufc-hq .ranking-spotlight__copy {
@@ -195,12 +195,22 @@
 
 .home-section--ufc-hq .ranking-spotlight__actions {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 7px;
+  gap: 6px;
 }
 
 .home-section--ufc-hq .ranking-spotlight__actions .secondary-action {
-  min-height: 38px;
-  font-size: 9px;
+  min-height: 34px;
+  border-color: rgba(255, 255, 255, .12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .035);
+  color: var(--text-primary);
+  font-size: 8px;
+}
+
+.home-section--ufc-hq .ranking-spotlight__actions .ranking-spotlight__watch {
+  border-color: rgba(229, 9, 20, .42);
+  background: rgba(229, 9, 20, .10);
+  color: #fff;
 }
 
 .home-section--ufc-hq .shane-watchlist-preview {
@@ -226,7 +236,7 @@
   }
 
   .home-event-card__standing {
-    padding: 9px;
+    padding: 8px;
   }
 
   .home-event-card__standing b {
@@ -234,11 +244,11 @@
   }
 
   .home-section--ufc-hq .ranking-spotlight__fighter {
-    grid-template-columns: 112px minmax(0, 1fr);
+    grid-template-columns: 106px minmax(0, 1fr);
   }
 
   .home-section--ufc-hq .ranking-spotlight__photo {
-    height: 142px;
+    height: 128px;
   }
 
   .home-section--ufc-hq .ranking-spotlight h2 {

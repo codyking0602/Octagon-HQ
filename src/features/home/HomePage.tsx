@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   eventPicksLocked,
@@ -19,6 +19,7 @@ import {
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
+import { useFootballHomeSpotlightPhoto } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
@@ -119,7 +120,9 @@ function TodayChallengeCard({
 
 export default function HomePage() {
   const identity = useIdentity();
+  const navigate = useNavigate();
   const picks = usePicks();
+  const footballPlayerPhoto = useFootballHomeSpotlightPhoto();
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
   const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
@@ -180,6 +183,9 @@ export default function HomePage() {
   const currentUfcRank = currentUfcStanding
     ? groupRankLabel(currentUfcStanding.rank, ufcStandings)
     : "";
+  const currentUfcRankLabel = currentUfcRank
+    ? currentUfcRank.startsWith("T-") ? currentUfcRank : `#${currentUfcRank}`
+    : "";
 
   const ufcDailyChallenge = (
     <TodayChallengeCard
@@ -217,6 +223,9 @@ export default function HomePage() {
       error={picks.footballHomeError}
       signedIn={signedIn}
       dailyChallenge={footballDailyChallenge}
+      playerPhotoSource={footballPlayerPhoto}
+      canManagePlayerPhoto={identity.profile?.canControlPicks === true}
+      onManagePlayerPhoto={() => navigate("/picks/control?sport=football#home-spotlight")}
     />
   );
 
@@ -255,7 +264,7 @@ export default function HomePage() {
           </div>
           <div className="home-event-card__standing" aria-label="UFC Picks season standing">
             <span>{recordSeason} STANDING</span>
-            <b>{signedIn && currentUfcRank ? `#${currentUfcRank} OF ${ufcStandings.length}` : "—"}</b>
+            <b>{signedIn && currentUfcRankLabel ? `${currentUfcRankLabel} OF ${ufcStandings.length}` : "—"}</b>
             <small>
               {!signedIn
                 ? "SIGN IN TO TRACK"

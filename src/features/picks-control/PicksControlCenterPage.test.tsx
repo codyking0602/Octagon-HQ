@@ -15,6 +15,7 @@ const owner = {
   id: "11111111-1111-4111-8111-111111111111",
   displayName: "CODY",
   initials: "CK",
+  canControlPicks: true,
 };
 
 function gateway(profile: typeof owner | null = owner): IdentityGateway {
@@ -257,6 +258,20 @@ afterEach(() => {
 });
 
 describe("Unified Picks Control Center", () => {
+  it("keeps Football Home Spotlight photo management inside the existing owner control center", async () => {
+    renderCenter(
+      controlRepository([null]),
+      setupRepository([null]),
+      monitoringRepository(),
+      gateway(),
+      "/picks/control?sport=football#home-spotlight",
+    );
+
+    expect(await screen.findByRole("region", { name: "Manage Football Home Player Spotlight" })).toBeInTheDocument();
+    expect(screen.getByText("PLAYER SPOTLIGHT PHOTO")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "UPLOAD / REPLACE PHOTO" })).toBeInTheDocument();
+  });
+
   it("loads each canonical no-event owner exactly once and keeps setup available", async () => {
     const control = controlRepository([null]);
     const setup = setupRepository([null]);
