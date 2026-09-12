@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { footballPlayerCareerSubjectsForPerson } from "./footballSubjectRegistry";
 import {
   FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE,
   footballFindLeaderSubjects,
@@ -61,4 +62,21 @@ describe("canonical Football subject registry", () => {
     expect(queryFootballSubjects({ sourceProvider: "cfbfastR", includeProjectedSourceSubjects: true }).length).toBeGreaterThan(0);
     expect(queryFootballSubjects({ sourceProvider: "nflverse", includeProjectedSourceSubjects: true }).length).toBeGreaterThan(0);
   });
+  it("keeps same-name player source identities distinct within each league", () => {
+    const players = queryFootballSubjects({
+      recognizabilityTiers: ["A", "B", "C"],
+      includeProjectedSourceSubjects: true,
+      includeProjectedCanonicalRecognition: true,
+    }).filter((subject) => subject.kind === "player-career");
+
+    for (const subject of players) {
+      const related = footballPlayerCareerSubjectsForPerson(subject);
+      const sameStage = related.filter((candidate) => candidate.league === subject.league);
+      expect(
+        sameStage.map((candidate) => candidate.id),
+        `${subject.league} ${subject.name} must not merge with a same-name source identity`,
+      ).toEqual([subject.id]);
+    }
+  });
+
 });
