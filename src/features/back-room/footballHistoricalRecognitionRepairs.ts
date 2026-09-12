@@ -208,9 +208,9 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("terrell-davis", "Terrell Davis", "NFL", "RB", 1995, 2001, "B", "mvp-all-pro"),
   player("kurt-warner", "Kurt Warner", "NFL", "QB", 1998, 2009, "A", "mvp-all-pro"),
   player("marshall-faulk", "Marshall Faulk", "NFL", "RB", 1994, 2005, "A", "mvp-all-pro"),
-  player("nflverse-player-00-0005741", "Rich Gannon", "NFL", "QB", 1987, 2004, "B", "mvp-all-pro"),
-  player("nflverse-player-00-0011024", "Steve McNair", "NFL", "QB", 1995, 2007, "B", "mvp-all-pro"),
-  player("nflverse-player-00-0034796", "Lamar Jackson", "NFL", "QB", 2018, 2025, "A", "mvp-all-pro"),
+  player("nfl-rich-gannon", "Rich Gannon", "NFL", "QB", 1987, 2004, "B", "mvp-all-pro"),
+  player("nfl-steve-mcnair", "Steve McNair", "NFL", "QB", 1995, 2007, "B", "mvp-all-pro"),
+  player("nfl-lamar-jackson", "Lamar Jackson", "NFL", "QB", 2018, 2025, "A", "mvp-all-pro"),
   player("nfl-josh-allen", "Josh Allen", "NFL", "QB", 2018, 2025, "A", "mvp-all-pro"),
 
   player("cfb-davey-obrien", "Davey O'Brien", "CFB", "QB", 1936, 1938, "A", "heisman", "TCU"),
