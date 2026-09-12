@@ -306,9 +306,9 @@
 }
 
 .ranking-spotlight__watch {
-  border-color: transparent !important;
-  background: var(--ufc-red) !important;
-  color: white !important;
+  border-color: transparent;
+  background: var(--ufc-red);
+  color: white;
 }
 
 .home-collapsible {
