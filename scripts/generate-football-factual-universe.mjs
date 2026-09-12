@@ -141,14 +141,22 @@ function cfbRowsFor(subject) {
   }
 
   const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
-  const nameRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
+  let nameRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
+
+  // Name is only candidate discovery. Canonical role/program metadata must narrow
+  // an ambiguous display name to one underlying source identity before aggregation.
+  if (subject.position) {
+    const positionRows = nameRows.filter((row) => row.position === subject.position);
+    if (positionRows.length) nameRows = positionRows;
+  }
+  if (subject.school) {
+    const schoolRows = nameRows.filter((row) => normalized(row.team) === normalized(subject.school));
+    if (schoolRows.length) nameRows = schoolRows;
+  }
+
   const sourceIds = new Set(nameRows.map((row) => String(row.sourcePlayerId ?? "")).filter(Boolean));
   if (sourceIds.size !== 1) return [];
-
-  const dominantRows = dominantCfbSeasonRows(nameRows);
-  if (!subject.school) return dominantRows;
-  const schoolRows = dominantRows.filter((row) => normalized(row.team) === normalized(subject.school));
-  return schoolRows.length ? schoolRows : dominantRows;
+  return dominantCfbSeasonRows(nameRows);
 }
 
 function nflPlayerFacts(subject) {
