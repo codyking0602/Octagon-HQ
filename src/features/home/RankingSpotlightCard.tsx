@@ -42,7 +42,7 @@ export function RankingSpotlightCard({ fighter }: { fighter: RankingFighter }) {
           </a>
         ) : null}
         <Link
-          className="secondary-action"
+          className="secondary-action ranking-spotlight__profile"
           to={`/fighters/${fighter.slug}`}
         >
           VIEW PROFILE →
