@@ -443,20 +443,40 @@ const findLeaderCanonicalSubjects: readonly FootballCanonicalSubject[] = footbal
     position: subject.domainId === "nfl-qb-career" ? "QB" : "RB" };
 });
 
+const normalizedCanonicalPlayerName = (name: string) =>
+  name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+
+const legacyFindLeaderOwnerByNflExpansionId = new Map(
+  footballNflExpansionSubjects.flatMap((subject) => {
+    const matches = findLeaderCanonicalSubjects.filter((candidate) => (
+      candidate.kind === "player-career"
+      && candidate.league === "NFL"
+      && candidate.position === subject.position
+      && normalizedCanonicalPlayerName(candidate.name) === normalizedCanonicalPlayerName(subject.name)
+    ));
+    return matches.length === 1 ? [[subject.id, matches[0]!.id] as const] : [];
+  }),
+);
+
 function mergeCanonicalSubjects(subjects: readonly FootballCanonicalSubject[]) {
-  const byName = new Map<string, FootballCanonicalSubject>();
+  const byIdentity = new Map<string, FootballCanonicalSubject>();
   for (const subject of subjects) {
-    const key = subject.kind === "player-career" ? subject.name.toLowerCase().replace(/[^a-z0-9]/g, "") : subject.id;
-    const current = byName.get(key);
+    // NFL expansion metadata may enrich one pre-existing Find Leader career owner.
+    // Every other player-career id remains a distinct stage/source identity; display
+    // name equality is never sufficient to merge two football people or CFB/NFL stages.
+    const key = subject.kind === "player-career"
+      ? (legacyFindLeaderOwnerByNflExpansionId.get(subject.id) ?? subject.id)
+      : subject.id;
+    const current = byIdentity.get(key);
     if (!current) {
-      byName.set(key, { ...subject, leagues: subject.leagues ?? [subject.league] });
+      byIdentity.set(key, { ...subject, leagues: subject.leagues ?? [subject.league] });
       continue;
     }
     const aliases = new Set([...(current.aliases ?? []), ...(subject.aliases ?? [])]);
     if (subject.id !== current.id) aliases.add(subject.id);
     const activeDecades = [...new Set([...(current.activeDecades ?? []), ...(subject.activeDecades ?? [])])];
     const leagues = [...new Set([...(current.leagues ?? [current.league]), ...(subject.leagues ?? [subject.league])])];
-    byName.set(key, {
+    byIdentity.set(key, {
       ...current,
       ...subject,
       id: current.id,
@@ -467,7 +487,7 @@ function mergeCanonicalSubjects(subjects: readonly FootballCanonicalSubject[]) {
       ...(activeDecades.length === 0 ? {} : { activeDecades }),
     });
   }
-  return [...byName.values()];
+  return [...byIdentity.values()];
 }
 
 /** The single canonical identity and reusable metadata ledger for Football. */
