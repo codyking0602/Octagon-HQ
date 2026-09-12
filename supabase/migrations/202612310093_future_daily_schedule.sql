@@ -3,20 +3,51 @@
 
 -- Slice 4 added Who Am I to the canonical Daily setup/challenge constraints. Extend the
 -- existing schedule-table constraint too before a future rotation is allowed to reference it.
-alter table private.daily_challenge_schedule_versions
-  drop constraint if exists daily_challenge_schedule_versions_supported_games_check;
+-- The original generalized-backend check was unnamed, so replace any stale supported-game
+-- check structurally instead of assuming a constraint name.
+do $$
+declare
+  v_constraint record;
+begin
+  for v_constraint in
+    select constraint_row.conname
+    from pg_constraint constraint_row
+    where constraint_row.conrelid = 'private.daily_challenge_schedule_versions'::regclass
+      and constraint_row.contype = 'c'
+      and pg_get_constraintdef(constraint_row.oid) like '%game_cycle%'
+      and pg_get_constraintdef(constraint_row.oid) like '%keep_4_cut_4%'
+      and pg_get_constraintdef(constraint_row.oid) not like '%who_am_i%'
+  loop
+    execute format(
+      'alter table private.daily_challenge_schedule_versions drop constraint %I',
+      v_constraint.conname
+    );
+  end loop;
+end
+$$;
 
-alter table private.daily_challenge_schedule_versions
-  add constraint daily_challenge_schedule_versions_supported_games_check
-  check (game_cycle <@ array[
-    'find_leader',
-    'blind_resume',
-    'wavelength',
-    'blind_rank_5',
-    'keep_4_cut_4',
-    'hit_the_number',
-    'who_am_i'
-  ]::text[]);
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint constraint_row
+    where constraint_row.conrelid = 'private.daily_challenge_schedule_versions'::regclass
+      and constraint_row.conname = 'daily_challenge_schedule_versions_supported_games_check'
+  ) then
+    alter table private.daily_challenge_schedule_versions
+      add constraint daily_challenge_schedule_versions_supported_games_check
+      check (game_cycle <@ array[
+        'find_leader',
+        'blind_resume',
+        'wavelength',
+        'blind_rank_5',
+        'keep_4_cut_4',
+        'hit_the_number',
+        'who_am_i'
+      ]::text[]);
+  end if;
+end
+$$;
 
 do $schedule$
 declare
