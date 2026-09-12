@@ -153,6 +153,25 @@ describe("generalized Today’s Challenge hub", () => {
     expect(navigate).toHaveBeenCalledWith(route);
   });
 
+  it("uses Football-specific Daily copy instead of UFC fighter wording", () => {
+    useTodayChallengeRuntime.mockReturnValue({
+      projection: projection("find_leader"),
+      loading: false,
+      error: null,
+      busy: false,
+      configured: true,
+      advance: vi.fn(),
+      refresh: vi.fn(),
+    });
+
+    render(<TodayChallengeHub sport="football" />);
+
+    const card = document.querySelector(".today-hub-card");
+    expect(card).toHaveTextContent("Eliminate nine players without removing today’s verified stat leader.");
+    expect(card).not.toHaveTextContent(/fighters?/i);
+    expect(card).not.toHaveTextContent(/\bUFC\b/i);
+  });
+
   it("keeps cumulative standings collapsed, then reveals one-row member stats and game averages", () => {
     useTodayChallengeRuntime.mockReturnValue({
       projection: projection("blind_resume"),
