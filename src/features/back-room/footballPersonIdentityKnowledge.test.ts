@@ -67,7 +67,7 @@ const PR6_SUBJECT_IDS = new Set([
   "dan-marino",
   "nfl-josh-allen",
   "nfl-roger-staubach",
-  "nflverse-player-00-0021306",
+  "nfl-adrian-peterson",
   "earl-campbell",
   "gale-sayers",
   "marshall-faulk",
@@ -209,6 +209,13 @@ describe("football person identity knowledge", () => {
       expect(cfbSubject?.recognizabilityTier).toBe("A");
       expect(distinctiveIdentityFacts(getFootballPersonIdentityKnowledge(cfbSubject!.id)!)).toHaveLength(5);
     }
+  });
+
+  it("binds Adrian Peterson research to his actual NFL source identity", () => {
+    const adrian = getFootballSubject("nfl-adrian-peterson");
+    expect(adrian?.sourceIdentityKeys).toContainEqual({ provider: "nflverse", id: "00-0025394" });
+    expect(getFootballPersonIdentityKnowledge("nfl-adrian-peterson")?.facts.some((fact) => fact.conceptId === "acl-mcl-rapid-comeback")).toBe(true);
+    expect(getFootballPersonIdentityKnowledge("nflverse-player-00-0021306")).toBeNull();
   });
 
   it("keeps the locked NFL launch pool unchanged", () => {
