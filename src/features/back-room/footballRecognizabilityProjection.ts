@@ -359,17 +359,6 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   return uniqueProjectionMatch(samePosition);
 }
 
-function exactSourceProHallMinimumTier(record: ProjectionRecord) {
-  if (record.league !== "NFL") return null;
-  const sameName = byLeagueAndName.get(`${record.league}:${record.name.toLowerCase()}`) ?? [];
-  if (sameName.length !== 1) return null;
-  return proHallMinimumTierFor({
-    name: record.name,
-    kind: "player-career",
-    league: record.league,
-  });
-}
-
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
   const exactPlayerRecord = subject.kind === "player-career" ? byId.get(subject.id) : undefined;
   const directHistorical = historicalById.get(subject.id);
@@ -377,7 +366,7 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
   if (exactPlayerRecord && !directHistorical && !directEvidence) {
     const provider: FootballSourceProviderId = exactPlayerRecord.league === "NFL" ? "nflverse" : "cfbfastR";
     return {
-      tier: recognitionTierAtLeast(exactPlayerRecord.tier, exactSourceProHallMinimumTier(exactPlayerRecord)),
+      tier: exactPlayerRecord.tier,
       sourceIdentityKey: { provider, id: exactPlayerRecord.sourceId } as const,
     };
   }
