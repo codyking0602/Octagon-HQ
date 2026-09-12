@@ -240,6 +240,10 @@ export function footballHitTheNumberSubjectIdentityKey(subject: FootballSubjectP
 }
 
 function preferredDuplicateSubject(left: FootballHitTheNumberSubject, right: FootballHitTheNumberSubject) {
+  if (left.kind === "team-season" && right.kind === "team-season" && left.nationalChampion !== right.nationalChampion) {
+    return left.nationalChampion ? left : right;
+  }
+
   const leftFacts = getFootballFactualRecord(left.id)?.facts.length ?? 0;
   const rightFacts = getFootballFactualRecord(right.id)?.facts.length ?? 0;
   if (leftFacts !== rightFacts) return leftFacts > rightFacts ? left : right;
