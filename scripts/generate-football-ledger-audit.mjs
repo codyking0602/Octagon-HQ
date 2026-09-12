@@ -21,12 +21,12 @@ try {
   fs.writeFileSync(outputPath, formatFootballLedgerAuditMarkdown(footballLedgerAudit));
   console.log(`Generated ${path.relative(root, outputPath)} from canonical Football owners.`);
 
-  const [registry, factual, whoAmI, knowledge, comparison] = await Promise.all([
+  const [registry, factual, whoAmI, knowledge, rankFive] = await Promise.all([
     server.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts"),
     server.ssrLoadModule("/src/features/back-room/footballFactualStats.ts"),
     server.ssrLoadModule("/src/features/games/footballWhoAmIAuthority.ts"),
     server.ssrLoadModule("/src/features/back-room/footballPersonIdentityKnowledge.ts"),
-    server.ssrLoadModule("/src/features/back-room/footballComparisonAuthority.ts"),
+    server.ssrLoadModule("/src/features/back-room/footballRankFivePlayableModel.ts"),
   ]);
 
   const launchByLeague = new Map(["NFL", "CFB"].map((league) => [
@@ -71,23 +71,24 @@ try {
   ));
 
   const anchors = [
-    ["nfl-qb","tom-brady"],["nfl-qb","drew-brees"],["nfl-qb","eli-manning"],
-    ["nfl-rb","jim-brown"],["nfl-rb","nfl-derrick-henry"],["nfl-rb","frank-gore"],
-    ["nfl-wr","nfl-jerry-rice"],["nfl-wr","nfl-randy-moss"],["nfl-wr","antonio-brown"],["nfl-wr","julio-jones"],
-    ["nfl-te","tony-gonzalez"],["nfl-te","shannon-sharpe"],["nfl-te","jason-witten"],
+    ["nfl-quarterbacks","tom-brady"],["nfl-quarterbacks","drew-brees"],["nfl-quarterbacks","eli-manning"],
+    ["nfl-running-backs","jim-brown"],["nfl-running-backs","derrick-henry"],["nfl-running-backs","frank-gore"],
+    ["nfl-wide-receivers","jerry-rice"],["nfl-wide-receivers","randy-moss"],["nfl-wide-receivers","antonio-brown"],["nfl-wide-receivers","julio-jones"],
+    ["nfl-tight-ends","tony-gonzalez"],["nfl-tight-ends","shannon-sharpe"],["nfl-tight-ends","jason-witten"],
     ["nfl-front-seven","clay-matthews"],["nfl-secondary","morris-claiborne"],
-    ["cfb-qb","cfb-lamar-jackson"],["cfb-qb","cfb-trevor-lawrence"],["cfb-qb","cfb-jake-fromm"],
-    ["cfb-rb","cfb-bijan-robinson"],["cfb-rb","cfb-trent-richardson"],
+    ["college-quarterbacks","lamar-jackson-2016"],["college-quarterbacks","trevor-lawrence-2018"],["college-quarterbacks","jake-fromm-career"],
+    ["college-running-backs","bijan-robinson-cfb"],["college-running-backs","trent-richardson-cfb"],
   ];
   console.log("FOOTBALL_LEDGER_DEBUG_COMPARISON_ANCHORS", JSON.stringify(anchors.map(([packId, id]) => {
-    const pack = comparison.footballComparisonCategoryPacks.find((candidate) => candidate.id === packId);
+    const pack = rankFive.footballRankFivePacks.find((candidate) => candidate.id === packId);
     return {
       packId,
       id,
       found: Boolean(pack?.items.find((item) => item.id === id)),
-      sameNameish: pack?.items.filter((item) => item.id.includes(id.replace(/^(?:nfl|cfb)-/, ""))).map((item) => item.id) ?? [],
+      sameNameish: pack?.items.filter((item) => item.id.includes(id.replace(/-(?:2016|2018|career|cfb)$/, ""))).map((item) => item.id) ?? [],
     };
   })));
+
 } finally {
   await server.close();
 }
