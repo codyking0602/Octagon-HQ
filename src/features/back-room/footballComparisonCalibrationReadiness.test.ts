@@ -8,14 +8,24 @@ function item(packId: Parameters<typeof getFootballRankFivePack>[0], name: strin
   return row!;
 }
 
-function largestGreatnessTierShare(packId: Parameters<typeof getFootballRankFivePack>[0]) {
+function greatnessTierSummary(packId: Parameters<typeof getFootballRankFivePack>[0]) {
   const pack = getFootballRankFivePack(packId);
   const counts = new Map<string, number>();
+  const ratings = new Map<number, number>();
   for (const row of pack.items) {
     const tier = footballGreatnessTierForItem(row);
     counts.set(tier, (counts.get(tier) ?? 0) + 1);
+    ratings.set(row.rating, (ratings.get(row.rating) ?? 0) + 1);
   }
-  return Math.max(...counts.values()) / pack.items.length;
+  return {
+    share: Math.max(...counts.values()) / pack.items.length,
+    tiers: Object.fromEntries(counts),
+    ratings: Object.fromEntries([...ratings].sort((left, right) => left[0] - right[0])),
+  };
+}
+
+function largestGreatnessTierShare(packId: Parameters<typeof getFootballRankFivePack>[0]) {
+  return greatnessTierSummary(packId).share;
 }
 
 describe("Football reviewed-profile calibration readiness", () => {
@@ -50,6 +60,7 @@ describe("Football reviewed-profile calibration readiness", () => {
   it("keeps generated secondary careers below the reviewed historical anchors they were eclipsing", () => {
     expect(item("nfl-secondary", "Brandon Carr").rating).toBeLessThan(item("nfl-secondary", "Champ Bailey").rating);
     expect(item("nfl-secondary", "Darnell Savage").rating).toBeLessThan(item("nfl-secondary", "Darrelle Revis").rating);
-    expect(largestGreatnessTierShare("nfl-secondary")).toBeLessThan(0.75);
+    const summary = greatnessTierSummary("nfl-secondary");
+    expect(summary.share, JSON.stringify(summary)).toBeLessThan(0.75);
   });
 });
