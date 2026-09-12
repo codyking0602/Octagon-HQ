@@ -6,7 +6,7 @@ import {
 } from "./todaysChallengeAdapters";
 
 describe("Today’s Challenge adapters", () => {
-  it("maps the six canonical backend game identities to existing Play games", () => {
+  it("maps the seven canonical backend game identities to existing Play games", () => {
     expect(Object.keys(TODAY_CHALLENGE_ADAPTERS)).toEqual([
       "find_leader",
       "blind_resume",
@@ -14,6 +14,7 @@ describe("Today’s Challenge adapters", () => {
       "blind_rank_5",
       "keep_4_cut_4",
       "hit_the_number",
+      "who_am_i",
     ]);
 
     for (const adapter of Object.values(TODAY_CHALLENGE_ADAPTERS)) {
@@ -33,6 +34,8 @@ describe("Today’s Challenge adapters", () => {
     expect(TODAY_CHALLENGE_ADAPTERS.keep_4_cut_4.dailyRoute).toContain("mode=daily");
     expect(TODAY_CHALLENGE_ADAPTERS.hit_the_number.dailyRoute).toBe("/play/hit-the-number?mode=daily");
     expect(TODAY_CHALLENGE_ADAPTERS.hit_the_number.casualRoute).toBe("/play/hit-the-number");
+    expect(TODAY_CHALLENGE_ADAPTERS.who_am_i.dailyRoute).toContain("mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.who_am_i.casualRoute).not.toContain("mode=daily");
   });
 
   it("states the corrected blind Keep 4, Cut 4 contract", () => {
