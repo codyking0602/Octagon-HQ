@@ -420,7 +420,7 @@ export function footballProjectedPlayerRegistrationTier(subjectId: string): Foot
   if (directEvidence) return directEvidence;
   const exactRecord = byId.get(subjectId);
   if (!exactRecord) return "D";
-  return recognitionTierAtLeast(exactRecord.tier, exactSourceProHallMinimumTier(exactRecord));
+  return exactRecord.tier;
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
