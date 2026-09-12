@@ -64,34 +64,10 @@ function cfbIdentitySeasonVolume(row, ix) {
     + n(at(row, ix, "passBreakups")) * 5;
 }
 
-function aggregationRows(corpus, league, ix) {
-  if (league !== "CFB") return corpus.rows;
-  const dominantByIdentitySeason = new Map();
-  for (const row of corpus.rows) {
-    const sourceId = String(at(row, ix, "sourcePlayerId") ?? "");
-    const name = at(row, ix, "playerName");
-    const season = n(at(row, ix, "season"));
-    if (!sourceId || sourceId === "0" || !name || !season) continue;
-    const key = `${sourceId}:${normalize(name)}:${season}`;
-    const current = dominantByIdentitySeason.get(key);
-    if (
-      !current
-      || cfbIdentitySeasonVolume(row, ix) > cfbIdentitySeasonVolume(current, ix)
-      || (
-        cfbIdentitySeasonVolume(row, ix) === cfbIdentitySeasonVolume(current, ix)
-        && String(at(row, ix, "team") ?? "").localeCompare(String(at(current, ix, "team") ?? "")) < 0
-      )
-    ) {
-      dominantByIdentitySeason.set(key, row);
-    }
-  }
-  return [...dominantByIdentitySeason.values()];
-}
-
 function aggregate(corpus, league) {
   const ix = ixFor(corpus);
   const people = new Map();
-  for (const row of aggregationRows(corpus, league, ix)) {
+  for (const row of corpus.rows) {
     const sourceId = String(at(row, ix, "sourcePlayerId") ?? "");
     const name = at(row, ix, "playerDisplayName") ?? at(row, ix, "playerName");
     if (!sourceId || sourceId === "0" || !name) continue;
