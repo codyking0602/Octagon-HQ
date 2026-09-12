@@ -96,10 +96,6 @@ function proHallMinimumTierFor(subject: FootballRecognitionFloorIdentity) {
   }, null);
 }
 
-function proHallMinimumTierForPlayerRecord(record: ProjectionRecord) {
-  return proHallMinimumTierFor({ kind: "player-career", league: record.league, name: record.name });
-}
-
 // Registration and recognition are separate concerns. Keep every exact source
 // player identity in the registry, including Tier D rows, so same-name athletes
 // remain distinguishable and factual records always reconcile. Eligibility filters
