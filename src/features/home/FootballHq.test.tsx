@@ -186,6 +186,10 @@ describe("Football HQ Home summary", () => {
       .toHaveAttribute("href", "/football/picks?matchup=2026-texas-ohio-state");
     expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Cowboys vs. Giants" }))
       .toHaveAttribute("href", "/football/picks?matchup=2026-cowboys-giants");
+    expect(within(hq).getByText("Texas Longhorns")).toBeInTheDocument();
+    expect(within(hq).getByText("Ohio State Buckeyes")).toBeInTheDocument();
+    expect(within(hq).getByText("Dallas Cowboys")).toBeInTheDocument();
+    expect(within(hq).getByText("New York Giants")).toBeInTheDocument();
     expect(within(hq).getByText("Sat, Sep 12, 6:30 PM CT")).toBeInTheDocument();
     expect(within(hq).getByText("Sun, Sep 13, 7:20 PM CT")).toBeInTheDocument();
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
