@@ -136,7 +136,7 @@ const summary: PickSummary = {
 };
 
 describe("Football HQ Home summary", () => {
-  it("uses UFC-style Picks, one Daily row, Player Spotlight, and one canonical authored Game of the Week", () => {
+  it("uses UFC-style Picks, one Daily row, Player Spotlight, and canonical authored matchup rows", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-09-08T19:30:00Z"));
 
@@ -176,16 +176,14 @@ describe("Football HQ Home summary", () => {
 
     expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Texas vs. Ohio State" }))
       .toHaveAttribute("href", "/football/picks?matchup=2026-texas-ohio-state");
-    expect(within(hq).queryByRole("link", { name: "Open matchup breakdown for Cowboys vs. Giants" }))
-      .not.toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Cowboys vs. Giants" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-cowboys-giants");
     expect(within(hq).getByText("Sat, Sep 12, 6:30 PM CT")).toBeInTheDocument();
-    expect(within(hq).queryByText("Sun, Sep 13, 7:20 PM CT")).not.toBeInTheDocument();
+    expect(within(hq).getByText("Sun, Sep 13, 7:20 PM CT")).toBeInTheDocument();
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
-    expect(within(hq).getByText("GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).queryByText("NFL GAME OF THE WEEK")).not.toBeInTheDocument();
-    expect(within(hq).getByText("OPEN MATCHUP BREAKDOWN →")).toBeInTheDocument();
+    expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
     expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toHaveAttribute("href", "/football/picks");
   });
@@ -210,6 +208,6 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("FOOTBALL PICKS")).toBeInTheDocument();
     expect(within(hq).getByText("WAITING")).toBeInTheDocument();
     expect(within(hq).getByText("Kamario Taylor")).toBeInTheDocument();
-    expect(within(hq).queryByLabelText("Football Game of the Week")).not.toBeInTheDocument();
+    expect(within(hq).queryByLabelText("Football Games of the Week")).not.toBeInTheDocument();
   });
 });
