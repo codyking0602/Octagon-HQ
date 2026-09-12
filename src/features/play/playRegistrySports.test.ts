@@ -53,7 +53,7 @@ describe("sport-aware Play registry", () => {
     expect(new Set(playGameCatalog.map((game) => `${game.sport}:${game.id}`)).size).toBe(playGameCatalog.length);
   });
 
-  it("preserves shared challenge support for established Football games while Who Am I stays replayable-only", () => {
+  it("preserves shared challenge support while Football Who Am I joins the official Daily contract", () => {
     const footballGames = playGamesForSport("football");
     for (const game of footballGames.filter((candidate) => candidate.id !== "who-am-i")) {
       expect(game.lineup).toMatchObject({
@@ -70,13 +70,13 @@ describe("sport-aware Play registry", () => {
 
     expect(playGameDefinition("who-am-i", "football").lineup).toMatchObject({
       defaultType: "replayable",
-      supportedTypes: ["replayable"],
+      supportedTypes: ["daily", "replayable"],
       replayBehavior: "new-lineup",
       challengeEligible: false,
-      dailyEligible: false,
-      streakEligible: false,
-      reminderEligible: false,
-      historyRecording: "casual-only",
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
     });
   });
 });
