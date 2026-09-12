@@ -29,6 +29,8 @@ const FACET_LIMITS: Readonly<Partial<Record<WhoAmIClueFacet, number>>> = {
   identity: 2,
 };
 
+const SPORTS_IDENTITY_TARGET = 8;
+
 export interface WhoAmIIdentityKnowledgeClueInput {
   subjectId: string;
   subjectName: string;
@@ -104,17 +106,19 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
   const haystack = `${clue.conceptId ?? clue.id} ${clue.text}`.toLowerCase();
   const signatureIdentity = /\b(?:nickname|moniker|signature|celebration|persona|known for|called me|called the)\b/.test(haystack);
   const strongSportsAnchor = /\b(?:heisman|all-america|all-american|all-pro|mvp|champion|championship|title|draft|drafted|transfer|transferred|jersey|hall of fame|super bowl|record|award|tournament)\b/.test(haystack);
-  const sportsRelationship = /\b(?:teammate|opponent|fought|defeated|lost to|shared the octagon|same team|nfl player|college player|ufc fighter|coach|training partner)\b/.test(haystack);
+  const competitiveRelationship = /\b(?:teammate|opponent|fought|defeated|lost to|shared the octagon|same team|nfl player|college player|ufc fighter|training partner)\b/.test(haystack);
+  const sportsRelationship = competitiveRelationship || /\bcoach(?:ed|ing)?\b/.test(haystack);
   const sportsBackground = /\b(?:school|college|university|conference|recruit|recruited|commit|committed|high-school|high school|junior college|football|wrestling|boxing|kickboxing|judo|sambo)\b/.test(haystack);
   const sportsIdentity = /\b(?:quarterback|running back|receiver|tight end|lineman|linebacker|defensive back|fighter|striker|grappler|wrestler|position|division|team|gym|touchdowns?|yards?|sacks?|tackles?|receptions?|interceptions?|knockouts?|submissions?)\b/.test(haystack);
   const sportsCareerEvent = /\b(?:injur(?:y|ed)|comeback|preseason|regular-season|postseason|playoff|season opener)\b/.test(haystack);
-  const deepBiography = /\b(?:childhood|upbringing|foster|group homes?|grandparents?|immigrat\w*|fourth[- ]grade|grade school|elementary school|tuition|classes|academic degree|left home|grew up|birthplace)\b/.test(haystack);
+  const deepBiography = /\b(?:childhood|upbringing|foster|group homes?|grandparents?|parents?|father|mother|brother|sister|family|youth|immigrat\w*|fourth[- ]grade|grade school|elementary school|tuition|classes|academic degree|left home|grew up|birthplace)\b/.test(haystack);
+  const personalFacet = facet === "background" || facet === "relationships" || facet === "off-field" || facet === "identity";
 
+  // Personal-history clues do not become sports identity merely because the prose also
+  // mentions a position, coach, award, or other sports word. Direct competitive
+  // relationships (teammates, opponents, fighters, training partners) remain sports-facing.
+  if (deepBiography && personalFacet && !competitiveRelationship && !signatureIdentity) return "deep-biography";
   if (signatureIdentity || sportsRelationship || strongSportsAnchor || sportsCareerEvent) return "sports-identity";
-  if (
-    deepBiography
-    && (facet === "background" || facet === "relationships" || facet === "off-field" || facet === "identity")
-  ) return "deep-biography";
   if (!clue.identityKnowledge) return "sports-identity";
 
   if (
@@ -483,6 +487,11 @@ function semanticFamily(entry: Pick<PreparedClue, "facet" | "conceptId" | "clue"
     entry.facet === "accomplishments"
     && /\b(?:title-fights?|title-wins?|ufc title fights?|title fight wins?)\b/.test(haystack)
   ) return "accomplishments:title-fight-record";
+  if (entry.facet === "accomplishments" && /\bheisman\b/.test(haystack)) return "accomplishments:heisman";
+  if (entry.facet === "accomplishments" && /\ball[- ]america(?:n)?\b/.test(haystack)) return "accomplishments:all-america";
+  if (entry.facet === "accomplishments" && /\ball[- ]pro\b/.test(haystack)) return "accomplishments:all-pro";
+  if (entry.facet === "accomplishments" && /\bpro[- ]bowl\b/.test(haystack)) return "accomplishments:pro-bowl";
+  if (entry.facet === "accomplishments" && /\bhall of fame\b/.test(haystack)) return "accomplishments:hall-of-fame";
   if (entry.facet === "career-path" && /\bdraft/.test(haystack)) return "career-path:draft";
   return null;
 }
@@ -834,7 +843,7 @@ export function assembleWhoAmIClues(
   }
 
   const sportsIdentityTarget = Math.min(
-    7,
+    SPORTS_IDENTITY_TARGET,
     limit,
     prepared.filter((entry) => entry.selectionClass === "sports-identity").length,
   );
