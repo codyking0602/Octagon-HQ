@@ -295,42 +295,59 @@ export function getFootballSubject(subjectId: string) {
   return footballSubjectById.get(subjectId) ?? null;
 }
 
-function footballPlayerCareerSubjectsSharePerson(
-  left: FootballSubjectProfile,
-  right: FootballSubjectProfile,
+function footballPlayerCareerCrossStageCandidates(
+  subject: FootballSubjectProfile,
+  sameName: readonly FootballSubjectProfile[],
 ) {
-  if (left.id === right.id) return true;
-  if (left.kind !== "player-career" || right.kind !== "player-career") return false;
-  if (normalizedFootballSubjectName(left.name) !== normalizedFootballSubjectName(right.name)) return false;
+  const candidates = sameName.filter((candidate) => (
+    candidate.id !== subject.id
+    && candidate.kind === "player-career"
+    && candidate.league !== subject.league
+    && (!subject.position || !candidate.position || subject.position === candidate.position)
+  ));
+  if (!candidates.length) return [];
 
-  // Same-stage same-name careers are distinct source identities unless they are already
-  // the exact same canonical subject. This prevents one athlete from silently rescuing
-  // another athlete with the same display name.
-  if (left.league === right.league) return false;
-  if (left.position && right.position && left.position !== right.position) return false;
+  const scored = candidates.map((candidate) => {
+    const cfb = subject.league === "CFB" ? subject : candidate;
+    const nfl = subject.league === "NFL" ? subject : candidate;
+    const cfbEnd = cfb.endSeason;
+    const nflStart = nfl.draftYear ?? nfl.startSeason;
+    const chronology = cfbEnd != null && nflStart != null
+      ? (nflStart >= cfbEnd && nflStart <= cfbEnd + 2)
+      : null;
+    const schoolMatch = Boolean(
+      cfb.school
+      && nfl.school
+      && normalizedFootballSubjectName(cfb.school) === normalizedFootballSubjectName(nfl.school)
+    );
+    return { candidate, chronology, schoolMatch };
+  });
 
-  const cfb = left.league === "CFB" ? left : right;
-  const nfl = left.league === "NFL" ? left : right;
-  const cfbEnd = cfb.endSeason;
-  const nflStart = nfl.draftYear ?? nfl.startSeason;
+  const supported = scored.filter(({ chronology, schoolMatch }) => chronology === true || schoolMatch);
+  if (supported.length === 1) return [supported[0]!.candidate];
+  if (supported.length > 1) {
+    const both = supported.filter(({ chronology, schoolMatch }) => chronology === true && schoolMatch);
+    return both.length === 1 ? [both[0]!.candidate] : [];
+  }
 
-  // Cross-stage linkage must be chronologically plausible. A college career should
-  // flow directly into the pro identity, not another same-name NFL career years away.
-  if (cfbEnd != null && nflStart != null && (nflStart < cfbEnd || nflStart > cfbEnd + 2)) return false;
-
-  return true;
+  // When neither side owns a usable school/window, a unique cross-stage same-name
+  // + same-position candidate may still link. Ambiguous names never auto-merge.
+  return candidates.length === 1 ? candidates : [];
 }
 
 /**
  * Canonical real-person relationship resolver for player-career subjects.
- * NFL and CFB career subjects remain distinct stage identities. Cross-stage sharing
- * is allowed only when source-stage position and chronology support the same person;
- * normalized name alone is never sufficient.
+ * NFL and CFB career subjects remain distinct stage identities. Same-stage same-name
+ * careers never merge, and ambiguous cross-stage names require position plus source
+ * chronology/school support instead of normalized-name recovery.
  */
 export function footballPlayerCareerSubjectsForPerson(subject: FootballSubjectProfile) {
   if (subject.kind !== "player-career") return [subject] as const;
   const sameName = footballPlayerCareerSubjectsByPerson.get(normalizedFootballSubjectName(subject.name)) ?? [subject];
-  return sameName.filter((candidate) => footballPlayerCareerSubjectsSharePerson(subject, candidate));
+  return [
+    subject,
+    ...footballPlayerCareerCrossStageCandidates(subject, sameName),
+  ];
 }
 
 function matchesFootballSubject(subject: FootballSubjectProfile, query: FootballSubjectQuery) {
