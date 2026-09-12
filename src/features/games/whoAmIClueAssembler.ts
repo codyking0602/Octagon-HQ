@@ -868,7 +868,21 @@ export function assembleWhoAmIClues(
       return prepared
         .filter((candidate) => !selected.includes(candidate))
         .filter((candidate) => candidate.selectionClass === "sports-identity")
-        .filter((candidate) => bandRank(candidate.clue.band) >= bandRank(current.clue.band))
+        .filter((candidate) => !isGenericCareerGames(candidate.clue))
+        .filter((candidate) => {
+          const candidateRank = bandRank(candidate.clue.band);
+          const currentRank = bandRank(current.clue.band);
+          if (candidateRank >= currentRank) return true;
+          if (currentRank - candidateRank > 1) return false;
+
+          // Sports-facing composition may replace one over-classified personal clue with
+          // a slightly earlier-band sports clue, but never at the expense of the minimum
+          // three-clue strong/giveaway finish.
+          const lateAfterSwap = otherSelected.filter((entry) => (
+            entry.clue.band === "strong" || entry.clue.band === "giveaway"
+          )).length + Number(candidate.clue.band === "strong" || candidate.clue.band === "giveaway");
+          return lateAfterSwap >= 3;
+        })
         .filter((candidate) => !otherSelected.some((entry) => entry.conceptId === candidate.conceptId))
         .filter((candidate) => !otherSelected.some((entry) => (
           normalize(entry.clue.text) === normalize(candidate.clue.text)
