@@ -178,7 +178,7 @@ describe("football person identity knowledge", () => {
     const launchById = new Map(launch.subjects.map((subject) => [subject.id, subject]));
     for (const subjectId of allReviewed) {
       const launchSubject = launchById.get(subjectId);
-      expect(launchSubject?.recognizabilityTier).toBe("A");
+      expect(launchSubject?.recognizabilityTier, subjectId).toBe("A");
       const canonical = getFootballSubject(subjectId);
       expect(canonical?.id).toBe(subjectId);
       expect(canonical?.league).toBe("NFL");
@@ -373,7 +373,7 @@ describe("football person identity knowledge", () => {
     expect(cfbLaunch.subjects).toHaveLength(200);
 
     const cfbATier = cfbLaunch.subjects.filter((subject) => subject.recognizabilityTier === "A");
-    expect(cfbATier).toHaveLength(EXPECTED_CFB_A_RESEARCHED_COUNT);
+    expect(cfbATier, cfbATier.map((subject) => `${subject.id}:${subject.name}`).join(", ")).toHaveLength(EXPECTED_CFB_A_RESEARCHED_COUNT);
     const cfbATierIds = new Set(cfbATier.map((subject) => subject.id));
     expect(cfbATierIds.size).toBe(EXPECTED_CFB_A_RESEARCHED_COUNT);
 
