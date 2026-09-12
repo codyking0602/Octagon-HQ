@@ -231,16 +231,7 @@ function buildPredicates(league: FootballTwentyQuestionsLeague, pool: readonly P
   }
 
   const playerSchools = new Set(pool.flatMap((person) => person.role === "player" && roleSchool(person) ? [roleSchool(person)!] : []));
-  for (const school of playerSchools) {
-    // This predicate is deliberately about the registry-owned primary college identity,
-    // not an exhaustive transfer history. A player with no single primary school answers
-    // No rather than turning every other player's school question into an unknown.
-    add(
-      league === "CFB" ? "player-primary-program" : "player-primary-college",
-      school,
-      (person) => person.role === "player" && roleSchool(person) === school,
-    );
-  }
+  for (const school of playerSchools) add(league === "CFB" ? "player-program" : "player-college", school, (person) => person.role !== "player" ? false : roleSchool(person) == null ? null : roleSchool(person) === school);
 
   const affiliationValues = new Set(pool.flatMap((person) => careerAffiliations(person)?.affiliations ?? []));
   for (const affiliation of affiliationValues) add(league === "NFL" ? "franchise" : "program", affiliation, (person) => affiliationAnswer(person, affiliation, "affiliations"));
@@ -357,8 +348,6 @@ function questionLabel(league: FootballTwentyQuestionsLeague, family: string, id
   if (family === "position-family") return `Does this player play ${id.replace("-", " ")}?`;
   if (family === "player-program") return `Did this player play college football at ${id}?`;
   if (family === "player-college") return `Did this NFL player play college football at ${id}?`;
-  if (family === "player-primary-program") return `Is this player's primary college program ${id}?`;
-  if (family === "player-primary-college") return `Is this NFL player's primary college program ${id}?`;
   if (family === "franchise") return `Did this person play or coach for the ${id}?`;
   if (family === "program") return `Did this person play or coach at ${id}?`;
   if (family === "historical-conference") return `Was this person's college career affiliated with the ${id}?`;
