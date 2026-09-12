@@ -7,6 +7,7 @@ const runtimeVerificationMigration = readFileSync("supabase/migrations/202608090
 const claimRepairMigration = readFileSync("supabase/migrations/202612310002_repair_pick_monitoring_schedule_claim.sql", "utf8");
 const migration = `${schedulerMigration}\n${hardeningMigration}\n${runtimeVerificationMigration}\n${claimRepairMigration}`;
 const runner = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
+const dailyRuntime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const sync = readFileSync("supabase/functions/sync-next-ufc-event/index.ts", "utf8");
 const config = readFileSync("supabase/config.toml", "utf8");
 const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
@@ -96,6 +97,13 @@ describe("automatic Picks monitoring deployment", () => {
     expect(runner).toContain("authorize_pick_monitoring_scheduler");
     expect(sync).toContain("monitoring-preview");
     expect(sync).toContain("get_pick_monitoring_event_state");
+  });
+
+  it("uses the service-role JWT first for scheduler-authorized RPCs", () => {
+    const serviceRoleFirst =
+      'Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SECRET_KEY")';
+    expect(runner).toContain(serviceRoleFirst);
+    expect(dailyRuntime).toContain(serviceRoleFirst);
   });
 
   it("repairs the existing claim RPC without adding a second schedule owner", () => {
