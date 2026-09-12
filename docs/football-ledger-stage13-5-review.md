@@ -37,7 +37,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | OL | 58 | 2 | 24 | 32 | 58 | 0 | 0 | 0 | 0 | 0 |
 | DL / EDGE | 46 | 8 | 22 | 16 | 29 | 17 | 0 | 17 | 0 | 0 |
 | LB | 45 | 5 | 15 | 25 | 33 | 12 | 0 | 12 | 0 | 0 |
-| Secondary | 46 | 9 | 25 | 12 | 36 | 10 | 0 | 10 | 0 | 0 |
+| Secondary | 46 | 10 | 24 | 12 | 36 | 10 | 0 | 10 | 0 | 0 |
 | K / P | 29 | 0 | 14 | 15 | 5 | 24 | 0 | 24 | 0 | 0 |
 | Player seasons | 399 | 12 | 25 | 362 | 399 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 132 | 6 | 42 | 84 | 132 | 0 | 0 | 0 | 0 | 0 |
@@ -62,7 +62,7 @@ None.
 - CFB DL / EDGE: **Lee Roy Selmon** — A, Partial; missing DL/EDGE disruption facts; source limits: CFB normalized player stats do not reach this career/season; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **Chris Long** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **David Pollack** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- CFB DL / EDGE: **J.J. Watt** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB DL / EDGE: **J.J. Watt** — B, Partial; missing DL/EDGE disruption facts; source limits: CFB normalized player stats do not reach this career/season; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **John Henderson** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **Julius Peppers** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB DL / EDGE: **Mario Williams** — B, Partial; missing DL/EDGE disruption facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
