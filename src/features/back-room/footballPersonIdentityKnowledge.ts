@@ -2208,7 +2208,7 @@ const resumeKnowledgeFacts = (
   tags: resumeFact.tags,
 }));
 
-export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentityKnowledgeRecord[] = [
+const rawFootballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentityKnowledgeRecord[] = [
   ...baseFootballPersonIdentityKnowledgeRecords.map((record) => {
     const resume = resumeResearchBySubjectId.get(record.subjectId);
     if (!resume) return record;
@@ -2224,6 +2224,20 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
       facts: resumeKnowledgeFacts(resume.subjectId, resume.facts),
     })),
 ];
+
+const canonicalKnowledgeRecordsBySubjectId = new Map<string, FootballPersonIdentityKnowledgeRecord>();
+for (const record of rawFootballPersonIdentityKnowledgeRecords) {
+  const canonicalSubject = getFootballSubject(record.subjectId);
+  const subjectId = canonicalSubject?.id ?? record.subjectId;
+  const existing = canonicalKnowledgeRecordsBySubjectId.get(subjectId);
+  canonicalKnowledgeRecordsBySubjectId.set(subjectId, {
+    subjectId,
+    facts: [...(existing?.facts ?? []), ...record.facts],
+  });
+}
+
+export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentityKnowledgeRecord[] =
+  [...canonicalKnowledgeRecordsBySubjectId.values()];
 
 const sourceById = new Map(footballPersonIdentityKnowledgeSources.map((item) => [item.id, item]));
 const recordBySubjectId = new Map<string, FootballPersonIdentityKnowledgeRecord>();
