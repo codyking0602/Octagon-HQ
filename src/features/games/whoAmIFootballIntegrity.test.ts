@@ -138,7 +138,9 @@ describe("Who Am I Football factual and identity integrity", () => {
       expect(career, `${subject.id} career production must cover its best season`).toBeGreaterThanOrEqual(best);
     }
 
-    expect(checked).toBeGreaterThan(40);
+    // Normalized CFB production begins in 2014; the exact-source binding repair
+    // intentionally removes historical/name-only rows that cannot prove ownership.
+    expect(checked).toBeGreaterThan(20);
   });
 
   it("keeps exact CFB source rows separate while facts resolve through explicit canonical ownership", () => {
