@@ -127,6 +127,8 @@ export interface FootballFindLeaderPoolDefinition {
 export interface FootballFindLeaderCandidate {
   id: string;
   name: string;
+  displayName?: string;
+  season?: number;
   subtitle: string;
   value: number;
 }
@@ -152,7 +154,15 @@ export interface FootballFindLeaderRun {
   identity: PlayLineupIdentity;
 }
 
-type ScoredRow = { id: string; name: string; subtitle: string; value: number; competitionValue: number };
+type ScoredRow = {
+  id: string;
+  name: string;
+  displayName?: string;
+  season?: number;
+  subtitle: string;
+  value: number;
+  competitionValue: number;
+};
 
 const domainCopy: Readonly<Record<FootballFindLeaderDomainId, string>> = {
   "nfl-qb-career": "NFL quarterbacks",
@@ -280,6 +290,16 @@ function playerCareerSubtitle(subject: ReturnType<typeof queryFootballSubjects>[
   return `NFL ${subject.position ?? "player"} career`;
 }
 
+function seasonDisplayName(subject: ReturnType<typeof queryFootballSubjects>[number]) {
+  if (subject.season == null) return undefined;
+  const season = String(subject.season);
+  const prefix = `${season} `;
+  const suffix = ` ${season}`;
+  if (subject.name.startsWith(prefix)) return subject.name.slice(prefix.length);
+  if (subject.name.endsWith(suffix)) return subject.name.slice(0, -suffix.length);
+  return subject.name;
+}
+
 function competitionValue(direction: FootballFindLeaderDirection, value: number) {
   return direction === "lower" ? -value : value;
 }
@@ -300,13 +320,14 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
       const record = getFootballFactualRecord(subject.id);
       if (!fact || !record || !(record.scopes ?? [record.scope]).includes(poolDefinition.factualScope)) return [];
       const subtitle = subject.kind === "player-season"
-        ? `NFL quarterback season${subject.season ? ` · ${subject.season}` : ""}`
+        ? "NFL quarterback season"
         : subject.kind === "team-season"
-          ? `${subject.league} team season${subject.season ? ` · ${subject.season}` : ""}`
+          ? `${subject.league} team season`
           : playerCareerSubtitle(subject);
       return [{
         id: subject.id,
         name: subject.name,
+        ...(subject.season != null ? { displayName: seasonDisplayName(subject), season: subject.season } : {}),
         subtitle,
         value: fact.fact.value,
         competitionValue: competitionValue(direction, fact.fact.value),
