@@ -36,7 +36,7 @@ describe("automatic Picks monitoring lifecycle", () => {
   it("uses the exact published source context for both manual and scheduled checks", () => {
     expect(sourceContextMigration).toContain("draft.state = 'published'");
     expect(sourceContextMigration).toContain("'{source_url}'");
-    expect(runner).toContain('admin.rpc("get_pick_monitoring_event_state")');
+    expect(runner).toContain('schedulerRpc("get_pick_monitoring_event_state")');
     expect(runner).not.toContain('owner.rpc("get_current_pick_event")');
     expect(runner).toContain('mode: "monitoring-preview"');
     expect(runner).toContain('source_url: sourceUrl');
@@ -45,7 +45,7 @@ describe("automatic Picks monitoring lifecycle", () => {
   it("stages an empty fight-week Event Setup and immediately surfaces the existing owner review notification", () => {
     const stageBlock = blockAfter("shouldAttemptAutomaticEventStaging(stagingNow)", 4300);
     const stagingRpcAt = stageBlock.indexOf('admin.rpc("stage_pick_event_draft"');
-    const ownerDispatchAt = stageBlock.indexOf('admin.rpc("dispatch_due_in_app_notifications"');
+    const ownerDispatchAt = stageBlock.indexOf('schedulerRpc("dispatch_due_in_app_notifications"');
     expect(stageBlock).toContain('mode: "monitoring-preview"');
     expect(stageBlock).toContain("eventIsInAutomaticStagingWindow(stageStartsAt, stagingNow)");
     expect(stagingRpcAt).toBeGreaterThanOrEqual(0);
@@ -54,7 +54,7 @@ describe("automatic Picks monitoring lifecycle", () => {
     expect(stageBlock).toContain('reason: "event_staged"');
     expect(stageBlock).toContain("providerCalled: false");
     expect(runner.match(/stage_pick_event_draft/g)).toHaveLength(1);
-    expect(runner.match(/admin\.rpc\("dispatch_due_in_app_notifications"/g)).toHaveLength(2);
+    expect(runner.match(/schedulerRpc\("dispatch_due_in_app_notifications"/g)).toHaveLength(2);
     expect(runner).not.toMatch(/publish_pick_event_draft|record_pick_result|setInterval/);
     expect(runner.indexOf('admin.rpc("stage_pick_event_draft"')).toBeLessThan(
       runner.indexOf("buildTheOddsApiRequestUrl(providerKey)"),
