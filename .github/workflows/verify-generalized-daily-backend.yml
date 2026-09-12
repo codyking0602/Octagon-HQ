@@ -376,6 +376,7 @@ jobs:
           require_remote_migration "202612310092"
           require_remote_migration "202612310093"
           require_remote_migration "202612310094"
+          require_remote_migration "202612310095"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
