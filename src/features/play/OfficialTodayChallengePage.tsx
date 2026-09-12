@@ -8,6 +8,7 @@ import {
   OfficialBlindRankScoreSummary,
 } from "./OfficialBlindRankResult";
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
+import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -103,6 +104,8 @@ export function OfficialTodayChallengeContent({
           busy={busy}
           onAdvance={onAdvance}
         />
+      ) : projection.gameType === "who_am_i" ? (
+        <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
       ) : (
         <OfficialTodayChallengeView
           projection={presentationProjection}
