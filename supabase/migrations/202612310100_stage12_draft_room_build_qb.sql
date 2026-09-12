@@ -56,76 +56,8 @@ as $$
   select case when p_mode_id = 'build-qb' then 'draft-room' else 'auction' end;
 $$;
 
-create or replace function private.auction_required_selections(p_mode_id text, p_content_version text)
-returns integer
-language sql
-immutable
-set search_path = ''
-as $$
-  select case
-    when p_mode_id in ('ultimate-fighter', 'build-qb') then 5
-    when p_content_version in (
-      'ufc-auction-2026-08-v3',
-      'ufc-auction-2026-08-v4',
-      'ufc-auction-2026-08-v5',
-      'ufc-auction-2026-08-v6',
-      'ufc-auction-2026-08-v7',
-      'ufc-auction-2026-08-v8'
-    ) then 3
-    else 4
-  end;
-$$;
-
-create or replace function private.auction_round_count(p_mode_id text, p_content_version text)
-returns integer
-language sql
-immutable
-set search_path = ''
-as $$
-  select private.auction_required_selections(p_mode_id, p_content_version) * 2;
-$$;
-
-create or replace function private.auction_starting_bankroll(p_mode_id text, p_content_version text)
-returns integer
-language sql
-immutable
-set search_path = ''
-as $$
-  select case
-    when p_mode_id in ('ultimate-fighter', 'build-qb') then 50
-    when p_content_version in (
-      'ufc-auction-2026-08-v3',
-      'ufc-auction-2026-08-v4',
-      'ufc-auction-2026-08-v5',
-      'ufc-auction-2026-08-v6',
-      'ufc-auction-2026-08-v7',
-      'ufc-auction-2026-08-v8'
-    ) then 30
-    else 40
-  end;
-$$;
-
-create or replace function private.auction_category_options(p_mode_id text)
-returns text[]
-language sql
-immutable
-set search_path = ''
-as $$
-  select case
-    when p_mode_id = 'ultimate-fighter'
-      then array['Striking','Grappling','Frame','Power','Heart']::text[]
-    when p_mode_id = 'build-qb'
-      then array['Arm','Accuracy','Processing','Mobility','Clutch']::text[]
-    else '{}'::text[]
-  end;
-$$;
-
 revoke all on function private.draft_room_public_release_enabled() from public, anon, authenticated;
 revoke all on function private.auction_game_id_for_mode(text) from public, anon, authenticated;
-revoke all on function private.auction_required_selections(text,text) from public, anon, authenticated;
-revoke all on function private.auction_round_count(text,text) from public, anon, authenticated;
-revoke all on function private.auction_starting_bankroll(text,text) from public, anon, authenticated;
-revoke all on function private.auction_category_options(text) from public, anon, authenticated;
 
 insert into private.auction_catalog_versions (
   content_version,
@@ -265,8 +197,30 @@ begin
     raise exception 'Auction catalog version is unavailable';
   end if;
 
-  v_rounds := private.auction_round_count(p_mode_id, v_content_version);
-  v_bankroll := private.auction_starting_bankroll(p_mode_id, v_content_version);
+  v_rounds := case
+    when p_mode_id = 'build-qb' then 10
+    when p_mode_id = 'ultimate-fighter' then 10
+    when v_content_version in (
+      'ufc-auction-2026-08-v3',
+      'ufc-auction-2026-08-v4',
+      'ufc-auction-2026-08-v5',
+      'ufc-auction-2026-08-v6',
+      'ufc-auction-2026-08-v7',
+      'ufc-auction-2026-08-v8'
+    ) then 6 else 8
+  end;
+  v_bankroll := case
+    when p_mode_id = 'build-qb' then 50
+    when p_mode_id = 'ultimate-fighter' then 50
+    when v_content_version in (
+      'ufc-auction-2026-08-v3',
+      'ufc-auction-2026-08-v4',
+      'ufc-auction-2026-08-v5',
+      'ufc-auction-2026-08-v6',
+      'ufc-auction-2026-08-v7',
+      'ufc-auction-2026-08-v8'
+    ) then 30 else 40
+  end;
   v_tie_priority := case
     when get_byte(extensions.gen_random_bytes(1), 0) < 128 then v_actor
     else p_recipient_id
@@ -342,7 +296,18 @@ begin
     raise exception 'bid must be a whole dollar amount of at least $1';
   end if;
 
-  v_required := private.auction_required_selections(p_game.mode_id, p_game.content_version);
+  v_required := case
+    when p_game.mode_id = 'build-qb' then 5
+    when p_game.mode_id = 'ultimate-fighter' then 5
+    when p_game.content_version in (
+      'ufc-auction-2026-08-v3',
+      'ufc-auction-2026-08-v4',
+      'ufc-auction-2026-08-v5',
+      'ufc-auction-2026-08-v6',
+      'ufc-auction-2026-08-v7',
+      'ufc-auction-2026-08-v8'
+    ) then 3 else 4
+  end;
 
   if p_actor = p_game.challenger_id then
     v_bankroll := p_game.challenger_bankroll;
@@ -363,10 +328,9 @@ begin
     raise exception 'bid exceeds reserve maximum of $%', v_maximum;
   end if;
 
-  v_categories := private.auction_category_options(p_game.mode_id);
-  if cardinality(v_categories) > 0 then
-    if p_category is null or not (p_category = any(v_categories)) then
-      raise exception 'an available category is required';
+  if p_game.mode_id = 'ultimate-fighter' then
+    if p_category not in ('Striking', 'Grappling', 'Frame', 'Power', 'Heart') then
+      raise exception 'an available Ultimate Fighter category is required';
     end if;
     if exists (
       select 1
@@ -375,10 +339,23 @@ begin
         and award.awarded_to = p_actor
         and award.visible_category = p_category
     ) then
-      raise exception 'category is already filled';
+      raise exception 'Ultimate Fighter category is already filled';
+    end if;
+  elsif p_game.mode_id = 'build-qb' then
+    if p_category not in ('Arm', 'Accuracy', 'Processing', 'Mobility', 'Clutch') then
+      raise exception 'an available Build a QB trait is required';
+    end if;
+    if exists (
+      select 1
+      from private.auction_awards award
+      where award.auction_id = p_game.id
+        and award.awarded_to = p_actor
+        and award.visible_category = p_category
+    ) then
+      raise exception 'Build a QB trait is already filled';
     end if;
   elsif p_category is not null then
-    raise exception 'category intent is not valid for this mode';
+    raise exception 'category intent is only valid for Ultimate Fighter';
   end if;
 end;
 $$;
@@ -475,8 +452,30 @@ begin
     p_auction_id, v_deck.id, v_winner, v_game.current_round, v_category
   );
 
-  v_required := private.auction_required_selections(v_game.mode_id, v_game.content_version);
-  v_rounds := private.auction_round_count(v_game.mode_id, v_game.content_version);
+  v_required := case
+    when v_game.mode_id = 'build-qb' then 5
+    when v_game.mode_id = 'ultimate-fighter' then 5
+    when v_game.content_version in (
+      'ufc-auction-2026-08-v3',
+      'ufc-auction-2026-08-v4',
+      'ufc-auction-2026-08-v5',
+      'ufc-auction-2026-08-v6',
+      'ufc-auction-2026-08-v7',
+      'ufc-auction-2026-08-v8'
+    ) then 3 else 4
+  end;
+  v_rounds := case
+    when v_game.mode_id = 'build-qb' then 10
+    when v_game.mode_id = 'ultimate-fighter' then 10
+    when v_game.content_version in (
+      'ufc-auction-2026-08-v3',
+      'ufc-auction-2026-08-v4',
+      'ufc-auction-2026-08-v5',
+      'ufc-auction-2026-08-v6',
+      'ufc-auction-2026-08-v7',
+      'ufc-auction-2026-08-v8'
+    ) then 6 else 8
+  end;
 
   update private.auction_games
   set lifecycle_state = 'active',
@@ -505,7 +504,13 @@ begin
       else v_game.challenger_id
     end;
 
-    v_categories := private.auction_category_options(v_game.mode_id);
+    v_categories := case
+      when v_game.mode_id = 'ultimate-fighter'
+        then array['Striking','Grappling','Frame','Power','Heart']::text[]
+      when v_game.mode_id = 'build-qb'
+        then array['Arm','Accuracy','Processing','Mobility','Clutch']::text[]
+      else '{}'::text[]
+    end;
 
     for v_position in v_game.current_round..v_rounds loop
       exit when (
@@ -646,8 +651,19 @@ begin
     raise exception 'Auction grading version is unsupported';
   end if;
 
-  v_required := private.auction_required_selections(v_game.mode_id, v_game.content_version);
-  v_category_builder := cardinality(private.auction_category_options(v_game.mode_id)) > 0;
+  v_required := case
+    when v_game.mode_id = 'build-qb' then 5
+    when v_game.mode_id = 'ultimate-fighter' then 5
+    when v_game.content_version in (
+      'ufc-auction-2026-08-v3',
+      'ufc-auction-2026-08-v4',
+      'ufc-auction-2026-08-v5',
+      'ufc-auction-2026-08-v6',
+      'ufc-auction-2026-08-v7',
+      'ufc-auction-2026-08-v8'
+    ) then 3 else 4
+  end;
+  v_category_builder := v_game.mode_id in ('ultimate-fighter', 'build-qb');
 
   select
     count(*),
@@ -1243,7 +1259,3 @@ $$;
 
 comment on function private.draft_room_public_release_enabled() is
   'Stage 12 release switch. False keeps Football Draft Room restricted to pick-control owners.';
-comment on function private.auction_required_selections(text,text) is
-  'Canonical sealed-bid collection-size owner shared by UFC Auction and Football Draft Room.';
-comment on function private.auction_category_options(text) is
-  'Canonical category owner for sealed-bid builder modes, including Build a QB traits.';
