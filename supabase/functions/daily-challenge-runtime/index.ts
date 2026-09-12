@@ -358,7 +358,7 @@ async function materializeFootballToday(admin: SupabaseClient, footballRuntime: 
   const publication = footballRuntime.buildFootballTodayPersistenceSetup(day) as JsonRecord;
   const published = await admin.rpc("publish_daily_challenge_setup", {
     p_central_day: day,
-    p_schedule_version: "football-daily-v1",
+    p_schedule_version: requiredString(publication.scheduleVersion, "Football daily schedule version"),
     p_game_type: requiredString(publication.gameType, "Football daily game type"),
     p_setup_key: requiredString(publication.setupKey, "Football daily setup key"),
     p_content_version: requiredString(publication.contentVersion, "Football daily content version"),
