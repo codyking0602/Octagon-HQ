@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **4,024**
+Canonical A/B/C subjects: **3,997**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -12,13 +12,13 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | QB | 133 | 30 | 41 | 62 | 133 | 0 | 0 | 0 | 0 | 0 |
 | RB | 178 | 20 | 36 | 122 | 178 | 0 | 0 | 0 | 0 | 0 |
-| WR | 252 | 7 | 53 | 192 | 252 | 0 | 0 | 0 | 0 | 0 |
-| TE | 73 | 1 | 12 | 60 | 73 | 0 | 0 | 0 | 0 | 0 |
-| OL | 72 | 15 | 55 | 2 | 72 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 324 | 8 | 45 | 271 | 323 | 1 | 0 | 1 | 0 | 0 |
-| LB | 243 | 6 | 39 | 198 | 223 | 20 | 0 | 20 | 0 | 0 |
-| Secondary | 418 | 7 | 53 | 358 | 418 | 0 | 0 | 0 | 0 | 0 |
-| K / P | 20 | 6 | 13 | 1 | 19 | 1 | 0 | 1 | 0 | 0 |
+| WR | 250 | 7 | 48 | 195 | 250 | 0 | 0 | 0 | 0 | 0 |
+| TE | 73 | 1 | 11 | 61 | 73 | 0 | 0 | 0 | 0 | 0 |
+| OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
+| DL / EDGE | 320 | 8 | 38 | 274 | 319 | 1 | 0 | 1 | 0 | 0 |
+| LB | 240 | 5 | 37 | 198 | 220 | 20 | 0 | 20 | 0 | 0 |
+| Secondary | 414 | 6 | 48 | 360 | 414 | 0 | 0 | 0 | 0 | 0 |
+| K / P | 19 | 6 | 12 | 1 | 19 | 0 | 0 | 0 | 0 | 0 |
 | Player seasons | 764 | 107 | 318 | 339 | 764 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 113 | 4 | 37 | 72 | 113 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 32 | 5 | 27 | 0 | 32 | 0 | 0 | 0 | 0 | 0 |
@@ -388,7 +388,6 @@ None.
 - NFL Head coaches: **Sean Payton** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Tom Coughlin** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Zac Taylor** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL K / P: **Morten Andersen** — B, Partial; missing specialist kicking/punting facts; source limits: normalized NFL player production begins in 1999.
 - NFL LB: **Dick Butkus** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Sam Huff** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Andre Tippett** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
