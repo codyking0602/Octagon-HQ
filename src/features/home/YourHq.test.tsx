@@ -1,7 +1,7 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ChallengeProfile, PlayChallenge } from "../challenges/challengeModel";
+import type { ChallengeProfile } from "../challenges/challengeModel";
 import type { PickEvent } from "../picks/picksModel";
 import HomePage from "./HomePage";
 
@@ -15,9 +15,25 @@ const mocks = vi.hoisted(() => {
     lockBonus: 0,
     totalPoints: 0,
   };
+  const emptyHistory = {
+    season: 2026,
+    summary: {
+      correct: 0,
+      incorrect: 0,
+      missing: 0,
+      excluded: 0,
+      basePoints: 0,
+      lockBonus: 0,
+      totalPoints: 0,
+      eventsEntered: 0,
+    },
+    seasonStandings: [],
+    events: [],
+  };
 
   return {
     emptySummary,
+    emptyHistory,
     identity: {
       profile: null as ChallengeProfile | null,
       openDialog: vi.fn(),
@@ -27,22 +43,18 @@ const mocks = vi.hoisted(() => {
       selections: {} as Record<string, string>,
       loading: false,
       summary: { ...emptySummary },
-      footballSummary: { ...emptySummary },
+      history: { ...emptyHistory },
       error: "",
+      footballEvent: null as PickEvent | null,
+      footballSelections: {} as Record<string, string>,
+      footballSummary: { ...emptySummary },
+      footballHistory: { ...emptyHistory },
       footballSummaryError: "",
-    },
-    challenges: {
-      challenges: [] as PlayChallenge[],
-      profiles: [] as ChallengeProfile[],
-      loading: false,
-      error: null as Error | null,
-    },
-    whatsNew: {
-      activeItems: [],
-      status: "ready" as const,
+      footballHomeError: "",
     },
     runtime: vi.fn(),
     overview: vi.fn(),
+    hqStreak: vi.fn(),
   };
 });
 
@@ -54,36 +66,19 @@ vi.mock("../picks/PicksProvider", () => ({
   usePicks: () => mocks.picks,
 }));
 
-vi.mock("../challenges/ChallengeProvider", () => ({
-  usePlayChallenges: () => mocks.challenges,
-}));
-
 vi.mock("../play/useTodayChallengeRuntime", () => ({
   useTodayChallengeRuntime: (...args: unknown[]) => mocks.runtime(...args),
 }));
 
 vi.mock("../play/useTodayChallengeOverview", () => ({
   useTodayChallengeOverview: (...args: unknown[]) => mocks.overview(...args),
-}));
-
-vi.mock("../whats-new/WhatsNewProvider", () => ({
-  useWhatsNew: () => mocks.whatsNew,
-}));
-
-vi.mock("../whats-new/WhatsNewPreview", () => ({
-  WhatsNewPreview: () => <section>WHAT’S NEW</section>,
+  useHqDailyChallengeStreak: (...args: unknown[]) => mocks.hqStreak(...args),
 }));
 
 const cody: ChallengeProfile = {
   id: "11111111-1111-4111-8111-111111111111",
   displayName: "CODY",
   initials: "CK",
-};
-
-const shane: ChallengeProfile = {
-  id: "22222222-2222-4222-8222-222222222222",
-  displayName: "SHANE",
-  initials: "SH",
 };
 
 const pickEvent: PickEvent = {
@@ -124,29 +119,6 @@ const pickEvent: PickEvent = {
   ],
 };
 
-function challenge(overrides: Partial<PlayChallenge> = {}): PlayChallenge {
-  return {
-    code: "RECEIVED1",
-    gameId: "find-leader",
-    gameVersion: "find-leader-v2",
-    gameTitle: "Find the Leader",
-    summary: "Who has the most UFC wins?",
-    creatorId: shane.id,
-    recipientId: cody.id,
-    playUrl: "https://example.test/play/find-leader?day=2026-07-24",
-    setup: { day: "2026-07-24" },
-    creatorResult: { score: 8 },
-    responderResult: null,
-    createdAt: "2026-07-24T12:00:00.000Z",
-    openedAt: null,
-    completedAt: null,
-    declinedAt: null,
-    expiresAt: "2026-08-23T12:00:00.000Z",
-    hiddenFor: [],
-    ...overrides,
-  };
-}
-
 function renderHome() {
   return render(<MemoryRouter><HomePage /></MemoryRouter>);
 }
@@ -157,7 +129,7 @@ function yourHqSection() {
   return section;
 }
 
-describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
+describe("Home Your HQ", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.identity.profile = null;
@@ -165,14 +137,14 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
     mocks.picks.selections = {};
     mocks.picks.loading = false;
     mocks.picks.summary = { ...mocks.emptySummary };
-    mocks.picks.footballSummary = { ...mocks.emptySummary };
+    mocks.picks.history = { ...mocks.emptyHistory };
     mocks.picks.error = "";
+    mocks.picks.footballEvent = null;
+    mocks.picks.footballSelections = {};
+    mocks.picks.footballSummary = { ...mocks.emptySummary };
+    mocks.picks.footballHistory = { ...mocks.emptyHistory };
     mocks.picks.footballSummaryError = "";
-    mocks.challenges.challenges = [];
-    mocks.challenges.profiles = [];
-    mocks.challenges.loading = false;
-    mocks.challenges.error = null;
-    mocks.whatsNew.activeItems = [];
+    mocks.picks.footballHomeError = "";
     mocks.runtime.mockReturnValue({
       projection: null,
       loading: false,
@@ -193,27 +165,33 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
       error: null,
       refresh: vi.fn(),
     });
+    mocks.hqStreak.mockReturnValue({
+      streak: { currentStreak: 0, bestStreak: 0 },
+      loading: false,
+      error: null,
+      refresh: vi.fn(),
+    });
   });
 
-  it("shows the locked three-stat sign-in snapshot and both permanent daily challenge entry points", () => {
+  it("keeps Your HQ to the three approved stats with no CTA", () => {
     renderHome();
 
     const hq = yourHqSection();
     expect(within(hq).getAllByRole("article")).toHaveLength(3);
-    expect(within(hq).getByText("Daily streak")).toBeInTheDocument();
+    expect(within(hq).getByText("HQ Daily streak")).toBeInTheDocument();
     expect(within(hq).getByText("UFC Picks record")).toBeInTheDocument();
     expect(within(hq).getByText("Football Picks record")).toBeInTheDocument();
-    expect(within(hq).queryByText("Favorite fighter")).not.toBeInTheDocument();
-    expect(within(hq).queryByText("Open challenges")).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "SIGN IN TO YOUR HQ" })).toBeInTheDocument();
+    expect(within(hq).queryByRole("button")).not.toBeInTheDocument();
+    expect(within(hq).queryByRole("link")).not.toBeInTheDocument();
 
     expect(screen.getByRole("link", { name: /Open UFC Today’s Challenge/i })).toHaveAttribute("href", "/play");
     expect(screen.getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
+    expect(screen.queryByRole("region", { name: "What’s New" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Today’s Challenges" })).not.toBeInTheDocument();
   });
 
-  it("keeps UFC and Football daily status independent on universal Home", () => {
+  it("keeps UFC and Football Daily Challenge status independent inside each sport HQ", () => {
     mocks.identity.profile = cody;
-    mocks.picks.event = null;
     mocks.runtime.mockImplementation((options: { sport?: string }) => options.sport === "football"
       ? {
           projection: {
@@ -284,11 +262,9 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
     expect(within(footballCard).getByText("#2 today")).toBeInTheDocument();
   });
 
-  it("shows independent UFC and Football Picks records from the app-level Picks owner", async () => {
+  it("uses the cross-sport HQ streak while preserving independent Picks records", () => {
     mocks.identity.profile = cody;
-    mocks.picks.selections = {
-      "ankalaev-guskov": "magomed-ankalaev",
-    };
+    mocks.picks.selections = { "ankalaev-guskov": "magomed-ankalaev" };
     mocks.picks.summary = {
       correct: 12,
       incorrect: 8,
@@ -307,27 +283,6 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
       lockBonus: 4,
       totalPoints: 40,
     };
-    mocks.challenges.challenges = [
-      challenge(),
-      challenge({
-        code: "WAITING1",
-        creatorId: cody.id,
-        recipientId: shane.id,
-        createdAt: "2026-07-24T10:00:00.000Z",
-      }),
-    ];
-    mocks.challenges.profiles = [cody, shane];
-    mocks.runtime.mockImplementation((options: { sport?: string }) => ({
-      projection: options.sport === "football"
-        ? { gameType: "wavelength", progressRevision: 0, officialAttempt: null }
-        : { gameType: "blind_resume", progressRevision: 0, officialAttempt: null },
-      loading: false,
-      error: null,
-      busy: false,
-      configured: true,
-      advance: vi.fn(),
-      refresh: vi.fn(),
-    }));
     mocks.overview.mockImplementation((options: { sport?: string }) => ({
       configured: true,
       standings: null,
@@ -339,19 +294,18 @@ describe("Home PR 9 — Today’s Challenges + Your HQ", () => {
       error: null,
       refresh: vi.fn(),
     }));
+    mocks.hqStreak.mockReturnValue({
+      streak: { currentStreak: 7, bestStreak: 11 },
+      loading: false,
+      error: null,
+      refresh: vi.fn(),
+    });
 
     renderHome();
 
-    const hq = yourHqSection();
-    await waitFor(() => expect(within(screen.getByText("Daily streak").closest("article")!).getByText("2")).toBeInTheDocument());
-    expect(within(hq).getAllByRole("article")).toHaveLength(3);
+    expect(within(screen.getByText("HQ Daily streak").closest("article")!).getByText("7")).toBeInTheDocument();
     expect(within(screen.getByText("UFC Picks record").closest("article")!).getByText("12-8")).toBeInTheDocument();
     expect(within(screen.getByText("Football Picks record").closest("article")!).getByText("9-3")).toBeInTheDocument();
     expect(within(screen.getByText("Football Picks record").closest("article")!).getByText(/2 PENDING/)).toBeInTheDocument();
-
-    expect(screen.queryByRole("region", { name: "Up Next" })).not.toBeInTheDocument();
-    expect(screen.queryByText("Magomed Ankalaev vs. Bogdan Guskov")).not.toBeInTheDocument();
-    expect(screen.getByText("1 OF 2")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
   });
 });
