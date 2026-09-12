@@ -857,7 +857,10 @@ export function assembleWhoAmIClues(
   const sportsIdentityTarget = Math.min(
     SPORTS_IDENTITY_TARGET,
     limit,
-    prepared.filter((entry) => entry.selectionClass === "sports-identity").length,
+    prepared.filter((entry) => (
+      entry.selectionClass === "sports-identity"
+      && !isGenericCareerGames(entry.clue)
+    )).length,
   );
 
   while (selected.filter((entry) => entry.selectionClass === "sports-identity").length < sportsIdentityTarget) {
@@ -939,6 +942,7 @@ export function assembleWhoAmIClues(
 
     return prepared
       .filter((candidate) => !selectedSnapshot.includes(candidate))
+      .filter((candidate) => !isGenericCareerGames(candidate.clue))
       .filter((candidate) => (
         candidate.clue.band === current.clue.band
         || (
