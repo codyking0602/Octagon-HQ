@@ -42,6 +42,7 @@ on:
       - "supabase/migrations/202612310093_future_daily_schedule.sql"
       - "supabase/migrations/202612310094_repair_football_daily_cutover.sql"
       - "supabase/migrations/202612310095_home_hq_cross_sport_streak.sql"
+      - "supabase/migrations/202612310098_reset_football_weekly_titles.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -50,6 +51,7 @@ on:
       - "supabase/tests/hit_the_number_daily_runtime.sql"
       - "supabase/tests/blind_resume_v3_daily_runtime.sql"
       - "supabase/tests/football_daily_challenge_persistence.sql"
+      - "supabase/tests/football_weekly_title_reset.sql"
       - "supabase/tests/home_hq_cross_sport_streak.sql"
       - "supabase/tests/who_am_i_daily_runtime.sql"
       - "supabase/tests/future_daily_schedule.sql"
@@ -203,6 +205,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/home_hq_cross_sport_streak.sql
 
+      - name: Execute Football-only weekly title reset proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/football_weekly_title_reset.sql
+
       - name: Execute realistic legacy-data migration and idempotency proof
         shell: bash
         run: |
@@ -227,6 +233,7 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310081_football_daily_midday_release.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310092_who_am_i_daily_runtime.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310095_home_hq_cross_sport_streak.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310098_reset_football_weekly_titles.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -258,6 +265,7 @@ jobs:
             echo "- Cross-device optimistic progress restoration: passed"
             echo "- Football/UFC same-day sport isolation and shared records RPCs: passed"
             echo "- Home HQ cross-sport daily streak union: passed"
+            echo "- Football-only weekly title reset, UFC preservation, and Monday rollover: passed"
             echo "- Shared hourly materialization wake-up: passed"
             echo "- Central-time DST boundaries: passed"
             echo "- Immutable first attempt and replay isolation: passed"
@@ -377,6 +385,7 @@ jobs:
           require_remote_migration "202612310093"
           require_remote_migration "202612310094"
           require_remote_migration "202612310095"
+          require_remote_migration "202612310098"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
