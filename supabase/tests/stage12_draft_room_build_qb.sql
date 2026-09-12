@@ -2,7 +2,13 @@ begin;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
-do $$
+-- Frozen Auction fixture proofs rotate the UFC preparation pointer broadly.
+-- Restore the independent Draft Room pointer inside this rollback-only proof.
+update private.auction_catalog_versions
+set is_preparation_version = true
+where content_version = 'football-draft-room-2026-09-v1';
+
+do $
 declare
   v_admin_a uuid := extensions.gen_random_uuid();
   v_admin_b uuid := extensions.gen_random_uuid();
