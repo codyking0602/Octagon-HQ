@@ -5,10 +5,6 @@ import {
   type TwentyQuestionsUniverse,
 } from "./twentyQuestionsEngine";
 import { getFootballTwentyQuestionsUniverse } from "./twentyQuestionsFootballAuthority";
-import {
-  FOOTBALL_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS,
-  getFootballTwentyQuestionsRuntimeUniverse,
-} from "./twentyQuestionsFootballRuntimeAuthority";
 import { createTwentyQuestionsRound } from "./twentyQuestionsRuntime";
 import {
   UFC_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS,
@@ -123,7 +119,7 @@ describe("UFC 20 Questions factual authority", () => {
   });
 });
 
-describe("Football 20 Questions runtime", () => {
+describe("Retired Football 20 Questions factual authority", () => {
   it("discloses NFL or CFB before play and never combines the universes", () => {
     const nfl = createFootballRound((() => {
       const values = [0.1, 0.2];
@@ -150,16 +146,5 @@ describe("Football 20 Questions runtime", () => {
       }
     });
 
-    it(`${league} runtime is deep enough to distinguish every eligible subject pair`, () => {
-      const universe = getFootballTwentyQuestionsRuntimeUniverse(league);
-      expect(universe.subjects).toHaveLength(120);
-      expect(universe.questions.length).toBeGreaterThan(50);
-      expect(universe.questions.length).toBeLessThanOrEqual(FOOTBALL_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS);
-      expect(new Set(universe.questions.map((question) => question.id)).size).toBe(universe.questions.length);
-      for (const question of universe.questions) {
-        for (const subject of universe.subjects) expect(typeof question.answer(subject.id)).toBe("boolean");
-      }
-      expectPairwiseSeparable(universe);
-    });
   }
 });
