@@ -1,13 +1,13 @@
 .home-section--football-hq {
-  --football-hq-navy: #1f4e79;
+  --football-hq-navy: #1F4E79;
 }
 
 .home-section--football-hq .home-event-card {
-  border-color: rgba(72, 139, 199, .28);
+  border-color: rgba(31, 78, 121, .28);
 }
 
 .home-section--football-hq .picks-progress__track span {
-  background: #5f93bd;
+  background: var(--football-hq-navy);
 }
 
 .football-player-spotlight {
@@ -15,10 +15,10 @@
   grid-template-columns: minmax(132px, .9fr) minmax(0, 1.3fr);
   min-height: 205px;
   overflow: hidden;
-  border: 1px solid rgba(72, 139, 199, .42);
+  border: 1px solid rgba(31, 78, 121, .42);
   border-radius: 16px;
   background:
-    radial-gradient(circle at 12% 28%, rgba(70, 134, 189, .18), transparent 40%),
+    radial-gradient(circle at 12% 28%, rgba(31, 78, 121, .18), transparent 40%),
     linear-gradient(135deg, #07111a, #090b0f 66%);
 }
 
@@ -44,7 +44,7 @@ button.football-player-spotlight__media.is-manageable {
 }
 
 button.football-player-spotlight__media.is-manageable:focus-visible {
-  outline: 2px solid #8ebce6;
+  outline: 2px solid var(--football-hq-navy);
   outline-offset: -3px;
 }
 
@@ -84,7 +84,7 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 }
 
 .football-player-spotlight__copy > span {
-  color: #a9cfee;
+  color: var(--football-hq-navy);
   font-size: 8px;
   font-weight: 950;
   letter-spacing: .13em;
@@ -171,7 +171,7 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 .football-player-spotlight__copy a:focus-visible,
 .football-hq-game-row:focus-visible,
 .football-hq-games__schedule:focus-visible {
-  outline: 2px solid #8ebce6;
+  outline: 2px solid var(--football-hq-navy);
   outline-offset: 2px;
 }
 
@@ -179,7 +179,7 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
   display: grid;
   gap: 9px;
   padding: 11px;
-  border: 1px solid rgba(72, 139, 199, .28);
+  border: 1px solid rgba(31, 78, 121, .28);
   border-radius: 16px;
   background: rgba(255, 255, 255, .022);
 }
@@ -236,7 +236,7 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 .football-hq-game-row__main > span {
   display: block;
   margin-bottom: 7px;
-  color: #8ebce6;
+  color: var(--football-hq-navy);
   font-size: 7px;
   font-weight: 950;
   letter-spacing: .09em;
@@ -298,7 +298,7 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 .football-hq-team-mark.is-empty {
   border: 1px solid var(--border);
   border-radius: 9px;
-  color: #8ebce6;
+  color: var(--football-hq-navy);
   font-size: 8px;
 }
 
@@ -321,7 +321,7 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 
 .football-hq-game-row__meta > b {
   margin-top: 2px;
-  color: #8ebce6;
+  color: var(--football-hq-navy);
   font-size: 7px;
   letter-spacing: .05em;
 }
