@@ -78,6 +78,17 @@ export interface FootballSubjectQuery {
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
 const projectedPlayerSourceSubjectById = new Map(footballProjectedPlayerSourceSubjects.map((subject) => [subject.id, subject]));
+const projectedPlayerSourceCoverageEndSeasonByLeague = new Map(
+  (["NFL", "CFB"] as const).map((league) => [
+    league,
+    Math.max(
+      0,
+      ...footballProjectedPlayerSourceSubjects
+        .filter((subject) => subject.league === league)
+        .map((subject) => subject.endSeason ?? 0),
+    ),
+  ]),
+);
 
 function normalizedFootballSubjectName(name: string) {
   return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
@@ -164,7 +175,14 @@ function reconcileProjectedPlayerIdentity(subject: FootballCanonicalSubject): Fo
     school: withReviewedMetadata.school ?? sourceProjection.school,
     franchises: withReviewedMetadata.franchises ?? sourceProjection.franchises,
     startSeason: withReviewedMetadata.startSeason ?? sourceProjection.startSeason,
-    endSeason: withReviewedMetadata.endSeason ?? sourceProjection.endSeason,
+    // A source row ending at the current NFL coverage ceiling proves only the
+    // last observed source season, not that an active player's career ended there.
+    endSeason: withReviewedMetadata.endSeason ?? (
+      sourceProjection.league === "NFL"
+      && sourceProjection.endSeason === projectedPlayerSourceCoverageEndSeasonByLeague.get("NFL")
+        ? undefined
+        : sourceProjection.endSeason
+    ),
     activeDecades: withReviewedMetadata.activeDecades ?? sourceProjection.activeDecades,
     draftYear: withReviewedMetadata.draftYear ?? sourceProjection.draftYear,
     draftRound: withReviewedMetadata.draftRound ?? sourceProjection.draftRound,
