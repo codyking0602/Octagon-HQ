@@ -113,7 +113,7 @@ describe("Football recognizability projection", () => {
     expect(generator).not.toContain("Math.random");
   });
   it("binds projected CFB school identity to authoritative season evidence", () => {
-    const seasonsBySourceId = new Map<string, typeof cfbSeasonRecognition.records>();
+    const seasonsBySourceId = new Map<string, Array<(typeof cfbSeasonRecognition.records)[number]>>();
     for (const season of cfbSeasonRecognition.records) {
       const rows = seasonsBySourceId.get(season.sourceId) ?? [];
       rows.push(season);
