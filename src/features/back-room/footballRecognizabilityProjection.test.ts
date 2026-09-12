@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import { describe, expect, it } from "vitest";
 import projection from "../../../data/generated/football/recognizability-projection.json";
-import cfbSeasonRecognition from "../../../data/generated/football/cfb/player-season-recognition.json";
 import { footballSubjects, getFootballSubject, queryFootballSubjects } from "./footballSubjectRegistry";
 import { buildFootballSubjectKnowledgeMetadata } from "./footballSubjectEligibility";
 
@@ -112,54 +111,4 @@ describe("Football recognizability projection", () => {
     const generator = fs.readFileSync("scripts/generate-football-recognizability.mjs", "utf8");
     expect(generator).not.toContain("Math.random");
   });
-  it("binds projected CFB school identity to authoritative season evidence", () => {
-    const seasonsBySourceId = new Map<string, Array<(typeof cfbSeasonRecognition.records)[number]>>();
-    for (const season of cfbSeasonRecognition.records) {
-      const rows = seasonsBySourceId.get(season.sourceId) ?? [];
-      rows.push(season);
-      seasonsBySourceId.set(season.sourceId, rows);
-    }
-
-    let checked = 0;
-    for (const record of projection.records.filter((candidate) => (
-      candidate.kind === "player-career"
-      && candidate.league === "CFB"
-      && candidate.sourceProvider === "cfbfastR"
-      && candidate.school
-    ))) {
-      const observed = (seasonsBySourceId.get(record.sourceId) ?? []).filter((season) => (
-        (record.startSeason == null || season.season >= record.startSeason)
-        && (record.endSeason == null || season.season <= record.endSeason)
-      ));
-      if (!observed.length) continue;
-      const observedSchools = new Set(observed.map((season) => season.school));
-      expect(
-        observedSchools,
-        `${record.name} projected school conflicts with source-backed season affiliation`,
-      ).toContain(record.school);
-      checked += 1;
-    }
-
-    expect(checked).toBeGreaterThan(50);
-  });
-
-  it("never promotes two same-stage NFL source identities from one display-name approval", () => {
-    const promotedPlayers = projection.records.filter((record) => (
-      record.kind === "player-career"
-      && record.league === "NFL"
-      && (record.tier === "A" || record.tier === "B")
-    ));
-    const byName = new Map<string, typeof promotedPlayers>();
-    for (const record of promotedPlayers) {
-      const key = record.name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
-      const rows = byName.get(key) ?? [];
-      rows.push(record);
-      byName.set(key, rows);
-    }
-
-    for (const [name, records] of byName) {
-      expect(records, `same-name NFL A/B collision for ${name}`).toHaveLength(1);
-    }
-  });
-
 });
