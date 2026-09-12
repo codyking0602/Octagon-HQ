@@ -297,6 +297,7 @@ export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[
 ];
 
 const byId = new Map(playerRecords.map((record) => [record.id, record]));
+const uniqueProjectionMatch = (values: readonly ProjectionRecord[]) => values.length === 1 ? values[0]! : null;
 
 function projectionRecordForCanonicalId(canonicalId: string) {
   const binding = canonicalPlayerSourceBindingByCanonicalId.get(canonicalId);
