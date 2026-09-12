@@ -221,13 +221,32 @@
   text-transform: uppercase;
   white-space: nowrap;
 }
-.football-find-card__copy strong {
+.football-find-card__identity {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 6px;
+  min-width: 0;
+}
+.football-find-card__identity strong {
   display: -webkit-box;
+  min-width: 0;
   overflow: hidden;
   font-size: clamp(13px, 3.6vw, 17px);
   line-height: 1.04;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+.football-find-card__season {
+  align-self: start;
+  padding: 3px 5px;
+  border: 1px solid rgba(var(--football-accent-rgb), .28);
+  border-radius: 999px;
+  background: rgba(var(--football-accent-rgb), .1);
+  color: var(--football-accent, #e26f20);
+  font-size: 7px;
+  line-height: 1;
+  white-space: nowrap;
 }
 .football-find-card > em {
   position: absolute;
@@ -544,9 +563,17 @@
     font-size: 5.5px;
     letter-spacing: .035em;
   }
-  .football-find-card__copy strong {
+  .football-find-card__identity {
+    align-items: center;
+    gap: 4px;
+  }
+  .football-find-card__identity strong {
     font-size: clamp(10px, 3vw, 12.5px);
     line-height: 1.02;
+  }
+  .football-find-card__season {
+    padding: 2px 4px;
+    font-size: 6px;
   }
   .football-find-card.is-safe .football-find-card__copy {
     padding-bottom: 12px;
