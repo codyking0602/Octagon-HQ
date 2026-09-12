@@ -4,7 +4,8 @@ import { expandedFootballFactSources, expandedFootballFactualRecords } from "./f
 import { footballFactualUniverseProjectedRecords, footballFactualUniverseSources } from "./footballFactualUniverseProjection";
 import { footballNflATierResumeFactualRecords } from "./footballNflATierResumeFacts";
 import { footballStage16CfbQbCareerFactualRecords } from "./footballStage16CfbQbCareerFacts";
-import { footballPlayerCareerSubjectsForPerson, getFootballSubject } from "./footballSubjectRegistry";
+import { footballCanonicalPlayerSubjectIdForSourceSubjectId } from "./footballRecognizabilityProjection";
+import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballFactScope =
   | "nfl-player-career" | "nfl-player-season" | "nfl-team-season" | "nfl-franchise" | "nfl-coach-career" | "nfl-franchise-era" | "nfl-game"
@@ -251,7 +252,7 @@ const compatibilityFactualRecords: readonly FootballFactualRecord[] = [
   ...footballCfbChampionSeasonRows.map((row): FootballFactualRecord => { const sourceId=({"1995-nebraska":"cfr-1995-nebraska","2001-miami":"cfr-2001-miami","2005-texas":"cfr-2005-texas","2008-florida":"cfr-2008-florida","2010-auburn":"cfr-2010-auburn","2013-florida-state":"cfr-2013-florida-state","2014-ohio-state":"cfr-2014-ohio-state","2018-clemson":"cfr-2018-clemson","2019-lsu":"cfr-2019-lsu","2020-alabama":"cfr-2020-alabama","2022-georgia":"cfr-2022-georgia"} as Record<string,string>)[row.id] ?? "cfr-champion-season-stat-lines"; const wl=championRecords[row.id]; return { subjectId:row.id,scope:"cfb-team-season",facts:[...(wl ? [reported(sourceId,"cfb-team-wins",wl[0]),reported(sourceId,"cfb-team-losses",wl[1])] : []),reported(sourceId,"cfb-team-points-for",row.pointsFor),reported(sourceId,"cfb-team-points-against",row.pointsAgainst),reported(sourceId,"cfb-team-points-per-game",row.pointsPerGame),reported(sourceId,"cfb-team-opponent-points-per-game",row.opponentPointsPerGame),reported(sourceId,"cfb-team-srs",row.srs),reported(sourceId,"cfb-team-sos",row.sos),reported(sourceId,"cfb-national-title",1),derived(sourceId,"cfb-team-point-differential",row.pointsFor-row.pointsAgainst,"points for - points against"),derived(sourceId,"cfb-team-scoring-margin-per-game",row.pointsPerGame-row.opponentPointsPerGame,"points per game - opponent points per game"),derived(sourceId,"cfb-team-points-for-against-ratio",row.pointsFor/row.pointsAgainst,"points for / points against"),derived(sourceId,"cfb-team-differential-rate-percentage",(row.pointsFor-row.pointsAgainst)/row.pointsFor*100,"(points for - points against) / points for * 100"),derived(sourceId,"cfb-team-total-points",row.pointsFor+row.pointsAgainst,"points for + points against")] }; }),
 ];
 
-function canonicalFactSubjectId(subjectId: string) { return getFootballSubject(subjectId)?.id ?? subjectId; }
+function canonicalFactSubjectId(subjectId: string) { return footballCanonicalPlayerSubjectIdForSourceSubjectId(subjectId) ?? getFootballSubject(subjectId)?.id ?? subjectId; }
 function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[]) {
   const bySubject = new Map<string, FootballFactualRecord>();
   for (const incoming of records) {
@@ -265,14 +266,13 @@ function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[])
 }
 function projectedGapFillRecords(projected: readonly FootballFactualRecord[], owned: readonly FootballFactualRecord[]) {
   const ownedKeys=new Set(owned.flatMap((record)=>record.facts.map((fact)=>`${record.subjectId}:${fact.metricId}`)));
-  const directProjectedSubjectIds = new Set(projected.map((record) => record.subjectId));
+  const directProjectedSubjectIds = new Set(projected.map((record) => canonicalFactSubjectId(record.subjectId)));
   return projected.flatMap((record)=>{
-    const canonicalSubject=getFootballSubject(record.subjectId);
-    if (!canonicalSubject) return [];
-    const subjectId=canonicalSubject.id;
-    // When both the reviewed canonical subject and its raw source placeholder are projected,
-    // the direct canonical record owns the factual gap fill. The source placeholder remains
-    // queryable through the registry but cannot inject a second, competing factual record.
+    const subjectId=canonicalFactSubjectId(record.subjectId);
+    const canonicalSubject=getFootballSubject(subjectId);
+    if (!canonicalSubject || canonicalSubject.recognizabilityTier === "D") return [];
+    // When both a canonical record and its exact source record are projected,
+    // the canonical record owns the factual gap fill.
     if (record.subjectId !== subjectId && directProjectedSubjectIds.has(subjectId)) return [];
     const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`));
     return facts.length ? [{...record,subjectId,facts}] : [];
@@ -286,54 +286,7 @@ const findLeaderGapFillFactualRecords=projectedGapFillRecords(footballFindLeader
 const footballFactualLookupRecords: readonly FootballFactualRecord[]=mergeCanonicalFactualRecords([...footballFactualRecords,...findLeaderGapFillFactualRecords]);
 const recordIds=footballFactualLookupRecords.map((record)=>record.subjectId); if (new Set(recordIds).size !== recordIds.length) throw new Error("Canonical Football factual lookup ledger contains duplicate subject records.");
 
-function buildFactualLookupBySubjectId(records: readonly FootballFactualRecord[]) {
-  const lookup = new Map(records.map((record) => [record.subjectId, record]));
-  const processedPeople = new Set<string>();
-
-  for (const record of records) {
-    const subject = getFootballSubject(record.subjectId);
-    if (!subject || subject.kind !== "player-career") continue;
-    const personSubjects = footballPlayerCareerSubjectsForPerson(subject);
-    if (personSubjects.length < 2) continue;
-
-    const personKey = personSubjects.map((candidate) => candidate.id).sort().join("|");
-    if (processedPeople.has(personKey)) continue;
-    processedPeople.add(personKey);
-
-    const linkedRecords = personSubjects
-      .map((candidate) => lookup.get(candidate.id))
-      .filter((candidate): candidate is FootballFactualRecord => candidate != null);
-    if (linkedRecords.length < 2) continue;
-
-    // Stage identities remain distinct in the registry. The factual facade alone
-    // provides a shared real-person view so an NFL metric can be requested through
-    // the independently linked CFB career (and vice versa) without name merging.
-    const cfbAnchor = personSubjects.find((candidate) => candidate.league === "CFB" && lookup.has(candidate.id));
-    const anchorId = cfbAnchor?.id ?? linkedRecords[0]!.subjectId;
-    const factByMetric = new Map<string, FootballFactValue>();
-    for (const linked of linkedRecords) {
-      for (const fact of linked.facts) {
-        const existing = factByMetric.get(fact.metricId);
-        if (existing && existing.value !== fact.value) {
-          throw new Error(`Conflicting cross-stage Football fact: ${anchorId}:${fact.metricId}`);
-        }
-        if (!existing) factByMetric.set(fact.metricId, fact);
-      }
-    }
-    const anchorRecord = lookup.get(anchorId) ?? linkedRecords[0]!;
-    const merged: FootballFactualRecord = {
-      ...anchorRecord,
-      subjectId: anchorId,
-      scopes: [...new Set(linkedRecords.flatMap((linked) => linked.scopes ?? [linked.scope]))],
-      facts: [...factByMetric.values()],
-    };
-    for (const personSubject of personSubjects) lookup.set(personSubject.id, merged);
-  }
-
-  return lookup;
-}
-
-const recordsBySubjectId=buildFactualLookupBySubjectId(footballFactualLookupRecords);
+const recordsBySubjectId=new Map(footballFactualLookupRecords.map((record)=>[record.subjectId,record]));
 const metricDefinitionsById=new Map(footballFactMetricDefinitions.map((row)=>[row.id,row]));
 const sourcesById=new Map(footballFactSources.map((source)=>[source.id,source]));
 export function getFootballFactualRecord(subjectId: string) { return recordsBySubjectId.get(canonicalFactSubjectId(subjectId)) ?? null; }
