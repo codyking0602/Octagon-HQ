@@ -13,7 +13,7 @@ const PLAYER_SPOTLIGHT = {
   lastWeek: "413 TOT YDS · 5 TD",
   result: "VS ULM · W 62–13",
   measurements: "6'4\" · 230 LB",
-  photoUrl: "/assets/football/kamario-taylor-spotlight.webp",
+  photoUrl: "https://images.sidearmdev.com/crop?height=680&type=webp&url=https%3A%2F%2Fdxbhsrqyrr690.cloudfront.net%2Fsidearm.nextgen.sites%2Fmsstate.sidearmsports.com%2Fimages%2F2026%2F6%2F26%2FTaylor_Kamario_WEB_20260624_FB_ProductionDay_MM_0101.jpg&width=530",
   highlightUrl: "https://www.youtube.com/watch?v=QxpXjmhoaTE",
 } as const;
 
