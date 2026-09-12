@@ -58,7 +58,10 @@ describe("Football Daily product integration", () => {
     expect(runtime).toContain('p_sport: "football"');
     expect(runtime).toContain("if (request.required !== true)");
     expect(runtime).toContain("...publicPayload(context)");
+    expect(runtime).toContain("normalizeLegacyFootballProgress(context, footballRuntime)");
+    expect(runtime).toContain("footballRuntime.advanceFootballOfficialDailyRuntime(replayContext, action)");
     expect(runtime).toContain("footballRuntime.advanceFootballOfficialDailyRuntime(context, action)");
+    expect(runtime).toContain("action_history: [...history, action]");
     expect(runtime).not.toContain("const snapshot = footballRuntime.buildFootballTodayRuntimeSnapshot(materialized.centralDay");
   });
 
