@@ -74,8 +74,11 @@ for (const row of nflPlayers) {
   const key = normalized(row.playerDisplayName ?? row.playerName);
   if (key) { const rows = nflPlayersByName.get(key) ?? []; rows.push(row); nflPlayersByName.set(key, rows); }
 }
+const cfbPlayersById = new Map();
 const cfbPlayersByName = new Map();
 for (const row of cfbPlayers) {
+  const idRows = cfbPlayersById.get(String(row.sourcePlayerId)) ?? [];
+  idRows.push(row); cfbPlayersById.set(String(row.sourcePlayerId), idRows);
   const key = normalized(row.playerName);
   const rows = cfbPlayersByName.get(key) ?? [];
   rows.push(row); cfbPlayersByName.set(key, rows);
@@ -102,13 +105,20 @@ function nflRowsFor(subject) {
   return rows.filter((row) => withinWindow(row, subject));
 }
 function cfbRowsFor(subject) {
-  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
-  let rows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
-  if (subject.school) {
-    const schoolRows = rows.filter((row) => normalized(row.team) === normalized(subject.school));
-    if (schoolRows.length) rows = schoolRows;
+  const cfbIdentity = subject.sourceIdentityKeys?.find((key) => key.provider === "cfbfastR");
+  const exactSourceId = cfbIdentity?.id ?? subject.sourceId ?? null;
+  let rows = exactSourceId == null ? [] : (cfbPlayersById.get(String(exactSourceId)) ?? []);
+  if (!rows.length) {
+    const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
+    let identityRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
+    if (subject.school) {
+      const schoolRows = identityRows.filter((row) => normalized(row.team) === normalized(subject.school));
+      if (schoolRows.length) identityRows = schoolRows;
+    }
+    const ids = new Set(identityRows.map((row) => String(row.sourcePlayerId)));
+    if (ids.size === 1) rows = identityRows;
   }
-  return rows;
+  return rows.filter((row) => withinWindow(row, subject));
 }
 
 function nflPlayerFacts(subject) {
