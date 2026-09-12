@@ -1,5 +1,23 @@
 begin;
 
+do $$
+declare
+  v_entry text := pg_get_functiondef(
+    'private.grade_daily_challenge(text,text,jsonb,jsonb)'::regprocedure
+  );
+  v_delegate text := pg_get_functiondef(
+    'private.grade_daily_challenge_pre_combo(text,text,jsonb,jsonb)'::regprocedure
+  );
+begin
+  if position('grade_daily_challenge_pre_combo' in v_entry) = 0 then
+    raise exception 'Who Am I integration must preserve the canonical Daily Double grader wrapper';
+  end if;
+  if position('elsif p_game_type = ''who_am_i'' then' in v_delegate) = 0 then
+    raise exception 'Who Am I must be owned by the existing canonical grader delegate';
+  end if;
+end
+$$;
+
 insert into private.daily_challenge_setups (
   game_type,
   setup_key,
