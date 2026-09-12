@@ -99,6 +99,13 @@ describe("automatic Picks monitoring deployment", () => {
     expect(sync).toContain("get_pick_monitoring_event_state");
   });
 
+  it("distinguishes scheduler token rejection from an internal authorization check failure", () => {
+    expect(runner).toContain('"SCHEDULER_AUTH_CHECK_FAILED"');
+    expect(runner).toContain('"Scheduled monitoring authorization could not be verified."');
+    expect(runner).toContain('if (authorized.data !== true)');
+    expect(runner).toContain('"SCHEDULER_AUTH_REQUIRED"');
+  });
+
   it("uses the service-role JWT first for scheduler-authorized RPCs", () => {
     const serviceRoleFirst =
       'Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SECRET_KEY")';
