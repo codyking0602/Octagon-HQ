@@ -993,7 +993,7 @@ wr("nfl-steve-largent", 819, 13089, 100),
     ["cfb-best-season-sacks", 17.5],
     ["cfb-best-season-tackles-for-loss", 34.5],
   ]),
-  cfbPlayer("cfb-nndamukong-suh", [
+  cfbPlayer("cfb-ndamukong-suh", [
     ["cfb-best-season-sacks", 12],
     ["cfb-best-season-tackles-for-loss", 20.5],
   ]),
