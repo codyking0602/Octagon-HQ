@@ -310,7 +310,7 @@ function buildFactualLookupBySubjectId(records: readonly FootballFactualRecord[]
     // the independently linked CFB career (and vice versa) without name merging.
     const cfbAnchor = personSubjects.find((candidate) => candidate.league === "CFB" && lookup.has(candidate.id));
     const anchorId = cfbAnchor?.id ?? linkedRecords[0]!.subjectId;
-    const factByMetric = new Map<string, FootballFact>();
+    const factByMetric = new Map<string, FootballFactValue>();
     for (const linked of linkedRecords) {
       for (const fact of linked.facts) {
         const existing = factByMetric.get(fact.metricId);
