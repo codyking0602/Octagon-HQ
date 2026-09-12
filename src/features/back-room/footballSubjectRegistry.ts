@@ -259,13 +259,35 @@ const projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballF
 
 const allRegisteredSubjects = [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects];
 
-const footballPlayerCareerSubjectsByPerson = new Map<string, FootballSubjectProfile[]>();
+const footballPlayerCareerSubjectsByName = new Map<string, FootballSubjectProfile[]>();
 for (const subject of allRegisteredSubjects) {
   if (subject.kind !== "player-career") continue;
   const key = normalizedFootballSubjectName(subject.name);
-  const subjects = footballPlayerCareerSubjectsByPerson.get(key) ?? [];
+  const subjects = footballPlayerCareerSubjectsByName.get(key) ?? [];
   if (!subjects.some((candidate) => candidate.id === subject.id)) subjects.push(subject);
-  footballPlayerCareerSubjectsByPerson.set(key, subjects);
+  footballPlayerCareerSubjectsByName.set(key, subjects);
+}
+
+function footballPlayerRoleFamily(position: FootballSubjectProfile["position"]) {
+  if (position === "DL" || position === "LB") return "front-seven";
+  return position;
+}
+
+function footballCrossStagePlayerIdentityMatches(left: FootballSubjectProfile, right: FootballSubjectProfile) {
+  if (left.kind !== "player-career" || right.kind !== "player-career" || left.league === right.league) return false;
+  if (normalizedFootballSubjectName(left.name) !== normalizedFootballSubjectName(right.name)) return false;
+
+  const cfb = left.league === "CFB" ? left : right;
+  const nfl = left.league === "NFL" ? left : right;
+  const cfbRole = footballPlayerRoleFamily(cfb.position);
+  const nflRole = footballPlayerRoleFamily(nfl.position);
+  if (cfbRole && nflRole && cfbRole !== nflRole) return false;
+
+  const collegeEnd = cfb.endSeason;
+  const nflTransition = nfl.draftYear ?? nfl.startSeason;
+  if (collegeEnd != null && nflTransition != null && (nflTransition < collegeEnd || nflTransition > collegeEnd + 2)) return false;
+
+  return true;
 }
 
 const footballSubjectById = new Map<string, FootballSubjectProfile>();
@@ -297,13 +319,17 @@ export function getFootballSubject(subjectId: string) {
 
 /**
  * Canonical real-person relationship resolver for player-career subjects.
- * NFL and CFB career subjects remain distinct identities; this only returns the
- * registered career records that belong to the same normalized person name so
- * consumers can apply their own league-stage applicability rules.
+ * NFL and CFB careers stay distinct identities. Normalized name only locates
+ * candidates; role and transition chronology must also prove the cross-stage link.
+ * Same-league source identities never merge merely because their names match.
  */
 export function footballPlayerCareerSubjectsForPerson(subject: FootballSubjectProfile) {
   if (subject.kind !== "player-career") return [subject] as const;
-  return footballPlayerCareerSubjectsByPerson.get(normalizedFootballSubjectName(subject.name)) ?? [subject];
+  const candidates = footballPlayerCareerSubjectsByName.get(normalizedFootballSubjectName(subject.name)) ?? [];
+  return [
+    subject,
+    ...candidates.filter((candidate) => candidate.id !== subject.id && footballCrossStagePlayerIdentityMatches(subject, candidate)),
+  ];
 }
 
 function matchesFootballSubject(subject: FootballSubjectProfile, query: FootballSubjectQuery) {
