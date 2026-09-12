@@ -3,6 +3,7 @@ import { footballCfbPlayerSeasonRecognitionRecords } from "../back-room/football
 import { getFootballFactualRecord } from "../back-room/footballFactualStatsCore";
 import { getFootballPersonIdentityKnowledgeForPerson } from "../back-room/footballPersonIdentityKnowledge";
 import { footballRecognitionProjectionSubjectIdFor } from "../back-room/footballRecognizabilityProjection";
+import type { FootballCanonicalSubject } from "../back-room/footballFactualStatsCatalog";
 import {
   footballPlayerCareerSubjectsForPerson,
   getFootballSubject,
@@ -141,7 +142,7 @@ describe("Who Am I Football factual and identity integrity", () => {
     expect(subject).not.toBeNull();
     if (!subject || subject.kind !== "player-career") throw new Error("Expected Myles Garrett CFB player career subject.");
 
-    const projectedSourceId = footballRecognitionProjectionSubjectIdFor(subject);
+    const projectedSourceId = footballRecognitionProjectionSubjectIdFor(subject as FootballCanonicalSubject);
     expect(projectedSourceId).toBeTruthy();
     expect(projectedSourceId).not.toBe(subject!.id);
     expect(getFootballSubject(projectedSourceId!)?.id).toBe(subject!.id);
