@@ -32,7 +32,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | QB | 82 | 12 | 36 | 34 | 70 | 12 | 0 | 12 | 0 | 0 |
 | RB | 95 | 17 | 30 | 48 | 78 | 17 | 0 | 17 | 0 | 0 |
-| WR | 85 | 6 | 18 | 61 | 76 | 9 | 0 | 9 | 0 | 0 |
+| WR | 85 | 6 | 18 | 61 | 75 | 10 | 0 | 10 | 0 | 0 |
 | TE | 35 | 1 | 20 | 14 | 24 | 11 | 0 | 11 | 0 | 0 |
 | OL | 58 | 2 | 24 | 32 | 58 | 0 | 0 | 0 | 0 | 0 |
 | DL / EDGE | 47 | 9 | 22 | 16 | 29 | 18 | 0 | 18 | 0 | 0 |
@@ -282,6 +282,7 @@ None.
 - CFB TE: **Michael Egnew** — C, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB TE: **Todd Heap** — C, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB TE: **Zach Miller** — C, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB WR: **Andre Johnson** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Davante Adams** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **DeSean Jackson** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Dez Bryant** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
