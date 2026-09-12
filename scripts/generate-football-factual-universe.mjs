@@ -38,11 +38,9 @@ const relationshipDerived = (metricId, value, formula) => finite(value) ? { metr
 
 const gateServer = await createServer({ root, configFile: false, logLevel: "error", server: { middlewareMode: true }, appType: "custom" });
 let promotedSubjects;
-let resolveFootballSubject;
 try {
-  const registry = await gateServer.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts");
-  resolveFootballSubject = registry.getFootballSubject;
-  promotedSubjects = registry.queryFootballSubjects({
+  const { queryFootballSubjects } = await gateServer.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts");
+  promotedSubjects = queryFootballSubjects({
     recognizabilityTiers: ["A", "B", "C"],
     includeProjectedCanonicalRecognition: true,
     includeProjectedSourceSubjects: true,
@@ -50,10 +48,7 @@ try {
 } finally {
   await gateServer.close();
 }
-promotedSubjects = [...new Map(promotedSubjects.map((subject) => {
-  const canonical = resolveFootballSubject(subject.id) ?? subject;
-  return [canonical.id, canonical];
-})).values()];
+promotedSubjects = [...new Map(promotedSubjects.map((subject) => [subject.id, subject])).values()];
 const promotedPlayers = promotedSubjects.filter((subject) => subject.kind === "player-career");
 const promotedPlayerSeasons = promotedSubjects.filter((subject) => subject.kind === "player-season");
 const promotedTeamSeasons = promotedSubjects.filter((subject) => subject.kind === "team-season");
