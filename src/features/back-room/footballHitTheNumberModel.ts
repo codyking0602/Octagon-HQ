@@ -368,8 +368,15 @@ const domains: readonly FootballHitTheNumberDomain[] = [
   },
 ] as const;
 
+const metricSubjectsCache = new Map<string, readonly FootballHitTheNumberSubject[]>();
+
 function metricSubjects(board: FootballHitTheNumberMetricBoard) {
-  return subjectsFor(board.group).filter((subject) => getFootballFact(subject.id, board.metricId) != null);
+  const key = `${board.group}:${board.metricId}`;
+  const cached = metricSubjectsCache.get(key);
+  if (cached) return cached;
+  const subjects = subjectsFor(board.group).filter((subject) => getFootballFact(subject.id, board.metricId) != null);
+  metricSubjectsCache.set(key, subjects);
+  return subjects;
 }
 
 function metricBoardEnabled(board: FootballHitTheNumberMetricBoard) {
@@ -395,9 +402,15 @@ export const FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG = domains.flatMap((domain) =
 const domainById = new Map(domains.map((domain) => [domain.id, domain]));
 const metricBoardById = new Map(domains.flatMap((domain) => domain.metrics).map((row) => [row.metricId, row]));
 
+const themeSubjectsCache = new Map<string, readonly FootballHitTheNumberSubject[]>();
+
 export function footballHitTheNumberThemeSubjects(theme: FootballHitTheNumberThemeDefinition) {
+  const cached = themeSubjectsCache.get(theme.id);
+  if (cached) return cached;
   const canonicalIds = new Set(theme.queries.flatMap((query) => queryFootballSubjects(query).map((subject) => subject.id)));
-  return subjectsFor(theme.group).filter((subject) => canonicalIds.has(subject.id));
+  const subjects = subjectsFor(theme.group).filter((subject) => canonicalIds.has(subject.id));
+  themeSubjectsCache.set(theme.id, subjects);
+  return subjects;
 }
 
 function themeMetricSubjects(theme: FootballHitTheNumberThemeDefinition, board: FootballHitTheNumberMetricBoard) {
@@ -600,21 +613,33 @@ function requiredPoolSize(boardType: FootballHitTheNumberBoardType, pickCount: n
   return boardType === "random-pool" ? footballHitTheNumberRandomPoolSize(pickCount) : pickCount;
 }
 
+const themesForMetricCache = new Map<string, readonly FootballHitTheNumberThemeDefinition[]>();
+
 function themesForMetric(
   board: FootballHitTheNumberMetricBoard,
   boardType: FootballHitTheNumberBoardType,
   pickCount: number,
 ) {
+  const key = `${board.metricId}:${boardType}:${pickCount}`;
+  const cached = themesForMetricCache.get(key);
+  if (cached) return cached;
   const minimum = Math.max(FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH, requiredPoolSize(boardType, pickCount));
-  return footballHitTheNumberPlayableThemes(board.group)
+  const themes = footballHitTheNumberPlayableThemes(board.group)
     .filter((theme) => themeMetricSubjects(theme, board).length >= minimum);
+  themesForMetricCache.set(key, themes);
+  return themes;
 }
+
+const pickOptionsCache = new Map<string, readonly number[]>();
 
 function pickOptionsFor(
   formatId: FootballHitTheNumberFormatId,
   boardType: FootballHitTheNumberBoardType,
   board: FootballHitTheNumberMetricBoard,
 ) {
+  const cacheKey = `${formatId}:${boardType}:${board.metricId}`;
+  const cached = pickOptionsCache.get(cacheKey);
+  if (cached) return cached;
   if (!metricBoardEnabled(board)) return [];
   if (formatId !== "classic" && board.contentKind === "accomplishment") return [];
   if (formatId === "build-the-team" && board.contentKind === "career-special") return [];
@@ -636,12 +661,14 @@ function pickOptionsFor(
     return [5];
   }
 
-  return FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE
+  const options = FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE
     .filter((row) => {
       if (formatId === "themed-lineup") return themesForMetric(board, boardType, row.value).length > 0;
       return metricSubjects(board).length >= requiredPoolSize(boardType, row.value);
     })
     .map((row) => row.value);
+  pickOptionsCache.set(cacheKey, options);
+  return options;
 }
 
 function viableMetricBoards(
@@ -898,17 +925,24 @@ function buildCandidate(
   };
 }
 
+const viableDomainChoicesCache = new Map<string, readonly { domain: FootballHitTheNumberDomain; boards: readonly FootballHitTheNumberMetricBoard[] }[]>();
+
 function viableDomainChoices(
   league: FootballHitTheNumberLeague,
   formatId: FootballHitTheNumberFormatId,
   boardType: FootballHitTheNumberBoardType,
 ) {
-  return domains
+  const key = `${league}:${formatId}:${boardType}`;
+  const cached = viableDomainChoicesCache.get(key);
+  if (cached) return cached;
+  const choices = domains
     .map((domain) => ({
       domain,
       boards: viableMetricBoards(domain, league, formatId, boardType),
     }))
     .filter((choice) => choice.boards.length > 0);
+  viableDomainChoicesCache.set(key, choices);
+  return choices;
 }
 
 export function createFootballHitTheNumberPlan(
