@@ -289,6 +289,193 @@ const cfbNameCounts = new Map();
 for (const person of cfbPeople) { const key = normalize(person.name); cfbNameCounts.set(key, (cfbNameCounts.get(key) ?? 0) + 1); }
 const cfbProjected = cfbPeople.map(projectCfbPlayer).map((record) => cfbNameCounts.get(normalize(record.name)) > 1 ? { ...record, tier: "D", evidence: ["ambiguous duplicate CFB source name; no safe canonical merge"], manualA: false } : record);
 
+/**
+ * Source rows and product identities are different things.
+ *
+ * Discovery may use names plus independent source metadata here, during generation.
+ * The emitted binding is the only runtime ownership relationship: canonical -> exact source.
+ * Exact source rows remain separately registered and never inherit product eligibility by name.
+ */
+const identityServer = await createServer({
+  root,
+  configFile: false,
+  logLevel: "error",
+  server: { middlewareMode: true },
+  appType: "custom",
+});
+let canonicalPlayerIdentityCandidates;
+try {
+  const [catalog, repairs, evidence] = await Promise.all([
+    identityServer.ssrLoadModule("/src/features/back-room/footballFactualStatsCatalog.ts"),
+    identityServer.ssrLoadModule("/src/features/back-room/footballHistoricalRecognitionRepairs.ts"),
+    identityServer.ssrLoadModule("/src/features/back-room/footballRecognitionEvidence.ts"),
+  ]);
+
+  const candidateById = new Map();
+  const candidateSources = [
+    [0, catalog.footballCanonicalSubjects ?? []],
+    [1, (repairs.footballHistoricalRecognitionRepairs ?? []).map((repair) => repair.subject)],
+    [2, evidence.footballRecognitionEvidenceSubjects ?? []],
+  ];
+  for (const [priority, subjects] of candidateSources) {
+    for (const subject of subjects) {
+      if (subject?.kind !== "player-career" || (subject.league !== "NFL" && subject.league !== "CFB")) continue;
+      if (/^(?:nflverse|cfbfast-r)-player-/.test(subject.id)) continue;
+      const current = candidateById.get(subject.id);
+      if (!current) {
+        candidateById.set(subject.id, { ...subject, __priority: priority });
+        continue;
+      }
+      const aliases = [...new Set([...(current.aliases ?? []), ...(subject.aliases ?? [])])];
+      const franchises = [...new Set([...(current.franchises ?? []), ...(subject.franchises ?? [])])];
+      candidateById.set(subject.id, {
+        ...subject,
+        ...Object.fromEntries(Object.entries(current).filter(([, value]) => value != null)),
+        ...(aliases.length ? { aliases } : {}),
+        ...(franchises.length ? { franchises } : {}),
+        __priority: Math.min(current.__priority, priority),
+      });
+    }
+  }
+  canonicalPlayerIdentityCandidates = [...candidateById.values()];
+} finally {
+  await identityServer.close();
+}
+
+const nflPersonBySourceId = new Map(nflPeople.map((person) => [person.sourceId, person]));
+const cfbPersonBySourceIdentity = new Map(
+  cfbPeople.map((person) => [`${person.sourceId}:${normalize(person.name)}`, person]),
+);
+const allProjectedPlayerSourceRecords = [...nflProjected, ...cfbProjected];
+const sourceRecordById = new Map(allProjectedPlayerSourceRecords.map((record) => [record.id, record]));
+
+function sourcePersonFor(record) {
+  return record.league === "NFL"
+    ? nflPersonBySourceId.get(record.sourceId)
+    : cfbPersonBySourceIdentity.get(`${record.sourceId}:${normalize(record.name)}`);
+}
+
+function canonicalBindingScore(subject, record) {
+  if (subject.league !== record.league) return -1;
+  const subjectNames = [subject.name, ...(subject.aliases ?? [])].map(normalize);
+  if (!subjectNames.includes(normalize(record.name))) return -1;
+  if (subject.position && record.position && subject.position !== record.position) return -1;
+
+  let score = 0;
+  if (subject.position && record.position && subject.position === record.position) score += 4;
+
+  const sourcePerson = sourcePersonFor(record);
+  const sourceTeams = new Set([...(sourcePerson?.teams ?? [])].map(normalize));
+  if (subject.league === "CFB" && subject.school && sourceTeams.has(normalize(subject.school))) score += 6;
+
+  if (
+    subject.startSeason != null
+    && subject.endSeason != null
+    && record.startSeason != null
+    && record.endSeason != null
+    && record.startSeason <= subject.endSeason
+    && record.endSeason >= subject.startSeason
+  ) {
+    score += 3;
+  } else if (
+    subject.startSeason != null
+    && record.startSeason != null
+    && subject.startSeason === record.startSeason
+  ) {
+    score += 2;
+  } else if (
+    subject.endSeason != null
+    && record.endSeason != null
+    && subject.endSeason === record.endSeason
+  ) {
+    score += 2;
+  }
+
+  if (subject.league === "NFL" && subject.draftYear != null && record.startSeason != null) {
+    if (record.startSeason >= subject.draftYear && record.startSeason <= subject.draftYear + 1) score += 5;
+    if (
+      record.startSeason === 1999
+      && subject.draftYear <= 1999
+      && (subject.endSeason == null || subject.endSeason >= 1999)
+    ) {
+      score += 4;
+    }
+  }
+
+  return score > 0 ? score - (subject.__priority ?? 9) * 0.001 : -1;
+}
+
+const sourceBindingProposals = [];
+for (const record of allProjectedPlayerSourceRecords) {
+  const ranked = canonicalPlayerIdentityCandidates
+    .map((subject) => ({ subject, score: canonicalBindingScore(subject, record) }))
+    .filter(({ score }) => score >= 0)
+    .sort((left, right) => right.score - left.score || left.subject.id.localeCompare(right.subject.id));
+  if (!ranked.length) continue;
+  if (ranked.length > 1 && ranked[0].score === ranked[1].score && ranked[0].subject.id !== ranked[1].subject.id) continue;
+  sourceBindingProposals.push({
+    canonicalId: ranked[0].subject.id,
+    sourceSubjectId: record.id,
+    sourceProvider: record.sourceProvider,
+    sourceId: record.sourceId,
+    league: record.league,
+    score: ranked[0].score,
+  });
+}
+
+const proposalsByCanonicalId = new Map();
+for (const proposal of sourceBindingProposals) {
+  const values = proposalsByCanonicalId.get(proposal.canonicalId) ?? [];
+  values.push(proposal);
+  proposalsByCanonicalId.set(proposal.canonicalId, values);
+}
+
+const canonicalPlayerSourceBindings = [];
+const boundSourceSubjectIds = new Set();
+const canonicalIds = new Set(canonicalPlayerIdentityCandidates.map((subject) => subject.id));
+for (const [canonicalId, proposals] of proposalsByCanonicalId) {
+  proposals.sort((left, right) => right.score - left.score || left.sourceSubjectId.localeCompare(right.sourceSubjectId));
+  if (proposals.length > 1 && proposals[0].score === proposals[1].score) continue;
+  const winner = proposals[0];
+  canonicalPlayerSourceBindings.push({
+    canonicalId,
+    league: winner.league,
+    sourceProvider: winner.sourceProvider,
+    sourceId: winner.sourceId,
+    sourceSubjectId: winner.sourceSubjectId,
+  });
+  boundSourceSubjectIds.add(winner.sourceSubjectId);
+}
+
+function generatedCanonicalId(record) {
+  const base = `${record.league === "NFL" ? "nfl" : "cfb"}-${normalize(record.name)}`;
+  if (!canonicalIds.has(base)) return base;
+  const sourceSuffix = String(record.sourceId).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return `${base}-${sourceSuffix}`;
+}
+
+// A promoted source row with no reviewed canonical owner may own a deterministic
+// generated canonical id only when the source name itself is unambiguous in that league.
+for (const record of allProjectedPlayerSourceRecords) {
+  if (record.tier === "D" || boundSourceSubjectIds.has(record.id)) continue;
+  const sourceNameCount = record.league === "NFL"
+    ? (nflNameCounts.get(normalize(record.name)) ?? 0)
+    : (cfbNameCounts.get(normalize(record.name)) ?? 0);
+  if (sourceNameCount !== 1) continue;
+  const canonicalId = generatedCanonicalId(record);
+  canonicalIds.add(canonicalId);
+  canonicalPlayerSourceBindings.push({
+    canonicalId,
+    league: record.league,
+    sourceProvider: record.sourceProvider,
+    sourceId: record.sourceId,
+    sourceSubjectId: record.id,
+  });
+  boundSourceSubjectIds.add(record.id);
+}
+
+canonicalPlayerSourceBindings.sort((left, right) => left.canonicalId.localeCompare(right.canonicalId));
+
 function recordsFromRows(corpus, mapper) {
   const ix = ixFor(corpus);
   return corpus.rows.map((row, rowIndex) => mapper(row, ix, rowIndex));
@@ -371,7 +558,7 @@ const allRecords = [
 ];
 allRecords.sort((a, b) => `${a.kind}:${a.id}`.localeCompare(`${b.kind}:${b.id}`));
 
-const promoted = allRecords.filter((record) => record.tier !== "D").map(({ evidence, manualA, ...record }) => record);
+const promoted = allRecords.filter((record) => record.tier !== "D" && (record.kind !== "player-career" || boundSourceSubjectIds.has(record.id))).map(({ evidence, manualA, ...record }) => record);
 // Registration and eligibility are separate. Keep every exact player source identity,
 // including Tier D rows, so same-name athletes remain distinguishable in the registry.
 // The source registry is tuple-compressed because these are generated reconciliation
@@ -407,14 +594,15 @@ const summary = {
   manualARecordCount: allRecords.filter((r) => r.manualA).length,
 };
 const output = {
-  schemaVersion: 3,
-  methodology: "recognizability-not-greatness; fixed position-aware player thresholds, conservative non-player rules, explicit A approvals, no percentile ranking",
+  schemaVersion: 4,
+  methodology: "recognizability-not-greatness; fixed position-aware player thresholds, conservative non-player rules, explicit A approvals, generated explicit canonical-to-source ownership, no percentile ranking",
   manualApprovals: [...approvedAPlayers].sort(),
   manualBApprovals: [...approvedBPlayers].sort(),
   manualCfbBIdentityApprovals: [...approvedCfbBIdentityWindows.entries()].map(([name, [startSeason, endSeason]]) => ({ name, startSeason, endSeason })),
   summary,
   records: promoted,
   playerSourceRegistry,
+  canonicalPlayerSourceBindings,
 };
 fs.writeFileSync(new URL("data/generated/football/recognizability-projection.json", root), `${JSON.stringify(output)}\n`);
 
