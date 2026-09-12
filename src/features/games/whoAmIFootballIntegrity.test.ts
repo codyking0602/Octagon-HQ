@@ -30,10 +30,6 @@ function recognizedCareerSchools(subject: FootballSubjectProfile) {
   if (!sourceId) return [];
   return [...new Set(
     (seasonRecognitionBySourceId.get(String(sourceId)) ?? [])
-      .filter((row) => (
-        (subject.startSeason == null || row.season >= subject.startSeason)
-        && (subject.endSeason == null || row.season <= subject.endSeason)
-      ))
       .map((row) => row.school),
   )];
 }
