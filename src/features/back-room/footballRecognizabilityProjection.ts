@@ -364,7 +364,6 @@ function exactSourceProHallMinimumTier(record: ProjectionRecord) {
   const sameName = byLeagueAndName.get(`${record.league}:${record.name.toLowerCase()}`) ?? [];
   if (sameName.length !== 1) return null;
   return proHallMinimumTierFor({
-    id: record.id,
     name: record.name,
     kind: "player-career",
     league: record.league,
