@@ -7,7 +7,7 @@ function member(overrides: Partial<TodayChallengeStandingsEntry>): TodayChalleng
   return {
     rank: 1, profileId: "11111111-1111-4111-8111-111111111111", displayName: "Cody", initials: "CK",
     avatarPhotoData: null, wins: 25, played: 30, averageScore: 84.6, currentStreak: 6, bestStreak: 13,
-    gameAverages: { findLeader: 84, wavelength: null, blindResume: 90, blindRank5: 82, keep4Cut4: 87, hitTheNumber: 91, whoAmI: null },
+    gameAverages: { findLeader: 84, wavelength: null, blindResume: 90, blindRank5: 82, keep4Cut4: 87, hitTheNumber: 91, whoAmI: 86 },
     isCurrentUser: false, weeklyRank: 1, weeklyWins: 4, weeklyPlayed: 6, weeklyAverageScore: 88.2, weeklyTitles: 2,
     ...overrides,
   };
@@ -43,7 +43,7 @@ describe("Daily Challenge championship standings", () => {
     expect(screen.getByText("Inactive")).toBeInTheDocument();
   });
 
-  it("shows one Daily Double average and includes Hit the Number", () => {
+  it("shows one Daily Double average and includes Hit the Number and Who Am I", () => {
     const standings: TodayChallengeStandings = {
       playerCount: 1, currentUserRank: 1, currentUserWins: 25,
       currentWeekStart: "2026-08-24", currentWeekEnd: "2026-08-30",
@@ -55,10 +55,13 @@ describe("Daily Challenge championship standings", () => {
 
     const dailyDouble = screen.getByText("Daily Double").closest("span");
     const hitTheNumber = screen.getByText("Hit the Number").closest("span");
+    const whoAmI = screen.getByText("Who Am I").closest("span");
     expect(dailyDouble).not.toBeNull();
     expect(hitTheNumber).not.toBeNull();
+    expect(whoAmI).not.toBeNull();
     expect(within(dailyDouble as HTMLElement).getByText("84.5")).toBeInTheDocument();
     expect(within(hitTheNumber as HTMLElement).getByText("91.0")).toBeInTheDocument();
+    expect(within(whoAmI as HTMLElement).getByText("86.0")).toBeInTheDocument();
     expect(screen.queryByText("Blind Rank 5")).not.toBeInTheDocument();
     expect(screen.queryByText("Keep 4, Cut 4")).not.toBeInTheDocument();
   });

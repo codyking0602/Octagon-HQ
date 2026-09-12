@@ -23,6 +23,7 @@ const GAME_AVERAGES = [
   ["Blind Resume", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.blindResume],
   ["Daily Double", dailyDoubleAverage],
   ["Hit the Number", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.hitTheNumber],
+  ["Who Am I", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.whoAmI],
 ] as const;
 
 function weekLabel(start: string, end: string) {

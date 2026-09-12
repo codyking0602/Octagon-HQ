@@ -15,55 +15,28 @@
 
 ## 1. Current roadmap position
 
-PRs 1 through 10 are complete. PR 9 produced the 20 Questions prototype, which is now retired as a product after the completed Who Am I rebuild proved to be the stronger identity-game experience. The reusable 20 Questions engine, factual predicates, and research remain preserved as dormant code/data rather than live product ownership. PR 11 — Today's Challenge vNext — is now active.
+PRs 1 through 10 are complete. **Stage 11 — Today’s Challenge vNext is complete.**
 
-Completed roadmap sequence:
+Stage 11 preserved the one canonical Daily platform while:
+- releasing Who Am I as a normal replayable UFC + Football game;
+- unifying the compact UFC/Football Daily presentation;
+- making Who Am I an official Daily family through the existing materializer, cross-device progress, immutable first-attempt persistence, server grader, leaderboard, history, streak, reminder, and standings owners;
+- creating immutable future schedule versions beginning **September 12, 2026 Central**, the first day that was not already materialized when the cutover was approved.
 
-1. **PR 1 — Canonical Games roadmap** — merged as #863.
-2. **PR 2 — Game source authority + eligibility repair** — merged as #864.
-3. **PR 3 — Play landing-page + shared presentation parity** — merged through #865 with focused repair #866.
-4. **PR 4 — Find the Leader final parity/source pass** — merged as #870.
-5. **PR 5 — Wavelength final parity/calibration pass** — merged as #873, with later presentation polish preserving the same mechanic/ownership.
-6. **PR 6 — Blind Resume final parity/source pass** — completed through the September 4 Blind Resume rebuild and follow-up fixes (#878–#882). The approved Football product direction changed during this work: Football Blind Resume is now Daily-only rather than a normal replayable Play-library game.
-7. **PR 7 — Hit the Number final parity/source pass** — completed by #885. UFC Random Pool quality now covers every mature format using only legal player selections; large deterministic parity/source tests lock UFC factual-ledger ownership, Football factual-registry ownership, format breadth, replayability, and challenge/result parity.
-8. **PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup** — completed by #895. Plain entry points now honor the Daily-only product role, compatible historical/challenge deep links remain valid, the existing Daily Double versions are preserved, Football comparison grading uses the shared official Keep/Cut comparison helper, and cross-sport Daily Double presentation recognizes both persisted UFC and Football result shapes.
+Final future mixes:
+- **UFC — `play-rotation-v7`, 24 slots:** Find the Leader ×5, Wavelength ×5, Blind Resume ×4, Hit the Number ×4, Who Am I ×4, Daily Double ×2.
+- **Football — `football-daily-v4`, 20 slots:** Find the Leader ×5, Wavelength ×5, Hit the Number ×4, Who Am I ×4, Daily Double ×2.
+- Daily Double remains the existing Blind Rank 5 → Keep 4 / Cut 4 experience.
+- Football Blind Resume is removed from the future rotation only. Historical v1/v2/v3 days remain immutable and queryable.
+- Historical UFC schedule versions through `play-rotation-v6` remain untouched.
 
-Who Am I PR 10 is complete. Stage 11 Slice 1 approved it for normal public replayable release, and Slice 2 releases it in both UFC and Football while competitive Daily remains unapproved pending a separate server-owned contract and human score-distribution evidence.
-
-Completed Who Am I rebuild work now includes:
-
-- launch-pool construction locked through the existing canonical football registry rather than a manual game roster;
-- one structured, presentation-neutral identity fact model;
-- the shared source-backed football person-identity knowledge owner and NFL A-tier pilot;
-- full NFL A-tier and NFL B-tier person-identity enrichment;
-- full CFB A-tier and CFB B-tier person-identity enrichment;
-- full UFC person-identity enrichment for the canonical 100-subject UFC population;
-- the canonical clue assembler with deterministic broad → helpful → strong → giveaway progression and concept/facet deduplication;
-- stage-aware football same-person aggregation that permits legitimate person/shared and draft-transition knowledge without mixing CFB and NFL production;
-- the football résumé-depth follow-up that leaves **0 NFL/CFB launch subjects below 10 candidate clues and 0 below 12**, while preserving the **10-clue gameplay reveal limit**;
-- deterministic replay variation within approved clue quality/progression, preserving same-context repeatability while producing different valid sequences across replay contexts;
-- the endgame recovery flow with two natural final guesses, then a plausible four-choice disguise board at reduced points, excluding identities already proven wrong.
-
-The current audited launch populations are **100 UFC / 200 NFL / 200 CFB**. The completed aggregation audit reports **0 football plumbing omissions**.
+20 Questions remains retired.
 
 ### NEXT
 
-**PR 11 — Today's Challenge vNext, slice 3: Who Am I Daily readiness measurement.**
+**Stage 12 — Draft Room foundation + Build a QB.**
 
-Stage 11 Slice 1 completed the Daily eligibility/rotation audit. Slice 2 releases Who Am I as a normal public replayable game in UFC and Football without changing gameplay or competitive ownership.
-
-Next, establish the minimum canonical measurement/readiness evidence for real Who Am I solve-window, wrong-guess, recovery, and final-score outcomes. Do not create a second gameplay owner merely to collect telemetry, and do not activate Daily yet.
-
-Who Am I remains:
-
-- public and replayable in both sports;
-- `dailyEligible: false`;
-- challenge/streak/reminder-ineligible;
-- outside every current UFC and Football Daily schedule.
-
-After sufficient readiness evidence exists, a later Stage 11 slice may build the versioned server-owned Who Am I Daily materializer/grader and only then make an explicit rotation decision.
-
-20 Questions remains retired. Do not reopen an earlier completed mechanic unless a new defect or explicit product decision requires it.
+Do not reopen Stage 11 mechanics unless a concrete defect or explicit product decision requires it.
 
 ---
 
@@ -112,7 +85,7 @@ The lists above remain the intended mature product. Stage 11 Slice 2 releases Wh
 
 Blind Rank 5 and Keep 4 / Cut 4 are not deleted. Their engines, graders, historical results, hydration, and compatible deep links remain valid where required.
 
-Football Blind Resume is also not deleted. Its approved current product role is the three-round Football Today's Challenge experience owned by the existing Daily platform.
+Football Blind Resume is also not deleted. Its three-round Daily implementation and historical results remain valid, but Stage 11 removes it from the future Football rotation beginning September 12, 2026.
 
 ### Better Than
 
@@ -124,21 +97,27 @@ Better Than may remain available as a direct challenge/profile utility where use
 
 Today's Challenge is the competitive daily layer, not a duplicate of All Games.
 
-The canonical Daily platform owns sport-scoped deterministic setup, private evidence, grading, persistence, immutable first completed attempts, history, streaks, standings, leaderboards, reminders, and cross-device restoration.
+The canonical Daily platform owns sport-scoped deterministic setup, private evidence, grading, persistence, immutable first completed attempts, cross-device progress, history, streaks, standings, leaderboards, reminders, and schedule resolution. Do not create a second Daily scheduler, schedule engine, repository, grader, leaderboard provider, or persistence path.
 
-Daily-capable families are:
-
+Official future Daily families after Stage 11 are:
 - Find the Leader
 - Wavelength
 - UFC Blind Resume
-- Football Blind Resume under its Football-specific three-round contract
 - Hit the Number
+- Who Am I
 - Daily Double: Blind Rank 5 + Keep 4 / Cut 4
-- Who Am I only after fairness/score-distribution proof and explicit approval to leave owner-only preview
+
+Football Blind Resume remains valid historical Daily content but is not part of `football-daily-v4`.
+
+Who Am I uses the same canonical casual populations, clue authority, score ladder, and Recovery Board rules. Daily setup is deterministic, ignores casual recent-subject localStorage exclusions, restores progress cross-device, reveals the correct identity after completion, and is graded by the existing server-owned Daily grader chain.
+
+Current future schedule identities begin September 12, 2026 Central:
+- UFC `play-rotation-v7`: Find 5 / Wavelength 5 / Blind Resume 4 / Hit 4 / Who Am I 4 / Daily Double 2.
+- Football `football-daily-v4`: Find 5 / Wavelength 5 / Hit 4 / Who Am I 4 / Daily Double 2.
+
+Schedule versions are immutable. Never rewrite an already-materialized Daily day to force a new rotation.
 
 Auction, Draft Room, and Better Than do not enter Today's Challenge.
-
-Final rotation weights are not locked until the new Games have real simulation data. Any schedule change must remain deterministic, versioned, Central-time based, sport-scoped, and owned by the existing Daily scheduler/runtime path.
 
 ---
 
@@ -352,7 +331,7 @@ Knowledge quality rules:
 
 The personal-identity pilot and subsequent NFL, CFB, and UFC enrichment are complete. Preserve the resulting canonical person-knowledge owners and provenance. Future Who Am I work should consume and quality-check that knowledge rather than restart broad identity research or create a second trivia store.
 
-Who Am I is a normal **public replayable game** in UFC and Football as of Stage 11 Slice 2. It remains outside Today's Challenge and all challenge/streak/reminder competitive ownership until a later explicit Stage 11 decision backed by a server-owned Daily contract and readiness evidence.
+Who Am I is a normal **public replayable game and official Daily family** in UFC and Football after Stage 11. Replayable mode preserves anti-repeat behavior; Daily mode uses deterministic server-owned identity/clue setup, cross-device progress, immutable first completion, the canonical server grader, and the existing Daily competition path.
 
 Do not use race/ethnicity/appearance classification as clue taxonomy. Physical measurements may be used only when canonical evidence is reliable and wording reflects normal measurement variance.
 
