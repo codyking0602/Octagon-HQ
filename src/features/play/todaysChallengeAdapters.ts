@@ -18,6 +18,7 @@ export interface TodayChallengeAdapter {
   casualRoute: string;
   cta: string;
   instructions: string;
+  footballInstructions: string;
   nativeResultLabel: string;
   nativeDisplay: (attempt: Pick<OfficialAttempt, "nativeScore" | "publicResult">) => string;
 }
@@ -31,6 +32,7 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     casualRoute: "/play/find-leader?mode=replayable",
     cta: "Tap to play",
     instructions: "Eliminate nine fighters without removing today’s verified stat leader.",
+    footballInstructions: "Eliminate nine players without removing today’s verified stat leader.",
     nativeResultLabel: "Round score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
   },
@@ -42,6 +44,7 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     casualRoute: "/play/blind-resume",
     cta: "Make today’s picks",
     instructions: "Choose the stronger UFC career five times without seeing either name.",
+    footballInstructions: "Choose the stronger football résumé three times without seeing either name.",
     nativeResultLabel: "Correct picks",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/5`,
   },
@@ -53,6 +56,7 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     casualRoute: "/play/wavelength",
     cta: "Guess the number",
     instructions: "Use four adaptive clues to land as close as possible to the hidden 1–100 target.",
+    footballInstructions: "Use four adaptive clues to land as close as possible to the hidden 1–100 target.",
     nativeResultLabel: "Wavelength score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
@@ -64,6 +68,7 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     casualRoute: "/play/blind-rank",
     cta: "Rank today’s five",
     instructions: "Place each mystery fighter before the next fighter is revealed. Every slot locks.",
+    footballInstructions: "Place each mystery football subject before the next subject is revealed. Every slot locks.",
     nativeResultLabel: "Correct comparisons",
     nativeDisplay: (attempt) => `${attempt.nativeScore} of 10 comparisons`,
   },
@@ -75,6 +80,7 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     casualRoute: "/play/keep-cut",
     cta: "Make today’s eight calls",
     instructions: "Decide one fighter at a time. Every call locks, future fighters stay hidden, and a full tray forces the rest to the other side.",
+    footballInstructions: "Decide one football subject at a time. Every call locks, future subjects stay hidden, and a full tray forces the rest to the other side.",
     nativeResultLabel: "Correct comparisons",
     nativeDisplay: (attempt) => `${attempt.nativeScore} of 16 comparisons`,
   },
@@ -86,6 +92,7 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     casualRoute: "/play/hit-the-number",
     cta: "Hit today’s target",
     instructions: "Choose the required fighters and get as close as possible without going over. Lock only when you are ready.",
+    footballInstructions: "Choose the required football subjects and get as close as possible without going over. Lock only when you are ready.",
     nativeResultLabel: "Fighter total",
     nativeDisplay: (attempt) => `${attempt.nativeScore}`,
   },
@@ -97,6 +104,7 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     casualRoute: "/play/who-am-i",
     cta: "Identify today’s subject",
     instructions: "Solve from clue pairs before the score falls, or save the round on the Recovery Board.",
+    footballInstructions: "Solve from clue pairs before the score falls, or save the round on the Recovery Board.",
     nativeResultLabel: "Who Am I score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
