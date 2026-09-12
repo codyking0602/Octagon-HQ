@@ -758,8 +758,6 @@ function preserveEraDiversityWithinTier(
   return selected.sort(footballLaunchSubjectCompare);
 }
 
-const FOOTBALL_WHO_AM_I_MIN_RAW_CLUES = 12;
-
 function selectedFootballSubjects(league: "NFL" | "CFB") {
   const queried = queryFootballSubjects({
     league,
@@ -768,10 +766,11 @@ function selectedFootballSubjects(league: "NFL" | "CFB") {
     includeProjectedCanonicalRecognition: true,
   })
     .filter((subject) => subject.kind === "player-career" || subject.kind === "coach")
-    .filter((subject) => footballCandidate(subject).clues.length >= FOOTBALL_WHO_AM_I_MIN_RAW_CLUES);
+    .filter((subject) => getFootballPersonIdentityKnowledge(subject.id) != null);
 
-  // Canonical subject IDs own launch identity. Display names are presentation only and
-  // must never collapse same-name people or choose between source identities.
+  // Who Am I launch membership is the intersection of canonical recognition and the
+  // source-backed person-knowledge owner. Canonical subject IDs own identity; display
+  // names are presentation only and never collapse same-name people.
   const bySubjectId = new Map<string, FootballSubjectProfile>();
   for (const subject of queried) {
     if (!bySubjectId.has(subject.id)) bySubjectId.set(subject.id, subject);
