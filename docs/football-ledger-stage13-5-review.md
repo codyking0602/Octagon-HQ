@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **4,026**
+Canonical A/B/C subjects: **4,126**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -11,13 +11,13 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | Pool | Universe | A | B | C | Full | Partial | Identity-only | Missing fact groups | Historical review | Omissions |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | QB | 133 | 27 | 44 | 62 | 133 | 0 | 0 | 0 | 0 | 0 |
-| RB | 179 | 21 | 36 | 122 | 179 | 0 | 0 | 0 | 0 | 0 |
+| RB | 178 | 20 | 36 | 122 | 178 | 0 | 0 | 0 | 0 | 0 |
 | WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
-| TE | 74 | 1 | 12 | 61 | 74 | 0 | 0 | 0 | 0 | 0 |
+| TE | 73 | 1 | 12 | 60 | 73 | 0 | 0 | 0 | 0 | 0 |
 | OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 321 | 7 | 41 | 273 | 321 | 0 | 0 | 0 | 0 | 0 |
-| LB | 240 | 5 | 38 | 197 | 219 | 21 | 0 | 21 | 0 | 0 |
-| Secondary | 417 | 9 | 49 | 359 | 417 | 0 | 0 | 0 | 0 | 0 |
+| DL / EDGE | 318 | 7 | 41 | 270 | 318 | 0 | 0 | 0 | 0 | 0 |
+| LB | 240 | 5 | 38 | 197 | 220 | 20 | 0 | 20 | 0 | 0 |
+| Secondary | 415 | 7 | 49 | 359 | 415 | 0 | 0 | 0 | 0 | 0 |
 | K / P | 19 | 6 | 12 | 1 | 19 | 0 | 0 | 0 | 0 | 0 |
 | Player seasons | 764 | 107 | 318 | 339 | 764 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 113 | 4 | 37 | 72 | 113 | 0 | 0 | 0 | 0 | 0 |
@@ -30,16 +30,16 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 
 | Pool | Universe | A | B | C | Full | Partial | Identity-only | Missing fact groups | Historical review | Omissions |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| QB | 72 | 12 | 36 | 24 | 60 | 12 | 0 | 12 | 0 | 0 |
-| RB | 85 | 17 | 30 | 38 | 67 | 18 | 0 | 18 | 0 | 0 |
-| WR | 62 | 6 | 18 | 38 | 53 | 9 | 0 | 9 | 0 | 0 |
+| QB | 82 | 12 | 36 | 34 | 70 | 12 | 0 | 12 | 0 | 0 |
+| RB | 95 | 17 | 30 | 48 | 78 | 17 | 0 | 17 | 0 | 0 |
+| WR | 85 | 6 | 18 | 61 | 75 | 10 | 0 | 10 | 0 | 0 |
 | TE | 35 | 1 | 20 | 14 | 24 | 11 | 0 | 11 | 0 | 0 |
 | OL | 58 | 2 | 24 | 32 | 58 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 53 | 8 | 22 | 23 | 36 | 17 | 0 | 17 | 0 | 0 |
-| LB | 51 | 5 | 15 | 31 | 40 | 11 | 0 | 11 | 0 | 0 |
-| Secondary | 51 | 9 | 24 | 18 | 42 | 9 | 0 | 9 | 0 | 0 |
+| DL / EDGE | 46 | 8 | 22 | 16 | 29 | 17 | 0 | 17 | 0 | 0 |
+| LB | 45 | 5 | 15 | 25 | 33 | 12 | 0 | 12 | 0 | 0 |
+| Secondary | 45 | 9 | 24 | 12 | 35 | 10 | 0 | 10 | 0 | 0 |
 | K / P | 29 | 0 | 14 | 15 | 5 | 24 | 0 | 24 | 0 | 0 |
-| Player seasons | 316 | 12 | 25 | 279 | 316 | 0 | 0 | 0 | 0 | 0 |
+| Player seasons | 399 | 12 | 25 | 362 | 399 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 132 | 6 | 42 | 84 | 132 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 106 | 5 | 13 | 88 | 101 | 5 | 0 | 10 | 0 | 0 |
 | Head coaches | 46 | 11 | 22 | 13 | 46 | 0 | 0 | 0 | 0 | 0 |
@@ -113,16 +113,16 @@ None.
 - CFB K / P: **Daniel Sepulveda** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Mason Crosby** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Matt Araiza** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- CFB K / P: **Michael Dickson** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB K / P: **Michael Dickson** — B, Partial; missing specialist kicking/punting facts; source limits: normalized CFB player production begins in 2014.
 - CFB K / P: **Mike Nugent** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Pat McAfee** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Ryan Allen** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Sebastian Janikowski** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Shane Lechler** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- CFB K / P: **Tory Taylor** — B, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB K / P: **Tory Taylor** — B, Partial; missing specialist kicking/punting facts; source limits: normalized CFB player production begins in 2014.
 - CFB K / P: **Alex Henery** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Brad Wing** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- CFB K / P: **Braden Mann** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB K / P: **Braden Mann** — C, Partial; missing specialist kicking/punting facts; source limits: normalized CFB player production begins in 2014.
 - CFB K / P: **Cairo Santos** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Drew Butler** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Dustin Colquitt** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
@@ -130,7 +130,7 @@ None.
 - CFB K / P: **Graham Gano** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Kai Forbath** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Kevin Huber** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- CFB K / P: **Pressley Harvin III** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB K / P: **Pressley Harvin III** — C, Partial; missing specialist kicking/punting facts; source limits: normalized CFB player production begins in 2014.
 - CFB K / P: **Randy Bullock** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB K / P: **Tom Hornsey** — C, Partial; missing specialist kicking/punting facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB LB: **Derrick Thomas** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: CFB normalized player stats do not reach this career/season; normalized CFB player production begins in 2014.
@@ -144,6 +144,7 @@ None.
 - CFB LB: **Rey Maualuga** — C, Partial; missing LB tackle/disruption/turnover facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB LB: **Rocky Calmus** — C, Partial; missing LB tackle/disruption/turnover facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB LB: **Ryan Shazier** — C, Partial; missing LB tackle/disruption/turnover facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB LB: **Tremaine Edmunds** — C, Partial; missing LB tackle/disruption/turnover facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB Notable games / misc: **1924 Notre Dame vs Army — Four Horsemen** — A, Partial; missing game final score, game context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
 - CFB Notable games / misc: **1928 Notre Dame vs Army — Win One for the Gipper** — A, Partial; missing game final score, game context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
 - CFB Notable games / misc: **1935 Notre Dame at Ohio State — Game of the Century** — A, Partial; missing game final score, game context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
@@ -256,12 +257,12 @@ None.
 - CFB RB: **Clinton Portis** — C, Partial; missing RB rushing/scrimmage facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB RB: **Jonathan Stewart** — C, Partial; missing RB rushing/scrimmage facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB RB: **Ka'Deem Carey** — C, Partial; missing RB rushing/scrimmage facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
-- CFB RB: **Kareem Hunt** — C, Partial; missing RB rushing/scrimmage facts; source limits: normalized CFB player production begins in 2014.
 - CFB RB: **Knowshon Moreno** — C, Partial; missing RB rushing/scrimmage facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB RB: **Matt Forte** — C, Partial; missing RB rushing/scrimmage facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB RB: **Shonn Greene** — C, Partial; missing RB rushing/scrimmage facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB RB: **Toby Gerhart** — C, Partial; missing RB rushing/scrimmage facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB Secondary: **Champ Bailey** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB Secondary: **Roy Williams** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB Secondary: **Sauce Gardner** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB Secondary: **Troy Polamalu** — B, Partial; missing secondary interception/PBU/tackle facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB Secondary: **Aqib Talib** — C, Partial; missing secondary interception/PBU/tackle facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
@@ -281,6 +282,7 @@ None.
 - CFB TE: **Michael Egnew** — C, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB TE: **Todd Heap** — C, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB TE: **Zach Miller** — C, Partial; missing TE receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB WR: **Andre Johnson** — B, Partial; missing WR receiving facts; source limits: CFB normalized player stats do not reach this career/season; normalized CFB player production begins in 2014.
 - CFB WR: **Davante Adams** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **DeSean Jackson** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Dez Bryant** — B, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
@@ -396,7 +398,6 @@ None.
 - NFL LB: **Chuck Howley** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Dave Robinson** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Dave Wilcox** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL LB: **Derrick Thomas** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats cover only part of this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Harry Carson** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Jack Ham** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Jack Lambert** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.

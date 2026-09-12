@@ -14,6 +14,8 @@ describe("retired 20 Questions load boundary", () => {
     const ufcRoute = source("src/features/play/UfcTwentyQuestionsPage.tsx");
     const footballRoute = source("src/features/play/FootballTwentyQuestionsPage.tsx");
     const router = source("src/app/router.tsx");
+    const packageJson = source("package.json");
+    const generatedFootballRuntime = source("src/features/games/generated/twentyQuestionsFootballRuntime.json");
 
     expect(sharedPage).not.toContain("twentyQuestionsFootballAuthority");
     expect(runtime).not.toContain("twentyQuestionsFootballAuthority");
@@ -27,5 +29,8 @@ describe("retired 20 Questions load boundary", () => {
     expect(router).not.toContain('import("../features/play/FootballTwentyQuestionsPage")');
     expect(router).toContain('path: "play/20-questions", element: <Navigate to="/play/who-am-i" replace />');
     expect(router).toContain('path: "football/20-questions", element: <Navigate to="/football/who-am-i" replace />');
+    expect(packageJson).not.toContain("npm run generate:football-twenty-questions-runtime");
+    expect(JSON.parse(generatedFootballRuntime).NFL.subjects).toEqual([]);
+    expect(JSON.parse(generatedFootballRuntime).CFB.subjects).toEqual([]);
   });
 });

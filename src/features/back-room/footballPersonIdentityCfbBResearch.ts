@@ -1824,7 +1824,7 @@ export const footballPersonIdentityCfbBResearchSources = [
 
 export const footballPersonIdentityCfbBResearch = [
   [
-    "cfbfast-r-player-4047646-a-j-brown",
+    "cfb-a-j-brown",
     [
       [
         "cfbfast-r-player-4047646-a-j-brown--dual-under-armour-all-american",
@@ -2664,7 +2664,7 @@ export const footballPersonIdentityCfbBResearch = [
     ]
   ],
   [
-    "cfbfast-r-player-4432577-c-j-stroud",
+    "cfb-c-j-stroud",
     [
       [
         "cfbfast-r-player-4432577-c-j-stroud--multi-sport-childhood",
@@ -3174,7 +3174,7 @@ export const footballPersonIdentityCfbBResearch = [
     ]
   ],
   [
-    "cfbfast-r-player-512030-dak-prescott",
+    "cfb-dak-prescott",
     [
       [
         "cfbfast-r-player-512030-dak-prescott--peggy-prescott-upbringing",
@@ -3234,7 +3234,7 @@ export const footballPersonIdentityCfbBResearch = [
     ]
   ],
   [
-    "cfbfast-r-player-3116593-dalvin-cook",
+    "cfb-dalvin-cook",
     [
       [
         "cfbfast-r-player-3116593-dalvin-cook--moved-to-grandmother-for-miami-central",

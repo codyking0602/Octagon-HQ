@@ -37,7 +37,7 @@ describe("Football CFB factual depth expansion", () => {
     expect(getFootballFact("cfb-bijan-robinson", "cfb-best-season-receiving-yards")?.fact.value).toBe(314);
     expect(getFootballFact("cfb-saquon-barkley", "cfb-best-season-receptions")?.fact.value).toBe(54);
 
-    expect(getFootballFact("cfb-nndamukong-suh", "cfb-best-season-sacks")?.fact.value).toBe(12);
+    expect(getFootballFact("cfb-ndamukong-suh", "cfb-best-season-sacks")?.fact.value).toBe(12);
     expect(getFootballFact("cfb-joey-bosa", "cfb-best-season-tackles-for-loss")?.fact.value).toBe(21);
     expect(getFootballFact("cfb-minkah-fitzpatrick", "cfb-best-season-defensive-interceptions")?.fact.value).toBe(6);
 
@@ -50,7 +50,7 @@ describe("Football CFB factual depth expansion", () => {
     for (const [subjectId, metricId] of [
       ["cfb-amari-cooper", "cfb-best-season-receiving-yards"],
       ["cfb-saquon-barkley", "cfb-best-season-receptions"],
-      ["cfb-nndamukong-suh", "cfb-best-season-sacks"],
+      ["cfb-ndamukong-suh", "cfb-best-season-sacks"],
       ["dabo-swinney-cfb", "cfb-coach-career-wins"],
       ["cfb-ashton-jeanty", "cfb-best-season-rushing-yards"],
       ["cfb-mark-ingram-ii", "cfb-best-season-rushing-touchdowns"],

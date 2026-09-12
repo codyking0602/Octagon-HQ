@@ -256,7 +256,7 @@ export const footballStage16CfbQbCareerFactualRecords: readonly FootballFactualR
     ["cfb-career-receiving-touchdowns", 0], ["cfb-career-total-touchdowns", 33], ["cfb-heisman-awards", 1],
   ]),
   facts("cfb-derrick-thomas", [["cfb-career-games", 34]]),
-  facts("cfb-nndamukong-suh", [
+  facts("cfb-ndamukong-suh", [
     ["cfb-career-games", 54], ["cfb-career-sacks", 24], ["cfb-career-defensive-interceptions", 4],
     ["cfb-career-forced-fumbles", 3], ["cfb-career-fumble-recoveries", 0],
   ]),

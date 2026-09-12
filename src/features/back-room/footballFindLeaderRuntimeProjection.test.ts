@@ -16,6 +16,7 @@ import {
   FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_ELIGIBILITY,
   FOOTBALL_FIND_LEADER_RUNTIME_PROJECTION_SUMMARY,
 } from "./footballFindLeaderRuntimeProjection";
+import { footballCanonicalPlayerSubjectIdForSourceSubjectId } from "./footballRecognizabilityProjection";
 
 describe("Football Find the Leader PR7 runtime projection", () => {
   it("keeps the checked-in compact projection internally deterministic", () => {
@@ -61,11 +62,12 @@ describe("Football Find the Leader PR7 runtime projection", () => {
 
   it("keeps source reconciliation internal and reviewed canonical facts authoritative", () => {
     const projectedBurrow = footballFindLeaderProjectedFactualRecords.find((record) =>
-      getFootballSubject(record.subjectId)?.id === "cfb-joe-burrow"
+      footballCanonicalPlayerSubjectIdForSourceSubjectId(record.subjectId) === "cfb-joe-burrow"
       && record.facts.some((fact) => fact.metricId === "cfb-best-season-passing-yards"),
     );
     expect(projectedBurrow).toBeDefined();
-    const canonicalBurrow = getFootballSubject(projectedBurrow!.subjectId);
+    expect(getFootballSubject(projectedBurrow!.subjectId)?.recognizabilityTier).toBe("D");
+    const canonicalBurrow = getFootballSubject("cfb-joe-burrow");
     expect(canonicalBurrow?.id).toBe("cfb-joe-burrow");
     expect(canonicalBurrow?.aliases ?? []).not.toContain(projectedBurrow!.subjectId);
 

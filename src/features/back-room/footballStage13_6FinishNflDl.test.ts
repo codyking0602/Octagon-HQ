@@ -5,7 +5,7 @@ import { footballLedgerAudit } from "./footballLedgerAudit";
 describe("Football Ledger Stage 13.6 NFL DL factual closeout", () => {
   it("closes every NFL DL factual gap with the Joe Greene duplicate reconciled", () => {
     const rows = footballLedgerAudit.rows.filter((row) => row.league === "NFL" && row.pool === "DL / EDGE");
-    expect(rows).toHaveLength(321);
+    expect(rows).toHaveLength(318);
     expect(rows.every((row) => row.readiness === "Full")).toBe(true);
     expect(rows.filter((row) => row.readiness !== "Full")).toEqual([]);
 

@@ -374,7 +374,7 @@ export const footballPersonIdentityCfbAResearch = [
     ["cfb-michael-crabtree--texas-last-second-catch", "Crabtree’s last-second touchdown against No. 1 Texas in 2008 became the single college play most permanently attached to his identity.", 53],
     ["cfb-michael-crabtree--dallas-and-tech-giveback", "After becoming established, Crabtree created youth football/community efforts in Dallas and funded a Texas Tech scholarship tied to his former position group.", 53],
   ]],
-  ["cfb-nndamukong-suh", [
+  ["cfb-ndamukong-suh", [
     ["cfb-ndamukong-suh--house-of-spears-name", "Suh’s family background spans Cameroon and Jamaica; his father is from Cameroon’s Ngema tribe, and his first name has been explained as meaning “House of Spears.”", 54],
     ["cfb-ndamukong-suh--two-way-and-shot-put", "In high school Suh played both offensive and defensive line, also played basketball, and became an Oregon state champion in the shot put.", 54],
     ["cfb-ndamukong-suh--freshman-knee-redshirt", "Suh’s first Nebraska season was derailed by a knee injury that required surgery and led to a medical redshirt.", 55],

@@ -37,8 +37,18 @@ type CfbSeed = readonly [
   tier: FootballRecognizabilityTier,
   basis?: FootballRecognitionEvidenceBasis,
   provider?: FootballSourceProviderId,
+  startSeason?: number,
+  endSeason?: number,
+  activeDecades?: readonly number[],
 ];
-type NflSeed = readonly [id: string, name: string, position: FootballCanonicalPosition, tier: FootballRecognizabilityTier];
+type NflSeed = readonly [
+  id: string,
+  name: string,
+  position: FootballCanonicalPosition,
+  tier: FootballRecognizabilityTier,
+  basis?: FootballRecognitionEvidenceBasis,
+  provider?: FootballSourceProviderId,
+];
 type CoachSeed = readonly [id: string, name: string, league: FootballCanonicalLeague, tier: FootballRecognizabilityTier];
 type EraSeed = readonly [id: string, name: string, startSeason: number, endSeason: number, tier: FootballRecognizabilityTier, franchises: readonly string[]];
 type GameSeed = readonly [id: string, name: string, season: number, tier: FootballRecognizabilityTier];
@@ -51,7 +61,10 @@ const cfb = (
   tier: FootballRecognizabilityTier = "C",
   basis: FootballRecognitionEvidenceBasis = "first-team-all-america",
   provider: FootballSourceProviderId = "sports-reference",
-): CfbSeed => [id, name, position, school, tier, basis, provider];
+  startSeason?: number,
+  endSeason?: number,
+  activeDecades?: readonly number[],
+): CfbSeed => [id, name, position, school, tier, basis, provider, startSeason, endSeason, activeDecades];
 
 const cfbSeeds: readonly CfbSeed[] = [
   // Quarterbacks — college identity is independent from NFL success.
@@ -113,7 +126,7 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-peter-warrick", "Peter Warrick", "WR", "Florida State", "B"),
   cfb("cfb-antonio-bryant", "Antonio Bryant", "WR", "Pittsburgh"),
   cfb("cfb-roy-williams-wr", "Roy Williams", "WR", "Texas", "B"),
-  cfb("cfb-andre-johnson", "Andre Johnson", "WR", "Miami", "B"),
+  cfb("cfb-andre-johnson", "Andre Johnson", "WR", "Miami", "B", "first-team-all-america", "sports-reference", 2000, 2002),
   cfb("cfb-larry-fitzgerald", "Larry Fitzgerald", "WR", "Pittsburgh", "A"),
   cfb("cfb-braylon-edwards", "Braylon Edwards", "WR", "Michigan", "B"),
   cfb("cfb-desean-jackson", "DeSean Jackson", "WR", "California", "B"),
@@ -243,7 +256,7 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-gerald-mccoy", "Gerald McCoy", "DL", "Oklahoma", "B"),
   cfb("cfb-ndamukong-suh", "Ndamukong Suh", "DL", "Nebraska", "A", "major-award-or-hall-of-fame", "official-cfb-awards"),
   cfb("cfb-terrence-cody", "Terrence Cody", "DL", "Alabama"),
-  cfb("cfb-jj-watt", "J.J. Watt", "DL", "Wisconsin", "B"),
+  cfb("cfb-jj-watt", "J.J. Watt", "DL", "Wisconsin", "B", "first-team-all-america", "sports-reference", undefined, undefined, [2000]),
   cfb("cfb-nick-fairley", "Nick Fairley", "DL", "Auburn"),
   cfb("cfb-daquan-bowers", "Da'Quan Bowers", "DL", "Clemson"),
   cfb("cfb-melvin-ingram", "Melvin Ingram", "DL", "South Carolina"),
@@ -293,10 +306,14 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-isaiah-simmons", "Isaiah Simmons", "LB", "Clemson", "B"),
   cfb("cfb-micah-parsons", "Micah Parsons", "LB", "Penn State", "B"),
   cfb("cfb-jeremiah-owusu-koramoah", "Jeremiah Owusu-Koramoah", "LB", "Notre Dame"),
-  cfb("cfb-nakobe-dean", "Nakobe Dean", "LB", "Georgia", "B"),
+  cfb("cfb-nakobe-dean", "Nakobe Dean", "LB", "Georgia", "B", "first-team-all-america", "sports-reference", undefined, undefined, [2010, 2020]),
   cfb("cfb-jack-campbell", "Jack Campbell", "LB", "Iowa"),
   cfb("cfb-payton-wilson", "Payton Wilson", "LB", "NC State"),
   cfb("cfb-edgerrin-cooper", "Edgerrin Cooper", "LB", "Texas A&M"),
+  cfb("cfb-tj-watt", "T.J. Watt", "LB", "Wisconsin", "C", "reviewed-national-recognition"),
+  cfb("cfb-tremaine-edmunds", "Tremaine Edmunds", "LB", "Virginia Tech", "C", "reviewed-national-recognition"),
+  cfb("cfb-haason-reddick", "Haason Reddick", "LB", "Temple", "C", "reviewed-national-recognition"),
+  cfb("cfb-uchenna-nwosu", "Uchenna Nwosu", "LB", "USC", "C", "reviewed-national-recognition"),
 
   // Secondary.
   cfb("cfb-champ-bailey", "Champ Bailey", "DB", "Georgia", "B"),
@@ -335,7 +352,7 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-cooper-dejean", "Cooper DeJean", "DB", "Iowa", "B"),
   cfb("cfb-malaki-starks", "Malaki Starks", "DB", "Georgia", "B"),
   cfb("cfb-caleb-downs", "Caleb Downs", "DB", "Ohio State", "B"),
-  cfb("cfb-travis-hunter-db", "Travis Hunter", "DB", "Colorado", "A", "major-award-or-hall-of-fame", "official-cfb-awards"),
+  cfb("cfb-travis-hunter", "Travis Hunter", "DB", "Colorado", "A", "major-award-or-hall-of-fame", "official-cfb-awards"),
 
   // Specialists.
   cfb("cfb-sebastian-janikowski", "Sebastian Janikowski", "K", "Florida State", "B"),
@@ -413,6 +430,7 @@ const nflSeeds: readonly NflSeed[] = [
   ["nfl-thomas-morstead", "Thomas Morstead", "P", "B"],
   ["nfl-sam-koch", "Sam Koch", "P", "C"],
   ["nfl-pat-mcafee", "Pat McAfee", "P", "A"],
+  ["nfl-morris-claiborne", "Morris Claiborne", "DB", "C", "reviewed-national-recognition", "sports-reference"],
 ] as const;
 
 const coachSeeds: readonly CoachSeed[] = [
@@ -493,7 +511,7 @@ const gameSeeds: readonly GameSeed[] = [
 ] as const;
 
 const cfbRecords = cfbSeeds.map(([
-  id, name, position, school, tier, basis = "first-team-all-america", provider = "sports-reference",
+  id, name, position, school, tier, basis = "first-team-all-america", provider = "sports-reference", startSeason, endSeason, activeDecades,
 ]): FootballRecognitionEvidenceRecord => ({
   id,
   name,
@@ -501,6 +519,14 @@ const cfbRecords = cfbSeeds.map(([
   league: "CFB",
   position,
   school,
+  ...(startSeason != null ? { startSeason } : {}),
+  ...(endSeason != null ? { endSeason } : {}),
+  ...(activeDecades?.length ? { activeDecades } : startSeason != null && endSeason != null ? {
+    activeDecades: Array.from(
+      { length: Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1 },
+      (_, index) => (Math.floor(startSeason / 10) + index) * 10,
+    ),
+  } : {}),
   tier,
   basis,
   sourceProvider: provider,
@@ -510,17 +536,19 @@ const cfbRecords = cfbSeeds.map(([
     : ["ncaafb", "official-cfb-awards"].filter((candidate) => candidate !== provider) as FootballSourceProviderId[],
 }));
 
-const nflRecords = nflSeeds.map(([id, name, position, tier]): FootballRecognitionEvidenceRecord => ({
+const nflRecords = nflSeeds.map(([
+  id, name, position, tier, basis = "major-award-or-hall-of-fame", provider = "nfl-honors",
+]): FootballRecognitionEvidenceRecord => ({
   id,
   name,
   kind: "player-career",
   league: "NFL",
   position,
   tier,
-  basis: "major-award-or-hall-of-fame",
-  sourceProvider: "nfl-honors",
-  sourceId: `nfl-honors:${id}`,
-  corroboratingSourceProviders: ["sports-reference"],
+  basis,
+  sourceProvider: provider,
+  sourceId: `${provider}:${id}`,
+  corroboratingSourceProviders: provider === "sports-reference" ? ["nfl-honors"] : ["sports-reference"],
 }));
 
 const coachRecords = coachSeeds.map(([id, name, league, tier]): FootballRecognitionEvidenceRecord => ({

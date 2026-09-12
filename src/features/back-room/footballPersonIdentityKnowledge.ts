@@ -2,7 +2,12 @@ import type { FootballFactSource } from "./footballFactualStatsCore";
 import { footballPersonIdentityCfbAResearch, footballPersonIdentityCfbAResearchSources } from "./footballPersonIdentityCfbAResearch";
 import { footballPersonIdentityCfbBResearch, footballPersonIdentityCfbBResearchSources } from "./footballPersonIdentityCfbBResearch";
 import { footballPersonResumeResearch, type FootballPersonResumeResearchRecord } from "./footballPersonResumeResearch";
-import { getFootballSubject, type FootballSubjectProfile } from "./footballSubjectRegistry";
+import { footballCanonicalPlayerSubjectIdForSourceSubjectId } from "./footballRecognizabilityProjection";
+import {
+  footballPlayerCareerSubjectsForPerson,
+  getFootballSubject,
+  type FootballSubjectProfile,
+} from "./footballSubjectRegistry";
 
 export type FootballPersonIdentityKnowledgeClass = "distinctive-identity" | "resume";
 export type FootballPersonIdentityVerification = "verified";
@@ -1063,7 +1068,7 @@ const baseFootballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentit
     fact("captain-comeback", "captain-comeback-identity", "His repeated late-game rallies with Dallas produced the enduring 'Captain Comeback' identity.", ["identity-pr6-roger-staubach"]),
     fact("hail-mary", "hail-mary-term-popularization", "His last-second 1975 playoff touchdown pass to Drew Pearson helped popularize the football term 'Hail Mary.'", ["identity-pr6-roger-staubach"]),
   ]},
-  { subjectId: "nflverse-player-00-0021306", facts: [
+  { subjectId: "adrian-peterson", facts: [
     fact("all-day", "ad-all-day-nickname", "His father gave him the nickname 'AD' for 'All Day' because of the energy he showed as a child.", ["identity-pr6-adrian-peterson"]),
     fact("track-speed", "sprinter-speed-deeper-alignment", "He was an accomplished high-school sprinter, giving a track background to the breakaway speed paired with his power-running style.", ["identity-pr6-adrian-peterson"]),
     fact("draft-collarbone", "vikings-draft-collarbone-concern", "A collarbone injury became a major part of the uncertainty surrounding him before Minnesota selected him in the 2007 draft.", ["identity-pr6-adrian-peterson"]),
@@ -2204,7 +2209,7 @@ const resumeKnowledgeFacts = (
   tags: resumeFact.tags,
 }));
 
-export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentityKnowledgeRecord[] = [
+const rawFootballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentityKnowledgeRecord[] = [
   ...baseFootballPersonIdentityKnowledgeRecords.map((record) => {
     const resume = resumeResearchBySubjectId.get(record.subjectId);
     if (!resume) return record;
@@ -2220,6 +2225,21 @@ export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIden
       facts: resumeKnowledgeFacts(resume.subjectId, resume.facts),
     })),
 ];
+
+const canonicalKnowledgeRecordsBySubjectId = new Map<string, FootballPersonIdentityKnowledgeRecord>();
+for (const record of rawFootballPersonIdentityKnowledgeRecords) {
+  const subjectId = footballCanonicalPlayerSubjectIdForSourceSubjectId(record.subjectId)
+    ?? getFootballSubject(record.subjectId)?.id
+    ?? record.subjectId;
+  const existing = canonicalKnowledgeRecordsBySubjectId.get(subjectId);
+  canonicalKnowledgeRecordsBySubjectId.set(subjectId, {
+    subjectId,
+    facts: [...(existing?.facts ?? []), ...record.facts],
+  });
+}
+
+export const footballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentityKnowledgeRecord[] =
+  [...canonicalKnowledgeRecordsBySubjectId.values()];
 
 const sourceById = new Map(footballPersonIdentityKnowledgeSources.map((item) => [item.id, item]));
 const recordBySubjectId = new Map<string, FootballPersonIdentityKnowledgeRecord>();
@@ -2273,34 +2293,24 @@ export function getFootballPersonIdentityKnowledge(subjectId: string) {
   return recordBySubjectId.get(canonicalSubjectId) ?? null;
 }
 
-function normalizedFootballPersonKnowledgeName(value: string) {
-  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
-}
-
-const personKnowledgeRecordsByName = new Map<string, FootballPersonIdentityKnowledgeRecord[]>();
-for (const record of footballPersonIdentityKnowledgeRecords) {
-  const resolvedSubject = getFootballSubject(record.subjectId);
-  if (!resolvedSubject || resolvedSubject.kind !== "player-career") continue;
-  const key = normalizedFootballPersonKnowledgeName(resolvedSubject.name);
-  const values = personKnowledgeRecordsByName.get(key) ?? [];
-  values.push(record);
-  personKnowledgeRecordsByName.set(key, values);
-}
-
 /**
  * Resolve every existing person-identity knowledge record attached to the same
- * canonical football person. This does not decide CFB/NFL applicability; callers
- * must still apply league-stage scope before using a record's facts.
+ * canonical football person. The subject registry owns cross-stage person linkage;
+ * this layer never re-groups records by display name.
  */
 export function getFootballPersonIdentityKnowledgeForPerson(subject: FootballSubjectProfile) {
   if (subject.kind !== "player-career") {
     const direct = getFootballPersonIdentityKnowledge(subject.id);
     return direct ? [direct] : [];
   }
+
+  const relatedSubjectIds = new Set(
+    footballPlayerCareerSubjectsForPerson(subject).map((relatedSubject) => relatedSubject.id),
+  );
   const direct = getFootballPersonIdentityKnowledge(subject.id);
-  const records = personKnowledgeRecordsByName.get(normalizedFootballPersonKnowledgeName(subject.name)) ?? [];
+  const related = footballPersonIdentityKnowledgeRecords.filter((record) => relatedSubjectIds.has(record.subjectId));
   return [...new Map(
-    [...(direct ? [direct] : []), ...records].map((record) => [record.subjectId, record]),
+    [...(direct ? [direct] : []), ...related].map((record) => [record.subjectId, record]),
   ).values()];
 }
 

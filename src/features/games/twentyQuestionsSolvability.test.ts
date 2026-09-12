@@ -5,7 +5,7 @@ import {
   twentyQuestionsRecommendedQuestions,
   type TwentyQuestionsUniverse,
 } from "./twentyQuestionsEngine";
-import { getFootballTwentyQuestionsRuntimeUniverse } from "./twentyQuestionsFootballRuntimeAuthority";
+import footballRuntimeSnapshot from "./generated/twentyQuestionsFootballRuntime.json";
 import { getUfcTwentyQuestionsUniverse } from "./twentyQuestionsUfcAuthority";
 
 function simulateRecommendedPath(universe: TwentyQuestionsUniverse, hiddenSubjectId: string) {
@@ -55,11 +55,8 @@ describe("20 Questions actual Recommended-path readiness", () => {
     expectUniverseSolvable(getUfcTwentyQuestionsUniverse());
   });
 
-  it("keeps every NFL subject solvable or on a directly playable forced-final board", () => {
-    expectUniverseSolvable(getFootballTwentyQuestionsRuntimeUniverse("NFL"));
-  });
-
-  it("keeps every CFB subject solvable or on a directly playable forced-final board", () => {
-    expectUniverseSolvable(getFootballTwentyQuestionsRuntimeUniverse("CFB"));
+  it.each(["NFL", "CFB"] as const)("keeps retired %s runtime ownership empty", (league) => {
+    expect(footballRuntimeSnapshot[league].subjects).toEqual([]);
+    expect(footballRuntimeSnapshot[league].questions).toEqual([]);
   });
 });

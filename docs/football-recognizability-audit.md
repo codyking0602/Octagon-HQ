@@ -13,22 +13,22 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 ## Totals
 
 - Raw projection records across all entity kinds: 105235
-- Promoted A-C records: 2384 (2.27%)
+- Promoted A-C records: 2381 (2.26%)
 - Raw player identities: 51428
-- Player A-C: 1614 (3.14%)
-- NFL player A-C: 1455 — below the 1,500 health target; thresholds were not weakened.
+- Player A-C: 1611 (3.13%)
+- NFL player A-C: 1452 — below the 1,500 health target; thresholds were not weakened.
 - CFB player A-C: 159 — below the 2,000 health target; thresholds were not weakened.
-- Manual A records: 47
+- Manual A records: 45
 
 ### Player tier by league
 
 ```json
 {
   "NFL": {
-    "A": 20,
-    "B": 151,
+    "A": 18,
+    "B": 150,
     "C": 1284,
-    "D": 9896
+    "D": 9899
   },
   "CFB": {
     "A": 0,
@@ -68,10 +68,10 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
     "D": 43466
   },
   "player-career": {
-    "A": 20,
-    "B": 181,
+    "A": 18,
+    "B": 180,
     "C": 1413,
-    "D": 49814
+    "D": 49817
   },
   "program": {
     "A": 7,
@@ -107,7 +107,7 @@ NFL positions use exact source position tokens, never substring matching. CFB pl
 
 ## Thin-pool / bias warnings
 
-- NFL player depth is 1455, below the roadmap health target; quality was kept above quota.
+- NFL player depth is 1452, below the roadmap health target; quality was kept above quota.
 - CFB player depth is 159, below the roadmap health target; quality was kept above quota.
 - CFB offensive-line recognition cannot be inferred from the historical player-stat source.
 - CFB defensive players without a unique, chronologically plausible NFL name reconciliation are deliberately not promoted from ambiguous defensive event stats alone.

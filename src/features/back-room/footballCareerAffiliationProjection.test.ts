@@ -22,6 +22,26 @@ describe("footballCareerAffiliationProjection", () => {
     expect(histories.some((history) => history.affiliations.length > 1)).toBe(true);
   });
 
+
+  it("owns at most one source-backed CFB program per player-season", () => {
+    for (const subject of eligiblePeople("CFB").filter((candidate) => candidate.kind === "player-career")) {
+      const history = footballCareerAffiliationHistoryFor(subject);
+      if (!history) continue;
+      const affiliationsBySeason = new Map<number, Set<string>>();
+      for (const row of history.seasons) {
+        const affiliations = affiliationsBySeason.get(row.season) ?? new Set<string>();
+        affiliations.add(row.affiliation);
+        affiliationsBySeason.set(row.season, affiliations);
+      }
+      for (const [season, affiliations] of affiliationsBySeason) {
+        expect(
+          affiliations.size,
+          `${subject.id} has conflicting source affiliations in ${season}: ${[...affiliations].join(", ")}`,
+        ).toBe(1);
+      }
+    }
+  });
+
   it("marks a career complete only when every season in the stated window is source-owned", () => {
     for (const league of ["NFL", "CFB"] as const) {
       for (const subject of eligiblePeople(league)) {

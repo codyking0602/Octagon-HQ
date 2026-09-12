@@ -59,6 +59,8 @@ const promotedGames = promotedSubjects.filter((subject) => subject.kind === "gam
 
 const nflPlayers = rowObjects(readJson("data/generated/football/nfl/player-seasons-1999-2025.json"));
 const cfbPlayers = rowObjects(readJson("data/generated/football/cfb/player-seasons-2014-2025.json"));
+const cfbPlayerSeasonRecognition = readJson("data/generated/football/cfb/player-season-recognition.json");
+const cfbPlayerSeasonRecognitionById = new Map(cfbPlayerSeasonRecognition.records.map((record) => [record.id, record]));
 const nflTeamStats = rowObjects(readJson("data/generated/football/nfl/team-seasons-1999-2025.json"));
 const nflTeamResults = rowObjects(readJson("data/generated/football/relationships/nfl-team-season-results-1999-2025.json"));
 const cfbTeamResults = rowObjects(readJson("data/generated/football/relationships/cfb-team-season-results-2002-2025.json"));
@@ -74,8 +76,14 @@ for (const row of nflPlayers) {
   const key = normalized(row.playerDisplayName ?? row.playerName);
   if (key) { const rows = nflPlayersByName.get(key) ?? []; rows.push(row); nflPlayersByName.set(key, rows); }
 }
+const cfbPlayersById = new Map();
 const cfbPlayersByName = new Map();
 for (const row of cfbPlayers) {
+  const sourceId = String(row.sourcePlayerId ?? "");
+  if (sourceId) {
+    const idRows = cfbPlayersById.get(sourceId) ?? [];
+    idRows.push(row); cfbPlayersById.set(sourceId, idRows);
+  }
   const key = normalized(row.playerName);
   const rows = cfbPlayersByName.get(key) ?? [];
   rows.push(row); cfbPlayersByName.set(key, rows);
@@ -101,14 +109,71 @@ function nflRowsFor(subject) {
   }
   return rows.filter((row) => withinWindow(row, subject));
 }
-function cfbRowsFor(subject) {
-  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
-  let rows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
-  if (subject.school) {
-    const schoolRows = rows.filter((row) => normalized(row.team) === normalized(subject.school));
-    if (schoolRows.length) rows = schoolRows;
+function cfbRowVolume(row) {
+  return (finite(row.gamesPlayed) ? row.gamesPlayed : 0) * 100
+    + (finite(row.passAttempts) ? row.passAttempts : 0)
+    + (finite(row.rushAttempts) ? row.rushAttempts : 0)
+    + (finite(row.receptions) ? row.receptions : 0)
+    + (finite(row.sacks) ? row.sacks : 0) * 10
+    + (finite(row.defensiveInterceptions) ? row.defensiveInterceptions : 0) * 20
+    + (finite(row.passBreakups) ? row.passBreakups : 0) * 5;
+}
+
+function dominantCfbSeasonRows(rows) {
+  const bySeason = new Map();
+  for (const row of rows) {
+    if (!finite(row.season)) continue;
+    const current = bySeason.get(row.season);
+    if (
+      !current
+      || cfbRowVolume(row) > cfbRowVolume(current)
+      || (cfbRowVolume(row) === cfbRowVolume(current) && String(row.team).localeCompare(String(current.team)) < 0)
+    ) {
+      bySeason.set(row.season, row);
+    }
   }
-  return rows;
+  return [...bySeason.values()].sort((left, right) => left.season - right.season);
+}
+
+function cfbRowsFor(subject) {
+  const seasonRecognition = subject.kind === "player-season"
+    ? cfbPlayerSeasonRecognitionById.get(subject.id)
+    : null;
+
+  if (seasonRecognition) {
+    return (cfbPlayersById.get(String(seasonRecognition.sourceId)) ?? []).filter((row) => (
+      row.season === seasonRecognition.season
+      && normalized(row.playerName) === normalized(subject.name.replace(/\s+\d{4}$/, ""))
+      && normalized(row.team) === normalized(seasonRecognition.school)
+    ));
+  }
+
+  const exactSourceId = sourceIdentityId(subject);
+  let rows = exactSourceId ? (cfbPlayersById.get(String(exactSourceId)) ?? []) : [];
+  if (rows.length) {
+    const exactRows = subject.kind === "player-season"
+      ? rows.filter((row) => subject.season == null || row.season === subject.season)
+      : rows;
+    return dominantCfbSeasonRows(exactRows);
+  }
+
+  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
+  let nameRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
+
+  // Name is only candidate discovery. Canonical role/program metadata must narrow
+  // an ambiguous display name to one underlying source identity before aggregation.
+  if (subject.position) {
+    const positionRows = nameRows.filter((row) => row.position === subject.position);
+    if (positionRows.length) nameRows = positionRows;
+  }
+  if (subject.school) {
+    const schoolRows = nameRows.filter((row) => normalized(row.team) === normalized(subject.school));
+    if (schoolRows.length) nameRows = schoolRows;
+  }
+
+  const sourceIds = new Set(nameRows.map((row) => String(row.sourcePlayerId ?? "")).filter(Boolean));
+  if (sourceIds.size !== 1) return [];
+  return dominantCfbSeasonRows(nameRows);
 }
 
 function nflPlayerFacts(subject) {
@@ -148,7 +213,18 @@ function cfbPlayerFacts(subject) {
   const rows = cfbRowsFor(subject);
   if (!rows.length) return [];
   const p = subject.position;
-  const facts = [fact("CFB", "cfb-career-games", sumObserved(rows, "gamesPlayed"))];
+  const observedGames = sumObserved(rows, "gamesPlayed");
+  const careerSeasons = subject.startSeason != null && subject.endSeason != null
+    ? Math.max(1, subject.endSeason - subject.startSeason + 1)
+    : null;
+  // cfbfastR's normalized event rows can expose a single nominal "game" for
+  // positions such as OL without representing actual games played. Do not turn
+  // that partial event coverage into a canonical career-games fact.
+  const usableGames = finite(observedGames)
+    && (careerSeasons == null ? observedGames >= 3 : observedGames >= careerSeasons * 3)
+    ? observedGames
+    : null;
+  const facts = compact([fact("CFB", "cfb-career-games", usableGames)]);
   if (p === "QB") facts.push(...compact([fact("CFB", "cfb-career-passing-completions", sumObserved(rows, "passCompletions")), fact("CFB", "cfb-career-passing-attempts", sumObserved(rows, "passAttempts")), fact("CFB", "cfb-career-passing-yards", sumObserved(rows, "passYards")), fact("CFB", "cfb-career-passing-touchdowns", sumObserved(rows, "passTouchdowns")), fact("CFB", "cfb-career-interceptions-thrown", sumObserved(rows, "interceptionsThrown")), fact("CFB", "cfb-best-season-passing-yards", maxObserved(rows, "passYards")), fact("CFB", "cfb-best-season-passing-touchdowns", maxObserved(rows, "passTouchdowns"))]));
   if (["QB", "RB", "WR", "TE"].includes(p)) facts.push(...compact([fact("CFB", "cfb-career-rushing-attempts", sumObserved(rows, "rushAttempts")), fact("CFB", "cfb-career-rushing-yards", sumObserved(rows, "rushYards")), fact("CFB", "cfb-career-rushing-touchdowns", sumObserved(rows, "rushTouchdowns")), fact("CFB", "cfb-best-season-rushing-yards", maxObserved(rows, "rushYards")), fact("CFB", "cfb-best-season-rushing-touchdowns", maxObserved(rows, "rushTouchdowns"))]));
   if (["RB", "WR", "TE"].includes(p)) facts.push(...compact([fact("CFB", "cfb-career-receptions", sumObserved(rows, "receptions")), fact("CFB", "cfb-career-targets", sumObserved(rows, "targets")), fact("CFB", "cfb-career-receiving-yards", sumObserved(rows, "receivingYards")), fact("CFB", "cfb-career-receiving-touchdowns", sumObserved(rows, "receivingTouchdowns")), fact("CFB", "cfb-career-total-touchdowns", sumObserved(rows, "totalTouchdowns")), fact("CFB", "cfb-best-season-receptions", maxObserved(rows, "receptions")), fact("CFB", "cfb-best-season-receiving-yards", maxObserved(rows, "receivingYards")), fact("CFB", "cfb-best-season-receiving-touchdowns", maxObserved(rows, "receivingTouchdowns"))]));

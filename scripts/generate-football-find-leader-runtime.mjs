@@ -219,11 +219,36 @@ const cfbGrouped = groupRows(cfbPlayers, (row, ix) => {
   const name = String(at(row, ix, "playerName") ?? "");
   return sourcePlayerId && name ? `${sourcePlayerId}:${normalize(name)}` : "";
 });
-for (const [key, rows] of cfbGrouped.groups) {
+function cfbPlayerRowVolume(row) {
+  return finite(at(row, cfbGrouped.ix, "gamesPlayed")) * 100
+    + finite(at(row, cfbGrouped.ix, "passAttempts"))
+    + finite(at(row, cfbGrouped.ix, "rushAttempts"))
+    + finite(at(row, cfbGrouped.ix, "receptions"))
+    + finite(at(row, cfbGrouped.ix, "sacks")) * 10
+    + finite(at(row, cfbGrouped.ix, "defensiveInterceptions")) * 20
+    + finite(at(row, cfbGrouped.ix, "passBreakups")) * 5;
+}
+function dominantCfbPlayerSeasonRows(rows) {
+  const bySeason = new Map();
+  for (const row of rows) {
+    const season = finite(at(row, cfbGrouped.ix, "season"));
+    if (!season) continue;
+    const current = bySeason.get(season);
+    if (
+      !current
+      || cfbPlayerRowVolume(row) > cfbPlayerRowVolume(current)
+      || (cfbPlayerRowVolume(row) === cfbPlayerRowVolume(current)
+        && String(at(row, cfbGrouped.ix, "team")).localeCompare(String(at(current, cfbGrouped.ix, "team"))) < 0)
+    ) bySeason.set(season, row);
+  }
+  return [...bySeason.values()].sort((left, right) => finite(at(left, cfbGrouped.ix, "season")) - finite(at(right, cfbGrouped.ix, "season")));
+}
+for (const [key, sourceRows] of cfbGrouped.groups) {
   const recognized = cfbCareerRecognition.get(key);
   if (!recognized) continue;
   const position = recognized.position;
   if (!["QB", "RB", "WR", "TE", "DL", "LB", "DB"].includes(position)) continue;
+  const rows = dominantCfbPlayerSeasonRows(sourceRows);
   // The normalized player corpus begins in 2014. A career whose first observed row is the source floor may have
   // earlier seasons outside the corpus, so do not claim a career-wide best season from that left-censored window.
   if (recognized.startSeason <= 2014) continue;

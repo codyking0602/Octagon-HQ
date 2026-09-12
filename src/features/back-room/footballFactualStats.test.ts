@@ -97,13 +97,16 @@ describe("Football factual stat owner", () => {
     expect(getFootballFact("2017-cleveland-browns", "nfl-team-overall-wins")?.fact.value).toBe(0);
   });
 
-  it("collapses cross-level aliases onto one canonical factual identity", () => {
-    const canonicalLarry = getFootballFact("cfb-larry-fitzgerald", "nfl-career-receiving-yards");
-    const nflAliasLarry = getFootballFact("nfl-larry-fitzgerald", "nfl-career-receiving-yards");
-    expect(canonicalLarry?.record.subjectId).toBe("cfb-larry-fitzgerald");
-    expect(nflAliasLarry?.record).toBe(canonicalLarry?.record);
-    expect(canonicalLarry?.fact.value).toBe(17492);
-    expect(getFootballFact("cfb-larry-fitzgerald", "cfb-best-season-receiving-yards")?.fact.value).toBe(1672);
+  it("preserves separate NFL and CFB factual identities for the same person", () => {
+    const nflLarry = getFootballFact("nfl-larry-fitzgerald", "nfl-career-receiving-yards");
+    const cfbLarry = getFootballFact("cfb-larry-fitzgerald", "cfb-best-season-receiving-yards");
+
+    expect(nflLarry?.record.subjectId).toBe("nfl-larry-fitzgerald");
+    expect(nflLarry?.fact.value).toBe(17492);
+    expect(cfbLarry?.record.subjectId).toBe("cfb-larry-fitzgerald");
+    expect(cfbLarry?.fact.value).toBe(1672);
+    expect(getFootballFact("cfb-larry-fitzgerald", "nfl-career-receiving-yards")).toBeNull();
+    expect(getFootballFact("nfl-larry-fitzgerald", "cfb-best-season-receiving-yards")).toBeNull();
   });
 
   it("covers modern CFB skill players, defenders, coaches, programs, Program Eras and non-title teams", () => {

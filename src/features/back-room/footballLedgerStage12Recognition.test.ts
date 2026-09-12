@@ -50,7 +50,13 @@ describe("Football Stage 12 recognizability universe", () => {
     expect(names(playerPool("CFB", "TE"))).toEqual(expect.arrayContaining(["Jermaine Gresham", "Mark Andrews", "Brock Bowers"]));
     expect(names(playerPool("CFB", "OL"))).toEqual(expect.arrayContaining(["Joe Thomas", "Barrett Jones", "Penei Sewell"]));
     expect(names(playerPool("CFB", "DL"))).toContain("Ndamukong Suh");
-    expect(names(playerPool("CFB", "LB"))).toContain("Luke Kuechly");
+    expect(names(playerPool("CFB", "LB"))).toEqual(expect.arrayContaining([
+      "Luke Kuechly",
+      "T.J. Watt",
+      "Tremaine Edmunds",
+      "Haason Reddick",
+      "Uchenna Nwosu",
+    ]));
     expect(names(playerPool("CFB", "DB"))).toContain("Eric Berry");
     expect(names([...playerPool("CFB", "K"), ...playerPool("CFB", "P")]))
       .toEqual(expect.arrayContaining(["Roberto Aguayo", "Michael Dickson"]));

@@ -28,7 +28,7 @@ describe("Football Ledger Stage 13.6 NFL TE factual hydration", () => {
     }
 
     const nflTeRows = footballLedgerAudit.rows.filter((row) => row.league === "NFL" && row.pool === "TE");
-    expect(nflTeRows).toHaveLength(74);
+    expect(nflTeRows).toHaveLength(73);
     expect(nflTeRows.every((row) => row.readiness === "Full")).toBe(true);
   });
 });

@@ -738,6 +738,22 @@ function subtitleForSubject(subject: FootballSubjectProfile) {
   return subject.school ?? `${subject.league} program`;
 }
 
+function nflQbHistoricalConsensusForSubject(subject: FootballSubjectProfile) {
+  const candidateIds = [
+    subject.id,
+    ...subject.sourceIdentityKeys
+      .filter((key) => key.provider === "nflverse")
+      .map((key) => `nflverse-player-${key.id}`),
+  ];
+  let unresolved = getNflQbHistoricalConsensus(subject.id);
+  for (const candidateId of [...new Set(candidateIds)]) {
+    const consensus = getNflQbHistoricalConsensus(candidateId);
+    if (consensus.score != null) return consensus;
+    unresolved = consensus;
+  }
+  return unresolved;
+}
+
 function buildNflQbHistoricalConsensusCandidatePool(spec: FootballComparisonCategorySpec): readonly FootballComparisonCandidate[] {
   const reviewedAnchors = reviewedByCanonicalId("nfl-quarterbacks", getFootballRankFivePack("nfl-quarterbacks").items);
   const rows = queryFootballSubjects(spec.query).flatMap((subject) => {
@@ -745,7 +761,7 @@ function buildNflQbHistoricalConsensusCandidatePool(spec: FootballComparisonCate
     const reviewedItem = reviewedAnchors.get(subject.id);
     if (!reviewedItem && facts.length < spec.minimumFacts) return [];
 
-    const consensus = getNflQbHistoricalConsensus(subject.id);
+    const consensus = nflQbHistoricalConsensusForSubject(subject);
     if (consensus.score == null) {
       throw new Error(`NFL QB historical consensus requires an explicit audit for ${subject.id}`);
     }
@@ -968,6 +984,7 @@ function familyCalibrationForSpec(
   spec: FootballComparisonCategorySpec,
   subject: FootballSubjectProfile,
 ) {
+  if (family.calibrationPackId === "nfl-secondary") return canonicalCalibrationValues(spec);
   if (family.calibrationPackId) return fixedCalibrationValues(family.calibrationPackId, spec);
   const calibrationSubjectIds = subject.position
     ? family.calibrationSubjectIdsByPosition?.[subject.position] ?? []
@@ -1046,7 +1063,12 @@ export function buildFootballComparisonCandidatePool(packId: FootballRankFivePac
         const family = familyModelForSubject(subject);
         return subject.position && family ? family.positionSpecs[subject.position] : undefined;
       },
-      calibrationForSpec: (positionSpec) => fixedCalibrationValues(packId, positionSpec),
+      calibrationForSpec: (positionSpec, subject) => {
+        const family = familyModelForSubject(subject);
+        return family
+          ? familyCalibrationForSpec(family, positionSpec, subject)
+          : fixedCalibrationValues(packId, positionSpec);
+      },
     });
   }
 
