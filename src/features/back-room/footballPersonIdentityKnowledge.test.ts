@@ -67,7 +67,7 @@ const PR6_SUBJECT_IDS = new Set([
   "dan-marino",
   "nfl-josh-allen",
   "nfl-roger-staubach",
-  "nflverse-player-00-0021306",
+  "nfl-adrian-peterson",
   "earl-campbell",
   "gale-sayers",
   "marshall-faulk",
