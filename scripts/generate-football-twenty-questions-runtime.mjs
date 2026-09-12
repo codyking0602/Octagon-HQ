@@ -100,7 +100,6 @@ function bestPairCoverageRow(rows, selectedIds, unresolved) {
   return { best, bestCoverage };
 }
 
-// Temporary branch diagnostic: expose unresolved source identities while repairing canonical Football truth.
 function completePairCoverage(universe, scored, selected) {
   const selectedIds = new Set(selected.map((row) => row.question.id));
   let unresolved = unresolvedSubjectPairs(universe.subjects.length, selected);
@@ -118,7 +117,7 @@ function completePairCoverage(universe, scored, selected) {
   }
 
   if (unresolved.length) {
-    throw new Error(`${universe.league} Football 20 Questions authority cannot distinguish ${unresolved.length} subject pairs: ${JSON.stringify(unresolved.slice(0, 5).map(([left, right]) => [universe.subjects[left]?.id, universe.subjects[right]?.id]))}`);
+    throw new Error(`${universe.league} Football 20 Questions authority cannot distinguish ${unresolved.length} subject pairs.`);
   }
   if (selected.length > MAX_QUESTIONS) {
     throw new Error(`${universe.league} Football 20 Questions runtime needs ${selected.length} questions, above the ${MAX_QUESTIONS} compact-runtime limit.`);
