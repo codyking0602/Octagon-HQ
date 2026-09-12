@@ -22,6 +22,8 @@
   --football-accent: var(--hq-context-accent);
   --football-accent-rgb: var(--hq-context-accent-rgb);
   --football-accent-contrast: var(--hq-context-accent-contrast);
+  --football-action: var(--hq-context-accent);
+  --football-action-contrast: var(--hq-context-accent-contrast);
 }
 
 .app-header--universal.app-header--with-sport-context {
