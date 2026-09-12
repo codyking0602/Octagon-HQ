@@ -1,25 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
-  chooseTwentyQuestionsFootballLeague,
   twentyQuestionsRecommendedQuestions,
   type TwentyQuestionsUniverse,
 } from "./twentyQuestionsEngine";
-import { getFootballTwentyQuestionsUniverse } from "./twentyQuestionsFootballAuthority";
-import { createTwentyQuestionsRound } from "./twentyQuestionsRuntime";
 import {
   UFC_TWENTY_QUESTIONS_RUNTIME_MAX_QUESTIONS,
   UFC_TWENTY_QUESTIONS_SUBJECT_COUNT,
   getUfcTwentyQuestionsUniverse,
 } from "./twentyQuestionsUfcAuthority";
-
-function createFootballRound(random: () => number) {
-  const league = chooseTwentyQuestionsFootballLeague(random);
-  return createTwentyQuestionsRound(
-    "football",
-    getFootballTwentyQuestionsUniverse(league),
-    random,
-  );
-}
 
 function expectPairwiseSeparable(universe: TwentyQuestionsUniverse) {
   for (let leftIndex = 0; leftIndex < universe.subjects.length; leftIndex += 1) {
@@ -117,34 +105,4 @@ describe("UFC 20 Questions factual authority", () => {
     expect(families).toContain("era");
     expect(families).toContain("achievement");
   });
-});
-
-describe("Retired Football 20 Questions factual authority", () => {
-  it("discloses NFL or CFB before play and never combines the universes", () => {
-    const nfl = createFootballRound((() => {
-      const values = [0.1, 0.2];
-      return () => values.shift() ?? 0;
-    })());
-    const cfb = createFootballRound((() => {
-      const values = [0.9, 0.2];
-      return () => values.shift() ?? 0;
-    })());
-    expect(nfl.universe.league).toBe("NFL");
-    expect(cfb.universe.league).toBe("CFB");
-    expect(nfl.hiddenSubject.league).toBe("NFL");
-    expect(cfb.hiddenSubject.league).toBe("CFB");
-    expect(nfl.universe.subjects).toHaveLength(120);
-    expect(cfb.universe.subjects).toHaveLength(120);
-  });
-
-  for (const league of ["NFL", "CFB"] as const) {
-    it(`${league} has no repeated live question ids and no unknown answers`, () => {
-      const universe = getFootballTwentyQuestionsUniverse(league);
-      expect(new Set(universe.questions.map((question) => question.id)).size).toBe(universe.questions.length);
-      for (const question of universe.questions) {
-        for (const subject of universe.subjects) expect(typeof question.answer(subject.id)).toBe("boolean");
-      }
-    });
-
-  }
 });
