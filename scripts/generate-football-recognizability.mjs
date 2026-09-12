@@ -1,4 +1,6 @@
 import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import { createServer } from "vite";
 
 const root = new URL("../", import.meta.url);
 const read = (path) => JSON.parse(fs.readFileSync(new URL(path, root), "utf8"));
@@ -297,7 +299,7 @@ const cfbProjected = cfbPeople.map(projectCfbPlayer).map((record) => cfbNameCoun
  * Exact source rows remain separately registered and never inherit product eligibility by name.
  */
 const identityServer = await createServer({
-  root,
+  root: fileURLToPath(root),
   configFile: false,
   logLevel: "error",
   server: { middlewareMode: true },
