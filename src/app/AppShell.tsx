@@ -23,6 +23,7 @@ const PLAY_GAME_TITLES: Record<string, string> = {
 
 const FOOTBALL_GAME_TITLES: Record<string, string> = {
   "/football/find-leader": "Find the Leader",
+  "/football/draft-room": "Draft Room",
 };
 
 type SportContextSection = "PICKS" | "PLAY" | "RANKINGS" | "INTELLIGENCE";
