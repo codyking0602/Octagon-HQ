@@ -295,15 +295,42 @@ export function getFootballSubject(subjectId: string) {
   return footballSubjectById.get(subjectId) ?? null;
 }
 
+function footballPlayerCareerSubjectsSharePerson(
+  left: FootballSubjectProfile,
+  right: FootballSubjectProfile,
+) {
+  if (left.id === right.id) return true;
+  if (left.kind !== "player-career" || right.kind !== "player-career") return false;
+  if (normalizedFootballSubjectName(left.name) !== normalizedFootballSubjectName(right.name)) return false;
+
+  // Same-stage same-name careers are distinct source identities unless they are already
+  // the exact same canonical subject. This prevents one athlete from silently rescuing
+  // another athlete with the same display name.
+  if (left.league === right.league) return false;
+  if (left.position && right.position && left.position !== right.position) return false;
+
+  const cfb = left.league === "CFB" ? left : right;
+  const nfl = left.league === "NFL" ? left : right;
+  const cfbEnd = cfb.endSeason;
+  const nflStart = nfl.draftYear ?? nfl.startSeason;
+
+  // Cross-stage linkage must be chronologically plausible. A college career should
+  // flow directly into the pro identity, not another same-name NFL career years away.
+  if (cfbEnd != null && nflStart != null && (nflStart < cfbEnd || nflStart > cfbEnd + 2)) return false;
+
+  return true;
+}
+
 /**
  * Canonical real-person relationship resolver for player-career subjects.
- * NFL and CFB career subjects remain distinct identities; this only returns the
- * registered career records that belong to the same normalized person name so
- * consumers can apply their own league-stage applicability rules.
+ * NFL and CFB career subjects remain distinct stage identities. Cross-stage sharing
+ * is allowed only when source-stage position and chronology support the same person;
+ * normalized name alone is never sufficient.
  */
 export function footballPlayerCareerSubjectsForPerson(subject: FootballSubjectProfile) {
   if (subject.kind !== "player-career") return [subject] as const;
-  return footballPlayerCareerSubjectsByPerson.get(normalizedFootballSubjectName(subject.name)) ?? [subject];
+  const sameName = footballPlayerCareerSubjectsByPerson.get(normalizedFootballSubjectName(subject.name)) ?? [subject];
+  return sameName.filter((candidate) => footballPlayerCareerSubjectsSharePerson(subject, candidate));
 }
 
 function matchesFootballSubject(subject: FootballSubjectProfile, query: FootballSubjectQuery) {
