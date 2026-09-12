@@ -54,10 +54,44 @@ const majorCfbPrograms = new Set([
 const iconicPrograms = new Set(["alabama", "michigan", "notre-dame", "ohio-state", "oklahoma", "texas", "usc"]);
 const veryRecognizablePrograms = new Set(["auburn", "clemson", "florida", "florida-state", "georgia", "lsu", "miami", "oregon", "penn-state", "tennessee", "texas-a-m"]);
 
+function cfbIdentitySeasonVolume(row, ix) {
+  return n(at(row, ix, "gamesPlayed")) * 100
+    + n(at(row, ix, "passAttempts"))
+    + n(at(row, ix, "rushAttempts"))
+    + n(at(row, ix, "receptions"))
+    + n(at(row, ix, "sacks")) * 10
+    + n(at(row, ix, "defensiveInterceptions")) * 20
+    + n(at(row, ix, "passBreakups")) * 5;
+}
+
+function aggregationRows(corpus, league, ix) {
+  if (league !== "CFB") return corpus.rows;
+  const dominantByIdentitySeason = new Map();
+  for (const row of corpus.rows) {
+    const sourceId = String(at(row, ix, "sourcePlayerId") ?? "");
+    const name = at(row, ix, "playerName");
+    const season = n(at(row, ix, "season"));
+    if (!sourceId || sourceId === "0" || !name || !season) continue;
+    const key = `${sourceId}:${normalize(name)}:${season}`;
+    const current = dominantByIdentitySeason.get(key);
+    if (
+      !current
+      || cfbIdentitySeasonVolume(row, ix) > cfbIdentitySeasonVolume(current, ix)
+      || (
+        cfbIdentitySeasonVolume(row, ix) === cfbIdentitySeasonVolume(current, ix)
+        && String(at(row, ix, "team") ?? "").localeCompare(String(at(current, ix, "team") ?? "")) < 0
+      )
+    ) {
+      dominantByIdentitySeason.set(key, row);
+    }
+  }
+  return [...dominantByIdentitySeason.values()];
+}
+
 function aggregate(corpus, league) {
   const ix = ixFor(corpus);
   const people = new Map();
-  for (const row of corpus.rows) {
+  for (const row of aggregationRows(corpus, league, ix)) {
     const sourceId = String(at(row, ix, "sourcePlayerId") ?? "");
     const name = at(row, ix, "playerDisplayName") ?? at(row, ix, "playerName");
     if (!sourceId || sourceId === "0" || !name) continue;
