@@ -253,7 +253,12 @@ describe("Football Today’s Challenge session", () => {
   it("keeps Football Daily Hit the Number on the replayable progression rules", () => {
     let setup: ReturnType<typeof buildFootballOfficialDailySetup> | null = null;
     for (let offset = 0; offset < 240; offset += 1) {
-      const candidate = buildFootballOfficialDailySetup("hit_the_number", isoDay(offset), footballTodayScheduleVersionForDay(day));
+      const day = isoDay(offset);
+      const candidate = buildFootballOfficialDailySetup(
+        "hit_the_number",
+        day,
+        footballTodayScheduleVersionForDay(day),
+      );
       const formatId = candidate.publicSetup.format_id;
       if (formatId === "one-from-each" || formatId === "build-the-team") {
         setup = candidate;
