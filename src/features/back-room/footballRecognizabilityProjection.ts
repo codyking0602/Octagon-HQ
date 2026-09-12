@@ -1,5 +1,9 @@
 import projectionJson from "../../../data/generated/football/recognizability-projection.json";
-import type { FootballCanonicalSubject, FootballCanonicalPosition } from "./footballFactualStatsCatalog";
+import {
+  footballCanonicalSubjects,
+  type FootballCanonicalSubject,
+  type FootballCanonicalPosition,
+} from "./footballFactualStatsCatalog";
 import { footballHistoricalPoolRecognitionRecords } from "./footballHistoricalPoolRecognitionEvidence";
 import { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";
 import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecognitionRepairs";
@@ -131,6 +135,22 @@ const canonicalPlayerSourceBindingByCanonicalId = new Map(
 const canonicalPlayerSourceBindingBySourceSubjectId = new Map(
   canonicalPlayerSourceBindings.map((binding) => [binding.sourceSubjectId, binding]),
 );
+
+const canonicalCatalogPlayerIdByIdentityId = new Map<string, string>();
+for (const subject of footballCanonicalSubjects) {
+  if (subject.kind !== "player-career") continue;
+  const ids = [subject.id, ...(subject.aliases ?? [])];
+  for (const id of ids) canonicalCatalogPlayerIdByIdentityId.set(id, subject.id);
+  const bareId = subject.id.replace(/^(?:nfl|cfb)-/, "");
+  canonicalCatalogPlayerIdByIdentityId.set(
+    `${subject.league === "NFL" ? "nfl" : "cfb"}-${bareId}`,
+    subject.id,
+  );
+}
+
+function canonicalCatalogPlayerId(subjectId: string) {
+  return canonicalCatalogPlayerIdByIdentityId.get(subjectId) ?? subjectId;
+}
 const nflPlayerSourceRegistry = parseNflPlayerSourceTuples(projectionJson.playerSourceRegistry?.nfl ?? []);
 const cfbPlayerSourceRegistry = parseCfbPlayerSourceTuples(projectionJson.playerSourceRegistry?.cfb ?? []);
 const registryPlayerRecords: ProjectionRecord[] = [
@@ -219,7 +239,8 @@ function proHallMinimumTierFor(subject: FootballRecognitionFloorIdentity) {
 const promotedPlayerRecords = promotedRecords.filter((record) => record.kind === "player-career");
 
 function canonicalReviewedPlayerId(subjectId: string) {
-  return canonicalPlayerSourceBindingBySourceSubjectId.get(subjectId)?.canonicalId ?? subjectId;
+  const boundCanonicalId = canonicalPlayerSourceBindingBySourceSubjectId.get(subjectId)?.canonicalId;
+  return canonicalCatalogPlayerId(boundCanonicalId ?? subjectId);
 }
 
 function canonicalizeReviewedPlayerSubject(subject: FootballCanonicalSubject): FootballCanonicalSubject {
@@ -250,19 +271,21 @@ for (const repair of footballHistoricalRecognitionRepairs) {
 }
 
 function historicalRepairFor(subject: FootballCanonicalSubject) {
-  const direct = historicalById.get(subject.id);
+  const canonicalSubjectId = subject.kind === "player-career"
+    ? canonicalCatalogPlayerId(subject.id)
+    : subject.id;
+  const direct = historicalById.get(canonicalSubjectId);
   if (direct) return direct;
-  // Exact generated source identities own themselves. A source-only athlete may
-  // share a display name with a reviewed star without inheriting that star's repair.
-  if (subject.kind === "player-career" && byId.has(subject.id)) return null;
+
+  // Player ownership never falls back to display-name reconciliation at runtime.
+  // Exact source rows remain source-only, and canonical player repairs were
+  // canonicalized above through explicit source binding or stage-scoped IDs.
+  if (subject.kind === "player-career") return null;
+
   const matches = historicalByKindLeagueAndName.get(
     `${subject.kind}:${subject.league}:${normalizedProjectionName(subject.name)}`,
   ) ?? [];
   if (matches.length === 1) return matches[0]!;
-  if (subject.position) {
-    const samePosition = matches.filter((repair) => repair.subject.position === subject.position);
-    if (samePosition.length === 1) return samePosition[0]!;
-  }
   return null;
 }
 
@@ -316,12 +339,13 @@ const byId = new Map(playerRecords.map((record) => [record.id, record]));
 const uniqueProjectionMatch = (values: readonly ProjectionRecord[]) => values.length === 1 ? values[0]! : null;
 
 function projectionRecordForCanonicalId(canonicalId: string) {
-  const binding = canonicalPlayerSourceBindingByCanonicalId.get(canonicalId);
+  const resolvedCanonicalId = canonicalCatalogPlayerId(canonicalId);
+  const binding = canonicalPlayerSourceBindingByCanonicalId.get(resolvedCanonicalId);
   return binding ? byId.get(binding.sourceSubjectId) ?? null : null;
 }
 
 export function footballCanonicalPlayerSourceBindingFor(canonicalId: string) {
-  return canonicalPlayerSourceBindingByCanonicalId.get(canonicalId) ?? null;
+  return canonicalPlayerSourceBindingByCanonicalId.get(canonicalCatalogPlayerId(canonicalId)) ?? null;
 }
 
 export function footballCanonicalPlayerSubjectIdForSourceSubjectId(sourceSubjectId: string) {
@@ -360,8 +384,9 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
     };
   }
 
-  const directEvidence = recognitionEvidenceById.get(subject.id);
-  const evidence = directEvidence ?? footballRecognitionEvidenceFor(subject);
+  const directEvidence = recognitionEvidenceById.get(canonicalCatalogPlayerId(subject.id));
+  const evidence = directEvidence
+    ?? (subject.kind === "player-career" ? null : footballRecognitionEvidenceFor(subject));
   if (evidence) {
     const sourceIdentityKey = production
       ? {
@@ -402,8 +427,10 @@ export function footballProjectedPlayerRegistrationTier(subjectId: string): Foot
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
-  return canonicalPlayerSourceBindingByCanonicalId.get(subject.id)?.sourceSubjectId
-    ?? historicalRepairFor(subject)?.subject.id
+  if (subject.kind === "player-career") {
+    return footballCanonicalPlayerSourceBindingFor(subject.id)?.sourceSubjectId ?? null;
+  }
+  return historicalRepairFor(subject)?.subject.id
     ?? footballRecognitionEvidenceFor(subject)?.id
     ?? null;
 }
