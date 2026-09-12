@@ -1062,7 +1062,11 @@ export function buildFootballComparisonCandidatePool(packId: FootballRankFivePac
         const family = familyModelForSubject(subject);
         return subject.position && family ? family.positionSpecs[subject.position] : undefined;
       },
-      calibrationForSpec: (positionSpec) => fixedCalibrationValues(packId, positionSpec),
+      calibrationForSpec: (positionSpec) => (
+        packId === "nfl-secondary"
+          ? canonicalCalibrationValues(positionSpec)
+          : fixedCalibrationValues(packId, positionSpec)
+      ),
     });
   }
 
