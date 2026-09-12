@@ -16,8 +16,8 @@
 }
 
 .home-challenge-card[data-sport="football"] {
-  --challenge-accent: var(--football-navy, #1f4e79);
-  --challenge-accent-strong: var(--football-navy-strong, #8ebce6);
+  --challenge-accent: var(--football-navy, #1F4E79);
+  --challenge-accent-strong: var(--football-navy-strong, #1F4E79);
 }
 
 .home-challenge-card__copy {
