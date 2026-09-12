@@ -282,40 +282,53 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   const samePosition = subject.position
     ? sameName.filter((record) => record.position === subject.position)
     : sameName;
+  if (!samePosition.length) return null;
 
-  // The projection contains every exact player source identity, including Tier D.
-  // A genuinely unique source name is therefore a safe fallback; ambiguous names
-  // require independent stage evidence instead of normalized-name ownership.
-  if (sameName.length === 1 && samePosition.length === 1) return samePosition[0]!;
-  if (sameName.length > 1 && subject.position) {
-    const positionMatch = uniqueProjectionMatch(samePosition);
-    if (positionMatch) return positionMatch;
-  }
+  // Display name is discovery only. Curated identities reconcile to an exact
+  // generated source row only when an independent stage signal supports it.
+  const expectedNflStart = subject.league === "NFL"
+    ? (subject.draftYear ?? subject.startSeason)
+    : undefined;
+  const hasTimingSignal = expectedNflStart != null
+    || subject.startSeason != null
+    || subject.endSeason != null;
+  const hasSchoolSignal = Boolean(subject.school);
 
-  if (subject.school) {
-    const schoolMatch = uniqueProjectionMatch(
-      samePosition.filter((record) => record.school === subject.school),
+  const supported = samePosition.filter((record) => {
+    const schoolMatch = Boolean(
+      subject.school
+      && record.school
+      && normalizedProjectionName(subject.school) === normalizedProjectionName(record.school),
     );
-    if (schoolMatch) return schoolMatch;
-  }
 
-  if (subject.league === "NFL") {
-    const expectedStartSeason = subject.draftYear ?? subject.startSeason;
-    if (expectedStartSeason != null) {
-      const timingMatch = uniqueProjectionMatch(
-        samePosition.filter((record) => record.startSeason === expectedStartSeason),
-      );
-      if (timingMatch) return timingMatch;
+    let timingMatch = false;
+    if (subject.league === "NFL" && expectedNflStart != null && record.startSeason != null) {
+      timingMatch = record.startSeason >= expectedNflStart && record.startSeason <= expectedNflStart + 1;
     }
-  } else if (subject.startSeason != null || subject.endSeason != null) {
-    const timingMatch = uniqueProjectionMatch(samePosition.filter((record) => (
-      (subject.startSeason == null || record.startSeason === subject.startSeason)
-      && (subject.endSeason == null || record.endSeason === subject.endSeason)
-    )));
-    if (timingMatch) return timingMatch;
-  }
+    if (
+      !timingMatch
+      && subject.startSeason != null
+      && subject.endSeason != null
+      && record.startSeason != null
+      && record.endSeason != null
+    ) {
+      timingMatch = record.startSeason <= subject.endSeason && record.endSeason >= subject.startSeason;
+    } else if (!timingMatch && subject.startSeason != null && record.startSeason != null) {
+      timingMatch = record.startSeason === subject.startSeason;
+    } else if (!timingMatch && subject.endSeason != null && record.endSeason != null) {
+      timingMatch = record.endSeason === subject.endSeason;
+    }
 
-  return null;
+    return schoolMatch || timingMatch;
+  });
+
+  const supportedMatch = uniqueProjectionMatch(supported);
+  if (supportedMatch) return supportedMatch;
+  if (supported.length > 1 || hasTimingSignal || hasSchoolSignal) return null;
+
+  // Truly metadata-free legacy identities may use a unique source-name discovery
+  // result, but no staged identity with contradictory/available evidence does.
+  return uniqueProjectionMatch(samePosition);
 }
 
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
