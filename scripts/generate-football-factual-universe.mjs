@@ -151,7 +151,10 @@ function cfbRowsFor(subject) {
   const exactSourceId = sourceIdentityId(subject);
   let rows = exactSourceId ? (cfbPlayersById.get(String(exactSourceId)) ?? []) : [];
   if (rows.length) {
-    return dominantCfbSeasonRows(rows.filter((row) => withinWindow(row, subject)));
+    const exactRows = subject.kind === "player-season"
+      ? rows.filter((row) => subject.season == null || row.season === subject.season)
+      : rows;
+    return dominantCfbSeasonRows(exactRows);
   }
 
   const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
