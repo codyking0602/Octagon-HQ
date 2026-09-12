@@ -58,7 +58,7 @@ type FootballRuntimeModule = {
   buildFootballTodayRuntimeSnapshot: (day: string, actionHistory: readonly JsonRecord[]) => unknown;
   advanceFootballOfficialDailyRuntime: (
     context: OfficialDailyRuntimeContext,
-    action: JsonRecord,
+    action: unknown,
   ) => {
     submissionState: JsonRecord;
     publicState: JsonRecord;
