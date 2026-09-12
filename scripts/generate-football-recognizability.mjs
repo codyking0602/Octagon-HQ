@@ -499,6 +499,7 @@ const uniqueBest = (values, tieKey) => {
 
 const canonicalPlayerSourceBindings = [];
 const boundSourceSubjectIds = new Set();
+const boundCanonicalIds = new Set();
 const canonicalIds = new Set(canonicalPlayerIdentityCandidates.map((subject) => subject.id));
 const canonicalStageOwnerByIdSlug = new Map();
 for (const subject of canonicalPlayerIdentityCandidates) {
@@ -528,6 +529,7 @@ for (const [canonicalId, proposals] of proposalsByCanonicalId) {
     sourceSubjectId: canonicalWinner.sourceSubjectId,
   });
   boundSourceSubjectIds.add(canonicalWinner.sourceSubjectId);
+  boundCanonicalIds.add(canonicalId);
 }
 
 function generatedCanonicalId(record) {
@@ -546,7 +548,11 @@ function generatedCanonicalId(record) {
 for (const record of allProjectedPlayerSourceRecords) {
   if (record.tier === "D" || boundSourceSubjectIds.has(record.id)) continue;
   const canonicalId = generatedCanonicalId(record);
+  // One product identity may own only one exact source row. If an authored stage
+  // owner already has a proven source, a second same-stage source remains source-only.
+  if (boundCanonicalIds.has(canonicalId)) continue;
   canonicalIds.add(canonicalId);
+  boundCanonicalIds.add(canonicalId);
   canonicalPlayerSourceBindings.push({
     canonicalId,
     league: record.league,
