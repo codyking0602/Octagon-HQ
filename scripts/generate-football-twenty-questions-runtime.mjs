@@ -100,6 +100,7 @@ function bestPairCoverageRow(rows, selectedIds, unresolved) {
   return { best, bestCoverage };
 }
 
+// Temporary branch diagnostic: expose unresolved source identities while repairing canonical Football truth.
 function completePairCoverage(universe, scored, selected) {
   const selectedIds = new Set(selected.map((row) => row.question.id));
   let unresolved = unresolvedSubjectPairs(universe.subjects.length, selected);
