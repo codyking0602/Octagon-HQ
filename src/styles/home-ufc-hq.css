@@ -19,8 +19,8 @@
 }
 
 .home-sport-hq--football {
-  --home-football-blue: #1F4E79;
-  --home-football-blue-rgb: 31, 78, 121;
+  --home-football-blue: var(--football-brand-blue, #8EBCE6);
+  --home-football-blue-rgb: var(--football-brand-blue-rgb, 142, 188, 230);
   --home-sport-accent: var(--home-football-blue);
   --home-sport-accent-rgb: var(--home-football-blue-rgb);
 }
