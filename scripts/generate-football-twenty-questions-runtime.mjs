@@ -35,7 +35,7 @@ function initialFamilyQuestionLimit(family) {
   if (family === "role") return 2;
   if (family === "position") return 10;
   if (family === "position-family") return 3;
-  if (["franchise", "program", "player-college", "player-program", "player-primary-college", "player-primary-program", "historical-conference"].includes(family)) return 12;
+  if (["franchise", "program", "player-college", "player-program", "historical-conference"].includes(family)) return 12;
   return MAX_INITIAL_QUESTIONS_PER_FAMILY;
 }
 
@@ -117,7 +117,7 @@ function completePairCoverage(universe, scored, selected) {
   }
 
   if (unresolved.length) {
-    throw new Error(`${universe.league} Football 20 Questions authority cannot distinguish ${unresolved.length} subject pairs: ${unresolved.slice(0, 20).map(([left, right]) => `${universe.subjects[left]?.id} <> ${universe.subjects[right]?.id}`).join(", ")}.`);
+    throw new Error(`${universe.league} Football 20 Questions authority cannot distinguish ${unresolved.length} subject pairs.`);
   }
   if (selected.length > MAX_QUESTIONS) {
     throw new Error(`${universe.league} Football 20 Questions runtime needs ${selected.length} questions, above the ${MAX_QUESTIONS} compact-runtime limit.`);
