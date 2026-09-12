@@ -4,9 +4,10 @@ import {
   type HomeFeatureMediaRepository,
 } from "../home/homeFeatureMedia";
 
-const MAX_INPUT_BYTES = 12 * 1024 * 1024;
-const MAX_SAVED_CHARACTERS = 450_000;
-const ACCEPTED_TYPES = /^image\/(jpeg|png|webp)$/i;
+const MAX_INPUT_BYTES = 30 * 1024 * 1024;
+const MAX_PREPARED_BYTES = 4 * 1024 * 1024;
+const ACCEPTED_TYPES = /^image\/(jpeg|png|webp|heic|heif)$/i;
+const ACCEPTED_EXTENSIONS = /\.(jpe?g|png|webp|heic|heif)$/i;
 
 function readableError(error: unknown) {
   return error instanceof Error ? error.message : "The Home Spotlight photo could not be saved.";
@@ -18,7 +19,7 @@ async function loadImage(file: File) {
     const image = await new Promise<HTMLImageElement>((resolve, reject) => {
       const next = new Image();
       next.onload = () => resolve(next);
-      next.onerror = () => reject(new Error("That photo could not be opened."));
+      next.onerror = () => reject(new Error("That photo could not be opened on this device."));
       next.src = objectUrl;
     });
     return image;
@@ -27,7 +28,12 @@ async function loadImage(file: File) {
   }
 }
 
-function renderPhoto(image: HTMLImageElement, width: number, height: number, quality: number) {
+function renderPhoto(
+  image: HTMLImageElement,
+  width: number,
+  height: number,
+  quality: number,
+): Promise<Blob> {
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -52,23 +58,35 @@ function renderPhoto(image: HTMLImageElement, width: number, height: number, qua
   context.fillStyle = "#0b0b0d";
   context.fillRect(0, 0, width, height);
   context.drawImage(image, sx, sy, sw, sh, 0, 0, width, height);
-  return canvas.toDataURL("image/webp", quality);
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error("That photo could not be prepared on this device."));
+        return;
+      }
+      resolve(blob);
+    }, "image/jpeg", quality);
+  });
 }
 
 export async function prepareFootballHomeSpotlightPhoto(file: File) {
-  if (!ACCEPTED_TYPES.test(file.type)) throw new Error("Choose a JPG, PNG, or WebP photo.");
-  if (file.size > MAX_INPUT_BYTES) throw new Error("Choose a photo smaller than 12 MB.");
+  if (!ACCEPTED_TYPES.test(file.type) && !ACCEPTED_EXTENSIONS.test(file.name)) {
+    throw new Error("Choose a JPG, PNG, WebP, HEIC, or HEIF photo.");
+  }
+  if (file.size > MAX_INPUT_BYTES) throw new Error("Choose a photo smaller than 30 MB.");
 
   const image = await loadImage(file);
   if (!image.naturalWidth || !image.naturalHeight) throw new Error("That photo has invalid dimensions.");
 
-  for (const [width, height] of [[720, 900], [600, 750], [480, 600]] as const) {
-    for (const quality of [0.82, 0.72, 0.62, 0.52]) {
-      const photoSource = renderPhoto(image, width, height, quality);
-      if (photoSource.length <= MAX_SAVED_CHARACTERS) return photoSource;
+  for (const [width, height] of [[900, 1125], [720, 900], [600, 750], [480, 600]] as const) {
+    for (const quality of [0.88, 0.8, 0.72, 0.64]) {
+      const photo = await renderPhoto(image, width, height, quality);
+      if (photo.size <= MAX_PREPARED_BYTES) return photo;
     }
   }
-  throw new Error("That photo is still too large after processing. Choose a simpler image.");
+
+  throw new Error("That photo could not be compressed enough to upload.");
 }
 
 export default function FootballHomeSpotlightPhotoControl({
@@ -148,7 +166,7 @@ export default function FootballHomeSpotlightPhotoControl({
           ref={inputRef}
           className="picks-event-header-control__input"
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
           onChange={choosePhoto}
           disabled={busy || !repository}
         />
