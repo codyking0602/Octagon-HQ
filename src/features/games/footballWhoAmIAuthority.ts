@@ -285,11 +285,7 @@ function footballWhoAmICfbSchools(subject: FootballSubjectProfile) {
   const sourceIds = (subject.sourceIdentityKeys ?? [])
     .filter((key) => key.provider === "cfbfastR")
     .map((key) => String(key.id));
-  const rows = sourceIds.flatMap((sourceId) => cfbWhoAmISeasonRecognitionBySourceId.get(sourceId) ?? [])
-    .filter((season) => (
-      (subject.startSeason == null || season.season >= subject.startSeason)
-      && (subject.endSeason == null || season.season <= subject.endSeason)
-    ));
+  const rows = sourceIds.flatMap((sourceId) => cfbWhoAmISeasonRecognitionBySourceId.get(sourceId) ?? []);
   if (!rows.length) return subject.school ? [subject.school] : [];
 
   const schools = [...new Set(rows.map((season) => season.school).filter(Boolean))];
