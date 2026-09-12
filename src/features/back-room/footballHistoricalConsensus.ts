@@ -1,3 +1,5 @@
+import { footballCanonicalPlayerSubjectIdForSourceSubjectId } from "./footballRecognizabilityProjection";
+
 const PFR_WEIGHT = 0.70;
 const RANKER_TOP_50_WEIGHT = 0.30;
 
@@ -98,7 +100,7 @@ interface QbSourceSnapshot {
 // PFR Hall of Fame Monitor is the backbone. A Ranker top-50 placement may modify that baseline;
 // Ranker 51-70 is ignored. Missing Ranker never becomes zero or penalizes a retired QB with PFR coverage.
 // Current/incomplete careers and PFR-missing identities are resolved only by the explicit audit below.
-const NFL_QB_SOURCE_SNAPSHOT: Readonly<Record<string, QbSourceSnapshot>> = {
+const NFL_QB_SOURCE_SNAPSHOT_RAW: Readonly<Record<string, QbSourceSnapshot>> = {
   "tom-brady": { pfrRank: 1, rankerRank: 1 },
   "peyton-manning": { pfrRank: 2, rankerRank: 2 },
   "nfl-aaron-rodgers": { pfrRank: 3, rankerRank: 3, currentCareer: true },
@@ -167,10 +169,21 @@ const NFL_QB_SOURCE_SNAPSHOT: Readonly<Record<string, QbSourceSnapshot>> = {
   "nflverse-player-00-0024218": { pfrRank: 175, rankerRank: 60 },
 };
 
+function canonicalHistoricalSubjectId(subjectId: string) {
+  return footballCanonicalPlayerSubjectIdForSourceSubjectId(subjectId) ?? subjectId;
+}
+
+const NFL_QB_SOURCE_SNAPSHOT: Readonly<Record<string, QbSourceSnapshot>> = Object.fromEntries(
+  Object.entries(NFL_QB_SOURCE_SNAPSHOT_RAW).map(([subjectId, snapshot]) => [
+    canonicalHistoricalSubjectId(subjectId),
+    snapshot,
+  ]),
+);
+
 // Explicit manual audit placement for the exact 122-QB playable pool. This is audit evidence, not membership.
 // The comparison authority still owns membership through canonical A-C eligibility and the existing factual floor.
 // This order is consulted only for current/incomplete careers or PFR-missing identities.
-export const NFL_QB_MANUAL_AUDIT_ORDER = [
+const NFL_QB_MANUAL_AUDIT_ORDER_RAW = [
   "tom-brady",
   "peyton-manning",
   "nfl-patrick-mahomes",
@@ -294,6 +307,9 @@ export const NFL_QB_MANUAL_AUDIT_ORDER = [
   "nflverse-player-00-0033869",
   "nflverse-player-00-0031409",
 ] as const;
+
+export const NFL_QB_MANUAL_AUDIT_ORDER: readonly string[] =
+  NFL_QB_MANUAL_AUDIT_ORDER_RAW.map(canonicalHistoricalSubjectId);
 
 const manualAuditRankById = new Map<string, number>(NFL_QB_MANUAL_AUDIT_ORDER.map((id, index) => [id, index + 1]));
 
