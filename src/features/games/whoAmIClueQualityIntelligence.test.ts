@@ -154,6 +154,27 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(sequence.map((clue) => clue.id)).toEqual(expect.arrayContaining(["h-transfer", "s-title", "g-heisman", "g-jersey"]));
   });
 
+  it("uses eight sports-facing clues when a healthy ten-clue pool can support them", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I played quarterback.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I played in the 2010s.", band: "broad", facet: "era" },
+      { id: "h-transfer", text: "I transferred before my final college season.", band: "helpful", facet: "career-path" },
+      { id: "h-school", text: "I played college football in the SEC.", band: "helpful", facet: "background" },
+      { id: "h-production", text: "I threw for more than 3,000 yards in a season.", band: "helpful", facet: "production" },
+      { id: "s-title", text: "I won a national championship.", band: "strong", facet: "accomplishments" },
+      { id: "s-style", text: "I was known for accurate downfield passing.", band: "strong", facet: "style" },
+      { id: "g-heisman", text: "I won the Heisman Trophy.", band: "giveaway", facet: "accomplishments" },
+      { id: "h-color", text: "I collected vintage records off the field.", band: "helpful", facet: "off-field", identityKnowledge: true, revealPriority: 1 },
+      { id: "s-color", text: "A childhood hobby became part of my public story.", band: "strong", facet: "identity", identityKnowledge: true, revealPriority: 1 },
+      { id: "s-family", text: "My family moved several times while I was young.", band: "strong", facet: "relationships", identityKnowledge: true, revealPriority: 1 },
+      { id: "g-color", text: "A personal ritual became well known away from football.", band: "giveaway", facet: "off-field", identityKnowledge: true, revealPriority: 1 },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+    expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length).toBeGreaterThanOrEqual(8);
+  });
+
   it("does not let sports vocabulary disguise deep personal biography as sports identity", () => {
     const familyCoach = whoAmIIdentityKnowledgeClue({
       subjectId: "cfb-example-quarterback",
