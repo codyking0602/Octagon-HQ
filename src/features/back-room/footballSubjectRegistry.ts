@@ -310,10 +310,14 @@ const projectedNonPlayerSourceSubjects: readonly FootballSubjectProfile[] = foot
   })
   .map(({ subject, tier, sourceIdentityKey }) => enrichProjectedNonPlayerSubject(subject, tier, sourceIdentityKey));
 
-const projectedSourceSubjects: readonly FootballSubjectProfile[] = [
+const projectedProductSourceSubjects: readonly FootballSubjectProfile[] = [
   ...projectedPlayerCanonicalSubjects,
-  ...projectedPlayerSourceSubjects,
   ...projectedNonPlayerSourceSubjects,
+];
+
+const projectedSourceSubjects: readonly FootballSubjectProfile[] = [
+  ...projectedProductSourceSubjects,
+  ...projectedPlayerSourceSubjects,
 ];
 
 const projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballFindLeaderProjectedAdditionalSubjects
@@ -388,10 +392,15 @@ function footballPlayerCareerCrossStageCandidates(
       && nfl.school
       && normalizedFootballSubjectName(cfb.school) === normalizedFootballSubjectName(nfl.school)
     );
-    return { candidate, chronology, schoolMatch };
+    const canonicalStageIdentityMatch = (
+      cfb.id.startsWith("cfb-")
+      && nfl.id.startsWith("nfl-")
+      && cfb.id.slice("cfb-".length) === nfl.id.slice("nfl-".length)
+    );
+    return { candidate, chronology, schoolMatch, canonicalStageIdentityMatch };
   });
 
-  const supported = scored.filter(({ candidate, chronology, schoolMatch }) => {
+  const supported = scored.filter(({ candidate, chronology, schoolMatch, canonicalStageIdentityMatch }) => {
     const cfb = subject.league === "CFB" ? subject : candidate;
     const nfl = subject.league === "NFL" ? subject : candidate;
     const bothOwnSchool = Boolean(cfb.school && nfl.school);
@@ -399,9 +408,10 @@ function footballPlayerCareerCrossStageCandidates(
     if (chronology === false) return false;
     if (bothOwnSchool && !schoolMatch) return false;
 
-    // Normalized name plus role is only the candidate-discovery key. At least one
-    // independent stage-identity signal must support the actual person relationship.
-    return chronology === true || schoolMatch;
+    // Display name plus role only discovers candidates. The relationship itself
+    // requires chronology, school, or matching canonical stage IDs. The latter is
+    // product-owned identity evidence, not a runtime display-name fallback.
+    return chronology === true || schoolMatch || canonicalStageIdentityMatch;
   });
   return supported.length === 1 ? [supported[0]!.candidate] : [];
 }
@@ -454,8 +464,15 @@ export function queryFootballSubjects(query: FootballSubjectQuery = {}) {
   const canonicalUniverse = query.includeProjectedCanonicalRecognition
     ? projectedCanonicalSubjects
     : footballSubjects;
+  const rawPlayerSourceRowsCanMatch = (
+    query.casualEligible !== true
+    && (!query.recognizabilityTiers || query.recognizabilityTiers.includes("D"))
+  );
+  const sourceSubjects = rawPlayerSourceRowsCanMatch
+    ? projectedSourceSubjects
+    : projectedProductSourceSubjects;
   const universe = query.includeProjectedSourceSubjects
-    ? [...canonicalUniverse, ...projectedSourceSubjects, ...projectedAdditionalSubjects]
+    ? [...canonicalUniverse, ...sourceSubjects, ...projectedAdditionalSubjects]
     : canonicalUniverse;
   return universe.filter((subject) => matchesFootballSubject(subject, query));
 }
