@@ -112,7 +112,7 @@ describe("Who Am I mature whole-game simulation", () => {
           const selectionClasses = sequence.map(whoAmIClueSelectionClass);
           expect(
             selectionClasses.filter((selectionClass) => selectionClass === "sports-identity").length,
-            `${candidate.id} should keep the round centered on sports identity`,
+            `${candidate.id} should keep the round overwhelmingly centered on sports identity`,
           ).toBeGreaterThanOrEqual(7);
           expect(
             selectionClasses.filter((selectionClass) => selectionClass === "deep-biography").length,

@@ -154,6 +154,88 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(sequence.map((clue) => clue.id)).toEqual(expect.arrayContaining(["h-transfer", "s-title", "g-heisman", "g-jersey"]));
   });
 
+  it("uses eight sports-facing clues when a healthy ten-clue pool can support them", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I played quarterback.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I played in the 2010s.", band: "broad", facet: "era" },
+      { id: "h-transfer", text: "I transferred before my final college season.", band: "helpful", facet: "career-path" },
+      { id: "h-school", text: "I played college football in the SEC.", band: "helpful", facet: "background" },
+      { id: "h-production", text: "I threw for more than 3,000 yards in a season.", band: "helpful", facet: "production" },
+      { id: "s-title", text: "I won a national championship.", band: "strong", facet: "accomplishments" },
+      { id: "s-style", text: "I was known for accurate downfield passing.", band: "strong", facet: "style" },
+      { id: "g-heisman", text: "I won the Heisman Trophy.", band: "giveaway", facet: "accomplishments" },
+      { id: "h-color", text: "I collected vintage records off the field.", band: "helpful", facet: "off-field", identityKnowledge: true, revealPriority: 1 },
+      { id: "s-color", text: "A childhood hobby became part of my public story.", band: "strong", facet: "identity", identityKnowledge: true, revealPriority: 1 },
+      { id: "s-family", text: "My family moved several times while I was young.", band: "strong", facet: "relationships", identityKnowledge: true, revealPriority: 1 },
+      { id: "g-color", text: "A personal ritual became well known away from football.", band: "giveaway", facet: "off-field", identityKnowledge: true, revealPriority: 1 },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+    expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length).toBeGreaterThanOrEqual(8);
+  });
+
+  it("does not let sports vocabulary disguise deep personal biography as sports identity", () => {
+    const familyCoach = whoAmIIdentityKnowledgeClue({
+      subjectId: "cfb-example-quarterback",
+      subjectName: "Example Quarterback",
+      subjectKind: "player",
+      league: "CFB",
+      factId: "father-youth-coach",
+      conceptId: "father-youth-quarterback-coach",
+      value: "His father coached him at quarterback throughout his youth and childhood.",
+      tags: ["family", "childhood"],
+    });
+    const siblingTeammate = whoAmIIdentityKnowledgeClue({
+      subjectId: "nfl-example-player",
+      subjectName: "Example Player",
+      subjectKind: "player",
+      league: "NFL",
+      factId: "brother-teammate",
+      conceptId: "brother-nfl-teammate",
+      value: "His brother was also his NFL teammate for multiple seasons.",
+      tags: ["family", "teammate"],
+    });
+
+    expect(whoAmIClueSelectionClass(familyCoach)).toBe("deep-biography");
+    expect(whoAmIClueSelectionClass(siblingTeammate)).toBe("sports-identity");
+  });
+
+  it("keeps recognizable family sports identity ahead of generic career-game filler", () => {
+    const candidate = getFootballWhoAmIUniverse("NFL").candidates.find((entry) => entry.id === "nfl-jason-kelce");
+    expect(candidate).toBeTruthy();
+
+    const siblingMatchup = candidate!.clues.find((clue) => clue.sourceFactId === "super-bowl-against-travis");
+    expect(siblingMatchup).toBeTruthy();
+    expect(whoAmIClueSelectionClass(siblingMatchup!)).toBe("sports-identity");
+
+    for (const seed of [1, 7, 19]) {
+      const sequence = whoAmIProgressiveClues(candidate!.clues, seededRandom(seed));
+      expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+      expect(sequence.some((clue) => /fact:(?:nfl|cfb)-career-games$/.test(clue.id))).toBe(false);
+    }
+  });
+
+  it("deduplicates major accolade families before they consume multiple valuable slots", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I played quarterback.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I played in the 2010s.", band: "broad", facet: "era" },
+      { id: "h-school", text: "I played college football in the SEC.", band: "helpful", facet: "background" },
+      { id: "h-style", text: "I was known for extending plays outside the pocket.", band: "helpful", facet: "style" },
+      { id: "h-path", text: "I became a first-round NFL draft pick.", band: "helpful", facet: "career-path" },
+      { id: "s-heisman-one", text: "I won the Heisman Trophy.", band: "strong", facet: "accomplishments" },
+      { id: "s-heisman-two", text: "My college résumé includes a Heisman award.", band: "strong", facet: "accomplishments", identityKnowledge: true },
+      { id: "s-title", text: "I won a national championship.", band: "strong", facet: "accomplishments" },
+      { id: "s-rival", text: "I beat a major rival in a championship season.", band: "strong", facet: "relationships" },
+      { id: "g-draft", text: "I was selected No. 1 overall in the NFL Draft.", band: "giveaway", facet: "career-path" },
+      { id: "g-jersey", text: "I wore jersey number 1.", band: "giveaway", facet: "identity" },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+    expect(sequence.filter((clue) => /heisman/i.test(clue.text))).toHaveLength(1);
+  });
+
   it("keeps strongly identifying color such as a signature celebration eligible", () => {
     const clues: WhoAmIClue[] = [
       { id: "b-role", text: "I was a fighter.", band: "broad", facet: "role" },
