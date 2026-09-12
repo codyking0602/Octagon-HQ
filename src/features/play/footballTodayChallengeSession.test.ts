@@ -13,6 +13,7 @@ import {
   advanceFootballOfficialDailyRuntime,
 } from "./footballTodayChallengeRuntime";
 import {
+  buildFootballTodayPersistenceSetup,
   buildFootballTodayProjection,
   footballTodayGameForDay,
   footballTodayScheduleVersionForDay,
@@ -234,6 +235,25 @@ describe("Football Today’s Challenge session", () => {
     expect(rankLeague).not.toBe(keepLeague);
     expect(keep.public_state.combo_blind_rank_result).toBeTruthy();
     expect(keep.reveal_setup).toBeNull();
+  });
+
+  it("persists future Daily Double child setups so published gameplay never depends on later code regeneration", () => {
+    const publication = buildFootballTodayPersistenceSetup("2026-09-18");
+    const initial = publication.publicSetup.initial_state as JsonRecord;
+    const rankChild = (publication.privateSetupEvidence.blind_rank_5 ?? {}) as JsonRecord;
+    const keepChild = (publication.privateSetupEvidence.keep_4_cut_4 ?? {}) as JsonRecord;
+
+    expect(publication.scheduleVersion).toBe("football-daily-v4");
+    expect(publication.gameType).toBe("keep_4_cut_4");
+    expect(initial.combo_stage).toBe("blind_rank_5");
+    expect((initial.blind_rank_5 as JsonRecord).complete).toBe(false);
+    for (const child of [rankChild, keepChild]) {
+      expect(child.setup_key).toBeTypeOf("string");
+      expect(child.public_setup).toBeTruthy();
+      expect(child.reveal_setup).toBeTruthy();
+      expect(child.private_setup_evidence).toBeTruthy();
+      expect(child.private_grading_evidence).toBeTruthy();
+    }
   });
 
   it("publishes non-legacy canonical subjects through the official daily Blind Rank and Keep/Cut runtime", () => {
