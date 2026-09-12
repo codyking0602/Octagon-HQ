@@ -32,15 +32,21 @@ function timeAgo(value: string) {
     : new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(new Date(value));
 }
 
+function isSealedBidChallenge(challenge: PlayChallenge) {
+  return challenge.gameId === "auction" || challenge.gameId === "draft-room";
+}
+
 function rowCopy(challenge: PlayChallenge, profileId: string) {
   const direction = challengeDirection(challenge, profileId);
   const status = challengeStatus(challenge, profileId);
 
-  if (challenge.gameId === "auction") {
-    if (status === "completed") return { eyebrow: "AUCTION COMPLETE WITH", detail: "Open the final server state", action: "OPEN" };
-    if (status === "declined") return { eyebrow: "AUCTION DECLINED", detail: "This Auction has ended", action: "DECLINED" };
-    if (direction === "sent") return { eyebrow: "AUCTION WITH", detail: status === "opened" ? "Open Auction · check whose bid is required" : "Waiting for their first bid", action: "OPEN" };
-    return { eyebrow: "AUCTION FROM", detail: status === "opened" ? "Open Auction · check whose bid is required" : "Your first sealed bid accepts", action: status === "opened" ? "OPEN" : "BID" };
+  if (isSealedBidChallenge(challenge)) {
+    const label = challenge.gameId === "draft-room" ? "DRAFT ROOM" : "AUCTION";
+    const title = challenge.gameId === "draft-room" ? "Draft Room" : "Auction";
+    if (status === "completed") return { eyebrow: `${label} COMPLETE WITH`, detail: "Open the final server state", action: "OPEN" };
+    if (status === "declined") return { eyebrow: `${label} DECLINED`, detail: `This ${title} has ended`, action: "DECLINED" };
+    if (direction === "sent") return { eyebrow: `${label} WITH`, detail: status === "opened" ? `Open ${title} · check whose bid is required` : "Waiting for their first bid", action: "OPEN" };
+    return { eyebrow: `${label} FROM`, detail: status === "opened" ? `Open ${title} · check whose bid is required` : "Your first sealed bid accepts", action: status === "opened" ? "OPEN" : "BID" };
   }
 
   if (direction === "sent") {
@@ -94,9 +100,13 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
   const centerRef = useRef<HTMLElement | null>(null);
   const handledDestinationRef = useRef("");
   const requestedCode = searchParams.get("challenge")?.trim().toUpperCase() ?? "";
+  const draftRoomAdmin = identity.profile?.canControlPicks === true;
   const sportChallenges = useMemo(
-    () => challenges.filter((challenge) => challengeSport(challenge) === sport),
-    [challenges, sport],
+    () => challenges.filter((challenge) =>
+      challengeSport(challenge) === sport
+      && (challenge.gameId !== "draft-room" || draftRoomAdmin)
+    ),
+    [challenges, draftRoomAdmin, sport],
   );
 
   const counts = useMemo(() => ({
@@ -124,7 +134,7 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
     if (!direction) return;
     const status = challengeStatus(requested, activeProfile.id);
 
-    if (requested.gameId === "auction") {
+    if (isSealedBidChallenge(requested)) {
       if (direction === "received" && status === "new") void markOpened(requested.code);
       navigate(challengePlayRoute(requested), { replace: true });
       return;
@@ -170,7 +180,7 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
   }
 
   function openChallenge(challenge: PlayChallenge) {
-    if (challenge.gameId === "auction") {
+    if (isSealedBidChallenge(challenge)) {
       const direction = challengeDirection(challenge, activeProfile!.id);
       const status = challengeStatus(challenge, activeProfile!.id);
       if (direction === "received" && status === "new") void markOpened(challenge.code);
@@ -230,12 +240,12 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
               const status = challengeStatus(challenge, activeProfile!.id);
               const counterpart = challengeCounterpart(challenge, activeProfile.id, profiles);
               const copy = rowCopy(challenge, activeProfile.id);
-              const auction = challenge.gameId === "auction";
-              const canPlay = auction ? status !== "declined" : direction === "received" && status !== "completed" && status !== "declined";
-              const canView = !auction && status === "completed";
-              const canCancelAuction = auction && direction === "sent" && status === "waiting";
-              const canDeclineAuction = auction && direction === "received" && status === "new";
-              const canRemoveAuction = auction && (status === "completed" || status === "declined");
+              const sealedBid = isSealedBidChallenge(challenge);
+              const canPlay = sealedBid ? status !== "declined" : direction === "received" && status !== "completed" && status !== "declined";
+              const canView = !sealedBid && status === "completed";
+              const canCancelAuction = sealedBid && direction === "sent" && status === "waiting";
+              const canDeclineAuction = sealedBid && direction === "received" && status === "new";
+              const canRemoveAuction = sealedBid && (status === "completed" || status === "declined");
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>
@@ -269,11 +279,11 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
                     {canView ? (
                       <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
                     ) : canPlay ? (
-                      <button type="button" onClick={() => openChallenge(challenge)}>{auction ? copy.action : "PLAY"}</button>
+                      <button type="button" onClick={() => openChallenge(challenge)}>{sealedBid ? copy.action : "PLAY"}</button>
                     ) : (
                       <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
                     )}
-                    {auction ? (
+                    {sealedBid ? (
                       canCancelAuction || canDeclineAuction || canRemoveAuction ? (
                         <button
                           type="button"
