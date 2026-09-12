@@ -37,6 +37,8 @@ type CfbSeed = readonly [
   tier: FootballRecognizabilityTier,
   basis?: FootballRecognitionEvidenceBasis,
   provider?: FootballSourceProviderId,
+  startSeason?: number,
+  endSeason?: number,
 ];
 type NflSeed = readonly [
   id: string,
@@ -58,7 +60,9 @@ const cfb = (
   tier: FootballRecognizabilityTier = "C",
   basis: FootballRecognitionEvidenceBasis = "first-team-all-america",
   provider: FootballSourceProviderId = "sports-reference",
-): CfbSeed => [id, name, position, school, tier, basis, provider];
+  startSeason?: number,
+  endSeason?: number,
+): CfbSeed => [id, name, position, school, tier, basis, provider, startSeason, endSeason];
 
 const cfbSeeds: readonly CfbSeed[] = [
   // Quarterbacks — college identity is independent from NFL success.
@@ -120,7 +124,7 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-peter-warrick", "Peter Warrick", "WR", "Florida State", "B"),
   cfb("cfb-antonio-bryant", "Antonio Bryant", "WR", "Pittsburgh"),
   cfb("cfb-roy-williams-wr", "Roy Williams", "WR", "Texas", "B"),
-  cfb("cfb-andre-johnson", "Andre Johnson", "WR", "Miami", "B"),
+  cfb("cfb-andre-johnson", "Andre Johnson", "WR", "Miami", "B", "first-team-all-america", "sports-reference", 2000, 2002),
   cfb("cfb-larry-fitzgerald", "Larry Fitzgerald", "WR", "Pittsburgh", "A"),
   cfb("cfb-braylon-edwards", "Braylon Edwards", "WR", "Michigan", "B"),
   cfb("cfb-desean-jackson", "DeSean Jackson", "WR", "California", "B"),
@@ -505,7 +509,7 @@ const gameSeeds: readonly GameSeed[] = [
 ] as const;
 
 const cfbRecords = cfbSeeds.map(([
-  id, name, position, school, tier, basis = "first-team-all-america", provider = "sports-reference",
+  id, name, position, school, tier, basis = "first-team-all-america", provider = "sports-reference", startSeason, endSeason,
 ]): FootballRecognitionEvidenceRecord => ({
   id,
   name,
@@ -513,6 +517,14 @@ const cfbRecords = cfbSeeds.map(([
   league: "CFB",
   position,
   school,
+  ...(startSeason != null ? { startSeason } : {}),
+  ...(endSeason != null ? { endSeason } : {}),
+  ...(startSeason != null && endSeason != null ? {
+    activeDecades: Array.from(
+      { length: Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1 },
+      (_, index) => (Math.floor(startSeason / 10) + index) * 10,
+    ),
+  } : {}),
   tier,
   basis,
   sourceProvider: provider,
