@@ -22,6 +22,15 @@ import {
   getFootballSubject,
   queryFootballSubjects,
 } from "./footballSubjectRegistry";
+import {
+  footballCanonicalPlayerSubjectIdForSourceSubjectId,
+} from "./footballRecognizabilityProjection";
+
+function canonicalResearchSubjectId(sourceSubjectId: string) {
+  const canonicalId = footballCanonicalPlayerSubjectIdForSourceSubjectId(sourceSubjectId);
+  if (!canonicalId) throw new Error(`Missing explicit canonical owner for researched source identity ${sourceSubjectId}.`);
+  return canonicalId;
+}
 
 const PR4_SUBJECT_IDS = new Set([
   "nfl-patrick-mahomes",
@@ -48,14 +57,14 @@ const PR5_SUBJECT_IDS = new Set([
   "emmitt-smith",
   "ladainian-tomlinson",
   "nfl-randy-moss",
-  "nflverse-player-00-0012478",
+  canonicalResearchSubjectId("nflverse-player-00-0012478"),
   "john-mackey",
   "nfl-joe-thomas",
   "nfl-orlando-pace",
   "reggie-white",
   "dick-butkus",
   "nfl-ed-reed",
-  "nflverse-player-00-0027949",
+  canonicalResearchSubjectId("nflverse-player-00-0027949"),
   "vince-lombardi",
   "don-shula",
   "tom-landry",
@@ -76,14 +85,14 @@ const PR6_SUBJECT_IDS = new Set([
   "earl-campbell",
   "gale-sayers",
   "marshall-faulk",
-  "nflverse-player-00-0025389",
+  canonicalResearchSubjectId("nflverse-player-00-0025389"),
   "nfl-alan-faneca",
   "nfl-jonathan-ogden",
   "nfl-trent-williams",
   "nfl-alan-page",
   "joe-greene",
   "nfl-brian-urlacher",
-  "nflverse-player-00-0018227",
+  canonicalResearchSubjectId("nflverse-player-00-0018227"),
   "ronnie-lott",
   "andy-reid",
   "chuck-noll",
@@ -93,7 +102,7 @@ const PR6_SUBJECT_IDS = new Set([
   "nfl-jim-kelly",
   "joe-namath",
   "john-elway",
-  "nflverse-player-00-0034796",
+  canonicalResearchSubjectId("nflverse-player-00-0034796"),
   "nfl-otto-graham",
   "nfl-sid-luckman",
   "steve-young",
@@ -104,7 +113,7 @@ const PR6_SUBJECT_IDS = new Set([
   "nfl-harold-red-grange",
   "marcus-allen",
   "nfl-paul-hornung",
-  "nflverse-player-00-0024217",
+  canonicalResearchSubjectId("nflverse-player-00-0024217"),
   "tony-dorsett",
   "nfl-raymond-berry",
   "nfl-chuck-bednarik",
@@ -118,7 +127,7 @@ const PR6_SUBJECT_IDS = new Set([
   "nfl-jim-thorpe",
   "nfl-oj-simpson",
   "nfl-don-hutson",
-  "nflverse-player-00-0022921",
+  canonicalResearchSubjectId("nflverse-player-00-0022921"),
   "nfl-anthony-munoz",
   "nfl-kevin-mawae",
   "nfl-steve-hutchinson",
@@ -187,22 +196,27 @@ describe("football person identity knowledge", () => {
     const nflLaunch = getFootballWhoAmILaunchPool("NFL");
     const nflLaunchById = new Map(nflLaunch.subjects.map((subject) => [subject.id, subject]));
 
-    for (const [subjectId, name] of [
+    for (const [sourceSubjectId, name] of [
       ["nflverse-player-00-0031409", "Johnny Manziel"],
       ["nflverse-player-00-0027876", "Tim Tebow"],
       ["nflverse-player-00-0024218", "Vince Young"],
     ] as const) {
-      const subject = nflRecognizedById.get(subjectId);
-      expect(subject?.name).toBe(name);
-      expect(subject?.league).toBe("NFL");
-      expect(subject?.recognizabilityTier).toBe("B");
+      const sourceSubject = getFootballSubject(sourceSubjectId);
+      expect(sourceSubject?.name).toBe(name);
+      expect(sourceSubject?.league).toBe("NFL");
+      expect(sourceSubject?.recognizabilityTier).toBe("D");
+      expect(sourceSubject?.casualEligible).toBe(false);
+      expect(nflRecognizedById.has(sourceSubjectId)).toBe(false);
 
-      const launchSubject = nflLaunchById.get(subjectId);
+      const canonicalId = canonicalResearchSubjectId(sourceSubjectId);
+      const canonicalSubject = nflRecognizedById.get(canonicalId);
+      expect(canonicalSubject?.name).toBe(name);
+      expect(canonicalSubject?.recognizabilityTier).toBe("B");
+
+      const launchSubject = nflLaunchById.get(canonicalId);
       if (launchSubject) {
         expect(launchSubject.recognizabilityTier).toBe("B");
-        expect(distinctiveIdentityFacts(getFootballPersonIdentityKnowledge(subjectId)!)).toHaveLength(5);
-      } else {
-        expect(getFootballPersonIdentityKnowledge(subjectId)).toBeNull();
+        expect(distinctiveIdentityFacts(getFootballPersonIdentityKnowledge(canonicalId)!)).toHaveLength(5);
       }
     }
 
