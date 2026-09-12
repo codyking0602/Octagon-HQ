@@ -139,8 +139,9 @@ describe("Who Am I Football factual and identity integrity", () => {
   it("keeps reviewed CFB source aliases on one canonical factual owner", () => {
     const subject = getFootballSubject("cfb-myles-garrett");
     expect(subject).not.toBeNull();
+    if (!subject || subject.kind !== "player-career") throw new Error("Expected Myles Garrett CFB player career subject.");
 
-    const projectedSourceId = footballRecognitionProjectionSubjectIdFor(subject!);
+    const projectedSourceId = footballRecognitionProjectionSubjectIdFor(subject);
     expect(projectedSourceId).toBeTruthy();
     expect(projectedSourceId).not.toBe(subject!.id);
     expect(getFootballSubject(projectedSourceId!)?.id).toBe(subject!.id);
