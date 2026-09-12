@@ -181,14 +181,13 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
     ? sameName.filter((record) => record.position === subject.position)
     : sameName;
 
-  // Display name (even with position) is candidate discovery only. Require an
-  // independent stage signal before binding a curated subject to a source row.
-  if (subject.league === "NFL") {
-    const expectedStartSeason = subject.draftYear ?? subject.startSeason;
-    if (expectedStartSeason == null) return null;
-    return uniqueProjectionMatch(
-      samePosition.filter((record) => record.startSeason === expectedStartSeason),
-    );
+  // The projection contains every exact player source identity, including Tier D.
+  // A genuinely unique source name is therefore a safe fallback; ambiguous names
+  // require independent stage evidence instead of normalized-name ownership.
+  if (sameName.length === 1 && samePosition.length === 1) return samePosition[0]!;
+  if (sameName.length > 1 && subject.position) {
+    const positionMatch = uniqueProjectionMatch(samePosition);
+    if (positionMatch) return positionMatch;
   }
 
   if (subject.school) {
@@ -197,12 +196,23 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
     );
     if (schoolMatch) return schoolMatch;
   }
-  if (subject.startSeason != null || subject.endSeason != null) {
-    return uniqueProjectionMatch(samePosition.filter((record) => (
+
+  if (subject.league === "NFL") {
+    const expectedStartSeason = subject.draftYear ?? subject.startSeason;
+    if (expectedStartSeason != null) {
+      const timingMatch = uniqueProjectionMatch(
+        samePosition.filter((record) => record.startSeason === expectedStartSeason),
+      );
+      if (timingMatch) return timingMatch;
+    }
+  } else if (subject.startSeason != null || subject.endSeason != null) {
+    const timingMatch = uniqueProjectionMatch(samePosition.filter((record) => (
       (subject.startSeason == null || record.startSeason === subject.startSeason)
       && (subject.endSeason == null || record.endSeason === subject.endSeason)
     )));
+    if (timingMatch) return timingMatch;
   }
+
   return null;
 }
 
