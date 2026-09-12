@@ -69,7 +69,9 @@ function aggregate(corpus, league) {
     const personKey = league === "CFB" ? `${sourceId}:${normalize(name)}` : sourceId;
     const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), seasonTeams: new Map(), position: "", totals: {}, peaks: {} };
     const season = n(at(row, ix, "season")); if (season) p.seasons.add(season);
-    const team = at(row, ix, "recentTeam") ?? at(row, ix, "team");
+    const team = league === "CFB"
+      ? at(row, ix, "team")
+      : at(row, ix, "recentTeam") ?? at(row, ix, "team");
     if (team) p.teams.add(String(team));
     if (league === "CFB" && season && team) {
       const volume = n(at(row, ix, "gamesPlayed")) * 100
@@ -201,8 +203,19 @@ function projectCfbPlayer(p) {
   const receptions = total(p, "receptions");
   const recYards = total(p, "receivingYards");
   const defensiveImpact = total(p, "sacks", "defensiveInterceptions");
-  const schools = [...new Set([...p.seasonTeams.values()].map((row) => row.team))].sort();
-  const school = schools.length === 1 ? schools[0] : undefined;
+  const schoolSignals = new Map();
+  for (const { team, volume } of p.seasonTeams.values()) {
+    const current = schoolSignals.get(team) ?? { seasons: 0, volume: 0 };
+    current.seasons += 1;
+    current.volume += volume;
+    schoolSignals.set(team, current);
+  }
+  const school = [...schoolSignals.entries()]
+    .sort((left, right) => (
+      right[1].seasons - left[1].seasons
+      || right[1].volume - left[1].volume
+      || left[0].localeCompare(right[0])
+    ))[0]?.[0];
   const major = [...p.teams].some((team) => majorCfbPrograms.has(normalize(team)));
   const singleMajorProgram = p.teams.size === 1 && major;
   const meaningful =
