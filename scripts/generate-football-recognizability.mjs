@@ -500,6 +500,17 @@ const uniqueBest = (values, tieKey) => {
 const canonicalPlayerSourceBindings = [];
 const boundSourceSubjectIds = new Set();
 const canonicalIds = new Set(canonicalPlayerIdentityCandidates.map((subject) => subject.id));
+const canonicalStageOwnerByIdSlug = new Map();
+for (const subject of canonicalPlayerIdentityCandidates) {
+  for (const identityId of [subject.id, ...(subject.aliases ?? [])]) {
+    if (/^(?:nflverse|cfbfast-r)-player-/.test(identityId)) continue;
+    const slug = identityId.replace(/^(?:nfl|cfb)-/, "");
+    const key = `${subject.league}:${slug}`;
+    const existing = canonicalStageOwnerByIdSlug.get(key);
+    if (!existing) canonicalStageOwnerByIdSlug.set(key, subject.id);
+    else if (existing !== subject.id) canonicalStageOwnerByIdSlug.set(key, null);
+  }
+}
 
 for (const [canonicalId, proposals] of proposalsByCanonicalId) {
   const canonicalWinner = uniqueBest(proposals, (value) => value.sourceSubjectId);
@@ -520,7 +531,11 @@ for (const [canonicalId, proposals] of proposalsByCanonicalId) {
 }
 
 function generatedCanonicalId(record) {
-  const base = `${record.league === "NFL" ? "nfl" : "cfb"}-${normalize(record.name)}`;
+  const nameSlug = normalize(record.name);
+  const existingStageOwner = canonicalStageOwnerByIdSlug.get(`${record.league}:${nameSlug}`);
+  if (existingStageOwner) return existingStageOwner;
+
+  const base = `${record.league === "NFL" ? "nfl" : "cfb"}-${nameSlug}`;
   if (!canonicalIds.has(base)) return base;
   const sourceSuffix = String(record.sourceId).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   return `${base}-${sourceSuffix}`;
