@@ -44,10 +44,10 @@ describe("remaining in-app notification producers", () => {
     expect(migration).not.toContain("cron.schedule");
     expect(migration).not.toContain("net.http_post");
     expect(runner).toContain(
-      'admin.rpc("dispatch_due_in_app_notifications"',
+      'schedulerRpc("dispatch_due_in_app_notifications"',
     );
-    expect(runner.indexOf('admin.rpc("dispatch_due_in_app_notifications"')).toBeLessThan(
-      runner.indexOf('admin.rpc("get_pick_monitoring_event_state"'),
+    expect(runner.indexOf('schedulerRpc("dispatch_due_in_app_notifications"')).toBeLessThan(
+      runner.indexOf('schedulerRpc("get_pick_monitoring_event_state"'),
     );
     expect(runner).toContain("notification_dispatch: notificationDispatch");
     expect(contract).toContain(
