@@ -15,7 +15,7 @@ import type {
 const FOOTBALL_LEGACY_SCHEDULE_VERSION = "football-daily-v1" as const;
 const FOOTBALL_MIDDAY_SCHEDULE_VERSION = "football-daily-v2" as const;
 const FOOTBALL_RESUMED_SCHEDULE_VERSION = "football-daily-v3" as const;
-export const FOOTBALL_TODAY_SCHEDULE_VERSION = "football-daily-v4" as const;
+export const FOOTBALL_TODAY_SCHEDULE_VERSION = "football-daily-v5" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
 const FOOTBALL_HISTORICAL_ANCHOR_DAY = "2026-08-22";
 const FOOTBALL_HISTORICAL_CYCLE: readonly OfficialDailyGameType[] = [
@@ -26,7 +26,6 @@ const FOOTBALL_HISTORICAL_CYCLE: readonly OfficialDailyGameType[] = [
   "hit_the_number",
 ];
 const FOOTBALL_FUTURE_CYCLE: readonly OfficialDailyGameType[] = [
-  "find_leader",
   "wavelength",
   "hit_the_number",
   "who_am_i",
@@ -46,6 +45,7 @@ const FOOTBALL_FUTURE_CYCLE: readonly OfficialDailyGameType[] = [
   "who_am_i",
   "find_leader",
   "wavelength",
+  "find_leader",
 ];
 const FOOTBALL_TODAY_GAME_OVERRIDES: Readonly<Record<string, OfficialDailyGameType>> = {
   "2026-09-04": "blind_resume",
