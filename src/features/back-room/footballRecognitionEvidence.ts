@@ -254,7 +254,7 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-gerald-mccoy", "Gerald McCoy", "DL", "Oklahoma", "B"),
   cfb("cfb-ndamukong-suh", "Ndamukong Suh", "DL", "Nebraska", "A", "major-award-or-hall-of-fame", "official-cfb-awards"),
   cfb("cfb-terrence-cody", "Terrence Cody", "DL", "Alabama"),
-  cfb("cfb-jj-watt", "J.J. Watt", "DL", "Wisconsin", "B"),
+  cfb("cfb-jj-watt", "J.J. Watt", "DL", "Wisconsin", "B", "first-team-all-america", "sports-reference", 2009, 2010),
   cfb("cfb-nick-fairley", "Nick Fairley", "DL", "Auburn"),
   cfb("cfb-daquan-bowers", "Da'Quan Bowers", "DL", "Clemson"),
   cfb("cfb-melvin-ingram", "Melvin Ingram", "DL", "South Carolina"),
@@ -304,7 +304,7 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-isaiah-simmons", "Isaiah Simmons", "LB", "Clemson", "B"),
   cfb("cfb-micah-parsons", "Micah Parsons", "LB", "Penn State", "B"),
   cfb("cfb-jeremiah-owusu-koramoah", "Jeremiah Owusu-Koramoah", "LB", "Notre Dame"),
-  cfb("cfb-nakobe-dean", "Nakobe Dean", "LB", "Georgia", "B"),
+  cfb("cfb-nakobe-dean", "Nakobe Dean", "LB", "Georgia", "B", "first-team-all-america", "sports-reference", 2019, 2021),
   cfb("cfb-jack-campbell", "Jack Campbell", "LB", "Iowa"),
   cfb("cfb-payton-wilson", "Payton Wilson", "LB", "NC State"),
   cfb("cfb-edgerrin-cooper", "Edgerrin Cooper", "LB", "Texas A&M"),
@@ -350,7 +350,7 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-cooper-dejean", "Cooper DeJean", "DB", "Iowa", "B"),
   cfb("cfb-malaki-starks", "Malaki Starks", "DB", "Georgia", "B"),
   cfb("cfb-caleb-downs", "Caleb Downs", "DB", "Ohio State", "B"),
-  cfb("cfb-travis-hunter-db", "Travis Hunter", "DB", "Colorado", "A", "major-award-or-hall-of-fame", "official-cfb-awards"),
+  cfb("cfb-travis-hunter", "Travis Hunter", "DB", "Colorado", "A", "major-award-or-hall-of-fame", "official-cfb-awards"),
 
   // Specialists.
   cfb("cfb-sebastian-janikowski", "Sebastian Janikowski", "K", "Florida State", "B"),
