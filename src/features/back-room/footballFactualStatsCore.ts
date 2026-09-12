@@ -264,12 +264,23 @@ function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[])
   }
   return [...bySubject.values()];
 }
+const projectedCareerBestSeasonPairs = new Map<string, string>([
+  ["cfb-career-passing-yards", "cfb-best-season-passing-yards"],
+  ["cfb-career-passing-touchdowns", "cfb-best-season-passing-touchdowns"],
+  ["cfb-career-rushing-yards", "cfb-best-season-rushing-yards"],
+  ["cfb-career-rushing-touchdowns", "cfb-best-season-rushing-touchdowns"],
+  ["cfb-career-receptions", "cfb-best-season-receptions"],
+  ["cfb-career-receiving-yards", "cfb-best-season-receiving-yards"],
+  ["cfb-career-receiving-touchdowns", "cfb-best-season-receiving-touchdowns"],
+]);
+
 function projectedGapFillRecords(
   projected: readonly FootballFactualRecord[],
   owned: readonly FootballFactualRecord[],
   includeSourceOnly = false,
 ) {
   const ownedKeys=new Set(owned.flatMap((record)=>record.facts.map((fact)=>`${record.subjectId}:${fact.metricId}`)));
+  const ownedValues=new Map(owned.flatMap((record)=>record.facts.map((fact)=>[`${record.subjectId}:${fact.metricId}`,fact.value] as const)));
   const directProjectedSubjectIds = new Set(projected.map((record) => canonicalFactSubjectId(record.subjectId)));
   return projected.flatMap((record)=>{
     const subjectId=canonicalFactSubjectId(record.subjectId);
@@ -280,7 +291,16 @@ function projectedGapFillRecords(
     // When both a canonical record and its exact source record are projected,
     // the canonical record owns the factual gap fill.
     if (record.subjectId !== subjectId && directProjectedSubjectIds.has(subjectId)) return [];
-    const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`));
+    const facts=record.facts.filter((fact)=>{
+      if (ownedKeys.has(`${subjectId}:${fact.metricId}`)) return false;
+      const bestSeasonMetric = projectedCareerBestSeasonPairs.get(fact.metricId);
+      const ownedBest = bestSeasonMetric ? ownedValues.get(`${subjectId}:${bestSeasonMetric}`) : undefined;
+      // A partial source window cannot own a "career" total that is already below
+      // an independently reviewed best season. Preserve the known best and leave
+      // the incomplete career total unknown instead of publishing a contradiction.
+      if (typeof ownedBest === "number" && fact.value < ownedBest) return false;
+      return true;
+    });
     return facts.length ? [{...record,subjectId,facts}] : [];
   });
 }
