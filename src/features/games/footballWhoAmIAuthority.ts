@@ -280,8 +280,10 @@ for (const season of footballCfbPlayerSeasonRecognitionRecords) {
   cfbWhoAmISeasonRecognitionBySourceId.set(season.sourceId, rows);
 }
 
-function footballWhoAmISchool(subject: FootballSubjectProfile) {
-  if (subject.kind !== "player-career" || subject.league !== "CFB") return subject.school;
+function footballWhoAmISchools(subject: FootballSubjectProfile) {
+  if (subject.kind !== "player-career" || subject.league !== "CFB") {
+    return subject.school ? [subject.school] : [];
+  }
   const sourceIds = (subject.sourceIdentityKeys ?? [])
     .filter((key) => key.provider === "cfbfastR")
     .map((key) => String(key.id));
@@ -290,13 +292,12 @@ function footballWhoAmISchool(subject: FootballSubjectProfile) {
       (subject.startSeason == null || season.season >= subject.startSeason)
       && (subject.endSeason == null || season.season <= subject.endSeason)
     ));
-  if (!rows.length) return subject.school;
+  if (!rows.length) return subject.school ? [subject.school] : [];
+  return [...new Set(rows.map((season) => season.school).filter(Boolean))].sort();
+}
 
-  const observedCareerYears = subject.startSeason != null && subject.endSeason != null
-    ? subject.endSeason - subject.startSeason + 1
-    : 1;
-  if (rows.length < Math.min(2, observedCareerYears)) return undefined;
-  const schools = [...new Set(rows.map((season) => season.school).filter(Boolean))];
+function footballWhoAmISchool(subject: FootballSubjectProfile) {
+  const schools = footballWhoAmISchools(subject);
   return schools.length === 1 ? schools[0] : undefined;
 }
 
@@ -461,6 +462,22 @@ export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfi
     const observedSeasons = Math.max(1, subject.endSeason - subject.startSeason + 1);
     if (fact.metricId === "cfb-career-games" && value < observedSeasons * 3) return false;
     if (fact.metricId === "cfb-career-starts" && value < observedSeasons * 2) return false;
+
+    if (subject.position === "QB") {
+      if (fact.metricId === "cfb-career-passing-attempts" && value < observedSeasons * 20) return false;
+      if (fact.metricId === "cfb-career-passing-yards" && value < observedSeasons * 100) return false;
+      if (fact.metricId === "cfb-best-season-passing-yards" && value < 100) return false;
+    }
+    if (subject.position === "RB") {
+      if (fact.metricId === "cfb-career-rushing-attempts" && value < observedSeasons * 20) return false;
+      if (fact.metricId === "cfb-career-rushing-yards" && value < observedSeasons * 100) return false;
+      if (fact.metricId === "cfb-best-season-rushing-yards" && value < 100) return false;
+    }
+    if (subject.position === "WR" || subject.position === "TE") {
+      if (fact.metricId === "cfb-career-receptions" && value < observedSeasons * 5) return false;
+      if (fact.metricId === "cfb-career-receiving-yards" && value < observedSeasons * 50) return false;
+      if (fact.metricId === "cfb-best-season-receiving-yards" && value < 50) return false;
+    }
   }
   return true;
 }
@@ -601,16 +618,18 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   const coachHistory = isCoach ? footballCoachCareerAffiliationHistoryFor(subject) : null;
   const relatedPlayerAffiliations = subject.kind === "player-career"
     ? footballPlayerCareerSubjectsForPerson(subject).flatMap((relatedSubject) => (
-        relatedSubject.league === subject.league
-          ? [...(relatedSubject.franchises ?? []), ...(relatedSubject.school ? [relatedSubject.school] : [])]
-          : []
+        relatedSubject.league !== subject.league
+          ? []
+          : subject.league === "CFB"
+            ? footballWhoAmISchools(relatedSubject)
+            : [...(relatedSubject.franchises ?? [])]
       ))
     : [];
   const profileAffiliations = coachHistory?.affiliations?.length
     ? coachHistory.affiliations
     : [
-        ...(subject.franchises ?? []),
-        ...(whoAmISchool ? [whoAmISchool] : []),
+        ...(subject.league === "NFL" ? (subject.franchises ?? []) : []),
+        ...(subject.league === "CFB" ? footballWhoAmISchools(subject) : []),
         ...relatedPlayerAffiliations,
       ];
   const uniqueAffiliations = [...new Set(
