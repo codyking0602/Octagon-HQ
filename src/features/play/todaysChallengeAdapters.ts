@@ -89,6 +89,17 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Fighter total",
     nativeDisplay: (attempt) => `${attempt.nativeScore}`,
   },
+  who_am_i: {
+    gameType: "who_am_i",
+    gameId: "who-am-i",
+    title: "Who Am I?",
+    dailyRoute: "/play/who-am-i?mode=daily",
+    casualRoute: "/play/who-am-i",
+    cta: "Identify today’s subject",
+    instructions: "Solve from clue pairs before the score falls, or save the round on the Recovery Board.",
+    nativeResultLabel: "Who Am I score",
+    nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
+  },
 } as const satisfies Record<DailyGameType, TodayChallengeAdapter>;
 
 export function todayChallengeAdapter(gameType: DailyGameType | string | undefined) {
