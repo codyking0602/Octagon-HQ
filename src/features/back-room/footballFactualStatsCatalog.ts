@@ -357,7 +357,7 @@ const footballCollegePlayerSubjects: readonly FootballCanonicalSubject[] = [
   collegePlayer("cfb-calvin-johnson", "Calvin Johnson", "WR", "Georgia Tech", 2000, false),
   collegePlayer("cfb-darren-mcfadden", "Darren McFadden", "RB", "Arkansas", 2000, false),
   collegePlayer("cfb-colt-mccoy", "Colt McCoy", "QB", "Texas", 2000, false),
-  collegePlayer("cfb-nndamukong-suh", "Ndamukong Suh", "DL", "Nebraska", 2000, false),
+  collegePlayer("cfb-ndamukong-suh", "Ndamukong Suh", "DL", "Nebraska", 2000, false),
   collegePlayer("cfb-michael-crabtree", "Michael Crabtree", "WR", "Texas Tech", 2000, false),
   collegePlayer("cfb-patrick-peterson", "Patrick Peterson", "DB", "LSU", 2000, false),
   collegePlayer("cfb-brady-quinn", "Brady Quinn", "QB", "Notre Dame", 2000, false),
