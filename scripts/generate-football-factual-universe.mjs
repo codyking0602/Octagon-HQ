@@ -11,6 +11,7 @@ const writeJson = (relative, value) => {
   fs.writeFileSync(target, `${JSON.stringify(value)}\n`);
 };
 const finite = (value) => typeof value === "number" && Number.isFinite(value);
+const n = (value) => finite(value) ? value : 0;
 const normalized = (value) => String(value ?? "").toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
 const rowObjects = (data) => {
   const indexes = new Map(data.columns.map((name, index) => [name, index]));
