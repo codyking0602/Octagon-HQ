@@ -73,7 +73,7 @@ describe("Football Knowledge Ledger Stage 13.5 human audit", () => {
     }
     const chaseYoung = footballLedgerAudit.players.find((row) => row.subjectId === "cfb-chase-young");
     expect(chaseYoung?.numericFactCount).toBeGreaterThan(0);
-    expect(chaseYoung?.sourceCoverage).toBe("unknown-career-window");
+    expect(chaseYoung?.sourceCoverage).toBe("inside-normalized-player-source");
     const chrisLong = footballLedgerAudit.players.find((row) => row.subjectId === "cfb-chris-long");
     expect(chrisLong?.sourceCoverage).toBe("unknown-career-window");
   });
