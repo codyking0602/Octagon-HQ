@@ -192,7 +192,7 @@ describe("Who Am I Slice 13 quality regressions", () => {
 
 describe("Who Am I football scope-aware clue aggregation", () => {
   it("keeps CFB school clues inside the authoritative season-affiliation set", () => {
-    const seasonRowsBySourceId = new Map<string, typeof footballCfbPlayerSeasonRecognitionRecords>();
+    const seasonRowsBySourceId = new Map<string, Array<(typeof footballCfbPlayerSeasonRecognitionRecords)[number]>>();
     for (const season of footballCfbPlayerSeasonRecognitionRecords) {
       const rows = seasonRowsBySourceId.get(season.sourceId) ?? [];
       rows.push(season);
@@ -250,7 +250,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
       const metrics = primaryMetricByPosition[subject.position as keyof typeof primaryMetricByPosition];
       const record = getFootballFactualRecord(subject.id);
       for (const fact of record?.facts ?? []) {
-        if (!metrics.includes(fact.metricId as never)) continue;
+        if (!(metrics as readonly string[]).includes(fact.metricId)) continue;
         if (!fact.evidence.sourceIds.includes("cfbfast-r-factual-universe")) continue;
         expect(
           footballWhoAmIMetricFactIsPlayable(subject, fact),
