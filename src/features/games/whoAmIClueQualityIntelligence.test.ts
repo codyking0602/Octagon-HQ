@@ -201,6 +201,21 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(whoAmIClueSelectionClass(siblingTeammate)).toBe("sports-identity");
   });
 
+  it("keeps recognizable family sports identity ahead of generic career-game filler", () => {
+    const candidate = getFootballWhoAmIUniverse("NFL").candidates.find((entry) => entry.id === "nfl-jason-kelce");
+    expect(candidate).toBeTruthy();
+
+    const siblingMatchup = candidate!.clues.find((clue) => clue.sourceFactId === "super-bowl-against-travis");
+    expect(siblingMatchup).toBeTruthy();
+    expect(whoAmIClueSelectionClass(siblingMatchup!)).toBe("sports-identity");
+
+    for (const seed of [1, 7, 19]) {
+      const sequence = whoAmIProgressiveClues(candidate!.clues, seededRandom(seed));
+      expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+      expect(sequence.some((clue) => /fact:(?:nfl|cfb)-career-games$/.test(clue.id))).toBe(false);
+    }
+  });
+
   it("deduplicates major accolade families before they consume multiple valuable slots", () => {
     const clues: WhoAmIClue[] = [
       { id: "b-role", text: "I played quarterback.", band: "broad", facet: "role" },
