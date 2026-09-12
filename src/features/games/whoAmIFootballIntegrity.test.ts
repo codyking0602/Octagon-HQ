@@ -183,7 +183,7 @@ describe("Who Am I Football factual and identity integrity", () => {
     }
 
     const collisionCases = [
-      ["Adrian Peterson", "nfl-adrian-peterson", "nflverse-player-00-0025394", "nflverse-player-00-0021306"],
+      ["Adrian Peterson", "adrian-peterson", "nflverse-player-00-0025394", "nflverse-player-00-0021306"],
       ["Cam Newton", "cam-newton", "nflverse-player-00-0027939", "nflverse-player-00-0023382"],
       ["Lamar Jackson", "nfl-lamar-jackson", "nflverse-player-00-0034796", "nflverse-player-00-0036152"],
     ] as const;
