@@ -4,7 +4,7 @@ import { expandedFootballFactSources, expandedFootballFactualRecords } from "./f
 import { footballFactualUniverseProjectedRecords, footballFactualUniverseSources } from "./footballFactualUniverseProjection";
 import { footballNflATierResumeFactualRecords } from "./footballNflATierResumeFacts";
 import { footballStage16CfbQbCareerFactualRecords } from "./footballStage16CfbQbCareerFacts";
-import { footballCanonicalPlayerSubjectIdForSourceSubjectId } from "./footballRecognizabilityProjection";
+import { footballCanonicalPlayerSubjectIdForSourceSubjectId, footballProjectedPlayerSourceSubjects } from "./footballRecognizabilityProjection";
 import { getFootballSubject } from "./footballSubjectRegistry";
 
 export type FootballFactScope =
@@ -264,6 +264,8 @@ function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[])
   }
   return [...bySubject.values()];
 }
+const projectedPlayerSourceSubjectIds = new Set(footballProjectedPlayerSourceSubjects.map((subject) => subject.id));
+
 const projectedCareerBestSeasonPairs = new Map<string, string>([
   ["cfb-career-passing-yards", "cfb-best-season-passing-yards"],
   ["cfb-career-passing-touchdowns", "cfb-best-season-passing-touchdowns"],
@@ -287,7 +289,14 @@ function projectedGapFillRecords(
     const subject=getFootballSubject(subjectId);
     const exactSourceSubject=getFootballSubject(record.subjectId);
     if (!subject && !exactSourceSubject) return [];
-    if (!includeSourceOnly && subject?.recognizabilityTier === "D") return [];
+    // Recognition tier does not own factual availability. Exclude only unbound
+    // exact-source rows from the normal ledger; a Tier D canonical product identity
+    // may still own valid facts used by comparison and factual games.
+    if (
+      !includeSourceOnly
+      && record.subjectId === subjectId
+      && projectedPlayerSourceSubjectIds.has(record.subjectId)
+    ) return [];
     // When both a canonical record and its exact source record are projected,
     // the canonical record owns the factual gap fill.
     if (record.subjectId !== subjectId && directProjectedSubjectIds.has(subjectId)) return [];
