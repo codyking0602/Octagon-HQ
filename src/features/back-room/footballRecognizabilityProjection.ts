@@ -100,9 +100,11 @@ function proHallMinimumTierForPlayerRecord(record: ProjectionRecord) {
   return proHallMinimumTierFor({ kind: "player-career", league: record.league, name: record.name });
 }
 
-const promotedPlayerRecords = playerRecords.filter((record) => (
-  recognitionTierAtLeast(record.tier, proHallMinimumTierForPlayerRecord(record)) !== "D"
-));
+// Registration and recognition are separate concerns. Keep every exact source
+// player identity in the registry, including Tier D rows, so same-name athletes
+// remain distinguishable and factual records always reconcile. Eligibility filters
+// decide whether a row can enter a game.
+const projectedPlayerRecords = playerRecords;
 
 const historicalPlayerRepairs = footballHistoricalRecognitionRepairs.filter(
   (repair) => repair.subject.kind === "player-career",
@@ -133,7 +135,7 @@ function historicalRepairFor(subject: FootballCanonicalSubject) {
   return null;
 }
 
-const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = promotedPlayerRecords.map((record) => ({
+const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = projectedPlayerRecords.map((record) => ({
   id: record.id,
   name: record.name,
   kind: "player-career",
@@ -148,17 +150,16 @@ const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = pr
 const evidencePlayerSubjects = footballRecognitionEvidenceSubjects
   .filter((subject): subject is FootballCanonicalSubject => subject.kind === "player-career");
 const repairedPlayerSubjects = historicalPlayerRepairs.map((repair) => repair.subject);
-const authoritativePlayerKeys = new Set(
-  [...evidencePlayerSubjects, ...repairedPlayerSubjects].map((subject) => (
-    `${subject.league}:${normalizedProjectionName(subject.name)}:${subject.position ?? ""}`
-  )),
+const reviewedPlayerIds = new Set(
+  [...evidencePlayerSubjects, ...repairedPlayerSubjects].map((subject) => subject.id),
 );
 
-/** One projected player universe. Reviewed recognition evidence wins source-production identity conflicts. */
+/**
+ * One projected player universe. Exact reviewed ids replace exact generated ids;
+ * display-name/position equality never suppresses another source identity.
+ */
 export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = [
-  ...generatedProjectedPlayerSubjects.filter((subject) => !authoritativePlayerKeys.has(
-    `${subject.league}:${normalizedProjectionName(subject.name)}:${subject.position ?? ""}`,
-  )),
+  ...generatedProjectedPlayerSubjects.filter((subject) => !reviewedPlayerIds.has(subject.id)),
   ...evidencePlayerSubjects.filter((subject) => !historicalById.has(subject.id)),
   ...repairedPlayerSubjects,
 ];
