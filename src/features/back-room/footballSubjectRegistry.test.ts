@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   FOOTBALL_FIND_LEADER_DOMAIN_POOL_SIZE,
   footballFindLeaderSubjects,
+  footballPlayerCareerSubjectsForPerson,
   footballSubjects,
   getFootballSubject,
   queryFootballSubjects,
@@ -37,6 +38,30 @@ describe("canonical Football subject registry", () => {
     const comparisonWatt = getFootballSubject("jj-watt");
     expect(canonicalWatt).not.toBeNull();
     expect(comparisonWatt).toBe(canonicalWatt);
+  });
+
+  it("keeps same-name athletes distinct and only links proven cross-stage careers", () => {
+    for (const [name, nflSourceId, wrongNflSourceId] of [
+      ["Adrian Peterson", "00-0025394", "00-0021306"],
+      ["Cam Newton", "00-0027939", "00-0023382"],
+      ["Lamar Jackson", "00-0034796", "00-0036152"],
+    ] as const) {
+      const cfb = queryFootballSubjects({
+        league: "CFB",
+        includeProjectedSourceSubjects: true,
+        includeProjectedCanonicalRecognition: true,
+      }).find((subject) => subject.kind === "player-career" && subject.name === name);
+      const nfl = queryFootballSubjects({
+        league: "NFL",
+        includeProjectedSourceSubjects: true,
+        includeProjectedCanonicalRecognition: true,
+      }).find((subject) => subject.kind === "player-career" && subject.name === name && subject.sourceIdentityKeys.some((key) => key.provider === "nflverse" && key.id === nflSourceId));
+      expect(cfb).toBeDefined();
+      expect(nfl).toBeDefined();
+      const related = footballPlayerCareerSubjectsForPerson(cfb!);
+      expect(related.map((subject) => subject.id)).toContain(nfl!.id);
+      expect(related.some((subject) => subject.sourceIdentityKeys.some((key) => key.provider === "nflverse" && key.id === wrongNflSourceId))).toBe(false);
+    }
   });
 
   it("provides stable lookup metadata for seasons, coaches and Program Eras", () => {
