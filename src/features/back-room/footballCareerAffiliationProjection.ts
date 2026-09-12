@@ -128,19 +128,59 @@ function pushIndex(
   index.set(key, rows);
 }
 
+function cfbPlayerRowSignal(values: readonly unknown[], indexes: Record<string, number>) {
+  const numeric = (column: string) => number(value(values, indexes, column)) ?? 0;
+  return numeric("gamesPlayed") * 100
+    + numeric("passAttempts")
+    + numeric("rushAttempts")
+    + numeric("receptions")
+    + numeric("sacks") * 10
+    + numeric("defensiveInterceptions") * 20
+    + numeric("passBreakups") * 5;
+}
+
 function buildPlayerIndex(table: ColumnarTable, league: "NFL" | "CFB") {
   const indexes = indexesFor(table);
   const result = new Map<string, FootballCareerAffiliationSeason[]>();
+
+  if (league === "CFB") {
+    const dominantByPlayerSeason = new Map<string, readonly unknown[]>();
+    for (const values of table.rows) {
+      const id = text(value(values, indexes, "sourcePlayerId"));
+      const season = number(value(values, indexes, "season"));
+      const affiliation = text(value(values, indexes, "team"));
+      if (!id || season == null || !affiliation) continue;
+
+      const key = `${id}:${season}`;
+      const current = dominantByPlayerSeason.get(key);
+      if (
+        !current
+        || cfbPlayerRowSignal(values, indexes) > cfbPlayerRowSignal(current, indexes)
+        || (
+          cfbPlayerRowSignal(values, indexes) === cfbPlayerRowSignal(current, indexes)
+          && affiliation.localeCompare(text(value(current, indexes, "team")) ?? "") < 0
+        )
+      ) {
+        dominantByPlayerSeason.set(key, values);
+      }
+    }
+
+    for (const values of dominantByPlayerSeason.values()) {
+      const id = text(value(values, indexes, "sourcePlayerId"))!;
+      const season = number(value(values, indexes, "season"))!;
+      const affiliation = text(value(values, indexes, "team"))!;
+      const conference = text(value(values, indexes, "conference")) ?? undefined;
+      pushIndex(result, id, { season, affiliation, ...(conference ? { conference } : {}) });
+    }
+    return result;
+  }
+
   for (const values of table.rows) {
     const id = text(value(values, indexes, "sourcePlayerId"));
     const season = number(value(values, indexes, "season"));
-    const affiliation = text(
-      value(values, indexes, league === "NFL" ? "recentTeam" : "team")
-        ?? value(values, indexes, "team"),
-    );
+    const affiliation = text(value(values, indexes, "recentTeam") ?? value(values, indexes, "team"));
     if (!id || season == null || !affiliation) continue;
-    const conference = league === "CFB" ? text(value(values, indexes, "conference")) ?? undefined : undefined;
-    pushIndex(result, id, { season, affiliation, ...(conference ? { conference } : {}) });
+    pushIndex(result, id, { season, affiliation });
   }
   return result;
 }
