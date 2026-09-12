@@ -224,33 +224,20 @@ const canonicalCoachIdentityKeys = new Set(
     .filter((subject) => subject.kind === "coach")
     .map((subject) => `${subject.league}:${normalizedFootballSubjectName(subject.name)}`),
 );
-function isGeneratedPlayerSourceId(subjectId: string) {
-  return subjectId.startsWith("nflverse-player-") || subjectId.startsWith("cfbfast-r-player-");
-}
-
-const reviewedPlayerIdentityOwners = [
-  ...footballCanonicalSubjects.filter((subject) => subject.kind === "player-career"),
-  ...footballProjectedPlayerSubjects.filter((subject) => (
-    subject.kind === "player-career" && !isGeneratedPlayerSourceId(subject.id)
-  )),
-];
 const reconciledProjectedPlayerIds = new Set(
-  reviewedPlayerIdentityOwners.flatMap((subject) => {
-    const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
-    return projectionId && projectionId !== subject.id ? [projectionId] : [];
-  }),
+  footballCanonicalSubjects
+    .filter((subject) => subject.kind === "player-career")
+    .map((subject) => footballRecognitionProjectionSubjectIdFor(subject))
+    .filter((id): id is string => Boolean(id)),
 );
 
-/**
- * Registration and ownership are separate. An exact source placeholder leaves the
- * query universe only when a different reviewed identity independently claims that
- * exact source id. Same-name unclaimed source athletes remain distinct.
- */
+/** Projected players survive only when their exact source identity does not already reconcile to a curated subject. */
 const projectedPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
-  .filter((subject) => (
-    !canonicalSubjectIds.has(subject.id)
-    && !reconciledProjectedPlayerIds.has(subject.id)
-  ))
+  .filter((subject) => {
+    if (canonicalSubjectIds.has(subject.id) || reconciledProjectedPlayerIds.has(subject.id)) return false;
+    const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
+    return projectionId == null || !reconciledProjectedPlayerIds.has(projectionId);
+  })
   .map((subject) => {
     const exactTier = footballProjectedPlayerRegistrationTier(subject.id);
     return enrichFootballSubject(subject, {
