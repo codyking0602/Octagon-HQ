@@ -41,6 +41,10 @@ describe("Football Hit the Number content foundation", () => {
     expect(metricById.has("cfb-team-srs")).toBe(false);
     expect(metricById.has("cfb-team-sos")).toBe(false);
     expect(metricById.has("cfb-best-season-tackles-for-loss")).toBe(false);
+
+    for (const subjectId of ["2002-ohio-state", "2003-lsu", "2004-usc"] as const) {
+      expect(getFootballHitTheNumberSubject(subjectId)?.nationalChampion, subjectId).toBe(true);
+    }
   });
 
   it("exports only unique playable subjects and keeps career specials recognizable", () => {
