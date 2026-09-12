@@ -33,7 +33,7 @@ on:
       - "supabase/migrations/202612310028_activate_six_game_daily_rotation.sql"
       - "supabase/migrations/202612310052_football_daily_challenge_persistence.sql"
       - "supabase/migrations/202612310069_reroll_august_30_daily_double.sql"
-      - "supabase/migrations/202612310071_who_am_i_daily_runtime.sql"
+      - "supabase/migrations/202612310092_who_am_i_daily_runtime.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -203,7 +203,7 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310027_blind_resume_v3_publication.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310028_activate_six_game_daily_rotation.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310052_football_daily_challenge_persistence.sql
-            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310071_who_am_i_daily_runtime.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310092_who_am_i_daily_runtime.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -349,7 +349,7 @@ jobs:
           require_remote_migration "202612310028"
           require_remote_migration "202612310052"
           require_remote_migration "202612310069"
-          require_remote_migration "202612310071"
+          require_remote_migration "202612310092"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
