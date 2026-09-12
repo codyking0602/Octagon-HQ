@@ -85,6 +85,19 @@ function logoForTeam(game: PickBout, team: FootballMatchupBreakdown["teams"][num
   return null;
 }
 
+function fullTeamNameForGame(game: PickBout, team: FootballMatchupBreakdown["teams"][number]) {
+  const aliases = new Set(team.aliases.map(normalizeTeamIdentity));
+  const homeSlug = normalizeTeamIdentity(game.homeTeamSlug ?? game.redFighterSlug);
+  const awaySlug = normalizeTeamIdentity(game.awayTeamSlug ?? game.blueFighterSlug);
+  const redSlug = normalizeTeamIdentity(game.redFighterSlug);
+  const blueSlug = normalizeTeamIdentity(game.blueFighterSlug);
+
+  const matchedSlug = aliases.has(homeSlug) ? homeSlug : aliases.has(awaySlug) ? awaySlug : null;
+  if (matchedSlug === redSlug) return game.redFighterName;
+  if (matchedSlug === blueSlug) return game.blueFighterName;
+  return team.name;
+}
+
 function PlayerSpotlight({
   photoSource,
   canManagePhoto,
@@ -157,8 +170,9 @@ function PlayerSpotlight({
             <span key={stat.label}><b>{stat.value}</b><small>{stat.label}</small></span>
           ))}
         </div>
-        <p>{PLAYER_SPOTLIGHT.result}</p>
-        <small>{PLAYER_SPOTLIGHT.measurements}</small>
+        <p className="football-player-spotlight__meta">
+          {PLAYER_SPOTLIGHT.result} · {PLAYER_SPOTLIGHT.measurements}
+        </p>
         <a href={PLAYER_SPOTLIGHT.highlightUrl} target="_blank" rel="noreferrer">
           WATCH HIGHLIGHT ↗
         </a>
@@ -199,12 +213,12 @@ function FeaturedGameRow({
         <div className="football-hq-game-row__teams">
           <div style={{ "--team-color": teamCardColor(firstTeam.name) } as CSSProperties}>
             <TeamMark logoUrl={logoForTeam(game, firstTeam)} name={firstTeam.name} />
-            <strong>{firstTeam.name}</strong>
+            <strong>{fullTeamNameForGame(game, firstTeam)}</strong>
           </div>
           <b>VS</b>
           <div style={{ "--team-color": teamCardColor(secondTeam.name) } as CSSProperties}>
             <TeamMark logoUrl={logoForTeam(game, secondTeam)} name={secondTeam.name} />
-            <strong>{secondTeam.name}</strong>
+            <strong>{fullTeamNameForGame(game, secondTeam)}</strong>
           </div>
         </div>
       </div>
