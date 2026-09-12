@@ -14,10 +14,16 @@ const bundles = [
     requiredExports: ["advanceOfficialDailyRuntime", "buildOfficialDailySetup"],
   },
   {
-    label: "Football daily runtime",
-    entry: resolve(repoRoot, "src/features/play/footballTodayChallengeSession.ts"),
-    fileName: "football-runtime.generated.mjs",
-    requiredExports: ["buildFootballTodayPersistenceSetup", "buildFootballTodayRuntimeSnapshot"],
+    label: "Football daily publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballTodayChallengePublicationRuntime.ts"),
+    fileName: "football-publication.generated.mjs",
+    requiredExports: ["buildFootballTodayPersistenceSetup"],
+  },
+  {
+    label: "Football daily advance runtime",
+    entry: resolve(repoRoot, "src/features/play/footballTodayChallengeAdvanceRuntime.ts"),
+    fileName: "football-advance.generated.mjs",
+    requiredExports: ["advanceFootballOfficialDailyRuntime"],
   },
 ];
 
