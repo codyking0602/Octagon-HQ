@@ -40,7 +40,7 @@ begin
   if exists (
     select 1
     from private.daily_challenge_schedule_versions
-    where version not in ('football-daily-v1', 'football-daily-v2', 'football-daily-v3')
+    where version not like 'football-daily-v%'
       and sport <> 'ufc'
   ) then
     raise exception 'pre-Football schedules were reclassified away from UFC';
