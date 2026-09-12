@@ -85,6 +85,21 @@ function logoForTeam(game: PickBout, team: FootballMatchupBreakdown["teams"][num
   return null;
 }
 
+function displayNameForTeam(
+  game: PickBout,
+  team: FootballMatchupBreakdown["teams"][number],
+) {
+  const aliases = new Set([team.name, ...team.aliases].map(normalizeTeamIdentity));
+  const redSlug = normalizeTeamIdentity(game.redFighterSlug);
+  const blueSlug = normalizeTeamIdentity(game.blueFighterSlug);
+  const homeSlug = normalizeTeamIdentity(game.homeTeamSlug ?? game.redFighterSlug);
+  const awaySlug = normalizeTeamIdentity(game.awayTeamSlug ?? game.blueFighterSlug);
+
+  if (aliases.has(redSlug) || aliases.has(homeSlug)) return game.redFighterName;
+  if (aliases.has(blueSlug) || aliases.has(awaySlug)) return game.blueFighterName;
+  return team.name;
+}
+
 function PlayerSpotlight({
   photoSource,
   canManagePhoto,
@@ -157,8 +172,10 @@ function PlayerSpotlight({
             <span key={stat.label}><b>{stat.value}</b><small>{stat.label}</small></span>
           ))}
         </div>
-        <p>{PLAYER_SPOTLIGHT.result}</p>
-        <small>{PLAYER_SPOTLIGHT.measurements}</small>
+        <div className="football-player-spotlight__meta">
+          <span>{PLAYER_SPOTLIGHT.result}</span>
+          <span>{PLAYER_SPOTLIGHT.measurements}</span>
+        </div>
         <a href={PLAYER_SPOTLIGHT.highlightUrl} target="_blank" rel="noreferrer">
           WATCH HIGHLIGHT ↗
         </a>
@@ -187,6 +204,8 @@ function FeaturedGameRow({
   const label = isCollegeGame(game.weightClass) ? "COLLEGE GAME OF THE WEEK" : "NFL GAME OF THE WEEK";
   const firstTeam = breakdown.teams[0];
   const secondTeam = breakdown.teams[1];
+  const firstTeamDisplayName = displayNameForTeam(game, firstTeam);
+  const secondTeamDisplayName = displayNameForTeam(game, secondTeam);
 
   return (
     <Link
@@ -198,13 +217,13 @@ function FeaturedGameRow({
         <span>{label}</span>
         <div className="football-hq-game-row__teams">
           <div style={{ "--team-color": teamCardColor(firstTeam.name) } as CSSProperties}>
-            <TeamMark logoUrl={logoForTeam(game, firstTeam)} name={firstTeam.name} />
-            <strong>{firstTeam.name}</strong>
+            <TeamMark logoUrl={logoForTeam(game, firstTeam)} name={firstTeamDisplayName} />
+            <strong>{firstTeamDisplayName}</strong>
           </div>
           <b>VS</b>
           <div style={{ "--team-color": teamCardColor(secondTeam.name) } as CSSProperties}>
-            <TeamMark logoUrl={logoForTeam(game, secondTeam)} name={secondTeam.name} />
-            <strong>{secondTeam.name}</strong>
+            <TeamMark logoUrl={logoForTeam(game, secondTeam)} name={secondTeamDisplayName} />
+            <strong>{secondTeamDisplayName}</strong>
           </div>
         </div>
       </div>
