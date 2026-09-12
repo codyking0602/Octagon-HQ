@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 import { footballCfbPlayerSeasonRecognitionRecords } from "../back-room/footballCfbPlayerSeasonRecognition";
 import { getFootballFactualRecord } from "../back-room/footballFactualStatsCore";
 import { getFootballPersonIdentityKnowledgeForPerson } from "../back-room/footballPersonIdentityKnowledge";
-import { footballRecognitionProjectionSubjectIdFor } from "../back-room/footballRecognizabilityProjection";
+import {
+  footballCanonicalPlayerSourceBindingFor,
+  footballCanonicalPlayerSubjectIdForSourceSubjectId,
+  footballRecognitionProjectionSubjectIdFor,
+} from "../back-room/footballRecognizabilityProjection";
 import type { FootballCanonicalSubject } from "../back-room/footballFactualStatsCatalog";
 import {
   footballPlayerCareerSubjectsForPerson,
@@ -137,20 +141,26 @@ describe("Who Am I Football factual and identity integrity", () => {
     expect(checked).toBeGreaterThan(40);
   });
 
-  it("keeps reviewed CFB source aliases on one canonical factual owner", () => {
+  it("keeps exact CFB source rows separate while facts resolve through explicit canonical ownership", () => {
     const subject = getFootballSubject("cfb-myles-garrett");
     expect(subject).not.toBeNull();
     if (!subject || subject.kind !== "player-career") throw new Error("Expected Myles Garrett CFB player career subject.");
 
     const projectedSourceId = footballRecognitionProjectionSubjectIdFor(subject as FootballCanonicalSubject);
     expect(projectedSourceId).toBeTruthy();
-    expect(projectedSourceId).not.toBe(subject!.id);
-    expect(getFootballSubject(projectedSourceId!)?.id).toBe(subject!.id);
+    expect(projectedSourceId).not.toBe(subject.id);
+    expect(footballCanonicalPlayerSourceBindingFor(subject.id)?.sourceSubjectId).toBe(projectedSourceId);
+    expect(footballCanonicalPlayerSubjectIdForSourceSubjectId(projectedSourceId!)).toBe(subject.id);
 
-    const directFacts = getFootballFactualRecord(subject!.id);
-    const aliasFacts = getFootballFactualRecord(projectedSourceId!);
-    expect(aliasFacts?.subjectId).toBe(subject!.id);
-    expect(aliasFacts).toEqual(directFacts);
+    const exactSource = getFootballSubject(projectedSourceId!);
+    expect(exactSource?.id).toBe(projectedSourceId);
+    expect(exactSource?.recognizabilityTier).toBe("D");
+    expect(exactSource?.casualEligible).toBe(false);
+
+    const directFacts = getFootballFactualRecord(subject.id);
+    const sourceFacts = getFootballFactualRecord(projectedSourceId!);
+    expect(sourceFacts?.subjectId).toBe(subject.id);
+    expect(sourceFacts).toEqual(directFacts);
     const metricIds = directFacts?.facts.map((fact) => fact.metricId) ?? [];
     expect(new Set(metricIds).size).toBe(metricIds.length);
   });
@@ -173,22 +183,34 @@ describe("Who Am I Football factual and identity integrity", () => {
     }
 
     const collisionCases = [
-      ["Adrian Peterson", "nflverse-player-00-0025394", "nflverse-player-00-0021306"],
-      ["Cam Newton", "nflverse-player-00-0027939", "nflverse-player-00-0023382"],
-      ["Lamar Jackson", "nflverse-player-00-0034796", "nflverse-player-00-0036152"],
+      ["Adrian Peterson", "nfl-adrian-peterson", "nflverse-player-00-0025394", "nflverse-player-00-0021306"],
+      ["Cam Newton", "cam-newton", "nflverse-player-00-0027939", "nflverse-player-00-0023382"],
+      ["Lamar Jackson", "nfl-lamar-jackson", "nflverse-player-00-0034796", "nflverse-player-00-0036152"],
     ] as const;
 
-    for (const [name, correctSourceId, otherSourceId] of collisionCases) {
-      const correct = getFootballSubject(correctSourceId);
-      const other = getFootballSubject(otherSourceId);
-      expect(correct?.name, correctSourceId).toBe(name);
-      expect(other?.name, otherSourceId).toBe(name);
-      expect(other?.recognizabilityTier, otherSourceId).toBe("D");
-      expect(other?.id, otherSourceId).not.toBe(correct?.id);
+    for (const [name, canonicalId, correctSourceId, otherSourceId] of collisionCases) {
+      const canonical = getFootballSubject(canonicalId);
+      const correctSource = getFootballSubject(correctSourceId);
+      const otherSource = getFootballSubject(otherSourceId);
 
-      const relatedIds = new Set(footballPlayerCareerSubjectsForPerson(correct!).map((subject) => subject.id));
-      expect(relatedIds.has(other!.id), `${name} same-name source identity leaked into person relationship`).toBe(false);
-      for (const knowledge of getFootballPersonIdentityKnowledgeForPerson(correct!)) {
+      expect(canonical?.name, canonicalId).toBe(name);
+      expect(footballCanonicalPlayerSourceBindingFor(canonicalId)?.sourceSubjectId, canonicalId).toBe(correctSourceId);
+      expect(footballCanonicalPlayerSubjectIdForSourceSubjectId(correctSourceId), correctSourceId).toBe(canonicalId);
+      expect(footballCanonicalPlayerSubjectIdForSourceSubjectId(otherSourceId), otherSourceId).toBeNull();
+
+      expect(correctSource?.id, correctSourceId).toBe(correctSourceId);
+      expect(otherSource?.id, otherSourceId).toBe(otherSourceId);
+      expect(correctSource?.name, correctSourceId).toBe(name);
+      expect(otherSource?.name, otherSourceId).toBe(name);
+      expect(correctSource?.recognizabilityTier, correctSourceId).toBe("D");
+      expect(otherSource?.recognizabilityTier, otherSourceId).toBe("D");
+      expect(correctSource?.casualEligible, correctSourceId).toBe(false);
+      expect(otherSource?.casualEligible, otherSourceId).toBe(false);
+
+      const relatedIds = new Set(footballPlayerCareerSubjectsForPerson(canonical!).map((subject) => subject.id));
+      expect(relatedIds.has(correctSourceId), `${name} source identity leaked into person relationship`).toBe(false);
+      expect(relatedIds.has(otherSourceId), `${name} same-name source identity leaked into person relationship`).toBe(false);
+      for (const knowledge of getFootballPersonIdentityKnowledgeForPerson(canonical!)) {
         expect(
           relatedIds,
           `${name} identity knowledge rebound through display-name grouping: ${knowledge.subjectId}`,
