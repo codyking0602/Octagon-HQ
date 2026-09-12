@@ -46,9 +46,76 @@ export interface FootballProjectedNonPlayerRecognitionSubject {
   sourceIdentityKey?: { provider: FootballSourceProviderId; id: string };
 }
 
-const records = projectionJson.records as readonly ProjectionRecord[];
-const playerRecords = records.filter((record) => record.kind === "player-career");
-const nonPlayerRecords = records.filter((record) => record.kind !== "player-career");
+type NflPlayerSourceTuple = readonly [
+  sourceId: string,
+  name: string,
+  position: string,
+  startSeason: number,
+  endSeason: number,
+];
+type CfbPlayerSourceTuple = readonly [
+  sourceId: string,
+  name: string,
+  position: string,
+  school: string,
+  startSeason: number,
+  endSeason: number,
+];
+interface ProjectionJsonV3 {
+  records: readonly ProjectionRecord[];
+  playerSourceRegistry?: {
+    nfl: readonly NflPlayerSourceTuple[];
+    cfb: readonly CfbPlayerSourceTuple[];
+  };
+}
+
+function projectionSourceSlug(name: string) {
+  return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function optionalSeason(value: number) {
+  return value > 0 ? value : undefined;
+}
+
+function optionalPosition(value: string) {
+  return value ? value as FootballCanonicalPosition : undefined;
+}
+
+const projection = projectionJson as ProjectionJsonV3;
+const promotedRecords = projection.records;
+const registryPlayerRecords: ProjectionRecord[] = [
+  ...(projection.playerSourceRegistry?.nfl ?? []).map(([sourceId, name, position, startSeason, endSeason]) => ({
+    id: `nflverse-player-${sourceId}`,
+    kind: "player-career",
+    name,
+    league: "NFL" as const,
+    position: optionalPosition(position),
+    startSeason: optionalSeason(startSeason),
+    endSeason: optionalSeason(endSeason),
+    tier: "D" as const,
+    sourceProvider: "nflverse",
+    sourceId,
+  })),
+  ...(projection.playerSourceRegistry?.cfb ?? []).map(([sourceId, name, position, school, startSeason, endSeason]) => ({
+    id: `cfbfast-r-player-${sourceId}-${projectionSourceSlug(name)}`,
+    kind: "player-career",
+    name,
+    league: "CFB" as const,
+    position: optionalPosition(position),
+    school: school || undefined,
+    startSeason: optionalSeason(startSeason),
+    endSeason: optionalSeason(endSeason),
+    tier: "D" as const,
+    sourceProvider: "cfbfastR",
+    sourceId,
+  })),
+];
+const playerRecordById = new Map(registryPlayerRecords.map((record) => [record.id, record]));
+for (const record of promotedRecords) {
+  if (record.kind === "player-career") playerRecordById.set(record.id, record);
+}
+const playerRecords = [...playerRecordById.values()];
+const nonPlayerRecords = promotedRecords.filter((record) => record.kind !== "player-career");
 
 function activeDecades(startSeason?: number, endSeason?: number) {
   if (startSeason == null || endSeason == null) return undefined;
