@@ -16,7 +16,7 @@ describe("Football Ledger Stage 13.6 NFL RB factual closeout", () => {
     expect(getFootballFact("nfl-larry-csonka", "nfl-career-rushing-yards")?.fact.value).toBe(8081);
 
     const nflRbRows = footballLedgerAudit.rows.filter((row) => row.league === "NFL" && row.pool === "RB");
-    expect(nflRbRows).toHaveLength(179);
+    expect(nflRbRows).toHaveLength(178);
     expect(nflRbRows.every((row) => row.readiness === "Full")).toBe(true);
     expect(nflRbRows.every((row) => row.missing.length === 0)).toBe(true);
   });
