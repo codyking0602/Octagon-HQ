@@ -11,7 +11,8 @@ type OfficialDailyGameType =
   | "wavelength"
   | "blind_rank_5"
   | "keep_4_cut_4"
-  | "hit_the_number";
+  | "hit_the_number"
+  | "who_am_i";
 
 interface OfficialDailyRuntimeContext {
   gameType: OfficialDailyGameType;
