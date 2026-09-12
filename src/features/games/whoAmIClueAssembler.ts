@@ -111,13 +111,25 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
   const sportsBackground = /\b(?:school|college|university|conference|recruit|recruited|commit|committed|high-school|high school|junior college|football|wrestling|boxing|kickboxing|judo|sambo)\b/.test(haystack);
   const sportsIdentity = /\b(?:quarterback|running back|receiver|tight end|lineman|linebacker|defensive back|fighter|striker|grappler|wrestler|position|division|team|gym|touchdowns?|yards?|sacks?|tackles?|receptions?|interceptions?|knockouts?|submissions?)\b/.test(haystack);
   const sportsCareerEvent = /\b(?:injur(?:y|ed)|comeback|preseason|regular-season|postseason|playoff|season opener)\b/.test(haystack);
-  const deepBiography = /\b(?:childhood|upbringing|foster|group homes?|grandparents?|parents?|father|mother|brother|sister|family|youth|immigrat\w*|fourth[- ]grade|grade school|elementary school|tuition|classes|academic degree|left home|grew up|birthplace)\b/.test(haystack);
+  const deepLifeBiography = /\b(?:childhood|upbringing|foster|group homes?|grandparents?|youth|immigrat\w*|fourth[- ]grade|grade school|elementary school|tuition|classes|academic degree|left home|grew up|birthplace)\b/.test(haystack);
+  const familyBiography = /\b(?:parents?|father|mother|brother|sister|family)\b/.test(haystack);
   const personalFacet = facet === "background" || facet === "relationships" || facet === "off-field" || facet === "identity";
 
-  // Personal-history clues do not become sports identity merely because the prose also
-  // mentions a position, coach, award, or other sports word. Direct competitive
-  // relationships (teammates, opponents, fighters, training partners) remain sports-facing.
-  if (deepBiography && personalFacet && !competitiveRelationship && !signatureIdentity) return "deep-biography";
+  // Deep life-history remains biography even when research prose happens to mention
+  // generic sports vocabulary. Family facts are different: an actual football/MMA
+  // relationship (for example, a famous sibling matchup or shared college path) is
+  // sports identity, while a purely personal family story stays biography.
+  if (deepLifeBiography && personalFacet && !competitiveRelationship && !signatureIdentity) return "deep-biography";
+  if (
+    familyBiography
+    && personalFacet
+    && !competitiveRelationship
+    && !signatureIdentity
+    && !strongSportsAnchor
+    && !sportsRelationship
+    && !sportsBackground
+    && !sportsIdentity
+  ) return "deep-biography";
   if (signatureIdentity || sportsRelationship || strongSportsAnchor || sportsCareerEvent) return "sports-identity";
   if (!clue.identityKnowledge) return "sports-identity";
 
