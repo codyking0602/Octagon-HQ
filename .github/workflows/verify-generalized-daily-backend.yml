@@ -40,6 +40,7 @@ on:
       - "supabase/migrations/202612310069_reroll_august_30_daily_double.sql"
       - "supabase/migrations/202612310092_who_am_i_daily_runtime.sql"
       - "supabase/migrations/202612310093_future_daily_schedule.sql"
+      - "supabase/migrations/202612310094_sport_daily_materialization_request.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -50,6 +51,7 @@ on:
       - "supabase/tests/football_daily_challenge_persistence.sql"
       - "supabase/tests/who_am_i_daily_runtime.sql"
       - "supabase/tests/future_daily_schedule.sql"
+      - "supabase/tests/sport_daily_materialization_request.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_seed.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_assert.sql"
   workflow_dispatch:
@@ -188,6 +190,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/future_daily_schedule.sql
 
+      - name: Execute immutable sport-scoped materialization proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/sport_daily_materialization_request.sql
+
       - name: Execute progressive reveal, cross-device progress, and scheduler proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/daily_challenge_runtime_progress.sql
@@ -220,6 +226,7 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310081_football_daily_midday_release.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310092_who_am_i_daily_runtime.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310093_future_daily_schedule.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310094_sport_daily_materialization_request.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -250,6 +257,7 @@ jobs:
             echo "- Progressive reveal and hidden-evidence boundaries: passed"
             echo "- Cross-device optimistic progress restoration: passed"
             echo "- Football/UFC same-day sport isolation and shared records RPCs: passed"
+            echo "- Published Football Daily identity is reused without runtime regeneration: passed"
             echo "- Shared hourly materialization wake-up: passed"
             echo "- Central-time DST boundaries: passed"
             echo "- Immutable first attempt and replay isolation: passed"
@@ -367,6 +375,7 @@ jobs:
           require_remote_migration "202612310069"
           require_remote_migration "202612310092"
           require_remote_migration "202612310093"
+          require_remote_migration "202612310094"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
