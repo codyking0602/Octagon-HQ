@@ -11,7 +11,6 @@ import {
   type FootballCanonicalSubject,
   type FootballCanonicalSubjectKind,
 } from "./footballFactualStatsCatalog";
-import { footballHistoricalRecognitionRepairs } from "./footballHistoricalRecognitionRepairs";
 import {
   buildFootballSubjectKnowledgeMetadata,
   type FootballRecognizabilityTier,
@@ -78,12 +77,7 @@ export interface FootballSubjectQuery {
 }
 
 const comparisonItemById = new Map(footballComparisonDepthItems.map((item) => [item.id, item]));
-const projectedPlayerSubjectById = new Map(footballProjectedPlayerSubjects.map((subject) => [subject.id, subject]));
-const reviewedHistoricalPlayerIds = new Set(
-  footballHistoricalRecognitionRepairs
-    .filter((repair) => repair.subject.kind === "player-career")
-    .map((repair) => repair.subject.id),
-);
+const projectedPlayerSourceSubjectById = new Map(footballProjectedPlayerSourceSubjects.map((subject) => [subject.id, subject]));
 
 function normalizedFootballSubjectName(name: string) {
   return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
@@ -117,16 +111,14 @@ function playerIdForSubject(subject: FootballSubjectIdentity) {
 }
 
 /**
- * Reviewed historical recognition identities may reconcile to an older curated canonical player id. The canonical id
- * and authored metadata remain authoritative, but missing reviewed career identity metadata must not be discarded.
- * Restrict this merge to the reviewed historical repair owner so ordinary source projection does not silently change
- * public queries.
+ * Canonical product identity stays authoritative. Missing career metadata may be
+ * filled only from its generated exact-source binding; runtime name discovery is never used.
  */
 function reconcileProjectedPlayerIdentity(subject: FootballCanonicalSubject): FootballCanonicalSubject {
   if (subject.kind !== "player-career") return subject;
-  const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
-  if (!projectionId || !reviewedHistoricalPlayerIds.has(projectionId)) return subject;
-  const projected = projectedPlayerSubjectById.get(projectionId);
+  const sourceSubjectId = footballRecognitionProjectionSubjectIdFor(subject);
+  if (!sourceSubjectId) return subject;
+  const projected = projectedPlayerSourceSubjectById.get(sourceSubjectId);
   if (!projected) return subject;
   return {
     ...subject,
