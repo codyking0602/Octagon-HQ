@@ -496,7 +496,7 @@ export function ChallengeProvider({
     if (
       !auctionRepository
       || !activeProfile
-      || challenge.gameId !== "auction"
+      || (challenge.gameId !== "auction" && challenge.gameId !== "draft-room")
       || challenge.creatorId !== activeProfile.id
       || challenge.openedAt
       || challenge.completedAt
