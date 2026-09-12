@@ -746,6 +746,99 @@ console.log("FOOTBALL_IDENTITY_DEBUG", JSON.stringify({
 }));
 fs.writeFileSync(new URL("data/generated/football/recognizability-projection.json", root), `${JSON.stringify(output)}\n`);
 
+const runtimeDebugServer = await createServer({
+  root: fileURLToPath(root),
+  configFile: false,
+  logLevel: "error",
+  server: { middlewareMode: true },
+  appType: "custom",
+});
+try {
+  const [registry, factual, whoAmI, hitNumber, comparison, identityFacts] = await Promise.all([
+    runtimeDebugServer.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts"),
+    runtimeDebugServer.ssrLoadModule("/src/features/back-room/footballFactualStats.ts"),
+    runtimeDebugServer.ssrLoadModule("/src/features/games/footballWhoAmIAuthority.ts"),
+    runtimeDebugServer.ssrLoadModule("/src/features/back-room/footballHitTheNumberModel.ts"),
+    runtimeDebugServer.ssrLoadModule("/src/features/back-room/footballComparisonAuthority.ts"),
+    runtimeDebugServer.ssrLoadModule("/src/features/games/whoAmIIdentityFacts.ts"),
+  ]);
+
+  const cfbLaunch = whoAmI.getFootballWhoAmILaunchPool("CFB");
+  const cfbSkillSource = cfbLaunch.players
+    .filter((subject) => ["QB", "RB", "WR", "TE"].includes(subject.position))
+    .map((subject) => {
+      const source = subject.sourceIdentityKeys.find((key) => key.provider === "cfbfastR");
+      const record = factual.getFootballFactualRecord(subject.id);
+      const metricIds = new Set(record?.facts.map((fact) => fact.metricId) ?? []);
+      const required = subject.position === "QB"
+        ? ["cfb-career-passing-attempts", "cfb-career-passing-yards", "cfb-best-season-passing-yards"]
+        : subject.position === "RB"
+          ? ["cfb-career-rushing-attempts", "cfb-career-rushing-yards", "cfb-best-season-rushing-yards"]
+          : ["cfb-career-receptions", "cfb-career-receiving-yards", "cfb-best-season-receiving-yards"];
+      return {
+        id: subject.id,
+        name: subject.name,
+        position: subject.position,
+        tier: subject.recognizabilityTier,
+        school: subject.school,
+        sourceId: source?.id ?? null,
+        startSeason: subject.startSeason ?? null,
+        endSeason: subject.endSeason ?? null,
+        complete: Boolean(source && required.every((metricId) => metricIds.has(metricId))),
+        presentRequired: required.filter((metricId) => metricIds.has(metricId)),
+      };
+    });
+  console.log("FOOTBALL_RUNTIME_CFB_SKILL", JSON.stringify({
+    total: cfbSkillSource.length,
+    complete: cfbSkillSource.filter((row) => row.complete).length,
+    rows: cfbSkillSource,
+  }));
+
+  const cfbMetrics = hitNumber.FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG
+    .filter((metric) => metric.league === "CFB" && metric.group === "cfb");
+  const cfbTeamSubjects = hitNumber.footballHitTheNumberSubjects
+    .filter((subject) => subject.group === "cfb" && subject.nationalChampion === true);
+  console.log("FOOTBALL_RUNTIME_HTN_CFB", JSON.stringify(cfbMetrics.map((metric) => {
+    const rows = cfbTeamSubjects.filter((subject) => factual.getFootballFact(subject.id, metric.metricId) != null);
+    const countRange = (from, to) => rows.filter((subject) => (subject.season ?? 0) >= from && (subject.season ?? 0) <= to).length;
+    return {
+      metricId: metric.metricId,
+      total: rows.length,
+      eras: [countRange(1995,2002), countRange(2003,2008), countRange(2009,2014), countRange(2015,2022)],
+      ids: rows.map((subject) => subject.id),
+    };
+  })));
+
+  const anchors = [
+    ["nfl-qb","tom-brady"],["nfl-qb","drew-brees"],["nfl-qb","eli-manning"],
+    ["nfl-rb","jim-brown"],["nfl-rb","nfl-derrick-henry"],["nfl-rb","frank-gore"],
+    ["nfl-wr","nfl-jerry-rice"],["nfl-wr","nfl-randy-moss"],["nfl-wr","antonio-brown"],["nfl-wr","julio-jones"],
+    ["nfl-te","tony-gonzalez"],["nfl-te","shannon-sharpe"],["nfl-te","jason-witten"],
+    ["nfl-front-seven","clay-matthews"],["nfl-secondary","morris-claiborne"],
+    ["cfb-qb","cfb-lamar-jackson"],["cfb-qb","cfb-trevor-lawrence"],["cfb-qb","cfb-jake-fromm"],
+    ["cfb-rb","cfb-bijan-robinson"],["cfb-rb","cfb-trent-richardson"],
+  ];
+  console.log("FOOTBALL_RUNTIME_COMPARISON_ANCHORS", JSON.stringify(anchors.map(([packId,id]) => {
+    const pack = comparison.footballComparisonCategoryPacks.find((candidate) => candidate.id === packId);
+    return {packId,id,found:Boolean(pack?.items.find((item) => item.id === id)),available:pack?.items.map((item) => item.id).filter((itemId) => itemId.includes(id.replace(/^(?:nfl|cfb)-/,""))) ?? []};
+  })));
+
+  for (const id of ["nfl-jason-kelce","nfl-joe-thomas","cfb-andrew-luck","cfb-ndamukong-suh","cfb-penei-sewell"]) {
+    const subject = registry.getFootballSubject(id);
+    console.log("FOOTBALL_RUNTIME_IDENTITY", JSON.stringify({
+      id,
+      subject: subject ? {
+        id: subject.id,name: subject.name,league:subject.league,position:subject.position,
+        tier:subject.recognizabilityTier,school:subject.school,startSeason:subject.startSeason,endSeason:subject.endSeason,
+        aliases:subject.aliases,sourceIdentityKeys:subject.sourceIdentityKeys,
+      } : null,
+      facts: subject ? identityFacts.footballWhoAmIIdentityFactBank(subject).facts.map((fact) => ({id:fact.id,owner:fact.source.owner})) : [],
+    }));
+  }
+} finally {
+  await runtimeDebugServer.close();
+}
+
 const detailSamples = (league, tier, amount) => allRecords.filter((r) => r.kind === "player-career" && r.league === league && r.tier === tier).sort((a, b) => `${a.name}:${a.id}`.localeCompare(`${b.name}:${b.id}`)).slice(0, amount).map((r) => `- ${r.name} (${r.position ?? "unknown"}, ${r.startSeason}–${r.endSeason}; ${r.evidence.join(", ")})`).join("\n");
 const entitySamples = (kind, amount = 12) => allRecords.filter((r) => r.kind === kind && r.tier !== "D").sort((a, b) => `${a.tier}:${a.name}`.localeCompare(`${b.tier}:${b.name}`)).slice(0, amount).map((r) => `- ${r.tier}: ${r.name} — ${r.evidence.join(", ")}`).join("\n") || "- No A-C records; source evidence is intentionally insufficient for casual promotion.";
 const playerEligible = playerRecords.filter((r) => r.tier !== "D");
