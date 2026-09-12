@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **4,118**
+Canonical A/B/C subjects: **4,127**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -36,10 +36,10 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | TE | 35 | 1 | 20 | 14 | 24 | 11 | 0 | 11 | 0 | 0 |
 | OL | 58 | 2 | 24 | 32 | 58 | 0 | 0 | 0 | 0 | 0 |
 | DL / EDGE | 47 | 8 | 22 | 17 | 29 | 18 | 0 | 18 | 0 | 0 |
-| LB | 41 | 5 | 15 | 21 | 30 | 11 | 0 | 11 | 0 | 0 |
+| LB | 45 | 5 | 15 | 25 | 33 | 12 | 0 | 12 | 0 | 0 |
 | Secondary | 46 | 9 | 25 | 12 | 36 | 10 | 0 | 10 | 0 | 0 |
 | K / P | 29 | 0 | 14 | 15 | 5 | 24 | 0 | 24 | 0 | 0 |
-| Player seasons | 394 | 12 | 25 | 357 | 394 | 0 | 0 | 0 | 0 | 0 |
+| Player seasons | 399 | 12 | 25 | 362 | 399 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 132 | 6 | 42 | 84 | 132 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 106 | 5 | 13 | 88 | 101 | 5 | 0 | 10 | 0 | 0 |
 | Head coaches | 46 | 11 | 22 | 13 | 46 | 0 | 0 | 0 | 0 | 0 |
@@ -145,6 +145,7 @@ None.
 - CFB LB: **Rey Maualuga** — C, Partial; missing LB tackle/disruption/turnover facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB LB: **Rocky Calmus** — C, Partial; missing LB tackle/disruption/turnover facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB LB: **Ryan Shazier** — C, Partial; missing LB tackle/disruption/turnover facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
+- CFB LB: **Tremaine Edmunds** — C, Partial; missing LB tackle/disruption/turnover facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB Notable games / misc: **1924 Notre Dame vs Army — Four Horsemen** — A, Partial; missing game final score, game context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
 - CFB Notable games / misc: **1928 Notre Dame vs Army — Win One for the Gipper** — A, Partial; missing game final score, game context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
 - CFB Notable games / misc: **1935 Notre Dame at Ohio State — Game of the Century** — A, Partial; missing game final score, game context; source limits: CFB relationship results do not reach this subject's historical window; normalized CFB relationship coverage begins in 2002.
