@@ -372,6 +372,12 @@ const allRecords = [
 allRecords.sort((a, b) => `${a.kind}:${a.id}`.localeCompare(`${b.kind}:${b.id}`));
 
 const promoted = allRecords.filter((record) => record.tier !== "D").map(({ evidence, manualA, ...record }) => record);
+// Registration and eligibility are separate. Keep every exact player source identity,
+// including Tier D rows, so same-name athletes remain distinguishable in the registry.
+// Non-player source depth remains promotion-gated.
+const registryRecords = allRecords
+  .filter((record) => record.kind === "player-career" || record.tier !== "D")
+  .map(({ evidence, manualA, ...record }) => record);
 const countBy = (rows, field) => Object.fromEntries([...new Set(rows.map((r) => r[field] ?? "unknown"))].sort().map((value) => [value, rows.filter((r) => (r[field] ?? "unknown") === value).length]));
 const tierCount = (rows) => Object.fromEntries(["A", "B", "C", "D"].map((tier) => [tier, rows.filter((r) => r.tier === tier).length]));
 const playerRecords = allRecords.filter((record) => record.kind === "player-career");
@@ -392,7 +398,7 @@ const output = {
   manualBApprovals: [...approvedBPlayers].sort(),
   manualCfbBIdentityApprovals: [...approvedCfbBIdentityWindows.entries()].map(([name, [startSeason, endSeason]]) => ({ name, startSeason, endSeason })),
   summary,
-  records: promoted,
+  records: registryRecords,
 };
 fs.writeFileSync(new URL("data/generated/football/recognizability-projection.json", root), `${JSON.stringify(output)}\n`);
 
