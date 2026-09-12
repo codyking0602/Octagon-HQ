@@ -147,6 +147,9 @@ for (const record of promotedRecords) {
   if (record.kind === "player-career") playerRecordById.set(record.id, record);
 }
 const playerRecords = [...playerRecordById.values()];
+const promotedPlayerRecordIds = new Set(
+  promotedRecords.filter((record) => record.kind === "player-career").map((record) => record.id),
+);
 const nonPlayerRecords = promotedRecords.filter((record) => record.kind !== "player-career");
 
 function activeDecades(startSeason?: number, endSeason?: number) {
@@ -384,7 +387,9 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
   if (exactPlayerRecord && !directHistorical && !directEvidence) {
     const provider: FootballSourceProviderId = exactPlayerRecord.league === "NFL" ? "nflverse" : "cfbfastR";
     return {
-      tier: recognitionTierAtLeast(exactPlayerRecord.tier, exactSourceProHallMinimumTier(exactPlayerRecord)),
+      tier: promotedPlayerRecordIds.has(exactPlayerRecord.id)
+        ? recognitionTierAtLeast(exactPlayerRecord.tier, exactSourceProHallMinimumTier(exactPlayerRecord))
+        : exactPlayerRecord.tier,
       sourceIdentityKey: { provider, id: exactPlayerRecord.sourceId } as const,
     };
   }
@@ -438,7 +443,9 @@ export function footballProjectedPlayerRegistrationTier(subjectId: string): Foot
   if (directEvidence) return directEvidence;
   const exactRecord = byId.get(subjectId);
   if (!exactRecord) return "D";
-  return recognitionTierAtLeast(exactRecord.tier, exactSourceProHallMinimumTier(exactRecord));
+  return promotedPlayerRecordIds.has(exactRecord.id)
+    ? recognitionTierAtLeast(exactRecord.tier, exactSourceProHallMinimumTier(exactRecord))
+    : exactRecord.tier;
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
