@@ -143,7 +143,7 @@ function cfbRowsFor(subject) {
   if (seasonRecognition) {
     return (cfbPlayersById.get(String(seasonRecognition.sourceId)) ?? []).filter((row) => (
       row.season === seasonRecognition.season
-      && normalized(row.playerName) === normalized(subject.name.replace(/\\s+\\d{4}$/, ""))
+      && normalized(row.playerName) === normalized(subject.name.replace(/\s+\d{4}$/, ""))
       && normalized(row.team) === normalized(seasonRecognition.school)
     ));
   }
@@ -154,7 +154,7 @@ function cfbRowsFor(subject) {
     return dominantCfbSeasonRows(rows.filter((row) => withinWindow(row, subject)));
   }
 
-  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\\s+\\d{4}$/, "") : subject.name;
+  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
   let nameRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
 
   // Name is only candidate discovery. Canonical role/program metadata must narrow
