@@ -75,7 +75,7 @@ describe("notification foundation", () => {
     expect(migration).toContain("create or replace function public.mark_all_notifications_read");
   });
 
-  it("replaces only the What's New header shortcut and preserves Home and Octagon Verdict", () => {
+  it("keeps notifications and Octagon Verdict after the Home What's New preview is retired", () => {
     const notificationAction = shell.indexOf("<NotificationHeaderAction />");
     const askAction = shell.indexOf('to="/intelligence"');
 
@@ -83,7 +83,7 @@ describe("notification foundation", () => {
     expect(notificationAction).toBeLessThan(askAction);
     expect(shell).not.toContain("<WhatsNewHeaderAction />");
     expect(shell).toContain('aria-label="Open UFC Intelligence"');
-    expect(home).toContain("<WhatsNewPreview />");
+    expect(home).not.toContain("<WhatsNewPreview />");
     expect(router).toContain('path: "notifications"');
     expect(router).toContain('path: "whats-new"');
     expect(contract).toContain("question-mark Octagon Verdict action remains unchanged");
