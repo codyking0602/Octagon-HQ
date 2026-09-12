@@ -6,6 +6,7 @@ import {
 } from "./footballFactualStatsCatalog";
 import {
   FOOTBALL_RECOGNITION_SUMMARY,
+  footballCanonicalPlayerSubjectIdForSourceSubjectId,
   footballProjectedPlayerSubjects,
   footballRecognitionProjectionSubjectIdFor,
 } from "./footballRecognizabilityProjection";
@@ -32,7 +33,9 @@ describe("canonical Football universe", () => {
     const peyton = footballCanonicalSubjects.find(({ id }) => id === "peyton-manning")!;
     const peytonProjectionId = footballRecognitionProjectionSubjectIdFor(peyton);
     expect(peytonProjectionId).not.toBeNull();
-    expect(getFootballSubject(peytonProjectionId!)).toBe(getFootballSubject(peyton.id));
+    expect(getFootballSubject(peytonProjectionId!)?.id).toBe(peytonProjectionId);
+    expect(getFootballSubject(peytonProjectionId!)?.recognizabilityTier).toBe("D");
+    expect(footballCanonicalPlayerSubjectIdForSourceSubjectId(peytonProjectionId!)).toBe(peyton.id);
     expect(getFootballSubject(peyton.id)?.aliases ?? []).not.toContain(peytonProjectionId);
 
     const ambiguousAdrian = {
@@ -48,7 +51,9 @@ describe("canonical Football universe", () => {
     expect(adrianPeterson?.name).toBe("Adrian Peterson");
     const adrianProjectionId = footballRecognitionProjectionSubjectIdFor(adrianPeterson as FootballCanonicalSubject);
     expect(adrianProjectionId).not.toBeNull();
-    expect(getFootballSubject(adrianProjectionId!)).toBe(adrianPeterson);
+    expect(getFootballSubject(adrianProjectionId!)?.id).toBe(adrianProjectionId);
+    expect(getFootballSubject(adrianProjectionId!)?.recognizabilityTier).toBe("D");
+    expect(footballCanonicalPlayerSubjectIdForSourceSubjectId(adrianProjectionId!)).toBe(adrianPeterson?.id);
     expect(adrianPeterson?.aliases ?? []).not.toContain(adrianProjectionId);
   });
 
@@ -92,9 +97,13 @@ describe("canonical Football universe", () => {
       position: "QB",
       includeProjectedSourceSubjects: true,
     }).filter(({ name }) => name === "Cam Newton");
-    expect(projectedCfbCam).toHaveLength(1);
-    expect(projectedNflCam).toHaveLength(1);
-    expect(projectedCfbCam[0]!.id).not.toBe(projectedNflCam[0]!.id);
+    const casualCfbCam = projectedCfbCam.filter((subject) => subject.casualEligible);
+    const casualNflCam = projectedNflCam.filter((subject) => subject.casualEligible);
+    expect(casualCfbCam).toHaveLength(1);
+    expect(casualNflCam).toHaveLength(1);
+    expect(projectedCfbCam.some((subject) => subject.recognizabilityTier === "D")).toBe(true);
+    expect(projectedNflCam.some((subject) => subject.recognizabilityTier === "D")).toBe(true);
+    expect(casualCfbCam[0]!.id).not.toBe(casualNflCam[0]!.id);
 
     const cfbCarroll = getFootballSubject("pete-carroll-cfb");
     const nflCarroll = getFootballSubject("pete-carroll");
