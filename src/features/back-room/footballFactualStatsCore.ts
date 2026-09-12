@@ -265,7 +265,18 @@ function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[])
 }
 function projectedGapFillRecords(projected: readonly FootballFactualRecord[], owned: readonly FootballFactualRecord[]) {
   const ownedKeys=new Set(owned.flatMap((record)=>record.facts.map((fact)=>`${record.subjectId}:${fact.metricId}`)));
-  return projected.flatMap((record)=>{ const canonicalSubject=getFootballSubject(record.subjectId); if (!canonicalSubject) return []; const subjectId=canonicalSubject.id; const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`)); return facts.length ? [{...record,subjectId,facts}] : []; });
+  const directProjectedSubjectIds = new Set(projected.map((record) => record.subjectId));
+  return projected.flatMap((record)=>{
+    const canonicalSubject=getFootballSubject(record.subjectId);
+    if (!canonicalSubject) return [];
+    const subjectId=canonicalSubject.id;
+    // When both the reviewed canonical subject and its raw source placeholder are projected,
+    // the direct canonical record owns the factual gap fill. The source placeholder remains
+    // queryable through the registry but cannot inject a second, competing factual record.
+    if (record.subjectId !== subjectId && directProjectedSubjectIds.has(subjectId)) return [];
+    const facts=record.facts.filter((fact)=>!ownedKeys.has(`${subjectId}:${fact.metricId}`));
+    return facts.length ? [{...record,subjectId,facts}] : [];
+  });
 }
 
 const preStage13FactualRecords=mergeCanonicalFactualRecords([...compatibilityFactualRecords,...expandedFootballFactualRecords,...footballNflATierResumeFactualRecords,...footballStage16CfbQbCareerFactualRecords]);
