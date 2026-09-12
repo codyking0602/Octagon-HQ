@@ -286,6 +286,13 @@ for (const subject of [...footballSubjects, ...projectedPlayerSourceSubjects]) {
   if (!projectionId || projectionId === subject.id) continue;
   const existing = footballSubjectById.get(projectionId);
   if (existing && existing.id !== subject.id) {
+    // An exact projected source placeholder may be replaced by the curated
+    // canonical subject that explicitly resolves to that same source identity.
+    // Other same-name source athletes keep owning their exact ids.
+    if (canonicalSubjectIds.has(subject.id) && existing.id === projectionId) {
+      footballSubjectById.set(projectionId, subject);
+      continue;
+    }
     throw new Error(`Conflicting Football source identity: ${projectionId} -> ${existing.id}/${subject.id}`);
   }
   footballSubjectById.set(projectionId, subject);
