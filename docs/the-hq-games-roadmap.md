@@ -32,9 +32,11 @@ Final future mixes:
 
 20 Questions remains retired.
 
-### NEXT
+### ACTIVE
 
 **Stage 12 — Draft Room foundation + Build a QB.**
+
+During Stage 12 development, Draft Room is an owner/admin preview only. Reuse the existing authenticated `canControlPicks` owner projection for access; do not add a second admin system. Keep both Play-library discovery and the direct Draft Room route unavailable to non-admin members until Cody explicitly approves public release.
 
 Do not reopen Stage 11 mechanics unless a concrete defect or explicit product decision requires it.
 
@@ -478,8 +480,8 @@ Do not restart completed identity research merely to increase counts. New facts 
 
 **Slice 3 — NEXT: Who Am I Daily readiness measurement.** Establish the minimum canonical evidence for real solve-window and recovery outcomes without creating a second game/runtime owner. Do not activate Daily until a later server-owned Daily contract and explicit rotation decision are complete.
 
-### PR 12 — Draft Room foundation + Build a QB
-Extend/reuse the canonical strategic challenge backend safely, launch Football Draft Room and Build a QB, prove canonical trait grading, bankroll/nomination behavior, challenge lifecycle, backend verification, and mobile presentation.
+### ▶ PR 12 — Draft Room foundation + Build a QB
+**ACTIVE — ADMIN PREVIEW ONLY.** Extend/reuse the canonical strategic challenge backend safely, launch Football Draft Room and Build a QB, prove canonical trait grading, bankroll/nomination behavior, challenge lifecycle, backend verification, and mobile presentation. Keep Draft Room behind the existing authenticated owner permission until Cody explicitly approves public release.
 
 ### PR 13 — Draft Room position builders
 Add RB, WR, DE/EDGE, CB, Safety, and LB builders using canonical trait owners and one Draft Room lifecycle.
