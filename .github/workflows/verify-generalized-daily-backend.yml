@@ -210,7 +210,6 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310031_hit_the_number_daily_formats.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310034_allow_daily_rank_keep_combo_publication.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310035_daily_rank_keep_combo_rotation.sql
-            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310040_hit_the_number_price_is_right_scoring.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310052_football_daily_challenge_persistence.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310081_football_daily_midday_release.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310092_who_am_i_daily_runtime.sql
