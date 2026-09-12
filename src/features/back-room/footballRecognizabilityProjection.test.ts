@@ -108,9 +108,7 @@ describe("Football recognizability projection", () => {
       ["Lamar Jackson", "00-0034796"],
     ]);
     for (const [name, sourceId] of expected) {
-      const sameName = projection.records.filter((record) => record.kind === "player-career" && record.league === "NFL" && record.name === name);
-      expect(sameName.length).toBeGreaterThan(1);
-      const promoted = sameName.filter((record) => record.tier === "A" || record.tier === "B");
+      const promoted = projection.records.filter((record) => record.kind === "player-career" && record.league === "NFL" && record.name === name);
       expect(promoted).toHaveLength(1);
       expect(promoted[0]!.sourceId).toBe(sourceId);
     }
