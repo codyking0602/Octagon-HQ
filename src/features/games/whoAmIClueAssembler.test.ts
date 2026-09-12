@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { footballCfbPlayerSeasonRecognitionRecords } from "../back-room/footballCfbPlayerSeasonRecognition";
 import { getFootballPersonIdentityKnowledge } from "../back-room/footballPersonIdentityKnowledge";
 import { getFootballFact, getFootballFactualRecord, type FootballFactMetricId } from "../back-room/footballFactualStatsCore";
 import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
@@ -190,6 +191,100 @@ describe("Who Am I Slice 13 quality regressions", () => {
 });
 
 describe("Who Am I football scope-aware clue aggregation", () => {
+  it("keeps CFB school clues inside the authoritative season-affiliation set", () => {
+    const seasonRowsBySourceId = new Map<string, typeof footballCfbPlayerSeasonRecognitionRecords>();
+    for (const season of footballCfbPlayerSeasonRecognitionRecords) {
+      const rows = seasonRowsBySourceId.get(season.sourceId) ?? [];
+      rows.push(season);
+      seasonRowsBySourceId.set(season.sourceId, rows);
+    }
+
+    const pool = getFootballWhoAmILaunchPool("CFB");
+    const universe = getFootballWhoAmIUniverse("CFB");
+    const candidateById = new Map(universe.candidates.map((candidate) => [candidate.id, candidate]));
+
+    let sourceBackedPlayers = 0;
+    for (const subject of pool.players) {
+      const sourceIds = subject.sourceIdentityKeys
+        .filter((key) => key.provider === "cfbfastR")
+        .map((key) => String(key.id));
+      const seasons = sourceIds.flatMap((sourceId) => seasonRowsBySourceId.get(sourceId) ?? [])
+        .filter((season) => (
+          (subject.startSeason == null || season.season >= subject.startSeason)
+          && (subject.endSeason == null || season.season <= subject.endSeason)
+        ));
+      if (!seasons.length) continue;
+      sourceBackedPlayers += 1;
+
+      const supportedSchools = new Set(seasons.map((season) => normalize(season.school)));
+      const candidate = candidateById.get(subject.id)!;
+      const explicitSchoolClues = candidate.clues.filter((clue) => (
+        clue.id === "school" || clue.id === "role-school" || clue.id.startsWith("affiliation:")
+      ));
+
+      for (const clue of explicitSchoolClues) {
+        const supported = [...supportedSchools].some((school) => normalize(clue.text).includes(school));
+        expect(supported, `${subject.name} surfaced unsupported school clue: ${clue.text}`).toBe(true);
+      }
+
+      if (supportedSchools.size === 1) {
+        expect(candidate.clues.find((clue) => clue.id === "school")?.text).toContain(seasons[0]!.school);
+      }
+    }
+
+    expect(sourceBackedPlayers).toBeGreaterThan(50);
+  });
+
+  it("keeps source-backed CFB career totals plausible for the player's primary role", () => {
+    const pool = getFootballWhoAmILaunchPool("CFB");
+    const primaryMetricByPosition = {
+      QB: ["cfb-career-passing-attempts", "cfb-career-passing-yards", "cfb-best-season-passing-yards"],
+      RB: ["cfb-career-rushing-attempts", "cfb-career-rushing-yards", "cfb-best-season-rushing-yards"],
+      WR: ["cfb-career-receptions", "cfb-career-receiving-yards", "cfb-best-season-receiving-yards"],
+      TE: ["cfb-career-receptions", "cfb-career-receiving-yards", "cfb-best-season-receiving-yards"],
+    } as const;
+
+    let checked = 0;
+    for (const subject of pool.players) {
+      if (!(subject.position && subject.position in primaryMetricByPosition)) continue;
+      const metrics = primaryMetricByPosition[subject.position as keyof typeof primaryMetricByPosition];
+      const record = getFootballFactualRecord(subject.id);
+      for (const fact of record?.facts ?? []) {
+        if (!metrics.includes(fact.metricId as never)) continue;
+        if (!fact.evidence.sourceIds.includes("cfbfast-r-factual-universe")) continue;
+        expect(
+          footballWhoAmIMetricFactIsPlayable(subject, fact),
+          `${subject.name} has implausible ${fact.metricId}=${fact.value}`,
+        ).toBe(true);
+        checked += 1;
+      }
+    }
+
+    expect(checked).toBeGreaterThan(30);
+  });
+
+  it("never lets a best CFB season exceed its matching career total", () => {
+    const metricPairs = [
+      ["cfb-best-season-passing-yards", "cfb-career-passing-yards"],
+      ["cfb-best-season-rushing-yards", "cfb-career-rushing-yards"],
+      ["cfb-best-season-receiving-yards", "cfb-career-receiving-yards"],
+      ["cfb-best-season-receptions", "cfb-career-receptions"],
+      ["cfb-best-season-sacks", "cfb-career-sacks"],
+      ["cfb-best-season-defensive-interceptions", "cfb-career-defensive-interceptions"],
+    ] as const;
+
+    for (const subject of getFootballWhoAmILaunchPool("CFB").players) {
+      const facts = new Map((getFootballFactualRecord(subject.id)?.facts ?? []).map((fact) => [fact.metricId, fact.value]));
+      for (const [bestMetric, careerMetric] of metricPairs) {
+        const best = facts.get(bestMetric);
+        const career = facts.get(careerMetric);
+        if (best == null || career == null) continue;
+        expect(best, `${subject.name}: ${bestMetric} exceeds ${careerMetric}`).toBeLessThanOrEqual(career);
+      }
+    }
+  });
+
+
   it("classifies specific clue meaning before generic college or team words", () => {
     expect(whoAmIClueFacet({
       id: "fact:cfb-career-passing-yards",
