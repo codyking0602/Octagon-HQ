@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **3,778**
+Canonical A/B/C subjects: **4,118**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -10,14 +10,14 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 
 | Pool | Universe | A | B | C | Full | Partial | Identity-only | Missing fact groups | Historical review | Omissions |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| QB | 134 | 29 | 43 | 62 | 132 | 2 | 0 | 2 | 0 | 0 |
-| RB | 174 | 23 | 34 | 117 | 171 | 3 | 0 | 3 | 0 | 0 |
-| WR | 236 | 7 | 47 | 182 | 236 | 0 | 0 | 0 | 0 | 0 |
-| TE | 73 | 2 | 12 | 59 | 72 | 1 | 0 | 1 | 0 | 0 |
+| QB | 133 | 27 | 44 | 62 | 133 | 0 | 0 | 0 | 0 | 0 |
+| RB | 178 | 20 | 36 | 122 | 178 | 0 | 0 | 0 | 0 | 0 |
+| WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
+| TE | 73 | 1 | 12 | 60 | 72 | 1 | 0 | 1 | 0 | 0 |
 | OL | 59 | 15 | 42 | 2 | 59 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 304 | 9 | 41 | 254 | 302 | 2 | 0 | 2 | 0 | 0 |
-| LB | 235 | 7 | 37 | 191 | 213 | 22 | 0 | 22 | 0 | 0 |
-| Secondary | 399 | 8 | 49 | 342 | 398 | 1 | 0 | 1 | 0 | 0 |
+| DL / EDGE | 318 | 7 | 41 | 270 | 317 | 1 | 0 | 1 | 0 | 0 |
+| LB | 240 | 5 | 38 | 197 | 220 | 20 | 0 | 20 | 0 | 0 |
+| Secondary | 414 | 7 | 49 | 358 | 414 | 0 | 0 | 0 | 0 | 0 |
 | K / P | 19 | 6 | 12 | 1 | 19 | 0 | 0 | 0 | 0 | 0 |
 | Player seasons | 764 | 107 | 318 | 339 | 764 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 113 | 4 | 37 | 72 | 113 | 0 | 0 | 0 | 0 | 0 |
@@ -35,11 +35,11 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | WR | 85 | 6 | 18 | 61 | 75 | 10 | 0 | 10 | 0 | 0 |
 | TE | 35 | 1 | 20 | 14 | 24 | 11 | 0 | 11 | 0 | 0 |
 | OL | 58 | 2 | 24 | 32 | 58 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 47 | 9 | 22 | 16 | 29 | 18 | 0 | 18 | 0 | 0 |
+| DL / EDGE | 47 | 8 | 22 | 17 | 29 | 18 | 0 | 18 | 0 | 0 |
 | LB | 41 | 5 | 15 | 21 | 30 | 11 | 0 | 11 | 0 | 0 |
-| Secondary | 46 | 10 | 24 | 12 | 36 | 10 | 0 | 10 | 0 | 0 |
+| Secondary | 46 | 9 | 25 | 12 | 36 | 10 | 0 | 10 | 0 | 0 |
 | K / P | 29 | 0 | 14 | 15 | 5 | 24 | 0 | 24 | 0 | 0 |
-| Player seasons | 105 | 12 | 4 | 89 | 105 | 0 | 0 | 0 | 0 | 0 |
+| Player seasons | 394 | 12 | 25 | 357 | 394 | 0 | 0 | 0 | 0 | 0 |
 | Team seasons | 132 | 6 | 42 | 84 | 132 | 0 | 0 | 0 | 0 | 0 |
 | Franchises / programs | 106 | 5 | 13 | 88 | 101 | 5 | 0 | 10 | 0 | 0 |
 | Head coaches | 46 | 11 | 22 | 13 | 46 | 0 | 0 | 0 | 0 | 0 |
@@ -293,7 +293,6 @@ None.
 - CFB WR: **Jeff Samardzija** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - CFB WR: **Robert Woods** — C, Partial; missing WR receiving facts; source limits: career timing is unresolved, so normalized-source completeness cannot be inferred; normalized CFB player production begins in 2014.
 - NFL DL / EDGE: **Joe Greene** — A, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL DL / EDGE: **Reggie White** — A, Partial; missing DL/EDGE disruption facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL Eras / dynasties: **Cleveland Browns — Paul Brown NFL dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Eras / dynasties: **Dallas Cowboys — Triplets dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
 - NFL Eras / dynasties: **Green Bay Packers — Lombardi dynasty** — A, Partial; missing objective era results, era championship/postseason context; source limits: NFL relationship results do not reach this subject's historical window; normalized NFL relationship coverage begins in 1999.
@@ -393,8 +392,6 @@ None.
 - NFL Head coaches: **Tom Coughlin** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Head coaches: **Zac Taylor** — C, Partial; missing coaching results, coaching championship/postseason context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL LB: **Dick Butkus** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL LB: **Dick Butkus** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL LB: **Lawrence Taylor** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Sam Huff** — A, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Andre Tippett** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL LB: **Bobby Bell** — B, Partial; missing LB tackle/disruption/turnover facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
@@ -487,10 +484,4 @@ None.
 - NFL Notable games / misc: **2025 Rams at Seahawks — Week 16 overtime comeback** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Notable games / misc: **Super Bowl LIX — Chiefs vs Eagles** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
 - NFL Notable games / misc: **Super Bowl LX — Seahawks vs Patriots** — C, Partial; missing game final score, game context; source limits: normalized NFL relationship coverage begins in 1999.
-- NFL QB: **Joe Montana** — A, Partial; missing QB passing facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL QB: **Johnny Unitas** — A, Partial; missing QB passing facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Gale Sayers** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Jim Brown** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL RB: **Walter Payton** — A, Partial; missing RB rushing/scrimmage facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
-- NFL Secondary: **Ronnie Lott** — A, Partial; missing secondary interception/PBU/tackle facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
 - NFL TE: **John Mackey** — A, Partial; missing TE receiving facts; source limits: NFL normalized player stats do not reach this career/season; normalized NFL player production begins in 1999.
