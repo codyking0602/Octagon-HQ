@@ -39,6 +39,7 @@ type CfbSeed = readonly [
   provider?: FootballSourceProviderId,
   startSeason?: number,
   endSeason?: number,
+  activeDecades?: readonly number[],
 ];
 type NflSeed = readonly [
   id: string,
@@ -62,7 +63,8 @@ const cfb = (
   provider: FootballSourceProviderId = "sports-reference",
   startSeason?: number,
   endSeason?: number,
-): CfbSeed => [id, name, position, school, tier, basis, provider, startSeason, endSeason];
+  activeDecades?: readonly number[],
+): CfbSeed => [id, name, position, school, tier, basis, provider, startSeason, endSeason, activeDecades];
 
 const cfbSeeds: readonly CfbSeed[] = [
   // Quarterbacks — college identity is independent from NFL success.
@@ -254,7 +256,7 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-gerald-mccoy", "Gerald McCoy", "DL", "Oklahoma", "B"),
   cfb("cfb-ndamukong-suh", "Ndamukong Suh", "DL", "Nebraska", "A", "major-award-or-hall-of-fame", "official-cfb-awards"),
   cfb("cfb-terrence-cody", "Terrence Cody", "DL", "Alabama"),
-  cfb("cfb-jj-watt", "J.J. Watt", "DL", "Wisconsin", "B", "first-team-all-america", "sports-reference", 2009, 2010),
+  cfb("cfb-jj-watt", "J.J. Watt", "DL", "Wisconsin", "B", "first-team-all-america", "sports-reference", undefined, undefined, [2000]),
   cfb("cfb-nick-fairley", "Nick Fairley", "DL", "Auburn"),
   cfb("cfb-daquan-bowers", "Da'Quan Bowers", "DL", "Clemson"),
   cfb("cfb-melvin-ingram", "Melvin Ingram", "DL", "South Carolina"),
@@ -304,7 +306,7 @@ const cfbSeeds: readonly CfbSeed[] = [
   cfb("cfb-isaiah-simmons", "Isaiah Simmons", "LB", "Clemson", "B"),
   cfb("cfb-micah-parsons", "Micah Parsons", "LB", "Penn State", "B"),
   cfb("cfb-jeremiah-owusu-koramoah", "Jeremiah Owusu-Koramoah", "LB", "Notre Dame"),
-  cfb("cfb-nakobe-dean", "Nakobe Dean", "LB", "Georgia", "B", "first-team-all-america", "sports-reference", 2019, 2021),
+  cfb("cfb-nakobe-dean", "Nakobe Dean", "LB", "Georgia", "B", "first-team-all-america", "sports-reference", undefined, undefined, [2010, 2020]),
   cfb("cfb-jack-campbell", "Jack Campbell", "LB", "Iowa"),
   cfb("cfb-payton-wilson", "Payton Wilson", "LB", "NC State"),
   cfb("cfb-edgerrin-cooper", "Edgerrin Cooper", "LB", "Texas A&M"),
@@ -509,7 +511,7 @@ const gameSeeds: readonly GameSeed[] = [
 ] as const;
 
 const cfbRecords = cfbSeeds.map(([
-  id, name, position, school, tier, basis = "first-team-all-america", provider = "sports-reference", startSeason, endSeason,
+  id, name, position, school, tier, basis = "first-team-all-america", provider = "sports-reference", startSeason, endSeason, activeDecades,
 ]): FootballRecognitionEvidenceRecord => ({
   id,
   name,
@@ -519,7 +521,7 @@ const cfbRecords = cfbSeeds.map(([
   school,
   ...(startSeason != null ? { startSeason } : {}),
   ...(endSeason != null ? { endSeason } : {}),
-  ...(startSeason != null && endSeason != null ? {
+  ...(activeDecades?.length ? { activeDecades } : startSeason != null && endSeason != null ? {
     activeDecades: Array.from(
       { length: Math.floor(endSeason / 10) - Math.floor(startSeason / 10) + 1 },
       (_, index) => (Math.floor(startSeason / 10) + index) * 10,
