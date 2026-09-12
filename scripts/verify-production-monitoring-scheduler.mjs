@@ -134,6 +134,18 @@ if (expectedActive) {
     findings,
   };
   const completedAt = Date.parse(latestDecision.completed_at ?? "");
+  const nextEligibleAt = Math.max(
+    ...latestDecision.diagnostics
+      .map((item) => Date.parse(item?.next_eligible_at ?? ""))
+      .filter(Number.isFinite),
+    Number.NEGATIVE_INFINITY,
+  );
+  const truthfulNotDueCarryForward = latestDecision.status === "skipped"
+    && latestDecision.decision_reason === "not_due"
+    && latestDecision.provider_called === false
+    && Number.isFinite(nextEligibleAt)
+    && nextEligibleAt >= lastWakeStartedAt
+    && now - completedAt <= maximumWakeAgeMs;
   const allowedStatuses = new Set(["completed", "partial", "failed", "skipped"]);
   const preProviderFailureReasons = new Set([
     "notification_dispatch_failed",
@@ -147,7 +159,7 @@ if (expectedActive) {
   if (!allowedStatuses.has(latestDecision.status)
     || typeof latestDecision.provider_called !== "boolean"
     || !Number.isFinite(completedAt)
-    || completedAt < lastWakeStartedAt - wakeDecisionToleranceMs
+    || (!truthfulNotDueCarryForward && completedAt < lastWakeStartedAt - wakeDecisionToleranceMs)
     || completedAt > now + wakeDecisionToleranceMs
     || (latestDecision.status === "skipped" && latestDecision.provider_called !== false)
     || (["completed", "partial"].includes(latestDecision.status) && latestDecision.provider_called !== true)

@@ -24,6 +24,15 @@ describe("daily challenge runtime cold-start isolation", () => {
     );
   });
 
+  it("keeps Who Am I authority split by sport so UFC cold starts do not import Football research", () => {
+    const ufcRuntime = readFileSync("src/features/play/todaysChallengeRuntime.ts", "utf8");
+    const footballRuntime = readFileSync("src/features/play/footballTodayChallengeRuntime.ts", "utf8");
+    expect(ufcRuntime).toContain('from "../games/ufcWhoAmIAuthority"');
+    expect(ufcRuntime).not.toContain('from "../games/whoAmIAuthority"');
+    expect(ufcRuntime).not.toContain("footballWhoAmIAuthority");
+    expect(footballRuntime).toContain('from "../games/footballWhoAmIAuthority"');
+  });
+
   it("loads the Football runtime only through the Football request path", () => {
     expect(runtime).toContain('function loadFootballRuntime()');
     expect(runtime).toContain('import("./football-runtime.generated.mjs")');

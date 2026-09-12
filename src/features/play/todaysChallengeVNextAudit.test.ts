@@ -66,18 +66,18 @@ describe("Stage 11 Today’s Challenge vNext audit", () => {
     expect(dailyDouble.scoringVersion).toBe("play-official-score-v4");
   });
 
-  it("keeps Who Am I replayable-only until a separate Daily contract is approved", () => {
+  it("promotes Who Am I into the existing official Daily contract without changing casual default", () => {
     for (const sport of ["ufc", "football"] as const) {
       const game = playGameDefinition("who-am-i", sport);
       expect(game.availability).toBeUndefined();
       expect(game.lineup).toMatchObject({
         defaultType: "replayable",
-        supportedTypes: ["replayable"],
+        supportedTypes: ["daily", "replayable"],
         challengeEligible: false,
-        dailyEligible: false,
-        streakEligible: false,
-        reminderEligible: false,
-        historyRecording: "casual-only",
+        dailyEligible: true,
+        streakEligible: true,
+        reminderEligible: true,
+        historyRecording: "official-daily-and-casual",
       });
     }
   });

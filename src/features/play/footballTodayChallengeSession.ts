@@ -185,6 +185,25 @@ function grade(
     };
   }
 
+  if (gameType === "who_am_i") {
+    const score = Number(context.publicState.score ?? 0);
+    if (!Number.isInteger(score) || score < 0 || score > 100) throw new Error("Football Who Am I score is invalid.");
+    const outcome = String(finalSubmission.outcome ?? "");
+    const revealedCount = Number(finalSubmission.revealed_count ?? 0);
+    return {
+      native: score,
+      normalized: score,
+      result: {
+        outcome,
+        revealed_count: revealedCount,
+        wrong_guesses: stringArray(finalSubmission.natural_guesses ?? [], "Football Who Am I natural guesses").filter(
+          (id) => id !== String(context.privateGradingEvidence.hidden_subject_id ?? ""),
+        ).length,
+        recovery_guesses: stringArray(finalSubmission.recovery_guesses ?? [], "Football Who Am I Recovery guesses"),
+      },
+    };
+  }
+
   if (gameType === "keep_4_cut_4") {
     const kept = stringArray(finalSubmission.kept_ids, "Football Keep Cut kept ids");
     const board = stringArray(context.privateGradingEvidence.fighter_ids, "Football Keep Cut board ids");

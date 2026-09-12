@@ -1,3 +1,4 @@
+import { createFootballWhoAmIRound } from "../games/footballWhoAmIAuthority";
 import {
   buildFootballBlindResumeRounds,
   footballBlindResumeNextRevealCount,
@@ -39,6 +40,10 @@ import {
   type FootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
+import {
+  advanceWhoAmIDailyRuntime,
+  buildWhoAmIDailyPublication,
+} from "./whoAmIDailyRuntime";
 import {
   OFFICIAL_SCORE_CONTRACT_VERSION,
   WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,
@@ -361,6 +366,16 @@ export function buildFootballOfficialDailySetup(
     case "blind_rank_5": return buildBlindRankSetup(day, scheduleVersion);
     case "keep_4_cut_4": return buildKeepCutSetup(day, scheduleVersion);
     case "hit_the_number": return buildHitTheNumberSetup(day, scheduleVersion);
+    case "who_am_i": return buildWhoAmIDailyPublication(
+      createFootballWhoAmIRound(
+        seededLineupRandom(FOOTBALL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
+        {},
+      ),
+      day,
+      scheduleVersion,
+      FOOTBALL_DAILY_RUNTIME_VERSION,
+      OFFICIAL_SCORE_CONTRACT_VERSION,
+    );
     default: throw new Error(`Unsupported Football official daily game ${String(gameType)}.`);
   }
 }
@@ -587,6 +602,7 @@ export function advanceFootballOfficialDailyRuntime(
     case "blind_rank_5": return advanceBlindRank(context, parsed);
     case "keep_4_cut_4": return advanceKeepCut(context, parsed);
     case "hit_the_number": return advanceHitTheNumber(context, parsed);
+    case "who_am_i": return advanceWhoAmIDailyRuntime(context, parsed);
     default: throw new Error(`Unsupported Football official daily game ${String(context.gameType)}.`);
   }
 }

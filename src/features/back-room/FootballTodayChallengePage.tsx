@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
+import { OfficialWhoAmIDailyView } from "../play/OfficialWhoAmIDailyView";
 import {
   createTodayChallengeRepository,
   TodayChallengeRepositoryError,
@@ -33,6 +34,7 @@ const GAME_LABELS = {
   blind_rank_5: "BLIND RANK 5",
   keep_4_cut_4: "KEEP 4 / CUT 4",
   hit_the_number: "HIT THE NUMBER",
+  who_am_i: "WHO AM I?",
 } as const;
 
 type JsonRecord = Record<string, unknown>;
@@ -544,7 +546,7 @@ export default function FootballTodayChallengePage() {
         )}
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
-        {!blindResume ? <ScoreCard projection={projection} /> : null}
+        {!blindResume && projection.gameType !== "who_am_i" ? <ScoreCard projection={projection} /> : null}
         {projection.officialAttempt ? (
           <div className="football-today-result-actions">
             <button className="football-today-primary" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
@@ -558,6 +560,7 @@ export default function FootballTodayChallengePage() {
         {projection.gameType === "blind_rank_5" ? <BlindRank projection={projection} advance={advance} /> : null}
         {projection.gameType === "keep_4_cut_4" ? <KeepCut projection={projection} advance={advance} /> : null}
         {projection.gameType === "hit_the_number" ? <HitTheNumber projection={projection} advance={advance} /> : null}
+        {projection.gameType === "who_am_i" ? <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={advance} /> : null}
       </section>
     </div>
   );

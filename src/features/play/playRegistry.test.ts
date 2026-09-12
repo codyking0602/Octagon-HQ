@@ -15,12 +15,15 @@ const expectedIds: PlayGameId[] = [
 
 const officialDailyIds: PlayGameId[] = [
   "hit-the-number",
+  "who-am-i",
   "find-leader",
   "wavelength",
   "blind-resume",
   "blind-rank",
   "keep-cut",
 ];
+
+const challengeableDailyIds = officialDailyIds.filter((id) => id !== "who-am-i");
 
 describe("Play game lineup contracts", () => {
   it("keeps retired games out of the default public registry while Who Am I is live", () => {
@@ -45,7 +48,7 @@ describe("Play game lineup contracts", () => {
     }
   });
 
-  it("declares the six canonical official daily, streak, and reminder-eligible games", () => {
+  it("declares the seven canonical official daily, streak, and reminder-eligible games", () => {
     const dailyGames = playGames.filter((game) => game.lineup.dailyEligible);
     const streakGames = playGames.filter((game) => game.lineup.streakEligible);
     const reminderGames = playGames.filter((game) => game.lineup.reminderEligible);
@@ -55,28 +58,29 @@ describe("Play game lineup contracts", () => {
 
     for (const gameId of officialDailyIds) {
       expect(playGameDefinition(gameId).lineup).toMatchObject({
-        supportedTypes: ["daily", "replayable", "curated"],
         historyRecording: "official-daily-and-casual",
         dailyEligible: true,
         streakEligible: true,
         reminderEligible: true,
       });
+      expect(playGameDefinition(gameId).lineup.supportedTypes).toContain("daily");
+      expect(playGameDefinition(gameId).lineup.supportedTypes).toContain("replayable");
     }
   });
 
-  it("keeps Who Am I replayable-only without activating Daily or challenge ownership", () => {
+  it("adds official Daily ownership to Who Am I without changing casual replay or enabling direct challenges", () => {
     expect(playGameDefinition("who-am-i").lineup).toMatchObject({
       defaultType: "replayable",
-      supportedTypes: ["replayable"],
+      supportedTypes: ["daily", "replayable"],
       replayBehavior: "new-lineup",
       newLineupControl: "result-replay",
       lineupSize: 1,
       completionState: "identity-guessed-or-clue-limit",
       challengeEligible: false,
-      dailyEligible: false,
-      streakEligible: false,
-      reminderEligible: false,
-      historyRecording: "casual-only",
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
     });
   });
 
@@ -98,7 +102,7 @@ describe("Play game lineup contracts", () => {
   });
 
   it("preserves casual new-lineup play and exact direct challenges for the Daily challenge games", () => {
-    for (const gameId of officialDailyIds) {
+    for (const gameId of challengeableDailyIds) {
       const contract = playGameDefinition(gameId).lineup;
       expect(contract.defaultType).toBe("replayable");
       expect(contract.supportedTypes).toContain("curated");
