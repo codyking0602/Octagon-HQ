@@ -78,11 +78,13 @@ describe("SportProvider", () => {
     expect(tokensSource).toContain('[data-hq-theme="ufc"]');
     expect(tokensSource).toContain("--hq-context-accent: var(--ufc-red);");
     expect(tokensSource).toContain('[data-hq-theme="football"]');
-    expect(tokensSource).toContain("--hq-context-accent: #1f4e79;");
-    expect(tokensSource).toContain("--hq-context-accent-strong: #5f8fb8;");
-    expect(tokensSource).toContain("--hq-context-accent-rgb: 31, 78, 121;");
-    expect(tokensSource).toContain("--hq-context-accent-soft: rgba(31, 78, 121, .42);");
-    expect(tokensSource).toContain("--hq-context-accent-border: rgba(95, 143, 184, .58);");
+    expect(tokensSource).toContain("--football-electric-blue: #2f7df6;");
+    expect(tokensSource).toContain("--football-electric-blue-rgb: 47, 125, 246;");
+    expect(tokensSource).toContain("--hq-context-accent: var(--football-electric-blue);");
+    expect(tokensSource).toContain("--hq-context-accent-strong: var(--football-electric-blue);");
+    expect(tokensSource).toContain("--hq-context-accent-rgb: var(--football-electric-blue-rgb);");
+    expect(tokensSource).toContain("--hq-context-accent-soft: rgba(var(--football-electric-blue-rgb), .16);");
+    expect(tokensSource).toContain("--hq-context-accent-border: rgba(var(--football-electric-blue-rgb), .48);");
     expect(sportContextStyles).toContain("var(--hq-neutral-accent-rgb)");
     expect(sportContextStyles).toContain("--football-accent: var(--hq-context-accent);");
     expect(sportContextStyles).toContain("--football-accent-rgb: var(--hq-context-accent-rgb);");
