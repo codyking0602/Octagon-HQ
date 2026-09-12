@@ -52,6 +52,10 @@ function gameProgress(projection: TodayChallengeProjection) {
       const cut = Array.isArray(state.cut) ? state.cut.length : 0;
       return `${kept + cut}/8 CALLS`;
     }
+    case "who_am_i":
+      return state.phase === "recovery"
+        ? "RECOVERY BOARD"
+        : `${Number(state.revealed_count ?? 2)}/10 CLUES`;
   }
 }
 
