@@ -374,10 +374,25 @@ allRecords.sort((a, b) => `${a.kind}:${a.id}`.localeCompare(`${b.kind}:${b.id}`)
 const promoted = allRecords.filter((record) => record.tier !== "D").map(({ evidence, manualA, ...record }) => record);
 // Registration and eligibility are separate. Keep every exact player source identity,
 // including Tier D rows, so same-name athletes remain distinguishable in the registry.
-// Non-player source depth remains promotion-gated.
-const registryRecords = allRecords
-  .filter((record) => record.kind === "player-career" || record.tier !== "D")
-  .map(({ evidence, manualA, ...record }) => record);
+// The source registry is tuple-compressed because these are generated reconciliation
+// identities, not a second authored player universe.
+const playerSourceRegistry = {
+  nfl: nflProjected.map((record) => [
+    record.sourceId,
+    record.name,
+    record.position ?? "",
+    record.startSeason ?? 0,
+    record.endSeason ?? 0,
+  ]),
+  cfb: cfbProjected.map((record) => [
+    record.sourceId,
+    record.name,
+    record.position ?? "",
+    record.school ?? "",
+    record.startSeason ?? 0,
+    record.endSeason ?? 0,
+  ]),
+};
 const countBy = (rows, field) => Object.fromEntries([...new Set(rows.map((r) => r[field] ?? "unknown"))].sort().map((value) => [value, rows.filter((r) => (r[field] ?? "unknown") === value).length]));
 const tierCount = (rows) => Object.fromEntries(["A", "B", "C", "D"].map((tier) => [tier, rows.filter((r) => r.tier === tier).length]));
 const playerRecords = allRecords.filter((record) => record.kind === "player-career");
@@ -392,13 +407,14 @@ const summary = {
   manualARecordCount: allRecords.filter((r) => r.manualA).length,
 };
 const output = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   methodology: "recognizability-not-greatness; fixed position-aware player thresholds, conservative non-player rules, explicit A approvals, no percentile ranking",
   manualApprovals: [...approvedAPlayers].sort(),
   manualBApprovals: [...approvedBPlayers].sort(),
   manualCfbBIdentityApprovals: [...approvedCfbBIdentityWindows.entries()].map(([name, [startSeason, endSeason]]) => ({ name, startSeason, endSeason })),
   summary,
-  records: registryRecords,
+  records: promoted,
+  playerSourceRegistry,
 };
 fs.writeFileSync(new URL("data/generated/football/recognizability-projection.json", root), `${JSON.stringify(output)}\n`);
 
