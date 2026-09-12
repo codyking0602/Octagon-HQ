@@ -54,6 +54,21 @@ Deno.serve(async (request) => {
 
   const admin = createClient(url, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
   const scheduled = input.mode === "scheduled";
+
+  // Supabase control-plane RPCs occasionally surface a transient PostgREST/auth error
+  // even though the same service-role call succeeds immediately afterward. Scheduled
+  // monitoring must keep one canonical RPC path, so retry that exact call once rather
+  // than inventing a fallback credential, query, or scheduler.
+  const schedulerRpc = async (
+    functionName: string,
+    args: Record<string, unknown> = {},
+  ) => {
+    const first = await admin.rpc(functionName, args);
+    if (!first.error) return first;
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    return admin.rpc(functionName, args);
+  };
+
   const finishScheduledDecision = async (decision: {
     outcome: "skipped" | "failed";
     reason: string;
@@ -63,7 +78,7 @@ Deno.serve(async (request) => {
     providerCalled?: boolean;
   }) => {
     if (!scheduled) return decision.response;
-    const recorded = await admin.rpc("record_pick_monitoring_scheduler_decision", {
+    const recorded = await schedulerRpc("record_pick_monitoring_scheduler_decision", {
       p_outcome: decision.outcome,
       p_reason: decision.reason,
       p_source_event_identity: decision.identity ?? null,
@@ -86,7 +101,7 @@ Deno.serve(async (request) => {
 
   if (scheduled) {
     const schedulerToken = request.headers.get(schedulerHeader) ?? "";
-    const authorized = await admin.rpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
+    const authorized = await schedulerRpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
     if (authorized.error) {
       return safeError(
         503,
@@ -100,7 +115,7 @@ Deno.serve(async (request) => {
 
     // Reuse the one trusted hourly wake-up for all due in-app reminders and owner actions.
     // The database function owns timing and idempotency; this Edge Function adds no scheduler.
-    const dispatched = await admin.rpc("dispatch_due_in_app_notifications", {
+    const dispatched = await schedulerRpc("dispatch_due_in_app_notifications", {
       p_now: new Date().toISOString(),
     });
     if (dispatched.error) {
@@ -132,7 +147,7 @@ Deno.serve(async (request) => {
       });
     }
 
-    const eventState = await admin.rpc("get_pick_monitoring_event_state");
+    const eventState = await schedulerRpc("get_pick_monitoring_event_state");
     if (eventState.error) {
       return finishScheduledDecision({
         outcome: "failed",
@@ -191,7 +206,7 @@ Deno.serve(async (request) => {
         // The due-notification dispatcher ran before the draft existed. Re-run that
         // same idempotent canonical owner once after staging so event_draft_ready is
         // delivered in this wake rather than waiting for the next hourly scheduler run.
-        const stagedDispatch = await admin.rpc("dispatch_due_in_app_notifications", {
+        const stagedDispatch = await schedulerRpc("dispatch_due_in_app_notifications", {
           p_now: stagingNow.toISOString(),
         });
         if (stagedDispatch.error) {
