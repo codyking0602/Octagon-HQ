@@ -109,6 +109,7 @@ jobs:
             supabase/tests/auction_launch_notification.sql \
             supabase/tests/auction_catalog_expansion.sql \
             supabase/tests/auction_standard_format.sql \
+            supabase/tests/stage12_draft_room_build_qb.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql \
             supabase/tests/home_football_spotlight_media.sql
           do
@@ -116,7 +117,7 @@ jobs:
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
           done
 
-          echo "Auction lifecycle and launch-notification SQL tests executed successfully against a fresh local database."
+          echo "Auction lifecycle, Draft Room Stage 12, and launch-notification SQL tests executed successfully against a fresh local database."
           echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
           echo "Football Home Spotlight media SQL test executed successfully against the same fresh local database."
 
