@@ -20,7 +20,10 @@ describe("canonical Football universe", () => {
   it("preserves the factual catalog while enriching its canonical identity view", () => {
     expect(footballSubjects).toHaveLength(footballCanonicalSubjects.length);
     footballCanonicalSubjects.forEach((subject, index) => {
-      expect(footballSubjects[index], subject.id).toMatchObject(subject);
+      const { aliases: expectedAliases, ...expectedSubject } = subject;
+      const actual = footballSubjects[index]!;
+      expect(actual, subject.id).toMatchObject(expectedSubject);
+      for (const alias of expectedAliases ?? []) expect(actual.aliases ?? [], subject.id).toContain(alias);
     });
     expect(footballSubjects.length).toBeGreaterThanOrEqual(250);
     expect(new Set(footballSubjects.map(({ id }) => id)).size).toBe(footballSubjects.length);
