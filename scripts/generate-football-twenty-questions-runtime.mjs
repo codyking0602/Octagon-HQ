@@ -35,7 +35,7 @@ function initialFamilyQuestionLimit(family) {
   if (family === "role") return 2;
   if (family === "position") return 10;
   if (family === "position-family") return 3;
-  if (["franchise", "program", "player-college", "player-program", "historical-conference"].includes(family)) return 12;
+  if (["franchise", "program", "player-college", "player-program", "player-primary-college", "player-primary-program", "historical-conference"].includes(family)) return 12;
   return MAX_INITIAL_QUESTIONS_PER_FAMILY;
 }
 
