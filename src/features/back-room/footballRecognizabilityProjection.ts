@@ -361,21 +361,14 @@ function exactSourceProHallMinimumTier(record: ProjectionRecord) {
 
 const reviewedPlayerSubjects = [...evidencePlayerSubjects, ...repairedPlayerSubjects];
 const reviewedPlayerIds = new Set(reviewedPlayerSubjects.map((subject) => subject.id));
-const reviewedProjectionIds = new Set(
-  reviewedPlayerSubjects
-    .map((subject) => resolveProjectionRecordFor(subject)?.id)
-    .filter((id): id is string => Boolean(id)),
-);
 
 /**
- * One projected player universe. Reviewed identities replace only the exact source
- * rows they can independently reconcile. Same-name source athletes remain distinct.
+ * Registration keeps every exact generated identity. Reviewed identities replace
+ * only exact-id collisions here; the subject registry owns safe source-to-canonical
+ * reconciliation so a wrong same-name source athlete can remain independently queryable.
  */
 export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = [
-  ...generatedProjectedPlayerSubjects.filter((subject) => (
-    !reviewedPlayerIds.has(subject.id)
-    && !reviewedProjectionIds.has(subject.id)
-  )),
+  ...generatedProjectedPlayerSubjects.filter((subject) => !reviewedPlayerIds.has(subject.id)),
   ...evidencePlayerSubjects.filter((subject) => !historicalById.has(subject.id)),
   ...repairedPlayerSubjects,
 ];
