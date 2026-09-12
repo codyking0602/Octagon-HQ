@@ -693,6 +693,33 @@ const output = {
   playerSourceRegistry,
   canonicalPlayerSourceBindings,
 };
+const debugCfbDefensiveNames = new Set([
+  "Montez Sweat", "Jacob Martin", "Arden Key", "Carl Granderson", "Charles Omenihu", "Derek Barnett",
+  "Germaine Pratt", "Uchenna Nwosu", "Lorenzo Carter", "Andrew Van Ginkel", "Jerome Baker", "Dre'Mont Jones",
+  "Cody Barton", "Tremaine Edmunds", "Haason Reddick", "T.J. Watt",
+  "Jaylinn Hawkins", "Juan Thornhill", "Rasul Douglas", "Taylor Rapp", "Rayshawn Jenkins", "Damontae Kazee",
+  "Fred Warner", "Bradley Chubb", "Josh Sweat", "Brian Burns", "A.J. Epenesa", "Micah Parsons",
+  "Carl Lawson", "Clelin Ferrell", "Christian Wilkins", "Dexter Lawrence", "Nick Bosa", "Chase Young",
+  "Xavien Howard", "Justin Simmons", "Minkah Fitzpatrick", "Xavier McKinney", "Travis Hunter"
+]);
+const debugCfbDefensiveStats = cfbPeople
+  .filter((person) => debugCfbDefensiveNames.has(person.name))
+  .map((person) => ({
+    name: person.name,
+    sourceId: person.sourceId,
+    seasons: [...person.seasons].sort(),
+    teams: [...person.teams].sort(),
+    school: person.school,
+    position: exactPosition(person),
+    inferredPosition: inferredCollegeSkillPosition(person),
+    gamesPlayed: total(person, "gamesPlayed"),
+    sacks: total(person, "sacks"),
+    defensiveInterceptions: total(person, "defensiveInterceptions"),
+    passBreakups: total(person, "passBreakups"),
+    defensiveImpact: total(person, "sacks", "defensiveInterceptions"),
+    projectedTier: cfbProjected.find((record) => record.sourceId === person.sourceId && record.name === person.name)?.tier ?? null,
+  }));
+console.log("FOOTBALL_CFB_DEFENSIVE_STATS", JSON.stringify(debugCfbDefensiveStats));
 const debugDefensiveSourceOwnership = allProjectedPlayerSourceRecords
   .filter((record) => record.league === "CFB" && ["DL", "LB", "DB"].includes(record.position) && record.tier !== "D")
   .map((record) => ({
