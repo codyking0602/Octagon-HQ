@@ -218,14 +218,29 @@ function proHallMinimumTierFor(subject: FootballRecognitionFloorIdentity) {
 // canonical bindings can turn source recognition/facts into product identity.
 const promotedPlayerRecords = promotedRecords.filter((record) => record.kind === "player-career");
 
-const historicalPlayerRepairs = footballHistoricalRecognitionRepairs.filter(
-  (repair) => repair.subject.kind === "player-career",
-);
+function canonicalReviewedPlayerId(subjectId: string) {
+  return canonicalPlayerSourceBindingBySourceSubjectId.get(subjectId)?.canonicalId ?? subjectId;
+}
+
+function canonicalizeReviewedPlayerSubject(subject: FootballCanonicalSubject): FootballCanonicalSubject {
+  if (subject.kind !== "player-career") return subject;
+  const canonicalId = canonicalReviewedPlayerId(subject.id);
+  return canonicalId === subject.id ? subject : { ...subject, id: canonicalId };
+}
+
+const historicalPlayerRepairs = footballHistoricalRecognitionRepairs
+  .filter((repair) => repair.subject.kind === "player-career")
+  .map((repair) => ({ ...repair, subject: canonicalizeReviewedPlayerSubject(repair.subject) }));
 const historicalNonPlayerRepairs = footballHistoricalRecognitionRepairs.filter(
   (repair) => repair.subject.kind !== "player-career",
 );
-const historicalById = new Map(footballHistoricalRecognitionRepairs.map((repair) => [repair.subject.id, repair]));
-const recognitionEvidenceById = new Map(footballRecognitionEvidenceRecords.map((record) => [record.id, record]));
+const historicalById = new Map([
+  ...historicalNonPlayerRepairs.map((repair) => [repair.subject.id, repair] as const),
+  ...historicalPlayerRepairs.map((repair) => [repair.subject.id, repair] as const),
+]);
+const recognitionEvidenceById = new Map(
+  footballRecognitionEvidenceRecords.map((record) => [canonicalReviewedPlayerId(record.id), record] as const),
+);
 const historicalByKindLeagueAndName = new Map<string, typeof footballHistoricalRecognitionRepairs[number][]>();
 for (const repair of footballHistoricalRecognitionRepairs) {
   const key = `${repair.subject.kind}:${repair.subject.league}:${normalizedProjectionName(repair.subject.name)}`;
@@ -280,7 +295,8 @@ const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = pr
 });
 
 const evidencePlayerSubjects = footballRecognitionEvidenceSubjects
-  .filter((subject): subject is FootballCanonicalSubject => subject.kind === "player-career");
+  .filter((subject): subject is FootballCanonicalSubject => subject.kind === "player-career")
+  .map(canonicalizeReviewedPlayerSubject);
 const repairedPlayerSubjects = historicalPlayerRepairs.map((repair) => repair.subject);
 const reviewedPlayerIds = new Set(
   [...evidencePlayerSubjects, ...repairedPlayerSubjects].map((subject) => subject.id),
