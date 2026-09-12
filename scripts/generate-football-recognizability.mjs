@@ -62,38 +62,87 @@ const veryRecognizablePrograms = new Set(["auburn", "clemson", "florida", "flori
 function aggregate(corpus, league) {
   const ix = ixFor(corpus);
   const people = new Map();
+  const statFields = [
+    "games", "gamesPlayed", "attempts", "passAttempts", "passingYards", "passYards",
+    "passingTouchdowns", "passTouchdowns", "carries", "rushAttempts", "rushingYards", "rushYards",
+    "rushingTouchdowns", "rushTouchdowns", "receptions", "receivingYards", "receivingTouchdowns",
+    "defensiveSacks", "sacks", "defensiveInterceptions", "fieldGoalsMade", "puntingAttempts",
+  ];
+
   for (const row of corpus.rows) {
     const sourceId = String(at(row, ix, "sourcePlayerId") ?? "");
     const name = at(row, ix, "playerDisplayName") ?? at(row, ix, "playerName");
     if (!sourceId || sourceId === "0" || !name) continue;
     const personKey = league === "CFB" ? `${sourceId}:${normalize(name)}` : sourceId;
-    const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), seasonTeams: new Map(), position: "", totals: {}, peaks: {} };
-    const season = n(at(row, ix, "season")); if (season) p.seasons.add(season);
-    const team = league === "CFB"
-      ? at(row, ix, "team")
-      : at(row, ix, "recentTeam") ?? at(row, ix, "team");
-    if (team) p.teams.add(String(team));
-    if (league === "CFB" && season && team) {
-      const volume = n(at(row, ix, "gamesPlayed")) * 100
-        + n(at(row, ix, "passAttempts"))
-        + n(at(row, ix, "rushAttempts"))
-        + n(at(row, ix, "receptions"))
-        + n(at(row, ix, "sacks")) * 10
-        + n(at(row, ix, "defensiveInterceptions")) * 20
-        + n(at(row, ix, "passBreakups")) * 5;
-      const current = p.seasonTeams.get(season);
-      if (!current || volume > current.volume || (volume === current.volume && String(team).localeCompare(current.team) < 0)) {
-        p.seasonTeams.set(season, { team: String(team), volume });
+    const p = people.get(personKey) ?? {
+      sourceId,
+      name: String(name),
+      league,
+      seasons: new Set(),
+      teams: new Set(),
+      position: "",
+      totals: {},
+      peaks: {},
+      cfbRowsBySeason: new Map(),
+    };
+
+    const season = n(at(row, ix, "season"));
+    if (league === "CFB") {
+      const team = at(row, ix, "team");
+      if (season && team) {
+        const volume = n(at(row, ix, "gamesPlayed")) * 100
+          + n(at(row, ix, "passAttempts"))
+          + n(at(row, ix, "rushAttempts"))
+          + n(at(row, ix, "receptions"))
+          + n(at(row, ix, "sacks")) * 10
+          + n(at(row, ix, "defensiveInterceptions")) * 20
+          + n(at(row, ix, "passBreakups")) * 5;
+        const current = p.cfbRowsBySeason.get(season);
+        if (!current || volume > current.volume || (volume === current.volume && String(team).localeCompare(current.team) < 0)) {
+          p.cfbRowsBySeason.set(season, { row, team: String(team), volume });
+        }
       }
-    }
-    p.position ||= String(at(row, ix, "positionGroup") ?? at(row, ix, "position") ?? "");
-    for (const field of ["games", "gamesPlayed", "attempts", "passAttempts", "passingYards", "passYards", "passingTouchdowns", "passTouchdowns", "carries", "rushAttempts", "rushingYards", "rushYards", "rushingTouchdowns", "rushTouchdowns", "receptions", "receivingYards", "receivingTouchdowns", "defensiveSacks", "sacks", "defensiveInterceptions", "fieldGoalsMade", "puntingAttempts"]) {
-      const value = n(at(row, ix, field));
-      p.totals[field] = n(p.totals[field]) + value;
-      p.peaks[field] = Math.max(n(p.peaks[field]), value);
+    } else {
+      if (season) p.seasons.add(season);
+      const team = at(row, ix, "recentTeam") ?? at(row, ix, "team");
+      if (team) p.teams.add(String(team));
+      p.position ||= String(at(row, ix, "positionGroup") ?? at(row, ix, "position") ?? "");
+      for (const field of statFields) {
+        const value = n(at(row, ix, field));
+        p.totals[field] = n(p.totals[field]) + value;
+        p.peaks[field] = Math.max(n(p.peaks[field]), value);
+      }
     }
     people.set(personKey, p);
   }
+
+  if (league === "CFB") {
+    for (const p of people.values()) {
+      const schoolSignals = new Map();
+      for (const [season, { row, team, volume }] of [...p.cfbRowsBySeason.entries()].sort((a, b) => a[0] - b[0])) {
+        p.seasons.add(season);
+        p.teams.add(team);
+        const schoolSignal = schoolSignals.get(team) ?? { seasons: 0, volume: 0 };
+        schoolSignal.seasons += 1;
+        schoolSignal.volume += volume;
+        schoolSignals.set(team, schoolSignal);
+        p.position ||= String(at(row, ix, "positionGroup") ?? at(row, ix, "position") ?? "");
+        for (const field of statFields) {
+          const value = n(at(row, ix, field));
+          p.totals[field] = n(p.totals[field]) + value;
+          p.peaks[field] = Math.max(n(p.peaks[field]), value);
+        }
+      }
+      p.school = [...schoolSignals.entries()]
+        .sort((left, right) => (
+          right[1].seasons - left[1].seasons
+          || right[1].volume - left[1].volume
+          || left[0].localeCompare(right[0])
+        ))[0]?.[0];
+      delete p.cfbRowsBySeason;
+    }
+  }
+
   return [...people.values()];
 }
 
@@ -203,19 +252,7 @@ function projectCfbPlayer(p) {
   const receptions = total(p, "receptions");
   const recYards = total(p, "receivingYards");
   const defensiveImpact = total(p, "sacks", "defensiveInterceptions");
-  const schoolSignals = new Map();
-  for (const { team, volume } of p.seasonTeams.values()) {
-    const current = schoolSignals.get(team) ?? { seasons: 0, volume: 0 };
-    current.seasons += 1;
-    current.volume += volume;
-    schoolSignals.set(team, current);
-  }
-  const school = [...schoolSignals.entries()]
-    .sort((left, right) => (
-      right[1].seasons - left[1].seasons
-      || right[1].volume - left[1].volume
-      || left[0].localeCompare(right[0])
-    ))[0]?.[0];
+  const school = p.school;
   const major = [...p.teams].some((team) => majorCfbPrograms.has(normalize(team)));
   const singleMajorProgram = p.teams.size === 1 && major;
   const meaningful =
