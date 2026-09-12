@@ -1,5 +1,4 @@
 import projectionJson from "../../../data/generated/football/recognizability-projection.json";
-import { footballCareerAffiliationHistoryFor } from "./footballCareerAffiliationProjection";
 import type { FootballCanonicalSubject, FootballCanonicalPosition } from "./footballFactualStatsCatalog";
 import { footballHistoricalPoolRecognitionRecords } from "./footballHistoricalPoolRecognitionEvidence";
 import { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";
@@ -26,6 +25,14 @@ interface ProjectionRecord {
   tier: FootballRecognizabilityTier;
   sourceProvider: string;
   sourceId: string;
+}
+
+interface CanonicalPlayerSourceBinding {
+  canonicalId: string;
+  league: "NFL" | "CFB";
+  sourceProvider: "nflverse" | "cfbfastR";
+  sourceId: string;
+  sourceSubjectId: string;
 }
 
 type FootballProjectedNonPlayerIdentitySubject = Omit<FootballRecognitionIdentitySubject, "kind"> & {
@@ -113,6 +120,17 @@ function optionalPosition(value: string) {
 }
 
 const promotedRecords = projectionJson.records as readonly ProjectionRecord[];
+const canonicalPlayerSourceBindings = (
+  projectionJson as typeof projectionJson & {
+    canonicalPlayerSourceBindings?: readonly CanonicalPlayerSourceBinding[];
+  }
+).canonicalPlayerSourceBindings ?? [];
+const canonicalPlayerSourceBindingByCanonicalId = new Map(
+  canonicalPlayerSourceBindings.map((binding) => [binding.canonicalId, binding]),
+);
+const canonicalPlayerSourceBindingBySourceSubjectId = new Map(
+  canonicalPlayerSourceBindings.map((binding) => [binding.sourceSubjectId, binding]),
+);
 const nflPlayerSourceRegistry = parseNflPlayerSourceTuples(projectionJson.playerSourceRegistry?.nfl ?? []);
 const cfbPlayerSourceRegistry = parseCfbPlayerSourceTuples(projectionJson.playerSourceRegistry?.cfb ?? []);
 const registryPlayerRecords: ProjectionRecord[] = [
@@ -198,11 +216,10 @@ function proHallMinimumTierFor(subject: FootballRecognitionFloorIdentity) {
   }, null);
 }
 
-// Registration and recognition are separate concerns. Keep every exact source
-// player identity in the registry, including Tier D rows, so same-name athletes
-// remain distinguishable and factual records always reconcile. Eligibility filters
-// decide whether a row can enter a game.
-const projectedPlayerRecords = playerRecords;
+// Registration, canonical ownership, and eligibility are separate concerns.
+// Every exact source row is registered independently; only generated explicit
+// canonical bindings can turn source recognition/facts into product identity.
+const promotedPlayerRecords = promotedRecords.filter((record) => record.kind === "player-career");
 
 const historicalPlayerRepairs = footballHistoricalRecognitionRepairs.filter(
   (repair) => repair.subject.kind === "player-career",
@@ -237,7 +254,7 @@ function historicalRepairFor(subject: FootballCanonicalSubject) {
   return null;
 }
 
-const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = projectedPlayerRecords.map((record) => ({
+export const footballProjectedPlayerSourceSubjects: readonly FootballCanonicalSubject[] = registryPlayerRecords.map((record) => ({
   id: record.id,
   name: record.name,
   kind: "player-career",
@@ -248,6 +265,22 @@ const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = pr
   endSeason: record.endSeason,
   activeDecades: activeDecades(record.startSeason, record.endSeason),
 }));
+
+const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = promotedPlayerRecords.flatMap((record) => {
+  const binding = canonicalPlayerSourceBindingBySourceSubjectId.get(record.id);
+  if (!binding) return [];
+  return [{
+    id: binding.canonicalId,
+    name: record.name,
+    kind: "player-career" as const,
+    league: record.league,
+    position: record.position,
+    school: record.school,
+    startSeason: record.startSeason,
+    endSeason: record.endSeason,
+    activeDecades: activeDecades(record.startSeason, record.endSeason),
+  }];
+});
 
 const evidencePlayerSubjects = footballRecognitionEvidenceSubjects
   .filter((subject): subject is FootballCanonicalSubject => subject.kind === "player-career");
@@ -267,129 +300,39 @@ export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[
 ];
 
 const byId = new Map(playerRecords.map((record) => [record.id, record]));
-const byLeagueAndName = new Map<string, ProjectionRecord[]>();
-for (const record of playerRecords) {
-  const key = `${record.league}:${record.name.toLowerCase()}`;
-  const values = byLeagueAndName.get(key) ?? [];
-  values.push(record);
-  byLeagueAndName.set(key, values);
-}
-const uniqueProjectionMatch = (values: readonly ProjectionRecord[]) => values.length === 1 ? values[0]! : null;
 
-function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
-  if (subject.kind !== "player-career") return null;
-  const direct = byId.get(subject.id)
-    ?? (subject.aliases ?? []).map((alias) => byId.get(alias)).find((value) => value != null);
-  if (direct) return direct;
-
-  const sameName = byLeagueAndName.get(`${subject.league}:${subject.name.toLowerCase()}`) ?? [];
-  const samePosition = subject.position
-    ? sameName.filter((record) => record.position === subject.position)
-    : sameName;
-  if (!samePosition.length) return null;
-
-  // Display name is discovery only. Curated identities reconcile to an exact
-  // generated source row only when an independent stage signal supports it.
-  const historicalWindow = historicalById.get(subject.id)?.subject;
-  const knownStart = subject.startSeason ?? historicalWindow?.startSeason;
-  const knownEnd = subject.endSeason ?? historicalWindow?.endSeason;
-  const expectedNflStart = subject.league === "NFL"
-    ? (subject.draftYear ?? knownStart)
-    : undefined;
-  const hasTimingSignal = expectedNflStart != null || knownStart != null || knownEnd != null;
-  const hasSchoolSignal = Boolean(subject.school);
-
-  const supported = samePosition.filter((record) => {
-    const sourceAffiliations = subject.league === "CFB" && subject.school
-      ? footballCareerAffiliationHistoryFor({
-          id: record.id,
-          kind: "player-career",
-          league: "CFB",
-          name: record.name,
-          startSeason: record.startSeason,
-          endSeason: record.endSeason,
-          sourceIdentityKeys: [{ provider: "cfbfastR", id: record.sourceId }],
-        })?.affiliations ?? []
-      : [];
-    const schoolMatch = Boolean(
-      subject.school
-      && (
-        sourceAffiliations.some((affiliation) => (
-          normalizedProjectionName(affiliation) === normalizedProjectionName(subject.school!)
-        ))
-        || (
-          sourceAffiliations.length === 0
-          && record.school
-          && normalizedProjectionName(subject.school) === normalizedProjectionName(record.school)
-        )
-      ),
-    );
-
-    let timingMatch = false;
-    if (subject.league === "NFL" && expectedNflStart != null && record.startSeason != null) {
-      const sourceFloorMatch = record.startSeason === 1999
-        && expectedNflStart <= 1999
-        && (
-          (knownEnd != null && knownEnd >= 1999)
-          || (subject.activeDecades ?? []).includes(2000)
-        );
-      timingMatch = sourceFloorMatch
-        || (record.startSeason >= expectedNflStart && record.startSeason <= expectedNflStart + 1);
-    }
-    if (
-      !timingMatch
-      && knownStart != null
-      && knownEnd != null
-      && record.startSeason != null
-      && record.endSeason != null
-    ) {
-      timingMatch = record.startSeason <= knownEnd && record.endSeason >= knownStart;
-    } else if (!timingMatch && knownStart != null && record.startSeason != null) {
-      timingMatch = record.startSeason === knownStart;
-    } else if (!timingMatch && knownEnd != null && record.endSeason != null) {
-      timingMatch = record.endSeason === knownEnd;
-    }
-
-    return schoolMatch || timingMatch;
-  });
-
-  const supportedMatch = uniqueProjectionMatch(supported);
-  if (supportedMatch) return supportedMatch;
-  if (supported.length > 1 || hasTimingSignal || hasSchoolSignal) return null;
-
-  // Truly metadata-free legacy identities may use a unique source-name discovery
-  // result, but no staged identity with contradictory/available evidence does.
-  return uniqueProjectionMatch(samePosition);
+function projectionRecordForCanonicalId(canonicalId: string) {
+  const binding = canonicalPlayerSourceBindingByCanonicalId.get(canonicalId);
+  return binding ? byId.get(binding.sourceSubjectId) ?? null : null;
 }
 
-function exactSourceProHallMinimumTier(record: ProjectionRecord) {
-  if (record.league !== "NFL" || !promotedPlayerRecordIds.has(record.id)) return null;
-  const sameName = byLeagueAndName.get(`${record.league}:${record.name.toLowerCase()}`) ?? [];
-  if (sameName.length !== 1) return null;
-  return proHallMinimumTierFor({
-    name: record.name,
-    kind: "player-career",
-    league: record.league,
-  });
+export function footballCanonicalPlayerSourceBindingFor(canonicalId: string) {
+  return canonicalPlayerSourceBindingByCanonicalId.get(canonicalId) ?? null;
+}
+
+export function footballCanonicalPlayerSubjectIdForSourceSubjectId(sourceSubjectId: string) {
+  return canonicalPlayerSourceBindingBySourceSubjectId.get(sourceSubjectId)?.canonicalId ?? null;
 }
 
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
   const exactPlayerRecord = subject.kind === "player-career" ? byId.get(subject.id) : undefined;
-  const directHistorical = historicalById.get(subject.id);
-  const directEvidence = recognitionEvidenceById.get(subject.id);
-  if (exactPlayerRecord && !directHistorical && !directEvidence) {
+  if (exactPlayerRecord) {
     const provider: FootballSourceProviderId = exactPlayerRecord.league === "NFL" ? "nflverse" : "cfbfastR";
     return {
-      tier: recognitionTierAtLeast(exactPlayerRecord.tier, exactSourceProHallMinimumTier(exactPlayerRecord)),
+      tier: "D" as const,
       sourceIdentityKey: { provider, id: exactPlayerRecord.sourceId } as const,
     };
   }
 
   const proHallMinimumTier = proHallMinimumTierFor(subject);
+  const directHistorical = historicalById.get(subject.id);
   const historical = directHistorical ?? historicalRepairFor(subject);
+  const production = subject.kind === "player-career"
+    ? projectionRecordForCanonicalId(subject.id)
+    : null;
+
   if (historical) {
     const tier = recognitionTierAtLeast(historical.tier, proHallMinimumTier);
-    const production = resolveProjectionRecordFor(subject);
     if (production) {
       const provider: FootballSourceProviderId = production.league === "NFL" ? "nflverse" : "cfbfastR";
       return { tier, sourceIdentityKey: { provider, id: production.sourceId } as const };
@@ -402,21 +345,30 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
       } as const,
     };
   }
+
+  const directEvidence = recognitionEvidenceById.get(subject.id);
   const evidence = directEvidence ?? footballRecognitionEvidenceFor(subject);
   if (evidence) {
+    const sourceIdentityKey = production
+      ? {
+          provider: (production.league === "NFL" ? "nflverse" : "cfbfastR") as FootballSourceProviderId,
+          id: production.sourceId,
+        }
+      : { provider: evidence.sourceProvider, id: evidence.sourceId };
     return {
       tier: recognitionTierAtLeast(evidence.tier, proHallMinimumTier),
-      sourceIdentityKey: { provider: evidence.sourceProvider, id: evidence.sourceId } as const,
+      sourceIdentityKey,
     };
   }
-  const record = resolveProjectionRecordFor(subject);
-  if (record) {
-    const provider: FootballSourceProviderId = record.league === "NFL" ? "nflverse" : "cfbfastR";
+
+  if (production) {
+    const provider: FootballSourceProviderId = production.league === "NFL" ? "nflverse" : "cfbfastR";
     return {
-      tier: recognitionTierAtLeast(record.tier, proHallMinimumTier),
-      sourceIdentityKey: { provider, id: record.sourceId } as const,
+      tier: recognitionTierAtLeast(production.tier, proHallMinimumTier),
+      sourceIdentityKey: { provider, id: production.sourceId } as const,
     };
   }
+
   if (!proHallMinimumTier) return null;
   return {
     tier: proHallMinimumTier,
@@ -428,17 +380,15 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
 }
 
 export function footballProjectedPlayerRegistrationTier(subjectId: string): FootballRecognizabilityTier {
+  if (byId.has(subjectId)) return "D";
   const directHistorical = historicalById.get(subjectId)?.tier;
   if (directHistorical) return directHistorical;
   const directEvidence = recognitionEvidenceById.get(subjectId)?.tier;
-  if (directEvidence) return directEvidence;
-  const exactRecord = byId.get(subjectId);
-  if (!exactRecord) return "D";
-  return recognitionTierAtLeast(exactRecord.tier, exactSourceProHallMinimumTier(exactRecord));
+  return directEvidence ?? "D";
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
-  return resolveProjectionRecordFor(subject)?.id
+  return canonicalPlayerSourceBindingByCanonicalId.get(subject.id)?.sourceSubjectId
     ?? historicalRepairFor(subject)?.subject.id
     ?? footballRecognitionEvidenceFor(subject)?.id
     ?? null;
