@@ -161,9 +161,12 @@ begin
 
   if p_mode_id = 'build-qb'
     and not private.draft_room_public_release_enabled()
-    and not public.is_pick_control_owner(v_actor)
+    and not (
+      public.is_pick_control_owner(v_actor)
+      and public.is_pick_control_owner(p_recipient_id)
+    )
   then
-    raise exception 'Draft Room admin preview access required';
+    raise exception 'Draft Room admin preview access required for both players';
   end if;
 
   select auction.id
