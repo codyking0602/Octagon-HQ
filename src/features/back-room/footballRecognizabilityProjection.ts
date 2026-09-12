@@ -175,22 +175,33 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   const direct = byId.get(subject.id)
     ?? (subject.aliases ?? []).map((alias) => byId.get(alias)).find((value) => value != null);
   if (direct) return direct;
+
   const sameName = byLeagueAndName.get(`${subject.league}:${subject.name.toLowerCase()}`) ?? [];
-  if (sameName.length <= 1) return sameName[0] ?? null;
-  if (subject.position) {
-    const samePosition = sameName.filter((record) => record.position === subject.position);
-    const unique = uniqueProjectionMatch(samePosition);
-    if (unique) return unique;
+  const samePosition = subject.position
+    ? sameName.filter((record) => record.position === subject.position)
+    : sameName;
+
+  // Display name (even with position) is candidate discovery only. Require an
+  // independent stage signal before binding a curated subject to a source row.
+  if (subject.league === "NFL") {
+    const expectedStartSeason = subject.draftYear ?? subject.startSeason;
+    if (expectedStartSeason == null) return null;
+    return uniqueProjectionMatch(
+      samePosition.filter((record) => record.startSeason === expectedStartSeason),
+    );
   }
+
   if (subject.school) {
-    const sameSchool = sameName.filter((record) => record.school === subject.school);
-    const unique = uniqueProjectionMatch(sameSchool);
-    if (unique) return unique;
+    const schoolMatch = uniqueProjectionMatch(
+      samePosition.filter((record) => record.school === subject.school),
+    );
+    if (schoolMatch) return schoolMatch;
   }
-  if (subject.league === "NFL" && subject.draftYear != null) {
-    const sameStartSeason = sameName.filter((record) => record.startSeason === subject.draftYear);
-    const unique = uniqueProjectionMatch(sameStartSeason);
-    if (unique) return unique;
+  if (subject.startSeason != null || subject.endSeason != null) {
+    return uniqueProjectionMatch(samePosition.filter((record) => (
+      (subject.startSeason == null || record.startSeason === subject.startSeason)
+      && (subject.endSeason == null || record.endSeason === subject.endSeason)
+    )));
   }
   return null;
 }
