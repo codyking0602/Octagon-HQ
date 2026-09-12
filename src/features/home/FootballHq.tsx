@@ -142,7 +142,7 @@ export function FootballHq({
   const standings = history?.seasonStandings ?? [];
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
   const rank = standing ? groupRankLabel(standing.rank, standings) : "";
-  const matchupBreakdowns = footballMatchupBreakdownsForEvent(event);
+  const matchupBreakdowns = event ? footballMatchupBreakdownsForEvent(event) : [];
   const featuredMatchups = event ? matchupBreakdowns.flatMap((breakdown) => {
     const game = featuredGameForBreakdown(event, breakdown.id);
     return game ? [{ breakdown, game }] : [];
