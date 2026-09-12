@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { footballCfbPlayerSeasonRecognitionRecords } from "../back-room/footballCfbPlayerSeasonRecognition";
 import { getFootballFactualRecord } from "../back-room/footballFactualStatsCore";
 import { getFootballPersonIdentityKnowledgeForPerson } from "../back-room/footballPersonIdentityKnowledge";
+import { footballRecognitionProjectionSubjectIdFor } from "../back-room/footballRecognizabilityProjection";
 import {
   footballPlayerCareerSubjectsForPerson,
   getFootballSubject,
@@ -133,6 +134,23 @@ describe("Who Am I Football factual and identity integrity", () => {
     }
 
     expect(checked).toBeGreaterThan(40);
+  });
+
+  it("keeps reviewed CFB source aliases on one canonical factual owner", () => {
+    const subject = getFootballSubject("cfb-myles-garrett");
+    expect(subject).not.toBeNull();
+
+    const projectedSourceId = footballRecognitionProjectionSubjectIdFor(subject!);
+    expect(projectedSourceId).toBeTruthy();
+    expect(projectedSourceId).not.toBe(subject!.id);
+    expect(getFootballSubject(projectedSourceId!)?.id).toBe(subject!.id);
+
+    const directFacts = getFootballFactualRecord(subject!.id);
+    const aliasFacts = getFootballFactualRecord(projectedSourceId!);
+    expect(aliasFacts?.subjectId).toBe(subject!.id);
+    expect(aliasFacts).toEqual(directFacts);
+    const metricIds = directFacts?.facts.map((fact) => fact.metricId) ?? [];
+    expect(new Set(metricIds).size).toBe(metricIds.length);
   });
 
   it("keeps same-name NFL source identities distinct and never uses name-only person recovery", () => {
