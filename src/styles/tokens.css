@@ -9,6 +9,8 @@
   --text-muted: #727278;
   --ufc-red: #d20a0a;
   --ufc-red-strong: #f01717;
+  --football-electric-blue: #2f7df6;
+  --football-electric-blue-rgb: 47, 125, 246;
   --hq-neutral-accent: #c5cbd2;
   --hq-neutral-accent-strong: #f3f5f7;
   --hq-neutral-accent-rgb: 197, 203, 210;
@@ -45,10 +47,10 @@
 }
 
 [data-hq-theme="football"] {
-  --hq-context-accent: #1f4e79;
-  --hq-context-accent-strong: #5f8fb8;
-  --hq-context-accent-rgb: 31, 78, 121;
+  --hq-context-accent: var(--football-electric-blue);
+  --hq-context-accent-strong: var(--football-electric-blue);
+  --hq-context-accent-rgb: var(--football-electric-blue-rgb);
   --hq-context-accent-contrast: #ffffff;
-  --hq-context-accent-soft: rgba(31, 78, 121, .42);
-  --hq-context-accent-border: rgba(95, 143, 184, .58);
+  --hq-context-accent-soft: rgba(var(--football-electric-blue-rgb), .16);
+  --hq-context-accent-border: rgba(var(--football-electric-blue-rgb), .48);
 }
