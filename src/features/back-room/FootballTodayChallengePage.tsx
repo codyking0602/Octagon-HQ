@@ -307,7 +307,7 @@ function BlindResume({ projection, advance }: GameProps) {
   );
 }
 
-function Wavelength({ projection, advance }: GameProps) {
+function Wavelength({ projection, advance, busy }: GameProps & { busy: boolean }) {
   const [guess, setGuess] = useState(50);
   const state = projection.publicState;
   const guesses = Array.isArray(state.guesses) ? state.guesses.map(Number) : [];
@@ -329,6 +329,7 @@ function Wavelength({ projection, advance }: GameProps) {
         guess={guess}
         onGuessChange={setGuess}
         onLock={() => advance({ guess })}
+        busy={busy}
         result={projection.officialAttempt ? {
           score: projection.officialAttempt.normalizedScore,
           target,
@@ -530,6 +531,28 @@ export default function FootballTodayChallengePage() {
 
   const blindResume = projection.gameType === "blind_resume";
 
+  if (projection.gameType === "wavelength") {
+    const wavelengthClassName = projection.officialAttempt
+      ? "page football-debate-page football-wavelength-page"
+      : "page football-debate-page football-wavelength-page wavelength-page wavelength-page--playing wavelength-page--football";
+
+    return (
+      <div className={wavelengthClassName}>
+        {error ? <div className="football-today-error">{error}</div> : null}
+        <Wavelength projection={projection} advance={advance} busy={busy} />
+        {projection.officialAttempt ? (
+          <div className="game-result-actions-wrap">
+            <div className="game-result-actions">
+              <button className="primary-action" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+              <button className="find-secondary-action" type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+            </div>
+            <p className="game-action-status" role="status">{shareStatus}</p>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div className="page football-today-page">
       <section className="football-today-shell">
@@ -556,7 +579,6 @@ export default function FootballTodayChallengePage() {
         ) : null}
         {projection.gameType === "find_leader" ? <FindLeader projection={projection} advance={advance} /> : null}
         {blindResume ? <BlindResume projection={projection} advance={advance} /> : null}
-        {projection.gameType === "wavelength" ? <Wavelength projection={projection} advance={advance} /> : null}
         {projection.gameType === "blind_rank_5" ? <BlindRank projection={projection} advance={advance} /> : null}
         {projection.gameType === "keep_4_cut_4" ? <KeepCut projection={projection} advance={advance} /> : null}
         {projection.gameType === "hit_the_number" ? <HitTheNumber projection={projection} advance={advance} /> : null}
