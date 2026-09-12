@@ -154,6 +154,52 @@ describe("Who Am I clue-quality intelligence", () => {
     expect(sequence.map((clue) => clue.id)).toEqual(expect.arrayContaining(["h-transfer", "s-title", "g-heisman", "g-jersey"]));
   });
 
+  it("does not let sports vocabulary disguise deep personal biography as sports identity", () => {
+    const familyCoach = whoAmIIdentityKnowledgeClue({
+      subjectId: "cfb-example-quarterback",
+      subjectName: "Example Quarterback",
+      subjectKind: "player",
+      league: "CFB",
+      factId: "father-youth-coach",
+      conceptId: "father-youth-quarterback-coach",
+      value: "His father coached him at quarterback throughout his youth and childhood.",
+      tags: ["family", "childhood"],
+    });
+    const siblingTeammate = whoAmIIdentityKnowledgeClue({
+      subjectId: "nfl-example-player",
+      subjectName: "Example Player",
+      subjectKind: "player",
+      league: "NFL",
+      factId: "brother-teammate",
+      conceptId: "brother-nfl-teammate",
+      value: "His brother was also his NFL teammate for multiple seasons.",
+      tags: ["family", "teammate"],
+    });
+
+    expect(whoAmIClueSelectionClass(familyCoach)).toBe("deep-biography");
+    expect(whoAmIClueSelectionClass(siblingTeammate)).toBe("sports-identity");
+  });
+
+  it("deduplicates major accolade families before they consume multiple valuable slots", () => {
+    const clues: WhoAmIClue[] = [
+      { id: "b-role", text: "I played quarterback.", band: "broad", facet: "role" },
+      { id: "b-era", text: "I played in the 2010s.", band: "broad", facet: "era" },
+      { id: "h-school", text: "I played college football in the SEC.", band: "helpful", facet: "background" },
+      { id: "h-style", text: "I was known for extending plays outside the pocket.", band: "helpful", facet: "style" },
+      { id: "h-path", text: "I became a first-round NFL draft pick.", band: "helpful", facet: "career-path" },
+      { id: "s-heisman-one", text: "I won the Heisman Trophy.", band: "strong", facet: "accomplishments" },
+      { id: "s-heisman-two", text: "My college résumé includes a Heisman award.", band: "strong", facet: "accomplishments", identityKnowledge: true },
+      { id: "s-title", text: "I won a national championship.", band: "strong", facet: "accomplishments" },
+      { id: "s-rival", text: "I beat a major rival in a championship season.", band: "strong", facet: "relationships" },
+      { id: "g-draft", text: "I was selected No. 1 overall in the NFL Draft.", band: "giveaway", facet: "career-path" },
+      { id: "g-jersey", text: "I wore jersey number 1.", band: "giveaway", facet: "identity" },
+    ];
+
+    const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
+    expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+    expect(sequence.filter((clue) => /heisman/i.test(clue.text))).toHaveLength(1);
+  });
+
   it("keeps strongly identifying color such as a signature celebration eligible", () => {
     const clues: WhoAmIClue[] = [
       { id: "b-role", text: "I was a fighter.", band: "broad", facet: "role" },
