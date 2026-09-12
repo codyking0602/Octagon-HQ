@@ -54,6 +54,11 @@ describe("automatic Picks monitoring deployment", () => {
     expect(productionVerifier).toContain('providerFindings.length === 0');
     expect(productionVerifier).toContain('Number(latestDecision.provider_requests_remaining) > 5');
     expect(productionVerifier).toContain('item?.finding_type === "provider_error" || item?.finding_type === "quota_warning"');
+    expect(productionVerifier).toContain('const truthfulNotDueCarryForward = latestDecision.status === "skipped"');
+    expect(productionVerifier).toContain('latestDecision.decision_reason === "not_due"');
+    expect(productionVerifier).toContain("nextEligibleAt >= lastWakeStartedAt");
+    expect(productionVerifier).toContain("now - completedAt <= maximumWakeAgeMs");
+    expect(productionVerifier).toContain("!truthfulNotDueCarryForward && completedAt < lastWakeStartedAt - wakeDecisionToleranceMs");
     expect(productionVerifier).toContain("Production Picks monitoring is unhealthy");
     expect(productionVerifier).toContain("monitoring-scheduler-proof.json");
     expect(productionVerifier).toContain("healthy partial provider check");
