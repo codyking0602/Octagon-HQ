@@ -5,7 +5,7 @@
 
 .play-landing-heading[data-sport="football"],
 .play-landing-library[data-sport="football"] {
-  --play-landing-accent: #1F4E79;
+  --play-landing-accent: var(--football-brand-blue, #8EBCE6);
 }
 
 .play-landing-heading {
