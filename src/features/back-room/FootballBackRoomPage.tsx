@@ -4,7 +4,6 @@ import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPresentation";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { FootballEntryTransition } from "./FootballEntryTransition";
-import { FootballGamesEarlyAccessBanner } from "./FootballGamesEarlyAccessBanner";
 import type { FootballEntryState } from "./footballEntrySession";
 
 export default function FootballBackRoomPage() {
@@ -24,7 +23,6 @@ export default function FootballBackRoomPage() {
         />
       ) : null}
 
-      {!showTransition ? <FootballGamesEarlyAccessBanner /> : null}
       <PlayLandingHeader sport="football" />
       <TodayChallengeHub sport="football" />
       <ChallengeCenter sport="football" />

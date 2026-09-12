@@ -8,7 +8,7 @@ import {
 } from "./DailyRankKeepComboStatus";
 import { OfficialTodayChallengeContent } from "./OfficialTodayChallengePage";
 import type { PlaySport } from "./playRegistry";
-import { todayChallengeAdapter, type DailyGameType } from "./todaysChallengeAdapters";
+import { todayChallengeAdapter } from "./todaysChallengeAdapters";
 import type {
   TodayChallengeLeaderboard,
   TodayChallengeProjection,
@@ -53,14 +53,6 @@ function gameProgress(projection: TodayChallengeProjection) {
       return `${kept + cut}/8 CALLS`;
     }
   }
-}
-
-function LeaderboardAvatar({ entry }: { entry: TodayChallengeLeaderboard["entries"][number] }) {
-  return entry.avatarPhotoData ? (
-    <img src={entry.avatarPhotoData} alt="" />
-  ) : (
-    <span>{entry.initials}</span>
-  );
 }
 
 function DailyAnswerDetail({
@@ -111,14 +103,10 @@ function DailyAnswerDetail({
 function DailyLeaderboard({
   leaderboard,
   projection,
-  gameType,
-  combo,
   loading,
 }: {
   leaderboard: TodayChallengeLeaderboard | null;
   projection: TodayChallengeProjection;
-  gameType: DailyGameType;
-  combo: boolean;
   loading: boolean;
 }) {
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
@@ -154,14 +142,7 @@ function DailyLeaderboard({
           onClick={() => setSelectedProfileId(entry.profileId)}
         >
           <b>#{entry.rank}</b>
-          <LeaderboardAvatar entry={entry} />
           <strong>{entry.displayName}</strong>
-          <em>{combo
-            ? `${entry.normalizedScore}/100`
-            : todayChallengeAdapter(gameType)?.nativeDisplay({
-              nativeScore: entry.nativeScore,
-              publicResult: {},
-            }) ?? entry.nativeScore}</em>
           <small>{entry.normalizedScore}</small>
         </button>
       ))}
@@ -292,8 +273,6 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
           <DailyLeaderboard
             leaderboard={overview.leaderboard}
             projection={projection}
-            gameType={projection.gameType}
-            combo={combo}
             loading={overview.leaderboardLoading}
           />
           <small className="today-hub-leaderboard__swipe">← SWIPE FOR TODAY’S GAME</small>
