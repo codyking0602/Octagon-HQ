@@ -1,6 +1,6 @@
 # Football Knowledge Ledger — Stage 13.5 Human Review
 
-Canonical A/B/C subjects: **4,128**
+Canonical A/B/C subjects: **4,127**
 Independent omission candidates: **0**
 Historical tier violations: **0**
 
@@ -35,7 +35,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 | WR | 85 | 6 | 18 | 61 | 75 | 10 | 0 | 10 | 0 | 0 |
 | TE | 35 | 1 | 20 | 14 | 24 | 11 | 0 | 11 | 0 | 0 |
 | OL | 58 | 2 | 24 | 32 | 58 | 0 | 0 | 0 | 0 | 0 |
-| DL / EDGE | 47 | 8 | 22 | 17 | 29 | 18 | 0 | 18 | 0 | 0 |
+| DL / EDGE | 46 | 8 | 22 | 16 | 28 | 18 | 0 | 18 | 0 | 0 |
 | LB | 45 | 5 | 15 | 25 | 33 | 12 | 0 | 12 | 0 | 0 |
 | Secondary | 46 | 9 | 25 | 12 | 36 | 10 | 0 | 10 | 0 | 0 |
 | K / P | 29 | 0 | 14 | 15 | 5 | 24 | 0 | 24 | 0 | 0 |
