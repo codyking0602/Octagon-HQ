@@ -15,8 +15,13 @@ import {
   footballPersonIdentityKnowledgeSources,
   getFootballPersonIdentityFactSources,
   getFootballPersonIdentityKnowledge,
+  getFootballPersonIdentityKnowledgeForPerson,
 } from "./footballPersonIdentityKnowledge";
-import { getFootballSubject, queryFootballSubjects } from "./footballSubjectRegistry";
+import {
+  footballPlayerCareerSubjectsForPerson,
+  getFootballSubject,
+  queryFootballSubjects,
+} from "./footballSubjectRegistry";
 
 const PR4_SUBJECT_IDS = new Set([
   "nfl-patrick-mahomes",
@@ -208,6 +213,26 @@ describe("football person identity knowledge", () => {
       const cfbSubject = cfbLaunch.subjects.find((subject) => subject.name === name);
       expect(cfbSubject?.recognizabilityTier).toBe("A");
       expect(distinctiveIdentityFacts(getFootballPersonIdentityKnowledge(cfbSubject!.id)!)).toHaveLength(5);
+    }
+  });
+
+
+  it("binds same-name NFL research only through canonical person identity", () => {
+    const nflLaunch = getFootballWhoAmILaunchPool("NFL");
+
+    for (const name of ["Adrian Peterson", "Cam Newton", "Lamar Jackson"]) {
+      const subject = nflLaunch.players.find((candidate) => candidate.name === name);
+      expect(subject, name).toBeDefined();
+
+      const allowedSubjectIds = new Set(
+        footballPlayerCareerSubjectsForPerson(subject!).map((candidate) => candidate.id),
+      );
+      const knowledge = getFootballPersonIdentityKnowledgeForPerson(subject!);
+      expect(knowledge.some((record) => record.subjectId === subject!.id), name).toBe(true);
+      expect(
+        knowledge.every((record) => allowedSubjectIds.has(record.subjectId)),
+        `${name} identity research escaped the canonical source-person relationship`,
+      ).toBe(true);
     }
   });
 
