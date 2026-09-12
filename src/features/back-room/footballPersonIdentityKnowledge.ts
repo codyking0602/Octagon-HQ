@@ -1067,7 +1067,7 @@ const baseFootballPersonIdentityKnowledgeRecords: readonly FootballPersonIdentit
     fact("captain-comeback", "captain-comeback-identity", "His repeated late-game rallies with Dallas produced the enduring 'Captain Comeback' identity.", ["identity-pr6-roger-staubach"]),
     fact("hail-mary", "hail-mary-term-popularization", "His last-second 1975 playoff touchdown pass to Drew Pearson helped popularize the football term 'Hail Mary.'", ["identity-pr6-roger-staubach"]),
   ]},
-  { subjectId: "nflverse-player-00-0021306", facts: [
+  { subjectId: "nfl-adrian-peterson", facts: [
     fact("all-day", "ad-all-day-nickname", "His father gave him the nickname 'AD' for 'All Day' because of the energy he showed as a child.", ["identity-pr6-adrian-peterson"]),
     fact("track-speed", "sprinter-speed-deeper-alignment", "He was an accomplished high-school sprinter, giving a track background to the breakaway speed paired with his power-running style.", ["identity-pr6-adrian-peterson"]),
     fact("draft-collarbone", "vikings-draft-collarbone-concern", "A collarbone injury became a major part of the uncertainty surrounding him before Minnesota selected him in the 2007 draft.", ["identity-pr6-adrian-peterson"]),
