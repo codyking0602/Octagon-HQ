@@ -487,6 +487,47 @@ function footballPublicPayload(context: OfficialDailyRuntimeContext & JsonRecord
   };
 }
 
+function normalizeLegacyFootballProgress(
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  footballRuntime: FootballRuntimeModule,
+) {
+  const history = footballActionHistory(context);
+  if (!history.length || isDailyCombo(context)) return context;
+
+  const stateKeys = Object.keys(context.submissionState)
+    .filter((key) => key !== "action_history" && key !== "final_submission");
+  if (stateKeys.length) return context;
+
+  let replayContext: OfficialDailyRuntimeContext = {
+    gameType: context.gameType,
+    setupKey: context.setupKey,
+    publicSetup: context.publicSetup,
+    revealSetup: context.revealSetup,
+    privateSetupEvidence: context.privateSetupEvidence,
+    privateGradingEvidence: context.privateGradingEvidence,
+    submissionState: {},
+    publicState: requiredRecord(context.publicSetup.initial_state, "Football daily initial state"),
+  };
+
+  for (const action of history) {
+    const advanced = footballRuntime.advanceFootballOfficialDailyRuntime(replayContext, action);
+    replayContext = {
+      ...replayContext,
+      submissionState: advanced.submissionState,
+      publicState: advanced.publicState,
+    };
+  }
+
+  return {
+    ...context,
+    submissionState: {
+      ...replayContext.submissionState,
+      action_history: history,
+    },
+    publicState: replayContext.publicState,
+  };
+}
+
 async function finalizePending(
   userClient: SupabaseClient,
   admin: SupabaseClient,
@@ -551,6 +592,7 @@ Deno.serve(async (request) => {
       const footballRuntime = await loadFootballRuntime();
       const materialized = await materializeFootballToday(admin, footballRuntime);
       let context = await getContext(admin, materialized.dailyChallengeId, profileId);
+      context = normalizeLegacyFootballProgress(context, footballRuntime);
       context = await finalizePending(userClient, admin, context, profileId);
 
       if (body.mode === "get-today" || body.mode === undefined) {
@@ -571,6 +613,7 @@ Deno.serve(async (request) => {
         return safeError(409, "STALE_PROGRESS", "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state.");
       }
 
+      const history = footballActionHistory(context);
       const action = requiredRecord(body.action, "Football daily action");
       const advanced = isDailyCombo(context)
         ? advanceDailyCombo(context, action, footballRuntime.advanceFootballOfficialDailyRuntime)
@@ -579,7 +622,10 @@ Deno.serve(async (request) => {
         p_daily_challenge_id: materialized.dailyChallengeId,
         p_profile_id: profileId,
         p_expected_revision: Number(context.progress_revision),
-        p_submission_state: advanced.submissionState,
+        p_submission_state: {
+          ...advanced.submissionState,
+          action_history: [...history, action],
+        },
         p_public_state: advanced.publicState,
       });
       if (saved.error) {
