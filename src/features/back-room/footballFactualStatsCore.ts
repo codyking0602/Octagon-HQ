@@ -264,13 +264,19 @@ function mergeCanonicalFactualRecords(records: readonly FootballFactualRecord[])
   }
   return [...bySubject.values()];
 }
-function projectedGapFillRecords(projected: readonly FootballFactualRecord[], owned: readonly FootballFactualRecord[]) {
+function projectedGapFillRecords(
+  projected: readonly FootballFactualRecord[],
+  owned: readonly FootballFactualRecord[],
+  includeSourceOnly = false,
+) {
   const ownedKeys=new Set(owned.flatMap((record)=>record.facts.map((fact)=>`${record.subjectId}:${fact.metricId}`)));
   const directProjectedSubjectIds = new Set(projected.map((record) => canonicalFactSubjectId(record.subjectId)));
   return projected.flatMap((record)=>{
     const subjectId=canonicalFactSubjectId(record.subjectId);
-    const canonicalSubject=getFootballSubject(subjectId);
-    if (!canonicalSubject || canonicalSubject.recognizabilityTier === "D") return [];
+    const subject=getFootballSubject(subjectId);
+    const exactSourceSubject=getFootballSubject(record.subjectId);
+    if (!subject && !exactSourceSubject) return [];
+    if (!includeSourceOnly && subject?.recognizabilityTier === "D") return [];
     // When both a canonical record and its exact source record are projected,
     // the canonical record owns the factual gap fill.
     if (record.subjectId !== subjectId && directProjectedSubjectIds.has(subjectId)) return [];
@@ -282,7 +288,9 @@ function projectedGapFillRecords(projected: readonly FootballFactualRecord[], ow
 const preStage13FactualRecords=mergeCanonicalFactualRecords([...compatibilityFactualRecords,...expandedFootballFactualRecords,...footballNflATierResumeFactualRecords,...footballStage16CfbQbCareerFactualRecords]);
 const stage13GapFillFactualRecords=projectedGapFillRecords(footballFactualUniverseProjectedRecords,preStage13FactualRecords);
 export const footballFactualRecords: readonly FootballFactualRecord[]=mergeCanonicalFactualRecords([...preStage13FactualRecords,...stage13GapFillFactualRecords]);
-const findLeaderGapFillFactualRecords=projectedGapFillRecords(footballFindLeaderProjectedFactualRecords,footballFactualRecords);
+// Find-the-Leader lookup facts remain available for exact source identities even when
+// the source row is Tier D. Bound rows still canonicalize through the explicit owner.
+const findLeaderGapFillFactualRecords=projectedGapFillRecords(footballFindLeaderProjectedFactualRecords,footballFactualRecords,true);
 const footballFactualLookupRecords: readonly FootballFactualRecord[]=mergeCanonicalFactualRecords([...footballFactualRecords,...findLeaderGapFillFactualRecords]);
 const recordIds=footballFactualLookupRecords.map((record)=>record.subjectId); if (new Set(recordIds).size !== recordIds.length) throw new Error("Canonical Football factual lookup ledger contains duplicate subject records.");
 
