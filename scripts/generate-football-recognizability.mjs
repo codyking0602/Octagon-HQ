@@ -96,9 +96,14 @@ function aggregate(corpus, league) {
     const name = at(row, ix, "playerDisplayName") ?? at(row, ix, "playerName");
     if (!sourceId || sourceId === "0" || !name) continue;
     const personKey = league === "CFB" ? `${sourceId}:${normalize(name)}` : sourceId;
-    const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), position: "", totals: {}, peaks: {} };
+    const p = people.get(personKey) ?? { sourceId, name: String(name), league, seasons: new Set(), teams: new Set(), teamVolumes: {}, position: "", totals: {}, peaks: {} };
     const season = n(at(row, ix, "season")); if (season) p.seasons.add(season);
-    const team = league === "CFB" ? at(row, ix, "team") : at(row, ix, "recentTeam") ?? at(row, ix, "team"); if (team) p.teams.add(String(team));
+    const team = league === "CFB" ? at(row, ix, "team") : at(row, ix, "recentTeam") ?? at(row, ix, "team");
+    if (team) {
+      p.teams.add(String(team));
+      p.teamVolumes[String(team)] = n(p.teamVolumes[String(team)])
+        + (league === "CFB" ? cfbIdentitySeasonVolume(row, ix) : n(at(row, ix, "games")));
+    }
     p.position ||= String(at(row, ix, "positionGroup") ?? at(row, ix, "position") ?? "");
     for (const field of ["games", "gamesPlayed", "attempts", "passAttempts", "passingYards", "passYards", "passingTouchdowns", "passTouchdowns", "carries", "rushAttempts", "rushingYards", "rushYards", "rushingTouchdowns", "rushTouchdowns", "receptions", "receivingYards", "receivingTouchdowns", "defensiveSacks", "sacks", "defensiveInterceptions", "fieldGoalsMade", "puntingAttempts"]) {
       const value = n(at(row, ix, field));
@@ -222,7 +227,8 @@ function projectCfbPlayer(p) {
   const receptions = total(p, "receptions");
   const recYards = total(p, "receivingYards");
   const defensiveImpact = total(p, "sacks", "defensiveInterceptions");
-  const school = [...p.teams].sort()[0];
+  const school = [...p.teams]
+    .sort((left, right) => n(p.teamVolumes[right]) - n(p.teamVolumes[left]) || left.localeCompare(right))[0];
   const major = [...p.teams].some((team) => majorCfbPrograms.has(normalize(team)));
   const singleMajorProgram = p.teams.size === 1 && major;
   const meaningful =
