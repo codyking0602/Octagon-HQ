@@ -136,21 +136,19 @@ function dominantCfbSeasonRows(rows) {
 function cfbRowsFor(subject) {
   const exactSourceId = sourceIdentityId(subject);
   let rows = exactSourceId ? (cfbPlayersById.get(String(exactSourceId)) ?? []) : [];
-  if (!rows.length) {
-    const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
-    const nameRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
-    const sourceIds = new Set(nameRows.map((row) => String(row.sourcePlayerId ?? "")).filter(Boolean));
-    if (sourceIds.size !== 1) return [];
-    rows = nameRows;
-  } else {
-    rows = rows.filter((row) => withinWindow(row, subject));
+  if (rows.length) {
+    return dominantCfbSeasonRows(rows.filter((row) => withinWindow(row, subject)));
   }
-  const dominantRows = dominantCfbSeasonRows(rows);
-  if (subject.school) {
-    const schoolRows = dominantRows.filter((row) => normalized(row.team) === normalized(subject.school));
-    if (schoolRows.length) return schoolRows;
-  }
-  return dominantRows;
+
+  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
+  const nameRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
+  const sourceIds = new Set(nameRows.map((row) => String(row.sourcePlayerId ?? "")).filter(Boolean));
+  if (sourceIds.size !== 1) return [];
+
+  const dominantRows = dominantCfbSeasonRows(nameRows);
+  if (!subject.school) return dominantRows;
+  const schoolRows = dominantRows.filter((row) => normalized(row.team) === normalized(subject.school));
+  return schoolRows.length ? schoolRows : dominantRows;
 }
 
 function nflPlayerFacts(subject) {
