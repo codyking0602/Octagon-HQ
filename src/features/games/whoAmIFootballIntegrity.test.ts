@@ -164,10 +164,14 @@ describe("Who Am I Football factual and identity integrity", () => {
 
     for (const [name, correctSourceId, otherSourceId] of collisionCases) {
       const correct = getFootballSubject(correctSourceId);
+      const other = getFootballSubject(otherSourceId);
       expect(correct?.name, correctSourceId).toBe(name);
-      expect(getFootballSubject(otherSourceId), otherSourceId).toBeNull();
+      expect(other?.name, otherSourceId).toBe(name);
+      expect(other?.recognizabilityTier, otherSourceId).toBe("D");
+      expect(other?.id, otherSourceId).not.toBe(correct?.id);
 
       const relatedIds = new Set(footballPlayerCareerSubjectsForPerson(correct!).map((subject) => subject.id));
+      expect(relatedIds.has(other!.id), `${name} same-name source identity leaked into person relationship`).toBe(false);
       for (const knowledge of getFootballPersonIdentityKnowledgeForPerson(correct!)) {
         expect(
           relatedIds,
