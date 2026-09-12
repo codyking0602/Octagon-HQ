@@ -126,8 +126,12 @@
 }
 
 .home-section--your-hq .hq-stat > span {
-  font-size: 10px;
+  overflow: hidden;
+  font-size: 9px;
   line-height: 1.2;
+  letter-spacing: -.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .home-section--your-hq .hq-stat > small {
