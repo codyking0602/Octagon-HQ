@@ -530,10 +530,6 @@ function generatedCanonicalId(record) {
 // identity when the source name is unique. The exact source identity remains a separate Tier D row.
 for (const record of allProjectedPlayerSourceRecords) {
   if (record.tier === "D" || boundSourceSubjectIds.has(record.id)) continue;
-  const sourceNameCount = record.league === "NFL"
-    ? (nflNameCounts.get(normalize(record.name)) ?? 0)
-    : (cfbNameCounts.get(normalize(record.name)) ?? 0);
-  if (sourceNameCount !== 1) continue;
   const canonicalId = generatedCanonicalId(record);
   canonicalIds.add(canonicalId);
   canonicalPlayerSourceBindings.push({
