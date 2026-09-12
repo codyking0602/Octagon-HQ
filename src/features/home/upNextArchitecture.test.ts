@@ -10,7 +10,7 @@ describe("retired Up Next ownership", () => {
   it("removes the retired priority hero without adding a second Home data owner", () => {
     expect(home).toContain("usePicks()");
     expect(home).toContain("useTodayChallengeRuntime");
-    expect(home).toContain("<WhatsNewPreview />");
+    expect(home).not.toContain("<WhatsNewPreview />");
     expect(home).not.toContain("usePlayChallenges()");
     expect(home).not.toContain("useWhatsNew()");
     expect(home).not.toContain("buildUpNextAction");
@@ -31,15 +31,14 @@ describe("retired Up Next ownership", () => {
     expect(main).not.toContain('styles/home-up-next.css');
   });
 
-  it("starts Home with Your HQ and keeps the approved five-section order across canonical owners", () => {
-    const homeOwnedSections = [...home.matchAll(/data-home-section="([^"]+)"/g)].map((match) => match[1]);
-    expect(homeOwnedSections).toEqual([
-      "your-hq",
-      "whats-new",
-      "todays-challenges",
-      "ufc-hq",
-    ]);
-    expect(home.indexOf('data-home-section="ufc-hq"')).toBeLessThan(home.indexOf("<FootballHq"));
+  it("keeps only Your HQ and the two canonical sport HQ owners on Home", () => {
+    expect(home).toContain('data-home-section="your-hq"');
+    expect(home).toContain('data-home-section="ufc-hq"');
     expect(footballHome).toContain('data-home-section="football-hq"');
+    expect(home).not.toContain('data-home-section="whats-new"');
+    expect(home).not.toContain('data-home-section="todays-challenges"');
+    expect(home).toContain("isFootballSeason()");
+    expect(home).toContain("{footballHq}");
+    expect(home).toContain("{ufcHq}");
   });
 });

@@ -13,6 +13,7 @@ import {
   advanceFootballOfficialDailyRuntime,
 } from "./footballTodayChallengeRuntime";
 import {
+  buildFootballTodayPersistenceSetup,
   buildFootballTodayProjection,
   footballTodayGameForDay,
   footballTodayScheduleVersionForDay,
@@ -33,8 +34,12 @@ function isoDay(offset: number) {
   return day.toISOString().slice(0, 10);
 }
 
+function setupScheduleVersion(day: string) {
+  return day >= "2026-09-12" ? FOOTBALL_TODAY_SCHEDULE_VERSION : "football-daily-v1";
+}
+
 function setupUsesNonReviewedSubject(gameType: "blind_rank_5" | "keep_4_cut_4", day: string) {
-  const setup = buildFootballOfficialDailySetup(gameType, day, footballTodayScheduleVersionForDay(day));
+  const setup = buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion(day));
   const pack = setup.publicSetup.pack as Record<string, unknown>;
   const packId = String(pack.id) as Parameters<typeof getFootballReviewedRankFivePack>[0];
   const reviewedIds = new Set(getFootballReviewedRankFivePack(packId).items.map((item) => item.id));
@@ -43,7 +48,7 @@ function setupUsesNonReviewedSubject(gameType: "blind_rank_5" | "keep_4_cut_4", 
 }
 
 function blindResumePrivateRounds(day: string) {
-  const setup = buildFootballOfficialDailySetup("blind_resume", day, footballTodayScheduleVersionForDay(day));
+  const setup = buildFootballOfficialDailySetup("blind_resume", day, setupScheduleVersion(day));
   return (setup.privateSetupEvidence as { rounds: BlindResumePrivateRound[] }).rounds;
 }
 
@@ -81,7 +86,7 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-09-05")).toBe("football-daily-v3");
     expect(footballTodayScheduleVersionForDay("2026-09-11")).toBe("football-daily-v3");
     expect(footballTodayScheduleVersionForDay("2026-09-12")).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
-    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v4");
+    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v5");
 
     const future = Array.from({ length: 20 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 8, 12 + offset)).toISOString().slice(0, 10);
@@ -95,10 +100,27 @@ describe("Football Today’s Challenge session", () => {
     expect(future).not.toContain("blind_resume");
     expect(future).not.toContain("blind_rank_5");
 
+    const historicalProjection = buildFootballTodayProjection("2026-09-11");
+    const historicalPersistence = buildFootballTodayPersistenceSetup("2026-09-11");
+    expect(historicalProjection.schedule_version).toBe("football-daily-v3");
+    expect(historicalProjection.game_type).toBe("find_leader");
+    expect(historicalProjection.setup_key).toContain("football-daily-v1");
+    expect(historicalPersistence.scheduleVersion).toBe("football-daily-v3");
+    expect(historicalPersistence.setupKey).toBe(historicalProjection.setup_key);
+
     const projection = buildFootballTodayProjection("2026-09-12");
-    expect(projection.schedule_version).toBe("football-daily-v4");
-    expect(projection.game_type).toBe("find_leader");
-    expect(projection.setup_key).toContain("football-daily-v4");
+    expect(projection.schedule_version).toBe("football-daily-v5");
+    expect(projection.game_type).toBe("wavelength");
+    expect(projection.setup_key).toContain("football-daily-v5");
+    expect(footballTodayGameForDay("2026-09-13")).toBe("hit_the_number");
+
+    const transition = Array.from({ length: 42 }, (_unused, offset) => {
+      const day = new Date(Date.UTC(2026, 8, 11 + offset)).toISOString().slice(0, 10);
+      return footballTodayGameForDay(day);
+    });
+    for (let index = 1; index < transition.length; index += 1) {
+      expect(transition[index]).not.toBe(transition[index - 1]);
+    }
   });
 
   it("builds the same public board for the same Central day without leaking Find the Leader evidence", () => {
@@ -116,7 +138,7 @@ describe("Football Today’s Challenge session", () => {
 
   it("reveals only safely eliminated Find the Leader values before completion", () => {
     const day = "2026-08-22";
-    const setup = buildFootballOfficialDailySetup("find_leader", day, footballTodayScheduleVersionForDay(day));
+    const setup = buildFootballOfficialDailySetup("find_leader", day, setupScheduleVersion(day));
     const candidateIds = setup.privateSetupEvidence.candidate_ids as string[];
     const leaderId = String(setup.privateSetupEvidence.leader_id);
     const safeId = candidateIds.find((id) => id !== leaderId)!;
@@ -213,7 +235,7 @@ describe("Football Today’s Challenge session", () => {
   it("keeps daily Wavelength adaptive clue selection identical to the replayable engine", () => {
     const day = "2026-08-24";
     const guess = 50;
-    const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|wavelength|${footballTodayScheduleVersionForDay(day)}|${day}`;
+    const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|wavelength|${setupScheduleVersion(day)}|${day}`;
     const replayableRound = createFootballWavelengthRound(seed);
     const expectedNext = nextFootballWavelengthClue(replayableRound, guess, 1, seed, []);
     const daily = buildFootballTodayProjection(day, [{ guess }]);
@@ -257,7 +279,7 @@ describe("Football Today’s Challenge session", () => {
       const candidate = buildFootballOfficialDailySetup(
         "hit_the_number",
         day,
-        footballTodayScheduleVersionForDay(day),
+        setupScheduleVersion(day),
       );
       const formatId = candidate.publicSetup.format_id;
       if (formatId === "one-from-each" || formatId === "build-the-team") {

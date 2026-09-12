@@ -53,20 +53,16 @@ describe("What's New foundation", () => {
     expect(contract).toContain("the only general-purpose externally callable publishing boundary");
   });
 
-  it("keeps the complete feed on Home after the header slot becomes notifications", () => {
+  it("keeps the complete feed behind notifications after retiring the Home preview", () => {
     const notificationAction = shell.indexOf("<NotificationHeaderAction />");
     const askAction = shell.indexOf('to="/intelligence"');
-    const yourHq = home.indexOf('id="your-hq-title"');
-    const preview = home.indexOf("<WhatsNewPreview />");
-    const event = home.indexOf("{currentEvent ? (");
 
     expect(notificationAction).toBeGreaterThan(-1);
     expect(notificationAction).toBeLessThan(askAction);
     expect(shell).not.toContain("<WhatsNewHeaderAction />");
-    expect(yourHq).toBeLessThan(preview);
-    expect(preview).toBeLessThan(event);
+    expect(home).not.toContain("<WhatsNewPreview />");
     expect(router).toContain('path: "whats-new"');
-    expect(contract).toContain("Home owns the permanent What's New preview");
+    expect(contract).toContain("Home does not render a What's New preview");
     expect(contract).toContain("continues to own the complete feed");
     expect(contract).toContain("not a bottom-navigation destination");
   });

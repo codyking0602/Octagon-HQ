@@ -73,6 +73,12 @@ vi.mock("../play/useTodayChallengeRuntime", () => ({
 }));
 
 vi.mock("../play/useTodayChallengeOverview", () => ({
+  useHqDailyChallengeStreak: () => ({
+    streak: { currentStreak: 0, bestStreak: 0 },
+    loading: false,
+    error: null,
+    refresh: vi.fn(),
+  }),
   useTodayChallengeOverview: () => ({
     configured: false,
     standings: null,
@@ -84,10 +90,6 @@ vi.mock("../play/useTodayChallengeOverview", () => ({
     error: null,
     refresh: vi.fn(),
   }),
-}));
-
-vi.mock("../whats-new/WhatsNewPreview", () => ({
-  WhatsNewPreview: () => <section>WHAT’S NEW</section>,
 }));
 
 vi.mock("./RankingSpotlightCard", () => ({
@@ -225,6 +227,7 @@ describe("Home UFC HQ", () => {
     expect(within(section).getByText("#2 OF 3")).toBeInTheDocument();
     expect(within(section).getByText("69 PTS")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
+    expect(within(section).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toBeInTheDocument();
     expect(within(section).getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "SHANE’S CONTENDER SERIES" })).toHaveAttribute("href", "/fighters-to-watch");
   });
@@ -237,13 +240,13 @@ describe("Home UFC HQ", () => {
 
     const section = ufcHq();
     expect(within(section).getAllByText("UNAVAILABLE").length).toBeGreaterThan(0);
-    expect(within(section).queryByRole("link", { name: /OPEN UFC/i })).not.toBeInTheDocument();
+    expect(within(section).queryByRole("link", { name: "OPEN UFC →" })).not.toBeInTheDocument();
     expect(within(section).getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "SHANE’S CONTENDER SERIES" })).toBeInTheDocument();
 
     const footballSection = screen.getByRole("region", { name: "Football HQ" });
-    expect(within(footballSection).getByRole("heading", { name: "Next slate not published" })).toBeInTheDocument();
-    expect(within(footballSection).queryByLabelText("Football Games of the Week")).not.toBeInTheDocument();
-    expect(within(footballSection).queryByText("Weekly feature")).not.toBeInTheDocument();
+    expect(within(footballSection).getByText("FOOTBALL PICKS")).toBeInTheDocument();
+    expect(within(footballSection).getByText("Kamario Taylor")).toBeInTheDocument();
+    expect(within(footballSection).queryByLabelText("Football Game of the Week")).not.toBeInTheDocument();
   });
 });

@@ -58,6 +58,8 @@ export function FootballFindLeaderVisual({
 export interface FootballFindLeaderPresentationCandidate {
   id: string;
   name: string;
+  displayName?: string;
+  season?: number;
   subtitle: string;
   value?: number;
 }
@@ -199,7 +201,10 @@ export function FootballFindLeaderPresentation({
               {renderVisual(candidate)}
               <span className="football-find-card__copy">
                 {showCandidateContext ? <small>{candidate.subtitle}</small> : null}
-                <strong>{candidate.name}</strong>
+                <span className="football-find-card__identity">
+                  <strong>{candidate.displayName ?? candidate.name}</strong>
+                  {candidate.season != null ? <b className="football-find-card__season">{candidate.season}</b> : null}
+                </span>
               </span>
               <em>{safe
                 ? typeof candidate.value === "number"

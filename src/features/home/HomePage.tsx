@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   eventPicksLocked,
@@ -12,11 +12,14 @@ import type {
   TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
 import { todayChallengeAdapter } from "../play/todaysChallengeAdapters";
-import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
+import {
+  useHqDailyChallengeStreak,
+  useTodayChallengeOverview,
+} from "../play/useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
-import { WhatsNewPreview } from "../whats-new/WhatsNewPreview";
 import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
+import { useFootballHomeSpotlightPhoto } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
@@ -30,6 +33,14 @@ function readableError(error: unknown) {
 function todayRank(leaderboard: TodayChallengeLeaderboard | null) {
   if (!leaderboard?.unlocked) return null;
   return leaderboard.entries.find((entry) => entry.isCurrentUser)?.rank ?? null;
+}
+
+function isFootballSeason(now = new Date()) {
+  const month = Number(new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    month: "numeric",
+  }).format(now));
+  return month >= 8 || month <= 2;
 }
 
 function TodayChallengeCard({
@@ -75,11 +86,11 @@ function TodayChallengeCard({
       to={to}
       aria-label={`Open ${sportLabel} Today’s Challenge`}
     >
-      <div className="home-challenge-card__topline">
-        <span>{sportLabel}</span>
-        <small>{status}</small>
-      </div>
       <div className="home-challenge-card__copy">
+        <div className="home-challenge-card__topline">
+          <span>{sportLabel} DAILY CHALLENGE</span>
+          <small>{status}</small>
+        </div>
         <h3>{title}</h3>
         {!signedIn ? (
           <p>Sign in to track today’s score and standing.</p>
@@ -109,9 +120,12 @@ function TodayChallengeCard({
 
 export default function HomePage() {
   const identity = useIdentity();
+  const navigate = useNavigate();
   const picks = usePicks();
+  const footballPlayerPhoto = useFootballHomeSpotlightPhoto();
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
+  const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
   const ufcDailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport: "ufc" });
   const ufcDailyOverview = useTodayChallengeOverview({
     profileId,
@@ -142,7 +156,7 @@ export default function HomePage() {
   const footballDailyLoading = footballDailyRuntime.loading || footballDailyOverview.loading;
   const ufcDailyError = readableError(ufcDailyRuntime.error) || readableError(ufcDailyOverview.error);
   const footballDailyError = readableError(footballDailyRuntime.error) || readableError(footballDailyOverview.error);
-  const currentStreak = ufcDailyOverview.streak.currentStreak;
+  const hqStreakError = readableError(hqDailyStreak.error);
   const currentEvent = picks.event;
   const recordSeason = currentEvent?.season ?? picks.history?.season ?? new Date().getFullYear();
   const picksProgress = pickProgress(currentEvent, picks.selections);
@@ -169,6 +183,113 @@ export default function HomePage() {
   const currentUfcRank = currentUfcStanding
     ? groupRankLabel(currentUfcStanding.rank, ufcStandings)
     : "";
+  const currentUfcRankLabel = currentUfcRank
+    ? currentUfcRank.startsWith("T-") ? currentUfcRank : `#${currentUfcRank}`
+    : "";
+
+  const ufcDailyChallenge = (
+    <TodayChallengeCard
+      sport="ufc"
+      title={ufcDailyAdapter?.title ?? "Today’s Challenge"}
+      to={ufcDailyAdapter?.dailyRoute ?? "/play"}
+      signedIn={signedIn}
+      loading={ufcDailyLoading}
+      error={ufcDailyError}
+      projection={ufcDailyRuntime.projection}
+      leaderboard={ufcDailyOverview.leaderboard}
+    />
+  );
+
+  const footballDailyChallenge = (
+    <TodayChallengeCard
+      sport="football"
+      title={footballDailyAdapter?.title ?? "Today’s Challenge"}
+      to="/football/today"
+      signedIn={signedIn}
+      loading={footballDailyLoading}
+      error={footballDailyError}
+      projection={footballDailyRuntime.projection}
+      leaderboard={footballDailyOverview.leaderboard}
+    />
+  );
+
+  const footballHq = (
+    <FootballHq
+      event={picks.footballEvent}
+      selections={picks.footballSelections}
+      history={picks.footballHistory}
+      summary={picks.footballSummary}
+      loading={picks.loading}
+      error={picks.footballHomeError}
+      signedIn={signedIn}
+      dailyChallenge={footballDailyChallenge}
+      playerPhotoSource={footballPlayerPhoto}
+      canManagePlayerPhoto={identity.profile?.canControlPicks === true}
+      onManagePlayerPhoto={() => navigate("/picks/control?sport=football#home-spotlight")}
+    />
+  );
+
+  const ufcHq = (
+    <section
+      className="home-section home-sport-hq home-sport-hq--ufc home-section--ufc-hq"
+      data-testid="home-section"
+      data-home-section="ufc-hq"
+      aria-label="UFC HQ"
+    >
+      <header className="home-sport-hq__heading">
+        <div>
+          <p className="eyebrow">UFC HQ</p>
+          <h2>Fight week</h2>
+        </div>
+        <small>PICKS · RANKINGS · CONTENDERS</small>
+      </header>
+
+      <section className="surface-card home-event-card home-event-card--compact" aria-label="UFC Picks and standing">
+        <div className="home-event-card__topline">
+          <p className="eyebrow">UFC PICKS</p>
+          <span>
+            {currentEvent
+              ? picksLocked ? "LOCKED" : "ACTIVE"
+              : picks.loading ? "LOADING" : picks.error ? "UNAVAILABLE" : "WAITING"}
+          </span>
+        </div>
+        <div className="home-event-card__picks-grid">
+          <div className="picks-progress" aria-label={`${picksProgress.completed} of ${picksProgress.total} picks completed`}>
+            <div>
+              <span>YOUR PICKS</span>
+              <b>{signedIn && currentEvent ? `${picksProgress.completed} OF ${picksProgress.total}` : "—"}</b>
+            </div>
+            <div className="picks-progress__track" aria-hidden="true"><span style={{ width: `${picksPercent}%` }} /></div>
+            <small className="home-event-card__picks-status">{picksStatus}</small>
+          </div>
+          <div className="home-event-card__standing" aria-label="UFC Picks season standing">
+            <span>{recordSeason} STANDING</span>
+            <b>{signedIn && currentUfcRankLabel ? `${currentUfcRankLabel} OF ${ufcStandings.length}` : "—"}</b>
+            <small>
+              {!signedIn
+                ? "SIGN IN TO TRACK"
+                : currentUfcStanding
+                  ? `${currentUfcStanding.totalPoints} PTS`
+                  : "NO STANDING YET"}
+            </small>
+          </div>
+        </div>
+        {currentEvent ? (
+          identity.profile ? (
+            <Link className="secondary-action" to="/picks">
+              {picksProgress.completed === picksProgress.total ? "REVIEW PICKS" : "MAKE PICKS"} →
+            </Link>
+          ) : (
+            <button className="secondary-action" type="button" onClick={identity.openDialog}>SIGN IN TO MAKE PICKS →</button>
+          )
+        ) : null}
+      </section>
+
+      {ufcDailyChallenge}
+      {spotlight ? <RankingSpotlightCard fighter={spotlight} /> : null}
+      <ShanesWatchlistCard />
+    </section>
+  );
 
   return (
     <div className="page home-page">
@@ -184,21 +305,17 @@ export default function HomePage() {
           </div>
 
           {!identity.profile ? (
-            <div className="hq-card__signed-out">
-              <div className="hq-card__grid" aria-label="Your HQ profile benefits">
-                <article className="hq-stat"><strong>—</strong><span>Daily streak</span><small>SYNC ACROSS DEVICES</small></article>
-                <article className="hq-stat"><strong>—</strong><span>UFC Picks record</span><small>SIGN IN TO TRACK</small></article>
-                <article className="hq-stat"><strong>—</strong><span>Football Picks record</span><small>SIGN IN TO TRACK</small></article>
-              </div>
-              <p>Sign in to sync your daily streak and UFC + Football Picks records across devices.</p>
-              <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO YOUR HQ</button>
+            <div className="hq-card__grid" aria-label="Your HQ profile stats">
+              <article className="hq-stat"><strong>—</strong><span>HQ Daily streak</span><small>UFC OR FOOTBALL CHALLENGE</small></article>
+              <article className="hq-stat"><strong>—</strong><span>UFC Picks record</span><small>SIGN IN TO TRACK</small></article>
+              <article className="hq-stat"><strong>—</strong><span>Football Picks record</span><small>SIGN IN TO TRACK</small></article>
             </div>
           ) : (
             <div className="hq-card__grid">
-              <article className={`hq-stat${ufcDailyError ? " is-unavailable" : ""}`}>
-                <strong>{ufcDailyLoading ? "…" : ufcDailyError ? "—" : currentStreak}</strong>
-                <span>Daily streak</span>
-                <small>{ufcDailyError ? "UNAVAILABLE" : "UFC TODAY’S CHALLENGE"}</small>
+              <article className={`hq-stat${hqStreakError ? " is-unavailable" : ""}`}>
+                <strong>{hqDailyStreak.loading ? "…" : hqStreakError ? "—" : hqDailyStreak.streak.currentStreak}</strong>
+                <span>HQ Daily streak</span>
+                <small>{hqStreakError ? "UNAVAILABLE" : "UFC OR FOOTBALL CHALLENGE"}</small>
               </article>
 
               <article className={`hq-stat${picks.error ? " is-unavailable" : ""}`}>
@@ -225,119 +342,17 @@ export default function HomePage() {
         </section>
       </section>
 
-      <section
-        className="home-section home-section--whats-new"
-        data-testid="home-section"
-        data-home-section="whats-new"
-        aria-label="What’s New"
-      >
-        <WhatsNewPreview />
-      </section>
-
-      <section
-        className="home-section home-section--todays-challenges"
-        data-testid="home-section"
-        data-home-section="todays-challenges"
-        aria-label="Today’s Challenges"
-      >
-        <div className="section-heading home-challenges__heading">
-          <div>
-            <p className="eyebrow">TODAY</p>
-            <h2>Today’s Challenges</h2>
-          </div>
-        </div>
-        <div className="home-challenges__grid">
-          <TodayChallengeCard
-            sport="ufc"
-            title={ufcDailyAdapter?.title ?? "Today’s Challenge"}
-            to={ufcDailyAdapter?.dailyRoute ?? "/play"}
-            signedIn={signedIn}
-            loading={ufcDailyLoading}
-            error={ufcDailyError}
-            projection={ufcDailyRuntime.projection}
-            leaderboard={ufcDailyOverview.leaderboard}
-          />
-          <TodayChallengeCard
-            sport="football"
-            title={footballDailyAdapter?.title ?? "Today’s Challenge"}
-            to="/football/today"
-            signedIn={signedIn}
-            loading={footballDailyLoading}
-            error={footballDailyError}
-            projection={footballDailyRuntime.projection}
-            leaderboard={footballDailyOverview.leaderboard}
-          />
-        </div>
-      </section>
-
-      <section
-        className="home-section home-sport-hq home-sport-hq--ufc home-section--ufc-hq"
-        data-testid="home-section"
-        data-home-section="ufc-hq"
-        aria-label="UFC HQ"
-      >
-        <header className="home-sport-hq__heading">
-          <div>
-            <p className="eyebrow">UFC HQ</p>
-            <h2>Fight week</h2>
-          </div>
-          <small>PICKS · RANKINGS · CONTENDERS</small>
-        </header>
-
-        <section className="surface-card home-event-card home-event-card--compact" aria-label="UFC Picks and standing">
-          <div className="home-event-card__topline">
-            <p className="eyebrow">UFC PICKS</p>
-            <span>
-              {currentEvent
-                ? picksLocked ? "LOCKED" : "ACTIVE"
-                : picks.loading ? "LOADING" : picks.error ? "UNAVAILABLE" : "WAITING"}
-            </span>
-          </div>
-          <div className="home-event-card__picks-grid">
-            <div className="picks-progress" aria-label={`${picksProgress.completed} of ${picksProgress.total} picks completed`}>
-              <div>
-                <span>YOUR PICKS</span>
-                <b>{signedIn && currentEvent ? `${picksProgress.completed} OF ${picksProgress.total}` : "—"}</b>
-              </div>
-              <div className="picks-progress__track" aria-hidden="true"><span style={{ width: `${picksPercent}%` }} /></div>
-              <small className="home-event-card__picks-status">{picksStatus}</small>
-            </div>
-            <div className="home-event-card__standing" aria-label="UFC Picks season standing">
-              <span>{recordSeason} STANDING</span>
-              <b>{signedIn && currentUfcRank ? `#${currentUfcRank} OF ${ufcStandings.length}` : "—"}</b>
-              <small>
-                {!signedIn
-                  ? "SIGN IN TO TRACK"
-                  : currentUfcStanding
-                    ? `${currentUfcStanding.totalPoints} PTS`
-                    : "NO STANDING YET"}
-              </small>
-            </div>
-          </div>
-          {currentEvent ? (
-            identity.profile ? (
-              <Link className="secondary-action" to="/picks">
-                {picksProgress.completed === picksProgress.total ? "REVIEW PICKS" : "MAKE PICKS"} →
-              </Link>
-            ) : (
-              <button className="secondary-action" type="button" onClick={identity.openDialog}>SIGN IN TO MAKE PICKS →</button>
-            )
-          ) : null}
-        </section>
-
-        {spotlight ? <RankingSpotlightCard fighter={spotlight} /> : null}
-        <ShanesWatchlistCard />
-      </section>
-
-      <FootballHq
-        event={picks.footballEvent}
-        selections={picks.footballSelections}
-        history={picks.footballHistory}
-        summary={picks.footballSummary}
-        loading={picks.loading}
-        error={picks.footballHomeError}
-        signedIn={signedIn}
-      />
+      {isFootballSeason() ? (
+        <>
+          {footballHq}
+          {ufcHq}
+        </>
+      ) : (
+        <>
+          {ufcHq}
+          {footballHq}
+        </>
+      )}
     </div>
   );
 }

@@ -313,6 +313,17 @@ async function rpc(client: TodayChallengeClient, name: string, args?: Record<str
   return data;
 }
 
+export async function loadHqDailyChallengeStreak(
+  suppliedClient?: TodayChallengeClient | null,
+): Promise<TodayChallengeStreak | null> {
+  const client = suppliedClient === undefined
+    ? getSupabaseClient() as unknown as TodayChallengeClient | null
+    : suppliedClient;
+  if (!client) return null;
+  const row = streakSchema.parse(await rpc(client, "get_my_hq_daily_challenge_streak"));
+  return { currentStreak: row.current_streak, bestStreak: row.best_streak };
+}
+
 export interface TodayChallengeRepository {
   loadToday(): Promise<TodayChallengeProjection>;
   advance(
