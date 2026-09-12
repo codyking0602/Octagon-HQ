@@ -213,7 +213,18 @@ function cfbPlayerFacts(subject) {
   const rows = cfbRowsFor(subject);
   if (!rows.length) return [];
   const p = subject.position;
-  const facts = [fact("CFB", "cfb-career-games", sumObserved(rows, "gamesPlayed"))];
+  const observedGames = sumObserved(rows, "gamesPlayed");
+  const careerSeasons = subject.startSeason != null && subject.endSeason != null
+    ? Math.max(1, subject.endSeason - subject.startSeason + 1)
+    : null;
+  // cfbfastR's normalized event rows can expose a single nominal "game" for
+  // positions such as OL without representing actual games played. Do not turn
+  // that partial event coverage into a canonical career-games fact.
+  const usableGames = finite(observedGames)
+    && (careerSeasons == null ? observedGames >= 3 : observedGames >= careerSeasons * 3)
+    ? observedGames
+    : null;
+  const facts = compact([fact("CFB", "cfb-career-games", usableGames)]);
   if (p === "QB") facts.push(...compact([fact("CFB", "cfb-career-passing-completions", sumObserved(rows, "passCompletions")), fact("CFB", "cfb-career-passing-attempts", sumObserved(rows, "passAttempts")), fact("CFB", "cfb-career-passing-yards", sumObserved(rows, "passYards")), fact("CFB", "cfb-career-passing-touchdowns", sumObserved(rows, "passTouchdowns")), fact("CFB", "cfb-career-interceptions-thrown", sumObserved(rows, "interceptionsThrown")), fact("CFB", "cfb-best-season-passing-yards", maxObserved(rows, "passYards")), fact("CFB", "cfb-best-season-passing-touchdowns", maxObserved(rows, "passTouchdowns"))]));
   if (["QB", "RB", "WR", "TE"].includes(p)) facts.push(...compact([fact("CFB", "cfb-career-rushing-attempts", sumObserved(rows, "rushAttempts")), fact("CFB", "cfb-career-rushing-yards", sumObserved(rows, "rushYards")), fact("CFB", "cfb-career-rushing-touchdowns", sumObserved(rows, "rushTouchdowns")), fact("CFB", "cfb-best-season-rushing-yards", maxObserved(rows, "rushYards")), fact("CFB", "cfb-best-season-rushing-touchdowns", maxObserved(rows, "rushTouchdowns"))]));
   if (["RB", "WR", "TE"].includes(p)) facts.push(...compact([fact("CFB", "cfb-career-receptions", sumObserved(rows, "receptions")), fact("CFB", "cfb-career-targets", sumObserved(rows, "targets")), fact("CFB", "cfb-career-receiving-yards", sumObserved(rows, "receivingYards")), fact("CFB", "cfb-career-receiving-touchdowns", sumObserved(rows, "receivingTouchdowns")), fact("CFB", "cfb-career-total-touchdowns", sumObserved(rows, "totalTouchdowns")), fact("CFB", "cfb-best-season-receptions", maxObserved(rows, "receptions")), fact("CFB", "cfb-best-season-receiving-yards", maxObserved(rows, "receivingYards")), fact("CFB", "cfb-best-season-receiving-touchdowns", maxObserved(rows, "receivingTouchdowns"))]));
