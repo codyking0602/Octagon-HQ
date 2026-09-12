@@ -296,6 +296,28 @@ describe("Football Find the Leader maturity", () => {
     expect(second.metricId).not.toBe(first.metricId);
   });
 
+  it("keeps season identity separate from truncatable Find the Leader copy", () => {
+    for (const metricId of [
+      "qb-season-passing-yards",
+      "nfl-team-wins",
+      "cfb-points-for",
+      "cfb-team-season-wins",
+    ] as const) {
+      const rows = footballFindLeaderMetricRows(metricId);
+      expect(rows.length, metricId).toBeGreaterThan(0);
+      for (const row of rows) {
+        expect(row.season, `${metricId}:${row.id}`).toEqual(expect.any(Number));
+        expect(row.displayName, `${metricId}:${row.id}`).toBeTruthy();
+        expect(row.displayName, `${metricId}:${row.id}`).not.toContain(String(row.season));
+        expect(row.subtitle, `${metricId}:${row.id}`).not.toContain(String(row.season));
+      }
+    }
+
+    const career = footballFindLeaderMetricRows("qb-passing-yards")[0]!;
+    expect(career).not.toHaveProperty("season");
+    expect(career).not.toHaveProperty("displayName");
+  });
+
   it("formats every enabled metric from the canonical factual definition", () => {
     for (const definition of footballFindLeaderEnabledMetricDefinitions) {
       for (const { value } of footballFindLeaderMetricRows(definition.id)) {
