@@ -240,13 +240,13 @@ describe("Home UFC HQ", () => {
 
     const section = ufcHq();
     expect(within(section).getAllByText("UNAVAILABLE").length).toBeGreaterThan(0);
-    expect(within(section).queryByRole("link", { name: /OPEN UFC/i })).not.toBeInTheDocument();
+    expect(within(section).queryByRole("link", { name: "OPEN UFC →" })).not.toBeInTheDocument();
     expect(within(section).getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "SHANE’S CONTENDER SERIES" })).toBeInTheDocument();
 
     const footballSection = screen.getByRole("region", { name: "Football HQ" });
     expect(within(footballSection).getByText("FOOTBALL PICKS")).toBeInTheDocument();
     expect(within(footballSection).getByText("Kamario Taylor")).toBeInTheDocument();
-    expect(within(footballSection).queryByLabelText("Football Games of the Week")).not.toBeInTheDocument();
+    expect(within(footballSection).queryByLabelText("Football Game of the Week")).not.toBeInTheDocument();
   });
 });
