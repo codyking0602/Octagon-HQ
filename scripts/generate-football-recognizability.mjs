@@ -123,17 +123,6 @@ function inferredCollegeSkillPosition(p) {
 }
 
 const yearsFor = (p) => [...p.seasons].filter(Boolean).sort((a, b) => a - b);
-const dominantCollegeTeams = (p) => {
-  const teams = new Set();
-  for (const season of yearsFor(p)) {
-    const candidates = [...p.teamEvidence.entries()]
-      .filter(([key]) => key.startsWith(`${season}:`))
-      .map(([key, score]) => ({ team: key.slice(String(season).length + 1), score }))
-      .sort((left, right) => right.score - left.score || left.team.localeCompare(right.team));
-    if (candidates[0]) teams.add(candidates[0].team);
-  }
-  return teams;
-};
 const total = (p, ...fields) => fields.reduce((sum, field) => sum + n(p.totals[field]), 0);
 const peak = (p, ...fields) => Math.max(0, ...fields.map((field) => n(p.peaks[field])));
 
