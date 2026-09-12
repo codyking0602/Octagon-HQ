@@ -59,6 +59,8 @@ const promotedGames = promotedSubjects.filter((subject) => subject.kind === "gam
 
 const nflPlayers = rowObjects(readJson("data/generated/football/nfl/player-seasons-1999-2025.json"));
 const cfbPlayers = rowObjects(readJson("data/generated/football/cfb/player-seasons-2014-2025.json"));
+const cfbPlayerSeasonRecognition = readJson("data/generated/football/cfb/player-season-recognition.json");
+const cfbPlayerSeasonRecognitionById = new Map(cfbPlayerSeasonRecognition.records.map((record) => [record.id, record]));
 const nflTeamStats = rowObjects(readJson("data/generated/football/nfl/team-seasons-1999-2025.json"));
 const nflTeamResults = rowObjects(readJson("data/generated/football/relationships/nfl-team-season-results-1999-2025.json"));
 const cfbTeamResults = rowObjects(readJson("data/generated/football/relationships/cfb-team-season-results-2002-2025.json"));
@@ -134,13 +136,25 @@ function dominantCfbSeasonRows(rows) {
 }
 
 function cfbRowsFor(subject) {
+  const seasonRecognition = subject.kind === "player-season"
+    ? cfbPlayerSeasonRecognitionById.get(subject.id)
+    : null;
+
+  if (seasonRecognition) {
+    return (cfbPlayersById.get(String(seasonRecognition.sourceId)) ?? []).filter((row) => (
+      row.season === seasonRecognition.season
+      && normalized(row.playerName) === normalized(subject.name.replace(/\\s+\\d{4}$/, ""))
+      && normalized(row.team) === normalized(seasonRecognition.school)
+    ));
+  }
+
   const exactSourceId = sourceIdentityId(subject);
   let rows = exactSourceId ? (cfbPlayersById.get(String(exactSourceId)) ?? []) : [];
   if (rows.length) {
     return dominantCfbSeasonRows(rows.filter((row) => withinWindow(row, subject)));
   }
 
-  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
+  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\\s+\\d{4}$/, "") : subject.name;
   let nameRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
 
   // Name is only candidate discovery. Canonical role/program metadata must narrow
