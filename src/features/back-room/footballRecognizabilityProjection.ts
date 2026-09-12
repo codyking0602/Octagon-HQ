@@ -141,11 +141,47 @@ function canonicalCatalogPlayerId(subjectId: string) {
   return canonicalCatalogPlayerIdByIdentityId.get(subjectId) ?? subjectId;
 }
 
-const rawCanonicalPlayerSourceBindings = (
-  projectionJson as typeof projectionJson & {
-    canonicalPlayerSourceBindings?: readonly CanonicalPlayerSourceBinding[];
+function parseCanonicalPlayerSourceBindings(rows: unknown): readonly CanonicalPlayerSourceBinding[] {
+  if (!Array.isArray(rows)) {
+    throw new Error("Invalid canonical Football player source bindings: expected an array.");
   }
-).canonicalPlayerSourceBindings ?? [];
+
+  return rows.map((row, index) => {
+    if (typeof row !== "object" || row == null || Array.isArray(row)) {
+      throw new Error(`Invalid canonical Football player source binding at index ${index}.`);
+    }
+
+    const candidate = row as Record<string, unknown>;
+    const canonicalId = candidate.canonicalId;
+    const league = candidate.league;
+    const sourceProvider = candidate.sourceProvider;
+    const sourceId = candidate.sourceId;
+    const sourceSubjectId = candidate.sourceSubjectId;
+
+    if (
+      typeof canonicalId !== "string"
+      || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(canonicalId)
+      || (league !== "NFL" && league !== "CFB")
+      || (sourceProvider !== "nflverse" && sourceProvider !== "cfbfastR")
+      || typeof sourceId !== "string"
+      || sourceId.trim() === ""
+      || typeof sourceSubjectId !== "string"
+      || sourceSubjectId.trim() === ""
+      || (league === "NFL" && sourceProvider !== "nflverse")
+      || (league === "CFB" && sourceProvider !== "cfbfastR")
+      || (sourceProvider === "nflverse" && sourceSubjectId !== `nflverse-player-${sourceId}`)
+      || (sourceProvider === "cfbfastR" && !sourceSubjectId.startsWith(`cfbfast-r-player-${sourceId}-`))
+    ) {
+      throw new Error(`Invalid canonical Football player source binding at index ${index}.`);
+    }
+
+    return { canonicalId, league, sourceProvider, sourceId, sourceSubjectId };
+  });
+}
+
+const rawCanonicalPlayerSourceBindings = parseCanonicalPlayerSourceBindings(
+  projectionJson.canonicalPlayerSourceBindings ?? [],
+);
 
 // The generator may create a normalized stage id for a source-backed subject whose
 // product-owned catalog id predates the nfl-/cfb- convention. Collapse that stage
