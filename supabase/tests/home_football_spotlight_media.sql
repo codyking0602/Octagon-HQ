@@ -19,6 +19,27 @@ begin
   perform public.register_unclaimed_pin_profile(v_member_id,'Home Spotlight Member','HM');
   insert into public.pick_control_owners(profile_id) values(v_owner_id);
 
+  if not exists (
+    select 1
+    from storage.buckets
+    where id = 'home-feature-media'
+      and public = true
+      and file_size_limit = 20971520
+      and allowed_mime_types @> array['image/jpeg', 'image/png', 'image/webp', 'image/avif']::text[]
+  ) then
+    raise exception 'Home feature media bucket is missing or misconfigured';
+  end if;
+
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'storage'
+      and tablename = 'objects'
+      and policyname = 'home_feature_media_owner_update'
+  ) then
+    raise exception 'Home feature media owner update policy is missing';
+  end if;
+
   perform set_config('request.jwt.claim.role','anon',true);
   perform set_config('request.jwt.claim.sub','',true);
   v_media := public.get_home_feature_media('football-player-spotlight');
@@ -43,14 +64,14 @@ begin
   perform set_config('request.jwt.claim.sub',v_owner_id::text,true);
   v_media := public.set_home_feature_media(
     'football-player-spotlight',
-    'data:image/webp;base64,UklGRg=='
+    'https://example.supabase.co/storage/v1/object/public/home-feature-media/football/player-spotlight?v=test'
   );
-  if v_media->>'photo_source' <> 'data:image/webp;base64,UklGRg==' then
+  if v_media->>'photo_source' <> 'https://example.supabase.co/storage/v1/object/public/home-feature-media/football/player-spotlight?v=test' then
     raise exception 'owner Home feature media write did not round-trip: %',v_media;
   end if;
 
   v_media := public.get_home_feature_media('football-player-spotlight');
-  if v_media->>'photo_source' <> 'data:image/webp;base64,UklGRg==' then
+  if v_media->>'photo_source' <> 'https://example.supabase.co/storage/v1/object/public/home-feature-media/football/player-spotlight?v=test' then
     raise exception 'canonical Home media read did not return the owner update: %',v_media;
   end if;
 
