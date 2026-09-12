@@ -22,6 +22,7 @@ import {
 import {
   footballNonPlayerRecognitionProjectionFor,
   footballProjectedNonPlayerRecognitionSubjects,
+  footballProjectedPlayerRegistrationTier,
   footballProjectedPlayerSubjects,
   footballRecognitionProjectionSubjectIdFor,
 } from "./footballRecognizabilityProjection";
@@ -237,7 +238,13 @@ const projectedPlayerSourceSubjects: readonly FootballSubjectProfile[] = footbal
     const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
     return projectionId == null || !reconciledProjectedPlayerIds.has(projectionId);
   })
-  .map((subject) => enrichFootballSubject(subject));
+  .map((subject) => {
+    const exactTier = footballProjectedPlayerRegistrationTier(subject.id);
+    return enrichFootballSubject(subject, {
+      recognizabilityTier: exactTier,
+      casualEligible: exactTier !== "D",
+    });
+  });
 
 /** Stage 12 adds identity-only franchise/game/coach/era families through the same query owner. */
 const projectedNonPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedNonPlayerRecognitionSubjects
