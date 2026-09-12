@@ -707,9 +707,11 @@ describe("Who Am I football scope-aware clue aggregation", () => {
     for (const league of ["NFL", "CFB"] as const) {
       const universe = getFootballWhoAmIUniverse(league);
       const minimumDepth = Math.min(...universe.candidates.map((candidate) => candidate.clues.length));
-      expect(minimumDepth).toBeGreaterThanOrEqual(12);
-
       const shallowest = universe.candidates.filter((candidate) => candidate.clues.length === minimumDepth);
+      expect(
+        minimumDepth,
+        shallowest.map((candidate) => `${candidate.id}:${candidate.clues.length}`).join(", "),
+      ).toBeGreaterThanOrEqual(12);
       expect(shallowest.length).toBeGreaterThan(0);
 
       for (const candidate of shallowest) {
