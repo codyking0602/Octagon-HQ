@@ -1,6 +1,23 @@
 -- Stage 11 Slice 5: activate the approved future Today’s Challenge mixes at the
 -- first unmaterialized Central day. Historical schedules and published Daily rows stay immutable.
 
+-- Slice 4 added Who Am I to the canonical Daily setup/challenge constraints. Extend the
+-- existing schedule-table constraint too before a future rotation is allowed to reference it.
+alter table private.daily_challenge_schedule_versions
+  drop constraint if exists daily_challenge_schedule_versions_supported_games_check;
+
+alter table private.daily_challenge_schedule_versions
+  add constraint daily_challenge_schedule_versions_supported_games_check
+  check (game_cycle <@ array[
+    'find_leader',
+    'blind_resume',
+    'wavelength',
+    'blind_rank_5',
+    'keep_4_cut_4',
+    'hit_the_number',
+    'who_am_i'
+  ]::text[]);
+
 do $schedule$
 declare
   v_cutover constant date := date '2026-09-12';
