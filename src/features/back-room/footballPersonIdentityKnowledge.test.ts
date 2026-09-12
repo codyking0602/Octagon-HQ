@@ -67,7 +67,7 @@ const PR6_SUBJECT_IDS = new Set([
   "dan-marino",
   "nfl-josh-allen",
   "nfl-roger-staubach",
-  "nfl-adrian-peterson",
+  "nflverse-player-00-0025394",
   "earl-campbell",
   "gale-sayers",
   "marshall-faulk",
@@ -212,9 +212,9 @@ describe("football person identity knowledge", () => {
   });
 
   it("binds Adrian Peterson research to his actual NFL source identity", () => {
-    const adrian = getFootballSubject("nfl-adrian-peterson");
+    const adrian = getFootballSubject("nflverse-player-00-0025394");
     expect(adrian?.sourceIdentityKeys).toContainEqual({ provider: "nflverse", id: "00-0025394" });
-    expect(getFootballPersonIdentityKnowledge("nfl-adrian-peterson")?.facts.some((fact) => fact.conceptId === "acl-mcl-rapid-comeback")).toBe(true);
+    expect(getFootballPersonIdentityKnowledge("nflverse-player-00-0025394")?.facts.some((fact) => fact.conceptId === "acl-mcl-rapid-comeback")).toBe(true);
     expect(getFootballPersonIdentityKnowledge("nflverse-player-00-0021306")).toBeNull();
   });
 
