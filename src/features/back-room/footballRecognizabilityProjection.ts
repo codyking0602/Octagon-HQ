@@ -246,7 +246,12 @@ function canonicalReviewedPlayerId(subjectId: string) {
 function canonicalizeReviewedPlayerSubject(subject: FootballCanonicalSubject): FootballCanonicalSubject {
   if (subject.kind !== "player-career") return subject;
   const canonicalId = canonicalReviewedPlayerId(subject.id);
-  return canonicalId === subject.id ? subject : { ...subject, id: canonicalId };
+  if (canonicalId === subject.id) return subject;
+  return {
+    ...subject,
+    id: canonicalId,
+    aliases: [...new Set([...(subject.aliases ?? []), subject.id])],
+  };
 }
 
 const historicalPlayerRepairs = footballHistoricalRecognitionRepairs
