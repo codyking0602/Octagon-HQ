@@ -74,8 +74,14 @@ for (const row of nflPlayers) {
   const key = normalized(row.playerDisplayName ?? row.playerName);
   if (key) { const rows = nflPlayersByName.get(key) ?? []; rows.push(row); nflPlayersByName.set(key, rows); }
 }
+const cfbPlayersById = new Map();
 const cfbPlayersByName = new Map();
 for (const row of cfbPlayers) {
+  const sourceId = String(row.sourcePlayerId ?? "");
+  if (sourceId) {
+    const idRows = cfbPlayersById.get(sourceId) ?? [];
+    idRows.push(row); cfbPlayersById.set(sourceId, idRows);
+  }
   const key = normalized(row.playerName);
   const rows = cfbPlayersByName.get(key) ?? [];
   rows.push(row); cfbPlayersByName.set(key, rows);
@@ -101,14 +107,50 @@ function nflRowsFor(subject) {
   }
   return rows.filter((row) => withinWindow(row, subject));
 }
-function cfbRowsFor(subject) {
-  const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
-  let rows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
-  if (subject.school) {
-    const schoolRows = rows.filter((row) => normalized(row.team) === normalized(subject.school));
-    if (schoolRows.length) rows = schoolRows;
+function cfbRowVolume(row) {
+  return (finite(row.gamesPlayed) ? row.gamesPlayed : 0) * 100
+    + (finite(row.passAttempts) ? row.passAttempts : 0)
+    + (finite(row.rushAttempts) ? row.rushAttempts : 0)
+    + (finite(row.receptions) ? row.receptions : 0)
+    + (finite(row.sacks) ? row.sacks : 0) * 10
+    + (finite(row.defensiveInterceptions) ? row.defensiveInterceptions : 0) * 20
+    + (finite(row.passBreakups) ? row.passBreakups : 0) * 5;
+}
+
+function dominantCfbSeasonRows(rows) {
+  const bySeason = new Map();
+  for (const row of rows) {
+    if (!finite(row.season)) continue;
+    const current = bySeason.get(row.season);
+    if (
+      !current
+      || cfbRowVolume(row) > cfbRowVolume(current)
+      || (cfbRowVolume(row) === cfbRowVolume(current) && String(row.team).localeCompare(String(current.team)) < 0)
+    ) {
+      bySeason.set(row.season, row);
+    }
   }
-  return rows;
+  return [...bySeason.values()].sort((left, right) => left.season - right.season);
+}
+
+function cfbRowsFor(subject) {
+  const exactSourceId = sourceIdentityId(subject);
+  let rows = exactSourceId ? (cfbPlayersById.get(String(exactSourceId)) ?? []) : [];
+  if (!rows.length) {
+    const lookupName = subject.kind === "player-season" ? subject.name.replace(/\s+\d{4}$/, "") : subject.name;
+    const nameRows = (cfbPlayersByName.get(normalized(lookupName)) ?? []).filter((row) => withinWindow(row, subject));
+    const sourceIds = new Set(nameRows.map((row) => String(row.sourcePlayerId ?? "")).filter(Boolean));
+    if (sourceIds.size !== 1) return [];
+    rows = nameRows;
+  } else {
+    rows = rows.filter((row) => withinWindow(row, subject));
+  }
+  const dominantRows = dominantCfbSeasonRows(rows);
+  if (subject.school) {
+    const schoolRows = dominantRows.filter((row) => normalized(row.team) === normalized(subject.school));
+    if (schoolRows.length) return schoolRows;
+  }
+  return dominantRows;
 }
 
 function nflPlayerFacts(subject) {
