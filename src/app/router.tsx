@@ -20,6 +20,7 @@ const FootballWavelengthPage = lazy(() => import("../features/back-room/Football
 const FootballBlindResumePage = lazy(() => import("../features/back-room/FootballBlindResumePage"));
 const FootballHitTheNumberPage = lazy(() => import("../features/back-room/FootballHitTheNumberPage"));
 const FootballFindLeaderPage = lazy(() => import("../features/back-room/FootballFindLeaderPage"));
+const FootballDraftRoomPage = lazy(() => import("../features/back-room/FootballDraftRoomPage"));
 const TodayChallengeHubPage = lazy(() => import("../features/play/TodayChallengeHubPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
@@ -79,6 +80,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/blind-resume", element: <FootballBlindResumePage /> },
       { path: "football/hit-the-number", element: <FootballHitTheNumberPage /> },
       { path: "football/find-leader", element: <FootballFindLeaderPage /> },
+      { path: "football/draft-room", element: <FootballDraftRoomPage /> },
       { path: "football/20-questions", element: <Navigate to="/football/who-am-i" replace /> },
       { path: "football/who-am-i", element: <FootballWhoAmIPage /> },
       { path: "picks", element: <PicksPage /> },

@@ -12,7 +12,8 @@ export type PlayGameId =
   | "auction"
   | "hit-the-number"
   | "20-questions"
-  | "who-am-i";
+  | "who-am-i"
+  | "draft-room";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
 
@@ -44,7 +45,8 @@ export type PlayCompletionState =
   | "auction-complete"
   | "target-selection-locked"
   | "identity-guessed-or-question-limit"
-  | "identity-guessed-or-clue-limit";
+  | "identity-guessed-or-clue-limit"
+  | "draft-room-complete";
 
 export interface PlayGameLineupDefinition {
   defaultType: PlayLineupType;
@@ -285,6 +287,30 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily-and-casual",
       difficultyModel: "A cutoff-centered eight-fighter board revealed one fighter at a time with every Keep/Cut decision locked.",
+    },
+  },
+  {
+    sport: "football",
+    id: "draft-room",
+    route: "/football/draft-room",
+    icon: "$",
+    title: "Draft Room",
+    description: "Build a QB through nominations and sealed bids, then grade the finished build through canonical Football ratings.",
+    availability: "preview",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: 5,
+      completionState: "draft-room-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "challenge-completion",
+      difficultyModel: "Two-player Build a QB room with five canonical traits, one nomination at a time, sealed bids, fixed bankrolls, and server-owned challenge state.",
     },
   },
   {
