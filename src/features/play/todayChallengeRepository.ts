@@ -409,7 +409,7 @@ export function createTodayChallengeRepository(
             blindRank5: entry.game_averages.blind_rank_5,
             keep4Cut4: entry.game_averages.keep_4_cut_4,
             hitTheNumber: entry.game_averages.hit_the_number ?? null,
-          whoAmI: entry.game_averages.who_am_i ?? null,
+            whoAmI: entry.game_averages.who_am_i ?? null,
           },
           isCurrentUser: entry.is_current_user,
         })),
