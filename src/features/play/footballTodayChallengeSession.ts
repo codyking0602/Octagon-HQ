@@ -124,6 +124,13 @@ export function footballTodayScheduleVersionForDay(day: string): string {
   return FOOTBALL_LEGACY_SCHEDULE_VERSION;
 }
 
+function footballTodaySetupScheduleVersionForDay(day: string): string {
+  dayNumber(day);
+  return day >= FOOTBALL_TODAY_CUTOVER_DAY
+    ? FOOTBALL_TODAY_SCHEDULE_VERSION
+    : FOOTBALL_LEGACY_SCHEDULE_VERSION;
+}
+
 export function footballTodayGameForDay(day: string): OfficialDailyGameType {
   const currentDayNumber = dayNumber(day);
   if (day >= FOOTBALL_TODAY_CUTOVER_DAY) {
@@ -287,10 +294,11 @@ function publicAttempt(graded: ReturnType<typeof grade>) {
 function buildSingle(
   day: string,
   scheduleVersion: string,
+  setupScheduleVersion: string,
   gameType: OfficialDailyGameType,
   actions: readonly JsonRecord[],
 ): FootballTodayProjection {
-  const publication = buildFootballOfficialDailySetup(gameType, day, scheduleVersion);
+  const publication = buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion);
   const run = replay(gameType, publication, actions);
   const graded = run.complete && run.finalSubmission ? grade(gameType, run.context, run.finalSubmission) : null;
   return {
@@ -316,10 +324,11 @@ function buildSingle(
 function buildDailyDouble(
   day: string,
   scheduleVersion: string,
+  setupScheduleVersion: string,
   actions: readonly JsonRecord[],
 ): FootballTodayProjection {
-  const rankPublication = buildFootballOfficialDailySetup("blind_rank_5", day, scheduleVersion);
-  const keepPublication = buildFootballOfficialDailySetup("keep_4_cut_4", day, scheduleVersion);
+  const rankPublication = buildFootballOfficialDailySetup("blind_rank_5", day, setupScheduleVersion);
+  const keepPublication = buildFootballOfficialDailySetup("keep_4_cut_4", day, setupScheduleVersion);
   const rankActions = actions.slice(0, Math.min(actions.length, 5));
   const keepActions = actions.slice(5);
   const rank = replay("blind_rank_5", rankPublication, rankActions);
@@ -382,29 +391,31 @@ export function buildFootballTodayProjection(
   if (actionHistory.length > 32) throw new Error("Football Today’s Challenge action history is too long.");
   const gameType = footballTodayGameForDay(day);
   const scheduleVersion = footballTodayScheduleVersionForDay(day);
+  const setupScheduleVersion = footballTodaySetupScheduleVersionForDay(day);
   return gameType === "keep_4_cut_4"
-    ? buildDailyDouble(day, scheduleVersion, actionHistory)
-    : buildSingle(day, scheduleVersion, gameType, actionHistory);
+    ? buildDailyDouble(day, scheduleVersion, setupScheduleVersion, actionHistory)
+    : buildSingle(day, scheduleVersion, setupScheduleVersion, gameType, actionHistory);
 }
 
 export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPersistenceSetup {
   dayNumber(day);
   const gameType = footballTodayGameForDay(day);
   const scheduleVersion = footballTodayScheduleVersionForDay(day);
+  const setupScheduleVersion = footballTodaySetupScheduleVersionForDay(day);
   if (gameType !== "keep_4_cut_4") {
     return {
       gameType,
       scheduleVersion,
-      ...buildFootballOfficialDailySetup(gameType, day, scheduleVersion),
+      ...buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion),
     };
   }
 
-  const rank = buildFootballOfficialDailySetup("blind_rank_5", day, scheduleVersion);
-  const keep = buildFootballOfficialDailySetup("keep_4_cut_4", day, scheduleVersion);
+  const rank = buildFootballOfficialDailySetup("blind_rank_5", day, setupScheduleVersion);
+  const keep = buildFootballOfficialDailySetup("keep_4_cut_4", day, setupScheduleVersion);
   return {
     gameType: "keep_4_cut_4",
     scheduleVersion,
-    setupKey: `${FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION}:${scheduleVersion}:${day}`,
+    setupKey: `${FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION}:${setupScheduleVersion}:${day}`,
     contentVersion: FOOTBALL_DAILY_DOUBLE_CONTENT_VERSION,
     scoringVersion: SHARED_DAILY_DOUBLE_SCORING_VERSION,
     publicSetup: {
@@ -435,9 +446,9 @@ export function buildFootballTodayRuntimeSnapshot(
 ): FootballTodayRuntimeSnapshot {
   const projection = buildFootballTodayProjection(day, actionHistory);
   const gameType = footballTodayGameForDay(day);
-  const scheduleVersion = projection.schedule_version;
+  const setupScheduleVersion = footballTodaySetupScheduleVersionForDay(day);
   if (gameType !== "keep_4_cut_4") {
-    const publication = buildFootballOfficialDailySetup(gameType, day, scheduleVersion);
+    const publication = buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion);
     const run = replay(gameType, publication, actionHistory);
     return {
       projection,
@@ -445,8 +456,8 @@ export function buildFootballTodayRuntimeSnapshot(
     };
   }
 
-  const rankPublication = buildFootballOfficialDailySetup("blind_rank_5", day, scheduleVersion);
-  const keepPublication = buildFootballOfficialDailySetup("keep_4_cut_4", day, scheduleVersion);
+  const rankPublication = buildFootballOfficialDailySetup("blind_rank_5", day, setupScheduleVersion);
+  const keepPublication = buildFootballOfficialDailySetup("keep_4_cut_4", day, setupScheduleVersion);
   const rankActions = actionHistory.slice(0, Math.min(actionHistory.length, 5));
   const keepActions = actionHistory.slice(5);
   const rank = replay("blind_rank_5", rankPublication, rankActions);
