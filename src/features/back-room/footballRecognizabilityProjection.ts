@@ -147,6 +147,9 @@ for (const record of promotedRecords) {
   if (record.kind === "player-career") playerRecordById.set(record.id, record);
 }
 const playerRecords = [...playerRecordById.values()];
+const promotedPlayerRecordIds = new Set(
+  promotedRecords.filter((record) => record.kind === "player-career").map((record) => record.id),
+);
 const nonPlayerRecords = promotedRecords.filter((record) => record.kind !== "player-career");
 
 function activeDecades(startSeason?: number, endSeason?: number) {
@@ -359,6 +362,17 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   return uniqueProjectionMatch(samePosition);
 }
 
+function exactSourceProHallMinimumTier(record: ProjectionRecord) {
+  if (record.league !== "NFL" || !promotedPlayerRecordIds.has(record.id)) return null;
+  const sameName = byLeagueAndName.get(`${record.league}:${record.name.toLowerCase()}`) ?? [];
+  if (sameName.length !== 1) return null;
+  return proHallMinimumTierFor({
+    name: record.name,
+    kind: "player-career",
+    league: record.league,
+  });
+}
+
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
   const exactPlayerRecord = subject.kind === "player-career" ? byId.get(subject.id) : undefined;
   const directHistorical = historicalById.get(subject.id);
@@ -366,7 +380,7 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
   if (exactPlayerRecord && !directHistorical && !directEvidence) {
     const provider: FootballSourceProviderId = exactPlayerRecord.league === "NFL" ? "nflverse" : "cfbfastR";
     return {
-      tier: exactPlayerRecord.tier,
+      tier: recognitionTierAtLeast(exactPlayerRecord.tier, exactSourceProHallMinimumTier(exactPlayerRecord)),
       sourceIdentityKey: { provider, id: exactPlayerRecord.sourceId } as const,
     };
   }
@@ -420,7 +434,7 @@ export function footballProjectedPlayerRegistrationTier(subjectId: string): Foot
   if (directEvidence) return directEvidence;
   const exactRecord = byId.get(subjectId);
   if (!exactRecord) return "D";
-  return exactRecord.tier;
+  return recognitionTierAtLeast(exactRecord.tier, exactSourceProHallMinimumTier(exactRecord));
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
