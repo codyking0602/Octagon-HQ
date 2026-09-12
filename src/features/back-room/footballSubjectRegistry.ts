@@ -23,6 +23,7 @@ import {
   footballNonPlayerRecognitionProjectionFor,
   footballProjectedNonPlayerRecognitionSubjects,
   footballProjectedPlayerRegistrationTier,
+  footballProjectedPlayerSourceSubjects,
   footballProjectedPlayerSubjects,
   footballRecognitionProjectionSubjectIdFor,
 } from "./footballRecognizabilityProjection";
@@ -224,25 +225,19 @@ const canonicalCoachIdentityKeys = new Set(
     .filter((subject) => subject.kind === "coach")
     .map((subject) => `${subject.league}:${normalizedFootballSubjectName(subject.name)}`),
 );
-const reconciledProjectedPlayerIds = new Set(
-  footballCanonicalSubjects
-    .filter((subject) => subject.kind === "player-career")
-    .map((subject) => footballRecognitionProjectionSubjectIdFor(subject))
-    .filter((id): id is string => Boolean(id)),
-);
+/** Generated recognition identities are product-owned canonical subjects, never raw source rows. */
+const projectedPlayerCanonicalSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
+  .filter((subject) => !canonicalSubjectIds.has(subject.id))
+  .map((subject) => enrichFootballSubject(subject));
 
-/** Projected players survive only when their exact source identity does not already reconcile to a curated subject. */
-const projectedPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
-  .filter((subject) => {
-    if (canonicalSubjectIds.has(subject.id) || reconciledProjectedPlayerIds.has(subject.id)) return false;
-    const projectionId = footballRecognitionProjectionSubjectIdFor(subject);
-    return projectionId == null || !reconciledProjectedPlayerIds.has(projectionId);
-  })
+/** Exact source identities stay independently queryable and database-only. */
+const projectedPlayerSourceSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSourceSubjects
+  .filter((subject) => !canonicalSubjectIds.has(subject.id))
   .map((subject) => {
     const exactTier = footballProjectedPlayerRegistrationTier(subject.id);
     return enrichFootballSubject(subject, {
       recognizabilityTier: exactTier,
-      casualEligible: exactTier !== "D",
+      casualEligible: false,
     });
   });
 
@@ -256,6 +251,7 @@ const projectedNonPlayerSourceSubjects: readonly FootballSubjectProfile[] = foot
   .map(({ subject, tier, sourceIdentityKey }) => enrichProjectedNonPlayerSubject(subject, tier, sourceIdentityKey));
 
 const projectedSourceSubjects: readonly FootballSubjectProfile[] = [
+  ...projectedPlayerCanonicalSubjects,
   ...projectedPlayerSourceSubjects,
   ...projectedNonPlayerSourceSubjects,
 ];
@@ -267,7 +263,12 @@ const projectedAdditionalSubjects: readonly FootballSubjectProfile[] = footballF
 const allRegisteredSubjects = [...footballSubjects, ...projectedSourceSubjects, ...projectedAdditionalSubjects];
 
 const footballPlayerCareerSubjectsByPerson = new Map<string, FootballSubjectProfile[]>();
-for (const subject of allRegisteredSubjects) {
+const personRelationshipSubjects = [
+  ...footballSubjects,
+  ...projectedPlayerCanonicalSubjects,
+  ...projectedAdditionalSubjects,
+];
+for (const subject of personRelationshipSubjects) {
   if (subject.kind !== "player-career") continue;
   const key = normalizedFootballSubjectName(subject.name);
   const subjects = footballPlayerCareerSubjectsByPerson.get(key) ?? [];
@@ -285,25 +286,8 @@ for (const subject of allRegisteredSubjects) {
   for (const alias of subject.aliases ?? []) if (!footballSubjectById.has(alias)) footballSubjectById.set(alias, subject);
 }
 
-// Source ids are reconciliation keys, not public canonical aliases. Keep the public subject shape unchanged while
-// allowing source-backed facts to collapse onto either a reviewed canonical player or a Stage 12 recognition identity.
-for (const subject of [...footballSubjects, ...projectedPlayerSourceSubjects]) {
-  if (subject.kind !== "player-career") continue;
-  const projectionId = footballRecognitionProjectionSubjectIdFor(subject as FootballCanonicalSubject);
-  if (!projectionId || projectionId === subject.id) continue;
-  const existing = footballSubjectById.get(projectionId);
-  if (existing && existing.id !== subject.id) {
-    // An exact projected source placeholder may be replaced by the curated
-    // canonical subject that explicitly resolves to that same source identity.
-    // Other same-name source athletes keep owning their exact ids.
-    if (existing.id === projectionId) {
-      footballSubjectById.set(projectionId, subject);
-      continue;
-    }
-    throw new Error(`Conflicting Football source identity: ${projectionId} -> ${existing.id}/${subject.id}`);
-  }
-  footballSubjectById.set(projectionId, subject);
-}
+// Exact source IDs own their source-only registry rows. Canonical/source ownership is
+// resolved only through the generated explicit binding consumed by factual/recognition owners.
 
 export function getFootballSubject(subjectId: string) {
   return footballSubjectById.get(subjectId) ?? null;
