@@ -83,6 +83,26 @@ function normalizedFootballSubjectName(name: string) {
   return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
 }
 
+function playerStageIdentityKey(subject: Pick<FootballCanonicalSubject, "id" | "kind" | "league">) {
+  if (subject.kind !== "player-career") return null;
+  const bareId = subject.id.replace(/^(?:nfl|cfb)-/, "");
+  return `${subject.league}:${bareId}`;
+}
+
+const canonicalPlayerCatalogSubjectByStageKey = new Map(
+  footballCanonicalSubjects.flatMap((subject) => {
+    const key = playerStageIdentityKey(subject);
+    return key ? [[key, subject] as const] : [];
+  }),
+);
+
+const projectedPlayerCanonicalSubjectByStageKey = new Map(
+  footballProjectedPlayerSubjects.flatMap((subject) => {
+    const key = playerStageIdentityKey(subject);
+    return key ? [[key, subject] as const] : [];
+  }),
+);
+
 function programAlias(subject: FootballSubjectIdentity) {
   if (subject.kind !== "program" || !subject.id.startsWith("program-")) return null;
   return `${subject.id.slice("program-".length)}-program`;
@@ -116,24 +136,42 @@ function playerIdForSubject(subject: FootballSubjectIdentity) {
  */
 function reconcileProjectedPlayerIdentity(subject: FootballCanonicalSubject): FootballCanonicalSubject {
   if (subject.kind !== "player-career") return subject;
-  const sourceSubjectId = footballRecognitionProjectionSubjectIdFor(subject);
-  if (!sourceSubjectId) return subject;
-  const projected = projectedPlayerSourceSubjectById.get(sourceSubjectId);
-  if (!projected) return subject;
-  return {
+
+  const stageProjection = projectedPlayerCanonicalSubjectByStageKey.get(playerStageIdentityKey(subject)!);
+  const withReviewedMetadata = stageProjection ? {
     ...subject,
-    position: subject.position ?? projected.position,
-    school: subject.school ?? projected.school,
-    franchises: subject.franchises ?? projected.franchises,
-    startSeason: subject.startSeason ?? projected.startSeason,
-    endSeason: subject.endSeason ?? projected.endSeason,
-    activeDecades: subject.activeDecades ?? projected.activeDecades,
-    draftYear: subject.draftYear ?? projected.draftYear,
-    draftRound: subject.draftRound ?? projected.draftRound,
-    draftPick: subject.draftPick ?? projected.draftPick,
-    firstRoundPick: subject.firstRoundPick ?? projected.firstRoundPick,
-    firstOverallPick: subject.firstOverallPick ?? projected.firstOverallPick,
-    undrafted: subject.undrafted ?? projected.undrafted,
+    position: subject.position ?? stageProjection.position,
+    school: subject.school ?? stageProjection.school,
+    franchises: subject.franchises ?? stageProjection.franchises,
+    startSeason: subject.startSeason ?? stageProjection.startSeason,
+    endSeason: subject.endSeason ?? stageProjection.endSeason,
+    activeDecades: subject.activeDecades ?? stageProjection.activeDecades,
+    draftYear: subject.draftYear ?? stageProjection.draftYear,
+    draftRound: subject.draftRound ?? stageProjection.draftRound,
+    draftPick: subject.draftPick ?? stageProjection.draftPick,
+    firstRoundPick: subject.firstRoundPick ?? stageProjection.firstRoundPick,
+    firstOverallPick: subject.firstOverallPick ?? stageProjection.firstOverallPick,
+    undrafted: subject.undrafted ?? stageProjection.undrafted,
+  } : subject;
+
+  const sourceSubjectId = footballRecognitionProjectionSubjectIdFor(withReviewedMetadata);
+  const sourceProjection = sourceSubjectId ? projectedPlayerSourceSubjectById.get(sourceSubjectId) : undefined;
+  if (!sourceProjection) return withReviewedMetadata;
+
+  return {
+    ...withReviewedMetadata,
+    position: withReviewedMetadata.position ?? sourceProjection.position,
+    school: withReviewedMetadata.school ?? sourceProjection.school,
+    franchises: withReviewedMetadata.franchises ?? sourceProjection.franchises,
+    startSeason: withReviewedMetadata.startSeason ?? sourceProjection.startSeason,
+    endSeason: withReviewedMetadata.endSeason ?? sourceProjection.endSeason,
+    activeDecades: withReviewedMetadata.activeDecades ?? sourceProjection.activeDecades,
+    draftYear: withReviewedMetadata.draftYear ?? sourceProjection.draftYear,
+    draftRound: withReviewedMetadata.draftRound ?? sourceProjection.draftRound,
+    draftPick: withReviewedMetadata.draftPick ?? sourceProjection.draftPick,
+    firstRoundPick: withReviewedMetadata.firstRoundPick ?? sourceProjection.firstRoundPick,
+    firstOverallPick: withReviewedMetadata.firstOverallPick ?? sourceProjection.firstOverallPick,
+    undrafted: withReviewedMetadata.undrafted ?? sourceProjection.undrafted,
   };
 }
 
@@ -219,7 +257,11 @@ const canonicalCoachIdentityKeys = new Set(
 );
 /** Generated recognition identities are product-owned canonical subjects, never raw source rows. */
 const projectedPlayerCanonicalSubjects: readonly FootballSubjectProfile[] = footballProjectedPlayerSubjects
-  .filter((subject) => !canonicalSubjectIds.has(subject.id))
+  .filter((subject) => {
+    if (canonicalSubjectIds.has(subject.id)) return false;
+    const key = playerStageIdentityKey(subject);
+    return !key || !canonicalPlayerCatalogSubjectByStageKey.has(key);
+  })
   .map((subject) => enrichFootballSubject(subject));
 
 /** Exact source identities stay independently queryable and database-only. */
@@ -276,6 +318,16 @@ for (const subject of allRegisteredSubjects) {
 }
 for (const subject of allRegisteredSubjects) {
   for (const alias of subject.aliases ?? []) if (!footballSubjectById.has(alias)) footballSubjectById.set(alias, subject);
+}
+// Reviewed stage-scoped player IDs are explicit aliases of an existing canonical
+// product identity when their normalized stage ID is the same. This never applies
+// to exact external source IDs, which own their own source-only registry rows.
+for (const projected of footballProjectedPlayerSubjects) {
+  const key = playerStageIdentityKey(projected);
+  const catalogSubject = key ? canonicalPlayerCatalogSubjectByStageKey.get(key) : undefined;
+  if (!catalogSubject || projected.id === catalogSubject.id || footballSubjectById.has(projected.id)) continue;
+  const canonical = footballSubjectById.get(catalogSubject.id);
+  if (canonical) footballSubjectById.set(projected.id, canonical);
 }
 
 // Exact source IDs own their source-only registry rows. Canonical/source ownership is
