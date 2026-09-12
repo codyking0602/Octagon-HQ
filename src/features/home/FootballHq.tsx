@@ -105,7 +105,7 @@ function FeaturedGameRow({
       <div className="football-hq-game-row__meta">
         <strong>{footballDateTimeLabel(game.locksAt ?? event.startsAt)}</strong>
         <span>{breakdown.venue}</span>
-        <b>OPEN MATCHUP BREAKDOWN →</b>
+        <b>OPEN BREAKDOWN →</b>
       </div>
     </Link>
   );
@@ -143,12 +143,10 @@ export function FootballHq({
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
   const rank = standing ? groupRankLabel(standing.rank, standings) : "";
   const matchupBreakdowns = event ? footballMatchupBreakdownsForEvent(event) : [];
-  const featuredMatchup = event ? (
-    matchupBreakdowns.flatMap((breakdown) => {
-      const game = featuredGameForBreakdown(event, breakdown.id);
-      return game ? [{ breakdown, game }] : [];
-    })[0] ?? null
-  ) : null;
+  const featuredMatchups = event ? matchupBreakdowns.flatMap((breakdown) => {
+    const game = featuredGameForBreakdown(event, breakdown.id);
+    return game ? [{ breakdown, game }] : [];
+  }) : [];
   const season = event?.season ?? history?.season ?? new Date().getFullYear();
   const status = !signedIn
     ? "SIGN IN TO PLAY"
@@ -206,18 +204,21 @@ export function FootballHq({
 
       <PlayerSpotlight />
 
-      {featuredMatchup ? (
-        <section className="football-hq-games" aria-label="Football Game of the Week">
+      {featuredMatchups.length ? (
+        <section className="football-hq-games" aria-label="Football Games of the Week">
           <header>
-            <span>GAME OF THE WEEK</span>
+            <span>TOP GAMES THIS WEEK</span>
             <small>{event ? weekLabel(event) : "THIS WEEK"}</small>
           </header>
           <div className="football-hq-games__list">
-            <FeaturedGameRow
-              event={event!}
-              breakdown={featuredMatchup.breakdown}
-              game={featuredMatchup.game}
-            />
+            {featuredMatchups.map(({ breakdown, game }) => (
+              <FeaturedGameRow
+                key={breakdown.id}
+                event={event!}
+                breakdown={breakdown}
+                game={game}
+              />
+            ))}
           </div>
           <Link className="football-hq-games__schedule" to="/football/picks">VIEW FULL SCHEDULE →</Link>
         </section>
