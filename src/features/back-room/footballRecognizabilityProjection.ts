@@ -147,9 +147,6 @@ for (const record of promotedRecords) {
   if (record.kind === "player-career") playerRecordById.set(record.id, record);
 }
 const playerRecords = [...playerRecordById.values()];
-const promotedPlayerRecordIds = new Set(
-  promotedRecords.filter((record) => record.kind === "player-career").map((record) => record.id),
-);
 const nonPlayerRecords = promotedRecords.filter((record) => record.kind !== "player-career");
 
 function activeDecades(startSeason?: number, endSeason?: number) {
@@ -252,6 +249,20 @@ const generatedProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = pr
 const evidencePlayerSubjects = footballRecognitionEvidenceSubjects
   .filter((subject): subject is FootballCanonicalSubject => subject.kind === "player-career");
 const repairedPlayerSubjects = historicalPlayerRepairs.map((repair) => repair.subject);
+const reviewedPlayerIds = new Set(
+  [...evidencePlayerSubjects, ...repairedPlayerSubjects].map((subject) => subject.id),
+);
+
+/**
+ * One projected player universe. Exact reviewed ids replace exact generated ids;
+ * display-name/position equality never suppresses another source identity.
+ */
+export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = [
+  ...generatedProjectedPlayerSubjects.filter((subject) => !reviewedPlayerIds.has(subject.id)),
+  ...evidencePlayerSubjects.filter((subject) => !historicalById.has(subject.id)),
+  ...repairedPlayerSubjects,
+];
+
 const byId = new Map(playerRecords.map((record) => [record.id, record]));
 const byLeagueAndName = new Map<string, ProjectionRecord[]>();
 for (const record of playerRecords) {
@@ -348,31 +359,6 @@ function resolveProjectionRecordFor(subject: FootballCanonicalSubject) {
   return uniqueProjectionMatch(samePosition);
 }
 
-function exactSourceProHallMinimumTier(record: ProjectionRecord) {
-  if (record.league !== "NFL") return null;
-  const sameName = byLeagueAndName.get(`${record.league}:${record.name.toLowerCase()}`) ?? [];
-  if (sameName.length !== 1) return null;
-  return proHallMinimumTierFor({
-    name: record.name,
-    kind: "player-career",
-    league: record.league,
-  });
-}
-
-const reviewedPlayerSubjects = [...evidencePlayerSubjects, ...repairedPlayerSubjects];
-const reviewedPlayerIds = new Set(reviewedPlayerSubjects.map((subject) => subject.id));
-
-/**
- * Registration keeps every exact generated identity. Reviewed identities replace
- * only exact-id collisions here; the subject registry owns safe source-to-canonical
- * reconciliation so a wrong same-name source athlete can remain independently queryable.
- */
-export const footballProjectedPlayerSubjects: readonly FootballCanonicalSubject[] = [
-  ...generatedProjectedPlayerSubjects.filter((subject) => !reviewedPlayerIds.has(subject.id)),
-  ...evidencePlayerSubjects.filter((subject) => !historicalById.has(subject.id)),
-  ...repairedPlayerSubjects,
-];
-
 export function footballRecognitionProjectionFor(subject: FootballCanonicalSubject) {
   const exactPlayerRecord = subject.kind === "player-career" ? byId.get(subject.id) : undefined;
   const directHistorical = historicalById.get(subject.id);
@@ -380,9 +366,7 @@ export function footballRecognitionProjectionFor(subject: FootballCanonicalSubje
   if (exactPlayerRecord && !directHistorical && !directEvidence) {
     const provider: FootballSourceProviderId = exactPlayerRecord.league === "NFL" ? "nflverse" : "cfbfastR";
     return {
-      tier: promotedPlayerRecordIds.has(exactPlayerRecord.id)
-        ? recognitionTierAtLeast(exactPlayerRecord.tier, exactSourceProHallMinimumTier(exactPlayerRecord))
-        : exactPlayerRecord.tier,
+      tier: exactPlayerRecord.tier,
       sourceIdentityKey: { provider, id: exactPlayerRecord.sourceId } as const,
     };
   }
@@ -436,9 +420,7 @@ export function footballProjectedPlayerRegistrationTier(subjectId: string): Foot
   if (directEvidence) return directEvidence;
   const exactRecord = byId.get(subjectId);
   if (!exactRecord) return "D";
-  return promotedPlayerRecordIds.has(exactRecord.id)
-    ? recognitionTierAtLeast(exactRecord.tier, exactSourceProHallMinimumTier(exactRecord))
-    : exactRecord.tier;
+  return exactRecord.tier;
 }
 
 export function footballRecognitionProjectionSubjectIdFor(subject: FootballCanonicalSubject) {
