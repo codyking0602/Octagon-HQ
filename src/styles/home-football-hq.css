@@ -373,16 +373,31 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
     padding-inline: 8px;
   }
 
+  .football-hq-game-row__teams {
+    grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr);
+    gap: 5px;
+  }
+
   .football-hq-game-row__teams > div {
-    grid-template-columns: 27px minmax(0, 1fr);
-    gap: 4px;
-    min-height: 42px;
-    padding: 4px 5px;
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 3px;
+    min-height: 44px;
+    padding: 4px;
+  }
+
+  .football-hq-game-row__teams > b {
+    width: 14px;
+  }
+
+  .football-hq-game-row__teams strong {
+    font-size: 8px;
+    line-height: 1.02;
+    -webkit-line-clamp: 3;
   }
 
   .football-hq-team-mark {
-    width: 27px;
-    height: 27px;
+    width: 24px;
+    height: 24px;
   }
 
   .football-hq-game-row__meta > strong {

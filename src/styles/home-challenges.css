@@ -141,6 +141,17 @@
   text-overflow: ellipsis;
 }
 
+@media (max-width: 430px) {
+  .home-section--your-hq .hq-stat {
+    padding-inline: 9px;
+  }
+
+  .home-section--your-hq .hq-stat > span {
+    font-size: clamp(7.5px, 1.95vw, 9px);
+    letter-spacing: -.035em;
+  }
+}
+
 @media (max-width: 390px) {
   .home-challenge-card {
     gap: 7px;
