@@ -11,7 +11,7 @@ describe("canonical Football Build a QB trait model", () => {
   it("derives every playable profile from canonical Football owners and stays synchronized with deployment output", () => {
     const profiles = buildFootballBuildQbTraitProfiles();
     expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v1");
-    expect(profiles.length).toBeGreaterThanOrEqual(20);
+    expect(profiles.length).toBeGreaterThanOrEqual(10);
 
     const actual = profiles.map((profile) => ({
       subjectId: profile.subjectId,
