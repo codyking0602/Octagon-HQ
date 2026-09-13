@@ -886,6 +886,12 @@
   background: rgba(7, 17, 29, .96);
 }
 
+.app-shell--football-room .football-room-page.auction-page .draft-room-catalog .auction-catalog__continue strong {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
 .app-shell--football-room .football-room-page.auction-page .auction-opponents {
   min-width: 0;
 }
