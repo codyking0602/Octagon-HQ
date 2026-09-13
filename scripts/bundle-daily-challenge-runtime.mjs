@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFile, rm } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "vite";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -27,10 +27,19 @@ const bundles = [
   },
 ];
 
-// The Football runtime imports this generated relationship projection. Keep the
+// The Football runtime imports generated canonical projections. Keep the
 // bundle command self-contained for clean deployment checkouts instead of relying
-// on pretypecheck/pretest having populated ignored generated files first.
-await import("./generate-football-career-media-context.mjs");
+// on pretypecheck/pretest having populated stale generated files first.
+// Order matches the canonical source generation dependency chain used by validation.
+for (const generator of [
+  "./generate-football-recognizability.mjs",
+  "./generate-football-cfb-player-season-recognition.mjs",
+  "./generate-football-career-media-context.mjs",
+  "./generate-football-factual-universe.mjs",
+  "./enrich-football-hit-number-peak-seasons.mjs",
+]) {
+  await import(generator);
+}
 
 for (const bundle of bundles) {
   const output = resolve(outDir, bundle.fileName);
@@ -73,5 +82,19 @@ for (const bundle of bundles) {
   }
 
   const digest = createHash("sha256").update(bundled).digest("hex");
+
+  if (bundle.fileName === "football-publication.generated.mjs") {
+    const generatedRuntime = await import(`${pathToFileURL(output).href}?sha256=${digest}`);
+    const publication = generatedRuntime.buildFootballTodayPersistenceSetup("2026-09-13");
+    if (
+      !publication
+      || typeof publication !== "object"
+      || typeof publication.setupKey !== "string"
+      || !publication.setupKey
+    ) {
+      throw new Error("Football daily publication bundle failed its deterministic smoke proof.");
+    }
+  }
+
   console.log(`Generated canonical ${bundle.label} bundle ${digest}.`);
 }
