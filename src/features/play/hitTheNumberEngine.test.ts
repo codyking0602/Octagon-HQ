@@ -60,10 +60,7 @@ function testStatRow(fighterId: string, wins: number): HitTheNumberStatRow {
       "ufc-submission-wins": 0,
       "ufc-title-fights": 0,
       "ufc-title-fight-wins": 0,
-      "ufc-active-years": wins,
-      "ufc-winning-years": wins,
       "ufc-longest-win-streak": wins,
-      "ufc-unique-opponents-beaten": wins,
     },
   };
 }
@@ -101,21 +98,15 @@ describe("Hit the Number foundation", () => {
         "ufc-submission-wins": wins.filter((fight) => fight.methodCategory === "submission").length,
         "ufc-title-fights": titleFights.length,
         "ufc-title-fight-wins": titleFights.filter((fight) => fight.officialResult === "win").length,
-        "ufc-active-years": new Set(fights.map((fight) => fight.date.slice(0, 4))).size,
-        "ufc-winning-years": new Set(wins.map((fight) => fight.date.slice(0, 4))).size,
         "ufc-longest-win-streak": expectedLongestWinStreak(fights),
-        "ufc-unique-opponents-beaten": new Set(
-          wins.map((fight) => fight.opponent.trim().toLowerCase()),
-        ).size,
         ...(shared.mainEvents == null ? {} : { "ufc-main-events": shared.mainEvents }),
         ...(shared.bonusAwards == null ? {} : { "ufc-bonus-awards": shared.bonusAwards }),
         ...(shared.firstRoundFinishes == null ? {} : { "ufc-first-round-finishes": shared.firstRoundFinishes }),
-        ...(shared.knockdownsFor == null ? {} : { "ufc-knockdowns-landed": shared.knockdownsFor }),
       });
     }
   });
 
-  it("defines and activates a balanced sixteen-stat UFC-only mix", () => {
+  it("defines and activates the approved twelve-stat UFC-only mix", () => {
     const statIds = HIT_THE_NUMBER_STATS.map((stat) => stat.id);
     expect(statIds).toEqual([
       "ufc-fights",
@@ -126,35 +117,27 @@ describe("Hit the Number foundation", () => {
       "ufc-submission-wins",
       "ufc-title-fights",
       "ufc-title-fight-wins",
-      "ufc-active-years",
-      "ufc-winning-years",
       "ufc-longest-win-streak",
-      "ufc-unique-opponents-beaten",
       "ufc-main-events",
       "ufc-bonus-awards",
       "ufc-first-round-finishes",
-      "ufc-knockdowns-landed",
     ]);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats).toEqual([
-      { value: "ufc-fights", weight: 8 },
-      { value: "ufc-wins", weight: 8 },
-      { value: "ufc-decision-wins", weight: 5 },
-      { value: "ufc-finishes", weight: 8 },
-      { value: "ufc-ko-tko-wins", weight: 7 },
-      { value: "ufc-submission-wins", weight: 5 },
-      { value: "ufc-title-fights", weight: 7 },
-      { value: "ufc-title-fight-wins", weight: 6 },
-      { value: "ufc-active-years", weight: 5 },
-      { value: "ufc-winning-years", weight: 4 },
-      { value: "ufc-longest-win-streak", weight: 6 },
-      { value: "ufc-unique-opponents-beaten", weight: 5 },
-      { value: "ufc-main-events", weight: 7 },
-      { value: "ufc-bonus-awards", weight: 7 },
-      { value: "ufc-first-round-finishes", weight: 5 },
-      { value: "ufc-knockdowns-landed", weight: 7 },
+      { value: "ufc-fights", weight: 10 },
+      { value: "ufc-wins", weight: 10 },
+      { value: "ufc-decision-wins", weight: 6 },
+      { value: "ufc-finishes", weight: 10 },
+      { value: "ufc-ko-tko-wins", weight: 9 },
+      { value: "ufc-submission-wins", weight: 6 },
+      { value: "ufc-title-fights", weight: 9 },
+      { value: "ufc-title-fight-wins", weight: 8 },
+      { value: "ufc-longest-win-streak", weight: 8 },
+      { value: "ufc-main-events", weight: 9 },
+      { value: "ufc-bonus-awards", weight: 9 },
+      { value: "ufc-first-round-finishes", weight: 6 },
     ]);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats.map((stat) => stat.value)).toEqual(statIds);
-    expect(Math.max(...HIT_THE_NUMBER_GENERATION_PROFILE.stats.map((stat) => stat.weight))).toBeLessThanOrEqual(8);
+    expect(Math.max(...HIT_THE_NUMBER_GENERATION_PROFILE.stats.map((stat) => stat.weight))).toBeLessThanOrEqual(10);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.filters).toEqual([
       { value: "all", weight: 55 },
       { value: "division", weight: 45 },
@@ -168,7 +151,7 @@ describe("Hit the Number foundation", () => {
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.filters.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.picks.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
-    expect(HIT_THE_NUMBER_STATS).toHaveLength(16);
+    expect(HIT_THE_NUMBER_STATS).toHaveLength(12);
   });
 
   it("can build exact open-roster boards for every activated stat", () => {
@@ -380,7 +363,7 @@ describe("Hit the Number foundation", () => {
       target: 93,
       distance: 1,
       pickCount: 7,
-    })).toBe(71);
+    })).toBe(46);
     expect(hitTheNumberScore({
       status: "perfect",
       target: 93,
@@ -418,7 +401,7 @@ describe("Hit the Number foundation", () => {
       status: "bust",
       total: 51,
       distance: 1,
-      score: 71,
+      score: 46,
     });
     expect(() => gradeHitTheNumberSelection(setup, ["a", "b", "c", "a"], rows)).toThrow(
       "Hit the Number selections must be unique.",
