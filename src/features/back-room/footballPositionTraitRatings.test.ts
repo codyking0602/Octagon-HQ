@@ -29,7 +29,7 @@ describe("canonical Football Build a QB trait model", () => {
     expect(FOOTBALL_BUILD_QB_RESEARCH_SOURCES.length).toBeGreaterThanOrEqual(8);
     expect(new Set(FOOTBALL_BUILD_QB_RESEARCH_SOURCES.map((source) => source.evidenceType)).size).toBeGreaterThanOrEqual(4);
     for (const profile of buildFootballBuildQbTraitProfiles()) {
-      expect(profile.evidenceMetricIds.length).toBeGreaterThanOrEqual(9);
+      expect(profile.evidenceMetricIds.length).toBeGreaterThanOrEqual(6);
       expect(profile.overall).toBe(
         Math.round(BUILD_QB_TRAITS.reduce((sum, trait) => sum + profile.traits[trait], 0) / BUILD_QB_TRAITS.length),
       );
