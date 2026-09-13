@@ -2,20 +2,24 @@
 
 ## Ownership and definitions
 
-`footballPositionTraitRatings.ts` is the single editable model. The generated TypeScript catalog and append-only SQL catalog version are deployment projections; grading remains server-owned. The five locked traits are evaluated independently: **Arm** is power/velocity and difficult-drive throws; **Accuracy** is repeatable ball placement at every level; **Processing** is read/decision speed and correctness; **Mobility** is escape, rushing, and outside-structure creation; **Clutch** is pressure, closing, comeback, and postseason performance.
+`footballPositionTraitRatings.ts` is the single editable trait-model owner. It resolves the mature pool through the existing canonical Football identity, comparison, factual, historical-consensus, and ranking owners. `generated/buildQbCatalog.ts` is a downstream projection, and the append-only SQL catalog is the deployment projection. Final scoring remains server-owned by the shared Auction grader.
+
+The five locked traits stay independent: **Arm** measures throwing power, velocity, and difficult-drive throws; **Accuracy** measures repeatable ball placement; **Processing** measures read and decision speed/quality; **Mobility** measures movement, escape, rushing value, and outside-structure creation; **Clutch** measures pressure, closing, comeback, and postseason-type performance.
 
 ## Evidence method
 
-The 60-player audit uses a peak-capability/career blend rather than a box-score formula. Each profile was cross-checked across reputable contemporary scouting and film analysis, era-relative efficiency and accuracy evidence, sack/pressure and rushing evidence, and high-leverage/postseason records. Traditional statistics are corroboration only. Completion percentage does not stand in for placement; rushing totals do not fully stand in for creation; championships do not automatically stand in for clutch.
+The v2 model uses era-normalized canonical career facts plus the existing historical-consensus owner and hidden qualitative scouting/film anchors where broad career statistics cannot represent a trait cleanly. The audit source set spans factual/statistical evidence, historical evaluation, film/scouting evaluation, arm-talent review, and high-leverage evidence.
 
-Era normalization compares what a player demonstrated against the defensive rules, passing environment, and offensive conventions of his own era. It avoids mechanically inflating modern completion rates or penalizing older deep-pass offenses. The values describe transferable trait quality, not an all-time-greatness ranking.
+The qualitative anchors are inputs, not final grades. All final trait grades are calculated through the shared Football ranking calibration. Subject quality and generation frequency are separate from trait ceilings, so a lower or wildcard quarterback can still carry an elite individual tool.
 
-## Specialists and rarity
+## Universe and room generation
 
-Rarity is independently curated for room composition and recognizability. It never caps a trait. The universe intentionally contains cannon arms, runners, placement specialists, quick processors, high-leverage specialists, balanced stars, and volatile players at lower bands.
+The mature universe contains exactly 60 canonical quarterbacks across eras and gameplay archetypes. Hidden quality bands are generation inputs only and are not collectible labels.
 
-A room draws one marquee, two strong, four core, two lower, and one wildcard profile through the existing catalog/deck ownership. Every draw is unique. Seeded tests run 5,000 rooms and audit identity uniqueness, mix, specialist representation, and diversity.
+Build a QB does **not** own a second deck engine. The existing shared Auction generator remains authoritative. The v2 catalog supplies hidden generation weights and rarity bands to that owner, which keeps rooms unique, limits high-end saturation, and allows bounded randomness. Deterministic audit simulations cover thousands of rooms for marquee frequency, high-end mix, specialist presence, replay diversity, and individual appearance coverage.
 
-## Score calibration
+## Score calibration and release gate
 
-Simulation assigns each room between two opponents, then models legal five-category builds using five distinct QBs per player. It samples strategic—not purely uniform—category choices and records mean, median, tails, decade frequencies, opponent differential, ties, and near-ceiling outcomes. This guards against compressed 90–95 outcomes while retaining rare exceptional builds. Version rotation is append-only because v1 has already shipped.
+Completed-build simulations use actual ten-player room constraints, five distinct selected quarterbacks, and the five unique traits. The audit measures mean, median, tails, score-decade frequency, near-ceiling frequency, opponent differential, and ties.
+
+The v2 catalog rotation is append-only because Stage 12 v1 has already shipped. Public release remains disabled. Direct backend use continues to require the private Draft Room access gate for both players.
