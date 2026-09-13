@@ -4,7 +4,7 @@ import { getNflQbHistoricalConsensus } from "./footballHistoricalConsensus";
 import { queryFootballSubjects } from "./footballSubjectRegistry";
 import { BUILD_QB_TRAITS, type BuildQbTrait } from "../play/draftRoomContract";
 
-export const FOOTBALL_POSITION_TRAIT_MODEL_VERSION = "build-qb-v2" as const;
+export const FOOTBALL_POSITION_TRAIT_MODEL_VERSION = "build-qb-v3" as const;
 export const BUILD_QB_MATURE_POOL_SIZE = 60 as const;
 export const FOOTBALL_BUILD_QB_RESEARCH_SNAPSHOT_DATE = "2026-09-12" as const;
 
@@ -88,16 +88,16 @@ const BUILD_QB_RESEARCH_AUDIT: readonly BuildQbResearchInput[] = [
   { catalogId: "build-qb-dan-marino", identityId: "dan-marino", name: "Dan Marino", qualityBand: 5, research: { Arm: 9, Accuracy: 8, Processing: 9, Mobility: 2, Clutch: 6 } },
   { catalogId: "build-qb-drew-brees", identityId: "drew-brees", name: "Drew Brees", qualityBand: 5, research: { Arm: 5, Accuracy: 9, Processing: 8, Mobility: 3, Clutch: 8 } },
   { catalogId: "build-qb-brett-favre", identityId: "brett-favre", name: "Brett Favre", qualityBand: 5, research: { Arm: 9, Accuracy: 6, Processing: 5, Mobility: 6, Clutch: 7 } },
-  { catalogId: "build-qb-johnny-unitas", identityId: "johnny-unitas", name: "Johnny Unitas", qualityBand: 5, research: { Arm: 7, Accuracy: 7, Processing: 8, Mobility: 4, Clutch: 8 } },
+  { catalogId: "build-qb-jayden-daniels", identityId: "nflverse-player-00-0039910", name: "Jayden Daniels", qualityBand: 5, research: { Arm: 8, Accuracy: 8, Processing: 8, Mobility: 9, Clutch: 8 } },
   { catalogId: "build-qb-john-elway", identityId: "john-elway", name: "John Elway", qualityBand: 5, research: { Arm: 9, Accuracy: 6, Processing: 7, Mobility: 7, Clutch: 9 } },
   { catalogId: "build-qb-steve-young", identityId: "steve-young", name: "Steve Young", qualityBand: 4, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 8, Clutch: 8 } },
   { catalogId: "build-qb-roger-staubach", identityId: "nfl-roger-staubach", name: "Roger Staubach", qualityBand: 4, research: { Arm: 7, Accuracy: 7, Processing: 8, Mobility: 8, Clutch: 9 } },
   { catalogId: "build-qb-terry-bradshaw", identityId: "nfl-terry-bradshaw", name: "Terry Bradshaw", qualityBand: 4, research: { Arm: 8, Accuracy: 5, Processing: 6, Mobility: 6, Clutch: 9 } },
-  { catalogId: "build-qb-bob-griese", identityId: "bob-griese", name: "Bob Griese", qualityBand: 4, research: { Arm: 6, Accuracy: 7, Processing: 8, Mobility: 4, Clutch: 8 } },
-  { catalogId: "build-qb-dan-fouts", identityId: "dan-fouts", name: "Dan Fouts", qualityBand: 4, research: { Arm: 8, Accuracy: 7, Processing: 8, Mobility: 3, Clutch: 6 } },
+  { catalogId: "build-qb-trevor-lawrence", identityId: "nflverse-player-00-0036971", name: "Trevor Lawrence", qualityBand: 4, research: { Arm: 8, Accuracy: 7, Processing: 7, Mobility: 7, Clutch: 6 } },
+  { catalogId: "build-qb-tua-tagovailoa", identityId: "nflverse-player-00-0036212", name: "Tua Tagovailoa", qualityBand: 4, research: { Arm: 6, Accuracy: 9, Processing: 8, Mobility: 5, Clutch: 6 } },
   { catalogId: "build-qb-kurt-warner", identityId: "kurt-warner", name: "Kurt Warner", qualityBand: 4, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 2, Clutch: 9 } },
   { catalogId: "build-qb-warren-moon", identityId: "warren-moon", name: "Warren Moon", qualityBand: 4, research: { Arm: 9, Accuracy: 7, Processing: 7, Mobility: 6, Clutch: 6 } },
-  { catalogId: "build-qb-trent-green", identityId: "nflverse-player-00-0006355", name: "Trent Green", qualityBand: 4, research: { Arm: 7, Accuracy: 7, Processing: 8, Mobility: 4, Clutch: 6 } },
+  { catalogId: "build-qb-c-j-stroud", identityId: "nflverse-player-00-0039163", name: "C.J. Stroud", qualityBand: 4, research: { Arm: 8, Accuracy: 9, Processing: 8, Mobility: 6, Clutch: 7 } },
   { catalogId: "build-qb-troy-aikman", identityId: "troy-aikman", name: "Troy Aikman", qualityBand: 4, research: { Arm: 7, Accuracy: 9, Processing: 8, Mobility: 3, Clutch: 9 } },
   { catalogId: "build-qb-ben-roethlisberger", identityId: "ben-roethlisberger", name: "Ben Roethlisberger", qualityBand: 4, research: { Arm: 8, Accuracy: 7, Processing: 7, Mobility: 7, Clutch: 9 } },
   { catalogId: "build-qb-philip-rivers", identityId: "nfl-philip-rivers", name: "Philip Rivers", qualityBand: 4, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 1, Clutch: 6 } },
@@ -117,17 +117,17 @@ const BUILD_QB_RESEARCH_AUDIT: readonly BuildQbResearchInput[] = [
   { catalogId: "build-qb-tony-romo", identityId: "nflverse-player-00-0021678", name: "Tony Romo", qualityBand: 3, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 6, Clutch: 6 } },
   { catalogId: "build-qb-carson-palmer", identityId: "nflverse-player-00-0021429", name: "Carson Palmer", qualityBand: 3, research: { Arm: 8, Accuracy: 7, Processing: 7, Mobility: 3, Clutch: 5 } },
   { catalogId: "build-qb-alex-smith", identityId: "nflverse-player-00-0023436", name: "Alex Smith", qualityBand: 3, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 6, Clutch: 6 } },
-  { catalogId: "build-qb-ken-anderson", identityId: "ken-anderson", name: "Ken Anderson", qualityBand: 3, research: { Arm: 6, Accuracy: 9, Processing: 8, Mobility: 5, Clutch: 7 } },
-  { catalogId: "build-qb-ken-stabler", identityId: "ken-stabler", name: "Ken Stabler", qualityBand: 3, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 5, Clutch: 9 } },
+  { catalogId: "build-qb-brock-purdy", identityId: "nflverse-player-00-0037834", name: "Brock Purdy", qualityBand: 3, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 6, Clutch: 8 } },
+  { catalogId: "build-qb-jordan-love", identityId: "nflverse-player-00-0036264", name: "Jordan Love", qualityBand: 3, research: { Arm: 9, Accuracy: 7, Processing: 7, Mobility: 7, Clutch: 7 } },
   { catalogId: "build-qb-joe-namath", identityId: "joe-namath", name: "Joe Namath", qualityBand: 3, research: { Arm: 9, Accuracy: 6, Processing: 6, Mobility: 4, Clutch: 9 } },
-  { catalogId: "build-qb-sonny-jurgensen", identityId: "sonny-jurgensen", name: "Sonny Jurgensen", qualityBand: 3, research: { Arm: 8, Accuracy: 8, Processing: 8, Mobility: 3, Clutch: 6 } },
-  { catalogId: "build-qb-len-dawson", identityId: "len-dawson", name: "Len Dawson", qualityBand: 3, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 4, Clutch: 8 } },
-  { catalogId: "build-qb-rich-gannon", identityId: "nflverse-player-00-0005741", name: "Rich Gannon", qualityBand: 2, research: { Arm: 5, Accuracy: 8, Processing: 8, Mobility: 6, Clutch: 6 } },
+  { catalogId: "build-qb-derek-carr", identityId: "nflverse-player-00-0031280", name: "Derek Carr", qualityBand: 3, research: { Arm: 8, Accuracy: 7, Processing: 7, Mobility: 4, Clutch: 6 } },
+  { catalogId: "build-qb-jimmy-garoppolo", identityId: "nflverse-player-00-0031345", name: "Jimmy Garoppolo", qualityBand: 3, research: { Arm: 6, Accuracy: 8, Processing: 7, Mobility: 4, Clutch: 7 } },
+  { catalogId: "build-qb-ryan-tannehill", identityId: "nflverse-player-00-0029701", name: "Ryan Tannehill", qualityBand: 2, research: { Arm: 7, Accuracy: 7, Processing: 7, Mobility: 7, Clutch: 5 } },
   { catalogId: "build-qb-joe-flacco", identityId: "nflverse-player-00-0026158", name: "Joe Flacco", qualityBand: 2, research: { Arm: 9, Accuracy: 6, Processing: 6, Mobility: 3, Clutch: 9 } },
   { catalogId: "build-qb-drew-bledsoe", identityId: "nflverse-player-00-0001361", name: "Drew Bledsoe", qualityBand: 2, research: { Arm: 9, Accuracy: 6, Processing: 6, Mobility: 1, Clutch: 6 } },
   { catalogId: "build-qb-daunte-culpepper", identityId: "nflverse-player-00-0003739", name: "Daunte Culpepper", qualityBand: 2, research: { Arm: 9, Accuracy: 6, Processing: 5, Mobility: 8, Clutch: 5 } },
   { catalogId: "build-qb-vinny-testaverde", identityId: "nflverse-player-00-0016193", name: "Vinny Testaverde", qualityBand: 2, research: { Arm: 8, Accuracy: 5, Processing: 5, Mobility: 4, Clutch: 6 } },
-  { catalogId: "build-qb-mark-brunell", identityId: "nflverse-player-00-0002110", name: "Mark Brunell", qualityBand: 2, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 7, Clutch: 6 } },
+  { catalogId: "build-qb-carson-wentz", identityId: "nflverse-player-00-0032950", name: "Carson Wentz", qualityBand: 2, research: { Arm: 8, Accuracy: 6, Processing: 6, Mobility: 7, Clutch: 5 } },
   { catalogId: "build-qb-andy-dalton", identityId: "nflverse-player-00-0027973", name: "Andy Dalton", qualityBand: 2, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 4, Clutch: 5 } },
   { catalogId: "build-qb-matt-hasselbeck", identityId: "nflverse-player-00-0007091", name: "Matt Hasselbeck", qualityBand: 2, research: { Arm: 5, Accuracy: 7, Processing: 8, Mobility: 4, Clutch: 7 } },
   { catalogId: "build-qb-kirk-cousins", identityId: "nflverse-player-00-0029604", name: "Kirk Cousins", qualityBand: 2, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 3, Clutch: 6 } },
@@ -139,7 +139,7 @@ const BUILD_QB_RESEARCH_AUDIT: readonly BuildQbResearchInput[] = [
   { catalogId: "build-qb-kyler-murray", identityId: "nflverse-player-00-0035228", name: "Kyler Murray", qualityBand: 1, research: { Arm: 8, Accuracy: 7, Processing: 6, Mobility: 9, Clutch: 5 } },
   { catalogId: "build-qb-jared-goff", identityId: "nflverse-player-00-0033106", name: "Jared Goff", qualityBand: 1, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 2, Clutch: 7 } },
   { catalogId: "build-qb-baker-mayfield", identityId: "nflverse-player-00-0034855", name: "Baker Mayfield", qualityBand: 1, research: { Arm: 8, Accuracy: 7, Processing: 6, Mobility: 6, Clutch: 7 } },
-  { catalogId: "build-qb-matt-schaub", identityId: "nflverse-player-00-0022787", name: "Matt Schaub", qualityBand: 1, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 3, Clutch: 5 } },
+  { catalogId: "build-qb-nick-foles", identityId: "nflverse-player-00-0029567", name: "Nick Foles", qualityBand: 1, research: { Arm: 7, Accuracy: 6, Processing: 6, Mobility: 3, Clutch: 9 } },
 ] as const;
 
 function qualityBandForRarity(rarityBand: BuildQbRarityBand): BuildQbQualityBand {

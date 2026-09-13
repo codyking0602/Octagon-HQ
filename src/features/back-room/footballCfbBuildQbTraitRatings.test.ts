@@ -3,6 +3,7 @@ import { BUILD_QB_TRAITS, draftRoomModeDefinition } from "../play/draftRoomContr
 import {
   CFB_BUILD_QB_GENERATION_WEIGHT_BY_RARITY,
   CFB_BUILD_QB_MATURE_POOL_SIZE,
+  CFB_BUILD_QB_TRAIT_MODEL_VERSION,
   buildFootballCfbBuildQbTraitProfiles,
   cfbBuildQbProfileForItemReference,
 } from "./footballCfbBuildQbTraitRatings";
@@ -15,6 +16,37 @@ describe("CFB Build a QB peak-season model", () => {
     expect(new Set(profiles.map((profile) => profile.canonicalPlayerId)).size).toBe(80);
     expect(new Set(profiles.map((profile) => profile.peakSeasonIdentityId)).size).toBe(80);
     expect(profiles.every((profile) => Number.isInteger(profile.peakSeason) && profile.school.length > 0)).toBe(true);
+  });
+
+  it("uses the approved modernized 80-QB membership and exact peak seasons", () => {
+    expect(CFB_BUILD_QB_TRAIT_MODEL_VERSION).toBe("cfb-build-qb-peak-season-v2");
+    const expected = new Map([
+      ["Andrew Luck", [2011, "Stanford"]],
+      ["Russell Wilson", [2011, "Wisconsin"]],
+      ["Aaron Rodgers", [2004, "California"]],
+      ["Matt Ryan", [2007, "Boston College"]],
+      ["Michael Vick", [1999, "Virginia Tech"]],
+      ["Marcus Vick", [2005, "Virginia Tech"]],
+      ["Jimmy Clausen", [2009, "Notre Dame"]],
+      ["Sam Ehlinger", [2018, "Texas"]],
+      ["Teddy Bridgewater", [2013, "Louisville"]],
+    ] as const);
+    for (const [name, [peakSeason, school]] of expected) {
+      expect(profiles.find((profile) => profile.name === name)).toMatchObject({ peakSeason, school });
+    }
+    for (const name of [
+      "Danny Wuerffel",
+      "Jim Plunkett",
+      "Hendon Hooker",
+      "Vinny Testaverde",
+      "Ty Detmer",
+      "Gino Torretta",
+      "Andre Ware",
+      "Eric Crouch",
+      "Chris Weinke",
+    ]) {
+      expect(profiles.some((profile) => profile.name === name), `retired CFB roster cut still present: ${name}`).toBe(false);
+    }
   });
 
   it("uses the same five traits and a calculated overall", () => {
