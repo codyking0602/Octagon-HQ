@@ -37,10 +37,10 @@ begin
 
   if exists (
     select 1
-    from jsonb_array_elements(v_package->'profiles') profile
-    where profile->'trait_codes' ? 'Clutch'
-      or not (profile->'trait_codes' ?& array['Arm','Accuracy','Processing','Mobility'])
-      or (profile->'trait_codes' - 'Arm' - 'Accuracy' - 'Processing' - 'Mobility') <> '{}'::jsonb
+    from jsonb_array_elements(v_package->'profiles') as profile(value)
+    where profile.value->'trait_codes' ? 'Clutch'
+      or not (profile.value->'trait_codes' ?& array['Arm','Accuracy','Processing','Mobility'])
+      or (profile.value->'trait_codes' - 'Arm' - 'Accuracy' - 'Processing' - 'Mobility') <> '{}'::jsonb
   ) then
     raise exception 'Football Verdict private knowledge profile contains an invalid trait-code packet';
   end if;
