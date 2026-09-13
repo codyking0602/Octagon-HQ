@@ -6,15 +6,12 @@ import { useIdentity } from "../identity/IdentityProvider";
 import type { IdentityProfile } from "../identity/identityModel";
 import type { MemberCardSummary } from "../members/memberProfilesModel";
 import {
-  BUILD_QB_HERO_IMAGE,
   buildQbVisualIdentity,
   type BuildQbVisualIdentity,
 } from "./buildQbVisualIdentity";
-import {
-  CFB_BUILD_QB_HERO_IMAGE,
-  cfbBuildQbVisualIdentity,
-} from "./cfbBuildQbVisualIdentity";
+import { cfbBuildQbVisualIdentity } from "./cfbBuildQbVisualIdentity";
 import { draftRoomModeArtwork } from "./draftRoomModeArtwork";
+import { trioPlayerVisualIdentity } from "./draftRoomTrioVisualIdentity";
 import {
   AuctionRepositoryError,
   createAuctionRepository,
@@ -52,10 +49,6 @@ function draftRoomVisualIdentity(modeId: DraftRoomModeId, itemReference: string 
   return modeId === "build-qb-cfb"
     ? cfbBuildQbVisualIdentity(itemReference)
     : buildQbVisualIdentity(itemReference);
-}
-
-function draftRoomHeroImage(modeId: DraftRoomModeId) {
-  return isCfbDraftRoomMode(modeId) ? CFB_BUILD_QB_HERO_IMAGE : BUILD_QB_HERO_IMAGE;
 }
 
 function draftRoomTitle(modeId: DraftRoomModeId) {
@@ -97,15 +90,31 @@ export function parseTrioPackageLabel(displayLabel: string): TrioPackagePlayer[]
   }));
 }
 
-function TrioPackageCard({ displayLabel, compact = false }: { displayLabel: string; compact?: boolean }) {
+function TrioPackageCard({
+  modeId,
+  displayLabel,
+  compact = false,
+}: {
+  modeId: DraftRoomModeId;
+  displayLabel: string;
+  compact?: boolean;
+}) {
   return (
     <div className={`draft-room-trio-package${compact ? " draft-room-trio-package--compact" : ""}`}>
-      {parseTrioPackageLabel(displayLabel).map((player) => (
-        <div className="draft-room-trio-package__player" key={player.position}>
-          <small>{player.position}</small>
-          <strong>{player.label}</strong>
-        </div>
-      ))}
+      {parseTrioPackageLabel(displayLabel).map((player) => {
+        const identity = trioPlayerVisualIdentity(modeId, player.label);
+        return (
+          <div
+            className={`draft-room-trio-package__player${identity ? " has-team-identity" : ""}`}
+            key={player.position}
+            style={identity ? buildQbTeamStyle(identity) : undefined}
+          >
+            <small>{player.position}</small>
+            {identity ? <BuildQbTeamMark identity={identity} compact /> : <span className="draft-room-trio-package__mark-spacer" />}
+            <strong>{player.label}</strong>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -130,7 +139,7 @@ function TrioComparison({ state }: { state: DraftRoomProjection }) {
           {challengerAwards.map((award, index) => (
             <article key={award.deck_position}>
               <small>TRIO {index + 1}</small>
-              <TrioPackageCard displayLabel={award.display_label} compact />
+              <TrioPackageCard modeId={state.mode_id} displayLabel={award.display_label} compact />
             </article>
           ))}
           {Array.from({ length: Math.max(0, 3 - challengerAwards.length) }, (_, index) => (
@@ -141,7 +150,7 @@ function TrioComparison({ state }: { state: DraftRoomProjection }) {
           {recipientAwards.map((award, index) => (
             <article key={award.deck_position}>
               <small>TRIO {index + 1}</small>
-              <TrioPackageCard displayLabel={award.display_label} compact />
+              <TrioPackageCard modeId={state.mode_id} displayLabel={award.display_label} compact />
             </article>
           ))}
           {Array.from({ length: Math.max(0, 3 - recipientAwards.length) }, (_, index) => (
@@ -317,15 +326,10 @@ function DraftRoomBoard({
   return (
     <div className="auction-board">
       <header className="auction-board__header">
-        {!trioMode ? (
-          <img
-            className="auction-board__image build-qb-board__image"
-            src={draftRoomHeroImage(state.mode_id)}
-            alt=""
-            aria-hidden="true"
-            onError={(event) => { event.currentTarget.hidden = true; }}
-          />
-        ) : null}
+        <DraftRoomModeArtworkImage
+          modeId={state.mode_id}
+          className="auction-board__image build-qb-board__image"
+        />
         <div className="auction-board__nav">
           <button type="button" onClick={onNewRoom}>‹ NEW ROOM</button>
           <button type="button" onClick={onReload} disabled={busy}>REFRESH</button>
@@ -364,7 +368,7 @@ function DraftRoomBoard({
           <small>{trioMode ? "CURRENT TRIO" : "CURRENT QB"}</small>
           {trioMode ? (
             state.current_item?.display_label
-              ? <TrioPackageCard displayLabel={state.current_item.display_label} />
+              ? <TrioPackageCard modeId={state.mode_id} displayLabel={state.current_item.display_label} />
               : <h2>{terminal ? "ROSTERS LOCKED" : "LOADING"}</h2>
           ) : (
             <div className="build-qb-current__identity">

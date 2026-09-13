@@ -8,11 +8,25 @@ const page = readFileSync(resolve(process.cwd(), "src/features/back-room/Footbal
 describe("Draft Room Trio presentation contract", () => {
   it("keeps all three package identities wrap-safe instead of truncating names", () => {
     expect(css).toContain(".draft-room-trio-package__player");
-    expect(css).toContain("grid-template-columns: 34px minmax(0, 1fr)");
+    expect(css).toContain("grid-template-columns: 34px 23px minmax(0, 1fr)");
     expect(css).toContain("min-width: 0");
     expect(css).toContain("overflow-wrap: anywhere");
     expect(page).toContain('TRIO_POSITIONS.map((position, index)');
     expect(page).not.toContain("text-overflow: ellipsis");
+  });
+
+  it("carries the selected mode artwork into every live and completed Draft Room header", () => {
+    expect(page).toContain('<DraftRoomModeArtworkImage');
+    expect(page).toContain('modeId={state.mode_id}');
+    expect(page).not.toContain('{!trioMode ? (\n          <img');
+  });
+
+  it("adds restrained team identity instead of full-color Trio rows", () => {
+    expect(page).toContain('trioPlayerVisualIdentity(modeId, player.label)');
+    expect(page).toContain('<BuildQbTeamMark identity={identity} compact />');
+    expect(css).toContain(".draft-room-trio-package__player.has-team-identity");
+    expect(css).toContain("rgba(var(--build-qb-team-rgb), .14)");
+    expect(css).toContain("inset 3px 0 0 var(--build-qb-team-secondary)");
   });
 
   it("has a dedicated phone treatment for two side-by-side three-trio rosters", () => {

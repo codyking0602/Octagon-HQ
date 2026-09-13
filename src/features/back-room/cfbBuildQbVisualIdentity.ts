@@ -5,8 +5,11 @@ import type { BuildQbVisualIdentity } from "./buildQbVisualIdentity";
 
 export const CFB_BUILD_QB_HERO_IMAGE = "/assets/football/build-qb-trevor-lawrence-clemson-hero.webp";
 
-const CFB_BUILD_QB_SCHOOL_COLORS: Readonly<Record<string, readonly [string, string]>> = {
+export const CFB_BUILD_QB_SCHOOL_COLORS: Readonly<Record<string, readonly [string, string]>> = {
   "Auburn": ["#0C2340", "#F26522"],
+  "Arizona": ["#CC0033", "#003366"],
+  "Arkansas": ["#9D2235", "#FFFFFF"],
+  "Boise State": ["#0033A0", "#D64309"],
   "Texas": ["#BF5700", "#FFFFFF"],
   "Florida": ["#0021A5", "#FA4616"],
   "USC": ["#990000", "#FFC72C"],
@@ -27,6 +30,8 @@ const CFB_BUILD_QB_SCHOOL_COLORS: Readonly<Record<string, readonly [string, stri
   "Mississippi State": ["#5D1725", "#FFFFFF"],
   "California": ["#003262", "#FDB515"],
   "Texas Tech": ["#CC0000", "#000000"],
+  "UTEP": ["#041E42", "#FF8200"],
+  "West Virginia": ["#002855", "#EAAA00"],
   "Clemson": ["#F56600", "#522D80"],
   "Louisville": ["#AD0000", "#000000"],
   "Wyoming": ["#492F24", "#FFC425"],
@@ -46,6 +51,12 @@ const CFB_BUILD_QB_SCHOOL_COLORS: Readonly<Record<string, readonly [string, stri
   "TCU": ["#4D1979", "#FFFFFF"],
   "Tennessee": ["#FF8200", "#FFFFFF"],
   "Georgia": ["#BA0C2F", "#000000"],
+  "Georgia Tech": ["#B3A369", "#003057"],
+  "Indiana": ["#990000", "#EEEDEB"],
+  "Memphis": ["#003087", "#898D8D"],
+  "Michigan State": ["#18453B", "#FFFFFF"],
+  "Oregon State": ["#DC4405", "#000000"],
+  "Penn State": ["#041E42", "#FFFFFF"],
   "Washington": ["#4B2E83", "#B7A57A"],
   "Wisconsin": ["#C5050C", "#FFFFFF"],
   "Virginia Tech": ["#861F41", "#E87722"],
