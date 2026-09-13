@@ -563,8 +563,8 @@ begin
   v_definition := pg_get_functiondef('private.generate_auction_deck(uuid,text,text,integer,double precision[])'::regprocedure);
   v_next := replace(
     v_definition,
-    E'begin\\n  if p_count < 1 then',
-    E'begin\\n  if p_mode_id in (''trio-nfl'', ''trio-cfb'') then\\n    if p_count <> 6 then raise exception ''Draft Room Trio deck must contain six packages''; end if;\\n    if p_random_order is not null then raise exception ''Injected Auction random order is unavailable for Trio rooms''; end if;\\n    perform private.generate_draft_room_trio_deck(p_auction_id, p_mode_id);\\n    return;\\n  end if;\\n\\n  if p_count < 1 then'
+    E'begin\n  if p_count < 1 then',
+    E'begin\n  if p_mode_id in (''trio-nfl'', ''trio-cfb'') then\n    if p_count <> 6 then raise exception ''Draft Room Trio deck must contain six packages''; end if;\n    if p_random_order is not null then raise exception ''Injected Auction random order is unavailable for Trio rooms''; end if;\n    perform private.generate_draft_room_trio_deck(p_auction_id, p_mode_id);\n    return;\n  end if;\n\n  if p_count < 1 then'
   );
   if v_next = v_definition then raise exception 'Stage 13 generator contract drifted'; end if;
   execute v_next;
@@ -573,8 +573,8 @@ begin
   v_definition := pg_get_functiondef('private.validate_auction_catalog_deck_entry()'::regprocedure);
   v_next := replace(
     v_definition,
-    E'begin\\n  select auction.content_version, auction.mode_id',
-    E'begin\\n  if exists (\\n    select 1\\n    from private.auction_games auction\\n    join private.draft_room_trio_packages package on package.auction_id = auction.id\\n    where auction.id = new.auction_id\\n      and auction.mode_id in (''trio-nfl'', ''trio-cfb'')\\n      and package.item_reference = new.private_item_reference\\n  ) then\\n    return new;\\n  end if;\\n\\n  select auction.content_version, auction.mode_id'
+    E'begin\n  select auction.content_version, auction.mode_id',
+    E'begin\n  if exists (\n    select 1\n    from private.auction_games auction\n    join private.draft_room_trio_packages package on package.auction_id = auction.id\n    where auction.id = new.auction_id\n      and auction.mode_id in (''trio-nfl'', ''trio-cfb'')\n      and package.item_reference = new.private_item_reference\n  ) then\n    return new;\n  end if;\n\n  select auction.content_version, auction.mode_id'
   );
   if v_next = v_definition then raise exception 'Stage 13 deck validation contract drifted'; end if;
   execute v_next;
@@ -583,8 +583,8 @@ begin
   v_definition := pg_get_functiondef('private.validate_auction_private_row()'::regprocedure);
   v_next := replace(
     v_definition,
-    E'case\\n        when v_auction.content_version = ''football-draft-room-2026-09-v6''',
-    E'case\\n        when v_auction.mode_id in (''trio-nfl'', ''trio-cfb'') then 6\\n        when v_auction.content_version = ''football-draft-room-2026-09-v6'''
+    E'case\n        when v_auction.content_version = ''football-draft-room-2026-09-v6''',
+    E'case\n        when v_auction.mode_id in (''trio-nfl'', ''trio-cfb'') then 6\n        when v_auction.content_version = ''football-draft-room-2026-09-v6'''
   );
   if v_next = v_definition then raise exception 'Stage 13 private-row round contract drifted'; end if;
   execute v_next;
@@ -593,8 +593,8 @@ begin
   v_definition := pg_get_functiondef('private.validate_auction_bid(private.auction_games,uuid,numeric,text)'::regprocedure);
   v_next := replace(
     v_definition,
-    E'v_required := case\\n    when p_game.content_version',
-    E'v_required := case\\n    when p_game.mode_id in (''trio-nfl'', ''trio-cfb'') then 3\\n    when p_game.content_version'
+    E'v_required := case\n    when p_game.content_version',
+    E'v_required := case\n    when p_game.mode_id in (''trio-nfl'', ''trio-cfb'') then 3\n    when p_game.content_version'
   );
   if v_next = v_definition then raise exception 'Stage 13 bid contract drifted'; end if;
   execute v_next;
@@ -603,13 +603,13 @@ begin
   v_definition := pg_get_functiondef('private.resolve_auction_round(uuid)'::regprocedure);
   v_next := replace(
     v_definition,
-    E'v_required := case\\n    when v_game.content_version',
-    E'v_required := case\\n    when v_game.mode_id in (''trio-nfl'', ''trio-cfb'') then 3\\n    when v_game.content_version'
+    E'v_required := case\n    when v_game.content_version',
+    E'v_required := case\n    when v_game.mode_id in (''trio-nfl'', ''trio-cfb'') then 3\n    when v_game.content_version'
   );
   v_next := replace(
     v_next,
-    E'v_rounds := case\\n    when v_game.content_version',
-    E'v_rounds := case\\n    when v_game.mode_id in (''trio-nfl'', ''trio-cfb'') then 6\\n    when v_game.content_version'
+    E'v_rounds := case\n    when v_game.content_version',
+    E'v_rounds := case\n    when v_game.mode_id in (''trio-nfl'', ''trio-cfb'') then 6\n    when v_game.content_version'
   );
   if v_next = v_definition then raise exception 'Stage 13 round-resolution contract drifted'; end if;
   execute v_next;
@@ -619,7 +619,7 @@ begin
   v_next := replace(
     v_definition,
     E'  if v_game.grading_version = ''grader-contract-v1'' then',
-    E'  if v_game.mode_id in (''trio-nfl'', ''trio-cfb'')\\n    and v_game.grading_version = ''football-draft-room-trio-grading-2026-09-v1''\\n  then\\n    perform private.grade_draft_room_trio(p_auction_id);\\n    return;\\n  end if;\\n\\n  if v_game.grading_version = ''grader-contract-v1'' then'
+    E'  if v_game.mode_id in (''trio-nfl'', ''trio-cfb'')\n    and v_game.grading_version = ''football-draft-room-trio-grading-2026-09-v1''\n  then\n    perform private.grade_draft_room_trio(p_auction_id);\n    return;\n  end if;\n\n  if v_game.grading_version = ''grader-contract-v1'' then'
   );
   if v_next = v_definition then raise exception 'Stage 13 grading contract drifted'; end if;
   execute v_next;
@@ -628,24 +628,24 @@ begin
   v_definition := pg_get_functiondef('public.prepare_auction(uuid,text)'::regprocedure);
   v_next := replace(
     v_definition,
-    E'    ''build-qb'',\\n    ''build-qb-cfb''',
-    E'    ''build-qb'',\\n    ''build-qb-cfb'',\\n    ''trio-nfl'',\\n    ''trio-cfb'''
+    E'    ''build-qb'',\n    ''build-qb-cfb''',
+    E'    ''build-qb'',\n    ''build-qb-cfb'',\n    ''trio-nfl'',\n    ''trio-cfb'''
   );
   v_next := replace(
     v_next,
-    E'  if p_mode_id in (''build-qb'', ''build-qb-cfb'')\\n    and not private.draft_room_public_release_enabled()',
-    E'  if p_mode_id in (''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'')\\n    and not private.draft_room_public_release_enabled()'
+    E'  if p_mode_id in (''build-qb'', ''build-qb-cfb'')\n    and not private.draft_room_public_release_enabled()',
+    E'  if p_mode_id in (''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'')\n    and not private.draft_room_public_release_enabled()'
   );
   v_next := replace(v_next, 'v_game_id := private.auction_game_id_for_mode(p_mode_id);', 'v_game_id := private.auction_catalog_game_id_for_mode(p_mode_id);');
   v_next := replace(
     v_next,
-    E'v_rounds := case\\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'')',
-    E'v_rounds := case\\n    when p_mode_id in (''trio-nfl'', ''trio-cfb'') then 6\\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'')'
+    E'v_rounds := case\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'')',
+    E'v_rounds := case\n    when p_mode_id in (''trio-nfl'', ''trio-cfb'') then 6\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'')'
   );
   v_next := replace(
     v_next,
-    E'v_bankroll := case\\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'')',
-    E'v_bankroll := case\\n    when p_mode_id in (''trio-nfl'', ''trio-cfb'') then 30\\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'')'
+    E'v_bankroll := case\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'')',
+    E'v_bankroll := case\n    when p_mode_id in (''trio-nfl'', ''trio-cfb'') then 30\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'')'
   );
   if v_next = v_definition then raise exception 'Stage 13 preparation contract drifted'; end if;
   execute v_next;
@@ -653,8 +653,8 @@ begin
   -- Sending and subsequent bids remain the same shared Draft Room challenge lifecycle.
   v_definition := pg_get_functiondef('public.send_auction_first_bid(uuid,bigint,numeric,text)'::regprocedure);
   v_next := replace(v_definition, E'v_is_draft := v_game.mode_id in (''build-qb'', ''build-qb-cfb'');', E'v_is_draft := v_game.mode_id in (''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'');');
-  v_next := replace(v_next, E'v_summary := case when v_is_draft then ''Build a QB'' else v_game.mode_id end;', E'v_summary := case\\n    when v_game.mode_id = ''trio-nfl'' then ''NFL QB / RB / WR Trio''\\n    when v_game.mode_id = ''trio-cfb'' then ''CFB QB / RB / WR Trio''\\n    when v_is_draft then ''Build a QB''\\n    else v_game.mode_id end;');
-  v_next := replace(v_next, E'when v_is_draft then v_creator_name || '' challenged you to Build a QB.''', E'when v_game.mode_id in (''trio-nfl'', ''trio-cfb'') then v_creator_name || '' challenged you to QB / RB / WR Trio.''\\n    when v_is_draft then v_creator_name || '' challenged you to Build a QB.''');
+  v_next := replace(v_next, E'v_summary := case when v_is_draft then ''Build a QB'' else v_game.mode_id end;', E'v_summary := case\n    when v_game.mode_id = ''trio-nfl'' then ''NFL QB / RB / WR Trio''\n    when v_game.mode_id = ''trio-cfb'' then ''CFB QB / RB / WR Trio''\n    when v_is_draft then ''Build a QB''\n    else v_game.mode_id end;');
+  v_next := replace(v_next, E'when v_is_draft then v_creator_name || '' challenged you to Build a QB.''', E'when v_game.mode_id in (''trio-nfl'', ''trio-cfb'') then v_creator_name || '' challenged you to QB / RB / WR Trio.''\n    when v_is_draft then v_creator_name || '' challenged you to Build a QB.''');
   if v_next = v_definition then raise exception 'Stage 13 first-bid contract drifted'; end if;
   execute v_next;
 
@@ -672,13 +672,13 @@ begin
   v_definition := pg_get_functiondef('public.get_auction_participant_state(uuid)'::regprocedure);
   v_next := replace(
     v_definition,
-    E'      left join private.auction_catalog catalog\\n        on catalog.content_version = auction.content_version\\n        and catalog.mode_id = auction.mode_id\\n        and catalog.item_reference = deck.private_item_reference',
-    E'      left join private.auction_catalog catalog\\n        on catalog.content_version = auction.content_version\\n        and catalog.mode_id = auction.mode_id\\n        and catalog.item_reference = deck.private_item_reference\\n      left join private.draft_room_trio_packages trio\\n        on trio.auction_id = auction.id\\n        and trio.item_reference = deck.private_item_reference'
+    E'      left join private.auction_catalog catalog\n        on catalog.content_version = auction.content_version\n        and catalog.mode_id = auction.mode_id\n        and catalog.item_reference = deck.private_item_reference',
+    E'      left join private.auction_catalog catalog\n        on catalog.content_version = auction.content_version\n        and catalog.mode_id = auction.mode_id\n        and catalog.item_reference = deck.private_item_reference\n      left join private.draft_room_trio_packages trio\n        on trio.auction_id = auction.id\n        and trio.item_reference = deck.private_item_reference'
   );
   v_next := replace(
     v_next,
-    E'        join private.auction_catalog catalog\\n          on catalog.content_version = auction.content_version\\n          and catalog.mode_id = auction.mode_id\\n          and catalog.item_reference = deck.private_item_reference',
-    E'        left join private.auction_catalog catalog\\n          on catalog.content_version = auction.content_version\\n          and catalog.mode_id = auction.mode_id\\n          and catalog.item_reference = deck.private_item_reference\\n        left join private.draft_room_trio_packages trio\\n          on trio.auction_id = auction.id\\n          and trio.item_reference = deck.private_item_reference'
+    E'        join private.auction_catalog catalog\n          on catalog.content_version = auction.content_version\n          and catalog.mode_id = auction.mode_id\n          and catalog.item_reference = deck.private_item_reference',
+    E'        left join private.auction_catalog catalog\n          on catalog.content_version = auction.content_version\n          and catalog.mode_id = auction.mode_id\n          and catalog.item_reference = deck.private_item_reference\n        left join private.draft_room_trio_packages trio\n          on trio.auction_id = auction.id\n          and trio.item_reference = deck.private_item_reference'
   );
   v_next := replace(v_next, 'catalog.display_label', 'coalesce(catalog.display_label, trio.display_label)');
   v_next := replace(v_next, 'when catalog.item_reference is not null', 'when catalog.item_reference is not null or trio.item_reference is not null');
