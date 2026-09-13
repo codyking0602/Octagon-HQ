@@ -63,7 +63,7 @@ begin
       jsonb_build_object(
         'category', award.visible_category,
         'qb', catalog.display_label,
-        'context', catalog.display_description,
+        'context', coalesce(catalog.display_description, catalog.display_label),
         'code', private.auction_rating_code(
           (catalog.grading_inputs ->> award.visible_category)::numeric
         )
@@ -93,7 +93,7 @@ begin
       jsonb_build_object(
         'category', award.visible_category,
         'qb', catalog.display_label,
-        'context', catalog.display_description,
+        'context', coalesce(catalog.display_description, catalog.display_label),
         'code', private.auction_rating_code(
           (catalog.grading_inputs ->> award.visible_category)::numeric
         )
@@ -220,7 +220,7 @@ begin
     jsonb_build_object(
       'mode', catalog.mode_id,
       'qb', catalog.display_label,
-      'context', catalog.display_description,
+      'context', coalesce(catalog.display_description, catalog.display_label),
       'trait_codes', jsonb_build_object(
         'Arm', private.auction_rating_code((catalog.grading_inputs->>'Arm')::numeric),
         'Accuracy', private.auction_rating_code((catalog.grading_inputs->>'Accuracy')::numeric),
