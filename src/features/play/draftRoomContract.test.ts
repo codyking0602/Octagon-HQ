@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  BUILD_QB_RATING_TRAITS,
   BUILD_QB_TRAITS,
   draftRoomModeDefinition,
   isDraftRoomModeId,
@@ -27,9 +26,9 @@ describe("Draft Room contract", () => {
     expect(cfb.description).toContain("four-part QB");
   });
 
-  it("keeps Clutch in canonical rating evidence without exposing it as a playable slot", () => {
-    expect(BUILD_QB_RATING_TRAITS).toContain("Clutch");
-    expect(BUILD_QB_TRAITS).not.toContain("Clutch");
+  it("removes Clutch from the canonical Build a QB trait contract", () => {
+    expect(BUILD_QB_TRAITS).toEqual(["Arm", "Accuracy", "Processing", "Mobility"]);
+    expect(BUILD_QB_TRAITS).not.toContain("Clutch" as never);
   });
 
   it("recognizes only canonical Draft Room mode ids", () => {
