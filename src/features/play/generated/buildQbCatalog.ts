@@ -14,7 +14,7 @@ export interface GeneratedBuildQbCatalogRow {
 
 // Generated deployment output from the canonical Football position-trait model.
 // Do not hand-edit ratings here; footballPositionTraitRatings.ts owns the model.
-export const generatedBuildQbCatalog: readonly GeneratedBuildQbCatalogRow[
+export const generatedBuildQbCatalog: readonly GeneratedBuildQbCatalogRow[] = [
   { subjectId: "nfl-patrick-mahomes", displayName: "Patrick Mahomes", rarityBand: 4, overall: 89, traits: { Arm: 95, Accuracy: 88, Processing: 87, Mobility: 83, Clutch: 94 } },
   { subjectId: "nfl-aaron-rodgers", displayName: "Aaron Rodgers", rarityBand: 4, overall: 87, traits: { Arm: 74, Accuracy: 89, Processing: 99, Mobility: 75, Clutch: 98 } },
   { subjectId: "nfl-lamar-jackson", displayName: "Lamar Jackson", rarityBand: 4, overall: 86, traits: { Arm: 67, Accuracy: 82, Processing: 90, Mobility: 96, Clutch: 93 } },
