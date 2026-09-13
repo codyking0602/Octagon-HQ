@@ -292,9 +292,12 @@ function hitTheNumberPublicStatePersisted(
     ? selectedIds.length
     : null;
   const activeSlot = activeIndex == null ? null : evidence.slots[activeIndex] ?? null;
+  const activeSlotSubjectIds = activeIndex == null
+    ? []
+    : evidence.progressionSlotSubjectIds[activeIndex] ?? [];
   const availableIds = complete || activeSlot == null
     ? [...evidence.ids]
-    : evidence.progressionSlotSubjectIds[activeIndex]!.filter((id) => !selectedIds.includes(id));
+    : activeSlotSubjectIds.filter((id) => !selectedIds.includes(id));
 
   return {
     complete,
