@@ -8,7 +8,7 @@ update private.auction_catalog_versions
 set is_preparation_version = true
 where content_version = 'football-draft-room-trio-2026-09-v1';
 
-do $
+do $stage13$
 declare
   v_admin_a uuid := extensions.gen_random_uuid();
   v_admin_b uuid := extensions.gen_random_uuid();
@@ -357,6 +357,6 @@ begin
   ) then
     raise exception 'CFB Trio generated an Average/Average/Average package';
   end if;
-end $$;
+end $stage13$;
 
 rollback;
