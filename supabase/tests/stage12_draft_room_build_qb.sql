@@ -6,7 +6,7 @@ select set_config('request.jwt.claim.role', 'service_role', true);
 -- Restore the independent Draft Room pointer inside this rollback-only proof.
 update private.auction_catalog_versions
 set is_preparation_version = true
-where content_version = 'football-draft-room-2026-09-v3';
+where content_version = 'football-draft-room-2026-09-v4';
 
 do $$
 declare
@@ -30,8 +30,8 @@ begin
     select 1
     from private.auction_catalog_versions version
     where version.game_id = 'draft-room'
-      and version.content_version = 'football-draft-room-2026-09-v3'
-      and version.rarity_version = 'football-draft-room-rarity-2026-09-v3'
+      and version.content_version = 'football-draft-room-2026-09-v4'
+      and version.rarity_version = 'football-draft-room-rarity-2026-09-v4'
       and version.grading_version = 'football-build-qb-traits-2026-09-v1'
       and version.is_preparation_version
   ) then
@@ -41,7 +41,7 @@ begin
   if (
     select count(*)
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v3'
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
       and catalog.mode_id = 'build-qb'
   ) <> 60 then
     raise exception 'Build a QB catalog must contain exactly 60 audited QB profiles';
@@ -50,7 +50,33 @@ begin
   if exists (
     select 1
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v3'
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
+      and catalog.mode_id = 'build-qb'
+      and catalog.display_label in (
+        'Johnny Unitas','Bob Griese','Dan Fouts','Trent Green','Ken Anderson','Ken Stabler',
+        'Sonny Jurgensen','Len Dawson','Rich Gannon','Mark Brunell','Matt Schaub'
+      )
+  ) then
+    raise exception 'Build a QB still contains an explicitly removed roster subject';
+  end if;
+
+  if (
+    select count(*)
+    from private.auction_catalog catalog
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
+      and catalog.mode_id = 'build-qb'
+      and catalog.display_label in (
+        'Trevor Lawrence','Tua Tagovailoa','C.J. Stroud','Brock Purdy','Jordan Love',
+        'Jayden Daniels','Derek Carr','Ryan Tannehill','Nick Foles','Carson Wentz','Jimmy Garoppolo'
+      )
+  ) <> 11 then
+    raise exception 'Build a QB is missing an approved roster replacement';
+  end if;
+
+  if exists (
+    select 1
+    from private.auction_catalog catalog
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
       and catalog.mode_id = 'build-qb'
       and (
         not (catalog.grading_inputs ?& array['Arm','Accuracy','Processing','Mobility','Clutch','overall'])
@@ -67,7 +93,7 @@ begin
   if (
     select count(*)
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v3'
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
       and catalog.mode_id = 'build-qb'
       and catalog.rarity_band <= 2
       and (
@@ -84,7 +110,7 @@ begin
   if not exists (
     select 1
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v3'
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
       and catalog.mode_id = 'build-qb'
       and catalog.display_label = 'Jay Cutler'
       and catalog.rarity_band = 1
@@ -99,7 +125,7 @@ begin
     from (
       select catalog.rarity_band, count(*) as total
       from private.auction_catalog catalog
-      where catalog.content_version = 'football-draft-room-2026-09-v3'
+      where catalog.content_version = 'football-draft-room-2026-09-v4'
         and catalog.mode_id = 'build-qb'
       group by catalog.rarity_band
     ) bands
@@ -172,7 +198,7 @@ begin
   from private.auction_games auction
   where auction.id = v_game;
 
-  if v_state.content_version <> 'football-draft-room-2026-09-v3'
+  if v_state.content_version <> 'football-draft-room-2026-09-v4'
     or v_state.challenger_bankroll <> 50
     or v_state.recipient_bankroll <> 50
     or v_state.current_round <> 1
