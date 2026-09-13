@@ -161,8 +161,11 @@ begin
 
   v_definition := pg_get_functiondef('private.grade_auction(uuid)'::regprocedure);
   v_next := replace(v_definition,
-    '''football-draft-room-2026-09-v4'', ''football-draft-room-2026-09-v5'')',
-    '''football-draft-room-2026-09-v4'', ''football-draft-room-2026-09-v5'', ''football-draft-room-2026-09-v6'')');
+    'and v_game.grading_version = ''football-build-qb-traits-2026-09-v1'')',
+    E'and v_game.grading_version = ''football-build-qb-traits-2026-09-v1'')\n    or (v_game.content_version = ''football-draft-room-2026-09-v6''\n      and v_game.rarity_version = ''football-draft-room-rarity-2026-09-v4''\n      and v_game.grading_version = ''football-build-qb-traits-2026-09-v2'')');
+  v_next := replace(v_next,
+    'when v_game.grading_version in (''ufc-private-grader-2026-08-v3'', ''football-build-qb-traits-2026-09-v1'')',
+    'when v_game.grading_version in (''ufc-private-grader-2026-08-v3'', ''football-build-qb-traits-2026-09-v1'', ''football-build-qb-traits-2026-09-v2'')');
   v_next := replace(v_next,
     'when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5',
     E'when v_game.content_version = ''football-draft-room-2026-09-v6'' and v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 4\n    when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5');
