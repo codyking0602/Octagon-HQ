@@ -282,6 +282,7 @@ describe("canonical Football Build a QB trait model", () => {
     expect(migration).toContain("football-build-qb-traits-2026-09-v1");
     expect(migration).not.toContain("football-build-qb-traits-2026-09-v2");
     expect(migration).not.toContain("create or replace function private.generate_auction_deck");
+    expect(migration).not.toContain("update private.auction_catalog\n");
     expect(migration).toContain("where content_version = 'football-draft-room-2026-09-v3'");
     expect(migration).toContain("create or replace function private.grade_auction");
 
@@ -290,7 +291,7 @@ describe("canonical Football Build a QB trait model", () => {
       "Jayden Daniels", "Derek Carr", "Ryan Tannehill", "Nick Foles", "Carson Wentz", "Jimmy Garoppolo",
     ]);
     for (const row of generatedBuildQbCatalog.filter((profile) => approvedReplacements.has(profile.displayName))) {
-      expect(migration).toContain(`display_label = '${row.displayName.replaceAll("'", "''")}'`);
+      expect(migration).toContain(`then '${row.displayName.replaceAll("'", "''")}'`);
       for (const trait of BUILD_QB_TRAITS) {
         expect(migration).toContain(`'${trait}',${row.traits[trait]}`);
       }
