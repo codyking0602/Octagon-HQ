@@ -98,10 +98,10 @@ describe("CFB Build a QB peak-season model", () => {
   });
 
   it("keeps every row's evidence references inside the canonical source registry", () => {
-    const sourceIds = new Set(CFB_BUILD_QB_RESEARCH_SOURCES.map((source) => source.id));
+    const sourceIds = new Set<string>(CFB_BUILD_QB_RESEARCH_SOURCES.map((source) => source.id));
     for (const profile of profiles) {
       for (const sourceId of profile.evidenceSourceIds) {
-        expect(sourceIds.has(sourceId as never), `unknown evidence source ${sourceId} for ${profile.name}`).toBe(true);
+        expect(sourceIds.has(sourceId), `unknown evidence source ${sourceId} for ${profile.name}`).toBe(true);
       }
     }
   });
