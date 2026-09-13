@@ -143,14 +143,25 @@ begin
   if exists (
     select 1 from private.auction_catalog
     where content_version = 'football-draft-room-2026-09-v4'
+      and mode_id = 'build-qb'
       and display_label in (
         'Johnny Unitas','Bob Griese','Dan Fouts','Trent Green','Ken Anderson','Ken Stabler',
-        'Sonny Jurgensen','Len Dawson','Rich Gannon','Mark Brunell','Matt Schaub',
+        'Sonny Jurgensen','Len Dawson','Rich Gannon','Mark Brunell','Matt Schaub'
+      )
+  ) then
+    raise exception 'NFL Build a QB v4 still contains a user-removed QB';
+  end if;
+
+  if exists (
+    select 1 from private.auction_catalog
+    where content_version = 'football-draft-room-2026-09-v4'
+      and mode_id = 'build-qb-cfb'
+      and display_label in (
         'Danny Wuerffel','Jim Plunkett','Hendon Hooker','Vinny Testaverde','Ty Detmer',
         'Gino Torretta','Andre Ware','Eric Crouch','Chris Weinke'
       )
   ) then
-    raise exception 'Build a QB v4 still contains a user-removed QB';
+    raise exception 'CFB Build a QB v4 still contains a user-removed QB';
   end if;
 end;
 $$;
