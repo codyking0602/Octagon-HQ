@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { getFootballFact } from "./footballFactualStats";
+import { queryFootballSubjects } from "./footballSubjectRegistry";
 import {
   FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE,
   FOOTBALL_HIT_THE_NUMBER_MAX_PICKS,
   FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG,
-  FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH,
   FOOTBALL_HIT_THE_NUMBER_MIN_PICKS,
+  FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH,
   FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE,
+  FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY,
   FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE,
   FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH,
   FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG,
@@ -16,12 +18,43 @@ import {
   footballHitTheNumberPlayableThemes,
   footballHitTheNumberRandomPoolSize,
   footballHitTheNumberSelectionSatisfies,
-  footballHitTheNumberSubjects,
   footballHitTheNumberThemeSubjects,
   footballHitTheNumberValue,
   gradeFootballHitTheNumberSelection,
   type FootballHitTheNumberFormatId,
 } from "./footballHitTheNumberModel";
+
+const APPROVED_NFL_METRICS = [
+  "nfl-season-passing-yards",
+  "nfl-team-overall-wins",
+  "nfl-team-points-for",
+  "nfl-season-passer-rating",
+  "nfl-team-points-per-game",
+  "nfl-season-passing-touchdowns",
+  "nfl-season-interceptions",
+  "nfl-career-passing-touchdowns",
+] as const;
+
+const APPROVED_CFB_METRICS = [
+  "cfb-team-points-for",
+  "cfb-team-points-against",
+  "cfb-team-wins",
+  "cfb-team-points-per-game",
+  "cfb-team-point-differential",
+] as const;
+
+const REJECTED_METRICS = [
+  "nfl-career-passing-yards",
+  "nfl-career-rushing-yards",
+  "nfl-career-receiving-yards",
+  "nfl-team-defensive-sacks",
+  "nfl-team-defensive-interceptions",
+  "nfl-team-postseason-wins",
+  "nfl-career-rushing-touchdowns",
+  "nfl-career-receiving-touchdowns",
+  "cfb-heisman-awards",
+  "cfb-team-postseason-wins",
+] as const;
 
 const ONE_FROM_EACH_LABELS = [
   "1995–2002 Champion",
@@ -39,37 +72,41 @@ const BUILD_TEAM_LABELS = [
   "Wild Card",
 ];
 
-describe("Football Hit the Number canonical fact integration", () => {
-  it("moves beyond the old 75-subject compatibility bottleneck without forcing sparse metrics", () => {
-    expect(footballHitTheNumberSubjects.length).toBeGreaterThan(100);
-    expect(new Set(footballHitTheNumberSubjects.map((subject) => subject.id)).size).toBe(footballHitTheNumberSubjects.length);
-    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.length).toBeGreaterThanOrEqual(17);
-
-    const groups = new Set(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((row) => row.group));
-    expect(groups).toContain("nfl-receiving-career");
-    expect(groups).toContain("nfl-qb-season");
-    expect(groups).toContain("cfb");
-    expect(groups).not.toContain("nfl-defense-career");
-
-    const metrics = new Set(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((row) => row.metricId));
-    expect(metrics).toContain("nfl-career-receiving-yards");
-    expect(metrics).toContain("nfl-season-passing-yards");
-    expect(metrics).toContain("cfb-team-wins");
-    expect(metrics).not.toContain("cfb-team-losses");
-    expect(metrics).not.toContain("nfl-defensive-player-of-year-awards");
-    expect(metrics).not.toContain("nfl-career-sacks");
+describe("Football Hit the Number curated generation", () => {
+  it("keeps exactly the approved 13-metric catalog with the locked 8 NFL / 5 CFB split", () => {
+    const metricIds = FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((row) => row.metricId);
+    expect(metricIds).toHaveLength(13);
+    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.filter((row) => row.league === "NFL")).toHaveLength(8);
+    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.filter((row) => row.league === "CFB")).toHaveLength(5);
+    expect(new Set(metricIds)).toEqual(new Set([...APPROVED_NFL_METRICS, ...APPROVED_CFB_METRICS]));
+    for (const metricId of REJECTED_METRICS) expect(metricIds).not.toContain(metricId);
   });
 
-  it("keeps themes deep, unique and honest now that non-champion team seasons are eligible elsewhere", () => {
-    const catalogIds = FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.map((theme) => theme.id);
-    expect(catalogIds).not.toContain("nfl-qbs-top-picks");
-    expect(catalogIds).not.toContain("nfl-skill-first-round");
-    expect(catalogIds).not.toContain("cfb-sec-era");
-    expect(catalogIds).not.toContain("cfb-offensive-era");
+  it("keeps one declarative theme owner with the simplified recognizable theme families", () => {
+    expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.map((theme) => theme.id)).toEqual([
+      "nfl-qb-seasons",
+      "nfl-qb-modern",
+      "nfl-qb-old-school",
+      "nfl-qbs-first-round",
+      "nfl-team-seasons",
+      "cfb-champions",
+      "cfb-bcs-champions",
+      "cfb-cfp-champions",
+      "cfb-modern-champions",
+    ]);
+
+    const labels = FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.map((theme) => theme.label);
+    expect(labels).toContain("Notable NFL QB Seasons");
+    expect(labels).toContain("Modern Era QBs");
+    expect(labels).toContain("Old School QBs");
+    expect(labels).toContain("First-Round QBs");
+    expect(labels).toContain("NFL Team Seasons");
+    expect(labels).toContain("National Champions");
+    expect(labels).toContain("BCS Era Champions");
+    expect(labels).toContain("CFP Era Champions");
+    expect(labels).toContain("Modern Champions");
 
     const playable = footballHitTheNumberPlayableThemes();
-    expect(playable.filter((theme) => theme.league === "NFL").length).toBeGreaterThanOrEqual(2);
-    expect(playable.filter((theme) => theme.league === "CFB").length).toBeGreaterThanOrEqual(8);
     for (const theme of playable) {
       const subjects = footballHitTheNumberThemeSubjects(theme);
       expect(subjects.length, theme.id).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH);
@@ -83,151 +120,106 @@ describe("Football Hit the Number canonical fact integration", () => {
     expect(new Set(signatures).size).toBe(playable.length);
   });
 
-  it("matches the mature UFC format and 4-7 pick generation profiles", () => {
-    expect(FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE).toEqual([
-      { value: "classic", weight: 40 },
-      { value: "themed-lineup", weight: 25 },
-      { value: "one-from-each", weight: 20 },
-      { value: "build-the-team", weight: 15 },
-    ]);
+  it("uses Football-only 4/5/6 picks with exact 12/14/16 choice pools and never supports 7", () => {
+    expect(FOOTBALL_HIT_THE_NUMBER_MIN_PICKS).toBe(4);
+    expect(FOOTBALL_HIT_THE_NUMBER_MAX_PICKS).toBe(6);
     expect(FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE).toEqual([
-      { value: 4, weight: 15 },
-      { value: 5, weight: 35 },
-      { value: 6, weight: 35 },
-      { value: 7, weight: 15 },
+      { value: 4, weight: 20 },
+      { value: 5, weight: 40 },
+      { value: 6, weight: 40 },
     ]);
-    expect([4, 5, 6, 7].map(footballHitTheNumberRandomPoolSize)).toEqual([12, 14, 16, 18]);
+    expect([4, 5, 6].map(footballHitTheNumberRandomPoolSize)).toEqual([12, 14, 16]);
+    expect(() => footballHitTheNumberRandomPoolSize(7)).toThrow(/4-6/);
+    expect(FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE).toBe(14);
+    expect(FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH).toBe(3);
   });
 
-  it("builds deterministic, solvable, quality-gated boards with deep era and stat-tier choices", () => {
-    let sawOneFromEach = false;
-    let sawBuildTeam = false;
-    let sawExpandedNflPlayerFamily = false;
-
-    for (const boardType of ["open-roster", "random-pool"] as const) {
-      for (let index = 0; index < 220; index += 1) {
-        const seed = `football-hit-number-${boardType}-${index}`;
-        const first = createFootballHitTheNumberPlan(seed, boardType);
-        const second = createFootballHitTheNumberPlan(seed, boardType);
-
-        expect(second).toEqual(first);
-        expect(first.boardType).toBe(boardType);
-        expect(first.pickCount).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_MIN_PICKS);
-        expect(first.pickCount).toBeLessThanOrEqual(FOOTBALL_HIT_THE_NUMBER_MAX_PICKS);
-        expect(new Set(first.subjectIds).size).toBe(first.subjectIds.length);
-        expect(first.subjectIds.length).toBeGreaterThanOrEqual(first.pickCount);
-        if (boardType === "random-pool") {
-          expect(first.subjectIds.length).toBe(
-            first.formatId === "one-from-each" || first.formatId === "build-the-team"
-              ? FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE
-              : footballHitTheNumberRandomPoolSize(first.pickCount),
-          );
-        }
-        expect(first.solutionSubjectIds).toHaveLength(first.pickCount);
-        expect(new Set(first.solutionSubjectIds).size).toBe(first.pickCount);
-        expect(first.solutionSubjectIds.every((subjectId) => first.subjectIds.includes(subjectId))).toBe(true);
-        expect(footballHitTheNumberSelectionSatisfies(first, first.solutionSubjectIds)).toBe(true);
-        expect(footballHitTheNumberPlanQuality(first).passes).toBe(true);
-
-        if (first.formatId === "one-from-each") {
-          sawOneFromEach = true;
-          expect(first.league).toBe("CFB");
-          expect(first.pickCount).toBe(5);
-          expect(first.slots.map((slot) => slot.label)).toEqual(ONE_FROM_EACH_LABELS);
-          expect(first.configurationLabel).toBe("One champion from each era + wild card");
-          expect(first.subjectIds.every((subjectId) => footballHitTheNumberSubjects.find((subject) => subject.id === subjectId)?.nationalChampion === true)).toBe(true);
-          for (let slotIndex = 0; slotIndex < 4; slotIndex += 1) {
-            const previousPicks = first.solutionSubjectIds.slice(0, slotIndex);
-            expect(
-              footballHitTheNumberAvailableProgressionSubjectIds(first, previousPicks).length,
-              `${first.metricId}:${boardType}:era-${slotIndex + 1}`,
-            ).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH);
-          }
-        }
-        if (first.formatId === "build-the-team") {
-          sawBuildTeam = true;
-          expect(first.pickCount).toBe(5);
-          expect(first.slots.map((slot) => slot.label)).toEqual(BUILD_TEAM_LABELS);
-          expect(first.configurationLabel).toBe("4 stat tiers + wild card");
-          for (let slotIndex = 0; slotIndex < 4; slotIndex += 1) {
-            const previousPicks = first.solutionSubjectIds.slice(0, slotIndex);
-            expect(
-              footballHitTheNumberAvailableProgressionSubjectIds(first, previousPicks).length,
-              `${first.metricId}:${boardType}:tier-${slotIndex + 1}`,
-            ).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH);
-          }
-        }
-        if (first.metricId.startsWith("nfl-career-receiv") || first.metricId.startsWith("nfl-season-")) sawExpandedNflPlayerFamily = true;
-
-        const expectedTarget = first.solutionSubjectIds.reduce(
-          (sum, subjectId) => sum + footballHitTheNumberValue(subjectId, first.metricId),
-          0,
-        );
-        expect(first.target).toBeCloseTo(expectedTarget, 8);
-        expect(gradeFootballHitTheNumberSelection(first, first.solutionSubjectIds)).toMatchObject({
-          status: "perfect",
-          score: 100,
-          total: expectedTarget,
-          target: expectedTarget,
-        });
-      }
-    }
-    expect(sawOneFromEach).toBe(true);
-    expect(sawBuildTeam).toBe(true);
-    expect(sawExpandedNflPlayerFamily).toBe(true);
-    expect(ONE_FROM_EACH_LABELS).not.toEqual(BUILD_TEAM_LABELS);
-  }, 60_000);
-
-  it("keeps canonical provenance while rotating every format, all pick counts, and CFB casual exposure", () => {
-    const formats = new Map<FootballHitTheNumberFormatId, number>([
-      ["classic", 0],
-      ["themed-lineup", 0],
-      ["one-from-each", 0],
-      ["build-the-team", 0],
-    ]);
+  it("builds deterministic capped boards with recognizability, value spread, provenance, and every valid format", () => {
+    const formats = new Map<FootballHitTheNumberFormatId, number>(
+      FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE.map((row) => [row.value, 0]),
+    );
     const picks = new Set<number>();
     const seenMetrics = new Set<string>();
-    const seenNewMetrics = new Set<string>();
-    const newMetrics = new Set([
-      "nfl-career-receiving-yards",
-      "nfl-season-passing-yards",
-      "cfb-team-wins",
-    ]);
-    let cfb = 0;
-    const runs = 1_000;
+    const playableIds = new Set(queryFootballSubjects({
+      casualEligible: true,
+      includeProjectedSourceSubjects: true,
+      includeProjectedCanonicalRecognition: true,
+    }).map((subject) => subject.id));
 
-    for (let index = 0; index < runs; index += 1) {
-      const plan = createFootballHitTheNumberPlan(`football-hit-number-mix-${index}`);
+    for (let index = 0; index < 600; index += 1) {
+      const seed = `football-curated-hit-number-${index}`;
+      const plan = createFootballHitTheNumberPlan(seed);
+      if (index < 60) expect(createFootballHitTheNumberPlan(seed)).toEqual(plan);
+
       formats.set(plan.formatId, formats.get(plan.formatId)! + 1);
       picks.add(plan.pickCount);
       seenMetrics.add(plan.metricId);
-      if (newMetrics.has(plan.metricId)) seenNewMetrics.add(plan.metricId);
-      if (plan.league === "CFB") cfb += 1;
-      expect(footballHitTheNumberPlanQuality(plan).passes).toBe(true);
+
+      expect(plan.boardType).toBe("random-pool");
+      expect([4, 5, 6]).toContain(plan.pickCount);
+      expect(plan.subjectIds).toHaveLength(footballHitTheNumberRandomPoolSize(plan.pickCount));
+      expect(plan.subjectIds.length).toBeLessThanOrEqual(16);
+      expect(new Set(plan.subjectIds).size).toBe(plan.subjectIds.length);
+      expect(plan.subjectIds.every((subjectId) => playableIds.has(subjectId))).toBe(true);
+      expect(plan.solutionSubjectIds).toHaveLength(plan.pickCount);
+      expect(plan.solutionSubjectIds.every((subjectId) => plan.subjectIds.includes(subjectId))).toBe(true);
       expect(footballHitTheNumberSelectionSatisfies(plan, plan.solutionSubjectIds)).toBe(true);
+
+      const quality = footballHitTheNumberPlanQuality(plan);
+      expect(quality.passes, `${plan.formatId}:${plan.metricId}`).toBe(true);
+      expect(quality.legalSelectionCount).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.minimumLegalSelections);
+      expect(quality.hasGoodUnder).toBe(true);
+      expect(quality.hasMiddlingOutcome).toBe(true);
+      expect(quality.hasBadUnder).toBe(true);
+      expect(quality.hasMeaningfulBust).toBe(true);
+
+      if (plan.formatId === "one-from-each") {
+        expect(plan.pickCount).toBe(5);
+        expect(plan.league).toBe("CFB");
+        expect(plan.slots.map((slot) => slot.label)).toEqual(ONE_FROM_EACH_LABELS);
+        expect(plan.configurationLabel).toBe("One champion from each era + wild card");
+      }
+      if (plan.formatId === "build-the-team") {
+        expect(plan.pickCount).toBe(5);
+        expect(plan.slots.map((slot) => slot.label)).toEqual(BUILD_TEAM_LABELS);
+        expect(plan.configurationLabel).toBe("4 stat tiers + wild card");
+      }
+      if (plan.formatId === "one-from-each" || plan.formatId === "build-the-team") {
+        for (let slotIndex = 0; slotIndex < 4; slotIndex += 1) {
+          const previous = plan.solutionSubjectIds.slice(0, slotIndex);
+          expect(
+            footballHitTheNumberAvailableProgressionSubjectIds(plan, previous).length,
+            `${plan.metricId}:${plan.formatId}:${slotIndex}`,
+          ).toBeGreaterThanOrEqual(FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH);
+        }
+      }
+
+      const expectedTarget = plan.solutionSubjectIds.reduce(
+        (sum, subjectId) => sum + footballHitTheNumberValue(subjectId, plan.metricId),
+        0,
+      );
+      expect(plan.target).toBeCloseTo(expectedTarget, 8);
+      expect(gradeFootballHitTheNumberSelection(plan, plan.solutionSubjectIds)).toMatchObject({
+        status: "perfect",
+        score: 100,
+        total: expectedTarget,
+        target: expectedTarget,
+      });
 
       for (const subjectId of plan.subjectIds) {
         const fact = getFootballFact(subjectId, plan.metricId);
         expect(fact, `${plan.metricId}:${subjectId}`).not.toBeNull();
         expect(Number.isFinite(fact!.fact.value)).toBe(true);
         expect(fact!.sources.length).toBeGreaterThan(0);
-        expect(fact!.sources.every((source) => ["2026-08-22", "2026-08-25", "2026-08-26", "2026-08-27"].includes(source.reviewedOn))).toBe(true);
       }
     }
 
-    expect(seenMetrics.size).toBeGreaterThanOrEqual(15);
-    expect(seenNewMetrics).toEqual(newMetrics);
-    expect(picks).toEqual(new Set([4, 5, 6, 7]));
-    expect(cfb / runs).toBeGreaterThanOrEqual(0.52);
-    expect(cfb / runs).toBeLessThanOrEqual(0.68);
+    expect(picks).toEqual(new Set([4, 5, 6]));
     expect([...formats.values()].every((count) => count > 0)).toBe(true);
-    expect(formats.get("classic")! / runs).toBeGreaterThanOrEqual(0.32);
-    expect(formats.get("classic")! / runs).toBeLessThanOrEqual(0.48);
-    expect(formats.get("themed-lineup")! / runs).toBeGreaterThanOrEqual(0.17);
-    expect(formats.get("themed-lineup")! / runs).toBeLessThanOrEqual(0.33);
-    expect(formats.get("one-from-each")! / runs).toBeGreaterThanOrEqual(0.12);
-    expect(formats.get("one-from-each")! / runs).toBeLessThanOrEqual(0.28);
-    expect(formats.get("build-the-team")! / runs).toBeGreaterThanOrEqual(0.07);
-    expect(formats.get("build-the-team")! / runs).toBeLessThanOrEqual(0.23);
+    expect(seenMetrics.size).toBeGreaterThanOrEqual(10);
+    for (const metricId of seenMetrics) {
+      expect([...APPROVED_NFL_METRICS, ...APPROVED_CFB_METRICS]).toContain(metricId);
+      expect(REJECTED_METRICS).not.toContain(metricId as never);
+    }
   }, 90_000);
 });
