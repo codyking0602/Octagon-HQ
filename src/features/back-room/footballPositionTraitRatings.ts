@@ -1,40 +1,49 @@
 import { buildFootballComparisonCandidatePool } from "./footballComparisonAuthority";
 import { getFootballFact, type FootballFactMetricId } from "./footballFactualStatsCore";
 import { getNflQbHistoricalConsensus } from "./footballHistoricalConsensus";
-import {
-  footballRankingRatingForScore,
-  scoreFootballAnchoredValue,
-} from "./footballRankingFramework";
-import { resolveFootballSubjectReference } from "./footballSubjectRegistry";
+import { queryFootballSubjects } from "./footballSubjectRegistry";
 import { BUILD_QB_TRAITS, type BuildQbTrait } from "../play/draftRoomContract";
 
-export const FOOTBALL_POSITION_TRAIT_MODEL_VERSION = "build-qb-v1" as const;
+export const FOOTBALL_POSITION_TRAIT_MODEL_VERSION = "build-qb-v2" as const;
+export const BUILD_QB_MATURE_POOL_SIZE = 60 as const;
+export const FOOTBALL_BUILD_QB_RESEARCH_SNAPSHOT_DATE = "2026-09-12" as const;
+
+export const FOOTBALL_BUILD_QB_RESEARCH_SOURCES = [
+  { id: "canonical-football-facts", evidenceType: "statistics", source: "Octagon HQ canonical Football factual ledger" },
+  { id: "pfr-any-a", evidenceType: "statistics", source: "https://www.pro-football-reference.com/leaders/pass_adj_net_yds_per_att_career.htm" },
+  { id: "pfr-comebacks", evidenceType: "high-leverage", source: "https://www.pro-football-reference.com/leaders/comebacks_career.htm" },
+  { id: "pfr-game-winning-drives", evidenceType: "high-leverage", source: "https://www.pro-football-reference.com/leaders/gwd_career.htm" },
+  { id: "espn-goat-index", evidenceType: "historical-evaluation", source: "https://www.espn.com/nfl/story/_/id/20096209/nfl-coaches-execs-rank-best-quarterbacks-modern-era-2017" },
+  { id: "espn-qb-council-2022", evidenceType: "film-scouting", source: "https://www.espn.com/nfl/story/_/id/34408660/nfl-quarterback-council-2022-ranking-top-10-qbs-arm-strength-accuracy-decision-making-rushing-ability-more" },
+  { id: "espn-qb-traits-2024", evidenceType: "film-scouting", source: "https://www.espn.com/nfl/story/_/id/40674690/2024-ranking-best-nfl-quarterbacks-top-10-trait-skill-arm-accuracy-rushing" },
+  { id: "espn-qb-traits-2025", evidenceType: "film-scouting", source: "https://www.espn.com/nfl/story/_/id/45913841/2025-ranking-best-nfl-quarterbacks-top-10-trait-skill-arm-accuracy-rushing" },
+  { id: "nfl-strongest-arms-history", evidenceType: "film-history", source: "https://www.nfl.com/videos/strongest-arms-in-nfl-history-nfl-throwback" },
+  { id: "nfl-strongest-arms-2014", evidenceType: "film-scouting", source: "https://www.nfl.com/news/matthew-stafford-leads-list-of-top-10-strongest-arms-0ap3000000400156" },
+  { id: "nfl-100-quarterbacks", evidenceType: "historical-evaluation", source: "https://www.nfl.com/news/nfl-s-all-time-team-tom-brady-joe-montana-top-quarterbacks-0ap3000001091999" },
+] as const;
+
+type BuildQbResearchLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+type BuildQbRarityBand = 1 | 2 | 3 | 4 | 5;
+export type BuildQbQualityBand = "marquee" | "strong" | "core" | "lower" | "wildcard";
+
+interface BuildQbResearchInput {
+  catalogId: string;
+  identityId: string;
+  name: string;
+  qualityBand: BuildQbRarityBand;
+  research: Readonly<Record<BuildQbTrait, BuildQbResearchLevel>>;
+}
 
 export interface FootballBuildQbTraitProfile {
   subjectId: string;
   name: string;
-  recognizabilityTier: "A" | "B";
+  recognizabilityTier: "A" | "B" | "C";
+  qualityBand: BuildQbQualityBand;
+  generationClass: `qb-${BuildQbQualityBand}`;
+  generationWeight: number;
   traits: Readonly<Record<BuildQbTrait, number>>;
   overall: number;
-  rarityBand: 1 | 2 | 3 | 4 | 5;
-  evidenceMetricIds: readonly FootballFactMetricId[];
-}
-
-interface RawQbTraitSignals {
-  subjectId: string;
-  name: string;
-  recognizabilityTier: "A" | "B";
-  yardsPerAttempt: number;
-  passingYardsPerGame: number;
-  passingTouchdownsPerGame: number;
-  completionPercentage: number;
-  passerRating: number;
-  touchdownInterceptionRatio: number;
-  interceptionPercentage: number;
-  rushingYardsPerGame: number;
-  rushingTouchdownsPerGame: number;
-  rushingYardsPerAttempt: number;
-  historicalConsensus: number;
+  rarityBand: BuildQbRarityBand;
   evidenceMetricIds: readonly FootballFactMetricId[];
 }
 
@@ -50,163 +59,187 @@ const REQUIRED_METRICS = [
   "nfl-career-rushing-touchdowns",
 ] as const satisfies readonly FootballFactMetricId[];
 
-function factValue(subjectId: string, metricId: FootballFactMetricId) {
-  return getFootballFact(subjectId, metricId)?.fact.value ?? null;
+const RESEARCH_LEVEL_RATING: Readonly<Record<BuildQbResearchLevel, number>> = {
+  1: 35,
+  2: 42,
+  3: 50,
+  4: 60,
+  5: 69,
+  6: 78,
+  7: 86,
+  8: 93,
+  9: 99,
+};
+
+export const BUILD_QB_GENERATION_WEIGHT_BY_RARITY: Readonly<Record<BuildQbRarityBand, number>> = {
+  1: 1.00,
+  2: 1.25,
+  3: 1.15,
+  4: 0.70,
+  5: 0.18,
+};
+
+const BUILD_QB_RESEARCH_AUDIT: readonly BuildQbResearchInput[] = [
+  { catalogId: "build-qb-tom-brady", identityId: "tom-brady", name: "Tom Brady", qualityBand: 5, research: { Arm: 6, Accuracy: 8, Processing: 9, Mobility: 2, Clutch: 9 } },
+  { catalogId: "build-qb-peyton-manning", identityId: "peyton-manning", name: "Peyton Manning", qualityBand: 5, research: { Arm: 7, Accuracy: 8, Processing: 9, Mobility: 2, Clutch: 8 } },
+  { catalogId: "build-qb-joe-montana", identityId: "joe-montana", name: "Joe Montana", qualityBand: 5, research: { Arm: 6, Accuracy: 8, Processing: 9, Mobility: 5, Clutch: 9 } },
+  { catalogId: "build-qb-patrick-mahomes", identityId: "nfl-patrick-mahomes", name: "Patrick Mahomes", qualityBand: 5, research: { Arm: 9, Accuracy: 8, Processing: 8, Mobility: 8, Clutch: 9 } },
+  { catalogId: "build-qb-aaron-rodgers", identityId: "nfl-aaron-rodgers", name: "Aaron Rodgers", qualityBand: 5, research: { Arm: 8, Accuracy: 9, Processing: 9, Mobility: 7, Clutch: 7 } },
+  { catalogId: "build-qb-dan-marino", identityId: "dan-marino", name: "Dan Marino", qualityBand: 5, research: { Arm: 9, Accuracy: 8, Processing: 9, Mobility: 2, Clutch: 6 } },
+  { catalogId: "build-qb-drew-brees", identityId: "drew-brees", name: "Drew Brees", qualityBand: 5, research: { Arm: 5, Accuracy: 9, Processing: 8, Mobility: 3, Clutch: 8 } },
+  { catalogId: "build-qb-brett-favre", identityId: "brett-favre", name: "Brett Favre", qualityBand: 5, research: { Arm: 9, Accuracy: 6, Processing: 5, Mobility: 6, Clutch: 7 } },
+  { catalogId: "build-qb-johnny-unitas", identityId: "johnny-unitas", name: "Johnny Unitas", qualityBand: 5, research: { Arm: 7, Accuracy: 7, Processing: 8, Mobility: 4, Clutch: 8 } },
+  { catalogId: "build-qb-john-elway", identityId: "john-elway", name: "John Elway", qualityBand: 5, research: { Arm: 9, Accuracy: 6, Processing: 7, Mobility: 7, Clutch: 9 } },
+  { catalogId: "build-qb-steve-young", identityId: "steve-young", name: "Steve Young", qualityBand: 4, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 8, Clutch: 8 } },
+  { catalogId: "build-qb-roger-staubach", identityId: "nfl-roger-staubach", name: "Roger Staubach", qualityBand: 4, research: { Arm: 7, Accuracy: 7, Processing: 8, Mobility: 8, Clutch: 9 } },
+  { catalogId: "build-qb-terry-bradshaw", identityId: "nfl-terry-bradshaw", name: "Terry Bradshaw", qualityBand: 4, research: { Arm: 8, Accuracy: 5, Processing: 6, Mobility: 6, Clutch: 9 } },
+  { catalogId: "build-qb-bob-griese", identityId: "bob-griese", name: "Bob Griese", qualityBand: 4, research: { Arm: 6, Accuracy: 7, Processing: 8, Mobility: 4, Clutch: 8 } },
+  { catalogId: "build-qb-dan-fouts", identityId: "dan-fouts", name: "Dan Fouts", qualityBand: 4, research: { Arm: 8, Accuracy: 7, Processing: 8, Mobility: 3, Clutch: 6 } },
+  { catalogId: "build-qb-kurt-warner", identityId: "kurt-warner", name: "Kurt Warner", qualityBand: 4, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 2, Clutch: 9 } },
+  { catalogId: "build-qb-warren-moon", identityId: "warren-moon", name: "Warren Moon", qualityBand: 4, research: { Arm: 9, Accuracy: 7, Processing: 7, Mobility: 6, Clutch: 6 } },
+  { catalogId: "build-qb-trent-green", identityId: "nflverse-player-00-0006355", name: "Trent Green", qualityBand: 4, research: { Arm: 7, Accuracy: 7, Processing: 8, Mobility: 4, Clutch: 6 } },
+  { catalogId: "build-qb-troy-aikman", identityId: "troy-aikman", name: "Troy Aikman", qualityBand: 4, research: { Arm: 7, Accuracy: 9, Processing: 8, Mobility: 3, Clutch: 9 } },
+  { catalogId: "build-qb-ben-roethlisberger", identityId: "ben-roethlisberger", name: "Ben Roethlisberger", qualityBand: 4, research: { Arm: 8, Accuracy: 7, Processing: 7, Mobility: 7, Clutch: 9 } },
+  { catalogId: "build-qb-philip-rivers", identityId: "nfl-philip-rivers", name: "Philip Rivers", qualityBand: 4, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 1, Clutch: 6 } },
+  { catalogId: "build-qb-matthew-stafford", identityId: "nfl-matthew-stafford", name: "Matthew Stafford", qualityBand: 4, research: { Arm: 9, Accuracy: 8, Processing: 8, Mobility: 5, Clutch: 8 } },
+  { catalogId: "build-qb-lamar-jackson", identityId: "nflverse-player-00-0034796", name: "Lamar Jackson", qualityBand: 4, research: { Arm: 7, Accuracy: 7, Processing: 8, Mobility: 9, Clutch: 8 } },
+  { catalogId: "build-qb-josh-allen", identityId: "nfl-josh-allen", name: "Josh Allen", qualityBand: 4, research: { Arm: 9, Accuracy: 7, Processing: 7, Mobility: 9, Clutch: 8 } },
+  { catalogId: "build-qb-eli-manning", identityId: "eli-manning", name: "Eli Manning", qualityBand: 3, research: { Arm: 7, Accuracy: 6, Processing: 6, Mobility: 2, Clutch: 9 } },
+  { catalogId: "build-qb-matt-ryan", identityId: "matt-ryan", name: "Matt Ryan", qualityBand: 3, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 3, Clutch: 7 } },
+  { catalogId: "build-qb-russell-wilson", identityId: "nflverse-player-00-0029263", name: "Russell Wilson", qualityBand: 3, research: { Arm: 8, Accuracy: 8, Processing: 6, Mobility: 8, Clutch: 8 } },
+  { catalogId: "build-qb-joe-burrow", identityId: "nflverse-player-00-0036442", name: "Joe Burrow", qualityBand: 3, research: { Arm: 7, Accuracy: 9, Processing: 9, Mobility: 5, Clutch: 8 } },
+  { catalogId: "build-qb-andrew-luck", identityId: "andrew-luck", name: "Andrew Luck", qualityBand: 3, research: { Arm: 8, Accuracy: 7, Processing: 8, Mobility: 8, Clutch: 7 } },
+  { catalogId: "build-qb-cam-newton", identityId: "cam-newton", name: "Cam Newton", qualityBand: 3, research: { Arm: 8, Accuracy: 5, Processing: 6, Mobility: 9, Clutch: 7 } },
+  { catalogId: "build-qb-michael-vick", identityId: "nflverse-player-00-0020245", name: "Michael Vick", qualityBand: 3, research: { Arm: 9, Accuracy: 5, Processing: 5, Mobility: 9, Clutch: 5 } },
+  { catalogId: "build-qb-jeff-garcia", identityId: "nflverse-player-00-0005755", name: "Jeff Garcia", qualityBand: 3, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 8, Clutch: 6 } },
+  { catalogId: "build-qb-donovan-mcnabb", identityId: "nflverse-player-00-0011022", name: "Donovan McNabb", qualityBand: 3, research: { Arm: 7, Accuracy: 6, Processing: 7, Mobility: 8, Clutch: 7 } },
+  { catalogId: "build-qb-steve-mcnair", identityId: "nflverse-player-00-0011024", name: "Steve McNair", qualityBand: 3, research: { Arm: 7, Accuracy: 7, Processing: 7, Mobility: 8, Clutch: 8 } },
+  { catalogId: "build-qb-tony-romo", identityId: "nflverse-player-00-0021678", name: "Tony Romo", qualityBand: 3, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 6, Clutch: 6 } },
+  { catalogId: "build-qb-carson-palmer", identityId: "nflverse-player-00-0021429", name: "Carson Palmer", qualityBand: 3, research: { Arm: 8, Accuracy: 7, Processing: 7, Mobility: 3, Clutch: 5 } },
+  { catalogId: "build-qb-alex-smith", identityId: "nflverse-player-00-0023436", name: "Alex Smith", qualityBand: 3, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 6, Clutch: 6 } },
+  { catalogId: "build-qb-ken-anderson", identityId: "ken-anderson", name: "Ken Anderson", qualityBand: 3, research: { Arm: 6, Accuracy: 9, Processing: 8, Mobility: 5, Clutch: 7 } },
+  { catalogId: "build-qb-ken-stabler", identityId: "ken-stabler", name: "Ken Stabler", qualityBand: 3, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 5, Clutch: 9 } },
+  { catalogId: "build-qb-joe-namath", identityId: "joe-namath", name: "Joe Namath", qualityBand: 3, research: { Arm: 9, Accuracy: 6, Processing: 6, Mobility: 4, Clutch: 9 } },
+  { catalogId: "build-qb-sonny-jurgensen", identityId: "sonny-jurgensen", name: "Sonny Jurgensen", qualityBand: 3, research: { Arm: 8, Accuracy: 8, Processing: 8, Mobility: 3, Clutch: 6 } },
+  { catalogId: "build-qb-len-dawson", identityId: "len-dawson", name: "Len Dawson", qualityBand: 3, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 4, Clutch: 8 } },
+  { catalogId: "build-qb-rich-gannon", identityId: "nflverse-player-00-0005741", name: "Rich Gannon", qualityBand: 2, research: { Arm: 5, Accuracy: 8, Processing: 8, Mobility: 6, Clutch: 6 } },
+  { catalogId: "build-qb-joe-flacco", identityId: "nflverse-player-00-0026158", name: "Joe Flacco", qualityBand: 2, research: { Arm: 9, Accuracy: 6, Processing: 6, Mobility: 3, Clutch: 9 } },
+  { catalogId: "build-qb-drew-bledsoe", identityId: "nflverse-player-00-0001361", name: "Drew Bledsoe", qualityBand: 2, research: { Arm: 9, Accuracy: 6, Processing: 6, Mobility: 1, Clutch: 6 } },
+  { catalogId: "build-qb-daunte-culpepper", identityId: "nflverse-player-00-0003739", name: "Daunte Culpepper", qualityBand: 2, research: { Arm: 9, Accuracy: 6, Processing: 5, Mobility: 8, Clutch: 5 } },
+  { catalogId: "build-qb-vinny-testaverde", identityId: "nflverse-player-00-0016193", name: "Vinny Testaverde", qualityBand: 2, research: { Arm: 8, Accuracy: 5, Processing: 5, Mobility: 4, Clutch: 6 } },
+  { catalogId: "build-qb-mark-brunell", identityId: "nflverse-player-00-0002110", name: "Mark Brunell", qualityBand: 2, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 7, Clutch: 6 } },
+  { catalogId: "build-qb-andy-dalton", identityId: "nflverse-player-00-0027973", name: "Andy Dalton", qualityBand: 2, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 4, Clutch: 5 } },
+  { catalogId: "build-qb-matt-hasselbeck", identityId: "nflverse-player-00-0007091", name: "Matt Hasselbeck", qualityBand: 2, research: { Arm: 5, Accuracy: 7, Processing: 8, Mobility: 4, Clutch: 7 } },
+  { catalogId: "build-qb-kirk-cousins", identityId: "nflverse-player-00-0029604", name: "Kirk Cousins", qualityBand: 2, research: { Arm: 6, Accuracy: 8, Processing: 8, Mobility: 3, Clutch: 6 } },
+  { catalogId: "build-qb-dak-prescott", identityId: "nflverse-player-00-0033077", name: "Dak Prescott", qualityBand: 2, research: { Arm: 8, Accuracy: 7, Processing: 7, Mobility: 7, Clutch: 6 } },
+  { catalogId: "build-qb-jay-cutler", identityId: "jay-cutler", name: "Jay Cutler", qualityBand: 1, research: { Arm: 9, Accuracy: 6, Processing: 4, Mobility: 6, Clutch: 5 } },
+  { catalogId: "build-qb-jameis-winston", identityId: "nflverse-player-00-0031503", name: "Jameis Winston", qualityBand: 1, research: { Arm: 9, Accuracy: 6, Processing: 4, Mobility: 5, Clutch: 5 } },
+  { catalogId: "build-qb-justin-herbert", identityId: "nflverse-player-00-0036355", name: "Justin Herbert", qualityBand: 1, research: { Arm: 9, Accuracy: 8, Processing: 7, Mobility: 7, Clutch: 5 } },
+  { catalogId: "build-qb-jalen-hurts", identityId: "nfl-jalen-hurts", name: "Jalen Hurts", qualityBand: 1, research: { Arm: 7, Accuracy: 6, Processing: 7, Mobility: 9, Clutch: 8 } },
+  { catalogId: "build-qb-kyler-murray", identityId: "nflverse-player-00-0035228", name: "Kyler Murray", qualityBand: 1, research: { Arm: 8, Accuracy: 7, Processing: 6, Mobility: 9, Clutch: 5 } },
+  { catalogId: "build-qb-jared-goff", identityId: "nflverse-player-00-0033106", name: "Jared Goff", qualityBand: 1, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 2, Clutch: 7 } },
+  { catalogId: "build-qb-baker-mayfield", identityId: "nflverse-player-00-0034855", name: "Baker Mayfield", qualityBand: 1, research: { Arm: 8, Accuracy: 7, Processing: 6, Mobility: 6, Clutch: 7 } },
+  { catalogId: "build-qb-matt-schaub", identityId: "nflverse-player-00-0022787", name: "Matt Schaub", qualityBand: 1, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 3, Clutch: 5 } },
+] as const;
+
+function qualityBandForRarity(rarityBand: BuildQbRarityBand): BuildQbQualityBand {
+  if (rarityBand === 5) return "marquee";
+  if (rarityBand === 4) return "strong";
+  if (rarityBand === 3) return "core";
+  if (rarityBand === 2) return "lower";
+  return "wildcard";
 }
 
-function passerRating(
-  completions: number,
-  attempts: number,
-  yards: number,
-  touchdowns: number,
-  interceptions: number,
-) {
-  const a = Math.min(2.375, Math.max(0, (completions / attempts - 0.3) * 5));
-  const b = Math.min(2.375, Math.max(0, (yards / attempts - 3) * 0.25));
-  const c = Math.min(2.375, Math.max(0, (touchdowns / attempts) * 20));
-  const d = Math.min(2.375, Math.max(0, 2.375 - (interceptions / attempts) * 25));
-  return ((a + b + c + d) / 6) * 100;
-}
-
-function rawBuildQbSignals(): RawQbTraitSignals[] {
-  const uniqueCandidates = new Map(
-    buildFootballComparisonCandidatePool("nfl-quarterbacks")
-      .filter((candidate) => candidate.recognizabilityTier === "A" || candidate.recognizabilityTier === "B")
-      .map((candidate) => [candidate.canonicalSubjectId, candidate]),
-  );
-
-  return [...uniqueCandidates.values()].flatMap((candidate) => {
-    if (candidate.recognizabilityTier !== "A" && candidate.recognizabilityTier !== "B") return [];
-
-    const subject = resolveFootballSubjectReference(
-      candidate.canonicalSubjectId,
-      candidate.name,
-      { kind: "player-career", league: "NFL", position: "QB" },
-    );
-    if (!subject || (subject.startSeason ?? 0) < 2000) return [];
-
-    const values = REQUIRED_METRICS.map((metricId) => factValue(candidate.canonicalSubjectId, metricId));
-    if (values.some((value) => value == null)) return [];
-
-    const [
-      games,
-      completions,
-      attempts,
-      passingYards,
-      passingTouchdowns,
-      interceptions,
-      rushingAttempts,
-      rushingYards,
-      rushingTouchdowns,
-    ] = values as number[];
-
-    if (games < 50 || attempts <= 0 || rushingAttempts < 0) return [];
-
-    const historicalConsensus = getNflQbHistoricalConsensus(candidate.canonicalSubjectId).score;
-    if (historicalConsensus == null) return [];
-
-    return [{
-      subjectId: candidate.canonicalSubjectId,
-      name: candidate.name,
-      recognizabilityTier: candidate.recognizabilityTier,
-      yardsPerAttempt: passingYards / attempts,
-      passingYardsPerGame: passingYards / games,
-      passingTouchdownsPerGame: passingTouchdowns / games,
-      completionPercentage: (completions / attempts) * 100,
-      passerRating: passerRating(completions, attempts, passingYards, passingTouchdowns, interceptions),
-      touchdownInterceptionRatio: passingTouchdowns / Math.max(1, interceptions),
-      interceptionPercentage: (interceptions / attempts) * 100,
-      rushingYardsPerGame: rushingYards / games,
-      rushingTouchdownsPerGame: rushingTouchdowns / games,
-      rushingYardsPerAttempt: rushingAttempts > 0 ? rushingYards / rushingAttempts : 0,
-      historicalConsensus,
-      evidenceMetricIds: REQUIRED_METRICS,
-    }];
-  });
-}
-
-function weightedScore(rows: readonly { score: number; weight: number }[]) {
-  return rows.reduce((sum, row) => sum + row.score * row.weight, 0)
-    / rows.reduce((sum, row) => sum + row.weight, 0);
-}
-
-function rarityBand(overall: number): 1 | 2 | 3 | 4 | 5 {
-  if (overall >= 90) return 5;
-  if (overall >= 82) return 4;
-  if (overall >= 72) return 3;
-  if (overall >= 62) return 2;
-  return 1;
+function researchTraitRatings(research: BuildQbResearchInput["research"]) {
+  return Object.fromEntries(
+    BUILD_QB_TRAITS.map((trait) => [trait, RESEARCH_LEVEL_RATING[research[trait]]]),
+  ) as Record<BuildQbTrait, number>;
 }
 
 /**
- * Canonical Build-a-QB position model.
+ * Canonical Build a QB competitive model.
  *
- * The trait model consumes only the existing Football comparison membership,
- * recognizability, factual ledger, historical-consensus owner, and shared
- * ranking calibration helpers. Draft Room never owns a parallel ratings table.
- *
- * "Clutch" is intentionally anchored primarily to the canonical historical QB
- * consensus (which carries career/postseason/accolade context), then lightly
- * tempered by efficiency evidence. It is a game trait, not a new all-time rank.
+ * Membership is a deliberately audited 60-QB slice of the existing canonical
+ * NFL quarterback comparison pool. The research levels are evidence inputs,
+ * not manually entered final grades. They encode the cross-source film,
+ * scouting, statistical, era-context and high-leverage audit represented by
+ * FOOTBALL_BUILD_QB_RESEARCH_SOURCES. Final trait grades are calculated from
+ * the shared level calibration above. Rarity is a separate room-composition
+ * input so subject quality never becomes a trait ceiling.
  */
 export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTraitProfile[] {
-  const raw = rawBuildQbSignals();
-  const anchors = {
-    yardsPerAttempt: raw.map((row) => row.yardsPerAttempt),
-    passingYardsPerGame: raw.map((row) => row.passingYardsPerGame),
-    passingTouchdownsPerGame: raw.map((row) => row.passingTouchdownsPerGame),
-    completionPercentage: raw.map((row) => row.completionPercentage),
-    passerRating: raw.map((row) => row.passerRating),
-    touchdownInterceptionRatio: raw.map((row) => row.touchdownInterceptionRatio),
-    interceptionPercentage: raw.map((row) => row.interceptionPercentage),
-    rushingYardsPerGame: raw.map((row) => row.rushingYardsPerGame),
-    rushingTouchdownsPerGame: raw.map((row) => row.rushingTouchdownsPerGame),
-    rushingYardsPerAttempt: raw.map((row) => row.rushingYardsPerAttempt),
-  };
+  const candidates = buildFootballComparisonCandidatePool("nfl-quarterbacks");
+  const candidateById = new Map(candidates.map((candidate) => [candidate.canonicalSubjectId, candidate]));
+  const candidateByExactIdentity = new Map(candidateById);
 
-  return raw.map((row) => {
-    const arm = footballRankingRatingForScore(weightedScore([
-      { score: scoreFootballAnchoredValue(row.yardsPerAttempt, anchors.yardsPerAttempt), weight: 0.45 },
-      { score: scoreFootballAnchoredValue(row.passingYardsPerGame, anchors.passingYardsPerGame), weight: 0.30 },
-      { score: scoreFootballAnchoredValue(row.passingTouchdownsPerGame, anchors.passingTouchdownsPerGame), weight: 0.25 },
-    ]));
-    const accuracy = footballRankingRatingForScore(weightedScore([
-      { score: scoreFootballAnchoredValue(row.completionPercentage, anchors.completionPercentage), weight: 0.55 },
-      { score: scoreFootballAnchoredValue(row.passerRating, anchors.passerRating), weight: 0.45 },
-    ]));
-    const processing = footballRankingRatingForScore(weightedScore([
-      { score: scoreFootballAnchoredValue(row.touchdownInterceptionRatio, anchors.touchdownInterceptionRatio), weight: 0.45 },
-      { score: scoreFootballAnchoredValue(row.interceptionPercentage, anchors.interceptionPercentage, "lower"), weight: 0.30 },
-      { score: scoreFootballAnchoredValue(row.passerRating, anchors.passerRating), weight: 0.25 },
-    ]));
-    const mobility = footballRankingRatingForScore(weightedScore([
-      { score: scoreFootballAnchoredValue(row.rushingYardsPerGame, anchors.rushingYardsPerGame), weight: 0.55 },
-      { score: scoreFootballAnchoredValue(row.rushingTouchdownsPerGame, anchors.rushingTouchdownsPerGame), weight: 0.30 },
-      { score: scoreFootballAnchoredValue(row.rushingYardsPerAttempt, anchors.rushingYardsPerAttempt), weight: 0.15 },
-    ]));
-    const clutch = footballRankingRatingForScore(weightedScore([
-      { score: row.historicalConsensus / 100, weight: 0.65 },
-      { score: scoreFootballAnchoredValue(row.passerRating, anchors.passerRating), weight: 0.20 },
-      { score: scoreFootballAnchoredValue(row.touchdownInterceptionRatio, anchors.touchdownInterceptionRatio), weight: 0.15 },
-    ]));
+  const subjects = queryFootballSubjects({
+    kind: "player-career",
+    league: "NFL",
+    position: "QB",
+    recognizabilityTiers: ["A", "B", "C"],
+    casualEligible: true,
+    includeProjectedSourceSubjects: true,
+    includeProjectedCanonicalRecognition: true,
+  });
+  for (const subject of subjects) {
+    const candidate = candidateById.get(subject.id);
+    if (!candidate) continue;
+    for (const sourceIdentity of subject.sourceIdentityKeys) {
+      if (sourceIdentity.provider === "nflverse") {
+        candidateByExactIdentity.set(`nflverse-player-${sourceIdentity.id}`, candidate);
+      }
+    }
+  }
 
-    const traits = {
-      Arm: arm,
-      Accuracy: accuracy,
-      Processing: processing,
-      Mobility: mobility,
-      Clutch: clutch,
-    } satisfies Record<BuildQbTrait, number>;
-    const overall = Math.round(BUILD_QB_TRAITS.reduce((sum, trait) => sum + traits[trait], 0) / BUILD_QB_TRAITS.length);
+  if (BUILD_QB_RESEARCH_AUDIT.length !== BUILD_QB_MATURE_POOL_SIZE) {
+    throw new Error(`Build a QB research audit must contain exactly ${BUILD_QB_MATURE_POOL_SIZE} quarterbacks`);
+  }
+
+  const resolvedCandidates = BUILD_QB_RESEARCH_AUDIT.map((input) => {
+    const candidate = candidateByExactIdentity.get(input.identityId);
+    if (!candidate) {
+      throw new Error(`Build a QB research audit references a non-playable exact QB identity: ${input.identityId}`);
+    }
+    return { input, candidate };
+  });
+  if (new Set(resolvedCandidates.map(({ candidate }) => candidate.canonicalSubjectId)).size !== BUILD_QB_MATURE_POOL_SIZE) {
+    throw new Error("Build a QB research audit contains duplicate canonical QB identities");
+  }
+
+  return resolvedCandidates.map(({ input, candidate }) => {
+    if (
+      candidate.recognizabilityTier !== "A"
+      && candidate.recognizabilityTier !== "B"
+      && candidate.recognizabilityTier !== "C"
+    ) {
+      throw new Error(`Build a QB QB ${candidate.canonicalSubjectId} is outside the canonical playable recognition floor`);
+    }
+
+    const evidenceMetricIds = REQUIRED_METRICS.filter(
+      (metricId) => getFootballFact(candidate.canonicalSubjectId, metricId) != null,
+    );
+    const historicalConsensus = getNflQbHistoricalConsensus(candidate.canonicalSubjectId);
+    if (historicalConsensus.score == null) {
+      throw new Error(`Build a QB historical consensus is unresolved for ${candidate.canonicalSubjectId}`);
+    }
+
+    const traits = researchTraitRatings(input.research);
+    const overall = Math.round(
+      BUILD_QB_TRAITS.reduce((sum, trait) => sum + traits[trait], 0) / BUILD_QB_TRAITS.length,
+    );
+    const qualityBand = qualityBandForRarity(input.qualityBand);
 
     return {
-      subjectId: row.subjectId,
-      name: row.name,
-      recognizabilityTier: row.recognizabilityTier,
+      subjectId: candidate.canonicalSubjectId,
+      name: input.name,
+      recognizabilityTier: candidate.recognizabilityTier,
+      qualityBand,
+      generationClass: `qb-${qualityBand}`,
+      generationWeight: BUILD_QB_GENERATION_WEIGHT_BY_RARITY[input.qualityBand],
       traits,
       overall,
-      rarityBand: rarityBand(overall),
-      evidenceMetricIds: row.evidenceMetricIds,
+      rarityBand: input.qualityBand,
+      evidenceMetricIds,
     };
-  }).sort((left, right) => right.overall - left.overall || left.name.localeCompare(right.name));
+  });
 }
