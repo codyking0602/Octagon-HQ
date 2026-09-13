@@ -381,6 +381,9 @@ describe("Football Today’s Challenge session", () => {
     if (!setup) return;
     expect(setup.contentVersion).toBe(FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION);
     expect(setup.publicSetup.slots).toBeTruthy();
+    const persistedSlotEligibility = setup.privateSetupEvidence.progression_slot_subject_ids as string[][];
+    expect(persistedSlotEligibility).toHaveLength(Number(setup.publicSetup.pick_count));
+    expect(persistedSlotEligibility.every((ids) => ids.length > 0)).toBe(true);
 
     const initialState = setup.publicSetup.initial_state as JsonRecord;
     const firstAvailable = initialState.available_subject_ids as string[];
@@ -417,6 +420,44 @@ describe("Football Today’s Challenge session", () => {
       submissionState: first.submissionState,
       publicState: first.publicState,
     }, { lock: true })).toThrow(/do not satisfy this board/);
+  });
+
+  it("advances the September 13 capped Classic board from persisted evidence without rebuilding it", () => {
+    const setup = buildFootballOfficialDailySetup(
+      "hit_the_number",
+      "2026-09-13",
+      FOOTBALL_TODAY_SCHEDULE_VERSION,
+    );
+    const candidates = setup.publicSetup.candidates as Array<Record<string, unknown>>;
+    const initialState = setup.publicSetup.initial_state as JsonRecord;
+    const firstId = String(candidates[0]?.id ?? "");
+    const context = {
+      gameType: "hit_the_number" as const,
+      setupKey: setup.setupKey,
+      publicSetup: setup.publicSetup,
+      revealSetup: setup.revealSetup,
+      privateSetupEvidence: setup.privateSetupEvidence,
+      privateGradingEvidence: setup.privateGradingEvidence,
+      submissionState: {},
+      publicState: initialState,
+    };
+
+    expect(setup.publicSetup.format_id).toBe("classic");
+    expect(setup.publicSetup.pick_count).toBe(5);
+    expect(candidates).toHaveLength(14);
+    expect(setup.privateSetupEvidence.progression_slot_subject_ids).toEqual([]);
+
+    const selected = advanceFootballOfficialDailyRuntime(context, { fighter_id: firstId });
+    expect(selected.submissionState.selected_ids).toEqual([firstId]);
+    expect(selected.publicState.selected_ids).toEqual([firstId]);
+
+    const deselected = advanceFootballOfficialDailyRuntime({
+      ...context,
+      submissionState: selected.submissionState,
+      publicState: selected.publicState,
+    }, { fighter_id: firstId });
+    expect(deselected.submissionState.selected_ids).toEqual([]);
+    expect(deselected.publicState.selected_ids).toEqual([]);
   });
 
   it("keeps Hit the Number subject values private before the final lock", () => {

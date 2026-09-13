@@ -14,6 +14,14 @@ describe("daily challenge runtime cold-start isolation", () => {
     ".github/workflows/deploy-supabase.yml",
     "utf8",
   );
+  const footballGenerationRuntime = readFileSync(
+    "src/features/play/footballTodayChallengeRuntime.ts",
+    "utf8",
+  );
+  const footballAdvanceRuntime = readFileSync(
+    "src/features/play/footballTodayChallengeAdvanceRuntime.ts",
+    "utf8",
+  );
 
   it("serves published UFC Daily reads before loading the generated UFC runtime", () => {
     expect(runtime).not.toContain('from "./runtime.generated.mjs";');
@@ -52,6 +60,17 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).toContain('const footballRuntime = await loadFootballPublicationRuntime();');
     expect(runtime).toContain('const footballRuntime = await loadFootballAdvanceRuntime();');
     expect(runtime).not.toContain('import("./football-runtime.generated.mjs")');
+  });
+
+  it("keeps Football Hit the Number generation and quality work out of ordinary Daily actions", () => {
+    expect(footballGenerationRuntime).toContain("createFootballHitTheNumberPlan");
+    expect(footballGenerationRuntime).toContain("footballHitTheNumberProgressionSlotSubjectIds");
+    expect(footballGenerationRuntime).toContain("progression_slot_subject_ids");
+    expect(footballAdvanceRuntime).toContain("progression_slot_subject_ids");
+    expect(footballAdvanceRuntime).not.toContain("footballHitTheNumberModel");
+    expect(footballAdvanceRuntime).not.toContain("createFootballHitTheNumberPlan");
+    expect(footballAdvanceRuntime).not.toContain("footballHitTheNumberPlanQuality");
+    expect(footballAdvanceRuntime).not.toContain('from "./footballTodayChallengeRuntime"');
   });
 
   it("builds separate UFC, Football publication, and Football advance artifacts under one function owner", () => {
