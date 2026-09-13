@@ -169,6 +169,14 @@ begin
   v_next := replace(v_next,
     'when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5',
     E'when v_game.content_version = ''football-draft-room-2026-09-v6'' and v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 4\n    when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5');
+
+  v_next := replace(v_next,
+    E'or (v_game.content_version in (''football-draft-room-2026-09-v1'', ''football-draft-room-2026-09-v2'', ''football-draft-room-2026-09-v3'', ''football-draft-room-2026-09-v4'', ''football-draft-room-2026-09-v5'', ''football-draft-room-2026-09-v6'')\n      and v_game.rarity_version in (''football-draft-room-rarity-2026-09-v1'', ''football-draft-room-rarity-2026-09-v2'', ''football-draft-room-rarity-2026-09-v3'', ''football-draft-room-rarity-2026-09-v4'')\n      and v_game.grading_version = ''football-build-qb-traits-2026-09-v1'')',
+    E'or (v_game.content_version in (''football-draft-room-2026-09-v1'', ''football-draft-room-2026-09-v2'', ''football-draft-room-2026-09-v3'', ''football-draft-room-2026-09-v4'', ''football-draft-room-2026-09-v5'')\n      and v_game.rarity_version in (''football-draft-room-rarity-2026-09-v1'', ''football-draft-room-rarity-2026-09-v2'', ''football-draft-room-rarity-2026-09-v3'', ''football-draft-room-rarity-2026-09-v4'')\n      and v_game.grading_version = ''football-build-qb-traits-2026-09-v1'')\n    or (v_game.content_version = ''football-draft-room-2026-09-v6''\n      and v_game.rarity_version = ''football-draft-room-rarity-2026-09-v4''\n      and v_game.grading_version = ''football-build-qb-traits-2026-09-v2'')');
+
+  v_next := replace(v_next,
+    'v_game.grading_version in (''ufc-private-grader-2026-08-v3'', ''football-build-qb-traits-2026-09-v1'')',
+    'v_game.grading_version in (''ufc-private-grader-2026-08-v3'', ''football-build-qb-traits-2026-09-v1'', ''football-build-qb-traits-2026-09-v2'')');
   if v_next = v_definition then raise exception 'Draft Room grading contract drifted'; end if;
   execute v_next;
 end;
