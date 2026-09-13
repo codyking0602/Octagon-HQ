@@ -22,6 +22,19 @@ describe("Draft Room Trio presentation contract", () => {
     expect(css).toContain(".draft-room-trio-package--compact .draft-room-trio-package__player");
   });
 
+
+  it("keeps the sport-filtered visual browse compact and phone-safe", () => {
+    expect(page).toContain('className="auction-catalog draft-room-catalog"');
+    expect(page).toContain('className="auction-catalog__tabs draft-room-sport-toggle"');
+    expect(page).toContain('SEALED BID CHALLENGE');
+    expect(css).toContain(".draft-room-sport-toggle");
+    expect(css).toContain("grid-template-columns: repeat(2, minmax(0, 1fr))");
+    expect(css).toContain(".draft-room-catalog .auction-catalog__name");
+    expect(css).toContain("white-space: normal");
+    expect(css).toContain("overflow-wrap: anywhere");
+    expect(css).toContain("env(safe-area-inset-bottom, 0px)");
+  });
+
   it("keeps the completed Trio result focused on winner, overall score, and rosters", () => {
     expect(page).toContain('const trioResult = trioMode && state.lifecycle_state === "completed"');
     expect(page).toContain("{!trioResult ? <section className=\"auction-scoreboard surface-card\">");

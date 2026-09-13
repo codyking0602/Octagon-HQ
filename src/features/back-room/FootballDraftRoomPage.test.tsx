@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
@@ -125,42 +125,71 @@ describe("Football Draft Room", () => {
       ]);
   });
 
-  it("shows Build a QB and Trio modes only through the existing owner gate", () => {
+  it("uses the UFC-parallel Draft Room hero and defaults the browse board to NFL only", () => {
+    mockedUseIdentity.mockReturnValue(identity(true));
+    const { container } = renderRoute();
+
+    expect(screen.getByRole("heading", { name: "Draft Room" })).toBeInTheDocument();
+    expect(screen.getByText("SEALED BID CHALLENGE")).toBeInTheDocument();
+    expect(screen.getByText("Pick a format and challenge another member. Bid privately to build the stronger roster.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFL" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CFB Build a QB" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CFB QB / RB / WR Trio" })).not.toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/build-qb-andrew-luck-hero.webp"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/draft-room-trio-nfl.webp"]')).toBeInTheDocument();
+  });
+
+  it("filters the visual browse board to CFB without mixing NFL modes", () => {
+    mockedUseIdentity.mockReturnValue(identity(true));
+    const { container } = renderRoute();
+
+    fireEvent.click(screen.getByRole("button", { name: "CFB" }));
+
+    expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "NFL QB / RB / WR Trio" })).not.toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/build-qb-trevor-lawrence-clemson-hero.webp"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/draft-room-trio-cfb.webp"]')).toBeInTheDocument();
+  });
+
+  it("keeps mode selection and opponent selection as one shared two-step setup flow", () => {
     mockedUseIdentity.mockReturnValue(identity(true));
     renderRoute();
 
-    expect(screen.getByRole("heading", { name: "Draft Room" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "NFL Build a QB" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
-    expect(screen.getByText(/Bid from a \$40 bankroll; 8 QBs appear and each side finishes with 4\./)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
-    expect(screen.getAllByText("DRAFT ROOM").length).toBeGreaterThan(0);
-    expect(screen.queryByText(/ADMIN PREVIEW/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/ADMIN RELEASE GATE/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/PRIVATE UNTIL/i)).not.toBeInTheDocument();
-    for (const trait of BUILD_A_QB_TRAITS) {
-      expect(screen.getByText(trait)).toBeInTheDocument();
-    }
+    fireEvent.click(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" }));
+    expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("SELECTED")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "CHOOSE OPPONENT →" }));
+    expect(screen.getByRole("heading", { name: "Choose opponent" })).toBeInTheDocument();
+    expect(screen.getByText("SELECTED FORMAT")).toBeInTheDocument();
+    expect(screen.getByText("NFL QB / RB / WR Trio")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "← CHANGE FORMAT" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "← CHANGE FORMAT" }));
+    expect(screen.getByRole("heading", { name: "Choose a format" })).toBeInTheDocument();
   });
 
-  it("resolves the NFL Trio launch contract with six packages, three wins, and a $30 bankroll", () => {
+  it("honors a direct Trio mode link without exposing the other sport", () => {
     mockedUseIdentity.mockReturnValue(identity(true));
     renderRoute("/football/draft-room?mode=trio-nfl");
-    expect(screen.getByRole("heading", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toHaveClass("is-selected");
-    expect(screen.getByText(/Bid from a \$30 bankroll; 6 trios appear and each side finishes with 3\./)).toBeInTheDocument();
-    expect(screen.getByText("QB")).toBeInTheDocument();
-    expect(screen.getByText("RB")).toBeInTheDocument();
-    expect(screen.getByText("WR")).toBeInTheDocument();
+
+    expect(screen.getByRole("button", { name: "NFL" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.queryByRole("button", { name: "CFB QB / RB / WR Trio" })).not.toBeInTheDocument();
   });
 
   it("resolves the CFB launch mode without weakening the canonical private gate", () => {
     mockedUseIdentity.mockReturnValue(identity(true));
     renderRoute("/football/draft-room?mode=build-qb-cfb");
-    expect(screen.getByRole("heading", { name: "CFB Build a QB" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "CFB Build a QB" })).toHaveClass("is-selected");
+    expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "CFB Build a QB" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
 
     mockedUseIdentity.mockReturnValue(identity(false));
     renderRoute("/football/draft-room?mode=build-qb-cfb");

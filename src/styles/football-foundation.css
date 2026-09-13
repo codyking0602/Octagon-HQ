@@ -828,30 +828,95 @@
 
 
 
-/* Draft Room mode selector stays inside the shared Football/Auction presentation owner. */
-.draft-room-mode-switcher {
+/* Draft Room browse mirrors UFC Auction while keeping Football identity and mobile spacing. */
+.app-shell--football-room .football-room-page.auction-page .draft-room-hero {
+  border-color: rgba(var(--draft-room-accent-rgb), .28);
+  background:
+    radial-gradient(circle at 90% 0, rgba(var(--draft-room-accent-rgb), .22), transparent 46%),
+    var(--surface);
+}
+
+.app-shell--football-room .football-room-page.auction-page .draft-room-catalog {
+  width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.app-shell--football-room .football-room-page.auction-page .draft-room-sport-toggle {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
-  margin: 14px 0 10px;
-}
-.draft-room-mode-switcher button {
-  min-height: 42px;
-  border: 1px solid rgba(142, 188, 230, 0.28);
-  border-radius: 10px;
-  background: rgba(9, 16, 25, 0.74);
-  color: rgba(255, 255, 255, 0.72);
-  font: inherit;
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-}
-.draft-room-mode-switcher button.is-selected {
-  border-color: rgba(142, 188, 230, 0.82);
-  background: rgba(142, 188, 230, 0.14);
-  color: #fff;
+  overflow: visible;
+  padding: 0;
 }
 
+.app-shell--football-room .football-room-page.auction-page .draft-room-sport-toggle button {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  border-radius: 11px;
+  font-size: .66rem;
+  letter-spacing: .08em;
+}
+
+.app-shell--football-room .football-room-page.auction-page .draft-room-catalog ol {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.app-shell--football-room .football-room-page.auction-page .draft-room-catalog li button {
+  min-height: 142px;
+}
+
+.app-shell--football-room .football-room-page.auction-page .draft-room-catalog .auction-catalog__image {
+  object-fit: cover;
+  filter: saturate(.94) contrast(1.03);
+}
+
+.app-shell--football-room .football-room-page.auction-page .draft-room-catalog .auction-catalog__name {
+  max-width: calc(100% - 18px);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: clamp(.72rem, 3vw, .84rem);
+  line-height: 1.08;
+}
+
+.app-shell--football-room .football-room-page.auction-page .draft-room-catalog .auction-catalog__continue {
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  border-color: rgba(var(--draft-room-accent-rgb), .26);
+  background: rgba(7, 17, 29, .96);
+}
+
+.app-shell--football-room .football-room-page.auction-page .draft-room-catalog .auction-catalog__continue strong {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-opponents {
+  min-width: 0;
+}
+
+@media (max-width: 430px) {
+  .app-shell--football-room .football-room-page.auction-page .draft-room-catalog li button {
+    min-height: 124px;
+    padding: 9px;
+  }
+
+  .app-shell--football-room .football-room-page.auction-page .draft-room-catalog .auction-catalog__name {
+    padding-right: 20px;
+    font-size: .7rem;
+  }
+
+  .app-shell--football-room .football-room-page.auction-page .draft-room-catalog .auction-catalog__number {
+    top: 8px;
+    left: 9px;
+  }
+
+  .app-shell--football-room .football-room-page.auction-page .draft-room-catalog .auction-catalog__mark {
+    top: 7px;
+    right: 9px;
+  }
+}
 
 /* Stage 13 QB / RB / WR Trio extends the shared Draft Room shell without exposing private grading. */
 .app-shell--football-room .football-room-page.auction-page .draft-room-trio-current {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
-import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { ChallengeMemberPicker } from "../challenges/ChallengeMemberPicker";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -14,6 +14,7 @@ import {
   CFB_BUILD_QB_HERO_IMAGE,
   cfbBuildQbVisualIdentity,
 } from "./cfbBuildQbVisualIdentity";
+import { draftRoomModeArtwork } from "./draftRoomModeArtwork";
 import {
   AuctionRepositoryError,
   createAuctionRepository,
@@ -59,6 +60,28 @@ function draftRoomHeroImage(modeId: DraftRoomModeId) {
 
 function draftRoomTitle(modeId: DraftRoomModeId) {
   return draftRoomModeDefinition(modeId).displayName;
+}
+
+type DraftRoomSport = "nfl" | "cfb";
+
+function DraftRoomModeArtworkImage({
+  modeId,
+  className,
+}: {
+  modeId: DraftRoomModeId;
+  className: string;
+}) {
+  const artwork = draftRoomModeArtwork(modeId);
+  return (
+    <img
+      className={className}
+      src={artwork.src}
+      alt=""
+      aria-hidden="true"
+      style={{ objectPosition: artwork.objectPosition }}
+      onError={(event) => { event.currentTarget.hidden = true; }}
+    />
+  );
 }
 
 export interface TrioPackagePlayer {
@@ -471,8 +494,23 @@ export default function FootballDraftRoomPage() {
   const submitting = useRef(false);
   const auctionId = params.get("auction") ?? "";
   const requestedModeParam = params.get("mode") ?? "";
-  const requestedMode: DraftRoomModeId = isDraftRoomModeId(requestedModeParam) ? requestedModeParam : "build-qb";
-  const requestedModeDefinition = draftRoomModeDefinition(requestedMode);
+  const requestedMode: DraftRoomModeId | null = isDraftRoomModeId(requestedModeParam) ? requestedModeParam : null;
+  const [selectedModeId, setSelectedModeId] = useState<DraftRoomModeId | null>(requestedMode);
+  const [selectedSport, setSelectedSport] = useState<DraftRoomSport>(
+    requestedMode && isCfbDraftRoomMode(requestedMode) ? "cfb" : "nfl",
+  );
+  const [setupStep, setSetupStep] = useState<"formats" | "opponent">("formats");
+  const selectedMode = selectedModeId ? draftRoomModeDefinition(selectedModeId) : null;
+  const visibleModes = draftRoomModes.filter((mode) => (
+    selectedSport === "cfb" ? isCfbDraftRoomMode(mode.id) : !isCfbDraftRoomMode(mode.id)
+  ));
+
+  useEffect(() => {
+    if (auctionId || !requestedMode) return;
+    setSelectedModeId(requestedMode);
+    setSelectedSport(isCfbDraftRoomMode(requestedMode) ? "cfb" : "nfl");
+    setSetupStep("formats");
+  }, [auctionId, requestedMode]);
 
   useEffect(() => {
     let cancelled = false;
@@ -512,6 +550,11 @@ export default function FootballDraftRoomPage() {
   }
 
   const profileId = identity.profile!.id;
+  const backLink = (
+    <Link className="game-header__back" to="/football">
+      <span>‹</span><span><small>FOOTBALL HQ</small><strong>All Games</strong></span>
+    </Link>
+  );
 
   async function reload() {
     if (!repository || !auctionId) return;
@@ -543,22 +586,44 @@ export default function FootballDraftRoomPage() {
     }
   }
 
-  function newRoom(modeId: DraftRoomModeId = requestedMode) {
+  function newRoom(modeId: DraftRoomModeId = selectedModeId ?? requestedMode ?? "build-qb") {
     setState(null);
     setSelectedOpponent(null);
+    setSelectedModeId(modeId);
+    setSelectedSport(isCfbDraftRoomMode(modeId) ? "cfb" : "nfl");
+    setSetupStep("formats");
     setError("");
     navigate(`/football/draft-room?mode=${modeId}`, { replace: true });
   }
 
+  function selectSport(sport: DraftRoomSport) {
+    setSelectedSport(sport);
+    setSelectedModeId(null);
+    setSelectedOpponent(null);
+    setSetupStep("formats");
+    setError("");
+  }
+
+  function selectMode(modeId: DraftRoomModeId) {
+    setSelectedModeId(modeId);
+    setSelectedOpponent(null);
+    setError("");
+  }
+
+  function continueToOpponent() {
+    if (!selectedModeId) return;
+    setSetupStep("opponent");
+  }
+
   async function prepare() {
-    if (!repository || !selectedOpponent || submitting.current) return;
+    if (!repository || !selectedModeId || !selectedOpponent || submitting.current) return;
     submitting.current = true;
     setBusy(true);
     setError("");
     try {
       const opponent = await challenges.findProfile(selectedOpponent.displayName);
       if (!opponent) throw new Error("No Octagon HQ profile matched that exact name.");
-      const prepared = await repository.prepare(opponent.id, requestedMode);
+      const prepared = await repository.prepare(opponent.id, selectedModeId);
       setState(prepared);
       navigate(`/football/draft-room?auction=${prepared.auction_id}`, { replace: true });
     } catch (nextError) {
@@ -627,11 +692,12 @@ export default function FootballDraftRoomPage() {
   if (auctionId) {
     return (
       <div className="page-stack football-room-page auction-page">
+        {backLink}
         <section className="auction-destination surface-card">
           <p className="eyebrow">DRAFT ROOM</p>
           <h1>{loading ? "Loading Draft Room…" : "Draft Room unavailable"}</h1>
           {error ? <p className="auction-error" role="status">{error}</p> : null}
-          {!loading ? <button className="primary-action" type="button" onClick={() => newRoom(requestedMode)}>BACK TO DRAFT ROOM</button> : null}
+          {!loading ? <button className="primary-action" type="button" onClick={() => newRoom(requestedMode ?? "build-qb")}>BACK TO DRAFT ROOM</button> : null}
         </section>
       </div>
     );
@@ -639,53 +705,102 @@ export default function FootballDraftRoomPage() {
 
   return (
     <div className="page-stack football-room-page auction-page">
-      <section className="page-heading">
-        <p className="eyebrow">DRAFT ROOM</p>
+      {backLink}
+      <header className="auction-hero surface-card draft-room-hero">
+        <p className="eyebrow">SEALED BID CHALLENGE</p>
         <h1>Draft Room</h1>
-        <p>Football’s sealed-bid strategy room. Bid smart, build your roster, and beat your opponent.</p>
-      </section>
+        <p>Pick a format and challenge another member. Bid privately to build the stronger roster.</p>
+      </header>
 
-      <section className="auction-hero surface-card" aria-labelledby="draft-room-launch-title">
-        <p className="eyebrow">LAUNCH ROOM</p>
-        <h2 id="draft-room-launch-title">{requestedModeDefinition.displayName}</h2>
-        <p>{requestedModeDefinition.description} Bid from a ${requestedModeDefinition.startingBankroll} bankroll; {requestedModeDefinition.rounds} {requestedModeDefinition.format === "trio" ? "trios" : "QBs"} appear and each side finishes with {requestedModeDefinition.requiredSelectionsPerPlayer}.</p>
-        <div className="draft-room-mode-switcher" role="group" aria-label="Draft Room mode">
-          {draftRoomModes.map((mode) => (
+      {setupStep === "formats" ? (
+        <section className="auction-catalog draft-room-catalog" aria-labelledby="draft-room-modes-title">
+          <header>
+            <p className="eyebrow">STEP 1</p>
+            <h2 id="draft-room-modes-title">Choose a format</h2>
+          </header>
+
+          <div className="auction-catalog__tabs draft-room-sport-toggle" role="group" aria-label="Draft Room sport">
             <button
               type="button"
-              key={mode.id}
-              className={requestedMode === mode.id ? "is-selected" : ""}
-              onClick={() => navigate(`/football/draft-room?mode=${mode.id}`, { replace: true })}
+              aria-pressed={selectedSport === "nfl"}
+              className={selectedSport === "nfl" ? "is-active" : ""}
+              onClick={() => selectSport("nfl")}
             >
-              {mode.displayName}
+              NFL
             </button>
-          ))}
-        </div>
-        <div className="auction-catalog__tabs" aria-label={requestedModeDefinition.format === "trio" ? "Trio positions" : "Build a QB traits"}>
-          {(requestedModeDefinition.format === "trio" ? TRIO_POSITIONS : BUILD_QB_TRAITS).map((label) => <span key={label}>{label}</span>)}
-        </div>
-      </section>
+            <button
+              type="button"
+              aria-pressed={selectedSport === "cfb"}
+              className={selectedSport === "cfb" ? "is-active" : ""}
+              onClick={() => selectSport("cfb")}
+            >
+              CFB
+            </button>
+          </div>
 
-      <section className="auction-opponents surface-card">
-        <p className="eyebrow">START ROOM</p>
-        <h2>Choose opponent</h2>
-        <ChallengeMemberPicker
-          members={challenges.members}
-          recentNames={challenges.profiles.map((profile) => profile.displayName)}
-          selectedName={selectedOpponent?.displayName}
-          busy={busy}
-          onSelect={setSelectedOpponent}
-        />
-        <p>Preparing fixes the private {requestedModeDefinition.rounds}-{requestedModeDefinition.format === "trio" ? "trio" : "QB"} room. Refreshing cannot reroll it.</p>
-        <button
-          className="primary-action"
-          type="button"
-          disabled={!repository || !selectedOpponent || busy}
-          onClick={() => void prepare()}
-        >
-          {busy ? "PREPARING…" : `PREPARE ${requestedModeDefinition.displayName.toUpperCase()}`}
-        </button>
-      </section>
+          <ol>
+            {visibleModes.map((mode, index) => (
+              <li className={selectedModeId === mode.id ? "is-selected" : ""} key={mode.id}>
+                <button
+                  type="button"
+                  aria-label={mode.displayName}
+                  aria-pressed={selectedModeId === mode.id}
+                  onClick={() => selectMode(mode.id)}
+                >
+                  <DraftRoomModeArtworkImage modeId={mode.id} className="auction-catalog__image" />
+                  <span className="auction-catalog__number">{String(index + 1).padStart(2, "0")}</span>
+                  <strong className="auction-catalog__name">{mode.displayName}</strong>
+                  <em className="auction-catalog__mark" aria-hidden="true">{selectedModeId === mode.id ? "✓" : "›"}</em>
+                </button>
+              </li>
+            ))}
+          </ol>
+
+          {selectedMode ? (
+            <div className="auction-catalog__continue">
+              <span><small>SELECTED</small><strong>{selectedMode.displayName}</strong></span>
+              <button className="primary-action" type="button" onClick={continueToOpponent}>
+                CHOOSE OPPONENT →
+              </button>
+            </div>
+          ) : null}
+        </section>
+      ) : (
+        <section className="auction-opponents surface-card">
+          <button
+            className="auction-opponents__back"
+            type="button"
+            onClick={() => {
+              setSetupStep("formats");
+              setSelectedOpponent(null);
+            }}
+          >
+            ← CHANGE FORMAT
+          </button>
+          <p className="eyebrow">STEP 2</p>
+          <h2>Choose opponent</h2>
+          <div className="auction-opponents__summary">
+            <small>SELECTED FORMAT</small>
+            <strong>{selectedMode?.displayName}</strong>
+          </div>
+          <ChallengeMemberPicker
+            members={challenges.members}
+            recentNames={challenges.profiles.map((profile) => profile.displayName)}
+            selectedName={selectedOpponent?.displayName}
+            busy={busy}
+            onSelect={setSelectedOpponent}
+          />
+          <p>Choose any Octagon HQ member. Search is optional.</p>
+          <button
+            className="primary-action"
+            type="button"
+            disabled={!repository || !selectedModeId || !selectedOpponent || busy}
+            onClick={() => void prepare()}
+          >
+            {busy ? "PREPARING…" : "PREPARE ROOM"}
+          </button>
+        </section>
+      )}
 
       {error ? <p className="auction-error" role="status">{error}</p> : null}
     </div>
