@@ -181,7 +181,10 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
     .filter((input) => !candidateById.has(input.canonicalSubjectId))
     .map((input) => input.canonicalSubjectId);
   if (identityMismatches.length) {
-    throw new Error(`Build a QB research audit references non-playable canonical QBs: ${identityMismatches.join(", ")}`);
+    const available = candidates.map((candidate) => `${candidate.name} [${candidate.canonicalSubjectId}]`).join("; ");
+    throw new Error(
+      `Build a QB research audit references non-playable canonical QBs: ${identityMismatches.join(", ")}; available: ${available}`,
+    );
   }
 
   return BUILD_QB_RESEARCH_AUDIT.map((input) => {
