@@ -35,7 +35,7 @@ begin
     where version.game_id = 'draft-room'
       and version.content_version = 'football-draft-room-2026-09-v6'
       and version.rarity_version = 'football-draft-room-rarity-2026-09-v4'
-      and version.grading_version = 'football-build-qb-traits-2026-09-v1'
+      and version.grading_version = 'football-build-qb-traits-2026-09-v2'
       and version.is_preparation_version
   ) then
     raise exception 'CFB Draft Room v6 preparation version is missing';
@@ -48,6 +48,28 @@ begin
       and catalog.mode_id = 'build-qb-cfb'
   ) <> 80 then
     raise exception 'CFB Build a QB v6 must retain all 80 audited peak-season QBs';
+  end if;
+
+  if exists (
+    select 1
+    from private.auction_catalog catalog
+    where catalog.content_version = 'football-draft-room-2026-09-v6'
+      and catalog.mode_id = 'build-qb-cfb'
+      and (
+        catalog.grading_inputs ? 'Clutch'
+        or not (catalog.grading_inputs ?& array['Arm','Accuracy','Processing','Mobility','overall'])
+        or jsonb_object_length(catalog.grading_inputs) <> 5
+        or (catalog.grading_inputs->>'overall')::numeric <> round(
+          (
+            (catalog.grading_inputs->>'Arm')::numeric
+            + (catalog.grading_inputs->>'Accuracy')::numeric
+            + (catalog.grading_inputs->>'Processing')::numeric
+            + (catalog.grading_inputs->>'Mobility')::numeric
+          ) / 4
+        )
+      )
+  ) then
+    raise exception 'CFB Build a QB v6 grading packet must contain only the four canonical traits plus their four-trait overall';
   end if;
 
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
