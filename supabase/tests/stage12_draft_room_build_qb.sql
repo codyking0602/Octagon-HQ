@@ -13,7 +13,6 @@ declare
   v_admin_a uuid := extensions.gen_random_uuid();
   v_admin_b uuid := extensions.gen_random_uuid();
   v_member uuid := extensions.gen_random_uuid();
-  v_preview uuid;
   v_game uuid;
   v_revision bigint;
   v_round integer;
@@ -96,6 +95,25 @@ begin
   perform set_config('request.jwt.claim.sub',v_admin_a::text,true);
 
   begin
+    perform public.create_play_challenge(
+      v_admin_b,
+      'draft-room',
+      'football-draft-room-server-v1',
+      'Draft Room',
+      'Build a QB',
+      '/football/draft-room',
+      '{}'::jsonb,
+      '{}'::jsonb
+    );
+    raise exception 'generic Challenge Center created a Draft Room challenge';
+  exception
+    when others then
+      if sqlerrm not like '%challenges must be sent through the Auction engine%' then
+        raise;
+      end if;
+  end;
+
+  begin
     perform public.prepare_auction(v_member, 'build-qb');
     raise exception 'admin prepared Draft Room against a non-admin';
   exception
@@ -159,6 +177,17 @@ begin
   where auction.id = v_game;
 
   perform set_config('request.jwt.claim.sub',v_admin_b::text,true);
+
+  begin
+    perform public.complete_play_challenge(v_code, '{}'::jsonb);
+    raise exception 'generic Challenge Center completed a Draft Room challenge';
+  exception
+    when others then
+      if sqlerrm not like '%completion is owned by the Auction engine%' then
+        raise;
+      end if;
+  end;
+
   perform public.submit_auction_bid(v_game, 1, v_revision, 4, 'Arm');
 
   for v_round in 2..10 loop
