@@ -425,8 +425,15 @@ jobs:
             printf '%s\n' "$function_list" | grep -F "deliver-notification-push"
           fi
 
+          live_curl() {
+            curl --silent --show-error \
+              --retry 5 \
+              --retry-all-errors \
+              --retry-delay 2 \
+              "$@"
+          }
           endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
-          status=$(curl --silent --show-error \
+          status=$(live_curl \
             --dump-header "$RUNNER_TEMP/pin-auth-headers.txt" \
             --output "$RUNNER_TEMP/pin-auth-response.json" \
             --write-out "%{http_code}" \
@@ -447,7 +454,7 @@ jobs:
 
           if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
             spotlight_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/build-pick-spotlight"
-            spotlight_status=$(curl --silent --show-error \
+            spotlight_status=$(live_curl \
               --dump-header "$RUNNER_TEMP/spotlight-builder-headers.txt" \
               --output "$RUNNER_TEMP/spotlight-builder-response.json" \
               --write-out "%{http_code}" \
@@ -460,7 +467,7 @@ jobs:
             grep -Fq "\"deployment_sha\":\"$SOURCE_SHA\"" "$RUNNER_TEMP/spotlight-builder-response.json"
             grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/spotlight-builder-headers.txt"
 
-            spotlight_unauthorized_status=$(curl --silent --show-error \
+            spotlight_unauthorized_status=$(live_curl \
               --output "$RUNNER_TEMP/spotlight-builder-unauthorized.json" \
               --write-out "%{http_code}" \
               --request POST \
@@ -473,7 +480,7 @@ jobs:
 
           if [ -f supabase/functions/daily-challenge-runtime/index.ts ]; then
             daily_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/daily-challenge-runtime"
-            daily_status=$(curl --silent --show-error \
+            daily_status=$(live_curl \
               --dump-header "$RUNNER_TEMP/daily-runtime-headers.txt" \
               --output "$RUNNER_TEMP/daily-runtime-response.json" \
               --write-out "%{http_code}" \
@@ -486,7 +493,7 @@ jobs:
             grep -Fq "\"deployment_sha\":\"$SOURCE_SHA\"" "$RUNNER_TEMP/daily-runtime-response.json"
             grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/daily-runtime-headers.txt"
 
-            daily_unauthorized_status=$(curl --silent --show-error \
+            daily_unauthorized_status=$(live_curl \
               --output "$RUNNER_TEMP/daily-runtime-unauthorized.json" \
               --write-out "%{http_code}" \
               --request POST \
@@ -499,7 +506,7 @@ jobs:
 
           if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
             push_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/deliver-notification-push"
-            push_status=$(curl --silent --show-error \
+            push_status=$(live_curl \
               --dump-header "$RUNNER_TEMP/push-config-headers.txt" \
               --output "$RUNNER_TEMP/push-config-response.json" \
               --write-out "%{http_code}" \
@@ -513,7 +520,7 @@ jobs:
             grep -Fq "\"deployment_sha\":\"$SOURCE_SHA\"" "$RUNNER_TEMP/push-config-response.json"
             grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/push-config-headers.txt"
 
-            unauthorized_status=$(curl --silent --show-error \
+            unauthorized_status=$(live_curl \
               --output "$RUNNER_TEMP/push-unauthorized-response.json" \
               --write-out "%{http_code}" \
               --request POST \
@@ -526,7 +533,7 @@ jobs:
 
           if [ -f supabase/functions/sync-next-football-event/index.ts ]; then
             football_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/sync-next-football-event"
-            football_status=$(curl --silent --show-error \
+            football_status=$(live_curl \
               --dump-header "$RUNNER_TEMP/football-sync-headers.txt" \
               --output "$RUNNER_TEMP/football-sync-response.json" \
               --write-out "%{http_code}" --request POST \
