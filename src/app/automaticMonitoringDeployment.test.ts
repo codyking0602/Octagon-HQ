@@ -59,7 +59,7 @@ describe("automatic Picks monitoring deployment", () => {
     expect(productionVerifier).toContain('latestDecision.decision_reason === "not_due"');
     expect(productionVerifier).toContain("nextEligibleAt >= lastWakeStartedAt");
     expect(productionVerifier).toContain("now - completedAt <= maximumWakeAgeMs");
-    expect(productionVerifier).toContain('const truthfulNoEventCarryForward =');
+    expect(productionVerifier).toContain('let truthfulNoEventCarryForward = false');
     expect(productionVerifier).toContain('latestDecision.decision_reason === "no_event"');
     expect(productionVerifier).toContain('latestDecision.source_event_identity === "none"');
     expect(productionVerifier).toContain('get_pick_monitoring_event_state');
