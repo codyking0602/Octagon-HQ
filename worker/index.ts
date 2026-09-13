@@ -28,6 +28,7 @@ declare const HTMLRewriter: new () => HtmlRewriterInstance;
 declare const __OCTAGON_SUPABASE_URL__: string;
 declare const __OCTAGON_SUPABASE_PUBLISHABLE_KEY__: string;
 declare const __OCTAGON_PREVIEW_CATALOG__: string;
+declare const __OCTAGON_DEPLOYMENT_SHA__: string;
 
 interface BrowserRunBinding {
   quickAction(
@@ -221,6 +222,19 @@ async function servePreviewImage(
   return response;
 }
 
+function serveDeploymentMarker() {
+  return new Response(`${JSON.stringify({ sha: __OCTAGON_DEPLOYMENT_SHA__ })}\n`, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+      Pragma: "no-cache",
+      Expires: "0",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+}
+
 async function servePreviewPage(request: Request, env: Env) {
   const requestUrl = new URL(request.url);
   const shell = await env.ASSETS.fetch(request);
@@ -270,6 +284,9 @@ export default {
   async fetch(request: Request, env: Env, context: WorkerExecutionContext): Promise<Response> {
     const requestUrl = new URL(request.url);
     if (request.method !== "GET") return env.ASSETS.fetch(request);
+    if (requestUrl.pathname === "/deployment.json") {
+      return serveDeploymentMarker();
+    }
     if (requestUrl.pathname.startsWith("/share-preview/")) {
       return servePreviewImage(request, env, context);
     }
