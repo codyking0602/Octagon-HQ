@@ -146,6 +146,29 @@ if (expectedActive) {
     && Number.isFinite(nextEligibleAt)
     && nextEligibleAt >= lastWakeStartedAt
     && now - completedAt <= maximumWakeAgeMs;
+
+  let truthfulNoEventCarryForward = false;
+  if (
+    latestDecision.status === "skipped"
+    && latestDecision.decision_reason === "no_event"
+    && latestDecision.provider_called === false
+    && latestDecision.source_event_identity === "none"
+    && Number(latestDecision.provider_event_count) === 0
+    && Number(latestDecision.complete_snapshot_count) === 0
+    && Number(latestDecision.missing_snapshot_count) === 0
+    && now - completedAt <= maximumWakeAgeMs
+  ) {
+    const stateResponse = await fetch(
+      `https://${projectId}.supabase.co/rest/v1/rpc/get_pick_monitoring_event_state`,
+      { method: "POST", headers: serviceHeaders, body: "{}" },
+    );
+    const state = await readBody(stateResponse);
+    if (!stateResponse.ok) {
+      throw new Error(`Production monitoring event-state verification failed with HTTP ${stateResponse.status}.`);
+    }
+    truthfulNoEventCarryForward = state?.staged == null && state?.current == null;
+  }
+
   const allowedStatuses = new Set(["completed", "partial", "failed", "skipped"]);
   const preProviderFailureReasons = new Set([
     "notification_dispatch_failed",
@@ -159,7 +182,7 @@ if (expectedActive) {
   if (!allowedStatuses.has(latestDecision.status)
     || typeof latestDecision.provider_called !== "boolean"
     || !Number.isFinite(completedAt)
-    || (!truthfulNotDueCarryForward && completedAt < lastWakeStartedAt - wakeDecisionToleranceMs)
+    || (!truthfulNotDueCarryForward && !truthfulNoEventCarryForward && completedAt < lastWakeStartedAt - wakeDecisionToleranceMs)
     || completedAt > now + wakeDecisionToleranceMs
     || (latestDecision.status === "skipped" && latestDecision.provider_called !== false)
     || (["completed", "partial"].includes(latestDecision.status) && latestDecision.provider_called !== true)
