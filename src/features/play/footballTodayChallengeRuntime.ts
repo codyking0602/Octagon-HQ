@@ -297,7 +297,7 @@ function buildDailyHitTheNumberPlan(day: string, scheduleVersion: string) {
     if (plan.league !== desiredLeague) continue;
     if (plan.subjectIds.length !== footballHitTheNumberRandomPoolSize(plan.pickCount)) continue;
     const values = plan.subjectIds.map((id) => footballHitTheNumberValue(id, plan.metricId));
-    if (values.every((value) => Number.isFinite(value) && value >= 0)) return { plan, values };
+    if (values.every((value) => Number.isFinite(value))) return { plan, values };
   }
   throw new Error("Football Hit the Number could not build the official capped board.");
 }
