@@ -198,8 +198,8 @@ describe("Hit the Number casual game", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "RANDOM POOL" }));
 
-    const pickCount = Number(container.querySelector(".hit-number-target")?.closest(".hit-number-heading")
-      ?.querySelector(".hit-number-meta span")?.textContent?.replace("PICK ", ""));
+    const selectionHeading = container.querySelector(".hit-number-selection .hit-number-section-heading h2")?.textContent ?? "";
+    const pickCount = Number(selectionHeading.match(/\/\s*(\d+)\s+selected/)?.[1]);
     const fighterCount = container.querySelectorAll(".hit-number-fighter-card").length;
     expect(pickCount).toBeGreaterThanOrEqual(4);
     expect(pickCount).toBeLessThanOrEqual(7);
@@ -233,8 +233,8 @@ describe("Hit the Number casual game", () => {
     const roleSlots = [...container.querySelectorAll<HTMLButtonElement>(".hit-number-role-slot")];
 
     expect(container.querySelector(".hit-number-page")).toHaveAttribute("data-format-id", "one-from-each");
-    expect(container.textContent).toContain("ONE FROM EACH");
-    expect(container.textContent).toContain(plan.format.configurationLabel!.toUpperCase());
+    expect(container.textContent).not.toContain("ONE FROM EACH");
+    expect(container.textContent).toContain(plan.format.configurationLabel!);
     expect(roleSlots).toHaveLength(5);
     plan.format.slots.forEach((slot, index) => {
       expect(roleSlots[index]?.textContent).toContain(slot.label);
@@ -261,7 +261,8 @@ describe("Hit the Number casual game", () => {
     const roleSlots = [...container.querySelectorAll<HTMLButtonElement>(".hit-number-role-slot")];
 
     expect(container.querySelector(".hit-number-page")).toHaveAttribute("data-format-id", "build-the-team");
-    expect(container.textContent).toContain("BUILD THE TEAM");
+    expect(container.textContent).not.toContain("BUILD THE TEAM");
+    expect(container.textContent).toContain(plan.format.configurationLabel!);
     expect(roleSlots).toHaveLength(5);
     plan.format.slots.forEach((slot, index) => {
       expect(roleSlots[index]?.textContent).toContain(slot.label);
