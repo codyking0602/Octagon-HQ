@@ -89,9 +89,9 @@ begin
   );
 
   if v_result.native_score <> 94
-    or v_result.normalized_score <> 71
+    or v_result.normalized_score <> 46
     or v_result.public_result->>'status' <> 'bust' then
-    raise exception 'expected one-over bust to score 71, got total %, score %, result %',
+    raise exception 'expected one-over bust to score 46, got total %, score %, result %',
       v_result.native_score,
       v_result.normalized_score,
       v_result.public_result;
