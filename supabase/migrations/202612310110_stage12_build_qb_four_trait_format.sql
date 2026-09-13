@@ -105,46 +105,46 @@ begin
   v_definition := pg_get_functiondef('public.prepare_auction(uuid,text)'::regprocedure);
   v_next := replace(v_definition,
     'when p_mode_id in (''build-qb'', ''build-qb-cfb'') then 10',
-    'when p_mode_id in (''build-qb'', ''build-qb-cfb'') and v_content_version = ''football-draft-room-2026-09-v6'' then 8\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'') then 10');
+    E'when p_mode_id in (''build-qb'', ''build-qb-cfb'') and v_content_version = ''football-draft-room-2026-09-v6'' then 8\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'') then 10');
   v_next := replace(v_next,
     'when p_mode_id in (''build-qb'', ''build-qb-cfb'') then 50',
-    'when p_mode_id in (''build-qb'', ''build-qb-cfb'') and v_content_version = ''football-draft-room-2026-09-v6'' then 40\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'') then 50');
+    E'when p_mode_id in (''build-qb'', ''build-qb-cfb'') and v_content_version = ''football-draft-room-2026-09-v6'' then 40\n    when p_mode_id in (''build-qb'', ''build-qb-cfb'') then 50');
   if v_next = v_definition then raise exception 'Draft Room prepare contract drifted'; end if;
   execute v_next;
 
   v_definition := pg_get_functiondef('private.validate_auction_private_row()'::regprocedure);
   v_next := replace(v_definition,
     'when v_auction.mode_id in (''ultimate-fighter'', ''build-qb'', ''build-qb-cfb'') then 10',
-    'when v_auction.content_version = ''football-draft-room-2026-09-v6'' and v_auction.mode_id in (''build-qb'', ''build-qb-cfb'') then 8\n        when v_auction.mode_id in (''ultimate-fighter'', ''build-qb'', ''build-qb-cfb'') then 10');
+    E'when v_auction.content_version = ''football-draft-room-2026-09-v6'' and v_auction.mode_id in (''build-qb'', ''build-qb-cfb'') then 8\n        when v_auction.mode_id in (''ultimate-fighter'', ''build-qb'', ''build-qb-cfb'') then 10');
   v_next := replace(v_next,
     'or new.ultimate_fighter_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility'', ''Clutch'')',
-    'or (v_auction.content_version = ''football-draft-room-2026-09-v6'' and new.ultimate_fighter_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility''))\n        or (v_auction.content_version <> ''football-draft-room-2026-09-v6'' and new.ultimate_fighter_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility'', ''Clutch''))');
+    E'or (v_auction.content_version = ''football-draft-room-2026-09-v6'' and new.ultimate_fighter_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility''))\n        or (v_auction.content_version <> ''football-draft-room-2026-09-v6'' and new.ultimate_fighter_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility'', ''Clutch''))');
   v_next := replace(v_next,
     'or new.visible_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility'', ''Clutch'')',
-    'or (v_auction.content_version = ''football-draft-room-2026-09-v6'' and new.visible_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility''))\n        or (v_auction.content_version <> ''football-draft-room-2026-09-v6'' and new.visible_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility'', ''Clutch''))');
+    E'or (v_auction.content_version = ''football-draft-room-2026-09-v6'' and new.visible_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility''))\n        or (v_auction.content_version <> ''football-draft-room-2026-09-v6'' and new.visible_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility'', ''Clutch''))');
   if v_next = v_definition then raise exception 'Draft Room private-row contract drifted'; end if;
   execute v_next;
 
   v_definition := pg_get_functiondef('private.validate_auction_bid(private.auction_games,uuid,numeric,text)'::regprocedure);
   v_next := replace(v_definition,
     'when p_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5',
-    'when p_game.content_version = ''football-draft-room-2026-09-v6'' and p_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 4\n    when p_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5');
+    E'when p_game.content_version = ''football-draft-room-2026-09-v6'' and p_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 4\n    when p_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5');
   v_next := replace(v_next,
     'if p_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility'', ''Clutch'') then',
-    'if (p_game.content_version = ''football-draft-room-2026-09-v6'' and p_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility''))\n      or (p_game.content_version <> ''football-draft-room-2026-09-v6'' and p_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility'', ''Clutch'')) then');
+    E'if (p_game.content_version = ''football-draft-room-2026-09-v6'' and p_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility''))\n      or (p_game.content_version <> ''football-draft-room-2026-09-v6'' and p_category not in (''Arm'', ''Accuracy'', ''Processing'', ''Mobility'', ''Clutch'')) then');
   if v_next = v_definition then raise exception 'Draft Room bid contract drifted'; end if;
   execute v_next;
 
   v_definition := pg_get_functiondef('private.resolve_auction_round(uuid)'::regprocedure);
   v_next := replace(v_definition,
     'when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5',
-    'when v_game.content_version = ''football-draft-room-2026-09-v6'' and v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 4\n    when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5');
+    E'when v_game.content_version = ''football-draft-room-2026-09-v6'' and v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 4\n    when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5');
   v_next := replace(v_next,
     'when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 10',
-    'when v_game.content_version = ''football-draft-room-2026-09-v6'' and v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 8\n    when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 10');
+    E'when v_game.content_version = ''football-draft-room-2026-09-v6'' and v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 8\n    when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 10');
   v_next := replace(v_next,
-    'when v_game.mode_id in (''build-qb'', ''build-qb-cfb'')\n        then array[''Arm'',''Accuracy'',''Processing'',''Mobility'',''Clutch'']::text[]',
-    'when v_game.mode_id in (''build-qb'', ''build-qb-cfb'')\n        then case when v_game.content_version = ''football-draft-room-2026-09-v6''\n          then array[''Arm'',''Accuracy'',''Processing'',''Mobility'']::text[]\n          else array[''Arm'',''Accuracy'',''Processing'',''Mobility'',''Clutch'']::text[] end');
+    E'when v_game.mode_id in (''build-qb'', ''build-qb-cfb'')\n        then array[''Arm'',''Accuracy'',''Processing'',''Mobility'',''Clutch'']::text[]',
+    E'when v_game.mode_id in (''build-qb'', ''build-qb-cfb'')\n        then case when v_game.content_version = ''football-draft-room-2026-09-v6''\n          then array[''Arm'',''Accuracy'',''Processing'',''Mobility'']::text[]\n          else array[''Arm'',''Accuracy'',''Processing'',''Mobility'',''Clutch'']::text[] end');
   if v_next = v_definition then raise exception 'Draft Room round-resolution contract drifted'; end if;
   execute v_next;
 
@@ -154,7 +154,7 @@ begin
     '''football-draft-room-2026-09-v4'', ''football-draft-room-2026-09-v5'', ''football-draft-room-2026-09-v6'')');
   v_next := replace(v_next,
     'when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5',
-    'when v_game.content_version = ''football-draft-room-2026-09-v6'' and v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 4\n    when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5');
+    E'when v_game.content_version = ''football-draft-room-2026-09-v6'' and v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 4\n    when v_game.mode_id in (''build-qb'', ''build-qb-cfb'') then 5');
   if v_next = v_definition then raise exception 'Draft Room grading contract drifted'; end if;
   execute v_next;
 end;
