@@ -17,7 +17,7 @@ export const HIT_THE_NUMBER_RANDOM_POOL_QUALITY = {
   minimumLegalSelections: 6,
   goodUnderMinScore: 90,
   badUnderMaxScore: 75,
-  meaningfulBustMaxScore: 40,
+  meaningfulBustMaxScore: 65,
   midScoreMin: 50,
   midScoreMax: 85,
 } as const;
