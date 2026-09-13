@@ -6,7 +6,7 @@ select set_config('request.jwt.claim.role', 'service_role', true);
 -- Restore the independent Draft Room pointer inside this rollback-only proof.
 update private.auction_catalog_versions
 set is_preparation_version = true
-where content_version = 'football-draft-room-2026-09-v3';
+where content_version = 'football-draft-room-2026-09-v4';
 
 do $$
 declare
@@ -30,8 +30,8 @@ begin
     select 1
     from private.auction_catalog_versions version
     where version.game_id = 'draft-room'
-      and version.content_version = 'football-draft-room-2026-09-v3'
-      and version.rarity_version = 'football-draft-room-rarity-2026-09-v3'
+      and version.content_version = 'football-draft-room-2026-09-v4'
+      and version.rarity_version = 'football-draft-room-rarity-2026-09-v4'
       and version.grading_version = 'football-build-qb-traits-2026-09-v1'
       and version.is_preparation_version
   ) then
@@ -41,7 +41,7 @@ begin
   if (
     select count(*)
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v3'
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
       and catalog.mode_id = 'build-qb-cfb'
   ) <> 80 then
     raise exception 'CFB Build a QB catalog must contain exactly 80 audited peak-season QB profiles';
@@ -50,7 +50,33 @@ begin
   if exists (
     select 1
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v3'
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
+      and catalog.mode_id = 'build-qb-cfb'
+      and catalog.display_label in (
+        'Danny Wuerffel','Jim Plunkett','Hendon Hooker','Vinny Testaverde','Ty Detmer',
+        'Gino Torretta','Andre Ware','Eric Crouch','Chris Weinke'
+      )
+  ) then
+    raise exception 'CFB Build a QB still contains an explicitly removed roster subject';
+  end if;
+
+  if (
+    select count(*)
+    from private.auction_catalog catalog
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
+      and catalog.mode_id = 'build-qb-cfb'
+      and catalog.display_label in (
+        'Andrew Luck','Russell Wilson','Aaron Rodgers','Matt Ryan','Michael Vick',
+        'Marcus Vick','Jimmy Clausen','Sam Ehlinger','Teddy Bridgewater'
+      )
+  ) <> 9 then
+    raise exception 'CFB Build a QB is missing an approved roster replacement';
+  end if;
+
+  if exists (
+    select 1
+    from private.auction_catalog catalog
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
       and catalog.mode_id = 'build-qb-cfb'
       and (
         not (catalog.grading_inputs ?& array['Arm','Accuracy','Processing','Mobility','Clutch','overall'])
@@ -67,7 +93,7 @@ begin
   if (
     select count(*)
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v3'
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
       and catalog.mode_id = 'build-qb-cfb'
       and catalog.rarity_band <= 2
       and (
@@ -84,7 +110,7 @@ begin
   if not exists (
     select 1
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v3'
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
       and catalog.mode_id = 'build-qb-cfb'
       and catalog.display_label = 'Josh Allen'
       and catalog.item_reference = 'cfb-build-qb-josh-allen-2016'
@@ -99,7 +125,7 @@ begin
   if not exists (
     select 1
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v3'
+    where catalog.content_version = 'football-draft-room-2026-09-v4'
       and catalog.mode_id = 'build-qb-cfb'
       and catalog.item_reference = 'cfb-build-qb-jalen-hurts-2019'
       and catalog.display_label = 'Jalen Hurts'
@@ -113,7 +139,7 @@ begin
     from (
       select catalog.rarity_band, count(*) as total
       from private.auction_catalog catalog
-      where catalog.content_version = 'football-draft-room-2026-09-v3'
+      where catalog.content_version = 'football-draft-room-2026-09-v4'
         and catalog.mode_id = 'build-qb-cfb'
       group by catalog.rarity_band
     ) bands
@@ -186,7 +212,7 @@ begin
   from private.auction_games auction
   where auction.id = v_game;
 
-  if v_state.content_version <> 'football-draft-room-2026-09-v3'
+  if v_state.content_version <> 'football-draft-room-2026-09-v4'
     or v_state.challenger_bankroll <> 50
     or v_state.recipient_bankroll <> 50
     or v_state.current_round <> 1
