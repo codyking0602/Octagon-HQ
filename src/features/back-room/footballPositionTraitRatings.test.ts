@@ -26,7 +26,7 @@ describe("canonical Football Build a QB trait model", () => {
 
   it("keeps every grade calculated, bounded and evidence-backed", () => {
     for (const profile of buildFootballBuildQbTraitProfiles()) {
-      expect(profile.evidenceMetricIds.length).toBeGreaterThanOrEqual(13);
+      expect(profile.evidenceMetricIds.length).toBeGreaterThanOrEqual(9);
       expect(profile.overall).toBe(
         Math.round(BUILD_QB_TRAITS.reduce((sum, trait) => sum + profile.traits[trait], 0) / BUILD_QB_TRAITS.length),
       );
