@@ -10,14 +10,14 @@ describe("Supabase deployment migration verification", () => {
     expect(workflow).toContain('if (matched_remote_version != "") print matched_remote_version');
     expect(workflow).not.toContain("print remote_version\n                  exit");
   });
+
   it("retries transient production verification transport failures without weakening assertions", () => {
     expect(workflow).toContain("live_curl() {");
     expect(workflow).toContain("--retry 5");
     expect(workflow).toContain("--retry-all-errors");
     expect(workflow).toContain("--retry-delay 2");
-    expect(workflow.match(/\\blive_curl\\b/g)?.length).toBe(9);
+    expect(workflow.match(/\blive_curl\b/g)?.length).toBe(9);
     expect(workflow).toContain("daily-runtime-response.json");
     expect(workflow).toContain("deployment_sha");
   });
-
 });
