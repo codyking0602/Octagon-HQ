@@ -25,6 +25,8 @@ describe("Stage 12 admin playtest readiness", () => {
     expect(accessMigration).toContain("insert into public.pick_control_owners (profile_id)");
     expect(accessMigration).toContain("c8b9d8a2-22a6-44cf-8a5f-3287d151f025");
     expect(accessMigration).toContain("profile.display_name = 'TEST'");
+    expect(accessMigration).toContain("into strict v_test_profile_id");
+    expect(accessMigration).toContain("when no_data_found");
     expect(accessMigration).not.toMatch(/create\s+(table|function)/i);
   });
 
