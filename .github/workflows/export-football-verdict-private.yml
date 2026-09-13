@@ -1,0 +1,149 @@
+name: Export Football Verdict Private Knowledge
+
+on:
+  workflow_run:
+    workflows:
+      - "Deploy Supabase Backend"
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      SOURCE_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        run: |
+          checked_out_sha="$(git rev-parse HEAD)"
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+
+      - name: Verify export secrets
+        run: |
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing Football Verdict export secret::$name is not configured."
+              exit 1
+            fi
+          done
+
+      - name: Generate private Football Verdict knowledge
+        run: |
+          mkdir -p artifacts/football-verdict-private
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
+          const projectId = process.env.SUPABASE_PROJECT_ID;
+          const sourceSha = process.env.SOURCE_SHA;
+          const supabaseOrigin = `https://${projectId}.supabase.co`;
+
+          const keysResponse = await fetch(
+            `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
+            { headers: { Authorization: `Bearer ${accessToken}` } },
+          );
+          if (!keysResponse.ok) throw new Error(`Project key lookup failed: HTTP ${keysResponse.status}`);
+          const keys = await keysResponse.json();
+          const secretKey = keys.find((item) => item.type === 'secret')?.api_key
+            ?? keys.find((item) => item.type === 'legacy' && /service.role/i.test(item.name ?? ''))?.api_key;
+          if (!secretKey) throw new Error('Football Verdict export could not resolve a service-role key.');
+
+          const response = await fetch(`${supabaseOrigin}/rest/v1/rpc/export_football_verdict_knowledge`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${secretKey}`,
+              apikey: secretKey,
+              'Content-Type': 'application/json',
+              'x-client-info': 'octagon-hq-football-verdict-export/1',
+            },
+            body: '{}',
+          });
+          if (!response.ok) {
+            throw new Error(`Football Verdict private export failed: HTTP ${response.status}`);
+          }
+
+          const knowledge = await response.json();
+          if (knowledge?.package_version !== 'football-verdict-private-knowledge-v1') {
+            throw new Error('Football Verdict private package version is invalid.');
+          }
+          if (knowledge?.content_version !== 'football-draft-room-2026-09-v6') {
+            throw new Error('Football Verdict private content version is invalid.');
+          }
+          if (knowledge?.grading_version !== 'football-build-qb-traits-2026-09-v2') {
+            throw new Error('Football Verdict private grading version is invalid.');
+          }
+          if (JSON.stringify(knowledge?.traits) !== JSON.stringify(['Arm', 'Accuracy', 'Processing', 'Mobility'])) {
+            throw new Error('Football Verdict private trait contract is invalid.');
+          }
+          if (!Array.isArray(knowledge?.profiles) || knowledge.profiles.length !== 140) {
+            throw new Error('Football Verdict private profile count is invalid.');
+          }
+          if (!knowledge?.decoder || typeof knowledge.decoder !== 'object' || Array.isArray(knowledge.decoder)) {
+            throw new Error('Football Verdict private decoder is invalid.');
+          }
+
+          const decoderEntries = Object.entries(knowledge.decoder);
+          if (decoderEntries.length < 1
+            || decoderEntries.some(([code, value]) => !/^[A-Z]{6}$/.test(code) || !Number.isInteger(Number(value)))) {
+            throw new Error('Football Verdict private decoder entries are invalid.');
+          }
+
+          const requiredTraits = ['Arm', 'Accuracy', 'Processing', 'Mobility'];
+          for (const profile of knowledge.profiles) {
+            if (!['build-qb', 'build-qb-cfb'].includes(profile?.mode)) {
+              throw new Error('Football Verdict private profile mode is invalid.');
+            }
+            if (!profile?.qb || !profile?.context) {
+              throw new Error('Football Verdict private profile identity is invalid.');
+            }
+            const codes = profile?.trait_codes;
+            if (!codes || Object.keys(codes).sort().join('|') !== [...requiredTraits].sort().join('|')) {
+              throw new Error('Football Verdict private profile trait-code shape is invalid.');
+            }
+            if (requiredTraits.some((trait) => !/^[A-Z]{6}$/.test(codes[trait] ?? ''))) {
+              throw new Error('Football Verdict private profile contains an invalid opaque code.');
+            }
+          }
+
+          const output = {
+            ...knowledge,
+            generated_from_source_sha: sourceSha,
+          };
+          fs.writeFileSync(
+            'artifacts/football-verdict-private/football-verdict-private-knowledge.json',
+            JSON.stringify(output, null, 2),
+            { mode: 0o600 },
+          );
+          console.log(`Validated private Football Verdict package for 140 QBs at source ${sourceSha} without printing decoder contents.`);
+          NODE
+
+      - name: Upload private Football Verdict knowledge
+        uses: actions/upload-artifact@v4
+        with:
+          name: football-verdict-private-knowledge
+          path: artifacts/football-verdict-private/football-verdict-private-knowledge.json
+          if-no-files-found: error
+          retention-days: 30
