@@ -19,7 +19,7 @@ describe("CFB Build a QB peak-season model", () => {
   });
 
   it("uses the approved modernized 80-QB membership and exact peak seasons", () => {
-    expect(CFB_BUILD_QB_TRAIT_MODEL_VERSION).toBe("cfb-build-qb-peak-season-v2");
+    expect(CFB_BUILD_QB_TRAIT_MODEL_VERSION).toBe("cfb-build-qb-peak-season-v3");
     const expected = new Map([
       ["Andrew Luck", [2011, "Stanford"]],
       ["Russell Wilson", [2011, "Wisconsin"]],
@@ -46,6 +46,17 @@ describe("CFB Build a QB peak-season model", () => {
       "Chris Weinke",
     ]) {
       expect(profiles.some((profile) => profile.name === name), `retired CFB roster cut still present: ${name}`).toBe(false);
+    }
+  });
+
+  it("retains player-by-player exact-season evidence for every audited trait profile", () => {
+    for (const profile of profiles) {
+      expect(profile.evidenceSourceIds.length).toBeGreaterThanOrEqual(4);
+      expect(new Set(profile.evidenceSourceIds).size).toBe(profile.evidenceSourceIds.length);
+      expect(profile.auditSummary.length).toBeGreaterThan(120);
+      for (const trait of BUILD_QB_TRAITS) {
+        expect(profile.auditSummary).toContain(`${trait}:`);
+      }
     }
   });
 
