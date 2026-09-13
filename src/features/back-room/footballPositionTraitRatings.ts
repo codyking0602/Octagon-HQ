@@ -188,7 +188,7 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
     }
 
     const subject = resolveFootballSubjectReference(
-      candidate.canonicalSubjectId,
+      candidate.id,
       candidate.name,
       { kind: "player-career", league: "NFL", position: "QB" },
     );
