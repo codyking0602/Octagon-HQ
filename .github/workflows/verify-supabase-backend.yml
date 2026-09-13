@@ -110,6 +110,7 @@ jobs:
             supabase/tests/auction_catalog_expansion.sql \
             supabase/tests/auction_standard_format.sql \
             supabase/tests/stage12_draft_room_build_qb.sql \
+            supabase/tests/stage12_draft_room_cfb_build_qb.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql \
             supabase/tests/home_football_spotlight_media.sql
           do
