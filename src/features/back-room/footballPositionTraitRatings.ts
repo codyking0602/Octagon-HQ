@@ -1,92 +1,372 @@
+import { buildFootballComparisonCandidatePool } from "./footballComparisonAuthority";
+import { getFootballFact, type FootballFactMetricId } from "./footballFactualStatsCore";
+import {
+  getNflQbHistoricalConsensus,
+  NFL_QB_MANUAL_AUDIT_ORDER,
+} from "./footballHistoricalConsensus";
+import {
+  footballRankingRatingForScore,
+  scoreFootballAnchoredValue,
+} from "./footballRankingFramework";
+import { resolveFootballSubjectReference } from "./footballSubjectRegistry";
 import { BUILD_QB_TRAITS, type BuildQbTrait } from "../play/draftRoomContract";
 
-export const FOOTBALL_POSITION_TRAIT_MODEL_VERSION = "build-qb-v2-audited" as const;
-export type BuildQbRarityBand = 1 | 2 | 3 | 4 | 5;
+export const FOOTBALL_POSITION_TRAIT_MODEL_VERSION = "build-qb-v2" as const;
+export const BUILD_QB_MATURE_POOL_SIZE = 60 as const;
+export const FOOTBALL_BUILD_QB_RESEARCH_SNAPSHOT_DATE = "2026-09-12" as const;
+export const FOOTBALL_BUILD_QB_RESEARCH_SOURCES = [
+  { id: "canonical-football-facts", evidenceType: "statistics", source: "Octagon HQ canonical Football factual ledger" },
+  { id: "pfr-any-a", evidenceType: "statistics", source: "Pro Football Reference adjusted passing efficiency" },
+  { id: "pfr-comebacks", evidenceType: "high-leverage", source: "Pro Football Reference fourth-quarter comebacks" },
+  { id: "pfr-game-winning-drives", evidenceType: "high-leverage", source: "Pro Football Reference game-winning drives" },
+  { id: "espn-goat-index", evidenceType: "historical-evaluation", source: "ESPN coach/executive historical QB evaluation" },
+  { id: "espn-qb-council-2022", evidenceType: "film-scouting", source: "ESPN QB Council trait scouting" },
+  { id: "espn-qb-traits-2024", evidenceType: "film-scouting", source: "ESPN 2024 QB trait scouting" },
+  { id: "espn-qb-traits-2025", evidenceType: "film-scouting", source: "ESPN 2025 QB trait scouting" },
+  { id: "nfl-strongest-arms-history", evidenceType: "film-history", source: "NFL historical arm-talent review" },
+  { id: "nfl-strongest-arms-2014", evidenceType: "film-scouting", source: "NFL arm-strength scouting" },
+  { id: "nfl-100-quarterbacks", evidenceType: "historical-evaluation", source: "NFL 100 all-time quarterback panel" },
+] as const;
 
-interface AuditedQbProfile {
+export type BuildQbQualityBand = "marquee" | "strong" | "core" | "lower" | "wildcard";
+
+export interface FootballBuildQbTraitProfile {
   subjectId: string;
   name: string;
-  rarityBand: BuildQbRarityBand;
+  recognizabilityTier: "A" | "B" | "C";
+  qualityBand: BuildQbQualityBand;
+  generationClass: `qb-${BuildQbQualityBand}`;
+  generationWeight: number;
   traits: Readonly<Record<BuildQbTrait, number>>;
+  overall: number;
+  rarityBand: 1 | 2 | 3 | 4 | 5;
+  evidenceMetricIds: readonly FootballFactMetricId[];
 }
 
-export interface FootballBuildQbTraitProfile extends AuditedQbProfile {
-  overall: number;
-  evidenceMethod: "multi-source-film-context";
+interface RawQbTraitSignals {
+  subjectId: string;
+  name: string;
+  recognizabilityTier: "A" | "B" | "C";
+  auditIndex: number;
+  startSeason: number;
+  yardsPerAttempt: number;
+  passingYardsPerGame: number;
+  passingTouchdownsPerGame: number;
+  completionPercentage: number;
+  passerRating: number;
+  touchdownInterceptionRatio: number;
+  interceptionPercentage: number;
+  rushingYardsPerGame: number;
+  rushingTouchdownsPerGame: number;
+  rushingYardsPerAttempt: number;
+  historicalConsensus: number;
+  evidenceMetricIds: readonly FootballFactMetricId[];
+}
+
+type ScoutingLevel = "rare" | "elite" | "high" | "plus" | "average" | "limited";
+type ScoutingTraitAudit = Partial<Record<BuildQbTrait, ScoutingLevel>>;
+
+/**
+ * Box-score production is not allowed to erase trait specialists. These hidden
+ * film/scouting anchors are used only where broad career statistics are known
+ * to understate the actual trait (raw arm, movement creation, processing, or
+ * high-leverage play). They are inputs to the calculated model, never final
+ * grades. The audit was cross-checked against NFL/ESPN trait scouting, the
+ * canonical Football factual ledger, PFR historical context and the existing
+ * dated QB historical-consensus owner.
+ */
+const SCOUTING_TRAIT_AUDIT: Readonly<Record<string, ScoutingTraitAudit>> = {
+  "tom-brady": { Accuracy: "high", Processing: "rare", Clutch: "rare" },
+  "peyton-manning": { Accuracy: "elite", Processing: "rare", Clutch: "high" },
+  "nfl-patrick-mahomes": { Arm: "rare", Processing: "elite", Mobility: "high", Clutch: "rare" },
+  "nfl-aaron-rodgers": { Arm: "elite", Accuracy: "elite", Processing: "elite", Mobility: "high" },
+  "johnny-unitas": { Processing: "elite", Clutch: "elite" },
+  "joe-montana": { Accuracy: "elite", Processing: "elite", Clutch: "rare" },
+  "brett-favre": { Arm: "rare", Mobility: "plus" },
+  "dan-marino": { Arm: "elite", Accuracy: "high", Processing: "elite", Clutch: "plus" },
+  "drew-brees": { Accuracy: "rare", Processing: "elite" },
+  "john-elway": { Arm: "rare", Mobility: "high", Clutch: "elite" },
+  "steve-young": { Accuracy: "elite", Processing: "elite", Mobility: "elite", Clutch: "high" },
+  "nfl-roger-staubach": { Mobility: "high", Clutch: "elite" },
+  "nfl-matthew-stafford": { Arm: "elite", Accuracy: "high", Clutch: "high" },
+  "ben-roethlisberger": { Arm: "high", Mobility: "high", Clutch: "high" },
+  "dan-fouts": { Arm: "high", Processing: "high" },
+  "kurt-warner": { Accuracy: "high", Processing: "high", Clutch: "high" },
+  "nfl-josh-allen": { Arm: "rare", Mobility: "elite", Clutch: "high" },
+  "nfl-terry-bradshaw": { Arm: "high", Clutch: "elite" },
+  "nfl-philip-rivers": { Accuracy: "high", Processing: "high" },
+  "matt-ryan": { Accuracy: "high", Processing: "high" },
+  "ken-stabler": { Accuracy: "high", Processing: "high", Clutch: "high" },
+  "warren-moon": { Arm: "elite", Accuracy: "high" },
+  "troy-aikman": { Accuracy: "elite", Processing: "high", Clutch: "high" },
+  "eli-manning": { Clutch: "elite" },
+  "cam-newton": { Arm: "high", Mobility: "rare" },
+  "joe-namath": { Arm: "elite", Clutch: "high" },
+  "andrew-luck": { Arm: "high", Processing: "high", Mobility: "elite" },
+  "nfl-lamar-jackson": { Arm: "high", Mobility: "rare" },
+  "nfl-joe-burrow": { Accuracy: "elite", Processing: "high", Clutch: "high" },
+  "nfl-jalen-hurts": { Mobility: "elite", Clutch: "high" },
+  "jay-cutler": { Arm: "elite", Mobility: "plus" },
+};
+
+const SCOUTING_LEVEL_SCORE: Readonly<Record<ScoutingLevel, number>> = {
+  rare: 1,
+  elite: 0.94,
+  high: 0.86,
+  plus: 0.76,
+  average: 0.58,
+  limited: 0.40,
+};
+
+const REQUIRED_METRICS = [
+  "nfl-career-games",
+  "nfl-career-passing-completions",
+  "nfl-career-passing-attempts",
+  "nfl-career-passing-yards",
+  "nfl-career-passing-touchdowns",
+  "nfl-career-interceptions-thrown",
+] as const satisfies readonly FootballFactMetricId[];
+
+const OPTIONAL_MOBILITY_METRICS = [
+  "nfl-career-rushing-attempts",
+  "nfl-career-rushing-yards",
+  "nfl-career-rushing-touchdowns",
+] as const satisfies readonly FootballFactMetricId[];
+
+function factValue(subjectId: string, metricId: FootballFactMetricId) {
+  return getFootballFact(subjectId, metricId)?.fact.value ?? null;
+}
+
+function qualityBandForAuditIndex(index: number): BuildQbQualityBand {
+  if (index < 10) return "marquee";
+  if (index < 24) return "strong";
+  if (index < 42) return "core";
+  if (index < 52) return "lower";
+  return "wildcard";
+}
+
+const BUILD_QB_GENERATION_WEIGHT_BY_QUALITY: Readonly<Record<BuildQbQualityBand, number>> = {
+  marquee: 0.18,
+  strong: 0.70,
+  core: 1.15,
+  lower: 1.25,
+  wildcard: 1.00,
+};
+
+function rarityBandForQualityBand(band: BuildQbQualityBand): 1 | 2 | 3 | 4 | 5 {
+  if (band === "marquee") return 5;
+  if (band === "strong") return 4;
+  if (band === "core") return 3;
+  if (band === "lower") return 2;
+  return 1;
+}
+
+function eraBucket(startSeason: number) {
+  if (startSeason < 1970) return "pre-1970";
+  if (startSeason < 1985) return "1970-1984";
+  if (startSeason < 2000) return "1985-1999";
+  if (startSeason < 2015) return "2000-2014";
+  return "2015-present";
+}
+
+function rawBuildQbSignals(): RawQbTraitSignals[] {
+  const candidates = new Map(
+    buildFootballComparisonCandidatePool("nfl-quarterbacks")
+      .map((candidate) => [candidate.canonicalSubjectId, candidate]),
+  );
+  const targetIds = NFL_QB_MANUAL_AUDIT_ORDER.slice(0, BUILD_QB_MATURE_POOL_SIZE);
+
+  return targetIds.map((subjectId, auditIndex) => {
+    const candidate = candidates.get(subjectId);
+    if (!candidate) throw new Error(`Build a QB mature pool is missing canonical QB ${subjectId}`);
+    if (
+      candidate.recognizabilityTier !== "A"
+      && candidate.recognizabilityTier !== "B"
+      && candidate.recognizabilityTier !== "C"
+    ) {
+      throw new Error(`Build a QB QB ${subjectId} is outside the canonical playable recognition floor`);
+    }
+
+    const subject = resolveFootballSubjectReference(
+      candidate.canonicalSubjectId,
+      candidate.name,
+      { league: "NFL", includeProjectedCanonicalRecognition: true },
+    );
+    if (!subject || subject.startSeason == null) {
+      throw new Error(`Build a QB QB ${subjectId} is missing canonical career identity`);
+    }
+
+    const values = Object.fromEntries(
+      [...REQUIRED_METRICS, ...OPTIONAL_MOBILITY_METRICS].map((metricId) => [metricId, factValue(subjectId, metricId)]),
+    ) as Record<(typeof REQUIRED_METRICS)[number] | (typeof OPTIONAL_MOBILITY_METRICS)[number], number | null>;
+    const missing = REQUIRED_METRICS.filter((metricId) => values[metricId] == null);
+    if (missing.length) {
+      throw new Error(`Build a QB QB ${subjectId} is missing canonical facts: ${missing.join(", ")}`);
+    }
+
+    const historicalConsensus = getNflQbHistoricalConsensus(subjectId).score;
+    if (historicalConsensus == null) {
+      throw new Error(`Build a QB QB ${subjectId} is missing historical consensus`);
+    }
+
+    const games = values["nfl-career-games"]!;
+    const completions = values["nfl-career-passing-completions"]!;
+    const attempts = values["nfl-career-passing-attempts"]!;
+    const passingYards = values["nfl-career-passing-yards"]!;
+    const passingTouchdowns = values["nfl-career-passing-touchdowns"]!;
+    const interceptions = values["nfl-career-interceptions-thrown"]!;
+    const rushingAttempts = values["nfl-career-rushing-attempts"] ?? 0;
+    const rushingYards = values["nfl-career-rushing-yards"] ?? 0;
+    const rushingTouchdowns = values["nfl-career-rushing-touchdowns"] ?? 0;
+    if (games <= 0 || attempts <= 0) throw new Error(`Build a QB QB ${subjectId} has incomplete career volume`);
+
+    const a = Math.min(2.375, Math.max(0, (completions / attempts - 0.3) * 5));
+    const b = Math.min(2.375, Math.max(0, (passingYards / attempts - 3) * 0.25));
+    const passerTouchdown = Math.min(2.375, Math.max(0, (passingTouchdowns / attempts) * 20));
+    const d = Math.min(2.375, Math.max(0, 2.375 - (interceptions / attempts) * 25));
+
+    return {
+      subjectId,
+      name: candidate.name,
+      recognizabilityTier: candidate.recognizabilityTier,
+      auditIndex,
+      startSeason: subject.startSeason,
+      yardsPerAttempt: passingYards / attempts,
+      passingYardsPerGame: passingYards / games,
+      passingTouchdownsPerGame: passingTouchdowns / games,
+      completionPercentage: (completions / attempts) * 100,
+      passerRating: ((a + b + passerTouchdown + d) / 6) * 100,
+      touchdownInterceptionRatio: passingTouchdowns / Math.max(1, interceptions),
+      interceptionPercentage: (interceptions / attempts) * 100,
+      rushingYardsPerGame: rushingYards / games,
+      rushingTouchdownsPerGame: rushingTouchdowns / games,
+      rushingYardsPerAttempt: rushingAttempts > 0 ? rushingYards / rushingAttempts : 0,
+      historicalConsensus,
+      evidenceMetricIds: [...REQUIRED_METRICS, ...OPTIONAL_MOBILITY_METRICS].filter(
+        (metricId) => values[metricId] != null,
+      ),
+    };
+  });
+}
+
+function weightedScore(rows: readonly { score: number; weight: number }[]) {
+  return rows.reduce((sum, row) => sum + row.score * row.weight, 0)
+    / rows.reduce((sum, row) => sum + row.weight, 0);
+}
+
+function blendScoutingEvidence(
+  statisticalScore: number,
+  subjectId: string,
+  trait: BuildQbTrait,
+  scoutingWeight: number,
+) {
+  const level = SCOUTING_TRAIT_AUDIT[subjectId]?.[trait];
+  if (!level) return statisticalScore;
+  return statisticalScore * (1 - scoutingWeight) + SCOUTING_LEVEL_SCORE[level] * scoutingWeight;
+}
+
+function buildEraAnchors(raw: readonly RawQbTraitSignals[]) {
+  const buckets = new Map<string, RawQbTraitSignals[]>();
+  for (const row of raw) {
+    const key = eraBucket(row.startSeason);
+    buckets.set(key, [...(buckets.get(key) ?? []), row]);
+  }
+  return buckets;
+}
+
+function eraScore(
+  row: RawQbTraitSignals,
+  buckets: ReadonlyMap<string, readonly RawQbTraitSignals[]>,
+  metric: keyof Pick<
+    RawQbTraitSignals,
+    | "yardsPerAttempt"
+    | "passingYardsPerGame"
+    | "passingTouchdownsPerGame"
+    | "completionPercentage"
+    | "passerRating"
+    | "touchdownInterceptionRatio"
+    | "interceptionPercentage"
+  >,
+  direction: "higher" | "lower" = "higher",
+) {
+  const peers = buckets.get(eraBucket(row.startSeason)) ?? [];
+  return scoreFootballAnchoredValue(row[metric], peers.map((peer) => peer[metric]), direction);
+}
+
+function calibratedTraitRating(score: number) {
+  // Preserve real separation without letting era/stat noise create unusable 30s/40s builds.
+  return footballRankingRatingForScore(0.38 + Math.max(0, Math.min(1, score)) * 0.62);
 }
 
 /**
- * Canonical, peak-capability Build-a-QB audit. Values synthesize film/scouting,
- * era-relative passing evidence, movement/pressure creation, and high-leverage
- * performance. Rarity describes room frequency—not a ceiling on any trait.
+ * Canonical Build a QB trait model.
+ *
+ * Membership comes from the existing exact-id NFL QB comparison/historical
+ * owners. Career production is era-normalized before rating. Film/scouting
+ * anchors are hidden evidence inputs for traits that broad box-score production
+ * cannot represent cleanly; they never determine subject quality bands or
+ * become hand-entered final scores. All five final trait grades are calculated
+ * through the shared Football 35-99 ranking calibration helper.
  */
-const AUDITED_QB_PROFILES: readonly AuditedQbProfile[] = [
-  { subjectId: "nfl-patrick-mahomes", name: "Patrick Mahomes", rarityBand: 5, traits: { Arm: 99, Accuracy: 94, Processing: 96, Mobility: 93, Clutch: 98 } },
-  { subjectId: "tom-brady", name: "Tom Brady", rarityBand: 5, traits: { Arm: 88, Accuracy: 94, Processing: 99, Mobility: 55, Clutch: 99 } },
-  { subjectId: "peyton-manning", name: "Peyton Manning", rarityBand: 5, traits: { Arm: 87, Accuracy: 96, Processing: 99, Mobility: 48, Clutch: 94 } },
-  { subjectId: "nfl-aaron-rodgers", name: "Aaron Rodgers", rarityBand: 5, traits: { Arm: 96, Accuracy: 97, Processing: 98, Mobility: 84, Clutch: 94 } },
-  { subjectId: "joe-montana", name: "Joe Montana", rarityBand: 5, traits: { Arm: 84, Accuracy: 95, Processing: 97, Mobility: 72, Clutch: 99 } },
-  { subjectId: "dan-marino", name: "Dan Marino", rarityBand: 4, traits: { Arm: 97, Accuracy: 94, Processing: 96, Mobility: 52, Clutch: 91 } },
-  { subjectId: "john-elway", name: "John Elway", rarityBand: 4, traits: { Arm: 98, Accuracy: 86, Processing: 91, Mobility: 86, Clutch: 97 } },
-  { subjectId: "steve-young", name: "Steve Young", rarityBand: 4, traits: { Arm: 91, Accuracy: 94, Processing: 95, Mobility: 94, Clutch: 96 } },
-  { subjectId: "drew-brees", name: "Drew Brees", rarityBand: 4, traits: { Arm: 84, Accuracy: 98, Processing: 97, Mobility: 58, Clutch: 94 } },
-  { subjectId: "brett-favre", name: "Brett Favre", rarityBand: 4, traits: { Arm: 98, Accuracy: 87, Processing: 86, Mobility: 82, Clutch: 93 } },
-  { subjectId: "nfl-josh-allen", name: "Josh Allen", rarityBand: 4, traits: { Arm: 99, Accuracy: 88, Processing: 89, Mobility: 96, Clutch: 91 } },
-  { subjectId: "nfl-lamar-jackson", name: "Lamar Jackson", rarityBand: 4, traits: { Arm: 88, Accuracy: 87, Processing: 90, Mobility: 99, Clutch: 88 } },
-  { subjectId: "nfl-joe-burrow", name: "Joe Burrow", rarityBand: 4, traits: { Arm: 88, Accuracy: 96, Processing: 95, Mobility: 78, Clutch: 96 } },
-  { subjectId: "nfl-matthew-stafford", name: "Matthew Stafford", rarityBand: 4, traits: { Arm: 97, Accuracy: 91, Processing: 91, Mobility: 72, Clutch: 95 } },
-  { subjectId: "ben-roethlisberger", name: "Ben Roethlisberger", rarityBand: 4, traits: { Arm: 94, Accuracy: 88, Processing: 88, Mobility: 87, Clutch: 96 } },
-  { subjectId: "kurt-warner", name: "Kurt Warner", rarityBand: 3, traits: { Arm: 89, Accuracy: 95, Processing: 94, Mobility: 52, Clutch: 97 } },
-  { subjectId: "andrew-luck", name: "Andrew Luck", rarityBand: 3, traits: { Arm: 94, Accuracy: 90, Processing: 93, Mobility: 88, Clutch: 89 } },
-  { subjectId: "russell-wilson", name: "Russell Wilson", rarityBand: 3, traits: { Arm: 93, Accuracy: 91, Processing: 88, Mobility: 94, Clutch: 96 } },
-  { subjectId: "nfl-philip-rivers", name: "Philip Rivers", rarityBand: 3, traits: { Arm: 89, Accuracy: 92, Processing: 94, Mobility: 52, Clutch: 87 } },
-  { subjectId: "matt-ryan", name: "Matt Ryan", rarityBand: 3, traits: { Arm: 88, Accuracy: 93, Processing: 94, Mobility: 63, Clutch: 89 } },
-  { subjectId: "cam-newton", name: "Cam Newton", rarityBand: 3, traits: { Arm: 95, Accuracy: 82, Processing: 84, Mobility: 98, Clutch: 88 } },
-  { subjectId: "donovan-mcnabb", name: "Donovan McNabb", rarityBand: 3, traits: { Arm: 91, Accuracy: 85, Processing: 88, Mobility: 91, Clutch: 89 } },
-  { subjectId: "steve-mcnair", name: "Steve McNair", rarityBand: 3, traits: { Arm: 90, Accuracy: 87, Processing: 88, Mobility: 92, Clutch: 95 } },
-  { subjectId: "fran-tarkenton", name: "Fran Tarkenton", rarityBand: 3, traits: { Arm: 85, Accuracy: 89, Processing: 93, Mobility: 96, Clutch: 93 } },
-  { subjectId: "roger-staubach", name: "Roger Staubach", rarityBand: 3, traits: { Arm: 88, Accuracy: 91, Processing: 94, Mobility: 89, Clutch: 98 } },
-  { subjectId: "troy-aikman", name: "Troy Aikman", rarityBand: 3, traits: { Arm: 89, Accuracy: 95, Processing: 94, Mobility: 55, Clutch: 97 } },
-  { subjectId: "jim-kelly", name: "Jim Kelly", rarityBand: 3, traits: { Arm: 92, Accuracy: 88, Processing: 92, Mobility: 67, Clutch: 92 } },
-  { subjectId: "warren-moon", name: "Warren Moon", rarityBand: 3, traits: { Arm: 94, Accuracy: 91, Processing: 92, Mobility: 72, Clutch: 88 } },
-  { subjectId: "ken-anderson", name: "Ken Anderson", rarityBand: 3, traits: { Arm: 82, Accuracy: 96, Processing: 95, Mobility: 65, Clutch: 87 } },
-  { subjectId: "brock-purdy", name: "Brock Purdy", rarityBand: 3, traits: { Arm: 85, Accuracy: 93, Processing: 92, Mobility: 78, Clutch: 90 } },
-  { subjectId: "eli-manning", name: "Eli Manning", rarityBand: 2, traits: { Arm: 89, Accuracy: 84, Processing: 86, Mobility: 52, Clutch: 98 } },
-  { subjectId: "tony-romo", name: "Tony Romo", rarityBand: 2, traits: { Arm: 88, Accuracy: 92, Processing: 91, Mobility: 76, Clutch: 84 } },
-  { subjectId: "dak-prescott", name: "Dak Prescott", rarityBand: 2, traits: { Arm: 89, Accuracy: 91, Processing: 91, Mobility: 80, Clutch: 86 } },
-  { subjectId: "jalen-hurts", name: "Jalen Hurts", rarityBand: 2, traits: { Arm: 87, Accuracy: 84, Processing: 86, Mobility: 96, Clutch: 91 } },
-  { subjectId: "justin-herbert", name: "Justin Herbert", rarityBand: 2, traits: { Arm: 97, Accuracy: 90, Processing: 89, Mobility: 84, Clutch: 84 } },
-  { subjectId: "baker-mayfield", name: "Baker Mayfield", rarityBand: 2, traits: { Arm: 91, Accuracy: 87, Processing: 86, Mobility: 76, Clutch: 90 } },
-  { subjectId: "jared-goff", name: "Jared Goff", rarityBand: 2, traits: { Arm: 88, Accuracy: 92, Processing: 91, Mobility: 57, Clutch: 87 } },
-  { subjectId: "kirk-cousins", name: "Kirk Cousins", rarityBand: 2, traits: { Arm: 87, Accuracy: 93, Processing: 92, Mobility: 59, Clutch: 82 } },
-  { subjectId: "carson-palmer", name: "Carson Palmer", rarityBand: 2, traits: { Arm: 94, Accuracy: 89, Processing: 88, Mobility: 61, Clutch: 82 } },
-  { subjectId: "rich-gannon", name: "Rich Gannon", rarityBand: 2, traits: { Arm: 84, Accuracy: 92, Processing: 94, Mobility: 81, Clutch: 86 } },
-  { subjectId: "randall-cunningham", name: "Randall Cunningham", rarityBand: 2, traits: { Arm: 95, Accuracy: 81, Processing: 82, Mobility: 99, Clutch: 86 } },
-  { subjectId: "daunte-culpepper", name: "Daunte Culpepper", rarityBand: 2, traits: { Arm: 96, Accuracy: 85, Processing: 82, Mobility: 94, Clutch: 84 } },
-  { subjectId: "michael-vick", name: "Michael Vick", rarityBand: 2, traits: { Arm: 98, Accuracy: 77, Processing: 78, Mobility: 99, Clutch: 86 } },
-  { subjectId: "boomer-esiason", name: "Boomer Esiason", rarityBand: 2, traits: { Arm: 90, Accuracy: 88, Processing: 90, Mobility: 70, Clutch: 89 } },
-  { subjectId: "mark-brunell", name: "Mark Brunell", rarityBand: 2, traits: { Arm: 86, Accuracy: 90, Processing: 89, Mobility: 87, Clutch: 88 } },
-  { subjectId: "jay-cutler", name: "Jay Cutler", rarityBand: 1, traits: { Arm: 98, Accuracy: 82, Processing: 75, Mobility: 77, Clutch: 74 } },
-  { subjectId: "joe-flacco", name: "Joe Flacco", rarityBand: 1, traits: { Arm: 95, Accuracy: 82, Processing: 81, Mobility: 54, Clutch: 94 } },
-  { subjectId: "nick-foles", name: "Nick Foles", rarityBand: 1, traits: { Arm: 87, Accuracy: 86, Processing: 82, Mobility: 61, Clutch: 97 } },
-  { subjectId: "jeff-garcia", name: "Jeff Garcia", rarityBand: 1, traits: { Arm: 79, Accuracy: 89, Processing: 90, Mobility: 88, Clutch: 87 } },
-  { subjectId: "chad-pennington", name: "Chad Pennington", rarityBand: 1, traits: { Arm: 72, Accuracy: 96, Processing: 93, Mobility: 58, Clutch: 83 } },
-  { subjectId: "ryan-fitzpatrick", name: "Ryan Fitzpatrick", rarityBand: 1, traits: { Arm: 88, Accuracy: 82, Processing: 80, Mobility: 82, Clutch: 82 } },
-  { subjectId: "vinny-testaverde", name: "Vinny Testaverde", rarityBand: 1, traits: { Arm: 94, Accuracy: 80, Processing: 80, Mobility: 61, Clutch: 81 } },
-  { subjectId: "jeff-george", name: "Jeff George", rarityBand: 1, traits: { Arm: 99, Accuracy: 79, Processing: 72, Mobility: 62, Clutch: 68 } },
-  { subjectId: "doug-flutie", name: "Doug Flutie", rarityBand: 1, traits: { Arm: 79, Accuracy: 84, Processing: 87, Mobility: 94, Clutch: 88 } },
-  { subjectId: "kordell-stewart", name: "Kordell Stewart", rarityBand: 1, traits: { Arm: 88, Accuracy: 73, Processing: 76, Mobility: 97, Clutch: 79 } },
-  { subjectId: "jake-delhomme", name: "Jake Delhomme", rarityBand: 1, traits: { Arm: 83, Accuracy: 82, Processing: 81, Mobility: 66, Clutch: 90 } },
-  { subjectId: "trent-green", name: "Trent Green", rarityBand: 1, traits: { Arm: 85, Accuracy: 91, Processing: 91, Mobility: 61, Clutch: 84 } },
-  { subjectId: "derek-carr", name: "Derek Carr", rarityBand: 1, traits: { Arm: 91, Accuracy: 88, Processing: 87, Mobility: 72, Clutch: 78 } },
-  { subjectId: "kyler-murray", name: "Kyler Murray", rarityBand: 1, traits: { Arm: 92, Accuracy: 85, Processing: 84, Mobility: 97, Clutch: 79 } },
-  { subjectId: "tua-tagovailoa", name: "Tua Tagovailoa", rarityBand: 1, traits: { Arm: 80, Accuracy: 94, Processing: 92, Mobility: 73, Clutch: 78 } },
-] as const;
-
 export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTraitProfile[] {
-  return AUDITED_QB_PROFILES.map((profile) => ({
-    ...profile,
-    overall: Math.round(BUILD_QB_TRAITS.reduce((sum, trait) => sum + profile.traits[trait], 0) / BUILD_QB_TRAITS.length),
-    evidenceMethod: "multi-source-film-context" as const,
-  }));
+  const raw = rawBuildQbSignals();
+  const eraAnchors = buildEraAnchors(raw);
+  const mobilityAnchors = {
+    rushingYardsPerGame: raw.map((row) => row.rushingYardsPerGame),
+    rushingTouchdownsPerGame: raw.map((row) => row.rushingTouchdownsPerGame),
+    rushingYardsPerAttempt: raw.map((row) => row.rushingYardsPerAttempt),
+  };
+
+  return raw.map((row) => {
+    const armStat = weightedScore([
+      { score: eraScore(row, eraAnchors, "yardsPerAttempt"), weight: 0.40 },
+      { score: eraScore(row, eraAnchors, "passingYardsPerGame"), weight: 0.30 },
+      { score: eraScore(row, eraAnchors, "passingTouchdownsPerGame"), weight: 0.30 },
+    ]);
+    const accuracyStat = weightedScore([
+      { score: eraScore(row, eraAnchors, "completionPercentage"), weight: 0.60 },
+      { score: eraScore(row, eraAnchors, "passerRating"), weight: 0.40 },
+    ]);
+    const processingStat = weightedScore([
+      { score: eraScore(row, eraAnchors, "touchdownInterceptionRatio"), weight: 0.45 },
+      { score: eraScore(row, eraAnchors, "interceptionPercentage", "lower"), weight: 0.30 },
+      { score: eraScore(row, eraAnchors, "passerRating"), weight: 0.25 },
+    ]);
+    const mobilityStat = weightedScore([
+      { score: scoreFootballAnchoredValue(row.rushingYardsPerGame, mobilityAnchors.rushingYardsPerGame), weight: 0.55 },
+      { score: scoreFootballAnchoredValue(row.rushingTouchdownsPerGame, mobilityAnchors.rushingTouchdownsPerGame), weight: 0.30 },
+      { score: scoreFootballAnchoredValue(row.rushingYardsPerAttempt, mobilityAnchors.rushingYardsPerAttempt), weight: 0.15 },
+    ]);
+    const clutchStat = weightedScore([
+      { score: row.historicalConsensus / 100, weight: 0.55 },
+      { score: eraScore(row, eraAnchors, "touchdownInterceptionRatio"), weight: 0.25 },
+      { score: eraScore(row, eraAnchors, "passerRating"), weight: 0.20 },
+    ]);
+
+    const traits = {
+      Arm: calibratedTraitRating(blendScoutingEvidence(armStat, row.subjectId, "Arm", 0.72)),
+      Accuracy: calibratedTraitRating(blendScoutingEvidence(accuracyStat, row.subjectId, "Accuracy", 0.48)),
+      Processing: calibratedTraitRating(blendScoutingEvidence(processingStat, row.subjectId, "Processing", 0.48)),
+      Mobility: calibratedTraitRating(blendScoutingEvidence(mobilityStat, row.subjectId, "Mobility", 0.52)),
+      Clutch: calibratedTraitRating(blendScoutingEvidence(clutchStat, row.subjectId, "Clutch", 0.52)),
+    } satisfies Record<BuildQbTrait, number>;
+
+    const qualityBand = qualityBandForAuditIndex(row.auditIndex);
+    const overall = Math.round(
+      BUILD_QB_TRAITS.reduce((sum, trait) => sum + traits[trait], 0) / BUILD_QB_TRAITS.length,
+    );
+
+    return {
+      subjectId: row.subjectId,
+      name: row.name,
+      recognizabilityTier: row.recognizabilityTier,
+      qualityBand,
+      generationClass: `qb-${qualityBand}`,
+      generationWeight: BUILD_QB_GENERATION_WEIGHT_BY_QUALITY[qualityBand],
+      traits,
+      overall,
+      rarityBand: rarityBandForQualityBand(qualityBand),
+      evidenceMetricIds: row.evidenceMetricIds,
+    };
+  });
 }
