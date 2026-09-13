@@ -54,7 +54,7 @@ function renderRoute() {
   );
 }
 
-describe("Football Draft Room admin preview", () => {
+describe("Football Draft Room", () => {
   beforeEach(() => {
     mockedUseIdentity.mockReset();
     mockedUsePlayChallenges.mockReset();
@@ -100,13 +100,16 @@ describe("Football Draft Room admin preview", () => {
     expect(screen.queryByRole("heading", { name: "Draft Room" })).not.toBeInTheDocument();
   });
 
-  it("shows Build a QB only to an admin and preserves the five approved traits", () => {
+  it("shows the public-facing Build a QB presentation only through the existing owner gate", () => {
     mockedUseIdentity.mockReturnValue(identity(true));
     renderRoute();
 
     expect(screen.getByRole("heading", { name: "Draft Room" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Build a QB" })).toBeInTheDocument();
-    expect(screen.getByText("STAGE 12 · ADMIN PREVIEW")).toBeInTheDocument();
+    expect(screen.getAllByText("DRAFT ROOM").length).toBeGreaterThan(0);
+    expect(screen.queryByText(/ADMIN PREVIEW/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/ADMIN RELEASE GATE/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/PRIVATE UNTIL/i)).not.toBeInTheDocument();
     for (const trait of BUILD_A_QB_TRAITS) {
       expect(screen.getByText(trait)).toBeInTheDocument();
     }
