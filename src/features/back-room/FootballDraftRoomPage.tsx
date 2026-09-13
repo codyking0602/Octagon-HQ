@@ -20,6 +20,14 @@ import {
 
 export { BUILD_QB_TRAITS as BUILD_A_QB_TRAITS } from "../play/draftRoomContract";
 
+export const BUILD_A_QB_TRAIT_HELP: Readonly<Record<BuildQbTrait, string>> = {
+  Arm: "Throwing power, velocity, and ability to drive difficult throws",
+  Accuracy: "Ball placement and consistent catchable precision at all levels",
+  Processing: "Speed and quality of reads, decisions, and getting to the right answer",
+  Mobility: "Movement, escape ability, rushing value, and creation outside structure",
+  Clutch: "Performance in high-leverage, pressure, closing, and playoff-type situations",
+};
+
 export function hasDraftRoomAdminAccess(profile: IdentityProfile | null | undefined) {
   return profile?.canControlPicks === true;
 }
@@ -100,7 +108,7 @@ function DraftRoomBoard({
     : null;
 
   const status = state.lifecycle_state === "prepared"
-    ? "Admin preview prepared · first bid sends only when both players are admins"
+    ? "Your first bid sends this Build a QB room"
     : state.lifecycle_state === "sent"
       ? profileId === state.recipient_id
         ? "Your first bid accepts this Build a QB room"
@@ -136,7 +144,7 @@ function DraftRoomBoard({
           <button type="button" onClick={onReload} disabled={busy}>REFRESH</button>
         </div>
         <div className="auction-board__title">
-          <p className="eyebrow">STAGE 12 · ADMIN PREVIEW</p>
+          <p className="eyebrow">DRAFT ROOM</p>
           <h1>Build a QB</h1>
         </div>
       </header>
@@ -220,6 +228,9 @@ function DraftRoomBoard({
               </button>
             ))}
           </fieldset>
+          {category ? (
+            <p className="challenge-center__hint" aria-live="polite">{BUILD_A_QB_TRAIT_HELP[category]}</p>
+          ) : null}
           <label>
             <span>SEALED BID · MAX ${maximum}</span>
             <div>
@@ -243,11 +254,6 @@ function DraftRoomBoard({
                   ? "LOCK BID & ACCEPT"
                   : "LOCK SEALED BID"}
           </button>
-          {state.lifecycle_state === "prepared" ? (
-            <p className="challenge-center__hint">
-              Admin preview lock: sending is allowed only when both participants have admin access. Public members cannot receive or open Draft Room yet.
-            </p>
-          ) : null}
         </form>
       ) : null}
 
@@ -310,7 +316,7 @@ export default function FootballDraftRoomPage() {
       <div className="page football-room-page">
         <section className="surface-card" aria-live="polite">
           <p className="eyebrow">DRAFT ROOM</p>
-          <strong>Checking preview access…</strong>
+          <strong>Loading Draft Room…</strong>
         </section>
       </div>
     );
@@ -437,7 +443,7 @@ export default function FootballDraftRoomPage() {
     return (
       <div className="page-stack football-room-page auction-page">
         <section className="auction-destination surface-card">
-          <p className="eyebrow">DRAFT ROOM · ADMIN PREVIEW</p>
+          <p className="eyebrow">DRAFT ROOM</p>
           <h1>{loading ? "Loading Build a QB…" : "Draft Room unavailable"}</h1>
           {error ? <p className="auction-error" role="status">{error}</p> : null}
           {!loading ? <button className="primary-action" type="button" onClick={newRoom}>BACK TO DRAFT ROOM</button> : null}
@@ -449,9 +455,9 @@ export default function FootballDraftRoomPage() {
   return (
     <div className="page-stack football-room-page auction-page">
       <section className="page-heading">
-        <p className="eyebrow">STAGE 12 · ADMIN PREVIEW</p>
+        <p className="eyebrow">DRAFT ROOM</p>
         <h1>Draft Room</h1>
-        <p>Football’s sealed-bid strategy room. This surface stays private until the public release is explicitly approved.</p>
+        <p>Football’s sealed-bid strategy room. Bid smart, build your quarterback, and beat your opponent.</p>
       </section>
 
       <section className="auction-hero surface-card" aria-labelledby="build-a-qb-title">
@@ -482,12 +488,6 @@ export default function FootballDraftRoomPage() {
         >
           {busy ? "PREPARING…" : "PREPARE BUILD A QB"}
         </button>
-      </section>
-
-      <section className="surface-card">
-        <p className="eyebrow">ADMIN RELEASE GATE</p>
-        <h2>Private until you release it.</h2>
-        <p>Draft Room is hidden from members, direct-route access is owner-gated, and the backend will not send a Build a QB challenge to a non-admin while the preview switch is locked.</p>
       </section>
 
       {error ? <p className="auction-error" role="status">{error}</p> : null}

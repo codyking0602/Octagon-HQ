@@ -7,6 +7,7 @@ import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
 import FootballDraftRoomPage, {
   BUILD_A_QB_TRAITS,
+  BUILD_A_QB_TRAIT_HELP,
   hasDraftRoomAdminAccess,
 } from "./FootballDraftRoomPage";
 
@@ -54,7 +55,7 @@ function renderRoute() {
   );
 }
 
-describe("Football Draft Room admin preview", () => {
+describe("Football Draft Room", () => {
   beforeEach(() => {
     mockedUseIdentity.mockReset();
     mockedUsePlayChallenges.mockReset();
@@ -93,6 +94,16 @@ describe("Football Draft Room admin preview", () => {
     expect(hasDraftRoomAdminAccess(identity(true).profile)).toBe(true);
   });
 
+  it("keeps the approved five-trait explanations player-facing and concise", () => {
+    expect(BUILD_A_QB_TRAIT_HELP).toEqual({
+      Arm: "Throwing power, velocity, and ability to drive difficult throws",
+      Accuracy: "Ball placement and consistent catchable precision at all levels",
+      Processing: "Speed and quality of reads, decisions, and getting to the right answer",
+      Mobility: "Movement, escape ability, rushing value, and creation outside structure",
+      Clutch: "Performance in high-leverage, pressure, closing, and playoff-type situations",
+    });
+  });
+
   it("redirects a non-admin direct route back to Football", () => {
     mockedUseIdentity.mockReturnValue(identity(false));
     renderRoute();
@@ -100,13 +111,16 @@ describe("Football Draft Room admin preview", () => {
     expect(screen.queryByRole("heading", { name: "Draft Room" })).not.toBeInTheDocument();
   });
 
-  it("shows Build a QB only to an admin and preserves the five approved traits", () => {
+  it("shows the public-facing Build a QB presentation only through the existing owner gate", () => {
     mockedUseIdentity.mockReturnValue(identity(true));
     renderRoute();
 
     expect(screen.getByRole("heading", { name: "Draft Room" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Build a QB" })).toBeInTheDocument();
-    expect(screen.getByText("STAGE 12 · ADMIN PREVIEW")).toBeInTheDocument();
+    expect(screen.getAllByText("DRAFT ROOM").length).toBeGreaterThan(0);
+    expect(screen.queryByText(/ADMIN PREVIEW/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/ADMIN RELEASE GATE/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/PRIVATE UNTIL/i)).not.toBeInTheDocument();
     for (const trait of BUILD_A_QB_TRAITS) {
       expect(screen.getByText(trait)).toBeInTheDocument();
     }
