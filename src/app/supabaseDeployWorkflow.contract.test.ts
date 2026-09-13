@@ -10,4 +10,11 @@ describe("Supabase deployment migration verification", () => {
     expect(workflow).toContain('if (matched_remote_version != "") print matched_remote_version');
     expect(workflow).not.toContain("print remote_version\n                  exit");
   });
+  it("retries transient production verification transport failures without weakening assertions", () => {
+    expect(workflow).toContain("live_curl() {");
+    expect(workflow).toContain("--retry 5 \\\n              --retry-all-errors \\\n              --retry-delay 2");
+    expect(workflow.split("live_curl \\\\").length - 1).toBe(8);
+    expect(workflow).toContain('grep -Fq "\\\\"deployment_sha\\\\":\\\\\"$SOURCE_SHA\\\\\""');
+  });
+
 });
