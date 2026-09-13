@@ -45,6 +45,10 @@ export function hasDraftRoomAdminAccess(profile: IdentityProfile | null | undefi
   return profile?.canControlPicks === true;
 }
 
+export function formatTrioFinalScore(score: number) {
+  return score.toFixed(1);
+}
+
 function draftRoomVisualIdentity(modeId: DraftRoomModeId, itemReference: string | null | undefined) {
   return modeId === "build-qb-cfb"
     ? cfbBuildQbVisualIdentity(itemReference)
@@ -406,9 +410,9 @@ function DraftRoomBoard({
                 : `${state.recipient_display_name} WINS`}
           </h2>
           <div className="auction-final__scores">
-            <article><small>{state.challenger_display_name}</small><strong>{trioMode ? Math.round(state.challenger_final_score) : state.challenger_final_score}</strong></article>
+            <article><small>{state.challenger_display_name}</small><strong>{trioMode ? formatTrioFinalScore(state.challenger_final_score) : state.challenger_final_score}</strong></article>
             <b>–</b>
-            <article><small>{state.recipient_display_name}</small><strong>{trioMode ? Math.round(state.recipient_final_score) : state.recipient_final_score}</strong></article>
+            <article><small>{state.recipient_display_name}</small><strong>{trioMode ? formatTrioFinalScore(state.recipient_final_score) : state.recipient_final_score}</strong></article>
           </div>
         </section>
       ) : null}
