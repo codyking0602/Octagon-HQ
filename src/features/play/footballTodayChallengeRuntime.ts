@@ -18,6 +18,7 @@ import {
   footballHitTheNumberActiveProgressionSlot,
   footballHitTheNumberAvailableProgressionSubjectIds,
   footballHitTheNumberSelectionSatisfies,
+  footballHitTheNumberRandomPoolSize,
   footballHitTheNumberValue,
   getFootballHitTheNumberSubject,
   type FootballHitTheNumberPlan,
@@ -58,7 +59,7 @@ import type {
 export const FOOTBALL_DAILY_RUNTIME_VERSION = "football-official-daily-v1" as const;
 export const FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION = "football-blind-resume-daily-v4" as const;
 export const FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION = "football-blind-resume-score-v4" as const;
-export const FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "football-hit-the-number-daily-v2" as const;
+export const FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "football-hit-the-number-daily-v3" as const;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -288,16 +289,17 @@ function buildKeepCutSetup(day: string, scheduleVersion: string): OfficialDailyS
   };
 }
 
-function buildIntegerHitTheNumberPlan(day: string, scheduleVersion: string) {
+function buildDailyHitTheNumberPlan(day: string, scheduleVersion: string) {
   const desiredLeague = dailyLeague(day, "hit-the-number");
   for (let attempt = 0; attempt < 128; attempt += 1) {
     const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${scheduleVersion}|${day}|${attempt}`;
-    const plan = createFootballHitTheNumberPlan(seed, "open-roster");
-    if (plan.league !== desiredLeague || !Number.isInteger(plan.target)) continue;
+    const plan = createFootballHitTheNumberPlan(seed, "random-pool");
+    if (plan.league !== desiredLeague) continue;
+    if (plan.subjectIds.length !== footballHitTheNumberRandomPoolSize(plan.pickCount)) continue;
     const values = plan.subjectIds.map((id) => footballHitTheNumberValue(id, plan.metricId));
-    if (values.every((value) => Number.isInteger(value) && value >= 0)) return { plan, values };
+    if (values.every((value) => Number.isFinite(value))) return { plan, values };
   }
-  throw new Error("Football Hit the Number could not build an integer-compatible official board.");
+  throw new Error("Football Hit the Number could not build the official capped board.");
 }
 
 function hitTheNumberPublicState(plan: FootballHitTheNumberPlan, selectedIds: readonly string[], complete = false) {
@@ -318,7 +320,7 @@ function hitTheNumberPublicState(plan: FootballHitTheNumberPlan, selectedIds: re
 }
 
 function buildHitTheNumberSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
-  const { plan, values } = buildIntegerHitTheNumberPlan(day, scheduleVersion);
+  const { plan, values } = buildDailyHitTheNumberPlan(day, scheduleVersion);
   const candidates = plan.subjectIds.map((id) => {
     const subject = getFootballHitTheNumberSubject(id);
     if (!subject) throw new Error(`Football Hit the Number subject ${id} is unavailable.`);
@@ -532,7 +534,7 @@ function advanceKeepCut(context: OfficialDailyRuntimeContext, action: JsonRecord
 function advanceHitTheNumber(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
   const ids = stringArray(context.privateSetupEvidence.fighter_ids, "Football Hit the Number ids");
   const eligible = new Set(ids);
-  const pickCount = integer(context.privateSetupEvidence.pick_count, "Football Hit the Number pick count", 4, 7);
+  const pickCount = integer(context.privateSetupEvidence.pick_count, "Football Hit the Number pick count", 4, 6);
   const plan = asRecord(context.privateSetupEvidence.plan) as unknown as FootballHitTheNumberPlan;
   if (!Array.isArray(plan.subjectIds) || plan.subjectIds.length !== ids.length || plan.pickCount !== pickCount) {
     throw new Error("Football Hit the Number canonical plan is unavailable.");
