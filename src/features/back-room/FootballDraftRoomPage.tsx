@@ -628,7 +628,7 @@ export default function FootballDraftRoomPage() {
       <div className="page-stack football-room-page auction-page">
         <section className="auction-destination surface-card">
           <p className="eyebrow">DRAFT ROOM</p>
-          <h1>{loading ? "Loading Build a QB…" : "Draft Room unavailable"}</h1>
+          <h1>{loading ? "Loading Draft Room…" : "Draft Room unavailable"}</h1>
           {error ? <p className="auction-error" role="status">{error}</p> : null}
           {!loading ? <button className="primary-action" type="button" onClick={() => newRoom(requestedMode)}>BACK TO DRAFT ROOM</button> : null}
         </section>
@@ -644,9 +644,9 @@ export default function FootballDraftRoomPage() {
         <p>Football’s sealed-bid strategy room. Bid smart, build your roster, and beat your opponent.</p>
       </section>
 
-      <section className="auction-hero surface-card" aria-labelledby="build-a-qb-title">
+      <section className="auction-hero surface-card" aria-labelledby="draft-room-launch-title">
         <p className="eyebrow">LAUNCH ROOM</p>
-        <h2 id="build-a-qb-title">{requestedModeDefinition.displayName}</h2>
+        <h2 id="draft-room-launch-title">{requestedModeDefinition.displayName}</h2>
         <p>{requestedModeDefinition.description} Bid from a ${requestedModeDefinition.startingBankroll} bankroll; {requestedModeDefinition.rounds} {requestedModeDefinition.format === "trio" ? "trios" : "QBs"} appear and each side finishes with {requestedModeDefinition.requiredSelectionsPerPlayer}.</p>
         <div className="draft-room-mode-switcher" role="group" aria-label="Draft Room mode">
           {draftRoomModes.map((mode) => (
