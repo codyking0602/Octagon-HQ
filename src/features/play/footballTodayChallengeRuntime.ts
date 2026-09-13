@@ -289,17 +289,17 @@ function buildKeepCutSetup(day: string, scheduleVersion: string): OfficialDailyS
   };
 }
 
-function buildIntegerHitTheNumberPlan(day: string, scheduleVersion: string) {
+function buildDailyHitTheNumberPlan(day: string, scheduleVersion: string) {
   const desiredLeague = dailyLeague(day, "hit-the-number");
   for (let attempt = 0; attempt < 128; attempt += 1) {
     const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${scheduleVersion}|${day}|${attempt}`;
     const plan = createFootballHitTheNumberPlan(seed, "random-pool");
-    if (plan.league !== desiredLeague || !Number.isInteger(plan.target)) continue;
+    if (plan.league !== desiredLeague) continue;
     if (plan.subjectIds.length !== footballHitTheNumberRandomPoolSize(plan.pickCount)) continue;
     const values = plan.subjectIds.map((id) => footballHitTheNumberValue(id, plan.metricId));
-    if (values.every((value) => Number.isInteger(value) && value >= 0)) return { plan, values };
+    if (values.every((value) => Number.isFinite(value) && value >= 0)) return { plan, values };
   }
-  throw new Error("Football Hit the Number could not build an integer-compatible official board.");
+  throw new Error("Football Hit the Number could not build the official capped board.");
 }
 
 function hitTheNumberPublicState(plan: FootballHitTheNumberPlan, selectedIds: readonly string[], complete = false) {
@@ -320,7 +320,7 @@ function hitTheNumberPublicState(plan: FootballHitTheNumberPlan, selectedIds: re
 }
 
 function buildHitTheNumberSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
-  const { plan, values } = buildIntegerHitTheNumberPlan(day, scheduleVersion);
+  const { plan, values } = buildDailyHitTheNumberPlan(day, scheduleVersion);
   const candidates = plan.subjectIds.map((id) => {
     const subject = getFootballHitTheNumberSubject(id);
     if (!subject) throw new Error(`Football Hit the Number subject ${id} is unavailable.`);
