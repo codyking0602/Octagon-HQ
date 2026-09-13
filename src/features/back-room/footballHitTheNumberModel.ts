@@ -892,6 +892,19 @@ export function footballHitTheNumberAvailableBuildSubjectIds(
   return footballHitTheNumberAvailableProgressionSubjectIds(plan, selectedSubjectIds);
 }
 
+export function footballHitTheNumberProgressionSlotSubjectIds(
+  plan: FootballHitTheNumberPlan,
+) {
+  if (!isProgressionFormat(plan)) return [] as string[][];
+  const slots = slotsForPlan(plan);
+  return slots.slice(0, plan.pickCount).map((slot) =>
+    plan.subjectIds.filter((subjectId) => {
+      const subject = subjectFor(subjectId);
+      return slot.accepts(subject, valueFor(subject.id, plan.metricId));
+    }),
+  );
+}
+
 export function footballHitTheNumberSelectionSatisfies(
   plan: FootballHitTheNumberPlan,
   selectedSubjectIds: readonly string[],
