@@ -99,6 +99,47 @@ describe("canonical Football Build a QB trait model", () => {
     }
   });
 
+  it("keeps trait leadership category-specific and preserves the original Stage 12 core", () => {
+    const profiles = buildFootballBuildQbTraitProfiles();
+    const leaderSignatures = new Set(
+      BUILD_QB_TRAITS.map((trait) => {
+        const maximum = Math.max(...profiles.map((profile) => profile.traits[trait]));
+        return profiles
+          .filter((profile) => profile.traits[trait] === maximum)
+          .map((profile) => profile.subjectId)
+          .sort()
+          .join("|");
+      }),
+    );
+    expect(leaderSignatures.size).toBeGreaterThanOrEqual(3);
+    expect(
+      profiles.some((profile) => BUILD_QB_TRAITS.every((trait) => (
+        profile.traits[trait] === Math.max(...profiles.map((candidate) => candidate.traits[trait]))
+      ))),
+    ).toBe(false);
+
+    const names = new Set(profiles.map((profile) => profile.name));
+    for (const name of [
+      "Patrick Mahomes",
+      "Aaron Rodgers",
+      "Lamar Jackson",
+      "Joe Burrow",
+      "Drew Brees",
+      "Tom Brady",
+      "Josh Allen",
+      "Matt Ryan",
+      "Matthew Stafford",
+      "Philip Rivers",
+      "Andrew Luck",
+      "Ben Roethlisberger",
+      "Cam Newton",
+      "Jay Cutler",
+      "Eli Manning",
+    ]) {
+      expect(names.has(name), `missing original Stage 12 QB ${name}`).toBe(true);
+    }
+  });
+
   it("keeps subject quality independent from trait ceiling", () => {
     const nonPremium = buildFootballBuildQbTraitProfiles()
       .filter((profile) => profile.qualityBand === "lower" || profile.qualityBand === "wildcard");
