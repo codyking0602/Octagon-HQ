@@ -25,8 +25,17 @@ export interface DraftRoomModeDefinition {
 export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
   {
     id: "build-qb",
-    displayName: "Build a QB",
-    description: "Win one quarterback for each trait and build the stronger five-part QB.",
+    displayName: "NFL Build a QB",
+    description: "Win one NFL quarterback for each trait and build the stronger five-part QB.",
+    rounds: 10,
+    requiredSelectionsPerPlayer: 5,
+    startingBankroll: 50,
+    categories: BUILD_QB_TRAITS,
+  },
+  {
+    id: "build-qb-cfb",
+    displayName: "CFB Build a QB",
+    description: "Win one peak-season college quarterback for each trait and build the stronger five-part QB.",
     rounds: 10,
     requiredSelectionsPerPlayer: 5,
     startingBankroll: 50,
