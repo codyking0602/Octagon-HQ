@@ -48,7 +48,7 @@ interface RawQbTraitSignals {
   name: string;
   recognizabilityTier: "A" | "B" | "C";
   auditIndex: number;
-  startSeason: number;
+  startSeason: number | null;
   yardsPerAttempt: number | null;
   passingYardsPerGame: number | null;
   passingTouchdownsPerGame: number | null;
@@ -181,7 +181,8 @@ function rarityBandForQualityBand(band: BuildQbQualityBand): 1 | 2 | 3 | 4 | 5 {
   return 1;
 }
 
-function eraBucket(startSeason: number) {
+function eraBucket(startSeason: number | null) {
+  if (startSeason == null) return "unknown";
   if (startSeason < 1970) return "pre-1970";
   if (startSeason < 1985) return "1970-1984";
   if (startSeason < 2000) return "1985-1999";
@@ -224,7 +225,7 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
     );
     const startSeason = subject?.startSeason
       ?? (sameNameCareerSubjects.length === 1 ? sameNameCareerSubjects[0]!.startSeason : null);
-    if (!subject || startSeason == null) {
+    if (!subject) {
       throw new Error(`Build a QB QB ${subjectId} is missing canonical career identity`);
     }
 
