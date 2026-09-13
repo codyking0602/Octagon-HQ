@@ -11,6 +11,7 @@ export const PLAY_ROUTE_BY_GAME: Partial<Record<PlayGameId, string>> = {
   "blind-rank": "/play/blind-rank",
   "keep-cut": "/play/keep-cut",
   auction: "/play/auction",
+  "draft-room": "/football/draft-room",
   "hit-the-number": "/play/hit-the-number",
 };
 

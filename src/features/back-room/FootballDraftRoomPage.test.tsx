@@ -3,6 +3,7 @@ import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
 import FootballDraftRoomPage, {
   BUILD_A_QB_TRAITS,
@@ -13,7 +14,12 @@ vi.mock("../identity/IdentityProvider", () => ({
   useIdentity: vi.fn(),
 }));
 
+vi.mock("../challenges/ChallengeProvider", () => ({
+  usePlayChallenges: vi.fn(),
+}));
+
 const mockedUseIdentity = vi.mocked(useIdentity);
+const mockedUsePlayChallenges = vi.mocked(usePlayChallenges);
 
 function identity(canControlPicks: boolean | undefined) {
   return {
@@ -51,6 +57,34 @@ function renderRoute() {
 describe("Football Draft Room admin preview", () => {
   beforeEach(() => {
     mockedUseIdentity.mockReset();
+    mockedUsePlayChallenges.mockReset();
+    mockedUsePlayChallenges.mockReturnValue({
+      configured: true,
+      enabled: true,
+      loading: false,
+      error: "",
+      profiles: [],
+      activeProfile: null,
+      members: [],
+      challenges: [],
+      composer: null,
+      resultCode: "",
+      preferredRecipientName: "",
+      prepareRecipient: vi.fn(),
+      clearPreparedRecipient: vi.fn(),
+      beginChallenge: vi.fn(),
+      refresh: vi.fn(),
+      findProfile: vi.fn(),
+      openComposer: vi.fn(),
+      closeComposer: vi.fn(),
+      sendChallenge: vi.fn(),
+      getChallenge: vi.fn(),
+      markOpened: vi.fn(),
+      submitResult: vi.fn(),
+      dismissChallenge: vi.fn(),
+      cancelPendingAuction: vi.fn(),
+      viewResults: vi.fn(),
+    } as ReturnType<typeof usePlayChallenges>);
   });
 
   it("reuses the existing Picks owner projection as the only preview gate", () => {
