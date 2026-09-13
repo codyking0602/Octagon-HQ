@@ -145,6 +145,14 @@ function qualityBandForAuditIndex(index: number): BuildQbQualityBand {
   return "wildcard";
 }
 
+const BUILD_QB_GENERATION_WEIGHT_BY_QUALITY: Readonly<Record<BuildQbQualityBand, number>> = {
+  marquee: 0.18,
+  strong: 0.70,
+  core: 1.15,
+  lower: 1.25,
+  wildcard: 1.00,
+};
+
 function rarityBandForQualityBand(band: BuildQbQualityBand): 1 | 2 | 3 | 4 | 5 {
   if (band === "marquee") return 5;
   if (band === "strong") return 4;
@@ -354,7 +362,7 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
       recognizabilityTier: row.recognizabilityTier,
       qualityBand,
       generationClass: `qb-${qualityBand}`,
-      generationWeight: 1,
+      generationWeight: BUILD_QB_GENERATION_WEIGHT_BY_QUALITY[qualityBand],
       traits,
       overall,
       rarityBand: rarityBandForQualityBand(qualityBand),
