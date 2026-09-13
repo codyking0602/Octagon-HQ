@@ -908,6 +908,7 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
   let hasMiddlingOutcome = false;
   let hasBadUnder = false;
   let hasMeaningfulBust = false;
+  const requiresBadUnder = !isProgressionFormat(plan);
   const goodUnderMinimum = Math.min(
     FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.goodUnderMinScore,
     minimumGoodUnderScore(plan),
@@ -945,7 +946,7 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
       legalSelectionCount >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.minimumLegalSelections
       && hasGoodUnder
       && hasMiddlingOutcome
-      && hasBadUnder
+      && (!requiresBadUnder || hasBadUnder)
       && hasMeaningfulBust
     );
   };
@@ -957,7 +958,7 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
       legalSelectionCount >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.minimumLegalSelections
       && hasGoodUnder
       && hasMiddlingOutcome
-      && hasBadUnder
+      && (!requiresBadUnder || hasBadUnder)
       && hasMeaningfulBust
     ),
     legalSelectionCount,
