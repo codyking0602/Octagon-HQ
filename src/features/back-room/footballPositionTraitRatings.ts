@@ -27,6 +27,7 @@ export type BuildQbQualityBand = "marquee" | "strong" | "core" | "lower" | "wild
 
 interface BuildQbResearchInput {
   catalogId: string;
+  canonicalSubjectId?: string;
   name: string;
   qualityBand: BuildQbRarityBand;
   research: Readonly<Record<BuildQbTrait, BuildQbResearchLevel>>;
@@ -91,7 +92,7 @@ const BUILD_QB_RESEARCH_AUDIT: readonly BuildQbResearchInput[] = [
   { catalogId: "build-qb-steve-young", name: "Steve Young", qualityBand: 4, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 8, Clutch: 8 } },
   { catalogId: "build-qb-roger-staubach", name: "Roger Staubach", qualityBand: 4, research: { Arm: 7, Accuracy: 7, Processing: 8, Mobility: 8, Clutch: 9 } },
   { catalogId: "build-qb-terry-bradshaw", name: "Terry Bradshaw", qualityBand: 4, research: { Arm: 8, Accuracy: 5, Processing: 6, Mobility: 6, Clutch: 9 } },
-  { catalogId: "build-qb-fran-tarkenton", name: "Fran Tarkenton", qualityBand: 4, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 8, Clutch: 7 } },
+  { catalogId: "build-qb-fran-tarkenton", canonicalSubjectId: "nfl-fran-tarkenton", name: "Fran Tarkenton", qualityBand: 4, research: { Arm: 6, Accuracy: 7, Processing: 7, Mobility: 8, Clutch: 7 } },
   { catalogId: "build-qb-dan-fouts", name: "Dan Fouts", qualityBand: 4, research: { Arm: 8, Accuracy: 7, Processing: 8, Mobility: 3, Clutch: 6 } },
   { catalogId: "build-qb-kurt-warner", name: "Kurt Warner", qualityBand: 4, research: { Arm: 7, Accuracy: 8, Processing: 8, Mobility: 2, Clutch: 9 } },
   { catalogId: "build-qb-warren-moon", name: "Warren Moon", qualityBand: 4, research: { Arm: 9, Accuracy: 7, Processing: 7, Mobility: 6, Clutch: 6 } },
@@ -171,6 +172,7 @@ function researchTraitRatings(research: BuildQbResearchInput["research"]) {
  */
 export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTraitProfile[] {
   const candidates = buildFootballComparisonCandidatePool("nfl-quarterbacks");
+  const candidateById = new Map(candidates.map((candidate) => [candidate.canonicalSubjectId, candidate]));
   const candidatesByName = new Map<string, typeof candidates>();
 
   for (const candidate of candidates) {
@@ -184,6 +186,9 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
   }
 
   const identityMismatches = BUILD_QB_RESEARCH_AUDIT.flatMap((input) => {
+    if (input.canonicalSubjectId) {
+      return candidateById.has(input.canonicalSubjectId) ? [] : [`${input.name} (missing exact id)`];
+    }
     const matches = candidatesByName.get(normalizedName(input.name)) ?? [];
     return matches.length === 1 ? [] : [`${input.name} (${matches.length})`];
   });
@@ -194,7 +199,9 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
   }
 
   return BUILD_QB_RESEARCH_AUDIT.map((input) => {
-    const candidate = candidatesByName.get(normalizedName(input.name))![0]!;
+    const candidate = input.canonicalSubjectId
+      ? candidateById.get(input.canonicalSubjectId)!
+      : candidatesByName.get(normalizedName(input.name))![0]!;
     if (
       candidate.recognizabilityTier !== "A"
       && candidate.recognizabilityTier !== "B"
