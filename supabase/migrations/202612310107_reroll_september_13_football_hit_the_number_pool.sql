@@ -10,6 +10,8 @@ declare
   v_central_today date := private.daily_challenge_central_day(now());
   v_existing_daily_id uuid;
   v_existing_game text;
+  v_existing_metric text;
+  v_existing_candidate_count integer;
 begin
   if not exists (
     select 1
@@ -24,9 +26,18 @@ begin
     raise exception 'expected source Football Daily to be Hit the Number on %', v_target_day;
   end if;
 
-  select daily.id, daily.game_type
-  into v_existing_daily_id, v_existing_game
+  select
+    daily.id,
+    daily.game_type,
+    setup.public_setup->>'metric_id',
+    jsonb_array_length(coalesce(setup.public_setup->'candidates', '[]'::jsonb))
+  into
+    v_existing_daily_id,
+    v_existing_game,
+    v_existing_metric,
+    v_existing_candidate_count
   from private.daily_challenges daily
+  join private.daily_challenge_setups setup on setup.id = daily.setup_id
   where daily.schedule_version = v_source_version
     and daily.central_day = v_target_day;
 
@@ -41,6 +52,17 @@ begin
       raise exception 'refusing to refresh unexpected published Football Daily game % on %',
         v_existing_game,
         v_target_day;
+    end if;
+
+    if v_existing_metric is distinct from 'nfl-season-passing-yards' then
+      raise exception 'refusing to replace unexpected Football Hit the Number metric % on %',
+        coalesce(v_existing_metric, '<none>'),
+        v_target_day;
+    end if;
+
+    if coalesce(v_existing_candidate_count, 0) <= 16 then
+      raise exception 'source Football Hit the Number board is already capped at % candidates; refusing destructive refresh',
+        v_existing_candidate_count;
     end if;
   end if;
 
