@@ -94,13 +94,12 @@ describe("Football Draft Room", () => {
     expect(hasDraftRoomAdminAccess(identity(true).profile)).toBe(true);
   });
 
-  it("keeps the approved five-trait explanations player-facing and concise", () => {
+  it("keeps the approved four-trait explanations player-facing and concise", () => {
     expect(BUILD_A_QB_TRAIT_HELP).toEqual({
       Arm: "Throwing power, velocity, and ability to drive difficult throws",
       Accuracy: "Ball placement and consistent catchable precision at all levels",
       Processing: "Speed and quality of reads, decisions, and getting to the right answer",
       Mobility: "Movement, escape ability, rushing value, and creation outside structure",
-      Clutch: "Performance in high-leverage, pressure, closing, and playoff-type situations",
     });
   });
 
@@ -118,6 +117,7 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("heading", { name: "Draft Room" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "NFL Build a QB" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
+    expect(screen.getByText(/Bid from a \$40 bankroll; 8 QBs appear and each side finishes with 4\./)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
     expect(screen.getAllByText("DRAFT ROOM").length).toBeGreaterThan(0);
     expect(screen.queryByText(/ADMIN PREVIEW/i)).not.toBeInTheDocument();

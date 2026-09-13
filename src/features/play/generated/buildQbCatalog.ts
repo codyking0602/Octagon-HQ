@@ -1,9 +1,9 @@
 import type { BuildQbTrait } from "../draftRoomContract";
 import { buildFootballBuildQbTraitProfiles, type BuildQbQualityBand } from "../../back-room/footballPositionTraitRatings";
 
-export const FOOTBALL_BUILD_QB_CATALOG_VERSION = "football-draft-room-2026-09-v5" as const;
+export const FOOTBALL_BUILD_QB_CATALOG_VERSION = "football-draft-room-2026-09-v6" as const;
 export const FOOTBALL_BUILD_QB_RARITY_VERSION = "football-draft-room-rarity-2026-09-v4" as const;
-export const FOOTBALL_BUILD_QB_GRADING_VERSION = "football-build-qb-traits-2026-09-v1" as const;
+export const FOOTBALL_BUILD_QB_GRADING_VERSION = "football-build-qb-traits-2026-09-v2" as const;
 
 export interface GeneratedBuildQbCatalogRow {
   subjectId: string;

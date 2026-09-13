@@ -6,13 +6,14 @@ import {
 } from "./draftRoomContract";
 
 describe("Draft Room contract", () => {
-  it("locks the Stage 12 Build a QB economy and five traits", () => {
+  it("locks the approved four-trait Build a QB economy", () => {
     const mode = draftRoomModeDefinition("build-qb");
-    expect(mode.rounds).toBe(10);
-    expect(mode.requiredSelectionsPerPlayer).toBe(5);
-    expect(mode.startingBankroll).toBe(50);
-    expect(mode.categories).toEqual(["Arm", "Accuracy", "Processing", "Mobility", "Clutch"]);
+    expect(mode.rounds).toBe(8);
+    expect(mode.requiredSelectionsPerPlayer).toBe(4);
+    expect(mode.startingBankroll).toBe(40);
+    expect(mode.categories).toEqual(["Arm", "Accuracy", "Processing", "Mobility"]);
     expect(BUILD_QB_TRAITS).toEqual(mode.categories);
+    expect(mode.description).toContain("four-part QB");
   });
 
   it("registers CFB as the same Draft Room economy and trait contract", () => {
@@ -22,6 +23,12 @@ describe("Draft Room contract", () => {
     expect(cfb.requiredSelectionsPerPlayer).toBe(nfl.requiredSelectionsPerPlayer);
     expect(cfb.startingBankroll).toBe(nfl.startingBankroll);
     expect(cfb.categories).toEqual(nfl.categories);
+    expect(cfb.description).toContain("four-part QB");
+  });
+
+  it("removes Clutch from the canonical Build a QB trait contract", () => {
+    expect(BUILD_QB_TRAITS).toEqual(["Arm", "Accuracy", "Processing", "Mobility"]);
+    expect(BUILD_QB_TRAITS).not.toContain("Clutch" as never);
   });
 
   it("recognizes only canonical Draft Room mode ids", () => {
