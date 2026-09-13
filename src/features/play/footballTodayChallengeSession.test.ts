@@ -35,7 +35,8 @@ function isoDay(offset: number) {
 }
 
 function setupScheduleVersion(day: string) {
-  return day >= "2026-09-12" ? FOOTBALL_TODAY_SCHEDULE_VERSION : "football-daily-v1";
+  if (day >= "2026-09-13") return FOOTBALL_TODAY_SCHEDULE_VERSION;
+  return day >= "2026-09-12" ? "football-daily-v5" : "football-daily-v1";
 }
 
 function setupUsesNonReviewedSubject(gameType: "blind_rank_5" | "keep_4_cut_4", day: string) {
@@ -85,8 +86,9 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-09-04")).toBe("football-daily-v2");
     expect(footballTodayScheduleVersionForDay("2026-09-05")).toBe("football-daily-v3");
     expect(footballTodayScheduleVersionForDay("2026-09-11")).toBe("football-daily-v3");
-    expect(footballTodayScheduleVersionForDay("2026-09-12")).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
-    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v5");
+    expect(footballTodayScheduleVersionForDay("2026-09-12")).toBe("football-daily-v5");
+    expect(footballTodayScheduleVersionForDay("2026-09-13")).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
+    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v6-question-refresh");
 
     const future = Array.from({ length: 20 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 8, 12 + offset)).toISOString().slice(0, 10);
@@ -113,6 +115,14 @@ describe("Football Today’s Challenge session", () => {
     expect(projection.game_type).toBe("wavelength");
     expect(projection.setup_key).toContain("football-daily-v5");
     expect(footballTodayGameForDay("2026-09-13")).toBe("hit_the_number");
+
+    const refreshedHitTheNumber = buildFootballTodayPersistenceSetup("2026-09-13");
+    expect(refreshedHitTheNumber.scheduleVersion).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
+    expect(refreshedHitTheNumber.gameType).toBe("hit_the_number");
+    expect(refreshedHitTheNumber.publicSetup.league).toBe("NFL");
+    expect(refreshedHitTheNumber.publicSetup.format_id).toBe("themed-lineup");
+    expect(refreshedHitTheNumber.publicSetup.metric_id).toBe("nfl-season-passing-yards");
+    expect(refreshedHitTheNumber.setupKey).not.toContain("nfl-team-defensive-interceptions");
 
     const transition = Array.from({ length: 42 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 8, 11 + offset)).toISOString().slice(0, 10);
@@ -264,7 +274,7 @@ describe("Football Today’s Challenge session", () => {
     const rankChild = publication.privateSetupEvidence.blind_rank_5 as JsonRecord;
     const keepChild = publication.privateSetupEvidence.keep_4_cut_4 as JsonRecord;
 
-    expect(publication.scheduleVersion).toBe("football-daily-v5");
+    expect(publication.scheduleVersion).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
     expect(publication.gameType).toBe("keep_4_cut_4");
     expect(initial.combo_stage).toBe("blind_rank_5");
     expect((initial.blind_rank_5 as JsonRecord).complete).toBe(false);
