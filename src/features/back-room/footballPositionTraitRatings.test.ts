@@ -221,6 +221,9 @@ describe("canonical Football Build a QB trait model", () => {
     expect(modelSource).toContain("BUILD_QB_RESEARCH_AUDIT");
     expect(modelSource).toContain("RESEARCH_LEVEL_RATING");
     expect(modelSource).toContain("researchTraitRatings");
+    expect(modelSource).toContain("candidateById");
+    expect(modelSource).not.toContain("normalizedSurname");
+    expect(modelSource).not.toContain("candidatesByName");
     expect(modelSource).not.toContain("AUDITED_QB_PROFILES");
 
     expect(migration).toContain("football-draft-room-2026-09-v2");
