@@ -45,7 +45,7 @@ begin
     end;
   elsif p_profile = 'Gritty' then
     return case p_slot
-      when 1 then array['Elite','Great','Good']::text[]
+      when 1 then array['Elite','Great','Great']::text[]
       when 2 then array['Great','Good','Average']::text[]
       when 3 then array['Good','Good','Good']::text[]
       when 4 then array['Good','Good','Average']::text[]
