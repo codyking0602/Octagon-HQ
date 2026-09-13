@@ -77,7 +77,7 @@ function slugifyPlayer(value: string) {
     .toLowerCase()
     .normalize("NFKD")
     .replace(/[’']/g, "")
-    .replace(/./g, "")
+    .replace(/[.]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 }
