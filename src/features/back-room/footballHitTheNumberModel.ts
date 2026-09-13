@@ -411,6 +411,14 @@ const domains: readonly FootballHitTheNumberDomain[] = [
   },
 ] as const;
 
+const playableRecognitionById = new Map(
+  queryFootballSubjects({
+    casualEligible: true,
+    includeProjectedSourceSubjects: true,
+    includeProjectedCanonicalRecognition: true,
+  }).map((subject) => [subject.id, subject]),
+);
+
 const metricSubjectsCache = new Map<string, readonly FootballHitTheNumberSubject[]>();
 
 function metricSubjects(board: FootballHitTheNumberMetricBoard) {
@@ -418,11 +426,18 @@ function metricSubjects(board: FootballHitTheNumberMetricBoard) {
   const cached = metricSubjectsCache.get(key);
   if (cached) return cached;
 
-  const casualSubjects = subjectsFor(board.group).filter((subject) => (
-    subject.casualEligible
-    && subject.recognizabilityTier !== "D"
-    && getFootballFact(subject.id, board.metricId) != null
-  ));
+  const casualSubjects = subjectsFor(board.group).flatMap((subject) => {
+    const recognition = playableRecognitionById.get(subject.id);
+    if (!recognition || recognition.recognizabilityTier === "D" || getFootballFact(subject.id, board.metricId) == null) {
+      return [];
+    }
+    return [{
+      ...subject,
+      recognizabilityTier: recognition.recognizabilityTier,
+      casualEligible: recognition.casualEligible,
+      sourceIdentityKeys: recognition.sourceIdentityKeys,
+    }];
+  });
   const highlyRecognizable = casualSubjects.filter((subject) => (
     subject.recognizabilityTier === "A" || subject.recognizabilityTier === "B"
   ));
@@ -469,8 +484,8 @@ export function footballHitTheNumberThemeSubjects(theme: FootballHitTheNumberThe
 }
 
 function themeMetricSubjects(theme: FootballHitTheNumberThemeDefinition, board: FootballHitTheNumberMetricBoard) {
-  const metricIds = new Set(metricSubjects(board).map((subject) => subject.id));
-  return footballHitTheNumberThemeSubjects(theme).filter((subject) => metricIds.has(subject.id));
+  const themeIds = new Set(footballHitTheNumberThemeSubjects(theme).map((subject) => subject.id));
+  return metricSubjects(board).filter((subject) => themeIds.has(subject.id));
 }
 
 export const FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH = 10;
@@ -499,6 +514,26 @@ function weightedValue<T>(rows: readonly { value: T; weight: number }[], random:
     if (cursor < 0) return row.value;
   }
   return rows[rows.length - 1]!.value;
+}
+
+function recognizabilityWeight(subject: FootballHitTheNumberSubject) {
+  if (subject.recognizabilityTier === "A") return 5;
+  if (subject.recognizabilityTier === "B") return 3;
+  if (subject.recognizabilityTier === "C") return 1;
+  return 0.05;
+}
+
+function recognizabilityWeightedShuffle(
+  subjects: readonly FootballHitTheNumberSubject[],
+  random: () => number,
+) {
+  return subjects
+    .map((subject) => ({
+      subject,
+      key: -Math.log(Math.max(random(), Number.EPSILON)) / recognizabilityWeight(subject),
+    }))
+    .sort((left, right) => left.key - right.key || left.subject.id.localeCompare(right.subject.id))
+    .map(({ subject }) => subject);
 }
 
 function buildTierGroups(
@@ -580,7 +615,7 @@ function slotSolution(
   metricId: FootballFactMetricId,
   random: () => number,
 ) {
-  const candidates = slots.map((slot) => shuffleLineup(
+  const candidates = slots.map((slot) => recognizabilityWeightedShuffle(
     subjects.filter((subject) => slot.accepts(subject, valueFor(subject.id, metricId))),
     random,
   ));
@@ -632,7 +667,7 @@ function balancedProgressionRandomPool(
     const required = group.filter((subject) => solutionIds.has(subject.id));
     const capacity = capacities[index]!;
     if (required.length > capacity) return [];
-    const extras = shuffleLineup(
+    const extras = recognizabilityWeightedShuffle(
       group.filter((subject) => !solutionIds.has(subject.id)),
       random,
     ).slice(0, capacity - required.length);
@@ -696,7 +731,7 @@ function curatedRandomPool(
     const band = bands[bandIndex]!;
     const alreadyInBand = band.filter((subject) => selectedIds.has(subject.id)).length;
     const needed = Math.max(0, desired[bandIndex]! - alreadyInBand);
-    const extras = shuffleLineup(
+    const extras = recognizabilityWeightedShuffle(
       band.filter((subject) => !selectedIds.has(subject.id)),
       random,
     ).slice(0, needed);
@@ -707,7 +742,7 @@ function curatedRandomPool(
   }
 
   if (selected.length < poolSize) {
-    const extras = shuffleLineup(
+    const extras = recognizabilityWeightedShuffle(
       subjects.filter((subject) => !selectedIds.has(subject.id)),
       random,
     ).slice(0, poolSize - selected.length);
@@ -984,7 +1019,7 @@ function buildCandidate(
     if (!theme) return null;
     eligible = themeMetricSubjects(theme, metricBoard);
     configurationLabel = theme.label;
-    solution = shuffleLineup(eligible, random).slice(0, pickCount);
+    solution = recognizabilityWeightedShuffle(eligible, random).slice(0, pickCount);
   } else if (formatId === "one-from-each") {
     eligible = oneFromEachSubjects(metricBoard);
     slots = oneFromEachSlots();
@@ -995,7 +1030,7 @@ function buildCandidate(
     configurationLabel = "4 stat tiers + wild card";
     solution = slotSolution(slots, eligible, metricId, random);
   } else {
-    solution = shuffleLineup(eligible, random).slice(0, pickCount);
+    solution = recognizabilityWeightedShuffle(eligible, random).slice(0, pickCount);
   }
 
   if (!solution || solution.length !== pickCount) return null;
