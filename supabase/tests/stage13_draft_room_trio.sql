@@ -2,7 +2,13 @@ begin;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
-do $$
+-- The legacy server-engine proof intentionally commits a global preparation-version
+-- rotation. Restore only the Trio preparation bit inside this test transaction.
+update private.auction_catalog_versions
+set is_preparation_version = true
+where content_version = 'football-draft-room-trio-2026-09-v1';
+
+do $
 declare
   v_admin_a uuid := extensions.gen_random_uuid();
   v_admin_b uuid := extensions.gen_random_uuid();
