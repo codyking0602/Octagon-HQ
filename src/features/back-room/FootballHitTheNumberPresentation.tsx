@@ -139,16 +139,13 @@ export function FootballHitTheNumberPresentation({
       <section className="hit-number-heading" style={{ padding: "16px 14px 14px" }}>
         {onBack ? <button className="hit-number-back" type="button" onClick={onBack}>← ALL GAMES</button> : null}
         <p className="eyebrow">HIT THE NUMBER</p>
+        <h1 className="hit-number-stat-heading">{metricLabel}</h1>
         <div className="hit-number-target" aria-label={`Target ${formatValue(target)}`}>
           <span>TARGET</span>
           <strong style={{ fontSize: "clamp(3.2rem, 14vw, 5.4rem)" }}>{formatValue(target)}</strong>
-          <small>{metricLabel.toUpperCase()}</small>
         </div>
-        <p className="hit-number-rule" style={{ marginTop: 10 }}>Get as close as possible without going over. Go over the target and you bust.</p>
-        <div className="hit-number-meta" aria-label="Current challenge context" style={{ marginTop: 10 }}>
-          <span>{league}</span>
-          {configurationLabel ? <span>{configurationLabel.toUpperCase()}</span> : null}
-        </div>
+        <p className="hit-number-theme">{configurationLabel ?? league}</p>
+        <p className="hit-number-rule" style={{ marginTop: 10 }}>Get as close as you can without going over. Go over and you bust. (Bob Barker rules)</p>
       </section>
 
       {!result && onNewBoard ? (

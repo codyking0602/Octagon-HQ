@@ -14,14 +14,31 @@ describe("daily challenge runtime cold-start isolation", () => {
     ".github/workflows/deploy-supabase.yml",
     "utf8",
   );
+  const footballGenerationRuntime = readFileSync(
+    "src/features/play/footballTodayChallengeRuntime.ts",
+    "utf8",
+  );
+  const footballAdvanceRuntime = readFileSync(
+    "src/features/play/footballTodayChallengeAdvanceRuntime.ts",
+    "utf8",
+  );
 
-  it("keeps the UFC runtime as the only eager generated runtime", () => {
-    expect(runtime).toContain(
-      'import {\n  advanceOfficialDailyRuntime,\n  buildOfficialDailySetup,\n} from "./runtime.generated.mjs";',
+  it("serves published UFC Daily reads before loading the generated UFC runtime", () => {
+    expect(runtime).not.toContain('from "./runtime.generated.mjs";');
+    expect(runtime).toContain('function loadUfcRuntime()');
+    expect(runtime).toContain('import("./runtime.generated.mjs")');
+
+    const materializationGuard = runtime.indexOf('if (request.required !== true)');
+    const materializationLoad = runtime.indexOf('const ufcRuntime = await loadUfcRuntime();');
+    expect(materializationGuard).toBeGreaterThan(-1);
+    expect(materializationLoad).toBeGreaterThan(materializationGuard);
+
+    const ufcReadReturn = runtime.lastIndexOf(
+      'if (body.mode === "get-today" || body.mode === undefined) {\n      return json(publicPayload(context));',
     );
-    expect(runtime).not.toContain(
-      'buildFootballTodayRuntimeSnapshot,\n  buildOfficialDailySetup,\n} from "./runtime.generated.mjs";',
-    );
+    const ufcAdvanceLoad = runtime.lastIndexOf('const ufcRuntime = await loadUfcRuntime();');
+    expect(ufcReadReturn).toBeGreaterThan(-1);
+    expect(ufcAdvanceLoad).toBeGreaterThan(ufcReadReturn);
   });
 
   it("keeps Who Am I authority split by sport so UFC cold starts do not import Football research", () => {
@@ -43,6 +60,17 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).toContain('const footballRuntime = await loadFootballPublicationRuntime();');
     expect(runtime).toContain('const footballRuntime = await loadFootballAdvanceRuntime();');
     expect(runtime).not.toContain('import("./football-runtime.generated.mjs")');
+  });
+
+  it("keeps Football Hit the Number generation and quality work out of ordinary Daily actions", () => {
+    expect(footballGenerationRuntime).toContain("createFootballHitTheNumberPlan");
+    expect(footballGenerationRuntime).toContain("footballHitTheNumberProgressionSlotSubjectIds");
+    expect(footballGenerationRuntime).toContain("progression_slot_subject_ids");
+    expect(footballAdvanceRuntime).toContain("progression_slot_subject_ids");
+    expect(footballAdvanceRuntime).not.toContain("footballHitTheNumberModel");
+    expect(footballAdvanceRuntime).not.toContain("createFootballHitTheNumberPlan");
+    expect(footballAdvanceRuntime).not.toContain("footballHitTheNumberPlanQuality");
+    expect(footballAdvanceRuntime).not.toContain('from "./footballTodayChallengeRuntime"');
   });
 
   it("builds separate UFC, Football publication, and Football advance artifacts under one function owner", () => {

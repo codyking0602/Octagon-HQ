@@ -86,7 +86,7 @@ describe("Hit the Number Random Pool quality", () => {
     }
   });
 
-  it("is deterministic and leaves non-themed boards on the existing planner path", () => {
+  it("is deterministic and quality-gates non-themed Random Pools without changing their format", () => {
     const themedSeed = findThemedRandomSeeds(1)[0]!;
     expect(createQualityGatedHitTheNumberFormatPlan({ seed: themedSeed, boardType: "random-pool" }))
       .toEqual(createQualityGatedHitTheNumberFormatPlan({ seed: themedSeed, boardType: "random-pool" }));
@@ -95,7 +95,10 @@ describe("Hit the Number Random Pool quality", () => {
       const seed = `quality-non-theme-${index}`;
       const raw = createHitTheNumberFormatPlan({ seed, boardType: "random-pool" });
       if (raw.format.formatId === "themed-lineup") continue;
-      expect(createQualityGatedHitTheNumberFormatPlan({ seed, boardType: "random-pool" })).toEqual(raw);
+      const gated = createQualityGatedHitTheNumberFormatPlan({ seed, boardType: "random-pool" });
+      expect(gated.format.formatId).toBe(raw.format.formatId);
+      expect(hitTheNumberRandomPoolQuality(gated).passes).toBe(true);
+      expect(gated).toEqual(createQualityGatedHitTheNumberFormatPlan({ seed, boardType: "random-pool" }));
       return;
     }
     throw new Error("No non-themed Random Pool seed found.");

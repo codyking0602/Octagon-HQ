@@ -105,7 +105,6 @@ export function HitTheNumberGameView({
       ? `${setup.filter.gender.toUpperCase()} ONLY`
       : "ALL DIVISIONS";
   const poolLabel = setup.boardType === "open-roster" ? "OPEN ROSTER" : "RANDOM POOL";
-  const formatLabel = format?.label.toUpperCase() ?? filterLabel;
   const configurationLabel = format?.configurationLabel?.toUpperCase() ?? null;
   const slotFormat = Boolean(format?.slots.length);
   const activeSlot = slotFormat
@@ -141,19 +140,13 @@ export function HitTheNumberGameView({
           <button className="hit-number-back" type="button" onClick={onBack}>← ALL GAMES</button>
         ) : null}
         <p className="eyebrow">HIT THE NUMBER</p>
+        <h1 className="hit-number-stat-heading">{stat.label}</h1>
         <div className="hit-number-target" aria-label={`Target ${setup.target}`}>
           <span>TARGET</span>
           <strong>{setup.target}</strong>
-          <small>{stat.label.toUpperCase()}</small>
         </div>
-        <p className="hit-number-rule">Get as close as possible without going over. Go over the target and you bust.</p>
-        <div className="hit-number-meta" aria-label="Current challenge rules">
-          <span>PICK {setup.pickCount}</span>
-          <span>{poolLabel}</span>
-          <span>{formatLabel}</span>
-          {configurationLabel ? <span>{configurationLabel}</span> : null}
-          {format?.formatId === "classic" ? <span>{filterLabel}</span> : null}
-        </div>
+        {configurationLabel ? <p className="hit-number-theme">{configurationLabel}</p> : null}
+        <p className="hit-number-rule">Get as close as you can without going over. Go over and you bust. (Bob Barker rules)</p>
       </section>
 
       {!result && controls ? controls : null}

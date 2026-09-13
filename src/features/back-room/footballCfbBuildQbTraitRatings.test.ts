@@ -73,7 +73,7 @@ describe("CFB Build a QB peak-season model", () => {
 
   it("projects every audited CFB trait packet to the append-only v5 backend catalog", () => {
     const migration = readFileSync(
-      "supabase/migrations/202612310105_stage12_cfb_build_qb_grading_audit.sql",
+      "supabase/migrations/202612310109_stage12_cfb_build_qb_grading_audit.sql",
       "utf8",
     );
 

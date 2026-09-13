@@ -14,6 +14,14 @@ describe("Hit the Number canonical presentation", () => {
     expect(view).toContain("hit-number-roster");
   });
 
+  it("keeps the opening hierarchy clean and uses the locked Bob Barker rule", () => {
+    expect(view).toContain('className="hit-number-stat-heading"');
+    expect(view).toContain('className="hit-number-theme"');
+    expect(view).toContain("Get as close as you can without going over. Go over and you bust. (Bob Barker rules)");
+    expect(view).not.toContain('className="hit-number-meta"');
+    expect(view).not.toContain("formatLabel");
+  });
+
   it("keeps the casual setup limited to board type plus NEW LINEUP", () => {
     expect(page).toContain("OPEN ROSTER");
     expect(page).toContain("RANDOM POOL");

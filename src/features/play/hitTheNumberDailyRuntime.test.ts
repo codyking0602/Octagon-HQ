@@ -14,7 +14,6 @@ const supplementalStatIds = [
   "ufc-main-events",
   "ufc-bonus-awards",
   "ufc-first-round-finishes",
-  "ufc-knockdowns-landed",
 ] as const;
 
 function dayAt(index: number) {
@@ -121,7 +120,7 @@ describe("official Hit the Number daily runtime", () => {
     ]));
   });
 
-  it("releases the expanded UFCStats-backed stat catalog into official Daily boards", () => {
+  it("releases the approved UFCStats-backed stat catalog into official Daily boards", () => {
     const observedSupplementalStats = new Set<string>();
 
     for (let index = 0; index < 240 && observedSupplementalStats.size < supplementalStatIds.length; index += 1) {

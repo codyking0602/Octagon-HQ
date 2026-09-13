@@ -15,8 +15,10 @@ import type {
 const FOOTBALL_LEGACY_SCHEDULE_VERSION = "football-daily-v1" as const;
 const FOOTBALL_MIDDAY_SCHEDULE_VERSION = "football-daily-v2" as const;
 const FOOTBALL_RESUMED_SCHEDULE_VERSION = "football-daily-v3" as const;
-export const FOOTBALL_TODAY_SCHEDULE_VERSION = "football-daily-v5" as const;
+const FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION = "football-daily-v5" as const;
+export const FOOTBALL_TODAY_SCHEDULE_VERSION = "football-daily-v7-hit-number-pool-cleanup" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
+const FOOTBALL_TODAY_QUESTION_REFRESH_DAY = "2026-09-13";
 const FOOTBALL_HISTORICAL_ANCHOR_DAY = "2026-08-22";
 const FOOTBALL_HISTORICAL_CYCLE: readonly OfficialDailyGameType[] = [
   "find_leader",
@@ -128,7 +130,8 @@ function dayNumber(day: string) {
 
 export function footballTodayScheduleVersionForDay(day: string): string {
   dayNumber(day);
-  if (day >= FOOTBALL_TODAY_CUTOVER_DAY) return FOOTBALL_TODAY_SCHEDULE_VERSION;
+  if (day >= FOOTBALL_TODAY_QUESTION_REFRESH_DAY) return FOOTBALL_TODAY_SCHEDULE_VERSION;
+  if (day >= FOOTBALL_TODAY_CUTOVER_DAY) return FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION;
   if (day === "2026-09-04") return FOOTBALL_MIDDAY_SCHEDULE_VERSION;
   if (day >= "2026-09-05") return FOOTBALL_RESUMED_SCHEDULE_VERSION;
   return FOOTBALL_LEGACY_SCHEDULE_VERSION;
@@ -136,8 +139,9 @@ export function footballTodayScheduleVersionForDay(day: string): string {
 
 function footballTodaySetupScheduleVersionForDay(day: string): string {
   dayNumber(day);
+  if (day >= FOOTBALL_TODAY_QUESTION_REFRESH_DAY) return FOOTBALL_TODAY_SCHEDULE_VERSION;
   return day >= FOOTBALL_TODAY_CUTOVER_DAY
-    ? FOOTBALL_TODAY_SCHEDULE_VERSION
+    ? FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION
     : FOOTBALL_LEGACY_SCHEDULE_VERSION;
 }
 
