@@ -183,14 +183,18 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
     throw new Error(`Build a QB research audit must contain exactly ${BUILD_QB_MATURE_POOL_SIZE} quarterbacks`);
   }
 
-  return BUILD_QB_RESEARCH_AUDIT.map((input) => {
+  const identityMismatches = BUILD_QB_RESEARCH_AUDIT.flatMap((input) => {
     const matches = candidatesByName.get(normalizedName(input.name)) ?? [];
-    if (matches.length !== 1) {
-      throw new Error(
-        `Build a QB research audit requires one exact canonical NFL QB for ${input.name}; found ${matches.length}`,
-      );
-    }
-    const candidate = matches[0]!;
+    return matches.length === 1 ? [] : [`${input.name} (${matches.length})`];
+  });
+  if (identityMismatches.length) {
+    throw new Error(
+      `Build a QB research audit requires one exact canonical NFL QB per subject; mismatches: ${identityMismatches.join(", ")}`,
+    );
+  }
+
+  return BUILD_QB_RESEARCH_AUDIT.map((input) => {
+    const candidate = candidatesByName.get(normalizedName(input.name))![0]!;
     if (
       candidate.recognizabilityTier !== "A"
       && candidate.recognizabilityTier !== "B"
