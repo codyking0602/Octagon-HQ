@@ -635,3 +635,88 @@
     max-width: 96px;
   }
 }
+
+
+/* Draft Room keeps the shared Auction structure but uses Football's powder-blue identity. */
+.app-shell--football-room .football-room-page.auction-page {
+  --draft-room-accent: var(--football-brand-blue, #8EBCE6);
+  --draft-room-accent-rgb: 142, 188, 230;
+}
+
+.app-shell--football-room .football-room-page.auction-page .eyebrow,
+.app-shell--football-room .football-room-page.auction-page .auction-board__back > span:first-child,
+.app-shell--football-room .football-room-page.auction-page .auction-board__back small,
+.app-shell--football-room .football-room-page.auction-page .auction-scoreboard em,
+.app-shell--football-room .football-room-page.auction-page .auction-current__item small,
+.app-shell--football-room .football-room-page.auction-page .auction-opponents__back,
+.app-shell--football-room .football-room-page.auction-page .auction-opponents__summary small,
+.app-shell--football-room .football-room-page.auction-page .auction-catalog__number,
+.app-shell--football-room .football-room-page.auction-page .auction-catalog__continue small,
+.app-shell--football-room .football-room-page.auction-page .auction-bid p,
+.app-shell--football-room .football-room-page.auction-page .auction-error {
+  color: var(--draft-room-accent);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-hero {
+  background:
+    radial-gradient(circle at 90% 0, rgba(var(--draft-room-accent-rgb), .2), transparent 45%),
+    var(--surface);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-board__header,
+.app-shell--football-room .football-room-page.auction-page .auction-opponents__summary {
+  border-color: rgba(var(--draft-room-accent-rgb), .55);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-opponents__summary {
+  background:
+    radial-gradient(circle at 92% 0, rgba(var(--draft-room-accent-rgb), .18), transparent 48%),
+    var(--surface);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-member-avatar {
+  border-color: rgba(var(--draft-room-accent-rgb), .65);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-current__item {
+  background: radial-gradient(circle, rgba(var(--draft-room-accent-rgb), .2), transparent 65%);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-current__status,
+.app-shell--football-room .football-room-page.auction-page .auction-bid fieldset button.is-selected {
+  border-color: var(--draft-room-accent);
+  background: var(--draft-room-accent);
+  color: #07111d;
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-final {
+  background:
+    radial-gradient(circle at 50% 0, rgba(var(--draft-room-accent-rgb), .22), transparent 62%),
+    var(--surface);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-catalog li {
+  background:
+    radial-gradient(circle at 80% 10%, rgba(var(--draft-room-accent-rgb), .18), transparent 48%),
+    var(--surface);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-catalog li.is-selected,
+.app-shell--football-room .football-room-page.auction-page .auction-catalog__tabs button.is-active {
+  border-color: var(--draft-room-accent);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-catalog li.is-selected {
+  box-shadow: 0 0 0 1px var(--draft-room-accent);
+}
+
+.app-shell--football-room .football-room-page.auction-page .auction-catalog__tabs button.is-active {
+  background: rgba(var(--draft-room-accent-rgb), .14);
+  color: #fff;
+}
+
+.app-shell--football-room .football-room-page.auction-page .primary-action {
+  border-color: var(--draft-room-accent) !important;
+  background: var(--draft-room-accent) !important;
+  color: #07111d !important;
+}
