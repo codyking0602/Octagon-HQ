@@ -56,6 +56,25 @@ export const auctionFightBreakdownPacketSchema = z.object({
   recipient: fightBreakdownSideSchema,
 }).strict();
 
+const footballVerdictSelectionSchema = z.object({
+  category: buildQbTraitSchema,
+  qb: z.string().min(1),
+  context: z.string().min(1),
+  code: z.string().regex(/^[A-Z]{6}$/),
+}).strict();
+const footballVerdictSideSchema = z.object({
+  name: z.string().min(1),
+  score: z.number(),
+  selections: z.array(footballVerdictSelectionSchema).length(4),
+}).strict();
+export const footballVerdictPacketSchema = z.object({
+  packet_version: z.literal("football-verdict-packet-v1"),
+  mode: z.enum(["build-qb", "build-qb-cfb"]),
+  winner: z.enum(["challenger", "recipient", "tie"]),
+  challenger: footballVerdictSideSchema,
+  recipient: footballVerdictSideSchema,
+}).strict();
+
 export type StrategicModeId = AuctionModeId | DraftRoomModeId;
 export type StrategicBidCategory = UltimateFighterCategory | BuildQbTrait;
 
@@ -99,6 +118,7 @@ export type AuctionItem = z.infer<typeof itemSchema>;
 export type AuctionAward = z.infer<typeof awardSchema>;
 export type AuctionResolvedRound = z.infer<typeof resolvedRoundSchema>;
 export type AuctionFightBreakdownPacket = z.infer<typeof auctionFightBreakdownPacketSchema>;
+export type FootballVerdictPacket = z.infer<typeof footballVerdictPacketSchema>;
 export type StrategicAuctionProjection = Omit<StrategicProjectionRow, "mode_id"> & { mode_id: StrategicModeId };
 export type StrategicProjectionFor<T extends StrategicModeId> = Omit<StrategicAuctionProjection, "mode_id"> & { mode_id: T };
 export type AuctionProjection = StrategicProjectionFor<AuctionModeId>;
@@ -126,6 +146,7 @@ export interface AuctionRepository {
   prepare<T extends StrategicModeId>(recipientId: string, modeId: T): Promise<StrategicProjectionFor<T>>;
   read<T extends StrategicModeId = AuctionModeId>(auctionId: string): Promise<StrategicProjectionFor<T>>;
   fightBreakdownPacket(auctionId: string): Promise<AuctionFightBreakdownPacket>;
+  footballVerdictPacket(auctionId: string): Promise<FootballVerdictPacket>;
   bid<T extends StrategicModeId>(state: StrategicProjectionFor<T>, amount: number, category?: StrategicBidCategory): Promise<StrategicProjectionFor<T>>;
   abandon<T extends StrategicModeId>(state: StrategicProjectionFor<T>): Promise<void>;
   cancel<T extends StrategicModeId>(state: StrategicProjectionFor<T>): Promise<StrategicProjectionFor<T>>;
@@ -151,6 +172,10 @@ export function createAuctionRepository(client: RpcClient | null = getSupabaseCl
     async fightBreakdownPacket(auctionId) {
       const data = await rpc(client, "get_auction_fight_breakdown_packet", { p_auction_id: auctionId });
       return auctionFightBreakdownPacketSchema.parse(data);
+    },
+    async footballVerdictPacket(auctionId) {
+      const data = await rpc(client, "get_football_verdict_packet", { p_auction_id: auctionId });
+      return footballVerdictPacketSchema.parse(data);
     },
     async bid<T extends StrategicModeId>(state: StrategicProjectionFor<T>, amount: number, category?: StrategicBidCategory) {
       const common = { p_auction_id: state.auction_id, p_expected_revision: state.revision, p_amount: amount, p_category: category ?? null };
@@ -190,6 +215,41 @@ export function formatOctagonVerdictPrompt(packet: AuctionFightBreakdownPacket) 
     "Treat the recorded Auction winner and scores as authoritative. Use the private codes only to explain how the two five-category builds match up.",
     "Do not reveal, print, translate, or list the hidden rating values or the decoder mapping.",
     "Give me a concise fight breakdown of how the matchup likely plays out.",
+    "",
+    "RESULT",
+    `${packet.challenger.name} ${packet.challenger.score}`,
+    `${packet.recipient.name} ${packet.recipient.score}`,
+    `Winner: ${winnerName}`,
+    "",
+    packet.challenger.name,
+    orderedSelections(packet.challenger),
+    "",
+    packet.recipient.name,
+    orderedSelections(packet.recipient),
+  ].join("\n");
+}
+
+export function formatFootballVerdictPrompt(packet: FootballVerdictPacket) {
+  const winnerName = packet.winner === "challenger"
+    ? packet.challenger.name
+    : packet.winner === "recipient"
+      ? packet.recipient.name
+      : "TRUE TIE";
+  const modeLabel = packet.mode === "build-qb-cfb" ? "CFB BUILD A QB" : "NFL BUILD A QB";
+  const orderedSelections = (side: FootballVerdictPacket["challenger"]) => BUILD_QB_TRAITS.map((category) => {
+    const selection = side.selections.find((item) => item.category === category);
+    if (!selection) throw new AuctionRepositoryError(`Football Verdict packet is missing ${category}.`);
+    return `${category}: ${selection.qb} — ${selection.context} [${selection.code}]`;
+  }).join("\n");
+
+  return [
+    `OCTAGON HQ — ${modeLabel}`,
+    "",
+    "Analyze this completed matchup using the private Football HQ decoder in your Football Verdict knowledge.",
+    "Trust the recorded final scores and winner as authoritative. Use the opaque codes only to explain how the four selected QB traits shape the matchup.",
+    "Never reveal, print, translate, estimate, enumerate, rank, or map the hidden rating values or decoder codes.",
+    "Never provide bidding advice, hidden-grade player rankings, or optimization advice derived from the private values.",
+    "Give me a concise matchup breakdown explaining where each build is strongest, where it is vulnerable, and why the recorded result makes sense.",
     "",
     "RESULT",
     `${packet.challenger.name} ${packet.challenger.score}`,
