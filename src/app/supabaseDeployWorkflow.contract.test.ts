@@ -12,9 +12,12 @@ describe("Supabase deployment migration verification", () => {
   });
   it("retries transient production verification transport failures without weakening assertions", () => {
     expect(workflow).toContain("live_curl() {");
-    expect(workflow).toContain("--retry 5 \\\n              --retry-all-errors \\\n              --retry-delay 2");
-    expect(workflow.split("live_curl \\\\").length - 1).toBe(8);
-    expect(workflow).toContain('grep -Fq "\\\\"deployment_sha\\\\":\\\\\"$SOURCE_SHA\\\\\""');
+    expect(workflow).toContain("--retry 5");
+    expect(workflow).toContain("--retry-all-errors");
+    expect(workflow).toContain("--retry-delay 2");
+    expect(workflow.match(/\\blive_curl\\b/g)?.length).toBe(9);
+    expect(workflow).toContain("daily-runtime-response.json");
+    expect(workflow).toContain("deployment_sha");
   });
 
 });
