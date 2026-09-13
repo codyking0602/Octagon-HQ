@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const css = readFileSync(new URL("../../styles/football-foundation.css", import.meta.url), "utf8");
-const page = readFileSync(new URL("./FootballDraftRoomPage.tsx", import.meta.url), "utf8");
+const css = readFileSync(resolve(process.cwd(), "src/styles/football-foundation.css"), "utf8");
+const page = readFileSync(resolve(process.cwd(), "src/features/back-room/FootballDraftRoomPage.tsx"), "utf8");
 
 describe("Draft Room Trio presentation contract", () => {
   it("keeps all three package identities wrap-safe instead of truncating names", () => {
