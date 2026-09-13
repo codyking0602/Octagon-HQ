@@ -1,8 +1,4 @@
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2.110.7";
-import {
-  advanceOfficialDailyRuntime,
-  buildOfficialDailySetup,
-} from "./runtime.generated.mjs";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 
 type OfficialDailyGameType =
@@ -53,7 +49,24 @@ const safeError = (status: number, code: string, message: string) => json({
 
 type JsonRecord = Record<string, unknown>;
 
-type DailyAdvanceRuntime = typeof advanceOfficialDailyRuntime;
+type DailyAdvanceRuntime = (
+  context: OfficialDailyRuntimeContext,
+  action: unknown,
+) => {
+  submissionState: JsonRecord;
+  publicState: JsonRecord;
+  complete: boolean;
+  finalSubmission: unknown;
+};
+
+type UfcRuntimeModule = {
+  buildOfficialDailySetup: (
+    gameType: OfficialDailyGameType,
+    day: string,
+    scheduleVersion: string,
+  ) => JsonRecord;
+  advanceOfficialDailyRuntime: DailyAdvanceRuntime;
+};
 
 type FootballPublicationRuntimeModule = {
   buildFootballTodayPersistenceSetup: (day: string) => unknown;
@@ -63,8 +76,16 @@ type FootballAdvanceRuntimeModule = {
   advanceFootballOfficialDailyRuntime: DailyAdvanceRuntime;
 };
 
+let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
 let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
+
+function loadUfcRuntime() {
+  if (!ufcRuntimePromise) {
+    ufcRuntimePromise = import("./runtime.generated.mjs") as Promise<UfcRuntimeModule>;
+  }
+  return ufcRuntimePromise;
+}
 
 function loadFootballPublicationRuntime() {
   if (!footballPublicationRuntimePromise) {
@@ -131,9 +152,9 @@ function childPublication(publication: JsonRecord) {
   };
 }
 
-function buildDailyComboSetup(day: string, scheduleVersion: string) {
-  const blindRank = buildOfficialDailySetup("blind_rank_5", day, scheduleVersion) as JsonRecord;
-  const keepCut = buildOfficialDailySetup("keep_4_cut_4", day, scheduleVersion) as JsonRecord;
+function buildDailyComboSetup(day: string, scheduleVersion: string, ufcRuntime: UfcRuntimeModule) {
+  const blindRank = ufcRuntime.buildOfficialDailySetup("blind_rank_5", day, scheduleVersion);
+  const keepCut = ufcRuntime.buildOfficialDailySetup("keep_4_cut_4", day, scheduleVersion);
   const blindRankChild = childPublication(blindRank);
   const keepCutChild = childPublication(keepCut);
   const blindRankInitial = requiredRecord(blindRankChild.public_setup.initial_state, "Blind Rank initial state");
@@ -207,7 +228,7 @@ function comboChildContext(
 function advanceDailyCombo(
   context: OfficialDailyRuntimeContext & JsonRecord,
   action: unknown,
-  advanceRuntime: DailyAdvanceRuntime = advanceOfficialDailyRuntime,
+  advanceRuntime: DailyAdvanceRuntime,
 ) {
   const stage = comboStage(context);
   const advanced = advanceRuntime(comboChildContext(context, stage), action);
@@ -319,18 +340,19 @@ async function materializeToday(admin: SupabaseClient) {
     };
   }
 
+  const ufcRuntime = await loadUfcRuntime();
   let gameType = expectedGame;
   let fallbackReason: string | null = null;
   let publication;
   try {
     publication = gameType === "keep_4_cut_4"
-      ? buildDailyComboSetup(day, scheduleVersion)
-      : buildOfficialDailySetup(gameType, day, scheduleVersion);
+      ? buildDailyComboSetup(day, scheduleVersion, ufcRuntime)
+      : ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion);
   } catch {
     if (gameType === "find_leader") throw new Error("The official Find the Leader fallback could not be materialized.");
     fallbackReason = `materialization_failed:${gameType}`;
     gameType = "find_leader";
-    publication = buildOfficialDailySetup(gameType, day, scheduleVersion);
+    publication = ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion);
   }
 
   const published = await admin.rpc("publish_daily_challenge_setup", {
@@ -656,9 +678,10 @@ Deno.serve(async (request) => {
       return safeError(409, "STALE_PROGRESS", "Official daily progress changed on another device. Refresh and continue from the latest state.");
     }
 
+    const ufcRuntime = await loadUfcRuntime();
     const advanced = isDailyCombo(context)
-      ? advanceDailyCombo(context, body.action)
-      : advanceOfficialDailyRuntime(context, body.action);
+      ? advanceDailyCombo(context, body.action, ufcRuntime.advanceOfficialDailyRuntime)
+      : ufcRuntime.advanceOfficialDailyRuntime(context, body.action);
     const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
       p_daily_challenge_id: materialized.dailyChallengeId,
       p_profile_id: profileId,
