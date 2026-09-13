@@ -65,7 +65,7 @@ describe("canonical Football Build a QB trait model", () => {
 
   it("derives exactly 60 playable profiles from canonical Football owners", () => {
     const profiles = buildFootballBuildQbTraitProfiles();
-    expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v2");
+    expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v3");
     expect(profiles).toHaveLength(BUILD_QB_MATURE_POOL_SIZE);
     expect(new Set(profiles.map((profile) => profile.subjectId)).size).toBe(BUILD_QB_MATURE_POOL_SIZE);
     expect(new Set(profiles.map((profile) => profile.name)).size).toBe(BUILD_QB_MATURE_POOL_SIZE);
@@ -80,6 +80,16 @@ describe("canonical Football Build a QB trait model", () => {
       ]),
     );
     expect(bands).toEqual({ marquee: 10, strong: 14, core: 18, lower: 10, wildcard: 8 });
+
+    const names = new Set(profiles.map((profile) => profile.name));
+    for (const added of [
+      "Trevor Lawrence", "Tua Tagovailoa", "C.J. Stroud", "Brock Purdy", "Jordan Love",
+      "Jayden Daniels", "Derek Carr", "Ryan Tannehill", "Nick Foles", "Carson Wentz", "Jimmy Garoppolo",
+    ]) expect(names.has(added), `missing approved NFL replacement ${added}`).toBe(true);
+    for (const removed of [
+      "Johnny Unitas", "Bob Griese", "Dan Fouts", "Trent Green", "Ken Anderson", "Ken Stabler",
+      "Sonny Jurgensen", "Len Dawson", "Rich Gannon", "Mark Brunell", "Matt Schaub",
+    ]) expect(names.has(removed), `removed NFL QB still present: ${removed}`).toBe(false);
   });
 
   it("keeps every grade calculated, bounded and evidence-backed", () => {
