@@ -23,10 +23,15 @@ import {
 } from "../play/auctionRepository";
 import {
   BUILD_QB_TRAITS,
+  TRIO_POSITIONS,
   draftRoomModeDefinition,
   draftRoomModes,
+  isCfbDraftRoomMode,
+  isDraftRoomModeId,
+  isTrioDraftRoomMode,
   type BuildQbTrait,
   type DraftRoomModeId,
+  type TrioPosition,
 } from "../play/draftRoomContract";
 
 export { BUILD_QB_TRAITS as BUILD_A_QB_TRAITS } from "../play/draftRoomContract";
@@ -49,11 +54,80 @@ function draftRoomVisualIdentity(modeId: DraftRoomModeId, itemReference: string 
 }
 
 function draftRoomHeroImage(modeId: DraftRoomModeId) {
-  return modeId === "build-qb-cfb" ? CFB_BUILD_QB_HERO_IMAGE : BUILD_QB_HERO_IMAGE;
+  return isCfbDraftRoomMode(modeId) ? CFB_BUILD_QB_HERO_IMAGE : BUILD_QB_HERO_IMAGE;
 }
 
 function draftRoomTitle(modeId: DraftRoomModeId) {
-  return modeId === "build-qb-cfb" ? "CFB Build a QB" : "Build a QB";
+  return draftRoomModeDefinition(modeId).displayName;
+}
+
+export interface TrioPackagePlayer {
+  position: TrioPosition;
+  label: string;
+}
+
+export function parseTrioPackageLabel(displayLabel: string): TrioPackagePlayer[] {
+  const players = displayLabel.split(" | ").map((label) => label.trim()).filter(Boolean);
+  return TRIO_POSITIONS.map((position, index) => ({
+    position,
+    label: players[index] ?? "Unknown player",
+  }));
+}
+
+function TrioPackageCard({ displayLabel, compact = false }: { displayLabel: string; compact?: boolean }) {
+  return (
+    <div className={`draft-room-trio-package${compact ? " draft-room-trio-package--compact" : ""}`}>
+      {parseTrioPackageLabel(displayLabel).map((player) => (
+        <div className="draft-room-trio-package__player" key={player.position}>
+          <small>{player.position}</small>
+          <strong>{player.label}</strong>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TrioComparison({ state }: { state: DraftRoomProjection }) {
+  const challengerAwards = state.awarded_collections
+    .filter((item) => item.awarded_to === state.challenger_id)
+    .sort((a, b) => a.resolved_round - b.resolved_round);
+  const recipientAwards = state.awarded_collections
+    .filter((item) => item.awarded_to === state.recipient_id)
+    .sort((a, b) => a.resolved_round - b.resolved_round);
+
+  return (
+    <section className="draft-room-trio-rosters surface-card" aria-label="Trio roster comparison">
+      <header className="auction-collections__header">
+        <div><strong>{state.challenger_display_name}</strong></div>
+        <span>VS</span>
+        <div><strong>{state.recipient_display_name}</strong></div>
+      </header>
+      <div className="draft-room-trio-rosters__grid">
+        <div>
+          {challengerAwards.map((award, index) => (
+            <article key={award.deck_position}>
+              <small>TRIO {index + 1}</small>
+              <TrioPackageCard displayLabel={award.display_label} compact />
+            </article>
+          ))}
+          {Array.from({ length: Math.max(0, 3 - challengerAwards.length) }, (_, index) => (
+            <article className="is-open" key={`challenger-open-${index}`}><strong>OPEN TRIO</strong></article>
+          ))}
+        </div>
+        <div>
+          {recipientAwards.map((award, index) => (
+            <article key={award.deck_position}>
+              <small>TRIO {index + 1}</small>
+              <TrioPackageCard displayLabel={award.display_label} compact />
+            </article>
+          ))}
+          {Array.from({ length: Math.max(0, 3 - recipientAwards.length) }, (_, index) => (
+            <article className="is-open" key={`recipient-open-${index}`}><strong>OPEN TRIO</strong></article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function buildQbTeamStyle(identity: BuildQbVisualIdentity): CSSProperties {
@@ -158,7 +232,7 @@ function DraftRoomBoard({
   state: DraftRoomProjection;
   profileId: string;
   busy: boolean;
-  onBid(amount: number, category: BuildQbTrait): void;
+  onBid(amount: number, category?: BuildQbTrait): void;
   onReload(): void;
   onAbandon(): void;
   onDecline(): void;
@@ -166,6 +240,7 @@ function DraftRoomBoard({
   onNewRoom(): void;
 }) {
   const mode = draftRoomModeDefinition(state.mode_id);
+  const trioMode = isTrioDraftRoomMode(state.mode_id);
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<BuildQbTrait | "">("");
   const [formError, setFormError] = useState("");
@@ -184,20 +259,20 @@ function DraftRoomBoard({
   const latestAward = latestRound
     ? state.awarded_collections.find((item) => item.resolved_round === latestRound.round)
     : null;
-  const currentQbIdentity = draftRoomVisualIdentity(state.mode_id, state.current_item?.item_reference);
+  const currentQbIdentity = trioMode ? null : draftRoomVisualIdentity(state.mode_id, state.current_item?.item_reference);
 
   const status = state.lifecycle_state === "prepared"
-    ? "Your first bid sends this Build a QB room"
+    ? `Your first bid sends this ${trioMode ? "Trio" : "Build a QB"} room`
     : state.lifecycle_state === "sent"
       ? profileId === state.recipient_id
-        ? "Your first bid accepts this Build a QB room"
+        ? `Your first bid accepts this ${trioMode ? "Trio" : "Build a QB"} room`
         : "Waiting for opponent's first bid"
       : state.lifecycle_state === "active" && state.current_user_submitted_bid
         ? "Bid locked · waiting for opponent"
         : state.lifecycle_state === "active"
           ? "Your sealed bid is required"
           : state.lifecycle_state === "completed"
-            ? "Build complete"
+            ? (trioMode ? "Rosters complete" : "Build complete")
             : state.lifecycle_state === "cancelled"
               ? "Room cancelled"
               : "Challenge declined";
@@ -210,9 +285,9 @@ function DraftRoomBoard({
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    const nextError = validateAuctionBid(amount, maximum, true, category, BUILD_QB_TRAITS);
+    const nextError = validateAuctionBid(amount, maximum, !trioMode, category, BUILD_QB_TRAITS);
     setFormError(nextError);
-    if (!nextError && category) onBid(Number(amount), category);
+    if (!nextError) onBid(Number(amount), trioMode ? undefined : category || undefined);
   }
 
   return (
@@ -257,14 +332,18 @@ function DraftRoomBoard({
           <span>TIES → {tieName}</span>
         </div>
         <div
-          className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}`}
+          className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}${trioMode ? " draft-room-trio-current" : ""}`}
           style={currentQbIdentity ? buildQbTeamStyle(currentQbIdentity) : undefined}
         >
-          <small>CURRENT QB</small>
-          <div className="build-qb-current__identity">
-            {currentQbIdentity ? <BuildQbTeamMark identity={currentQbIdentity} /> : null}
-            <h2>{state.current_item?.display_label ?? (terminal ? "BUILD LOCKED" : "LOADING")}</h2>
-          </div>
+          <small>{trioMode ? "CURRENT TRIO" : "CURRENT QB"}</small>
+          {trioMode && state.current_item?.display_label ? (
+            <TrioPackageCard displayLabel={state.current_item.display_label} />
+          ) : (
+            <div className="build-qb-current__identity">
+              {currentQbIdentity ? <BuildQbTeamMark identity={currentQbIdentity} /> : null}
+              <h2>{state.current_item?.display_label ?? (terminal ? "BUILD LOCKED" : "LOADING")}</h2>
+            </div>
+          )}
         </div>
         <strong className="auction-current__status">{status}</strong>
       </section>
@@ -272,9 +351,9 @@ function DraftRoomBoard({
       {latestRound ? (
         <section className="auction-result surface-card" aria-label="Latest Draft Room result">
           <p className="eyebrow">{latestRound.forced ? "FORCED $1 ASSIGNMENT" : `ROUND ${latestRound.round} RESULT`}</p>
-          <h2>{latestAward?.display_label ?? "Resolved QB"}</h2>
+          <h2>{latestAward ? (trioMode ? "Trio awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : "Resolved QB")}</h2>
           <p>
-            {latestAward?.category ? `${latestAward.category} · ` : ""}
+            {trioMode && latestAward ? `${latestAward.display_label} · ` : latestAward?.category ? `${latestAward.category} · ` : ""}
             {latestRound.forced
               ? `assigned for $${latestRound.charged_amount}`
               : `${state.challenger_display_name} $${latestRound.challenger_bid} · ${state.recipient_display_name} $${latestRound.recipient_bid}`}
@@ -285,7 +364,7 @@ function DraftRoomBoard({
       {state.lifecycle_state === "completed"
         && state.challenger_final_score !== null
         && state.recipient_final_score !== null ? (
-        <section className="auction-final surface-card" aria-label="Build a QB final result">
+        <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : "Build a QB final result"}>
           <p className="eyebrow">FINAL BUILD SCORE</p>
           <h2>
             {state.is_tie
@@ -295,34 +374,40 @@ function DraftRoomBoard({
                 : `${state.recipient_display_name} WINS`}
           </h2>
           <div className="auction-final__scores">
-            <article><small>{state.challenger_display_name}</small><strong>{state.challenger_final_score}</strong></article>
+            <article><small>{state.challenger_display_name}</small><strong>{trioMode ? Math.round(state.challenger_final_score) : state.challenger_final_score}</strong></article>
             <b>–</b>
-            <article><small>{state.recipient_display_name}</small><strong>{state.recipient_final_score}</strong></article>
+            <article><small>{state.recipient_display_name}</small><strong>{trioMode ? Math.round(state.recipient_final_score) : state.recipient_final_score}</strong></article>
           </div>
         </section>
       ) : null}
 
-      <BuildComparison state={state} />
+      {trioMode ? <TrioComparison state={state} /> : <BuildComparison state={state} />}
 
       {canBid ? (
         <form className="auction-bid surface-card" onSubmit={submit}>
-          <fieldset>
-            <legend>ASSIGN THIS QB</legend>
-            {BUILD_QB_TRAITS.map((trait) => (
-              <button
-                type="button"
-                key={trait}
-                className={category === trait ? "is-selected" : ""}
-                disabled={usedCategories.has(trait)}
-                onClick={() => setCategory(trait)}
-              >
-                {trait}
-              </button>
-            ))}
-          </fieldset>
-          {category ? (
-            <p className="challenge-center__hint" aria-live="polite">{BUILD_A_QB_TRAIT_HELP[category]}</p>
-          ) : null}
+          {!trioMode ? (
+            <>
+              <fieldset>
+                <legend>ASSIGN THIS QB</legend>
+                {BUILD_QB_TRAITS.map((trait) => (
+                  <button
+                    type="button"
+                    key={trait}
+                    className={category === trait ? "is-selected" : ""}
+                    disabled={usedCategories.has(trait)}
+                    onClick={() => setCategory(trait)}
+                  >
+                    {trait}
+                  </button>
+                ))}
+              </fieldset>
+              {category ? (
+                <p className="challenge-center__hint" aria-live="polite">{BUILD_A_QB_TRAIT_HELP[category]}</p>
+              ) : null}
+            </>
+          ) : (
+            <p className="draft-room-trio-bid-note">Bid on the full QB / RB / WR package.</p>
+          )}
           <label>
             <span>SEALED BID · MAX ${maximum}</span>
             <div>
@@ -380,7 +465,8 @@ export default function FootballDraftRoomPage() {
   const [error, setError] = useState("");
   const submitting = useRef(false);
   const auctionId = params.get("auction") ?? "";
-  const requestedMode: DraftRoomModeId = params.get("mode") === "build-qb-cfb" ? "build-qb-cfb" : "build-qb";
+  const requestedModeParam = params.get("mode") ?? "";
+  const requestedMode: DraftRoomModeId = isDraftRoomModeId(requestedModeParam) ? requestedModeParam : "build-qb";
   const requestedModeDefinition = draftRoomModeDefinition(requestedMode);
 
   useEffect(() => {
@@ -551,13 +637,13 @@ export default function FootballDraftRoomPage() {
       <section className="page-heading">
         <p className="eyebrow">DRAFT ROOM</p>
         <h1>Draft Room</h1>
-        <p>Football’s sealed-bid strategy room. Bid smart, build your quarterback, and beat your opponent.</p>
+        <p>Football’s sealed-bid strategy room. Bid smart, build your roster, and beat your opponent.</p>
       </section>
 
       <section className="auction-hero surface-card" aria-labelledby="build-a-qb-title">
         <p className="eyebrow">LAUNCH ROOM</p>
         <h2 id="build-a-qb-title">{requestedModeDefinition.displayName}</h2>
-        <p>{requestedModeDefinition.description} Bid from a ${requestedModeDefinition.startingBankroll} bankroll; {requestedModeDefinition.rounds} QBs appear and each side finishes with {requestedModeDefinition.requiredSelectionsPerPlayer}.</p>
+        <p>{requestedModeDefinition.description} Bid from a ${requestedModeDefinition.startingBankroll} bankroll; {requestedModeDefinition.rounds} {requestedModeDefinition.format === "trio" ? "trios" : "QBs"} appear and each side finishes with {requestedModeDefinition.requiredSelectionsPerPlayer}.</p>
         <div className="draft-room-mode-switcher" role="group" aria-label="Draft Room mode">
           {draftRoomModes.map((mode) => (
             <button
@@ -570,8 +656,8 @@ export default function FootballDraftRoomPage() {
             </button>
           ))}
         </div>
-        <div className="auction-catalog__tabs" aria-label="Build a QB traits">
-          {BUILD_QB_TRAITS.map((trait) => <span key={trait}>{trait}</span>)}
+        <div className="auction-catalog__tabs" aria-label={requestedModeDefinition.format === "trio" ? "Trio positions" : "Build a QB traits"}>
+          {(requestedModeDefinition.format === "trio" ? TRIO_POSITIONS : BUILD_QB_TRAITS).map((label) => <span key={label}>{label}</span>)}
         </div>
       </section>
 
@@ -585,14 +671,14 @@ export default function FootballDraftRoomPage() {
           busy={busy}
           onSelect={setSelectedOpponent}
         />
-        <p>Preparing fixes the private 10-QB deck. Refreshing cannot reroll it.</p>
+        <p>Preparing fixes the private {requestedModeDefinition.rounds}-{requestedModeDefinition.format === "trio" ? "trio" : "QB"} room. Refreshing cannot reroll it.</p>
         <button
           className="primary-action"
           type="button"
           disabled={!repository || !selectedOpponent || busy}
           onClick={() => void prepare()}
         >
-          {busy ? "PREPARING…" : `PREPARE ${requestedMode === "build-qb-cfb" ? "CFB" : "NFL"} BUILD A QB`}
+          {busy ? "PREPARING…" : `PREPARE ${requestedModeDefinition.displayName.toUpperCase()}`}
         </button>
       </section>
 
