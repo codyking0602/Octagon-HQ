@@ -91,6 +91,14 @@ for (const bundle of bundles) {
       || typeof publication !== "object"
       || typeof publication.setupKey !== "string"
       || !publication.setupKey
+      || typeof publication.scheduleVersion !== "string"
+      || !publication.scheduleVersion
+      || typeof publication.gameType !== "string"
+      || !publication.gameType
+      || !publication.publicSetup
+      || typeof publication.publicSetup !== "object"
+      || !publication.privateSetupEvidence
+      || typeof publication.privateSetupEvidence !== "object"
     ) {
       throw new Error("Football daily publication bundle failed its deterministic smoke proof.");
     }
