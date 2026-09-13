@@ -137,7 +137,7 @@ describe("Football Today’s Challenge session", () => {
       "cfb-team-wins",
       "cfb-team-points-per-game",
       "cfb-team-point-differential",
-    ])).toContain(String(refreshedHitTheNumber.publicSetup.metric_id));
+    ]).has(String(refreshedHitTheNumber.publicSetup.metric_id))).toBe(true);
     expect(refreshedHitTheNumber.setupKey).not.toContain("nfl-team-defensive-interceptions");
 
     const transition = Array.from({ length: 42 }, (_unused, offset) => {
