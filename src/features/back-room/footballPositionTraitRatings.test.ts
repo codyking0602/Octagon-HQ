@@ -12,7 +12,7 @@ describe("canonical Football Build a QB trait model", () => {
     const profiles = buildFootballBuildQbTraitProfiles();
     expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v2");
     expect(profiles).toHaveLength(BUILD_QB_MATURE_POOL_SIZE);
-    expect(new Set(profiles.map((profile) => profile.subjectId))).toHaveLength?.(BUILD_QB_MATURE_POOL_SIZE);
+    expect(new Set(profiles.map((profile) => profile.subjectId)).size).toBe(BUILD_QB_MATURE_POOL_SIZE);
     expect(new Set(profiles.map((profile) => profile.name)).size).toBe(BUILD_QB_MATURE_POOL_SIZE);
 
     const bands = Object.fromEntries(
