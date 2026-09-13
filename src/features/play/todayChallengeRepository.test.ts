@@ -79,6 +79,54 @@ describe("Today’s Challenge runtime repository", () => {
     expect(advanced.progressRevision).toBe(3);
   });
 
+  it("sends exactly one Football backend request per Hit the Number toggle", async () => {
+    const football = (revision: number, selectedIds: string[]) => runtimeProjection({
+      sport: "football",
+      game_type: "hit_the_number",
+      setup_key: "football-hit-the-number:test",
+      content_version: "football-hit-the-number-daily-v3",
+      public_setup: {
+        metric_id: "nfl-team-points-per-game",
+        pick_count: 5,
+        candidates: [],
+      },
+      progress_revision: revision,
+      public_state: { complete: false, selected_ids: selectedIds },
+      action_history: selectedIds.map((fighter_id) => ({ fighter_id })),
+    });
+    const { client, invoke } = clientWithResponses([
+      { data: football(3, ["2007-ne"]), error: null },
+      { data: football(4, []), error: null },
+    ]);
+    const repository = createTodayChallengeRepository(client as never, "football")!;
+
+    const first = await repository.advance(
+      { id: dailyId, progressRevision: 2, actionHistory: [] },
+      { fighter_id: "2007-ne" },
+    );
+    await repository.advance(first, { fighter_id: "2007-ne" });
+
+    expect(invoke).toHaveBeenCalledTimes(2);
+    expect(invoke).toHaveBeenNthCalledWith(1, "daily-challenge-runtime", {
+      body: {
+        mode: "advance",
+        sport: "football",
+        daily_challenge_id: dailyId,
+        revision: 2,
+        action: { fighter_id: "2007-ne" },
+      },
+    });
+    expect(invoke).toHaveBeenNthCalledWith(2, "daily-challenge-runtime", {
+      body: {
+        mode: "advance",
+        sport: "football",
+        daily_challenge_id: dailyId,
+        revision: 3,
+        action: { fighter_id: "2007-ne" },
+      },
+    });
+  });
+
   it("loads one cross-sport HQ streak through the canonical daily repository client", async () => {
     const { client } = clientWithResponses([]);
     const rpc = vi.fn().mockResolvedValue({
