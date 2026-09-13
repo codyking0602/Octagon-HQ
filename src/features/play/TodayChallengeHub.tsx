@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "./DailyChallengeStandings";
@@ -15,6 +15,12 @@ import type {
 } from "./todayChallengeRepository";
 import { useTodayChallengeOverview } from "./useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
+
+const FootballTodayChallengeResult = lazy(() =>
+  import("../back-room/FootballTodayChallengePage").then((module) => ({
+    default: module.FootballTodayChallengeResult,
+  })),
+);
 
 function dayLabel(day: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -63,10 +69,12 @@ function DailyAnswerDetail({
   entry,
   projection,
   onClose,
+  sport,
 }: {
   entry: TodayChallengeLeaderboard["entries"][number];
   projection: TodayChallengeProjection;
   onClose: () => void;
+  sport: PlaySport;
 }) {
   const navigate = useNavigate();
   const resultProjection: TodayChallengeProjection = {
@@ -93,12 +101,18 @@ function DailyAnswerDetail({
         <span><strong>{entry.displayName}</strong><small>#{entry.rank} · {entry.normalizedScore}/100</small></span>
       </header>
       <div className="today-hub-official-result__body official-daily-page">
-        <OfficialTodayChallengeContent
-          projection={resultProjection}
-          busy={false}
-          onAdvance={() => {}}
-          onNavigate={(route) => navigate(route)}
-        />
+        {sport === "football" ? (
+          <Suspense fallback={<p className="today-hub-empty">Loading official Football result…</p>}>
+            <FootballTodayChallengeResult projection={resultProjection} />
+          </Suspense>
+        ) : (
+          <OfficialTodayChallengeContent
+            projection={resultProjection}
+            busy={false}
+            onAdvance={() => {}}
+            onNavigate={(route) => navigate(route)}
+          />
+        )}
       </div>
     </div>
   );
@@ -108,10 +122,12 @@ function DailyLeaderboard({
   leaderboard,
   projection,
   loading,
+  sport,
 }: {
   leaderboard: TodayChallengeLeaderboard | null;
   projection: TodayChallengeProjection;
   loading: boolean;
+  sport: PlaySport;
 }) {
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const selectedEntry = leaderboard?.entries.find((entry) => entry.profileId === selectedProfileId) ?? null;
@@ -131,6 +147,7 @@ function DailyLeaderboard({
         entry={selectedEntry}
         projection={projection}
         onClose={() => setSelectedProfileId(null)}
+        sport={sport}
       />
     );
   }
@@ -278,6 +295,7 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
             leaderboard={overview.leaderboard}
             projection={projection}
             loading={overview.leaderboardLoading}
+            sport={sport}
           />
           <small className="today-hub-leaderboard__swipe">← SWIPE FOR TODAY’S GAME</small>
         </div>
