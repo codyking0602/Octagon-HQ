@@ -36,7 +36,6 @@ export const BUILD_A_QB_TRAIT_HELP: Readonly<Record<BuildQbTrait, string>> = {
   Accuracy: "Ball placement and consistent catchable precision at all levels",
   Processing: "Speed and quality of reads, decisions, and getting to the right answer",
   Mobility: "Movement, escape ability, rushing value, and creation outside structure",
-  Clutch: "Performance in high-leverage, pressure, closing, and playoff-type situations",
 };
 
 export function hasDraftRoomAdminAccess(profile: IdentityProfile | null | undefined) {
@@ -558,7 +557,7 @@ export default function FootballDraftRoomPage() {
       <section className="auction-hero surface-card" aria-labelledby="build-a-qb-title">
         <p className="eyebrow">LAUNCH ROOM</p>
         <h2 id="build-a-qb-title">{requestedModeDefinition.displayName}</h2>
-        <p>{requestedModeDefinition.description} Bid from a $50 bankroll; ten QBs appear and each side finishes with five.</p>
+        <p>{requestedModeDefinition.description} Bid from a ${requestedModeDefinition.startingBankroll} bankroll; {requestedModeDefinition.rounds} QBs appear and each side finishes with {requestedModeDefinition.requiredSelectionsPerPlayer}.</p>
         <div className="draft-room-mode-switcher" role="group" aria-label="Draft Room mode">
           {draftRoomModes.map((mode) => (
             <button
