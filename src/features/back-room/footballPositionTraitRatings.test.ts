@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { buildFootballComparisonCandidatePool } from "./footballComparisonAuthority";
 import { BUILD_QB_TRAITS } from "../play/draftRoomContract";
 import { generatedBuildQbCatalog } from "../play/generated/buildQbCatalog";
 import {
@@ -62,6 +63,13 @@ function randomCompletedBuildScore(
 }
 
 describe("canonical Football Build a QB trait model", () => {
+  it("diagnostic: lists canonical QB candidate identities", () => {
+    const identities = buildFootballComparisonCandidatePool("nfl-quarterbacks")
+      .map((candidate) => `${candidate.name} [${candidate.canonicalSubjectId}]`)
+      .join("; ");
+    throw new Error(`BUILD_QB_CANONICAL_CANDIDATES=${identities}`);
+  });
+
   it("derives exactly 60 playable profiles from canonical Football owners", () => {
     const profiles = buildFootballBuildQbTraitProfiles();
     expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v2");
