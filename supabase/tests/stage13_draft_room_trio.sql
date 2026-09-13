@@ -3,10 +3,14 @@ begin;
 select set_config('request.jwt.claim.role', 'service_role', true);
 
 -- The legacy server-engine proof intentionally commits a global preparation-version
--- rotation. Restore only the Trio preparation bit inside this test transaction.
+-- rotation. Restore only the current Trio preparation version inside this test transaction.
+update private.auction_catalog_versions
+set is_preparation_version = false
+where game_id = 'draft-room-trio';
+
 update private.auction_catalog_versions
 set is_preparation_version = true
-where content_version = 'football-draft-room-trio-2026-09-v1';
+where content_version = 'football-draft-room-trio-2026-09-v2';
 
 do $stage13$
 declare
@@ -20,12 +24,6 @@ declare
   v_expected_a numeric(5,2);
   v_expected_b numeric(5,2);
   v_projection jsonb;
-  v_loaded_strength numeric;
-  v_strong_strength numeric;
-  v_balanced_strength numeric;
-  v_gritty_strength numeric;
-  v_nfl_package_spread numeric;
-  v_cfb_package_spread numeric;
 begin
   if private.draft_room_public_release_enabled() then
     raise exception 'Stage 13 Draft Room unexpectedly has its public release switch enabled';
@@ -35,8 +33,8 @@ begin
     select 1
     from private.auction_catalog_versions version
     where version.game_id = 'draft-room-trio'
-      and version.content_version = 'football-draft-room-trio-2026-09-v1'
-      and version.rarity_version = 'football-draft-room-trio-rarity-2026-09-v1'
+      and version.content_version = 'football-draft-room-trio-2026-09-v2'
+      and version.rarity_version = 'football-draft-room-trio-rarity-2026-09-v2'
       and version.grading_version = 'football-draft-room-trio-grading-2026-09-v1'
       and version.is_preparation_version
   ) then
@@ -98,84 +96,57 @@ begin
   end if;
 
   if (
-    select jsonb_object_agg(profile, profile_count)
+    select jsonb_object_agg(shape, shape_count)
     from (
-      select profile, count(*) profile_count
+      select shape, count(*) shape_count
       from (
-        select private.draft_room_trio_room_profile(i / 100.0) profile
+        select private.draft_room_trio_board_shape(i / 100.0) shape
         from generate_series(0, 99) i
       ) rolls
-      group by profile
+      group by shape
     ) counts
-  ) <> '{"Loaded":20,"Strong":30,"Balanced":30,"Gritty":20}'::jsonb then
-    raise exception 'Trio room profile distribution is not locked to 20/30/30/20';
+  ) <> '{"Balanced":24,"BottomHeavy":14,"Chaotic":15,"Compressed":12,"TopHeavy":15,"Wide":20}'::jsonb then
+    raise exception 'Trio v2 board-shape distribution is not locked to 20/24/15/14/12/15';
   end if;
 
-  if exists (
-    select 1
-    from (values ('Loaded'),('Strong'),('Balanced'),('Gritty')) profiles(profile)
-    cross join generate_series(1,6) slot
-    where private.draft_room_trio_slot_combo(profiles.profile, slot)
-      = array['Average','Average','Average']::text[]
-  ) then
-    raise exception 'Average/Average/Average is reachable in the calibrated Trio slot ladder';
-  end if;
-
-  with sampled as (
-    select
-      profiles.profile,
-      avg(case tier
-        when 'Elite' then 4
-        when 'Great' then 3
-        when 'Good' then 2
-        when 'Average' then 1
-      end) as average_tier_strength
-    from (values ('Loaded'),('Strong'),('Balanced'),('Gritty')) profiles(profile)
-    cross join generate_series(1,6) slot
-    cross join lateral unnest(
-      private.draft_room_trio_slot_combo(profiles.profile, slot)
-    ) tier
-    group by profiles.profile
-  )
-  select
-    max(average_tier_strength) filter (where profile = 'Loaded'),
-    max(average_tier_strength) filter (where profile = 'Strong'),
-    max(average_tier_strength) filter (where profile = 'Balanced'),
-    max(average_tier_strength) filter (where profile = 'Gritty')
-  into v_loaded_strength, v_strong_strength, v_balanced_strength, v_gritty_strength
-  from sampled;
-
-  if not (
-    v_loaded_strength > v_strong_strength
-    and v_strong_strength > v_balanced_strength
-    and v_balanced_strength > v_gritty_strength
-  ) then
-    raise exception 'Trio calibrated room-strength profiles do not produce materially ordered game strength';
-  end if;
-
-  if exists (
-    select 1
-    from (values ('Loaded'),('Strong'),('Balanced'),('Gritty')) profiles(profile)
-    cross join lateral (
-      select
-        max(slot_strength) - min(slot_strength) as tier_spread
+  if (
+    select jsonb_object_agg(variant::text, variant_count)
+    from (
+      select variant, count(*) variant_count
       from (
-        select
-          slot,
-          avg(case tier
-            when 'Elite' then 4
-            when 'Great' then 3
-            when 'Good' then 2
-            when 'Average' then 1
-          end) as slot_strength
-        from generate_series(1,6) slot
-        cross join lateral unnest(private.draft_room_trio_slot_combo(profiles.profile, slot)) tier
-        group by slot
-      ) slot_strengths
-    ) spread
-    where spread.tier_spread < 1.33
+        select private.draft_room_trio_shape_variant(i / 300.0) variant
+        from generate_series(0, 299) i
+      ) rolls
+      group by variant
+    ) counts
+  ) <> '{"1":100,"2":100,"3":100}'::jsonb then
+    raise exception 'Trio v2 shape variants are not evenly randomized';
+  end if;
+
+  if (select count(*) from private.draft_room_trio_board_shapes) <> 6
+    or (select count(*) from private.draft_room_trio_shape_slots) <> 108
+  then
+    raise exception 'Trio v2 shape configuration is incomplete';
+  end if;
+
+  if exists (
+    select 1
+    from (
+      select shape, variant, count(*) slot_count
+      from private.draft_room_trio_shape_slots
+      group by shape, variant
+    ) configured
+    where configured.slot_count <> 6
   ) then
-    raise exception 'Trio calibrated room does not provide enough internal package-quality spread';
+    raise exception 'Every Trio v2 shape variant must expose six hidden strength slots';
+  end if;
+
+  if exists (
+    select 1
+    from private.draft_room_trio_shape_slots
+    where tier_1 = 'Average' and tier_2 = 'Average' and tier_3 = 'Average'
+  ) then
+    raise exception 'Average/Average/Average is reachable in the Trio v2 board model';
   end if;
 
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
@@ -203,7 +174,7 @@ begin
   v_nfl_game := public.prepare_auction(v_admin_b, 'trio-nfl');
 
   select auction.* into v_state from private.auction_games auction where auction.id = v_nfl_game;
-  if v_state.content_version <> 'football-draft-room-trio-2026-09-v1'
+  if v_state.content_version <> 'football-draft-room-trio-2026-09-v2'
     or v_state.challenger_bankroll <> 30
     or v_state.recipient_bankroll <> 30
     or v_state.current_round <> 1
@@ -217,21 +188,17 @@ begin
     raise exception 'NFL Trio deck must contain exactly six packages';
   end if;
 
-  select
-    max((qb.hidden_grade + rb.hidden_grade + wr.hidden_grade) / 3.0)
-      - min((qb.hidden_grade + rb.hidden_grade + wr.hidden_grade) / 3.0)
-  into v_nfl_package_spread
-  from private.draft_room_trio_packages package
-  join private.draft_room_trio_player_pool qb
-    on qb.mode_id = 'trio-nfl' and qb.position = 'QB' and qb.player_reference = package.qb_reference
-  join private.draft_room_trio_player_pool rb
-    on rb.mode_id = 'trio-nfl' and rb.position = 'RB' and rb.player_reference = package.rb_reference
-  join private.draft_room_trio_player_pool wr
-    on wr.mode_id = 'trio-nfl' and wr.position = 'WR' and wr.player_reference = package.wr_reference
-  where package.auction_id = v_nfl_game;
-
-  if v_nfl_package_spread < 6 then
-    raise exception 'NFL Trio calibrated room spread is too compressed: %', v_nfl_package_spread;
+  if exists (
+    select 1
+    from private.draft_room_trio_packages package
+    where package.auction_id = v_nfl_game
+      and not exists (
+        select 1
+        from private.draft_room_trio_board_shapes shape
+        where shape.shape = package.room_profile
+      )
+  ) then
+    raise exception 'NFL Trio generated an unknown v2 board shape';
   end if;
 
   if (
@@ -402,21 +369,17 @@ begin
     raise exception 'CFB Trio generated an Average/Average/Average package';
   end if;
 
-  select
-    max((qb.hidden_grade + rb.hidden_grade + wr.hidden_grade) / 3.0)
-      - min((qb.hidden_grade + rb.hidden_grade + wr.hidden_grade) / 3.0)
-  into v_cfb_package_spread
-  from private.draft_room_trio_packages package
-  join private.draft_room_trio_player_pool qb
-    on qb.mode_id = 'trio-cfb' and qb.position = 'QB' and qb.player_reference = package.qb_reference
-  join private.draft_room_trio_player_pool rb
-    on rb.mode_id = 'trio-cfb' and rb.position = 'RB' and rb.player_reference = package.rb_reference
-  join private.draft_room_trio_player_pool wr
-    on wr.mode_id = 'trio-cfb' and wr.position = 'WR' and wr.player_reference = package.wr_reference
-  where package.auction_id = v_cfb_game;
-
-  if v_cfb_package_spread < 6 then
-    raise exception 'CFB Trio calibrated room spread is too compressed: %', v_cfb_package_spread;
+  if exists (
+    select 1
+    from private.draft_room_trio_packages package
+    where package.auction_id = v_cfb_game
+      and not exists (
+        select 1
+        from private.draft_room_trio_board_shapes shape
+        where shape.shape = package.room_profile
+      )
+  ) then
+    raise exception 'CFB Trio generated an unknown v2 board shape';
   end if;
 end $stage13$;
 
