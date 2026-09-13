@@ -826,3 +826,28 @@
   font-size: clamp(9px, 2.7vw, 12px);
 }
 
+
+
+/* Draft Room mode selector stays inside the shared Football/Auction presentation owner. */
+.draft-room-mode-switcher {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0 10px;
+}
+.draft-room-mode-switcher button {
+  min-height: 42px;
+  border: 1px solid rgba(142, 188, 230, 0.28);
+  border-radius: 10px;
+  background: rgba(9, 16, 25, 0.74);
+  color: rgba(255, 255, 255, 0.72);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+.draft-room-mode-switcher button.is-selected {
+  border-color: rgba(142, 188, 230, 0.82);
+  background: rgba(142, 188, 230, 0.14);
+  color: #fff;
+}
