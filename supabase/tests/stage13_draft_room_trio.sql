@@ -24,6 +24,8 @@ declare
   v_strong_strength numeric;
   v_balanced_strength numeric;
   v_gritty_strength numeric;
+  v_nfl_package_spread numeric;
+  v_cfb_package_spread numeric;
 begin
   if private.draft_room_public_release_enabled() then
     raise exception 'Stage 13 Draft Room unexpectedly has its public release switch enabled';
@@ -112,11 +114,11 @@ begin
   if exists (
     select 1
     from (values ('Loaded'),('Strong'),('Balanced'),('Gritty')) profiles(profile)
-    cross join generate_series(0,99) i
-    where private.draft_room_trio_tier_combo(profiles.profile, i / 100.0)
+    cross join generate_series(1,6) slot
+    where private.draft_room_trio_slot_combo(profiles.profile, slot)
       = array['Average','Average','Average']::text[]
   ) then
-    raise exception 'Average/Average/Average is reachable in the Trio generator';
+    raise exception 'Average/Average/Average is reachable in the calibrated Trio slot ladder';
   end if;
 
   with sampled as (
@@ -129,9 +131,9 @@ begin
         when 'Average' then 1
       end) as average_tier_strength
     from (values ('Loaded'),('Strong'),('Balanced'),('Gritty')) profiles(profile)
-    cross join generate_series(0,999) i
+    cross join generate_series(1,6) slot
     cross join lateral unnest(
-      private.draft_room_trio_tier_combo(profiles.profile, (i + 0.5) / 1000.0)
+      private.draft_room_trio_slot_combo(profiles.profile, slot)
     ) tier
     group by profiles.profile
   )
@@ -148,7 +150,32 @@ begin
     and v_strong_strength > v_balanced_strength
     and v_balanced_strength > v_gritty_strength
   ) then
-    raise exception 'Trio room-strength profiles do not produce materially ordered game strength';
+    raise exception 'Trio calibrated room-strength profiles do not produce materially ordered game strength';
+  end if;
+
+  if exists (
+    select 1
+    from (values ('Loaded'),('Strong'),('Balanced'),('Gritty')) profiles(profile)
+    cross join lateral (
+      select
+        max(slot_strength) - min(slot_strength) as tier_spread
+      from (
+        select
+          slot,
+          avg(case tier
+            when 'Elite' then 4
+            when 'Great' then 3
+            when 'Good' then 2
+            when 'Average' then 1
+          end) as slot_strength
+        from generate_series(1,6) slot
+        cross join lateral unnest(private.draft_room_trio_slot_combo(profiles.profile, slot)) tier
+        group by slot
+      ) slot_strengths
+    ) spread
+    where spread.tier_spread < 1.33
+  ) then
+    raise exception 'Trio calibrated room does not provide enough internal package-quality spread';
   end if;
 
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
@@ -188,6 +215,23 @@ begin
     or (select count(*) from private.draft_room_trio_packages package where package.auction_id = v_nfl_game) <> 6
   then
     raise exception 'NFL Trio deck must contain exactly six packages';
+  end if;
+
+  select
+    max((qb.hidden_grade + rb.hidden_grade + wr.hidden_grade) / 3.0)
+      - min((qb.hidden_grade + rb.hidden_grade + wr.hidden_grade) / 3.0)
+  into v_nfl_package_spread
+  from private.draft_room_trio_packages package
+  join private.draft_room_trio_player_pool qb
+    on qb.mode_id = 'trio-nfl' and qb.position = 'QB' and qb.player_reference = package.qb_reference
+  join private.draft_room_trio_player_pool rb
+    on rb.mode_id = 'trio-nfl' and rb.position = 'RB' and rb.player_reference = package.rb_reference
+  join private.draft_room_trio_player_pool wr
+    on wr.mode_id = 'trio-nfl' and wr.position = 'WR' and wr.player_reference = package.wr_reference
+  where package.auction_id = v_nfl_game;
+
+  if v_nfl_package_spread < 6 then
+    raise exception 'NFL Trio calibrated room spread is too compressed: %', v_nfl_package_spread;
   end if;
 
   if (
@@ -356,6 +400,23 @@ begin
       and package.wr_tier = 'Average'
   ) then
     raise exception 'CFB Trio generated an Average/Average/Average package';
+  end if;
+
+  select
+    max((qb.hidden_grade + rb.hidden_grade + wr.hidden_grade) / 3.0)
+      - min((qb.hidden_grade + rb.hidden_grade + wr.hidden_grade) / 3.0)
+  into v_cfb_package_spread
+  from private.draft_room_trio_packages package
+  join private.draft_room_trio_player_pool qb
+    on qb.mode_id = 'trio-cfb' and qb.position = 'QB' and qb.player_reference = package.qb_reference
+  join private.draft_room_trio_player_pool rb
+    on rb.mode_id = 'trio-cfb' and rb.position = 'RB' and rb.player_reference = package.rb_reference
+  join private.draft_room_trio_player_pool wr
+    on wr.mode_id = 'trio-cfb' and wr.position = 'WR' and wr.player_reference = package.wr_reference
+  where package.auction_id = v_cfb_game;
+
+  if v_cfb_package_spread < 6 then
+    raise exception 'CFB Trio calibrated room spread is too compressed: %', v_cfb_package_spread;
   end if;
 end $stage13$;
 
