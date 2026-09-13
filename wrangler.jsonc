@@ -18,6 +18,7 @@
       "/picks/",
       "/play",
       "/play/*",
+      "/deployment.json",
       "/share-preview/*"
     ]
   }
