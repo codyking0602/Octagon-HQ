@@ -197,6 +197,7 @@ begin
     package.mode_id,
     package.board_id,
     subset.subset_id,
+    sum(package.package_score) filter (where package.strength_slot = any(subset.slots)) as selected_sum,
     (
       sum(package.package_score) filter (where package.strength_slot = any(subset.slots))
       - sum(package.package_score) filter (where not (package.strength_slot = any(subset.slots)))
@@ -239,16 +240,9 @@ begin
     with weighted as (
       select
         board_id,
-        exp(0.06 * (
-          select sum(package.package_score)
-          from trio_sim_packages package
-          join trio_sim_subsets subset on subset.subset_id = outcome.subset_id
-          where package.mode_id = outcome.mode_id
-            and package.board_id = outcome.board_id
-            and package.strength_slot = any(subset.slots)
-        )) as decision_weight,
+        exp(0.06 * selected_sum) as decision_weight,
         signed_margin
-      from trio_sim_outcomes outcome
+      from trio_sim_outcomes
       where mode_id = v_mode
     ),
     board_probability as (
