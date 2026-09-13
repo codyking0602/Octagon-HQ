@@ -1,4 +1,4 @@
-export const DRAFT_ROOM_MODE_IDS = ["build-qb"] as const;
+export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb"] as const;
 
 export type DraftRoomModeId = (typeof DRAFT_ROOM_MODE_IDS)[number];
 
