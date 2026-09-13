@@ -5,6 +5,10 @@ import { validatePublicSupabaseConfig } from "./scripts/public-supabase-config.m
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+  const deploymentSha = (env.VITE_DEPLOYMENT_SHA ?? process.env.SOURCE_SHA ?? "").trim().toLowerCase();
+  if (deploymentSha && !/^[0-9a-f]{40}$/.test(deploymentSha)) {
+    throw new Error("VITE_DEPLOYMENT_SHA or SOURCE_SHA must be an exact 40-character commit SHA.");
+  }
   validatePublicSupabaseConfig({
     url: env.VITE_SUPABASE_URL,
     publishableKey: env.VITE_SUPABASE_PUBLISHABLE_KEY,
@@ -23,6 +27,7 @@ export default defineConfig(({ mode }) => {
       __OCTAGON_SUPABASE_URL__: JSON.stringify(env.VITE_SUPABASE_URL),
       __OCTAGON_SUPABASE_PUBLISHABLE_KEY__: JSON.stringify(env.VITE_SUPABASE_PUBLISHABLE_KEY),
       __OCTAGON_PREVIEW_CATALOG__: JSON.stringify(catalogSource),
+      __OCTAGON_DEPLOYMENT_SHA__: JSON.stringify(deploymentSha),
     },
     build: {
       target: "es2022",
