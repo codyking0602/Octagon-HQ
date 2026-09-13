@@ -15,6 +15,16 @@ describe("CFB Build a QB peak-season model", () => {
     expect(new Set(profiles.map((profile) => profile.canonicalPlayerId)).size).toBe(80);
     expect(new Set(profiles.map((profile) => profile.peakSeasonIdentityId)).size).toBe(80);
     expect(profiles.every((profile) => Number.isInteger(profile.peakSeason) && profile.school.length > 0)).toBe(true);
+
+    const names = new Set(profiles.map((profile) => profile.name));
+    for (const added of [
+      "Andrew Luck", "Russell Wilson", "Aaron Rodgers", "Matt Ryan", "Michael Vick",
+      "Marcus Vick", "Jimmy Clausen", "Sam Ehlinger", "Teddy Bridgewater",
+    ]) expect(names.has(added), `missing approved CFB replacement ${added}`).toBe(true);
+    for (const removed of [
+      "Danny Wuerffel", "Jim Plunkett", "Hendon Hooker", "Vinny Testaverde", "Ty Detmer",
+      "Gino Torretta", "Andre Ware", "Eric Crouch", "Chris Weinke",
+    ]) expect(names.has(removed), `removed CFB QB still present: ${removed}`).toBe(false);
   });
 
   it("uses the same five traits and a calculated overall", () => {
