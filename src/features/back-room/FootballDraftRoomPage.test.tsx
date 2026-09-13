@@ -8,6 +8,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import FootballDraftRoomPage, {
   BUILD_A_QB_TRAITS,
   BUILD_A_QB_TRAIT_HELP,
+  formatTrioFinalScore,
   hasDraftRoomAdminAccess,
   parseTrioPackageLabel,
 } from "./FootballDraftRoomPage";
@@ -109,6 +110,12 @@ describe("Football Draft Room", () => {
     renderRoute();
     expect(screen.getByText("Football home")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Draft Room" })).not.toBeInTheDocument();
+  });
+
+  it("keeps close Trio outcomes visibly distinct instead of rounding both to the same integer", () => {
+    expect(formatTrioFinalScore(87.2222)).toBe("87.2");
+    expect(formatTrioFinalScore(86.8888)).toBe("86.9");
+    expect(formatTrioFinalScore(87)).toBe("87.0");
   });
 
   it("parses one Trio package into exactly QB, RB, and WR presentation rows", () => {
