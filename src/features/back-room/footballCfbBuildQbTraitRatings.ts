@@ -1,4 +1,4 @@
-import { BUILD_QB_TRAITS, type BuildQbTrait } from "../play/draftRoomContract";
+import { BUILD_QB_RATING_TRAITS, type BuildQbTrait } from "../play/draftRoomContract";
 
 export const CFB_BUILD_QB_TRAIT_MODEL_VERSION = "cfb-build-qb-peak-season-v3" as const;
 export const CFB_BUILD_QB_MATURE_POOL_SIZE = 80 as const;
@@ -72,7 +72,7 @@ function peak(
   levels: readonly CfbBuildQbResearchLevel[],
   auditSummary: string,
 ): CfbBuildQbPeakAuditRow {
-  if (levels.length !== BUILD_QB_TRAITS.length) throw new Error(`Invalid CFB Build a QB research row for ${name}`);
+  if (levels.length !== BUILD_QB_RATING_TRAITS.length) throw new Error(`Invalid CFB Build a QB research row for ${name}`);
   return {
     name,
     peakSeason,
@@ -80,7 +80,7 @@ function peak(
     canonicalPlayerId,
     sourceProvider: canonicalPlayerId.startsWith("cfbfast-r-player-") ? "cfbfastR" : "octagon-hq",
     qualityBand,
-    researchLevels: Object.fromEntries(BUILD_QB_TRAITS.map((trait, index) => [trait, levels[index]!])) as Readonly<Record<BuildQbTrait, CfbBuildQbResearchLevel>>,
+    researchLevels: Object.fromEntries(BUILD_QB_RATING_TRAITS.map((trait, index) => [trait, levels[index]!])) as Readonly<Record<BuildQbTrait, CfbBuildQbResearchLevel>>,
     evidenceSourceIds: [
       peakSeason >= 2014 ? "canonical-cfb-source" : "sports-reference-cfb",
       "canonical-cfb-history",
@@ -197,11 +197,11 @@ export function buildFootballCfbBuildQbTraitProfiles(): readonly CfbBuildQbTrait
     if (catalogIds.has(catalogId)) throw new Error(`Duplicate CFB Build a QB catalog identity: ${catalogId}`);
     catalogIds.add(catalogId);
 
-    const traits = Object.fromEntries(BUILD_QB_TRAITS.map((trait) => [
+    const traits = Object.fromEntries(BUILD_QB_RATING_TRAITS.map((trait) => [
       trait,
       CFB_BUILD_QB_TRAIT_RATING_BY_LEVEL[row.researchLevels[trait]],
     ])) as Readonly<Record<BuildQbTrait, number>>;
-    const overall = Math.round(BUILD_QB_TRAITS.reduce((sum, trait) => sum + traits[trait], 0) / BUILD_QB_TRAITS.length);
+    const overall = Math.round(BUILD_QB_RATING_TRAITS.reduce((sum, trait) => sum + traits[trait], 0) / BUILD_QB_RATING_TRAITS.length);
 
     return {
       catalogId,
