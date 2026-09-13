@@ -23,7 +23,7 @@ declare
   v_categories text[] := array['Arm','Accuracy','Processing','Mobility','Clutch'];
 begin
   if private.draft_room_public_release_enabled() then
-    raise exception 'Stage 12 Draft Room unexpectedly has its public release switch enabled';
+    raise exception 'Stage 12 CFB Draft Room unexpectedly has its public release switch enabled';
   end if;
 
   if not exists (
@@ -42,16 +42,16 @@ begin
     select count(*)
     from private.auction_catalog catalog
     where catalog.content_version = 'football-draft-room-2026-09-v3'
-      and catalog.mode_id = 'build-qb'
-  ) <> 60 then
-    raise exception 'Build a QB catalog must contain exactly 60 audited QB profiles';
+      and catalog.mode_id = 'build-qb-cfb'
+  ) <> 80 then
+    raise exception 'CFB Build a QB catalog must contain exactly 80 audited peak-season QB profiles';
   end if;
 
   if exists (
     select 1
     from private.auction_catalog catalog
     where catalog.content_version = 'football-draft-room-2026-09-v3'
-      and catalog.mode_id = 'build-qb'
+      and catalog.mode_id = 'build-qb-cfb'
       and (
         not (catalog.grading_inputs ?& array['Arm','Accuracy','Processing','Mobility','Clutch','overall'])
         or (catalog.grading_inputs->>'Arm')::numeric not between 35 and 99
@@ -68,7 +68,7 @@ begin
     select count(*)
     from private.auction_catalog catalog
     where catalog.content_version = 'football-draft-room-2026-09-v3'
-      and catalog.mode_id = 'build-qb'
+      and catalog.mode_id = 'build-qb-cfb'
       and catalog.rarity_band <= 2
       and (
         (catalog.grading_inputs->>'Arm')::numeric = 99
@@ -77,21 +77,35 @@ begin
         or (catalog.grading_inputs->>'Mobility')::numeric = 99
         or (catalog.grading_inputs->>'Clutch')::numeric = 99
       )
-  ) < 6 then
-    raise exception 'Build a QB lower bands lost elite specialist traits';
+  ) < 8 then
+    raise exception 'CFB Build a QB lower bands lost elite specialist traits';
   end if;
 
   if not exists (
     select 1
     from private.auction_catalog catalog
     where catalog.content_version = 'football-draft-room-2026-09-v3'
-      and catalog.mode_id = 'build-qb'
-      and catalog.display_label = 'Jay Cutler'
+      and catalog.mode_id = 'build-qb-cfb'
+      and catalog.display_label = 'Josh Allen'
+      and catalog.item_reference = 'cfb-build-qb-josh-allen-2016'
       and catalog.rarity_band = 1
+      and catalog.display_description like '2016 Wyoming peak-season CFB QB profile%'
       and (catalog.grading_inputs->>'Arm')::numeric = 99
       and (catalog.grading_inputs->>'Processing')::numeric < 99
   ) then
-    raise exception 'Build a QB specialist audit lost the Jay Cutler arm profile';
+    raise exception 'CFB Build a QB specialist audit lost the 2016 Josh Allen arm profile';
+  end if;
+
+  if not exists (
+    select 1
+    from private.auction_catalog catalog
+    where catalog.content_version = 'football-draft-room-2026-09-v3'
+      and catalog.mode_id = 'build-qb-cfb'
+      and catalog.item_reference = 'cfb-build-qb-jalen-hurts-2019'
+      and catalog.display_label = 'Jalen Hurts'
+      and catalog.display_description like '2019 Oklahoma peak-season CFB QB profile%'
+  ) then
+    raise exception 'CFB Build a QB transfer identity lost Jalen Hurts 2019 Oklahoma peak season';
   end if;
 
   if (
@@ -100,25 +114,25 @@ begin
       select catalog.rarity_band, count(*) as total
       from private.auction_catalog catalog
       where catalog.content_version = 'football-draft-room-2026-09-v3'
-        and catalog.mode_id = 'build-qb'
+        and catalog.mode_id = 'build-qb-cfb'
       group by catalog.rarity_band
     ) bands
-  ) <> '{"1": 8, "2": 10, "3": 18, "4": 14, "5": 10}'::jsonb then
-    raise exception 'Build a QB rarity mix drifted from the audited 60-QB composition';
+  ) <> '{"1": 11, "2": 13, "3": 24, "4": 19, "5": 13}'::jsonb then
+    raise exception 'CFB Build a QB rarity mix drifted from the audited 80-QB composition';
   end if;
 
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
   values
     (v_admin_a,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
-      'stage12-admin-a@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','STAGE 12 ADMIN A','historical_unclaimed',true)),
+      'stage12-cfb-admin-a@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','STAGE 12 ADMIN A','historical_unclaimed',true)),
     (v_admin_b,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
-      'stage12-admin-b@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','STAGE 12 ADMIN B','historical_unclaimed',true)),
+      'stage12-cfb-admin-b@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','STAGE 12 ADMIN B','historical_unclaimed',true)),
     (v_member,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
-      'stage12-member@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','STAGE 12 MEMBER','historical_unclaimed',true));
+      'stage12-cfb-member@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','STAGE 12 MEMBER','historical_unclaimed',true));
 
-  perform public.register_unclaimed_pin_profile(v_admin_a,'Stage 12 Admin A','SA');
-  perform public.register_unclaimed_pin_profile(v_admin_b,'Stage 12 Admin B','SB');
-  perform public.register_unclaimed_pin_profile(v_member,'Stage 12 Member','SM');
+  perform public.register_unclaimed_pin_profile(v_admin_a,'Stage 12 CFB Admin A','SA');
+  perform public.register_unclaimed_pin_profile(v_admin_b,'Stage 12 CFB Admin B','SB');
+  perform public.register_unclaimed_pin_profile(v_member,'Stage 12 CFB Member','SM');
 
   insert into public.pick_control_owners(profile_id) values (v_admin_a), (v_admin_b);
 
@@ -126,7 +140,7 @@ begin
   perform set_config('request.jwt.claim.sub',v_member::text,true);
 
   begin
-    perform public.prepare_auction(v_admin_a, 'build-qb');
+    perform public.prepare_auction(v_admin_a, 'build-qb-cfb');
     raise exception 'regular member prepared an admin-only Draft Room';
   exception
     when others then
@@ -157,7 +171,7 @@ begin
   end;
 
   begin
-    perform public.prepare_auction(v_member, 'build-qb');
+    perform public.prepare_auction(v_member, 'build-qb-cfb');
     raise exception 'admin prepared Draft Room against a non-admin';
   exception
     when others then
@@ -166,7 +180,7 @@ begin
       end if;
   end;
 
-  v_game := public.prepare_auction(v_admin_b, 'build-qb');
+  v_game := public.prepare_auction(v_admin_b, 'build-qb-cfb');
 
   select auction.* into v_state
   from private.auction_games auction
@@ -177,7 +191,7 @@ begin
     or v_state.recipient_bankroll <> 50
     or v_state.current_round <> 1
   then
-    raise exception 'prepared Draft Room did not pin the Stage 12 contract: %', row_to_json(v_state);
+    raise exception 'prepared CFB Draft Room did not pin the Stage 12 contract: %', row_to_json(v_state);
   end if;
 
   if (
@@ -185,7 +199,7 @@ begin
     from private.auction_deck_entries deck
     where deck.auction_id = v_game
   ) <> 10 then
-    raise exception 'Build a QB deck must contain exactly ten QBs';
+    raise exception 'CFB Build a QB deck must contain exactly ten QBs';
   end if;
 
   if (
@@ -193,7 +207,7 @@ begin
     from private.auction_deck_entries deck
     where deck.auction_id = v_game
   ) <> 10 then
-    raise exception 'Build a QB deck rerolled or duplicated QB identities';
+    raise exception 'CFB Build a QB deck rerolled or duplicated QB identities';
   end if;
 
   if (
@@ -201,12 +215,12 @@ begin
     from private.auction_deck_entries deck
     join private.auction_catalog catalog
       on catalog.content_version = v_state.content_version
-      and catalog.mode_id = 'build-qb'
+      and catalog.mode_id = 'build-qb-cfb'
       and catalog.item_reference = deck.private_item_reference
     where deck.auction_id = v_game
       and catalog.rarity_band >= 4
   ) > 4 then
-    raise exception 'Build a QB room exceeded the shared high-end generation safeguard';
+    raise exception 'CFB Build a QB room exceeded the shared high-end generation safeguard';
   end if;
 
   select auction.revision into v_revision
@@ -276,7 +290,7 @@ begin
     limit 1;
 
     if v_category_a is null or v_category_b is null then
-      raise exception 'Build a QB category assignment exhausted before completion';
+      raise exception 'CFB Build a QB category assignment exhausted before completion';
     end if;
 
     perform set_config('request.jwt.claim.sub',v_admin_a::text,true);
@@ -300,7 +314,7 @@ begin
     or v_state.challenger_final_score not between 35 and 99
     or v_state.recipient_final_score not between 35 and 99
   then
-    raise exception 'Build a QB did not complete through the shared sealed-bid lifecycle: %', row_to_json(v_state);
+    raise exception 'CFB Build a QB did not complete through the shared sealed-bid lifecycle: %', row_to_json(v_state);
   end if;
 
   if exists (
@@ -313,7 +327,7 @@ begin
     ) result
     where result.total <> 5 or result.categories <> 5
   ) then
-    raise exception 'completed Build a QB did not assign five unique traits per player';
+    raise exception 'completed CFB Build a QB did not assign five unique traits per player';
   end if;
 
   if not exists (

@@ -44,9 +44,9 @@ function identity(canControlPicks: boolean | undefined) {
   } as ReturnType<typeof useIdentity>;
 }
 
-function renderRoute() {
+function renderRoute(entry = "/football/draft-room") {
   return render(
-    <MemoryRouter initialEntries={["/football/draft-room"]}>
+    <MemoryRouter initialEntries={[entry]}>
       <Routes>
         <Route path="/football/draft-room" element={<FootballDraftRoomPage />} />
         <Route path="/football" element={<div>Football home</div>} />
@@ -111,12 +111,14 @@ describe("Football Draft Room", () => {
     expect(screen.queryByRole("heading", { name: "Draft Room" })).not.toBeInTheDocument();
   });
 
-  it("shows the public-facing Build a QB presentation only through the existing owner gate", () => {
+  it("shows both NFL and CFB Build a QB modes only through the existing owner gate", () => {
     mockedUseIdentity.mockReturnValue(identity(true));
     renderRoute();
 
     expect(screen.getByRole("heading", { name: "Draft Room" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "NFL Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
     expect(screen.getAllByText("DRAFT ROOM").length).toBeGreaterThan(0);
     expect(screen.queryByText(/ADMIN PREVIEW/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/ADMIN RELEASE GATE/i)).not.toBeInTheDocument();
@@ -124,5 +126,16 @@ describe("Football Draft Room", () => {
     for (const trait of BUILD_A_QB_TRAITS) {
       expect(screen.getByText(trait)).toBeInTheDocument();
     }
+  });
+
+  it("resolves the CFB launch mode without weakening the canonical private gate", () => {
+    mockedUseIdentity.mockReturnValue(identity(true));
+    renderRoute("/football/draft-room?mode=build-qb-cfb");
+    expect(screen.getByRole("heading", { name: "CFB Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "CFB Build a QB" })).toHaveClass("is-selected");
+
+    mockedUseIdentity.mockReturnValue(identity(false));
+    renderRoute("/football/draft-room?mode=build-qb-cfb");
+    expect(screen.getAllByText("Football home").length).toBeGreaterThan(0);
   });
 });

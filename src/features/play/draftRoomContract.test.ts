@@ -15,8 +15,18 @@ describe("Draft Room contract", () => {
     expect(BUILD_QB_TRAITS).toEqual(mode.categories);
   });
 
+  it("registers CFB as the same Draft Room economy and trait contract", () => {
+    const nfl = draftRoomModeDefinition("build-qb");
+    const cfb = draftRoomModeDefinition("build-qb-cfb");
+    expect(cfb.rounds).toBe(nfl.rounds);
+    expect(cfb.requiredSelectionsPerPlayer).toBe(nfl.requiredSelectionsPerPlayer);
+    expect(cfb.startingBankroll).toBe(nfl.startingBankroll);
+    expect(cfb.categories).toEqual(nfl.categories);
+  });
+
   it("recognizes only canonical Draft Room mode ids", () => {
     expect(isDraftRoomModeId("build-qb")).toBe(true);
+    expect(isDraftRoomModeId("build-qb-cfb")).toBe(true);
     expect(isDraftRoomModeId("ultimate-fighter")).toBe(false);
   });
 });
