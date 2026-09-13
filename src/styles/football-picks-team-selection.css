@@ -1,0 +1,103 @@
+/* Team-aware selection treatment for Football Picks. Unselected cards stay neutral. */
+.football-pick-team { --football-pick-team-color: var(--football-picks-accent); }
+
+/* NFL */
+.football-pick-team[aria-label^="Arizona Cardinals "] { --football-pick-team-color: #97233f; }
+.football-pick-team[aria-label^="Atlanta Falcons "] { --football-pick-team-color: #a71930; }
+.football-pick-team[aria-label^="Baltimore Ravens "] { --football-pick-team-color: #241773; }
+.football-pick-team[aria-label^="Buffalo Bills "] { --football-pick-team-color: #00338d; }
+.football-pick-team[aria-label^="Carolina Panthers "] { --football-pick-team-color: #0085ca; }
+.football-pick-team[aria-label^="Chicago Bears "] { --football-pick-team-color: #0b162a; }
+.football-pick-team[aria-label^="Cincinnati Bengals "] { --football-pick-team-color: #fb4f14; }
+.football-pick-team[aria-label^="Cleveland Browns "] { --football-pick-team-color: #311d00; }
+.football-pick-team[aria-label^="Dallas Cowboys "] { --football-pick-team-color: #003594; }
+.football-pick-team[aria-label^="Denver Broncos "] { --football-pick-team-color: #fb4f14; }
+.football-pick-team[aria-label^="Detroit Lions "] { --football-pick-team-color: #0076b6; }
+.football-pick-team[aria-label^="Green Bay Packers "] { --football-pick-team-color: #203731; }
+.football-pick-team[aria-label^="Houston Texans "] { --football-pick-team-color: #03202f; }
+.football-pick-team[aria-label^="Indianapolis Colts "] { --football-pick-team-color: #002c5f; }
+.football-pick-team[aria-label^="Jacksonville Jaguars "] { --football-pick-team-color: #006778; }
+.football-pick-team[aria-label^="Kansas City Chiefs "] { --football-pick-team-color: #e31837; }
+.football-pick-team[aria-label^="Las Vegas Raiders "] { --football-pick-team-color: #5a5a5a; }
+.football-pick-team[aria-label^="Los Angeles Chargers "] { --football-pick-team-color: #0080c6; }
+.football-pick-team[aria-label^="Los Angeles Rams "] { --football-pick-team-color: #003594; }
+.football-pick-team[aria-label^="Miami Dolphins "] { --football-pick-team-color: #008e97; }
+.football-pick-team[aria-label^="Minnesota Vikings "] { --football-pick-team-color: #4f2683; }
+.football-pick-team[aria-label^="New England Patriots "] { --football-pick-team-color: #002244; }
+.football-pick-team[aria-label^="New Orleans Saints "] { --football-pick-team-color: #b5a36a; }
+.football-pick-team[aria-label^="New York Giants "] { --football-pick-team-color: #0b2265; }
+.football-pick-team[aria-label^="New York Jets "] { --football-pick-team-color: #125740; }
+.football-pick-team[aria-label^="Philadelphia Eagles "] { --football-pick-team-color: #004c54; }
+.football-pick-team[aria-label^="Pittsburgh Steelers "] { --football-pick-team-color: #b99718; }
+.football-pick-team[aria-label^="San Francisco 49ers "] { --football-pick-team-color: #aa0000; }
+.football-pick-team[aria-label^="Seattle Seahawks "] { --football-pick-team-color: #002244; }
+.football-pick-team[aria-label^="Tampa Bay Buccaneers "] { --football-pick-team-color: #d50a0a; }
+.football-pick-team[aria-label^="Tennessee Titans "] { --football-pick-team-color: #0c2340; }
+.football-pick-team[aria-label^="Washington Commanders "] { --football-pick-team-color: #5a1414; }
+
+/* CFB */
+.football-pick-team[aria-label^="Alabama Crimson Tide "] { --football-pick-team-color: #9e1b32; }
+.football-pick-team[aria-label^="Arkansas Razorbacks "] { --football-pick-team-color: #9d2235; }
+.football-pick-team[aria-label^="Auburn Tigers "] { --football-pick-team-color: #0c2340; }
+.football-pick-team[aria-label^="Baylor Bears "] { --football-pick-team-color: #154734; }
+.football-pick-team[aria-label^="BYU Cougars "] { --football-pick-team-color: #002e5d; }
+.football-pick-team[aria-label^="Clemson Tigers "] { --football-pick-team-color: #f56600; }
+.football-pick-team[aria-label^="Colorado Buffaloes "] { --football-pick-team-color: #8f7b3f; }
+.football-pick-team[aria-label^="Florida Gators "] { --football-pick-team-color: #0021a5; }
+.football-pick-team[aria-label^="Florida State Seminoles "] { --football-pick-team-color: #782f40; }
+.football-pick-team[aria-label^="Georgia Bulldogs "] { --football-pick-team-color: #ba0c2f; }
+.football-pick-team[aria-label^="Illinois Fighting Illini "] { --football-pick-team-color: #13294b; }
+.football-pick-team[aria-label^="Indiana Hoosiers "] { --football-pick-team-color: #990000; }
+.football-pick-team[aria-label^="Iowa Hawkeyes "] { --football-pick-team-color: #b69b24; }
+.football-pick-team[aria-label^="Iowa State Cyclones "] { --football-pick-team-color: #c8102e; }
+.football-pick-team[aria-label^="Kansas Jayhawks "] { --football-pick-team-color: #0051ba; }
+.football-pick-team[aria-label^="Kansas State Wildcats "] { --football-pick-team-color: #512888; }
+.football-pick-team[aria-label^="Kentucky Wildcats "] { --football-pick-team-color: #0033a0; }
+.football-pick-team[aria-label^="LSU Tigers "] { --football-pick-team-color: #461d7c; }
+.football-pick-team[aria-label^="Miami Hurricanes "] { --football-pick-team-color: #005030; }
+.football-pick-team[aria-label^="Michigan Wolverines "] { --football-pick-team-color: #00274c; }
+.football-pick-team[aria-label^="Michigan State Spartans "] { --football-pick-team-color: #18453b; }
+.football-pick-team[aria-label^="Mississippi State Bulldogs "] { --football-pick-team-color: #660000; }
+.football-pick-team[aria-label^="Missouri Tigers "] { --football-pick-team-color: #b99718; }
+.football-pick-team[aria-label^="Nebraska Cornhuskers "] { --football-pick-team-color: #e41c38; }
+.football-pick-team[aria-label^="North Carolina Tar Heels "] { --football-pick-team-color: #4b9cd3; }
+.football-pick-team[aria-label^="Notre Dame Fighting Irish "] { --football-pick-team-color: #0c2340; }
+.football-pick-team[aria-label^="Ohio State Buckeyes "] { --football-pick-team-color: #bb0000; }
+.football-pick-team[aria-label^="Oklahoma Sooners "] { --football-pick-team-color: #841617; }
+.football-pick-team[aria-label^="Oklahoma State Cowboys "] { --football-pick-team-color: #ff7300; }
+.football-pick-team[aria-label^="Ole Miss Rebels "] { --football-pick-team-color: #ce1126; }
+.football-pick-team[aria-label^="Oregon Ducks "] { --football-pick-team-color: #154733; }
+.football-pick-team[aria-label^="Penn State Nittany Lions "] { --football-pick-team-color: #041e42; }
+.football-pick-team[aria-label^="South Carolina Gamecocks "] { --football-pick-team-color: #73000a; }
+.football-pick-team[aria-label^="Tennessee Volunteers "] { --football-pick-team-color: #ff8200; }
+.football-pick-team[aria-label^="Texas Longhorns "] { --football-pick-team-color: #bf5700; }
+.football-pick-team[aria-label^="Texas A&M Aggies "] { --football-pick-team-color: #500000; }
+.football-pick-team[aria-label^="Texas Tech Red Raiders "] { --football-pick-team-color: #cc0000; }
+.football-pick-team[aria-label^="UCLA Bruins "] { --football-pick-team-color: #2d68c4; }
+.football-pick-team[aria-label^="USC Trojans "] { --football-pick-team-color: #990000; }
+.football-pick-team[aria-label^="Utah Utes "] { --football-pick-team-color: #cc0000; }
+.football-pick-team[aria-label^="Virginia Tech Hokies "] { --football-pick-team-color: #861f41; }
+.football-pick-team[aria-label^="Washington Huskies "] { --football-pick-team-color: #4b2e83; }
+.football-pick-team[aria-label^="West Virginia Mountaineers "] { --football-pick-team-color: #002855; }
+.football-pick-team[aria-label^="Wisconsin Badgers "] { --football-pick-team-color: #c5050c; }
+
+.football-pick-team.is-selected {
+  background: color-mix(in srgb, var(--football-pick-team-color) 34%, #111415);
+  opacity: 1;
+}
+.football-pick-team.is-away.is-selected {
+  box-shadow: inset 3px 0 color-mix(in srgb, var(--football-pick-team-color) 78%, white 22%);
+}
+.football-pick-team.is-home.is-selected {
+  box-shadow: inset -3px 0 color-mix(in srgb, var(--football-pick-team-color) 78%, white 22%);
+}
+.football-pick-team:not(.is-selected) .football-pick-team-mark { opacity: .78; }
+.football-pick-team.is-selected .football-pick-team-mark {
+  background: #202426;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .12);
+  opacity: 1;
+}
+.football-pick-team.is-selected .football-pick-team-copy strong { color: #fff; }
+.football-pick-team.is-selected .football-pick-team-copy small {
+  color: color-mix(in srgb, var(--football-pick-team-color) 54%, white 46%);
+}
