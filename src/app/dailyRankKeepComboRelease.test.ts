@@ -29,14 +29,14 @@ const august30RerollMigration = readFileSync(
 describe("bundled Blind Rank + Keep Cut Daily release", () => {
   it("orchestrates both canonical game runtimes as one official attempt across schedule versions", () => {
     expect(runtime).not.toContain("DAILY_COMBO_SCHEDULE_VERSION");
-    expect(runtime).toContain('publication = gameType === "keep_4_cut_4"\n      ? buildDailyComboSetup(day, scheduleVersion)');
-    expect(runtime).toContain('buildOfficialDailySetup("blind_rank_5", day, scheduleVersion)');
-    expect(runtime).toContain('buildOfficialDailySetup("keep_4_cut_4", day, scheduleVersion)');
+    expect(runtime).toContain('publication = gameType === "keep_4_cut_4"\n      ? buildDailyComboSetup(day, scheduleVersion, ufcRuntime)');
+    expect(runtime).toContain('ufcRuntime.buildOfficialDailySetup("blind_rank_5", day, scheduleVersion)');
+    expect(runtime).toContain('ufcRuntime.buildOfficialDailySetup("keep_4_cut_4", day, scheduleVersion)');
     expect(runtime).toContain('combo_stage: "blind_rank_5"');
     expect(runtime).toContain('combo_stage: "keep_4_cut_4"');
     expect(runtime).toContain("blind_rank: blindRankFinal");
     expect(runtime).toContain("keep_cut: keepCutFinal");
-    expect(runtime).toContain("? advanceDailyCombo(context, body.action)");
+    expect(runtime).toContain("? advanceDailyCombo(context, body.action, ufcRuntime.advanceOfficialDailyRuntime)");
   });
 
   it("keeps the second board private until Blind Rank is finished", () => {
