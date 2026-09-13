@@ -1,6 +1,6 @@
 import { BUILD_QB_TRAITS, type BuildQbTrait } from "../play/draftRoomContract";
 
-export const CFB_BUILD_QB_TRAIT_MODEL_VERSION = "cfb-build-qb-peak-season-v1" as const;
+export const CFB_BUILD_QB_TRAIT_MODEL_VERSION = "cfb-build-qb-peak-season-v2" as const;
 export const CFB_BUILD_QB_MATURE_POOL_SIZE = 80 as const;
 export const CFB_BUILD_QB_RESEARCH_SNAPSHOT_DATE = "2026-09-13" as const;
 
@@ -93,19 +93,19 @@ export const CFB_BUILD_QB_PEAK_SEASON_AUDIT: readonly CfbBuildQbPeakAuditRow[] =
   peak("Jameis Winston", 2013, "Florida State", "cfb-jameis-winston", 5, [8, 8, 7, 6, 9]),
   peak("Robert Griffin III", 2011, "Baylor", "cfb-robert-griffin-iii", 5, [8, 9, 8, 9, 8]),
   peak("Doug Flutie", 1984, "Boston College", "cfb-doug-flutie", 3, [7, 7, 7, 8, 9]),
-  peak("Vinny Testaverde", 1986, "Miami", "cfb-vinny-testaverde", 3, [9, 7, 7, 6, 6]),
+  peak("Aaron Rodgers", 2004, "California", "cfb-aaron-rodgers", 3, [9, 9, 9, 6, 7]),
   peak("Charlie Ward", 1993, "Florida State", "cfb-charlie-ward", 4, [7, 8, 8, 8, 9]),
-  peak("Danny Wuerffel", 1996, "Florida", "cfb-danny-wuerffel", 4, [5, 8, 9, 4, 9]),
-  peak("Ty Detmer", 1990, "BYU", "cfb-ty-detmer", 3, [5, 9, 9, 5, 8]),
-  peak("Gino Torretta", 1992, "Miami", "cfb-gino-torretta", 3, [6, 7, 8, 4, 8]),
-  peak("Andre Ware", 1989, "Houston", "cfb-andre-ware", 3, [9, 7, 7, 6, 6]),
-  peak("Eric Crouch", 2001, "Nebraska", "cfb-eric-crouch", 3, [5, 5, 6, 9, 8]),
-  peak("Jim Plunkett", 1970, "Stanford", "cfb-jim-plunkett", 4, [9, 7, 7, 6, 8]),
+  peak("Andrew Luck", 2011, "Stanford", "cfb-andrew-luck", 4, [9, 8, 9, 8, 9]),
+  peak("Matt Ryan", 2007, "Boston College", "cfb-matt-ryan", 3, [8, 8, 9, 5, 9]),
+  peak("Jimmy Clausen", 2009, "Notre Dame", "cfb-jimmy-clausen", 3, [8, 9, 8, 5, 7]),
+  peak("Sam Ehlinger", 2018, "Texas", "cfb-sam-ehlinger", 3, [7, 8, 8, 8, 9]),
+  peak("Teddy Bridgewater", 2013, "Louisville", "cfb-teddy-bridgewater", 3, [7, 9, 9, 7, 8]),
+  peak("Russell Wilson", 2011, "Wisconsin", "cfb-russell-wilson", 4, [8, 9, 8, 9, 9]),
   peak("Roger Staubach", 1963, "Navy", "cfb-roger-staubach", 4, [7, 8, 9, 9, 9]),
   peak("Troy Smith", 2006, "Ohio State", "cfb-troy-smith", 3, [8, 8, 8, 8, 7]),
   peak("Brady Quinn", 2005, "Notre Dame", "cfb-brady-quinn", 2, [8, 7, 8, 5, 6]),
   peak("Carson Palmer", 2002, "USC", "cfb-carson-palmer", 3, [9, 8, 8, 5, 8]),
-  peak("Chris Weinke", 2000, "Florida State", "cfb-chris-weinke", 2, [8, 7, 8, 3, 8]),
+  peak("Marcus Vick", 2005, "Virginia Tech", "cfb-marcus-vick", 2, [8, 7, 7, 9, 6]),
   peak("Jason White", 2003, "Oklahoma", "cfb-jason-white", 3, [8, 8, 8, 3, 6]),
   peak("Marcus Mariota", 2014, "Oregon", "cfbfast-r-player-511459-marcus-mariota", 5, [7, 9, 8, 9, 8]),
   peak("Dak Prescott", 2014, "Mississippi State", "cfbfast-r-player-512030-dak-prescott", 3, [7, 7, 7, 9, 7]),
@@ -143,7 +143,7 @@ export const CFB_BUILD_QB_PEAK_SEASON_AUDIT: readonly CfbBuildQbPeakAuditRow[] =
   peak("Caleb Williams", 2022, "USC", "cfb-caleb-williams", 5, [9, 8, 7, 9, 8]),
   peak("Max Duggan", 2022, "TCU", "cfbfast-r-player-4427105-max-duggan", 3, [7, 7, 7, 8, 9]),
   peak("Drake Maye", 2022, "North Carolina", "cfbfast-r-player-4431452-drake-maye", 4, [9, 8, 8, 8, 7]),
-  peak("Hendon Hooker", 2022, "Tennessee", "cfbfast-r-player-4240858-hendon-hooker", 4, [8, 9, 8, 8, 8]),
+  peak("Michael Vick", 1999, "Virginia Tech", "cfb-michael-vick", 4, [8, 7, 6, 9, 9]),
   peak("Stetson Bennett", 2022, "Georgia", "cfbfast-r-player-4259553-stetson-bennett", 3, [6, 8, 8, 7, 9]),
   peak("Michael Penix Jr.", 2023, "Washington", "cfb-michael-penix-jr", 4, [9, 8, 8, 4, 9]),
   peak("Bo Nix", 2023, "Oregon", "cfb-bo-nix", 4, [7, 9, 9, 7, 7]),
