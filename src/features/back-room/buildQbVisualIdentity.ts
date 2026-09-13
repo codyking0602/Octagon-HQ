@@ -35,6 +35,7 @@ const BUILD_QB_TEAMS = {
   CAR: team("CAR", "Carolina Panthers", "#0085CA", "0, 133, 202", "#101820", "car"),
   CHI: team("CHI", "Chicago Bears", "#0B162A", "11, 22, 42", "#C83803", "chi"),
   CIN: team("CIN", "Cincinnati Bengals", "#FB4F14", "251, 79, 20", "#000000", "cin"),
+  CLE: team("CLE", "Cleveland Browns", "#311D00", "49, 29, 0", "#FF3C00", "cle"),
   DAL: team("DAL", "Dallas Cowboys", "#003594", "0, 53, 148", "#869397", "dal"),
   DEN: team("DEN", "Denver Broncos", "#FB4F14", "251, 79, 20", "#002244", "den"),
   DET: team("DET", "Detroit Lions", "#0076B6", "0, 118, 182", "#B0B7BC", "det"),
@@ -59,10 +60,17 @@ const BUILD_QB_TEAMS = {
   SF: team("SF", "San Francisco 49ers", "#AA0000", "170, 0, 0", "#B3995D", "sf"),
   TB: team("TB", "Tampa Bay Buccaneers", "#D50A0A", "213, 10, 10", "#FF7900", "tb"),
   TEN: team("TEN", "Tennessee Titans", "#0C2340", "12, 35, 64", "#4B92DB", "ten"),
-  WAS: team("WAS", "Washington", "#5A1414", "90, 20, 20", "#FFB612", null),
+  WAS: team("WAS", "Washington Commanders", "#5A1414", "90, 20, 20", "#FFB612", "wsh"),
 } as const;
 
 type BuildQbTeamKey = keyof typeof BUILD_QB_TEAMS;
+
+export function buildQbTeamVisualIdentity(teamCode: string | null | undefined): BuildQbVisualIdentity | null {
+  if (!teamCode) return null;
+  const normalized = teamCode.trim().toUpperCase();
+  const key = (normalized === "WSH" ? "WAS" : normalized) as BuildQbTeamKey;
+  return BUILD_QB_TEAMS[key] ?? null;
+}
 
 /**
  * Visual-only identity for Build a QB. Keys are the exact server-owned Auction
@@ -136,5 +144,5 @@ export const BUILD_QB_TEAM_BY_ITEM_REFERENCE = {
 export function buildQbVisualIdentity(itemReference: string | null | undefined): BuildQbVisualIdentity | null {
   if (!itemReference) return null;
   const teamKey = BUILD_QB_TEAM_BY_ITEM_REFERENCE[itemReference as keyof typeof BUILD_QB_TEAM_BY_ITEM_REFERENCE];
-  return teamKey ? BUILD_QB_TEAMS[teamKey] : null;
+  return teamKey ? buildQbTeamVisualIdentity(teamKey) : null;
 }
