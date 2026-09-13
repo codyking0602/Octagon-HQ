@@ -791,6 +791,10 @@ function pickOptionsFor(
   if (!metricBoardEnabled(board)) return [];
   if (formatId !== "classic" && board.contentKind === "accomplishment") return [];
   if (formatId === "build-the-team" && board.contentKind === "career-special") return [];
+  // Champion-only CFB win totals are too compressed to create the full scoring
+  // spectrum in capped pools. Keep the metric in Classic, where all recognizable
+  // CFB team seasons provide the value spread the quality gate requires.
+  if (board.metricId === "cfb-team-wins" && formatId !== "classic") return [];
   if (formatId === "one-from-each") {
     if (board.group !== "cfb") return [];
     const subjects = oneFromEachSubjects(board);
