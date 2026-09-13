@@ -188,9 +188,9 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
     }
 
     const subject = resolveFootballSubjectReference(
-      candidate.id,
+      candidate.canonicalSubjectId,
       candidate.name,
-      { kind: "player-career", league: "NFL", position: "QB" },
+      { league: "NFL" },
     );
     if (!subject || subject.startSeason == null) {
       throw new Error(`Build a QB QB ${subjectId} is missing canonical career identity`);
