@@ -1,5 +1,4 @@
 import {
-  HIT_THE_NUMBER_GENERATION_PROFILE,
   hitTheNumberScore,
   type HitTheNumberResultStatus,
 } from "../play/hitTheNumberEngine";
@@ -25,9 +24,9 @@ import {
 } from "./footballSubjectRegistry";
 
 export const FOOTBALL_HIT_THE_NUMBER_GAME_ID = "football-hit-the-number";
-export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v4" as const;
+export const FOOTBALL_HIT_THE_NUMBER_VERSION = "football-hit-the-number-v5" as const;
 export const FOOTBALL_HIT_THE_NUMBER_MIN_PICKS = 4;
-export const FOOTBALL_HIT_THE_NUMBER_MAX_PICKS = 7;
+export const FOOTBALL_HIT_THE_NUMBER_MAX_PICKS = 6;
 export const FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE = "random-pool" as const;
 
 export type FootballHitTheNumberFormatId =
@@ -128,6 +127,7 @@ export interface FootballHitTheNumberQualityResult {
   legalSelectionCount: number;
   hasGoodUnder: boolean;
   hasMiddlingOutcome: boolean;
+  hasBadUnder: boolean;
   hasMeaningfulBust: boolean;
 }
 
@@ -138,7 +138,11 @@ export const FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE = [
   { value: "build-the-team", weight: 15 },
 ] as const satisfies readonly { value: FootballHitTheNumberFormatId; weight: number }[];
 
-export const FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE = HIT_THE_NUMBER_GENERATION_PROFILE.picks;
+export const FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE = [
+  { value: 4, weight: 20 },
+  { value: 5, weight: 40 },
+  { value: 6, weight: 40 },
+] as const satisfies readonly { value: number; weight: number }[];
 
 export const FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS = {
   "peak-season": 8,
@@ -147,9 +151,19 @@ export const FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS = {
   "career-special": 2,
 } as const satisfies Readonly<Record<FootballHitTheNumberContentKind, number>>;
 
-export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH = 24;
-export const FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH = 6;
-export const FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE = 4 * FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH;
+export const FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH = 16;
+export const FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH = 3;
+export const FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE = 14;
+export const FOOTBALL_HIT_THE_NUMBER_RECOGNIZABLE_POOL_DEPTH = 24;
+
+export const FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY = {
+  minimumLegalSelections: 6,
+  goodUnderMinScore: 90,
+  badUnderMaxScore: 75,
+  meaningfulBustMaxScore: 40,
+  midScoreMin: 50,
+  midScoreMax: 85,
+} as const;
 
 function careerSpecialSubjectEligible(subject: FootballSubjectProfile) {
   return subject.casualEligible
@@ -166,27 +180,69 @@ const championSeasons = (...values: number[]): FootballSubjectQuery[] => values.
 
 /** Declarative configurations over the canonical registry; never HTN-owned rosters. */
 export const FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG: readonly FootballHitTheNumberThemeDefinition[] = [
-  { id: "nfl-qb-seasons", label: "Notable NFL QB Seasons", league: "NFL", group: "nfl-qb-season", queries: [{ league: "NFL", kind: "player-season", position: "QB", includeProjectedSourceSubjects: true }] },
-  { id: "nfl-team-seasons", label: "NFL Team Seasons", league: "NFL", group: "nfl-team-season", queries: [{ league: "NFL", kind: "team-season", includeProjectedSourceSubjects: true }] },
-  { id: "cfb-players", label: "College Football Players", league: "CFB", group: "cfb-player-peak", queries: [{ league: "CFB", kind: "player-career", casualEligible: true }] },
-  { id: "nfl-qbs", label: "NFL Quarterbacks", league: "NFL", group: "nfl-qb-career", queries: [{ league: "NFL", kind: "player-career", position: "QB" }] },
-  { id: "nfl-qbs-2000s-2020s", label: "2000s–2020s QBs", league: "NFL", group: "nfl-qb-career", queries: decades(2000, 2010, 2020) },
-  { id: "nfl-qbs-1990s-2020s", label: "1990s–2020s QBs", league: "NFL", group: "nfl-qb-career", queries: decades(1990, 2000, 2010, 2020) },
-  { id: "nfl-qbs-1960s-1990s", label: "1960s–1990s QBs", league: "NFL", group: "nfl-qb-career", queries: decades(1960, 1970, 1980, 1990) },
-  { id: "nfl-qbs-first-round", label: "First-Round QBs", league: "NFL", group: "nfl-qb-career", queries: [{ league: "NFL", kind: "player-career", position: "QB", firstRoundPick: true }] },
-  { id: "nfl-qbs-1990s-2000s", label: "1990s–2000s QBs", league: "NFL", group: "nfl-qb-career", queries: decades(1990, 2000) },
-  { id: "nfl-rbs", label: "NFL Running Backs", league: "NFL", group: "nfl-rb-career", queries: [{ league: "NFL", kind: "player-career", position: "RB" }] },
-  { id: "nfl-rbs-2000s-2020s", label: "2000s–2020s RBs", league: "NFL", group: "nfl-rb-career", queries: decades(2000, 2010, 2020) },
-  { id: "nfl-rbs-1990s-2020s", label: "1990s–2020s RBs", league: "NFL", group: "nfl-rb-career", queries: decades(1990, 2000, 2010, 2020) },
-  { id: "nfl-rbs-1960s-1990s", label: "1960s–1990s RBs", league: "NFL", group: "nfl-rb-career", queries: decades(1960, 1970, 1980, 1990) },
-  { id: "cfb-champions", label: "National Champions", league: "CFB", group: "cfb", queries: [{ league: "CFB", kind: "team-season", nationalChampion: true }] },
-  { id: "cfb-bcs-cfp", label: "BCS + CFP Champions", league: "CFB", group: "cfb", queries: championSeasons(1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
-  { id: "cfb-2000s", label: "2000s Champions", league: "CFB", group: "cfb", queries: championSeasons(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009) },
-  { id: "cfb-2010-2022", label: "2010–2022 Champions", league: "CFB", group: "cfb", queries: championSeasons(2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
-  { id: "cfb-pre-cfp", label: "Pre-CFP Champions", league: "CFB", group: "cfb", queries: championSeasons(1995,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013) },
-  { id: "cfb-21st-century", label: "21st-Century Champions", league: "CFB", group: "cfb", queries: championSeasons(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019,2020,2021,2022) },
-  { id: "cfb-early-bcs", label: "Early BCS Champions", league: "CFB", group: "cfb", queries: championSeasons(1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009) },
-  { id: "cfb-bcs-to-cfp", label: "BCS-to-CFP Bridge Champions", league: "CFB", group: "cfb", queries: championSeasons(2008,2009,2010,2011,2012,2013,2014,2015,2017,2018,2019) },
+  {
+    id: "nfl-qb-seasons",
+    label: "Notable NFL QB Seasons",
+    league: "NFL",
+    group: "nfl-qb-season",
+    queries: [{ league: "NFL", kind: "player-season", position: "QB", includeProjectedSourceSubjects: true }],
+  },
+  {
+    id: "nfl-qbs-modern",
+    label: "Modern Era QBs",
+    league: "NFL",
+    group: "nfl-qb-career",
+    queries: decades(2000, 2010, 2020),
+  },
+  {
+    id: "nfl-qbs-old-school",
+    label: "Old School QBs",
+    league: "NFL",
+    group: "nfl-qb-career",
+    queries: decades(1960, 1970, 1980, 1990),
+  },
+  {
+    id: "nfl-qbs-first-round",
+    label: "First-Round QBs",
+    league: "NFL",
+    group: "nfl-qb-career",
+    queries: [{ league: "NFL", kind: "player-career", position: "QB", firstRoundPick: true }],
+  },
+  {
+    id: "nfl-team-seasons",
+    label: "NFL Team Seasons",
+    league: "NFL",
+    group: "nfl-team-season",
+    queries: [{ league: "NFL", kind: "team-season", includeProjectedSourceSubjects: true }],
+  },
+  {
+    id: "cfb-champions",
+    label: "National Champions",
+    league: "CFB",
+    group: "cfb",
+    queries: [{ league: "CFB", kind: "team-season", nationalChampion: true }],
+  },
+  {
+    id: "cfb-bcs-era",
+    label: "BCS Era Champions",
+    league: "CFB",
+    group: "cfb",
+    queries: championSeasons(1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013),
+  },
+  {
+    id: "cfb-cfp-era",
+    label: "CFP Era Champions",
+    league: "CFB",
+    group: "cfb",
+    queries: championSeasons(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022),
+  },
+  {
+    id: "cfb-modern-champions",
+    label: "Modern Champions",
+    league: "CFB",
+    group: "cfb",
+    queries: championSeasons(2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022),
+  },
 ] as const;
 
 function hasScope(subjectId: string, scope: FootballFactScope) {
@@ -265,11 +321,8 @@ function dedupeSemanticSubjects(subjects: readonly FootballHitTheNumberSubject[]
 
 const groupOrder: readonly FootballHitTheNumberSubjectGroup[] = [
   "nfl-qb-career",
-  "nfl-rb-career",
-  "nfl-receiving-career",
   "nfl-qb-season",
   "nfl-team-season",
-  "cfb-player-peak",
   "cfb",
 ];
 
@@ -334,9 +387,6 @@ const domains: readonly FootballHitTheNumberDomain[] = [
       metric("nfl-season-passing-yards", "NFL", "nfl-qb-season", "NFL QB Season Passing Yards", "peak-season"),
       metric("nfl-team-overall-wins", "NFL", "nfl-team-season", "NFL Team-Season Wins", "team-season"),
       metric("nfl-team-points-for", "NFL", "nfl-team-season", "NFL Team-Season Points Scored", "team-season"),
-      metric("nfl-career-passing-yards", "NFL", "nfl-qb-career", "NFL QB Career Passing Yards", "career-special"),
-      metric("nfl-career-rushing-yards", "NFL", "nfl-rb-career", "NFL RB Career Rushing Yards", "career-special"),
-      metric("nfl-career-receiving-yards", "NFL", "nfl-receiving-career", "NFL Career Receiving Yards", "career-special"),
       metric("cfb-team-points-for", "CFB", "cfb", "CFB Team-Season Points Scored", "team-season"),
       metric("cfb-team-points-against", "CFB", "cfb", "CFB Team-Season Points Allowed", "team-season"),
       metric("cfb-team-wins", "CFB", "cfb", "CFB Team-Season Wins", "team-season"),
@@ -346,24 +396,17 @@ const domains: readonly FootballHitTheNumberDomain[] = [
     id: "efficiency",
     metrics: [
       metric("nfl-season-passer-rating", "NFL", "nfl-qb-season", "NFL QB Season Passer Rating", "peak-season"),
-      metric("nfl-team-points-per-game", "NFL", "nfl-team-season", "NFL Team-Season Points Per Game", "team-season"),
-      metric("cfb-team-points-per-game", "CFB", "cfb", "CFB Team-Season Points Per Game", "team-season"),
+      metric("nfl-team-points-per-game", "NFL", "nfl-team-season", "NFL Team Points Per Game", "team-season"),
+      metric("cfb-team-points-per-game", "CFB", "cfb", "CFB Team Points Per Game", "team-season"),
     ],
   },
   {
     id: "dominance",
     metrics: [
-      metric("nfl-season-passing-touchdowns", "NFL", "nfl-qb-season", "NFL QB Season Passing TD", "peak-season"),
+      metric("nfl-season-passing-touchdowns", "NFL", "nfl-qb-season", "NFL QB Season Passing Touchdowns", "peak-season"),
       metric("nfl-season-interceptions", "NFL", "nfl-qb-season", "NFL QB Season Interceptions Thrown", "peak-season"),
-      metric("nfl-team-defensive-sacks", "NFL", "nfl-team-season", "NFL Team-Season Defensive Sacks", "team-season"),
-      metric("nfl-team-defensive-interceptions", "NFL", "nfl-team-season", "NFL Team-Season Defensive Interceptions", "team-season"),
-      metric("nfl-team-postseason-wins", "NFL", "nfl-team-season", "NFL Team-Season Postseason Wins", "accomplishment"),
-      metric("nfl-career-passing-touchdowns", "NFL", "nfl-qb-career", "NFL QB Career Passing TD", "career-special"),
-      metric("nfl-career-rushing-touchdowns", "NFL", "nfl-rb-career", "NFL RB Career Rushing TD", "career-special"),
-      metric("nfl-career-receiving-touchdowns", "NFL", "nfl-receiving-career", "NFL Career Receiving TD", "career-special"),
-      metric("cfb-heisman-awards", "CFB", "cfb-player-peak", "CFB Heisman Trophies", "accomplishment"),
-      metric("cfb-team-point-differential", "CFB", "cfb", "CFB Team-Season Point Differential", "team-season"),
-      metric("cfb-team-postseason-wins", "CFB", "cfb", "CFB Team-Season Postseason Wins", "accomplishment"),
+      metric("nfl-career-passing-touchdowns", "NFL", "nfl-qb-career", "NFL QB Career Passing Touchdowns", "career-special"),
+      metric("cfb-team-point-differential", "CFB", "cfb", "CFB Team Point Differential", "team-season"),
     ],
   },
 ] as const;
@@ -374,13 +417,25 @@ function metricSubjects(board: FootballHitTheNumberMetricBoard) {
   const key = `${board.group}:${board.metricId}`;
   const cached = metricSubjectsCache.get(key);
   if (cached) return cached;
-  const subjects = subjectsFor(board.group).filter((subject) => getFootballFact(subject.id, board.metricId) != null);
+
+  const casualSubjects = subjectsFor(board.group).filter((subject) => (
+    subject.casualEligible
+    && subject.recognizabilityTier !== "D"
+    && getFootballFact(subject.id, board.metricId) != null
+  ));
+  const highlyRecognizable = casualSubjects.filter((subject) => (
+    subject.recognizabilityTier === "A" || subject.recognizabilityTier === "B"
+  ));
+  const subjects = highlyRecognizable.length >= FOOTBALL_HIT_THE_NUMBER_RECOGNIZABLE_POOL_DEPTH
+    ? highlyRecognizable
+    : casualSubjects;
+
   metricSubjectsCache.set(key, subjects);
   return subjects;
 }
 
 function metricBoardEnabled(board: FootballHitTheNumberMetricBoard) {
-  return metricSubjects(board).length >= FOOTBALL_HIT_THE_NUMBER_MIN_PICKS;
+  return metricSubjects(board).length >= 12;
 }
 
 export const footballHitTheNumberSubjects: readonly FootballHitTheNumberSubject[] = dedupeSemanticSubjects(
@@ -571,14 +626,16 @@ function balancedProgressionRandomPool(
   random: () => number,
 ) {
   const solutionIds = new Set(solution.map((subject) => subject.id));
-  const pool = slots.slice(0, 4).flatMap((slot) => {
+  const capacities = [3, 4, 4, 3] as const;
+  const pool = slots.slice(0, 4).flatMap((slot, index) => {
     const group = subjects.filter((subject) => slot.accepts(subject, valueFor(subject.id, metricId)));
     const required = group.filter((subject) => solutionIds.has(subject.id));
-    if (required.length > FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH) return [];
+    const capacity = capacities[index]!;
+    if (required.length > capacity) return [];
     const extras = shuffleLineup(
       group.filter((subject) => !solutionIds.has(subject.id)),
       random,
-    ).slice(0, FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH - required.length);
+    ).slice(0, capacity - required.length);
     return [...required, ...extras];
   });
   if (pool.length !== FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return null;
@@ -609,8 +666,59 @@ export function footballHitTheNumberRandomPoolSize(pickCount: number) {
   return pickCount * 2 + 4;
 }
 
-function requiredPoolSize(boardType: FootballHitTheNumberBoardType, pickCount: number) {
-  return boardType === "random-pool" ? footballHitTheNumberRandomPoolSize(pickCount) : pickCount;
+function requiredPoolSize(_boardType: FootballHitTheNumberBoardType, pickCount: number) {
+  return footballHitTheNumberRandomPoolSize(pickCount);
+}
+
+function curatedRandomPool(
+  subjects: readonly FootballHitTheNumberSubject[],
+  solution: readonly FootballHitTheNumberSubject[],
+  metricId: FootballFactMetricId,
+  poolSize: number,
+  random: () => number,
+) {
+  const ordered = [...subjects].sort((left, right) =>
+    valueFor(left.id, metricId) - valueFor(right.id, metricId) || left.id.localeCompare(right.id));
+  const bands = Array.from({ length: 4 }, (_, index) => {
+    const start = Math.floor(index * ordered.length / 4);
+    const end = Math.floor((index + 1) * ordered.length / 4);
+    return ordered.slice(start, end);
+  });
+  const desired = poolSize === 12
+    ? [3, 3, 3, 3]
+    : poolSize === 14
+      ? [3, 4, 4, 3]
+      : [4, 4, 4, 4];
+  const selected = [...solution];
+  const selectedIds = new Set(selected.map((subject) => subject.id));
+
+  for (let bandIndex = 0; bandIndex < bands.length; bandIndex += 1) {
+    const band = bands[bandIndex]!;
+    const alreadyInBand = band.filter((subject) => selectedIds.has(subject.id)).length;
+    const needed = Math.max(0, desired[bandIndex]! - alreadyInBand);
+    const extras = shuffleLineup(
+      band.filter((subject) => !selectedIds.has(subject.id)),
+      random,
+    ).slice(0, needed);
+    for (const subject of extras) {
+      selected.push(subject);
+      selectedIds.add(subject.id);
+    }
+  }
+
+  if (selected.length < poolSize) {
+    const extras = shuffleLineup(
+      subjects.filter((subject) => !selectedIds.has(subject.id)),
+      random,
+    ).slice(0, poolSize - selected.length);
+    for (const subject of extras) {
+      selected.push(subject);
+      selectedIds.add(subject.id);
+    }
+  }
+
+  if (selected.length !== poolSize || selectedIds.size !== poolSize) return null;
+  return shuffleLineup(selected, random);
 }
 
 const themesForMetricCache = new Map<string, readonly FootballHitTheNumberThemeDefinition[]>();
@@ -763,8 +871,12 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
   let legalSelectionCount = 0;
   let hasGoodUnder = false;
   let hasMiddlingOutcome = false;
+  let hasBadUnder = false;
   let hasMeaningfulBust = false;
-  const goodUnderMinimum = minimumGoodUnderScore(plan);
+  const goodUnderMinimum = Math.min(
+    FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.goodUnderMinScore,
+    minimumGoodUnderScore(plan),
+  );
 
   const inspectSelection = (subjectIds: readonly string[]) => {
     if (!footballHitTheNumberSelectionSatisfies(plan, subjectIds)) return false;
@@ -778,38 +890,45 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
       distance: Math.abs(plan.target - total),
       pickCount: plan.pickCount,
     });
-    if (status === "under" && score >= goodUnderMinimum) hasGoodUnder = true;
+    if (status === "under") {
+      if (score >= goodUnderMinimum) hasGoodUnder = true;
+      if (score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.badUnderMaxScore) hasBadUnder = true;
+    }
     if (
-      (status === "under" && score >= 50 && score <= 89)
-      || (status === "bust" && score >= 41)
-    ) hasMiddlingOutcome = true;
-    if (status === "bust") hasMeaningfulBust = true;
-    return legalSelectionCount >= 6 && hasGoodUnder && hasMiddlingOutcome && hasMeaningfulBust;
+      score >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMin
+      && score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMax
+    ) {
+      hasMiddlingOutcome = true;
+    }
+    if (
+      status === "bust"
+      && score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.meaningfulBustMaxScore
+    ) {
+      hasMeaningfulBust = true;
+    }
+    return (
+      legalSelectionCount >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.minimumLegalSelections
+      && hasGoodUnder
+      && hasMiddlingOutcome
+      && hasBadUnder
+      && hasMeaningfulBust
+    );
   };
 
-  if (plan.boardType === "open-roster" || isProgressionFormat(plan)) {
-    const solutionSet = new Set(plan.solutionSubjectIds);
-    let complete = false;
-    for (let solutionIndex = 0; solutionIndex < plan.solutionSubjectIds.length && !complete; solutionIndex += 1) {
-      for (const replacementId of plan.subjectIds) {
-        if (solutionSet.has(replacementId)) continue;
-        const candidate = [...plan.solutionSubjectIds];
-        candidate[solutionIndex] = replacementId;
-        if (inspectSelection(candidate)) {
-          complete = true;
-          break;
-        }
-      }
-    }
-  } else {
-    combinations(plan.subjectIds, plan.pickCount, inspectSelection);
-  }
+  combinations(plan.subjectIds, plan.pickCount, inspectSelection);
 
   return {
-    passes: legalSelectionCount >= 6 && hasGoodUnder && hasMiddlingOutcome && hasMeaningfulBust,
+    passes: (
+      legalSelectionCount >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.minimumLegalSelections
+      && hasGoodUnder
+      && hasMiddlingOutcome
+      && hasBadUnder
+      && hasMeaningfulBust
+    ),
     legalSelectionCount,
     hasGoodUnder,
     hasMiddlingOutcome,
+    hasBadUnder,
     hasMeaningfulBust,
   };
 }
@@ -881,23 +1000,17 @@ function buildCandidate(
 
   if (!solution || solution.length !== pickCount) return null;
   const solutionIds = solution.map((subject) => subject.id);
-  const solutionSet = new Set(solutionIds);
   let subjectIds: string[];
 
-  if (boardType === "open-roster") {
-    subjectIds = eligible.map((subject) => subject.id);
-  } else if (formatId === "one-from-each" || formatId === "build-the-team") {
+  if (formatId === "one-from-each" || formatId === "build-the-team") {
     const balancedPool = balancedProgressionRandomPool(eligible, solution, metricId, slots, random);
     if (!balancedPool) return null;
     subjectIds = balancedPool.map((subject) => subject.id);
   } else {
     const poolSize = footballHitTheNumberRandomPoolSize(pickCount);
-    const extras = shuffleLineup(
-      eligible.filter((subject) => !solutionSet.has(subject.id)),
-      random,
-    ).slice(0, poolSize - solutionIds.length);
-    if (extras.length !== poolSize - solutionIds.length) return null;
-    subjectIds = shuffleLineup([...solution, ...extras], random).map((subject) => subject.id);
+    const curatedPool = curatedRandomPool(eligible, solution, metricId, poolSize, random);
+    if (!curatedPool) return null;
+    subjectIds = curatedPool.map((subject) => subject.id);
   }
 
   const target = solutionIds.reduce((sum, subjectId) => sum + valueFor(subjectId, metricId), 0);
@@ -975,7 +1088,7 @@ export function createFootballHitTheNumberPlan(
 }
 
 function planSignature(plan: FootballHitTheNumberPlan) {
-  const pool = plan.boardType === "random-pool" ? [...plan.subjectIds].sort().join(",") : "open";
+  const pool = [...plan.subjectIds].sort().join(",");
   return [
     plan.domainId,
     plan.metricId,
