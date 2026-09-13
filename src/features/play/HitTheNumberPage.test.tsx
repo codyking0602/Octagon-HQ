@@ -234,7 +234,7 @@ describe("Hit the Number casual game", () => {
 
     expect(container.querySelector(".hit-number-page")).toHaveAttribute("data-format-id", "one-from-each");
     expect(container.textContent).not.toContain("ONE FROM EACH");
-    expect(container.textContent).toContain(plan.format.configurationLabel!);
+    expect(container.textContent).toContain(plan.format.configurationLabel!.toUpperCase());
     expect(roleSlots).toHaveLength(5);
     plan.format.slots.forEach((slot, index) => {
       expect(roleSlots[index]?.textContent).toContain(slot.label);
@@ -262,7 +262,7 @@ describe("Hit the Number casual game", () => {
 
     expect(container.querySelector(".hit-number-page")).toHaveAttribute("data-format-id", "build-the-team");
     expect(container.textContent).not.toContain("BUILD THE TEAM");
-    expect(container.textContent).toContain(plan.format.configurationLabel!);
+    expect(container.textContent).toContain(plan.format.configurationLabel!.toUpperCase());
     expect(roleSlots).toHaveLength(5);
     plan.format.slots.forEach((slot, index) => {
       expect(roleSlots[index]?.textContent).toContain(slot.label);
