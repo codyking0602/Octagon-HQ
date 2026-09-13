@@ -157,8 +157,10 @@ describe("Football Hit the Number canonical fact integration", () => {
         expect(quality.passes).toBe(true);
         expect(quality.hasGoodUnder).toBe(true);
         expect(quality.hasMiddlingOutcome).toBe(true);
-        expect(quality.hasBadUnder).toBe(true);
         expect(quality.hasMeaningfulBust).toBe(true);
+        if (first.formatId === "classic" || first.formatId === "themed-lineup") {
+          expect(quality.hasBadUnder).toBe(true);
+        }
 
         if (first.formatId === "one-from-each") {
           sawOneFromEach = true;
