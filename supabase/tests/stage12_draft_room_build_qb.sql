@@ -6,7 +6,7 @@ select set_config('request.jwt.claim.role', 'service_role', true);
 -- Restore the independent Draft Room pointer inside this rollback-only proof.
 update private.auction_catalog_versions
 set is_preparation_version = true
-where content_version = 'football-draft-room-2026-09-v1';
+where content_version = 'football-draft-room-2026-09-v2';
 
 do $$
 declare
@@ -30,8 +30,8 @@ begin
     select 1
     from private.auction_catalog_versions version
     where version.game_id = 'draft-room'
-      and version.content_version = 'football-draft-room-2026-09-v1'
-      and version.rarity_version = 'football-draft-room-rarity-2026-09-v1'
+      and version.content_version = 'football-draft-room-2026-09-v2'
+      and version.rarity_version = 'football-draft-room-rarity-2026-09-v2'
       and version.grading_version = 'football-build-qb-traits-2026-09-v1'
       and version.is_preparation_version
   ) then
@@ -41,16 +41,16 @@ begin
   if (
     select count(*)
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v1'
+    where catalog.content_version = 'football-draft-room-2026-09-v2'
       and catalog.mode_id = 'build-qb'
-  ) <> 15 then
-    raise exception 'Build a QB catalog must contain exactly 15 generated QB profiles';
+  ) <> 60 then
+    raise exception 'Build a QB catalog must contain exactly 60 audited QB profiles';
   end if;
 
   if exists (
     select 1
     from private.auction_catalog catalog
-    where catalog.content_version = 'football-draft-room-2026-09-v1'
+    where catalog.content_version = 'football-draft-room-2026-09-v2'
       and catalog.mode_id = 'build-qb'
       and (
         not (catalog.grading_inputs ?& array['Arm','Accuracy','Processing','Mobility','Clutch','overall'])
@@ -62,6 +62,49 @@ begin
       )
   ) then
     raise exception 'Build a QB catalog contains invalid canonical trait grades';
+  end if;
+
+  if (
+    select count(*)
+    from private.auction_catalog catalog
+    where catalog.content_version = 'football-draft-room-2026-09-v2'
+      and catalog.mode_id = 'build-qb'
+      and catalog.rarity_band <= 2
+      and (
+        (catalog.grading_inputs->>'Arm')::numeric = 99
+        or (catalog.grading_inputs->>'Accuracy')::numeric = 99
+        or (catalog.grading_inputs->>'Processing')::numeric = 99
+        or (catalog.grading_inputs->>'Mobility')::numeric = 99
+        or (catalog.grading_inputs->>'Clutch')::numeric = 99
+      )
+  ) < 6 then
+    raise exception 'Build a QB lower bands lost elite specialist traits';
+  end if;
+
+  if not exists (
+    select 1
+    from private.auction_catalog catalog
+    where catalog.content_version = 'football-draft-room-2026-09-v2'
+      and catalog.mode_id = 'build-qb'
+      and catalog.display_label = 'Jay Cutler'
+      and catalog.rarity_band = 1
+      and (catalog.grading_inputs->>'Arm')::numeric = 99
+      and (catalog.grading_inputs->>'Processing')::numeric < 99
+  ) then
+    raise exception 'Build a QB specialist audit lost the Jay Cutler arm profile';
+  end if;
+
+  if (
+    select jsonb_object_agg(rarity_band::text, total order by rarity_band)
+    from (
+      select catalog.rarity_band, count(*) as total
+      from private.auction_catalog catalog
+      where catalog.content_version = 'football-draft-room-2026-09-v2'
+        and catalog.mode_id = 'build-qb'
+      group by catalog.rarity_band
+    ) bands
+  ) <> '{"1": 8, "2": 10, "3": 18, "4": 14, "5": 10}'::jsonb then
+    raise exception 'Build a QB rarity mix drifted from the audited 60-QB composition';
   end if;
 
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
@@ -129,7 +172,7 @@ begin
   from private.auction_games auction
   where auction.id = v_game;
 
-  if v_state.content_version <> 'football-draft-room-2026-09-v1'
+  if v_state.content_version <> 'football-draft-room-2026-09-v2'
     or v_state.challenger_bankroll <> 50
     or v_state.recipient_bankroll <> 50
     or v_state.current_round <> 1
@@ -151,6 +194,19 @@ begin
     where deck.auction_id = v_game
   ) <> 10 then
     raise exception 'Build a QB deck rerolled or duplicated QB identities';
+  end if;
+
+  if (
+    select count(*)
+    from private.auction_deck_entries deck
+    join private.auction_catalog catalog
+      on catalog.content_version = v_state.content_version
+      and catalog.mode_id = 'build-qb'
+      and catalog.item_reference = deck.private_item_reference
+    where deck.auction_id = v_game
+      and catalog.rarity_band >= 4
+  ) > 4 then
+    raise exception 'Build a QB room exceeded the shared high-end generation safeguard';
   end if;
 
   select auction.revision into v_revision
