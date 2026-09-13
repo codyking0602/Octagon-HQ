@@ -1,7 +1,7 @@
 import { buildFootballCfbBuildQbTraitProfiles, type CfbBuildQbQualityBand } from "../../back-room/footballCfbBuildQbTraitRatings";
 import type { BuildQbTrait } from "../draftRoomContract";
 
-export const FOOTBALL_CFB_BUILD_QB_CATALOG_VERSION = "football-draft-room-2026-09-v3";
+export const FOOTBALL_CFB_BUILD_QB_CATALOG_VERSION = "football-draft-room-2026-09-v4";
 export const FOOTBALL_CFB_BUILD_QB_RARITY_VERSION = "football-draft-room-rarity-2026-09-v3";
 export const FOOTBALL_CFB_BUILD_QB_GRADING_VERSION = "football-build-qb-traits-2026-09-v1";
 
