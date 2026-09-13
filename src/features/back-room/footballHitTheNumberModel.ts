@@ -609,39 +609,6 @@ function assignSlots(
   return visit(0);
 }
 
-function slotSolution(
-  slots: readonly FootballHitTheNumberSlot[],
-  subjects: readonly FootballHitTheNumberSubject[],
-  metricId: FootballFactMetricId,
-  random: () => number,
-) {
-  const candidates = slots.map((slot) => recognizabilityWeightedShuffle(
-    subjects.filter((subject) => slot.accepts(subject, valueFor(subject.id, metricId))),
-    random,
-  ));
-  if (candidates.some((rows) => rows.length === 0)) return null;
-  const used = new Set<string>();
-  const assigned: FootballHitTheNumberSubject[] = new Array(slots.length);
-  const order = candidates
-    .map((rows, index) => ({ index, size: rows.length }))
-    .sort((left, right) => left.size - right.size || left.index - right.index);
-
-  function visit(orderIndex: number): boolean {
-    if (orderIndex === order.length) return true;
-    const slotIndex = order[orderIndex]!.index;
-    for (const subject of candidates[slotIndex]!) {
-      if (used.has(subject.id)) continue;
-      used.add(subject.id);
-      assigned[slotIndex] = subject;
-      if (visit(orderIndex + 1)) return true;
-      used.delete(subject.id);
-    }
-    return false;
-  }
-
-  return visit(0) ? assigned : null;
-}
-
 function progressionSlotsHaveDepth(
   slots: readonly FootballHitTheNumberSlot[],
   subjects: readonly FootballHitTheNumberSubject[],
@@ -653,30 +620,57 @@ function progressionSlotsHaveDepth(
   ));
 }
 
+function stratifiedProgressionSample(
+  subjects: readonly FootballHitTheNumberSubject[],
+  metricId: FootballFactMetricId,
+  count: number,
+  random: () => number,
+) {
+  const ordered = [...subjects].sort((left, right) =>
+    valueFor(left.id, metricId) - valueFor(right.id, metricId) || left.id.localeCompare(right.id));
+  if (ordered.length < count) return [];
+  return Array.from({ length: count }, (_, index) => {
+    const start = Math.floor(index * ordered.length / count);
+    const end = Math.floor((index + 1) * ordered.length / count);
+    return recognizabilityWeightedShuffle(ordered.slice(start, end), random)[0]!;
+  });
+}
+
 function balancedProgressionRandomPool(
   subjects: readonly FootballHitTheNumberSubject[],
-  solution: readonly FootballHitTheNumberSubject[],
   metricId: FootballFactMetricId,
   slots: readonly FootballHitTheNumberSlot[],
   random: () => number,
 ) {
-  const solutionIds = new Set(solution.map((subject) => subject.id));
   const capacities = [3, 4, 4, 3] as const;
   const pool = slots.slice(0, 4).flatMap((slot, index) => {
     const group = subjects.filter((subject) => slot.accepts(subject, valueFor(subject.id, metricId)));
-    const required = group.filter((subject) => solutionIds.has(subject.id));
-    const capacity = capacities[index]!;
-    if (required.length > capacity) return [];
-    const extras = recognizabilityWeightedShuffle(
-      group.filter((subject) => !solutionIds.has(subject.id)),
-      random,
-    ).slice(0, capacity - required.length);
-    return [...required, ...extras];
+    return stratifiedProgressionSample(group, metricId, capacities[index]!, random);
   });
   if (pool.length !== FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return null;
   if (new Set(pool.map((subject) => subject.id)).size !== pool.length) return null;
-  if (!solution.every((subject) => pool.some((candidate) => candidate.id === subject.id))) return null;
   return shuffleLineup(pool, random);
+}
+
+function balancedProgressionTargetSolution(
+  pool: readonly FootballHitTheNumberSubject[],
+  slots: readonly FootballHitTheNumberSlot[],
+  metricId: FootballFactMetricId,
+) {
+  const legal: { subjects: FootballHitTheNumberSubject[]; total: number; signature: string }[] = [];
+  combinations(pool, 5, (selection) => {
+    if (!assignSlots(slots, selection, metricId)) return;
+    const total = selection.reduce((sum, subject) => sum + valueFor(subject.id, metricId), 0);
+    if (!(total > 0)) return;
+    legal.push({
+      subjects: [...selection],
+      total,
+      signature: selection.map((subject) => subject.id).sort().join("|"),
+    });
+  });
+  if (!legal.length) return null;
+  legal.sort((left, right) => left.total - right.total || left.signature.localeCompare(right.signature));
+  return legal[Math.floor((legal.length - 1) / 2)]!.subjects;
 }
 
 function combinations<T>(items: readonly T[], count: number, visit: (selection: readonly T[]) => boolean | void) {
@@ -1025,30 +1019,30 @@ function buildCandidate(
     eligible = oneFromEachSubjects(metricBoard);
     slots = oneFromEachSlots();
     configurationLabel = "One champion from each era + wild card";
-    solution = slotSolution(slots, eligible, metricId, random);
   } else if (formatId === "build-the-team") {
     slots = buildSlotsFor(eligible, metricId);
     configurationLabel = "4 stat tiers + wild card";
-    solution = slotSolution(slots, eligible, metricId, random);
   } else {
     solution = recognizabilityWeightedShuffle(eligible, random).slice(0, pickCount);
   }
 
-  if (!solution || solution.length !== pickCount) return null;
-  const solutionIds = solution.map((subject) => subject.id);
   let subjectIds: string[];
-
   if (formatId === "one-from-each" || formatId === "build-the-team") {
-    const balancedPool = balancedProgressionRandomPool(eligible, solution, metricId, slots, random);
+    const balancedPool = balancedProgressionRandomPool(eligible, metricId, slots, random);
     if (!balancedPool) return null;
+    solution = balancedProgressionTargetSolution(balancedPool, slots, metricId);
+    if (!solution || solution.length !== pickCount) return null;
     subjectIds = balancedPool.map((subject) => subject.id);
   } else {
+    if (!solution || solution.length !== pickCount) return null;
     const poolSize = footballHitTheNumberRandomPoolSize(pickCount);
     const curatedPool = curatedRandomPool(eligible, solution, metricId, poolSize, random);
     if (!curatedPool) return null;
     subjectIds = curatedPool.map((subject) => subject.id);
   }
 
+  if (!solution || solution.length !== pickCount) return null;
+  const solutionIds = solution.map((subject) => subject.id);
   const target = solutionIds.reduce((sum, subjectId) => sum + valueFor(subjectId, metricId), 0);
   if (!(target > 0)) return null;
   const fact = getFootballFact(solutionIds[0]!, metricId);
