@@ -5,6 +5,13 @@ import {
 } from "../back-room/footballWavelengthModel";
 import { getFootballReviewedRankFivePack } from "../back-room/footballRankFivePlayableModel";
 import {
+  FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE,
+  createFootballHitTheNumberPlan,
+  footballHitTheNumberPlanQuality,
+  footballHitTheNumberRandomPoolSize,
+  type FootballHitTheNumberPlan,
+} from "../back-room/footballHitTheNumberModel";
+import {
   buildFootballOfficialDailySetup,
   FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION,
   FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION,
@@ -37,6 +44,10 @@ function isoDay(offset: number) {
 function setupScheduleVersion(day: string) {
   if (day >= "2026-09-13") return FOOTBALL_TODAY_SCHEDULE_VERSION;
   return day >= "2026-09-12" ? "football-daily-v5" : "football-daily-v1";
+}
+
+function hitTheNumberPlan(setup: ReturnType<typeof buildFootballOfficialDailySetup>) {
+  return setup.privateSetupEvidence.plan as FootballHitTheNumberPlan;
 }
 
 function setupUsesNonReviewedSubject(gameType: "blind_rank_5" | "keep_4_cut_4", day: string) {
@@ -88,7 +99,7 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-09-11")).toBe("football-daily-v3");
     expect(footballTodayScheduleVersionForDay("2026-09-12")).toBe("football-daily-v5");
     expect(footballTodayScheduleVersionForDay("2026-09-13")).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
-    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v6-question-refresh");
+    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v7-curated-hit-number");
 
     const future = Array.from({ length: 20 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 8, 12 + offset)).toISOString().slice(0, 10);
@@ -117,11 +128,15 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayGameForDay("2026-09-13")).toBe("hit_the_number");
 
     const refreshedHitTheNumber = buildFootballTodayPersistenceSetup("2026-09-13");
+    const refreshedPlan = hitTheNumberPlan(refreshedHitTheNumber);
     expect(refreshedHitTheNumber.scheduleVersion).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
     expect(refreshedHitTheNumber.gameType).toBe("hit_the_number");
-    expect(refreshedHitTheNumber.publicSetup.league).toBe("NFL");
-    expect(refreshedHitTheNumber.publicSetup.format_id).toBe("themed-lineup");
-    expect(refreshedHitTheNumber.publicSetup.metric_id).toBe("nfl-season-passing-yards");
+    expect(refreshedPlan.boardType).toBe("random-pool");
+    expect([4, 5, 6]).toContain(refreshedPlan.pickCount);
+    expect(refreshedHitTheNumber.publicSetup.candidates).toHaveLength(
+      footballHitTheNumberRandomPoolSize(refreshedPlan.pickCount),
+    );
+    expect(footballHitTheNumberPlanQuality(refreshedPlan).passes).toBe(true);
     expect(refreshedHitTheNumber.setupKey).not.toContain("nfl-team-defensive-interceptions");
 
     const transition = Array.from({ length: 42 }, (_unused, offset) => {
@@ -301,6 +316,35 @@ describe("Football Today’s Challenge session", () => {
     expect(keepCutExpanded).toBe(true);
   });
 
+  it("uses the same capped curated generator contract for Football Daily and Casual", () => {
+    expect(FOOTBALL_HIT_THE_NUMBER_DEFAULT_BOARD_TYPE).toBe("random-pool");
+
+    const dailyFormats = new Set<string>();
+    for (let offset = 0; offset < 180; offset += 1) {
+      const day = isoDay(offset);
+      const setup = buildFootballOfficialDailySetup("hit_the_number", day, setupScheduleVersion(day));
+      const plan = hitTheNumberPlan(setup);
+      const candidates = setup.publicSetup.candidates as Array<Record<string, unknown>>;
+
+      dailyFormats.add(plan.formatId);
+      expect(plan.boardType).toBe("random-pool");
+      expect([4, 5, 6]).toContain(plan.pickCount);
+      expect(candidates).toHaveLength(footballHitTheNumberRandomPoolSize(plan.pickCount));
+      expect(candidates.length).toBeLessThanOrEqual(16);
+      expect((setup.privateSetupEvidence.fighter_ids as string[])).toHaveLength(candidates.length);
+      expect(footballHitTheNumberPlanQuality(plan).passes).toBe(true);
+    }
+    expect(dailyFormats).toEqual(new Set(["classic", "themed-lineup", "one-from-each", "build-the-team"]));
+
+    for (let index = 0; index < 120; index += 1) {
+      const casual = createFootballHitTheNumberPlan(`daily-casual-parity-${index}`);
+      expect(casual.boardType).toBe("random-pool");
+      expect(casual.subjectIds).toHaveLength(footballHitTheNumberRandomPoolSize(casual.pickCount));
+      expect(casual.subjectIds.length).toBeLessThanOrEqual(16);
+      expect(footballHitTheNumberPlanQuality(casual).passes).toBe(true);
+    }
+  }, 90_000);
+
   it("keeps Football Daily Hit the Number on the replayable progression rules", () => {
     let setup: ReturnType<typeof buildFootballOfficialDailySetup> | null = null;
     for (let offset = 0; offset < 240; offset += 1) {
@@ -364,7 +408,9 @@ describe("Football Today’s Challenge session", () => {
     const candidates = projection.public_setup.candidates as Array<Record<string, unknown>>;
 
     expect(projection.game_type).toBe("hit_the_number");
-    expect(candidates.length).toBeGreaterThan(7);
+    const plan = hitTheNumberPlan(buildFootballTodayPersistenceSetup("2026-08-26"));
+    expect(candidates).toHaveLength(footballHitTheNumberRandomPoolSize(plan.pickCount));
+    expect(candidates.length).toBeLessThanOrEqual(16);
     expect(candidates.every((candidate) => !("value" in candidate))).toBe(true);
     expect(projection.reveal_setup).toBeNull();
   });
