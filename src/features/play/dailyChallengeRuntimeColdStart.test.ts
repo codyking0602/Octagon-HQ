@@ -15,13 +15,22 @@ describe("daily challenge runtime cold-start isolation", () => {
     "utf8",
   );
 
-  it("keeps the UFC runtime as the only eager generated runtime", () => {
-    expect(runtime).toContain(
-      'import {\n  advanceOfficialDailyRuntime,\n  buildOfficialDailySetup,\n} from "./runtime.generated.mjs";',
+  it("serves published UFC Daily reads before loading the generated UFC runtime", () => {
+    expect(runtime).not.toContain('from "./runtime.generated.mjs";');
+    expect(runtime).toContain('function loadUfcRuntime()');
+    expect(runtime).toContain('import("./runtime.generated.mjs")');
+
+    const materializationGuard = runtime.indexOf('if (request.required !== true)');
+    const materializationLoad = runtime.indexOf('const ufcRuntime = await loadUfcRuntime();');
+    expect(materializationGuard).toBeGreaterThan(-1);
+    expect(materializationLoad).toBeGreaterThan(materializationGuard);
+
+    const ufcReadReturn = runtime.lastIndexOf(
+      'if (body.mode === "get-today" || body.mode === undefined) {\n      return json(publicPayload(context));',
     );
-    expect(runtime).not.toContain(
-      'buildFootballTodayRuntimeSnapshot,\n  buildOfficialDailySetup,\n} from "./runtime.generated.mjs";',
-    );
+    const ufcAdvanceLoad = runtime.lastIndexOf('const ufcRuntime = await loadUfcRuntime();');
+    expect(ufcReadReturn).toBeGreaterThan(-1);
+    expect(ufcAdvanceLoad).toBeGreaterThan(ufcReadReturn);
   });
 
   it("keeps Who Am I authority split by sport so UFC cold starts do not import Football research", () => {
