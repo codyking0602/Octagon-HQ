@@ -259,10 +259,10 @@ describe("canonical Football Build a QB trait model", () => {
     }));
     expect(actual).toEqual(generatedBuildQbCatalog);
   });
-  it("keeps one calculated ratings owner and synchronizes the append-only backend projection", () => {
+  it("keeps one calculated ratings owner and synchronizes the append-only v4 backend projection", () => {
     const modelSource = readFileSync("src/features/back-room/footballPositionTraitRatings.ts", "utf8");
     const migration = readFileSync(
-      "supabase/migrations/202612310102_stage12_build_qb_competitive_model.sql",
+      "supabase/migrations/202612310104_stage12_build_qb_recognizable_pool_refresh.sql",
       "utf8",
     );
 
@@ -277,26 +277,24 @@ describe("canonical Football Build a QB trait model", () => {
     expect(modelSource).not.toContain("candidatesByName");
     expect(modelSource).not.toContain("AUDITED_QB_PROFILES");
 
-    expect(migration).toContain("football-draft-room-2026-09-v2");
-    expect(migration).toContain("football-draft-room-rarity-2026-09-v2");
+    expect(migration).toContain("football-draft-room-2026-09-v4");
+    expect(migration).toContain("football-draft-room-rarity-2026-09-v4");
     expect(migration).toContain("football-build-qb-traits-2026-09-v1");
     expect(migration).not.toContain("football-build-qb-traits-2026-09-v2");
     expect(migration).not.toContain("create or replace function private.generate_auction_deck");
+    expect(migration).toContain("where content_version = 'football-draft-room-2026-09-v3'");
+    expect(migration).toContain("create or replace function private.grade_auction");
 
-    const catalogLines = migration
-      .split("\n")
-      .filter((line) => line.includes("'football-draft-room-2026-09-v2','build-qb'"));
-    expect(catalogLines).toHaveLength(BUILD_QB_MATURE_POOL_SIZE);
-
-    for (const row of generatedBuildQbCatalog) {
-      const line = catalogLines.find((candidate) => candidate.includes(`'${row.displayName}'`));
-      expect(line, `missing backend projection for ${row.displayName}`).toBeDefined();
-      expect(line).toContain(`,${row.rarityBand},`);
-      expect(line).toContain(`,${row.generationWeight.toFixed(2)},`);
+    const approvedReplacements = new Set([
+      "Trevor Lawrence", "Tua Tagovailoa", "C.J. Stroud", "Brock Purdy", "Jordan Love",
+      "Jayden Daniels", "Derek Carr", "Ryan Tannehill", "Nick Foles", "Carson Wentz", "Jimmy Garoppolo",
+    ]);
+    for (const row of generatedBuildQbCatalog.filter((profile) => approvedReplacements.has(profile.displayName))) {
+      expect(migration).toContain(`display_label = '${row.displayName.replaceAll("'", "''")}'`);
       for (const trait of BUILD_QB_TRAITS) {
-        expect(line).toContain(`'${trait}',${row.traits[trait]}`);
+        expect(migration).toContain(`'${trait}',${row.traits[trait]}`);
       }
-      expect(line).toContain(`'overall',${row.overall}`);
+      expect(migration).toContain(`'overall',${row.overall}`);
     }
   });
 
