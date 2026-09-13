@@ -22,8 +22,8 @@ export const FOOTBALL_BUILD_QB_RESEARCH_SOURCES = [
   { id: "nfl-100-quarterbacks", evidenceType: "historical-evaluation", source: "https://www.nfl.com/news/nfl-s-all-time-team-tom-brady-joe-montana-top-quarterbacks-0ap3000001091999" },
 ] as const;
 
-type BuildQbResearchLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-type BuildQbRarityBand = 1 | 2 | 3 | 4 | 5;
+export type BuildQbResearchLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type BuildQbRarityBand = 1 | 2 | 3 | 4 | 5;
 export type BuildQbQualityBand = "marquee" | "strong" | "core" | "lower" | "wildcard";
 
 interface BuildQbResearchInput {
@@ -59,7 +59,7 @@ const REQUIRED_METRICS = [
   "nfl-career-rushing-touchdowns",
 ] as const satisfies readonly FootballFactMetricId[];
 
-const RESEARCH_LEVEL_RATING: Readonly<Record<BuildQbResearchLevel, number>> = {
+export const BUILD_QB_RESEARCH_LEVEL_RATING: Readonly<Record<BuildQbResearchLevel, number>> = {
   1: 35,
   2: 42,
   3: 50,
@@ -70,6 +70,9 @@ const RESEARCH_LEVEL_RATING: Readonly<Record<BuildQbResearchLevel, number>> = {
   8: 93,
   9: 99,
 };
+
+// Compatibility name retained for the locked NFL audit while both NFL and CFB consume one calibration owner.
+const RESEARCH_LEVEL_RATING = BUILD_QB_RESEARCH_LEVEL_RATING;
 
 export const BUILD_QB_GENERATION_WEIGHT_BY_RARITY: Readonly<Record<BuildQbRarityBand, number>> = {
   1: 1.00,
@@ -150,10 +153,22 @@ function qualityBandForRarity(rarityBand: BuildQbRarityBand): BuildQbQualityBand
   return "wildcard";
 }
 
-function researchTraitRatings(research: BuildQbResearchInput["research"]) {
+export function buildQbTraitRatingsFromResearch(
+  research: Readonly<Record<BuildQbTrait, BuildQbResearchLevel>>,
+) {
   return Object.fromEntries(
-    BUILD_QB_TRAITS.map((trait) => [trait, RESEARCH_LEVEL_RATING[research[trait]]]),
+    BUILD_QB_TRAITS.map((trait) => [trait, BUILD_QB_RESEARCH_LEVEL_RATING[research[trait]]]),
   ) as Record<BuildQbTrait, number>;
+}
+
+export function calculateBuildQbOverall(traits: Readonly<Record<BuildQbTrait, number>>) {
+  return Math.round(
+    BUILD_QB_TRAITS.reduce((sum, trait) => sum + traits[trait], 0) / BUILD_QB_TRAITS.length,
+  );
+}
+
+function researchTraitRatings(research: BuildQbResearchInput["research"]) {
+  return buildQbTraitRatingsFromResearch(research);
 }
 
 /**
@@ -224,9 +239,7 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
     }
 
     const traits = researchTraitRatings(input.research);
-    const overall = Math.round(
-      BUILD_QB_TRAITS.reduce((sum, trait) => sum + traits[trait], 0) / BUILD_QB_TRAITS.length,
-    );
+    const overall = calculateBuildQbOverall(traits);
     const qualityBand = qualityBandForRarity(input.qualityBand);
 
     return {
