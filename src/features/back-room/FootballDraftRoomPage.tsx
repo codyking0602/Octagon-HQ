@@ -293,13 +293,15 @@ function DraftRoomBoard({
   return (
     <div className="auction-board">
       <header className="auction-board__header">
-        <img
-          className="auction-board__image build-qb-board__image"
-          src={draftRoomHeroImage(state.mode_id)}
-          alt=""
-          aria-hidden="true"
-          onError={(event) => { event.currentTarget.hidden = true; }}
-        />
+        {!trioMode ? (
+          <img
+            className="auction-board__image build-qb-board__image"
+            src={draftRoomHeroImage(state.mode_id)}
+            alt=""
+            aria-hidden="true"
+            onError={(event) => { event.currentTarget.hidden = true; }}
+          />
+        ) : null}
         <div className="auction-board__nav">
           <button type="button" onClick={onNewRoom}>‹ NEW ROOM</button>
           <button type="button" onClick={onReload} disabled={busy}>REFRESH</button>
@@ -336,8 +338,10 @@ function DraftRoomBoard({
           style={currentQbIdentity ? buildQbTeamStyle(currentQbIdentity) : undefined}
         >
           <small>{trioMode ? "CURRENT TRIO" : "CURRENT QB"}</small>
-          {trioMode && state.current_item?.display_label ? (
-            <TrioPackageCard displayLabel={state.current_item.display_label} />
+          {trioMode ? (
+            state.current_item?.display_label
+              ? <TrioPackageCard displayLabel={state.current_item.display_label} />
+              : <h2>{terminal ? "ROSTERS LOCKED" : "LOADING"}</h2>
           ) : (
             <div className="build-qb-current__identity">
               {currentQbIdentity ? <BuildQbTeamMark identity={currentQbIdentity} /> : null}
@@ -365,7 +369,7 @@ function DraftRoomBoard({
         && state.challenger_final_score !== null
         && state.recipient_final_score !== null ? (
         <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : "Build a QB final result"}>
-          <p className="eyebrow">FINAL BUILD SCORE</p>
+          <p className="eyebrow">{trioMode ? "FINAL ROSTER SCORE" : "FINAL BUILD SCORE"}</p>
           <h2>
             {state.is_tie
               ? "TRUE TIE"
