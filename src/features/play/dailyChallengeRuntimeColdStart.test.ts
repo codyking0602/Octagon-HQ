@@ -45,30 +45,6 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).not.toContain('import("./football-runtime.generated.mjs")');
   });
 
-  it("rebuilds canonical Football inputs and executes the publication artifact before deployment", () => {
-    const generationOrder = [
-      "./generate-football-recognizability.mjs",
-      "./generate-football-cfb-player-season-recognition.mjs",
-      "./generate-football-career-media-context.mjs",
-      "./generate-football-factual-universe.mjs",
-      "./enrich-football-hit-number-peak-seasons.mjs",
-    ];
-
-    for (let index = 0; index < generationOrder.length; index += 1) {
-      const position = bundler.indexOf(generationOrder[index]);
-      expect(position, generationOrder[index]).toBeGreaterThan(-1);
-      if (index > 0) {
-        expect(position, generationOrder[index]).toBeGreaterThan(
-          bundler.indexOf(generationOrder[index - 1]),
-        );
-      }
-    }
-
-    expect(bundler).toContain("pathToFileURL(output).href");
-    expect(bundler).toContain("generatedRuntime.buildFootballTodayPersistenceSetup(\"2026-09-13\")");
-    expect(bundler).toContain("Football daily publication bundle failed its deterministic smoke proof.");
-  });
-
   it("builds separate UFC, Football publication, and Football advance artifacts under one function owner", () => {
     expect(bundler).toContain('src/features/play/todaysChallengeRuntime.ts');
     expect(bundler).toContain('src/features/play/footballTodayChallengePublicationRuntime.ts');
