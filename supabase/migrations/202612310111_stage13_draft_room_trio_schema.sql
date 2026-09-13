@@ -682,6 +682,11 @@ begin
   );
   v_next := replace(v_next, 'catalog.display_label', 'coalesce(catalog.display_label, trio.display_label)');
   v_next := replace(v_next, 'when catalog.item_reference is not null', 'when catalog.item_reference is not null or trio.item_reference is not null');
+  v_next := replace(
+    v_next,
+    E'        where deck.auction_id = auction.id\n          and deck.deck_position = auction.current_round',
+    E'        where deck.auction_id = auction.id\n          and deck.deck_position = auction.current_round\n          and (catalog.item_reference is not null or trio.item_reference is not null)'
+  );
   if v_next = v_definition then raise exception 'Stage 13 participant projection contract drifted'; end if;
   execute v_next;
 end;
