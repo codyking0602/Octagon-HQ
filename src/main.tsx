@@ -64,7 +64,6 @@ import "./styles/football-blind-resume.css";
 import "./styles/blind-resume-alignment.css";
 import "./styles/football-foundation.css";
 import "./styles/football-shell.css";
-import "./styles/football-draft-room.css";
 import "./styles/football-entry-reveal.css";
 import "./styles/football-picks.css";
 import "./styles/football-matchup-breakdowns.css";
