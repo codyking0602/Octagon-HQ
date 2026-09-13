@@ -76,6 +76,8 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
   );
 
   return [...uniqueCandidates.values()].flatMap((candidate) => {
+    if (candidate.recognizabilityTier !== "A" && candidate.recognizabilityTier !== "B") return [];
+
     const subject = resolveFootballSubjectReference(
       candidate.canonicalSubjectId,
       candidate.name,
