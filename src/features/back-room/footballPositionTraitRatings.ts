@@ -49,16 +49,16 @@ interface RawQbTraitSignals {
   recognizabilityTier: "A" | "B" | "C";
   auditIndex: number;
   startSeason: number;
-  yardsPerAttempt: number;
-  passingYardsPerGame: number;
-  passingTouchdownsPerGame: number;
-  completionPercentage: number;
-  passerRating: number;
+  yardsPerAttempt: number | null;
+  passingYardsPerGame: number | null;
+  passingTouchdownsPerGame: number | null;
+  completionPercentage: number | null;
+  passerRating: number | null;
   touchdownInterceptionRatio: number;
-  interceptionPercentage: number;
-  rushingYardsPerGame: number;
-  rushingTouchdownsPerGame: number;
-  rushingYardsPerAttempt: number;
+  interceptionPercentage: number | null;
+  rushingYardsPerGame: number | null;
+  rushingTouchdownsPerGame: number | null;
+  rushingYardsPerAttempt: number | null;
   historicalConsensus: number;
   evidenceMetricIds: readonly FootballFactMetricId[];
 }
@@ -107,6 +107,23 @@ const SCOUTING_TRAIT_AUDIT: Readonly<Record<string, ScoutingTraitAudit>> = {
   "nfl-joe-burrow": { Accuracy: "elite", Processing: "high", Clutch: "high" },
   "nfl-jalen-hurts": { Mobility: "elite", Clutch: "high" },
   "jay-cutler": { Arm: "elite", Mobility: "plus" },
+
+  // Name-keyed historical anchors are used only when the canonical factual ledger
+  // intentionally exposes partial pre-modern career rates. They provide film/context
+  // evidence without creating a second factual-stat owner or hand-entering final grades.
+  "roger staubach": { Arm: "high", Accuracy: "high", Processing: "elite", Mobility: "high", Clutch: "elite" },
+  "terry bradshaw": { Arm: "high", Accuracy: "average", Processing: "plus", Mobility: "plus", Clutch: "elite" },
+  "fran tarkenton": { Arm: "plus", Accuracy: "high", Processing: "high", Mobility: "elite", Clutch: "high" },
+  "jim kelly": { Arm: "high", Accuracy: "high", Processing: "high", Mobility: "plus", Clutch: "high" },
+  "boomer esiason": { Arm: "high", Accuracy: "high", Processing: "high", Mobility: "average", Clutch: "high" },
+  "randall cunningham": { Arm: "high", Accuracy: "plus", Processing: "plus", Mobility: "rare", Clutch: "plus" },
+  "steve mcnair": { Arm: "high", Accuracy: "high", Processing: "high", Mobility: "elite", Clutch: "high" },
+  "rich gannon": { Arm: "average", Accuracy: "high", Processing: "elite", Mobility: "plus", Clutch: "high" },
+  "drew bledsoe": { Arm: "rare", Accuracy: "plus", Processing: "plus", Mobility: "limited", Clutch: "plus" },
+  "vinny testaverde": { Arm: "elite", Accuracy: "average", Processing: "average", Mobility: "average", Clutch: "plus" },
+  "mark brunell": { Arm: "plus", Accuracy: "high", Processing: "high", Mobility: "high", Clutch: "plus" },
+  "jim everett": { Arm: "high", Accuracy: "high", Processing: "plus", Mobility: "average", Clutch: "average" },
+  "jeff george": { Arm: "rare", Accuracy: "average", Processing: "limited", Mobility: "average", Clutch: "limited" },
 };
 
 const SCOUTING_LEVEL_SCORE: Readonly<Record<ScoutingLevel, number>> = {
@@ -119,12 +136,15 @@ const SCOUTING_LEVEL_SCORE: Readonly<Record<ScoutingLevel, number>> = {
 };
 
 const REQUIRED_METRICS = [
-  "nfl-career-games",
-  "nfl-career-passing-completions",
-  "nfl-career-passing-attempts",
   "nfl-career-passing-yards",
   "nfl-career-passing-touchdowns",
   "nfl-career-interceptions-thrown",
+] as const satisfies readonly FootballFactMetricId[];
+
+const OPTIONAL_RATE_METRICS = [
+  "nfl-career-games",
+  "nfl-career-passing-completions",
+  "nfl-career-passing-attempts",
 ] as const satisfies readonly FootballFactMetricId[];
 
 const OPTIONAL_MOBILITY_METRICS = [
@@ -196,12 +216,13 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
       throw new Error(`Build a QB QB ${subjectId} is missing canonical career identity`);
     }
 
+    const metricIds = [...REQUIRED_METRICS, ...OPTIONAL_RATE_METRICS, ...OPTIONAL_MOBILITY_METRICS];
     const values = Object.fromEntries(
-      [...REQUIRED_METRICS, ...OPTIONAL_MOBILITY_METRICS].map((metricId) => [metricId, factValue(subjectId, metricId)]),
-    ) as Record<(typeof REQUIRED_METRICS)[number] | (typeof OPTIONAL_MOBILITY_METRICS)[number], number | null>;
+      metricIds.map((metricId) => [metricId, factValue(subjectId, metricId)]),
+    ) as Record<(typeof metricIds)[number], number | null>;
     const missing = REQUIRED_METRICS.filter((metricId) => values[metricId] == null);
     if (missing.length) {
-      throw new Error(`Build a QB QB ${subjectId} is missing canonical facts: ${missing.join(", ")}`);
+      throw new Error(`Build a QB QB ${subjectId} is missing canonical core facts: ${missing.join(", ")}`);
     }
 
     const historicalConsensus = getNflQbHistoricalConsensus(subjectId).score;
@@ -209,21 +230,26 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
       throw new Error(`Build a QB QB ${subjectId} is missing historical consensus`);
     }
 
-    const games = values["nfl-career-games"]!;
-    const completions = values["nfl-career-passing-completions"]!;
-    const attempts = values["nfl-career-passing-attempts"]!;
+    const games = values["nfl-career-games"];
+    const completions = values["nfl-career-passing-completions"];
+    const attempts = values["nfl-career-passing-attempts"];
     const passingYards = values["nfl-career-passing-yards"]!;
     const passingTouchdowns = values["nfl-career-passing-touchdowns"]!;
     const interceptions = values["nfl-career-interceptions-thrown"]!;
-    const rushingAttempts = values["nfl-career-rushing-attempts"] ?? 0;
-    const rushingYards = values["nfl-career-rushing-yards"] ?? 0;
-    const rushingTouchdowns = values["nfl-career-rushing-touchdowns"] ?? 0;
-    if (games <= 0 || attempts <= 0) throw new Error(`Build a QB QB ${subjectId} has incomplete career volume`);
+    const rushingAttempts = values["nfl-career-rushing-attempts"];
+    const rushingYards = values["nfl-career-rushing-yards"];
+    const rushingTouchdowns = values["nfl-career-rushing-touchdowns"];
 
-    const a = Math.min(2.375, Math.max(0, (completions / attempts - 0.3) * 5));
-    const b = Math.min(2.375, Math.max(0, (passingYards / attempts - 3) * 0.25));
-    const passerTouchdown = Math.min(2.375, Math.max(0, (passingTouchdowns / attempts) * 20));
-    const d = Math.min(2.375, Math.max(0, 2.375 - (interceptions / attempts) * 25));
+    const hasPassingRateVolume = attempts != null && attempts > 0;
+    const hasPerGameVolume = games != null && games > 0;
+    let passerRating: number | null = null;
+    if (hasPassingRateVolume && completions != null) {
+      const a = Math.min(2.375, Math.max(0, (completions / attempts - 0.3) * 5));
+      const b = Math.min(2.375, Math.max(0, (passingYards / attempts - 3) * 0.25));
+      const passerTouchdown = Math.min(2.375, Math.max(0, (passingTouchdowns / attempts) * 20));
+      const d = Math.min(2.375, Math.max(0, 2.375 - (interceptions / attempts) * 25));
+      passerRating = ((a + b + passerTouchdown + d) / 6) * 100;
+    }
 
     return {
       subjectId,
@@ -231,38 +257,48 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
       recognizabilityTier: candidate.recognizabilityTier,
       auditIndex,
       startSeason: subject.startSeason,
-      yardsPerAttempt: passingYards / attempts,
-      passingYardsPerGame: passingYards / games,
-      passingTouchdownsPerGame: passingTouchdowns / games,
-      completionPercentage: (completions / attempts) * 100,
-      passerRating: ((a + b + passerTouchdown + d) / 6) * 100,
+      yardsPerAttempt: hasPassingRateVolume ? passingYards / attempts : null,
+      passingYardsPerGame: hasPerGameVolume ? passingYards / games : null,
+      passingTouchdownsPerGame: hasPerGameVolume ? passingTouchdowns / games : null,
+      completionPercentage: hasPassingRateVolume && completions != null ? (completions / attempts) * 100 : null,
+      passerRating,
       touchdownInterceptionRatio: passingTouchdowns / Math.max(1, interceptions),
-      interceptionPercentage: (interceptions / attempts) * 100,
-      rushingYardsPerGame: rushingYards / games,
-      rushingTouchdownsPerGame: rushingTouchdowns / games,
-      rushingYardsPerAttempt: rushingAttempts > 0 ? rushingYards / rushingAttempts : 0,
+      interceptionPercentage: hasPassingRateVolume ? (interceptions / attempts) * 100 : null,
+      rushingYardsPerGame: hasPerGameVolume && rushingYards != null ? rushingYards / games : null,
+      rushingTouchdownsPerGame: hasPerGameVolume && rushingTouchdowns != null ? rushingTouchdowns / games : null,
+      rushingYardsPerAttempt: rushingAttempts != null && rushingAttempts > 0 && rushingYards != null
+        ? rushingYards / rushingAttempts
+        : null,
       historicalConsensus,
-      evidenceMetricIds: [...REQUIRED_METRICS, ...OPTIONAL_MOBILITY_METRICS].filter(
-        (metricId) => values[metricId] != null,
-      ),
+      evidenceMetricIds: metricIds.filter((metricId) => values[metricId] != null),
     };
   });
 }
 
-function weightedScore(rows: readonly { score: number; weight: number }[]) {
-  return rows.reduce((sum, row) => sum + row.score * row.weight, 0)
-    / rows.reduce((sum, row) => sum + row.weight, 0);
+function weightedScore(rows: readonly { score: number | null; weight: number }[]) {
+  const usable = rows.filter((row): row is { score: number; weight: number } => row.score != null);
+  if (!usable.length) return null;
+  return usable.reduce((sum, row) => sum + row.score * row.weight, 0)
+    / usable.reduce((sum, row) => sum + row.weight, 0);
+}
+
+function normalizedScoutingName(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 function blendScoutingEvidence(
-  statisticalScore: number,
+  statisticalScore: number | null,
   subjectId: string,
+  name: string,
   trait: BuildQbTrait,
   scoutingWeight: number,
 ) {
-  const level = SCOUTING_TRAIT_AUDIT[subjectId]?.[trait];
-  if (!level) return statisticalScore;
-  return statisticalScore * (1 - scoutingWeight) + SCOUTING_LEVEL_SCORE[level] * scoutingWeight;
+  const level = SCOUTING_TRAIT_AUDIT[subjectId]?.[trait]
+    ?? SCOUTING_TRAIT_AUDIT[normalizedScoutingName(name)]?.[trait];
+  if (!level) return statisticalScore ?? SCOUTING_LEVEL_SCORE.average;
+  const scoutingScore = SCOUTING_LEVEL_SCORE[level];
+  if (statisticalScore == null) return scoutingScore;
+  return statisticalScore * (1 - scoutingWeight) + scoutingScore * scoutingWeight;
 }
 
 function buildEraAnchors(raw: readonly RawQbTraitSignals[]) {
@@ -289,8 +325,18 @@ function eraScore(
   >,
   direction: "higher" | "lower" = "higher",
 ) {
-  const peers = buckets.get(eraBucket(row.startSeason)) ?? [];
-  return scoreFootballAnchoredValue(row[metric], peers.map((peer) => peer[metric]), direction);
+  const value = row[metric];
+  if (value == null) return null;
+  const peers = (buckets.get(eraBucket(row.startSeason)) ?? [])
+    .map((peer) => peer[metric])
+    .filter((peerValue): peerValue is number => peerValue != null);
+  if (peers.length < 2) return null;
+  return scoreFootballAnchoredValue(value, peers, direction);
+}
+
+function anchoredScore(value: number | null, anchors: readonly number[]) {
+  if (value == null || anchors.length < 2) return null;
+  return scoreFootballAnchoredValue(value, anchors);
 }
 
 function calibratedTraitRating(score: number) {
@@ -312,9 +358,9 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
   const raw = rawBuildQbSignals();
   const eraAnchors = buildEraAnchors(raw);
   const mobilityAnchors = {
-    rushingYardsPerGame: raw.map((row) => row.rushingYardsPerGame),
-    rushingTouchdownsPerGame: raw.map((row) => row.rushingTouchdownsPerGame),
-    rushingYardsPerAttempt: raw.map((row) => row.rushingYardsPerAttempt),
+    rushingYardsPerGame: raw.map((row) => row.rushingYardsPerGame).filter((value): value is number => value != null),
+    rushingTouchdownsPerGame: raw.map((row) => row.rushingTouchdownsPerGame).filter((value): value is number => value != null),
+    rushingYardsPerAttempt: raw.map((row) => row.rushingYardsPerAttempt).filter((value): value is number => value != null),
   };
 
   return raw.map((row) => {
@@ -333,9 +379,9 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
       { score: eraScore(row, eraAnchors, "passerRating"), weight: 0.25 },
     ]);
     const mobilityStat = weightedScore([
-      { score: scoreFootballAnchoredValue(row.rushingYardsPerGame, mobilityAnchors.rushingYardsPerGame), weight: 0.55 },
-      { score: scoreFootballAnchoredValue(row.rushingTouchdownsPerGame, mobilityAnchors.rushingTouchdownsPerGame), weight: 0.30 },
-      { score: scoreFootballAnchoredValue(row.rushingYardsPerAttempt, mobilityAnchors.rushingYardsPerAttempt), weight: 0.15 },
+      { score: anchoredScore(row.rushingYardsPerGame, mobilityAnchors.rushingYardsPerGame), weight: 0.55 },
+      { score: anchoredScore(row.rushingTouchdownsPerGame, mobilityAnchors.rushingTouchdownsPerGame), weight: 0.30 },
+      { score: anchoredScore(row.rushingYardsPerAttempt, mobilityAnchors.rushingYardsPerAttempt), weight: 0.15 },
     ]);
     const clutchStat = weightedScore([
       { score: row.historicalConsensus / 100, weight: 0.55 },
@@ -344,11 +390,11 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
     ]);
 
     const traits = {
-      Arm: calibratedTraitRating(blendScoutingEvidence(armStat, row.subjectId, "Arm", 0.72)),
-      Accuracy: calibratedTraitRating(blendScoutingEvidence(accuracyStat, row.subjectId, "Accuracy", 0.48)),
-      Processing: calibratedTraitRating(blendScoutingEvidence(processingStat, row.subjectId, "Processing", 0.48)),
-      Mobility: calibratedTraitRating(blendScoutingEvidence(mobilityStat, row.subjectId, "Mobility", 0.52)),
-      Clutch: calibratedTraitRating(blendScoutingEvidence(clutchStat, row.subjectId, "Clutch", 0.52)),
+      Arm: calibratedTraitRating(blendScoutingEvidence(armStat, row.subjectId, row.name, "Arm", 0.72)),
+      Accuracy: calibratedTraitRating(blendScoutingEvidence(accuracyStat, row.subjectId, row.name, "Accuracy", 0.48)),
+      Processing: calibratedTraitRating(blendScoutingEvidence(processingStat, row.subjectId, row.name, "Processing", 0.48)),
+      Mobility: calibratedTraitRating(blendScoutingEvidence(mobilityStat, row.subjectId, row.name, "Mobility", 0.52)),
+      Clutch: calibratedTraitRating(blendScoutingEvidence(clutchStat, row.subjectId, row.name, "Clutch", 0.52)),
     } satisfies Record<BuildQbTrait, number>;
 
     const qualityBand = qualityBandForAuditIndex(row.auditIndex);
