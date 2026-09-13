@@ -8,7 +8,7 @@ import {
   footballRankingRatingForScore,
   scoreFootballAnchoredValue,
 } from "./footballRankingFramework";
-import { resolveFootballSubjectReference } from "./footballSubjectRegistry";
+import { queryFootballSubjects } from "./footballSubjectRegistry";
 import { BUILD_QB_TRAITS, type BuildQbTrait } from "../play/draftRoomContract";
 
 export const FOOTBALL_POSITION_TRAIT_MODEL_VERSION = "build-qb-v2" as const;
@@ -194,6 +194,17 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
     buildFootballComparisonCandidatePool("nfl-quarterbacks")
       .map((candidate) => [candidate.canonicalSubjectId, candidate]),
   );
+  const subjects = new Map(
+    queryFootballSubjects({
+      kind: "player-career",
+      league: "NFL",
+      position: "QB",
+      recognizabilityTiers: ["A", "B", "C"],
+      casualEligible: true,
+      includeProjectedSourceSubjects: true,
+      includeProjectedCanonicalRecognition: true,
+    }).map((subject) => [subject.id, subject]),
+  );
   const targetIds = NFL_QB_MANUAL_AUDIT_ORDER.slice(0, BUILD_QB_MATURE_POOL_SIZE);
 
   return targetIds.map((subjectId, auditIndex) => {
@@ -207,11 +218,7 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
       throw new Error(`Build a QB QB ${subjectId} is outside the canonical playable recognition floor`);
     }
 
-    const subject = resolveFootballSubjectReference(
-      candidate.canonicalSubjectId,
-      candidate.name,
-      { league: "NFL", includeProjectedSourceSubjects: true, includeProjectedCanonicalRecognition: true },
-    );
+    const subject = subjects.get(candidate.canonicalSubjectId);
     if (!subject || subject.startSeason == null) {
       throw new Error(`Build a QB QB ${subjectId} is missing canonical career identity`);
     }
