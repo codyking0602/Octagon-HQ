@@ -5,6 +5,13 @@ import {
 } from "../back-room/footballWavelengthModel";
 import { getFootballReviewedRankFivePack } from "../back-room/footballRankFivePlayableModel";
 import {
+  FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG,
+  createFootballHitTheNumberPlan,
+  footballHitTheNumberPlanQuality,
+  footballHitTheNumberRandomPoolSize,
+  type FootballHitTheNumberPlan,
+} from "../back-room/footballHitTheNumberModel";
+import {
   buildFootballOfficialDailySetup,
   FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION,
   FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION,
@@ -316,6 +323,35 @@ describe("Football Today’s Challenge session", () => {
     expect(blindRankExpanded).toBe(true);
     expect(keepCutExpanded).toBe(true);
   });
+
+  it("keeps Daily and Casual on the same capped, quality-gated Football Hit the Number contract", () => {
+    const approvedMetrics = new Set(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((metric) => metric.metricId));
+
+    for (let offset = 0; offset < 72; offset += 1) {
+      const day = isoDay(offset);
+      const setup = buildFootballOfficialDailySetup("hit_the_number", day, setupScheduleVersion(day));
+      const plan = setup.privateSetupEvidence.plan as FootballHitTheNumberPlan;
+      const candidates = setup.publicSetup.candidates as Array<Record<string, unknown>>;
+
+      expect(plan.boardType).toBe("random-pool");
+      expect([4, 5, 6]).toContain(plan.pickCount);
+      expect(candidates).toHaveLength(footballHitTheNumberRandomPoolSize(plan.pickCount));
+      expect(candidates.length).toBeLessThanOrEqual(16);
+      expect(setup.privateSetupEvidence.fighter_ids).toHaveLength(candidates.length);
+      expect(approvedMetrics.has(plan.metricId)).toBe(true);
+      expect(footballHitTheNumberPlanQuality(plan).passes).toBe(true);
+    }
+
+    for (let index = 0; index < 72; index += 1) {
+      const casual = createFootballHitTheNumberPlan(`football-daily-casual-parity-${index}`);
+      expect(casual.boardType).toBe("random-pool");
+      expect([4, 5, 6]).toContain(casual.pickCount);
+      expect(casual.subjectIds).toHaveLength(footballHitTheNumberRandomPoolSize(casual.pickCount));
+      expect(casual.subjectIds.length).toBeLessThanOrEqual(16);
+      expect(approvedMetrics.has(casual.metricId)).toBe(true);
+      expect(footballHitTheNumberPlanQuality(casual).passes).toBe(true);
+    }
+  }, 90_000);
 
   it("keeps Football Daily Hit the Number on the replayable progression rules", () => {
     let setup: ReturnType<typeof buildFootballOfficialDailySetup> | null = null;
