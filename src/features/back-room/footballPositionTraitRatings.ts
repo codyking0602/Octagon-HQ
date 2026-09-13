@@ -224,7 +224,8 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
       (profile) => profile.name === candidate.name && profile.startSeason != null,
     );
     const startSeason = subject?.startSeason
-      ?? (sameNameCareerSubjects.length === 1 ? sameNameCareerSubjects[0]!.startSeason : null);
+      ?? (sameNameCareerSubjects.length === 1 ? sameNameCareerSubjects[0]!.startSeason : null)
+      ?? null;
     if (!subject) {
       throw new Error(`Build a QB QB ${subjectId} is missing canonical career identity`);
     }
