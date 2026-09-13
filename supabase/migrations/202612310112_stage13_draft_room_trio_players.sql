@@ -300,7 +300,7 @@ trio-cfb|WR|Average|Terry McLaurin|80|Ohio State|2018
 trio-cfb|WR|Average|JuJu Smith-Schuster|83|USC|2015
 trio-cfb|WR|Average|Michael Floyd|83|Notre Dame|2011
 trio-cfb|WR|Average|James Washington|83|Oklahoma State|2017
-trio-cfb|WR|Average|Corey Coleman|83|Baylor|2015$trio_pool$, E'\\n') with ordinality as source(line, ordinality)
+trio-cfb|WR|Average|Corey Coleman|83|Baylor|2015$trio_pool$, chr(10)) with ordinality as source(line, ordinality)
   where trim(line) <> ''
 ), parsed as (
   select
