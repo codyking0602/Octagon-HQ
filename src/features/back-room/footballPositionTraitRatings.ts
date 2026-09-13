@@ -219,7 +219,12 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
     }
 
     const subject = subjects.get(candidate.canonicalSubjectId);
-    if (!subject || subject.startSeason == null) {
+    const sameNameCareerSubjects = [...subjects.values()].filter(
+      (profile) => profile.name === candidate.name && profile.startSeason != null,
+    );
+    const startSeason = subject?.startSeason
+      ?? (sameNameCareerSubjects.length === 1 ? sameNameCareerSubjects[0]!.startSeason : null);
+    if (!subject || startSeason == null) {
       throw new Error(`Build a QB QB ${subjectId} is missing canonical career identity`);
     }
 
@@ -263,7 +268,7 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
       name: candidate.name,
       recognizabilityTier: candidate.recognizabilityTier,
       auditIndex,
-      startSeason: subject.startSeason,
+      startSeason,
       yardsPerAttempt: hasPassingRateVolume ? passingYards / attempts : null,
       passingYardsPerGame: hasPerGameVolume ? passingYards / games : null,
       passingTouchdownsPerGame: hasPerGameVolume ? passingTouchdowns / games : null,
