@@ -207,9 +207,8 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
     canonicalCandidateForInput(input) ? [] : [input.name]
   ));
   if (identityMismatches.length) {
-    const available = candidates.map((candidate) => `${candidate.name} [${candidate.canonicalSubjectId}]`).join("; ");
     throw new Error(
-      `Build a QB research audit requires one exact canonical NFL QB per subject; mismatches: ${identityMismatches.join(", ")}; available: ${available}`,
+      `Build a QB research audit requires one exact canonical NFL QB per subject; mismatches: ${identityMismatches.join(", ")}`,
     );
   }
 
