@@ -8,7 +8,7 @@ update private.auction_catalog_versions
 set is_preparation_version = true
 where content_version = 'football-draft-room-2026-09-v1';
 
-do $
+do $$
 declare
   v_admin_a uuid := extensions.gen_random_uuid();
   v_admin_b uuid := extensions.gen_random_uuid();
