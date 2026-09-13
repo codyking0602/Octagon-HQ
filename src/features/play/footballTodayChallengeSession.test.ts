@@ -128,6 +128,14 @@ describe("Football Today’s Challenge session", () => {
     expect(refreshedHitTheNumber.gameType).toBe("hit_the_number");
     const refreshedPickCount = Number(refreshedHitTheNumber.publicSetup.pick_count);
     const refreshedCandidates = refreshedHitTheNumber.publicSetup.candidates as Array<Record<string, unknown>>;
+    const refreshedPlan = refreshedHitTheNumber.privateSetupEvidence.plan as {
+      boardType: string;
+      subjectIds: string[];
+      pickCount: number;
+    };
+    expect(refreshedPlan.boardType).toBe("random-pool");
+    expect(refreshedPlan.pickCount).toBe(refreshedPickCount);
+    expect(refreshedPlan.subjectIds).toEqual(refreshedCandidates.map((candidate) => String(candidate.id)));
     expect([4, 5, 6]).toContain(refreshedPickCount);
     expect(refreshedCandidates).toHaveLength(refreshedPickCount * 2 + 4);
     expect(new Set([
