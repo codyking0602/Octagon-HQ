@@ -257,3 +257,5 @@ comment on function public.export_football_verdict_knowledge() is
 
 revoke all on function public.export_football_verdict_knowledge() from public, anon, authenticated;
 grant execute on function public.export_football_verdict_knowledge() to service_role;
+
+notify pgrst, 'reload schema';
