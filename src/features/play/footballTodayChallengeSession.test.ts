@@ -46,7 +46,7 @@ function setupScheduleVersion(day: string) {
   return day >= "2026-09-12" ? "football-daily-v5" : "football-daily-v1";
 }
 
-function hitTheNumberPlan(setup: ReturnType<typeof buildFootballOfficialDailySetup>) {
+function hitTheNumberPlan(setup: { privateSetupEvidence: Record<string, unknown> }) {
   return setup.privateSetupEvidence.plan as FootballHitTheNumberPlan;
 }
 
