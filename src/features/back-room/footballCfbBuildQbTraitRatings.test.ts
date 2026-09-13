@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { BUILD_QB_RATING_TRAITS, BUILD_QB_TRAITS, draftRoomModeDefinition } from "../play/draftRoomContract";
+import { BUILD_QB_TRAITS, draftRoomModeDefinition } from "../play/draftRoomContract";
 import {
   CFB_BUILD_QB_GENERATION_WEIGHT_BY_RARITY,
   CFB_BUILD_QB_MATURE_POOL_SIZE,
@@ -22,7 +22,7 @@ describe("CFB Build a QB peak-season model", () => {
   });
 
   it("uses the approved modernized 80-QB membership and exact peak seasons", () => {
-    expect(CFB_BUILD_QB_TRAIT_MODEL_VERSION).toBe("cfb-build-qb-peak-season-v3");
+    expect(CFB_BUILD_QB_TRAIT_MODEL_VERSION).toBe("cfb-build-qb-peak-season-v4");
     const expected = new Map([
       ["Andrew Luck", [2011, "Stanford"]],
       ["Russell Wilson", [2011, "Wisconsin"]],
@@ -49,33 +49,29 @@ describe("CFB Build a QB peak-season model", () => {
     for (const profile of profiles) {
       expect(profile.evidenceSourceIds.length).toBeGreaterThanOrEqual(4);
       expect(new Set(profile.evidenceSourceIds).size).toBe(profile.evidenceSourceIds.length);
-      expect(profile.auditSummary.length).toBeGreaterThan(120);
-      for (const trait of BUILD_QB_RATING_TRAITS) expect(profile.auditSummary).toContain(`${trait}:`);
+      expect(profile.auditSummary.length).toBeGreaterThan(90);
+      for (const trait of BUILD_QB_TRAITS) expect(profile.auditSummary).toContain(`${trait}:`);
+      expect(profile.auditSummary).not.toContain("Clutch:");
     }
   });
 
-  it("plays four core traits while retaining Clutch in the canonical rating packet", () => {
+  it("uses exactly four canonical traits and derives overall from those four only", () => {
     expect(draftRoomModeDefinition("build-qb-cfb").categories).toEqual(BUILD_QB_TRAITS);
     expect(BUILD_QB_TRAITS).toEqual(["Arm", "Accuracy", "Processing", "Mobility"]);
     for (const profile of profiles) {
-      expect(Object.keys(profile.traits)).toEqual(BUILD_QB_RATING_TRAITS);
-      expect(profile.overall).toBe(Math.round(BUILD_QB_RATING_TRAITS.reduce((sum, trait) => sum + profile.traits[trait], 0) / BUILD_QB_RATING_TRAITS.length));
+      expect(Object.keys(profile.traits)).toEqual(BUILD_QB_TRAITS);
+      expect(profile.overall).toBe(Math.round(BUILD_QB_TRAITS.reduce((sum, trait) => sum + profile.traits[trait], 0) / BUILD_QB_TRAITS.length));
     }
   });
 
-  it("projects every audited CFB trait packet to the append-only v5 backend catalog", () => {
-    const migration = readFileSync("supabase/migrations/202612310109_stage12_cfb_build_qb_grading_audit.sql", "utf8");
-    expect(migration).toContain("football-draft-room-2026-09-v5");
-    expect(migration).toContain("football-draft-room-rarity-2026-09-v4");
-    expect(migration).toContain("where source.content_version = 'football-draft-room-2026-09-v4'");
-    expect(migration).not.toContain("update private.auction_catalog\n");
-    const auditedLines = migration.split("\n").filter((line) => line.includes("when 'cfb-build-qb-") && line.includes("jsonb_build_object"));
-    expect(auditedLines).toHaveLength(80);
+  it("projects a Clutch-free four-trait grading packet to the v6 backend", () => {
+    const migration = readFileSync("supabase/migrations/202612310110_stage12_build_qb_four_trait_format.sql", "utf8");
+    expect(migration).toContain("football-draft-room-2026-09-v6");
+    expect(migration).toContain("football-build-qb-traits-2026-09-v2");
+    expect(migration).toContain("grading_inputs - 'Clutch'");
     for (const row of generatedCfbBuildQbCatalog) {
-      const line = auditedLines.find((candidate) => candidate.includes(`when '${row.itemReference}'`));
-      expect(line, `missing v5 grading packet for ${row.displayLabel}`).toBeDefined();
-      for (const trait of BUILD_QB_TRAITS) expect(line).toContain(`'${trait}',${row.gradingInputs[trait]}`);
-      expect(line).toContain(`'overall',${row.gradingInputs.overall}`);
+      expect(Object.keys(row.gradingInputs).sort()).toEqual([...BUILD_QB_TRAITS, "overall"].sort());
+      expect(row.gradingInputs.overall).toBe(Math.round(BUILD_QB_TRAITS.reduce((sum, trait) => sum + row.gradingInputs[trait], 0) / BUILD_QB_TRAITS.length));
     }
   });
 
@@ -129,7 +125,7 @@ describe("CFB Build a QB peak-season model", () => {
     function weightedRoom(random: () => number) {
       const pool = profiles.map((profile) => ({ profile, weight: profile.generationWeight }));
       const room = [];
-      while (room.length < 10) {
+      while (room.length < 8) {
         const total = pool.reduce((sum, item) => sum + item.weight, 0);
         let ticket = random() * total;
         let index = 0;
@@ -159,7 +155,7 @@ describe("CFB Build a QB peak-season model", () => {
     for (let seed = 1; seed <= roomCount; seed += 1) {
       const random = randomForSeed(seed);
       const room = weightedRoom(random);
-      expect(new Set(room.map((profile) => profile.catalogId)).size).toBe(10);
+      expect(new Set(room.map((profile) => profile.catalogId)).size).toBe(8);
       for (const profile of room) {
         appearances.set(profile.catalogId, appearances.get(profile.catalogId)! + 1);
         if (profile.qualityBand === 5) marqueeAppearances += 1;
