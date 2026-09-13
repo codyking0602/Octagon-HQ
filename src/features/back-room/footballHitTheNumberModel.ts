@@ -584,13 +584,14 @@ function oneFromEachSubjects(board: FootballHitTheNumberMetricBoard) {
   return metricSubjects(board).filter((subject) => subject.nationalChampion === true);
 }
 
-function assignSlots(
+function subjectsAssignedToSlots(
   slots: readonly FootballHitTheNumberSlot[],
   subjects: readonly FootballHitTheNumberSubject[],
   metricId: FootballFactMetricId,
 ) {
-  if (subjects.length !== slots.length) return false;
+  if (subjects.length !== slots.length) return null;
   const used = new Set<number>();
+  const assigned: FootballHitTheNumberSubject[] = new Array(slots.length);
 
   function visit(slotIndex: number): boolean {
     if (slotIndex === slots.length) return true;
@@ -600,13 +601,22 @@ function assignSlots(
       const subject = subjects[subjectIndex]!;
       if (!slot.accepts(subject, valueFor(subject.id, metricId))) continue;
       used.add(subjectIndex);
+      assigned[slotIndex] = subject;
       if (visit(slotIndex + 1)) return true;
       used.delete(subjectIndex);
     }
     return false;
   }
 
-  return visit(0);
+  return visit(0) ? assigned : null;
+}
+
+function assignSlots(
+  slots: readonly FootballHitTheNumberSlot[],
+  subjects: readonly FootballHitTheNumberSubject[],
+  metricId: FootballFactMetricId,
+) {
+  return subjectsAssignedToSlots(slots, subjects, metricId) != null;
 }
 
 function progressionSlotsHaveDepth(
@@ -670,7 +680,8 @@ function balancedProgressionTargetSolution(
   });
   if (!legal.length) return null;
   legal.sort((left, right) => left.total - right.total || left.signature.localeCompare(right.signature));
-  return legal[Math.floor((legal.length - 1) / 2)]!.subjects;
+  const selected = legal[Math.floor((legal.length - 1) / 2)]!.subjects;
+  return subjectsAssignedToSlots(slots, selected, metricId);
 }
 
 function combinations<T>(items: readonly T[], count: number, visit: (selection: readonly T[]) => boolean | void) {
@@ -790,6 +801,10 @@ function pickOptionsFor(
   }
 
   if (formatId === "build-the-team") {
+    // Season wins are intentionally narrow count stats. They remain fully playable
+    // in Classic/Themed/One From Each, but four stat tiers cannot reliably create
+    // the required good-under / bad-under / meaningful-bust spread in only 14 choices.
+    if (board.metricId === "nfl-team-overall-wins" || board.metricId === "cfb-team-wins") return [];
     const subjects = metricSubjects(board);
     if (subjects.length < FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH) return [];
     const slots = buildSlotsFor(subjects, board.metricId);
