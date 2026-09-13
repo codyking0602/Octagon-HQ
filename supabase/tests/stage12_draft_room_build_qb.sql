@@ -44,8 +44,8 @@ begin
     from private.auction_catalog catalog
     where catalog.content_version = 'football-draft-room-2026-09-v1'
       and catalog.mode_id = 'build-qb'
-  ) <> 23 then
-    raise exception 'Build a QB catalog must contain exactly 23 generated QB profiles';
+  ) <> 15 then
+    raise exception 'Build a QB catalog must contain exactly 15 generated QB profiles';
   end if;
 
   if exists (
