@@ -176,8 +176,8 @@ describe("CFB Build a QB peak-season model", () => {
     expect(marqueeAppearances / roomCount).toBeLessThan(0.5);
     expect(scores.every(Number.isFinite)).toBe(true);
     expect(Math.min(...scores)).toBeLessThan(80);
-    expect(scores.filter((score) => score >= 80 && score < 90).length).toBeGreaterThan(scores.filter((score) => score >= 90).length);
-    expect(scores.filter((score) => score >= 90).length).toBeGreaterThan(0);
+    expect(scores.filter((score) => score >= 80 && score < 90).length / scores.length).toBeGreaterThan(0.35);
+    expect(scores.filter((score) => score >= 90).length / scores.length).toBeGreaterThan(0.25);
     expect(scores.filter((score) => score >= 97).length / scores.length).toBeLessThan(0.02);
     expect(ties / roomCount).toBeLessThan(0.15);
   });
