@@ -487,7 +487,7 @@ export default function FootballDraftRoomPage() {
     try {
       await repository.abandon(state);
       await challenges.refresh();
-      newRoom();
+      newRoom(state.mode_id);
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : "Draft Room could not be abandoned.");
     } finally {
@@ -504,7 +504,7 @@ export default function FootballDraftRoomPage() {
     try {
       const declined = await challenges.dismissChallenge(state.challenge_code);
       if (!declined) setError("Draft Room challenge could not be declined.");
-      else newRoom();
+      else newRoom(state.mode_id);
     } finally {
       submitting.current = false;
       setBusy(false);
