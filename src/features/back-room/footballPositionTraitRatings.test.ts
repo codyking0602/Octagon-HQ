@@ -31,7 +31,7 @@ function generateBuildQbRoom(random: () => number) {
     .slice(0, 4);
   return [...highEnd, ...weighted.filter(({ profile }) => profile.rarityBand < 4)]
     .sort((left, right) => left.weightedKey - right.weightedKey || left.profile.subjectId.localeCompare(right.profile.subjectId))
-    .slice(0, 10)
+    .slice(0, 8)
     .map(({ profile }) => profile);
 }
 
@@ -53,7 +53,7 @@ function randomCompletedBuildScore(room: readonly (typeof generatedBuildQbCatalo
 describe("canonical Football Build a QB trait model", () => {
   it("derives exactly 60 playable profiles from canonical Football owners", () => {
     const profiles = buildFootballBuildQbTraitProfiles();
-    expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v3");
+    expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v4");
     expect(profiles).toHaveLength(BUILD_QB_MATURE_POOL_SIZE);
     expect(new Set(profiles.map((profile) => profile.subjectId)).size).toBe(BUILD_QB_MATURE_POOL_SIZE);
     expect(new Set(profiles.map((profile) => profile.name)).size).toBe(BUILD_QB_MATURE_POOL_SIZE);
@@ -111,8 +111,8 @@ describe("canonical Football Build a QB trait model", () => {
     let specialistRooms = 0;
     for (let iteration = 0; iteration < 5_000; iteration += 1) {
       const room = generateBuildQbRoom(random);
-      expect(room).toHaveLength(10);
-      expect(new Set(room.map((profile) => profile.subjectId)).size).toBe(10);
+      expect(room).toHaveLength(8);
+      expect(new Set(room.map((profile) => profile.subjectId)).size).toBe(8);
       marqueeCounts.push(room.filter((profile) => profile.qualityBand === "marquee").length);
       signatures.add(room.map((profile) => profile.subjectId).sort().join("|"));
       if (room.some((profile) => profile.rarityBand <= 2 && Math.max(...BUILD_QB_TRAITS.map((trait) => profile.traits[trait])) >= 90)) specialistRooms += 1;
