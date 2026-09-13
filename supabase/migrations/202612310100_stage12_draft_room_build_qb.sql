@@ -108,6 +108,127 @@ insert into private.auction_catalog (
   ('football-draft-room-2026-09-v1','build-qb','nflverse-player-00-0024218','Vince Young',1,'Canonical NFL QB profile from Football position-trait model v1',1.0,'qb',jsonb_build_object('Arm',42,'Accuracy',35,'Processing',35,'Mobility',89,'Clutch',48,'overall',50)),
   ('football-draft-room-2026-09-v1','build-qb','nflverse-player-00-0027688','Colt McCoy',1,'Canonical NFL QB profile from Football position-trait model v1',1.0,'qb',jsonb_build_object('Arm',35,'Accuracy',44,'Processing',41,'Mobility',54,'Clutch',38,'overall',42));
 
+-- Extend the existing sealed-bid storage invariants for the Build a QB format.
+-- This keeps one Auction/Draft Room backend owner while preserving all UFC limits.
+alter table private.auction_games
+  drop constraint auction_games_round_valid,
+  drop constraint auction_games_selection_counts_valid,
+  drop constraint auction_games_bankroll_ceiling;
+
+alter table private.auction_games
+  add constraint auction_games_round_valid check (
+    current_round >= 1
+    and current_round <= case
+      when mode_id in ('ultimate-fighter', 'build-qb') then 10
+      when lifecycle_state in ('completed', 'cancelled', 'abandoned') then 8
+      when content_version = 'ufc-auction-2026-08-v3' then 6
+      else 8
+    end
+  ),
+  add constraint auction_games_selection_counts_valid check (
+    challenger_selection_count between 0 and case
+      when mode_id in ('ultimate-fighter', 'build-qb') then 5
+      when lifecycle_state in ('completed', 'cancelled', 'abandoned') then 4
+      when content_version = 'ufc-auction-2026-08-v3' then 3
+      else 4
+    end
+    and recipient_selection_count between 0 and case
+      when mode_id in ('ultimate-fighter', 'build-qb') then 5
+      when lifecycle_state in ('completed', 'cancelled', 'abandoned') then 4
+      when content_version = 'ufc-auction-2026-08-v3' then 3
+      else 4
+    end
+  ),
+  add constraint auction_games_bankroll_ceiling check (
+    challenger_bankroll <= case
+      when mode_id in ('ultimate-fighter', 'build-qb') then 50
+      when lifecycle_state in ('completed', 'cancelled', 'abandoned') then 40
+      when content_version = 'ufc-auction-2026-08-v3' then 30
+      else 40
+    end
+    and recipient_bankroll <= case
+      when mode_id in ('ultimate-fighter', 'build-qb') then 50
+      when lifecycle_state in ('completed', 'cancelled', 'abandoned') then 40
+      when content_version = 'ufc-auction-2026-08-v3' then 30
+      else 40
+    end
+  );
+
+alter table private.auction_pending_bids
+  drop constraint auction_pending_bids_ultimate_fighter_category_check;
+
+alter table private.auction_pending_bids
+  add constraint auction_pending_bids_ultimate_fighter_category_check check (
+    ultimate_fighter_category is null
+    or ultimate_fighter_category in (
+      'Striking', 'Grappling', 'Frame', 'Power', 'Heart',
+      'Arm', 'Accuracy', 'Processing', 'Mobility', 'Clutch'
+    )
+  );
+
+alter table private.auction_awards
+  drop constraint auction_awards_visible_category_check;
+
+alter table private.auction_awards
+  add constraint auction_awards_visible_category_check check (
+    visible_category is null
+    or visible_category in (
+      'Striking', 'Grappling', 'Frame', 'Power', 'Heart',
+      'Arm', 'Accuracy', 'Processing', 'Mobility', 'Clutch'
+    )
+  );
+
+create or replace function private.validate_auction_private_row()
+returns trigger
+language plpgsql
+set search_path = ''
+as $
+declare
+  v_auction private.auction_games;
+  v_profile_id uuid;
+  v_round integer;
+  v_category text;
+begin
+  select auction.* into v_auction
+  from private.auction_games auction
+  where auction.id = new.auction_id;
+
+  if tg_table_name = 'auction_pending_bids' then
+    v_profile_id := new.bidder_id;
+    v_round := new.round_number;
+    v_category := new.ultimate_fighter_category;
+  else
+    v_profile_id := new.awarded_to;
+    v_round := new.resolved_round;
+    v_category := new.visible_category;
+  end if;
+
+  if v_category is not null then
+    if v_auction.mode_id = 'ultimate-fighter' then
+      if v_category not in ('Striking', 'Grappling', 'Frame', 'Power', 'Heart') then
+        raise exception 'Invalid Ultimate Fighter category';
+      end if;
+    elsif v_auction.mode_id = 'build-qb' then
+      if v_category not in ('Arm', 'Accuracy', 'Processing', 'Mobility', 'Clutch') then
+        raise exception 'Invalid Build a QB trait';
+      end if;
+    else
+      raise exception 'Category intent is only valid for category-builder modes';
+    end if;
+  end if;
+
+  if v_profile_id not in (v_auction.challenger_id, v_auction.recipient_id) then
+    raise exception 'Auction private row must belong to a participant';
+  end if;
+
+  if v_round > (case when v_auction.mode_id in ('ultimate-fighter', 'build-qb') then 10 else 8 end) then
+    raise exception 'Auction round exceeds the selected mode';
+  end if;
+
+  return new;
+end;
+$;
+
 create or replace function public.prepare_auction(p_recipient_id uuid, p_mode_id text)
 returns uuid
 language plpgsql
