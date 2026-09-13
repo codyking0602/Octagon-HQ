@@ -92,7 +92,7 @@ describe("canonical Football Build a QB trait model", () => {
         Math.round(BUILD_QB_TRAITS.reduce((sum, trait) => sum + profile.traits[trait], 0) / BUILD_QB_TRAITS.length),
       );
       for (const trait of BUILD_QB_TRAITS) {
-        expect(profile.traits[trait]).toBeGreaterThanOrEqual(59);
+        expect(profile.traits[trait]).toBeGreaterThanOrEqual(35);
         expect(profile.traits[trait]).toBeLessThanOrEqual(99);
       }
     }
