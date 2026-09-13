@@ -11,6 +11,10 @@ import {
   type BuildQbVisualIdentity,
 } from "./buildQbVisualIdentity";
 import {
+  CFB_BUILD_QB_HERO_IMAGE,
+  cfbBuildQbVisualIdentity,
+} from "./cfbBuildQbVisualIdentity";
+import {
   AuctionRepositoryError,
   createAuctionRepository,
   maximumLegalAuctionBid,
@@ -20,7 +24,9 @@ import {
 import {
   BUILD_QB_TRAITS,
   draftRoomModeDefinition,
+  draftRoomModes,
   type BuildQbTrait,
+  type DraftRoomModeId,
 } from "../play/draftRoomContract";
 
 export { BUILD_QB_TRAITS as BUILD_A_QB_TRAITS } from "../play/draftRoomContract";
@@ -35,6 +41,20 @@ export const BUILD_A_QB_TRAIT_HELP: Readonly<Record<BuildQbTrait, string>> = {
 
 export function hasDraftRoomAdminAccess(profile: IdentityProfile | null | undefined) {
   return profile?.canControlPicks === true;
+}
+
+function draftRoomVisualIdentity(modeId: DraftRoomModeId, itemReference: string | null | undefined) {
+  return modeId === "build-qb-cfb"
+    ? cfbBuildQbVisualIdentity(itemReference)
+    : buildQbVisualIdentity(itemReference);
+}
+
+function draftRoomHeroImage(modeId: DraftRoomModeId) {
+  return modeId === "build-qb-cfb" ? CFB_BUILD_QB_HERO_IMAGE : BUILD_QB_HERO_IMAGE;
+}
+
+function draftRoomTitle(modeId: DraftRoomModeId) {
+  return modeId === "build-qb-cfb" ? "CFB Build a QB" : "Build a QB";
 }
 
 function buildQbTeamStyle(identity: BuildQbVisualIdentity): CSSProperties {
@@ -87,8 +107,8 @@ function BuildComparison({ state }: { state: DraftRoomProjection }) {
         {BUILD_QB_TRAITS.map((trait) => {
           const challengerAward = challengerAwards.find((item) => item.category === trait);
           const recipientAward = recipientAwards.find((item) => item.category === trait);
-          const challengerIdentity = buildQbVisualIdentity(challengerAward?.item_reference);
-          const recipientIdentity = buildQbVisualIdentity(recipientAward?.item_reference);
+          const challengerIdentity = draftRoomVisualIdentity(state.mode_id, challengerAward?.item_reference);
+          const recipientIdentity = draftRoomVisualIdentity(state.mode_id, recipientAward?.item_reference);
 
           return (
             <article key={trait}>
@@ -165,7 +185,7 @@ function DraftRoomBoard({
   const latestAward = latestRound
     ? state.awarded_collections.find((item) => item.resolved_round === latestRound.round)
     : null;
-  const currentQbIdentity = buildQbVisualIdentity(state.current_item?.item_reference);
+  const currentQbIdentity = draftRoomVisualIdentity(state.mode_id, state.current_item?.item_reference);
 
   const status = state.lifecycle_state === "prepared"
     ? "Your first bid sends this Build a QB room"
@@ -201,7 +221,7 @@ function DraftRoomBoard({
       <header className="auction-board__header">
         <img
           className="auction-board__image build-qb-board__image"
-          src={BUILD_QB_HERO_IMAGE}
+          src={draftRoomHeroImage(state.mode_id)}
           alt=""
           aria-hidden="true"
           onError={(event) => { event.currentTarget.hidden = true; }}
@@ -212,7 +232,7 @@ function DraftRoomBoard({
         </div>
         <div className="auction-board__title">
           <p className="eyebrow">DRAFT ROOM</p>
-          <h1>Build a QB</h1>
+          <h1>{draftRoomTitle(state.mode_id)}</h1>
         </div>
       </header>
 
@@ -361,6 +381,8 @@ export default function FootballDraftRoomPage() {
   const [error, setError] = useState("");
   const submitting = useRef(false);
   const auctionId = params.get("auction") ?? "";
+  const requestedMode: DraftRoomModeId = params.get("mode") === "build-qb-cfb" ? "build-qb-cfb" : "build-qb";
+  const requestedModeDefinition = draftRoomModeDefinition(requestedMode);
 
   useEffect(() => {
     let cancelled = false;
@@ -371,7 +393,7 @@ export default function FootballDraftRoomPage() {
       return () => { cancelled = true; };
     }
     setLoading(true);
-    void repository.read<"build-qb">(auctionId)
+    void repository.read<DraftRoomModeId>(auctionId)
       .then((nextState) => {
         if (!cancelled) setState(nextState);
       })
@@ -406,7 +428,7 @@ export default function FootballDraftRoomPage() {
     setLoading(true);
     setError("");
     try {
-      setState(await repository.read<"build-qb">(auctionId));
+      setState(await repository.read<DraftRoomModeId>(auctionId));
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : "Draft Room could not be loaded.");
     } finally {
@@ -431,11 +453,11 @@ export default function FootballDraftRoomPage() {
     }
   }
 
-  function newRoom() {
+  function newRoom(modeId: DraftRoomModeId = requestedMode) {
     setState(null);
     setSelectedOpponent(null);
     setError("");
-    navigate("/football/draft-room", { replace: true });
+    navigate(`/football/draft-room?mode=${modeId}`, { replace: true });
   }
 
   async function prepare() {
@@ -446,7 +468,7 @@ export default function FootballDraftRoomPage() {
     try {
       const opponent = await challenges.findProfile(selectedOpponent.displayName);
       if (!opponent) throw new Error("No Octagon HQ profile matched that exact name.");
-      const prepared = await repository.prepare(opponent.id, "build-qb");
+      const prepared = await repository.prepare(opponent.id, requestedMode);
       setState(prepared);
       navigate(`/football/draft-room?auction=${prepared.auction_id}`, { replace: true });
     } catch (nextError) {
@@ -501,7 +523,7 @@ export default function FootballDraftRoomPage() {
           onReload={() => void reload()}
           onAbandon={() => void abandon()}
           onDecline={() => void decline()}
-          onNewRoom={newRoom}
+          onNewRoom={() => newRoom(state.mode_id)}
           onCancel={() => {
             if (window.confirm("Cancel this Draft Room for both players? It ends with no winner, loss, score, or forfeit.")) {
               void command(() => repository!.cancel(state));
@@ -519,7 +541,7 @@ export default function FootballDraftRoomPage() {
           <p className="eyebrow">DRAFT ROOM</p>
           <h1>{loading ? "Loading Build a QB…" : "Draft Room unavailable"}</h1>
           {error ? <p className="auction-error" role="status">{error}</p> : null}
-          {!loading ? <button className="primary-action" type="button" onClick={newRoom}>BACK TO DRAFT ROOM</button> : null}
+          {!loading ? <button className="primary-action" type="button" onClick={() => newRoom(requestedMode)}>BACK TO DRAFT ROOM</button> : null}
         </section>
       </div>
     );
@@ -535,8 +557,20 @@ export default function FootballDraftRoomPage() {
 
       <section className="auction-hero surface-card" aria-labelledby="build-a-qb-title">
         <p className="eyebrow">LAUNCH ROOM</p>
-        <h2 id="build-a-qb-title">Build a QB</h2>
-        <p>Bid from a $50 bankroll to win one quarterback for each trait. Ten QBs appear; each side finishes with five.</p>
+        <h2 id="build-a-qb-title">{requestedModeDefinition.displayName}</h2>
+        <p>{requestedModeDefinition.description} Bid from a $50 bankroll; ten QBs appear and each side finishes with five.</p>
+        <div className="draft-room-mode-switcher" role="group" aria-label="Draft Room mode">
+          {draftRoomModes.map((mode) => (
+            <button
+              type="button"
+              key={mode.id}
+              className={requestedMode === mode.id ? "is-selected" : ""}
+              onClick={() => navigate(`/football/draft-room?mode=${mode.id}`, { replace: true })}
+            >
+              {mode.displayName}
+            </button>
+          ))}
+        </div>
         <div className="auction-catalog__tabs" aria-label="Build a QB traits">
           {BUILD_QB_TRAITS.map((trait) => <span key={trait}>{trait}</span>)}
         </div>
@@ -559,7 +593,7 @@ export default function FootballDraftRoomPage() {
           disabled={!repository || !selectedOpponent || busy}
           onClick={() => void prepare()}
         >
-          {busy ? "PREPARING…" : "PREPARE BUILD A QB"}
+          {busy ? "PREPARING…" : `PREPARE ${requestedMode === "build-qb-cfb" ? "CFB" : "NFL"} BUILD A QB`}
         </button>
       </section>
 
