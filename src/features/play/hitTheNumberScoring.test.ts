@@ -42,8 +42,8 @@ describe("Hit the Number Price Is Right scoring", () => {
 
     expect(perfect).toBe(100);
     expect(closestUnder).toBe(99);
-    expect(farthestUnder).toBe(75);
-    expect(closestBust).toBe(74);
+    expect(farthestUnder).toBe(50);
+    expect(closestBust).toBe(49);
     expect(farthestUnder).toBeGreaterThan(closestBust);
     expect(closestUnder).toBeGreaterThan(fartherUnder);
     expect(closestBust).toBeGreaterThan(fartherBust);

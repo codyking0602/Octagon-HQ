@@ -780,8 +780,8 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
     });
     if (status === "under" && score >= goodUnderMinimum) hasGoodUnder = true;
     if (
-      (status === "under" && score >= 75 && score <= 89)
-      || (status === "bust" && score >= 66)
+      (status === "under" && score >= 50 && score <= 89)
+      || (status === "bust" && score >= 41)
     ) hasMiddlingOutcome = true;
     if (status === "bust") hasMeaningfulBust = true;
     return legalSelectionCount >= 6 && hasGoodUnder && hasMiddlingOutcome && hasMeaningfulBust;

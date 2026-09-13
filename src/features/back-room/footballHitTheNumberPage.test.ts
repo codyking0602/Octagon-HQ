@@ -21,6 +21,15 @@ describe("Football Hit the Number selection presentation", () => {
     expect(presentationSource).toContain('PICK POOL');
   });
 
+  it("uses the shared clean header instead of format and pick-count pills", () => {
+    expect(presentationSource).toContain('className="hit-number-stat-heading"');
+    expect(presentationSource).toContain('className="hit-number-theme"');
+    expect(presentationSource).toContain("Get as close as you can without going over. Go over and you bust. (Bob Barker rules)");
+    expect(presentationSource).not.toContain('className="hit-number-meta"');
+    expect(presentationSource).not.toContain("THEMED LINEUP");
+    expect(presentationSource).not.toContain("PICK {pickCount}");
+  });
+
   it("keeps the active progression pool focused on unused eligible choices through the canonical model owner", () => {
     expect(pageSource).toContain(
       "availableIds={slotProgression && !result ? availableSubjectIds : plan.subjectIds}",

@@ -23,43 +23,34 @@ export const HIT_THE_NUMBER_STATS = [
   { id: "ufc-submission-wins", label: "UFC Submission Wins" },
   { id: "ufc-title-fights", label: "UFC Title Fights" },
   { id: "ufc-title-fight-wins", label: "UFC Title-Fight Wins" },
-  { id: "ufc-active-years", label: "UFC Active Years" },
-  { id: "ufc-winning-years", label: "UFC Winning Years" },
   { id: "ufc-longest-win-streak", label: "UFC Longest Win Streak" },
-  { id: "ufc-unique-opponents-beaten", label: "UFC Unique Opponents Beaten" },
   { id: "ufc-main-events", label: "UFC Main Events" },
   { id: "ufc-bonus-awards", label: "UFC Bonus Awards" },
   { id: "ufc-first-round-finishes", label: "UFC First-Round Finishes" },
-  { id: "ufc-knockdowns-landed", label: "UFC Knockdowns Landed" },
 ] as const;
 
 export type HitTheNumberStatId = typeof HIT_THE_NUMBER_STATS[number]["id"];
 type HitTheNumberSupplementalStatId =
   | "ufc-main-events"
   | "ufc-bonus-awards"
-  | "ufc-first-round-finishes"
-  | "ufc-knockdowns-landed";
+  | "ufc-first-round-finishes";
 type HitTheNumberLedgerStatId = Exclude<HitTheNumberStatId, HitTheNumberSupplementalStatId>;
 export type HitTheNumberBoardType = "open-roster" | "random-pool";
 
 export const HIT_THE_NUMBER_GENERATION_PROFILE = {
   stats: [
-    { value: "ufc-fights", weight: 8 },
-    { value: "ufc-wins", weight: 8 },
-    { value: "ufc-decision-wins", weight: 5 },
-    { value: "ufc-finishes", weight: 8 },
-    { value: "ufc-ko-tko-wins", weight: 7 },
-    { value: "ufc-submission-wins", weight: 5 },
-    { value: "ufc-title-fights", weight: 7 },
-    { value: "ufc-title-fight-wins", weight: 6 },
-    { value: "ufc-active-years", weight: 5 },
-    { value: "ufc-winning-years", weight: 4 },
-    { value: "ufc-longest-win-streak", weight: 6 },
-    { value: "ufc-unique-opponents-beaten", weight: 5 },
-    { value: "ufc-main-events", weight: 7 },
-    { value: "ufc-bonus-awards", weight: 7 },
-    { value: "ufc-first-round-finishes", weight: 5 },
-    { value: "ufc-knockdowns-landed", weight: 7 },
+    { value: "ufc-fights", weight: 10 },
+    { value: "ufc-wins", weight: 10 },
+    { value: "ufc-decision-wins", weight: 6 },
+    { value: "ufc-finishes", weight: 10 },
+    { value: "ufc-ko-tko-wins", weight: 9 },
+    { value: "ufc-submission-wins", weight: 6 },
+    { value: "ufc-title-fights", weight: 9 },
+    { value: "ufc-title-fight-wins", weight: 8 },
+    { value: "ufc-longest-win-streak", weight: 8 },
+    { value: "ufc-main-events", weight: 9 },
+    { value: "ufc-bonus-awards", weight: 9 },
+    { value: "ufc-first-round-finishes", weight: 6 },
   ],
   filters: [
     { value: "all", weight: 55 },
@@ -144,14 +135,10 @@ function statValuesForFights(
     "ufc-submission-wins": stats.submissionWins,
     "ufc-title-fights": stats.titleFights,
     "ufc-title-fight-wins": stats.titleFightWins,
-    "ufc-active-years": stats.activeYears,
-    "ufc-winning-years": stats.winningYears,
     "ufc-longest-win-streak": stats.longestWinStreak,
-    "ufc-unique-opponents-beaten": stats.uniqueOpponentsBeaten,
     ...(stats.mainEvents == null ? {} : { "ufc-main-events": stats.mainEvents }),
     ...(stats.bonusAwards == null ? {} : { "ufc-bonus-awards": stats.bonusAwards }),
     ...(stats.firstRoundFinishes == null ? {} : { "ufc-first-round-finishes": stats.firstRoundFinishes }),
-    ...(stats.knockdownsFor == null ? {} : { "ufc-knockdowns-landed": stats.knockdownsFor }),
   };
 }
 
@@ -501,13 +488,13 @@ export function hitTheNumberScore({
 
   const averageContribution = target / pickCount;
   const rawScore = status === "bust"
-    ? 75 - (50 * distance / averageContribution)
+    ? 50 - (50 * distance / averageContribution)
     : 100 - (50 * distance / averageContribution);
   const roundedScore = Math.round(rawScore);
 
   return status === "bust"
-    ? Math.max(0, Math.min(74, roundedScore))
-    : Math.max(75, Math.min(99, roundedScore));
+    ? Math.max(0, Math.min(49, roundedScore))
+    : Math.max(50, Math.min(99, roundedScore));
 }
 
 export function gradeHitTheNumberSelection(
