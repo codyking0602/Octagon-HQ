@@ -29,6 +29,13 @@ describe("Stage 12 admin playtest readiness", () => {
     expect(accessMigration).not.toMatch(/create\s+(table|function)/i);
   });
 
+  it("keeps preview authorization internal instead of exposing admin copy in the game UI", () => {
+    expect(draftRoomSource).not.toContain("ADMIN PREVIEW");
+    expect(draftRoomSource).not.toContain("ADMIN RELEASE GATE");
+    expect(draftRoomSource).not.toContain("Public members cannot");
+    expect(draftRoomSource).toContain("return profile?.canControlPicks === true;");
+  });
+
   it("keeps shared Auction layout ownership while scoping Football powder blue to Draft Room", () => {
     expect(footballCss).toContain("--draft-room-accent: var(--football-brand-blue, #8EBCE6);");
     expect(footballCss).toContain(".football-room-page.auction-page .auction-current__status");
