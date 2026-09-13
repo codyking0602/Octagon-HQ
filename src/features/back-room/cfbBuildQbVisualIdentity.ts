@@ -47,6 +47,8 @@ const CFB_BUILD_QB_SCHOOL_COLORS: Readonly<Record<string, readonly [string, stri
   "Tennessee": ["#FF8200", "#FFFFFF"],
   "Georgia": ["#BA0C2F", "#000000"],
   "Washington": ["#4B2E83", "#B7A57A"],
+  "Wisconsin": ["#C5050C", "#FFFFFF"],
+  "Virginia Tech": ["#861F41", "#E87722"],
   "Michigan": ["#00274C", "#FFCB05"],
   "Colorado": ["#CFB87C", "#000000"],
   "Syracuse": ["#D44500", "#FFFFFF"],
