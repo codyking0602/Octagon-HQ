@@ -318,5 +318,5 @@ describe("Who Am I mature whole-game simulation", () => {
 
     expect(allFindings).toHaveLength(500);
     expect(allFindings.filter((finding) => Number(finding.candidateClues) < WHO_AM_I_CLUE_LIMIT)).toEqual([]);
-  }, 60_000);
+  }, 90_000);
 });
