@@ -756,7 +756,7 @@ function pickOptionsFor(
     const subjects = oneFromEachSubjects(board);
     const slots = oneFromEachSlots();
     if (!progressionSlotsHaveDepth(slots, subjects, board.metricId)) return [];
-    if (boardType === "random-pool" && subjects.length < FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return [];
+    if (subjects.length < FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return [];
     return [5];
   }
 
@@ -765,7 +765,7 @@ function pickOptionsFor(
     if (subjects.length < FOOTBALL_HIT_THE_NUMBER_BUILD_TEAM_MIN_DEPTH) return [];
     const slots = buildSlotsFor(subjects, board.metricId);
     if (!progressionSlotsHaveDepth(slots, subjects, board.metricId)) return [];
-    if (boardType === "random-pool" && subjects.length < FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return [];
+    if (subjects.length < FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE) return [];
     return [5];
   }
 
