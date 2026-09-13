@@ -241,6 +241,7 @@ function DraftRoomBoard({
 }) {
   const mode = draftRoomModeDefinition(state.mode_id);
   const trioMode = isTrioDraftRoomMode(state.mode_id);
+  const trioResult = trioMode && state.lifecycle_state === "completed";
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<BuildQbTrait | "">("");
   const [formError, setFormError] = useState("");
@@ -312,7 +313,7 @@ function DraftRoomBoard({
         </div>
       </header>
 
-      <section className="auction-scoreboard surface-card">
+      {!trioResult ? <section className="auction-scoreboard surface-card">
         <article>
           <small>CHALLENGER</small>
           <strong>{state.challenger_display_name}</strong>
@@ -326,9 +327,9 @@ function DraftRoomBoard({
           <b>${state.recipient_bankroll}</b>
           <em>{state.recipient_selection_count}/{mode.requiredSelectionsPerPlayer}</em>
         </article>
-      </section>
+      </section> : null}
 
-      <section className="auction-current surface-card">
+      {!trioResult ? <section className="auction-current surface-card">
         <div className="auction-current__meta">
           <span>ROUND {Math.min(state.current_round, mode.rounds)} / {mode.rounds}</span>
           <span>TIES → {tieName}</span>
@@ -350,9 +351,9 @@ function DraftRoomBoard({
           )}
         </div>
         <strong className="auction-current__status">{status}</strong>
-      </section>
+      </section> : null}
 
-      {latestRound ? (
+      {latestRound && !trioResult ? (
         <section className="auction-result surface-card" aria-label="Latest Draft Room result">
           <p className="eyebrow">{latestRound.forced ? "FORCED $1 ASSIGNMENT" : `ROUND ${latestRound.round} RESULT`}</p>
           <h2>{latestAward ? (trioMode ? "Trio awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : "Resolved QB")}</h2>
