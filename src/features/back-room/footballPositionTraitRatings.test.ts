@@ -307,14 +307,31 @@ describe("canonical Football Build a QB trait model", () => {
     expect(migration).not.toContain("football-build-qb-traits-2026-09-v2");
     expect(migration).not.toContain("create or replace function private.generate_auction_deck");
 
+    expect(migration).toContain("from private.auction_catalog");
+    expect(migration).toContain("where content_version = 'football-draft-room-2026-09-v3'");
+
+    const replacementNames = [
+      "Trevor Lawrence",
+      "Tua Tagovailoa",
+      "C.J. Stroud",
+      "Brock Purdy",
+      "Jordan Love",
+      "Jayden Daniels",
+      "Derek Carr",
+      "Ryan Tannehill",
+      "Nick Foles",
+      "Carson Wentz",
+      "Jimmy Garoppolo",
+    ];
     const catalogLines = migration
       .split("\n")
       .filter((line) => line.includes("'football-draft-room-2026-09-v4','build-qb'"));
-    expect(catalogLines).toHaveLength(BUILD_QB_MATURE_POOL_SIZE);
+    expect(catalogLines).toHaveLength(replacementNames.length);
 
-    for (const row of generatedBuildQbCatalog) {
+    for (const name of replacementNames) {
+      const row = generatedBuildQbCatalog.find((candidate) => candidate.displayName === name)!;
       const line = catalogLines.find((candidate) => candidate.includes(`'${row.displayName}'`));
-      expect(line, `missing backend projection for ${row.displayName}`).toBeDefined();
+      expect(line, `missing backend replacement projection for ${row.displayName}`).toBeDefined();
       expect(line).toContain(`,${row.rarityBand},`);
       expect(line).toContain(`,${row.generationWeight.toFixed(2)},`);
       for (const trait of BUILD_QB_TRAITS) {
