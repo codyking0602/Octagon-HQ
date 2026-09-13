@@ -65,7 +65,7 @@ describe("canonical Football Build a QB trait model", () => {
 
   it("derives exactly 60 playable profiles from canonical Football owners", () => {
     const profiles = buildFootballBuildQbTraitProfiles();
-    expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v2");
+    expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v3");
     expect(profiles).toHaveLength(BUILD_QB_MATURE_POOL_SIZE);
     expect(new Set(profiles.map((profile) => profile.subjectId)).size).toBe(BUILD_QB_MATURE_POOL_SIZE);
     expect(new Set(profiles.map((profile) => profile.name)).size).toBe(BUILD_QB_MATURE_POOL_SIZE);
@@ -137,6 +137,40 @@ describe("canonical Football Build a QB trait model", () => {
       "Eli Manning",
     ]) {
       expect(names.has(name), `missing original Stage 12 QB ${name}`).toBe(true);
+    }
+  });
+
+  it("uses the approved modernized 60-QB membership without retired roster cuts", () => {
+    const names = new Set(buildFootballBuildQbTraitProfiles().map((profile) => profile.name));
+    for (const name of [
+      "Trevor Lawrence",
+      "Tua Tagovailoa",
+      "C.J. Stroud",
+      "Brock Purdy",
+      "Jordan Love",
+      "Jayden Daniels",
+      "Derek Carr",
+      "Ryan Tannehill",
+      "Nick Foles",
+      "Carson Wentz",
+      "Jimmy Garoppolo",
+    ]) {
+      expect(names.has(name), `missing approved NFL replacement ${name}`).toBe(true);
+    }
+    for (const name of [
+      "Johnny Unitas",
+      "Bob Griese",
+      "Dan Fouts",
+      "Trent Green",
+      "Ken Anderson",
+      "Ken Stabler",
+      "Sonny Jurgensen",
+      "Len Dawson",
+      "Rich Gannon",
+      "Mark Brunell",
+      "Matt Schaub",
+    ]) {
+      expect(names.has(name), `retired NFL roster cut still present: ${name}`).toBe(false);
     }
   });
 
@@ -252,7 +286,7 @@ describe("canonical Football Build a QB trait model", () => {
   it("keeps one calculated ratings owner and synchronizes the append-only backend projection", () => {
     const modelSource = readFileSync("src/features/back-room/footballPositionTraitRatings.ts", "utf8");
     const migration = readFileSync(
-      "supabase/migrations/202612310102_stage12_build_qb_competitive_model.sql",
+      "supabase/migrations/202612310104_stage12_build_qb_roster_refresh.sql",
       "utf8",
     );
 
@@ -267,15 +301,15 @@ describe("canonical Football Build a QB trait model", () => {
     expect(modelSource).not.toContain("candidatesByName");
     expect(modelSource).not.toContain("AUDITED_QB_PROFILES");
 
-    expect(migration).toContain("football-draft-room-2026-09-v2");
-    expect(migration).toContain("football-draft-room-rarity-2026-09-v2");
+    expect(migration).toContain("football-draft-room-2026-09-v4");
+    expect(migration).toContain("football-draft-room-rarity-2026-09-v4");
     expect(migration).toContain("football-build-qb-traits-2026-09-v1");
     expect(migration).not.toContain("football-build-qb-traits-2026-09-v2");
     expect(migration).not.toContain("create or replace function private.generate_auction_deck");
 
     const catalogLines = migration
       .split("\n")
-      .filter((line) => line.includes("'football-draft-room-2026-09-v2','build-qb'"));
+      .filter((line) => line.includes("'football-draft-room-2026-09-v4','build-qb'"));
     expect(catalogLines).toHaveLength(BUILD_QB_MATURE_POOL_SIZE);
 
     for (const row of generatedBuildQbCatalog) {
