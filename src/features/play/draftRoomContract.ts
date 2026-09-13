@@ -2,19 +2,8 @@ export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb"] as const;
 
 export type DraftRoomModeId = (typeof DRAFT_ROOM_MODE_IDS)[number];
 
-// Clutch remains in the canonical rating packets as historical/scouting evidence,
-// but the playable Build a QB format is intentionally the four core QB traits.
 export const BUILD_QB_TRAITS = ["Arm", "Accuracy", "Processing", "Mobility"] as const;
-export type BuildQbPlayableTrait = (typeof BUILD_QB_TRAITS)[number];
-
-export const BUILD_QB_RATING_TRAITS = [
-  "Arm",
-  "Accuracy",
-  "Processing",
-  "Mobility",
-  "Clutch",
-] as const;
-export type BuildQbTrait = (typeof BUILD_QB_RATING_TRAITS)[number];
+export type BuildQbTrait = (typeof BUILD_QB_TRAITS)[number];
 
 export interface DraftRoomModeDefinition {
   id: DraftRoomModeId;
@@ -23,7 +12,7 @@ export interface DraftRoomModeDefinition {
   rounds: number;
   requiredSelectionsPerPlayer: number;
   startingBankroll: number;
-  categories: readonly BuildQbPlayableTrait[];
+  categories: readonly BuildQbTrait[];
 }
 
 export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
