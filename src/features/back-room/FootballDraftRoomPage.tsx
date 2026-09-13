@@ -1,10 +1,15 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { ChallengeMemberPicker } from "../challenges/ChallengeMemberPicker";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { IdentityProfile } from "../identity/identityModel";
 import type { MemberCardSummary } from "../members/memberProfilesModel";
+import {
+  BUILD_QB_HERO_IMAGE,
+  buildQbVisualIdentity,
+  type BuildQbVisualIdentity,
+} from "./buildQbVisualIdentity";
 import {
   AuctionRepositoryError,
   createAuctionRepository,
@@ -32,6 +37,41 @@ export function hasDraftRoomAdminAccess(profile: IdentityProfile | null | undefi
   return profile?.canControlPicks === true;
 }
 
+function buildQbTeamStyle(identity: BuildQbVisualIdentity): CSSProperties {
+  return {
+    "--build-qb-team-color": identity.primary,
+    "--build-qb-team-rgb": identity.primaryRgb,
+    "--build-qb-team-secondary": identity.secondary,
+  } as CSSProperties;
+}
+
+function BuildQbTeamMark({
+  identity,
+  compact = false,
+}: {
+  identity: BuildQbVisualIdentity;
+  compact?: boolean;
+}) {
+  return (
+    <span
+      className={`build-qb-team-mark${compact ? " build-qb-team-mark--compact" : ""}`}
+      role="img"
+      aria-label={identity.teamName}
+      title={identity.teamName}
+    >
+      <span className="build-qb-team-mark__fallback" aria-hidden="true">{identity.teamCode}</span>
+      {identity.logoSrc ? (
+        <img
+          src={identity.logoSrc}
+          alt=""
+          aria-hidden="true"
+          onError={(event) => { event.currentTarget.hidden = true; }}
+        />
+      ) : null}
+    </span>
+  );
+}
+
 function BuildComparison({ state }: { state: DraftRoomProjection }) {
   const challengerAwards = state.awarded_collections.filter((item) => item.awarded_to === state.challenger_id);
   const recipientAwards = state.awarded_collections.filter((item) => item.awarded_to === state.recipient_id);
@@ -45,18 +85,37 @@ function BuildComparison({ state }: { state: DraftRoomProjection }) {
       </header>
       <div className="auction-collections__rows">
         {BUILD_QB_TRAITS.map((trait) => {
-          const challenger = challengerAwards.find((item) => item.category === trait)?.display_label ?? "OPEN";
-          const recipient = recipientAwards.find((item) => item.category === trait)?.display_label ?? "OPEN";
+          const challengerAward = challengerAwards.find((item) => item.category === trait);
+          const recipientAward = recipientAwards.find((item) => item.category === trait);
+          const challengerIdentity = buildQbVisualIdentity(challengerAward?.item_reference);
+          const recipientIdentity = buildQbVisualIdentity(recipientAward?.item_reference);
+
           return (
             <article key={trait}>
-              <div className={challenger === "OPEN" ? "" : "is-filled"}>
+              <div
+                className={challengerAward ? `is-filled${challengerIdentity ? " build-qb-team-slot" : ""}` : ""}
+                style={challengerIdentity ? buildQbTeamStyle(challengerIdentity) : undefined}
+              >
                 <small>{trait}</small>
-                <strong>{challenger}</strong>
+                {challengerAward ? (
+                  <span className="build-qb-slot__player">
+                    {challengerIdentity ? <BuildQbTeamMark identity={challengerIdentity} compact /> : null}
+                    <strong>{challengerAward.display_label}</strong>
+                  </span>
+                ) : <strong>OPEN</strong>}
               </div>
               <span aria-hidden="true">VS</span>
-              <div className={recipient === "OPEN" ? "" : "is-filled"}>
+              <div
+                className={recipientAward ? `is-filled${recipientIdentity ? " build-qb-team-slot" : ""}` : ""}
+                style={recipientIdentity ? buildQbTeamStyle(recipientIdentity) : undefined}
+              >
                 <small>{trait}</small>
-                <strong>{recipient}</strong>
+                {recipientAward ? (
+                  <span className="build-qb-slot__player">
+                    {recipientIdentity ? <BuildQbTeamMark identity={recipientIdentity} compact /> : null}
+                    <strong>{recipientAward.display_label}</strong>
+                  </span>
+                ) : <strong>OPEN</strong>}
               </div>
             </article>
           );
@@ -106,6 +165,7 @@ function DraftRoomBoard({
   const latestAward = latestRound
     ? state.awarded_collections.find((item) => item.resolved_round === latestRound.round)
     : null;
+  const currentQbIdentity = buildQbVisualIdentity(state.current_item?.item_reference);
 
   const status = state.lifecycle_state === "prepared"
     ? "Your first bid sends this Build a QB room"
@@ -139,6 +199,13 @@ function DraftRoomBoard({
   return (
     <div className="auction-board">
       <header className="auction-board__header">
+        <img
+          className="auction-board__image build-qb-board__image"
+          src={BUILD_QB_HERO_IMAGE}
+          alt=""
+          aria-hidden="true"
+          onError={(event) => { event.currentTarget.hidden = true; }}
+        />
         <div className="auction-board__nav">
           <button type="button" onClick={onNewRoom}>‹ NEW ROOM</button>
           <button type="button" onClick={onReload} disabled={busy}>REFRESH</button>
@@ -170,9 +237,15 @@ function DraftRoomBoard({
           <span>ROUND {Math.min(state.current_round, mode.rounds)} / {mode.rounds}</span>
           <span>TIES → {tieName}</span>
         </div>
-        <div className="auction-current__item">
+        <div
+          className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}`}
+          style={currentQbIdentity ? buildQbTeamStyle(currentQbIdentity) : undefined}
+        >
           <small>CURRENT QB</small>
-          <h2>{state.current_item?.display_label ?? (terminal ? "BUILD LOCKED" : "LOADING")}</h2>
+          <div className="build-qb-current__identity">
+            {currentQbIdentity ? <BuildQbTeamMark identity={currentQbIdentity} /> : null}
+            <h2>{state.current_item?.display_label ?? (terminal ? "BUILD LOCKED" : "LOADING")}</h2>
+          </div>
         </div>
         <strong className="auction-current__status">{status}</strong>
       </section>
