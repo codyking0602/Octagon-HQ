@@ -58,7 +58,7 @@ begin
       and (
         catalog.grading_inputs ? 'Clutch'
         or not (catalog.grading_inputs ?& array['Arm','Accuracy','Processing','Mobility','overall'])
-        or jsonb_object_length(catalog.grading_inputs) <> 5
+        or (catalog.grading_inputs - 'Arm' - 'Accuracy' - 'Processing' - 'Mobility' - 'overall') <> '{}'::jsonb
         or (catalog.grading_inputs->>'overall')::numeric <> round(
           (
             (catalog.grading_inputs->>'Arm')::numeric
