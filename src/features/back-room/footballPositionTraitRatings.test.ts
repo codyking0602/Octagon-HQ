@@ -65,7 +65,6 @@ describe("canonical Football Build a QB trait model", () => {
 
   it("derives exactly 60 playable profiles from canonical Football owners", () => {
     const profiles = buildFootballBuildQbTraitProfiles();
-    console.log("BUILD_QB_CANONICAL_IDS", JSON.stringify(profiles.map(({ name, subjectId }) => ({ name, subjectId }))));
     expect(FOOTBALL_POSITION_TRAIT_MODEL_VERSION).toBe("build-qb-v2");
     expect(profiles).toHaveLength(BUILD_QB_MATURE_POOL_SIZE);
     expect(new Set(profiles.map((profile) => profile.subjectId)).size).toBe(BUILD_QB_MATURE_POOL_SIZE);
