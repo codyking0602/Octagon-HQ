@@ -125,6 +125,9 @@ const REQUIRED_METRICS = [
   "nfl-career-passing-yards",
   "nfl-career-passing-touchdowns",
   "nfl-career-interceptions-thrown",
+] as const satisfies readonly FootballFactMetricId[];
+
+const OPTIONAL_MOBILITY_METRICS = [
   "nfl-career-rushing-attempts",
   "nfl-career-rushing-yards",
   "nfl-career-rushing-touchdowns",
@@ -186,8 +189,8 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
     }
 
     const values = Object.fromEntries(
-      REQUIRED_METRICS.map((metricId) => [metricId, factValue(subjectId, metricId)]),
-    ) as Record<(typeof REQUIRED_METRICS)[number], number | null>;
+      [...REQUIRED_METRICS, ...OPTIONAL_MOBILITY_METRICS].map((metricId) => [metricId, factValue(subjectId, metricId)]),
+    ) as Record<(typeof REQUIRED_METRICS)[number] | (typeof OPTIONAL_MOBILITY_METRICS)[number], number | null>;
     const missing = REQUIRED_METRICS.filter((metricId) => values[metricId] == null);
     if (missing.length) {
       throw new Error(`Build a QB QB ${subjectId} is missing canonical facts: ${missing.join(", ")}`);
@@ -204,9 +207,9 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
     const passingYards = values["nfl-career-passing-yards"]!;
     const passingTouchdowns = values["nfl-career-passing-touchdowns"]!;
     const interceptions = values["nfl-career-interceptions-thrown"]!;
-    const rushingAttempts = values["nfl-career-rushing-attempts"]!;
-    const rushingYards = values["nfl-career-rushing-yards"]!;
-    const rushingTouchdowns = values["nfl-career-rushing-touchdowns"]!;
+    const rushingAttempts = values["nfl-career-rushing-attempts"] ?? 0;
+    const rushingYards = values["nfl-career-rushing-yards"] ?? 0;
+    const rushingTouchdowns = values["nfl-career-rushing-touchdowns"] ?? 0;
     if (games <= 0 || attempts <= 0) throw new Error(`Build a QB QB ${subjectId} has incomplete career volume`);
 
     const a = Math.min(2.375, Math.max(0, (completions / attempts - 0.3) * 5));
@@ -231,7 +234,9 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
       rushingTouchdownsPerGame: rushingTouchdowns / games,
       rushingYardsPerAttempt: rushingAttempts > 0 ? rushingYards / rushingAttempts : 0,
       historicalConsensus,
-      evidenceMetricIds: REQUIRED_METRICS,
+      evidenceMetricIds: [...REQUIRED_METRICS, ...OPTIONAL_MOBILITY_METRICS].filter(
+        (metricId) => values[metricId] != null,
+      ),
     };
   });
 }
