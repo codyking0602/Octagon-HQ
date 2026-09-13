@@ -8,7 +8,7 @@ describe("Draft Room mode artwork", () => {
       objectPosition: "50% 36%",
     });
     expect(draftRoomModeArtwork("build-qb-cfb")).toEqual({
-      src: "/assets/football/build-qb-trevor-lawrence-clemson-hero.webp",
+      src: "/assets/football/build-qb-cam-newton-auburn-hero.webp",
       objectPosition: "50% 36%",
     });
     expect(draftRoomModeArtwork("trio-nfl")).toEqual({
@@ -16,7 +16,7 @@ describe("Draft Room mode artwork", () => {
       objectPosition: "50% 50%",
     });
     expect(draftRoomModeArtwork("trio-cfb")).toEqual({
-      src: "/assets/football/draft-room-trio-cfb.webp",
+      src: "/assets/football/draft-room-trio-cfb-ohio-state.webp",
       objectPosition: "50% 50%",
     });
   });
