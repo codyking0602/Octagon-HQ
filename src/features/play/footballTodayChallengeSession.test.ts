@@ -88,7 +88,7 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-09-11")).toBe("football-daily-v3");
     expect(footballTodayScheduleVersionForDay("2026-09-12")).toBe("football-daily-v5");
     expect(footballTodayScheduleVersionForDay("2026-09-13")).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
-    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v6-question-refresh");
+    expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v7-hit-number-pool-cleanup");
 
     const future = Array.from({ length: 20 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 8, 12 + offset)).toISOString().slice(0, 10);
@@ -119,9 +119,25 @@ describe("Football Today’s Challenge session", () => {
     const refreshedHitTheNumber = buildFootballTodayPersistenceSetup("2026-09-13");
     expect(refreshedHitTheNumber.scheduleVersion).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
     expect(refreshedHitTheNumber.gameType).toBe("hit_the_number");
-    expect(refreshedHitTheNumber.publicSetup.league).toBe("NFL");
-    expect(refreshedHitTheNumber.publicSetup.format_id).toBe("themed-lineup");
-    expect(refreshedHitTheNumber.publicSetup.metric_id).toBe("nfl-season-passing-yards");
+    const refreshedPickCount = Number(refreshedHitTheNumber.publicSetup.pick_count);
+    const refreshedCandidates = refreshedHitTheNumber.publicSetup.candidates as Array<Record<string, unknown>>;
+    expect([4, 5, 6]).toContain(refreshedPickCount);
+    expect(refreshedCandidates).toHaveLength(refreshedPickCount * 2 + 4);
+    expect(new Set([
+      "nfl-season-passing-yards",
+      "nfl-team-overall-wins",
+      "nfl-team-points-for",
+      "nfl-season-passer-rating",
+      "nfl-team-points-per-game",
+      "nfl-season-passing-touchdowns",
+      "nfl-season-interceptions",
+      "nfl-career-passing-touchdowns",
+      "cfb-team-points-for",
+      "cfb-team-points-against",
+      "cfb-team-wins",
+      "cfb-team-points-per-game",
+      "cfb-team-point-differential",
+    ])).toContain(String(refreshedHitTheNumber.publicSetup.metric_id));
     expect(refreshedHitTheNumber.setupKey).not.toContain("nfl-team-defensive-interceptions");
 
     const transition = Array.from({ length: 42 }, (_unused, offset) => {
@@ -364,7 +380,9 @@ describe("Football Today’s Challenge session", () => {
     const candidates = projection.public_setup.candidates as Array<Record<string, unknown>>;
 
     expect(projection.game_type).toBe("hit_the_number");
-    expect(candidates.length).toBeGreaterThan(7);
+    const pickCount = Number(projection.public_setup.pick_count);
+    expect([4, 5, 6]).toContain(pickCount);
+    expect(candidates).toHaveLength(pickCount * 2 + 4);
     expect(candidates.every((candidate) => !("value" in candidate))).toBe(true);
     expect(projection.reveal_setup).toBeNull();
   });
