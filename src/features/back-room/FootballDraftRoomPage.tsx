@@ -743,6 +743,7 @@ export default function FootballDraftRoomPage() {
               <li className={selectedModeId === mode.id ? "is-selected" : ""} key={mode.id}>
                 <button
                   type="button"
+                  aria-label={mode.displayName}
                   aria-pressed={selectedModeId === mode.id}
                   onClick={() => selectMode(mode.id)}
                 >
