@@ -57,6 +57,11 @@ export const footballQbCareerRows: readonly FootballQbCareerRow[] = [
   { id: "steve-young", name: "Steve Young", games: 169, completions: 2667, attempts: 4149, passingYards: 33124, passingTouchdowns: 232, interceptions: 107 },
   { id: "troy-aikman", name: "Troy Aikman", games: 165, completions: 2898, attempts: 4715, passingYards: 32942, passingTouchdowns: 165, interceptions: 141 },
   { id: "andrew-luck", name: "Andrew Luck", games: 86, completions: 2000, attempts: 3290, passingYards: 23671, passingTouchdowns: 171, interceptions: 83 },
+  { id: "nfl-roger-staubach", name: "Roger Staubach", games: 131, completions: 1685, attempts: 2958, passingYards: 22700, passingTouchdowns: 153, interceptions: 109 },
+  { id: "nfl-terry-bradshaw", name: "Terry Bradshaw", games: 168, completions: 2025, attempts: 3901, passingYards: 27989, passingTouchdowns: 212, interceptions: 210 },
+  { id: "nfl-fran-tarkenton", name: "Fran Tarkenton", games: 246, completions: 3686, attempts: 6467, passingYards: 47003, passingTouchdowns: 342, interceptions: 266 },
+  { id: "nfl-jim-kelly", name: "Jim Kelly", games: 160, completions: 2874, attempts: 4779, passingYards: 35467, passingTouchdowns: 237, interceptions: 175 },
+  { id: "nfl-boomer-esiason", name: "Boomer Esiason", games: 187, completions: 2969, attempts: 5205, passingYards: 37920, passingTouchdowns: 247, interceptions: 184 },
 ] as const;
 
 export const footballRbCareerRows: readonly FootballRbCareerRow[] = [
