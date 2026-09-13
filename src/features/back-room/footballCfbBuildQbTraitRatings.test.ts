@@ -1,12 +1,15 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BUILD_QB_TRAITS, draftRoomModeDefinition } from "../play/draftRoomContract";
 import {
   CFB_BUILD_QB_GENERATION_WEIGHT_BY_RARITY,
   CFB_BUILD_QB_MATURE_POOL_SIZE,
+  CFB_BUILD_QB_RESEARCH_SOURCES,
   CFB_BUILD_QB_TRAIT_MODEL_VERSION,
   buildFootballCfbBuildQbTraitProfiles,
   cfbBuildQbProfileForItemReference,
 } from "./footballCfbBuildQbTraitRatings";
+import { generatedCfbBuildQbCatalog } from "../play/generated/cfbBuildQbCatalog";
 
 describe("CFB Build a QB peak-season model", () => {
   const profiles = buildFootballCfbBuildQbTraitProfiles();
@@ -65,6 +68,41 @@ describe("CFB Build a QB peak-season model", () => {
     for (const profile of profiles) {
       expect(Object.keys(profile.traits)).toEqual(BUILD_QB_TRAITS);
       expect(profile.overall).toBe(Math.round(BUILD_QB_TRAITS.reduce((sum, trait) => sum + profile.traits[trait], 0) / 5));
+    }
+  });
+
+  it("projects every audited CFB trait packet to the append-only v5 backend catalog", () => {
+    const migration = readFileSync(
+      "supabase/migrations/202612310105_stage12_cfb_build_qb_grading_audit.sql",
+      "utf8",
+    );
+
+    expect(migration).toContain("football-draft-room-2026-09-v5");
+    expect(migration).toContain("football-draft-room-rarity-2026-09-v4");
+    expect(migration).toContain("where source.content_version = 'football-draft-room-2026-09-v4'");
+    expect(migration).not.toContain("update private.auction_catalog\n");
+
+    const auditedLines = migration
+      .split("\n")
+      .filter((line) => line.includes("when 'cfb-build-qb-") && line.includes("jsonb_build_object"));
+    expect(auditedLines).toHaveLength(80);
+
+    for (const row of generatedCfbBuildQbCatalog) {
+      const line = auditedLines.find((candidate) => candidate.includes(`when '${row.itemReference}'`));
+      expect(line, `missing v5 grading packet for ${row.displayLabel}`).toBeDefined();
+      for (const trait of BUILD_QB_TRAITS) {
+        expect(line).toContain(`'${trait}',${row.gradingInputs[trait]}`);
+      }
+      expect(line).toContain(`'overall',${row.gradingInputs.overall}`);
+    }
+  });
+
+  it("keeps every row's evidence references inside the canonical source registry", () => {
+    const sourceIds = new Set(CFB_BUILD_QB_RESEARCH_SOURCES.map((source) => source.id));
+    for (const profile of profiles) {
+      for (const sourceId of profile.evidenceSourceIds) {
+        expect(sourceIds.has(sourceId as never), `unknown evidence source ${sourceId} for ${profile.name}`).toBe(true);
+      }
     }
   });
 
