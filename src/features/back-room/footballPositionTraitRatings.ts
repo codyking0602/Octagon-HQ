@@ -45,7 +45,6 @@ interface RawQbTraitSignals {
   rushingYardsPerGame: number;
   rushingTouchdownsPerGame: number;
   rushingYardsPerAttempt: number;
-  superBowlTitles: number;
   historicalConsensus: number;
   evidenceMetricIds: readonly FootballFactMetricId[];
 }
@@ -107,18 +106,14 @@ const SCOUTING_LEVEL_SCORE: Readonly<Record<ScoutingLevel, number>> = {
 
 const REQUIRED_METRICS = [
   "nfl-career-games",
+  "nfl-career-passing-completions",
   "nfl-career-passing-attempts",
+  "nfl-career-passing-yards",
+  "nfl-career-passing-touchdowns",
   "nfl-career-interceptions-thrown",
-  "nfl-career-passing-yards-per-attempt",
-  "nfl-career-passing-yards-per-game",
-  "nfl-career-passing-touchdowns-per-game",
-  "nfl-career-completion-percentage",
-  "nfl-career-passer-rating",
-  "nfl-career-passing-touchdown-interception-ratio",
-  "nfl-career-rushing-yards-per-attempt",
-  "nfl-career-rushing-yards-per-game",
-  "nfl-career-rushing-touchdowns-per-game",
-  "nfl-super-bowl-titles",
+  "nfl-career-rushing-attempts",
+  "nfl-career-rushing-yards",
+  "nfl-career-rushing-touchdowns",
 ] as const satisfies readonly FootballFactMetricId[];
 
 function factValue(subjectId: string, metricId: FootballFactMetricId) {
@@ -189,9 +184,21 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
       throw new Error(`Build a QB QB ${subjectId} is missing historical consensus`);
     }
 
+    const games = values["nfl-career-games"]!;
+    const completions = values["nfl-career-passing-completions"]!;
     const attempts = values["nfl-career-passing-attempts"]!;
+    const passingYards = values["nfl-career-passing-yards"]!;
+    const passingTouchdowns = values["nfl-career-passing-touchdowns"]!;
     const interceptions = values["nfl-career-interceptions-thrown"]!;
-    if (attempts <= 0) throw new Error(`Build a QB QB ${subjectId} has no passing attempts`);
+    const rushingAttempts = values["nfl-career-rushing-attempts"]!;
+    const rushingYards = values["nfl-career-rushing-yards"]!;
+    const rushingTouchdowns = values["nfl-career-rushing-touchdowns"]!;
+    if (games <= 0 || attempts <= 0) throw new Error(`Build a QB QB ${subjectId} has incomplete career volume`);
+
+    const a = Math.min(2.375, Math.max(0, (completions / attempts - 0.3) * 5));
+    const b = Math.min(2.375, Math.max(0, (passingYards / attempts - 3) * 0.25));
+    const passerTouchdown = Math.min(2.375, Math.max(0, (passingTouchdowns / attempts) * 20));
+    const d = Math.min(2.375, Math.max(0, 2.375 - (interceptions / attempts) * 25));
 
     return {
       subjectId,
@@ -199,17 +206,16 @@ function rawBuildQbSignals(): RawQbTraitSignals[] {
       recognizabilityTier: candidate.recognizabilityTier,
       auditIndex,
       startSeason: subject.startSeason,
-      yardsPerAttempt: values["nfl-career-passing-yards-per-attempt"]!,
-      passingYardsPerGame: values["nfl-career-passing-yards-per-game"]!,
-      passingTouchdownsPerGame: values["nfl-career-passing-touchdowns-per-game"]!,
-      completionPercentage: values["nfl-career-completion-percentage"]!,
-      passerRating: values["nfl-career-passer-rating"]!,
-      touchdownInterceptionRatio: values["nfl-career-passing-touchdown-interception-ratio"]!,
+      yardsPerAttempt: passingYards / attempts,
+      passingYardsPerGame: passingYards / games,
+      passingTouchdownsPerGame: passingTouchdowns / games,
+      completionPercentage: (completions / attempts) * 100,
+      passerRating: ((a + b + passerTouchdown + d) / 6) * 100,
+      touchdownInterceptionRatio: passingTouchdowns / Math.max(1, interceptions),
       interceptionPercentage: (interceptions / attempts) * 100,
-      rushingYardsPerGame: values["nfl-career-rushing-yards-per-game"]!,
-      rushingTouchdownsPerGame: values["nfl-career-rushing-touchdowns-per-game"]!,
-      rushingYardsPerAttempt: values["nfl-career-rushing-yards-per-attempt"]!,
-      superBowlTitles: values["nfl-super-bowl-titles"]!,
+      rushingYardsPerGame: rushingYards / games,
+      rushingTouchdownsPerGame: rushingTouchdowns / games,
+      rushingYardsPerAttempt: rushingAttempts > 0 ? rushingYards / rushingAttempts : 0,
       historicalConsensus,
       evidenceMetricIds: REQUIRED_METRICS,
     };
@@ -306,9 +312,9 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
       { score: scoreFootballAnchoredValue(row.rushingYardsPerAttempt, mobilityAnchors.rushingYardsPerAttempt), weight: 0.15 },
     ]);
     const clutchStat = weightedScore([
-      { score: row.historicalConsensus / 100, weight: 0.45 },
-      { score: scoreFootballAnchoredValue(row.superBowlTitles, superBowlAnchors), weight: 0.35 },
-      { score: eraScore(row, eraAnchors, "touchdownInterceptionRatio"), weight: 0.20 },
+      { score: row.historicalConsensus / 100, weight: 0.55 },
+      { score: eraScore(row, eraAnchors, "touchdownInterceptionRatio"), weight: 0.25 },
+      { score: eraScore(row, eraAnchors, "passerRating"), weight: 0.20 },
     ]);
 
     const traits = {
