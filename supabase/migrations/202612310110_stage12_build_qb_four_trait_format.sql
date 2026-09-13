@@ -12,7 +12,7 @@ insert into private.auction_catalog_versions (
 ) values (
   'football-draft-room-2026-09-v6',
   'football-draft-room-rarity-2026-09-v4',
-  'football-build-qb-traits-2026-09-v1',
+  'football-build-qb-traits-2026-09-v2',
   true,
   'draft-room'
 );
@@ -23,7 +23,18 @@ insert into private.auction_catalog (
 )
 select
   'football-draft-room-2026-09-v6', mode_id, item_reference, display_label, rarity_band,
-  display_description, generation_weight, private_generation_class, grading_inputs
+  display_description, generation_weight, private_generation_class,
+  (grading_inputs - 'Clutch') || jsonb_build_object(
+    'overall',
+    round(
+      (
+        (grading_inputs->>'Arm')::numeric
+        + (grading_inputs->>'Accuracy')::numeric
+        + (grading_inputs->>'Processing')::numeric
+        + (grading_inputs->>'Mobility')::numeric
+      ) / 4
+    )
+  )
 from private.auction_catalog
 where content_version = 'football-draft-room-2026-09-v5'
   and mode_id in ('build-qb', 'build-qb-cfb');
