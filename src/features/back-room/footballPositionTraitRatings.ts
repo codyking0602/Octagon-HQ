@@ -13,6 +13,20 @@ import { BUILD_QB_TRAITS, type BuildQbTrait } from "../play/draftRoomContract";
 
 export const FOOTBALL_POSITION_TRAIT_MODEL_VERSION = "build-qb-v2" as const;
 export const BUILD_QB_MATURE_POOL_SIZE = 60 as const;
+export const FOOTBALL_BUILD_QB_RESEARCH_SNAPSHOT_DATE = "2026-09-12" as const;
+export const FOOTBALL_BUILD_QB_RESEARCH_SOURCES = [
+  { id: "canonical-football-facts", evidenceType: "statistics", source: "Octagon HQ canonical Football factual ledger" },
+  { id: "pfr-any-a", evidenceType: "statistics", source: "Pro Football Reference adjusted passing efficiency" },
+  { id: "pfr-comebacks", evidenceType: "high-leverage", source: "Pro Football Reference fourth-quarter comebacks" },
+  { id: "pfr-game-winning-drives", evidenceType: "high-leverage", source: "Pro Football Reference game-winning drives" },
+  { id: "espn-goat-index", evidenceType: "historical-evaluation", source: "ESPN coach/executive historical QB evaluation" },
+  { id: "espn-qb-council-2022", evidenceType: "film-scouting", source: "ESPN QB Council trait scouting" },
+  { id: "espn-qb-traits-2024", evidenceType: "film-scouting", source: "ESPN 2024 QB trait scouting" },
+  { id: "espn-qb-traits-2025", evidenceType: "film-scouting", source: "ESPN 2025 QB trait scouting" },
+  { id: "nfl-strongest-arms-history", evidenceType: "film-history", source: "NFL historical arm-talent review" },
+  { id: "nfl-strongest-arms-2014", evidenceType: "film-scouting", source: "NFL arm-strength scouting" },
+  { id: "nfl-100-quarterbacks", evidenceType: "historical-evaluation", source: "NFL 100 all-time quarterback panel" },
+] as const;
 
 export type BuildQbQualityBand = "marquee" | "strong" | "core" | "lower" | "wildcard";
 
@@ -289,7 +303,6 @@ export function buildFootballBuildQbTraitProfiles(): readonly FootballBuildQbTra
     rushingTouchdownsPerGame: raw.map((row) => row.rushingTouchdownsPerGame),
     rushingYardsPerAttempt: raw.map((row) => row.rushingYardsPerAttempt),
   };
-  const superBowlAnchors = raw.map((row) => row.superBowlTitles);
 
   return raw.map((row) => {
     const armStat = weightedScore([
