@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   BUILD_QB_TRAITS,
+  TRIO_POSITIONS,
   draftRoomModeDefinition,
   isDraftRoomModeId,
+  isTrioDraftRoomMode,
 } from "./draftRoomContract";
 
 describe("Draft Room contract", () => {
@@ -31,9 +33,26 @@ describe("Draft Room contract", () => {
     expect(BUILD_QB_TRAITS).not.toContain("Clutch" as never);
   });
 
+  it("locks the Stage 13 Trio economy without changing Build a QB", () => {
+    for (const modeId of ["trio-nfl", "trio-cfb"] as const) {
+      const mode = draftRoomModeDefinition(modeId);
+      expect(mode.rounds).toBe(6);
+      expect(mode.requiredSelectionsPerPlayer).toBe(3);
+      expect(mode.startingBankroll).toBe(30);
+      expect(mode.categories).toEqual([]);
+      expect(mode.format).toBe("trio");
+      expect(isTrioDraftRoomMode(modeId)).toBe(true);
+    }
+    expect(TRIO_POSITIONS).toEqual(["QB", "RB", "WR"]);
+    expect(draftRoomModeDefinition("build-qb").startingBankroll).toBe(40);
+    expect(draftRoomModeDefinition("build-qb").rounds).toBe(8);
+  });
+
   it("recognizes only canonical Draft Room mode ids", () => {
     expect(isDraftRoomModeId("build-qb")).toBe(true);
     expect(isDraftRoomModeId("build-qb-cfb")).toBe(true);
+    expect(isDraftRoomModeId("trio-nfl")).toBe(true);
+    expect(isDraftRoomModeId("trio-cfb")).toBe(true);
     expect(isDraftRoomModeId("ultimate-fighter")).toBe(false);
   });
 });

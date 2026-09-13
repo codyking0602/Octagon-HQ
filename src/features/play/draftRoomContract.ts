@@ -1,9 +1,12 @@
-export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb"] as const;
+export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb", "trio-nfl", "trio-cfb"] as const;
 
 export type DraftRoomModeId = (typeof DRAFT_ROOM_MODE_IDS)[number];
 
 export const BUILD_QB_TRAITS = ["Arm", "Accuracy", "Processing", "Mobility"] as const;
 export type BuildQbTrait = (typeof BUILD_QB_TRAITS)[number];
+
+export const TRIO_POSITIONS = ["QB", "RB", "WR"] as const;
+export type TrioPosition = (typeof TRIO_POSITIONS)[number];
 
 export interface DraftRoomModeDefinition {
   id: DraftRoomModeId;
@@ -13,6 +16,7 @@ export interface DraftRoomModeDefinition {
   requiredSelectionsPerPlayer: number;
   startingBankroll: number;
   categories: readonly BuildQbTrait[];
+  format: "build-qb" | "trio";
 }
 
 export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
@@ -24,6 +28,7 @@ export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
     requiredSelectionsPerPlayer: 4,
     startingBankroll: 40,
     categories: BUILD_QB_TRAITS,
+    format: "build-qb",
   },
   {
     id: "build-qb-cfb",
@@ -33,11 +38,40 @@ export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
     requiredSelectionsPerPlayer: 4,
     startingBankroll: 40,
     categories: BUILD_QB_TRAITS,
+    format: "build-qb",
+  },
+  {
+    id: "trio-nfl",
+    displayName: "NFL QB / RB / WR Trio",
+    description: "Bid on complete NFL QB, RB, and WR packages. Win three trios and build the stronger nine-player roster.",
+    rounds: 6,
+    requiredSelectionsPerPlayer: 3,
+    startingBankroll: 30,
+    categories: [],
+    format: "trio",
+  },
+  {
+    id: "trio-cfb",
+    displayName: "CFB QB / RB / WR Trio",
+    description: "Bid on complete peak-college QB, RB, and WR packages. Win three trios and build the stronger nine-player roster.",
+    rounds: 6,
+    requiredSelectionsPerPlayer: 3,
+    startingBankroll: 30,
+    categories: [],
+    format: "trio",
   },
 ] as const;
 
 export function isDraftRoomModeId(value: string): value is DraftRoomModeId {
   return (DRAFT_ROOM_MODE_IDS as readonly string[]).includes(value);
+}
+
+export function isTrioDraftRoomMode(modeId: DraftRoomModeId) {
+  return modeId === "trio-nfl" || modeId === "trio-cfb";
+}
+
+export function isCfbDraftRoomMode(modeId: DraftRoomModeId) {
+  return modeId === "build-qb-cfb" || modeId === "trio-cfb";
 }
 
 export function draftRoomModeDefinition(modeId: DraftRoomModeId) {

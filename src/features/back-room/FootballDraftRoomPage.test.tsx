@@ -9,6 +9,7 @@ import FootballDraftRoomPage, {
   BUILD_A_QB_TRAITS,
   BUILD_A_QB_TRAIT_HELP,
   hasDraftRoomAdminAccess,
+  parseTrioPackageLabel,
 } from "./FootballDraftRoomPage";
 
 vi.mock("../identity/IdentityProvider", () => ({
@@ -110,7 +111,21 @@ describe("Football Draft Room", () => {
     expect(screen.queryByRole("heading", { name: "Draft Room" })).not.toBeInTheDocument();
   });
 
-  it("shows both NFL and CFB Build a QB modes only through the existing owner gate", () => {
+  it("parses one Trio package into exactly QB, RB, and WR presentation rows", () => {
+    expect(parseTrioPackageLabel("Patrick Mahomes | Derrick Henry | Calvin Johnson")).toEqual([
+      { position: "QB", label: "Patrick Mahomes" },
+      { position: "RB", label: "Derrick Henry" },
+      { position: "WR", label: "Calvin Johnson" },
+    ]);
+    expect(parseTrioPackageLabel("Joe Burrow · LSU 2019 | Reggie Bush · USC 2005 | Travis Hunter · Colorado 2024"))
+      .toEqual([
+        { position: "QB", label: "Joe Burrow · LSU 2019" },
+        { position: "RB", label: "Reggie Bush · USC 2005" },
+        { position: "WR", label: "Travis Hunter · Colorado 2024" },
+      ]);
+  });
+
+  it("shows Build a QB and Trio modes only through the existing owner gate", () => {
     mockedUseIdentity.mockReturnValue(identity(true));
     renderRoute();
 
@@ -119,6 +134,8 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
     expect(screen.getByText(/Bid from a \$40 bankroll; 8 QBs appear and each side finishes with 4\./)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
     expect(screen.getAllByText("DRAFT ROOM").length).toBeGreaterThan(0);
     expect(screen.queryByText(/ADMIN PREVIEW/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/ADMIN RELEASE GATE/i)).not.toBeInTheDocument();
@@ -126,6 +143,17 @@ describe("Football Draft Room", () => {
     for (const trait of BUILD_A_QB_TRAITS) {
       expect(screen.getByText(trait)).toBeInTheDocument();
     }
+  });
+
+  it("resolves the NFL Trio launch contract with six packages, three wins, and a $30 bankroll", () => {
+    mockedUseIdentity.mockReturnValue(identity(true));
+    renderRoute("/football/draft-room?mode=trio-nfl");
+    expect(screen.getByRole("heading", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toHaveClass("is-selected");
+    expect(screen.getByText(/Bid from a \$30 bankroll; 6 trios appear and each side finishes with 3\./)).toBeInTheDocument();
+    expect(screen.getByText("QB")).toBeInTheDocument();
+    expect(screen.getByText("RB")).toBeInTheDocument();
+    expect(screen.getByText("WR")).toBeInTheDocument();
   });
 
   it("resolves the CFB launch mode without weakening the canonical private gate", () => {
