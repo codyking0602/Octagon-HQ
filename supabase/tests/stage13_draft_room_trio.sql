@@ -73,10 +73,10 @@ begin
     select md5(string_agg(
       mode_id || '|' || position || '|' || tier || '|' || display_name || '|' || coalesce(peak_team, '') || '|' || coalesce(peak_season::text, ''),
       E'\n'
-      order by mode_id, position, tier, display_name, peak_team, peak_season
+      order by player_reference
     ))
     from private.draft_room_trio_player_pool
-  ) <> '67bca40706b297435128466c3f74f053' then
+  ) <> 'fe45cc452d1c61a3ab667beb9c74ba42' then
     raise exception 'Stage 13 locked Trio names or CFB peak identities drifted';
   end if;
 
