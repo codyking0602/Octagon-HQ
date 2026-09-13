@@ -459,6 +459,31 @@ type GameProps = {
   advance: (action: JsonRecord) => void;
 };
 
+export function FootballTodayChallengeResult({
+  projection,
+}: {
+  projection: TodayChallengeProjection;
+}) {
+  const advance = (_action: JsonRecord) => {};
+
+  switch (projection.gameType) {
+    case "find_leader":
+      return <FindLeader projection={projection} advance={advance} />;
+    case "blind_resume":
+      return <BlindResume projection={projection} advance={advance} />;
+    case "wavelength":
+      return <Wavelength projection={projection} advance={advance} busy={false} />;
+    case "blind_rank_5":
+      return <BlindRank projection={projection} advance={advance} />;
+    case "keep_4_cut_4":
+      return <KeepCut projection={projection} advance={advance} />;
+    case "hit_the_number":
+      return <HitTheNumber projection={projection} advance={advance} />;
+    case "who_am_i":
+      return <OfficialWhoAmIDailyView projection={projection} busy={false} onAdvance={advance} />;
+  }
+}
+
 export default function FootballTodayChallengePage() {
   const navigate = useNavigate();
   const identity = useIdentity();
