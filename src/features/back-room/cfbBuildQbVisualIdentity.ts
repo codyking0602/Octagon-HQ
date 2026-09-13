@@ -3,7 +3,7 @@ import { footballTeamAssets } from "./footballSubjectAssets";
 import { buildFootballCfbBuildQbTraitProfiles } from "./footballCfbBuildQbTraitRatings";
 import type { BuildQbVisualIdentity } from "./buildQbVisualIdentity";
 
-export const CFB_BUILD_QB_HERO_IMAGE = "/assets/football/build-qb-trevor-lawrence-clemson-hero.webp";
+export const CFB_BUILD_QB_HERO_IMAGE = "/assets/football/build-qb-cam-newton-auburn-hero.webp";
 
 export const CFB_BUILD_QB_SCHOOL_COLORS: Readonly<Record<string, readonly [string, string]>> = {
   "Auburn": ["#0C2340", "#F26522"],

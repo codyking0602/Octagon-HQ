@@ -160,8 +160,8 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL QB / RB / WR Trio" })).not.toBeInTheDocument();
-    expect(container.querySelector('img[src="/assets/football/build-qb-trevor-lawrence-clemson-hero.webp"]')).toBeInTheDocument();
-    expect(container.querySelector('img[src="/assets/football/draft-room-trio-cfb.webp"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/build-qb-cam-newton-auburn-hero.webp"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/draft-room-trio-cfb-ohio-state.webp"]')).toBeInTheDocument();
   });
 
   it("keeps mode selection and opponent selection as one shared two-step setup flow", () => {

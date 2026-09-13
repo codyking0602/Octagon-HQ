@@ -26,8 +26,8 @@ describe("CFB Build a QB visual identity", () => {
     expect(cfbBuildQbVisualIdentity(hurts.catalogId)?.teamName).toBe("Oklahoma · 2019");
   });
 
-  it("ships the dedicated Trevor Lawrence Clemson hero asset", () => {
-    expect(CFB_BUILD_QB_HERO_IMAGE).toBe("/assets/football/build-qb-trevor-lawrence-clemson-hero.webp");
-    expect(existsSync("public/assets/football/build-qb-trevor-lawrence-clemson-hero.webp")).toBe(true);
+  it("ships the approved Cam Newton Auburn hero asset", () => {
+    expect(CFB_BUILD_QB_HERO_IMAGE).toBe("/assets/football/build-qb-cam-newton-auburn-hero.webp");
+    expect(existsSync("public/assets/football/build-qb-cam-newton-auburn-hero.webp")).toBe(true);
   });
 });
