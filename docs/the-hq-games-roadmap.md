@@ -2,7 +2,7 @@
 
 **Status:** Sole canonical product and implementation roadmap for UFC + Football Games  
 **Created:** September 3, 2026  
-**Updated:** September 11, 2026  
+**Updated:** September 13, 2026  
 **Scope:** Play landing pages, shared game presentation, UFC games, Football games, Today's Challenge, 20 Questions, Who Am I, Auction, Draft Room, game-source ownership, and Games release readiness.
 
 > **Cross-chat rule:** Read this document before changing UFC Play, Football Play, any shared game mechanic, Today's Challenge, Auction, Draft Room, Blind Rank 5, Keep 4 / Cut 4, 20 Questions, Who Am I, or the data/ranking sources consumed by Games.
@@ -34,11 +34,15 @@ Final future mixes:
 
 ### ACTIVE
 
-**Stage 12 — Draft Room foundation + Build a QB.**
+**Stage 13 — Draft Room roster builders.**
 
-During Stage 12 development, Draft Room is an owner/admin preview only. Reuse the existing authenticated `canControlPicks` owner projection for access; do not add a second admin system. Keep both Play-library discovery and the direct Draft Room route unavailable to non-admin members until Cody explicitly approves public release.
+Stage 12 — Draft Room foundation + Build a QB is complete. Build a QB uses the shared sealed-bid/Auction architecture with four traits (Arm, Accuracy, Processing, Mobility), eight rounds, a $40 bankroll, and server-owned bidding, ties, and grading.
 
-Do not reopen Stage 11 mechanics unless a concrete defect or explicit product decision requires it.
+Draft Room remains an owner/admin preview. Reuse the existing authenticated `canControlPicks` owner projection for access; do not add a second admin system. Keep both Play-library discovery and the direct Draft Room route unavailable to non-admin members until Cody explicitly approves public release.
+
+Stage 13 now expands Draft Room through three roster-build formats: QB / RB / WR Trio, Front Seven, and Secondary. Exact Front Seven and Secondary roster-slot/scoring details remain intentionally uncommitted until product brainstorming is complete.
+
+Do not reopen Stage 11 or Stage 12 mechanics unless a concrete defect or explicit product decision requires it.
 
 ---
 
@@ -357,24 +361,36 @@ Core strategic contract:
 - true ties supported;
 - challenge/rematch/history use existing canonical challenge/backend patterns.
 
-Launch priority is **Build a QB** first. Approved initial position-builder traits:
+**Build a QB is complete** as the foundation room. Its locked current format is:
 
-- QB: Arm, Accuracy, Processing, Mobility, Clutch
-- RB: Vision, Power, Elusiveness, Speed, Receiving
-- WR: Routes, Hands, Speed, YAC, Contested Catch
-- DE/EDGE: Pass Rush, Power, Get-Off, Run Defense, Motor
-- CB: Coverage, Ball Skills, Speed, Physicality, Technique
-- Safety: Coverage, Range, Tackling, Ball Skills, Instincts
-- LB: Run Defense, Coverage, Tackling, Blitzing, Instincts
+- Arm, Accuracy, Processing, Mobility only;
+- eight rounds;
+- $40 starting bankroll;
+- four filled trait slots per side;
+- server-owned bidding, ties, and grading;
+- NFL ratings use the approved NFL QB model;
+- CFB ratings use each quarterback's peak college season and the team identity from that season.
 
-Trait grades must derive from the canonical Football ranking/category owner or an explicitly approved canonical position-rating model. Never create a Draft Room-only manual ratings table.
+The old standalone RB / WR / DE-EDGE / CB / Safety / LB position-builder roadmap is retired unless Cody explicitly revives it.
 
-After position builders are proven, initial themed rooms are:
+The next approved roster-build rooms are:
 
-- Cowboys Since 2000
-- Longhorns Since 2000
-- Best QB / RB / WR Trio
-- Best Secondary
+- **QB / RB / WR Trio**
+- **Front Seven**
+- **Secondary**
+
+Front Seven and Secondary roster composition, round count, bankroll, and grading structure will be locked during product brainstorming before implementation.
+
+Approved themed/history rooms after those builders are:
+
+- **Cowboys Since 2007** — individual Cowboys players from the approved era;
+- **Longhorns Since 2005** — individual Texas players from the approved era;
+- **Cowboys Teams Since 2007** — specific Dallas team seasons from the approved era;
+- **Longhorns Teams Since 2005** — specific Texas team seasons from the approved era;
+- **College Football National Champions** — championship teams/seasons;
+- **NFL Division Draft** — one rotating mode whose eligible NFL division changes rather than creating eight separate permanent room types.
+
+Trait/asset grades and final collection grading must derive from canonical Football owners or an explicitly approved canonical room-rating model. Never create an ad hoc Draft Room-only truth source merely to populate a room.
 
 Do not inflate mode count merely to match UFC Auction.
 
@@ -471,23 +487,32 @@ Completed final rebuild slice:
 
 Do not restart completed identity research merely to increase counts. New facts should be added only when a concrete quality gap is found during gameplay simulation and the existing canonical owner is extended.
 
-### ▶ PR 11 — Today's Challenge vNext
-**ACTIVE.** Preserve one sport-aware Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Do not add Auction, Draft Room, Better Than, or retired 20 Questions.
+### ✅ PR 11 — Today's Challenge vNext
+**COMPLETE.** Preserve the one canonical sport-aware Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Who Am I is now an official Daily family in UFC and Football under the locked future rotations above. Auction, Draft Room, Better Than, and retired 20 Questions remain outside Today's Challenge.
 
-**Slice 1 — Daily eligibility + rotation audit: COMPLETE.** The canonical audit is `docs/todays-challenge-vnext-audit.md`. Current UFC and Football schedules remain unchanged; current scoring remains unchanged; Who Am I is approved for public replayable Play but not yet for competitive Daily.
+### ✅ PR 12 — Draft Room foundation + Build a QB
+**COMPLETE — ADMIN PREVIEW ONLY.** Draft Room reuses the canonical sealed-bid/Auction architecture. Build a QB is live in the approved four-trait format: Arm / Accuracy / Processing / Mobility, eight rounds, $40 bankroll, four filled trait slots per side, and server-owned bidding/ties/grading. Keep Draft Room behind the existing authenticated owner permission until Cody explicitly approves public release.
 
-**Slice 2 — public Who Am I release: COMPLETE in this focused release.** Remove owner-only preview gating without changing Who Am I gameplay. Keep `dailyEligible: false` and every Daily/challenge/streak/reminder surface off.
+### ▶ PR 13 — Draft Room roster builders
+**ACTIVE.** Add three new roster-build rooms using the existing Draft Room lifecycle:
 
-**Slice 3 — NEXT: Who Am I Daily readiness measurement.** Establish the minimum canonical evidence for real solve-window and recovery outcomes without creating a second game/runtime owner. Do not activate Daily until a later server-owned Daily contract and explicit rotation decision are complete.
+- QB / RB / WR Trio
+- Front Seven
+- Secondary
 
-### ▶ PR 12 — Draft Room foundation + Build a QB
-**ACTIVE — ADMIN PREVIEW ONLY.** Extend/reuse the canonical strategic challenge backend safely, launch Football Draft Room and Build a QB, prove canonical trait grading, bankroll/nomination behavior, challenge lifecycle, backend verification, and mobile presentation. Keep Draft Room behind the existing authenticated owner permission until Cody explicitly approves public release.
+Do not implement the retired standalone RB / WR / DE-EDGE / CB / Safety / LB trait-builder sequence unless Cody explicitly changes direction. Lock Front Seven and Secondary roster/scoring details before implementation.
 
-### PR 13 — Draft Room position builders
-Add RB, WR, DE/EDGE, CB, Safety, and LB builders using canonical trait owners and one Draft Room lifecycle.
+### PR 14 — Draft Room themed + history rooms
+Add the approved six-room set through the same Draft Room lifecycle:
 
-### PR 14 — Draft Room themed collection rooms
-Add Cowboys Since 2000, Longhorns Since 2000, Best QB/RB/WR Trio, and Best Secondary. Keep later room ideas as backlog unless explicitly promoted.
+- Cowboys Since 2007
+- Longhorns Since 2005
+- Cowboys Teams Since 2007
+- Longhorns Teams Since 2005
+- College Football National Champions
+- NFL Division Draft — rotating division, one mode rather than eight separate permanent modes
+
+Do not add College Football Power Programs or other brainstormed room ideas unless explicitly promoted later.
 
 ### PR 15 — Full Games maturity audit + production release proof
 Run cross-game simulations, source-provenance audit, landing/game parity review, mobile review, history/deep-link review, Daily fairness, challenge hydration, Draft Room lifecycle, and exact production release proof. Remove Football Games Early Access/Beta treatment only if all completion gates are green.
@@ -512,6 +537,7 @@ Do not:
 - let runtime AI decide yes/no truth;
 - use unsupported trivia or race/ethnicity appearance taxonomy in Who Am I;
 - create Draft Room-only manual trait grades;
+- revive the retired standalone RB / WR / DE-EDGE / CB / Safety / LB trait-builder roadmap without an explicit new product decision;
 - add Auction/Draft Room/Better Than to Today's Challenge;
 - add a second Daily scheduler, history store, leaderboard owner, reminder owner, or score repository;
 - call a roadmap step complete merely because code merged without exact-head validation and, when applicable, exact live-SHA verification.
