@@ -48,7 +48,7 @@ describe("FootballPicksPage", () => {
   it("keeps event artwork clean and makes every Football Picks time explicitly Central", () => {
     const { container } = render(<FootballPicksPage />);
     const hero = screen.getByLabelText("Football Week 1 event artwork");
-    const slate = screen.getByLabelText("Football Week 1 football games");
+    const slate = screen.getByLabelText("Current and upcoming football games");
     const provenance = screen.getByText(/ATS ODDS · THE ODDS API · FROZEN/);
 
     expect(hero).toHaveTextContent("");
