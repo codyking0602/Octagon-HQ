@@ -9,7 +9,7 @@ describe("Picks group progress presentation", () => {
   it("stays collapsed by default and shows scannable completion states", () => {
     expect(component).toContain('<details className="surface-card picks-group-progress">');
     expect(component).not.toContain('<details open');
-    expect(component).toContain("{completedMembers}/{members.length} COMPLETE");
+    expect(component).toContain("`${completedMembers}/${visibleMembers.length} COMPLETE`");
     expect(component).toContain("{member.completed}/{member.total}");
     expect(component).toContain("const isComplete = member.completed === member.total && member.total > 0");
     expect(component).toContain('{isComplete ? "✓" : member.displayName.trim().charAt(0).toUpperCase()}');
