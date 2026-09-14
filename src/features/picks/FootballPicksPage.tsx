@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { FootballFuturesCard } from "./FootballFuturesCard";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
-import { FOOTBALL_FUTURES_MAX_POINTS, FOOTBALL_FUTURES_RULES, footballLockAllowance, gradeFootballAts, type AtsOutcome } from "./footballPicksScoring";
+import { footballLockAllowance, gradeFootballAts, type AtsOutcome } from "./footballPicksScoring";
 import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
@@ -249,8 +249,18 @@ export default function FootballPicksPage() {
           {identity.profile ? (
             <details className="surface-card football-group-hub" data-football-section="group">
               <summary className="football-group-hub__summary">
-                <span>YOUR GROUP</span>
-                <strong>{seasonHub ? "WEEKLY + SEASON" : "WEEKLY PICKS"}</strong>
+                <div className="football-group-hub__summary-copy">
+                  <span>PICKS &amp; STANDINGS</span>
+                  <small>{progress.completed} / {progress.total} PICKED{lockAllowance ? ` · ${usedLocks} / ${lockAllowance} LOCKS` : ""}</small>
+                </div>
+                <div className="football-group-hub__summary-meta">
+                  <strong>
+                    {liveAts.settled
+                      ? `${liveAts.wins}-${liveAts.losses}${liveAts.pushes ? `-${liveAts.pushes}` : ""}`
+                      : seasonHub ? "WEEKLY + SEASON" : "WEEKLY PICKS"}
+                  </strong>
+                  <small>{liveAts.settled ? `${liveAts.settled} FINAL` : seasonHub ? "GROUP + SEASON" : "GROUP PICKS"}</small>
+                </div>
               </summary>
               <div className="football-group-hub__body">
                 <section className="football-group-hub__week" aria-label="Weekly group picks">
@@ -265,19 +275,18 @@ export default function FootballPicksPage() {
             </details>
           ) : null}
 
-          <section className="football-picks-slate football-picks-slate--current" data-football-section="current" aria-label="Current and upcoming football games">
+          <section className="football-picks-slate football-picks-slate--current" data-football-section="current" aria-label="This week’s football games">
             <header className="football-picks-section-header">
-              <p className="eyebrow">CURRENT / UPCOMING GAMES</p>
+              <p className="eyebrow">THIS WEEK’S GAMES</p>
               <strong>{currentGames.length} OPEN</strong>
             </header>
 
-            <section className="surface-card football-picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
-              <div><span>YOUR WEEK</span><strong>{progress.completed} / {progress.total} PICKED{lockAllowance ? ` · LOCKS ${usedLocks} / ${lockAllowance}` : ""}</strong></div>
-              {liveAts.settled ? <p><b>LIVE ATS</b> {liveAts.wins}-{liveAts.losses}{liveAts.pushes ? ` · ${liveAts.pushes} PUSH${liveAts.pushes === 1 ? "" : "ES"}` : ""} · {liveAts.settled} FINAL</p> : null}
-              <div className="football-picks-progress__track" aria-hidden="true"><span style={{ width: `${percentage}%` }} /></div>
-              {!identity.profile ? <p>Sign in to make your weekly picks.</p> : null}
-              {!identity.profile ? <button type="button" className="primary-action" onClick={identity.openDialog}>SIGN IN TO PICK</button> : null}
-            </section>
+            {!identity.profile ? (
+              <section className="surface-card football-picks-progress" aria-label="Sign in to make weekly football picks">
+                <p>Sign in to make your weekly picks.</p>
+                <button type="button" className="primary-action" onClick={identity.openDialog}>SIGN IN TO PICK</button>
+              </section>
+            ) : null}
 
             <p className="football-picks-provenance">
               ATS ODDS · {spreadProvider}{spreadFrozenAt ? ` · FROZEN ${footballDateTimeLabel(spreadFrozenAt, false)}` : ""}
@@ -313,13 +322,21 @@ export default function FootballPicksPage() {
 
           <details className="surface-card football-picks-grading" data-football-section="grading">
             <summary><span>SCORING &amp; GRADING</span><strong>HOW IT WORKS</strong></summary>
-            <div>
-              <p><b>ATS win</b> 1 point · <b>Lock win</b> 3 points total · <b>Push</b> 0.5 · <b>Loss</b> 0.</p>
-              <p>Lines are frozen when the slate is published and every result grades against that frozen line. {lockAllowance ? `This slate allows ${lockAllowance} Locks.` : "Locks unlock on larger slates."} Your lowest-scoring week is dropped from the championship total.</p>
-              <p><b>Season Futures</b> {FOOTBALL_FUTURES_MAX_POINTS.total} points total · CFB {FOOTBALL_FUTURES_MAX_POINTS.cfb} · NFL {FOOTBALL_FUTURES_MAX_POINTS.nfl}.</p>
-              <p><b>CFB:</b> Power 4 champions {FOOTBALL_FUTURES_RULES.cfb.power4Champions.pointsEach} each · CFP teams {FOOTBALL_FUTURES_RULES.cfb.playoffTeams.pointsEach} each · semifinalists {FOOTBALL_FUTURES_RULES.cfb.semifinalists.pointsEach} each · Heisman {FOOTBALL_FUTURES_RULES.cfb.heisman.pointsEach} · national champion {FOOTBALL_FUTURES_RULES.cfb.nationalChampion.pointsEach}.</p>
-              <p><b>NFL:</b> division champions {FOOTBALL_FUTURES_RULES.nfl.divisionChampions.pointsEach} each · playoff teams {FOOTBALL_FUTURES_RULES.nfl.playoffTeams.pointsEach} each · conference title teams {FOOTBALL_FUTURES_RULES.nfl.conferenceChampionshipTeams.pointsEach} each · MVP {FOOTBALL_FUTURES_RULES.nfl.mvp.pointsEach} · Super Bowl champion {FOOTBALL_FUTURES_RULES.nfl.superBowlChampion.pointsEach}.</p>
-              <p>Futures stay private until the listed lock time. Champions must also appear in the playoff rounds you picked.</p>
+            <div className="football-picks-grading__body">
+              <div className="football-picks-grading__scores" aria-label="Weekly football scoring">
+                <span><b>WIN</b><strong>+1</strong></span>
+                <span><b>LOCK WIN</b><strong>+2 BONUS</strong></span>
+                <span><b>PUSH</b><strong>+0.5</strong></span>
+                <span><b>LOSS</b><strong>0</strong></span>
+              </div>
+              <section className="football-picks-grading__rule">
+                <b>FROZEN LINES</b>
+                <p>Your pick is graded against the line shown when the week was published.</p>
+              </section>
+              <section className="football-picks-grading__rule">
+                <b>SEASON TOTAL</b>
+                <p>Your lowest-scoring week is dropped.</p>
+              </section>
             </div>
           </details>
 
