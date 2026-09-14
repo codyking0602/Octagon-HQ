@@ -69,7 +69,11 @@ type UfcRuntimeModule = {
 };
 
 type FootballPublicationRuntimeModule = {
-  buildFootballTodayPersistenceSetup: (day: string) => unknown;
+  buildFootballDailyPersistenceSetup: (
+    day: string,
+    scheduleVersion: string,
+    gameType: OfficialDailyGameType,
+  ) => unknown;
 };
 
 type FootballAdvanceRuntimeModule = {
@@ -77,7 +81,7 @@ type FootballAdvanceRuntimeModule = {
 };
 
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
-let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
+const footballPublicationRuntimePromises = new Map<string, Promise<FootballPublicationRuntimeModule>>();
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 
 function loadUfcRuntime() {
@@ -87,11 +91,40 @@ function loadUfcRuntime() {
   return ufcRuntimePromise;
 }
 
-function loadFootballPublicationRuntime() {
-  if (!footballPublicationRuntimePromise) {
-    footballPublicationRuntimePromise = import("./football-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
+  const bundleKey = gameType === "blind_rank_5" || gameType === "keep_4_cut_4"
+    ? "comparison"
+    : gameType;
+  const existing = footballPublicationRuntimePromises.get(bundleKey);
+  if (existing) return existing;
+
+  let runtime: Promise<FootballPublicationRuntimeModule>;
+  switch (gameType) {
+    case "who_am_i":
+      runtime = import("./football-publication-who-am-i.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
+    case "wavelength":
+      runtime = import("./football-publication-wavelength.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
+    case "find_leader":
+      runtime = import("./football-publication-find-leader.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
+    case "blind_resume":
+      runtime = import("./football-publication-blind-resume.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
+    case "hit_the_number":
+      runtime = import("./football-publication-hit-the-number.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
+    case "blind_rank_5":
+    case "keep_4_cut_4":
+      runtime = import("./football-publication-comparison.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
+    default:
+      throw new Error(`Unsupported Football Daily publication game ${String(gameType)}.`);
   }
-  return footballPublicationRuntimePromise;
+
+  footballPublicationRuntimePromises.set(bundleKey, runtime);
+  return runtime;
 }
 
 function loadFootballAdvanceRuntime() {
@@ -401,8 +434,12 @@ async function materializeFootballToday(admin: SupabaseClient) {
     };
   }
 
-  const footballRuntime = await loadFootballPublicationRuntime();
-  const publication = footballRuntime.buildFootballTodayPersistenceSetup(day) as JsonRecord;
+  const footballRuntime = await loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType);
+  const publication = footballRuntime.buildFootballDailyPersistenceSetup(
+    day,
+    scheduleVersion,
+    expectedGame as OfficialDailyGameType,
+  ) as JsonRecord;
   const publicationSchedule = requiredString(publication.scheduleVersion, "Football daily schedule version");
   const publicationGame = requiredString(publication.gameType, "Football daily game type");
   if (publicationSchedule !== scheduleVersion || publicationGame !== expectedGame) {
