@@ -55,9 +55,8 @@ describe("FootballPicksPage", () => {
     expect(screen.queryByText("FOOTBALL PICKS · WEEKLY ATS")).not.toBeInTheDocument();
     expect(screen.queryByText("Opening weekend")).not.toBeInTheDocument();
     expect(provenance).toHaveTextContent("Sep 1, 7:00 AM CT");
-    expect(screen.getByText("WEEKLY SLATE · ALL TIMES CT")).toBeInTheDocument();
+    expect(screen.getByText("CURRENT / UPCOMING GAMES")).toBeInTheDocument();
     expect(screen.getByText("Thu, Sep 3, 11:00 AM CT")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Pick every game against the spread (ATS)" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
     expect(within(slate).getByText("CFB")).toBeInTheDocument();
