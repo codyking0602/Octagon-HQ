@@ -35,12 +35,12 @@ describe("FootballFuturesCard", () => {
     vi.useRealTimers();
   });
 
-  it("starts collapsed and shows the real 11:59 PM Central lock", () => {
+  it("starts collapsed and shows the Sep 17 display-only deadline", () => {
     render(<FootballFuturesCard />);
     const details = screen.getByText("SEASON FUTURES").closest("details");
 
     expect(details).not.toHaveAttribute("open");
-    expect(details).toHaveTextContent("Fri, Sep 4, 11:59 PM CT");
+    expect(details).toHaveTextContent("Thu, Sep 17, 11:59 PM CT");
     expect(screen.getByText("78 POTENTIAL PTS")).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("SEASON FUTURES").closest("summary")!);
