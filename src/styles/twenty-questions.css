@@ -47,6 +47,15 @@
   font-size: clamp(30px, 7vw, 46px);
 }
 
+.twenty-questions-daily-context {
+  display: block;
+  margin-top: 7px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .12em;
+}
+
 .twenty-questions-league-pill,
 .twenty-questions-start__league {
   color: var(--twenty-questions-accent);
