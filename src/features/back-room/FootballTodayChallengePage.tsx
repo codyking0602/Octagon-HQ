@@ -578,6 +578,25 @@ export default function FootballTodayChallengePage() {
     );
   }
 
+  if (projection.gameType === "who_am_i") {
+    return (
+      <div className="official-daily-page">
+        {error ? <div className="football-today-error">{error}</div> : null}
+        {busy ? <div className="football-today-busy">LOCKING…</div> : null}
+        <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={advance} />
+        {projection.officialAttempt ? (
+          <div className="game-result-actions-wrap">
+            <div className="game-result-actions">
+              <button className="primary-action" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+              <button className="find-secondary-action" type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+            </div>
+            <p className="game-action-status" role="status">{shareStatus}</p>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div className="page football-today-page">
       <section className="football-today-shell">
