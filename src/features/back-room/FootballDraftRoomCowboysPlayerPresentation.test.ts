@@ -18,8 +18,9 @@ describe("Cowboys player presentation", () => {
   });
 
   it("uses a subtle Cowboys navy and silver identity on the room and browse card", () => {
-    expect(page).toContain('cowboysMode ? " auction-board--cowboys" : ""');
-    expect(page).toContain('isCowboysDraftRoomMode(mode.id) ? "is-cowboys-mode" : ""');
+    expect(page).toContain("cowboysFamilyMode = cowboysMode || cowboysTeamsMode");
+    expect(page).toContain('cowboysFamilyMode ? " auction-board--cowboys" : ""');
+    expect(page).toContain('isCowboysDraftRoomMode(mode.id) || isCowboysTeamsDraftRoomMode(mode.id) ? "is-cowboys-mode" : ""');
     expect(css).toContain("--cowboys-navy: #003594");
     expect(css).toContain("--cowboys-silver: #869397");
     expect(css).toContain(".auction-board--cowboys .auction-current__status");
