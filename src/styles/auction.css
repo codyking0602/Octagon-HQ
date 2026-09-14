@@ -523,6 +523,109 @@
   line-height: 1.3;
 }
 
+.nfl-division-season {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border: 1px solid rgba(var(--build-qb-team-rgb, 255, 255, 255), .34);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 18% 50%, rgba(var(--build-qb-team-rgb, 255, 255, 255), .20), transparent 56%),
+    rgba(var(--build-qb-team-rgb, 255, 255, 255), .05);
+}
+
+.nfl-division-season > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+  text-align: left;
+}
+
+.nfl-division-season .draft-room-season-label {
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.05;
+}
+
+.nfl-division-season__division {
+  color: var(--build-qb-team-color, var(--text-secondary));
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.nfl-division-season--compact {
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 5px 6px;
+  border-radius: 8px;
+}
+
+.nfl-division-season--compact .draft-room-season-label {
+  font-size: 10px;
+}
+
+.nfl-division-season--compact .draft-room-season-summary {
+  font-size: 7px;
+}
+
+.nfl-division-season--compact .nfl-division-season__division {
+  font-size: 6px;
+}
+
+.auction-board--nfl-divisions .auction-current__item.has-nfl-division-team {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(var(--build-qb-team-rgb), .24), transparent 64%),
+    var(--surface);
+}
+
+.auction-board--nfl-divisions .auction-current__item.has-nfl-division-team > small,
+.auction-board--nfl-divisions .auction-result .eyebrow {
+  color: var(--build-qb-team-color, var(--ufc-red-strong));
+}
+
+.auction-board--nfl-divisions .auction-collections__rows article > div.is-filled {
+  padding: 4px;
+}
+
+.auction-board--nfl-divisions .auction-collections__rows .nfl-division-season {
+  width: 100%;
+}
+
+@media (max-width: 430px) {
+  .nfl-division-season {
+    gap: 7px;
+    padding: 7px 8px;
+  }
+
+  .nfl-division-season .draft-room-season-label {
+    font-size: 13px;
+  }
+
+  .nfl-division-season--compact {
+    gap: 5px;
+    padding: 4px;
+  }
+
+  .nfl-division-season--compact .build-qb-team-mark {
+    width: 23px;
+    height: 23px;
+    flex-basis: 23px;
+  }
+
+  .nfl-division-season--compact .draft-room-season-label {
+    font-size: 9px;
+  }
+
+  .nfl-division-season--compact .draft-room-season-summary {
+    font-size: 6.5px;
+  }
+}
+
 .auction-board--longhorns {
   --longhorn-burnt-orange: #bf5700;
   --longhorn-burnt-orange-rgb: 191, 87, 0;
