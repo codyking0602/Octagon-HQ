@@ -22,6 +22,10 @@ describe("daily challenge runtime cold-start isolation", () => {
     "src/features/play/footballTodayChallengeAdvanceRuntime.ts",
     "utf8",
   );
+  const footballSchedulerMigration = readFileSync(
+    "supabase/migrations/202612310109_football_daily_scheduler_prematerialization.sql",
+    "utf8",
+  );
 
   it("serves published UFC Daily reads before loading the generated UFC runtime", () => {
     expect(runtime).not.toContain('from "./runtime.generated.mjs";');
@@ -60,6 +64,17 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).toContain('const footballRuntime = await loadFootballPublicationRuntime();');
     expect(runtime).toContain('const footballRuntime = await loadFootballAdvanceRuntime();');
     expect(runtime).not.toContain('import("./football-runtime.generated.mjs")');
+  });
+
+  it("pre-materializes UFC and Football Daily in separate scheduled invocations", () => {
+    expect(runtime).toContain('const scheduledSport = body.sport == null ? "ufc" : body.sport;');
+    expect(runtime).toContain('scheduledSport === "football"');
+    expect(runtime).toContain("await materializeFootballToday(admin)");
+    expect(runtime).toContain("await materializeToday(admin)");
+    expect(footballSchedulerMigration).toContain('{"mode":"scheduled","sport":"ufc"}');
+    expect(footballSchedulerMigration).toContain('{"mode":"scheduled","sport":"football"}');
+    expect(footballSchedulerMigration.match(/functions\/v1\/daily-challenge-runtime/g)).toHaveLength(2);
+    expect(footballSchedulerMigration).toContain("active := true");
   });
 
   it("keeps Football Hit the Number generation and quality work out of ordinary Daily actions", () => {
