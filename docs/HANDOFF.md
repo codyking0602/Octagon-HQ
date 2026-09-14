@@ -150,7 +150,7 @@ Canonical route:
 
 - `/football/today`
 
-The shared Daily backend owns setup, actions, grading, persistence, history, streaks, standings, leaderboards, competition, and reminders. Do not create Football-specific duplicate stacks.
+The shared `daily-challenge-runtime` owns private setup/actions/grading, persistence, history, streaks, standings, leaderboards, competition, and reminders. Do not create Football-specific duplicate stacks.
 
 Current future Football rotation is `football-daily-v4`: Find the Leader ×5, Wavelength ×5, Hit the Number ×4, Who Am I ×4, Daily Double ×2. Football Blind Resume remains valid historical Daily content but is not in the future v4 rotation.
 
