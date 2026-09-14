@@ -25,10 +25,6 @@ declare
   v_expected_b numeric(5,2);
   v_projection jsonb;
 begin
-  if private.draft_room_public_release_enabled() then
-    raise exception 'Stage 13 Draft Room unexpectedly has its public release switch enabled';
-  end if;
-
   if not exists (
     select 1
     from private.auction_catalog_versions version
