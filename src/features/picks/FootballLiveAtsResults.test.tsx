@@ -95,11 +95,11 @@ describe("Football live ATS results", () => {
 
   it("shows a settled pick immediately while later games remain unresolved", () => {
     vi.mocked(usePicks).mockReturnValue(picksRuntime([baseGame, pendingGame] as typeof baseGame[]) as never);
-    render(<FootballPicksPage />);
+    const { container } = render(<FootballPicksPage />);
 
     expect(screen.getByText("✓ COVERED")).toBeInTheDocument();
     expect(screen.getByText("LIVE ATS 1-0")).toBeInTheDocument();
-    expect(screen.getByText("1 FINAL")).toBeInTheDocument();
+    expect(container.querySelector(".football-group-hub__summary-meta small")).toHaveTextContent("1 FINAL");
     expect(screen.getByText("FINAL · Ohio State Buckeyes 20, Texas Longhorns 24")).toBeInTheDocument();
     expect(screen.getByText("LOCKED")).toBeInTheDocument();
   });
@@ -111,6 +111,6 @@ describe("Football live ATS results", () => {
 
     expect(container.querySelector(".football-pick-game__status.is-push")).toHaveTextContent("PUSH");
     expect(screen.getByText("LIVE ATS 0-0 · 1 PUSH")).toBeInTheDocument();
-    expect(screen.getByText("1 FINAL")).toBeInTheDocument();
+    expect(container.querySelector(".football-group-hub__summary-meta small")).toHaveTextContent("1 FINAL");
   });
 });
