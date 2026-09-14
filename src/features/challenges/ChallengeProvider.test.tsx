@@ -145,6 +145,37 @@ describe("real profile challenges", () => {
     expect(screen.queryByText("PREVIEW MODE")).toBeNull();
   });
 
+  it("shows public Draft Room requests to normal Football members", async () => {
+    const draftRoomChallenge: PlayChallenge = {
+      ...challengeRow(),
+      code: "DRAFT123",
+      gameId: "draft-room",
+      gameVersion: "football-draft-room-2026-09-v6",
+      gameTitle: "Draft Room",
+      summary: "NFL Build a QB",
+      creatorId: shane.id,
+      recipientId: cody.id,
+      playUrl: "https://example.test/football/draft-room?auction=11111111-1111-4111-8111-111111111111",
+      setup: { modeId: "build-qb" },
+      creatorResult: { auctionId: "11111111-1111-4111-8111-111111111111" },
+    };
+
+    render(
+      <IdentityProvider gateway={identityGateway()}>
+        <ChallengeProvider repository={fakeRepository({
+          load: async () => ({ challenges: [draftRoomChallenge], profiles: [shane] }),
+        })}>
+          <MemoryRouter><ChallengeCenter sport="football" /></MemoryRouter>
+        </ChallengeProvider>
+      </IdentityProvider>,
+    );
+
+    expect(await screen.findByRole("heading", { name: "CODY's matchups" })).toBeTruthy();
+    expect(await screen.findByText("DRAFT ROOM FROM")).toBeTruthy();
+    expect(screen.getByText("Draft Room", { exact: false })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "BID" })).toBeTruthy();
+  });
+
   it("exposes the canonical exact-name profile lookup without a second query path", async () => {
     const findProfile = vi.fn(async () => shane);
     render(
