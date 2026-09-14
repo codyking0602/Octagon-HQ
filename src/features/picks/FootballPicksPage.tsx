@@ -69,7 +69,6 @@ export default function FootballPicksPage() {
     [games],
   );
   const progress = pickProgress(event, picks.selections);
-  const percentage = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
   const lockGameCount = games.filter((game) => game.resultStatus !== "cancelled").length;
   const lockAllowance = footballLockAllowance(lockGameCount);
   const usedLocks = games.filter((game) => game.resultStatus !== "cancelled" && picks.footballLocks[game.boutId] === true).length;
