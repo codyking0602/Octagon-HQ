@@ -6,6 +6,7 @@ import { build } from "vite";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = resolve(repoRoot, "supabase/functions/daily-challenge-runtime");
+const footballScheduleVersion = "football-daily-v7-hit-number-pool-cleanup";
 const bundles = [
   {
     label: "UFC daily runtime",
@@ -14,10 +15,46 @@ const bundles = [
     requiredExports: ["advanceOfficialDailyRuntime", "buildOfficialDailySetup"],
   },
   {
-    label: "Football daily publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballTodayChallengePublicationRuntime.ts"),
-    fileName: "football-publication.generated.mjs",
-    requiredExports: ["buildFootballTodayPersistenceSetup"],
+    label: "Football Daily Who Am I publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWhoAmI.ts"),
+    fileName: "football-publication-who-am-i.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smoke: { day: "2026-09-14", gameType: "who_am_i" },
+  },
+  {
+    label: "Football Daily Wavelength publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWavelength.ts"),
+    fileName: "football-publication-wavelength.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smoke: { day: "2026-09-16", gameType: "wavelength" },
+  },
+  {
+    label: "Football Daily Find the Leader publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationFindLeader.ts"),
+    fileName: "football-publication-find-leader.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smoke: { day: "2026-09-15", gameType: "find_leader" },
+  },
+  {
+    label: "Football Daily Blind Resume publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationBlindResume.ts"),
+    fileName: "football-publication-blind-resume.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smoke: { day: "2026-09-21", gameType: "blind_resume" },
+  },
+  {
+    label: "Football Daily Hit the Number publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationHitNumber.ts"),
+    fileName: "football-publication-hit-the-number.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smoke: { day: "2026-09-18", gameType: "hit_the_number" },
+  },
+  {
+    label: "Football Daily comparison publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationComparison.ts"),
+    fileName: "football-publication-comparison.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smoke: { day: "2026-09-17", gameType: "keep_4_cut_4" },
   },
   {
     label: "Football daily advance runtime",
@@ -84,9 +121,13 @@ for (const bundle of bundles) {
 
   const digest = createHash("sha256").update(bundled).digest("hex");
 
-  if (bundle.fileName === "football-publication.generated.mjs") {
+  if (bundle.smoke) {
     const generatedRuntime = await import(`${pathToFileURL(output).href}?sha256=${digest}`);
-    const publication = generatedRuntime.buildFootballTodayPersistenceSetup("2026-09-13");
+    const publication = generatedRuntime.buildFootballDailyPersistenceSetup(
+      bundle.smoke.day,
+      footballScheduleVersion,
+      bundle.smoke.gameType,
+    );
     if (
       !publication
       || typeof publication !== "object"
@@ -101,9 +142,11 @@ for (const bundle of bundles) {
       || !publication.privateSetupEvidence
       || typeof publication.privateSetupEvidence !== "object"
     ) {
-      throw new Error("Football daily publication bundle failed its deterministic smoke proof.");
+      throw new Error(`${bundle.label} failed its deterministic smoke proof.`);
     }
   }
 
-  console.log(`Generated canonical ${bundle.label} bundle ${digest}.`);
+  console.log(
+    `Generated canonical ${bundle.label} bundle ${digest} (${Buffer.byteLength(bundled).toLocaleString("en-US")} bytes).`,
+  );
 }

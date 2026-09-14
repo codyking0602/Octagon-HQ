@@ -20,6 +20,7 @@ describe("daily challenge runtime bundle prerequisites", () => {
       "./generate-football-career-media-context.mjs",
       "./generate-football-factual-universe.mjs",
       "./enrich-football-hit-number-peak-seasons.mjs",
+      "./generate-football-who-am-i-daily-universes.mjs",
     ];
     const bundleLoopIndex = bundlerSource.indexOf("for (const bundle of bundles)");
 
@@ -35,13 +36,15 @@ describe("daily challenge runtime bundle prerequisites", () => {
     }
   });
 
-  it("executes the generated Football publication artifact before deployment can accept it", () => {
+  it("executes every generated Football publication artifact before deployment can accept it", () => {
     expect(bundlerSource).toContain("pathToFileURL(output).href");
-    expect(bundlerSource).toContain(
-      'generatedRuntime.buildFootballTodayPersistenceSetup("2026-09-13")',
-    );
-    expect(bundlerSource).toContain(
-      "Football daily publication bundle failed its deterministic smoke proof.",
-    );
+    expect(bundlerSource).toContain("generatedRuntime.buildFootballDailyPersistenceSetup(");
+    expect(bundlerSource).toContain('fileName: "football-publication-who-am-i.generated.mjs"');
+    expect(bundlerSource).toContain('fileName: "football-publication-wavelength.generated.mjs"');
+    expect(bundlerSource).toContain('fileName: "football-publication-find-leader.generated.mjs"');
+    expect(bundlerSource).toContain('fileName: "football-publication-blind-resume.generated.mjs"');
+    expect(bundlerSource).toContain('fileName: "football-publication-hit-the-number.generated.mjs"');
+    expect(bundlerSource).toContain('fileName: "football-publication-comparison.generated.mjs"');
+    expect(bundlerSource).toContain("failed its deterministic smoke proof.");
   });
 });
