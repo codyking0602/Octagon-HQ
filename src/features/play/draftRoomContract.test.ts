@@ -6,6 +6,8 @@ import {
   isDraftRoomModeId,
   isCowboysDraftRoomMode,
   isCowboysTeamsDraftRoomMode,
+  isCfbBestTeamsDraftRoomMode,
+  isCfbDraftRoomMode,
   isLonghornsDraftRoomMode,
   isLonghornsTeamsDraftRoomMode,
   isTrioDraftRoomMode,
@@ -106,6 +108,19 @@ describe("Draft Room contract", () => {
     expect(isTrioDraftRoomMode("cowboys-teams-2007")).toBe(false);
   });
 
+  it("locks Best CFB Teams to the approved eight-auction conference format", () => {
+    const mode = draftRoomModeDefinition("cfb-best-teams");
+    expect(mode.displayName).toBe("Best CFB Teams");
+    expect(mode.rounds).toBe(8);
+    expect(mode.requiredSelectionsPerPlayer).toBe(4);
+    expect(mode.startingBankroll).toBe(40);
+    expect(mode.categories).toEqual([]);
+    expect(mode.format).toBe("open-roster");
+    expect(isCfbBestTeamsDraftRoomMode("cfb-best-teams")).toBe(true);
+    expect(isCfbDraftRoomMode("cfb-best-teams")).toBe(true);
+    expect(isTrioDraftRoomMode("cfb-best-teams")).toBe(false);
+  });
+
   it("recognizes only canonical Draft Room mode ids", () => {
     expect(isDraftRoomModeId("build-qb")).toBe(true);
     expect(isDraftRoomModeId("build-qb-cfb")).toBe(true);
@@ -115,6 +130,7 @@ describe("Draft Room contract", () => {
     expect(isDraftRoomModeId("longhorns-teams-2005")).toBe(true);
     expect(isDraftRoomModeId("cowboys-2007")).toBe(true);
     expect(isDraftRoomModeId("cowboys-teams-2007")).toBe(true);
+    expect(isDraftRoomModeId("cfb-best-teams")).toBe(true);
     expect(isDraftRoomModeId("ultimate-fighter")).toBe(false);
   });
 });
