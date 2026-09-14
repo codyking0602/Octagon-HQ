@@ -20,8 +20,7 @@ create table private.draft_room_longhorns_player_pool (
 
 with raw as (
   select line, ordinality
-  from regexp_split_to_table($longhorns$
-QB|Vince Young|99
+  from regexp_split_to_table($longhorns$QB|Vince Young|99
 QB|Colt McCoy|98
 QB|Sam Ehlinger|89
 QB|Quinn Ewers|90
