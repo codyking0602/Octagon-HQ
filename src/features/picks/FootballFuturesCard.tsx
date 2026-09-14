@@ -496,20 +496,18 @@ export function FootballFuturesCard() {
   return (
     <details className={`surface-card football-futures${locked ? " is-locked" : ""}`} aria-labelledby="football-futures-title">
       <summary className="football-futures__summary">
-        <div className="football-futures__summary-copy">
-          <header className="football-futures__header">
-            <div><p className="eyebrow">SEASON FUTURES</p><h2 id="football-futures-title">{locked ? "Your season futures" : "Pick the season before it starts"}</h2></div>
-            <strong>{FOOTBALL_FUTURES_MAX_POINTS.total} PTS</strong>
-          </header>
-          <div className="football-futures__status">
-            <span>{locked ? "LOCKED · GROUP REVEALED" : "PRIVATE UNTIL LOCK"}</span>
-            <b>{snapshot ? footballDateTimeLabel(snapshot.lockAt) : "FRI · 11:59 PM CT"}</b>
-          </div>
-        </div>
+        <span className="football-futures__summary-label" id="football-futures-title">SEASON FUTURES</span>
+        <strong className="football-futures__summary-status">
+          {locked ? `${FOOTBALL_FUTURES_MAX_POINTS.total} PTS · LOCKED` : `${FOOTBALL_FUTURES_MAX_POINTS.total} PTS · PICK NOW`}
+        </strong>
         <span className="football-futures__chevron" aria-hidden="true">⌄</span>
       </summary>
 
       <div className="football-futures__body">
+        <div className="football-futures__status">
+          <span>{locked ? "GROUP PICKS REVEALED" : "PRIVATE UNTIL LOCK"}</span>
+          <b>{snapshot ? footballDateTimeLabel(snapshot.lockAt) : "FRI · 11:59 PM CT"}</b>
+        </div>
         {loading ? <p className="football-futures__message">Loading Futures…</p> : null}
         {!loading ? (
           locked ? (
