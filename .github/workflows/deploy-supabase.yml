@@ -420,6 +420,9 @@ jobs:
           if [ -f supabase/migrations/202612310126_stage22_draft_room_launch_notification.sql ]; then
             require_remote_migration "202612310126"
           fi
+          if [ -f supabase/migrations/202612310127_ty_miller_contender_in_app_notification.sql ]; then
+            require_remote_migration "202612310127"
+          fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
           printf '%s\n' "$function_list" | grep -F "pin-auth"
