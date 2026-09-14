@@ -1,4 +1,4 @@
-export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb", "trio-nfl", "trio-cfb", "longhorns-2005", "longhorns-teams-2005"] as const;
+export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb", "trio-nfl", "trio-cfb", "longhorns-2005", "longhorns-teams-2005", "cowboys-teams-2007"] as const;
 
 export type DraftRoomModeId = (typeof DRAFT_ROOM_MODE_IDS)[number];
 
@@ -80,6 +80,16 @@ export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
     categories: [],
     format: "open-roster",
   },
+  {
+    id: "cowboys-teams-2007",
+    displayName: "Cowboys Teams Since 2007",
+    description: "Bid on completed Dallas Cowboys seasons from 2007 forward. Win four teams and build the stronger four-season group.",
+    rounds: 8,
+    requiredSelectionsPerPlayer: 4,
+    startingBankroll: 40,
+    categories: [],
+    format: "open-roster",
+  },
 ] as const;
 
 export function isDraftRoomModeId(value: string): value is DraftRoomModeId {
@@ -96,6 +106,10 @@ export function isLonghornsDraftRoomMode(modeId: DraftRoomModeId) {
 
 export function isLonghornsTeamsDraftRoomMode(modeId: DraftRoomModeId) {
   return modeId === "longhorns-teams-2005";
+}
+
+export function isCowboysTeamsDraftRoomMode(modeId: DraftRoomModeId) {
+  return modeId === "cowboys-teams-2007";
 }
 
 export function isCfbDraftRoomMode(modeId: DraftRoomModeId) {
