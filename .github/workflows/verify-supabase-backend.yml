@@ -112,6 +112,9 @@ jobs:
             supabase/tests/stage12_draft_room_build_qb.sql \
             supabase/tests/stage12_draft_room_cfb_build_qb.sql \
             supabase/tests/stage13_draft_room_trio.sql \
+            supabase/tests/stage19_cfb_best_teams_contract.sql \
+            supabase/tests/stage19_cfb_best_teams_simulation.sql \
+            supabase/tests/stage19_cfb_best_teams_playable.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql \
             supabase/tests/home_football_spotlight_media.sql
           do
