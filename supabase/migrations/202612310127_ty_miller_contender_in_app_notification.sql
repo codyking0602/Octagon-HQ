@@ -1,6 +1,11 @@
 -- Add a dedicated Shane Contender Series notification kind and publish Ty Miller's
 -- one-time board addition to the in-app inbox only. This kind is deliberately not
 -- push eligible.
+--
+-- Fresh-database verification also exposed stale direct DML grants on pick_bouts.
+-- Canonical fight changes are RPC-owned, so remove those browser-role writes here.
+
+revoke insert, update, delete on table public.pick_bouts from anon, authenticated;
 
 alter table private.notification_groups
   drop constraint if exists notification_groups_kind_valid;
