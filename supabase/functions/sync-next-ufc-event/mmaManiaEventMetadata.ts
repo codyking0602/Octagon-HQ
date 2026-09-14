@@ -65,7 +65,8 @@ export function parseMmaManiaEventMetadata(input: { sourceUrl: string; articleTe
   const red = canonicalFighterDisplay(input.mainEvent.red_fighter_name); const blue = canonicalFighterDisplay(input.mainEvent.blue_fighter_name); if (!red || !blue) throw new Error("MMA Mania did not provide a safe main-event pairing."); const subtitle = `${red} vs. ${blue}`; const name = eventName(eventLabel, number);
   const sourceUrl = new URL(input.sourceUrl); if (!/(?:^|\.)mmamania\.com$/i.test(sourceUrl.hostname)) throw new Error("MMA Mania event metadata requires an MMA Mania article URL."); const sourceEventKey = clean(input.sourceEventKeyOverride) || sourceUrl.pathname.replace(/^\/+|\/+$/g, ""); if (!sourceEventKey) throw new Error("MMA Mania did not produce a stable event identity.");
   const place = locationParts(labeledField(articleText, "Location"));
-  const startsAt = type === "numbered" ? times.prelimsStartsAt : times.mainCardStartsAt;
-  const eventIdDate = startsAt.slice(0, 10); const eventId = normalizeText(`${name} ${subtitle} ${eventIdDate}`).replace(/\s+/g, "-");
-  return { source_event_key: sourceEventKey, event_id: eventId, name, subtitle, venue: place.venue, location: place.location, starts_at: startsAt, prelims_starts_at: type === "numbered" ? times.prelimsStartsAt : "", locks_at: startsAt, season: Number(eventIdDate.slice(0, 4)), eventType: type, localEventDate };
+  const startsAt = times.mainCardStartsAt;
+  const locksAt = type === "numbered" ? times.prelimsStartsAt : times.mainCardStartsAt;
+  const eventId = normalizeText(`${name} ${subtitle} ${localEventDate}`).replace(/\s+/g, "-");
+  return { source_event_key: sourceEventKey, event_id: eventId, name, subtitle, venue: place.venue, location: place.location, starts_at: startsAt, prelims_starts_at: type === "numbered" ? times.prelimsStartsAt : "", locks_at: locksAt, season: Number(localEventDate.slice(0, 4)), eventType: type, localEventDate };
 }
