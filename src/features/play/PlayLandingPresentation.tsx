@@ -20,7 +20,7 @@ export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies Play
 export const PLAY_LANDING_FOOTBALL_STRATEGIC_GAME = "draft-room" as const satisfies PlayGameId;
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
-  if (sport === "ufc") return [PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER];
+  if (sport === "ufc") return [...PLAY_LANDING_COMMON_GAME_ORDER, PLAY_LANDING_UFC_STRATEGIC_GAME];
   return [...PLAY_LANDING_FOOTBALL_GAME_ORDER, PLAY_LANDING_FOOTBALL_STRATEGIC_GAME];
 }
 
@@ -78,7 +78,7 @@ export function PlayLandingGameLibrary({
             >
               <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
               <span className="play-landing-game-card__status">
-                {game.availability === "preview" ? "OWNER PREVIEW" : strategic ? "STRATEGY" : "PLAY NOW"}
+                {game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
               </span>
               <strong>{game.title}</strong>
               <small>{game.description}</small>
