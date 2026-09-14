@@ -7,6 +7,7 @@ const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
 const productionOrigin = "https://the.hq-app.workers.dev";
 const verifyExactSource = process.env.GITHUB_EVENT_NAME !== "pull_request";
 const skipAuctionMigrationHistory = process.env.SKIP_AUCTION_MIGRATION_HISTORY === "true";
+const skipMonitoringFunctionVerification = process.env.SKIP_MONITORING_FUNCTION_VERIFICATION === "true";
 const requiredAuctionMigrationVersions = [
   "202608220001",
   "202608220002",
@@ -122,7 +123,7 @@ if (process.env.GITHUB_OUTPUT) {
   appendFileSync(process.env.GITHUB_OUTPUT, `deployed_sync_source_sha=${deployedSha}\n`);
 }
 
-if (existsSync("supabase/functions/run-pick-monitoring/index.ts")) {
+if (!skipMonitoringFunctionVerification && existsSync("supabase/functions/run-pick-monitoring/index.ts")) {
   process.env.EXPECTED_MONITORING_SOURCE_SHA = process.env.EXPECTED_MONITORING_SOURCE_SHA?.trim() || deployedSha;
   await import("./verify-monitoring-function-deployment.mjs");
 }
