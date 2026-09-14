@@ -63,20 +63,20 @@ Never create a second factual owner, comparison owner, route owner, challenge ow
 
 ### UFC Play
 
-1. Find the Leader
-2. Wavelength
-3. Blind Resume
-4. Hit the Number
+1. Auction
+2. Find the Leader
+3. Wavelength
+4. Blind Resume
 5. Who Am I?
-6. Auction
+6. Hit the Number
 
 ### Football Play
 
-1. Find the Leader
-2. Wavelength
-3. Hit the Number
+1. Draft Room
+2. Find the Leader
+3. Wavelength
 4. Who Am I?
-5. Draft Room
+5. Hit the Number
 
 The lists above remain the intended mature product. Stage 11 Slice 2 releases Who Am I as a normal public replayable game in both Play libraries. 20 Questions is retired and is not part of either mature Play library.
 
