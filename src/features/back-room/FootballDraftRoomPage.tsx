@@ -12,6 +12,7 @@ import {
 import { cfbBuildQbVisualIdentity } from "./cfbBuildQbVisualIdentity";
 import { draftRoomModeArtwork } from "./draftRoomModeArtwork";
 import { trioPlayerVisualIdentity } from "./draftRoomTrioVisualIdentity";
+import { longhornsPlayerSummary } from "./longhornsPlayerSummaries";
 import { longhornsTeamSeasonSummary } from "./longhornsTeamSeasonSummaries";
 import {
   AuctionRepositoryError,
@@ -174,10 +175,12 @@ function LonghornsComparison({
   state,
   itemLabel = "PLAYER",
   ariaLabel = "Longhorns roster comparison",
+  itemSummary,
 }: {
   state: DraftRoomProjection;
   itemLabel?: "PLAYER" | "TEAM";
   ariaLabel?: string;
+  itemSummary?: (displayLabel: string) => string;
 }) {
   const challengerAwards = state.awarded_collections
     .filter((item) => item.awarded_to === state.challenger_id)
@@ -202,16 +205,20 @@ function LonghornsComparison({
               <div className={challengerAward ? "is-filled" : ""}>
                 <small>{itemLabel} {index + 1}</small>
                 <strong className={itemLabel === "TEAM" ? "draft-room-season-label" : undefined}>{challengerAward?.display_label ?? "OPEN"}</strong>
-                {itemLabel === "TEAM" && challengerAward ? (
-                  <span className="draft-room-season-summary">{longhornsTeamSeasonSummary(challengerAward.display_label)}</span>
+                {challengerAward && itemSummary ? (
+                  <span className={itemLabel === "TEAM" ? "draft-room-season-summary" : "draft-room-player-summary"}>
+                    {itemSummary(challengerAward.display_label)}
+                  </span>
                 ) : null}
               </div>
               <span aria-hidden="true">VS</span>
               <div className={recipientAward ? "is-filled" : ""}>
                 <small>{itemLabel} {index + 1}</small>
                 <strong className={itemLabel === "TEAM" ? "draft-room-season-label" : undefined}>{recipientAward?.display_label ?? "OPEN"}</strong>
-                {itemLabel === "TEAM" && recipientAward ? (
-                  <span className="draft-room-season-summary">{longhornsTeamSeasonSummary(recipientAward.display_label)}</span>
+                {recipientAward && itemSummary ? (
+                  <span className={itemLabel === "TEAM" ? "draft-room-season-summary" : "draft-room-player-summary"}>
+                    {itemSummary(recipientAward.display_label)}
+                  </span>
                 ) : null}
               </div>
             </article>
@@ -443,6 +450,10 @@ function DraftRoomBoard({
                 <p className="draft-room-season-summary draft-room-season-summary--current">
                   {longhornsTeamSeasonSummary(state.current_item.display_label)}
                 </p>
+              ) : longhornsMode && state.current_item?.display_label ? (
+                <p className="draft-room-player-summary draft-room-player-summary--current">
+                  {longhornsPlayerSummary(state.current_item.display_label)}
+                </p>
               ) : null}
             </>
           ) : (
@@ -467,6 +478,8 @@ function DraftRoomBoard({
           </p>
           {longhornsTeamsMode && latestAward ? (
             <span className="draft-room-season-summary">{longhornsTeamSeasonSummary(latestAward.display_label)}</span>
+          ) : longhornsMode && latestAward ? (
+            <span className="draft-room-player-summary">{longhornsPlayerSummary(latestAward.display_label)}</span>
           ) : null}
         </section>
       ) : null}
@@ -494,9 +507,14 @@ function DraftRoomBoard({
       {trioMode
         ? <TrioComparison state={state} />
         : longhornsTeamsMode
-          ? <LonghornsComparison state={state} itemLabel="TEAM" ariaLabel="Longhorns team-season comparison" />
+          ? <LonghornsComparison
+              state={state}
+              itemLabel="TEAM"
+              ariaLabel="Longhorns team-season comparison"
+              itemSummary={longhornsTeamSeasonSummary}
+            />
           : longhornsMode
-            ? <LonghornsComparison state={state} />
+            ? <LonghornsComparison state={state} itemSummary={longhornsPlayerSummary} />
             : cowboysMode
               ? <LonghornsComparison state={state} ariaLabel="Cowboys roster comparison" />
               : <BuildComparison state={state} />}
