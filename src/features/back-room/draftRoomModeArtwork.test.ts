@@ -26,7 +26,7 @@ describe("Draft Room mode artwork", () => {
       objectPosition: "50% 50%",
     });
     expect(draftRoomModeArtwork("cfb-best-teams")).toEqual({
-      src: "/assets/football/draft-room-trio-cfb-ohio-state.webp",
+      src: "/assets/football/draft-room-cfb-best-teams-lsu.webp",
       objectPosition: "50% 50%",
     });
     expect(draftRoomModeArtwork("longhorns-2005")).toEqual({
@@ -45,6 +45,13 @@ describe("Draft Room mode artwork", () => {
       src: "/assets/football/draft-room-cowboys-teams.webp",
       objectPosition: "50% 42%",
     });
+  });
+
+  it("keeps the supplied Best CFB Teams hero as a valid WebP asset", () => {
+    const image = readFileSync(resolve(process.cwd(), "public/assets/football/draft-room-cfb-best-teams-lsu.webp"));
+    expect(image.subarray(0, 4).toString("ascii")).toBe("RIFF");
+    expect(image.subarray(8, 12).toString("ascii")).toBe("WEBP");
+    expect(image.byteLength).toBeGreaterThan(5_000);
   });
 
   it("keeps the supplied Cowboys Teams hero as a valid WebP asset", () => {
