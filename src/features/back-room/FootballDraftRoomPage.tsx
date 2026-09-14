@@ -14,7 +14,10 @@ import { cfbBuildQbVisualIdentity } from "./cfbBuildQbVisualIdentity";
 import { draftRoomModeArtwork } from "./draftRoomModeArtwork";
 import { trioPlayerVisualIdentity } from "./draftRoomTrioVisualIdentity";
 import { longhornsTeamSeasonSummary } from "./longhornsTeamSeasonSummaries";
-import { nflDivisionTeamSeasonPresentation } from "./nflDivisionTeamSeasonPresentation";
+import {
+  nflDivisionBoardLabel,
+  nflDivisionTeamSeasonPresentation,
+} from "./nflDivisionTeamSeasonPresentation";
 import {
   AuctionRepositoryError,
   createAuctionRepository,
@@ -446,6 +449,9 @@ function DraftRoomBoard({
   const currentNflDivisionIdentity = currentNflDivisionSeason
     ? buildQbTeamVisualIdentity(currentNflDivisionSeason.teamCode)
     : null;
+  const currentNflDivisionBoardLabel = nflDivisionsMode
+    ? nflDivisionBoardLabel(state.current_item?.item_reference)
+    : null;
 
   const roomLabel = trioMode ? "Trio" : nflDivisionsMode ? "NFL Divisions" : longhornsTeamsMode ? "Longhorns Teams" : longhornsMode ? "Longhorns" : cowboysMode ? "Cowboys" : "Build a QB";
   const status = state.lifecycle_state === "prepared"
@@ -513,7 +519,7 @@ function DraftRoomBoard({
       {!rosterResult ? <section className="auction-current surface-card">
         <div className="auction-current__meta">
           <span>ROUND {Math.min(state.current_round, mode.rounds)} / {mode.rounds}</span>
-          <span>TIES → {tieName}</span>
+          <span>{currentNflDivisionBoardLabel ? `BOARD · ${currentNflDivisionBoardLabel}` : `TIES → ${tieName}`}</span>
         </div>
         <div
           className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}${currentNflDivisionIdentity ? " has-nfl-division-team" : ""}${trioMode ? " draft-room-trio-current" : ""}`}
