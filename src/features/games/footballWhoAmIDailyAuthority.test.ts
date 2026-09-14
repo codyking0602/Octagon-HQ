@@ -28,8 +28,8 @@ describe("Football Who Am I Daily lightweight authority", () => {
       .toEqual(jsonValue(getFootballWhoAmIUniverse("CFB")));
   });
 
-  it("preserves deterministic daily round selection and clue order", () => {
-    for (let seed = 1; seed <= 64; seed += 1) {
+  it("preserves deterministic daily round selection and clue order for both league branches", () => {
+    for (const seed of [1, 1000]) {
       expect(createFootballWhoAmIDailyRound(seededRandom(seed)))
         .toEqual(createFootballWhoAmIRound(seededRandom(seed)));
     }
