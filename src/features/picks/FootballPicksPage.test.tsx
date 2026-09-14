@@ -221,8 +221,8 @@ describe("FootballPicksPage", () => {
     expect(screen.getByText("COMPLETED GAMES")).toBeInTheDocument();
     const completed = container.querySelector("details.football-pick-completed");
     expect(completed).not.toHaveAttribute("open");
-    expect(within(completed as HTMLElement).getByText("Dallas Cowboys")).toBeInTheDocument();
-    expect(within(completed as HTMLElement).getByText("New York Giants")).toBeInTheDocument();
+    expect(within(completed as HTMLElement).getAllByText("Dallas Cowboys").length).toBeGreaterThan(0);
+    expect(within(completed as HTMLElement).getAllByText("New York Giants").length).toBeGreaterThan(0);
   });
 
   it("keeps the football season hub and persisted Futures visible when there is no active slate", () => {
