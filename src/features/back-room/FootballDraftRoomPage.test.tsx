@@ -132,6 +132,7 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("heading", { name: "Draft Room" })).toBeInTheDocument();
     expect(screen.getByText("SEALED BID CHALLENGE")).toBeInTheDocument();
     expect(screen.getByText("Pick a format and challenge another member. Bid privately to build the stronger roster.")).toBeInTheDocument();
+    expect(screen.queryByText("STEP 1")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "NFL" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
@@ -153,6 +154,7 @@ describe("Football Draft Room", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "CFB" }));
 
+    expect(screen.queryByText("STEP 1")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
