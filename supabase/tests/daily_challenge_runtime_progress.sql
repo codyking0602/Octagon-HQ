@@ -289,19 +289,27 @@ $$;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
-do $$
+do $
 declare
   v_health jsonb;
+  v_command text;
 begin
   v_health := public.get_pick_monitoring_scheduler_health();
+  select job.command
+  into v_command
+  from cron.job job
+  where job.jobname = 'octagon-hq-pick-monitoring';
+
   if v_health->>'job_name' <> 'octagon-hq-pick-monitoring'
     or v_health->>'schedule' <> '*/5 * * * *'
     or v_health->>'function_name' <> 'run-pick-monitoring'
-    or v_health->>'command_configured' <> 'true' then
-    raise exception 'canonical five-minute scheduler is not configured: %', v_health;
+    or v_health->>'command_configured' <> 'true'
+    or position('{"mode":"scheduled","sport":"ufc"}' in coalesce(v_command, '')) = 0
+    or position('{"mode":"scheduled","sport":"football"}' in coalesce(v_command, '')) = 0 then
+    raise exception 'canonical five-minute scheduler is not configured for both Daily sports: %, command %', v_health, v_command;
   end if;
 end
-$$;
+$;
 
 rollback;
 
