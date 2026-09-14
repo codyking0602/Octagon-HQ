@@ -20,19 +20,19 @@ describe("Play landing presentation", () => {
       "find-leader",
       "wavelength",
       "blind-resume",
-      "hit-the-number",
       "who-am-i",
+      "hit-the-number",
     ]);
     expect(PLAY_LANDING_FOOTBALL_GAME_ORDER).toEqual([
       "find-leader",
       "wavelength",
-      "hit-the-number",
       "who-am-i",
+      "hit-the-number",
     ]);
-    expect(playLandingGameIds("ufc")).toEqual([...PLAY_LANDING_COMMON_GAME_ORDER, PLAY_LANDING_UFC_STRATEGIC_GAME]);
+    expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]);
     expect(playLandingGameIds("football")).toEqual([
-      ...PLAY_LANDING_FOOTBALL_GAME_ORDER,
       PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
+      ...PLAY_LANDING_FOOTBALL_GAME_ORDER,
     ]);
   });
 
@@ -70,7 +70,7 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/football/draft-room");
   });
 
-  it("keeps UFC Auction last and presents strategic games with the standard Play Now status", () => {
+  it("keeps UFC Auction first and presents strategic games with the standard Play Now status", () => {
     const navigate = vi.fn();
     render(<PlayLandingGameLibrary sport="ufc" onNavigate={navigate} />);
     const library = screen.getByRole("region", { name: /pick a game/i });
@@ -83,9 +83,11 @@ describe("Play landing presentation", () => {
       expect.stringContaining("Who Am I?"),
       expect.stringContaining("Auction"),
     ]));
-    expect(cards.at(-1)).toHaveTextContent("Auction");
-    expect(within(cards.at(-1)!).getByText("PLAY NOW")).toBeInTheDocument();
+    expect(cards.at(0)).toHaveTextContent("Auction");
+    expect(within(cards.at(0)!).getByText("PLAY NOW")).toBeInTheDocument();
     expect(screen.queryByText("STRATEGY")).not.toBeInTheDocument();
+    expect(cards.findIndex((card) => /Who Am I\?/.test(card.textContent ?? "")))
+      .toBeLessThan(cards.findIndex((card) => /Hit the Number/.test(card.textContent ?? "")));
   });
 
   it("opens UFC Find the Leader replayable while preserving its canonical route owner", () => {
