@@ -17,8 +17,9 @@ describe("Longhorns Teams presentation contract", () => {
 
   it("shows concise season context on the current team and filled team slots", () => {
     expect(page).toContain("longhornsTeamSeasonSummary(state.current_item.display_label)");
-    expect(page).toContain("longhornsTeamSeasonSummary(challengerAward.display_label)");
-    expect(page).toContain("longhornsTeamSeasonSummary(recipientAward.display_label)");
+    expect(page).toContain("itemSummary={longhornsTeamSeasonSummary}");
+    expect(page).toContain("{itemSummary(challengerAward.display_label)}");
+    expect(page).toContain("{itemSummary(recipientAward.display_label)}");
     expect(css).toContain(".draft-room-season-summary");
     expect(css).toContain(".draft-room-season-summary--current");
   });
