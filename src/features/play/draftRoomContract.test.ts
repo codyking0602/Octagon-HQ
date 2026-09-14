@@ -5,6 +5,7 @@ import {
   draftRoomModeDefinition,
   isDraftRoomModeId,
   isCowboysDraftRoomMode,
+  isCowboysTeamsDraftRoomMode,
   isLonghornsDraftRoomMode,
   isLonghornsTeamsDraftRoomMode,
   isTrioDraftRoomMode,
@@ -85,9 +86,24 @@ describe("Draft Room contract", () => {
     expect(mode.categories).toEqual([]);
     expect(mode.format).toBe("open-roster");
     expect(isCowboysDraftRoomMode("cowboys-2007")).toBe(true);
+    expect(isCowboysTeamsDraftRoomMode("cowboys-2007")).toBe(false);
     expect(isLonghornsDraftRoomMode("cowboys-2007")).toBe(false);
     expect(isLonghornsTeamsDraftRoomMode("cowboys-2007")).toBe(false);
     expect(isTrioDraftRoomMode("cowboys-2007")).toBe(false);
+  });
+
+  it("locks Cowboys Teams Since 2007 to eight team-season auctions and four wins per side", () => {
+    const mode = draftRoomModeDefinition("cowboys-teams-2007");
+    expect(mode.displayName).toBe("Cowboys Teams Since 2007");
+    expect(mode.description).toContain("completed Dallas Cowboys seasons");
+    expect(mode.rounds).toBe(8);
+    expect(mode.requiredSelectionsPerPlayer).toBe(4);
+    expect(mode.startingBankroll).toBe(40);
+    expect(mode.categories).toEqual([]);
+    expect(mode.format).toBe("open-roster");
+    expect(isCowboysTeamsDraftRoomMode("cowboys-teams-2007")).toBe(true);
+    expect(isCowboysDraftRoomMode("cowboys-teams-2007")).toBe(false);
+    expect(isTrioDraftRoomMode("cowboys-teams-2007")).toBe(false);
   });
 
   it("recognizes only canonical Draft Room mode ids", () => {
@@ -98,6 +114,7 @@ describe("Draft Room contract", () => {
     expect(isDraftRoomModeId("longhorns-2005")).toBe(true);
     expect(isDraftRoomModeId("longhorns-teams-2005")).toBe(true);
     expect(isDraftRoomModeId("cowboys-2007")).toBe(true);
+    expect(isDraftRoomModeId("cowboys-teams-2007")).toBe(true);
     expect(isDraftRoomModeId("ultimate-fighter")).toBe(false);
   });
 });
