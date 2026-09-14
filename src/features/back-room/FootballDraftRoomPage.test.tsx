@@ -143,12 +143,14 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Cowboys Since 2007" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CFB Build a QB" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CFB QB / RB / WR Trio" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Longhorns Since 2005" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Longhorns Teams Since 2005" })).not.toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/build-qb-andrew-luck-hero.webp"]')).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-trio-nfl.webp"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/draft-room-cowboys-jason-witten.webp"]')).toBeInTheDocument();
   });
 
   it("filters the visual browse board to CFB without mixing NFL modes", () => {
@@ -195,6 +197,18 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "NFL" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.queryByRole("button", { name: "CFB QB / RB / WR Trio" })).not.toBeInTheDocument();
+  });
+
+  it("resolves Cowboys Since 2007 as an NFL Draft Room mode with canonical Jason Witten art", () => {
+    mockedUseIdentity.mockReturnValue(identity(true));
+    const { container } = renderRoute("/football/draft-room?mode=cowboys-2007");
+
+    expect(screen.getByRole("button", { name: "NFL" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Cowboys Since 2007" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CFB Build a QB" })).not.toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/draft-room-cowboys-jason-witten.webp"]')).toBeInTheDocument();
   });
 
   it("resolves Longhorns Since 2005 as a CFB Draft Room mode", () => {
