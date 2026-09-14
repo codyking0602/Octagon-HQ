@@ -6,6 +6,7 @@ const projectId = process.env.SUPABASE_PROJECT_ID;
 const expectedSha = process.env.EXPECTED_SYNC_SOURCE_SHA?.trim() ?? "";
 const productionOrigin = "https://the.hq-app.workers.dev";
 const verifyExactSource = process.env.GITHUB_EVENT_NAME !== "pull_request";
+const skipAuctionMigrationHistory = process.env.SKIP_AUCTION_MIGRATION_HISTORY === "true";
 const requiredAuctionMigrationVersions = [
   "202608220001",
   "202608220002",
@@ -57,7 +58,9 @@ async function readBody(response) {
   }
 }
 
-verifyAuctionMigrationHistory();
+if (!skipAuctionMigrationHistory) {
+  verifyAuctionMigrationHistory();
+}
 
 const keysResponse = await fetch(
   `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
@@ -113,6 +116,10 @@ if (verifyExactSource) {
   if (process.env.GITHUB_ENV) {
     appendFileSync(process.env.GITHUB_ENV, `EXPECTED_SYNC_SOURCE_SHA=${deployedSha}\n`);
   }
+}
+
+if (process.env.GITHUB_OUTPUT) {
+  appendFileSync(process.env.GITHUB_OUTPUT, `deployed_sync_source_sha=${deployedSha}\n`);
 }
 
 if (existsSync("supabase/functions/run-pick-monitoring/index.ts")) {
