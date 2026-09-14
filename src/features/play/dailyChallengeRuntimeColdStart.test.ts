@@ -23,7 +23,7 @@ describe("daily challenge runtime cold-start isolation", () => {
     "utf8",
   );
   const footballSchedulerMigration = readFileSync(
-    "supabase/migrations/202612310109_football_daily_scheduler_prematerialization.sql",
+    "supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql",
     "utf8",
   );
 
