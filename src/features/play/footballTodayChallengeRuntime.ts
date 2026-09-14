@@ -335,7 +335,6 @@ export function buildFootballOfficialDailySetup(
     case "who_am_i": return buildWhoAmIDailyPublication(
       createFootballWhoAmIDailyRound(
         seededLineupRandom(FOOTBALL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
-        {},
       ),
       day,
       scheduleVersion,
