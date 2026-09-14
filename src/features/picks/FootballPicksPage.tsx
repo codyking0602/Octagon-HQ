@@ -254,7 +254,7 @@ export default function FootballPicksPage() {
               </summary>
               <div className="football-group-hub__body">
                 <section className="football-group-hub__week" aria-label="Weekly group picks">
-                  <GroupPickProgress event={event} locked={event.status !== "upcoming"} mySelections={picks.selections} />
+                  <GroupPickProgress event={event} locked={event.status !== "upcoming"} mySelections={picks.selections} embedded />
                 </section>
                 {seasonHub ? (
                   <section className="football-group-hub__season" aria-label="Football season standings">
