@@ -17,6 +17,14 @@ declare
   v_four_plus_rate numeric;
   v_median_margin numeric;
   v_skill_win_rate numeric;
+  v_single_min_spread numeric;
+  v_single_max_spread numeric;
+  v_split_min_spread numeric;
+  v_split_max_spread numeric;
+  v_single_min_skill numeric;
+  v_single_max_skill numeric;
+  v_split_min_skill numeric;
+  v_split_max_skill numeric;
 begin
   if (select count(*) from private.draft_room_nfl_divisions_pool) <> 128 then
     raise exception 'NFL Divisions simulation contract requires 128 team-seasons';
@@ -462,29 +470,74 @@ begin
     v_median_margin
   from nfl_divisions_sim_outcomes;
 
+  create temporary table nfl_divisions_sim_skill on commit drop as
   with weighted as (
     select
       board_id,
       exp(0.059 * selected_sum) as decision_weight,
       signed_margin
     from nfl_divisions_sim_outcomes
-  ),
-  board_probability as (
-    select
-      board_id,
-      (
-        sum(decision_weight) filter (where signed_margin > 0)
-        + 0.5 * coalesce(sum(decision_weight) filter (where signed_margin = 0), 0)
-      ) / sum(decision_weight) as skilled_win_probability
-    from weighted
-    group by board_id
   )
+  select
+    board_id,
+    (
+      sum(decision_weight) filter (where signed_margin > 0)
+      + 0.5 * coalesce(sum(decision_weight) filter (where signed_margin = 0), 0)
+    ) / sum(decision_weight) as skilled_win_probability
+  from weighted
+  group by board_id;
+
   select avg(skilled_win_probability)
   into v_skill_win_rate
-  from board_probability;
+  from nfl_divisions_sim_skill;
+
+  select
+    min(context_spread),
+    max(context_spread),
+    min(context_skill),
+    max(context_skill)
+  into
+    v_single_min_spread,
+    v_single_max_spread,
+    v_single_min_skill,
+    v_single_max_skill
+  from (
+    select
+      board.division_one,
+      avg(spread.board_spread) as context_spread,
+      avg(skill.skilled_win_probability) as context_skill
+    from nfl_divisions_sim_boards board
+    join nfl_divisions_sim_spreads spread on spread.board_id = board.board_id
+    join nfl_divisions_sim_skill skill on skill.board_id = board.board_id
+    where board.board_kind = 'single'
+    group by board.division_one
+  ) contexts;
+
+  select
+    min(context_spread),
+    max(context_spread),
+    min(context_skill),
+    max(context_skill)
+  into
+    v_split_min_spread,
+    v_split_max_spread,
+    v_split_min_skill,
+    v_split_max_skill
+  from (
+    select
+      board.division_one,
+      board.division_two,
+      avg(spread.board_spread) as context_spread,
+      avg(skill.skilled_win_probability) as context_skill
+    from nfl_divisions_sim_boards board
+    join nfl_divisions_sim_spreads spread on spread.board_id = board.board_id
+    join nfl_divisions_sim_skill skill on skill.board_id = board.board_id
+    where board.board_kind = 'split'
+    group by board.division_one, board.division_two
+  ) contexts;
 
   raise notice
-    'NFL Divisions simulation: mean spread %, p10 %, median spread %, single mean %, split mean %, under1 margin %, under3 margin %, >=4 margin %, median margin %, skilled win %',
+    'NFL Divisions simulation: mean spread %, p10 %, median spread %, single mean %, split mean %, under1 margin %, under3 margin %, >=4 margin %, median margin %, skilled win %, single context spread %..%, single skill %..%, split context spread %..%, split skill %..%',
     round(v_mean_spread, 3),
     round(v_p10_spread, 3),
     round(v_median_spread, 3),
@@ -494,7 +547,30 @@ begin
     round(v_close_three_rate, 4),
     round(v_four_plus_rate, 4),
     round(v_median_margin, 3),
-    round(v_skill_win_rate, 4);
+    round(v_skill_win_rate, 4),
+    round(v_single_min_spread, 3),
+    round(v_single_max_spread, 3),
+    round(v_single_min_skill, 4),
+    round(v_single_max_skill, 4),
+    round(v_split_min_spread, 3),
+    round(v_split_max_spread, 3),
+    round(v_split_min_skill, 4),
+    round(v_split_max_skill, 4);
+
+  if v_single_min_spread < 10
+    or v_single_max_spread > 21
+    or v_split_min_spread < 10
+    or v_split_max_spread > 22
+    or v_single_min_skill < 0.60
+    or v_single_max_skill > 0.76
+    or v_split_min_skill < 0.60
+    or v_split_max_skill > 0.76
+  then
+    raise exception
+      'NFL Divisions context simulation left the safe envelope: single spread %..%, single skill %..%, split spread %..%, split skill %..%',
+      v_single_min_spread, v_single_max_spread, v_single_min_skill, v_single_max_skill,
+      v_split_min_spread, v_split_max_spread, v_split_min_skill, v_split_max_skill;
+  end if;
 
   if v_close_one_rate not between 0.15 and 0.22
     or v_close_three_rate not between 0.48 and 0.59
