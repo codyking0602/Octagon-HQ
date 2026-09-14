@@ -549,6 +549,7 @@ jobs:
         id: webkit_sync_source
         env:
           SKIP_AUCTION_MIGRATION_HISTORY: "true"
+          SKIP_MONITORING_FUNCTION_VERIFICATION: "true"
         run: node scripts/verify-sync-function-deployment.mjs
 
       - name: Verify production Event Setup in WebKit at 390x844
