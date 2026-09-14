@@ -8,6 +8,7 @@ import {
 } from "./playRegistry";
 
 const footballGamesExpected = [
+  { id: "draft-room", route: "/football/draft-room" },
   { id: "blind-rank", route: "/football/rank-five" },
   { id: "keep-cut", route: "/football/keep-cut" },
   { id: "wavelength", route: "/football/wavelength" },
@@ -15,7 +16,6 @@ const footballGamesExpected = [
   { id: "hit-the-number", route: "/football/hit-the-number" },
   { id: "who-am-i", route: "/football/who-am-i" },
   { id: "find-leader", route: "/football/find-leader" },
-  { id: "draft-room", route: "/football/draft-room" },
 ] as const;
 
 describe("sport-aware Play registry", () => {
@@ -69,8 +69,8 @@ describe("sport-aware Play registry", () => {
       });
     }
 
+    expect(playGameDefinition("draft-room", "football").availability).toBeUndefined();
     expect(playGameDefinition("draft-room", "football")).toMatchObject({
-      availability: undefined,
       route: "/football/draft-room",
       lineup: {
         defaultType: "curated",
