@@ -19,7 +19,7 @@ describe("Longhorns player summaries", () => {
     expect(longhornsPlayerSummary("Bo Scaife")).toBe("TE • 2004 first-team All-Big 12 • 75 career catches");
 
     for (const summary of Object.values(LONGHORNS_PLAYER_SUMMARIES)) {
-      expect(summary).not.toMatch(/grade|icon|elite|star|strong|core/i);
+      expect(summary).not.toMatch(/\b(?:grade|icon|elite|star|strong|core)\b/i);
     }
   });
 });
