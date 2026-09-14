@@ -7,6 +7,7 @@ interface GroupPickProgressProps {
   event: PickEvent;
   locked: boolean;
   mySelections: Readonly<Record<string, string>>;
+  embedded?: boolean;
 }
 
 function ordinalPlace(rank: number, tied = false) {
@@ -24,7 +25,7 @@ function liveRecord(wins: number, losses: number, pushes: number) {
   return `${wins}-${losses}${pushes ? `-${pushes}` : ""}`;
 }
 
-export function GroupPickProgress({ event, locked: _locked, mySelections }: GroupPickProgressProps) {
+export function GroupPickProgress({ event, locked: _locked, mySelections, embedded = false }: GroupPickProgressProps) {
   const picks = usePicks();
   const members = picks.groupProgress;
   const loading = picks.groupProgressLoading;
@@ -192,7 +193,7 @@ export function GroupPickProgress({ event, locked: _locked, mySelections }: Grou
     : `${completedMembers}/${visibleMembers.length} COMPLETE`;
 
   return (
-    <details className="surface-card picks-group-progress">
+    <details className="surface-card picks-group-progress" open={embedded ? true : undefined}>
       <summary>
         <span>GROUP PICKS</span>
         <strong>{groupSummary}</strong>
