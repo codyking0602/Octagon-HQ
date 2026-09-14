@@ -55,7 +55,7 @@ describe("Draft Room Trio presentation contract", () => {
     expect(page).toContain("{latestRound && !rosterResult ? (");
     expect(page).toContain('{openRosterMode ? "FINAL ROSTER SCORE" : "FINAL BUILD SCORE"}');
     expect(page).toContain("? <TrioComparison state={state} />");
-    expect(page).toContain("? <LonghornsComparison state={state} />");
+    expect(page).toContain("? <LonghornsComparison state={state} itemSummary={longhornsPlayerSummary} />");
     expect(page).toContain(": <BuildComparison state={state} />");
   });
 });
