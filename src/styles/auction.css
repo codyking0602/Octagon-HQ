@@ -507,16 +507,19 @@
   white-space: nowrap;
 }
 
-.draft-room-season-summary {
+.draft-room-season-summary,
+.draft-room-player-summary {
   display: block;
   margin-top: 2px;
   color: var(--text-secondary);
   font-size: 8px;
   font-weight: 800;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
-.draft-room-season-summary--current {
+.draft-room-season-summary--current,
+.draft-room-player-summary--current {
   max-width: min(92vw, 460px);
   margin: 7px auto 0;
   font-size: 10px;
