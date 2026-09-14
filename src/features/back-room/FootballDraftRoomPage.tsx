@@ -26,6 +26,7 @@ import {
   draftRoomModes,
   isCfbDraftRoomMode,
   isDraftRoomModeId,
+  isLonghornsDraftRoomMode,
   isTrioDraftRoomMode,
   type BuildQbTrait,
   type DraftRoomModeId,
@@ -166,6 +167,44 @@ function TrioComparison({ state }: { state: DraftRoomProjection }) {
   );
 }
 
+function LonghornsComparison({ state }: { state: DraftRoomProjection }) {
+  const challengerAwards = state.awarded_collections
+    .filter((item) => item.awarded_to === state.challenger_id)
+    .sort((a, b) => a.resolved_round - b.resolved_round);
+  const recipientAwards = state.awarded_collections
+    .filter((item) => item.awarded_to === state.recipient_id)
+    .sort((a, b) => a.resolved_round - b.resolved_round);
+
+  return (
+    <section className="auction-collections surface-card" aria-label="Longhorns roster comparison">
+      <header className="auction-collections__header">
+        <div><strong>{state.challenger_display_name}</strong></div>
+        <span>VS</span>
+        <div><strong>{state.recipient_display_name}</strong></div>
+      </header>
+      <div className="auction-collections__rows">
+        {Array.from({ length: 4 }, (_, index) => {
+          const challengerAward = challengerAwards[index];
+          const recipientAward = recipientAwards[index];
+          return (
+            <article key={index}>
+              <div className={challengerAward ? "is-filled" : ""}>
+                <small>PLAYER {index + 1}</small>
+                <strong>{challengerAward?.display_label ?? "OPEN"}</strong>
+              </div>
+              <span aria-hidden="true">VS</span>
+              <div className={recipientAward ? "is-filled" : ""}>
+                <small>PLAYER {index + 1}</small>
+                <strong>{recipientAward?.display_label ?? "OPEN"}</strong>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function buildQbTeamStyle(identity: BuildQbVisualIdentity): CSSProperties {
   return {
     "--build-qb-team-color": identity.primary,
@@ -277,6 +316,8 @@ function DraftRoomBoard({
 }) {
   const mode = draftRoomModeDefinition(state.mode_id);
   const trioMode = isTrioDraftRoomMode(state.mode_id);
+  const longhornsMode = isLonghornsDraftRoomMode(state.mode_id);
+  const openRosterMode = trioMode || longhornsMode;
   const trioResult = trioMode && state.lifecycle_state === "completed";
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<BuildQbTrait | "">("");
@@ -296,20 +337,21 @@ function DraftRoomBoard({
   const latestAward = latestRound
     ? state.awarded_collections.find((item) => item.resolved_round === latestRound.round)
     : null;
-  const currentQbIdentity = trioMode ? null : draftRoomVisualIdentity(state.mode_id, state.current_item?.item_reference);
+  const currentQbIdentity = openRosterMode ? null : draftRoomVisualIdentity(state.mode_id, state.current_item?.item_reference);
 
+  const roomLabel = trioMode ? "Trio" : longhornsMode ? "Longhorns" : "Build a QB";
   const status = state.lifecycle_state === "prepared"
-    ? `Your first bid sends this ${trioMode ? "Trio" : "Build a QB"} room`
+    ? `Your first bid sends this ${roomLabel} room`
     : state.lifecycle_state === "sent"
       ? profileId === state.recipient_id
-        ? `Your first bid accepts this ${trioMode ? "Trio" : "Build a QB"} room`
+        ? `Your first bid accepts this ${roomLabel} room`
         : "Waiting for opponent's first bid"
       : state.lifecycle_state === "active" && state.current_user_submitted_bid
         ? "Bid locked · waiting for opponent"
         : state.lifecycle_state === "active"
           ? "Your sealed bid is required"
           : state.lifecycle_state === "completed"
-            ? (trioMode ? "Rosters complete" : "Build complete")
+            ? (openRosterMode ? "Roster complete" : "Build complete")
             : state.lifecycle_state === "cancelled"
               ? "Room cancelled"
               : "Challenge declined";
@@ -322,9 +364,9 @@ function DraftRoomBoard({
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    const nextError = validateAuctionBid(amount, maximum, !trioMode, category, BUILD_QB_TRAITS);
+    const nextError = validateAuctionBid(amount, maximum, !openRosterMode, category, BUILD_QB_TRAITS);
     setFormError(nextError);
-    if (!nextError) onBid(Number(amount), trioMode ? undefined : category || undefined);
+    if (!nextError) onBid(Number(amount), openRosterMode ? undefined : category || undefined);
   }
 
   return (
@@ -369,11 +411,13 @@ function DraftRoomBoard({
           className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}${trioMode ? " draft-room-trio-current" : ""}`}
           style={currentQbIdentity ? buildQbTeamStyle(currentQbIdentity) : undefined}
         >
-          <small>{trioMode ? "CURRENT TRIO" : "CURRENT QB"}</small>
+          <small>{trioMode ? "CURRENT TRIO" : longhornsMode ? "CURRENT LONGHORN" : "CURRENT QB"}</small>
           {trioMode ? (
             state.current_item?.display_label
               ? <TrioPackageCard modeId={state.mode_id} displayLabel={state.current_item.display_label} />
               : <h2>{terminal ? "ROSTERS LOCKED" : "LOADING"}</h2>
+          ) : longhornsMode ? (
+            <h2>{state.current_item?.display_label ?? (terminal ? "ROSTER LOCKED" : "LOADING")}</h2>
           ) : (
             <div className="build-qb-current__identity">
               {currentQbIdentity ? <BuildQbTeamMark identity={currentQbIdentity} /> : null}
@@ -387,7 +431,7 @@ function DraftRoomBoard({
       {latestRound && !trioResult ? (
         <section className="auction-result surface-card" aria-label="Latest Draft Room result">
           <p className="eyebrow">{latestRound.forced ? "FORCED $1 ASSIGNMENT" : `ROUND ${latestRound.round} RESULT`}</p>
-          <h2>{latestAward ? (trioMode ? "Trio awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : "Resolved QB")}</h2>
+          <h2>{latestAward ? (trioMode ? "Trio awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : longhornsMode ? "Resolved Longhorn" : "Resolved QB")}</h2>
           <p>
             {trioMode && latestAward ? `${latestAward.display_label} · ` : latestAward?.category ? `${latestAward.category} · ` : ""}
             {latestRound.forced
@@ -400,8 +444,8 @@ function DraftRoomBoard({
       {state.lifecycle_state === "completed"
         && state.challenger_final_score !== null
         && state.recipient_final_score !== null ? (
-        <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : "Build a QB final result"}>
-          <p className="eyebrow">{trioMode ? "FINAL ROSTER SCORE" : "FINAL BUILD SCORE"}</p>
+        <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : longhornsMode ? "Longhorns final result" : "Build a QB final result"}>
+          <p className="eyebrow">{openRosterMode ? "FINAL ROSTER SCORE" : "FINAL BUILD SCORE"}</p>
           <h2>
             {state.is_tie
               ? "TRUE TIE"
@@ -410,18 +454,22 @@ function DraftRoomBoard({
                 : `${state.recipient_display_name} WINS`}
           </h2>
           <div className="auction-final__scores">
-            <article><small>{state.challenger_display_name}</small><strong>{trioMode ? formatTrioFinalScore(state.challenger_final_score) : state.challenger_final_score}</strong></article>
+            <article><small>{state.challenger_display_name}</small><strong>{openRosterMode ? formatTrioFinalScore(state.challenger_final_score) : state.challenger_final_score}</strong></article>
             <b>–</b>
-            <article><small>{state.recipient_display_name}</small><strong>{trioMode ? formatTrioFinalScore(state.recipient_final_score) : state.recipient_final_score}</strong></article>
+            <article><small>{state.recipient_display_name}</small><strong>{openRosterMode ? formatTrioFinalScore(state.recipient_final_score) : state.recipient_final_score}</strong></article>
           </div>
         </section>
       ) : null}
 
-      {trioMode ? <TrioComparison state={state} /> : <BuildComparison state={state} />}
+      {trioMode
+        ? <TrioComparison state={state} />
+        : longhornsMode
+          ? <LonghornsComparison state={state} />
+          : <BuildComparison state={state} />}
 
       {canBid ? (
         <form className="auction-bid surface-card" onSubmit={submit}>
-          {!trioMode ? (
+          {!openRosterMode ? (
             <>
               <fieldset>
                 <legend>ASSIGN THIS QB</legend>
@@ -442,7 +490,9 @@ function DraftRoomBoard({
               ) : null}
             </>
           ) : (
-            <p className="draft-room-trio-bid-note">Bid on the full QB / RB / WR package.</p>
+            <p className="draft-room-trio-bid-note">
+              {trioMode ? "Bid on the full QB / RB / WR package." : "Bid on this Longhorn. Any position can join your four-player roster."}
+            </p>
           )}
           <label>
             <span>SEALED BID · MAX ${maximum}</span>
