@@ -1,5 +1,6 @@
 begin;
 
+-- Deterministic Stage 20 calibration proof: 10,000 boards and every 4-v-4 allocation.
 select set_config('request.jwt.claim.role', 'service_role', true);
 
 do $nfl_divisions_sim$
