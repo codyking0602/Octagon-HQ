@@ -1,4 +1,4 @@
-export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb", "trio-nfl", "trio-cfb", "longhorns-2005", "longhorns-teams-2005", "cowboys-2007", "cowboys-teams-2007", "cfb-best-teams"] as const;
+export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb", "trio-nfl", "trio-cfb", "nfl-divisions", "longhorns-2005", "longhorns-teams-2005", "cowboys-2007", "cowboys-teams-2007", "cfb-best-teams"] as const;
 
 export type DraftRoomModeId = (typeof DRAFT_ROOM_MODE_IDS)[number];
 
@@ -59,6 +59,16 @@ export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
     startingBankroll: 30,
     categories: [],
     format: "trio",
+  },
+  {
+    id: "nfl-divisions",
+    displayName: "NFL Divisions",
+    description: "Bid on elite NFL team-seasons from randomized single-division or split-division boards. Win four seasons and build the stronger group.",
+    rounds: 8,
+    requiredSelectionsPerPlayer: 4,
+    startingBankroll: 40,
+    categories: [],
+    format: "open-roster",
   },
   {
     id: "cfb-best-teams",
@@ -134,6 +144,10 @@ export function isCowboysDraftRoomMode(modeId: DraftRoomModeId) {
 
 export function isCowboysTeamsDraftRoomMode(modeId: DraftRoomModeId) {
   return modeId === "cowboys-teams-2007";
+}
+
+export function isNflDivisionsDraftRoomMode(modeId: DraftRoomModeId) {
+  return modeId === "nfl-divisions";
 }
 
 export function isCfbBestTeamsDraftRoomMode(modeId: DraftRoomModeId) {
