@@ -100,13 +100,9 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
   const centerRef = useRef<HTMLElement | null>(null);
   const handledDestinationRef = useRef("");
   const requestedCode = searchParams.get("challenge")?.trim().toUpperCase() ?? "";
-  const draftRoomAdmin = identity.profile?.canControlPicks === true;
   const sportChallenges = useMemo(
-    () => challenges.filter((challenge) =>
-      challengeSport(challenge) === sport
-      && (challenge.gameId !== "draft-room" || draftRoomAdmin)
-    ),
-    [challenges, draftRoomAdmin, sport],
+    () => challenges.filter((challenge) => challengeSport(challenge) === sport),
+    [challenges, sport],
   );
 
   const counts = useMemo(() => ({
