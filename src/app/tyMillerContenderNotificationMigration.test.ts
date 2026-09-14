@@ -9,6 +9,7 @@ const model = readFileSync("src/features/notifications/notificationModel.ts", "u
 
 describe("Ty Miller Contender Series notification", () => {
   it("uses the canonical notification publisher for one existing-profile campaign", () => {
+    expect(migration).toContain("revoke insert, update, delete on table public.pick_bouts from anon, authenticated;");
     expect(migration).toContain("perform private.publish_notification_to_profile(");
     expect(migration).toContain("from public.profiles profile");
     expect(migration).toContain("where event.source_key = 'fighter-watchlist:ty-miller:2026-09-14'");
