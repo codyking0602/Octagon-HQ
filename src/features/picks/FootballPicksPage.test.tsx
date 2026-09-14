@@ -48,16 +48,15 @@ describe("FootballPicksPage", () => {
   it("keeps event artwork clean and makes every Football Picks time explicitly Central", () => {
     const { container } = render(<FootballPicksPage />);
     const hero = screen.getByLabelText("Football Week 1 event artwork");
-    const slate = screen.getByLabelText("Football Week 1 football games");
+    const slate = screen.getByLabelText("Current and upcoming football games");
     const provenance = screen.getByText(/ATS ODDS · THE ODDS API · FROZEN/);
 
     expect(hero).toHaveTextContent("");
     expect(screen.queryByText("FOOTBALL PICKS · WEEKLY ATS")).not.toBeInTheDocument();
     expect(screen.queryByText("Opening weekend")).not.toBeInTheDocument();
     expect(provenance).toHaveTextContent("Sep 1, 7:00 AM CT");
-    expect(screen.getByText("WEEKLY SLATE · ALL TIMES CT")).toBeInTheDocument();
+    expect(screen.getByText("CURRENT / UPCOMING GAMES")).toBeInTheDocument();
     expect(screen.getByText("Thu, Sep 3, 11:00 AM CT")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Pick every game against the spread (ATS)" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
     expect(within(slate).getByText("CFB")).toBeInTheDocument();
@@ -162,6 +161,67 @@ describe("FootballPicksPage", () => {
     render(<FootballPicksPage />);
     expect(screen.queryByText(/LOCKS 0 \/ 1/)).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Make Lock Texas Longhorns" })).not.toBeInTheDocument();
+  });
+
+  it("orders the live Football sections and keeps final games collapsed by default", () => {
+    const finalGame = {
+      ...event.bouts[0],
+      boutId: "dallas-giants",
+      position: 2,
+      redFighterSlug: "ny-giants",
+      redFighterName: "New York Giants",
+      blueFighterSlug: "dallas",
+      blueFighterName: "Dallas Cowboys",
+      homeTeamSlug: "ny-giants",
+      awayTeamSlug: "dallas",
+      frozenSpreadHome: 3,
+      homeFinalScore: 28,
+      awayFinalScore: 20,
+      resultStatus: "red_win" as const,
+      isLocked: true,
+    };
+    const mixedEvent = { ...event, bouts: [event.bouts[0], finalGame] };
+    const history = {
+      season: 2099,
+      summary: { correct: 1, incorrect: 0, missing: 0, excluded: 0, eventsEntered: 1, basePoints: 1, lockBonus: 0, totalPoints: 1 },
+      seasonStandings: [{
+        rank: 1, profileId: "me", displayName: "Cody", correct: 1, incorrect: 0, missing: 0, excluded: 0,
+        eventsEntered: 1, basePoints: 1, lockBonus: 0, totalPoints: 1, adjustedPoints: 1, isCurrentUser: true,
+      }],
+      events: [{
+        eventId: "football-week-0",
+        name: "Football Week 0",
+        subtitle: "NFL + CFB",
+        venue: "Multiple venues",
+        location: "Nationwide",
+        startsAt: "2099-08-27T16:00:00Z",
+        season: 2099,
+        completedAt: "2099-08-31T05:00:00Z",
+        record: { correct: 1, incorrect: 0, missing: 0, excluded: 0, basePoints: 1, lockBonus: 0, totalPoints: 1 },
+        underdogLock: null,
+        bouts: [],
+        groupResults: [{
+          rank: 1, profileId: "me", displayName: "Cody", correct: 1, incorrect: 0, missing: 0, excluded: 0,
+          basePoints: 1, lockBonus: 0, totalPoints: 1, isCurrentUser: true,
+        }],
+      }],
+    };
+    vi.mocked(usePicks).mockReturnValue(runtime({
+      event: mixedEvent,
+      history,
+      selections: { "dallas-giants": "dallas" },
+    }) as never);
+
+    const { container } = render(<MemoryRouter><FootballPicksPage /></MemoryRouter>);
+    const sectionNames = Array.from(container.querySelectorAll("[data-football-section]"))
+      .map((node) => node.getAttribute("data-football-section"));
+
+    expect(sectionNames).toEqual(["group", "current", "completed", "standings", "futures", "grading"]);
+    expect(screen.getByText("COMPLETED GAMES")).toBeInTheDocument();
+    const completed = container.querySelector("details.football-pick-completed");
+    expect(completed).not.toHaveAttribute("open");
+    expect(within(completed as HTMLElement).getAllByText("Dallas Cowboys").length).toBeGreaterThan(0);
+    expect(within(completed as HTMLElement).getAllByText("New York Giants").length).toBeGreaterThan(0);
   });
 
   it("keeps the football season hub and persisted Futures visible when there is no active slate", () => {
