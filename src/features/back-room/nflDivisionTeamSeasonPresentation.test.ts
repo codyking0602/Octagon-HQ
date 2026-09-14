@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   NFL_DIVISION_TEAM_SEASONS,
+  nflDivisionBoardLabel,
   nflDivisionTeamSeasonPresentation,
 } from "./nflDivisionTeamSeasonPresentation";
 
@@ -29,6 +30,13 @@ describe("NFL Divisions team-season presentation metadata", () => {
     expect(nflDivisionTeamSeasonPresentation("nfl-division-tb-2020")?.summary).toBe("11-5 · Super Bowl Champion");
     expect(nflDivisionTeamSeasonPresentation("nfl-division-sea-2013")?.summary).toBe("13-3 · Super Bowl Champion");
     expect(nflDivisionTeamSeasonPresentation("nfl-division-bal-2019")?.summary).toBe("14-2 · AFC North Champion");
+  });
+
+  it("decodes the server-owned single and split board context without changing subject identity", () => {
+    expect(nflDivisionBoardLabel("nfl-division-dal-2016--board--nfc-east")).toBe("NFC EAST");
+    expect(nflDivisionBoardLabel("nfl-division-dal-2016--board--nfc-east-vs-afc-west")).toBe("NFC EAST vs AFC WEST");
+    expect(nflDivisionTeamSeasonPresentation("nfl-division-dal-2016--board--nfc-east-vs-afc-west")?.summary)
+      .toBe("13-3 · NFC East Champion");
   });
 
   it("preserves historical franchise names for historical seasons", () => {
