@@ -115,6 +115,8 @@ jobs:
             supabase/tests/stage19_cfb_best_teams_contract.sql \
             supabase/tests/stage19_cfb_best_teams_simulation.sql \
             supabase/tests/stage19_cfb_best_teams_playable.sql \
+            supabase/tests/stage20_nfl_divisions_playable.sql \
+            supabase/tests/stage20_nfl_divisions_simulation.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql \
             supabase/tests/home_football_spotlight_media.sql
           do
@@ -122,7 +124,7 @@ jobs:
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
           done
 
-          echo "Auction lifecycle, Draft Room Stage 12, and launch-notification SQL tests executed successfully against a fresh local database."
+          echo "Auction lifecycle, Draft Room Stage 12/13, Best CFB Teams Stage 19, and NFL Divisions Stage 20 SQL tests executed successfully against a fresh local database."
           echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
           echo "Football Home Spotlight media SQL test executed successfully against the same fresh local database."
 
@@ -543,10 +545,17 @@ jobs:
           WHATS_NEW_SCREENSHOT_PATH: ${{ runner.temp }}/whats-new-gable-proof.png
         run: node scripts/verify-whats-new-live.mjs
 
+      - name: Resolve healthy deployed backend source for WebKit
+        id: webkit_sync_source
+        env:
+          SKIP_AUCTION_MIGRATION_HISTORY: "true"
+          SKIP_MONITORING_FUNCTION_VERIFICATION: "true"
+        run: node scripts/verify-sync-function-deployment.mjs
+
       - name: Verify production Event Setup in WebKit at 390x844
         shell: bash
         env:
-          EXPECTED_SYNC_SOURCE_SHA: ${{ steps.live_frontend.outputs.current_main_sha }}
+          EXPECTED_SYNC_SOURCE_SHA: ${{ steps.webkit_sync_source.outputs.deployed_sync_source_sha }}
           EVENT_SETUP_SCREENSHOT_PATH: ${{ runner.temp }}/event-setup-preview.png
         run: |
           set +e
