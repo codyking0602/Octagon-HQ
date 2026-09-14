@@ -336,3 +336,6 @@ end;
 $$;
 
 rollback;
+
+\ir stage20_nfl_divisions_playable.sql
+\ir stage20_nfl_divisions_simulation.sql
