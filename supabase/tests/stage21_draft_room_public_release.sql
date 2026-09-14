@@ -2,6 +2,28 @@ begin;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
+-- The legacy Auction server-engine regression intentionally commits a preparation
+-- rotation before this test runs. Restore the current Draft Room preparation
+-- catalogs inside this transaction so the public-release proof tests the real
+-- launch versions rather than that legacy fixture state.
+update private.auction_catalog_versions
+set is_preparation_version = false
+where game_id like 'draft-room%'
+  and is_preparation_version;
+
+update private.auction_catalog_versions
+set is_preparation_version = true
+where content_version in (
+  'football-draft-room-2026-09-v6',
+  'football-draft-room-trio-2026-09-v2',
+  'football-draft-room-longhorns-2005-2026-09-v1',
+  'football-draft-room-longhorn-teams-2005-2026-09-v1',
+  'football-draft-room-cowboys-2007-2026-09-v1',
+  'football-draft-room-cowboys-teams-2007-2026-09-v1',
+  'football-draft-room-cfb-best-teams-2026-09-v1',
+  'football-draft-room-nfl-divisions-2026-09-v1'
+);
+
 do $stage21$
 declare
   v_member_a uuid := extensions.gen_random_uuid();
@@ -23,6 +45,15 @@ declare
 begin
   if not private.draft_room_public_release_enabled() then
     raise exception 'Stage 21 Draft Room public release switch is disabled';
+  end if;
+
+  if (
+    select count(*)
+    from private.auction_catalog_versions
+    where game_id like 'draft-room%'
+      and is_preparation_version
+  ) <> 8 then
+    raise exception 'Stage 21 did not restore all eight current Draft Room preparation catalogs';
   end if;
 
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
