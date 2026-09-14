@@ -32,12 +32,12 @@ begin
     now(),
     now(),
     now(),
-    jsonb_build_object('display_name', 'TY MILLER NOTIFICATION TEST', 'historical_unclaimed', true)
+    jsonb_build_object('display_name', 'TY MILLER TEST', 'historical_unclaimed', true)
   );
 
   perform public.register_unclaimed_pin_profile(
     v_member,
-    'Ty Miller Notification Test',
+    'Ty Miller Test',
     'TM'
   );
 
