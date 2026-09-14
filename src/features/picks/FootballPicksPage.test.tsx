@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import type React from "react";
+import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -8,7 +8,7 @@ import FootballPicksPage from "./FootballPicksPage";
 
 vi.mock("../identity/IdentityProvider", () => ({ useIdentity: vi.fn() }));
 vi.mock("./PicksProvider", () => ({ usePicks: vi.fn() }));
-vi.mock("./GroupPickProgress", () => ({ GroupPickProgress: ({ seasonContent }: { seasonContent?: React.ReactNode }) => <div>Who has picked{seasonContent}</div> }));
+vi.mock("./GroupPickProgress", () => ({ GroupPickProgress: ({ seasonContent }: { seasonContent?: ReactNode }) => <div>Who has picked{seasonContent}</div> }));
 vi.mock("./GroupPickReveal", () => ({ GroupPickReveal: () => null }));
 
 const setPick = vi.fn(async () => undefined);
