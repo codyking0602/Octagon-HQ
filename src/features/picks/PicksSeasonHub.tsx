@@ -107,10 +107,12 @@ export function PicksSeasonHub({
   history,
   loading,
   sport = "ufc",
+  embedded = false,
 }: {
   history: PickHistory;
   loading: boolean;
   sport?: "ufc" | "football";
+  embedded?: boolean;
 }) {
   const [searchParams] = useSearchParams();
   const football = sport === "football";
@@ -193,15 +195,17 @@ export function PicksSeasonHub({
   return (
     <section
       ref={hubRef}
-      className="picks-history picks-season-section"
+      className={`picks-history picks-season-section${embedded ? " picks-season-section--embedded" : ""}`}
       aria-labelledby="picks-season-title"
       aria-current={targetEvent ? "true" : undefined}
       tabIndex={targetEvent ? -1 : undefined}
     >
       <details
-        className="surface-card picks-season-hub"
-        open={hubOpen}
-        onToggle={(toggleEvent) => setHubOpen(toggleEvent.currentTarget.open)}
+        className={`surface-card picks-season-hub${embedded ? " picks-season-hub--embedded" : ""}`}
+        open={embedded || hubOpen}
+        onToggle={(toggleEvent) => {
+          if (!embedded) setHubOpen(toggleEvent.currentTarget.open);
+        }}
       >
         <summary className="picks-season-hub__summary">
           <div className="picks-season-hub__identity">
