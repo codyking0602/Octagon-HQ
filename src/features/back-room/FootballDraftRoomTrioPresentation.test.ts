@@ -50,10 +50,12 @@ describe("Draft Room Trio presentation contract", () => {
   });
 
   it("keeps the completed Trio result focused on winner, overall score, and rosters", () => {
-    expect(page).toContain('const trioResult = trioMode && state.lifecycle_state === "completed"');
-    expect(page).toContain("{!trioResult ? <section className=\"auction-scoreboard surface-card\">");
-    expect(page).toContain("{latestRound && !trioResult ? (");
-    expect(page).toContain('{trioMode ? "FINAL ROSTER SCORE" : "FINAL BUILD SCORE"}');
-    expect(page).toContain("{trioMode ? <TrioComparison state={state} /> : <BuildComparison state={state} />}");
+    expect(page).toContain('const rosterResult = openRosterMode && state.lifecycle_state === "completed"');
+    expect(page).toContain("{!rosterResult ? <section className=\"auction-scoreboard surface-card\">");
+    expect(page).toContain("{latestRound && !rosterResult ? (");
+    expect(page).toContain('{openRosterMode ? "FINAL ROSTER SCORE" : "FINAL BUILD SCORE"}');
+    expect(page).toContain("? <TrioComparison state={state} />");
+    expect(page).toContain("? <LonghornsComparison state={state} />");
+    expect(page).toContain(": <BuildComparison state={state} />");
   });
 });
