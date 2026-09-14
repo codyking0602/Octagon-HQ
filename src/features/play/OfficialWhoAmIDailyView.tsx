@@ -60,13 +60,18 @@ export function OfficialWhoAmIDailyView({
   const rescueMisses = Number(state.recovery_wrong_guesses ?? 0);
   const rejected = new Set(strings(state.rejected_subject_ids));
   const rescueRejected = new Set(strings(state.recovery_rejected_subject_ids));
-  const clues = records(state.clues).map((entry, index) => ({\n    id: String(entry.id ?? `clue-${index + 1}`),\n    text: String(entry.text ?? ""),\n  }));
+  const clues = records(state.clues).map((entry, index) => ({
+    id: String(entry.id ?? `clue-${index + 1}`),
+    text: String(entry.text ?? ""),
+  }));
   const subjects = records(setup.subjects).map(subject).filter(Boolean) as WhoAmISubject[];
   const rescueChoices = records(state.recovery_choices).map(subject).filter(Boolean) as WhoAmISubject[];
   const [guessSearch, setGuessSearch] = useState("");
   const [selectedGuess, setSelectedGuess] = useState<WhoAmISubject | null>(null);
   const [guessOpen, setGuessOpen] = useState(false);
-  const [reviewOpen, setReviewOpen] = useState(false);\n  const [guessNotice, setGuessNotice] = useState<{ name: string; score: number } | null>(null);\n  const [pendingGuess, setPendingGuess] = useState<WhoAmISubject | null>(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [guessNotice, setGuessNotice] = useState<{ name: string; score: number } | null>(null);
+  const [pendingGuess, setPendingGuess] = useState<WhoAmISubject | null>(null);
   const attempt = projection.officialAttempt;
   const result = attempt?.publicResult ?? {};
   const reveal = record(projection.revealSetup);
@@ -110,7 +115,14 @@ export function OfficialWhoAmIDailyView({
 
   const resultOutcome = String(result.outcome ?? state.outcome ?? "");
   const resultLabel = resultOutcome === "natural" ? "NATURAL SOLVE" : resultOutcome === "recovered" ? "RECOVERED" : "MISS";
-  const revealClues = records(reveal.clues).map((entry, index) => ({\n    id: String(entry.id ?? `clue-${index + 1}`),\n    text: String(entry.text ?? ""),\n  }));\n  const presentationPhase = attempt ? "result" : phase === "recovery" ? "rescue" : "playing";\n  const resultState = resultOutcome === "natural" ? "correct" : resultOutcome === "recovered" ? "rescued" : "incorrect";\n  const presentationRevealedCount = attempt ? Number(result.revealed_count ?? revealedCount) : revealedCount;\n  const presentationWrongGuesses = attempt ? Number(result.wrong_guesses ?? wrongGuesses) : wrongGuesses;
+  const revealClues = records(reveal.clues).map((entry, index) => ({
+    id: String(entry.id ?? `clue-${index + 1}`),
+    text: String(entry.text ?? ""),
+  }));
+  const presentationPhase = attempt ? "result" : phase === "recovery" ? "rescue" : "playing";
+  const resultState = resultOutcome === "natural" ? "correct" : resultOutcome === "recovered" ? "rescued" : "incorrect";
+  const presentationRevealedCount = attempt ? Number(result.revealed_count ?? revealedCount) : revealedCount;
+  const presentationWrongGuesses = attempt ? Number(result.wrong_guesses ?? wrongGuesses) : wrongGuesses;
 
   return (
     <WhoAmIPresentation
