@@ -142,7 +142,7 @@ describe("FootballPicksPage", () => {
     };
     vi.mocked(usePicks).mockReturnValue(runtime({ event: twoGameEvent, selections: { "texas-ohio-state": "texas" } }) as never);
     render(<FootballPicksPage />);
-    expect(screen.getByText(/LOCKS 0 \/ 1/)).toBeInTheDocument();
+    expect(screen.getByText(/0 \/ 1 LOCKS/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Make Lock Texas Longhorns" }));
     expect(setFootballLock).toHaveBeenCalledWith("texas-ohio-state", true);
   });
@@ -157,7 +157,7 @@ describe("FootballPicksPage", () => {
     };
     vi.mocked(usePicks).mockReturnValue(runtime({ event: oneEligibleGameEvent, selections: { "texas-ohio-state": "texas" } }) as never);
     render(<FootballPicksPage />);
-    expect(screen.queryByText(/LOCKS 0 \/ 1/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/0 \/ 1 LOCKS/)).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Make Lock Texas Longhorns" })).not.toBeInTheDocument();
   });
 
