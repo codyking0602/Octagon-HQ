@@ -69,7 +69,7 @@ type UfcRuntimeModule = {
 };
 
 type FootballPublicationRuntimeModule = {
-  buildFootballTodayPersistenceSetup: (day: string) => unknown;
+  buildFootballTodayPersistenceSetup: (day: string) => unknown | Promise<unknown>;
 };
 
 type FootballAdvanceRuntimeModule = {
@@ -402,7 +402,7 @@ async function materializeFootballToday(admin: SupabaseClient) {
   }
 
   const footballRuntime = await loadFootballPublicationRuntime();
-  const publication = footballRuntime.buildFootballTodayPersistenceSetup(day) as JsonRecord;
+  const publication = await footballRuntime.buildFootballTodayPersistenceSetup(day) as JsonRecord;
   const publicationSchedule = requiredString(publication.scheduleVersion, "Football daily schedule version");
   const publicationGame = requiredString(publication.gameType, "Football daily game type");
   if (publicationSchedule !== scheduleVersion || publicationGame !== expectedGame) {
