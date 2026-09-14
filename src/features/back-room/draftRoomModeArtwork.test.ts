@@ -23,5 +23,9 @@ describe("Draft Room mode artwork", () => {
       src: "/assets/football/draft-room-longhorns-vince-young.webp",
       objectPosition: "50% 36%",
     });
+    expect(draftRoomModeArtwork("longhorns-teams-2005")).toEqual({
+      src: "/assets/football/draft-room-longhorns-teams-mack-brown.webp",
+      objectPosition: "50% 40%",
+    });
   });
 });
