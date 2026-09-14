@@ -9,6 +9,7 @@ import type { ChallengeJson, PlayChallenge } from "../challenges/challengeModel"
 import { playGameDefinition, playGamesForSport, type PlayGameId } from "./playRegistry";
 
 const footballChallengeGames: readonly { id: PlayGameId; route: string }[] = [
+  { id: "draft-room", route: "/football/draft-room" },
   { id: "blind-rank", route: "/football/rank-five" },
   { id: "keep-cut", route: "/football/keep-cut" },
   { id: "wavelength", route: "/football/wavelength" },
@@ -43,14 +44,16 @@ function challenge(
 }
 
 describe("Football standalone challenge integration parity", () => {
-  it("keeps the six established live Football games challenge-capable while 20 Questions stays retired", () => {
+  it("keeps public Football challenge games challenge-capable while 20 Questions stays retired", () => {
     const games = playGamesForSport("football");
     const challengeGames = games.filter((game) => game.lineup.challengeEligible);
     expect(challengeGames.map((game) => game.id)).toEqual(footballChallengeGames.map((game) => game.id));
 
     for (const game of challengeGames) {
       expect(game.lineup.supportedTypes).toContain("curated");
-      expect(game.lineup.historyRecording).toBe("casual-and-challenge");
+      expect(game.lineup.historyRecording).toBe(
+        game.id === "draft-room" ? "challenge-completion" : "casual-and-challenge",
+      );
       expect(game.lineup.dailyEligible).toBe(false);
       expect(game.lineup.streakEligible).toBe(false);
       expect(game.lineup.reminderEligible).toBe(false);
