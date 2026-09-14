@@ -14,9 +14,9 @@ const bundles = [
     requiredExports: ["advanceOfficialDailyRuntime", "buildOfficialDailySetup"],
   },
   {
-    label: "Football daily publication runtime",
+    label: "Football daily publication fallback runtime",
     entry: resolve(repoRoot, "src/features/play/footballTodayChallengePublicationRuntime.ts"),
-    fileName: "football-publication.generated.mjs",
+    fileName: "football-publication-fallback.generated.mjs",
     requiredExports: ["buildFootballTodayPersistenceSetup"],
   },
   {
@@ -83,26 +83,39 @@ for (const bundle of bundles) {
 
   const digest = createHash("sha256").update(bundled).digest("hex");
 
-  if (bundle.fileName === "football-publication.generated.mjs") {
-    const generatedRuntime = await import(`${pathToFileURL(output).href}?sha256=${digest}`);
-    const publication = generatedRuntime.buildFootballTodayPersistenceSetup("2026-09-13");
-    if (
-      !publication
-      || typeof publication !== "object"
-      || typeof publication.setupKey !== "string"
-      || !publication.setupKey
-      || typeof publication.scheduleVersion !== "string"
-      || !publication.scheduleVersion
-      || typeof publication.gameType !== "string"
-      || !publication.gameType
-      || !publication.publicSetup
-      || typeof publication.publicSetup !== "object"
-      || !publication.privateSetupEvidence
-      || typeof publication.privateSetupEvidence !== "object"
-    ) {
-      throw new Error("Football daily publication bundle failed its deterministic smoke proof.");
-    }
-  }
-
   console.log(`Generated canonical ${bundle.label} bundle ${digest}.`);
 }
+
+
+await import("./generate-football-daily-publication-cache.mjs");
+
+const footballPublicationOutput = resolve(outDir, "football-publication.generated.mjs");
+const footballPublicationRegistry = await readFile(footballPublicationOutput, "utf8");
+if (footballPublicationRegistry.includes("footballWhoAmIAuthority")) {
+  throw new Error("Football Daily publication registry unexpectedly contains heavyweight Who Am I authority code.");
+}
+const footballPublicationDigest = createHash("sha256").update(footballPublicationRegistry).digest("hex");
+const generatedFootballPublicationRuntime = await import(
+  `${pathToFileURL(footballPublicationOutput).href}?sha256=${footballPublicationDigest}`
+);
+
+for (const day of ["2026-09-13", "2026-09-14"]) {
+  const publication = await generatedFootballPublicationRuntime.buildFootballTodayPersistenceSetup(day);
+  if (
+    !publication
+    || typeof publication !== "object"
+    || typeof publication.setupKey !== "string"
+    || !publication.setupKey
+    || typeof publication.scheduleVersion !== "string"
+    || !publication.scheduleVersion
+    || typeof publication.gameType !== "string"
+    || !publication.gameType
+    || !publication.publicSetup
+    || typeof publication.publicSetup !== "object"
+    || !publication.privateSetupEvidence
+    || typeof publication.privateSetupEvidence !== "object"
+  ) {
+    throw new Error(`Football daily publication cache failed its deterministic smoke proof for ${day}.`);
+  }
+}
+console.log(`Generated canonical Football daily publication registry ${footballPublicationDigest}.`);
