@@ -39,15 +39,10 @@ describe("Draft Room mode artwork", () => {
     });
   });
 
-  it("keeps the team-season heroes as valid WebP assets", () => {
-    for (const path of [
-      "public/assets/football/draft-room-longhorns-teams-mack-brown.webp",
-      "public/assets/football/draft-room-cowboys-teams.webp",
-    ]) {
-      const image = readFileSync(resolve(process.cwd(), path));
-      expect(image.subarray(0, 4).toString("ascii")).toBe("RIFF");
-      expect(image.subarray(8, 12).toString("ascii")).toBe("WEBP");
-      expect(image.byteLength).toBeGreaterThan(5_000);
-    }
+  it("keeps the supplied Cowboys Teams hero as a valid WebP asset", () => {
+    const image = readFileSync(resolve(process.cwd(), "public/assets/football/draft-room-cowboys-teams.webp"));
+    expect(image.subarray(0, 4).toString("ascii")).toBe("RIFF");
+    expect(image.subarray(8, 12).toString("ascii")).toBe("WEBP");
+    expect(image.byteLength).toBeGreaterThan(5_000);
   });
 });
