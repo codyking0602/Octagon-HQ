@@ -626,7 +626,6 @@ export default function FootballTodayChallengePage() {
         {projection.gameType === "blind_rank_5" ? <BlindRank projection={projection} advance={advance} /> : null}
         {projection.gameType === "keep_4_cut_4" ? <KeepCut projection={projection} advance={advance} /> : null}
         {projection.gameType === "hit_the_number" ? <HitTheNumber projection={projection} advance={advance} /> : null}
-        {projection.gameType === "who_am_i" ? <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={advance} /> : null}
       </section>
     </div>
   );
