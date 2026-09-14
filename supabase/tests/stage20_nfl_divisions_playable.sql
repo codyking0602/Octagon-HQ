@@ -40,9 +40,9 @@ begin
     (v_admin_b,'00000000-0000-0000-0000-000000000000','authenticated','authenticated','stage20-nfl-divisions-b@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','STAGE 20 NFL DIVISIONS B','historical_unclaimed',true)),
     (v_member,'00000000-0000-0000-0000-000000000000','authenticated','authenticated','stage20-nfl-divisions-member@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','STAGE 20 NFL DIVISIONS MEMBER','historical_unclaimed',true));
 
-  perform public.register_unclaimed_pin_profile(v_admin_a,'Stage18 NFL Div A','NA');
-  perform public.register_unclaimed_pin_profile(v_admin_b,'Stage18 NFL Div B','NB');
-  perform public.register_unclaimed_pin_profile(v_member,'Stage18 NFL Div Member','NM');
+  perform public.register_unclaimed_pin_profile(v_admin_a,'Stage20 NFL Div A','NA');
+  perform public.register_unclaimed_pin_profile(v_admin_b,'Stage20 NFL Div B','NB');
+  perform public.register_unclaimed_pin_profile(v_member,'Stage20 NFL Div Member','NM');
   insert into public.pick_control_owners(profile_id) values (v_admin_a), (v_admin_b);
 
   perform set_config('request.jwt.claim.role','authenticated',true);
