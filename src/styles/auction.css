@@ -526,6 +526,115 @@
   line-height: 1.3;
 }
 
+
+.cfb-best-team-season {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border: 1px solid rgba(var(--build-qb-team-rgb, 255, 255, 255), .34);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 18% 50%, rgba(var(--build-qb-team-rgb, 255, 255, 255), .19), transparent 58%),
+    rgba(var(--build-qb-team-rgb, 255, 255, 255), .05);
+}
+
+.cfb-best-team-season > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+  text-align: left;
+}
+
+.cfb-best-team-season .draft-room-season-label {
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.05;
+}
+
+.cfb-best-team-season__year {
+  color: var(--build-qb-team-color, var(--text-secondary));
+  font-size: 9px;
+  font-weight: 950;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.cfb-best-team-season--compact {
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 5px 6px;
+  border-radius: 8px;
+}
+
+.cfb-best-team-season--compact .draft-room-season-label {
+  font-size: 10px;
+}
+
+.cfb-best-team-season--compact .cfb-best-team-season__year {
+  font-size: 7px;
+}
+
+.cfb-best-team-season--compact .draft-room-season-summary {
+  font-size: 7px;
+}
+
+.auction-board--cfb-best-teams .auction-current__item {
+  background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, .08), transparent 66%), var(--surface);
+}
+
+.auction-board--cfb-best-teams .auction-collections__rows article > div.is-filled {
+  padding: 4px;
+}
+
+.auction-board--cfb-best-teams .auction-collections__rows .cfb-best-team-season {
+  width: 100%;
+}
+
+.auction-catalog li.is-cfb-best-teams-mode {
+  background:
+    radial-gradient(circle at 82% 10%, rgba(30, 93, 168, .20), rgba(255, 255, 255, .04) 46%, transparent 66%),
+    var(--surface);
+}
+
+.auction-catalog li.is-cfb-best-teams-mode.is-selected {
+  border-color: rgba(125, 169, 222, .82);
+  box-shadow: 0 0 0 1px rgba(125, 169, 222, .62);
+}
+
+@media (max-width: 430px) {
+  .cfb-best-team-season {
+    gap: 7px;
+    padding: 7px 8px;
+  }
+
+  .cfb-best-team-season .draft-room-season-label {
+    font-size: 13px;
+  }
+
+  .cfb-best-team-season--compact {
+    gap: 5px;
+    padding: 4px;
+  }
+
+  .cfb-best-team-season--compact .build-qb-team-mark {
+    width: 23px;
+    height: 23px;
+    flex-basis: 23px;
+  }
+
+  .cfb-best-team-season--compact .draft-room-season-label {
+    font-size: 9px;
+  }
+
+  .cfb-best-team-season--compact .cfb-best-team-season__year,
+  .cfb-best-team-season--compact .draft-room-season-summary {
+    font-size: 6.5px;
+  }
+}
+
 .auction-board--longhorns {
   --longhorn-burnt-orange: #bf5700;
   --longhorn-burnt-orange-rgb: 191, 87, 0;

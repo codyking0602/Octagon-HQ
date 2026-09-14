@@ -14,6 +14,11 @@ import { draftRoomModeArtwork } from "./draftRoomModeArtwork";
 import { trioPlayerVisualIdentity } from "./draftRoomTrioVisualIdentity";
 import { cowboysPlayerSummary } from "./cowboysPlayerSummaries";
 import { cowboysTeamSeasonSummary } from "./cowboysTeamSeasonSummaries";
+import {
+  cfbBestTeamBoardLabel,
+  cfbBestTeamSeasonPresentation,
+  cfbBestTeamSeasonVisualIdentity,
+} from "./cfbBestTeamSeasonPresentation";
 import { longhornsPlayerSummary } from "./longhornsPlayerSummaries";
 import { longhornsTeamSeasonSummary } from "./longhornsTeamSeasonSummaries";
 import {
@@ -31,6 +36,7 @@ import {
   isCfbDraftRoomMode,
   isCowboysDraftRoomMode,
   isCowboysTeamsDraftRoomMode,
+  isCfbBestTeamsDraftRoomMode,
   isDraftRoomModeId,
   isLonghornsDraftRoomMode,
   isLonghornsTeamsDraftRoomMode,
@@ -267,6 +273,73 @@ function BuildQbTeamMark({
   );
 }
 
+function CfbBestTeamSeasonCard({
+  itemReference,
+  displayLabel,
+  compact = false,
+}: {
+  itemReference: string | null | undefined;
+  displayLabel: string;
+  compact?: boolean;
+}) {
+  const season = cfbBestTeamSeasonPresentation(itemReference);
+  const identity = cfbBestTeamSeasonVisualIdentity(itemReference);
+  return (
+    <div
+      className={`cfb-best-team-season${compact ? " cfb-best-team-season--compact" : ""}${identity ? " has-team-identity" : ""}`}
+      style={identity ? buildQbTeamStyle(identity) : undefined}
+    >
+      {identity ? <BuildQbTeamMark identity={identity} compact={compact} /> : null}
+      <div>
+        <strong className="draft-room-season-label">{season ? `${season.school} · ${season.year}` : displayLabel}</strong>
+        {season ? <span className="draft-room-season-summary">{season.summary}</span> : null}
+      </div>
+    </div>
+  );
+}
+
+function CfbBestTeamsComparison({ state }: { state: DraftRoomProjection }) {
+  const challengerAwards = state.awarded_collections
+    .filter((item) => item.awarded_to === state.challenger_id)
+    .sort((a, b) => a.resolved_round - b.resolved_round);
+  const recipientAwards = state.awarded_collections
+    .filter((item) => item.awarded_to === state.recipient_id)
+    .sort((a, b) => a.resolved_round - b.resolved_round);
+
+  return (
+    <section className="auction-collections surface-card" aria-label="Best CFB Teams comparison">
+      <header className="auction-collections__header">
+        <div><strong>{state.challenger_display_name}</strong></div>
+        <span>VS</span>
+        <div><strong>{state.recipient_display_name}</strong></div>
+      </header>
+      <div className="auction-collections__rows">
+        {Array.from({ length: 4 }, (_, index) => {
+          const challengerAward = challengerAwards[index];
+          const recipientAward = recipientAwards[index];
+          return (
+            <article key={index}>
+              <div className={challengerAward ? "is-filled" : ""}>
+                <small>TEAM {index + 1}</small>
+                {challengerAward ? (
+                  <CfbBestTeamSeasonCard itemReference={challengerAward.item_reference} displayLabel={challengerAward.display_label} compact />
+                ) : <strong>OPEN</strong>}
+              </div>
+              <span aria-hidden="true">VS</span>
+              <div className={recipientAward ? "is-filled" : ""}>
+                <small>TEAM {index + 1}</small>
+                {recipientAward ? (
+                  <CfbBestTeamSeasonCard itemReference={recipientAward.item_reference} displayLabel={recipientAward.display_label} compact />
+                ) : <strong>OPEN</strong>}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function BuildComparison({ state }: { state: DraftRoomProjection }) {
   const challengerAwards = state.awarded_collections.filter((item) => item.awarded_to === state.challenger_id);
   const recipientAwards = state.awarded_collections.filter((item) => item.awarded_to === state.recipient_id);
@@ -347,9 +420,10 @@ function DraftRoomBoard({
   const longhornsTeamsMode = isLonghornsTeamsDraftRoomMode(state.mode_id);
   const cowboysMode = isCowboysDraftRoomMode(state.mode_id);
   const cowboysTeamsMode = isCowboysTeamsDraftRoomMode(state.mode_id);
+  const cfbBestTeamsMode = isCfbBestTeamsDraftRoomMode(state.mode_id);
   const longhornsFamilyMode = longhornsMode || longhornsTeamsMode;
   const cowboysFamilyMode = cowboysMode || cowboysTeamsMode;
-  const openRosterMode = trioMode || longhornsFamilyMode || cowboysFamilyMode;
+  const openRosterMode = trioMode || longhornsFamilyMode || cowboysFamilyMode || cfbBestTeamsMode;
   const rosterResult = openRosterMode && state.lifecycle_state === "completed";
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<BuildQbTrait | "">("");
@@ -370,9 +444,11 @@ function DraftRoomBoard({
     ? state.awarded_collections.find((item) => item.resolved_round === latestRound.round)
     : null;
   const currentQbIdentity = openRosterMode ? null : draftRoomVisualIdentity(state.mode_id, state.current_item?.item_reference);
+  const currentCfbBestBoardLabel = cfbBestTeamsMode ? cfbBestTeamBoardLabel(state.current_item?.item_reference ?? state.awarded_collections[0]?.item_reference) : null;
 
   const roomLabel = trioMode ? "Trio"
-    : longhornsTeamsMode ? "Longhorns Teams"
+    : cfbBestTeamsMode ? "Best CFB Teams"
+      : longhornsTeamsMode ? "Longhorns Teams"
       : longhornsMode ? "Longhorns"
         : cowboysTeamsMode ? "Cowboys Teams"
           : cowboysMode ? "Cowboys"
@@ -407,7 +483,7 @@ function DraftRoomBoard({
   }
 
   return (
-    <div className={`auction-board${longhornsFamilyMode ? " auction-board--longhorns" : ""}${cowboysFamilyMode ? " auction-board--cowboys" : ""}`}>
+    <div className={`auction-board${longhornsFamilyMode ? " auction-board--longhorns" : ""}${cowboysFamilyMode ? " auction-board--cowboys" : ""}${cfbBestTeamsMode ? " auction-board--cfb-best-teams" : ""}`}>
       <header className="auction-board__header">
         <DraftRoomModeArtworkImage
           modeId={state.mode_id}
@@ -419,7 +495,7 @@ function DraftRoomBoard({
         </div>
         <div className="auction-board__title">
           <p className="eyebrow">DRAFT ROOM</p>
-          <h1>{draftRoomTitle(state.mode_id)}</h1>
+          <h1>{currentCfbBestBoardLabel ?? draftRoomTitle(state.mode_id)}</h1>
         </div>
       </header>
 
@@ -442,17 +518,22 @@ function DraftRoomBoard({
       {!rosterResult ? <section className="auction-current surface-card">
         <div className="auction-current__meta">
           <span>ROUND {Math.min(state.current_round, mode.rounds)} / {mode.rounds}</span>
-          <span>TIES → {tieName}</span>
+          <span>{currentCfbBestBoardLabel ? `BOARD · ${currentCfbBestBoardLabel} · TIES → ${tieName}` : `TIES → ${tieName}`}</span>
         </div>
         <div
           className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}${trioMode ? " draft-room-trio-current" : ""}`}
           style={currentQbIdentity ? buildQbTeamStyle(currentQbIdentity) : undefined}
         >
-          <small>{trioMode ? "CURRENT TRIO" : longhornsTeamsMode ? "CURRENT TEXAS TEAM" : longhornsMode ? "CURRENT LONGHORN" : cowboysTeamsMode ? "CURRENT COWBOYS TEAM" : cowboysMode ? "CURRENT COWBOY" : "CURRENT QB"}</small>
+          <small>{trioMode ? "CURRENT TRIO" : cfbBestTeamsMode ? "CURRENT TEAM-SEASON" : longhornsTeamsMode ? "CURRENT TEXAS TEAM" : longhornsMode ? "CURRENT LONGHORN" : cowboysTeamsMode ? "CURRENT COWBOYS TEAM" : cowboysMode ? "CURRENT COWBOY" : "CURRENT QB"}</small>
           {trioMode ? (
             state.current_item?.display_label
               ? <TrioPackageCard modeId={state.mode_id} displayLabel={state.current_item.display_label} />
               : <h2>{terminal ? "ROSTERS LOCKED" : "LOADING"}</h2>
+          ) : cfbBestTeamsMode && state.current_item?.display_label ? (
+            <CfbBestTeamSeasonCard
+              itemReference={state.current_item.item_reference}
+              displayLabel={state.current_item.display_label}
+            />
           ) : longhornsFamilyMode || cowboysFamilyMode ? (
             <>
               <h2 className={longhornsTeamsMode || cowboysTeamsMode ? "draft-room-season-label" : undefined}>{state.current_item?.display_label ?? (terminal ? "ROSTER LOCKED" : "LOADING")}</h2>
@@ -487,14 +568,20 @@ function DraftRoomBoard({
       {latestRound && !rosterResult ? (
         <section className="auction-result surface-card" aria-label="Latest Draft Room result">
           <p className="eyebrow">{latestRound.forced ? "FORCED $1 ASSIGNMENT" : `ROUND ${latestRound.round} RESULT`}</p>
-          <h2>{latestAward ? (trioMode ? "Trio awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : longhornsTeamsMode ? "Resolved Texas team" : longhornsMode ? "Resolved Longhorn" : cowboysTeamsMode ? "Resolved Cowboys team" : cowboysMode ? "Resolved Cowboy" : "Resolved QB")}</h2>
+          <h2>{latestAward ? (trioMode ? "Trio awarded" : cfbBestTeamsMode ? "Team-season awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : cfbBestTeamsMode ? "Resolved CFB team-season" : longhornsTeamsMode ? "Resolved Texas team" : longhornsMode ? "Resolved Longhorn" : cowboysTeamsMode ? "Resolved Cowboys team" : cowboysMode ? "Resolved Cowboy" : "Resolved QB")}</h2>
           <p>
             {trioMode && latestAward ? `${latestAward.display_label} · ` : latestAward?.category ? `${latestAward.category} · ` : ""}
             {latestRound.forced
               ? `assigned for ${latestRound.charged_amount}`
               : `${state.challenger_display_name} ${latestRound.challenger_bid} · ${state.recipient_display_name} ${latestRound.recipient_bid}`}
           </p>
-          {longhornsTeamsMode && latestAward ? (
+          {cfbBestTeamsMode && latestAward ? (
+            <CfbBestTeamSeasonCard
+              itemReference={latestAward.item_reference}
+              displayLabel={latestAward.display_label}
+              compact
+            />
+          ) : longhornsTeamsMode && latestAward ? (
             <span className="draft-room-season-summary">{longhornsTeamSeasonSummary(latestAward.display_label)}</span>
           ) : cowboysTeamsMode && latestAward ? (
             <span className="draft-room-season-summary">{cowboysTeamSeasonSummary(latestAward.display_label)}</span>
@@ -509,7 +596,7 @@ function DraftRoomBoard({
       {state.lifecycle_state === "completed"
         && state.challenger_final_score !== null
         && state.recipient_final_score !== null ? (
-        <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : longhornsTeamsMode ? "Longhorns Teams final result" : longhornsMode ? "Longhorns final result" : cowboysTeamsMode ? "Cowboys Teams final result" : cowboysMode ? "Cowboys final result" : "Build a QB final result"}>
+        <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : cfbBestTeamsMode ? "Best CFB Teams final result" : longhornsTeamsMode ? "Longhorns Teams final result" : longhornsMode ? "Longhorns final result" : cowboysTeamsMode ? "Cowboys Teams final result" : cowboysMode ? "Cowboys final result" : "Build a QB final result"}>
           <p className="eyebrow">{openRosterMode ? "FINAL ROSTER SCORE" : "FINAL BUILD SCORE"}</p>
           <h2>
             {state.is_tie
@@ -528,6 +615,8 @@ function DraftRoomBoard({
 
       {trioMode
         ? <TrioComparison state={state} />
+        : cfbBestTeamsMode
+          ? <CfbBestTeamsComparison state={state} />
         : longhornsTeamsMode
           ? <LonghornsComparison
               state={state}
@@ -578,6 +667,8 @@ function DraftRoomBoard({
             <p className="draft-room-trio-bid-note">
               {trioMode
                 ? "Bid on the full QB / RB / WR package."
+                : cfbBestTeamsMode
+                  ? "Bid on this college team-season. Win four seasons and build the stronger group."
                 : longhornsTeamsMode
                   ? "Bid on this Texas season. Win four seasons and build the stronger four-team group."
                   : cowboysTeamsMode
@@ -896,6 +987,7 @@ export default function FootballDraftRoomPage() {
                   selectedModeId === mode.id ? "is-selected" : "",
                   isLonghornsDraftRoomMode(mode.id) || isLonghornsTeamsDraftRoomMode(mode.id) ? "is-longhorns-mode" : "",
                   isCowboysDraftRoomMode(mode.id) || isCowboysTeamsDraftRoomMode(mode.id) ? "is-cowboys-mode" : "",
+                  isCfbBestTeamsDraftRoomMode(mode.id) ? "is-cfb-best-teams-mode" : "",
                 ].filter(Boolean).join(" ")}
                 key={mode.id}
               >
