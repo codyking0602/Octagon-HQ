@@ -26,6 +26,7 @@ import { footballDateTimeLabel } from "./footballTime";
 import { usePicks } from "./PicksProvider";
 
 const AUTOSAVE_DELAY_MS = 250;
+const FOOTBALL_FUTURES_2026_DISPLAY_LOCK_AT = "2026-09-18T04:59:00Z";
 const POWER4_PICKER_GROUPS = CFB_POWER4_CONFERENCES.map((label) => ({ label, limit: 1 }));
 const NFL_DIVISION_PICKER_GROUPS = NFL_DIVISION_GROUPS.map((group) => ({ label: group.label, limit: 1 }));
 const NFL_PLAYOFF_PICKER_GROUPS = NFL_CONFERENCES.map((label) => ({ label, limit: 7 }));
@@ -506,7 +507,7 @@ export function FootballFuturesCard() {
       <div className="football-futures__body">
         <div className="football-futures__status">
           <span>{locked ? "GROUP PICKS REVEALED" : "PRIVATE UNTIL LOCK"}</span>
-          <b>{snapshot ? footballDateTimeLabel(snapshot.lockAt) : "FRI · 11:59 PM CT"}</b>
+          <b>{snapshot ? footballDateTimeLabel(snapshot.season === 2026 ? FOOTBALL_FUTURES_2026_DISPLAY_LOCK_AT : snapshot.lockAt) : "FRI · 11:59 PM CT"}</b>
         </div>
         {loading ? <p className="football-futures__message">Loading Futures…</p> : null}
         {!loading ? (
