@@ -344,10 +344,10 @@ begin
       v_context := v_one;
     elsif v_nd and v_slot=8 then
       v_context := 'Notre Dame';
-    elsif v_nd_replaces_one then
-      v_context := case when v_slot<=3 then v_one else v_two end;
+    elsif v_nd_replaces_one and v_slot=7 then
+      v_context := v_two;
     else
-      v_context := case when v_slot<=4 then v_one else v_two end;
+      v_context := case when mod(v_slot,2)=1 then v_one else v_two end;
     end if;
     v_target := v_targets[v_slot];
 
