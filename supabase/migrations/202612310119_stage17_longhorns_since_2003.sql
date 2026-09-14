@@ -136,4 +136,4 @@ begin
     raise exception 'Longhorns challenge notification copy did not fully move to 2003';
   end if;
 end;
-$;
+$$;
