@@ -51,8 +51,10 @@ describe("Draft Room contract", () => {
     expect(draftRoomModeDefinition("build-qb").rounds).toBe(8);
   });
 
-  it("locks Longhorns Since 2005 to eight open-roster auctions and four wins per side", () => {
+  it("locks Longhorns Since 2003 to eight open-roster auctions and four wins per side", () => {
     const mode = draftRoomModeDefinition("longhorns-2005");
+    expect(mode.displayName).toBe("Longhorns Since 2003");
+    expect(mode.description).toContain("from 2003 forward");
     expect(mode.rounds).toBe(8);
     expect(mode.requiredSelectionsPerPlayer).toBe(4);
     expect(mode.startingBankroll).toBe(40);
@@ -62,8 +64,10 @@ describe("Draft Room contract", () => {
     expect(isTrioDraftRoomMode("longhorns-2005")).toBe(false);
   });
 
-  it("locks Longhorns Teams Since 2005 to eight team-season auctions and four wins per side", () => {
+  it("locks Longhorns Teams Since 2003 to eight team-season auctions and four wins per side", () => {
     const mode = draftRoomModeDefinition("longhorns-teams-2005");
+    expect(mode.displayName).toBe("Longhorns Teams Since 2003");
+    expect(mode.description).toContain("from 2003 forward");
     expect(mode.rounds).toBe(8);
     expect(mode.requiredSelectionsPerPlayer).toBe(4);
     expect(mode.startingBankroll).toBe(40);

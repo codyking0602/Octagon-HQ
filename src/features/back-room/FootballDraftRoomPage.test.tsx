@@ -146,8 +146,8 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "Cowboys Since 2007" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CFB Build a QB" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CFB QB / RB / WR Trio" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Longhorns Since 2005" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Longhorns Teams Since 2005" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Longhorns Since 2003" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Longhorns Teams Since 2003" })).not.toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/build-qb-andrew-luck-hero.webp"]')).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-trio-nfl.webp"]')).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-cowboys-jason-witten.webp"]')).toBeInTheDocument();
@@ -162,8 +162,8 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Longhorns Since 2005" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Longhorns Teams Since 2005" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Longhorns Since 2003" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Longhorns Teams Since 2003" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL QB / RB / WR Trio" })).not.toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/build-qb-cam-newton-auburn-hero.webp"]')).toBeInTheDocument();
@@ -211,25 +211,25 @@ describe("Football Draft Room", () => {
     expect(container.querySelector('img[src="/assets/football/draft-room-cowboys-jason-witten.webp"]')).toBeInTheDocument();
   });
 
-  it("resolves Longhorns Since 2005 as a CFB Draft Room mode", () => {
+  it("resolves Longhorns Since 2003 as a CFB Draft Room mode", () => {
     mockedUseIdentity.mockReturnValue(identity(true));
     const { container } = renderRoute("/football/draft-room?mode=longhorns-2005");
 
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "Longhorns Since 2005" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Longhorns Since 2003" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-longhorns-vince-young.webp"]')).toBeInTheDocument();
   });
 
-  it("resolves Longhorns Teams Since 2005 as a CFB Draft Room mode with canonical team-season art", () => {
+  it("resolves Longhorns Teams Since 2003 as a CFB Draft Room mode with canonical team-season art", () => {
     mockedUseIdentity.mockReturnValue(identity(true));
     const { container } = renderRoute("/football/draft-room?mode=longhorns-teams-2005");
 
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "Longhorns Teams Since 2005" })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "Longhorns Since 2005" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Longhorns Teams Since 2003" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Longhorns Since 2003" })).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-longhorns-teams-mack-brown.webp"]')).toBeInTheDocument();
   });
 

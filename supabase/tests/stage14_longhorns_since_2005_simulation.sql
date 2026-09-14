@@ -14,8 +14,8 @@ declare
   v_margin_median numeric;
   v_skill_win_rate numeric;
 begin
-  if (select count(*) from private.draft_room_longhorns_player_pool) <> 64 then
-    raise exception 'Longhorns Since 2005 pool must contain all 64 approved players';
+  if (select count(*) from private.draft_room_longhorns_player_pool) <> 70 then
+    raise exception 'Longhorns Since 2003 pool must contain all 70 approved players';
   end if;
 
   if (
@@ -25,8 +25,8 @@ begin
       order by player_reference
     ))
     from private.draft_room_longhorns_player_pool
-  ) <> '3916fb6791adbb09934515f194388b83' then
-    raise exception 'Longhorns Since 2005 approved names, positions, or grades drifted';
+  ) <> '88b67886b7c1cb387d919267f14d0c3d' then
+    raise exception 'Longhorns Since 2003 approved names, positions, or grades drifted';
   end if;
 
   if (
@@ -36,8 +36,8 @@ begin
       from private.draft_room_longhorns_player_pool
       group by grade_band
     ) counts
-  ) <> '{"Core":10,"Elite":12,"Icon":10,"Star":13,"Strong":19}'::jsonb then
-    raise exception 'Longhorns Since 2005 grade-band distribution drifted';
+  ) <> '{"Core":10,"Elite":14,"Icon":12,"Star":14,"Strong":20}'::jsonb then
+    raise exception 'Longhorns Since 2003 grade-band distribution drifted';
   end if;
 
   if not exists (
@@ -64,6 +64,28 @@ begin
     where display_name = 'Quandre Diggs' and hidden_grade = 89
   ) then
     raise exception 'Approved Longhorns population lost Quandre Diggs';
+  end if;
+
+  if not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Derrick Johnson' and hidden_grade = 99
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Cedric Benson' and hidden_grade = 97
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Roy Williams' and hidden_grade = 95
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Nathan Vasher' and hidden_grade = 94
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Marcus Tubbs' and hidden_grade = 92
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Bo Scaife' and hidden_grade = 87
+  ) then
+    raise exception 'Approved 2003-2004 Longhorn player additions drifted';
   end if;
 
   if (

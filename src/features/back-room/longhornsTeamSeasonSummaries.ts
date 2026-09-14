@@ -1,4 +1,6 @@
 export const LONGHORNS_TEAM_SEASON_SUMMARIES = {
+  "2003 Texas": "10–3 • Holiday Bowl Appearance",
+  "2004 Texas": "11–1 • Rose Bowl Champion",
   "2005 Texas": "13–0 • National Champion",
   "2006 Texas": "10–3 • Alamo Bowl Champion",
   "2007 Texas": "10–3 • Holiday Bowl Champion",

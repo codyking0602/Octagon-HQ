@@ -12,8 +12,8 @@ declare
   v_four_plus_rate numeric;
   v_median_margin numeric;
 begin
-  if (select count(*) from private.draft_room_longhorn_teams_pool) <> 21 then
-    raise exception 'Longhorns Teams pool must contain all 21 completed seasons';
+  if (select count(*) from private.draft_room_longhorn_teams_pool) <> 23 then
+    raise exception 'Longhorns Teams pool must contain all 23 completed seasons from 2003-2025';
   end if;
 
   if (
@@ -23,8 +23,8 @@ begin
       order by hidden_grade desc, season_year
     ))
     from private.draft_room_longhorn_teams_pool
-  ) <> '988f8c0ae09a1872cf81615abc9549ce' then
-    raise exception 'Longhorns Teams approved seasons or grades drifted';
+  ) <> 'e87ef9320a0a5e70f21e83bc8417f5fd' then
+    raise exception 'Longhorns Teams 2003-2025 approved seasons or grades drifted';
   end if;
 
   if exists (
@@ -32,6 +32,16 @@ begin
     where season_year = 2026
   ) then
     raise exception 'Incomplete 2026 season entered Longhorns Teams';
+  end if;
+
+  if not exists (
+    select 1 from private.draft_room_longhorn_teams_pool
+    where season_year = 2003 and hidden_grade = 82 and quality_band = 'B'
+  ) or not exists (
+    select 1 from private.draft_room_longhorn_teams_pool
+    where season_year = 2004 and hidden_grade = 92 and quality_band = 'A'
+  ) then
+    raise exception 'Longhorns Teams 2003/2004 additions drifted';
   end if;
 
   if (
