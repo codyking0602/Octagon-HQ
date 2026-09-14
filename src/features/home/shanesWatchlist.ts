@@ -202,7 +202,7 @@ export const shanesWatchlist = {
       whyOnBoard: "An unbeaten welterweight who opened his UFC run with back-to-back knockouts of Adam Fugitt and Billy Ray Goff.",
       boardNote: "Long, busy boxer with real finishing pop. Two UFC fights, two knockouts.",
       scoutingSnapshot: "Miller earned his UFC contract with a unanimous decision over Jimmy Drago on the 2025 Contender Series, then turned his first two UFC appearances into knockouts. He stopped Adam Fugitt at 4:59 of Round 1 and Billy Ray Goff just 15 seconds into Round 3, moving to 2–0 in the UFC and 8–0 overall. At 6'2\" with a 77.5-inch reach and a boxing-first game, he gives Shane’s board another young welterweight with size, volume and real finishing upside.",
-      photoUrl: null,
+      photoUrl: "/assets/fighters/ty-miller-thumb.webp",
       videoUrl: "https://youtu.be/wodu318-nm0?si=KYM3qd6RKriviD6U",
     },
   ] satisfies ShaneWatchFighter[],
