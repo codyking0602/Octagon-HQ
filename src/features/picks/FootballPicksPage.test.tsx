@@ -48,14 +48,14 @@ describe("FootballPicksPage", () => {
   it("keeps event artwork clean and makes every Football Picks time explicitly Central", () => {
     const { container } = render(<FootballPicksPage />);
     const hero = screen.getByLabelText("Football Week 1 event artwork");
-    const slate = screen.getByLabelText("Current and upcoming football games");
+    const slate = screen.getByLabelText("This week’s football games");
     const provenance = screen.getByText(/ATS ODDS · THE ODDS API · FROZEN/);
 
     expect(hero).toHaveTextContent("");
     expect(screen.queryByText("FOOTBALL PICKS · WEEKLY ATS")).not.toBeInTheDocument();
     expect(screen.queryByText("Opening weekend")).not.toBeInTheDocument();
     expect(provenance).toHaveTextContent("Sep 1, 7:00 AM CT");
-    expect(screen.getByText("CURRENT / UPCOMING GAMES")).toBeInTheDocument();
+    expect(screen.getByText("THIS WEEK’S GAMES")).toBeInTheDocument();
     expect(screen.getByText("Thu, Sep 3, 11:00 AM CT")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ohio State Buckeyes AWAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
@@ -87,21 +87,19 @@ describe("FootballPicksPage", () => {
     expect(awayMark).toHaveTextContent("");
   });
 
-  it("keeps the scoring rubric collapsed with weekly and Futures grading rules", () => {
+  it("keeps the scoring rubric collapsed and makes weekly scoring easy to scan", () => {
     render(<FootballPicksPage />);
     const details = screen.getByText("SCORING & GRADING").closest("details");
 
     expect(details).not.toHaveAttribute("open");
-    expect(details).toHaveTextContent("ATS win 1 point");
-    expect(details).toHaveTextContent("Lock win 3 points total");
-    expect(details).toHaveTextContent("Push 0.5");
-    expect(details).toHaveTextContent("lowest-scoring week is dropped");
-    expect(details).toHaveTextContent("Season Futures 78 points total · CFB 38 · NFL 40");
-    expect(details).toHaveTextContent("Power 4 champions 2 each");
-    expect(details).toHaveTextContent("national champion 7");
-    expect(details).toHaveTextContent("division champions 1 each");
-    expect(details).toHaveTextContent("Super Bowl champion 7");
-    expect(details).toHaveTextContent("Futures stay private until the listed lock time");
+    expect(details).toHaveTextContent("WIN+1");
+    expect(details).toHaveTextContent("LOCK WIN+2 BONUS");
+    expect(details).toHaveTextContent("PUSH+0.5");
+    expect(details).toHaveTextContent("LOSS0");
+    expect(details).toHaveTextContent("Your pick is graded against the line shown when the week was published.");
+    expect(details).toHaveTextContent("Your lowest-scoring week is dropped.");
+    expect(details).not.toHaveTextContent("Season Futures 78 points total");
+    expect(details).not.toHaveTextContent("3 points total");
   });
 
   it("gives the Picks owner a direct manage-event path below the clean Football header", () => {
@@ -144,7 +142,7 @@ describe("FootballPicksPage", () => {
     };
     vi.mocked(usePicks).mockReturnValue(runtime({ event: twoGameEvent, selections: { "texas-ohio-state": "texas" } }) as never);
     render(<FootballPicksPage />);
-    expect(screen.getByText(/LOCKS 0 \/ 1/)).toBeInTheDocument();
+    expect(screen.getByText(/0 \/ 1 LOCKS/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Make Lock Texas Longhorns" }));
     expect(setFootballLock).toHaveBeenCalledWith("texas-ohio-state", true);
   });
@@ -159,7 +157,7 @@ describe("FootballPicksPage", () => {
     };
     vi.mocked(usePicks).mockReturnValue(runtime({ event: oneEligibleGameEvent, selections: { "texas-ohio-state": "texas" } }) as never);
     render(<FootballPicksPage />);
-    expect(screen.queryByText(/LOCKS 0 \/ 1/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/0 \/ 1 LOCKS/)).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Make Lock Texas Longhorns" })).not.toBeInTheDocument();
   });
 
@@ -223,7 +221,7 @@ describe("FootballPicksPage", () => {
     expect(within(completed as HTMLElement).getAllByText("Dallas Cowboys").length).toBeGreaterThan(0);
     expect(within(completed as HTMLElement).getAllByText("New York Giants").length).toBeGreaterThan(0);
     expect(completed?.querySelector(".football-pick-game")).not.toBeNull();
-    expect(screen.getByText("YOUR GROUP")).toBeInTheDocument();
+    expect(screen.getByText("PICKS & STANDINGS")).toBeInTheDocument();
   });
 
   it("keeps the football season hub and persisted Futures visible when there is no active slate", () => {
@@ -269,7 +267,7 @@ describe("FootballPicksPage", () => {
     expect(screen.getByText("4-2 ATS · 66.7% WIN · 6 PTS")).toBeInTheDocument();
     expect(screen.getByText("STANDINGS & WEEKS")).toBeInTheDocument();
     expect(screen.getByText("SEASON FUTURES")).toBeInTheDocument();
-    expect(screen.getByText("78 PTS · LOCKED")).toBeInTheDocument();
+    expect(screen.getByText("78 POTENTIAL PTS")).toBeInTheDocument();
     expect(screen.getByText("GROUP PICKS REVEALED")).toBeInTheDocument();
     const seasonHub = container.querySelector(".picks-season-section");
     const futures = container.querySelector(".football-futures");

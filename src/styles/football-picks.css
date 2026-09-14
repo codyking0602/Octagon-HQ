@@ -24,8 +24,15 @@
 .football-picks-grading > summary strong { color: #9da2a4; font-size: .54rem; }
 .football-picks-grading > summary strong::after { content: " +"; color: var(--football-picks-accent); }
 .football-picks-grading[open] > summary strong::after { content: " −"; }
-.football-picks-grading > div { padding: 0 12px 10px; border-top: 1px solid #292c2e; color: #aeb2b3; font-size: .68rem; line-height: 1.42; }
-.football-picks-grading p { margin: 8px 0 0; }
+.football-picks-grading > div { padding: 10px 12px 12px; border-top: 1px solid #292c2e; color: #aeb2b3; font-size: .68rem; line-height: 1.42; }
+.football-picks-grading__body { display: grid; gap: 10px; }
+.football-picks-grading__scores { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.football-picks-grading__scores > span { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 38px; padding: 7px 9px; border: 1px solid #2c3032; border-radius: 8px; background: #101213; }
+.football-picks-grading__scores b { color: #f3f3f1; font-size: .58rem; letter-spacing: .075em; }
+.football-picks-grading__scores strong { color: var(--football-picks-accent); font-size: .68rem; letter-spacing: .04em; white-space: nowrap; }
+.football-picks-grading__rule { display: grid; gap: 3px; padding-top: 8px; border-top: 1px solid #292c2e; }
+.football-picks-grading__rule b { color: #f3f3f1; font-size: .55rem; letter-spacing: .08em; }
+.football-picks-grading__rule p { margin: 0; color: #9fa4a6; font-size: .64rem; line-height: 1.35; }
 .football-picks-grading b { color: #f3f3f1; }
 .football-picks-provenance { margin: 1px 5px 3px; color: #71777a; font-size: .5rem; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
 .football-picks-slate { display: grid; gap: 7px; }

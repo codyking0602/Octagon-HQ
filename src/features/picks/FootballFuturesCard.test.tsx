@@ -41,7 +41,7 @@ describe("FootballFuturesCard", () => {
 
     expect(details).not.toHaveAttribute("open");
     expect(details).toHaveTextContent("Fri, Sep 4, 11:59 PM CT");
-    expect(screen.getByText("78 PTS · PICK NOW")).toBeInTheDocument();
+    expect(screen.getByText("78 POTENTIAL PTS")).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("SEASON FUTURES").closest("summary")!);
     expect(details).toHaveAttribute("open");
@@ -54,7 +54,7 @@ describe("FootballFuturesCard", () => {
 
     render(<FootballFuturesCard />);
 
-    expect(screen.getByText("78 PTS · LOCKED")).toBeInTheDocument();
+    expect(screen.getByText("78 POTENTIAL PTS")).toBeInTheDocument();
     expect(screen.getByText("GROUP PICKS REVEALED")).toBeInTheDocument();
     expect(screen.queryByText("Your season futures")).not.toBeInTheDocument();
   });
