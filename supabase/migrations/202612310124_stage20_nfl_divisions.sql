@@ -750,8 +750,8 @@ begin
   );
   v_next := replace(
     v_next,
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''cowboys-teams-2007'', ''cfb-best-teams'')',
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'')'
+    E'  if p_mode_id in (''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''cowboys-teams-2007'')\n    and not private.draft_room_public_release_enabled()',
+    E'  if p_mode_id in (''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'')\n    and not private.draft_room_public_release_enabled()'
   );
   v_next := replace(
     v_next,
