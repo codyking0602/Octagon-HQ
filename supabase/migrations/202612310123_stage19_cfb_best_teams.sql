@@ -294,7 +294,7 @@ declare
   v_one text;
   v_two text;
   v_nd boolean := false;
-  v_nd_replaces_one boolean := false;
+  v_nd_slot integer := null;
   v_shape text;
   v_shape_roll double precision;
   v_variant integer;
@@ -327,7 +327,7 @@ begin
     from (select distinct conference_bucket from private.draft_room_cfb_best_teams_pool where conference_bucket not in ('Notre Dame',v_one)) c
     order by random(),conference_bucket limit 1;
     v_nd := random()<0.40;
-    v_nd_replaces_one := v_nd and random()<0.50;
+    if v_nd then v_nd_slot := floor(random()*8)::integer+1; end if;
   end if;
 
   v_shape_roll := random();
@@ -342,10 +342,8 @@ begin
   for v_slot in 1..8 loop
     if v_kind='single' then
       v_context := v_one;
-    elsif v_nd and v_slot=8 then
+    elsif v_nd and v_slot=v_nd_slot then
       v_context := 'Notre Dame';
-    elsif v_nd_replaces_one and v_slot=7 then
-      v_context := v_two;
     else
       v_context := case when mod(v_slot,2)=1 then v_one else v_two end;
     end if;
