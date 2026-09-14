@@ -5,6 +5,7 @@ import {
   draftRoomModeDefinition,
   isDraftRoomModeId,
   isLonghornsDraftRoomMode,
+  isLonghornsTeamsDraftRoomMode,
   isTrioDraftRoomMode,
 } from "./draftRoomContract";
 
@@ -60,12 +61,24 @@ describe("Draft Room contract", () => {
     expect(isTrioDraftRoomMode("longhorns-2005")).toBe(false);
   });
 
+  it("locks Longhorns Teams Since 2005 to eight team-season auctions and four wins per side", () => {
+    const mode = draftRoomModeDefinition("longhorns-teams-2005");
+    expect(mode.rounds).toBe(8);
+    expect(mode.requiredSelectionsPerPlayer).toBe(4);
+    expect(mode.startingBankroll).toBe(40);
+    expect(mode.categories).toEqual([]);
+    expect(mode.format).toBe("open-roster");
+    expect(isLonghornsTeamsDraftRoomMode("longhorns-teams-2005")).toBe(true);
+    expect(isLonghornsDraftRoomMode("longhorns-teams-2005")).toBe(false);
+  });
+
   it("recognizes only canonical Draft Room mode ids", () => {
     expect(isDraftRoomModeId("build-qb")).toBe(true);
     expect(isDraftRoomModeId("build-qb-cfb")).toBe(true);
     expect(isDraftRoomModeId("trio-nfl")).toBe(true);
     expect(isDraftRoomModeId("trio-cfb")).toBe(true);
     expect(isDraftRoomModeId("longhorns-2005")).toBe(true);
+    expect(isDraftRoomModeId("longhorns-teams-2005")).toBe(true);
     expect(isDraftRoomModeId("ultimate-fighter")).toBe(false);
   });
 });
