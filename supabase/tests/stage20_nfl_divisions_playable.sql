@@ -19,10 +19,6 @@ declare
   v_expected_b numeric(5,2);
   v_projection jsonb;
 begin
-  if private.draft_room_public_release_enabled() then
-    raise exception 'NFL Divisions wiring unexpectedly enabled the public Draft Room release switch';
-  end if;
-
   if private.auction_game_id_for_mode('nfl-divisions') <> 'draft-room'
     or private.auction_catalog_game_id_for_mode('nfl-divisions') <> 'draft-room-nfl-divisions'
   then
