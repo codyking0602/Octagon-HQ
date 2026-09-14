@@ -112,6 +112,8 @@ jobs:
             supabase/tests/stage12_draft_room_build_qb.sql \
             supabase/tests/stage12_draft_room_cfb_build_qb.sql \
             supabase/tests/stage13_draft_room_trio.sql \
+            supabase/tests/stage18_nfl_divisions_playable.sql \
+            supabase/tests/stage18_nfl_divisions_simulation.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql \
             supabase/tests/home_football_spotlight_media.sql
           do
@@ -119,7 +121,7 @@ jobs:
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
           done
 
-          echo "Auction lifecycle, Draft Room Stage 12, and launch-notification SQL tests executed successfully against a fresh local database."
+          echo "Auction lifecycle, Draft Room Stage 12/13, and NFL Divisions Stage 18 SQL tests executed successfully against a fresh local database."
           echo "Truthful Picks monitoring and per-fight lock SQL tests executed successfully against the same fresh local database."
           echo "Football Home Spotlight media SQL test executed successfully against the same fresh local database."
 
