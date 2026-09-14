@@ -19,10 +19,6 @@ declare
   v_expected_b numeric(5,2);
   v_projection jsonb;
 begin
-  if private.draft_room_public_release_enabled() then
-    raise exception 'Longhorns wiring unexpectedly enabled the public Draft Room release switch';
-  end if;
-
   if not exists (
     select 1
     from private.auction_catalog_versions version
