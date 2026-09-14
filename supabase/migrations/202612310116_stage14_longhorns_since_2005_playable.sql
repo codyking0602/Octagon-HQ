@@ -560,6 +560,16 @@ begin
   if v_next = v_definition then raise exception 'Longhorns decline-sync contract drifted'; end if;
   execute v_next;
 
+  -- Keep cancellation inside the shared Draft Room route for every Football Draft Room mode.
+  v_definition := pg_get_functiondef('public.cancel_auction(uuid,bigint)'::regprocedure);
+  v_next := replace(
+    v_definition,
+    E'v_is_draft := v_game.mode_id in (''build-qb'', ''build-qb-cfb'');',
+    E'v_is_draft := v_game.mode_id in (''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'');'
+  );
+  if v_next = v_definition then raise exception 'Draft Room cancellation routing contract drifted'; end if;
+  execute v_next;
+
   -- Extend the participant projection with display names only. Grades, bands and board metadata stay private.
   v_definition := pg_get_functiondef('public.get_auction_participant_state(uuid)'::regprocedure);
   v_next := replace(
