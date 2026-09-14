@@ -9,8 +9,8 @@ import { shanesWatchlist, watchMovement } from "./shanesWatchlist";
 describe("Shane's ranked watchlist", () => {
   it("keeps one ordered Top 15 model and the approved fight-highlight links", () => {
     expect(shanesWatchlist.capacity).toBe(15);
-    expect(shanesWatchlist.lastUpdated).toBe("August 2026");
-    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(shanesWatchlist.lastUpdated).toBe("September 2026");
+    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6, 7]);
     expect(shanesWatchlist.fighters[0]).toMatchObject({
       id: "gable-steveson",
       rank: 1,
@@ -59,7 +59,7 @@ describe("Shane's ranked watchlist", () => {
       ufcWinStreak: "1",
       ufcFinishes: "1",
       photoUrl: "/assets/fighters/bilal-hasan-thumb.webp",
-      videoUrl: "https://www.ufc.com/video/159682",
+      videoUrl: "https://youtu.be/qj6dK0cfWds?si=02KWqe1Vj2WAwbiP",
     });
     expect(existsSync("public/assets/fighters/bilal-hasan-thumb.webp")).toBe(true);
     expect(watchMovement(shanesWatchlist.fighters[3])).toEqual({ label: "↑1", direction: "up" });
@@ -77,16 +77,37 @@ describe("Shane's ranked watchlist", () => {
       id: "daniil-donchenko",
       rank: 6,
       previousRank: 6,
+      age: 25,
+      ufcRecord: "4–0",
+      ufcWinStreak: "4",
+      ufcFinishes: "2",
+      videoUrl: "https://youtu.be/bAlhi6r7X2U?si=hI6nBaMAqJAKKB5B",
     });
     expect(watchMovement(shanesWatchlist.fighters[5])).toEqual({ label: "—", direction: "same" });
+
+    expect(shanesWatchlist.fighters[6]).toMatchObject({
+      id: "ty-miller",
+      rank: 7,
+      previousRank: null,
+      nickname: "Thriller",
+      division: "Welterweight",
+      age: 26,
+      ufcRecord: "2–0",
+      ufcWinStreak: "2",
+      ufcFinishes: "2",
+      photoUrl: null,
+      videoUrl: "https://youtu.be/wodu318-nm0?si=KYM3qd6RKriviD6U",
+    });
+    expect(watchMovement(shanesWatchlist.fighters[6])).toEqual({ label: "NEW", direction: "new" });
 
     expect(shanesWatchlist.fighters.map((fighter) => fighter.videoUrl)).toEqual([
       "https://youtube.com/shorts/2V8eGAiUZaU?is=b2fwdTJ5f9m1LVZ5",
       "https://youtube.com/shorts/ivb3NbPsnYg?is=y2ti4vYuCvUdFroV",
       "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N",
-      "https://www.ufc.com/video/159682",
+      "https://youtu.be/qj6dK0cfWds?si=02KWqe1Vj2WAwbiP",
       "https://youtu.be/E3Eat8_BBjM?is=69fExP5AoinR5Xdt",
-      "https://youtube.com/shorts/hAPpKy3ZALk?is=MWDtVBsFxcT0IV2L",
+      "https://youtu.be/bAlhi6r7X2U?si=hI6nBaMAqJAKKB5B",
+      "https://youtu.be/wodu318-nm0?si=KYM3qd6RKriviD6U",
     ]);
   });
 
@@ -113,20 +134,20 @@ describe("Shane's ranked watchlist", () => {
 
     expect(screen.getByRole("heading", { name: "Shane King’s Contender Series" })).toBeInTheDocument();
     expect(screen.getByText("A living Top 15 of UFC prospects to watch as their careers develop.")).toBeInTheDocument();
-    expect(screen.getByText("6 OF 15 SPOTS FILLED")).toBeInTheDocument();
+    expect(screen.getByText("7 OF 15 SPOTS FILLED")).toBeInTheDocument();
     expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
     expect(screen.getByText("Bilal Hasan")).toBeInTheDocument();
-    expect(screen.getByText("9 SPOTS OPEN")).toBeInTheDocument();
+    expect(screen.getByText("8 SPOTS OPEN")).toBeInTheDocument();
     expect(screen.getByText("Nobody else has earned a place on Shane’s board yet.")).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(container.querySelectorAll("details")).toHaveLength(0);
 
-    const movementSummary = screen.getByLabelText("August 2026 movement summary");
+    const movementSummary = screen.getByLabelText("September 2026 movement summary");
     expect(within(movementSummary).getByText("NEW")).toBeInTheDocument();
     expect(within(movementSummary).getByText("MOVED")).toBeInTheDocument();
     expect(within(movementSummary).getByText("HELD")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("0")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("1")).toBeInTheDocument();
     expect(within(movementSummary).getAllByText("3")).toHaveLength(2);
   });
 
@@ -184,7 +205,33 @@ describe("Shane's ranked watchlist", () => {
     expect(within(dialog).queryByText("PRO RECORD")).not.toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
-      "https://www.ufc.com/video/159682",
+      "https://youtu.be/qj6dK0cfWds?si=02KWqe1Vj2WAwbiP",
+    );
+  });
+
+  it("keeps Daniil at #6 after the Soriano win and adds Ty Miller at #7", () => {
+    window.history.replaceState({}, "", "/fighters-to-watch");
+    render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Daniil Donchenko" }));
+    const daniilDialog = screen.getByRole("dialog", { name: "Daniil Donchenko" });
+    expect(within(daniilDialog).getByText("SHANE’S RANKING · #6")).toBeInTheDocument();
+    expect(within(daniilDialog).getByText("4–0")).toBeInTheDocument();
+    expect(within(daniilDialog).getByText(/controlled Punahele Soriano over three rounds/i)).toBeInTheDocument();
+    expect(within(daniilDialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://youtu.be/bAlhi6r7X2U?si=hI6nBaMAqJAKKB5B",
+    );
+    fireEvent.click(within(daniilDialog).getByRole("button", { name: "Close scouting report" }));
+
+    fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Ty Miller" }));
+    const tyDialog = screen.getByRole("dialog", { name: "Ty Miller" });
+    expect(within(tyDialog).getByText("SHANE’S RANKING · #7")).toBeInTheDocument();
+    expect(within(tyDialog).getByText("“Thriller”")).toBeInTheDocument();
+    expect(within(tyDialog).getByText("2–0")).toBeInTheDocument();
+    expect(within(tyDialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://youtu.be/wodu318-nm0?si=KYM3qd6RKriviD6U",
     );
   });
 
