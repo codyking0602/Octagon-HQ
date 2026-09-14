@@ -54,9 +54,9 @@ describe("FootballFuturesCard", () => {
 
     render(<FootballFuturesCard />);
 
-    expect(screen.getByRole("heading", { name: "Your season futures" })).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "Pick the season before it starts" })).not.toBeInTheDocument();
-    expect(screen.getByText("LOCKED · GROUP REVEALED")).toBeInTheDocument();
+    expect(screen.getByText("78 PTS · LOCKED")).toBeInTheDocument();
+    expect(screen.getByText("GROUP PICKS REVEALED")).toBeInTheDocument();
+    expect(screen.queryByText("Your season futures")).not.toBeInTheDocument();
   });
 
   it("uses the same structured reveal for your locked futures and group futures", () => {
