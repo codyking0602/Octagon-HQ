@@ -162,6 +162,7 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Best CFB Teams" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Longhorns Since 2003" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Longhorns Teams Since 2003" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
@@ -231,6 +232,16 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "Longhorns Teams Since 2003" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "Longhorns Since 2003" })).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-longhorns-teams-mack-brown.webp"]')).toBeInTheDocument();
+  });
+
+  it("resolves Best CFB Teams as a CFB Draft Room mode", () => {
+    mockedUseIdentity.mockReturnValue(identity(true));
+    const { container } = renderRoute("/football/draft-room?mode=cfb-best-teams");
+
+    expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Best CFB Teams" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/draft-room-trio-cfb-ohio-state.webp"]')).toBeInTheDocument();
   });
 
   it("resolves the CFB launch mode without weakening the canonical private gate", () => {
