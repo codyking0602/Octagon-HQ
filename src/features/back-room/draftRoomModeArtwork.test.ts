@@ -21,7 +21,7 @@ describe("Draft Room mode artwork", () => {
     });
     expect(draftRoomModeArtwork("longhorns-2005")).toEqual({
       src: "/assets/football/draft-room-longhorns-vince-young.webp",
-      objectPosition: "50% 50%",
+      objectPosition: "50% 36%",
     });
   });
 });
