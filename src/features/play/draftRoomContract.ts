@@ -1,4 +1,4 @@
-export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb", "trio-nfl", "trio-cfb", "longhorns-2005"] as const;
+export const DRAFT_ROOM_MODE_IDS = ["build-qb", "build-qb-cfb", "trio-nfl", "trio-cfb", "longhorns-2005", "longhorns-teams-2005"] as const;
 
 export type DraftRoomModeId = (typeof DRAFT_ROOM_MODE_IDS)[number];
 
@@ -70,6 +70,16 @@ export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
     categories: [],
     format: "open-roster",
   },
+  {
+    id: "longhorns-teams-2005",
+    displayName: "Longhorns Teams Since 2005",
+    description: "Bid on completed Texas seasons from 2005 forward. Win four teams and build the stronger four-season group.",
+    rounds: 8,
+    requiredSelectionsPerPlayer: 4,
+    startingBankroll: 40,
+    categories: [],
+    format: "open-roster",
+  },
 ] as const;
 
 export function isDraftRoomModeId(value: string): value is DraftRoomModeId {
@@ -84,8 +94,15 @@ export function isLonghornsDraftRoomMode(modeId: DraftRoomModeId) {
   return modeId === "longhorns-2005";
 }
 
+export function isLonghornsTeamsDraftRoomMode(modeId: DraftRoomModeId) {
+  return modeId === "longhorns-teams-2005";
+}
+
 export function isCfbDraftRoomMode(modeId: DraftRoomModeId) {
-  return modeId === "build-qb-cfb" || modeId === "trio-cfb" || isLonghornsDraftRoomMode(modeId);
+  return modeId === "build-qb-cfb"
+    || modeId === "trio-cfb"
+    || isLonghornsDraftRoomMode(modeId)
+    || isLonghornsTeamsDraftRoomMode(modeId);
 }
 
 export function draftRoomModeDefinition(modeId: DraftRoomModeId) {

@@ -502,6 +502,12 @@
   letter-spacing: -.04em;
 }
 
+.draft-room-season-label {
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+
 .auction-current__status {
   display: block;
   padding: 8px 10px;

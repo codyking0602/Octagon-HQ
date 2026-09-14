@@ -27,6 +27,7 @@ import {
   isCfbDraftRoomMode,
   isDraftRoomModeId,
   isLonghornsDraftRoomMode,
+  isLonghornsTeamsDraftRoomMode,
   isTrioDraftRoomMode,
   type BuildQbTrait,
   type DraftRoomModeId,
@@ -167,7 +168,15 @@ function TrioComparison({ state }: { state: DraftRoomProjection }) {
   );
 }
 
-function LonghornsComparison({ state }: { state: DraftRoomProjection }) {
+function LonghornsComparison({
+  state,
+  itemLabel = "PLAYER",
+  ariaLabel = "Longhorns roster comparison",
+}: {
+  state: DraftRoomProjection;
+  itemLabel?: "PLAYER" | "TEAM";
+  ariaLabel?: string;
+}) {
   const challengerAwards = state.awarded_collections
     .filter((item) => item.awarded_to === state.challenger_id)
     .sort((a, b) => a.resolved_round - b.resolved_round);
@@ -176,7 +185,7 @@ function LonghornsComparison({ state }: { state: DraftRoomProjection }) {
     .sort((a, b) => a.resolved_round - b.resolved_round);
 
   return (
-    <section className="auction-collections surface-card" aria-label="Longhorns roster comparison">
+    <section className="auction-collections surface-card" aria-label={ariaLabel}>
       <header className="auction-collections__header">
         <div><strong>{state.challenger_display_name}</strong></div>
         <span>VS</span>
@@ -189,13 +198,13 @@ function LonghornsComparison({ state }: { state: DraftRoomProjection }) {
           return (
             <article key={index}>
               <div className={challengerAward ? "is-filled" : ""}>
-                <small>PLAYER {index + 1}</small>
-                <strong>{challengerAward?.display_label ?? "OPEN"}</strong>
+                <small>{itemLabel} {index + 1}</small>
+                <strong className={itemLabel === "TEAM" ? "draft-room-season-label" : undefined}>{challengerAward?.display_label ?? "OPEN"}</strong>
               </div>
               <span aria-hidden="true">VS</span>
               <div className={recipientAward ? "is-filled" : ""}>
-                <small>PLAYER {index + 1}</small>
-                <strong>{recipientAward?.display_label ?? "OPEN"}</strong>
+                <small>{itemLabel} {index + 1}</small>
+                <strong className={itemLabel === "TEAM" ? "draft-room-season-label" : undefined}>{recipientAward?.display_label ?? "OPEN"}</strong>
               </div>
             </article>
           );
@@ -317,7 +326,8 @@ function DraftRoomBoard({
   const mode = draftRoomModeDefinition(state.mode_id);
   const trioMode = isTrioDraftRoomMode(state.mode_id);
   const longhornsMode = isLonghornsDraftRoomMode(state.mode_id);
-  const openRosterMode = trioMode || longhornsMode;
+  const longhornsTeamsMode = isLonghornsTeamsDraftRoomMode(state.mode_id);
+  const openRosterMode = trioMode || longhornsMode || longhornsTeamsMode;
   const rosterResult = openRosterMode && state.lifecycle_state === "completed";
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<BuildQbTrait | "">("");
@@ -339,7 +349,7 @@ function DraftRoomBoard({
     : null;
   const currentQbIdentity = openRosterMode ? null : draftRoomVisualIdentity(state.mode_id, state.current_item?.item_reference);
 
-  const roomLabel = trioMode ? "Trio" : longhornsMode ? "Longhorns" : "Build a QB";
+  const roomLabel = trioMode ? "Trio" : longhornsTeamsMode ? "Longhorns Teams" : longhornsMode ? "Longhorns" : "Build a QB";
   const status = state.lifecycle_state === "prepared"
     ? `Your first bid sends this ${roomLabel} room`
     : state.lifecycle_state === "sent"
@@ -411,13 +421,13 @@ function DraftRoomBoard({
           className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}${trioMode ? " draft-room-trio-current" : ""}`}
           style={currentQbIdentity ? buildQbTeamStyle(currentQbIdentity) : undefined}
         >
-          <small>{trioMode ? "CURRENT TRIO" : longhornsMode ? "CURRENT LONGHORN" : "CURRENT QB"}</small>
+          <small>{trioMode ? "CURRENT TRIO" : longhornsTeamsMode ? "CURRENT TEXAS TEAM" : longhornsMode ? "CURRENT LONGHORN" : "CURRENT QB"}</small>
           {trioMode ? (
             state.current_item?.display_label
               ? <TrioPackageCard modeId={state.mode_id} displayLabel={state.current_item.display_label} />
               : <h2>{terminal ? "ROSTERS LOCKED" : "LOADING"}</h2>
-          ) : longhornsMode ? (
-            <h2>{state.current_item?.display_label ?? (terminal ? "ROSTER LOCKED" : "LOADING")}</h2>
+          ) : longhornsMode || longhornsTeamsMode ? (
+            <h2 className={longhornsTeamsMode ? "draft-room-season-label" : undefined}>{state.current_item?.display_label ?? (terminal ? "ROSTER LOCKED" : "LOADING")}</h2>
           ) : (
             <div className="build-qb-current__identity">
               {currentQbIdentity ? <BuildQbTeamMark identity={currentQbIdentity} /> : null}
@@ -431,7 +441,7 @@ function DraftRoomBoard({
       {latestRound && !rosterResult ? (
         <section className="auction-result surface-card" aria-label="Latest Draft Room result">
           <p className="eyebrow">{latestRound.forced ? "FORCED $1 ASSIGNMENT" : `ROUND ${latestRound.round} RESULT`}</p>
-          <h2>{latestAward ? (trioMode ? "Trio awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : longhornsMode ? "Resolved Longhorn" : "Resolved QB")}</h2>
+          <h2>{latestAward ? (trioMode ? "Trio awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : longhornsTeamsMode ? "Resolved Texas team" : longhornsMode ? "Resolved Longhorn" : "Resolved QB")}</h2>
           <p>
             {trioMode && latestAward ? `${latestAward.display_label} · ` : latestAward?.category ? `${latestAward.category} · ` : ""}
             {latestRound.forced
@@ -444,7 +454,7 @@ function DraftRoomBoard({
       {state.lifecycle_state === "completed"
         && state.challenger_final_score !== null
         && state.recipient_final_score !== null ? (
-        <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : longhornsMode ? "Longhorns final result" : "Build a QB final result"}>
+        <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : longhornsTeamsMode ? "Longhorns Teams final result" : longhornsMode ? "Longhorns final result" : "Build a QB final result"}>
           <p className="eyebrow">{openRosterMode ? "FINAL ROSTER SCORE" : "FINAL BUILD SCORE"}</p>
           <h2>
             {state.is_tie
@@ -463,9 +473,11 @@ function DraftRoomBoard({
 
       {trioMode
         ? <TrioComparison state={state} />
-        : longhornsMode
-          ? <LonghornsComparison state={state} />
-          : <BuildComparison state={state} />}
+        : longhornsTeamsMode
+          ? <LonghornsComparison state={state} itemLabel="TEAM" ariaLabel="Longhorns team-season comparison" />
+          : longhornsMode
+            ? <LonghornsComparison state={state} />
+            : <BuildComparison state={state} />}
 
       {canBid ? (
         <form className="auction-bid surface-card" onSubmit={submit}>
@@ -491,7 +503,11 @@ function DraftRoomBoard({
             </>
           ) : (
             <p className="draft-room-trio-bid-note">
-              {trioMode ? "Bid on the full QB / RB / WR package." : "Bid on this Longhorn. Any position can join your four-player roster."}
+              {trioMode
+                ? "Bid on the full QB / RB / WR package."
+                : longhornsTeamsMode
+                  ? "Bid on this Texas season. Win four seasons and build the stronger four-team group."
+                  : "Bid on this Longhorn. Any position can join your four-player roster."}
             </p>
           )}
           <label>
