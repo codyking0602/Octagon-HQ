@@ -1,10 +1,12 @@
-.football-futures { padding: 0; overflow: visible; border-radius: 14px; background: #141617; }
-.football-futures__summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 12px; cursor: pointer; list-style: none; }
+.football-futures { min-height: 0; padding: 0; overflow: visible; border-radius: 14px; background: #141617; }
+.football-futures:not([open]) { height: 54px; min-height: 54px; overflow: hidden; }
+.football-futures__summary { display: grid; grid-template-columns: minmax(0, 1fr) auto 24px; align-items: center; gap: 10px; min-height: 52px; padding: 0 12px; cursor: pointer; list-style: none; }
 .football-futures__summary::-webkit-details-marker { display: none; }
-.football-futures__summary-copy { display: grid; gap: 10px; min-width: 0; }
+.football-futures__summary-label { font-size: .6rem; font-weight: 950; letter-spacing: .1em; }
+.football-futures__summary-status { color: #9da2a4; font-size: .54rem; font-weight: 950; letter-spacing: .07em; white-space: nowrap; }
 .football-futures__chevron { display: grid; place-items: center; width: 24px; height: 24px; color: #8f9597; font-size: 1.1rem; font-weight: 900; line-height: 1; transition: transform 160ms ease; }
 .football-futures[open] .football-futures__chevron { transform: rotate(180deg); }
-.football-futures__body { display: grid; gap: 10px; padding: 0 12px 12px; }
+.football-futures__body { display: grid; gap: 10px; padding: 10px 12px 12px; border-top: 1px solid #292c2e; }
 .football-futures__header { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .football-futures__header h2 { margin: 1px 0 0; font-size: clamp(.85rem, 3.6vw, 1.25rem); line-height: 1.05; text-transform: uppercase; }
 .football-futures__header > strong { flex: 0 0 auto; padding: 5px 7px; border: 1px solid color-mix(in srgb, var(--football-picks-accent) 62%, #363a3c); border-radius: 6px; background: color-mix(in srgb, var(--football-picks-accent) 14%, #181a1b); color: #efb184; font-size: .58rem; letter-spacing: .09em; }
