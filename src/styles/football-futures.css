@@ -1,8 +1,12 @@
 .football-futures { padding: 0; overflow: visible; border-radius: 14px; background: #141617; }
-.football-futures__summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 12px; cursor: pointer; list-style: none; }
+.football-futures__summary { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; min-height: 62px; padding: 8px 10px 8px 13px; cursor: pointer; list-style: none; }
 .football-futures__summary::-webkit-details-marker { display: none; }
-.football-futures__summary-copy { display: grid; gap: 10px; min-width: 0; }
-.football-futures__chevron { display: grid; place-items: center; width: 24px; height: 24px; color: #8f9597; font-size: 1.1rem; font-weight: 900; line-height: 1; transition: transform 160ms ease; }
+.football-futures__summary-copy { display: grid; gap: 3px; min-width: 0; }
+.football-futures__summary-title { color: #f4f5f3; font-size: .62rem; font-weight: 950; letter-spacing: .1em; }
+.football-futures__summary-copy small { overflow: hidden; color: #858b8d; font-size: .47rem; font-weight: 900; letter-spacing: .075em; text-overflow: ellipsis; white-space: nowrap; }
+.football-futures__summary-score { color: #dcefff; font-size: .56rem; font-weight: 950; letter-spacing: .07em; white-space: nowrap; }
+.football-futures.is-locked .football-futures__summary-score { color: #9ed6ac; }
+.football-futures__chevron { display: grid; place-items: center; width: 22px; height: 22px; color: #8f9597; font-size: 1.05rem; font-weight: 900; line-height: 1; transition: transform 160ms ease; }
 .football-futures[open] .football-futures__chevron { transform: rotate(180deg); }
 .football-futures__body { display: grid; gap: 10px; padding: 0 12px 12px; }
 .football-futures__header { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
@@ -73,7 +77,7 @@ button.football-futures-team-chip { cursor: pointer; }
 .football-futures__leagues--revealed .football-futures-field input:disabled { height: 25px; padding: 0 6px; border-color: #33383a; border-radius: 5px; background: #1a1d1e; font-size: .52rem; }
 .football-futures__leagues--revealed .football-futures-team-picker__empty { display: flex; align-items: center; min-height: 23px; padding: 0 5px; border: 1px solid #33383a; border-radius: 5px; background: #1a1d1e; font-size: .52rem; }
 @media (min-width: 700px) {
-  .football-futures__summary { padding: 14px; }
+  .football-futures__summary { min-height: 62px; padding: 8px 12px 8px 14px; }
   .football-futures__body { padding: 0 14px 14px; }
   .football-futures__leagues { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
   .football-futures-field { grid-template-columns: 135px minmax(0, 1fr); }
