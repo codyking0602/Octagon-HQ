@@ -9,7 +9,6 @@ import FootballDraftRoomPage, {
   BUILD_A_QB_TRAITS,
   BUILD_A_QB_TRAIT_HELP,
   formatTrioFinalScore,
-  hasDraftRoomAdminAccess,
   parseTrioPackageLabel,
 } from "./FootballDraftRoomPage";
 
@@ -90,12 +89,6 @@ describe("Football Draft Room", () => {
     } as ReturnType<typeof usePlayChallenges>);
   });
 
-  it("reuses the existing Picks owner projection as the only preview gate", () => {
-    expect(hasDraftRoomAdminAccess(null)).toBe(false);
-    expect(hasDraftRoomAdminAccess(identity(false).profile)).toBe(false);
-    expect(hasDraftRoomAdminAccess(identity(true).profile)).toBe(true);
-  });
-
   it("keeps the approved four-trait explanations player-facing and concise", () => {
     expect(BUILD_A_QB_TRAIT_HELP).toEqual({
       Arm: "Throwing power, velocity, and ability to drive difficult throws",
@@ -105,11 +98,11 @@ describe("Football Draft Room", () => {
     });
   });
 
-  it("redirects a non-admin direct route back to Football", () => {
+  it("allows a regular authenticated member to open Draft Room directly", () => {
     mockedUseIdentity.mockReturnValue(identity(false));
     renderRoute();
-    expect(screen.getByText("Football home")).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "Draft Room" })).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Draft Room" })).toBeInTheDocument();
+    expect(screen.queryByText("Football home")).not.toBeInTheDocument();
   });
 
   it("keeps close Trio outcomes visibly distinct instead of rounding both to the same integer", () => {
@@ -257,15 +250,11 @@ describe("Football Draft Room", () => {
     expect(container.querySelector('img[src="/assets/football/draft-room-trio-cfb-ohio-state.webp"]')).toBeInTheDocument();
   });
 
-  it("resolves the CFB launch mode without weakening the canonical private gate", () => {
-    mockedUseIdentity.mockReturnValue(identity(true));
+  it("resolves the CFB launch mode for regular authenticated members", () => {
+    mockedUseIdentity.mockReturnValue(identity(false));
     renderRoute("/football/draft-room?mode=build-qb-cfb");
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "CFB Build a QB" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
-
-    mockedUseIdentity.mockReturnValue(identity(false));
-    renderRoute("/football/draft-room?mode=build-qb-cfb");
-    expect(screen.getAllByText("Football home").length).toBeGreaterThan(0);
   });
 });

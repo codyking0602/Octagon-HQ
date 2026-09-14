@@ -19,10 +19,6 @@ declare
   v_expected_b numeric(5,2);
   v_projection jsonb;
 begin
-  if private.draft_room_public_release_enabled() then
-    raise exception 'NFL Divisions wiring unexpectedly enabled the public Draft Room release switch';
-  end if;
-
   if private.auction_game_id_for_mode('nfl-divisions') <> 'draft-room'
     or private.auction_catalog_game_id_for_mode('nfl-divisions') <> 'draft-room-nfl-divisions'
   then
@@ -46,14 +42,6 @@ begin
   insert into public.pick_control_owners(profile_id) values (v_admin_a), (v_admin_b);
 
   perform set_config('request.jwt.claim.role','authenticated',true);
-  perform set_config('request.jwt.claim.sub',v_member::text,true);
-  begin
-    perform public.prepare_auction(v_admin_a, 'nfl-divisions');
-    raise exception 'regular member prepared an admin-only NFL Divisions room';
-  exception when others then
-    if sqlerrm not like '%Draft Room admin preview access required for both players%' then raise; end if;
-  end;
-
   perform setseed(0.1818);
   perform set_config('request.jwt.claim.sub',v_admin_a::text,true);
   v_game := public.prepare_auction(v_admin_b, 'nfl-divisions');

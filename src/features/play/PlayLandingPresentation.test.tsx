@@ -30,8 +30,7 @@ describe("Play landing presentation", () => {
       "who-am-i",
     ]);
     expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]);
-    expect(playLandingGameIds("football")).toEqual(PLAY_LANDING_FOOTBALL_GAME_ORDER);
-    expect(playLandingGameIds("football", true)).toEqual([
+    expect(playLandingGameIds("football")).toEqual([
       ...PLAY_LANDING_FOOTBALL_GAME_ORDER,
       PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
     ]);
@@ -54,19 +53,18 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/football/who-am-i");
   });
 
-  it("keeps Daily-only games out of normal Football Play and Draft Room admin-only", () => {
+  it("keeps Daily-only games out of normal Football Play while Draft Room is public", () => {
     const navigate = vi.fn();
-    const { rerender } = render(<PlayLandingGameLibrary sport="football" onNavigate={navigate} />);
+    render(<PlayLandingGameLibrary sport="football" onNavigate={navigate} />);
     expect(screen.queryByRole("button", { name: /blind rank 5/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /keep 4, cut 4/i })).not.toBeInTheDocument();
     expect(screen.queryByText("TEMP CASUAL")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /blind resume/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /draft room/i })).not.toBeInTheDocument();
 
-    rerender(<PlayLandingGameLibrary sport="football" onNavigate={navigate} ownerAccess />);
     const draftRoom = screen.getByRole("button", { name: /draft room/i });
     expect(draftRoom).toBeInTheDocument();
-    expect(screen.getByText("OWNER PREVIEW")).toBeInTheDocument();
+    expect(screen.queryByText("OWNER PREVIEW")).not.toBeInTheDocument();
+    expect(screen.getByText("STRATEGY")).toBeInTheDocument();
     fireEvent.click(draftRoom);
     expect(navigate).toHaveBeenCalledWith("/football/draft-room");
   });

@@ -1,6 +1,6 @@
 # The HQ — Current Handoff
 
-_Last updated: 2026-09-09_
+_Last updated: 2026-09-14_
 
 This is the cold-start operational handoff for `codyking0602/Octagon-HQ`. Current `main` is always the live source of truth; resolve it from GitHub before every branch rather than trusting a copied SHA in this file.
 
@@ -110,21 +110,37 @@ The active product is The HQ with UFC and Football sport contexts.
 - Wavelength
 - Blind Resume
 - Hit the Number
+- Who Am I
 - Auction
-
-20 Questions is an owner-only prototype and is intentionally parked. Who Am I is an owner-only preview under active rebuild. Neither appears in public Play discovery or Today's Challenge.
-
-Blind Rank 5 and Keep 4 / Cut 4 are removed from normal library discovery but retained for Daily Double/history/deep-link compatibility.
 
 ### Football normal Play library
 
 - Find the Leader
 - Wavelength
 - Hit the Number
+- Who Am I
+- Draft Room
 
-Football Blind Resume is now **Daily-only**. The old standalone route redirects to the canonical Football Today owner rather than maintaining a second runtime.
+20 Questions is retired. Blind Rank 5 + Keep 4 / Cut 4 remain Daily Double mechanics rather than normal library games. Football Blind Resume remains historical/Daily-only and is not part of the current future Football rotation.
 
-20 Questions remains owner-only and parked. Who Am I remains owner-only while its launch pools, knowledge depth, clue progression, replay behavior, and endgame are rebuilt. Draft Room remains planned.
+### Football Draft Room
+
+Draft Room is public for authenticated members after the September 14, 2026 Stage 15 release. It remains outside Today's Challenge and continues to reuse the canonical Auction sealed-bid backend/challenge lifecycle.
+
+Launch formats:
+
+- NFL Build a QB
+- CFB Build a QB
+- NFL QB / RB / WR Trio
+- CFB QB / RB / WR Trio
+- Cowboys Since 2007
+- Longhorns Since 2003
+- Cowboys Teams Since 2007
+- Longhorns Teams Since 2003
+- Best CFB Teams
+- NFL Divisions
+
+Front Seven and Secondary are deferred post-launch and are not missing release scope.
 
 ## Football Today's Challenge
 
@@ -132,57 +148,19 @@ Football Today's Challenge reuses the shared Daily Challenge platform.
 
 Canonical route:
 
-- `/back-room/football/today`
+- `/football/today`
 
-Current platform ownership:
+The shared `daily-challenge-runtime` owns private setup/actions/grading, persistence, history, streaks, standings, leaderboards, competition, and reminders. Do not create Football-specific duplicate stacks.
 
-- shared `daily-challenge-runtime` owns private setup/actions/grading
-- shared `todayChallengeRepository` owns browser persistence transport
-- Daily Challenge records, history, streaks, standings, leaderboards, competition, and reminders remain sport-scoped through the shared backend
-
-Do not create Football-specific attempt/history/standings/streak/leaderboard/notification/share persistence stacks.
-
-Current Football Blind Resume contract:
-
-- Daily-only;
-- three rounds;
-- three reveal stages;
-- canonical Football factual evidence;
-- curated explicit matchup verdicts instead of fake exact within-tier greatness rankings;
-- +10/-4, +8/-1, +7/0 scoring ladder normalized to the official Daily 0–100 result;
-- canonical team/program reveal media.
+Current future Football rotation is `football-daily-v4`: Find the Leader ×5, Wavelength ×5, Hit the Number ×4, Who Am I ×4, Daily Double ×2. Football Blind Resume remains valid historical Daily content but is not in the future v4 rotation.
 
 ## Games roadmap status
 
 `docs/the-hq-games-roadmap.md` is the sole active Games roadmap.
 
-Completed roadmap phases:
+Completed launch work includes source/eligibility ownership, Play presentation parity, mature Find the Leader/Wavelength/Blind Resume/Hit the Number, Daily-only comparison cleanup, retirement of 20 Questions, the completed public Who Am I rebuild, Today's Challenge vNext, and the complete Draft Room launch slate.
 
-- PR 1 — canonical Games roadmap (#863)
-- PR 2 — source authority + eligibility (#864)
-- PR 3 — Play landing/presentation parity (#865, repair #866)
-- PR 4 — Find the Leader parity/source pass (#870)
-- PR 5 — Wavelength parity/calibration (#873)
-- PR 6 — Blind Resume final pass (#878–#882)
-- PR 7 — Hit the Number final parity/source pass (#885)
-- PR 8 — Blind Rank + Keep/Cut Daily-only role cleanup (#895)
-- PR 9 — 20 Questions owner-only prototype is preserved and parked, not public-ready
-
-Roadmap PR 10 is the active **Who Am I owner-only rebuild**. Its first three rebuild slices are complete:
-
-1. football launch pools locked through canonical registry/recognizability owners;
-2. one canonical structured identity fact model established;
-3. NFL A-tier structural/resume enrichment completed at 105/105 identities with at least 15 facts, average 22.97, median 19, and 52 at 20+.
-
-The third slice proved that raw fact count is not enough. Career-window and era derivatives are useful, but the game also needs distinctive source-backed person knowledge that actually feels specific to the identity.
-
-### Next Games PR
-
-**Who Am I rebuild PR 4 — shared identity knowledge foundation + NFL A-tier research pilot.**
-
-Research roughly 10–15 diverse NFL A-tier identities broadly first, discover genuinely distinctive biographical/person-specific facts, verify provenance, and only then normalize them into one reusable canonical person-knowledge owner. Do not create a Who Am I-only trivia database or a predefined checklist of personal-fact schema fields to fill by search.
-
-After the pilot is approved, continue the research method through NFL A-tier, NFL B-tier, CFB A-tier, CFB B-tier, and UFC before final clue assembly/replay/endgame work. 20 Questions remains parked during this work.
+The September 14 Stage 15 release opens Draft Room by removing the frontend owner-only gate and flipping the existing backend public-release switch. Exact-head typecheck, full tests, build, backend verification, merge, and exact production SHA verification remain the release standard.
 
 ## Football canonical data ownership
 
@@ -265,6 +243,6 @@ Relevant Supabase SQL tests, migration-order checks, backend verification, phone
 
 ## Next safe action
 
-For Games work, continue with **Who Am I rebuild PR 4: shared identity knowledge foundation + NFL A-tier research pilot** from current `main`.
+For Games work, the launch roadmap is complete after the Stage 15 exact production SHA is verified. Treat Front Seven, Secondary, and any new Draft Room formats as explicit post-launch additions, not unfinished release scope.
 
 For other product areas, read the canonical owner for that scope first and preserve the same one-owner release standard.

@@ -3,7 +3,6 @@ import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { ChallengeMemberPicker } from "../challenges/ChallengeMemberPicker";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
-import type { IdentityProfile } from "../identity/identityModel";
 import type { MemberCardSummary } from "../members/memberProfilesModel";
 import {
   buildQbTeamVisualIdentity,
@@ -60,10 +59,6 @@ export const BUILD_A_QB_TRAIT_HELP: Readonly<Record<BuildQbTrait, string>> = {
   Processing: "Speed and quality of reads, decisions, and getting to the right answer",
   Mobility: "Movement, escape ability, rushing value, and creation outside structure",
 };
-
-export function hasDraftRoomAdminAccess(profile: IdentityProfile | null | undefined) {
-  return profile?.canControlPicks === true;
-}
 
 export function formatTrioFinalScore(score: number) {
   return score.toFixed(1);
@@ -869,7 +864,7 @@ export default function FootballDraftRoomPage() {
     let cancelled = false;
     setState(null);
     setError("");
-    if (!auctionId || !identity.profile || !repository || !hasDraftRoomAdminAccess(identity.profile)) {
+    if (!auctionId || !identity.profile || !repository) {
       setLoading(false);
       return () => { cancelled = true; };
     }
@@ -898,11 +893,11 @@ export default function FootballDraftRoomPage() {
     );
   }
 
-  if (!hasDraftRoomAdminAccess(identity.profile)) {
+  if (!identity.profile) {
     return <Navigate to="/football" replace />;
   }
 
-  const profileId = identity.profile!.id;
+  const profileId = identity.profile.id;
   const backLink = (
     <Link className="game-header__back" to="/football">
       <span>‹</span><span><small>FOOTBALL HQ</small><strong>All Games</strong></span>

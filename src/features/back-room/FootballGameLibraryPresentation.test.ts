@@ -22,9 +22,11 @@ describe("Football HQ game library presentation", () => {
       "wavelength",
       "hit-the-number",
       "who-am-i",
+      "draft-room",
     ]);
     expect(playGameDefinition("20-questions", "football").availability).toBe("retired");
     expect(playGameDefinition("who-am-i", "football").availability).toBeUndefined();
+    expect(playGameDefinition("draft-room", "football").availability).toBeUndefined();
     expect(new Set(games.map((game) => game.icon)).size).toBe(games.length);
     expect(games.every((game) => game.route.startsWith("/football/"))).toBe(true);
   });
