@@ -106,9 +106,10 @@ describe("Football live ATS results", () => {
   it("shows an exact frozen-line result as a push", () => {
     const pushGame = { ...baseGame, frozenSpreadHome: -4 };
     vi.mocked(usePicks).mockReturnValue(picksRuntime([pushGame] as typeof baseGame[]) as never);
-    render(<FootballPicksPage />);
+    const { container } = render(<FootballPicksPage />);
 
-    expect(screen.getByText("PUSH")).toBeInTheDocument();
-    expect(screen.getByText(/LIVE ATS/).parentElement).toHaveTextContent("LIVE ATS 0-0 · 1 PUSH · 1 FINAL");
+    expect(container.querySelector(".football-pick-game__status.is-push")).toHaveTextContent("PUSH");
+    expect(screen.getByText("LIVE ATS 0-0 · 1 PUSH")).toBeInTheDocument();
+    expect(screen.getByText("1 FINAL")).toBeInTheDocument();
   });
 });
