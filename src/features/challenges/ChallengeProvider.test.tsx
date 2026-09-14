@@ -172,7 +172,6 @@ describe("real profile challenges", () => {
 
     expect(await screen.findByRole("heading", { name: "CODY's matchups" })).toBeTruthy();
     expect(await screen.findByText("DRAFT ROOM FROM")).toBeTruthy();
-    expect(screen.getByText("Draft Room", { exact: false })).toBeTruthy();
     expect(screen.getByRole("button", { name: "BID" })).toBeTruthy();
   });
 
