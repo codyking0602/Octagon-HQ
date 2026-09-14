@@ -247,9 +247,22 @@ export default function FootballPicksPage() {
           ) : null}
 
           {identity.profile ? (
-            <div className="football-picks-group" data-football-section="group">
-              <GroupPickProgress event={event} locked={event.status !== "upcoming"} mySelections={picks.selections} />
-            </div>
+            <details className="surface-card football-group-hub" data-football-section="group">
+              <summary className="football-group-hub__summary">
+                <span>YOUR GROUP</span>
+                <strong>{seasonHub ? "WEEKLY + SEASON" : "WEEKLY PICKS"}</strong>
+              </summary>
+              <div className="football-group-hub__body">
+                <section className="football-group-hub__week" aria-label="Weekly group picks">
+                  <GroupPickProgress event={event} locked={event.status !== "upcoming"} mySelections={picks.selections} />
+                </section>
+                {seasonHub ? (
+                  <section className="football-group-hub__season" aria-label="Football season standings">
+                    {seasonHub}
+                  </section>
+                ) : null}
+              </div>
+            </details>
           ) : null}
 
           <section className="football-picks-slate football-picks-slate--current" data-football-section="current" aria-label="Current and upcoming football games">
@@ -276,49 +289,21 @@ export default function FootballPicksPage() {
             {identity.profile && !currentGames.length ? (
               <div className="surface-card football-picks-empty">ALL GAMES ARE FINAL</div>
             ) : null}
+
+            {identity.profile && completedGames.length ? (
+              <details className="football-picks-completed-drawer" data-football-subsection="completed">
+                <summary>
+                  <span>COMPLETED GAMES</span>
+                  <strong>{completedGames.length} FINAL</strong>
+                </summary>
+                <div className="football-picks-completed-drawer__body">
+                  {completedGames.map((game) => (
+                    <div key={game.boutId}>{renderGameCard(game)}</div>
+                  ))}
+                </div>
+              </details>
+            ) : null}
           </section>
-
-          {identity.profile && completedGames.length ? (
-            <section className="football-picks-completed" data-football-section="completed" aria-label="Completed football games">
-              <header className="football-picks-section-header">
-                <p className="eyebrow">COMPLETED GAMES</p>
-                <strong>{completedGames.length} FINAL</strong>
-              </header>
-              <div className="football-picks-completed__list">
-                {completedGames.map((game) => {
-                  const selected = picks.selections[game.boutId] ?? null;
-                  const selectedName = selected === game.redFighterSlug
-                    ? game.redFighterName
-                    : selected === game.blueFighterSlug ? game.blueFighterName : "NO PICK";
-                  const isLock = picks.footballLocks[game.boutId] === true;
-                  const outcome = liveAts.outcomes[game.boutId] ?? "unresolved";
-                  const resultLabel = outcome === "win"
-                    ? "✓ WIN"
-                    : outcome === "loss"
-                      ? "✕ LOSS"
-                      : outcome === "push" ? "½ PUSH" : gameStatus(game, true);
-                  const resultClass = outcome !== "unresolved" ? `is-${outcome}` : `is-${gameStatus(game, true).toLowerCase()}`;
-                  return (
-                    <details className="football-pick-completed" key={game.boutId}>
-                      <summary>
-                        <span className="football-pick-completed__league">{leagueLabel(game.weightClass)}</span>
-                        <span className="football-pick-completed__matchup">
-                          <span><TeamLogo logoUrl={game.awayTeamLogoUrl} /><b>{game.blueFighterName}</b><strong>{game.awayFinalScore ?? "—"}</strong></span>
-                          <em>–</em>
-                          <span><TeamLogo logoUrl={game.homeTeamLogoUrl} /><b>{game.redFighterName}</b><strong>{game.homeFinalScore ?? "—"}</strong></span>
-                        </span>
-                        <span className="football-pick-completed__pick">YOUR PICK {selectedName}{isLock ? " · ★ LOCK" : ""}</span>
-                        <b className={`football-pick-game__status ${resultClass}`}>{resultLabel}</b>
-                      </summary>
-                      <div className="football-pick-completed__detail">{renderGameCard(game)}</div>
-                    </details>
-                  );
-                })}
-              </div>
-            </section>
-          ) : null}
-
-          {seasonHub ? <div data-football-section="standings">{seasonHub}</div> : null}
 
           {identity.profile ? (
             <div data-football-section="futures">
