@@ -406,8 +406,8 @@ jobs:
           if [ -f supabase/migrations/202612310098_reset_football_weekly_titles.sql ]; then
             require_remote_migration "202612310098"
           fi
-          if [ -f supabase/migrations/202612310109_football_daily_scheduler_prematerialization.sql ]; then
-            require_remote_migration "202612310109"
+          if [ -f supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql ]; then
+            require_remote_migration "202612310122"
           fi
 
           function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
