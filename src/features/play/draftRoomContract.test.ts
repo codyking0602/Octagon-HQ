@@ -13,8 +13,6 @@ import {
 describe("Draft Room contract", () => {
   it("locks the approved four-trait Build a QB economy", () => {
     const mode = draftRoomModeDefinition("build-qb");
-    expect(mode.displayName).toBe("Longhorns Since 2003");
-    expect(mode.description).toContain("from 2003 forward");
     expect(mode.rounds).toBe(8);
     expect(mode.requiredSelectionsPerPlayer).toBe(4);
     expect(mode.startingBankroll).toBe(40);
@@ -55,6 +53,8 @@ describe("Draft Room contract", () => {
 
   it("locks Longhorns Since 2003 to eight open-roster auctions and four wins per side", () => {
     const mode = draftRoomModeDefinition("longhorns-2005");
+    expect(mode.displayName).toBe("Longhorns Since 2003");
+    expect(mode.description).toContain("from 2003 forward");
     expect(mode.rounds).toBe(8);
     expect(mode.requiredSelectionsPerPlayer).toBe(4);
     expect(mode.startingBankroll).toBe(40);
