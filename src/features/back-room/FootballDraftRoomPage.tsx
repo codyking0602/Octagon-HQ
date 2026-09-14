@@ -1063,7 +1063,6 @@ export default function FootballDraftRoomPage() {
       {setupStep === "formats" ? (
         <section className="auction-catalog draft-room-catalog" aria-labelledby="draft-room-modes-title">
           <header>
-            <p className="eyebrow">STEP 1</p>
             <h2 id="draft-room-modes-title">Choose a format</h2>
           </header>
 

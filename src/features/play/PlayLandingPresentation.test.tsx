@@ -29,7 +29,7 @@ describe("Play landing presentation", () => {
       "hit-the-number",
       "who-am-i",
     ]);
-    expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]);
+    expect(playLandingGameIds("ufc")).toEqual([...PLAY_LANDING_COMMON_GAME_ORDER, PLAY_LANDING_UFC_STRATEGIC_GAME]);
     expect(playLandingGameIds("football")).toEqual([
       ...PLAY_LANDING_FOOTBALL_GAME_ORDER,
       PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
@@ -64,9 +64,28 @@ describe("Play landing presentation", () => {
     const draftRoom = screen.getByRole("button", { name: /draft room/i });
     expect(draftRoom).toBeInTheDocument();
     expect(screen.queryByText("OWNER PREVIEW")).not.toBeInTheDocument();
-    expect(screen.getByText("STRATEGY")).toBeInTheDocument();
+    expect(screen.queryByText("STRATEGY")).not.toBeInTheDocument();
+    expect(within(draftRoom).getByText("PLAY NOW")).toBeInTheDocument();
     fireEvent.click(draftRoom);
     expect(navigate).toHaveBeenCalledWith("/football/draft-room");
+  });
+
+  it("keeps UFC Auction last and presents strategic games with the standard Play Now status", () => {
+    const navigate = vi.fn();
+    render(<PlayLandingGameLibrary sport="ufc" onNavigate={navigate} />);
+    const library = screen.getByRole("region", { name: /pick a game/i });
+    const cards = within(library).getAllByRole("button");
+    expect(cards.map((card) => card.textContent)).toEqual(expect.arrayContaining([
+      expect.stringContaining("Find the Leader"),
+      expect.stringContaining("Wavelength"),
+      expect.stringContaining("Blind Resume"),
+      expect.stringContaining("Hit the Number"),
+      expect.stringContaining("Who Am I?"),
+      expect.stringContaining("Auction"),
+    ]));
+    expect(cards.at(-1)).toHaveTextContent("Auction");
+    expect(within(cards.at(-1)!).getByText("PLAY NOW")).toBeInTheDocument();
+    expect(screen.queryByText("STRATEGY")).not.toBeInTheDocument();
   });
 
   it("opens UFC Find the Leader replayable while preserving its canonical route owner", () => {
