@@ -5,7 +5,12 @@ describe("notificationSport", () => {
   it("keeps existing UFC notification context visible", () => {
     expect(notificationSport({ kind: "picks_repick_required", route: "/picks" })).toBe("ufc");
     expect(notificationSport({ kind: "ufc_event_starting", route: null })).toBe("ufc");
+    expect(notificationSport({ kind: "fighter_watchlist_added", route: "/fighters-to-watch#ty-miller" })).toBe("ufc");
     expect(notificationSportLabel("ufc")).toBe("UFC");
+  });
+
+  it("recognizes the Contender Series in-app notification kind", () => {
+    expect(notificationKinds).toContain("fighter_watchlist_added");
   });
 
   it("accepts the canonical Football Picks notification kind and route", () => {

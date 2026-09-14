@@ -95,9 +95,10 @@ describe("Shane's ranked watchlist", () => {
       ufcRecord: "2–0",
       ufcWinStreak: "2",
       ufcFinishes: "2",
-      photoUrl: null,
+      photoUrl: "/assets/fighters/ty-miller-thumb.webp",
       videoUrl: "https://youtu.be/wodu318-nm0?si=KYM3qd6RKriviD6U",
     });
+    expect(existsSync("public/assets/fighters/ty-miller-thumb.webp")).toBe(true);
     expect(watchMovement(shanesWatchlist.fighters[6])).toEqual({ label: "NEW", direction: "new" });
 
     expect(shanesWatchlist.fighters.map((fighter) => fighter.videoUrl)).toEqual([

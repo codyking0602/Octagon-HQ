@@ -12,11 +12,13 @@ declare
   v_status jsonb;
   v_push_notification jsonb;
   v_in_app_notification jsonb;
+  v_watchlist_notification jsonb;
   v_deadline_notification jsonb;
   v_near_lock_notification jsonb;
   v_claim jsonb;
   v_repeated_claim jsonb;
   v_in_app_claim jsonb;
+  v_watchlist_claim jsonb;
   v_deadline_claim jsonb;
   v_near_lock_claim jsonb;
   v_delivery_id uuid;
@@ -119,6 +121,50 @@ begin
     or jsonb_array_length(v_in_app_claim->'deliveries') <> 0
   then
     raise exception 'an in-app-only notification became push eligible: %', v_in_app_claim;
+  end if;
+
+  if private.notification_category_for_kind('fighter_watchlist_added') <> 'rankings'
+    or private.notification_priority_for_kind('fighter_watchlist_added') <> 'in_app'
+  then
+    raise exception 'Contender Series additions are not registered as rankings/in_app';
+  end if;
+
+  v_watchlist_notification := public.publish_notification(
+    v_member,
+    'push-proof:fighter-watchlist:ty-miller',
+    'push-proof:fighter-watchlist:ty-miller',
+    'fighter_watchlist_added',
+    'Ty Miller joins Shane’s Contender Series',
+    'The unbeaten welterweight enters Shane King’s board at #7 after back-to-back UFC knockouts.',
+    '/fighters-to-watch#ty-miller',
+    'VIEW BOARD',
+    now()
+  );
+
+  if not exists (
+    select 1
+    from private.notification_groups notification
+    where notification.id = (v_watchlist_notification->>'id')::uuid
+      and notification.kind = 'fighter_watchlist_added'
+      and notification.category = 'rankings'
+      and notification.priority = 'in_app'
+      and notification.route = '/fighters-to-watch#ty-miller'
+  ) then
+    raise exception 'Ty Miller Contender Series notification was not retained as in-app rankings content';
+  end if;
+
+  v_watchlist_claim := public.claim_notification_push_delivery(
+    (v_watchlist_notification->>'id')::uuid
+  );
+  if v_watchlist_claim->'notification' <> 'null'::jsonb
+    or jsonb_array_length(v_watchlist_claim->'deliveries') <> 0
+    or exists (
+      select 1
+      from private.notification_push_deliveries delivery
+      where delivery.notification_id = (v_watchlist_notification->>'id')::uuid
+    )
+  then
+    raise exception 'Ty Miller Contender Series notification produced device push work: %', v_watchlist_claim;
   end if;
 
   v_deadline_notification := public.publish_notification(
