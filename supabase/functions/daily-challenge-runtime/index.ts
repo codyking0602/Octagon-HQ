@@ -588,8 +588,20 @@ Deno.serve(async (request) => {
       if (authorized.error || authorized.data !== true) {
         return safeError(401, "SCHEDULER_AUTH_REQUIRED", "Scheduled daily materialization authorization required.");
       }
-      const materialized = await materializeToday(admin);
-      return json({ status: materialized.created ? "materialized" : "already_materialized", ...materialized, deployment_sha: DEPLOYED_SOURCE_SHA });
+
+      const scheduledSport = body.sport == null ? "ufc" : body.sport;
+      if (scheduledSport !== "ufc" && scheduledSport !== "football") {
+        return safeError(400, "INVALID_SPORT", "Scheduled daily materialization sport must be UFC or Football.");
+      }
+      const materialized = scheduledSport === "football"
+        ? await materializeFootballToday(admin)
+        : await materializeToday(admin);
+      return json({
+        status: materialized.created ? "materialized" : "already_materialized",
+        sport: scheduledSport,
+        ...materialized,
+        deployment_sha: DEPLOYED_SOURCE_SHA,
+      });
     }
 
     const authorization = request.headers.get("authorization") ?? "";
