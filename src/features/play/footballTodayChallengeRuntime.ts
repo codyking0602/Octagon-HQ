@@ -1,4 +1,4 @@
-import { createFootballWhoAmIRound } from "../games/footballWhoAmIAuthority";
+import { createFootballWhoAmIDailyRound } from "../games/footballWhoAmIDailyAuthority";
 import {
   buildFootballBlindResumeRounds,
   footballBlindResumeRevealStage,
@@ -333,7 +333,7 @@ export function buildFootballOfficialDailySetup(
     case "keep_4_cut_4": return buildKeepCutSetup(day, scheduleVersion);
     case "hit_the_number": return buildHitTheNumberSetup(day, scheduleVersion);
     case "who_am_i": return buildWhoAmIDailyPublication(
-      createFootballWhoAmIRound(
+      createFootballWhoAmIDailyRound(
         seededLineupRandom(FOOTBALL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
         {},
       ),
