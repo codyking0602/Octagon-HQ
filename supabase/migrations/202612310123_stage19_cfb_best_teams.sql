@@ -296,6 +296,7 @@ declare
   v_nd boolean := false;
   v_nd_replaces_one boolean := false;
   v_shape text;
+  v_shape_roll double precision;
   v_variant integer;
   v_targets numeric[];
   v_slot integer;
@@ -329,14 +330,11 @@ begin
     v_nd_replaces_one := v_nd and random()<0.50;
   end if;
 
+  v_shape_roll := random();
   select shape into v_shape from private.draft_room_cfb_best_teams_board_shapes
-  where random() >= roll_start and random() < roll_end
+  where v_shape_roll >= roll_start and v_shape_roll < roll_end
   order by roll_start limit 1;
-  if v_shape is null then
-    -- One roll must select exactly one weighted interval.
-    select shape into v_shape from private.draft_room_cfb_best_teams_board_shapes
-    order by abs(((roll_start+roll_end)/2)-random()) limit 1;
-  end if;
+  if v_shape is null then raise exception 'Best CFB Teams board shape roll was uncovered: %', v_shape_roll; end if;
   v_variant := floor(random()*4)::integer+1;
   select target_percentiles into v_targets from private.draft_room_cfb_best_teams_board_variants
   where shape=v_shape and variant=v_variant;
