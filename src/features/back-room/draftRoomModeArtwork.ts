@@ -17,7 +17,7 @@ export const draftRoomModeArtworks = {
   "trio-nfl": artwork("/assets/football/draft-room-trio-nfl.webp", "50% 50%"),
   "trio-cfb": artwork("/assets/football/draft-room-trio-cfb-ohio-state.webp", "50% 50%"),
   "nfl-divisions": artwork("/assets/football/draft-room-trio-nfl.webp", "50% 50%"),
-  "cfb-best-teams": artwork("/assets/football/draft-room-trio-cfb-ohio-state.webp", "50% 50%"),
+  "cfb-best-teams": artwork("/assets/football/draft-room-cfb-best-teams-lsu.webp", "50% 50%"),
   "longhorns-2005": artwork("/assets/football/draft-room-longhorns-vince-young.webp", "50% 36%"),
   "longhorns-teams-2005": artwork("/assets/football/draft-room-longhorns-teams-mack-brown.webp", "50% 40%"),
   "cowboys-2007": artwork("/assets/football/draft-room-cowboys-jason-witten.webp", "50% 42%"),
