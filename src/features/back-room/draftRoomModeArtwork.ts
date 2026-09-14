@@ -18,6 +18,7 @@ export const draftRoomModeArtworks = {
   "trio-cfb": artwork("/assets/football/draft-room-trio-cfb-ohio-state.webp", "50% 50%"),
   "longhorns-2005": artwork("/assets/football/draft-room-longhorns-vince-young.webp", "50% 36%"),
   "longhorns-teams-2005": artwork("/assets/football/draft-room-longhorns-teams-mack-brown.webp", "50% 40%"),
+  "cowboys-teams-2007": artwork("/assets/football/draft-room-cowboys-teams.webp", "50% 42%"),
 } as const satisfies Readonly<Record<DraftRoomModeId, DraftRoomModeArtwork>>;
 
 export function draftRoomModeArtwork(modeId: DraftRoomModeId): DraftRoomModeArtwork {
