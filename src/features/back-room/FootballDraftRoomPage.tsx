@@ -12,6 +12,7 @@ import {
 import { cfbBuildQbVisualIdentity } from "./cfbBuildQbVisualIdentity";
 import { draftRoomModeArtwork } from "./draftRoomModeArtwork";
 import { trioPlayerVisualIdentity } from "./draftRoomTrioVisualIdentity";
+import { cowboysPlayerSummary } from "./cowboysPlayerSummaries";
 import { longhornsPlayerSummary } from "./longhornsPlayerSummaries";
 import { longhornsTeamSeasonSummary } from "./longhornsTeamSeasonSummaries";
 import {
@@ -397,7 +398,7 @@ function DraftRoomBoard({
   }
 
   return (
-    <div className={`auction-board${longhornsFamilyMode ? " auction-board--longhorns" : ""}`}>
+    <div className={`auction-board${longhornsFamilyMode ? " auction-board--longhorns" : ""}${cowboysMode ? " auction-board--cowboys" : ""}`}>
       <header className="auction-board__header">
         <DraftRoomModeArtworkImage
           modeId={state.mode_id}
@@ -454,6 +455,10 @@ function DraftRoomBoard({
                 <p className="draft-room-player-summary draft-room-player-summary--current">
                   {longhornsPlayerSummary(state.current_item.display_label)}
                 </p>
+              ) : cowboysMode && state.current_item?.display_label ? (
+                <p className="draft-room-player-summary draft-room-player-summary--current">
+                  {cowboysPlayerSummary(state.current_item.display_label)}
+                </p>
               ) : null}
             </>
           ) : (
@@ -480,6 +485,8 @@ function DraftRoomBoard({
             <span className="draft-room-season-summary">{longhornsTeamSeasonSummary(latestAward.display_label)}</span>
           ) : longhornsMode && latestAward ? (
             <span className="draft-room-player-summary">{longhornsPlayerSummary(latestAward.display_label)}</span>
+          ) : cowboysMode && latestAward ? (
+            <span className="draft-room-player-summary">{cowboysPlayerSummary(latestAward.display_label)}</span>
           ) : null}
         </section>
       ) : null}
@@ -516,7 +523,11 @@ function DraftRoomBoard({
           : longhornsMode
             ? <LonghornsComparison state={state} itemSummary={longhornsPlayerSummary} />
             : cowboysMode
-              ? <LonghornsComparison state={state} ariaLabel="Cowboys roster comparison" />
+              ? <LonghornsComparison
+                  state={state}
+                  ariaLabel="Cowboys roster comparison"
+                  itemSummary={cowboysPlayerSummary}
+                />
               : <BuildComparison state={state} />}
 
       {canBid ? (
@@ -860,6 +871,7 @@ export default function FootballDraftRoomPage() {
                 className={[
                   selectedModeId === mode.id ? "is-selected" : "",
                   isLonghornsDraftRoomMode(mode.id) || isLonghornsTeamsDraftRoomMode(mode.id) ? "is-longhorns-mode" : "",
+                  isCowboysDraftRoomMode(mode.id) ? "is-cowboys-mode" : "",
                 ].filter(Boolean).join(" ")}
                 key={mode.id}
               >

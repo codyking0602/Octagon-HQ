@@ -590,6 +590,72 @@
   box-shadow: 0 0 0 1px #bf5700;
 }
 
+.auction-board--cowboys {
+  --cowboys-navy: #003594;
+  --cowboys-navy-rgb: 0, 53, 148;
+  --cowboys-silver: #869397;
+  --cowboys-silver-rgb: 134, 147, 151;
+}
+
+.auction-board--cowboys .auction-board__header {
+  border-color: rgba(var(--cowboys-silver-rgb), .78);
+}
+
+.auction-board--cowboys .auction-board__header::after {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .38) 0%, rgba(0, 24, 67, .26) 42%, rgba(0, 0, 0, .93) 100%),
+    linear-gradient(90deg, rgba(var(--cowboys-navy-rgb), .24), rgba(var(--cowboys-silver-rgb), .10) 62%, transparent 86%);
+}
+
+.auction-board--cowboys .auction-board__title .eyebrow,
+.auction-board--cowboys .auction-scoreboard em,
+.auction-board--cowboys .auction-current__item small,
+.auction-board--cowboys .auction-result .eyebrow,
+.auction-board--cowboys .auction-final .eyebrow,
+.auction-board--cowboys .auction-bid label > span {
+  color: var(--cowboys-silver);
+}
+
+.auction-board--cowboys .auction-current__item {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(var(--cowboys-navy-rgb), .28), rgba(var(--cowboys-silver-rgb), .06) 54%, transparent 70%),
+    var(--surface);
+}
+
+.auction-board--cowboys .auction-current__status {
+  background: var(--cowboys-navy);
+}
+
+.auction-board--cowboys .auction-collections__rows article > div.is-filled {
+  border-color: rgba(var(--cowboys-silver-rgb), .52);
+  background: rgba(var(--cowboys-navy-rgb), .09);
+}
+
+.auction-board--cowboys .auction-bid p {
+  color: #aeb9c3;
+}
+
+.auction-board--cowboys .auction-final {
+  background:
+    radial-gradient(circle at 50% 0, rgba(var(--cowboys-navy-rgb), .30), rgba(var(--cowboys-silver-rgb), .06) 44%, transparent 64%),
+    var(--surface);
+}
+
+.auction-catalog li.is-cowboys-mode {
+  background:
+    radial-gradient(circle at 82% 10%, rgba(0, 53, 148, .24), rgba(134, 147, 151, .08) 46%, transparent 66%),
+    var(--surface);
+}
+
+.auction-catalog li.is-cowboys-mode .auction-catalog__number {
+  color: #aeb9c3;
+}
+
+.auction-catalog li.is-cowboys-mode.is-selected {
+  border-color: #869397;
+  box-shadow: 0 0 0 1px #003594, inset 0 0 0 1px rgba(134, 147, 151, .32);
+}
+
 
 .auction-current__status {
   display: block;

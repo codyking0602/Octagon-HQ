@@ -17,11 +17,10 @@ describe("Longhorns player summary presentation", () => {
     expect(page).toContain("<LonghornsComparison state={state} itemSummary={longhornsPlayerSummary} />");
   });
 
-  it("keeps the compact summary wrap-safe on mobile without changing Cowboys presentation", () => {
+  it("keeps the compact Longhorn summary wrap-safe on mobile", () => {
     expect(css).toContain(".draft-room-player-summary {");
     expect(css).toContain("overflow-wrap: anywhere");
     expect(css).toContain(".draft-room-player-summary--current");
     expect(page).toContain('? <LonghornsComparison state={state} itemSummary={longhornsPlayerSummary} />');
-    expect(page).toContain('? <LonghornsComparison state={state} ariaLabel="Cowboys roster comparison" />');
   });
 });
