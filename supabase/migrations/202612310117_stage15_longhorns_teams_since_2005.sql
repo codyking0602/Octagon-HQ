@@ -372,7 +372,7 @@ begin
       order by auction.created_at desc, auction.id
       limit 10
     ),
-    overlaps as (
+    board_overlaps as (
       select
         recent.id,
         recent.recent_rank,
@@ -386,7 +386,7 @@ begin
       coalesce(bool_or(overlap_count = 8), false),
       coalesce(bool_or(recent_rank <= 3 and overlap_count >= 7), false)
     into v_exact_repeat, v_near_repeat
-    from overlaps;
+    from board_overlaps;
 
     if v_attempt = 12
       or (
