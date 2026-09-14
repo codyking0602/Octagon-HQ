@@ -8,7 +8,7 @@ import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
-import { pickBoutLocked, pickProgress, type PickBout } from "./picksModel";
+import { groupRankLabel, pickBoutLocked, pickProgress, type PickBout } from "./picksModel";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 import { usePicks } from "./PicksProvider";
 import { pickEventPosters } from "./picksEventAssets";
@@ -135,6 +135,14 @@ export default function FootballPicksPage() {
   const seasonHub = picks.history.events.length ? (
     <PicksSeasonHub history={picks.history} loading={picks.loading} sport="football" />
   ) : null;
+  const embeddedSeasonHub = picks.history.events.length ? (
+    <PicksSeasonHub history={picks.history} loading={picks.loading} sport="football" embedded />
+  ) : null;
+  const seasonStandings = picks.history.seasonStandings ?? [];
+  const currentSeasonStanding = seasonStandings.find((standing) => standing.isCurrentUser) ?? null;
+  const seasonSummary = currentSeasonStanding
+    ? `${groupRankLabel(currentSeasonStanding.rank, seasonStandings)} OF ${seasonStandings.length} · ${currentSeasonStanding.totalPoints} PTS`
+    : null;
 
   const renderGameCard = (game: PickBout) => {
     if (!event) return null;
@@ -248,7 +256,13 @@ export default function FootballPicksPage() {
 
           {identity.profile ? (
             <div className="football-picks-group" data-football-section="group">
-              <GroupPickProgress event={event} locked={event.status !== "upcoming"} mySelections={picks.selections} />
+              <GroupPickProgress
+                event={event}
+                locked={event.status !== "upcoming"}
+                mySelections={picks.selections}
+                seasonSummary={seasonSummary ?? undefined}
+                seasonContent={embeddedSeasonHub}
+              />
             </div>
           ) : null}
 
@@ -276,49 +290,21 @@ export default function FootballPicksPage() {
             {identity.profile && !currentGames.length ? (
               <div className="surface-card football-picks-empty">ALL GAMES ARE FINAL</div>
             ) : null}
+
+            {identity.profile && completedGames.length ? (
+              <details className="football-picks-completed-disclosure">
+                <summary>
+                  <span>COMPLETED GAMES</span>
+                  <strong>{completedGames.length} FINAL</strong>
+                </summary>
+                <div className="football-picks-completed-disclosure__games">
+                  {completedGames.map((game) => (
+                    <div key={game.boutId}>{renderGameCard(game)}</div>
+                  ))}
+                </div>
+              </details>
+            ) : null}
           </section>
-
-          {identity.profile && completedGames.length ? (
-            <section className="football-picks-completed" data-football-section="completed" aria-label="Completed football games">
-              <header className="football-picks-section-header">
-                <p className="eyebrow">COMPLETED GAMES</p>
-                <strong>{completedGames.length} FINAL</strong>
-              </header>
-              <div className="football-picks-completed__list">
-                {completedGames.map((game) => {
-                  const selected = picks.selections[game.boutId] ?? null;
-                  const selectedName = selected === game.redFighterSlug
-                    ? game.redFighterName
-                    : selected === game.blueFighterSlug ? game.blueFighterName : "NO PICK";
-                  const isLock = picks.footballLocks[game.boutId] === true;
-                  const outcome = liveAts.outcomes[game.boutId] ?? "unresolved";
-                  const resultLabel = outcome === "win"
-                    ? "✓ WIN"
-                    : outcome === "loss"
-                      ? "✕ LOSS"
-                      : outcome === "push" ? "½ PUSH" : gameStatus(game, true);
-                  const resultClass = outcome !== "unresolved" ? `is-${outcome}` : `is-${gameStatus(game, true).toLowerCase()}`;
-                  return (
-                    <details className="football-pick-completed" key={game.boutId}>
-                      <summary>
-                        <span className="football-pick-completed__league">{leagueLabel(game.weightClass)}</span>
-                        <span className="football-pick-completed__matchup">
-                          <span><TeamLogo logoUrl={game.awayTeamLogoUrl} /><b>{game.blueFighterName}</b><strong>{game.awayFinalScore ?? "—"}</strong></span>
-                          <em>–</em>
-                          <span><TeamLogo logoUrl={game.homeTeamLogoUrl} /><b>{game.redFighterName}</b><strong>{game.homeFinalScore ?? "—"}</strong></span>
-                        </span>
-                        <span className="football-pick-completed__pick">YOUR PICK {selectedName}{isLock ? " · ★ LOCK" : ""}</span>
-                        <b className={`football-pick-game__status ${resultClass}`}>{resultLabel}</b>
-                      </summary>
-                      <div className="football-pick-completed__detail">{renderGameCard(game)}</div>
-                    </details>
-                  );
-                })}
-              </div>
-            </section>
-          ) : null}
-
-          {seasonHub ? <div data-football-section="standings">{seasonHub}</div> : null}
 
           {identity.profile ? (
             <div data-football-section="futures">
