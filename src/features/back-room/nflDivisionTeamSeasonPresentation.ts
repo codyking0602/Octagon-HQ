@@ -144,7 +144,24 @@ export const NFL_DIVISION_TEAM_SEASONS = {
   "nfl-division-sf-2011": { season: 2011, teamCode: "SF", teamName: "San Francisco 49ers", divisionLabel: "NFC West", summary: "13-3 · NFC Championship Game" },
 } as const satisfies Readonly<Record<string, NflDivisionTeamSeasonPresentation>>;
 
+function canonicalSeasonReference(itemReference: string) {
+  return itemReference.split("--board--", 1)[0];
+}
+
 export function nflDivisionTeamSeasonPresentation(itemReference: string | null | undefined) {
   if (!itemReference) return null;
-  return NFL_DIVISION_TEAM_SEASONS[itemReference as keyof typeof NFL_DIVISION_TEAM_SEASONS] ?? null;
+  const reference = canonicalSeasonReference(itemReference);
+  return NFL_DIVISION_TEAM_SEASONS[reference as keyof typeof NFL_DIVISION_TEAM_SEASONS] ?? null;
+}
+
+export function nflDivisionBoardLabel(itemReference: string | null | undefined) {
+  if (!itemReference) return null;
+  const marker = "--board--";
+  const index = itemReference.indexOf(marker);
+  if (index < 0) return null;
+  return itemReference
+    .slice(index + marker.length)
+    .split("-vs-")
+    .map((division) => division.split("-").map((word) => word.toUpperCase()).join(" "))
+    .join(" vs ");
 }
