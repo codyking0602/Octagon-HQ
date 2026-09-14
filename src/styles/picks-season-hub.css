@@ -389,3 +389,25 @@
     font-size: 13px;
   }
 }
+
+
+.picks-season-section--embedded {
+  margin-top: 0;
+}
+
+.picks-season-hub--embedded {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.picks-season-hub--embedded > .picks-season-hub__summary {
+  display: none;
+}
+
+.picks-season-hub--embedded > .picks-season-hub__body {
+  padding: 9px 0 0;
+  border-top: 0;
+  background: transparent;
+}

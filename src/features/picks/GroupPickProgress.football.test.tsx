@@ -112,10 +112,15 @@ describe("GroupPickProgress football live standings", () => {
           "texas-ohio-state": "texas",
           "denver-kansas-city": "kansas-city",
         }}
+        seasonSummary="1ST OF 5 · 11.5 PTS"
+        seasonContent={<div>Season standings and weeks</div>}
       />,
     );
 
-    expect(screen.getByText("1ST · 1-1")).toBeInTheDocument();
+    expect(screen.getByText("YOUR GROUP")).toBeInTheDocument();
+    expect(screen.getByText("THIS WEEK 1ST · 1-1")).toBeInTheDocument();
+    expect(screen.getByText("SEASON 1ST OF 5 · 11.5 PTS")).toBeInTheDocument();
+    expect(screen.getByText("Season standings and weeks")).toBeInTheDocument();
 
     const codyRow = screen.getByText("Cody · YOU").closest("button");
     const shaneRow = screen.getByText("Shane").closest("button");

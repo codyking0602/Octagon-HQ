@@ -1,5 +1,6 @@
 .football-picks-group .picks-group-progress {
   margin-top: 0;
+  border-radius: 14px;
 }
 
 .football-picks-section-header {
@@ -35,150 +36,51 @@
   text-align: center;
 }
 
-.football-picks-completed {
+.football-picks-group .picks-group-progress:not([open]),
+.football-futures:not([open]),
+.football-picks-grading:not([open]) {
+  height: 64px;
+  min-height: 64px;
+}
+
+.football-picks-group .picks-group-progress > summary,
+.football-futures > summary,
+.football-picks-grading > summary {
+  min-height: 62px;
+  box-sizing: border-box;
+}
+
+.football-picks-group .picks-group-progress > summary {
+  padding: 8px 38px 8px 13px;
+}
+
+.football-group-summary {
   display: grid;
-  gap: 7px;
-}
-
-.football-picks-completed__list {
-  display: grid;
-  gap: 6px;
-}
-
-.football-pick-completed {
-  overflow: hidden;
-  border: 1px solid #2c3032;
-  border-radius: 11px;
-  background: #141617;
-}
-
-.football-pick-completed > summary {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas:
-    "league matchup result"
-    "pick pick result";
-  align-items: center;
-  gap: 4px 8px;
-  min-height: 54px;
-  padding: 7px 28px 7px 8px;
-  cursor: pointer;
-  list-style: none;
-}
-
-.football-pick-completed > summary::-webkit-details-marker {
-  display: none;
-}
-
-.football-pick-completed > summary::after {
-  content: "›";
-  position: absolute;
-  right: 9px;
-  top: 50%;
-  color: #7f8689;
-  font-size: 19px;
-  transform: translateY(-50%) rotate(0deg);
-  transition: transform .18s ease;
-}
-
-.football-pick-completed[open] > summary::after {
-  transform: translateY(-50%) rotate(90deg);
-}
-
-.football-pick-completed[open] > summary {
-  border-bottom: 1px solid #292c2e;
-}
-
-.football-pick-completed__league {
-  grid-area: league;
-  color: #959c9f;
-  font-size: .5rem;
-  font-weight: 950;
-  letter-spacing: .12em;
-}
-
-.football-pick-completed__matchup {
-  grid-area: matchup;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+  gap: 3px;
   min-width: 0;
+  justify-items: end;
+  text-align: right;
 }
 
-.football-pick-completed__matchup > span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-}
-
-.football-pick-completed__matchup .football-pick-team-mark {
-  flex-basis: 24px;
-  width: 24px;
-  height: 24px;
-}
-
-.football-pick-completed__matchup b {
-  max-width: 110px;
-  overflow: hidden;
-  font-size: .58rem;
+.football-group-summary b {
+  color: #f5f6f4;
+  font-size: 11px;
   line-height: 1.05;
-  text-overflow: ellipsis;
+  letter-spacing: .04em;
   white-space: nowrap;
 }
 
-.football-pick-completed__matchup strong {
-  color: #f6f7f5;
-  font-size: .68rem;
-}
-
-.football-pick-completed__matchup em {
-  color: #697073;
-  font-size: .58rem;
-  font-style: normal;
-}
-
-.football-pick-completed__pick {
-  grid-area: pick;
-  color: #7f8689;
-  font-size: .46rem;
-  font-weight: 850;
-  letter-spacing: .055em;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.football-group-summary small {
+  color: #858b8d;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .07em;
   white-space: nowrap;
 }
 
-.football-pick-completed > summary > .football-pick-game__status {
-  grid-area: result;
-  align-self: center;
-  justify-self: end;
-  white-space: nowrap;
-}
-
-.football-pick-game__status.is-win {
-  background: #263a2d;
-  color: #80d39a;
-}
-
-.football-pick-game__status.is-loss {
-  background: #47292b;
-  color: #ff8d93;
-}
-
-.football-pick-game__status.is-push {
-  background: #3b3825;
-  color: #e1ca73;
-}
-
-.football-pick-completed__detail {
-  padding: 7px;
-}
-
-.football-pick-completed__detail > .football-pick-game {
-  box-shadow: none;
+.football-group-season {
+  padding: 0 8px 8px;
+  border-top: 1px solid #292c2e;
 }
 
 .football-picks-group .picks-group-progress__member > button {
@@ -207,25 +109,93 @@
   white-space: nowrap;
 }
 
+.football-picks-completed-disclosure {
+  overflow: hidden;
+  margin-top: 2px;
+  border: 1px solid #2c3032;
+  border-radius: 11px;
+  background: #141617;
+}
+
+.football-picks-completed-disclosure > summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 0 34px 0 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.football-picks-completed-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.football-picks-completed-disclosure > summary::after {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  color: #858b8d;
+  content: "›";
+  font-size: 19px;
+  transform: translateY(-50%) rotate(90deg);
+  transition: transform .18s ease;
+}
+
+.football-picks-completed-disclosure[open] > summary::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.football-picks-completed-disclosure > summary span {
+  color: var(--football-picks-accent);
+  font-size: .58rem;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.football-picks-completed-disclosure > summary strong {
+  color: #8f9699;
+  font-size: .52rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.football-picks-completed-disclosure__games {
+  display: grid;
+  gap: 7px;
+  padding: 7px;
+  border-top: 1px solid #292c2e;
+  background: rgba(0, 0, 0, .08);
+}
+
+.football-pick-game__status.is-win {
+  background: #263a2d;
+  color: #80d39a;
+}
+
+.football-pick-game__status.is-loss {
+  background: #47292b;
+  color: #ff8d93;
+}
+
+.football-pick-game__status.is-push {
+  background: #3b3825;
+  color: #e1ca73;
+}
+
 @media (max-width: 430px) {
-  .football-pick-completed__matchup b {
-    max-width: 78px;
-  }
-
-  .football-pick-completed__matchup .football-pick-team-mark {
-    flex-basis: 22px;
-    width: 22px;
-    height: 22px;
-  }
-
-  .football-pick-completed > summary {
-    gap: 4px 6px;
-    padding-left: 7px;
-  }
-
   .football-picks-group .picks-group-progress__member > button {
     gap: 7px;
     padding-left: 11px;
     padding-right: 9px;
+  }
+
+  .football-group-summary b {
+    font-size: 10px;
+  }
+
+  .football-group-summary small {
+    font-size: 6.5px;
   }
 }

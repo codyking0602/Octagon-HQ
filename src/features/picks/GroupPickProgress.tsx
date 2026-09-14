@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { gradeFootballAts } from "./footballPicksScoring";
 import type { PickEvent } from "./picksModel";
 import { usePicks } from "./PicksProvider";
@@ -7,6 +7,8 @@ interface GroupPickProgressProps {
   event: PickEvent;
   locked: boolean;
   mySelections: Readonly<Record<string, string>>;
+  seasonSummary?: string;
+  seasonContent?: ReactNode;
 }
 
 function ordinalPlace(rank: number, tied = false) {
@@ -24,7 +26,13 @@ function liveRecord(wins: number, losses: number, pushes: number) {
   return `${wins}-${losses}${pushes ? `-${pushes}` : ""}`;
 }
 
-export function GroupPickProgress({ event, locked: _locked, mySelections }: GroupPickProgressProps) {
+export function GroupPickProgress({
+  event,
+  locked: _locked,
+  mySelections,
+  seasonSummary,
+  seasonContent,
+}: GroupPickProgressProps) {
   const picks = usePicks();
   const members = picks.groupProgress;
   const loading = picks.groupProgressLoading;
@@ -194,8 +202,15 @@ export function GroupPickProgress({ event, locked: _locked, mySelections }: Grou
   return (
     <details className="surface-card picks-group-progress">
       <summary>
-        <span>GROUP PICKS</span>
-        <strong>{groupSummary}</strong>
+        <span>{isFootball && seasonContent ? "YOUR GROUP" : "GROUP PICKS"}</span>
+        {isFootball && seasonSummary ? (
+          <span className="football-group-summary">
+            <b>THIS WEEK {groupSummary}</b>
+            <small>SEASON {seasonSummary}</small>
+          </span>
+        ) : (
+          <strong>{groupSummary}</strong>
+        )}
       </summary>
       <div className="picks-group-progress__members">
         {visibleMembers.map((member) => {
@@ -290,6 +305,7 @@ export function GroupPickProgress({ event, locked: _locked, mySelections }: Grou
           );
         })}
       </div>
+      {seasonContent ? <div className="football-group-season">{seasonContent}</div> : null}
     </details>
   );
 }
