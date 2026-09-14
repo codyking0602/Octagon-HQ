@@ -292,7 +292,11 @@ export default function FootballPicksPage() {
                     : selected === game.blueFighterSlug ? game.blueFighterName : "NO PICK";
                   const isLock = picks.footballLocks[game.boutId] === true;
                   const outcome = liveAts.outcomes[game.boutId] ?? "unresolved";
-                  const resultLabel = atsOutcomeLabel(outcome) ?? gameStatus(game, true);
+                  const resultLabel = outcome === "win"
+                    ? "✓ WIN"
+                    : outcome === "loss"
+                      ? "✕ LOSS"
+                      : outcome === "push" ? "½ PUSH" : gameStatus(game, true);
                   const resultClass = outcome !== "unresolved" ? `is-${outcome}` : `is-${gameStatus(game, true).toLowerCase()}`;
                   return (
                     <details className="football-pick-completed" key={game.boutId}>
