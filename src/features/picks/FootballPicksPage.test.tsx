@@ -221,7 +221,9 @@ describe("FootballPicksPage", () => {
     const completed = container.querySelector("details.football-picks-completed-drawer");
     expect(completed).not.toHaveAttribute("open");
     expect(within(completed as HTMLElement).getAllByText("Dallas Cowboys").length).toBeGreaterThan(0);
-    expect(within(completed as HTMLElement).getAllByText("New York Giants").length).toBeGreaterThan(0);\n    expect(completed?.querySelector(".football-pick-game")).not.toBeNull();\n    expect(screen.getByText("YOUR GROUP")).toBeInTheDocument();
+    expect(within(completed as HTMLElement).getAllByText("New York Giants").length).toBeGreaterThan(0);
+    expect(completed?.querySelector(".football-pick-game")).not.toBeNull();
+    expect(screen.getByText("YOUR GROUP")).toBeInTheDocument();
   });
 
   it("keeps the football season hub and persisted Futures visible when there is no active slate", () => {
@@ -267,7 +269,8 @@ describe("FootballPicksPage", () => {
     expect(screen.getByText("4-2 ATS · 66.7% WIN · 6 PTS")).toBeInTheDocument();
     expect(screen.getByText("STANDINGS & WEEKS")).toBeInTheDocument();
     expect(screen.getByText("SEASON FUTURES")).toBeInTheDocument();
-    expect(screen.getByText("78 PTS · LOCKED")).toBeInTheDocument();\n    expect(screen.getByText("GROUP PICKS REVEALED")).toBeInTheDocument();
+    expect(screen.getByText("78 PTS · LOCKED")).toBeInTheDocument();
+    expect(screen.getByText("GROUP PICKS REVEALED")).toBeInTheDocument();
     const seasonHub = container.querySelector(".picks-season-section");
     const futures = container.querySelector(".football-futures");
     expect(seasonHub).not.toBeNull();
