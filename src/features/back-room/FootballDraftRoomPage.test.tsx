@@ -143,6 +143,7 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFL Divisions" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Cowboys Since 2007" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CFB Build a QB" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CFB QB / RB / WR Trio" })).not.toBeInTheDocument();
@@ -166,6 +167,7 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "Longhorns Teams Since 2003" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL QB / RB / WR Trio" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "NFL Divisions" })).not.toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/build-qb-cam-newton-auburn-hero.webp"]')).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-trio-cfb-ohio-state.webp"]')).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-longhorns-vince-young.webp"]')).toBeInTheDocument();
@@ -197,6 +199,17 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "NFL" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.queryByRole("button", { name: "CFB QB / RB / WR Trio" })).not.toBeInTheDocument();
+  });
+
+  it("resolves NFL Divisions as an NFL Draft Room mode without exposing CFB formats", () => {
+    mockedUseIdentity.mockReturnValue(identity(true));
+    renderRoute("/football/draft-room?mode=nfl-divisions");
+
+    expect(screen.getByRole("button", { name: "NFL" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "NFL Divisions" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "NFL Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CFB Build a QB" })).not.toBeInTheDocument();
   });
 
   it("resolves Cowboys Since 2007 as an NFL Draft Room mode with canonical Jason Witten art", () => {
