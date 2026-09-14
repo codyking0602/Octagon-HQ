@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import type React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -7,7 +8,7 @@ import FootballPicksPage from "./FootballPicksPage";
 
 vi.mock("../identity/IdentityProvider", () => ({ useIdentity: vi.fn() }));
 vi.mock("./PicksProvider", () => ({ usePicks: vi.fn() }));
-vi.mock("./GroupPickProgress", () => ({ GroupPickProgress: () => <div>Who has picked</div> }));
+vi.mock("./GroupPickProgress", () => ({ GroupPickProgress: ({ seasonContent }: { seasonContent?: React.ReactNode }) => <div>Who has picked{seasonContent}</div> }));
 vi.mock("./GroupPickReveal", () => ({ GroupPickReveal: () => null }));
 
 const setPick = vi.fn(async () => undefined);
@@ -216,12 +217,16 @@ describe("FootballPicksPage", () => {
     const sectionNames = Array.from(container.querySelectorAll("[data-football-section]"))
       .map((node) => node.getAttribute("data-football-section"));
 
-    expect(sectionNames).toEqual(["group", "current", "completed", "standings", "futures", "grading"]);
+    expect(sectionNames).toEqual(["group", "current", "futures", "grading"]);
     expect(screen.getByText("COMPLETED GAMES")).toBeInTheDocument();
-    const completed = container.querySelector("details.football-pick-completed");
+    const completed = container.querySelector("details.football-picks-completed-disclosure");
     expect(completed).not.toHaveAttribute("open");
+    expect(completed?.querySelector(".football-pick-game")).not.toBeNull();
     expect(within(completed as HTMLElement).getAllByText("Dallas Cowboys").length).toBeGreaterThan(0);
     expect(within(completed as HTMLElement).getAllByText("New York Giants").length).toBeGreaterThan(0);
+    expect(container.querySelector('[data-football-section="group"] .picks-season-hub--embedded')).not.toBeNull();
+    expect(container.querySelector('[data-football-section="completed"]')).toBeNull();
+    expect(container.querySelector('[data-football-section="standings"]')).toBeNull();
   });
 
   it("keeps the football season hub and persisted Futures visible when there is no active slate", () => {
@@ -267,7 +272,8 @@ describe("FootballPicksPage", () => {
     expect(screen.getByText("4-2 ATS · 66.7% WIN · 6 PTS")).toBeInTheDocument();
     expect(screen.getByText("STANDINGS & WEEKS")).toBeInTheDocument();
     expect(screen.getByText("SEASON FUTURES")).toBeInTheDocument();
-    expect(screen.getByText("LOCKED · GROUP REVEALED")).toBeInTheDocument();
+    expect(screen.getByText("78 PTS · LOCKED")).toBeInTheDocument();
+    expect(screen.getByText("GROUP REVEALED")).toBeInTheDocument();
     const seasonHub = container.querySelector(".picks-season-section");
     const futures = container.querySelector(".football-futures");
     expect(seasonHub).not.toBeNull();
