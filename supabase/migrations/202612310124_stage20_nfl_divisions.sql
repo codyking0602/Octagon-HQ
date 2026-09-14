@@ -750,6 +750,11 @@ begin
   );
   v_next := replace(
     v_next,
+    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''cowboys-teams-2007'', ''cfb-best-teams'')',
+    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'')'
+  );
+  v_next := replace(
+    v_next,
     E'''cowboys-teams-2007'', ''cfb-best-teams'') then 8',
     E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'') then 8'
   );
