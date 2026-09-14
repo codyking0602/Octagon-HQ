@@ -40,7 +40,8 @@
 }
 
 .football-group-hub:not([open]) {
-  min-height: 64px;
+  height: 54px;
+  min-height: 54px;
 }
 
 .football-group-hub__summary {
@@ -48,8 +49,8 @@
   grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 10px;
-  min-height: 62px;
-  padding: 7px 12px;
+  min-height: 52px;
+  padding: 0 12px;
   cursor: pointer;
   list-style: none;
 }
