@@ -15,6 +15,7 @@ export const draftRoomModeArtworks = {
   "build-qb": artwork(BUILD_QB_HERO_IMAGE, "50% 36%"),
   "build-qb-cfb": artwork(CFB_BUILD_QB_HERO_IMAGE, "50% 36%"),
   "trio-nfl": artwork("/assets/football/draft-room-trio-nfl.webp", "50% 50%"),
+  "nfl-divisions": artwork("/assets/football/draft-room-trio-nfl.webp", "50% 50%"),
   "trio-cfb": artwork("/assets/football/draft-room-trio-cfb-ohio-state.webp", "50% 50%"),
   "longhorns-2005": artwork("/assets/football/draft-room-longhorns-vince-young.webp", "50% 36%"),
   "longhorns-teams-2005": artwork("/assets/football/draft-room-longhorns-teams-mack-brown.webp", "50% 40%"),
