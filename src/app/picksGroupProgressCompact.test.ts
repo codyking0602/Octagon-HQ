@@ -12,8 +12,8 @@ describe("compact Group Picks presentation", () => {
   });
 
   it("keeps the working member list collapsed by default", () => {
-    expect(component).toContain('<details className="surface-card picks-group-progress">');
-    expect(component).not.toContain("<details open");
+    expect(component).toContain('<details className="surface-card picks-group-progress" open={embedded ? true : undefined}>');
+    expect(component).toContain("embedded = false");
   });
 
   it("uses a compact collapsed height", () => {
