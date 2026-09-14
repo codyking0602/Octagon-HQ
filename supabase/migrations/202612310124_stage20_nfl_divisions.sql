@@ -678,7 +678,7 @@ alter table private.auction_games
     end
   );
 
-do $$
+do $wire$
 declare
   v_definition text;
   v_next text;
@@ -704,8 +704,8 @@ begin
   v_definition := pg_get_functiondef('private.validate_auction_private_row()'::regprocedure);
   v_next := replace(
     v_definition,
-    E'when v_auction.mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'') then 8',
-    E'when v_auction.mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'') then 8'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'') then 8',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'') then 8'
   );
   if v_next = v_definition then raise exception 'NFL Divisions private-row round contract drifted'; end if;
   execute v_next;
@@ -713,8 +713,8 @@ begin
   v_definition := pg_get_functiondef('private.validate_auction_bid(private.auction_games,uuid,numeric,text)'::regprocedure);
   v_next := replace(
     v_definition,
-    E'when p_game.mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'') then 4',
-    E'when p_game.mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'') then 4'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'') then 4',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'') then 4'
   );
   if v_next = v_definition then raise exception 'NFL Divisions bid contract drifted'; end if;
   execute v_next;
@@ -722,13 +722,13 @@ begin
   v_definition := pg_get_functiondef('private.resolve_auction_round(uuid)'::regprocedure);
   v_next := replace(
     v_definition,
-    E'when v_game.mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'') then 4',
-    E'when v_game.mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'') then 4'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'') then 4',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'') then 4'
   );
   v_next := replace(
     v_next,
-    E'when v_game.mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'') then 8',
-    E'when v_game.mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'') then 8'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'') then 8',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'') then 8'
   );
   if v_next = v_definition then raise exception 'NFL Divisions round-resolution contract drifted'; end if;
   execute v_next;
@@ -750,18 +750,13 @@ begin
   );
   v_next := replace(
     v_next,
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'')',
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'')'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'') then 8',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'') then 8'
   );
   v_next := replace(
     v_next,
-    E'when p_mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'') then 8',
-    E'when p_mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'') then 8'
-  );
-  v_next := replace(
-    v_next,
-    E'when p_mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'') then 40',
-    E'when p_mode_id in (''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'') then 40'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'') then 40',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'') then 40'
   );
   if v_next = v_definition then raise exception 'NFL Divisions preparation contract drifted'; end if;
   execute v_next;
@@ -769,18 +764,16 @@ begin
   v_definition := pg_get_functiondef('public.send_auction_first_bid(uuid,bigint,numeric,text)'::regprocedure);
   v_next := replace(
     v_definition,
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'')',
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'')'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'')',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'')'
   );
   v_next := replace(
     v_next,
-    E'    when v_game.mode_id = ''cowboys-2007'' then ''Cowboys Since 2007''',
     E'    when v_game.mode_id = ''cfb-best-teams'' then ''Best CFB Teams''',
     E'    when v_game.mode_id = ''cfb-best-teams'' then ''Best CFB Teams''\n    when v_game.mode_id = ''nfl-divisions'' then ''NFL Divisions'''
   );
   v_next := replace(
     v_next,
-    E'when v_game.mode_id = ''cowboys-2007'' then v_creator_name || '' challenged you to Cowboys Since 2007.''',
     E'when v_game.mode_id = ''cfb-best-teams'' then v_creator_name || '' challenged you to Best CFB Teams.''',
     E'when v_game.mode_id = ''cfb-best-teams'' then v_creator_name || '' challenged you to Best CFB Teams.''\n    when v_game.mode_id = ''nfl-divisions'' then v_creator_name || '' challenged you to NFL Divisions.'''
   );
@@ -790,8 +783,8 @@ begin
   v_definition := pg_get_functiondef('public.submit_auction_bid(uuid,integer,bigint,numeric,text)'::regprocedure);
   v_next := replace(
     v_definition,
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'')',
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'')'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'')',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'')'
   );
   if v_next = v_definition then raise exception 'NFL Divisions submit-bid contract drifted'; end if;
   execute v_next;
@@ -799,8 +792,8 @@ begin
   v_definition := pg_get_functiondef('private.sync_auction_challenge_decline()'::regprocedure);
   v_next := replace(
     v_definition,
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'')',
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'')'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'')',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'')'
   );
   if v_next = v_definition then raise exception 'NFL Divisions decline-sync contract drifted'; end if;
   execute v_next;
@@ -808,8 +801,8 @@ begin
   v_definition := pg_get_functiondef('public.cancel_auction(uuid,bigint)'::regprocedure);
   v_next := replace(
     v_definition,
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'')',
-    E'(''build-qb'', ''build-qb-cfb'', ''trio-nfl'', ''trio-cfb'', ''longhorns-2005'', ''longhorns-teams-2005'', ''cowboys-2007'', ''nfl-divisions'')'
+    E'''cowboys-teams-2007'', ''cfb-best-teams'')',
+    E'''cowboys-teams-2007'', ''cfb-best-teams'', ''nfl-divisions'')'
   );
   if v_next = v_definition then raise exception 'NFL Divisions cancellation routing contract drifted'; end if;
   execute v_next;
@@ -827,20 +820,18 @@ begin
   );
   v_next := replace(
     v_next,
-    'coalesce(catalog.display_label, trio.display_label, longhorn.display_name, longhorn_team.display_label, cowboy.display_name)',
     'coalesce(catalog.display_label, trio.display_label, longhorn.display_name, longhorn_team.display_label, cowboy.display_name, cowboy_team.display_label, cfb_team.display_label)',
     'coalesce(catalog.display_label, trio.display_label, longhorn.display_name, longhorn_team.display_label, cowboy.display_name, cowboy_team.display_label, cfb_team.display_label, nfl_division.display_label)'
   );
   v_next := replace(
     v_next,
-    'catalog.item_reference is not null or trio.item_reference is not null or longhorn.item_reference is not null or longhorn_team.item_reference is not null or cowboy.item_reference is not null',
     'catalog.item_reference is not null or trio.item_reference is not null or longhorn.item_reference is not null or longhorn_team.item_reference is not null or cowboy.item_reference is not null or cowboy_team.item_reference is not null or cfb_team.item_reference is not null',
     'catalog.item_reference is not null or trio.item_reference is not null or longhorn.item_reference is not null or longhorn_team.item_reference is not null or cowboy.item_reference is not null or cowboy_team.item_reference is not null or cfb_team.item_reference is not null or nfl_division.item_reference is not null'
   );
   if v_next = v_definition then raise exception 'NFL Divisions participant projection contract drifted'; end if;
   execute v_next;
 end;
-$$;
+$wire$;
 
 do $$
 begin
