@@ -17,6 +17,10 @@ describe("Draft Room mode artwork", () => {
       src: "/assets/football/draft-room-trio-nfl.webp",
       objectPosition: "50% 50%",
     });
+    expect(draftRoomModeArtwork("nfl-divisions")).toEqual({
+      src: "/assets/football/draft-room-trio-nfl.webp",
+      objectPosition: "50% 50%",
+    });
     expect(draftRoomModeArtwork("trio-cfb")).toEqual({
       src: "/assets/football/draft-room-trio-cfb-ohio-state.webp",
       objectPosition: "50% 50%",
