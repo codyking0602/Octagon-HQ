@@ -14,26 +14,21 @@ const auctionCss = readFileSync(
   resolve(process.cwd(), "src/styles/auction.css"),
   "utf8",
 );
-const accessMigration = readFileSync(
-  resolve(process.cwd(), "supabase/migrations/202612310101_stage12_test_profile_admin_playtest.sql"),
+const releaseMigration = readFileSync(
+  resolve(process.cwd(), "supabase/migrations/202612310125_stage21_draft_room_public_release.sql"),
   "utf8",
 );
 
-describe("Stage 12 admin playtest readiness", () => {
-  it("grants TEST through the existing Picks-owner gate instead of adding a Draft Room bypass", () => {
-    expect(draftRoomSource).toContain("return profile?.canControlPicks === true;");
-    expect(accessMigration).toContain("insert into public.pick_control_owners (profile_id)");
-    expect(accessMigration).toContain("c8b9d8a2-22a6-44cf-8a5f-3287d151f025");
-    expect(accessMigration).toContain("profile.display_name = 'TEST'");
-    expect(accessMigration).toContain("on conflict (profile_id) do nothing");
-    expect(accessMigration).not.toMatch(/create\s+(table|function)/i);
-  });
-
-  it("keeps preview authorization internal instead of exposing admin copy in the game UI", () => {
+describe("Draft Room public release readiness", () => {
+  it("removes the owner-only frontend gate and uses the canonical backend release switch", () => {
+    expect(draftRoomSource).not.toContain("canControlPicks");
+    expect(draftRoomSource).not.toContain("hasDraftRoomAdminAccess");
     expect(draftRoomSource).not.toContain("ADMIN PREVIEW");
-    expect(draftRoomSource).not.toContain("ADMIN RELEASE GATE");
-    expect(draftRoomSource).not.toContain("Public members cannot");
-    expect(draftRoomSource).toContain("return profile?.canControlPicks === true;");
+    expect(releaseMigration).toContain("create or replace function private.draft_room_public_release_enabled()");
+    expect(releaseMigration).toContain("select true;");
+    expect(releaseMigration).toContain(
+      "revoke all on function private.draft_room_public_release_enabled() from public, anon, authenticated;",
+    );
   });
 
   it("keeps shared Auction layout ownership while scoping Football powder blue to Draft Room", () => {
