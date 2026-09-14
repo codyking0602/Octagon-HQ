@@ -988,6 +988,7 @@ export default function FootballDraftRoomPage() {
                   selectedModeId === mode.id ? "is-selected" : "",
                   isLonghornsDraftRoomMode(mode.id) || isLonghornsTeamsDraftRoomMode(mode.id) ? "is-longhorns-mode" : "",
                   isCowboysDraftRoomMode(mode.id) || isCowboysTeamsDraftRoomMode(mode.id) ? "is-cowboys-mode" : "",
+                  isCfbBestTeamsDraftRoomMode(mode.id) ? "is-cfb-best-teams-mode" : "",
                 ].filter(Boolean).join(" ")}
                 key={mode.id}
               >
