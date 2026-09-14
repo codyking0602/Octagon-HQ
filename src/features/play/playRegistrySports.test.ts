@@ -15,6 +15,7 @@ const footballGamesExpected = [
   { id: "hit-the-number", route: "/football/hit-the-number" },
   { id: "who-am-i", route: "/football/who-am-i" },
   { id: "find-leader", route: "/football/find-leader" },
+  { id: "draft-room", route: "/football/draft-room" },
 ] as const;
 
 describe("sport-aware Play registry", () => {
@@ -28,7 +29,7 @@ describe("sport-aware Play registry", () => {
   it("registers Football games on their canonical Football HQ routes", () => {
     const footballGames = playGamesForSport("football");
     expect(footballGames.map(({ id, route }) => ({ id, route }))).toEqual(footballGamesExpected);
-    expect(footballGames).toHaveLength(7);
+    expect(footballGames).toHaveLength(8);
 
     for (const game of footballGames) {
       expect(playGameDefinition(game.id, "football")).toBe(game);
@@ -55,7 +56,7 @@ describe("sport-aware Play registry", () => {
 
   it("preserves shared challenge support while Football Who Am I joins the official Daily contract", () => {
     const footballGames = playGamesForSport("football");
-    for (const game of footballGames.filter((candidate) => candidate.id !== "who-am-i")) {
+    for (const game of footballGames.filter((candidate) => !["who-am-i", "draft-room"].includes(candidate.id))) {
       expect(game.lineup).toMatchObject({
         defaultType: "replayable",
         supportedTypes: ["replayable", "curated"],
@@ -67,6 +68,22 @@ describe("sport-aware Play registry", () => {
         historyRecording: "casual-and-challenge",
       });
     }
+
+    expect(playGameDefinition("draft-room", "football")).toMatchObject({
+      availability: undefined,
+      route: "/football/draft-room",
+      lineup: {
+        defaultType: "curated",
+        supportedTypes: ["curated"],
+        replayBehavior: "same-curated-challenge",
+        challengeEligible: true,
+        dailyEligible: false,
+        streakEligible: false,
+        reminderEligible: false,
+        historyRecording: "challenge-completion",
+        completionState: "draft-room-complete",
+      },
+    });
 
     expect(playGameDefinition("who-am-i", "football").lineup).toMatchObject({
       defaultType: "replayable",
