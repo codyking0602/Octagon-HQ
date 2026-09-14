@@ -7,7 +7,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "predev": "npm run generate:football-recognizability && npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe",
+    "predev": "npm run generate:football-recognizability && npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-who-am-i-daily-universes",
     "dev": "vite",
     "build": "npm run typecheck && npm run build:artifacts",
     "build:artifacts": "vite build && vite build --config vite.worker.config.ts && node scripts/normalize-football-reveal-codec.mjs && npm run verify:artifact",
@@ -20,12 +20,13 @@
     "generate:football-twenty-questions-runtime": "node scripts/generate-football-twenty-questions-runtime.mjs",
     "generate:football-ledger-audit": "node scripts/generate-football-ledger-audit.mjs",
     "verify:football-ledger-audit": "node scripts/verify-football-ledger-audit-artifact.mjs",
-    "pretypecheck": "npm run generate:football-recognizability && npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit",
+    "pretypecheck": "npm run generate:football-recognizability && npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit && npm run generate:football-who-am-i-daily-universes",
     "typecheck": "tsc --noEmit",
-    "pretest": "npm run generate:football-recognizability && npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit",
+    "pretest": "npm run generate:football-recognizability && npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit && npm run generate:football-who-am-i-daily-universes",
     "test": "vitest run",
     "verify:artifact": "node scripts/verify-production-artifact.mjs",
-    "export:verdict": "node scripts/export-octagon-verdict.mjs"
+    "export:verdict": "node scripts/export-octagon-verdict.mjs",
+    "generate:football-who-am-i-daily-universes": "node scripts/generate-football-who-am-i-daily-universes.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.110.7",
