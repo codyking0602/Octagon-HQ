@@ -289,7 +289,7 @@ $$;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
-do $
+do $scheduler$
 declare
   v_health jsonb;
   v_command text;
@@ -309,7 +309,7 @@ begin
     raise exception 'canonical five-minute scheduler is not configured for both Daily sports: %, command %', v_health, v_command;
   end if;
 end
-$;
+$scheduler$;
 
 rollback;
 
