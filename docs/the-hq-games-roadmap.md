@@ -2,7 +2,7 @@
 
 **Status:** Sole canonical product and implementation roadmap for UFC + Football Games  
 **Created:** September 3, 2026  
-**Updated:** September 13, 2026  
+**Updated:** September 14, 2026  
 **Scope:** Play landing pages, shared game presentation, UFC games, Football games, Today's Challenge, 20 Questions, Who Am I, Auction, Draft Room, game-source ownership, and Games release readiness.
 
 > **Cross-chat rule:** Read this document before changing UFC Play, Football Play, any shared game mechanic, Today's Challenge, Auction, Draft Room, Blind Rank 5, Keep 4 / Cut 4, 20 Questions, Who Am I, or the data/ranking sources consumed by Games.
@@ -15,34 +15,30 @@
 
 ## 1. Current roadmap position
 
-PRs 1 through 10 are complete. **Stage 11 — Today’s Challenge vNext is complete.**
+PRs 1 through 14 are complete. **Stage 15 — full Games maturity audit + production release is the release step.**
 
-Stage 11 preserved the one canonical Daily platform while:
-- releasing Who Am I as a normal replayable UFC + Football game;
-- unifying the compact UFC/Football Daily presentation;
-- making Who Am I an official Daily family through the existing materializer, cross-device progress, immutable first-attempt persistence, server grader, leaderboard, history, streak, reminder, and standings owners;
-- creating immutable future schedule versions beginning **September 12, 2026 Central**, the first day that was not already materialized when the cutover was approved.
+Cody approved Football Draft Room for public release on **September 14, 2026** after the launch slate was completed, calibrated, simulated, and visually polished. The release uses the existing shared sealed-bid/Auction architecture; it does not create a second backend or challenge lifecycle.
 
-Final future mixes:
-- **UFC — `play-rotation-v7`, 24 slots:** Find the Leader ×5, Wavelength ×5, Blind Resume ×4, Hit the Number ×4, Who Am I ×4, Daily Double ×2.
-- **Football — `football-daily-v4`, 20 slots:** Find the Leader ×5, Wavelength ×5, Hit the Number ×4, Who Am I ×4, Daily Double ×2.
-- Daily Double remains the existing Blind Rank 5 → Keep 4 / Cut 4 experience.
-- Football Blind Resume is removed from the future rotation only. Historical v1/v2/v3 days remain immutable and queryable.
-- Historical UFC schedule versions through `play-rotation-v6` remain untouched.
+The public Draft Room launch slate is:
 
-20 Questions remains retired.
+- NFL Build a QB
+- CFB Build a QB
+- NFL QB / RB / WR Trio
+- CFB QB / RB / WR Trio
+- Cowboys Since 2007
+- Longhorns Since 2003
+- Cowboys Teams Since 2007
+- Longhorns Teams Since 2003
+- Best CFB Teams
+- NFL Divisions
 
-### ACTIVE
+Front Seven and Secondary are **deferred post-launch additions**, not release blockers. The earlier standalone College Football National Champions concept is superseded for launch by the broader Best CFB Teams conference/split-conference product.
 
-**Stage 13 — Draft Room roster builders.**
+Stage 11 — Today’s Challenge vNext remains complete. Who Am I is public and part of the official UFC/Football Daily rotations. 20 Questions remains retired. Auction and Draft Room remain outside Today’s Challenge.
 
-Stage 12 — Draft Room foundation + Build a QB is complete. Build a QB uses the shared sealed-bid/Auction architecture with four traits (Arm, Accuracy, Processing, Mobility), eight rounds, a $40 bankroll, and server-owned bidding, ties, and grading.
+Stage 12 established the shared Draft Room foundation and Build a QB. Later Draft Room stages expanded that same lifecycle with Trio, team/player history rooms, Best CFB Teams, and NFL Divisions. The Stage 15 release removes the owner-only discovery/route gate and flips the existing backend public-release switch only after the exact release head is green.
 
-Draft Room remains an owner/admin preview. Reuse the existing authenticated `canControlPicks` owner projection for access; do not add a second admin system. Keep both Play-library discovery and the direct Draft Room route unavailable to non-admin members until Cody explicitly approves public release.
-
-Stage 13 now expands Draft Room through three roster-build formats: QB / RB / WR Trio, Front Seven, and Secondary. Exact Front Seven and Secondary roster-slot/scoring details remain intentionally uncommitted until product brainstorming is complete.
-
-Do not reopen Stage 11 or Stage 12 mechanics unless a concrete defect or explicit product decision requires it.
+Do not reopen completed Draft Room grading, board construction, or game mechanics merely because the older roadmap named additional builders.
 
 ---
 
@@ -357,40 +353,26 @@ Core strategic contract:
 - one nomination at a time;
 - winner pays the charged amount;
 - awarded assets fill a collection/build;
-- final collections are graded through canonical Football owners;
+- final collections are graded through approved private Football room-rating owners;
 - true ties supported;
-- challenge/rematch/history use existing canonical challenge/backend patterns.
+- challenge/rematch/history use the existing canonical challenge/backend patterns.
 
-**Build a QB is complete** as the foundation room. Its locked current format is:
+**Build a QB** uses four traits — Arm, Accuracy, Processing, Mobility — with eight rounds, a $40 bankroll, four filled trait slots per side, and server-owned bidding/ties/grading. NFL and CFB use their approved audited rating models; CFB uses each quarterback's peak college season and school identity from that season.
 
-- Arm, Accuracy, Processing, Mobility only;
-- eight rounds;
-- $40 starting bankroll;
-- four filled trait slots per side;
-- server-owned bidding, ties, and grading;
-- NFL ratings use the approved NFL QB model;
-- CFB ratings use each quarterback's peak college season and the team identity from that season.
+**QB / RB / WR Trio** is live for NFL and CFB using the shared Draft Room lifecycle, six auctions, a $30 bankroll, and three trios per side.
 
-The old standalone RB / WR / DE-EDGE / CB / Safety / LB position-builder roadmap is retired unless Cody explicitly revives it.
+The public themed/history launch rooms are:
 
-The next approved roster-build rooms are:
+- **Cowboys Since 2007**
+- **Longhorns Since 2003**
+- **Cowboys Teams Since 2007**
+- **Longhorns Teams Since 2003**
+- **Best CFB Teams** — conference and split-conference boards from the approved completed-season pool
+- **NFL Divisions** — randomized single-division and split-division completed-season boards
 
-- **QB / RB / WR Trio**
-- **Front Seven**
-- **Secondary**
+Front Seven and Secondary are deferred post-launch. Do not treat them as missing launch scope. The earlier College Football National Champions concept is not a separate required launch room; Best CFB Teams replaced it with a broader approved format.
 
-Front Seven and Secondary roster composition, round count, bankroll, and grading structure will be locked during product brainstorming before implementation.
-
-Approved themed/history rooms after those builders are:
-
-- **Cowboys Since 2007** — individual Cowboys players from the approved era;
-- **Longhorns Since 2005** — individual Texas players from the approved era;
-- **Cowboys Teams Since 2007** — specific Dallas team seasons from the approved era;
-- **Longhorns Teams Since 2005** — specific Texas team seasons from the approved era;
-- **College Football National Champions** — championship teams/seasons;
-- **NFL Division Draft** — one rotating mode whose eligible NFL division changes rather than creating eight separate permanent room types.
-
-Trait/asset grades and final collection grading must derive from canonical Football owners or an explicitly approved canonical room-rating model. Never create an ad hoc Draft Room-only truth source merely to populate a room.
+Trait/asset grades and final collection grading must continue through the existing approved private room-rating owners. Never create a second public grading source merely because Draft Room is now discoverable to all members.
 
 Do not inflate mode count merely to match UFC Auction.
 
@@ -491,31 +473,16 @@ Do not restart completed identity research merely to increase counts. New facts 
 **COMPLETE.** Preserve the one canonical sport-aware Daily owner, immutable first completion, cross-device persistence, versioning, and official 0–100 normalization. Who Am I is now an official Daily family in UFC and Football under the locked future rotations above. Auction, Draft Room, Better Than, and retired 20 Questions remain outside Today's Challenge.
 
 ### ✅ PR 12 — Draft Room foundation + Build a QB
-**COMPLETE — ADMIN PREVIEW ONLY.** Draft Room reuses the canonical sealed-bid/Auction architecture. Build a QB is live in the approved four-trait format: Arm / Accuracy / Processing / Mobility, eight rounds, $40 bankroll, four filled trait slots per side, and server-owned bidding/ties/grading. Keep Draft Room behind the existing authenticated owner permission until Cody explicitly approves public release.
+**COMPLETE.** Draft Room reuses the canonical sealed-bid/Auction architecture. NFL and CFB Build a QB use the locked four-trait / 8-round / $40 format with server-owned bidding, ties, and grading.
 
-### ▶ PR 13 — Draft Room roster builders
-**ACTIVE.** Add three new roster-build rooms using the existing Draft Room lifecycle:
+### ✅ PR 13 — Draft Room roster builders
+**COMPLETE FOR LAUNCH.** NFL and CFB QB / RB / WR Trio are live on the shared lifecycle. Front Seven and Secondary are explicitly deferred post-launch and do not block release.
 
-- QB / RB / WR Trio
-- Front Seven
-- Secondary
+### ✅ PR 14 — Draft Room themed + history rooms
+**COMPLETE FOR LAUNCH.** The implemented launch set is Cowboys Since 2007, Longhorns Since 2003, Cowboys Teams Since 2007, Longhorns Teams Since 2003, Best CFB Teams, and NFL Divisions. Best CFB Teams supersedes the narrower National Champions launch concept.
 
-Do not implement the retired standalone RB / WR / DE-EDGE / CB / Safety / LB trait-builder sequence unless Cody explicitly changes direction. Lock Front Seven and Secondary roster/scoring details before implementation.
-
-### PR 14 — Draft Room themed + history rooms
-Add the approved six-room set through the same Draft Room lifecycle:
-
-- Cowboys Since 2007
-- Longhorns Since 2005
-- Cowboys Teams Since 2007
-- Longhorns Teams Since 2005
-- College Football National Champions
-- NFL Division Draft — rotating division, one mode rather than eight separate permanent modes
-
-Do not add College Football Power Programs or other brainstormed room ideas unless explicitly promoted later.
-
-### PR 15 — Full Games maturity audit + production release proof
-Run cross-game simulations, source-provenance audit, landing/game parity review, mobile review, history/deep-link review, Daily fairness, challenge hydration, Draft Room lifecycle, and exact production release proof. Remove Football Games Early Access/Beta treatment only if all completion gates are green.
+### ✅ PR 15 — Full Games maturity audit + production release proof
+**RELEASE APPROVED SEPTEMBER 14, 2026.** Draft Room's launch modes have dedicated calibration/simulation coverage, use the shared server-owned lifecycle, and retain their approved mobile/presentation treatments. The public release removes the frontend owner-preview gate and flips the existing private backend release switch. Completion requires the exact release head to pass typecheck, the full test suite, production build, relevant fresh-database backend verification, merge cleanly, and then match the exact production deployment SHA.
 
 ---
 
@@ -560,4 +527,4 @@ The roadmap is complete only when production has:
 - exact final head green for typecheck, full tests, production build, and relevant backend proof;
 - exact production deployment SHA verified.
 
-Until then, continue from the **NEXT** marker above rather than inferring progress from an older roadmap or historical PR sequence.
+The Games launch roadmap is complete when the Stage 15 exact production deployment SHA is verified. Front Seven, Secondary, and any additional Draft Room subjects are post-launch product work and require an explicit future decision rather than being inferred as unfinished launch scope.
