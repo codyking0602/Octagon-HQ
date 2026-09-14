@@ -82,6 +82,7 @@ describe("sport-aware Play registry", () => {
         reminderEligible: false,
         historyRecording: "challenge-completion",
         completionState: "draft-room-complete",
+        lineupSize: "variable",
       },
     });
 
