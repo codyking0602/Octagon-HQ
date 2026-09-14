@@ -12,6 +12,7 @@ import {
 import { cfbBuildQbVisualIdentity } from "./cfbBuildQbVisualIdentity";
 import { draftRoomModeArtwork } from "./draftRoomModeArtwork";
 import { trioPlayerVisualIdentity } from "./draftRoomTrioVisualIdentity";
+import { longhornsTeamSeasonSummary } from "./longhornsTeamSeasonSummaries";
 import {
   AuctionRepositoryError,
   createAuctionRepository,
@@ -201,11 +202,17 @@ function LonghornsComparison({
               <div className={challengerAward ? "is-filled" : ""}>
                 <small>{itemLabel} {index + 1}</small>
                 <strong className={itemLabel === "TEAM" ? "draft-room-season-label" : undefined}>{challengerAward?.display_label ?? "OPEN"}</strong>
+                {itemLabel === "TEAM" && challengerAward ? (
+                  <span className="draft-room-season-summary">{longhornsTeamSeasonSummary(challengerAward.display_label)}</span>
+                ) : null}
               </div>
               <span aria-hidden="true">VS</span>
               <div className={recipientAward ? "is-filled" : ""}>
                 <small>{itemLabel} {index + 1}</small>
                 <strong className={itemLabel === "TEAM" ? "draft-room-season-label" : undefined}>{recipientAward?.display_label ?? "OPEN"}</strong>
+                {itemLabel === "TEAM" && recipientAward ? (
+                  <span className="draft-room-season-summary">{longhornsTeamSeasonSummary(recipientAward.display_label)}</span>
+                ) : null}
               </div>
             </article>
           );
@@ -329,7 +336,8 @@ function DraftRoomBoard({
   const longhornsMode = isLonghornsDraftRoomMode(state.mode_id);
   const longhornsTeamsMode = isLonghornsTeamsDraftRoomMode(state.mode_id);
   const cowboysMode = isCowboysDraftRoomMode(state.mode_id);
-  const openRosterMode = trioMode || longhornsMode || longhornsTeamsMode || cowboysMode;
+  const longhornsFamilyMode = longhornsMode || longhornsTeamsMode;
+  const openRosterMode = trioMode || longhornsFamilyMode || cowboysMode;
   const rosterResult = openRosterMode && state.lifecycle_state === "completed";
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<BuildQbTrait | "">("");
@@ -382,7 +390,7 @@ function DraftRoomBoard({
   }
 
   return (
-    <div className="auction-board">
+    <div className={`auction-board${longhornsFamilyMode ? " auction-board--longhorns" : ""}`}>
       <header className="auction-board__header">
         <DraftRoomModeArtworkImage
           modeId={state.mode_id}
@@ -429,7 +437,14 @@ function DraftRoomBoard({
               ? <TrioPackageCard modeId={state.mode_id} displayLabel={state.current_item.display_label} />
               : <h2>{terminal ? "ROSTERS LOCKED" : "LOADING"}</h2>
           ) : longhornsMode || longhornsTeamsMode || cowboysMode ? (
-            <h2 className={longhornsTeamsMode ? "draft-room-season-label" : undefined}>{state.current_item?.display_label ?? (terminal ? "ROSTER LOCKED" : "LOADING")}</h2>
+            <>
+              <h2 className={longhornsTeamsMode ? "draft-room-season-label" : undefined}>{state.current_item?.display_label ?? (terminal ? "ROSTER LOCKED" : "LOADING")}</h2>
+              {longhornsTeamsMode && state.current_item?.display_label ? (
+                <p className="draft-room-season-summary draft-room-season-summary--current">
+                  {longhornsTeamSeasonSummary(state.current_item.display_label)}
+                </p>
+              ) : null}
+            </>
           ) : (
             <div className="build-qb-current__identity">
               {currentQbIdentity ? <BuildQbTeamMark identity={currentQbIdentity} /> : null}
@@ -447,9 +462,12 @@ function DraftRoomBoard({
           <p>
             {trioMode && latestAward ? `${latestAward.display_label} · ` : latestAward?.category ? `${latestAward.category} · ` : ""}
             {latestRound.forced
-              ? `assigned for $${latestRound.charged_amount}`
-              : `${state.challenger_display_name} $${latestRound.challenger_bid} · ${state.recipient_display_name} $${latestRound.recipient_bid}`}
+              ? `assigned for ${latestRound.charged_amount}`
+              : `${state.challenger_display_name} ${latestRound.challenger_bid} · ${state.recipient_display_name} ${latestRound.recipient_bid}`}
           </p>
+          {longhornsTeamsMode && latestAward ? (
+            <span className="draft-room-season-summary">{longhornsTeamSeasonSummary(latestAward.display_label)}</span>
+          ) : null}
         </section>
       ) : null}
 
@@ -820,7 +838,13 @@ export default function FootballDraftRoomPage() {
 
           <ol>
             {visibleModes.map((mode, index) => (
-              <li className={selectedModeId === mode.id ? "is-selected" : ""} key={mode.id}>
+              <li
+                className={[
+                  selectedModeId === mode.id ? "is-selected" : "",
+                  isLonghornsDraftRoomMode(mode.id) || isLonghornsTeamsDraftRoomMode(mode.id) ? "is-longhorns-mode" : "",
+                ].filter(Boolean).join(" ")}
+                key={mode.id}
+              >
                 <button
                   type="button"
                   aria-label={mode.displayName}
