@@ -123,5 +123,17 @@ begin
   ) then
     raise exception 'Longhorns Teams eligibility escaped the completed 2003-2025 window';
   end if;
+
+  if pg_get_functiondef('public.send_auction_first_bid(uuid,bigint,numeric,text)'::regprocedure)
+      not like '%Longhorns Since 2003%'
+    or pg_get_functiondef('public.send_auction_first_bid(uuid,bigint,numeric,text)'::regprocedure)
+      not like '%Longhorns Teams Since 2003%'
+    or pg_get_functiondef('public.send_auction_first_bid(uuid,bigint,numeric,text)'::regprocedure)
+      like '%Longhorns Since 2005%'
+    or pg_get_functiondef('public.send_auction_first_bid(uuid,bigint,numeric,text)'::regprocedure)
+      like '%Longhorns Teams Since 2005%'
+  then
+    raise exception 'Longhorns challenge notification copy did not fully move to 2003';
+  end if;
 end;
-$$;
+$;
