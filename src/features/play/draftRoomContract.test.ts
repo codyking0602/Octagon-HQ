@@ -4,6 +4,7 @@ import {
   TRIO_POSITIONS,
   draftRoomModeDefinition,
   isDraftRoomModeId,
+  isCowboysDraftRoomMode,
   isLonghornsDraftRoomMode,
   isLonghornsTeamsDraftRoomMode,
   isTrioDraftRoomMode,
@@ -72,6 +73,19 @@ describe("Draft Room contract", () => {
     expect(isLonghornsDraftRoomMode("longhorns-teams-2005")).toBe(false);
   });
 
+  it("locks Cowboys Since 2007 to eight open-roster auctions and four wins per side", () => {
+    const mode = draftRoomModeDefinition("cowboys-2007");
+    expect(mode.rounds).toBe(8);
+    expect(mode.requiredSelectionsPerPlayer).toBe(4);
+    expect(mode.startingBankroll).toBe(40);
+    expect(mode.categories).toEqual([]);
+    expect(mode.format).toBe("open-roster");
+    expect(isCowboysDraftRoomMode("cowboys-2007")).toBe(true);
+    expect(isLonghornsDraftRoomMode("cowboys-2007")).toBe(false);
+    expect(isLonghornsTeamsDraftRoomMode("cowboys-2007")).toBe(false);
+    expect(isTrioDraftRoomMode("cowboys-2007")).toBe(false);
+  });
+
   it("recognizes only canonical Draft Room mode ids", () => {
     expect(isDraftRoomModeId("build-qb")).toBe(true);
     expect(isDraftRoomModeId("build-qb-cfb")).toBe(true);
@@ -79,6 +93,7 @@ describe("Draft Room contract", () => {
     expect(isDraftRoomModeId("trio-cfb")).toBe(true);
     expect(isDraftRoomModeId("longhorns-2005")).toBe(true);
     expect(isDraftRoomModeId("longhorns-teams-2005")).toBe(true);
+    expect(isDraftRoomModeId("cowboys-2007")).toBe(true);
     expect(isDraftRoomModeId("ultimate-fighter")).toBe(false);
   });
 });

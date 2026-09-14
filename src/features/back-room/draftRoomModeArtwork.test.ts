@@ -27,5 +27,9 @@ describe("Draft Room mode artwork", () => {
       src: "/assets/football/draft-room-longhorns-teams-mack-brown.webp",
       objectPosition: "50% 40%",
     });
+    expect(draftRoomModeArtwork("cowboys-2007")).toEqual({
+      src: "/assets/football/draft-room-cowboys-jason-witten.webp",
+      objectPosition: "50% 42%",
+    });
   });
 });
