@@ -5,23 +5,23 @@ export const PLAY_LANDING_COMMON_GAME_ORDER = [
   "find-leader",
   "wavelength",
   "blind-resume",
-  "hit-the-number",
   "who-am-i",
+  "hit-the-number",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
   "find-leader",
   "wavelength",
-  "hit-the-number",
   "who-am-i",
+  "hit-the-number",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies PlayGameId;
 export const PLAY_LANDING_FOOTBALL_STRATEGIC_GAME = "draft-room" as const satisfies PlayGameId;
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
-  if (sport === "ufc") return [...PLAY_LANDING_COMMON_GAME_ORDER, PLAY_LANDING_UFC_STRATEGIC_GAME];
-  return [...PLAY_LANDING_FOOTBALL_GAME_ORDER, PLAY_LANDING_FOOTBALL_STRATEGIC_GAME];
+  if (sport === "ufc") return [PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER];
+  return [PLAY_LANDING_FOOTBALL_STRATEGIC_GAME, ...PLAY_LANDING_FOOTBALL_GAME_ORDER];
 }
 
 export function playLandingDestination(sport: PlaySport, gameId: PlayGameId) {
