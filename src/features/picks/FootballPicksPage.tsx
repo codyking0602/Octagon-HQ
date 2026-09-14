@@ -255,7 +255,7 @@ export default function FootballPicksPage() {
                 <div className="football-group-hub__summary-meta">
                   <strong>
                     {liveAts.settled
-                      ? `${liveAts.wins}-${liveAts.losses}${liveAts.pushes ? `-${liveAts.pushes}` : ""}`
+                      ? `LIVE ATS ${liveAts.wins}-${liveAts.losses}${liveAts.pushes ? ` · ${liveAts.pushes} PUSH${liveAts.pushes === 1 ? "" : "ES"}` : ""}`
                       : seasonHub ? "WEEKLY + SEASON" : "WEEKLY PICKS"}
                   </strong>
                   <small>{liveAts.settled ? `${liveAts.settled} FINAL` : seasonHub ? "GROUP + SEASON" : "GROUP PICKS"}</small>
