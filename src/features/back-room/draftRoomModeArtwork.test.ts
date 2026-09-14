@@ -14,7 +14,7 @@ describe("Draft Room mode artwork", () => {
       objectPosition: "50% 36%",
     });
     expect(draftRoomModeArtwork("trio-nfl")).toEqual({
-      src: "/assets/football/draft-room-trio-nfl.webp",
+      src: "/assets/football/steelers-trio-hero.webp",
       objectPosition: "50% 50%",
     });
     expect(draftRoomModeArtwork("trio-cfb")).toEqual({
@@ -56,6 +56,13 @@ describe("Draft Room mode artwork", () => {
 
   it("keeps the supplied Cowboys Teams hero as a valid WebP asset", () => {
     const image = readFileSync(resolve(process.cwd(), "public/assets/football/draft-room-cowboys-teams.webp"));
+    expect(image.subarray(0, 4).toString("ascii")).toBe("RIFF");
+    expect(image.subarray(8, 12).toString("ascii")).toBe("WEBP");
+    expect(image.byteLength).toBeGreaterThan(5_000);
+  });
+
+  it("keeps the supplied Steelers NFL Trio hero as a valid WebP asset", () => {
+    const image = readFileSync(resolve(process.cwd(), "public/assets/football/steelers-trio-hero.webp"));
     expect(image.subarray(0, 4).toString("ascii")).toBe("RIFF");
     expect(image.subarray(8, 12).toString("ascii")).toBe("WEBP");
     expect(image.byteLength).toBeGreaterThan(5_000);
