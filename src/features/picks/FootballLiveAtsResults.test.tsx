@@ -98,7 +98,8 @@ describe("Football live ATS results", () => {
     render(<FootballPicksPage />);
 
     expect(screen.getByText("✓ COVERED")).toBeInTheDocument();
-    expect(screen.getByText("LIVE ATS 1-0")).toBeInTheDocument();\n    expect(screen.getByText("1 FINAL")).toBeInTheDocument();
+    expect(screen.getByText("LIVE ATS 1-0")).toBeInTheDocument();
+    expect(screen.getByText("1 FINAL")).toBeInTheDocument();
     expect(screen.getByText("FINAL · Ohio State Buckeyes 20, Texas Longhorns 24")).toBeInTheDocument();
     expect(screen.getByText("LOCKED")).toBeInTheDocument();
   });
