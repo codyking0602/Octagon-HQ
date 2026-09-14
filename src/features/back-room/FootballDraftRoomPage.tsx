@@ -6,6 +6,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import type { IdentityProfile } from "../identity/identityModel";
 import type { MemberCardSummary } from "../members/memberProfilesModel";
 import {
+  buildQbTeamVisualIdentity,
   buildQbVisualIdentity,
   type BuildQbVisualIdentity,
 } from "./buildQbVisualIdentity";
@@ -15,6 +16,10 @@ import { trioPlayerVisualIdentity } from "./draftRoomTrioVisualIdentity";
 import { cowboysPlayerSummary } from "./cowboysPlayerSummaries";
 import { longhornsPlayerSummary } from "./longhornsPlayerSummaries";
 import { longhornsTeamSeasonSummary } from "./longhornsTeamSeasonSummaries";
+import {
+  nflDivisionBoardLabel,
+  nflDivisionTeamSeasonPresentation,
+} from "./nflDivisionTeamSeasonPresentation";
 import {
   AuctionRepositoryError,
   createAuctionRepository,
@@ -32,6 +37,7 @@ import {
   isDraftRoomModeId,
   isLonghornsDraftRoomMode,
   isLonghornsTeamsDraftRoomMode,
+  isNflDivisionsDraftRoomMode,
   isTrioDraftRoomMode,
   type BuildQbTrait,
   type DraftRoomModeId,
@@ -230,6 +236,84 @@ function LonghornsComparison({
   );
 }
 
+function NflDivisionSeasonCard({
+  itemReference,
+  displayLabel,
+  compact = false,
+}: {
+  itemReference: string | null | undefined;
+  displayLabel: string;
+  compact?: boolean;
+}) {
+  const season = nflDivisionTeamSeasonPresentation(itemReference);
+  const identity = season ? buildQbTeamVisualIdentity(season.teamCode) : null;
+  const label = season ? `${season.season} ${season.teamName}` : displayLabel;
+
+  return (
+    <div
+      className={`nfl-division-season${compact ? " nfl-division-season--compact" : ""}${identity ? " has-team-identity" : ""}`}
+      style={identity ? buildQbTeamStyle(identity) : undefined}
+    >
+      {identity ? <BuildQbTeamMark identity={identity} compact={compact} /> : null}
+      <div>
+        <strong className="draft-room-season-label">{label}</strong>
+        {season ? <span className="draft-room-season-summary">{season.summary}</span> : null}
+        {season ? <small className="nfl-division-season__division">{season.divisionLabel}</small> : null}
+      </div>
+    </div>
+  );
+}
+
+function NflDivisionsComparison({ state }: { state: DraftRoomProjection }) {
+  const challengerAwards = state.awarded_collections
+    .filter((item) => item.awarded_to === state.challenger_id)
+    .sort((a, b) => a.resolved_round - b.resolved_round);
+  const recipientAwards = state.awarded_collections
+    .filter((item) => item.awarded_to === state.recipient_id)
+    .sort((a, b) => a.resolved_round - b.resolved_round);
+
+  return (
+    <section className="auction-collections surface-card" aria-label="NFL Divisions team-season comparison">
+      <header className="auction-collections__header">
+        <div><strong>{state.challenger_display_name}</strong></div>
+        <span>VS</span>
+        <div><strong>{state.recipient_display_name}</strong></div>
+      </header>
+      <div className="auction-collections__rows">
+        {Array.from({ length: 4 }, (_, index) => {
+          const challengerAward = challengerAwards[index];
+          const recipientAward = recipientAwards[index];
+          return (
+            <article key={index}>
+              <div className={challengerAward ? "is-filled" : ""}>
+                <small>TEAM {index + 1}</small>
+                {challengerAward ? (
+                  <NflDivisionSeasonCard
+                    itemReference={challengerAward.item_reference}
+                    displayLabel={challengerAward.display_label}
+                    compact
+                  />
+                ) : <strong>OPEN</strong>}
+              </div>
+              <span aria-hidden="true">VS</span>
+              <div className={recipientAward ? "is-filled" : ""}>
+                <small>TEAM {index + 1}</small>
+                {recipientAward ? (
+                  <NflDivisionSeasonCard
+                    itemReference={recipientAward.item_reference}
+                    displayLabel={recipientAward.display_label}
+                    compact
+                  />
+                ) : <strong>OPEN</strong>}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function buildQbTeamStyle(identity: BuildQbVisualIdentity): CSSProperties {
   return {
     "--build-qb-team-color": identity.primary,
@@ -343,9 +427,10 @@ function DraftRoomBoard({
   const trioMode = isTrioDraftRoomMode(state.mode_id);
   const longhornsMode = isLonghornsDraftRoomMode(state.mode_id);
   const longhornsTeamsMode = isLonghornsTeamsDraftRoomMode(state.mode_id);
+  const nflDivisionsMode = isNflDivisionsDraftRoomMode(state.mode_id);
   const cowboysMode = isCowboysDraftRoomMode(state.mode_id);
   const longhornsFamilyMode = longhornsMode || longhornsTeamsMode;
-  const openRosterMode = trioMode || longhornsFamilyMode || cowboysMode;
+  const openRosterMode = trioMode || longhornsFamilyMode || nflDivisionsMode || cowboysMode;
   const rosterResult = openRosterMode && state.lifecycle_state === "completed";
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<BuildQbTrait | "">("");
@@ -366,8 +451,17 @@ function DraftRoomBoard({
     ? state.awarded_collections.find((item) => item.resolved_round === latestRound.round)
     : null;
   const currentQbIdentity = openRosterMode ? null : draftRoomVisualIdentity(state.mode_id, state.current_item?.item_reference);
+  const currentNflDivisionSeason = nflDivisionsMode
+    ? nflDivisionTeamSeasonPresentation(state.current_item?.item_reference)
+    : null;
+  const currentNflDivisionIdentity = currentNflDivisionSeason
+    ? buildQbTeamVisualIdentity(currentNflDivisionSeason.teamCode)
+    : null;
+  const currentNflDivisionBoardLabel = nflDivisionsMode
+    ? nflDivisionBoardLabel(state.current_item?.item_reference)
+    : null;
 
-  const roomLabel = trioMode ? "Trio" : longhornsTeamsMode ? "Longhorns Teams" : longhornsMode ? "Longhorns" : cowboysMode ? "Cowboys" : "Build a QB";
+  const roomLabel = trioMode ? "Trio" : nflDivisionsMode ? "NFL Divisions" : longhornsTeamsMode ? "Longhorns Teams" : longhornsMode ? "Longhorns" : cowboysMode ? "Cowboys" : "Build a QB";
   const status = state.lifecycle_state === "prepared"
     ? `Your first bid sends this ${roomLabel} room`
     : state.lifecycle_state === "sent"
@@ -398,7 +492,7 @@ function DraftRoomBoard({
   }
 
   return (
-    <div className={`auction-board${longhornsFamilyMode ? " auction-board--longhorns" : ""}${cowboysMode ? " auction-board--cowboys" : ""}`}>
+    <div className={`auction-board${longhornsFamilyMode ? " auction-board--longhorns" : ""}${nflDivisionsMode ? " auction-board--nfl-divisions" : ""}${cowboysMode ? " auction-board--cowboys" : ""}`}>
       <header className="auction-board__header">
         <DraftRoomModeArtworkImage
           modeId={state.mode_id}
@@ -433,17 +527,22 @@ function DraftRoomBoard({
       {!rosterResult ? <section className="auction-current surface-card">
         <div className="auction-current__meta">
           <span>ROUND {Math.min(state.current_round, mode.rounds)} / {mode.rounds}</span>
-          <span>TIES → {tieName}</span>
+          <span>{currentNflDivisionBoardLabel ? `BOARD · ${currentNflDivisionBoardLabel}` : `TIES → ${tieName}`}</span>
         </div>
         <div
-          className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}${trioMode ? " draft-room-trio-current" : ""}`}
-          style={currentQbIdentity ? buildQbTeamStyle(currentQbIdentity) : undefined}
+          className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}${currentNflDivisionIdentity ? " has-nfl-division-team" : ""}${trioMode ? " draft-room-trio-current" : ""}`}
+          style={currentQbIdentity ? buildQbTeamStyle(currentQbIdentity) : currentNflDivisionIdentity ? buildQbTeamStyle(currentNflDivisionIdentity) : undefined}
         >
-          <small>{trioMode ? "CURRENT TRIO" : longhornsTeamsMode ? "CURRENT TEXAS TEAM" : longhornsMode ? "CURRENT LONGHORN" : cowboysMode ? "CURRENT COWBOY" : "CURRENT QB"}</small>
+          <small>{trioMode ? "CURRENT TRIO" : nflDivisionsMode ? "CURRENT TEAM-SEASON" : longhornsTeamsMode ? "CURRENT TEXAS TEAM" : longhornsMode ? "CURRENT LONGHORN" : cowboysMode ? "CURRENT COWBOY" : "CURRENT QB"}</small>
           {trioMode ? (
             state.current_item?.display_label
               ? <TrioPackageCard modeId={state.mode_id} displayLabel={state.current_item.display_label} />
               : <h2>{terminal ? "ROSTERS LOCKED" : "LOADING"}</h2>
+          ) : nflDivisionsMode && state.current_item?.display_label ? (
+            <NflDivisionSeasonCard
+              itemReference={state.current_item.item_reference}
+              displayLabel={state.current_item.display_label}
+            />
           ) : longhornsMode || longhornsTeamsMode || cowboysMode ? (
             <>
               <h2 className={longhornsTeamsMode ? "draft-room-season-label" : undefined}>{state.current_item?.display_label ?? (terminal ? "ROSTER LOCKED" : "LOADING")}</h2>
@@ -474,14 +573,20 @@ function DraftRoomBoard({
       {latestRound && !rosterResult ? (
         <section className="auction-result surface-card" aria-label="Latest Draft Room result">
           <p className="eyebrow">{latestRound.forced ? "FORCED $1 ASSIGNMENT" : `ROUND ${latestRound.round} RESULT`}</p>
-          <h2>{latestAward ? (trioMode ? "Trio awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : longhornsTeamsMode ? "Resolved Texas team" : longhornsMode ? "Resolved Longhorn" : cowboysMode ? "Resolved Cowboy" : "Resolved QB")}</h2>
+          <h2>{latestAward ? (trioMode ? "Trio awarded" : latestAward.display_label) : (trioMode ? "Resolved trio" : nflDivisionsMode ? "Resolved NFL team-season" : longhornsTeamsMode ? "Resolved Texas team" : longhornsMode ? "Resolved Longhorn" : cowboysMode ? "Resolved Cowboy" : "Resolved QB")}</h2>
           <p>
             {trioMode && latestAward ? `${latestAward.display_label} · ` : latestAward?.category ? `${latestAward.category} · ` : ""}
             {latestRound.forced
               ? `assigned for ${latestRound.charged_amount}`
               : `${state.challenger_display_name} ${latestRound.challenger_bid} · ${state.recipient_display_name} ${latestRound.recipient_bid}`}
           </p>
-          {longhornsTeamsMode && latestAward ? (
+          {nflDivisionsMode && latestAward ? (
+            <NflDivisionSeasonCard
+              itemReference={latestAward.item_reference}
+              displayLabel={latestAward.display_label}
+              compact
+            />
+          ) : longhornsTeamsMode && latestAward ? (
             <span className="draft-room-season-summary">{longhornsTeamSeasonSummary(latestAward.display_label)}</span>
           ) : longhornsMode && latestAward ? (
             <span className="draft-room-player-summary">{longhornsPlayerSummary(latestAward.display_label)}</span>
@@ -494,7 +599,7 @@ function DraftRoomBoard({
       {state.lifecycle_state === "completed"
         && state.challenger_final_score !== null
         && state.recipient_final_score !== null ? (
-        <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : longhornsTeamsMode ? "Longhorns Teams final result" : longhornsMode ? "Longhorns final result" : cowboysMode ? "Cowboys final result" : "Build a QB final result"}>
+        <section className="auction-final surface-card" aria-label={trioMode ? "Trio final result" : nflDivisionsMode ? "NFL Divisions final result" : longhornsTeamsMode ? "Longhorns Teams final result" : longhornsMode ? "Longhorns final result" : cowboysMode ? "Cowboys final result" : "Build a QB final result"}>
           <p className="eyebrow">{openRosterMode ? "FINAL ROSTER SCORE" : "FINAL BUILD SCORE"}</p>
           <h2>
             {state.is_tie
@@ -513,6 +618,8 @@ function DraftRoomBoard({
 
       {trioMode
         ? <TrioComparison state={state} />
+        : nflDivisionsMode
+          ? <NflDivisionsComparison state={state} />
         : longhornsTeamsMode
           ? <LonghornsComparison
               state={state}
@@ -556,6 +663,8 @@ function DraftRoomBoard({
             <p className="draft-room-trio-bid-note">
               {trioMode
                 ? "Bid on the full QB / RB / WR package."
+                : nflDivisionsMode
+                  ? "Bid on this NFL team-season. The server chooses the division board; win four seasons to build the stronger group."
                 : longhornsTeamsMode
                   ? "Bid on this Texas season. Win four seasons and build the stronger four-team group."
                   : cowboysMode
