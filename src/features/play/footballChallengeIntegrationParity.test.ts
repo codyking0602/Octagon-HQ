@@ -9,7 +9,6 @@ import type { ChallengeJson, PlayChallenge } from "../challenges/challengeModel"
 import { playGameDefinition, playGamesForSport, type PlayGameId } from "./playRegistry";
 
 const footballChallengeGames: readonly { id: PlayGameId; route: string }[] = [
-  { id: "draft-room", route: "/football/draft-room" },
   { id: "blind-rank", route: "/football/rank-five" },
   { id: "keep-cut", route: "/football/keep-cut" },
   { id: "wavelength", route: "/football/wavelength" },
@@ -47,13 +46,23 @@ describe("Football standalone challenge integration parity", () => {
   it("keeps public Football challenge games challenge-capable while 20 Questions stays retired", () => {
     const games = playGamesForSport("football");
     const challengeGames = games.filter((game) => game.lineup.challengeEligible);
-    expect(challengeGames.map((game) => game.id)).toEqual(footballChallengeGames.map((game) => game.id));
+    expect(challengeGames.map((game) => game.id)).toEqual([
+      "draft-room",
+      ...footballChallengeGames.map((game) => game.id),
+    ]);
 
-    for (const game of challengeGames) {
+    const draftRoom = playGameDefinition("draft-room", "football");
+    expect(draftRoom.lineup).toMatchObject({
+      supportedTypes: ["curated"],
+      historyRecording: "challenge-completion",
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+    });
+
+    for (const game of challengeGames.filter((candidate) => candidate.id !== "draft-room")) {
       expect(game.lineup.supportedTypes).toContain("curated");
-      expect(game.lineup.historyRecording).toBe(
-        game.id === "draft-room" ? "challenge-completion" : "casual-and-challenge",
-      );
+      expect(game.lineup.historyRecording).toBe("casual-and-challenge");
       expect(game.lineup.dailyEligible).toBe(false);
       expect(game.lineup.streakEligible).toBe(false);
       expect(game.lineup.reminderEligible).toBe(false);
@@ -69,6 +78,15 @@ describe("Football standalone challenge integration parity", () => {
       const expectedParam = game.id === "find-leader" ? "challenge=FB1234" : "match=FB1234";
       expect(routed).toBe(`${game.route}?${expectedParam}`);
     }
+  });
+
+  it("preserves the sealed-bid Draft Room auction URL through Challenge Center routing", () => {
+    expect(challengePlayRoute(challenge(
+      "draft-room",
+      "/football/draft-room?auction=11111111-1111-1111-1111-111111111111",
+    ))).toBe(
+      "/football/draft-room?auction=11111111-1111-1111-1111-111111111111&match=FB1234",
+    );
   });
 
   it("uses the sport-aware registry route when a stored play URL is missing", () => {
