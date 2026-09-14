@@ -498,7 +498,7 @@ export function FootballFuturesCard() {
       <summary className="football-futures__summary">
         <span className="football-futures__summary-label" id="football-futures-title">SEASON FUTURES</span>
         <strong className="football-futures__summary-status">
-          {locked ? `${FOOTBALL_FUTURES_MAX_POINTS.total} PTS · LOCKED` : `${FOOTBALL_FUTURES_MAX_POINTS.total} PTS · PICK NOW`}
+          `${FOOTBALL_FUTURES_MAX_POINTS.total} POTENTIAL PTS`
         </strong>
         <span className="football-futures__chevron" aria-hidden="true">⌄</span>
       </summary>
