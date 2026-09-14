@@ -613,7 +613,7 @@ export default function FootballTodayChallengePage() {
         )}
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
-        {!blindResume && projection.gameType !== "who_am_i" ? <ScoreCard projection={projection} /> : null}
+        {!blindResume ? <ScoreCard projection={projection} /> : null}
         {projection.officialAttempt ? (
           <div className="football-today-result-actions">
             <button className="football-today-primary" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
