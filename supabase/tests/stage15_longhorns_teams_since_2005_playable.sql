@@ -40,10 +40,23 @@ begin
     raise exception 'Longhorns Teams lost shared Draft Room ownership or private catalog ownership';
   end if;
 
-  if (select count(*) from private.draft_room_longhorn_teams_pool) <> 21
-    or exists (select 1 from private.draft_room_longhorn_teams_pool where season_year = 2026)
+  if not exists (
+    select 1 from private.draft_room_longhorn_teams_pool
+    where season_year = 2003 and hidden_grade = 82
+  ) or not exists (
+    select 1 from private.draft_room_longhorn_teams_pool
+    where season_year = 2004 and hidden_grade = 92
+  ) then
+    raise exception 'Longhorns Teams playable pool lost the approved 2003/2004 seasons';
+  end if;
+
+  if (select count(*) from private.draft_room_longhorn_teams_pool) <> 23
+    or exists (
+      select 1 from private.draft_room_longhorn_teams_pool
+      where season_year < 2003 or season_year > 2025
+    )
   then
-    raise exception 'Longhorns Teams eligibility must be completed Texas seasons 2005-2025 only';
+    raise exception 'Longhorns Teams eligibility must be completed Texas seasons 2003-2025 only';
   end if;
 
   insert into auth.users(
