@@ -62,8 +62,8 @@ export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
   },
   {
     id: "longhorns-2005",
-    displayName: "Longhorns Since 2005",
-    description: "Bid on Texas Longhorns from 2005 forward. Win four players and build the stronger four-player group.",
+    displayName: "Longhorns Since 2003",
+    description: "Bid on Texas Longhorns from 2003 forward. Win four players and build the stronger four-player group.",
     rounds: 8,
     requiredSelectionsPerPlayer: 4,
     startingBankroll: 40,
@@ -72,8 +72,8 @@ export const draftRoomModes: readonly DraftRoomModeDefinition[] = [
   },
   {
     id: "longhorns-teams-2005",
-    displayName: "Longhorns Teams Since 2005",
-    description: "Bid on completed Texas seasons from 2005 forward. Win four teams and build the stronger four-season group.",
+    displayName: "Longhorns Teams Since 2003",
+    description: "Bid on completed Texas seasons from 2003 forward. Win four teams and build the stronger four-season group.",
     rounds: 8,
     requiredSelectionsPerPlayer: 4,
     startingBankroll: 40,
