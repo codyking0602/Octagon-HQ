@@ -291,8 +291,7 @@ function CfbBestTeamSeasonCard({
     >
       {identity ? <BuildQbTeamMark identity={identity} compact={compact} /> : null}
       <div>
-        <strong className="draft-room-season-label">{season ? season.school : displayLabel}</strong>
-        {season ? <span className="cfb-best-team-season__year">{season.school} · {season.year}</span> : null}
+        <strong className="draft-room-season-label">{season ? `${season.school} · ${season.year}` : displayLabel}</strong>
         {season ? <span className="draft-room-season-summary">{season.summary}</span> : null}
       </div>
     </div>
@@ -445,7 +444,7 @@ function DraftRoomBoard({
     ? state.awarded_collections.find((item) => item.resolved_round === latestRound.round)
     : null;
   const currentQbIdentity = openRosterMode ? null : draftRoomVisualIdentity(state.mode_id, state.current_item?.item_reference);
-  const currentCfbBestBoardLabel = cfbBestTeamsMode ? cfbBestTeamBoardLabel(state.current_item?.item_reference) : null;
+  const currentCfbBestBoardLabel = cfbBestTeamsMode ? cfbBestTeamBoardLabel(state.current_item?.item_reference ?? state.awarded_collections[0]?.item_reference) : null;
 
   const roomLabel = trioMode ? "Trio"
     : cfbBestTeamsMode ? "Best CFB Teams"
@@ -519,7 +518,7 @@ function DraftRoomBoard({
       {!rosterResult ? <section className="auction-current surface-card">
         <div className="auction-current__meta">
           <span>ROUND {Math.min(state.current_round, mode.rounds)} / {mode.rounds}</span>
-          <span>{currentCfbBestBoardLabel ? `BOARD · ${currentCfbBestBoardLabel}` : `TIES → ${tieName}`}</span>
+          <span>{currentCfbBestBoardLabel ? `BOARD · ${currentCfbBestBoardLabel} · TIES → ${tieName}` : `TIES → ${tieName}`}</span>
         </div>
         <div
           className={`auction-current__item${currentQbIdentity ? " has-build-qb-team" : ""}${trioMode ? " draft-room-trio-current" : ""}`}
