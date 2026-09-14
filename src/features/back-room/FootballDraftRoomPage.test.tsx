@@ -145,6 +145,7 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CFB Build a QB" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "CFB QB / RB / WR Trio" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Longhorns Since 2005" })).not.toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/build-qb-andrew-luck-hero.webp"]')).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-trio-nfl.webp"]')).toBeInTheDocument();
   });
@@ -158,10 +159,12 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Longhorns Since 2005" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "NFL QB / RB / WR Trio" })).not.toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/build-qb-cam-newton-auburn-hero.webp"]')).toBeInTheDocument();
     expect(container.querySelector('img[src="/assets/football/draft-room-trio-cfb-ohio-state.webp"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/draft-room-longhorns-vince-young.webp"]')).toBeInTheDocument();
   });
 
   it("keeps mode selection and opponent selection as one shared two-step setup flow", () => {
@@ -189,6 +192,18 @@ describe("Football Draft Room", () => {
     expect(screen.getByRole("button", { name: "NFL" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "NFL QB / RB / WR Trio" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.queryByRole("button", { name: "CFB QB / RB / WR Trio" })).not.toBeInTheDocument();
+  });
+
+  it("resolves Longhorns Since 2005 as a CFB Draft Room mode", () => {
+    mockedUseIdentity.mockReturnValue(identity(true));
+    const { container } = renderRoute("/football/draft-room?mode=longhorns-2005");
+
+    expect(screen.getByRole("button", { name: "CFB" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Longhorns Since 2005" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "CFB Build a QB" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "CFB QB / RB / WR Trio" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "NFL Build a QB" })).not.toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/football/draft-room-longhorns-vince-young.webp"]')).toBeInTheDocument();
   });
 
   it("resolves the CFB launch mode without weakening the canonical private gate", () => {
