@@ -14,7 +14,7 @@ function artwork(src: string, objectPosition: string): DraftRoomModeArtwork {
 export const draftRoomModeArtworks = {
   "build-qb": artwork(BUILD_QB_HERO_IMAGE, "50% 36%"),
   "build-qb-cfb": artwork(CFB_BUILD_QB_HERO_IMAGE, "50% 36%"),
-  "trio-nfl": artwork("/assets/football/draft-room-trio-nfl.webp", "50% 50%"),
+  "trio-nfl": artwork("/assets/football/steelers-trio-hero.webp", "50% 50%"),
   "trio-cfb": artwork("/assets/football/draft-room-trio-cfb-ohio-state.webp", "50% 50%"),
   "nfl-divisions": artwork("/assets/football/draft-room-trio-nfl.webp", "50% 50%"),
   "cfb-best-teams": artwork("/assets/football/draft-room-cfb-best-teams-lsu.webp", "50% 50%"),
