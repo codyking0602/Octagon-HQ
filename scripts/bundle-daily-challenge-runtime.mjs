@@ -37,6 +37,7 @@ for (const generator of [
   "./generate-football-career-media-context.mjs",
   "./generate-football-factual-universe.mjs",
   "./enrich-football-hit-number-peak-seasons.mjs",
+  "./generate-football-who-am-i-daily-universes.mjs",
 ]) {
   await import(generator);
 }

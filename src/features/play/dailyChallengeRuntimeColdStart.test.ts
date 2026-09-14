@@ -51,7 +51,18 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(ufcRuntime).toContain('from "../games/ufcWhoAmIAuthority"');
     expect(ufcRuntime).not.toContain('from "../games/whoAmIAuthority"');
     expect(ufcRuntime).not.toContain("footballWhoAmIAuthority");
-    expect(footballRuntime).toContain('from "../games/footballWhoAmIAuthority"');
+    expect(footballRuntime).toContain('from "../games/footballWhoAmIDailyAuthority"');
+    expect(footballRuntime).not.toContain('from "../games/footballWhoAmIAuthority"');
+  });
+
+  it("precompiles Football Who Am I research into a compact Daily universe", () => {
+    const dailyAuthority = readFileSync("src/features/games/footballWhoAmIDailyAuthority.ts", "utf8");
+    const generator = readFileSync("scripts/generate-football-who-am-i-daily-universes.mjs", "utf8");
+    expect(dailyAuthority).toContain("who-am-i-daily-universes.json");
+    expect(dailyAuthority).not.toContain("footballPersonIdentityKnowledge");
+    expect(dailyAuthority).not.toContain("footballSubjectRegistry");
+    expect(generator).toContain("getFootballWhoAmIUniverse");
+    expect(bundler).toContain("./generate-football-who-am-i-daily-universes.mjs");
   });
 
   it("serves published Football Daily reads before loading a generated Football runtime", () => {
