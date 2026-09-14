@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { draftRoomModeArtwork } from "./draftRoomModeArtwork";
 
@@ -31,5 +33,12 @@ describe("Draft Room mode artwork", () => {
       src: "/assets/football/draft-room-cowboys-jason-witten.webp",
       objectPosition: "50% 42%",
     });
+  });
+
+  it("keeps the Longhorns Teams hero as a valid WebP asset", () => {
+    const image = readFileSync(resolve(process.cwd(), "public/assets/football/draft-room-longhorns-teams-mack-brown.webp"));
+    expect(image.subarray(0, 4).toString("ascii")).toBe("RIFF");
+    expect(image.subarray(8, 12).toString("ascii")).toBe("WEBP");
+    expect(image.byteLength).toBeGreaterThan(5_000);
   });
 });
