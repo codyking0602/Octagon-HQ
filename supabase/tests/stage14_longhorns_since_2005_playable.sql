@@ -41,6 +41,32 @@ begin
     raise exception 'Longhorns mode lost shared Draft Room challenge ownership or private catalog ownership';
   end if;
 
+  if (select count(*) from private.draft_room_longhorns_player_pool) <> 70 then
+    raise exception 'Longhorns Since 2003 playable pool must contain 70 approved players';
+  end if;
+
+  if not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Derrick Johnson' and hidden_grade = 99
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Cedric Benson' and hidden_grade = 97
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Roy Williams' and hidden_grade = 95
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Nathan Vasher' and hidden_grade = 94
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Marcus Tubbs' and hidden_grade = 92
+  ) or not exists (
+    select 1 from private.draft_room_longhorns_player_pool
+    where display_name = 'Bo Scaife' and hidden_grade = 87
+  ) then
+    raise exception 'Longhorns Since 2003 playable pool lost an approved 2003/2004 player';
+  end if;
+
   insert into auth.users(
     id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data
   ) values
