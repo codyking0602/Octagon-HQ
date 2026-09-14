@@ -295,8 +295,7 @@ export const playGameCatalog = [
     route: "/football/draft-room",
     icon: "$",
     title: "Draft Room",
-    description: "Build a QB through nominations and sealed bids, then grade the finished build through canonical Football ratings.",
-    availability: "preview",
+    description: "Draft NFL and CFB stars and team seasons through sealed bids across multiple formats.",
     lineup: {
       defaultType: "curated",
       supportedTypes: ["curated"],
