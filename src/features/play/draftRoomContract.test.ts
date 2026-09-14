@@ -7,6 +7,7 @@ import {
   isCowboysDraftRoomMode,
   isLonghornsDraftRoomMode,
   isLonghornsTeamsDraftRoomMode,
+  isNflDivisionsDraftRoomMode,
   isTrioDraftRoomMode,
 } from "./draftRoomContract";
 
@@ -49,6 +50,20 @@ describe("Draft Room contract", () => {
     expect(TRIO_POSITIONS).toEqual(["QB", "RB", "WR"]);
     expect(draftRoomModeDefinition("build-qb").startingBankroll).toBe(40);
     expect(draftRoomModeDefinition("build-qb").rounds).toBe(8);
+  });
+
+  it("locks NFL Divisions to randomized eight-auction team-season boards", () => {
+    const mode = draftRoomModeDefinition("nfl-divisions");
+    expect(mode.displayName).toBe("NFL Divisions");
+    expect(mode.description).toContain("server-randomized");
+    expect(mode.description).toContain("split-division");
+    expect(mode.rounds).toBe(8);
+    expect(mode.requiredSelectionsPerPlayer).toBe(4);
+    expect(mode.startingBankroll).toBe(40);
+    expect(mode.categories).toEqual([]);
+    expect(mode.format).toBe("open-roster");
+    expect(isNflDivisionsDraftRoomMode("nfl-divisions")).toBe(true);
+    expect(isTrioDraftRoomMode("nfl-divisions")).toBe(false);
   });
 
   it("locks Longhorns Since 2003 to eight open-roster auctions and four wins per side", () => {
@@ -94,6 +109,7 @@ describe("Draft Room contract", () => {
     expect(isDraftRoomModeId("build-qb")).toBe(true);
     expect(isDraftRoomModeId("build-qb-cfb")).toBe(true);
     expect(isDraftRoomModeId("trio-nfl")).toBe(true);
+    expect(isDraftRoomModeId("nfl-divisions")).toBe(true);
     expect(isDraftRoomModeId("trio-cfb")).toBe(true);
     expect(isDraftRoomModeId("longhorns-2005")).toBe(true);
     expect(isDraftRoomModeId("longhorns-teams-2005")).toBe(true);
