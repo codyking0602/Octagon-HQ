@@ -16,8 +16,8 @@ begin
     raise exception 'Football Tuesday cadence changed or removed the UFC championship cutoff';
   end if;
 
-  if position('v_football_championship_start date := date ''2026-09-08''' in v_definition) = 0 then
-    raise exception 'Football Tuesday championship cutoff is missing';
+  if position('v_football_championship_start date := date ''2026-09-15''' in v_definition) = 0 then
+    raise exception 'Football native Tuesday championship cutoff is missing';
   end if;
 
   if position('(p_sport = ''ufc'' and week_start >= v_ufc_championship_start)' in v_definition) = 0
@@ -31,13 +31,13 @@ begin
 
   with weekly_ranked(profile_id, week_start, weekly_rank) as (
     values
-      ('cody', date '2026-09-01', 1),
-      ('cody', date '2026-09-08', 1)
+      ('cody', date '2026-09-08', 1),
+      ('cody', date '2026-09-15', 1)
   )
   select count(*) filter (
     where weekly_rank = 1
-      and week_start < date '2026-09-08'
-      and week_start >= date '2026-09-08'
+      and week_start < date '2026-09-15'
+      and week_start >= date '2026-09-15'
   )::integer
   into v_titles_now
   from weekly_ranked;
@@ -53,14 +53,14 @@ begin
   )
   select count(*) filter (
     where weekly_rank = 1
-      and week_start < date '2026-09-15'
-      and week_start >= date '2026-09-08'
+      and week_start < date '2026-09-22'
+      and week_start >= date '2026-09-15'
   )::integer
   into v_titles_next_week
   from weekly_ranked;
 
   if v_titles_next_week <> 1 then
-    raise exception 'first Tuesday-cadence Football title is not awarded after this week: %', v_titles_next_week;
+    raise exception 'first native Tuesday-cadence Football title is not awarded after Sep 15-21: %', v_titles_next_week;
   end if;
 
   with weekly_ranked(profile_id, week_start, weekly_rank) as (
@@ -71,11 +71,15 @@ begin
   )
   select count(*) filter (
     where weekly_rank = 1
-      and week_start < date '2026-09-08'
+      and week_start < date '2026-09-15'
       and week_start >= date '2026-08-10'
   )::integer
   into v_ufc_titles
   from weekly_ranked;
+
+  if position('private.football_daily_transition_adjustments' in v_definition) = 0 then
+    raise exception 'Football transition title/win adjustment is missing from standings';
+  end if;
 
   if v_ufc_titles <> 2 then
     raise exception 'UFC weekly-title era changed during Football-only reset: %', v_ufc_titles;
