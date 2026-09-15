@@ -158,10 +158,13 @@ export function assembleWhoAmIRevealClues(
   const orderedFinal = [...final].sort(revealOrder).map((entry) => entry.value);
   const planned = [...broad, ...helpful, ...orderedStrong, ...orderedFinal];
   const selectionClasses = planned.map(whoAmIClueSelectionClass);
+  const facets = planned.map(whoAmIClueFacet);
 
   if (
     selectionClasses.filter((selectionClass) => selectionClass === "sports-identity").length < 7
     || selectionClasses.filter((selectionClass) => selectionClass === "deep-biography").length > 1
+    || new Set(facets).size < 4
+    || facets.filter((facet) => facet === "relationships").length > 1
   ) {
     return assembleWhoAmIClues(eligibleClues, limit, random);
   }
