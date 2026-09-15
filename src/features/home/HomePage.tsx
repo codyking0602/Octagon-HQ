@@ -159,7 +159,7 @@ export default function HomePage() {
     ? footballDailyRuntime.error
     : null;
   const footballDailyAdapter = todayChallengeAdapter(
-    footballDailyRuntime.projection?.gameType ?? footballWeeklyAuctionGate?.previewGameType,
+    footballDailyRuntime.projection?.gameType ?? footballWeeklyAuctionGate?.previewGameType ?? undefined,
   );
   const footballDailyGatedPreview = Boolean(
     footballWeeklyAuctionGate?.previewGameType
