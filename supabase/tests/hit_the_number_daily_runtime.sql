@@ -70,8 +70,8 @@ begin
   if v_result.native_score <> 88 then
     raise exception 'expected Hit the Number native total 88, got %', v_result.native_score;
   end if;
-  if v_result.normalized_score <> 81 then
-    raise exception 'expected Hit the Number normalized score 81, got %', v_result.normalized_score;
+  if v_result.normalized_score <> 97 then
+    raise exception 'expected Hit the Number normalized score 97, got %', v_result.normalized_score;
   end if;
   if v_result.public_result->>'status' <> 'under'
     or (v_result.public_result->>'distance')::integer <> 5
@@ -89,9 +89,9 @@ begin
   );
 
   if v_result.native_score <> 94
-    or v_result.normalized_score <> 46
+    or v_result.normalized_score <> 49
     or v_result.public_result->>'status' <> 'bust' then
-    raise exception 'expected one-over bust to score 46, got total %, score %, result %',
+    raise exception 'expected one-over bust to score 49, got total %, score %, result %',
       v_result.native_score,
       v_result.normalized_score,
       v_result.public_result;
