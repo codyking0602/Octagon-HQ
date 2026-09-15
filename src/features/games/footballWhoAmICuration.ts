@@ -1081,6 +1081,30 @@ const batch3RetainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["clay-matthews", keep("identity:clay-matthews-multigenerational-nfl-family", "identity:clay-matthews-usc-walk-on", "identity:clay-matthews-special-teams-to-hybrid-defender", "identity:clay-matthews-long-hair-bet")],
 ]);
 
+const batch3TextOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["nfl-jason-kelce:identity:cincinnati-walk-on-origin", {
+    band: "helpful",
+    facet: "background",
+    revealPriority: 12,
+  }],
+  ["nfl-jason-kelce:identity:college-position-conversion", {
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 10,
+  }],
+  ["nfl-jason-kelce:identity:brothers-super-bowl-matchup", {
+    band: "giveaway",
+    facet: "relationships",
+    revealPriority: 8,
+  }],
+]);
+
+function applyBatch3IdentityCuration(subjectId: string, clue: WhoAmIClue) {
+  const override = batch3TextOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id))
+    ?? batch3TextOverrides.get(subjectId + ":" + clue.id);
+  return override ? { ...clue, ...override } : clue;
+}
+
 function batch3Supplement(
   id: string,
   text: string,
@@ -1486,6 +1510,7 @@ const batch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
   ["nfl-joe-thomas", [
     batch3ReplayClue("thomas-left-tackle", "Left tackle was my position throughout my Cleveland career.", "helpful", "role"),
     batch3ReplayClue("thomas-snap-ending", "My record run of consecutive snaps ended only when a triceps injury stopped my 2017 season.", "helpful", "accomplishments"),
+    batch3ReplayClue("thomas-six-ap1", "I earned first-team All-Pro honors six times.", "strong", "accomplishments", 14),
   ]],
   ["nfl-orlando-pace", [
     batch3ReplayClue("pace-left-tackle", "Left tackle was my signature NFL position.", "helpful", "role"),
@@ -1624,15 +1649,16 @@ function curateNflBatch3Clues(subject: FootballSubjectProfile, rawClues: readonl
       && !retained.has(rawClue.id)
     ) continue;
 
-    if (rawClue.identityKnowledge) {
-      const selectionClass = whoAmIClueSelectionClass(rawClue);
+    const clue = applyBatch3IdentityCuration(subject.id, rawClue);
+    if (clue.identityKnowledge) {
+      const selectionClass = whoAmIClueSelectionClass(clue);
       if (selectionClass === "deep-biography") continue;
       if (selectionClass === "identity-color") {
         if (colorUsed) continue;
         colorUsed = true;
       }
     }
-    curated.push(rawClue);
+    curated.push(clue);
   }
 
   curated.push(...(batch3SupplementalClues.get(subject.id) ?? []));
