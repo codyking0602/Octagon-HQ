@@ -23,15 +23,31 @@ const migration = readFileSync(
 );
 
 describe("notification reliability repair", () => {
-  it("replaces a valid-looking subscription when its VAPID public key is stale or unavailable", () => {
+  it("repairs stale push connections without overriding an explicit device opt-out", () => {
     expect(pushConnection).toContain("subscription.options.applicationServerKey");
     expect(pushConnection).toContain("if (!existingKey) return false");
     expect(pushConnection).toContain("subscriptionUsesPublicKey(existing, publicKey)");
     expect(pushConnection).toContain("await existing.unsubscribe().catch(() => false)");
     expect(pushConnection).toContain("usableExistingSubscription(registration, publicKey)");
     expect(pushConnection).not.toContain("if (!existingKey) return true");
-    expect(pushConnection).not.toContain("localStorage");
-    expect(pushConnection).not.toContain("setInterval");
+
+    expect(pushConnection).toContain('pushIntentStorageKey = "octagon-notification-push-intent"');
+    expect(pushConnection).toContain('window.localStorage.getItem(pushIntentStorageKey)');
+    expect(pushConnection).toContain('window.localStorage.setItem(pushIntentStorageKey, intent)');
+    expect(pushConnection).not.toContain("subscription.endpoint, intent");
+    expect(pushConnection).not.toContain("subscription.p256dh");
+    expect(pushConnection).not.toContain("subscription.auth");
+
+    expect(provider).toContain("getNotificationDevicePushIntent()");
+    expect(provider).toContain('pushIntent === "enabled"');
+    expect(provider).toContain("pushIntent === null && pushStatus.activeDeviceCount > 0");
+    expect(provider).toContain("!pushStatus.currentDeviceRegistered");
+    expect(provider).toContain('readiness.permission === "granted"');
+    expect(provider).toContain("await repository.loadPushConfiguration()");
+    expect(provider).toContain("await repository.registerPushSubscription(connected.input)");
+    expect(provider).toContain('setNotificationDevicePushIntent("enabled")');
+    expect(provider).toContain('setNotificationDevicePushIntent("disabled")');
+    expect(provider).not.toContain("setInterval");
   });
 
   it("adds one canonical clear-read action without deleting idempotency history", () => {

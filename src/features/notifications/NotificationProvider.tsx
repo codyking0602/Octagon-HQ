@@ -27,6 +27,8 @@ import {
   disableNotificationDevicePush,
   enableNotificationDevicePush,
   getCurrentNotificationPushSubscription,
+  getNotificationDevicePushIntent,
+  setNotificationDevicePushIntent,
 } from "./notificationDevicePush";
 import {
   createNotificationRepository,
@@ -205,8 +207,27 @@ export function NotificationProvider({
       const subscription = readiness.status === "ready"
         ? await getCurrentNotificationPushSubscription()
         : null;
-      const pushStatus = await repository.loadPushStatus(subscription?.endpoint ?? null);
+      let pushStatus = await repository.loadPushStatus(subscription?.endpoint ?? null);
       if (revision !== pushRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+
+      const pushIntent = getNotificationDevicePushIntent();
+      const legacyPushWasPreviouslyEnabled = pushIntent === null && pushStatus.activeDeviceCount > 0;
+      const shouldRepairCurrentDevice = readiness.status === "ready"
+        && readiness.permission === "granted"
+        && !pushStatus.currentDeviceRegistered
+        && (pushIntent === "enabled" || legacyPushWasPreviouslyEnabled);
+
+      if (
+        shouldRepairCurrentDevice
+        && repository.loadPushConfiguration
+        && repository.registerPushSubscription
+      ) {
+        const publicKey = await repository.loadPushConfiguration();
+        const connected = await enableNotificationDevicePush(publicKey);
+        pushStatus = await repository.registerPushSubscription(connected.input);
+        if (revision !== pushRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+        setNotificationDevicePushIntent("enabled");
+      }
 
       const nextStatus = readiness.status !== "ready"
         ? "unsupported"
@@ -408,6 +429,7 @@ export function NotificationProvider({
       || !repository.registerPushSubscription
     ) return false;
 
+    setNotificationDevicePushIntent("enabled");
     const revision = ++pushRevisionRef.current;
     setDevicePush((current) => ({ ...current, status: "enabling" }));
     try {
@@ -441,6 +463,7 @@ export function NotificationProvider({
     const expectedProfileId = profileIdRef.current;
     if (!expectedProfileId || !repository?.removePushSubscription) return false;
 
+    setNotificationDevicePushIntent("disabled");
     const revision = ++pushRevisionRef.current;
     setDevicePush((current) => ({ ...current, status: "disabling" }));
     try {
