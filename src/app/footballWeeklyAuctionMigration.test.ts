@@ -93,6 +93,10 @@ describe("Football Weekly Auction live contract", () => {
   it("ships the approved card research and final team-color treatment", () => {
     expect(FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT).toBe(13);
     expect(gate).toContain("View season ↗");
+    expect(gate).toContain("TODAY’S BOARD");
+    expect(gate).toContain("RESULTS REVEAL AT MIDNIGHT CT");
+    expect(gate).toContain("setLogoFailed(true)");
+    expect(gate).toContain("return \`#1 · \${resume}\`");
     expect(styles).toContain("rgba(var(--weekly-team-rgb), .17)");
     expect(styles).toContain(".football-weekly-auction__result-team::before");
   });
