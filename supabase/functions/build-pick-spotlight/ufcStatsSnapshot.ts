@@ -309,7 +309,7 @@ const fighters: Record<string, UfcStatsSnapshotFighter> = {
     takedownAverage: 0, takedownAccuracy: 0, takedownDefense: null, submissionAverage: 0,
   },
   "sean sharaf": {
-    name: "Sean Sharaf", record: "4-2-0", dob: "1993-07-11", height: "6' 3\"", reach: "77\"", stance: "Orthodox",
+    name: "Sean Sharaf", record: "4-2-0", dob: "1993-07-11", height: "6' 2\"", reach: "76\"", stance: "Orthodox",
     slpm: 7.41, strikingAccuracy: 44, sapm: 15, strikingDefense: 42,
     takedownAverage: 0.93, takedownAccuracy: 11, takedownDefense: 0, submissionAverage: 0,
   },
