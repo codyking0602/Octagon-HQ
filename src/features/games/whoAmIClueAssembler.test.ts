@@ -11,6 +11,7 @@ import {
   getUfcWhoAmIUniverse,
 } from "./whoAmIAuthority";
 import { assembleWhoAmIClues, whoAmIClueFacet, whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
+import { isUfcWhoAmICalibrationSubject, shouldUseUfcWhoAmIIdentityConcept } from "./ufcWhoAmICuration";
 import {
   WHO_AM_I_CLUE_LIMIT,
   whoAmIProgressiveClues,
@@ -247,8 +248,19 @@ describe("Who Am I football scope-aware clue aggregation", () => {
     for (const candidate of getUfcWhoAmIUniverse().candidates) {
       const source = getUfcPersonIdentityKnowledge(candidate.id);
       expect(source?.facts).toHaveLength(5);
-      expect(candidate.clues.filter((clue) => clue.identityKnowledge)).toHaveLength(5);
-      expect(candidate.clues.filter((clue) => clue.identityKnowledge).every((clue) => clue.knowledgeSubjectId === candidate.id)).toBe(true);
+
+      const identityClues = candidate.clues.filter((clue) => clue.identityKnowledge);
+      if (isUfcWhoAmICalibrationSubject(candidate.id)) {
+        expect(identityClues.length).toBeGreaterThan(0);
+        expect(identityClues.length).toBeLessThanOrEqual(5);
+        expect(identityClues.every((clue) => {
+          const fact = source?.facts.find((row) => row.factId === clue.sourceFactId);
+          return Boolean(fact && shouldUseUfcWhoAmIIdentityConcept(candidate.id, fact.conceptId));
+        })).toBe(true);
+      } else {
+        expect(identityClues).toHaveLength(5);
+      }
+      expect(identityClues.every((clue) => clue.knowledgeSubjectId === candidate.id)).toBe(true);
     }
 
     for (const league of ["NFL", "CFB"] as const) {
