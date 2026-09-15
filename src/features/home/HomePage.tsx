@@ -18,12 +18,14 @@ import {
   useTodayChallengeOverview,
 } from "../play/useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
+import { currentDailyChallengeChampionship } from "../play/dailyChallengeChampionship";
 import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
 import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
+import { WeeklyGamesStandingLink } from "./WeeklyGamesStandingLink";
 import "../../styles/home-football-hq.css";
 import "../../styles/home-ufc-hq.css";
 
@@ -205,6 +207,16 @@ export default function HomePage() {
   const currentUfcRankLabel = currentUfcRank
     ? currentUfcRank.startsWith("T-") ? currentUfcRank : `#${currentUfcRank}`
     : "";
+  const footballStandings = picks.footballHistory?.seasonStandings ?? [];
+  const currentFootballStanding = footballStandings.find((standing) => standing.isCurrentUser) ?? null;
+  const currentFootballRank = currentFootballStanding
+    ? groupRankLabel(currentFootballStanding.rank, footballStandings)
+    : "";
+  const currentFootballRankLabel = currentFootballRank
+    ? currentFootballRank.startsWith("T-") ? currentFootballRank : `#${currentFootballRank}`
+    : "";
+  const ufcChampionship = currentDailyChallengeChampionship(ufcDailyOverview.standings);
+  const footballChampionship = currentDailyChallengeChampionship(footballDailyOverview.standings);
 
   const ufcDailyChallenge = (
     <TodayChallengeCard
@@ -243,6 +255,8 @@ export default function HomePage() {
       error={picks.footballHomeError}
       signedIn={signedIn}
       dailyChallenge={footballDailyChallenge}
+      weeklyGames={footballChampionship}
+      weeklyGamesLoading={footballDailyOverview.standingsLoading}
       playerPhotoSources={footballPlayerPhotos}
       canManagePlayerPhoto={identity.profile?.canControlPicks === true}
       onManagePlayerPhoto={() => navigate("/picks/control?sport=football#home-spotlight")}
@@ -283,7 +297,7 @@ export default function HomePage() {
             <small className="home-event-card__picks-status">{picksStatus}</small>
           </div>
           <div className="home-event-card__standing" aria-label="UFC Picks season standing">
-            <span>{recordSeason} STANDING</span>
+            <span>{recordSeason} PICKS STANDING</span>
             <b>{signedIn && currentUfcRankLabel ? `${currentUfcRankLabel} OF ${ufcStandings.length}` : "—"}</b>
             <small>
               {!signedIn
@@ -304,6 +318,13 @@ export default function HomePage() {
           )
         ) : null}
       </section>
+
+      <WeeklyGamesStandingLink
+        sport="ufc"
+        standing={ufcChampionship}
+        loading={ufcDailyOverview.standingsLoading}
+        signedIn={signedIn}
+      />
 
       {ufcDailyChallenge}
       {spotlight ? <RankingSpotlightCard fighter={spotlight} /> : null}
@@ -327,8 +348,8 @@ export default function HomePage() {
           {!identity.profile ? (
             <div className="hq-card__grid" aria-label="Your HQ profile stats">
               <article className="hq-stat"><strong>—</strong><span>HQ Daily streak</span><small>UFC OR FOOTBALL CHALLENGE</small></article>
-              <article className="hq-stat"><strong>—</strong><span>UFC Picks record</span><small>SIGN IN TO TRACK</small></article>
-              <article className="hq-stat"><strong>—</strong><span>Football Picks record</span><small>SIGN IN TO TRACK</small></article>
+              <article className="hq-stat"><strong>—</strong><span>Football Picks</span><small>SIGN IN TO TRACK</small></article>
+              <article className="hq-stat"><strong>—</strong><span>UFC Picks</span><small>SIGN IN TO TRACK</small></article>
             </div>
           ) : (
             <div className="hq-card__grid">
@@ -338,24 +359,46 @@ export default function HomePage() {
                 <small>{hqStreakError ? "UNAVAILABLE" : "UFC OR FOOTBALL CHALLENGE"}</small>
               </article>
 
-              <article className={`hq-stat${picks.error ? " is-unavailable" : ""}`}>
-                <strong>{picks.loading ? "…" : picks.error ? "—" : pickRecord(picks.summary)}</strong>
-                <span>UFC Picks record</span>
-                <small>
-                  {picks.error
-                    ? "UNAVAILABLE"
-                    : `${recordSeason} SEASON${picks.summary.pending ? ` · ${picks.summary.pending} PENDING` : ""}`}
-                </small>
-              </article>
-
               <article className={`hq-stat${picks.footballSummaryError ? " is-unavailable" : ""}`}>
                 <strong>{picks.loading ? "…" : picks.footballSummaryError ? "—" : pickRecord(picks.footballSummary)}</strong>
-                <span>Football Picks record</span>
-                <small>
-                  {picks.footballSummaryError
-                    ? "UNAVAILABLE"
-                    : `${recordSeason} SEASON${picks.footballSummary.pending ? ` · ${picks.footballSummary.pending} PENDING` : ""}`}
-                </small>
+                <span>Football Picks</span>
+                <div className="hq-stat__standings">
+                  <small>
+                    {picks.footballSummaryError
+                      ? "UNAVAILABLE"
+                      : currentFootballRankLabel
+                        ? `${currentFootballRankLabel} OF ${footballStandings.length} · PICKS STANDING`
+                        : "NO PICKS STANDING"}
+                  </small>
+                  <small>
+                    {footballDailyOverview.standingsLoading && !footballChampionship
+                      ? "WEEKLY GAMES · LOADING"
+                      : footballChampionship
+                        ? `#${footballChampionship.rank} · WEEKLY GAMES`
+                        : "NO WEEKLY GAMES RANK"}
+                  </small>
+                </div>
+              </article>
+
+              <article className={`hq-stat${picks.error ? " is-unavailable" : ""}`}>
+                <strong>{picks.loading ? "…" : picks.error ? "—" : pickRecord(picks.summary)}</strong>
+                <span>UFC Picks</span>
+                <div className="hq-stat__standings">
+                  <small>
+                    {picks.error
+                      ? "UNAVAILABLE"
+                      : currentUfcRankLabel
+                        ? `${currentUfcRankLabel} OF ${ufcStandings.length} · PICKS STANDING`
+                        : "NO PICKS STANDING"}
+                  </small>
+                  <small>
+                    {ufcDailyOverview.standingsLoading && !ufcChampionship
+                      ? "WEEKLY GAMES · LOADING"
+                      : ufcChampionship
+                        ? `#${ufcChampionship.rank} · WEEKLY GAMES`
+                        : "NO WEEKLY GAMES RANK"}
+                  </small>
+                </div>
               </article>
             </div>
           )}

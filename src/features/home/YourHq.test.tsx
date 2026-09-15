@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChallengeProfile } from "../challenges/challengeModel";
-import type { PickEvent } from "../picks/picksModel";
+import type { PickEvent, PickHistory } from "../picks/picksModel";
 import { TodayChallengeRepositoryError } from "../play/todayChallengeRepository";
 import HomePage from "./HomePage";
 
@@ -16,7 +16,7 @@ const mocks = vi.hoisted(() => {
     lockBonus: 0,
     totalPoints: 0,
   };
-  const emptyHistory = {
+  const emptyHistory: PickHistory = {
     season: 2026,
     summary: {
       correct: 0,
@@ -180,8 +180,8 @@ describe("Home Your HQ", () => {
     const hq = yourHqSection();
     expect(within(hq).getAllByRole("article")).toHaveLength(3);
     expect(within(hq).getByText("HQ Daily streak")).toBeInTheDocument();
-    expect(within(hq).getByText("UFC Picks record")).toBeInTheDocument();
-    expect(within(hq).getByText("Football Picks record")).toBeInTheDocument();
+    expect(within(hq).getByText("UFC Picks")).toBeInTheDocument();
+    expect(within(hq).getByText("Football Picks")).toBeInTheDocument();
     expect(within(hq).queryByRole("button")).not.toBeInTheDocument();
     expect(within(hq).queryByRole("link")).not.toBeInTheDocument();
 
@@ -326,17 +326,150 @@ describe("Home Your HQ", () => {
       lockBonus: 4,
       totalPoints: 40,
     };
-    mocks.overview.mockImplementation((options: { sport?: string }) => ({
-      configured: true,
-      standings: null,
-      streak: options.sport === "football"
-        ? { currentStreak: 5, bestStreak: 7 }
-        : { currentStreak: 2, bestStreak: 4 },
-      leaderboard: null,
-      loading: false,
-      error: null,
-      refresh: vi.fn(),
-    }));
+    mocks.picks.history = {
+      ...mocks.emptyHistory,
+      seasonStandings: [
+        {
+          rank: 1,
+          profileId: cody.id,
+          displayName: cody.displayName,
+          isCurrentUser: true,
+          correct: 12,
+          incorrect: 8,
+          missing: 0,
+          excluded: 0,
+          basePoints: 48,
+          lockBonus: 0,
+          totalPoints: 48,
+          eventsEntered: 4,
+        },
+        {
+          rank: 2,
+          profileId: "22222222-2222-4222-8222-222222222222",
+          displayName: "SHANE",
+          isCurrentUser: false,
+          correct: 10,
+          incorrect: 10,
+          missing: 0,
+          excluded: 0,
+          basePoints: 40,
+          lockBonus: 0,
+          totalPoints: 40,
+          eventsEntered: 4,
+        },
+      ],
+    };
+    mocks.picks.footballHistory = {
+      ...mocks.emptyHistory,
+      seasonStandings: [
+        {
+          rank: 1,
+          profileId: "22222222-2222-4222-8222-222222222222",
+          displayName: "SHANE",
+          isCurrentUser: false,
+          correct: 10,
+          incorrect: 2,
+          missing: 0,
+          excluded: 0,
+          basePoints: 42,
+          lockBonus: 2,
+          totalPoints: 44,
+          eventsEntered: 3,
+        },
+        {
+          rank: 2,
+          profileId: cody.id,
+          displayName: cody.displayName,
+          isCurrentUser: true,
+          correct: 9,
+          incorrect: 3,
+          missing: 0,
+          excluded: 0,
+          basePoints: 36,
+          lockBonus: 4,
+          totalPoints: 40,
+          eventsEntered: 3,
+        },
+      ],
+    };
+    mocks.overview.mockImplementation((options: { sport?: string }) => {
+      const football = options.sport === "football";
+      return {
+        configured: true,
+        standings: {
+          playerCount: 2,
+          currentUserRank: football ? 2 : 1,
+          currentUserWins: football ? 9 : 12,
+          currentWeekStart: "2026-09-15",
+          currentWeekEnd: "2026-09-21",
+          entries: [
+            {
+              rank: 1,
+              profileId: cody.id,
+              displayName: cody.displayName,
+              initials: "CK",
+              avatarPhotoData: null,
+              wins: football ? 9 : 12,
+              played: 12,
+              averageScore: football ? 82 : 86,
+              currentStreak: football ? 5 : 2,
+              bestStreak: football ? 7 : 4,
+              gameAverages: {
+                findLeader: 84,
+                wavelength: 82,
+                blindResume: 86,
+                blindRank5: null,
+                keep4Cut4: null,
+                hitTheNumber: 80,
+                whoAmI: 88,
+              },
+              isCurrentUser: true,
+              weeklyRank: 1,
+              weeklyWins: 2,
+              weeklyPlayed: 3,
+              weeklyAverageScore: 88,
+              weeklyTitles: football ? 2 : 1,
+            },
+            {
+              rank: 2,
+              profileId: "22222222-2222-4222-8222-222222222222",
+              displayName: "SHANE",
+              initials: "SH",
+              avatarPhotoData: null,
+              wins: 8,
+              played: 12,
+              averageScore: 80,
+              currentStreak: 1,
+              bestStreak: 3,
+              gameAverages: {
+                findLeader: 78,
+                wavelength: 80,
+                blindResume: 82,
+                blindRank5: null,
+                keep4Cut4: null,
+                hitTheNumber: 77,
+                whoAmI: 84,
+              },
+              isCurrentUser: false,
+              weeklyRank: 2,
+              weeklyWins: 1,
+              weeklyPlayed: 3,
+              weeklyAverageScore: 80,
+              weeklyTitles: football ? 1 : 3,
+            },
+          ],
+        },
+        streak: football
+          ? { currentStreak: 5, bestStreak: 7 }
+          : { currentStreak: 2, bestStreak: 4 },
+        leaderboard: null,
+        standingsLoading: false,
+        leaderboardLoading: false,
+        loading: false,
+        error: null,
+        refresh: vi.fn(),
+      };
+    });
     mocks.hqStreak.mockReturnValue({
       streak: { currentStreak: 7, bestStreak: 11 },
       loading: false,
@@ -347,8 +480,17 @@ describe("Home Your HQ", () => {
     renderHome();
 
     expect(within(screen.getByText("HQ Daily streak").closest("article")!).getByText("7")).toBeInTheDocument();
-    expect(within(screen.getByText("UFC Picks record").closest("article")!).getByText("12-8")).toBeInTheDocument();
-    expect(within(screen.getByText("Football Picks record").closest("article")!).getByText("9-3")).toBeInTheDocument();
-    expect(within(screen.getByText("Football Picks record").closest("article")!).getByText(/2 PENDING/)).toBeInTheDocument();
+
+    const football = screen.getByText("Football Picks").closest("article")!;
+    expect(within(football).getByText("9-3")).toBeInTheDocument();
+    expect(within(football).getByText("#2 OF 2 · PICKS STANDING")).toBeInTheDocument();
+    expect(within(football).getByText("#1 · WEEKLY GAMES")).toBeInTheDocument();
+
+    const ufc = screen.getByText("UFC Picks").closest("article")!;
+    expect(within(ufc).getByText("12-8")).toBeInTheDocument();
+    expect(within(ufc).getByText("#1 OF 2 · PICKS STANDING")).toBeInTheDocument();
+    expect(within(ufc).getByText("#2 · WEEKLY GAMES")).toBeInTheDocument();
+
+    expect(within(yourHqSection()).queryByRole("link")).not.toBeInTheDocument();
   });
 });

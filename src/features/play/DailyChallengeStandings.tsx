@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { rankDailyChallengeChampionship } from "./dailyChallengeChampionship";
 import type {
   TodayChallengeStandings,
   TodayChallengeStandingsEntry,
@@ -43,26 +44,24 @@ function MemberAvatar({ entry }: { entry: TodayChallengeStandingsEntry }) {
     : <span aria-hidden="true">{entry.initials}</span>;
 }
 
-export function DailyChallengeStandings({ standings, loading, error, onRefresh }: {
+export function DailyChallengeStandings({ standings, loading, error, onRefresh, focusCurrentUser = false }: {
   standings: TodayChallengeStandings | null;
   loading: boolean;
   error: Error | null;
   onRefresh: () => void;
+  focusCurrentUser?: boolean;
 }) {
   const [expandedProfileId, setExpandedProfileId] = useState<string | null>(null);
   const [showInactive, setShowInactive] = useState(false);
+  const [standingsOpen, setStandingsOpen] = useState(focusCurrentUser);
   const current = standings?.entries.find((entry) => entry.isCurrentUser) ?? null;
-  const ordered = [...(standings?.entries ?? [])].sort((a, b) =>
-    b.weeklyTitles - a.weeklyTitles || b.wins - a.wins || b.averageScore - a.averageScore
-      || b.played - a.played || a.displayName.localeCompare(b.displayName));
-  const championshipRanks = new Map<string, number>();
-  let previousTitles: number | null = null;
-  let rank = 0;
-  ordered.forEach((entry, index) => {
-    if (entry.weeklyTitles !== previousTitles) rank = index + 1;
-    championshipRanks.set(entry.profileId, rank);
-    previousTitles = entry.weeklyTitles;
-  });
+  const { ordered, ranks: championshipRanks } = rankDailyChallengeChampionship(standings?.entries ?? []);
+
+  useEffect(() => {
+    if (!focusCurrentUser || !current?.profileId) return;
+    setStandingsOpen(true);
+    setExpandedProfileId(current.profileId);
+  }, [current?.profileId, focusCurrentUser]);
   const active = ordered.filter((entry) => entry.played > 0 || entry.weeklyTitles > 0);
   const inactive = ordered.filter((entry) => entry.played === 0 && entry.weeklyTitles === 0);
   const visible = showInactive ? ordered : active;
@@ -70,7 +69,12 @@ export function DailyChallengeStandings({ standings, loading, error, onRefresh }
     .sort((a, b) => a.weeklyRank - b.weeklyRank || a.displayName.localeCompare(b.displayName));
 
   return (
-    <details className="daily-standings">
+    <details
+      className="daily-standings"
+      id="championship-standings"
+      open={standingsOpen}
+      onToggle={(event) => setStandingsOpen(event.currentTarget.open)}
+    >
       <summary>
         <div className="daily-standings__summary-copy">
           <p className="eyebrow">DAILY CHALLENGE</p>
