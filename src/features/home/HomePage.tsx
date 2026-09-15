@@ -20,7 +20,7 @@ import {
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
-import { useFootballHomeSpotlightPhoto } from "./homeFeatureMedia";
+import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
@@ -131,7 +131,7 @@ export default function HomePage() {
   const identity = useIdentity();
   const navigate = useNavigate();
   const picks = usePicks();
-  const footballPlayerPhoto = useFootballHomeSpotlightPhoto();
+  const footballPlayerPhotos = useFootballHomeSpotlightPhotos();
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
   const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
@@ -243,7 +243,7 @@ export default function HomePage() {
       error={picks.footballHomeError}
       signedIn={signedIn}
       dailyChallenge={footballDailyChallenge}
-      playerPhotoSource={footballPlayerPhoto}
+      playerPhotoSources={footballPlayerPhotos}
       canManagePlayerPhoto={identity.profile?.canControlPicks === true}
       onManagePlayerPhoto={() => navigate("/picks/control?sport=football#home-spotlight")}
     />
