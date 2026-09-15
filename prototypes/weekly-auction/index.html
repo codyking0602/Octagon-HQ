@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Octagon HQ Weekly Auction Prototype</title>
+<style>
+:root{color-scheme:dark;--bg:#071018;--panel:#0d1923;--panel2:#101f2b;--line:rgba(255,255,255,.11);--muted:#91a0ad;--gold:#e5bd62;--green:#37c97c;--danger:#ff6d6d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#153247 0,#071018 37%,#04090d 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f7fafc;min-height:100vh}.wrap{width:min(100%,460px);margin:0 auto;padding:18px 14px 50px}.proto{font-size:10px;letter-spacing:.16em;text-align:center;color:#7890a1;margin:5px 0 13px}.card{background:linear-gradient(180deg,rgba(18,34,46,.98),rgba(8,17,25,.98));border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.28)}button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.13em;color:#78b8df;text-transform:uppercase}.cover{text-align:center;padding:24px 18px}.cover h1,.board h1,.final h1{font-size:33px;line-height:.95;letter-spacing:.02em;margin:10px 0 8px}.lede{font-size:17px;font-weight:800;margin:0 0 20px}.rules{text-align:left;padding:15px 16px;border:1px solid rgba(229,189,98,.3);border-radius:14px;background:rgba(229,189,98,.055)}.rules p{font-size:14px;line-height:1.45;margin:10px 0}.rules small{font-weight:900;letter-spacing:.12em;color:var(--gold)}.rules ul{margin:8px 0 13px;padding-left:20px}.rules li{font-size:14px;margin:7px 0;color:#dce5eb}.unlock{font-size:13px;color:#b7c3cc;margin:17px 0 13px}.primary,.secondary,.ghost{width:100%;min-height:48px;border-radius:12px;font-weight:900;letter-spacing:.04em}.primary{border:1px solid #46d28a;background:linear-gradient(180deg,#37c97c,#189458);color:#04150c}.secondary{border:1px solid rgba(255,255,255,.21);background:#12212c;color:#fff}.ghost{border:1px dashed rgba(120,184,223,.35);background:transparent;color:#8ac8ec;margin-top:8px}.board,.final{padding:17px}.boardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.boardHead span,.final header>span{font-size:11px;font-weight:900;letter-spacing:.15em;color:#8eb5cc}.boardHead h1{font-size:25px;margin:4px 0}.bank{text-align:right;border-left:1px solid var(--line);padding-left:14px}.bank strong{display:block;font-size:31px;color:#fff}.bank span{font-size:9px!important;color:#83a0b2!important}.ledger{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.ledger div{background:#0a151e;border:1px solid var(--line);border-radius:11px;padding:10px 11px}.ledger small{display:block;color:#738999;font-size:9px;font-weight:800;letter-spacing:.08em}.ledger strong{font-size:18px}.theme{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 9px}.theme strong{font-size:13px;color:#7ec7f2;letter-spacing:.08em}.theme span{font-size:11px;color:#81919e}.teams{display:grid;gap:10px}.team{position:relative;overflow:hidden;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(115deg,rgba(var(--rgb),.33),rgba(10,19,27,.97) 55%);padding:13px}.team:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--team)}.teamTop{display:grid;grid-template-columns:50px 1fr;gap:11px;align-items:center}.logo{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:#fff;border:2px solid rgba(255,255,255,.65);padding:4px}.logo img{max-width:100%;max-height:100%;object-fit:contain}.teamName{font-size:18px;font-weight:950}.teamName span{color:#c2ced6}.resume{display:block;margin-top:3px;font-size:12px;line-height:1.3;color:#cbd6dd}.seasonLink{display:inline-block;margin-top:6px;color:#86cff5;font-size:11px;font-weight:800;text-decoration:none}.bidRow{display:grid;grid-template-columns:40px 1fr 40px;gap:6px;margin-top:11px}.bidRow button{height:40px;border-radius:9px;border:1px solid var(--line);background:#0c1821;color:#fff;font-size:22px}.bidBox{height:40px;border:1px solid rgba(255,255,255,.16);background:rgba(3,9,13,.65);border-radius:9px;display:flex;align-items:center;justify-content:center;gap:5px}.bidBox span{font-size:10px;color:#8598a6;font-weight:800;text-transform:uppercase}.bidBox b{font-size:18px}.bidBox input{width:40px;background:transparent;border:0;color:#fff;font-weight:900;font-size:18px;outline:0;padding:0}.actions{margin-top:13px}.submitted{background:rgba(55,201,124,.08);border:1px solid rgba(55,201,124,.3);border-radius:11px;padding:10px 12px;margin-bottom:9px}.submitted strong{display:block;color:#63df9a;font-size:12px;letter-spacing:.08em}.submitted span{font-size:11px;color:#9eb3a8}.yesterday{margin-bottom:15px;padding:12px;border:1px solid var(--line);border-radius:13px;background:#09131b}.yesterdayHead{display:flex;justify-content:space-between;margin-bottom:7px}.yesterdayHead small{font-weight:900;color:#8fb3ca;letter-spacing:.09em}.results div{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-top:1px solid rgba(255,255,255,.06);font-size:11px}.results strong.you{color:#59d794}.sample{font-size:9px;line-height:1.35;text-align:center;color:#d5b45d;border:1px solid rgba(229,189,98,.25);background:rgba(229,189,98,.06);padding:8px;border-radius:9px;margin-bottom:13px}.final header{text-align:center}.final header h1{font-size:27px}.final header p{font-size:12px;color:#9baab5;margin-top:4px}.champ{border:1px solid rgba(229,189,98,.45);background:radial-gradient(circle at 50% 0,rgba(229,189,98,.18),rgba(12,22,29,.86) 65%);border-radius:15px;text-align:center;padding:15px;margin:13px 0}.champ small{display:block;color:var(--gold);letter-spacing:.13em;font-weight:900}.champ strong{display:block;font-size:23px;margin-top:4px}.champ span{font-size:36px;font-weight:950}.champ p{margin:2px 0 0;color:#d9bd72;font-size:12px}.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;background:#071118;border:1px solid var(--line);padding:4px;border-radius:11px;margin-bottom:10px}.tabs button{min-height:38px;border:0;border-radius:8px;background:transparent;color:#8193a0;font-size:11px;font-weight:900}.tabs button.active{background:#172936;color:#fff}.list{border:1px solid var(--line);border-radius:13px;overflow:hidden}.row,.headrow{display:grid;grid-template-columns:1fr 64px 58px;gap:7px;align-items:center;padding:10px 11px;border-top:1px solid rgba(255,255,255,.07)}.headrow{border-top:0;background:#08131b;color:#8297a5;font-size:9px;font-weight:900;letter-spacing:.08em}.row strong{font-size:12px}.row span,.row b{text-align:right;font-size:12px}.count{background:rgba(229,189,98,.075)}.count strong small{font-size:8px;color:var(--gold);margin-left:4px}.best{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#0b1821;border-top:1px solid rgba(229,189,98,.25)}.best small{font-weight:900;color:#a6b4be}.best strong{font-size:22px;color:var(--gold)}.standings .row{grid-template-columns:34px 1fr 65px}.standings .winner{background:rgba(229,189,98,.08)}.standings .winner span{color:var(--gold);font-weight:900}.standings .row b{text-align:right}.more{width:100%;border:0;background:#0a151d;color:#88a7b9;padding:12px;font-size:11px;font-weight:800}.footerNote{font-size:10px;color:#6e8290;text-align:center;margin:13px 0 0}@media (max-width:370px){.wrap{padding-left:10px;padding-right:10px}.teamTop{grid-template-columns:44px 1fr}.logo{width:44px;height:44px}.teamName{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="proto">INTERACTIVE DESIGN PROTOTYPE · NO LIVE DATA</div>
+
+  <section id="cover" class="card cover">
+    <div class="eyebrow">FOOTBALL DAILY · TUESDAY–MONDAY</div>
+    <h1>WEEKLY AUCTION</h1>
+    <p class="lede">3 teams. 1 bankroll. 7 days.</p>
+    <div class="rules">
+      <p>You have <strong>$40 for the entire week.</strong></p>
+      <div><small>EACH DAY</small><ul>
+        <li>Bid on any or all 3 teams</li>
+        <li>Highest bid wins each team</li>
+        <li>Losing bids cost nothing</li>
+        <li>Today’s bids lock at <strong>midnight CT</strong></li>
+      </ul></div>
+      <p>Your best <strong>3 teams</strong> count toward your final score.</p>
+      <p>At the end of the week, the highest average wins a <strong>bonus Daily win.</strong></p>
+      <p><strong>Tie on a bid?</strong> Fewer teams won gets priority, then less money spent.</p>
+    </div>
+    <p class="unlock">Submit today’s bids to unlock your Daily Challenge.</p>
+    <button class="primary" onclick="startAuction()">START TODAY’S AUCTION</button>
+  </section>
+
+  <section id="day" class="card board hidden">
+    <div id="yesterday" class="yesterday hidden"></div>
+    <header class="boardHead">
+      <div><span>WEEKLY AUCTION</span><h1 id="dayTitle">DAY 1 OF 7</h1></div>
+      <div class="bank"><strong id="remaining">$40</strong><span>REMAINING</span></div>
+    </header>
+    <div class="ledger">
+      <div><small>COMMITTED TODAY</small><strong id="committed">$0</strong></div>
+      <div><small>STILL AVAILABLE</small><strong id="available">$40</strong></div>
+    </div>
+    <div class="theme"><strong id="theme">SEC</strong><span>Bids lock at midnight CT</span></div>
+    <div id="teamStack" class="teams"></div>
+    <div class="actions">
+      <div id="submittedBox" class="submitted hidden"><strong>BIDS SUBMITTED</strong><span>You can still edit until midnight CT.</span></div>
+      <button id="submitBtn" class="primary" onclick="submitBids()">SUBMIT TODAY’S BIDS</button>
+      <button id="editBtn" class="secondary hidden" onclick="editBids()">EDIT BIDS</button>
+      <button id="nextBtn" class="ghost hidden" onclick="advancePrototype()">PROTOTYPE: PREVIEW DAY 2 →</button>
+    </div>
+    <p class="footerNote">Prototype resolution uses fake opposing bids only to demonstrate the flow.</p>
+  </section>
+
+  <section id="final" class="card final hidden">
+    <div class="sample">PROTOTYPE ONLY · REVEAL VALUES BELOW ARE SAMPLE UI DATA, NOT PRODUCTION GRADES</div>
+    <header><span>WEEKLY AUCTION</span><h1>FINAL RESULTS</h1><p>Best 3 average decides the week.</p></header>
+    <div class="champ"><small>WEEKLY CHAMPION</small><strong>You</strong><span>91.3</span><p>+1 bonus Daily win</p></div>
+    <div class="tabs">
+      <button id="tabStandings" class="active" onclick="showTab('standings')">Standings</button>
+      <button id="tabCollection" onclick="showTab('collection')">Your Collection</button>
+      <button id="tabReveal" onclick="showTab('reveal')">All Grades</button>
+    </div>
+    <div id="standings" class="list standings">
+      <div class="row winner"><span>1</span><strong>You</strong><b>91.3</b></div>
+      <div class="row"><span>2</span><strong>Player 2</strong><b>90.8</b></div>
+      <div class="row"><span>3</span><strong>Player 3</strong><b>90.2</b></div>
+      <div class="row"><span>4</span><strong>Player 4</strong><b>89.6</b></div>
+    </div>
+    <div id="collection" class="list hidden">
+      <div class="headrow"><span>TEAM</span><span>PAID</span><span>GRADE</span></div>
+      <div class="row count"><strong>Arkansas · 2011 <small>COUNTS</small></strong><span>$7</span><b>92.0</b></div>
+      <div class="row count"><strong>Oregon · 2012 <small>COUNTS</small></strong><span>$8</span><b>91.5</b></div>
+      <div class="row count"><strong>Texas A&M · 2012 <small>COUNTS</small></strong><span>$6</span><b>90.5</b></div>
+      <div class="row"><strong>Iowa · 2009</strong><span>$4</span><b>89.5</b></div>
+      <div class="row"><strong>Ole Miss · 2023</strong><span>$5</span><b>89.0</b></div>
+      <div class="best"><small>BEST 3 AVERAGE</small><strong>91.3</strong></div>
+    </div>
+    <div id="reveal" class="list hidden">
+      <div class="headrow"><span>TEAM</span><span>WIN BID</span><span>GRADE</span></div>
+      <div class="row"><strong>Arkansas · 2011</strong><span>$7</span><b>92.0</b></div>
+      <div class="row"><strong>Oregon · 2012</strong><span>$8</span><b>91.5</b></div>
+      <div class="row"><strong>Texas A&M · 2012</strong><span>$6</span><b>90.5</b></div>
+      <div class="row"><strong>Ohio State · 2006</strong><span>$7</span><b>94.0</b></div>
+      <div class="row"><strong>Iowa · 2009</strong><span>$4</span><b>89.5</b></div>
+      <div class="row"><strong>Ole Miss · 2023</strong><span>$5</span><b>89.0</b></div>
+      <div class="row"><strong>Florida · 2008</strong><span>$9</span><b>95.5</b></div>
+      <div class="row"><strong>USC · 2005</strong><span>$6</span><b>96.0</b></div>
+      <div class="row"><strong>Penn State · 2016</strong><span>$4</span><b>91.0</b></div>
+      <button class="more">+ 12 more revealed teams</button>
+    </div>
+    <button class="secondary" style="margin-top:12px" onclick="resetPrototype()">RESTART PROTOTYPE</button>
+  </section>
+</div>
+
+<script>
+var stageDay=1,submitted=false;
+var day1=[
+ {id:'ark',name:'Arkansas',year:'2011',resume:'11–2 · No. 5 Final AP · Won Cotton Bowl',url:'https://www.sports-reference.com/cfb/schools/arkansas/2011.html',logo:'https://a.espncdn.com/i/teamlogos/ncaa/500/8.png',color:'#9D2235',rgb:'157,34,53',rival:6,other:'Player 2',bid:0},
+ {id:'tam',name:'Texas A&M',year:'2012',resume:'11–2 · No. 5 Final AP · Won Cotton Bowl',url:'https://www.sports-reference.com/cfb/schools/texas-am/2012.html',logo:'https://a.espncdn.com/i/teamlogos/ncaa/500/245.png',color:'#500000',rgb:'80,0,0',rival:9,other:'Player 3',bid:0},
+ {id:'om',name:'Ole Miss',year:'2023',resume:'11–2 · No. 9 Final AP · Won Peach Bowl',url:'https://www.sports-reference.com/cfb/schools/mississippi/2023.html',logo:'https://a.espncdn.com/i/teamlogos/ncaa/500/145.png',color:'#CE1126',rgb:'206,17,38',rival:5,other:'Player 4',bid:0}
+];
+var day2=[
+ {id:'osu',name:'Ohio State',year:'2006',resume:'12–1 · No. 2 Final AP · Lost BCS Championship',url:'https://www.sports-reference.com/cfb/schools/ohio-state/2006.html',logo:'https://a.espncdn.com/i/teamlogos/ncaa/500/194.png',color:'#BB0000',rgb:'187,0,0',rival:7,other:'Player 2',bid:0},
+ {id:'iowa',name:'Iowa',year:'2009',resume:'11–2 · No. 7 Final AP · Won Orange Bowl',url:'https://www.sports-reference.com/cfb/schools/iowa/2009.html',logo:'https://a.espncdn.com/i/teamlogos/ncaa/500/2294.png',color:'#FFCD00',rgb:'255,205,0',rival:4,other:'Player 3',bid:0},
+ {id:'ore',name:'Oregon',year:'2012',resume:'12–1 · No. 2 Final AP · Won Fiesta Bowl',url:'https://www.sports-reference.com/cfb/schools/oregon/2012.html',logo:'https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png',color:'#154733',rgb:'21,71,51',rival:8,other:'Player 4',bid:0}
+];
+var remaining=40,results1=[];
+function current(){return stageDay===1?day1:day2}
+function startAuction(){document.getElementById('cover').classList.add('hidden');document.getElementById('day').classList.remove('hidden');render()}
+function bid(id,delta){if(submitted)return;var t=current().find(function(x){return x.id===id});if(!t)return;t.bid=Math.max(0,Math.min(remaining,t.bid+delta));render()}
+function setBid(id,value){if(submitted)return;var t=current().find(function(x){return x.id===id});if(!t)return;t.bid=Math.max(0,Math.min(remaining,Math.floor(Number(value)||0)));render()}
+function committed(){return current().reduce(function(s,t){return s+t.bid},0)}
+function render(){
+ document.getElementById('dayTitle').textContent='DAY '+stageDay+' OF 7';
+ document.getElementById('theme').textContent=stageDay===1?'SEC':'BIG TEN';
+ document.getElementById('remaining').textContent='$'+remaining;
+ document.getElementById('committed').textContent='$'+committed();
+ document.getElementById('available').textContent='$'+Math.max(0,remaining-committed());
+ var stack=document.getElementById('teamStack');stack.innerHTML='';
+ current().forEach(function(t){
+  var el=document.createElement('article');el.className='team';el.style.setProperty('--team',t.color);el.style.setProperty('--rgb',t.rgb);
+  el.innerHTML='<div class="teamTop"><div class="logo"><img src="'+t.logo+'" alt=""></div><div><div class="teamName">'+t.name+' <span>· '+t.year+'</span></div><span class="resume">'+t.resume+'</span><a class="seasonLink" target="_blank" rel="noreferrer" href="'+t.url+'">View season ↗</a></div></div><div class="bidRow"><button onclick="bid(\''+t.id+'\',-1)" '+(submitted?'disabled':'')+'>−</button><div class="bidBox"><span>Bid</span><b>$</b><input inputmode="numeric" type="number" value="'+t.bid+'" onchange="setBid(\''+t.id+'\',this.value)" '+(submitted?'disabled':'')+'></div><button onclick="bid(\''+t.id+'\',1)" '+(submitted?'disabled':'')+'>+</button></div>';
+  stack.appendChild(el);
+ });
+ var legal=committed()<=remaining;
+ var submit=document.getElementById('submitBtn');submit.disabled=!legal;submit.style.opacity=legal?'1':'.45';
+ document.getElementById('submittedBox').classList.toggle('hidden',!submitted);
+ submit.classList.toggle('hidden',submitted);document.getElementById('editBtn').classList.toggle('hidden',!submitted);document.getElementById('nextBtn').classList.toggle('hidden',!submitted);
+ document.getElementById('nextBtn').textContent=stageDay===1?'PROTOTYPE: PREVIEW DAY 2 →':'PROTOTYPE: JUMP TO FINAL REVEAL →';
+}
+function submitBids(){if(committed()>remaining)return;submitted=true;render()}
+function editBids(){submitted=false;render()}
+function resolveFirst(){
+ var yourWins=0;results1=day1.map(function(t){var win=t.bid>t.rival||(t.bid===t.rival&&t.bid>0&&yourWins===0);if(win)yourWins++;return{team:t,win:win,price:win?t.bid:t.rival,winner:win?'You':t.other}});
+ remaining=40-results1.filter(function(r){return r.win}).reduce(function(s,r){return s+r.price},0);
+}
+function advancePrototype(){
+ if(stageDay===1){resolveFirst();stageDay=2;submitted=false;var y=document.getElementById('yesterday');y.classList.remove('hidden');var rows=results1.map(function(r){return'<div><span>'+r.team.name+' · '+r.team.year+'</span><strong class="'+(r.win?'you':'')+'">'+r.winner+' · $'+r.price+'</strong></div>'}).join('');y.innerHTML='<div class="yesterdayHead"><small>YESTERDAY’S RESULTS</small><strong>Day 1</strong></div><div class="results">'+rows+'</div>';render();window.scrollTo({top:0,behavior:'smooth'});return}
+ document.getElementById('day').classList.add('hidden');document.getElementById('final').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})
+}
+function showTab(name){['standings','collection','reveal'].forEach(function(id){document.getElementById(id).classList.toggle('hidden',id!==name);var b=document.getElementById('tab'+id.charAt(0).toUpperCase()+id.slice(1));b.classList.toggle('active',id===name)})}
+function resetPrototype(){stageDay=1;submitted=false;remaining=40;day1.concat(day2).forEach(function(t){t.bid=0});document.getElementById('final').classList.add('hidden');document.getElementById('day').classList.add('hidden');document.getElementById('yesterday').classList.add('hidden');document.getElementById('cover').classList.remove('hidden');showTab('standings');window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>
