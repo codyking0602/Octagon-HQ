@@ -97,7 +97,6 @@ export interface FindLeaderScope {
   championsOnly?: boolean;
   division?: string;
 }
-
 export interface FindLeaderQuestionDefinition {
   id: string;
   question: string;
@@ -567,6 +566,7 @@ export function centralDay(date = new Date()) {
 
 export function scheduledFindLeaderDefinition(day = centralDay()) {
   const target = Math.max(0, dayNumber(day) - dayNumber(DAILY_ANCHOR));
+  const available = findLeaderQuestions.filter((definition) => buildFindLeaderBoard(definition, `audit-${target}`, day));
   const history: string[] = [];
   const available = playableFindLeaderDefinitions();
   let selected: FindLeaderQuestionDefinition | null = null;
