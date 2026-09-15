@@ -323,8 +323,8 @@ export function FootballHq({
   error,
   signedIn,
   dailyChallenge,
-  weeklyGames,
-  weeklyGamesLoading,
+  weeklyGames = null,
+  weeklyGamesLoading = false,
   playerPhotoSources = {},
   canManagePlayerPhoto = false,
   onManagePlayerPhoto,
@@ -337,8 +337,8 @@ export function FootballHq({
   error: string;
   signedIn: boolean;
   dailyChallenge: ReactNode;
-  weeklyGames: DailyChallengeChampionshipSnapshot | null;
-  weeklyGamesLoading: boolean;
+  weeklyGames?: DailyChallengeChampionshipSnapshot | null;
+  weeklyGamesLoading?: boolean;
   playerPhotoSources?: Readonly<Partial<Record<FootballSpotlightKind, string | null>>>;
   canManagePlayerPhoto?: boolean;
   onManagePlayerPhoto?: () => void;
