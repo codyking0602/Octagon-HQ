@@ -16,7 +16,7 @@ begin
     raise exception 'Football Tuesday cadence changed or removed the UFC championship cutoff';
   end if;
 
-  if position('v_football_championship_start date := date ''2026-09-07''' in v_definition) = 0 then
+  if position('v_football_championship_start date := date ''2026-09-08''' in v_definition) = 0 then
     raise exception 'Football Tuesday championship cutoff is missing';
   end if;
 
