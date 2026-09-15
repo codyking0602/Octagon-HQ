@@ -19,7 +19,7 @@ function sequenceKey(ids: readonly string[]) {
   return [...ids].sort().join("|");
 }
 
-describe("UFC Who Am I calibration subjects 1-50", () => {
+describe("UFC Who Am I calibration full 100-fighter population", () => {
   it("keeps the playable pool sports-first while preserving real replay depth", () => {
     const universe = getUfcWhoAmIUniverse();
     const candidateById = new Map(universe.candidates.map((candidate) => [candidate.id, candidate]));
@@ -82,6 +82,6 @@ describe("UFC Who Am I calibration subjects 1-50", () => {
       });
     }
 
-    console.info("UFC Who Am I 1-50 calibration", JSON.stringify(report));
+    console.info("UFC Who Am I full-100 calibration", JSON.stringify(report));
   }, 90_000);
 });
