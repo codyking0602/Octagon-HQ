@@ -175,7 +175,7 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("#2 OF 2")).toBeInTheDocument();
     expect(within(hq).getByText("2026 PICKS STANDING")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "Open Football Picks season standings" }))
-      .toHaveAttribute("href", "/football/picks?view=standings#picks-season-standings");
+      .toHaveAttribute("href", "/football/picks?view=standings#picks-season-leaderboard");
     expect(within(hq).getByText("#1 overall · 2 titles")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "View Football Championship Standings" }))
       .toHaveAttribute("href", "/football?standings=me#championship-standings");
