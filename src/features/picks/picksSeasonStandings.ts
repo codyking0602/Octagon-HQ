@@ -73,9 +73,10 @@ function rerankFootballStandings(standings: readonly PickSeasonStanding[]) {
 }
 
 export function picksSeasonStandings(
-  history: PickHistory,
+  history: PickHistory | null | undefined,
   sport: PickSport = "mma",
 ): PickSeasonStanding[] {
+  if (!history) return [];
   const canonicalStandings = history.seasonStandings ?? [];
   const source = canonicalStandings.length
     ? canonicalStandings
