@@ -1,0 +1,353 @@
+import { useEffect, useMemo, useState } from "react";
+import type {
+  FootballWeeklyAuctionActiveState,
+  FootballWeeklyAuctionFinal,
+  FootballWeeklyAuctionPriorResult,
+  FootballWeeklyAuctionTeam,
+} from "../play/footballWeeklyAuctionRepository";
+import {
+  footballWeeklyAuctionTeamIdentity,
+  footballWeeklyAuctionTeamStyle,
+  type FootballWeeklyAuctionTeamIdentity,
+} from "./footballWeeklyAuctionPresentation";
+
+type BidMap = Record<1 | 2 | 3, number>;
+type FinalTab = "standings" | "collection" | "grades";
+
+function TeamMark({ identity, school }: { identity: FootballWeeklyAuctionTeamIdentity; school: string }) {
+  return (
+    <span className="football-weekly-auction__mark" aria-hidden="true">
+      <span>{school.slice(0, 2).toUpperCase()}</span>
+      {identity.logoSrc ? (
+        <img src={identity.logoSrc} alt="" onError={(event) => { event.currentTarget.hidden = true; }} />
+      ) : null}
+    </span>
+  );
+}
+
+function RulesCover({ onStart }: { onStart: () => void }) {
+  return (
+    <section className="football-weekly-auction__cover surface-card">
+      <p className="eyebrow">FOOTBALL DAILY · TUESDAY–MONDAY</p>
+      <h1>WEEKLY AUCTION</h1>
+      <strong className="football-weekly-auction__lede">3 teams. 1 bankroll. 7 days.</strong>
+      <div className="football-weekly-auction__rules">
+        <p>You have <strong>$40 for the entire week.</strong></p>
+        <small>EACH DAY</small>
+        <ul>
+          <li>Bid on any or all 3 teams</li>
+          <li>Highest bid wins each team</li>
+          <li>Losing bids cost nothing</li>
+          <li>Today’s bids lock at <strong>midnight CT</strong></li>
+        </ul>
+        <p>Your best <strong>3 teams</strong> count toward your final score.</p>
+        <p>At the end of the week, the highest average wins a <strong>bonus Daily win.</strong></p>
+        <p><strong>Tie on a bid?</strong> Fewer teams won gets priority, then less money spent.</p>
+      </div>
+      <p className="football-weekly-auction__unlock">Submit today’s bids to unlock your Daily Challenge.</p>
+      <button className="football-weekly-auction__primary" type="button" onClick={onStart}>
+        START TODAY’S AUCTION
+      </button>
+    </section>
+  );
+}
+
+function PriorResults({ results }: { results: FootballWeeklyAuctionPriorResult[] }) {
+  if (!results.length) return null;
+  return (
+    <section className="football-weekly-auction__prior surface-card">
+      <header><div><p className="eyebrow">YESTERDAY’S RESULTS</p><strong>Resolved board</strong></div></header>
+      {results.map((result) => (
+        <article key={result.slot}>
+          <div className="football-weekly-auction__prior-summary">
+            <span>{result.school} · {result.season_year}</span>
+            <strong>
+              {result.winner_display_name ?? "No winner"} · {result.winning_bid ? "$" + result.winning_bid : "Pass"}
+            </strong>
+          </div>
+          <details>
+            <summary>View all bids</summary>
+            <div className="football-weekly-auction__bid-history">
+              {result.bids.map((bid) => (
+                <div key={bid.profile_id}>
+                  <span>{bid.display_name}</span>
+                  <strong>{bid.amount ? "$" + bid.amount : "Pass"}</strong>
+                </div>
+              ))}
+            </div>
+          </details>
+        </article>
+      ))}
+    </section>
+  );
+}
+
+function TeamCard({
+  team,
+  value,
+  disabled,
+  onChange,
+}: {
+  team: FootballWeeklyAuctionTeam;
+  value: number;
+  disabled: boolean;
+  onChange: (value: number) => void;
+}) {
+  const identity = footballWeeklyAuctionTeamIdentity(team.season_reference, team.school, team.season_year);
+  return (
+    <article className="football-weekly-auction__team" style={footballWeeklyAuctionTeamStyle(identity)}>
+      <div className="football-weekly-auction__team-main">
+        <TeamMark identity={identity} school={team.school} />
+        <div>
+          <strong>{team.school} <span>· {team.season_year}</span></strong>
+          <small>{identity.resume}</small>
+          <a href={identity.sportsReferenceUrl} target="_blank" rel="noopener noreferrer">View season ↗</a>
+        </div>
+      </div>
+      <div className="football-weekly-auction__bid">
+        <button
+          type="button"
+          disabled={disabled || value <= 0}
+          onClick={() => onChange(Math.max(0, value - 1))}
+          aria-label={"Lower " + team.school + " bid"}
+        >−</button>
+        <label>
+          <span>BID</span><b>$</b>
+          <input
+            inputMode="numeric"
+            pattern="[0-9]*"
+            type="number"
+            min={0}
+            max={40}
+            step={1}
+            disabled={disabled}
+            value={value}
+            onChange={(event) => {
+              const next = Math.floor(Number(event.currentTarget.value));
+              onChange(Number.isFinite(next) ? Math.max(0, Math.min(40, next)) : 0);
+            }}
+            aria-label={team.school + " bid"}
+          />
+        </label>
+        <button
+          type="button"
+          disabled={disabled || value >= 40}
+          onClick={() => onChange(Math.min(40, value + 1))}
+          aria-label={"Raise " + team.school + " bid"}
+        >+</button>
+      </div>
+      <span className="football-weekly-auction__pass">$0 = pass</span>
+    </article>
+  );
+}
+
+function FinalResult({
+  result,
+  busy,
+  onAcknowledge,
+}: {
+  result: FootballWeeklyAuctionFinal;
+  busy: boolean;
+  onAcknowledge: () => void;
+}) {
+  const [tab, setTab] = useState<FinalTab>("standings");
+  const me = result.my_result;
+
+  return (
+    <section className="football-weekly-auction__final surface-card">
+      <header className="football-weekly-auction__final-header">
+        <p className="eyebrow">WEEKLY AUCTION</p>
+        <h1>FINAL RESULTS</h1>
+        <span>Best 3 average decides the week.</span>
+      </header>
+
+      {me.is_winner ? (
+        <div className="football-weekly-auction__champion">
+          <small>WEEKLY CHAMPION</small>
+          <strong>You</strong>
+          <b>{me.final_score?.toFixed(1) ?? "—"}</b>
+          <span>+1 bonus Daily win</span>
+        </div>
+      ) : (
+        <div className="football-weekly-auction__finish">
+          <small>YOUR FINISH</small>
+          <strong>{me.final_rank ? "#" + me.final_rank : "—"}</strong>
+          <span>{me.final_score == null ? "Fewer than 3 teams owned" : me.final_score.toFixed(1) + " best-3 average"}</span>
+        </div>
+      )}
+
+      <nav className="football-weekly-auction__tabs" aria-label="Weekly Auction final views">
+        <button className={tab === "standings" ? "is-active" : ""} type="button" onClick={() => setTab("standings")}>Standings</button>
+        <button className={tab === "collection" ? "is-active" : ""} type="button" onClick={() => setTab("collection")}>Your Collection</button>
+        <button className={tab === "grades" ? "is-active" : ""} type="button" onClick={() => setTab("grades")}>All Grades</button>
+      </nav>
+
+      {tab === "standings" ? (
+        <div className="football-weekly-auction__rows football-weekly-auction__standings">
+          {result.standings.map((entry) => (
+            <div className={entry.is_current_user ? "is-current" : ""} key={entry.profile_id}>
+              <b>#{entry.rank ?? "—"}</b>
+              <strong>{entry.display_name}</strong>
+              <span>{entry.final_score == null ? "—" : entry.final_score.toFixed(1)}</span>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {tab === "collection" ? (
+        <div className="football-weekly-auction__rows">
+          <header><span>TEAM</span><span>PAID</span><span>GRADE</span></header>
+          {result.collection.map((entry) => {
+            const identity = footballWeeklyAuctionTeamIdentity(entry.season_reference, entry.school, entry.season_year);
+            return (
+              <div
+                className={"football-weekly-auction__result-team" + (entry.counts ? " is-counting" : "")}
+                key={entry.season_reference}
+                style={footballWeeklyAuctionTeamStyle(identity)}
+              >
+                <strong>{entry.display_label}{entry.counts ? <small>COUNTS</small> : null}</strong>
+                <span>{"$"}{entry.winning_bid}</span>
+                <b>{entry.grade.toFixed(1)}</b>
+              </div>
+            );
+          })}
+          <footer><span>BEST 3 AVERAGE</span><strong>{me.final_score?.toFixed(1) ?? "—"}</strong></footer>
+        </div>
+      ) : null}
+
+      {tab === "grades" ? (
+        <div className="football-weekly-auction__rows">
+          <header><span>TEAM</span><span>WIN BID</span><span>GRADE</span></header>
+          {result.all_teams.map((entry) => {
+            const identity = footballWeeklyAuctionTeamIdentity(entry.season_reference, entry.school, entry.season_year);
+            return (
+              <div
+                className="football-weekly-auction__result-team"
+                key={entry.season_reference}
+                style={footballWeeklyAuctionTeamStyle(identity)}
+              >
+                <strong>{entry.display_label}</strong>
+                <span>{entry.winning_bid ? "$" + entry.winning_bid : "Pass"}</span>
+                <b>{entry.grade.toFixed(1)}</b>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
+
+      <button className="football-weekly-auction__primary" disabled={busy} type="button" onClick={onAcknowledge}>
+        START THE NEW WEEK
+      </button>
+    </section>
+  );
+}
+
+export function FootballWeeklyAuctionGate({
+  state,
+  busy,
+  error,
+  forceBoard = false,
+  onSubmit,
+  onAcknowledgeFinal,
+  onContinue,
+}: {
+  state: FootballWeeklyAuctionActiveState;
+  busy: boolean;
+  error: string | null;
+  forceBoard?: boolean;
+  onSubmit: (bids: BidMap) => Promise<void>;
+  onAcknowledgeFinal: (weekStart: string) => Promise<void>;
+  onContinue: () => void;
+}) {
+  const [introDismissed, setIntroDismissed] = useState(false);
+  const [editing, setEditing] = useState(!state.submitted_today);
+  const initialBids = useMemo<BidMap>(() => ({
+    1: state.bids["1"] ?? 0,
+    2: state.bids["2"] ?? 0,
+    3: state.bids["3"] ?? 0,
+  }), [state.bids]);
+  const [bids, setBids] = useState<BidMap>(initialBids);
+
+  useEffect(() => {
+    setBids(initialBids);
+    setEditing(!state.submitted_today);
+  }, [initialBids, state.submitted_today]);
+
+  if (state.previous_final) {
+    return (
+      <FinalResult
+        result={state.previous_final}
+        busy={busy}
+        onAcknowledge={() => void onAcknowledgeFinal(state.previous_final!.week_start)}
+      />
+    );
+  }
+
+  if (state.show_intro && !introDismissed && !forceBoard) {
+    return <RulesCover onStart={() => setIntroDismissed(true)} />;
+  }
+
+  const committed = bids[1] + bids[2] + bids[3];
+  const legal = committed <= state.max_commit;
+  const submitted = state.submitted_today && !editing;
+
+  return (
+    <div className="football-weekly-auction">
+      <PriorResults results={state.prior_results} />
+      <section className="football-weekly-auction__board surface-card">
+        <header className="football-weekly-auction__board-head">
+          <div><p className="eyebrow">WEEKLY AUCTION</p><h1>DAY {state.day_index} OF 7</h1></div>
+          <div className="football-weekly-auction__bank"><strong>{"$"}{state.bankroll}</strong><span>REMAINING</span></div>
+        </header>
+
+        <div className="football-weekly-auction__status">
+          <div><small>TEAMS OWNED</small><strong>{state.owned_count}</strong></div>
+          <div><small>COMMITTED</small><strong>{"$"}{committed}</strong></div>
+          <div><small>MAX TODAY</small><strong>{"$"}{state.max_commit}</strong></div>
+        </div>
+
+        <div className="football-weekly-auction__theme">
+          <strong>{state.theme}</strong><span>Bids lock at midnight CT</span>
+        </div>
+
+        <div className="football-weekly-auction__team-stack">
+          {state.teams.map((team) => (
+            <TeamCard
+              key={team.slot}
+              team={team}
+              value={bids[team.slot as 1 | 2 | 3]}
+              disabled={submitted || busy}
+              onChange={(value) => setBids((current) => ({ ...current, [team.slot]: value } as BidMap))}
+            />
+          ))}
+        </div>
+
+        {!legal ? (
+          <p className="football-weekly-auction__error">
+            Today’s bids can total at most {"$"}{state.max_commit} with your current bankroll protection.
+          </p>
+        ) : null}
+        {error ? <p className="football-weekly-auction__error">{error}</p> : null}
+
+        {submitted ? (
+          <div className="football-weekly-auction__submitted-actions">
+            <div><strong>BIDS SUBMITTED</strong><span>You can still edit until midnight CT.</span></div>
+            <button type="button" disabled={busy} onClick={() => setEditing(true)}>EDIT BIDS</button>
+            <button className="football-weekly-auction__primary" type="button" disabled={busy} onClick={onContinue}>
+              CONTINUE TO DAILY CHALLENGE
+            </button>
+          </div>
+        ) : (
+          <button
+            className="football-weekly-auction__primary"
+            type="button"
+            disabled={busy || !legal}
+            onClick={() => void onSubmit(bids)}
+          >
+            {state.submitted_today ? "SAVE BID CHANGES" : "SUBMIT TODAY’S BIDS"}
+          </button>
+        )}
+      </section>
+    </div>
+  );
+}
