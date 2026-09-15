@@ -6,6 +6,28 @@ export interface NotificationPushSubscriptionInput {
 }
 
 const workerPath = "/push-readiness-sw.js";
+const pushIntentStorageKey = "octagon-notification-push-intent";
+
+export type NotificationDevicePushIntent = "enabled" | "disabled" | null;
+
+export function getNotificationDevicePushIntent(): NotificationDevicePushIntent {
+  if (typeof window === "undefined") return null;
+  try {
+    const value = window.localStorage.getItem(pushIntentStorageKey);
+    return value === "enabled" || value === "disabled" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+export function setNotificationDevicePushIntent(intent: Exclude<NotificationDevicePushIntent, null>) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(pushIntentStorageKey, intent);
+  } catch {
+    // A storage failure must not block the actual Push API connection flow.
+  }
+}
 
 function base64UrlToBytes(value: string) {
   const padding = "=".repeat((4 - (value.length % 4)) % 4);
