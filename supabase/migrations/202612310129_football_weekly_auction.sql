@@ -246,15 +246,21 @@ declare
   v_day integer;
   v_slot integer;
   v_attempt integer;
+  v_shape_attempt integer;
   v_shape text;
   v_shape_roll double precision;
   v_prev_shape text;
   v_two_back_shape text;
   v_targets numeric[];
   v_target numeric;
+  v_high numeric;
+  v_center numeric;
   v_pick private.draft_room_cfb_best_teams_pool;
   v_used_refs text[];
   v_used_schools text[];
+  v_forced_refs text[];
+  v_trap_blue_ref text;
+  v_trap_other_ref text;
   v_elites integer;
   v_lock_at timestamptz;
 begin
@@ -274,7 +280,7 @@ begin
   end if;
 
   <<attempt_loop>>
-  for v_attempt in 1..80 loop
+  for v_attempt in 1..500 loop
     delete from private.football_weekly_auction_board where week_start = p_week_start;
     v_used_refs := array[]::text[];
     v_used_schools := array[]::text[];
@@ -288,56 +294,138 @@ begin
 
     for v_day in 1..7 loop
       v_theme := v_themes[v_day];
-      v_shape_roll := random() * 100;
-      v_shape := case
-        when v_shape_roll < 19 then 'Wide'
-        when v_shape_roll < 37 then 'Compressed'
-        when v_shape_roll < 54 then 'TopHeavy'
-        when v_shape_roll < 74 then 'MiddleHeavy'
-        when v_shape_roll < 88 then 'Trap'
-        else 'Chaotic'
-      end;
+
+      for v_shape_attempt in 1..30 loop
+        v_shape_roll := random() * 100;
+        v_shape := case
+          when v_shape_roll < 19 then 'Wide'
+          when v_shape_roll < 37 then 'Compressed'
+          when v_shape_roll < 54 then 'TopHeavy'
+          when v_shape_roll < 74 then 'MiddleHeavy'
+          when v_shape_roll < 88 then 'Trap'
+          else 'Chaotic'
+        end;
+        exit when not (v_shape = v_prev_shape and v_shape = v_two_back_shape);
+      end loop;
       if v_shape = v_prev_shape and v_shape = v_two_back_shape then
-        v_shape := case when v_shape = 'Chaotic' then 'Wide' else 'Chaotic' end;
+        continue attempt_loop;
       end if;
 
-      v_targets := case v_shape
-        when 'Wide' then array[96.0, 91.0, 87.0]::numeric[]
-        when 'Compressed' then array[90.5, 91.0, 91.5]::numeric[]
-        when 'TopHeavy' then array[96.0, 94.0, 89.0]::numeric[]
-        when 'MiddleHeavy' then array[89.5, 91.0, 93.0]::numeric[]
-        when 'Trap' then array[90.0, 93.0, 89.0]::numeric[]
-        else array[(86 + random()*14)::numeric, (86 + random()*14)::numeric, (86 + random()*14)::numeric]
-      end;
+      v_forced_refs := array[]::text[];
+      v_targets := null;
 
-      for v_slot in 1..3 loop
-        v_target := v_targets[v_slot];
-        v_pick := null;
+      if v_shape = 'Wide' then
+        v_high := 94 + floor(random() * 9) * 0.5;
+        v_targets := array[
+          v_high,
+          v_high - (4 + random() * 1.5),
+          v_high - (7 + random() * 2)
+        ]::numeric[];
+      elsif v_shape = 'Compressed' then
+        v_center := 88.5 + floor(random() * 14) * 0.5;
+        v_targets := array[v_center - 0.5, v_center, v_center + 0.5]::numeric[];
+      elsif v_shape = 'TopHeavy' then
+        v_high := 94 + floor(random() * 8) * 0.5;
+        v_targets := array[
+          v_high,
+          v_high - (0.5 + random()),
+          v_high - (4 + random() * 2)
+        ]::numeric[];
+      elsif v_shape = 'MiddleHeavy' then
+        v_center := 89.5 + floor(random() * 8) * 0.5;
+        v_targets := array[
+          v_center - (1.2 + random() * 0.8),
+          v_center + (random() - 0.5) * 0.5,
+          v_center + (1.2 + random() * 0.8)
+        ]::numeric[];
+      elsif v_shape = 'Trap' then
+        v_trap_blue_ref := null;
+        v_trap_other_ref := null;
 
-        select pool.*
-        into v_pick
-        from private.draft_room_cfb_best_teams_pool pool
+        select blue.season_reference, other.season_reference
+        into v_trap_blue_ref, v_trap_other_ref
+        from private.draft_room_cfb_best_teams_pool blue
+        cross join private.draft_room_cfb_best_teams_pool other
         where (
-            pool.season_reference like 'cfb-best-%'
-            or pool.conference_bucket = 'Wildcard'
+            blue.season_reference like 'cfb-best-%'
+            or blue.conference_bucket = 'Wildcard'
           )
           and (
-            (v_theme = 'Wildcard' and pool.conference_bucket in ('Notre Dame','Wildcard'))
-            or pool.conference_bucket = v_theme
+            other.season_reference like 'cfb-best-%'
+            or other.conference_bucket = 'Wildcard'
           )
-          and not (pool.season_reference = any(v_used_refs))
-          and not (pool.school = any(v_used_schools))
+          and (
+            (v_theme = 'Wildcard' and blue.conference_bucket in ('Notre Dame','Wildcard'))
+            or blue.conference_bucket = v_theme
+          )
+          and (
+            (v_theme = 'Wildcard' and other.conference_bucket in ('Notre Dame','Wildcard'))
+            or other.conference_bucket = v_theme
+          )
+          and blue.school in (
+            'Alabama','Ohio State','USC','Texas','Oklahoma','Michigan','Notre Dame',
+            'Georgia','LSU','Florida','Florida State','Clemson','Miami','Penn State',
+            'Nebraska','Oregon','Auburn'
+          )
+          and other.school not in (
+            'Alabama','Ohio State','USC','Texas','Oklahoma','Michigan','Notre Dame',
+            'Georgia','LSU','Florida','Florida State','Clemson','Miami','Penn State',
+            'Nebraska','Oregon','Auburn'
+          )
+          and other.school <> blue.school
+          and other.hidden_grade >= blue.hidden_grade + 1.5
+          and other.hidden_grade <= blue.hidden_grade + 4.5
+          and not (blue.school = any(v_used_schools))
+          and not (other.school = any(v_used_schools))
           and not exists (
-            select 1
-            from private.football_weekly_auction_board prior
+            select 1 from private.football_weekly_auction_board prior
             where prior.week_start >= p_week_start - 28
               and prior.week_start < p_week_start
-              and prior.season_reference = pool.season_reference
+              and prior.season_reference = blue.season_reference
           )
-        order by abs(pool.hidden_grade - v_target), random(), pool.season_reference
+          and not exists (
+            select 1 from private.football_weekly_auction_board prior
+            where prior.week_start >= p_week_start - 28
+              and prior.week_start < p_week_start
+              and prior.season_reference = other.season_reference
+          )
+        order by random()
         limit 1;
 
-        if v_pick.season_reference is null then
+        if v_trap_blue_ref is not null and v_trap_other_ref is not null then
+          v_forced_refs := array[v_trap_blue_ref, v_trap_other_ref];
+          select array[null::numeric, null::numeric, avg(pool.hidden_grade)]::numeric[]
+          into v_targets
+          from private.draft_room_cfb_best_teams_pool pool
+          where pool.season_reference = any(v_forced_refs);
+        else
+          v_targets := array[
+            90 + random() * 4,
+            92 + random() * 3,
+            88.5 + random() * 3.5
+          ]::numeric[];
+        end if;
+      else
+        v_targets := array[
+          86 + random() * 14,
+          86 + random() * 14,
+          86 + random() * 14
+        ]::numeric[];
+      end if;
+
+      for v_slot in 1..3 loop
+        v_pick := null;
+
+        if array_length(v_forced_refs, 1) is not null
+          and v_slot <= array_length(v_forced_refs, 1)
+        then
+          select pool.*
+          into v_pick
+          from private.draft_room_cfb_best_teams_pool pool
+          where pool.season_reference = v_forced_refs[v_slot];
+        else
+          v_target := v_targets[v_slot];
+
           select pool.*
           into v_pick
           from private.draft_room_cfb_best_teams_pool pool
@@ -351,8 +439,33 @@ begin
             )
             and not (pool.season_reference = any(v_used_refs))
             and not (pool.school = any(v_used_schools))
-          order by abs(pool.hidden_grade - v_target), random(), pool.season_reference
+            and not exists (
+              select 1
+              from private.football_weekly_auction_board prior
+              where prior.week_start >= p_week_start - 28
+                and prior.week_start < p_week_start
+                and prior.season_reference = pool.season_reference
+            )
+          order by abs(pool.hidden_grade - v_target) + random() * 0.3, pool.season_reference
           limit 1;
+
+          if v_pick.season_reference is null then
+            select pool.*
+            into v_pick
+            from private.draft_room_cfb_best_teams_pool pool
+            where (
+                pool.season_reference like 'cfb-best-%'
+                or pool.conference_bucket = 'Wildcard'
+              )
+              and (
+                (v_theme = 'Wildcard' and pool.conference_bucket in ('Notre Dame','Wildcard'))
+                or pool.conference_bucket = v_theme
+              )
+              and not (pool.season_reference = any(v_used_refs))
+              and not (pool.school = any(v_used_schools))
+            order by abs(pool.hidden_grade - v_target) + random() * 0.3, pool.season_reference
+            limit 1;
+          end if;
         end if;
 
         if v_pick.season_reference is null then
