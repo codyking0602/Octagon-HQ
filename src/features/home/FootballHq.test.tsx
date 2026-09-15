@@ -161,34 +161,7 @@ describe("Football HQ Home summary", () => {
           error=""
           signedIn
           dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
-          weeklyGames={{ entry: {
-            rank: 1,
-            profileId: "me",
-            displayName: "ME",
-            initials: "ME",
-            avatarPhotoData: null,
-            wins: 8,
-            played: 12,
-            averageScore: 82,
-            currentStreak: 4,
-            bestStreak: 7,
-            gameAverages: {
-              findLeader: 80,
-              wavelength: 82,
-              blindResume: 84,
-              blindRank5: null,
-              keep4Cut4: null,
-              hitTheNumber: null,
-              whoAmI: null,
-            },
-            isCurrentUser: true,
-            weeklyRank: 1,
-            weeklyWins: 2,
-            weeklyPlayed: 3,
-            weeklyAverageScore: 88,
-            weeklyTitles: 2,
-          }, rank: 1, weeklyTitles: 2 }}
-          weeklyGamesLoading={false}
+          weeklyGames={{ rank: 1, weeklyTitles: 2 }}
         />
       </MemoryRouter>,
     );
@@ -266,34 +239,6 @@ describe("Football HQ Home summary", () => {
           error=""
           signedIn
           dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
-          weeklyGames={{ entry: {
-            rank: 1,
-            profileId: "me",
-            displayName: "ME",
-            initials: "ME",
-            avatarPhotoData: null,
-            wins: 8,
-            played: 12,
-            averageScore: 82,
-            currentStreak: 4,
-            bestStreak: 7,
-            gameAverages: {
-              findLeader: 80,
-              wavelength: 82,
-              blindResume: 84,
-              blindRank5: null,
-              keep4Cut4: null,
-              hitTheNumber: null,
-              whoAmI: null,
-            },
-            isCurrentUser: true,
-            weeklyRank: 1,
-            weeklyWins: 2,
-            weeklyPlayed: 3,
-            weeklyAverageScore: 88,
-            weeklyTitles: 2,
-          }, rank: 1, weeklyTitles: 2 }}
-          weeklyGamesLoading={false}
           playerPhotoSources={{ cfb: "https://example.com/drew.webp" }}
           canManagePlayerPhoto
           onManagePlayerPhoto={onManagePlayerPhoto}
@@ -327,34 +272,6 @@ describe("Football HQ Home summary", () => {
           error=""
           signedIn={false}
           dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
-          weeklyGames={{ entry: {
-            rank: 1,
-            profileId: "me",
-            displayName: "ME",
-            initials: "ME",
-            avatarPhotoData: null,
-            wins: 8,
-            played: 12,
-            averageScore: 82,
-            currentStreak: 4,
-            bestStreak: 7,
-            gameAverages: {
-              findLeader: 80,
-              wavelength: 82,
-              blindResume: 84,
-              blindRank5: null,
-              keep4Cut4: null,
-              hitTheNumber: null,
-              whoAmI: null,
-            },
-            isCurrentUser: true,
-            weeklyRank: 1,
-            weeklyWins: 2,
-            weeklyPlayed: 3,
-            weeklyAverageScore: 88,
-            weeklyTitles: 2,
-          }, rank: 1, weeklyTitles: 2 }}
-          weeklyGamesLoading={false}
         />
       </MemoryRouter>,
     );
@@ -389,34 +306,6 @@ describe("Football HQ Home summary", () => {
           error=""
           signedIn
           dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
-          weeklyGames={{ entry: {
-            rank: 1,
-            profileId: "me",
-            displayName: "ME",
-            initials: "ME",
-            avatarPhotoData: null,
-            wins: 8,
-            played: 12,
-            averageScore: 82,
-            currentStreak: 4,
-            bestStreak: 7,
-            gameAverages: {
-              findLeader: 80,
-              wavelength: 82,
-              blindResume: 84,
-              blindRank5: null,
-              keep4Cut4: null,
-              hitTheNumber: null,
-              whoAmI: null,
-            },
-            isCurrentUser: true,
-            weeklyRank: 1,
-            weeklyWins: 2,
-            weeklyPlayed: 3,
-            weeklyAverageScore: 88,
-            weeklyTitles: 2,
-          }, rank: 1, weeklyTitles: 2 }}
-          weeklyGamesLoading={false}
           playerPhotoSources={{
             cfb: "https://example.com/drew.webp",
             nfl: "https://example.com/josh.webp",
@@ -458,34 +347,6 @@ describe("Football HQ Home summary", () => {
           error=""
           signedIn
           dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
-          weeklyGames={{ entry: {
-            rank: 1,
-            profileId: "me",
-            displayName: "ME",
-            initials: "ME",
-            avatarPhotoData: null,
-            wins: 8,
-            played: 12,
-            averageScore: 82,
-            currentStreak: 4,
-            bestStreak: 7,
-            gameAverages: {
-              findLeader: 80,
-              wavelength: 82,
-              blindResume: 84,
-              blindRank5: null,
-              keep4Cut4: null,
-              hitTheNumber: null,
-              whoAmI: null,
-            },
-            isCurrentUser: true,
-            weeklyRank: 1,
-            weeklyWins: 2,
-            weeklyPlayed: 3,
-            weeklyAverageScore: 88,
-            weeklyTitles: 2,
-          }, rank: 1, weeklyTitles: 2 }}
-          weeklyGamesLoading={false}
           playerPhotoSources={{ cfb: "https://example.com/drew.webp" }}
         />
       </MemoryRouter>,
