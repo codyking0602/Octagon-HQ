@@ -268,8 +268,10 @@ describe("Unified Picks Control Center", () => {
     );
 
     expect(await screen.findByRole("region", { name: "Manage Football Home Player Spotlight" })).toBeInTheDocument();
-    expect(screen.getByText("PLAYER SPOTLIGHT PHOTO")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "UPLOAD / REPLACE PHOTO" })).toBeInTheDocument();
+    expect(screen.getByText("CFB PLAYER SPOTLIGHT PHOTO")).toBeInTheDocument();
+    expect(screen.getByText("NFL PLAYER SPOTLIGHT PHOTO")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "UPLOAD / REPLACE CFB PHOTO" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "UPLOAD / REPLACE NFL PHOTO" })).toBeInTheDocument();
   });
 
   it("loads each canonical no-event owner exactly once and keeps setup available", async () => {
