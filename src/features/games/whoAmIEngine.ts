@@ -1,4 +1,4 @@
-import { assembleWhoAmIClues } from "./whoAmIClueAssembler";
+import { assembleWhoAmIRevealClues } from "./whoAmIRevealEngine";
 
 export type WhoAmISport = "ufc" | "football";
 export type WhoAmILeague = "UFC" | "NFL" | "CFB";
@@ -71,7 +71,7 @@ export function whoAmIProgressiveClues(
   clues: readonly WhoAmIClue[],
   random: () => number = Math.random,
 ) {
-  return assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, random);
+  return assembleWhoAmIRevealClues(clues, WHO_AM_I_CLUE_LIMIT, random);
 }
 
 function shuffled<T>(values: readonly T[], random: () => number) {
