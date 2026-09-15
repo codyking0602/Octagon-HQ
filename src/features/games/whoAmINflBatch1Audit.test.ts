@@ -4,6 +4,34 @@ import { NFL_WHO_AM_I_BATCH_1_SUBJECT_IDS } from "./footballWhoAmICuration";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import { WHO_AM_I_CLUE_LIMIT, whoAmIProgressiveClues } from "./whoAmIEngine";
 
+const ACTIVE_2026_BATCH_IDS = new Set([
+  "nfl-aaron-rodgers",
+  "nfl-josh-allen",
+  "nfl-lamar-jackson",
+  "nfl-patrick-mahomes",
+]);
+
+const PARTIAL_QB_RUSHING_IDS = new Set([
+  "brett-favre",
+  "dan-marino",
+  "nfl-fran-tarkenton",
+  "nfl-jim-kelly",
+  "joe-montana",
+  "joe-namath",
+  "john-elway",
+  "johnny-unitas",
+  "kurt-warner",
+  "nfl-otto-graham",
+  "peyton-manning",
+  "nfl-roger-staubach",
+  "nfl-sammy-baugh",
+  "nfl-sid-luckman",
+  "steve-young",
+  "nfl-terry-bradshaw",
+  "troy-aikman",
+  "nfl-ya-tittle",
+]);
+
 function seededRandom(seed: number) {
   let state = seed >>> 0;
   return () => {
@@ -39,6 +67,26 @@ describe("NFL Who Am I batch 1 calibration", () => {
         candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length,
         `${subjectId} color clues`,
       ).toBeLessThanOrEqual(1);
+      expect(
+        candidate!.clues.some((clue) => clue.id === "player-career-start" || clue.id === "player-career-end"),
+        `${subjectId} coverage-window chronology`,
+      ).toBe(false);
+      if (ACTIVE_2026_BATCH_IDS.has(subjectId)) {
+        expect(
+          candidate!.clues.some((clue) => /^fact:nfl-career-/.test(clue.id)),
+          `${subjectId} stale active-player career totals`,
+        ).toBe(false);
+      }
+      if (PARTIAL_QB_RUSHING_IDS.has(subjectId)) {
+        expect(
+          candidate!.clues.some((clue) => /^fact:nfl-career-rushing-/.test(clue.id)),
+          `${subjectId} partial-source quarterback rushing totals`,
+        ).toBe(false);
+      }
+      if (subjectId === "nfl-aaron-rodgers") {
+        expect(candidate!.clues.find((clue) => clue.id === "curated:three-team-path")?.text).toContain("Pittsburgh");
+        expect(candidate!.clues.some((clue) => clue.id === "career-path" || clue.id.startsWith("affiliation:"))).toBe(false);
+      }
 
       const sequences = Array.from({ length: 64 }, (_value, index) => (
         whoAmIProgressiveClues(candidate!.clues, seededRandom(index + 1))
