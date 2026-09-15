@@ -191,6 +191,8 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
     () => todayChallengeAdapter(projection?.gameType),
     [projection?.gameType],
   );
+  const focusChampionship = typeof window !== "undefined"
+    && new URLSearchParams(window.location.search).get("standings") === "me";
 
   if (!signedIn) {
     return (
@@ -246,6 +248,7 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
             loading={overview.standingsLoading}
             error={overview.error instanceof Error ? overview.error : null}
             onRefresh={() => { void overview.refresh(); }}
+            focusCurrentUser={focusChampionship}
           />
         </section>
       );
@@ -364,6 +367,7 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
         loading={overview.standingsLoading}
         error={overview.error instanceof Error ? overview.error : null}
         onRefresh={() => { void overview.refresh(); }}
+        focusCurrentUser={focusChampionship}
       />
     </section>
   );
