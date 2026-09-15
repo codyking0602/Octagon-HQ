@@ -56,8 +56,8 @@ describe("UFC 331 Picks fight-week polish", () => {
     } satisfies PickBout;
 
     expect(fightCardLabel({ ...base, position: 1, cardSegment: "main", segmentSequence: 5 }, 0)).toBe("MAIN EVENT");
-    expect(fightCardLabel({ ...base, cardSegment: "main", segmentSequence: 1 }, 4)).toBe("MAIN CARD · FIGHT 1");
-    expect(fightCardLabel({ ...base, cardSegment: "prelim", segmentSequence: 3 }, 5)).toBe("PRELIMS · FIGHT 3");
+    expect(fightCardLabel({ ...base, cardSegment: "main", segmentSequence: 4 }, 1, 2)).toBe("MAIN CARD · FIGHT 2");
+    expect(fightCardLabel({ ...base, cardSegment: "prelim", segmentSequence: 3 }, 5, 1)).toBe("PRELIMS · FIGHT 1");
   });
 
   it("keeps the numbered-PPV scope, premium motion, portraits, and fight-week repair locked", () => {
