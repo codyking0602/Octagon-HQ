@@ -3,7 +3,8 @@ import {
   type UfcFactualSubject,
 } from "../back-room/ufcFactualLedger";
 import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
-import { whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
+import { whoAmIClueSelectionClass, whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
+import { isUfcWhoAmICalibrationSubject, shouldUseUfcWhoAmIIdentityConcept, ufcWhoAmIIdentityFacetOverride } from "./ufcWhoAmICuration";
 import {
   createWhoAmIRound,
   type WhoAmICandidate,
@@ -20,15 +21,33 @@ import {
 function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
   const knowledge = getUfcPersonIdentityKnowledge(subject.id);
   if (!knowledge) return [];
-  return knowledge.facts.map((fact) => whoAmIIdentityKnowledgeClue({
-    subjectId: subject.id,
-    subjectName: subject.name,
-    subjectKind: "fighter",
-    league: "UFC",
-    factId: fact.factId,
-    conceptId: fact.conceptId,
-    value: fact.value,
-  }));
+  const clues = knowledge.facts
+    .filter((fact) => shouldUseUfcWhoAmIIdentityConcept(subject.id, fact.conceptId))
+    .map((fact) => {
+      const identityClue = whoAmIIdentityKnowledgeClue({
+        subjectId: subject.id,
+        subjectName: subject.name,
+        subjectKind: "fighter",
+        league: "UFC",
+        factId: fact.factId,
+        conceptId: fact.conceptId,
+        value: fact.value,
+      });
+      const facetOverride = ufcWhoAmIIdentityFacetOverride(subject.id, fact.conceptId);
+      return facetOverride ? { ...identityClue, facet: facetOverride } : identityClue;
+    });
+
+  if (!isUfcWhoAmICalibrationSubject(subject.id)) return clues;
+
+  let colorClueUsed = false;
+  return clues.filter((identityClue) => {
+    const selectionClass = whoAmIClueSelectionClass(identityClue);
+    if (selectionClass === "deep-biography") return false;
+    if (selectionClass !== "identity-color") return true;
+    if (colorClueUsed) return false;
+    colorClueUsed = true;
+    return true;
+  });
 }
 
 function ufcDivision(value: string) {
