@@ -226,7 +226,7 @@ describe("Football HQ Home summary", () => {
       ...history,
       seasonStandings: [
         { ...history.seasonStandings![0]!, rank: 1, isCurrentUser: false },
-        { ...history.seasonStandings![1]!, rank: 1, isCurrentUser: true },
+        { ...history.seasonStandings![1]!, rank: 1, totalPoints: 12, isCurrentUser: true },
       ],
     };
 
