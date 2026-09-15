@@ -265,6 +265,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
 
     for (const league of ["NFL", "CFB"] as const) {
       const universe = getFootballWhoAmIUniverse(league);
+      const launchSubjectById = new Map(getFootballWhoAmILaunchPool(league).subjects.map((subject) => [subject.id, subject]));
       let covered = 0;
       for (const candidate of universe.candidates) {
         const source = getFootballPersonIdentityKnowledge(candidate.id);
@@ -272,7 +273,10 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         covered += 1;
         const identityClues = candidate.clues.filter((clue) => clue.identityKnowledge);
         if (league === "NFL" && isNflWhoAmIBatch1Subject(candidate.id)) {
-          expect(identityClues.every((clue) => source.facts.some((fact) => fact.factId === clue.sourceFactId))).toBe(true);
+          const subject = launchSubjectById.get(candidate.id);
+          if (!subject) throw new Error(`Missing launch subject for ${candidate.id}.`);
+          const applicableFactIds = new Set(footballWhoAmIApplicableIdentityFacts(subject).map(({ fact }) => fact.factId));
+          expect(identityClues.every((clue) => Boolean(clue.sourceFactId && applicableFactIds.has(clue.sourceFactId)))).toBe(true);
         } else {
           expect(identityClues.length).toBeGreaterThanOrEqual(source.facts.length);
           expect(source.facts.every((fact) => identityClues.some((clue) => clue.sourceFactId === fact.factId))).toBe(true);
