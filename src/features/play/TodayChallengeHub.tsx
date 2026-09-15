@@ -9,9 +9,10 @@ import {
 import { OfficialTodayChallengeContent } from "./OfficialTodayChallengePage";
 import type { PlaySport } from "./playRegistry";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
-import type {
-  TodayChallengeLeaderboard,
-  TodayChallengeProjection,
+import {
+  TodayChallengeRepositoryError,
+  type TodayChallengeLeaderboard,
+  type TodayChallengeProjection,
 } from "./todayChallengeRepository";
 import { useTodayChallengeOverview } from "./useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
@@ -214,6 +215,23 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
   }
 
   if (!projection || !adapter) {
+    const weeklyAuctionRequired = sport === "football"
+      && runtime.error instanceof TodayChallengeRepositoryError
+      && runtime.error.code === "WEEKLY_AUCTION_REQUIRED";
+
+    if (weeklyAuctionRequired) {
+      return (
+        <section className="today-hub-gate" data-sport={sport}>
+          <div>
+            <p className="eyebrow">TODAY’S CHALLENGE</p>
+            <h2>Weekly Auction comes first.</h2>
+            <p>Submit today’s Weekly Auction bids to unlock Football Daily.</p>
+          </div>
+          <button type="button" onClick={() => navigate("/football/today")}>START TODAY’S AUCTION</button>
+        </section>
+      );
+    }
+
     return (
       <section className="today-hub-gate is-error" data-sport={sport}>
         <div>
