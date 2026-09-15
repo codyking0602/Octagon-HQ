@@ -19,6 +19,7 @@ import {
   type FootballSubjectProfile,
 } from "../back-room/footballSubjectRegistry";
 import { whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
+import { curateFootballWhoAmIClues } from "./footballWhoAmICuration";
 import {
   distinctWhoAmIClues as distinctClues,
   whoAmIClue as clue,
@@ -677,12 +678,12 @@ function footballCandidate(subject: FootballSubjectProfile): WhoAmICandidate {
     kind,
     eraBand: footballEraBand(subject),
     rescueGroup: kind === "coach" ? `${subject.league}:coach` : `${subject.league}:${subject.position ?? "player"}`,
-    clues: distinctClues([
+    clues: curateFootballWhoAmIClues(subject, distinctClues([
       ...footballIdentityClues(subject),
       ...footballMetricClues(subject),
       ...footballRecognitionClues(subject),
       ...footballPersonIdentityClues(subject),
-    ]),
+    ])),
   };
 }
 
