@@ -26,6 +26,11 @@ describe("Fight Spotlight fighter photo assets", () => {
     expect(spotlight).toContain('["ian-garry", "ian-machado-garry"]');
   });
 
+  it("resolves the uploaded Pantoja Spotlight asset to the current Alexandre Pantoja fighter slug", () => {
+    expect(existsSync("public/assets/fighters/alex-pantoja-spotlight.webp")).toBe(true);
+    expect(spotlight).toContain('["alex-pantoja", "alexandre-pantoja"]');
+  });
+
   it("ships dedicated Spotlight cutouts for the Sacramento main event", () => {
     expect(existsSync("public/assets/fighters/anthony-hernandez-spotlight.webp")).toBe(true);
     expect(existsSync("public/assets/fighters/gregory-rodrigues-spotlight.webp")).toBe(true);
