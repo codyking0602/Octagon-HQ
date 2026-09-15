@@ -475,7 +475,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
           clue.sourceFactId === fact.factId
           || clue.conceptId === `identity:${fact.conceptId}`
         )));
-        const intentionallyCurated = league === "NFL" && isNflWhoAmIBatch1Subject(candidate.id);
+        const intentionallyCurated = league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id));
 
         if (!intentionallyCurated) {
           expect(
