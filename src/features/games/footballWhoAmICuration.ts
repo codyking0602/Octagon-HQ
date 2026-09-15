@@ -79,6 +79,13 @@ const suppressedCareerSpanSubjectIds = new Set([
   "nfl-ahman-green",
 ]);
 
+const active2026SubjectIds = new Set([
+  "nfl-aaron-rodgers",
+  "nfl-josh-allen",
+  "nfl-lamar-jackson",
+  "nfl-patrick-mahomes",
+]);
+
 const partialQuarterbackRushingSubjectIds = new Set([
   "brett-favre",
   "dan-marino",
@@ -241,6 +248,11 @@ const clueTextOverrides = new Map<string, Pick<WhoAmIClue, "text" | "band" | "fa
 ]);
 
 const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["nfl-aaron-rodgers", [
+    { id: "curated:three-team-path", conceptId: "curated:three-team-path", text: "My NFL career has included Green Bay, the New York Jets, and Pittsburgh.", band: "giveaway", facet: "career-path", revealPriority: 12 },
+    { id: "curated:four-ap-mvps", conceptId: "curated:four-ap-mvps", text: "I won the AP NFL MVP award four times.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:super-bowl-xlv-mvp", conceptId: "curated:super-bowl-xlv-mvp", text: "I was Super Bowl XLV MVP after leading Green Bay to a championship.", band: "giveaway", facet: "accomplishments", revealPriority: 8 },
+  ]],
   ["nfl-bart-starr", [{ id: "curated:five-championships", conceptId: "curated:five-championships", text: "I quarterbacked Green Bay to five NFL championships under Vince Lombardi.", band: "giveaway", facet: "accomplishments", revealPriority: 12 }]],
   ["nfl-bobby-layne", [
     { id: "curated:three-lions-titles", conceptId: "curated:three-lions-titles", text: "I helped lead Detroit to NFL championships in 1952, 1953 and 1957.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
@@ -258,12 +270,28 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:eleven-bills-seasons", conceptId: "curated:eleven-bills-seasons", text: "I spent all 11 of my NFL seasons with the Buffalo Bills.", band: "strong", facet: "career-path", revealPriority: 16 },
   ]],
   ["joe-montana", [{ id: "curated:four-super-bowl-wins", conceptId: "curated:four-super-bowl-wins", text: "I went 4-0 as San Francisco's starting quarterback in Super Bowls.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
-  ["nfl-josh-allen", [{ id: "curated:2024-mvp", conceptId: "curated:2024-mvp", text: "I won the AP NFL MVP award for the 2024 season.", band: "giveaway", facet: "accomplishments", revealPriority: 15 }]],
+  ["nfl-josh-allen", [
+    { id: "curated:2024-mvp", conceptId: "curated:2024-mvp", text: "I won the AP NFL MVP award for the 2024 season.", band: "giveaway", facet: "accomplishments", revealPriority: 15 },
+    { id: "curated:five-straight-40-total-td", conceptId: "curated:five-straight-40-total-td", text: "I became the first player in NFL history with five straight seasons of at least 40 total touchdowns.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+    { id: "curated:pass-rush-receive-td-game", conceptId: "curated:pass-rush-receive-td-game", text: "I became the first quarterback in NFL history with a passing, rushing, and receiving touchdown in the same game.", band: "strong", facet: "accomplishments", revealPriority: 20 },
+    { id: "curated:bills-total-td-record", conceptId: "curated:bills-total-td-record", text: "In 2024 I passed Jim Kelly for the most total touchdowns in Bills franchise history.", band: "strong", facet: "accomplishments", revealPriority: 22 },
+    { id: "curated:jersey-17", conceptId: "curated:jersey-17", text: "I wear No. 17 in the NFL.", band: "giveaway", facet: "identity", revealPriority: 10 },
+  ]],
   ["kurt-warner", [{ id: "curated:super-bowl-xxxiv-mvp", conceptId: "curated:super-bowl-xxxiv-mvp", text: "I became Super Bowl XXXIV MVP in my first season as the Rams' starting quarterback.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
-  ["nfl-lamar-jackson", [{ id: "curated:2019-unanimous-mvp", conceptId: "curated:2019-unanimous-mvp", text: "In 2019 I became the second unanimous AP NFL MVP in league history.", band: "giveaway", facet: "accomplishments", revealPriority: 12 }]],
+  ["nfl-lamar-jackson", [
+    { id: "curated:two-ap-mvps", conceptId: "curated:two-ap-mvps", text: "I won AP NFL MVP awards in 2019 and 2023, with the first coming by unanimous vote.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:qb-rushing-record", conceptId: "curated:qb-rushing-record", text: "I passed Michael Vick in 2024 to become the NFL's career rushing-yard leader among quarterbacks.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
+    { id: "curated:2019-qb-rushing-season-record", conceptId: "curated:2019-qb-rushing-season-record", text: "In my 2019 MVP season I set the single-season quarterback rushing record with 1,206 yards.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+    { id: "curated:jersey-8", conceptId: "curated:jersey-8", text: "I wear No. 8 in the NFL.", band: "giveaway", facet: "identity", revealPriority: 10 },
+  ]],
   ["nfl-otto-graham", [{ id: "curated:ten-title-games", conceptId: "curated:ten-title-games", text: "I led Cleveland to a league championship game in each of my ten pro seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 12 }]],
   ["nfl-sammy-baugh", [{ id: "curated:two-washington-titles", conceptId: "curated:two-washington-titles", text: "I led Washington to NFL championships in 1937 and 1942.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
-  ["nfl-patrick-mahomes", [{ id: "curated:three-super-bowl-mvps", conceptId: "curated:three-super-bowl-mvps", text: "I won three Super Bowl MVP awards before turning 30.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["nfl-patrick-mahomes", [
+    { id: "curated:three-super-bowl-mvps", conceptId: "curated:three-super-bowl-mvps", text: "I won three Super Bowl MVP awards before turning 30.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:2018-fifty-touchdown-mvp", conceptId: "curated:2018-fifty-touchdown-mvp", text: "In my first season as a full-time starter, I threw for 5,097 yards and 50 touchdowns and won the 2018 NFL MVP award.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
+    { id: "curated:alex-smith-rookie-year", conceptId: "curated:alex-smith-rookie-year", text: "I spent my rookie season behind Alex Smith before taking over as Kansas City's starter.", band: "strong", facet: "career-path", revealPriority: 18 },
+    { id: "curated:jersey-15", conceptId: "curated:jersey-15", text: "I wear No. 15 in the NFL.", band: "giveaway", facet: "identity", revealPriority: 10 },
+  ]],
   ["steve-young", [{ id: "curated:montana-to-super-bowl-mvp", conceptId: "curated:montana-to-super-bowl-mvp", text: "I succeeded Joe Montana in San Francisco and later threw six touchdown passes as Super Bowl XXIX MVP.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
   ["nfl-terry-bradshaw", [
     { id: "curated:four-super-bowls", conceptId: "curated:four-super-bowls", text: "I quarterbacked Pittsburgh to four Super Bowl championships in six seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
@@ -360,6 +388,11 @@ export function curateFootballWhoAmIClues(
   for (const rawClue of rawClues) {
     if (suppressedBatchStructuralClueIds.has(rawClue.id)) continue;
     if (rawClue.id === "career-span" && suppressedCareerSpanSubjectIds.has(subject.id)) continue;
+    if (active2026SubjectIds.has(subject.id) && /^fact:nfl-career-/.test(rawClue.id)) continue;
+    if (
+      subject.id === "nfl-aaron-rodgers"
+      && (rawClue.id === "career-path" || rawClue.id.startsWith("affiliation:"))
+    ) continue;
     if (
       partialQuarterbackRushingSubjectIds.has(subject.id)
       && /^fact:nfl-career-rushing-/.test(rawClue.id)
