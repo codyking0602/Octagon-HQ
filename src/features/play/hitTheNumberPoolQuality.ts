@@ -15,11 +15,11 @@ import {
 export const HIT_THE_NUMBER_RANDOM_POOL_QUALITY = {
   candidateAttempts: 64,
   minimumLegalSelections: 6,
-  goodUnderMinScore: 97,
-  badUnderMaxScore: 95,
-  meaningfulBustMaxScore: 48,
-  midScoreMin: 80,
-  midScoreMax: 95,
+  goodUnderMinScore: 90,
+  badUnderMaxScore: 85,
+  meaningfulBustMaxScore: 49,
+  midScoreMin: 75,
+  midScoreMax: 89,
 } as const;
 
 export interface HitTheNumberPoolQualityResult {
@@ -133,8 +133,10 @@ export function hitTheNumberRandomPoolQuality(
       lowestBustScore = lowestBustScore == null ? score : Math.min(lowestBustScore, score);
     }
     if (
-      score >= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.midScoreMin
-      && score <= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.midScoreMax
+      (status === "under"
+        && score >= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.midScoreMin
+        && score <= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.midScoreMax)
+      || (status === "bust" && score >= 35)
     ) {
       hasMidScore = true;
     }
