@@ -43,4 +43,15 @@ describe("Who Am I reveal planner", () => {
     expect(sequence.slice(-2).map((clue) => clue.id)).toContain("g-nickname");
     expect(sequence.filter((clue) => clue.band === "giveaway")).toHaveLength(1);
   });
+
+  it("never spends a deep-pool slot on generic football career games", () => {
+    const clues = [
+      ...healthyPool(),
+      { id: "fact:nfl-career-games", text: "I played 230 career games.", band: "helpful", facet: "production" } satisfies WhoAmIClue,
+    ];
+    const sequence = assembleWhoAmIRevealClues(clues, 10, () => 0.5);
+
+    expect(sequence).toHaveLength(10);
+    expect(sequence.some((clue) => clue.id === "fact:nfl-career-games")).toBe(false);
+  });
 });
