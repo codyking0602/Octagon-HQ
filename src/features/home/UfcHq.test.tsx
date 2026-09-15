@@ -246,7 +246,7 @@ describe("Home UFC HQ", () => {
 
     const footballSection = screen.getByRole("region", { name: "Football HQ" });
     expect(within(footballSection).getByText("FOOTBALL PICKS")).toBeInTheDocument();
-    expect(within(footballSection).getByText("Kamario Taylor")).toBeInTheDocument();
+    expect(within(footballSection).getByRole("article", { name: "Football Player Spotlight" })).toBeInTheDocument();
     expect(within(footballSection).queryByLabelText("Football Game of the Week")).not.toBeInTheDocument();
   });
 });

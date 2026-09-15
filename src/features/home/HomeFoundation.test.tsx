@@ -83,7 +83,7 @@ describe("The HQ universal Home foundation", () => {
     expect(within(footballHq).getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
     expect(ufcHq).toHaveClass("home-sport-hq");
     expect(footballHq).toHaveClass("home-sport-hq");
-    expect(within(footballHq).getByText("Kamario Taylor")).toBeInTheDocument();
+    expect(within(footballHq).getByRole("article", { name: "Football Player Spotlight" })).toBeInTheDocument();
     expect(within(footballHq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
   });
 

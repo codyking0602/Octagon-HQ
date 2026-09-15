@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMetadata";
 import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
@@ -7,21 +7,55 @@ import { footballDateTimeLabel } from "../picks/footballTime";
 import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../picks/picksModel";
 
-const PLAYER_SPOTLIGHT = {
-  name: "Kamario Taylor",
-  team: "Mississippi State",
-  position: "QB",
-  stats: [
-    { value: "354", label: "PYDS" },
-    { value: "59", label: "RYDS" },
-    { value: "5", label: "TOTAL TDS" },
-    { value: "191.0", label: "QB RTG" },
-  ],
-  result: "VS ULM · W 62–13",
-  measurements: "6'4\" · 230 LB",
-  teamColor: "#5D1725",
-  highlightUrl: "https://youtu.be/g-rXa8_YAZw?is=iqhMr2kCswMHKGLO",
+export type FootballSpotlightKind = "cfb" | "nfl";
+
+export const FOOTBALL_PLAYER_SPOTLIGHTS = {
+  cfb: {
+    name: "Drew Mestemaker",
+    team: "Oklahoma State",
+    position: "QB",
+    stats: [
+      { value: "317", label: "PYDS" },
+      { value: "109", label: "RYDS" },
+      { value: "426", label: "TOTAL YDS" },
+      { value: "3", label: "TOTAL TDS" },
+    ],
+    result: "VS #6 OREGON · W 39–31",
+    measurements: "6'3\" · 215 LB",
+    teamColor: "#FF7300",
+    highlightUrl: "https://youtu.be/Ia6UXgdSKw4?is=i2gxMRVoqonuhYtB",
+  },
+  nfl: {
+    name: "Josh Allen",
+    team: "Buffalo Bills",
+    position: "QB",
+    stats: [
+      { value: "334", label: "PYDS" },
+      { value: "2", label: "PASS TD" },
+      { value: "2", label: "RUSH TD" },
+      { value: "130.5", label: "QB RTG" },
+    ],
+    result: "AT HOUSTON · W 36–31",
+    measurements: "6'5\" · 237 LB",
+    teamColor: "#00338D",
+    highlightUrl: "https://youtu.be/ZeJwLzd2I4E?is=a_f7gk7JKUEYJPZs",
+  },
 } as const;
+
+export function footballSpotlightKindAt(now = new Date()): FootballSpotlightKind {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    weekday: "short",
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const weekday = parts.find((part) => part.type === "weekday")?.value ?? "";
+  const hour = Number(parts.find((part) => part.type === "hour")?.value ?? 0);
+
+  if (weekday === "Sat") return "cfb";
+  if (weekday === "Sun" || weekday === "Mon") return "nfl";
+  return hour < 15 ? "cfb" : "nfl";
+}
 
 const TEAM_BRAND_COLORS: Readonly<Record<string, string>> = {
   "Texas": "#BF5700",
@@ -99,10 +133,12 @@ function fullTeamNameForGame(game: PickBout, team: FootballMatchupBreakdown["tea
 }
 
 function PlayerSpotlight({
+  spotlight,
   photoSource,
   canManagePhoto,
   onManagePhoto,
 }: {
+  spotlight: (typeof FOOTBALL_PLAYER_SPOTLIGHTS)[FootballSpotlightKind];
   photoSource: string | null;
   canManagePhoto: boolean;
   onManagePhoto?: () => void;
@@ -127,9 +163,15 @@ function PlayerSpotlight({
 
   useEffect(() => clearHold, []);
 
+  const initials = spotlight.name
+    .split(/\s+/)
+    .map((part) => part[0] ?? "")
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
   const photo = photoSource
-    ? <img src={photoSource} alt={PLAYER_SPOTLIGHT.name} loading="lazy" />
-    : <span className="football-player-spotlight__placeholder" aria-hidden="true">KT</span>;
+    ? <img src={photoSource} alt={spotlight.name} loading="lazy" />
+    : <span className="football-player-spotlight__placeholder" aria-hidden="true">{initials}</span>;
 
   const media = canManagePhoto ? (
     <button
@@ -158,22 +200,22 @@ function PlayerSpotlight({
     <article
       className="football-player-spotlight"
       aria-label="Football Player Spotlight"
-      style={{ "--player-team-color": PLAYER_SPOTLIGHT.teamColor } as CSSProperties}
+      style={{ "--player-team-color": spotlight.teamColor } as CSSProperties}
     >
       {media}
       <div className="football-player-spotlight__copy">
         <span>PLAYER SPOTLIGHT</span>
-        <h3>{PLAYER_SPOTLIGHT.name}</h3>
-        <strong>{PLAYER_SPOTLIGHT.team.toUpperCase()} · {PLAYER_SPOTLIGHT.position}</strong>
-        <div className="football-player-spotlight__stats" aria-label="Kamario Taylor season stats">
-          {PLAYER_SPOTLIGHT.stats.map((stat) => (
+        <h3>{spotlight.name}</h3>
+        <strong>{spotlight.team.toUpperCase()} · {spotlight.position}</strong>
+        <div className="football-player-spotlight__stats" aria-label={`${spotlight.name} featured-game stats`}>
+          {spotlight.stats.map((stat) => (
             <span key={stat.label}><b>{stat.value}</b><small>{stat.label}</small></span>
           ))}
         </div>
         <p className="football-player-spotlight__meta">
-          {PLAYER_SPOTLIGHT.result} · {PLAYER_SPOTLIGHT.measurements}
+          {spotlight.result} · {spotlight.measurements}
         </p>
-        <a href={PLAYER_SPOTLIGHT.highlightUrl} target="_blank" rel="noreferrer">
+        <a href={spotlight.highlightUrl} target="_blank" rel="noreferrer">
           WATCH HIGHLIGHT ↗
         </a>
       </div>
@@ -244,7 +286,7 @@ export function FootballHq({
   error,
   signedIn,
   dailyChallenge,
-  playerPhotoSource = null,
+  playerPhotoSources = {},
   canManagePlayerPhoto = false,
   onManagePlayerPhoto,
 }: {
@@ -256,10 +298,27 @@ export function FootballHq({
   error: string;
   signedIn: boolean;
   dailyChallenge: ReactNode;
-  playerPhotoSource?: string | null;
+  playerPhotoSources?: Readonly<Partial<Record<FootballSpotlightKind, string | null>>>;
   canManagePlayerPhoto?: boolean;
   onManagePlayerPhoto?: () => void;
 }) {
+  const [spotlightNow, setSpotlightNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setSpotlightNow(new Date()), 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const scheduledSpotlightKind = footballSpotlightKindAt(spotlightNow);
+  const alternateSpotlightKind: FootballSpotlightKind = scheduledSpotlightKind === "cfb" ? "nfl" : "cfb";
+  const activeSpotlightKind = playerPhotoSources[scheduledSpotlightKind]
+    ? scheduledSpotlightKind
+    : playerPhotoSources[alternateSpotlightKind]
+      ? alternateSpotlightKind
+      : scheduledSpotlightKind;
+  const activeSpotlight = FOOTBALL_PLAYER_SPOTLIGHTS[activeSpotlightKind];
+  const activeSpotlightPhoto = playerPhotoSources[activeSpotlightKind] ?? null;
+
   const progress = pickProgress(event, selections);
   const progressPercent = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
   const remaining = Math.max(0, progress.total - progress.completed);
@@ -328,7 +387,8 @@ export function FootballHq({
       {dailyChallenge}
 
       <PlayerSpotlight
-        photoSource={playerPhotoSource}
+        spotlight={activeSpotlight}
+        photoSource={activeSpotlightPhoto}
         canManagePhoto={canManagePlayerPhoto}
         onManagePhoto={onManagePlayerPhoto}
       />
