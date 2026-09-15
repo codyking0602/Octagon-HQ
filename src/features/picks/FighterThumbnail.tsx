@@ -33,6 +33,8 @@ const remotePhotoBySlug = new Map([
   ["robelis-despaigne", "https://a.espncdn.com/i/headshots/mma/players/full/5189560.png"],
   ["michael-aswell-jr", "https://a.espncdn.com/i/headshots/mma/players/full/5212738.png"],
   ["joosang-yoo", "https://a.espncdn.com/i/headshots/mma/players/full/5282139.png"],
+  ["ryan-gandra", "https://a.espncdn.com/i/headshots/mma/players/full/5291085.png"],
+  ["ozzy-diaz", "https://a.espncdn.com/i/headshots/mma/players/full/4944080.png"],
   ["dan-hooker", "https://a.espncdn.com/i/headshots/mma/players/full/3109135.png"],
   ["salahdine-parnasse", "https://a.espncdn.com/i/headshots/mma/players/full/4312859.png"],
   ["fares-ziam", "https://a.espncdn.com/i/headshots/mma/players/full/4083018.png"],
