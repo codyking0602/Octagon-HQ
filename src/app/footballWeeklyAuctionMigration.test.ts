@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT } from "../features/back-room/footballWeeklyAuctionPresentation";
 
 const migration = readFileSync("supabase/migrations/202612310129_football_weekly_auction.sql", "utf8");
+const bankrollFloorRepair = readFileSync("supabase/migrations/202612310130_football_weekly_auction_bankroll_floor.sql", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 const gate = readFileSync("src/features/back-room/FootballWeeklyAuctionGate.tsx", "utf8");
@@ -21,7 +22,8 @@ describe("Football Weekly Auction live contract", () => {
     expect(migration).toContain("slot integer not null check (slot between 1 and 3)");
     expect(migration).toContain("amount integer not null check (amount between 0 and 40)");
     expect(migration).toContain("v_bid1 + v_bid2 + v_bid3");
-    expect(migration).toContain("v_max := v_bankroll");
+    expect(bankrollFloorRepair).toContain("when p_owned <= 0 then 2 when p_owned = 1 then 1 else 0");
+    expect(bankrollFloorRepair).toContain("v_max := greatest(v_bankroll - v_floor, 0)");
     expect(migration).toContain("v_total > v_max");
     expect(gate).toContain("$0 = pass");
   });
