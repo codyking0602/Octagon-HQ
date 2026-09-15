@@ -76,7 +76,12 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).toContain('import("./football-publication-comparison.generated.mjs")');
     expect(runtime).toContain('import("./football-advance.generated.mjs")');
     expect(runtime).not.toContain('import("./football-publication.generated.mjs")');
-    expect(runtime).toContain('if (body.sport === "football") {\n      const materialized = await materializeFootballToday(admin);');
+    const footballBranch = runtime.indexOf('if (body.sport === "football") {');
+    const weeklyGate = runtime.indexOf('football_weekly_auction_daily_gate', footballBranch);
+    const footballMaterialization = runtime.indexOf('const materialized = await materializeFootballToday(admin);', footballBranch);
+    expect(footballBranch).toBeGreaterThan(-1);
+    expect(weeklyGate).toBeGreaterThan(footballBranch);
+    expect(footballMaterialization).toBeGreaterThan(weeklyGate);
     expect(runtime).toContain('if (request.required !== true)');
     expect(runtime).toContain('loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType)');
     expect(runtime).toContain('buildFootballDailyPersistenceSetup(');
