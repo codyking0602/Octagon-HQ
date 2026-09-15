@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChallengeProfile } from "../challenges/challengeModel";
 import type { PickEvent } from "../picks/picksModel";
+import { TodayChallengeRepositoryError } from "../play/todayChallengeRepository";
 import HomePage from "./HomePage";
 
 const mocks = vi.hoisted(() => {
@@ -260,6 +261,48 @@ describe("Home Your HQ", () => {
     expect(within(footballCard).getByText("COMPLETED")).toBeInTheDocument();
     expect(within(footballCard).getByText((_, element) => element?.tagName === "STRONG" && element.textContent === "91/100")).toBeInTheDocument();
     expect(within(footballCard).getByText("#2 today")).toBeInTheDocument();
+  });
+
+  it("keeps the canonical Football Daily game active on Home while Weekly Auction bids are required", () => {
+    mocks.identity.profile = cody;
+    mocks.runtime.mockImplementation((options: { sport?: string }) => options.sport === "football"
+      ? {
+          projection: null,
+          loading: false,
+          error: new TodayChallengeRepositoryError(
+            "WEEKLY_AUCTION_REQUIRED",
+            "Submit today’s Weekly Auction bids before starting Football Daily.",
+            {
+              central_day: "2026-09-15",
+              schedule_version: "football-daily-v1",
+              game_type: "find_leader",
+            },
+          ),
+          busy: false,
+          configured: true,
+          advance: vi.fn(),
+          refresh: vi.fn(),
+        }
+      : {
+          projection: null,
+          loading: false,
+          error: null,
+          busy: false,
+          configured: true,
+          advance: vi.fn(),
+          refresh: vi.fn(),
+        });
+
+    renderHome();
+
+    const footballCard = screen.getByRole("link", { name: /Open Football Today’s Challenge/i });
+    expect(footballCard).toHaveAttribute("href", "/football/today");
+    expect(within(footballCard).getByRole("heading", { name: "Find the Leader" })).toBeInTheDocument();
+    expect(within(footballCard).getByText("READY")).toBeInTheDocument();
+    expect(within(footballCard).getByText("PLAY NOW")).toBeInTheDocument();
+    expect(within(footballCard).getByText("Ready when you are.")).toBeInTheDocument();
+    expect(within(footballCard).queryByText(/UNAVAILABLE/i)).not.toBeInTheDocument();
+    expect(within(footballCard).queryByText(/Weekly Auction/i)).not.toBeInTheDocument();
   });
 
   it("uses the cross-sport HQ streak while preserving independent Picks records", () => {
