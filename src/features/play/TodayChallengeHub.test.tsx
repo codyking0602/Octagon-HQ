@@ -128,6 +128,7 @@ describe("generalized Today’s Challenge hub", () => {
   beforeEach(() => {
     navigate.mockReset();
     openDialog.mockReset();
+    window.history.replaceState({}, "", "/");
     Object.defineProperty(window, "innerWidth", { configurable: true, value: 390 });
     Object.defineProperty(window, "innerHeight", { configurable: true, value: 844 });
     useTodayChallengeOverview.mockReturnValue(overviewDefaults);
@@ -201,6 +202,30 @@ describe("generalized Today’s Challenge hub", () => {
     expect(screen.queryByRole("heading", { name: "The official game did not load." })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /find the leader/i }));
     expect(navigate).toHaveBeenCalledWith("/football/today");
+  });
+
+  it("opens Championship Standings with the current user expanded from the Home deep link", () => {
+    window.history.replaceState({}, "", "/play?standings=me#championship-standings");
+    useTodayChallengeRuntime.mockReturnValue({
+      projection: projection("blind_resume"),
+      loading: false,
+      error: null,
+      busy: false,
+      configured: true,
+      advance: vi.fn(),
+      refresh: vi.fn(),
+    });
+
+    render(<TodayChallengeHub />);
+
+    const details = document.querySelector<HTMLDetailsElement>("#championship-standings");
+    expect(details).not.toBeNull();
+    expect(details).toHaveAttribute("open");
+
+    const codyRow = screen.getAllByText("Cody").find((node) => node.closest("button"))?.closest("button");
+    expect(codyRow).not.toBeNull();
+    expect(codyRow).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("Average Score by Game")).toBeInTheDocument();
   });
 
   it("keeps cumulative standings collapsed, then reveals one-row member stats and game averages", () => {
