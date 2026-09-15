@@ -15,6 +15,7 @@ const fighterPhotoModules = import.meta.glob<{ default: string }>(
 
 const spotlightPhotoSlugAliases = new Map([
   ["ian-garry", "ian-machado-garry"],
+  ["alex-pantoja", "alexandre-pantoja"],
 ]);
 
 const spotlightPhotoBySlug = new Map(
