@@ -10,16 +10,16 @@ afterEach(() => {
 });
 
 const event: PickEvent = {
-  eventId: "football-picks-2026-09-08",
+  eventId: "football-picks-2026-09-15",
   sport: "football",
   league: "mixed",
   eventKind: "slate",
-  name: "Football Picks · Week of Sep 8",
+  name: "Football Picks · Week of Sep 15",
   subtitle: "College + NFL",
   venue: "Multiple venues",
   location: "Nationwide",
-  startsAt: "2026-09-10T00:20:00Z",
-  locksAt: "2026-09-10T00:20:00Z",
+  startsAt: "2026-09-18T00:15:00Z",
+  locksAt: "2026-09-18T00:15:00Z",
   season: 2026,
   status: "upcoming",
   bouts: [
@@ -42,40 +42,40 @@ const event: PickEvent = {
       locksAt: "2026-09-12T16:00:00Z",
     },
     {
-      boutId: "football-college-football-401856682",
+      boutId: "football-college-football-401856688",
       position: 9,
       weightClass: "COLLEGE-FOOTBALL ATS",
-      redFighterSlug: "texas-longhorns",
-      redFighterName: "Texas Longhorns",
-      blueFighterSlug: "ohio-state-buckeyes",
-      blueFighterName: "Ohio State Buckeyes",
-      homeTeamSlug: "texas-longhorns",
-      awayTeamSlug: "ohio-state-buckeyes",
-      homeTeamLogoUrl: "https://example.com/texas.png",
-      awayTeamLogoUrl: "https://example.com/ohio-state.png",
+      redFighterSlug: "ole-miss-rebels",
+      redFighterName: "Ole Miss Rebels",
+      blueFighterSlug: "lsu-tigers",
+      blueFighterName: "LSU Tigers",
+      homeTeamSlug: "ole-miss-rebels",
+      awayTeamSlug: "lsu-tigers",
+      homeTeamLogoUrl: "https://example.com/ole-miss.png",
+      awayTeamLogoUrl: "https://example.com/lsu.png",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       includedInPicks: true,
-      locksAt: "2026-09-12T23:30:00Z",
+      locksAt: "2026-09-19T23:30:00Z",
     },
     {
-      boutId: "football-nfl-401872930",
+      boutId: "football-nfl-401872932",
       position: 23,
       weightClass: "NFL ATS",
-      redFighterSlug: "new-york-giants",
-      redFighterName: "New York Giants",
-      blueFighterSlug: "dallas-cowboys",
-      blueFighterName: "Dallas Cowboys",
-      homeTeamSlug: "new-york-giants",
-      awayTeamSlug: "dallas-cowboys",
-      homeTeamLogoUrl: "https://example.com/giants.png",
-      awayTeamLogoUrl: "https://example.com/cowboys.png",
+      redFighterSlug: "buffalo-bills",
+      redFighterName: "Buffalo Bills",
+      blueFighterSlug: "detroit-lions",
+      blueFighterName: "Detroit Lions",
+      homeTeamSlug: "buffalo-bills",
+      awayTeamSlug: "detroit-lions",
+      homeTeamLogoUrl: "https://example.com/bills.png",
+      awayTeamLogoUrl: "https://example.com/lions.png",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       includedInPicks: true,
-      locksAt: "2026-09-14T00:20:00Z",
+      locksAt: "2026-09-18T00:15:00Z",
     },
   ],
 };
@@ -138,7 +138,7 @@ const summary: PickSummary = {
 describe("Football HQ Home summary", () => {
   it("uses UFC-style Picks, one Daily row, Player Spotlight, and canonical authored matchup rows", () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-09-08T19:30:00Z"));
+    vi.setSystemTime(new Date("2026-09-15T19:30:00Z"));
 
     render(
       <MemoryRouter>
@@ -181,22 +181,22 @@ describe("Football HQ Home summary", () => {
     );
     expect(within(hq).queryByRole("link", { name: /VIEW PLAYER/i })).not.toBeInTheDocument();
 
-    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Texas vs. Ohio State" }))
-      .toHaveAttribute("href", "/football/picks?matchup=2026-texas-ohio-state");
-    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Cowboys vs. Giants" }))
-      .toHaveAttribute("href", "/football/picks?matchup=2026-cowboys-giants");
-    expect(within(hq).getByText("Sat, Sep 12, 6:30 PM CT")).toBeInTheDocument();
-    expect(within(hq).getByText("Sun, Sep 13, 7:20 PM CT")).toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for LSU vs. Ole Miss" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-lsu-ole-miss");
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Bills vs. Lions" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-bills-lions");
+    expect(within(hq).getByText("Sat, Sep 19, 6:30 PM CT")).toBeInTheDocument();
+    expect(within(hq).getByText("Thu, Sep 17, 7:15 PM CT")).toBeInTheDocument();
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).getByText("Texas Longhorns")).toBeInTheDocument();
-    expect(within(hq).getByText("Ohio State Buckeyes")).toBeInTheDocument();
+    expect(within(hq).getByText("LSU Tigers")).toBeInTheDocument();
+    expect(within(hq).getByText("Ole Miss Rebels")).toBeInTheDocument();
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).getByText("Dallas Cowboys")).toBeInTheDocument();
-    expect(within(hq).getByText("New York Giants")).toBeInTheDocument();
-    expect(within(hq).queryByText("DKR-Texas Memorial Stadium · Austin")).not.toBeInTheDocument();
-    expect(within(hq).queryByText("MetLife Stadium · East Rutherford")).not.toBeInTheDocument();
+    expect(within(hq).getByText("Buffalo Bills")).toBeInTheDocument();
+    expect(within(hq).getByText("Detroit Lions")).toBeInTheDocument();
+    expect(within(hq).queryByText("Vaught-Hemingway Stadium · Oxford")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("Highmark Stadium · Orchard Park")).not.toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
     expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toHaveAttribute("href", "/football/picks");
   });
@@ -244,7 +244,7 @@ describe("Football HQ Home summary", () => {
 
   it("keeps the Picks and Player Spotlight structure when the weekly slate is not published", () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-09-08T19:30:00Z"));
+    vi.setSystemTime(new Date("2026-09-15T19:30:00Z"));
 
     render(
       <MemoryRouter>
