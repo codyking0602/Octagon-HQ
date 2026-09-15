@@ -5,6 +5,8 @@ import {
 } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet } from "./whoAmIEngine";
 
+const REVEAL_SHORTLIST_EXTRA = 4;
+
 const REVEAL_TARGETS = {
   broad: 2,
   helpful: 2,
@@ -88,7 +90,11 @@ export function assembleWhoAmIRevealClues(
 ) {
   if (limit !== 10) return assembleWhoAmIClues(clues, limit, random);
 
-  const shortlist = assembleWhoAmIClues(clues, clues.length, random);
+  const shortlist = assembleWhoAmIClues(
+    clues,
+    Math.min(clues.length, limit + REVEAL_SHORTLIST_EXTRA),
+    random,
+  );
 
   const broad = shortlist.filter((clue) => clue.band === "broad").slice(0, REVEAL_TARGETS.broad);
   const helpful = ranked(shortlist.filter((clue) => clue.band === "helpful"), random)
