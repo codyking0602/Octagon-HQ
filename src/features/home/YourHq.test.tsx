@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChallengeProfile } from "../challenges/challengeModel";
-import type { PickEvent } from "../picks/picksModel";
+import type { PickEvent, PickHistory } from "../picks/picksModel";
 import { TodayChallengeRepositoryError } from "../play/todayChallengeRepository";
 import HomePage from "./HomePage";
 
@@ -16,7 +16,7 @@ const mocks = vi.hoisted(() => {
     lockBonus: 0,
     totalPoints: 0,
   };
-  const emptyHistory = {
+  const emptyHistory: PickHistory = {
     season: 2026,
     summary: {
       correct: 0,
