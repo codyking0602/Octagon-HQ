@@ -60,7 +60,6 @@ export function FootballHitNumberSubjectMark({ subjectId, className }: { subject
       </span>
     );
   }
-  const lightBackplate = asset.darkSurfaceTreatment === "light-backplate";
   return (
     <img
       alt=""
@@ -71,10 +70,10 @@ export function FootballHitNumberSubjectMark({ subjectId, className }: { subject
       title={asset.label}
       style={{
         objectFit: "contain",
-        padding: lightBackplate ? 3 : 4,
-        background: lightBackplate ? "#fff" : "rgba(255,255,255,.04)",
-        borderRadius: lightBackplate ? "50%" : undefined,
-        boxShadow: lightBackplate ? "0 0 0 1px rgba(255,255,255,.28)" : undefined,
+        padding: 4,
+        background: "var(--football-logo-backplate, #E7E1D7)",
+        border: "1px solid var(--football-logo-backplate-border, rgba(74, 63, 49, .22))",
+        boxShadow: "0 3px 10px rgba(0,0,0,.2)",
       }}
     />
   );

@@ -50,9 +50,9 @@ describe("football matchup breakdowns", () => {
     const breakdown = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-lsu-ole-miss");
     const setup = breakdown?.setup.join(" ") ?? "";
 
-    expect(setup).toContain("Lane Kiffin is going back to Oxford in LSU colors");
-    expect(setup).toContain("Vaught-Hemingway is going to be venomous");
-    expect(setup).toContain("try to beat the program he built");
+    expect(setup).toContain("Lane Kiffin’s return to Oxford is the story before the ball is even kicked");
+    expect(setup).toContain("There won’t be much warmth waiting for him");
+    expect(setup).toContain("make the game about execution instead of emotion");
   });
 
   it("does not surface a breakdown for an unrelated slate", () => {

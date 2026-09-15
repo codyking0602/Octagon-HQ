@@ -337,8 +337,8 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
       { name: "Ole Miss", aliases: ["ole-miss", "ole-miss-rebels", "mississippi", "mississippi-rebels"] },
     ],
     setup: [
-      "Forget the polite version: Lane Kiffin is going back to Oxford in LSU colors. He spent six seasons building Ole Miss into a national contender, left for the Tigers, and now his first trip back is a top-10 Magnolia Bowl. Vaught-Hemingway is going to be venomous, Ole Miss gets a clean shot at the coach who left, and Kiffin gets to walk into his old stadium with No. 7 LSU and try to beat the program he built.",
-      "And the football is good enough to match the grudge. LSU is averaging 48.0 points and 586.0 yards per game with 10 sacks and 17 tackles for loss on defense. Ole Miss has Trinidad Chambliss and Deuce Alexander threatening explosives, plus every emotional reason to land the first punch. The swing is whether the Rebels can turn that hostility into early pressure, or whether LSU's front and Kiffin's offense settle the game down and make Oxford watch him control it from the other sideline.",
+      "Lane Kiffin’s return to Oxford is the story before the ball is even kicked. He spent six seasons turning Ole Miss into a national contender, left for LSU, and now comes back to Vaught-Hemingway wearing purple and gold. There won’t be much warmth waiting for him. This is Ole Miss’ first chance to take a shot at its former coach, and Kiffin gets to walk back into the stadium he used to own with a top-10 LSU team on the opposite sideline.",
+      "The matchup has plenty of substance beyond the emotion. LSU is averaging 48.0 points and 586.0 yards per game, while its defense has already produced 10 sacks and 17 tackles for loss. Ole Miss has explosive-play threats in Trinidad Chambliss and Deuce Alexander and should have one of the most charged home crowds of the season behind it. The question is whether the Rebels can turn that energy into early pressure, or whether LSU can absorb the opening punch and make the game about execution instead of emotion.",
     ],
     keyMatchups: [
       {

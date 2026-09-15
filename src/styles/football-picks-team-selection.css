@@ -117,8 +117,9 @@
 }
 .football-pick-team:not(.is-selected) .football-pick-team-mark { opacity: .78; }
 .football-pick-team.is-selected .football-pick-team-mark {
-  background: #202426;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, .12);
+  border-color: var(--football-logo-backplate-border, rgba(74, 63, 49, .22));
+  background: var(--football-logo-backplate, #E7E1D7);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
   opacity: 1;
 }
 .football-pick-team.is-selected .football-pick-team-copy strong { color: #fff; }

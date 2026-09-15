@@ -31,8 +31,9 @@ describe("Football HQ final identity polish", () => {
     expect(footballVisualCss).toContain(".football-team-helmet img");
   });
 
-  it("keeps logo tiles neutral and removes Longhorns-only navy surface leakage", () => {
-    expect(footballVisualCss).toContain("#101113");
+  it("keeps team and program logo tiles on the shared warm ivory backplate", () => {
+    expect(footballVisualCss).toContain("background: var(--football-logo-backplate, #E7E1D7);");
+    expect(footballVisualCss).not.toContain("#101113");
     expect(footballVisualCss).not.toContain("#101b2c");
     expect(footballVisualCss).toContain(".app-shell--football-team-longhorns .football-rank-five-current");
     expect(footballVisualCss).toContain(".app-shell--football-team-longhorns .football-keep-cut-current");

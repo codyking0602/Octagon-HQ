@@ -9,18 +9,14 @@
 
 .app-shell--football-room .football-subject-visual[data-visual-kind="team-mark"],
 .app-shell--football-room .football-subject-visual[data-visual-kind="program-mark"] {
-  border-color: rgba(255, 255, 255, .11);
-  background:
-    radial-gradient(circle at 50% 38%, rgba(255, 255, 255, .065), transparent 54%),
-    linear-gradient(145deg, rgba(255, 255, 255, .025), transparent 62%),
-    #101113;
+  border-color: var(--football-logo-backplate-border, rgba(74, 63, 49, .22));
+  background: var(--football-logo-backplate, #E7E1D7);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .22);
 }
 
-/* Ohio State's transparent ESPN mark loses its white/gray detail on Football HQ dark surfaces. */
-.app-shell--football-room img[src*="/teamlogos/ncaa/"][src*="/194.png"] {
-  border-radius: 50%;
-  background: #f4f5f6;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, .22), 0 3px 8px rgba(0, 0, 0, .24);
+.app-shell--football-room .football-subject-visual[data-visual-kind="team-mark"] .football-subject-visual__fallback,
+.app-shell--football-room .football-subject-visual[data-visual-kind="program-mark"] .football-subject-visual__fallback {
+  color: #211d18;
 }
 
 .app-shell--football-room .football-rank-five-current .football-subject-visual,
