@@ -46,6 +46,21 @@ begin
     raise exception 'Best CFB Teams board-shape weights must cover 100 percent';
   end if;
 
+  declare
+    v_generator_definition text;
+  begin
+    select pg_get_functiondef('private.generate_draft_room_cfb_best_teams_deck(uuid)'::regprocedure::oid)
+    into v_generator_definition;
+
+    if position('where season_reference like ''cfb-best-%'' and conference_bucket<>''Notre Dame''' in v_generator_definition) = 0
+      or position('where season_reference like ''cfb-best-%'' and conference_bucket not in (''Notre Dame'',v_one)' in v_generator_definition) = 0
+      or (length(v_generator_definition) - length(replace(v_generator_definition, 'season.season_reference like ''cfb-best-%''', '')))
+         / length('season.season_reference like ''cfb-best-%''') < 2
+    then
+      raise exception 'Best CFB Teams Draft Room generator leaked outside the original 132-season pool';
+    end if;
+  end;
+
   if private.auction_game_id_for_mode('cfb-best-teams') <> 'draft-room'
     or private.auction_catalog_game_id_for_mode('cfb-best-teams') <> 'draft-room-cfb-best-teams'
   then
