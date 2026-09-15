@@ -30,6 +30,25 @@ const spotlightPhotoBySlug = new Map(
     }),
 );
 
+const remoteSpotlightPhotoBySlug = new Map([
+  ["joshua-van", "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-05/VAN_JOSHUA_L_BELT_05-09.png?itok=emXQEdHo"],
+  ["alexandre-pantoja", "/assets/fighters/alex-pantoja.webp"],
+  ["arman-tsarukyan", "https://dmxg5wxfqgb4u.cloudfront.net/styles/athlete_bio_full_body/s3/2024-01/TSARUKYAN_ARMAN_L_12-02.png?itok=0le9exxO"],
+  ["mauricio-ruffy", "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-02/RUFFY_MAURICIO_L_01-31.png?itok=HFHVC1L-"],
+  ["patricio-pitbull", "https://a.espncdn.com/i/headshots/mma/players/full/2532870.png"],
+  ["dooho-choi", "https://a.espncdn.com/i/headshots/mma/players/full/3093026.png"],
+  ["alonzo-menifield", "https://a.espncdn.com/i/headshots/mma/players/full/3948876.png"],
+  ["iwo-baraniewski", "https://a.espncdn.com/i/headshots/mma/players/full/5307810.png"],
+  ["gable-steveson", "https://a.espncdn.com/i/headshots/mma/players/full/5214652.png"],
+  ["sean-sharaf", "https://a.espncdn.com/i/headshots/mma/players/full/5240957.png"],
+  ["marlon-vera", "https://a.espncdn.com/i/headshots/mma/players/full/3155424.png"],
+  ["charles-jourdain", "https://a.espncdn.com/i/headshots/mma/players/full/4421978.png"],
+  ["tai-tuivasa", "https://a.espncdn.com/i/headshots/mma/players/full/3722422.png"],
+  ["robelis-despaigne", "https://a.espncdn.com/i/headshots/mma/players/full/5189560.png"],
+  ["michael-aswell-jr", "https://a.espncdn.com/i/headshots/mma/players/full/5212738.png"],
+  ["joosang-yoo", "https://a.espncdn.com/i/headshots/mma/players/full/5282139.png"],
+]);
+
 const profilePhotoBySlug = new Map(
   Object.entries(fighterPhotoModules)
     .filter(([path]) => !/-(?:thumb|spotlight)\.(webp|png|jpe?g)$/i.test(path))
@@ -210,6 +229,7 @@ function spotlightForBout(bout: PickBout, configured?: PickEventSpotlight | null
 
 function fighterPhotoPath(slug: string) {
   return spotlightPhotoBySlug.get(slug)
+    ?? remoteSpotlightPhotoBySlug.get(slug)
     ?? profilePhotoBySlug.get(slug)
     ?? fighterThumbnailPath(slug);
 }
