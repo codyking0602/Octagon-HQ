@@ -53,7 +53,7 @@ function RulesCover({ onStart }: { onStart: () => void }) {
           <li>Your best <strong>3 teams</strong> count toward your final score</li>
         </ul>
         <p><strong>Tie?</strong> Fewer teams won gets priority, then less money spent.</p>
-        <p>Highest best-3 average earns a <strong>bonus Daily win.</strong></p>
+        <p>Highest best-3 average is worth a <strong>bonus Daily Challenge win.</strong></p>
       </div>
       <button className="football-weekly-auction__primary" type="button" onClick={onStart}>
         START TODAY’S AUCTION
@@ -176,7 +176,7 @@ function FinalResult({
           <small>WEEKLY CHAMPION</small>
           <strong>You</strong>
           <b>{me.final_score?.toFixed(1) ?? "—"}</b>
-          <span>+1 bonus Daily win</span>
+          <span>+1 bonus Daily Challenge win</span>
         </div>
       ) : (
         <div className="football-weekly-auction__finish">
