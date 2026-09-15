@@ -98,8 +98,8 @@ const retainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-alex-smith", keep("identity:reggie-bush-run-first-high-school", "identity:constant-offensive-system-turnover", "identity:catastrophic-leg-injury-comeback")],
   ["andrew-luck", keep("identity:pain-rehab-cycle-retirement", "identity:cfb-andrew-luck--oliver-luck-football-family")],
   ["adrian-peterson", keep("identity:ad-all-day-nickname", "identity:sprinter-speed-deeper-alignment", "identity:vikings-draft-collarbone-concern", "identity:walkthrough-full-speed-habit", "identity:acl-mcl-rapid-comeback")],
-  ["barry-sanders", keep("identity:late-high-school-position-opportunity", "identity:college-backup-to-thurman-thomas", "identity:college-return-specialist-breakthrough", "identity:historic-lone-starting-season", "identity:skipped-college-senior-season", "identity:hall-of-fame-father-introduction", "identity:oklahoma-state-campus-honor", "identity:cfb-barry-sanders--declined-high-school-record-chase")],
-  ["nfl-bronko-nagurski", keep("identity:bronislau-to-bronko-name", "identity:five-positions-one-college-game", "identity:left-nfl-for-pro-wrestling", "identity:wartime-nfl-comeback", "identity:five-all-nfl-selections")],
+  ["barry-sanders", keep("identity:late-high-school-position-opportunity", "identity:college-backup-to-thurman-thomas", "identity:college-return-specialist-breakthrough", "identity:historic-lone-starting-season", "identity:skipped-college-senior-season", "identity:oklahoma-state-campus-honor")],
+  ["nfl-bronko-nagurski", keep("identity:five-positions-one-college-game", "identity:left-nfl-for-pro-wrestling", "identity:wartime-nfl-comeback", "identity:five-all-nfl-selections")],
   ["nfl-doak-walker", keep("identity:five-sport-high-school-athlete", "identity:bobby-layne-lifelong-football-link", "identity:merchant-marine-college-interruption", "identity:house-that-doak-built", "identity:pro-bowls")],
   ["earl-campbell", keep("identity:tyler-rose-family-origin", "identity:luv-ya-blue-monday-night-breakout")],
   ["emmitt-smith", keep("identity:historic-high-school-rushing", "identity:florida-record-book-takeover", "identity:super-bowl-champion-holdout", "identity:1993-giants-injury-game")],
@@ -117,7 +117,7 @@ const retainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-reggie-bush", keep("identity:helix-teammate-alex-smith", "identity:bush-push", "identity:heisman-vacated-and-restored", "identity:texans-passed-at-number-one", "identity:post-katrina-new-orleans-arrival")],
   ["tony-dorsett", keep("identity:undersized-local-pitt-recruit", "identity:cowboys-four-pick-trade-up", "identity:ninety-nine-yard-run-ten-men", "identity:cfb-tony-dorsett--hawk-nickname-origin")],
   ["walter-payton", keep("identity:first-football-play-touchdown", "identity:segregation-era-recruiting-path", "identity:sweetness-nickname-origin")],
-  ["nfl-ahman-green", keep("identity:state-champion-sprinter", "identity:high-school-baseball-center-fielder", "identity:seattle-fumble-stigma-reset")],
+  ["nfl-ahman-green", keep("identity:state-champion-sprinter", "identity:high-school-baseball-center-fielder")],
 ]);
 
 const facetOverrides = new Map<string, WhoAmIClueFacet>([
@@ -157,6 +157,42 @@ const facetOverrides = new Map<string, WhoAmIClueFacet>([
 ]);
 
 const clueTextOverrides = new Map<string, Pick<WhoAmIClue, "text" | "band" | "facet" | "revealPriority">>([
+  ["nfl-bart-starr:identity:ice-bowl-sneak-call", {
+    text: "On the final drive of the Ice Bowl, I proposed a quarterback sneak to Vince Lombardi and scored the winning touchdown myself.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
+  ["nfl-bobby-layne:identity:doak-walker-lifelong-football-partnership", {
+    text: "My Lions partnership with Doak Walker reached the 1953 NFL Championship Game, when Walker kicked the deciding extra point after I led a late 80-yard touchdown drive.",
+    band: "strong",
+    facet: "relationships",
+    revealPriority: 16,
+  }],
+  ["nfl-lamar-jackson:identity:quarterback-only-position-insistence", {
+    text: "My mother and I consistently insisted that I be evaluated as a quarterback rather than moved to another position because of my athleticism.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 16,
+  }],
+  ["gale-sayers:identity:piccolo-interracial-roommates", {
+    text: "Brian Piccolo and I became one of the NFL's early interracial roommate pairings while playing together for the Bears.",
+    band: "strong",
+    facet: "relationships",
+    revealPriority: 22,
+  }],
+  ["gale-sayers:identity:halas-award-given-to-piccolo", {
+    text: "When I received the George S. Halas Award for courage, I accepted it in Brian Piccolo's honor.",
+    band: "strong",
+    facet: "relationships",
+    revealPriority: 24,
+  }],
+  ["nfl-reggie-bush:identity:bush-push", {
+    text: "A controversial push that helped Matt Leinart score at Notre Dame in 2005 became one of the defining plays of my USC career.",
+    band: "strong",
+    facet: "accomplishments",
+    revealPriority: 14,
+  }],
   ["earl-campbell:identity:tyler-rose-family-origin", {
     text: "I was known as the 'Tyler Rose.'",
     band: "giveaway",
