@@ -11,7 +11,7 @@ import {
   getUfcWhoAmIUniverse,
 } from "./whoAmIAuthority";
 import { assembleWhoAmIClues, whoAmIClueFacet, whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
-import { isNflWhoAmIBatch1Subject } from "./footballWhoAmICuration";
+import { isNflWhoAmIBatch1Subject, isNflWhoAmIBatch2Subject } from "./footballWhoAmICuration";
 import { isUfcWhoAmICalibrationSubject, shouldUseUfcWhoAmIIdentityConcept } from "./ufcWhoAmICuration";
 import {
   WHO_AM_I_CLUE_LIMIT,
@@ -272,7 +272,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         if (!source) continue;
         covered += 1;
         const identityClues = candidate.clues.filter((clue) => clue.identityKnowledge);
-        if (league === "NFL" && isNflWhoAmIBatch1Subject(candidate.id)) {
+        if (league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id))) {
           const subject = launchSubjectById.get(candidate.id);
           if (!subject) throw new Error(`Missing launch subject for ${candidate.id}.`);
           const applicableFactIds = new Set(footballWhoAmIApplicableIdentityFacts(subject).map(({ fact }) => fact.factId));
@@ -417,7 +417,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         }
 
         const identityBacked = candidate.clues.some((clue) => clue.identityKnowledge);
-        const intentionallyCurated = league === "NFL" && isNflWhoAmIBatch1Subject(candidate.id);
+        const intentionallyCurated = league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id));
         if (identityBacked) identityBackedCandidates += 1;
         if (sequence.length === WHO_AM_I_CLUE_LIMIT) {
           playable += 1;
@@ -475,7 +475,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
           clue.sourceFactId === fact.factId
           || clue.conceptId === `identity:${fact.conceptId}`
         )));
-        const intentionallyCurated = league === "NFL" && isNflWhoAmIBatch1Subject(candidate.id);
+        const intentionallyCurated = league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id));
 
         if (!intentionallyCurated) {
           expect(

@@ -390,6 +390,659 @@ function trimDeepPool(subject: FootballSubjectProfile, clues: readonly WhoAmIClu
   return clues.filter((clue) => selected.has(clue.id));
 }
 
+
+export const NFL_WHO_AM_I_BATCH_2_SUBJECT_IDS = [
+  "nfl-alvin-kamara",
+  "nfl-ashton-jeanty",
+  "nfl-bijan-robinson",
+  "nfl-chris-johnson",
+  "nfl-christian-mccaffrey",
+  "nfl-calvin-johnson",
+  "nfl-don-hutson",
+  "nfl-jerry-rice",
+  "nfl-larry-fitzgerald",
+  "nfl-randy-moss",
+  "nfl-raymond-berry",
+  "nfl-terrell-owens",
+  "nfl-a-j-brown",
+  "nfl-a-j-green",
+  "nfl-amari-cooper",
+  "nfl-andre-johnson",
+  "nfl-andre-reed",
+  "nfl-anquan-boldin",
+  "nfl-antonio-brown",
+  "nfl-art-monk",
+  "nfl-bob-hayes",
+  "nfl-brandon-marshall",
+  "nfl-chad-johnson",
+  "nfl-charley-taylor",
+  "nfl-charlie-joiner",
+  "nfl-cliff-branch",
+  "nfl-cris-carter",
+  "nfl-davante-adams",
+  "nfl-deandre-hopkins",
+  "nfl-derrick-mason",
+  "nfl-desean-jackson",
+  "nfl-devin-hester",
+  "nfl-dez-bryant",
+  "nfl-don-maynard",
+  "nfl-donald-driver",
+  "nfl-drew-pearson",
+  "nfl-fred-biletnikoff",
+  "john-mackey",
+  "antonio-gates",
+  "nfl-charlie-sanders",
+  "nfl-dave-casper",
+  "nfl-jackie-smith",
+  "jason-witten",
+  "nfl-kellen-winslow",
+  "mike-ditka",
+  "ozzie-newsome",
+  "shannon-sharpe",
+  "nfl-tony-gonzalez",
+  "nfl-travis-kelce",
+  "zach-ertz",
+] as const;
+
+const batch2SubjectIds = new Set<string>(NFL_WHO_AM_I_BATCH_2_SUBJECT_IDS);
+
+const batch2ActiveOrUnsettledSubjectIds = new Set<string>([
+  "nfl-alvin-kamara",
+  "nfl-ashton-jeanty",
+  "nfl-bijan-robinson",
+  "nfl-christian-mccaffrey",
+  "nfl-a-j-brown",
+  "nfl-davante-adams",
+  "nfl-deandre-hopkins",
+  "nfl-travis-kelce",
+  "zach-ertz",
+]);
+
+const batch2PartialCareerCoverageSubjectIds = new Set<string>([
+  "nfl-andre-reed",
+  "nfl-cris-carter",
+  "nfl-kellen-winslow",
+]);
+
+const batch2SuppressedCareerSpanSubjectIds = new Set<string>([
+  ...batch2ActiveOrUnsettledSubjectIds,
+  ...batch2PartialCareerCoverageSubjectIds,
+  "shannon-sharpe",
+  "jason-witten",
+]);
+
+const batch2RetainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
+  ["nfl-alvin-kamara", new Set(["identity:junior-college-reset-path", "identity:mark-ingram-brotherhood", "identity:free-spirit-game-day-style"])],
+  ["nfl-ashton-jeanty", new Set(["identity:organized-soccer-before-football", "identity:european-road-game-travel", "identity:michael-myers-stance-change", "identity:cfb-ashton-jeanty--five-prep-positions"])],
+  ["nfl-bijan-robinson", new Set(["identity:grandfather-referee-father-figure", "identity:signature-juke-craft"])],
+  ["nfl-chris-johnson", new Set(["identity:chris-johnson-national-level-track-speed", "identity:chris-johnson-signed-as-wide-receiver", "identity:chris-johnson-424-combine", "identity:chris-johnson-cj2k-media-nickname"])],
+  ["nfl-christian-mccaffrey", new Set(["identity:christian-mccaffrey-shanahan-generational-link", "identity:cfb-christian-mccaffrey--both-parents-stanford-athletes", "identity:cfb-christian-mccaffrey--grandfather-dave-sime-olympian", "identity:cfb-christian-mccaffrey--high-school-relay-record"])],
+  ["nfl-calvin-johnson", new Set(["identity:megatron", "identity:retired-thirty"])],
+  ["nfl-don-hutson", new Set(["identity:baseball-walkon", "identity:track", "identity:routes", "identity:multi-role", "identity:29-quarter", "identity:resume-nfl-don-hutson-01"])],
+  ["nfl-jerry-rice", new Set(["identity:football-after-cutting-class", "identity:overlooked-by-big-programs", "identity:cooley-scouted-basketball", "identity:eighteen-ncaa-records", "identity:49ers-traded-up", "identity:edgewood-hill-workout"])],
+  ["nfl-larry-fitzgerald", new Set(["identity:green", "identity:raiders-call", "identity:pr8-cfb-larry-fitzgerald--carter-moss-mentorship", "identity:valley-forge"])],
+  ["nfl-randy-moss", new Set(["identity:wv-football-basketball-poy", "identity:marshall-i-aa-title", "identity:track-team-instant-champion", "identity:marshall-i-a-transition-star", "identity:drafted-21st-then-17-td"])],
+  ["nfl-raymond-berry", new Set(["identity:special-shoes", "identity:twentieth-round", "identity:route-moves", "identity:resume-nfl-raymond-berry-01"])],
+  ["nfl-terrell-owens", new Set(["identity:chattanooga-three-sport", "identity:basketball-ncaa-tournaments", "identity:little-known-third-rounder", "identity:developed-beside-jerry-rice", "identity:hall-speech-at-chattanooga"])],
+  ["nfl-a-j-brown", new Set(["identity:pr7-eagles-receiver-legend-mentorship", "identity:pr9-cfbfast-r-player-4047646-a-j-brown--padres-draft-and-summer-baseball"])],
+  ["nfl-a-j-green", new Set(["identity:pr7-fitzgerald-johnson-receiver-mentorship"])],
+  ["nfl-amari-cooper", new Set(["identity:pr7-chess-informed-route-deception", "identity:pr7-quiet-observer-persona", "identity:pr7-route-running-technician-identity", "identity:pr7-coverage-diagnosis-quarterback-dialogue"])],
+  ["nfl-andre-johnson", new Set(["identity:pr7-finnegans-rare-loss-of-composure"])],
+  ["nfl-andre-reed", new Set(["identity:pr7-high-school-quarterback-to-receiver", "identity:pr7-yac-playing-identity", "identity:pr7-comeback-three-touchdown-role"])],
+  ["nfl-anquan-boldin", new Set(["identity:pr7-college-quarterback-receiver-interchange", "identity:pr7-angry-football-receiver-style", "identity:pr7-shattered-face-return"])],
+  ["nfl-antonio-brown", new Set(["identity:pr7-return-specialist-entry-role", "identity:pr7-obsessive-practice-work-ethic", "identity:pr7-separation-over-measurables", "identity:pr7-old-helmet-grievance"])],
+  ["nfl-art-monk", new Set(["identity:pr7-actions-not-words-persona", "identity:pr7-prototype-big-physical-receiver"])],
+  ["nfl-bob-hayes", new Set(["identity:pr7-unbeaten-college-sprinter", "identity:pr7-tokyo-worlds-fastest-human", "identity:pr7-bullet-bob-speed-identity", "identity:pr7-speed-forced-defensive-structure-change"])],
+  ["nfl-brandon-marshall", new Set(["identity:pr7-high-school-quarterback-two-way-athlete", "identity:pr7-receiver-to-safety-and-back"])],
+  ["nfl-chad-johnson", new Set(["identity:pr7-chad-johnson-soccer-first-love", "identity:pr7-chad-johnson-legal-ochocinco-name"])],
+  ["nfl-charley-taylor", new Set(["identity:pr7-charley-taylor-usc-to-arizona-state", "identity:pr7-charley-taylor-running-back-to-receiver", "identity:pr7-charley-taylor-scout-to-posse-coach", "identity:resume-nfl-charley-taylor-01"])],
+  ["nfl-charlie-joiner", new Set(["identity:pr7-charlie-joiner-drafted-defensive-back", "identity:pr7-charlie-joiner-age-39-receiver", "identity:pr7-charlie-joiner-retired-as-dual-career-leader", "identity:pr7-charlie-joiner-immediate-coaching-career", "identity:resume-nfl-charlie-joiner-01"])],
+  ["nfl-cliff-branch", new Set(["identity:pr7-cliff-branch-junior-college-route", "identity:pr7-cliff-branch-ncaa-sprint-record", "identity:pr7-cliff-branch-al-davis-speed-evaluation", "identity:pr7-cliff-branch-maximum-length-reception", "identity:resume-nfl-cliff-branch-01"])],
+  ["nfl-cris-carter", new Set(["identity:pr7-cris-carter-agent-money-lost-senior-year", "identity:pr7-cris-carter-eagles-release-sobriety-turning-point", "identity:pr7-cris-carter-jugs-machine-practice"])],
+  ["nfl-davante-adams", new Set(["identity:pr7-davante-adams-accidental-fresno-recruitment", "identity:pr7-davante-adams-receiver-film-synthesis", "identity:pr9-cfb-davante-adams--basketball-first-point-guard", "identity:resume-cfb-davante-adams-02"])],
+  ["nfl-deandre-hopkins", new Set(["identity:pr7-deandre-hopkins-mother-touchdown-ball-tradition", "identity:pr7-deandre-hopkins-nuk-pacifier-nickname", "identity:pr7-deandre-hopkins-sammy-watkins-catch-contests"])],
+  ["nfl-derrick-mason", new Set(["identity:pr7-derrick-mason-too-slow-draft-evaluation", "identity:pr7-derrick-mason-late-receiving-breakout", "identity:pr7-derrick-mason-return-receiving-dual-career", "identity:pr7-derrick-mason-cracked-scapula-season", "identity:pr7-derrick-mason-chose-ravens-retirement"])],
+  ["nfl-desean-jackson", new Set(["identity:pr7-desean-jackson-baseball-draft-choice", "identity:pr7-desean-jackson-miracle-new-meadowlands", "identity:resume-cfb-desean-jackson-01"])],
+  ["nfl-devin-hester", new Set(["identity:pr7-devin-hester-anytime-deion", "identity:pr7-devin-hester-miami-three-phase-player", "identity:pr7-devin-hester-kick-away-effect", "identity:pr7-devin-hester-first-return-specialist-hof"])],
+  ["nfl-dez-bryant", new Set(["identity:pr7-dez-bryant-x-celebration-meaning", "identity:pr7-dez-bryant-green-bay-catch-rule"])],
+  ["nfl-don-maynard", new Set(["identity:pr7-don-maynard-cowboy-don", "identity:pr7-don-maynard-nfl-cfl-afl-path", "identity:pr7-don-maynard-first-new-york-titan", "identity:pr7-don-maynard-namath-first-meeting", "identity:resume-nfl-don-maynard-01"])],
+  ["nfl-donald-driver", new Set(["identity:pr7-donald-driver-elite-high-jump", "identity:pr7-donald-driver-spur-of-moment-draft"])],
+  ["nfl-drew-pearson", new Set(["identity:pr7-drew-pearson-tulsa-qb-to-wr", "identity:pr7-drew-pearson-undrafted-special-teams-entry", "identity:pr7-drew-pearson-staubach-apartment-workouts", "identity:pr7-drew-pearson-original-hail-mary", "identity:resume-nfl-drew-pearson-01"])],
+  ["nfl-fred-biletnikoff", new Set(["identity:pr7-fred-biletnikoff-man-made-receiver", "identity:pr7-fred-biletnikoff-stickum-ritual", "identity:pr7-fred-biletnikoff-high-jump-multisport", "identity:pr7-fred-biletnikoff-raiders-receiver-coach", "identity:resume-nfl-fred-biletnikoff-01"])],
+  ["john-mackey", new Set(["identity:syracuse-running-back-to-tight-end", "identity:redefined-tight-end-deep-threat", "identity:six-long-touchdowns-1966", "identity:super-bowl-v-deflection-touchdown", "identity:nflpa-president-mackey-v-nfl", "identity:resume-john-mackey-01"])],
+  ["antonio-gates", new Set(["identity:pr7-no-college-football-basketball-path", "identity:pr7-saban-two-sport-conflict-transfer", "identity:pr7-three-school-basketball-odyssey", "identity:pr7-rob-murphy-pathway-mentor"])],
+  ["nfl-charlie-sanders", new Set(["identity:pr7-charlie-sanders-multisport-background", "identity:pr7-charlie-sanders-receiving-tight-end-era", "identity:pr7-charlie-sanders-43-years-lions", "identity:resume-nfl-charlie-sanders-01"])],
+  ["nfl-dave-casper", new Set(["identity:pr7-dave-casper-notre-dame-tackle-to-tight-end", "identity:pr7-dave-casper-ron-wolf-fake-name-call", "identity:pr7-dave-casper-lost-weight-to-stay-tight-end", "identity:pr7-dave-casper-holy-roller-rule-change", "identity:resume-nfl-dave-casper-01"])],
+  ["nfl-jackie-smith", new Set(["identity:pr7-jackie-smith-track-hurdler", "identity:pr7-jackie-smith-tight-end-punter", "identity:pr7-jackie-smith-super-bowl-drop-perspective", "identity:resume-nfl-jackie-smith-01"])],
+  ["jason-witten", new Set(["identity:pr7-jason-witten-defense-first-high-school", "identity:pr7-jason-witten-parcells-bavaro-mentor", "identity:pr7-jason-witten-lacerated-spleen-return"])],
+  ["nfl-kellen-winslow", new Set(["identity:pr7-kellen-winslow-late-football-start", "identity:pr7-kellen-winslow-football-as-chess", "identity:pr7-kellen-winslow-basketball-box-out", "identity:pr7-kellen-winslow-epic-in-miami", "identity:pr7-kellen-winslow-knee-injury-comeback"])],
+  ["mike-ditka", new Set(["identity:pr7-mike-ditka-dentistry-plan", "identity:pr7-mike-ditka-early-modern-tight-end", "identity:pr7-mike-ditka-letter-to-halas", "identity:pr7-mike-ditka-super-bowl-prediction", "identity:pr7-mike-ditka-player-assistant-head-coach-title-arc", "identity:resume-mike-ditka-01"])],
+  ["ozzie-newsome", new Set(["identity:pr7-ozzie-newsome-wizard-of-oz-bear-bryant", "identity:pr7-ozzie-newsome-alabama-wr-to-nfl-te", "identity:pr7-ozzie-newsome-player-to-scout", "identity:pr7-ozzie-newsome-cleveland-baltimore-first-draft", "identity:pr7-ozzie-newsome-first-black-nfl-gm", "identity:resume-ozzie-newsome-01", "identity:resume-ozzie-newsome-02", "identity:resume-ozzie-newsome-03"])],
+  ["shannon-sharpe", new Set(["identity:pr7-shannon-sharpe-brown-grocery-bags-college", "identity:pr7-shannon-sharpe-wr-te-tweener-nearly-cut"])],
+  ["nfl-tony-gonzalez", new Set(["identity:pr7-tony-gonzalez-cal-basketball-sweet-sixteen", "identity:pr7-tony-gonzalez-goalpost-dunk", "identity:pr7-tony-gonzalez-kansas-city-contender-choice"])],
+  ["nfl-travis-kelce", new Set(["identity:pr7-travis-kelce-quarterback-to-tight-end", "identity:pr7-travis-kelce-connor-barwin-blocking-lesson", "identity:pr7-travis-kelce-jason-path-mentor", "identity:pr7-travis-kelce-andy-reid-draft-warning"])],
+  ["zach-ertz", new Set(["identity:pr7-zach-ertz-brent-jones-basketball-to-tight-end", "identity:pr7-zach-ertz-tennis-ball-hand-training"])],
+]);
+
+const batch2TextOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["nfl-terrell-owens:identity:developed-beside-jerry-rice", { text: "Jerry Rice was my 49ers teammate for most of my first eight seasons, giving me a Hall of Fame standard at my own position.", facet: "relationships" }],
+  ["nfl-anquan-boldin:identity:pr7-shattered-face-return", { text: "I returned to NFL action less than a month after an injury that caused multiple facial fractures and required surgical repair.", facet: "career-path" }],
+  ["nfl-bob-hayes:identity:pr7-tokyo-worlds-fastest-human", { facet: "accomplishments" }],
+  ["nfl-devin-hester:identity:pr7-devin-hester-miami-three-phase-player", { facet: "role" }],
+  ["nfl-devin-hester:identity:pr7-devin-hester-kick-away-effect", { facet: "style" }],
+  ["nfl-dez-bryant:identity:pr7-dez-bryant-green-bay-catch-rule", { text: "My apparent fourth-down catch at Green Bay in the 2014 playoffs was overturned under the catch rule and became one of the era's defining officiating controversies.", facet: "accomplishments" }],
+  ["nfl-don-maynard:identity:pr7-don-maynard-first-new-york-titan", { facet: "career-path" }],
+  ["nfl-drew-pearson:identity:pr7-drew-pearson-staubach-apartment-workouts", { text: "Roger Staubach became my Cowboys teammate and a key throwing partner as I developed from an undrafted player into a starting receiver.", facet: "relationships" }],
+  ["nfl-fred-biletnikoff:identity:pr7-fred-biletnikoff-stickum-ritual", { facet: "style" }],
+  ["nfl-charlie-sanders:identity:pr7-charlie-sanders-receiving-tight-end-era", { facet: "role" }],
+  ["nfl-dave-casper:identity:pr7-dave-casper-holy-roller-rule-change", { text: "I recovered the final fumble in the end zone on the Raiders' game-winning 1978 'Holy Roller,' a play that helped trigger a rule change.", facet: "accomplishments" }],
+  ["jason-witten:identity:pr7-jason-witten-parcells-bavaro-mentor", { text: "Bill Parcells coached me early in Dallas and repeatedly used former Giants tight end Mark Bavaro as my toughness standard.", facet: "relationships" }],
+  ["nfl-kellen-winslow:identity:pr7-kellen-winslow-basketball-box-out", { facet: "style" }],
+  ["nfl-tony-gonzalez:identity:pr7-tony-gonzalez-kansas-city-contender-choice", { facet: "career-path" }],
+  ["nfl-bijan-robinson:identity:signature-juke-craft", { band: "helpful", facet: "style" }],
+  ["nfl-jerry-rice:identity:overlooked-by-big-programs", { band: "helpful", facet: "background" }],
+  ["nfl-a-j-brown:identity:pr9-cfbfast-r-player-4047646-a-j-brown--padres-draft-and-summer-baseball", { band: "helpful", facet: "background" }],
+  ["nfl-charlie-joiner:identity:pr7-charlie-joiner-drafted-defensive-back", { band: "helpful", facet: "background" }],
+  ["nfl-cris-carter:identity:pr7-cris-carter-agent-money-lost-senior-year", { band: "helpful", facet: "background" }],
+  ["nfl-cris-carter:identity:pr7-cris-carter-jugs-machine-practice", { band: "helpful", facet: "style" }],
+  ["nfl-deandre-hopkins:identity:pr7-deandre-hopkins-sammy-watkins-catch-contests", { band: "helpful", facet: "identity" }],
+  ["nfl-devin-hester:identity:pr7-devin-hester-anytime-deion", { band: "helpful", facet: "identity" }],
+  ["nfl-devin-hester:identity:pr7-devin-hester-kick-away-effect", { band: "helpful", facet: "style" }],
+  ["mike-ditka:identity:pr7-mike-ditka-dentistry-plan", { band: "helpful", facet: "identity" }],
+  ["mike-ditka:identity:pr7-mike-ditka-early-modern-tight-end", { band: "helpful", facet: "style" }],
+  ["ozzie-newsome:identity:pr7-ozzie-newsome-alabama-wr-to-nfl-te", { band: "helpful", facet: "background" }],
+  ["ozzie-newsome:identity:pr7-ozzie-newsome-wizard-of-oz-bear-bryant", { band: "helpful", facet: "identity" }],
+  ["shannon-sharpe:identity:pr7-shannon-sharpe-wr-te-tweener-nearly-cut", { band: "helpful", facet: "style" }],
+  ["nfl-tony-gonzalez:identity:pr7-tony-gonzalez-cal-basketball-sweet-sixteen", { band: "helpful", facet: "background" }],
+  ["nfl-travis-kelce:identity:pr7-travis-kelce-quarterback-to-tight-end", { band: "helpful", facet: "background" }],
+  ["nfl-travis-kelce:identity:pr7-travis-kelce-connor-barwin-blocking-lesson", { band: "helpful", facet: "style" }],
+]);
+
+function batch2Supplement(
+  id: string,
+  text: string,
+  band: WhoAmIClue["band"] = "strong",
+  facet: WhoAmIClue["facet"] = "accomplishments",
+  revealPriority = 16,
+): WhoAmIClue {
+  return { id: "curated2:" + id, conceptId: "curated2:" + id, text, band, facet, revealPriority };
+}
+
+const batch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["nfl-alvin-kamara", [
+    batch2Supplement("kamara-draft", "New Orleans selected me in the third round, No. 67 overall, in the 2017 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("kamara-oroy", "I was the AP Offensive Rookie of the Year in 2017.", "strong"),
+    batch2Supplement("kamara-six-td", "On Christmas Day 2020, I tied the NFL record by rushing for six touchdowns in one game.", "giveaway", "accomplishments", 8),
+    batch2Supplement("kamara-41", "I became one of the defining No. 41s in Saints history.", "strong", "identity"),
+    batch2Supplement("kamara-pro-bowls", "I earned five Pro Bowl selections in my first five NFL seasons.", "strong"),
+    batch2Supplement("kamara-saints-rusher", "By 2026 I had become the Saints' all-time leading rusher.", "giveaway", "accomplishments", 10),
+    batch2Supplement("kamara-saints-current", "I remained with New Orleans for the 2026 season after restructuring my contract.", "strong", "career-path"),
+  ]],
+  ["nfl-ashton-jeanty", [
+    batch2Supplement("jeanty-boise", "I became a national star at Boise State.", "helpful", "background"),
+    batch2Supplement("jeanty-2601", "I rushed for 2,601 yards in the 2024 college season.", "giveaway", "production", 9),
+    batch2Supplement("jeanty-awards", "I won both the Maxwell Award and Doak Walker Award in 2024.", "giveaway", "accomplishments", 8),
+    batch2Supplement("jeanty-heisman-runnerup", "I finished second in the 2024 Heisman Trophy voting.", "strong"),
+    batch2Supplement("jeanty-sixth", "Las Vegas selected me No. 6 overall in the 2025 NFL Draft.", "giveaway", "career-path", 10),
+    batch2Supplement("jeanty-raiders-2", "I wear No. 2 for the Raiders.", "strong", "identity"),
+    batch2Supplement("jeanty-unanimous-aa", "I became the first unanimous All-American in Boise State football history in 2024.", "strong", "accomplishments"),
+    batch2Supplement("jeanty-30-touchdowns", "I scored 30 total touchdowns during Boise State's 2024 season.", "strong", "production"),
+    batch2Supplement("jeanty-cfp", "I helped Boise State win the 2024 Mountain West title and earn the No. 3 seed in the College Football Playoff.", "strong", "accomplishments"),
+  ]],
+  ["nfl-bijan-robinson", [
+    batch2Supplement("bijan-texas", "I played college football at Texas.", "helpful", "background"),
+    batch2Supplement("bijan-doak", "I won the Doak Walker Award in my final season at Texas.", "strong"),
+    batch2Supplement("bijan-draft", "Atlanta selected me No. 8 overall in the 2023 NFL Draft.", "giveaway", "career-path", 10),
+    batch2Supplement("bijan-7", "I wear No. 7 for the Falcons.", "helpful", "identity"),
+    batch2Supplement("bijan-2025-allpro", "I earned first-team AP All-Pro honors at running back for the 2025 season.", "giveaway", "accomplishments", 10),
+    batch2Supplement("bijan-scrimmage-2025", "I led the NFL with 2,298 yards from scrimmage in 2025.", "strong", "production"),
+    batch2Supplement("bijan-probowls", "I made the Pro Bowl in both 2024 and 2025.", "strong"),
+    batch2Supplement("bijan-arizona-record", "I left high school as Arizona's all-time rushing leader.", "helpful", "background"),
+    batch2Supplement("bijan-unanimous-aa", "I was a unanimous first-team All-American at Texas in 2022.", "strong", "accomplishments"),
+    batch2Supplement("bijan-2024-rushing", "I rushed for 1,456 yards and 14 touchdowns for Atlanta in 2024.", "strong", "production"),
+  ]],
+  ["nfl-chris-johnson", [
+    batch2Supplement("cj-draft", "Tennessee selected me No. 24 overall in the 2008 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("cj-2009", "I rushed for 2,006 yards in 2009 and won AP Offensive Player of the Year.", "giveaway", "accomplishments", 8),
+    batch2Supplement("cj-scrimmage", "My 2,509 yards from scrimmage in 2009 set an NFL single-season record.", "giveaway", "production", 9),
+  ]],
+  ["nfl-christian-mccaffrey", [
+    batch2Supplement("cmc-1000-1000", "In 2019 I became the third player in NFL history with 1,000 rushing yards and 1,000 receiving yards in the same season.", "giveaway", "accomplishments", 8),
+    batch2Supplement("cmc-opoy", "I won AP Offensive Player of the Year for the 2023 season.", "giveaway", "accomplishments", 8),
+    batch2Supplement("cmc-rushing-title", "I led the NFL in rushing yards in 2023.", "strong", "production"),
+    batch2Supplement("cmc-23", "I wear No. 23 for San Francisco.", "strong", "identity"),
+  ]],
+  ["nfl-calvin-johnson", [
+    batch2Supplement("calvin-1964", "I set the NFL single-season receiving-yardage record with 1,964 yards in 2012.", "giveaway", "accomplishments", 8),
+    batch2Supplement("calvin-hof", "I was elected to the Pro Football Hall of Fame in my first year of eligibility.", "strong"),
+    batch2Supplement("calvin-lions-only", "I spent my entire NFL career with Detroit.", "giveaway", "career-path", 11),
+  ]],
+  ["nfl-don-hutson", [
+    batch2Supplement("hutson-mvps", "I won back-to-back NFL MVP awards in 1941 and 1942.", "giveaway", "accomplishments", 9),
+    batch2Supplement("hutson-packers", "I spent my entire pro career with Green Bay and helped the Packers win three NFL championships.", "giveaway", "career-path", 10),
+  ]],
+  ["nfl-jerry-rice", [
+    batch2Supplement("rice-three-sb", "I won three Super Bowls with San Francisco.", "strong", "accomplishments", 9),
+    batch2Supplement("rice-sb23-mvp", "I was the MVP of Super Bowl XXIII after catching 11 passes for 215 yards and a touchdown.", "giveaway", "accomplishments", 8),
+    batch2Supplement("rice-records", "I retired as the NFL's career leader in receptions, receiving yards and receiving touchdowns.", "giveaway", "accomplishments", 7),
+    batch2Supplement("rice-mvsu", "I played college football at Mississippi Valley State.", "helpful", "background"),
+    batch2Supplement("rice-80", "No. 80 became my signature number in San Francisco.", "helpful", "identity"),
+    batch2Supplement("rice-route-work", "My receiving identity was built on precise route running and relentless conditioning.", "helpful", "style"),
+  ]],
+  ["nfl-larry-fitzgerald", [
+    batch2Supplement("fitz-cardinals-only", "I spent all 17 of my NFL seasons with the Arizona Cardinals.", "giveaway", "career-path", 10),
+    batch2Supplement("fitz-probowls", "I was selected to 11 Pro Bowls.", "strong"),
+    batch2Supplement("fitz-sb-run", "During Arizona's run to Super Bowl XLIII, I produced one of the most prolific receiving postseasons in NFL history.", "strong", "accomplishments"),
+  ]],
+  ["nfl-randy-moss", [
+    batch2Supplement("moss-23", "I set the NFL single-season record with 23 receiving touchdowns in 2007.", "giveaway", "accomplishments", 8),
+    batch2Supplement("moss-oroy", "I was AP Offensive Rookie of the Year after catching 17 touchdowns in 1998.", "giveaway", "accomplishments", 10),
+    batch2Supplement("moss-probowls", "I was selected to six Pro Bowls and four first-team All-Pro teams.", "strong"),
+  ]],
+  ["nfl-raymond-berry", [
+    batch2Supplement("berry-unitas", "Johnny Unitas and I formed one of the defining quarterback-receiver partnerships of the 1950s Colts.", "strong", "relationships"),
+    batch2Supplement("berry-1958", "In the 1958 NFL Championship Game I caught 12 passes for 178 yards and a touchdown in Baltimore's overtime win.", "giveaway", "accomplishments", 8),
+    batch2Supplement("berry-records", "I retired as the NFL career leader in both receptions and receiving yards.", "strong"),
+  ]],
+  ["nfl-terrell-owens", [
+    batch2Supplement("to-path", "My peak NFL stops included San Francisco, Philadelphia and Dallas.", "strong", "career-path"),
+    batch2Supplement("to-sb39", "I returned from a severe ankle injury to catch nine passes for 122 yards in Super Bowl XXXIX.", "giveaway", "accomplishments", 9),
+    batch2Supplement("to-allpro", "I earned five first-team All-Pro selections and six Pro Bowl selections.", "strong"),
+    batch2Supplement("to-20-catches", "I once caught 20 passes in a single game for San Francisco.", "strong", "production"),
+  ]],
+  ["nfl-a-j-brown", [
+    batch2Supplement("ajb-olemiss", "I played college football at Ole Miss.", "helpful", "background"),
+    batch2Supplement("ajb-draft", "Tennessee selected me No. 51 overall in the 2019 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("ajb-metcalf", "DK Metcalf was my college teammate at Ole Miss.", "strong", "relationships"),
+    batch2Supplement("ajb-eagles-trade", "I was traded from Tennessee to Philadelphia during the first round of the 2022 NFL Draft.", "giveaway", "career-path", 10),
+    batch2Supplement("ajb-eagles-record", "My 1,496 receiving yards in 2022 set an Eagles single-season franchise record.", "strong", "production"),
+    batch2Supplement("ajb-superbowl", "I won Super Bowl LIX with Philadelphia.", "giveaway", "accomplishments", 9),
+    batch2Supplement("ajb-patriots", "In 2026 I was traded to New England, reuniting with former Titans coach Mike Vrabel.", "giveaway", "career-path", 9),
+    batch2Supplement("ajb-padres", "The Padres drafted me in baseball before my NFL career.", "strong", "career-path"),
+    batch2Supplement("ajb-11", "No. 11 became my signature number with both Tennessee and Philadelphia.", "helpful", "identity"),
+    batch2Supplement("ajb-physical-yac", "I became known as a physical catch-and-run receiver who could create yards through contact.", "helpful", "style"),
+  ]],
+  ["nfl-a-j-green", [
+    batch2Supplement("ajg-georgia", "I starred at Georgia before entering the NFL.", "helpful", "background"),
+    batch2Supplement("ajg-draft", "Cincinnati selected me No. 4 overall in the 2011 NFL Draft.", "giveaway", "career-path", 10),
+    batch2Supplement("ajg-bengals", "I spent my first 10 NFL seasons with the Bengals before finishing with Arizona.", "strong", "career-path"),
+    batch2Supplement("ajg-seven-probowls", "I made the Pro Bowl in each of my first seven NFL seasons.", "giveaway", "accomplishments", 10),
+    batch2Supplement("ajg-five-1k", "I opened my career with five consecutive 1,000-yard receiving seasons.", "strong", "production"),
+    batch2Supplement("ajg-18", "I became closely associated with No. 18 in Cincinnati.", "strong", "identity"),
+  ]],
+  ["nfl-amari-cooper", [
+    batch2Supplement("cooper-alabama", "I won the Biletnikoff Award at Alabama.", "strong", "accomplishments"),
+    batch2Supplement("cooper-fourth", "The Raiders selected me No. 4 overall in the 2015 NFL Draft.", "giveaway", "career-path", 10),
+    batch2Supplement("cooper-cowboys", "A midseason trade sent me from the Raiders to Dallas in 2018.", "strong", "career-path"),
+    batch2Supplement("cooper-browns", "I later posted back-to-back 1,000-yard seasons for Cleveland.", "strong", "production"),
+    batch2Supplement("cooper-probowls", "I was selected to five Pro Bowls.", "strong"),
+  ]],
+  ["nfl-andre-johnson", [
+    batch2Supplement("andre-miami", "I played college football at Miami and won a national championship there.", "strong", "background"),
+    batch2Supplement("andre-third", "Houston selected me No. 3 overall in the 2003 NFL Draft.", "giveaway", "career-path", 10),
+    batch2Supplement("andre-texans", "I became the defining receiver of the Texans' early franchise history.", "strong", "career-path"),
+    batch2Supplement("andre-probowls", "I was selected to seven Pro Bowls and twice earned first-team All-Pro honors.", "strong"),
+    batch2Supplement("andre-yard-titles", "I led the NFL in receiving yards in both 2008 and 2009.", "strong", "production"),
+    batch2Supplement("andre-hof", "I became the first longtime Houston Texan elected to the Pro Football Hall of Fame.", "giveaway", "accomplishments", 10),
+    batch2Supplement("andre-late-path", "After 12 seasons in Houston, I finished with Indianapolis and Tennessee.", "strong", "career-path"),
+  ]],
+  ["nfl-andre-reed", [
+    batch2Supplement("reed-kutztown", "I played college football at Division II Kutztown.", "strong", "background"),
+    batch2Supplement("reed-bills", "Buffalo drafted me in the fourth round in 1985, and I spent 15 seasons with the Bills.", "giveaway", "career-path", 10),
+    batch2Supplement("reed-kgun", "I was a core target for Jim Kelly in Buffalo's K-Gun offense.", "giveaway", "relationships", 10),
+    batch2Supplement("reed-four-superbowls", "I played in four consecutive Super Bowls with Buffalo.", "giveaway", "accomplishments", 9),
+    batch2Supplement("reed-seven-probowls", "I was selected to seven Pro Bowls.", "strong"),
+    batch2Supplement("reed-hof", "I was inducted into the Pro Football Hall of Fame in 2014.", "strong"),
+    batch2Supplement("reed-951", "I finished my career with 951 receptions.", "strong", "production"),
+    batch2Supplement("reed-washington", "My final NFL season came with Washington after 15 years in Buffalo.", "strong", "career-path"),
+  ]],
+  ["nfl-anquan-boldin", [
+    batch2Supplement("boldin-draft", "Arizona selected me in the second round of the 2003 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("boldin-debut", "In my NFL debut I caught 10 passes for 217 yards and two touchdowns.", "giveaway", "production", 10),
+    batch2Supplement("boldin-oroy", "I was AP Offensive Rookie of the Year in 2003.", "strong"),
+    batch2Supplement("boldin-sb47", "I won Super Bowl XLVII with Baltimore and led the Ravens with 104 receiving yards in that game.", "giveaway", "accomplishments", 9),
+    batch2Supplement("boldin-path", "My NFL career took me from Arizona to Baltimore, San Francisco and Detroit.", "strong", "career-path"),
+  ]],
+  ["nfl-antonio-brown", [
+    batch2Supplement("ab-cmu", "I played college football at Central Michigan.", "helpful", "background"),
+    batch2Supplement("ab-sixth", "Pittsburgh selected me in the sixth round of the 2010 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("ab-steelers", "I became a perennial All-Pro as the Steelers' No. 84.", "giveaway", "identity", 10),
+    batch2Supplement("ab-four-allpro", "I earned first-team All-Pro honors four consecutive seasons from 2014 through 2017.", "giveaway", "accomplishments", 9),
+    batch2Supplement("ab-sb55", "I won Super Bowl LV with Tampa Bay and caught a touchdown in the game.", "strong", "accomplishments"),
+  ]],
+  ["nfl-art-monk", [
+    batch2Supplement("monk-three-sb", "I was part of all three Washington Super Bowl championship teams under Joe Gibbs.", "giveaway", "accomplishments", 9),
+    batch2Supplement("monk-106", "My 106 catches in 1984 set an NFL single-season record.", "giveaway", "production", 9),
+    batch2Supplement("monk-streak", "I once held the NFL record with a 183-game streak with a reception.", "strong", "accomplishments"),
+    batch2Supplement("monk-career-catches", "In 1992 I became the NFL's career receptions leader with my 820th catch.", "strong", "accomplishments"),
+    batch2Supplement("monk-posse", "I was the veteran pillar of Washington's 'Posse' receiving trio with Gary Clark and Ricky Sanders.", "giveaway", "relationships", 10),
+  ]],
+  ["nfl-bob-hayes", [
+    batch2Supplement("hayes-cowboys", "I spent most of my NFL career stretching the field for the Dallas Cowboys.", "strong", "career-path"),
+    batch2Supplement("hayes-sb6", "I won Super Bowl VI with Dallas after previously winning Olympic sprint gold.", "giveaway", "accomplishments", 9),
+    batch2Supplement("hayes-hof", "I was inducted into the Pro Football Hall of Fame in 2009.", "strong"),
+  ]],
+  ["nfl-brandon-marshall", [
+    batch2Supplement("marshall-ucf", "I played college football at UCF before Denver drafted me in the fourth round.", "strong", "career-path"),
+    batch2Supplement("marshall-21", "I set the NFL single-game receptions record with 21 catches against Indianapolis in 2009.", "giveaway", "accomplishments", 8),
+    batch2Supplement("marshall-probowls", "I was selected to six Pro Bowls.", "strong"),
+    batch2Supplement("marshall-four-teams-1k", "I recorded 1,000-yard receiving seasons for Denver, Miami, Chicago and the Jets.", "giveaway", "career-path", 10),
+    batch2Supplement("marshall-cutler", "Jay Cutler was my quarterback in both Denver and Chicago.", "strong", "relationships"),
+    batch2Supplement("marshall-path", "My prime NFL stops included Denver, Miami, Chicago and the New York Jets.", "strong", "career-path"),
+  ]],
+  ["nfl-chad-johnson", [
+    batch2Supplement("ochocinco-oregon-state", "I played college football at Oregon State after a junior-college stop.", "helpful", "background"),
+    batch2Supplement("ochocinco-draft", "Cincinnati selected me No. 36 overall in the 2001 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("ochocinco-85", "No. 85 became central to my Bengals identity and eventually to my Ochocinco persona.", "giveaway", "identity", 9),
+    batch2Supplement("ochocinco-probowls", "I was selected to six Pro Bowls.", "strong"),
+    batch2Supplement("ochocinco-2006", "I led the NFL in receiving yards in 2006.", "strong", "production"),
+    batch2Supplement("ochocinco-patriots", "After 10 seasons in Cincinnati, I spent my final NFL season with New England.", "strong", "career-path"),
+  ]],
+  ["nfl-charley-taylor", [
+    batch2Supplement("taylor-washington", "I spent my entire 14-season NFL career with Washington.", "giveaway", "career-path", 10),
+    batch2Supplement("taylor-receptions-record", "I retired as the NFL's all-time leader in receptions.", "strong", "accomplishments"),
+    batch2Supplement("taylor-sb7", "I helped Washington reach Super Bowl VII after the 1972 season.", "strong", "accomplishments"),
+    batch2Supplement("taylor-hof", "I was inducted into the Pro Football Hall of Fame in 1984.", "strong"),
+  ]],
+  ["nfl-charlie-joiner", [
+    batch2Supplement("joiner-path", "My pro career ran through Houston, Cincinnati and San Diego.", "strong", "career-path"),
+    batch2Supplement("joiner-air-coryell", "I became a key target for Dan Fouts in San Diego's 'Air Coryell' offense.", "giveaway", "relationships", 9),
+    batch2Supplement("joiner-hof", "I was inducted into the Pro Football Hall of Fame in 1996.", "strong"),
+    batch2Supplement("joiner-grambling", "I played college football at Grambling State.", "helpful", "background"),
+    batch2Supplement("joiner-18", "No. 18 became my signature number in San Diego.", "helpful", "identity"),
+    batch2Supplement("joiner-route-technique", "I became known as a precise route runner in San Diego's vertical passing attack.", "helpful", "style"),
+  ]],
+  ["nfl-cliff-branch", [
+    batch2Supplement("branch-raiders", "I spent my entire NFL career with the Raiders.", "giveaway", "career-path", 10),
+    batch2Supplement("branch-three-sb", "I won Super Bowls XI, XV and XVIII with the Raiders.", "giveaway", "accomplishments", 8),
+    batch2Supplement("branch-allpro", "I earned first-team All-Pro honors three straight seasons from 1974 through 1976.", "strong"),
+    batch2Supplement("branch-hof", "I was posthumously inducted into the Pro Football Hall of Fame in 2022.", "strong"),
+  ]],
+  ["nfl-cris-carter", [
+    batch2Supplement("carter-ohio-state", "I starred at Ohio State before entering the NFL through the supplemental draft.", "helpful", "background"),
+    batch2Supplement("carter-vikings", "Minnesota claimed me after Philadelphia released me, and the Vikings became the team most associated with my career.", "giveaway", "career-path", 10),
+    batch2Supplement("carter-buddy-quote", "Buddy Ryan famously explained my Eagles release by saying that all I did was catch touchdowns.", "giveaway", "identity", 9),
+    batch2Supplement("carter-probowls", "I was selected to eight consecutive Pro Bowls from 1993 through 2000.", "strong"),
+    batch2Supplement("carter-tds", "I finished with 130 career receiving touchdowns.", "strong", "production"),
+    batch2Supplement("carter-moss", "Randy Moss joined me in Minnesota in 1998, creating one of the era's defining receiver tandems.", "giveaway", "relationships", 10),
+    batch2Supplement("carter-hof", "I was inducted into the Pro Football Hall of Fame in 2013.", "strong"),
+    batch2Supplement("carter-80", "No. 80 became my signature number in Minnesota.", "helpful", "identity"),
+  ]],
+  ["nfl-davante-adams", [
+    batch2Supplement("adams-fresno", "I starred at Fresno State before entering the NFL.", "helpful", "background"),
+    batch2Supplement("adams-17", "No. 17 became my signature number in Green Bay and remained my number with the Rams.", "strong", "identity"),
+    batch2Supplement("adams-allpro", "I earned three consecutive first-team All-Pro selections from 2020 through 2022.", "giveaway", "accomplishments", 10),
+    batch2Supplement("adams-18td", "I led the NFL with 18 receiving touchdowns in 2020.", "strong", "production"),
+    batch2Supplement("adams-path", "My NFL path went from Green Bay to Las Vegas, the New York Jets and the Los Angeles Rams.", "giveaway", "career-path", 9),
+    batch2Supplement("adams-rams", "I remained the Rams' No. 17 for the 2026 season.", "strong", "career-path"),
+  ]],
+  ["nfl-deandre-hopkins", [
+    batch2Supplement("hopkins-clemson", "I starred at Clemson before entering the NFL.", "helpful", "background"),
+    batch2Supplement("hopkins-draft", "Houston selected me No. 27 overall in the 2013 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("hopkins-path", "My NFL career included Houston, Arizona, Tennessee, Kansas City and Baltimore.", "giveaway", "career-path", 9),
+    batch2Supplement("hopkins-allpro", "I earned three first-team All-Pro selections and five Pro Bowl selections.", "strong"),
+    batch2Supplement("hopkins-hail-murray", "I caught the 2020 'Hail Murray' over multiple Bills defenders to win a game for Arizona.", "giveaway", "accomplishments", 8),
+    batch2Supplement("hopkins-2017td", "I led the NFL in receiving touchdowns in 2017.", "strong", "production"),
+    batch2Supplement("hopkins-sammy", "Sammy Watkins was my Clemson teammate and practice rival at wide receiver.", "strong", "relationships"),
+    batch2Supplement("hopkins-10", "No. 10 became my signature number across my long runs in Houston and Arizona.", "helpful", "identity"),
+    batch2Supplement("hopkins-trade-arizona", "Houston traded me to Arizona in 2020 in the deal that brought running back David Johnson to the Texans.", "helpful", "background"),
+    batch2Supplement("hopkins-hands", "I became known for elite hands, body control and contested-catch ability along the boundary.", "helpful", "style"),
+  ]],
+  ["nfl-derrick-mason", [
+    batch2Supplement("mason-titans-ravens", "My two defining NFL stops were Tennessee and Baltimore.", "strong", "career-path"),
+    batch2Supplement("mason-probowls", "I was selected to two Pro Bowls.", "strong"),
+    batch2Supplement("mason-sb34", "I played in Super Bowl XXXIV with Tennessee.", "strong", "accomplishments"),
+  ]],
+  ["nfl-desean-jackson", [
+    batch2Supplement("djax-cal", "I starred at California before Philadelphia drafted me No. 49 overall in 2008.", "strong", "career-path"),
+    batch2Supplement("djax-eagles", "I became one of the NFL's defining deep threats and returners with Philadelphia.", "giveaway", "career-path", 10),
+    batch2Supplement("djax-probowls", "I was selected to three Pro Bowls.", "strong"),
+    batch2Supplement("djax-path", "My long career later included Washington, Tampa Bay, the Rams, Raiders and Ravens.", "strong", "career-path"),
+  ]],
+  ["nfl-devin-hester", [
+    batch2Supplement("hester-draft", "Chicago selected me in the second round of the 2006 NFL Draft out of Miami.", "strong", "career-path"),
+    batch2Supplement("hester-bears", "I became the most feared returner of my era with the Chicago Bears.", "giveaway", "career-path", 10),
+    batch2Supplement("hester-sb41", "I opened Super Bowl XLI by returning the kickoff for a touchdown.", "giveaway", "accomplishments", 8),
+    batch2Supplement("hester-20", "I finished with an NFL-record 20 combined return touchdowns.", "giveaway", "accomplishments", 8),
+    batch2Supplement("hester-probowls", "I was selected to four Pro Bowls as a return specialist.", "strong"),
+    batch2Supplement("hester-hof", "I became the first primary return specialist elected to the Pro Football Hall of Fame.", "giveaway", "accomplishments", 9),
+    batch2Supplement("hester-miami", "I played college football at Miami.", "helpful", "background"),
+    batch2Supplement("hester-23", "No. 23 became my signature number in Chicago.", "helpful", "identity"),
+  ]],
+  ["nfl-dez-bryant", [
+    batch2Supplement("dez-okstate", "I starred at Oklahoma State before entering the NFL.", "helpful", "background"),
+    batch2Supplement("dez-draft", "Dallas selected me No. 24 overall in the 2010 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("dez-88", "I became one of the Cowboys' signature No. 88 receivers.", "giveaway", "identity", 9),
+    batch2Supplement("dez-16td", "I led the NFL with 16 receiving touchdowns in 2014.", "strong", "production"),
+    batch2Supplement("dez-probowls", "I was selected to three Pro Bowls.", "strong"),
+  ]],
+  ["nfl-don-maynard", [
+    batch2Supplement("maynard-jets", "I became Joe Namath's Hall of Fame receiving partner for the New York Jets.", "giveaway", "relationships", 9),
+    batch2Supplement("maynard-sb3", "I was part of the Jets team that upset Baltimore in Super Bowl III.", "giveaway", "accomplishments", 8),
+    batch2Supplement("maynard-record", "I retired as the NFL's career receiving-yardage leader.", "strong", "accomplishments"),
+  ]],
+  ["nfl-donald-driver", [
+    batch2Supplement("driver-draft", "Green Bay selected me in the seventh round of the 1999 NFL Draft out of Alcorn State.", "strong", "career-path"),
+    batch2Supplement("driver-packers-only", "I spent my entire 14-season NFL career with the Packers.", "giveaway", "career-path", 10),
+    batch2Supplement("driver-sb45", "I won Super Bowl XLV with Green Bay.", "strong"),
+    batch2Supplement("driver-records", "I retired as Green Bay's career leader in both receptions and receiving yards.", "giveaway", "accomplishments", 9),
+    batch2Supplement("driver-probowls", "I was selected to three Pro Bowls.", "strong"),
+  ]],
+  ["nfl-drew-pearson", [
+    batch2Supplement("pearson-cowboys", "I spent my entire NFL career with the Dallas Cowboys.", "giveaway", "career-path", 10),
+    batch2Supplement("pearson-sb12", "I won Super Bowl XII with Dallas.", "strong"),
+    batch2Supplement("pearson-88", "I helped establish the Cowboys' tradition of star receivers wearing No. 88.", "giveaway", "identity", 9),
+    batch2Supplement("pearson-hof", "I was inducted into the Pro Football Hall of Fame in 2021.", "strong"),
+  ]],
+  ["nfl-fred-biletnikoff", [
+    batch2Supplement("biletnikoff-raiders", "I spent my NFL career with the Oakland Raiders.", "giveaway", "career-path", 10),
+    batch2Supplement("biletnikoff-sb11", "I was named MVP of Super Bowl XI after Oakland's first championship.", "giveaway", "accomplishments", 8),
+    batch2Supplement("biletnikoff-hof", "I was inducted into the Pro Football Hall of Fame in 1988.", "strong"),
+    batch2Supplement("biletnikoff-award", "College football's annual award for the nation's outstanding receiver bears my name.", "giveaway", "identity", 8),
+  ]],
+  ["john-mackey", [
+    batch2Supplement("mackey-allpro", "I was first-team All-NFL three straight seasons from 1966 through 1968.", "strong"),
+    batch2Supplement("mackey-unitas", "Johnny Unitas was my quarterback for most of my Baltimore Colts career.", "strong", "relationships"),
+  ]],
+  ["antonio-gates", [
+    batch2Supplement("gates-116", "My 116 receiving touchdowns remain the NFL record for a tight end.", "giveaway", "accomplishments", 8),
+    batch2Supplement("gates-hof", "I was inducted into the Pro Football Hall of Fame in 2025.", "strong"),
+    batch2Supplement("gates-probowls", "I was selected to eight consecutive Pro Bowls.", "strong"),
+    batch2Supplement("gates-chargers-only", "I spent all 16 of my NFL seasons with the Chargers.", "giveaway", "career-path", 10),
+    batch2Supplement("gates-allpro", "I earned first-team All-Pro honors three straight seasons from 2004 through 2006.", "strong", "accomplishments"),
+  ]],
+  ["nfl-charlie-sanders", [
+    batch2Supplement("sanders-lions", "I spent my entire 10-season NFL career with Detroit.", "giveaway", "career-path", 10),
+    batch2Supplement("sanders-hof", "I was inducted into the Pro Football Hall of Fame in 2007.", "strong"),
+    batch2Supplement("sanders-decade", "I was named to the NFL's All-Decade Team of the 1970s.", "strong"),
+    batch2Supplement("sanders-lions-record", "I retired as the Lions' all-time leader in receptions.", "strong", "accomplishments"),
+  ]],
+  ["nfl-dave-casper", [
+    batch2Supplement("casper-raiders", "I became a Hall of Fame tight end with the Oakland Raiders.", "giveaway", "career-path", 10),
+    batch2Supplement("casper-ghost", "My 42-yard catch in the 1977 playoff classic at Baltimore became the signature play of the 'Ghost to the Post' game.", "giveaway", "accomplishments", 8),
+    batch2Supplement("casper-sb11", "I won Super Bowl XI with the Raiders.", "strong"),
+    batch2Supplement("casper-hof", "I was inducted into the Pro Football Hall of Fame in 2002.", "strong"),
+  ]],
+  ["nfl-jackie-smith", [
+    batch2Supplement("jackie-cardinals", "I spent 15 seasons with the St. Louis Cardinals before one final year in Dallas.", "giveaway", "career-path", 10),
+    batch2Supplement("jackie-tenth", "St. Louis selected me in the 10th round of the 1963 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("jackie-leading-te", "I retired as the NFL's all-time leading tight end in receptions and receiving yards.", "giveaway", "accomplishments", 9),
+    batch2Supplement("jackie-hof", "I was inducted into the Pro Football Hall of Fame in 1994.", "strong"),
+  ]],
+  ["jason-witten", [
+    batch2Supplement("witten-tennessee", "I played college football at Tennessee.", "helpful", "background"),
+    batch2Supplement("witten-draft", "Dallas selected me No. 69 overall in the 2003 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("witten-probowls", "I was selected to 11 Pro Bowls.", "giveaway", "accomplishments", 10),
+    batch2Supplement("witten-return", "I retired after the 2017 season, returned to Dallas in 2019 and finished with the Raiders in 2020.", "strong", "career-path"),
+    batch2Supplement("witten-17seasons", "I played 17 NFL seasons, 16 of them with Dallas.", "strong", "career-path"),
+  ]],
+  ["nfl-kellen-winslow", [
+    batch2Supplement("winslow-era", "I played in the NFL from 1979 through 1987.", "broad", "era", 30),
+    batch2Supplement("winslow-missouri", "I played college football at Missouri.", "helpful", "background"),
+    batch2Supplement("winslow-draft", "San Diego selected me No. 13 overall in the 1979 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("winslow-chargers", "I spent my entire NFL career with the San Diego Chargers.", "giveaway", "career-path", 10),
+    batch2Supplement("winslow-air-coryell", "Don Coryell moved me around the formation as a centerpiece of the 'Air Coryell' offense.", "giveaway", "relationships", 9),
+    batch2Supplement("winslow-probowls", "I was selected to five Pro Bowls and three first-team All-Pro teams.", "strong"),
+    batch2Supplement("winslow-correct-stats", "I finished with 541 receptions for 6,741 yards and 45 touchdowns.", "strong", "production"),
+  ]],
+  ["mike-ditka", [
+    batch2Supplement("ditka-era", "My playing career ran from the 1960s into the early 1970s.", "broad", "era", 30),
+    batch2Supplement("ditka-pitt", "I starred at Pitt before entering the NFL.", "helpful", "background"),
+    batch2Supplement("ditka-fifth", "Chicago selected me No. 5 overall in the 1961 NFL Draft.", "giveaway", "career-path", 10),
+    batch2Supplement("ditka-rookie", "As a rookie I became the first NFL tight end to top 1,000 receiving yards in a season and won Rookie of the Year.", "strong", "accomplishments", 8),
+    batch2Supplement("ditka-iron", "I became widely known as 'Iron Mike.'", "giveaway", "nickname", 9),
+    batch2Supplement("ditka-coach", "I later coached the 1985 Bears to a Super Bowl XX championship.", "giveaway", "career-path", 8),
+    batch2Supplement("ditka-89", "No. 89 became my signature number as a Bears tight end.", "helpful", "identity"),
+    batch2Supplement("ditka-pitt-two-way", "At Pitt I led the team in receiving for three straight seasons while also playing defense and punting.", "helpful", "background"),
+  ]],
+  ["ozzie-newsome", [
+    batch2Supplement("ozzie-era", "My playing career ran from the late 1970s through the 1980s.", "broad", "era", 30),
+    batch2Supplement("ozzie-alabama", "I played college football at Alabama.", "helpful", "background"),
+    batch2Supplement("ozzie-82", "No. 82 became my signature number in Cleveland.", "helpful", "identity"),
+  ]],
+  ["shannon-sharpe", [
+    batch2Supplement("sharpe-savannah", "I starred at Savannah State before Denver drafted me in the seventh round in 1990.", "helpful", "background"),
+    batch2Supplement("sharpe-brother", "My older brother Sterling Sharpe was already an NFL star receiver while I was becoming a tight end.", "strong", "relationships"),
+    batch2Supplement("sharpe-three-sb", "I won two Super Bowls with Denver and another with Baltimore.", "giveaway", "accomplishments", 8),
+    batch2Supplement("sharpe-probowls", "I was selected to eight Pro Bowls.", "strong"),
+    batch2Supplement("sharpe-records", "I retired holding the NFL tight-end career records for receptions and receiving yards.", "giveaway", "accomplishments", 9),
+    batch2Supplement("sharpe-ravens", "My lone team outside Denver was Baltimore, where I won Super Bowl XXXV.", "strong", "career-path"),
+    batch2Supplement("sharpe-84", "No. 84 became my signature number in Denver.", "helpful", "identity"),
+  ]],
+  ["nfl-tony-gonzalez", [
+    batch2Supplement("gonzalez-falcons", "After 12 seasons in Kansas City, I finished my career with five seasons in Atlanta.", "strong", "career-path"),
+    batch2Supplement("gonzalez-probowls", "I was selected to 14 Pro Bowls.", "giveaway", "accomplishments", 9),
+    batch2Supplement("gonzalez-allpro", "I earned first-team All-Pro honors seven times.", "strong"),
+    batch2Supplement("gonzalez-records", "I retired as the career leader among tight ends in receptions, receiving yards and receiving touchdowns.", "giveaway", "accomplishments", 8),
+    batch2Supplement("gonzalez-88", "No. 88 became my signature number in both Kansas City and Atlanta.", "helpful", "identity"),
+    batch2Supplement("gonzalez-basketball-style", "I used basketball-style body positioning and rebounding instincts to create receiving mismatches at tight end.", "helpful", "style"),
+  ]],
+  ["nfl-travis-kelce", [
+    batch2Supplement("kelce-87", "I wear No. 87 for Kansas City.", "helpful", "identity"),
+    batch2Supplement("kelce-three-sb", "I won Super Bowls LIV, LVII and LVIII with the Chiefs.", "giveaway", "accomplishments", 8),
+    batch2Supplement("kelce-seven-1k", "I became the first tight end in NFL history to record seven consecutive 1,000-yard receiving seasons.", "giveaway", "accomplishments", 9),
+    batch2Supplement("kelce-mahomes", "Patrick Mahomes became my quarterback for the Chiefs' championship run.", "strong", "relationships"),
+    batch2Supplement("kelce-2026", "I returned to Kansas City for the 2026 season and remained an active Chief.", "strong", "career-path"),
+    batch2Supplement("kelce-chief-career", "Kansas City has been my only NFL team.", "helpful", "background"),
+  ]],
+  ["zach-ertz", [
+    batch2Supplement("ertz-stanford", "I played college football at Stanford.", "helpful", "background"),
+    batch2Supplement("ertz-draft", "Philadelphia selected me No. 35 overall in the 2013 NFL Draft.", "strong", "career-path"),
+    batch2Supplement("ertz-sb52", "I caught the go-ahead touchdown in the fourth quarter of Philadelphia's Super Bowl LII victory.", "giveaway", "accomplishments", 8),
+    batch2Supplement("ertz-116", "My 116 catches in 2018 set a single-season NFL record for a tight end at the time.", "giveaway", "production", 9),
+    batch2Supplement("ertz-path", "My NFL career included Philadelphia, Arizona and Washington.", "strong", "career-path"),
+    batch2Supplement("ertz-probowls", "I was selected to three Pro Bowls.", "strong"),
+    batch2Supplement("ertz-eagles", "I spent my first nine seasons with the Eagles.", "giveaway", "career-path", 10),
+    batch2Supplement("ertz-86", "No. 86 became my signature number in the NFL.", "helpful", "identity"),
+    batch2Supplement("ertz-basketball", "Basketball was a major part of my athletic background before I developed into an NFL tight end.", "helpful", "background"),
+  ]],
+]);
+
+function applyBatch2IdentityCuration(subjectId: string, clue: WhoAmIClue) {
+  const override = batch2TextOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id))
+    ?? batch2TextOverrides.get(subjectId + ":" + clue.id);
+  return override ? { ...clue, ...override } : clue;
+}
+
+function batch2ShouldSuppressMetric(subject: FootballSubjectProfile, clue: WhoAmIClue) {
+  if (!clue.id.startsWith("fact:nfl-")) return false;
+  if (batch2ActiveOrUnsettledSubjectIds.has(subject.id)) return /^fact:nfl-career-/.test(clue.id);
+  if (batch2PartialCareerCoverageSubjectIds.has(subject.id)) return /^fact:nfl-career-/.test(clue.id);
+  if (clue.id === "fact:nfl-career-games" || clue.id === "fact:nfl-career-targets") return true;
+  if (subject.position === "WR" || subject.position === "TE") {
+    if (/^fact:nfl-career-rushing-/.test(clue.id)) return true;
+  }
+  if (subject.position === "RB") {
+    if (/^fact:nfl-career-rushing-(?:attempts|yards-per-attempt)$/.test(clue.id)) return true;
+  }
+  if (subject.id === "nfl-devin-hester" && /^fact:nfl-career-receiv/.test(clue.id)) return true;
+  if (subject.id === "mike-ditka" && /^fact:nfl-coach-/.test(clue.id)) return true;
+  return false;
+}
+
+const batch2ForcedPoolIds = new Map<string, ReadonlySet<string>>([
+  ["nfl-jerry-rice", new Set([
+    "position",
+    "era",
+    "school",
+    "identity:football-after-cutting-class",
+    "curated2:rice-80",
+    "curated2:rice-route-work",
+    "draft-pick",
+    "identity:49ers-traded-up",
+    "identity:edgewood-hill-workout",
+    "curated2:rice-three-sb",
+    "curated2:rice-sb23-mvp",
+    "curated2:rice-records",
+  ])],
+  ["mike-ditka", new Set([
+    "position",
+    "curated2:ditka-era",
+    "identity:pr7-mike-ditka-dentistry-plan",
+    "identity:pr7-mike-ditka-early-modern-tight-end",
+    "curated2:ditka-pitt",
+    "curated2:ditka-89",
+    "curated2:ditka-pitt-two-way",
+    "fact:nfl-career-receiving-yards",
+    "identity:pr7-mike-ditka-letter-to-halas",
+    "identity:resume-mike-ditka-01",
+    "curated2:ditka-rookie",
+    "curated2:ditka-fifth",
+    "curated2:ditka-iron",
+    "curated2:ditka-coach",
+  ])],
+]);
+
+function trimNflBatch2Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const target = subject.id === "nfl-jerry-rice" || subject.id === "mike-ditka" ? 12 : 16;
+  if (clues.length <= target) return [...clues];
+
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+  const selected = new Set(ranked.slice(0, target).map((entry) => entry.clue.id));
+  return clues.filter((clue) => selected.has(clue.id));
+}
+
+function curateNflBatch2Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
+  const retained = batch2RetainedIdentityConcepts.get(subject.id);
+  let colorUsed = false;
+  const curated: WhoAmIClue[] = [];
+
+  for (const rawClue of rawClues) {
+    if (rawClue.id === "player-career-start" || rawClue.id === "player-career-end") continue;
+    if (rawClue.id === "career-span" && batch2SuppressedCareerSpanSubjectIds.has(subject.id)) continue;
+    if (subject.id === "nfl-kellen-winslow" && rawClue.id === "era") continue;
+    if (batch2ShouldSuppressMetric(subject, rawClue)) continue;
+    if (
+      rawClue.identityKnowledge
+      && retained
+      && !retained.has(rawClue.conceptId ?? "")
+      && !retained.has(rawClue.id)
+    ) continue;
+
+    const clue = applyBatch2IdentityCuration(subject.id, rawClue);
+    if (clue.identityKnowledge) {
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      if (selectionClass === "deep-biography") continue;
+      if (selectionClass === "identity-color") {
+        if (colorUsed) continue;
+        colorUsed = true;
+      }
+    }
+    curated.push(clue);
+  }
+
+  curated.push(...(batch2SupplementalClues.get(subject.id) ?? []));
+  const forcedPool = batch2ForcedPoolIds.get(subject.id);
+  if (forcedPool) return curated.filter((clue) => forcedPool.has(clue.id));
+  return trimNflBatch2Pool(subject, curated);
+}
+
+export function isNflWhoAmIBatch2Subject(subjectId: string) {
+  return batch2SubjectIds.has(subjectId);
+}
+
 export function isNflWhoAmIBatch1Subject(subjectId: string) {
   return batchSubjectIds.has(subjectId);
 }
@@ -398,7 +1051,9 @@ export function curateFootballWhoAmIClues(
   subject: FootballSubjectProfile,
   rawClues: readonly WhoAmIClue[],
 ): WhoAmIClue[] {
-  if (subject.league !== "NFL" || !batchSubjectIds.has(subject.id)) return [...rawClues];
+  if (subject.league !== "NFL") return [...rawClues];
+  if (batch2SubjectIds.has(subject.id)) return curateNflBatch2Clues(subject, rawClues);
+  if (!batchSubjectIds.has(subject.id)) return [...rawClues];
 
   const retained = retainedIdentityConcepts.get(subject.id);
   let colorUsed = false;
@@ -416,7 +1071,12 @@ export function curateFootballWhoAmIClues(
       partialQuarterbackRushingSubjectIds.has(subject.id)
       && /^fact:nfl-career-rushing-/.test(rawClue.id)
     ) continue;
-    if (rawClue.identityKnowledge && retained && !retained.has(rawClue.conceptId ?? "")) continue;
+    if (
+      rawClue.identityKnowledge
+      && retained
+      && !retained.has(rawClue.conceptId ?? "")
+      && !retained.has(rawClue.id)
+    ) continue;
     const clue = applyIdentityCuration(subject.id, rawClue);
     if (clue.identityKnowledge) {
       const selectionClass = whoAmIClueSelectionClass(clue);
