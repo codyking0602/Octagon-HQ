@@ -2,7 +2,7 @@ import { act, cleanup, fireEvent, render, screen, within } from "@testing-librar
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
-import { FootballHq, footballSpotlightKindAt } from "./FootballHq";
+import { FootballHq, footballHqTeamPresentationFor, footballSpotlightKindAt } from "./FootballHq";
 
 afterEach(() => {
   cleanup();
@@ -134,6 +134,16 @@ const summary: PickSummary = {
   lockBonus: 2,
   totalPoints: 10,
 };
+
+describe("Football HQ team logo presentation", () => {
+  it("uses the opposite meaningful team color when available and white only for explicit silhouette exceptions", () => {
+    expect(footballHqTeamPresentationFor("LSU")).toEqual({ color: "#FDD023", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Ole Miss")).toEqual({ color: "#14213D", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Buffalo Bills")).toEqual({ color: "#C60C30", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Detroit Lions")).toEqual({ color: "#0076B6", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Texas")).toEqual({ color: "#BF5700", logoTreatment: "white" });
+  });
+});
 
 describe("Football HQ Home summary", () => {
   it("uses UFC-style Picks, one Daily row, Player Spotlight, and canonical authored matchup rows", () => {
