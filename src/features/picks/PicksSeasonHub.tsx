@@ -70,6 +70,7 @@ export function PicksSeasonHub({
   );
   const [hubOpen, setHubOpen] = useState(Boolean(targetEventId || standingsRequested));
   const hubRef = useRef<HTMLElement | null>(null);
+  const standingsRef = useRef<HTMLElement | null>(null);
   const standings = useMemo(
     () => picksSeasonStandings(history, football ? "football" : "mma"),
     [football, history],
@@ -108,11 +109,18 @@ export function PicksSeasonHub({
     const shouldFocusStandings = standingsRequested && hubOpen && activeTab === "standings";
     if (!shouldFocusEvent && !shouldFocusStandings) return undefined;
 
-    const frame = requestAnimationFrame(() => {
-      hubRef.current?.scrollIntoView({ behavior: "smooth", block: shouldFocusStandings ? "start" : "center" });
-      hubRef.current?.focus({ preventScroll: true });
+    let settleFrame = 0;
+    const layoutFrame = requestAnimationFrame(() => {
+      settleFrame = requestAnimationFrame(() => {
+        const target = shouldFocusStandings ? standingsRef.current : hubRef.current;
+        target?.scrollIntoView({ behavior: "smooth", block: shouldFocusStandings ? "start" : "center" });
+        target?.focus({ preventScroll: true });
+      });
     });
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(layoutFrame);
+      cancelAnimationFrame(settleFrame);
+    };
   }, [activeTab, hubOpen, standingsRequested, targetEvent]);
 
   if (loading && !history.events.length) {
@@ -183,7 +191,14 @@ export function PicksSeasonHub({
           </div>
 
           {activeTab === "standings" ? (
-            <section className="picks-season-standings" role="tabpanel" aria-label="Group season standings">
+            <section
+              ref={standingsRef}
+              id="picks-season-leaderboard"
+              className="picks-season-standings"
+              role="tabpanel"
+              aria-label="Group season standings"
+              tabIndex={standingsRequested ? -1 : undefined}
+            >
               <div className="picks-season-panel-heading">
                 <div>
                   <span>GROUP STANDINGS</span>
