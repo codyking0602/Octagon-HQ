@@ -4,6 +4,7 @@ import {
 } from "../back-room/ufcFactualLedger";
 import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
 import { whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
+import { shouldUseUfcWhoAmIIdentityConcept } from "./ufcWhoAmICuration";
 import {
   createWhoAmIRound,
   type WhoAmICandidate,
@@ -20,7 +21,9 @@ import {
 function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
   const knowledge = getUfcPersonIdentityKnowledge(subject.id);
   if (!knowledge) return [];
-  return knowledge.facts.map((fact) => whoAmIIdentityKnowledgeClue({
+  return knowledge.facts
+    .filter((fact) => shouldUseUfcWhoAmIIdentityConcept(subject.id, fact.conceptId))
+    .map((fact) => whoAmIIdentityKnowledgeClue({
     subjectId: subject.id,
     subjectName: subject.name,
     subjectKind: "fighter",
