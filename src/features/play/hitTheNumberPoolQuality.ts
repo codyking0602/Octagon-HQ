@@ -15,11 +15,11 @@ import {
 export const HIT_THE_NUMBER_RANDOM_POOL_QUALITY = {
   candidateAttempts: 64,
   minimumLegalSelections: 6,
-  goodUnderMinScore: 90,
-  badUnderMaxScore: 75,
-  meaningfulBustMaxScore: 40,
-  midScoreMin: 50,
-  midScoreMax: 85,
+  goodUnderMinScore: 97,
+  badUnderMaxScore: 95,
+  meaningfulBustMaxScore: 48,
+  midScoreMin: 80,
+  midScoreMax: 95,
 } as const;
 
 export interface HitTheNumberPoolQualityResult {
