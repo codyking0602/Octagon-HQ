@@ -24,6 +24,7 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
     const universe = getUfcWhoAmIUniverse();
     const candidateById = new Map(universe.candidates.map((candidate) => [candidate.id, candidate]));
     const report: Array<Record<string, unknown>> = [];
+    const replayGaps: Array<Record<string, unknown>> = [];
     let nonForcedGiveawayBoards = 0;
     let totalBoards = 0;
 
@@ -73,18 +74,15 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
         maxRotatedFromFirst = Math.max(maxRotatedFromFirst, WHO_AM_I_CLUE_LIMIT - sharedWithFirst);
       }
 
-      expect(
-        surfaced.size,
-        `${subjectId} should surface at least 12 playable clues across replay seeds`,
-      ).toBeGreaterThanOrEqual(12);
-      expect(
-        maxRotatedFromFirst,
-        `${subjectId} should be able to rotate at least two clues between replays`,
-      ).toBeGreaterThanOrEqual(2);
-      expect(
-        sequenceKeys.size,
-        `${subjectId} should have multiple legitimate replay boards`,
-      ).toBeGreaterThanOrEqual(4);
+      if (surfaced.size < 12 || maxRotatedFromFirst < 2 || sequenceKeys.size < 4) {
+        replayGaps.push({
+          id: subjectId,
+          candidatePool: candidate!.clues.length,
+          surfacedAcross64: surfaced.size,
+          distinctBoards: sequenceKeys.size,
+          maxRotatedFromFirst,
+        });
+      }
 
       report.push({
         id: subjectId,
@@ -96,6 +94,8 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
     }
 
     expect(nonForcedGiveawayBoards).toBeGreaterThan(0);
+    console.info("UFC_WHO_AM_I_REPLAY_GAPS", JSON.stringify(replayGaps));
+    expect(replayGaps).toEqual([]);
     console.info(
       "UFC Who Am I full-100 calibration",
       JSON.stringify({ report, nonForcedGiveawayBoards, totalBoards }),
