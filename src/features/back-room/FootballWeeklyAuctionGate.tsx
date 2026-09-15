@@ -29,7 +29,13 @@ function TeamMark({ identity, school }: { identity: FootballWeeklyAuctionTeamIde
   );
 }
 
-function rankedResume(resume: string) {
+const CURRENT_BOARD_FINAL_AP_RANKS: Readonly<Record<string, number>> = Object.freeze({
+  "cfb-best-alabama-2009": 1,
+  "cfb-best-lsu-2011": 2,
+  "cfb-best-auburn-2013": 2,
+});
+
+function rankedResume(seasonReference: string, resume: string) {
   const explicitRank = resume.match(/(?:^| · )No\. (\d+) Final AP(?: · |$)/);
   if (explicitRank) {
     const rank = explicitRank[1];
@@ -38,9 +44,8 @@ function rankedResume(resume: string) {
       .replace(`No. ${rank} Final AP · `, "");
     return `#${rank} · ${cleaned}`;
   }
-  if (resume.includes("National Champion")) return `#1 · ${resume}`;
-  if (resume.includes("National Runner-Up")) return `#2 · ${resume}`;
-  return resume;
+  const rank = CURRENT_BOARD_FINAL_AP_RANKS[seasonReference];
+  return rank ? `#${rank} · ${resume}` : resume;
 }
 
 function RulesCover({ onStart }: { onStart: () => void }) {
@@ -116,7 +121,7 @@ function TeamCard({
         <TeamMark identity={identity} school={team.school} />
         <div>
           <strong>{team.school} <span>· {team.season_year}</span></strong>
-          <small>{rankedResume(identity.resume)}</small>
+          <small>{rankedResume(team.season_reference, identity.resume)}</small>
           <a href={identity.sportsReferenceUrl} target="_blank" rel="noopener noreferrer">View season ↗</a>
         </div>
       </div>
