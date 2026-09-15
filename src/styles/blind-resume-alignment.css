@@ -361,8 +361,10 @@
   width: 100%;
   height: clamp(112px, 31vw, 142px);
   margin-bottom: 4px;
+  border: 1px solid var(--football-logo-backplate-border, rgba(74, 63, 49, .22));
   border-radius: 14px;
-  background: #202126;
+  background: var(--football-logo-backplate, #E7E1D7);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
 }
 
 .football-today-page .football-blind-resume-logo img {
