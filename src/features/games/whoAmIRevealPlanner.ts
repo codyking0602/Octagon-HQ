@@ -83,16 +83,27 @@ function revealOrder(left: RankedClue, right: RankedClue) {
   return left.index - right.index;
 }
 
+function isGenericCareerGames(clue: WhoAmIClue) {
+  return /fact:(?:nfl|cfb)-career-games$/.test(clue.id);
+}
+
+function eligibleRevealPool(clues: readonly WhoAmIClue[], limit: number) {
+  if (clues.length <= 12) return clues;
+  const withoutGenericCareerGames = clues.filter((clue) => !isGenericCareerGames(clue));
+  return withoutGenericCareerGames.length >= limit ? withoutGenericCareerGames : clues;
+}
+
 export function assembleWhoAmIRevealClues(
   clues: readonly WhoAmIClue[],
   limit: number,
   random: () => number = () => 0.5,
 ) {
-  if (limit !== 10) return assembleWhoAmIClues(clues, limit, random);
+  const eligibleClues = eligibleRevealPool(clues, limit);
+  if (limit !== 10) return assembleWhoAmIClues(eligibleClues, limit, random);
 
   const shortlist = assembleWhoAmIClues(
-    clues,
-    Math.min(clues.length, limit + REVEAL_SHORTLIST_EXTRA),
+    eligibleClues,
+    Math.min(eligibleClues.length, limit + REVEAL_SHORTLIST_EXTRA),
     random,
   );
 
@@ -111,7 +122,7 @@ export function assembleWhoAmIRevealClues(
     || strongCount < REVEAL_TARGETS.strong
     || latePool.length < REVEAL_TARGETS.strong + REVEAL_TARGETS.final
   ) {
-    return assembleWhoAmIClues(clues, limit, random);
+    return assembleWhoAmIClues(eligibleClues, limit, random);
   }
 
   const rankedLate = ranked(latePool, random).sort(qualityFirst);
@@ -131,7 +142,7 @@ export function assembleWhoAmIRevealClues(
   }
 
   if (final.length < REVEAL_TARGETS.final) {
-    return assembleWhoAmIClues(clues, limit, random);
+    return assembleWhoAmIClues(eligibleClues, limit, random);
   }
 
   const finalIds = new Set(final.map((entry) => entry.value.id));
@@ -140,7 +151,7 @@ export function assembleWhoAmIRevealClues(
     .slice(0, REVEAL_TARGETS.strong);
 
   if (coreStrong.length < REVEAL_TARGETS.strong) {
-    return assembleWhoAmIClues(clues, limit, random);
+    return assembleWhoAmIClues(eligibleClues, limit, random);
   }
 
   const orderedStrong = [...coreStrong].sort(revealOrder).map((entry) => entry.value);
