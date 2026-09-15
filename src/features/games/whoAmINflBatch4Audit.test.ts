@@ -23,6 +23,19 @@ describe("NFL Who Am I batch 4 discovery", () => {
     }))));
 
     const candidates = new Map(getFootballWhoAmIUniverse("NFL").candidates.map((candidate) => [candidate.id, candidate]));
+    for (const subject of subjects) {
+      const candidate = candidates.get(subject.id)!;
+      console.info("NFL WHO AM I BATCH 4 CLUES", subject.id, JSON.stringify(candidate.clues.map((clue) => ({
+        id: clue.id,
+        conceptId: clue.conceptId,
+        text: clue.text,
+        band: clue.band,
+        facet: whoAmIClueFacet(clue),
+        selectionClass: whoAmIClueSelectionClass(clue),
+        identityKnowledge: Boolean(clue.identityKnowledge),
+        sourceFactId: clue.sourceFactId,
+      }))));
+    }
     const report = subjects.map((subject) => {
       const candidate = candidates.get(subject.id)!;
       const sequences = Array.from({ length: 64 }, (_value, index) => whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1)));
