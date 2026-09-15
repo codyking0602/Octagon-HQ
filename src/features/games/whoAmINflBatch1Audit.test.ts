@@ -49,6 +49,42 @@ describe("NFL Who Am I batch 1 calibration", () => {
     expect(ids).toEqual(NFL_WHO_AM_I_BATCH_1_SUBJECT_IDS);
   });
 
+  it("prints compact replay diagnostics for the full batch before enforcing hard gates", () => {
+    const universe = getFootballWhoAmIUniverse("NFL");
+    const candidates = new Map(universe.candidates.map((candidate) => [candidate.id, candidate]));
+    const report = NFL_WHO_AM_I_BATCH_1_SUBJECT_IDS.map((subjectId) => {
+      const candidate = candidates.get(subjectId)!;
+      const sequences = Array.from({ length: 64 }, (_value, index) => (
+        whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
+      ));
+      const first = new Set(sequences[0]!.map((clue) => clue.id));
+      const surfaced = new Set(sequences.flatMap((sequence) => sequence.map((clue) => clue.id)));
+      return {
+        id: subjectId,
+        pool: candidate.clues.length,
+        surfaced: surfaced.size,
+        boards: new Set(sequences.map((sequence) => sequence.map((clue) => clue.id).join("|"))).size,
+        rotated: Math.max(...sequences.map((sequence) => sequence.filter((clue) => !first.has(clue.id)).length)),
+        minSports: Math.min(...sequences.map((sequence) => (
+          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length
+        ))),
+        maxDeep: Math.max(...sequences.map((sequence) => (
+          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography").length
+        ))),
+        maxColor: Math.max(...sequences.map((sequence) => (
+          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length
+        ))),
+        maxRelationships: Math.max(...sequences.map((sequence) => (
+          sequence.filter((clue) => whoAmIClueFacet(clue) === "relationships").length
+        ))),
+        minFinalStrong: Math.min(...sequences.map((sequence) => (
+          sequence.slice(-2).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length
+        ))),
+      };
+    });
+    console.info("NFL WHO AM I BATCH 1 PREFLIGHT", JSON.stringify(report));
+  }, 150_000);
+
   it("keeps every batch-one pool sports-first, replayable, and free of biography filler", () => {
     const universe = getFootballWhoAmIUniverse("NFL");
     const candidates = new Map(universe.candidates.map((candidate) => [candidate.id, candidate]));
