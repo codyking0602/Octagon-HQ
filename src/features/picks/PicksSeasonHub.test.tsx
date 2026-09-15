@@ -123,13 +123,15 @@ describe("PicksSeasonHub", () => {
 
   it("opens the standings tab directly from a Home standings link", () => {
     render(
-      <MemoryRouter initialEntries={["/picks?view=standings#picks-season-standings"]}>
+      <MemoryRouter initialEntries={["/picks?view=standings#picks-season-leaderboard"]}>
         <PicksSeasonHub history={history} loading={false} />
       </MemoryRouter>,
     );
 
     const hub = document.querySelector("#picks-season-standings");
+    const leaderboard = document.querySelector("#picks-season-leaderboard");
     expect(hub).not.toBeNull();
+    expect(leaderboard).not.toBeNull();
     expect(screen.getByText("STANDINGS & EVENTS").closest("details")).toHaveAttribute("open");
     expect(screen.getByRole("tab", { name: "STANDINGS" })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByText("Season leaderboard")).toBeInTheDocument();
