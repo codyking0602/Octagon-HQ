@@ -39,17 +39,6 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
       const sequenceKeys = new Set<string>();
       let maxRotatedFromFirst = 0;
 
-      if (subjectId === "ufc:demetrious-johnson") {
-        console.info(
-          "DEMETRIOUS_REVEAL_DIAGNOSTIC",
-          JSON.stringify(sequences.map((sequence, index) => ({
-            seed: index + 1,
-            ids: sequence.map((clue) => clue.id),
-            bands: sequence.map((clue) => clue.band),
-          }))),
-        );
-      }
-
       const firstIds = new Set(sequences[0]!.map((clue) => clue.id));
 
       for (const sequence of sequences) {
