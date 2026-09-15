@@ -1467,6 +1467,111 @@ const batch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
 ]);
 
+
+function batch3ReplayClue(
+  id: string,
+  text: string,
+  band: WhoAmIClue["band"] = "helpful",
+  facet: WhoAmIClue["facet"] = "identity",
+  revealPriority = 18,
+): WhoAmIClue {
+  return { id: "curated3-replay:" + id, conceptId: "curated3-replay:" + id, text, band, facet, revealPriority };
+}
+
+const batch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
+  ["nfl-chuck-bednarik", [
+    batch3ReplayClue("bednarik-two-way", "Center and linebacker were both defining positions in my Eagles career.", "helpful", "role"),
+    batch3ReplayClue("bednarik-hof", "I was elected to the Pro Football Hall of Fame in 1967.", "strong", "accomplishments"),
+  ]],
+  ["nfl-joe-thomas", [
+    batch3ReplayClue("thomas-left-tackle", "Left tackle was my position throughout my Cleveland career.", "helpful", "role"),
+    batch3ReplayClue("thomas-snap-ending", "My record run of consecutive snaps ended only when a triceps injury stopped my 2017 season.", "helpful", "accomplishments"),
+  ]],
+  ["nfl-orlando-pace", [
+    batch3ReplayClue("pace-left-tackle", "Left tackle was my signature NFL position.", "helpful", "role"),
+    batch3ReplayClue("pace-rams-bears", "I spent 12 seasons with the Rams before finishing my career with Chicago.", "helpful", "career-path"),
+    batch3ReplayClue("pace-76", "No. 76 became my signature number with the Rams.", "helpful", "identity"),
+  ]],
+  ["bruce-smith", [
+    batch3ReplayClue("bruce-end", "Defensive end was my primary NFL position.", "helpful", "role"),
+    batch3ReplayClue("bruce-buffalo-washington", "I spent 15 seasons with Buffalo before finishing my career in Washington.", "helpful", "career-path"),
+    batch3ReplayClue("bruce-hof", "I was elected to the Pro Football Hall of Fame in 2009.", "strong", "accomplishments"),
+  ]],
+  ["nfl-alex-karras", [
+    batch3ReplayClue("karras-dt", "Defensive tackle was my position in Detroit.", "helpful", "role"),
+    batch3ReplayClue("karras-71", "I wore No. 71 for the Lions.", "helpful", "identity"),
+    batch3ReplayClue("karras-hof", "I was elected to the Pro Football Hall of Fame in 2020.", "strong", "accomplishments"),
+  ]],
+  ["nfl-bob-lilly", [
+    batch3ReplayClue("lilly-dt", "Defensive tackle was my defining position in Dallas.", "helpful", "role"),
+    batch3ReplayClue("lilly-eleven-probowls", "I was selected to 11 Pro Bowls.", "strong", "accomplishments"),
+    batch3ReplayClue("lilly-hof", "I was elected to the Pro Football Hall of Fame in 1980.", "strong", "accomplishments"),
+  ]],
+  ["nfl-bryant-young", [
+    batch3ReplayClue("young-dt", "Defensive tackle was my primary position in San Francisco.", "helpful", "role"),
+    batch3ReplayClue("young-97", "I wore No. 97 throughout my 49ers career.", "helpful", "identity"),
+    batch3ReplayClue("young-ap1", "I earned first-team All-Pro honors in 1996.", "strong", "accomplishments"),
+  ]],
+  ["nfl-carl-eller", [
+    batch3ReplayClue("eller-end", "Defensive end was my position on Minnesota's front.", "helpful", "role"),
+    batch3ReplayClue("eller-81", "I wore No. 81 for the Vikings.", "helpful", "identity"),
+    batch3ReplayClue("eller-sixth", "Minnesota selected me No. 6 overall in the 1964 NFL Draft.", "strong", "career-path"),
+  ]],
+  ["nfl-carlos-dunlap", [
+    batch3ReplayClue("dunlap-end", "Defensive end was my primary NFL position.", "helpful", "role"),
+    batch3ReplayClue("dunlap-96", "No. 96 became my signature number in Cincinnati.", "helpful", "identity"),
+    batch3ReplayClue("dunlap-bcs-mvp", "I was the defensive MVP of Florida's BCS National Championship Game win for the 2008 season.", "strong", "accomplishments"),
+  ]],
+  ["nfl-chandler-jones", [
+    batch3ReplayClue("chandler-edge", "I built my NFL career as an edge rusher and defensive end.", "helpful", "role"),
+    batch3ReplayClue("chandler-55", "No. 55 became my signature number in Arizona.", "helpful", "identity"),
+    batch3ReplayClue("chandler-ap1", "I earned first-team All-Pro honors in 2017.", "strong", "accomplishments"),
+  ]],
+  ["nfl-charles-haley", [
+    batch3ReplayClue("haley-1992-trade", "A 1992 trade sent me from San Francisco to Dallas.", "helpful", "career-path"),
+    batch3ReplayClue("haley-hof", "I was elected to the Pro Football Hall of Fame in 2015.", "strong", "accomplishments"),
+    batch3ReplayClue("haley-edge-role", "I moved between outside linebacker and defensive end as a pass rusher.", "helpful", "role"),
+  ]],
+  ["nfl-chris-doleman", [
+    batch3ReplayClue("doleman-end", "Defensive end was my primary NFL position.", "helpful", "role"),
+    batch3ReplayClue("doleman-minnesota", "Most of my NFL career came with the Minnesota Vikings.", "helpful", "career-path"),
+    batch3ReplayClue("doleman-hof", "I was elected to the Pro Football Hall of Fame in 2012.", "strong", "accomplishments"),
+  ]],
+  ["nfl-elvin-bethea", [
+    batch3ReplayClue("bethea-65", "I wore No. 65 for the Houston Oilers.", "helpful", "identity"),
+    batch3ReplayClue("bethea-third-round", "Houston selected me in the third round of the 1968 draft.", "strong", "career-path"),
+    batch3ReplayClue("bethea-end", "Defensive end became my NFL home after I entered the league with offensive-line experience.", "helpful", "role"),
+  ]],
+  ["nfl-elvis-dumervil", [
+    batch3ReplayClue("dumervil-six-sacks", "At Louisville I tied the NCAA single-game record with six sacks against Kentucky in 2005.", "helpful", "production"),
+    batch3ReplayClue("dumervil-big-east", "I was the Big East Defensive Player of the Year in 2005.", "strong", "accomplishments"),
+    batch3ReplayClue("dumervil-edge", "I made my NFL living as an undersized edge rusher.", "helpful", "role"),
+  ]],
+  ["nfl-fred-dean", [
+    batch3ReplayClue("dean-second-round", "San Diego selected me in the second round of the 1975 NFL Draft.", "strong", "career-path"),
+    batch3ReplayClue("dean-hof", "I was elected to the Pro Football Hall of Fame in 2008.", "strong", "accomplishments"),
+    batch3ReplayClue("dean-end", "Defensive end became my NFL position after I had played linebacker in college.", "helpful", "role"),
+  ]],
+  ["nfl-andre-tippett", [
+    batch3ReplayClue("tippett-olb", "Outside linebacker was my position in New England.", "helpful", "role"),
+    batch3ReplayClue("tippett-56", "I wore No. 56 for the Patriots.", "helpful", "identity"),
+    batch3ReplayClue("tippett-hof", "I was elected to the Pro Football Hall of Fame in 2008.", "strong", "accomplishments"),
+  ]],
+  ["nfl-bobby-bell", [
+    batch3ReplayClue("bell-olb", "Outside linebacker became my defining pro position in Kansas City.", "helpful", "role"),
+    batch3ReplayClue("bell-78", "I wore No. 78 for the Chiefs.", "helpful", "identity"),
+    batch3ReplayClue("bell-outland", "I won the Outland Trophy at Minnesota in 1962.", "strong", "accomplishments"),
+    batch3ReplayClue("bell-hof", "I was elected to the Pro Football Hall of Fame in 1983.", "strong", "accomplishments"),
+    batch3ReplayClue("bell-super-bowl-i", "I also started for Kansas City in the first Super Bowl.", "strong", "accomplishments"),
+  ]],
+  ["nfl-cameron-wake", [
+    batch3ReplayClue("wake-undrafted", "I went undrafted in 2005 before eventually earning my NFL breakthrough.", "helpful", "career-path"),
+    batch3ReplayClue("wake-91", "I wore No. 91 for Miami.", "helpful", "identity"),
+    batch3ReplayClue("wake-ap1", "I earned first-team All-Pro honors in 2012.", "strong", "accomplishments"),
+    batch3ReplayClue("wake-cfl-awards", "Before returning to the NFL, I twice won the CFL's Most Outstanding Defensive Player award.", "strong", "accomplishments"),
+  ]],
+]);
+
 function batch3ShouldSuppressMetric(subject: FootballSubjectProfile, clue: WhoAmIClue) {
   if (!clue.id.startsWith("fact:nfl-")) return false;
   if (clue.id === "fact:nfl-career-games" || clue.id === "fact:nfl-career-targets") return true;
@@ -1484,6 +1589,7 @@ function batch3ShouldSuppressMetric(subject: FootballSubjectProfile, clue: WhoAm
 function batch3ClueQualityScore(subject: FootballSubjectProfile, clue: WhoAmIClue) {
   let score = clueQualityScore(subject, clue);
   if (clue.id.startsWith("curated3:")) score += 55;
+  if (clue.id.startsWith("curated3-replay:")) score += 85;
   if (clue.id === "position" || clue.id === "era") score += 20;
   return score;
 }
@@ -1530,6 +1636,7 @@ function curateNflBatch3Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(batch3SupplementalClues.get(subject.id) ?? []));
+  curated.push(...(batch3ReplayDepthClues.get(subject.id) ?? []));
   return trimNflBatch3Pool(subject, curated);
 }
 
