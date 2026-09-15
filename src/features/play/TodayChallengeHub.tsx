@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "./DailyChallengeStandings";
@@ -193,6 +193,13 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
   );
   const focusChampionship = typeof window !== "undefined"
     && new URLSearchParams(window.location.search).get("standings") === "me";
+
+  useEffect(() => {
+    if (!focusChampionship || !overview.standings) return;
+    window.requestAnimationFrame(() => {
+      document.getElementById("championship-standings")?.scrollIntoView?.({ block: "start" });
+    });
+  }, [focusChampionship, overview.standings]);
 
   if (!signedIn) {
     return (
