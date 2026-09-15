@@ -499,6 +499,38 @@ export function hitTheNumberScore({
     : Math.max(50, Math.min(99, roundedScore));
 }
 
+/**
+ * Board curation keeps the established per-pick spread heuristic so changing
+ * player-facing score calibration does not silently change which boards can
+ * be generated. This value is never shown to players or persisted as a score.
+ */
+export function hitTheNumberBoardQualityScore({
+  status,
+  target,
+  distance,
+  pickCount,
+}: {
+  status: HitTheNumberResultStatus;
+  target: number;
+  distance: number;
+  pickCount: number;
+}) {
+  if (!Number.isFinite(target) || target <= 0) throw new Error("Hit the Number quality target must be positive.");
+  validatePickCount(pickCount);
+  if (!Number.isFinite(distance) || distance < 0) throw new Error("Hit the Number quality distance cannot be negative.");
+  if (status === "perfect") return 100;
+
+  const averageContribution = target / pickCount;
+  const rawScore = status === "bust"
+    ? 50 - (50 * distance / averageContribution)
+    : 100 - (50 * distance / averageContribution);
+  const roundedScore = Math.round(rawScore);
+
+  return status === "bust"
+    ? Math.max(0, Math.min(49, roundedScore))
+    : Math.max(50, Math.min(99, roundedScore));
+}
+
 export function gradeHitTheNumberSelection(
   setup: HitTheNumberPublicSetup,
   selectedFighterIds: readonly string[],
