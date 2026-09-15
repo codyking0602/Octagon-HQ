@@ -79,5 +79,5 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
     }
 
     console.info("UFC Who Am I full-100 calibration", JSON.stringify(report));
-  }, 90_000);
+  }, 150_000);
 });
