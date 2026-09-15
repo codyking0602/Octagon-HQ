@@ -106,5 +106,8 @@ describe("Football Weekly Auction live contract", () => {
     expect(footballWeeklyAuctionTeamIdentity("weekly-cfb-fresno-state-2013", "Fresno State", 2013).finalApRank).toBeNull();
     expect(styles).toContain("rgba(var(--weekly-team-rgb), .17)");
     expect(styles).toContain(".football-weekly-auction__result-team::before");
+    expect(styles).toContain("align-self: start");
+    expect(styles).toContain("display: block");
+    expect(gate).toContain("bonus Daily Challenge win");
   });
 });
