@@ -92,6 +92,12 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
       clue("record-eleven-title-defenses", "I set a UFC record with 11 consecutive successful title defenses.", "giveaway"),
     );
   }
+  if (subject.id === "ufc:max-holloway") {
+    clues.push(
+      clue("aldo-twice-in-2017", "I stopped Jose Aldo twice in 2017, both times by third-round TKO.", "strong"),
+      clue("ufc-300-bmf-knockout", "I won the BMF title by knocking out Justin Gaethje at 4:59 of Round 5 at UFC 300.", "giveaway"),
+    );
+  }
   if (koWins.length > submissionWins.length && koWins.length >= 3) clues.push(clue("finish-style", "My UFC wins leaned much more toward knockouts than submissions.", "helpful"));
   if (submissionWins.length > koWins.length && submissionWins.length >= 3) clues.push(clue("finish-style", "My UFC wins leaned more toward submissions than knockouts.", "helpful"));
 
