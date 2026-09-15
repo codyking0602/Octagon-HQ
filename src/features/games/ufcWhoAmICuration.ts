@@ -178,7 +178,7 @@ const retainedConceptsBySubject = new Map<string, ReadonlySet<string>>([
   ["ufc:kevin-holland", new Set(["kung-fu-humbling-start-age-sixteen", "trailblazer-nickname-school-name", "dual-black-belts-kungfu-bjj", "big-mouth-midfight-talking-persona"])],
   ["ufc:gilbert-burns", new Set(["durinho-nickname-brother-diminutive", "bjj-world-title-before-mma", "belfort-cornerman-hooft-connection"])],
   ["ufc:nick-diaz", new Set(["stockton-slap-grandfather-origin", "offroad-triathlon-passion"])],
-  ["ufc:anderson-silva", new Set(["spider-man-comic-collector", "royce-gracie-ufc1-inspiration"])],
+  ["ufc:anderson-silva", new Set(["royce-gracie-ufc1-inspiration"])],
   ["ufc:alexander-volkanovski", new Set(["alexander-the-great-nickname-heritage", "national-level-wrestling-background", "warilla-gorillas-rugby-league", "rugby-conditioning-led-to-mma-coach"])],
   ["ufc:kamaru-usman", new Set(["marty-wrestling-nickname", "olympic-wrestling-dream", "rashad-evans-mma-bridge"])],
   ["ufc:jose-aldo", new Set(["childhood-cheek-scar", "soccer-first-ambition", "manaus-to-rio-leap", "capoeira-before-jiu-jitsu"])],
@@ -214,6 +214,8 @@ const retainedConceptsBySubject = new Map<string, ReadonlySet<string>>([
 ]);
 
 const identityFacetOverrides = new Map<string, "style" | "career-path">([
+  ["ufc:nick-diaz:stockton-slap-grandfather-origin", "style"],
+  ["ufc:anderson-silva:royce-gracie-ufc1-inspiration", "career-path"],
   ["ufc:royce-gracie:adult-sparring-by-fourteen", "style"],
   ["ufc:royce-gracie:moved-to-rorion-california-garage", "career-path"],
 ]);
