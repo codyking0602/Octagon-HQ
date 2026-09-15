@@ -41,9 +41,15 @@ const json = (body: unknown, status = 200) => new Response(JSON.stringify(body),
   },
 });
 
-const safeError = (status: number, code: string, message: string) => json({
+const safeError = (
+  status: number,
+  code: string,
+  message: string,
+  details: Record<string, unknown> = {},
+) => json({
   code,
   message,
+  ...details,
   deployment_sha: DEPLOYED_SOURCE_SHA,
 }, status);
 
@@ -660,6 +666,7 @@ Deno.serve(async (request) => {
     });
 
     if (body.sport === "football") {
+      const materialized = await materializeFootballToday(admin);
       const weeklyGate = await admin.rpc("football_weekly_auction_daily_gate", {
         p_profile_id: profileId,
       });
@@ -672,10 +679,13 @@ Deno.serve(async (request) => {
           409,
           "WEEKLY_AUCTION_REQUIRED",
           "Submit today’s Weekly Auction bids before starting Football Daily.",
+          {
+            central_day: materialized.centralDay,
+            schedule_version: materialized.scheduleVersion,
+            game_type: materialized.gameType,
+          },
         );
       }
-
-      const materialized = await materializeFootballToday(admin);
       let context = await getContext(admin, materialized.dailyChallengeId, profileId);
       context = await finalizePending(userClient, admin, context, profileId);
 
