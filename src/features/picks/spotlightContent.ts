@@ -269,6 +269,86 @@ function matchupEditorial(red: SpotlightStatsFighter, blue: SpotlightStatsFighte
     };
   }
 
+  if (slugs.has("joshua-van") && slugs.has("alexandre-pantoja")) {
+    return {
+      preview: "Joshua Van brings relentless combination volume into a rematch with Alexandre Pantoja’s pressure grappling. Van wants long exchanges and clean exits; Pantoja’s clearest path is forcing clinches, takedowns, and back-control sequences.",
+      edgesBySlug: new Map([
+        ["joshua-van", ["Elite combination volume", "Five-round pace", "Strong takedown defense"]],
+        ["alexandre-pantoja", ["Championship grappling", "Back-control and submissions", "Pressure-fighting experience"]],
+      ]),
+    };
+  }
+
+  if (slugs.has("arman-tsarukyan") && slugs.has("mauricio-ruffy")) {
+    return {
+      preview: "Arman Tsarukyan can turn a striking fight into repeated wrestling and control exchanges. Mauricio Ruffy’s threat is keeping space for his reach, accuracy, and knockout power; over five rounds, Ruffy must make every entry expensive.",
+      edgesBySlug: new Map([
+        ["arman-tsarukyan", ["Chain wrestling", "Damage avoidance", "Five-round control game"]],
+        ["mauricio-ruffy", ["Long-range striking", "Knockout power", "Takedown resistance"]],
+      ]),
+    };
+  }
+
+  if (slugs.has("patricio-pitbull") && slugs.has("dooho-choi")) {
+    return {
+      preview: "Patricio Pitbull brings veteran counter craft, power, and a layered grappling threat against Dooho Choi’s clean high-output boxing. Choi can win minutes behind combinations; Pitbull can change the fight with counters, takedowns, or front-headlock attacks.",
+      edgesBySlug: new Map([
+        ["patricio-pitbull", ["Veteran counter craft", "Submission threat", "Wrestling defense"]],
+        ["dooho-choi", ["High-output boxing", "Reach and range control", "Recent finishing momentum"]],
+      ]),
+    };
+  }
+
+  if (slugs.has("alonzo-menifield") && slugs.has("iwo-baraniewski")) {
+    return {
+      preview: "Alonzo Menifield is the proven veteran with power and strong takedown defense. Unbeaten Iwo Baraniewski is an early-round accelerator; the key is whether Menifield can make the fight structured before Baraniewski’s blitz creates damage.",
+      edgesBySlug: new Map([
+        ["alonzo-menifield", ["UFC veteran experience", "Power countering", "Takedown resistance"]],
+        ["iwo-baraniewski", ["Unbeaten finishing record", "Explosive early pace", "Judo and grappling base"]],
+      ]),
+    };
+  }
+
+  if (slugs.has("gable-steveson") && slugs.has("sean-sharaf")) {
+    return {
+      preview: "Gable Steveson’s Olympic wrestling is the matchup’s defining weapon, but his heavyweight hands have been fast and damaging. Sean Sharaf is the taller, longer puncher; he needs to punish entries before Steveson can turn exchanges into clinch control.",
+      edgesBySlug: new Map([
+        ["gable-steveson", ["Olympic wrestling", "Explosive athleticism", "Fast finishing power"]],
+        ["sean-sharaf", ["Height and reach", "Heavyweight knockout power", "High striking output"]],
+      ]),
+    };
+  }
+
+  if (slugs.has("marlon-vera") && slugs.has("charles-jourdain")) {
+    return {
+      preview: "Charles Jourdain brings the higher striking pace and cleaner defensive numbers, while Marlon Vera remains dangerous deep into fights. Jourdain wants movement and combinations; Vera can flip rounds with body work, leg kicks, and sudden power.",
+      edgesBySlug: new Map([
+        ["marlon-vera", ["Fight-changing power", "Deep-round experience", "Submission threat"]],
+        ["charles-jourdain", ["Higher striking volume", "Defensive striking", "Switch-stance movement"]],
+      ]),
+    };
+  }
+
+  if (slugs.has("tai-tuivasa") && slugs.has("robelis-despaigne")) {
+    return {
+      preview: "Tai Tuivasa has the UFC experience and proven pocket power, but Robelis Despaigne owns a massive reach advantage and dangerous straight-line offense. Tuivasa needs to get inside the long weapons; Despaigne wants clean space and first-contact damage.",
+      edgesBySlug: new Map([
+        ["tai-tuivasa", ["UFC veteran experience", "Pocket knockout power", "Leg-kick threat"]],
+        ["robelis-despaigne", ["Massive reach advantage", "Long-range power", "Efficient striking"]],
+      ]),
+    };
+  }
+
+  if (slugs.has("michael-aswell-jr") && slugs.has("joosang-yoo")) {
+    return {
+      preview: "Michael Aswell Jr. pushes one of the card’s fastest striking paces, while JooSang Yoo is the more accurate counter striker with a reach edge. Aswell wants sustained boxing volume; Yoo’s opportunity is making that pressure pay with cleaner counters.",
+      edgesBySlug: new Map([
+        ["michael-aswell-jr", ["Relentless striking pace", "Pressure boxing", "Battle-tested volume"]],
+        ["joosang-yoo", ["Accurate counter striking", "Reach and range control", "Counterpunching power"]],
+      ]),
+    };
+  }
+
   return null;
 }
 
