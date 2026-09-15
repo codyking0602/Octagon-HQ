@@ -19,6 +19,12 @@ describe("Football powder-blue brand", () => {
     expect(sportContextCss).toContain("background: var(--hq-context-accent);");
   });
 
+  it("keeps Football HQ logos full color on darker team-tinted pills", () => {
+    expect(homeFootballCss).toContain("background: color-mix(in srgb, var(--team-color) 34%, #111415);");
+    expect(homeFootballCss).toContain("filter: none;");
+    expect(homeFootballCss).not.toContain("filter: brightness(0) invert(1);");
+  });
+
   it("does not restore the retired dark Home-only Football accent", () => {
     expect(homeSportCss).not.toContain("--home-football-blue: #1F4E79;");
     expect(homeChallengesCss).not.toContain("#1F4E79");
