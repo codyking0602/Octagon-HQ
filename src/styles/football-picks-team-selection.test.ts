@@ -106,6 +106,8 @@ describe("Football Picks team-aware selection styling", () => {
   it("keeps logos protected while making the selected edge unmistakable", () => {
     expect(css).toContain(".football-pick-team:not(.is-selected) .football-pick-team-mark { opacity: .78; }");
     expect(css).toContain(".football-pick-team.is-selected .football-pick-team-mark");
+    expect(css).toContain("background: var(--football-logo-backplate, #E7E1D7);");
+    expect(css).not.toContain("background: #202426;");
     expect(css).toContain("inset 3px 0");
     expect(css).toContain("inset -3px 0");
   });
