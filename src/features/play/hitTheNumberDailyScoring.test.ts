@@ -32,9 +32,8 @@ describe("Hit the Number authoritative Daily Bob Barker scoring", () => {
     expect(targetPercentageMigration).toContain(
       "least(99, round(100 - (50 * v_hit_distance / v_hit_target))::integer)",
     );
-    expect(targetPercentageMigration).not.toContain(
-      "v_hit_distance / (v_hit_target / v_pick_count)",
-    );
+    expect(targetPercentageMigration).toContain("v_expected text := $old$");
+    expect(targetPercentageMigration).toContain("v_replacement text := $new$");
   });
 
   it("regrades the affected September 15 UFC Daily attempts in the same migration", () => {
