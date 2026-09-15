@@ -9,10 +9,15 @@ import {
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
 import {
+  createFootballWeeklyAuctionRepository,
+  type FootballWeeklyAuctionState,
+} from "../play/footballWeeklyAuctionRepository";
+import {
   FootballFindLeaderPresentation,
   FootballFindLeaderVisual,
 } from "./FootballFindLeaderPresentation";
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
+import { FootballWeeklyAuctionGate } from "./FootballWeeklyAuctionGate";
 import {
   FootballHitTheNumberPresentation,
   footballHitNumberTheme,
@@ -489,31 +494,127 @@ export default function FootballTodayChallengePage() {
   const identity = useIdentity();
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const repository = useMemo(() => createTodayChallengeRepository(undefined, "football"), []);
+  const weeklyRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const [projection, setProjection] = useState<TodayChallengeProjection | null>(null);
+  const [weeklyState, setWeeklyState] = useState<FootballWeeklyAuctionState | null>(null);
+  const [showWeeklyAuction, setShowWeeklyAuction] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [weeklyBusy, setWeeklyBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [weeklyError, setWeeklyError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
+
+  async function loadDaily() {
+    if (!repository) {
+      setError("Football Today’s Challenge is unavailable on this build.");
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    try {
+      setProjection(await repository.loadToday());
+      setShowWeeklyAuction(false);
+    } catch (reason) {
+      if (reason instanceof TodayChallengeRepositoryError && reason.code === "WEEKLY_AUCTION_REQUIRED") {
+        if (weeklyRepository) {
+          const nextWeekly = await weeklyRepository.load();
+          setWeeklyState(nextWeekly);
+          setShowWeeklyAuction(nextWeekly.available);
+        }
+      } else {
+        setError(reason instanceof Error ? reason.message : "Could not load today’s football board.");
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
 
   useEffect(() => {
     let active = true;
     if (!signedIn) {
       setProjection(null);
+      setWeeklyState(null);
+      setShowWeeklyAuction(false);
       setBusy(false);
+      setWeeklyBusy(false);
       setError(null);
+      setWeeklyError(null);
       return () => { active = false; };
     }
-    if (!repository) {
-      setError("Football Today’s Challenge is unavailable on this build.");
+    if (!weeklyRepository) {
+      setWeeklyError("Football Weekly Auction is unavailable on this build.");
       return () => { active = false; };
     }
-    setBusy(true);
-    setError(null);
-    repository.loadToday()
-      .then((next) => { if (active) setProjection(next); })
-      .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "Could not load today’s football board."); })
-      .finally(() => { if (active) setBusy(false); });
+
+    setWeeklyBusy(true);
+    setWeeklyError(null);
+    weeklyRepository.load()
+      .then(async (nextWeekly) => {
+        if (!active) return;
+        setWeeklyState(nextWeekly);
+        if (nextWeekly.available && (nextWeekly.previous_final || !nextWeekly.submitted_today)) {
+          setShowWeeklyAuction(true);
+          return;
+        }
+        if (!repository) {
+          setError("Football Today’s Challenge is unavailable on this build.");
+          return;
+        }
+        setBusy(true);
+        try {
+          const nextDaily = await repository.loadToday();
+          if (active) setProjection(nextDaily);
+        } catch (reason) {
+          if (!active) return;
+          if (reason instanceof TodayChallengeRepositoryError && reason.code === "WEEKLY_AUCTION_REQUIRED") {
+            const refreshed = await weeklyRepository.load();
+            if (!active) return;
+            setWeeklyState(refreshed);
+            setShowWeeklyAuction(refreshed.available);
+          } else {
+            setError(reason instanceof Error ? reason.message : "Could not load today’s football board.");
+          }
+        } finally {
+          if (active) setBusy(false);
+        }
+      })
+      .catch((reason) => {
+        if (active) setWeeklyError(reason instanceof Error ? reason.message : "Could not load Weekly Auction.");
+      })
+      .finally(() => { if (active) setWeeklyBusy(false); });
+
     return () => { active = false; };
-  }, [repository, signedIn]);
+  }, [repository, signedIn, weeklyRepository]);
+
+  async function submitWeeklyBids(bids: Record<1 | 2 | 3, number>) {
+    if (!weeklyRepository || weeklyBusy) return;
+    setWeeklyBusy(true);
+    setWeeklyError(null);
+    try {
+      const next = await weeklyRepository.submit(bids);
+      setWeeklyState(next);
+      setShowWeeklyAuction(next.available);
+    } catch (reason) {
+      setWeeklyError(reason instanceof Error ? reason.message : "Those Weekly Auction bids could not be saved.");
+    } finally {
+      setWeeklyBusy(false);
+    }
+  }
+
+  async function acknowledgeWeeklyFinal(weekStart: string) {
+    if (!weeklyRepository || weeklyBusy) return;
+    setWeeklyBusy(true);
+    setWeeklyError(null);
+    try {
+      const next = await weeklyRepository.acknowledgeFinal(weekStart);
+      setWeeklyState(next);
+      setShowWeeklyAuction(next.available);
+    } catch (reason) {
+      setWeeklyError(reason instanceof Error ? reason.message : "Weekly Auction results could not be closed.");
+    } finally {
+      setWeeklyBusy(false);
+    }
+  }
 
   async function advance(action: JsonRecord) {
     if (!repository || !projection || busy || projection.officialAttempt) return;
@@ -550,9 +651,47 @@ export default function FootballTodayChallengePage() {
     );
   }
 
-  if (!projection) {
-    return <div className="page football-today-page"><section className="football-today-shell"><p className="eyebrow">FOOTBALL HQ</p><h1>{busy ? "Building today’s board…" : "Today’s Challenge"}</h1>{error ? <p>{error}</p> : null}</section></div>;
+  if (weeklyState?.available && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today)) {
+    return (
+      <div className="page football-today-page">
+        <FootballWeeklyAuctionGate
+          state={weeklyState}
+          busy={weeklyBusy}
+          error={weeklyError}
+          forceBoard={showWeeklyAuction && weeklyState.submitted_today}
+          onSubmit={submitWeeklyBids}
+          onAcknowledgeFinal={acknowledgeWeeklyFinal}
+          onContinue={() => {
+            if (projection) {
+              setShowWeeklyAuction(false);
+            } else {
+              void loadDaily();
+            }
+          }}
+        />
+      </div>
+    );
   }
+
+  if (!projection) {
+    const loading = busy || weeklyBusy || weeklyState === null;
+    const message = weeklyError ?? error;
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell">
+          <p className="eyebrow">FOOTBALL HQ</p>
+          <h1>{loading ? "Building today’s board…" : "Today’s Challenge"}</h1>
+          {message ? <p>{message}</p> : null}
+        </section>
+      </div>
+    );
+  }
+
+  const weeklyEditControl = weeklyState?.available && weeklyState.submitted_today ? (
+    <button className="football-weekly-auction-edit" type="button" onClick={() => setShowWeeklyAuction(true)}>
+      WEEKLY AUCTION · EDIT BIDS
+    </button>
+  ) : null;
 
   const blindResume = projection.gameType === "blind_resume";
 
@@ -563,6 +702,7 @@ export default function FootballTodayChallengePage() {
 
     return (
       <div className={wavelengthClassName}>
+        {weeklyEditControl}
         {error ? <div className="football-today-error">{error}</div> : null}
         <Wavelength projection={projection} advance={advance} busy={busy} />
         {projection.officialAttempt ? (
@@ -581,6 +721,7 @@ export default function FootballTodayChallengePage() {
   if (projection.gameType === "who_am_i") {
     return (
       <div className="official-daily-page">
+        {weeklyEditControl}
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
         <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={advance} />
@@ -600,6 +741,7 @@ export default function FootballTodayChallengePage() {
   return (
     <div className="page football-today-page">
       <section className="football-today-shell">
+        {weeklyEditControl}
         {blindResume ? (
           <header className="football-today-header football-today-header--blind-resume">
             <button className="football-today-back" type="button" aria-label="Back to Football Play Hub" onClick={() => navigate("/football")}>←</button>
