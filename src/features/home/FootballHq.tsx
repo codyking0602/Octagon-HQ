@@ -23,7 +23,7 @@ export const FOOTBALL_PLAYER_SPOTLIGHTS = {
     result: "VS #6 OREGON · W 39–31",
     measurements: "6'3\" · 215 LB",
     teamColor: "#FF7300",
-    highlightUrl: "https://okstate.com/news/2026/9/12/cowboy-football-oklahoma-state-stuns-no-6-oregon-39-31",
+    highlightUrl: "https://youtu.be/Ia6UXgdSKw4?is=i2gxMRVoqonuhYtB",
   },
   nfl: {
     name: "Josh Allen",
@@ -38,7 +38,7 @@ export const FOOTBALL_PLAYER_SPOTLIGHTS = {
     result: "AT HOUSTON · W 36–31",
     measurements: "6'5\" · 237 LB",
     teamColor: "#00338D",
-    highlightUrl: "https://www.buffalobills.com/game-day/2026/reg-week1/bills-at-texans/",
+    highlightUrl: "https://youtu.be/ZeJwLzd2I4E?is=a_f7gk7JKUEYJPZs",
   },
 } as const;
 
