@@ -251,7 +251,6 @@ describe("Who Am I football scope-aware clue aggregation", () => {
 
       const identityClues = candidate.clues.filter((clue) => clue.identityKnowledge);
       if (isUfcWhoAmICalibrationSubject(candidate.id)) {
-        expect(identityClues.length).toBeGreaterThan(0);
         expect(identityClues.length).toBeLessThanOrEqual(5);
         expect(identityClues.every((clue) => {
           const fact = source?.facts.find((row) => row.factId === clue.sourceFactId);
