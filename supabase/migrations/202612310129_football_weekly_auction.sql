@@ -234,15 +234,6 @@ as $$
   select ((p_at at time zone 'America/Chicago')::date - p_week_start)::integer + 1;
 $$;
 
-create or replace function private.football_weekly_auction_reserve_floor(p_owned integer)
-returns integer
-language sql
-immutable
-set search_path = ''
-as $$
-  select case when p_owned <= 0 then 2 when p_owned = 1 then 1 else 0 end;
-$$;
-
 create or replace function private.materialize_football_weekly_auction_week(p_week_start date)
 returns void
 language plpgsql
@@ -808,7 +799,6 @@ declare
   v_previous_week date;
   v_bankroll integer;
   v_owned integer;
-  v_floor integer;
   v_submitted boolean;
   v_show_intro boolean;
   v_previous_final jsonb := null;
@@ -852,7 +842,6 @@ begin
   where award.week_start = v_week_start
     and award.profile_id = v_profile;
 
-  v_floor := private.football_weekly_auction_reserve_floor(v_owned);
 
   select exists (
     select 1 from private.football_weekly_auction_daily_entries entry
@@ -954,8 +943,8 @@ begin
     'theme', v_theme,
     'bankroll', v_bankroll,
     'owned_count', v_owned,
-    'reserve_floor', v_floor,
-    'max_commit', greatest(v_bankroll - v_floor, 0),
+    'reserve_floor', 0,
+    'max_commit', v_bankroll,
     'submitted_today', v_submitted,
     'show_intro', v_show_intro,
     'teams', v_teams,
@@ -988,7 +977,6 @@ declare
   v_lock_at timestamptz;
   v_owned integer;
   v_bankroll integer;
-  v_floor integer;
   v_max integer;
   v_bid1 integer;
   v_bid2 integer;
@@ -1036,8 +1024,7 @@ begin
   where award.week_start = v_week_start
     and award.profile_id = v_profile;
 
-  v_floor := private.football_weekly_auction_reserve_floor(v_owned);
-  v_max := greatest(v_bankroll - v_floor, 0);
+  v_max := v_bankroll;
   v_total := v_bid1 + v_bid2 + v_bid3;
 
   if v_total > v_max then
@@ -1194,11 +1181,6 @@ begin
   end if;
   if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='Wildcard') <> 13 then
     raise exception 'Weekly Auction Wildcard inventory must contain 13 calibrated seasons';
-  end if;
-  if private.football_weekly_auction_reserve_floor(0) <> 2
-    or private.football_weekly_auction_reserve_floor(1) <> 1
-    or private.football_weekly_auction_reserve_floor(2) <> 0 then
-    raise exception 'Weekly Auction bankroll floor drifted';
   end if;
   if private.football_weekly_auction_week_start('2026-09-15 12:00:00-05'::timestamptz) <> date '2026-09-15'
     or private.football_weekly_auction_week_start('2026-09-21 23:59:00-05'::timestamptz) <> date '2026-09-15' then
