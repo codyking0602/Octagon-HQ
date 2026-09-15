@@ -4,37 +4,59 @@ import type { HomeFeatureMediaRepository } from "../home/homeFeatureMedia";
 import FootballHomeSpotlightPhotoControl from "./FootballHomeSpotlightPhotoControl";
 
 describe("FootballHomeSpotlightPhotoControl", () => {
-  it("uploads the processed photo to media storage before persisting its public URL", async () => {
-    const uploadedPhotoSource = "https://example.supabase.co/storage/v1/object/public/home-feature-media/football/player-spotlight?v=2";
+  it("loads separate CFB and NFL upload slots and persists each photo to its own key", async () => {
+    const cfbUploadedPhotoSource = "https://example.supabase.co/storage/v1/object/public/home-feature-media/football/player-spotlight-cfb?v=2";
+    const nflUploadedPhotoSource = "https://example.supabase.co/storage/v1/object/public/home-feature-media/football/player-spotlight-nfl?v=3";
     const repository: HomeFeatureMediaRepository = {
-      loadFootballSpotlight: vi.fn().mockResolvedValue({
-        contentKey: "football-player-spotlight",
-        photoSource: "https://example.com/current.webp",
-        updatedAt: "2026-09-12T00:00:00Z",
-      }),
-      saveFootballSpotlightPhoto: vi.fn().mockResolvedValue({
-        contentKey: "football-player-spotlight",
-        photoSource: uploadedPhotoSource,
-        updatedAt: "2026-09-12T00:01:00Z",
-      }),
+      loadFootballSpotlight: vi.fn().mockImplementation(async (kind) => ({
+        contentKey: kind === "cfb"
+          ? "football-player-spotlight-cfb"
+          : "football-player-spotlight-nfl",
+        photoSource: `https://example.com/current-${kind}.webp`,
+        updatedAt: "2026-09-15T00:00:00Z",
+      })),
+      saveFootballSpotlightPhoto: vi.fn().mockImplementation(async (kind, photoSource) => ({
+        contentKey: kind === "cfb"
+          ? "football-player-spotlight-cfb"
+          : "football-player-spotlight-nfl",
+        photoSource,
+        updatedAt: "2026-09-15T00:01:00Z",
+      })),
     };
-    const uploadPhoto = vi.fn().mockResolvedValue(uploadedPhotoSource);
-    const { container } = render(
+    const uploadPhoto = vi.fn().mockImplementation(async (_file, kind) => (
+      kind === "cfb" ? cfbUploadedPhotoSource : nflUploadedPhotoSource
+    ));
+    render(
       <FootballHomeSpotlightPhotoControl repository={repository} uploadPhoto={uploadPhoto} />,
     );
 
-    expect(await screen.findByAltText("Current Football Home Player Spotlight"))
-      .toHaveAttribute("src", "https://example.com/current.webp");
+    expect(await screen.findByAltText("Current CFB Football Home Player Spotlight"))
+      .toHaveAttribute("src", "https://example.com/current-cfb.webp");
+    expect(await screen.findByAltText("Current NFL Football Home Player Spotlight"))
+      .toHaveAttribute("src", "https://example.com/current-nfl.webp");
+    expect(repository.loadFootballSpotlight).toHaveBeenCalledWith("cfb");
+    expect(repository.loadFootballSpotlight).toHaveBeenCalledWith("nfl");
 
-    const input = container.querySelector<HTMLInputElement>('input[type="file"]');
-    expect(input).not.toBeNull();
-    const file = new File(["portrait"], "kamario.jpg", { type: "image/jpeg" });
-    fireEvent.change(input!, { target: { files: [file] } });
+    const cfbInput = screen.getByLabelText("Upload CFB Player Spotlight photo");
+    const cfbFile = new File(["portrait"], "drew.jpg", { type: "image/jpeg" });
+    fireEvent.change(cfbInput, { target: { files: [cfbFile] } });
 
-    await waitFor(() => expect(uploadPhoto).toHaveBeenCalledWith(file));
-    await waitFor(() => expect(repository.saveFootballSpotlightPhoto).toHaveBeenCalledWith(uploadedPhotoSource));
-    expect(await screen.findByText("Football Home Spotlight photo updated.")).toBeInTheDocument();
-    expect(screen.getByAltText("Current Football Home Player Spotlight"))
-      .toHaveAttribute("src", uploadedPhotoSource);
+    await waitFor(() => expect(uploadPhoto).toHaveBeenCalledWith(cfbFile, "cfb"));
+    await waitFor(() => expect(repository.saveFootballSpotlightPhoto)
+      .toHaveBeenCalledWith("cfb", cfbUploadedPhotoSource));
+    expect(await screen.findByText("CFB Football Home Spotlight photo updated.")).toBeInTheDocument();
+    expect(screen.getByAltText("Current CFB Football Home Player Spotlight"))
+      .toHaveAttribute("src", cfbUploadedPhotoSource);
+
+    const nflInput = screen.getByLabelText("Upload NFL Player Spotlight photo");
+    const nflFile = new File(["portrait"], "josh.jpg", { type: "image/jpeg" });
+    fireEvent.change(nflInput, { target: { files: [nflFile] } });
+
+    await waitFor(() => expect(uploadPhoto).toHaveBeenCalledWith(nflFile, "nfl"));
+    await waitFor(() => expect(repository.saveFootballSpotlightPhoto)
+      .toHaveBeenCalledWith("nfl", nflUploadedPhotoSource));
+    expect(await screen.findByText("NFL Football Home Spotlight photo updated.")).toBeInTheDocument();
+    expect(screen.getByAltText("Current NFL Football Home Player Spotlight"))
+      .toHaveAttribute("src", nflUploadedPhotoSource);
   });
 });
