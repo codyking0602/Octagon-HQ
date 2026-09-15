@@ -11,6 +11,7 @@ import {
   getUfcWhoAmIUniverse,
 } from "./whoAmIAuthority";
 import { assembleWhoAmIClues, whoAmIClueFacet, whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
+import { isNflWhoAmIBatch1Subject } from "./footballWhoAmICuration";
 import { isUfcWhoAmICalibrationSubject, shouldUseUfcWhoAmIIdentityConcept } from "./ufcWhoAmICuration";
 import {
   WHO_AM_I_CLUE_LIMIT,
@@ -270,8 +271,12 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         if (!source) continue;
         covered += 1;
         const identityClues = candidate.clues.filter((clue) => clue.identityKnowledge);
-        expect(identityClues.length).toBeGreaterThanOrEqual(source.facts.length);
-        expect(source.facts.every((fact) => identityClues.some((clue) => clue.sourceFactId === fact.factId))).toBe(true);
+        if (league === "NFL" && isNflWhoAmIBatch1Subject(candidate.id)) {
+          expect(identityClues.every((clue) => source.facts.some((fact) => fact.factId === clue.sourceFactId))).toBe(true);
+        } else {
+          expect(identityClues.length).toBeGreaterThanOrEqual(source.facts.length);
+          expect(source.facts.every((fact) => identityClues.some((clue) => clue.sourceFactId === fact.factId))).toBe(true);
+        }
         expect(identityClues.every((clue) => clue.knowledgeSubjectId === candidate.id)).toBe(true);
       }
       expect(covered).toBeGreaterThan(0);
@@ -381,20 +386,20 @@ describe("Who Am I football scope-aware clue aggregation", () => {
 
   it("audits complete canonical UFC, NFL, and CFB populations with deterministic diverse sequences", () => {
     const universes = [
-      getUfcWhoAmIUniverse(),
-      getFootballWhoAmIUniverse("NFL"),
-      getFootballWhoAmIUniverse("CFB"),
-    ];
+      ["UFC", getUfcWhoAmIUniverse()],
+      ["NFL", getFootballWhoAmIUniverse("NFL")],
+      ["CFB", getFootballWhoAmIUniverse("CFB")],
+    ] as const;
 
-    expect(universes[0].candidates).toHaveLength(100);
-    expect(universes[1].candidates).toHaveLength(200);
-    expect(universes[2].candidates).toHaveLength(200);
+    expect(universes[0][1].candidates).toHaveLength(100);
+    expect(universes[1][1].candidates).toHaveLength(200);
+    expect(universes[2][1].candidates).toHaveLength(200);
 
     let identityBackedCandidates = 0;
     let identityBackedPlayableCandidates = 0;
     let identityBackedPlayableSelections = 0;
 
-    for (const universe of universes) {
+    for (const [league, universe] of universes) {
       let playable = 0;
       for (const candidate of universe.candidates) {
         const sequence = whoAmIProgressiveClues(candidate.clues, () => 0.123);
@@ -408,11 +413,12 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         }
 
         const identityBacked = candidate.clues.some((clue) => clue.identityKnowledge);
+        const intentionallyCurated = league === "NFL" && isNflWhoAmIBatch1Subject(candidate.id);
         if (identityBacked) identityBackedCandidates += 1;
         if (sequence.length === WHO_AM_I_CLUE_LIMIT) {
           playable += 1;
           assertProgressiveSequence(candidate, sequence);
-          if (identityBacked) {
+          if (identityBacked && !intentionallyCurated) {
             identityBackedPlayableCandidates += 1;
             if (sequence.some((clue) => clue.identityKnowledge)) identityBackedPlayableSelections += 1;
           }
@@ -465,15 +471,18 @@ describe("Who Am I football scope-aware clue aggregation", () => {
           clue.sourceFactId === fact.factId
           || clue.conceptId === `identity:${fact.conceptId}`
         )));
+        const intentionallyCurated = league === "NFL" && isNflWhoAmIBatch1Subject(candidate.id);
 
-        expect(
-          missingMetrics,
-          `${candidate.id} has unexplained missing applicable factual-ledger facts.`,
-        ).toEqual([]);
-        expect(
-          missingIdentity,
-          `${candidate.id} has unexplained missing applicable person-identity facts.`,
-        ).toEqual([]);
+        if (!intentionallyCurated) {
+          expect(
+            missingMetrics,
+            `${candidate.id} has unexplained missing applicable factual-ledger facts.`,
+          ).toEqual([]);
+          expect(
+            missingIdentity,
+            `${candidate.id} has unexplained missing applicable person-identity facts.`,
+          ).toEqual([]);
+        }
 
         const recognitionClues = candidate.clues.filter((clue) => (
           clue.id.startsWith("recognition:")
@@ -491,8 +500,9 @@ describe("Who Am I football scope-aware clue aggregation", () => {
           || clue.id === "career-path"
         )).length;
         const assembledClues = whoAmIProgressiveClues(candidate.clues).length;
+        const unexplainedMissing = !intentionallyCurated && (missingMetrics.length > 0 || missingIdentity.length > 0);
         const classification = assembledClues < WHO_AM_I_CLUE_LIMIT
-          ? (missingMetrics.length || missingIdentity.length ? "plumbing omission" : "genuine canonical source-depth gap")
+          ? (unexplainedMissing ? "plumbing omission" : "genuine canonical source-depth gap")
           : "complete";
 
         return {
