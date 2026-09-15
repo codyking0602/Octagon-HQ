@@ -48,8 +48,8 @@ begin
 
   with weekly_ranked(profile_id, week_start, weekly_rank) as (
     values
-      ('cody', date '2026-09-01', 1),
-      ('cody', date '2026-09-08', 1)
+      ('cody', date '2026-09-08', 1),
+      ('cody', date '2026-09-15', 1)
   )
   select count(*) filter (
     where weekly_rank = 1
