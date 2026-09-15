@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT } from "../features/back-room/footballWeeklyAuctionPresentation";
 
 const migration = readFileSync("supabase/migrations/202612310129_football_weekly_auction.sql", "utf8");
+const transitionMigration = readFileSync("supabase/migrations/202612310130_football_troy_transition_carry.sql", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 const gate = readFileSync("src/features/back-room/FootballWeeklyAuctionGate.tsx", "utf8");
@@ -76,6 +77,15 @@ describe("Football Weekly Auction live contract", () => {
     expect(page).toContain("createFootballWeeklyAuctionRepository");
     expect(page).toContain("FootballWeeklyAuctionGate");
     expect(page).toContain("WEEKLY AUCTION · EDIT BIDS");
+  });
+
+  it("preserves the transition title and carries the Sep 14 win into the first native Tuesday week", () => {
+    expect(transitionMigration).toContain("football-2026-tuesday-cadence-troy");
+    expect(transitionMigration).toContain("date '2026-09-15'");
+    expect(transitionMigration).toContain("weekly_wins_bonus");
+    expect(transitionMigration).toContain("weekly_titles_bonus");
+    expect(transitionMigration).toContain("v_football_championship_start date := date ''2026-09-15''");
+    expect(transitionMigration).toContain("private.football_daily_transition_adjustments");
   });
 
   it("ships the approved card research and final team-color treatment", () => {
