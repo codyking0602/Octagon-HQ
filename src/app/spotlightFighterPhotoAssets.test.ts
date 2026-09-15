@@ -26,6 +26,15 @@ describe("Fight Spotlight fighter photo assets", () => {
     expect(spotlight).toContain('["ian-garry", "ian-machado-garry"]');
   });
 
+
+  it("wires the current UFC 331 missing thumbnail and Spotlight portraits without changing Spotlight ownership", () => {
+    const thumbnails = readFileSync("src/features/picks/FighterThumbnail.tsx", "utf8");
+    expect(thumbnails).toContain('["ryan-gandra", "https://a.espncdn.com/i/headshots/mma/players/full/5291085.png"]');
+    expect(thumbnails).toContain('["ozzy-diaz", "https://a.espncdn.com/i/headshots/mma/players/full/4944080.png"]');
+    expect(spotlight).toContain('["gable-steveson", "https://gidstats.com/img/fighters/0/0/1-3231.png"]');
+    expect(spotlight).toContain('["sean-sharaf", "https://gidstats.com/img/fighters/0/0/1-2418.png"]');
+  });
+
   it("ships dedicated Spotlight cutouts for the Sacramento main event", () => {
     expect(existsSync("public/assets/fighters/anthony-hernandez-spotlight.webp")).toBe(true);
     expect(existsSync("public/assets/fighters/gregory-rodrigues-spotlight.webp")).toBe(true);
