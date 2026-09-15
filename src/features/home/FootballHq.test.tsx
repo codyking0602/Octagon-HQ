@@ -177,7 +177,7 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("VS #6 OREGON · W 39–31 · 6'3\" · 215 LB")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
-      "https://okstate.com/news/2026/9/12/cowboy-football-oklahoma-state-stuns-no-6-oregon-39-31",
+      "https://youtu.be/Ia6UXgdSKw4?is=i2gxMRVoqonuhYtB",
     );
     expect(within(hq).queryByRole("link", { name: /VIEW PLAYER/i })).not.toBeInTheDocument();
 
@@ -313,7 +313,7 @@ describe("Football HQ Home summary", () => {
     expect(screen.getByText("AT HOUSTON · W 36–31 · 6'5\" · 237 LB")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
-      "https://www.buffalobills.com/game-day/2026/reg-week1/bills-at-texans/",
+      "https://youtu.be/ZeJwLzd2I4E?is=a_f7gk7JKUEYJPZs",
     );
   });
 
