@@ -16,14 +16,25 @@ type BidMap = Record<1 | 2 | 3, number>;
 type FinalTab = "standings" | "collection" | "grades";
 
 function TeamMark({ identity, school }: { identity: FootballWeeklyAuctionTeamIdentity; school: string }) {
+  const [logoFailed, setLogoFailed] = useState(false);
+  const showLogo = Boolean(identity.logoSrc) && !logoFailed;
   return (
     <span className="football-weekly-auction__mark" aria-hidden="true">
-      <span>{school.slice(0, 2).toUpperCase()}</span>
-      {identity.logoSrc ? (
-        <img src={identity.logoSrc} alt="" onError={(event) => { event.currentTarget.hidden = true; }} />
-      ) : null}
+      {showLogo ? (
+        <img src={identity.logoSrc ?? ""} alt="" onError={() => setLogoFailed(true)} />
+      ) : (
+        <span>{school.slice(0, 2).toUpperCase()}</span>
+      )}
     </span>
   );
+}
+
+function rankedResume(identity: FootballWeeklyAuctionTeamIdentity) {
+  const cleaned = identity.resume
+    .replace(/ · No\. \d+ Final AP/, "")
+    .replace(/No\. \d+ Final AP · /, "");
+  const rank = identity.finalApRank == null ? "NR" : `#${identity.finalApRank}`;
+  return `${rank} · ${cleaned}`;
 }
 
 function RulesCover({ onStart }: { onStart: () => void }) {
@@ -31,21 +42,19 @@ function RulesCover({ onStart }: { onStart: () => void }) {
     <section className="football-weekly-auction__cover surface-card">
       <p className="eyebrow">FOOTBALL DAILY · TUESDAY–MONDAY</p>
       <h1>WEEKLY AUCTION</h1>
-      <strong className="football-weekly-auction__lede">3 teams. 1 bankroll. 7 days.</strong>
+      <strong className="football-weekly-auction__lede">3 teams. $40. 7 days.</strong>
       <div className="football-weekly-auction__rules">
-        <p>You have <strong>$40 for the entire week.</strong></p>
-        <small>EACH DAY</small>
+        <p><strong>$40 bankroll</strong> for the entire week.</p>
+        <small>HOW IT WORKS</small>
         <ul>
           <li>Bid on any or all 3 teams</li>
-          <li>Highest bid wins each team</li>
-          <li>Losing bids cost nothing</li>
-          <li>Today’s bids lock at <strong>midnight CT</strong></li>
+          <li>Highest bid wins. Losing bids cost nothing.</li>
+          <li>Bids lock + results reveal at <strong>midnight CT</strong></li>
+          <li>Your best <strong>3 teams</strong> count toward your final score</li>
         </ul>
-        <p>Your best <strong>3 teams</strong> count toward your final score.</p>
-        <p>At the end of the week, the highest average wins a <strong>bonus Daily win.</strong></p>
-        <p><strong>Tie on a bid?</strong> Fewer teams won gets priority, then less money spent.</p>
+        <p><strong>Tie?</strong> Fewer teams won gets priority, then less money spent.</p>
+        <p>Highest best-3 average earns a <strong>bonus Daily win.</strong></p>
       </div>
-      <p className="football-weekly-auction__unlock">Submit today’s bids to unlock your Daily Challenge.</p>
       <button className="football-weekly-auction__primary" type="button" onClick={onStart}>
         START TODAY’S AUCTION
       </button>
@@ -101,7 +110,7 @@ function TeamCard({
         <TeamMark identity={identity} school={team.school} />
         <div>
           <strong>{team.school} <span>· {team.season_year}</span></strong>
-          <small>{identity.resume}</small>
+          <small>{rankedResume(identity)}</small>
           <a href={identity.sportsReferenceUrl} target="_blank" rel="noopener noreferrer">View season ↗</a>
         </div>
       </div>
@@ -308,7 +317,11 @@ export function FootballWeeklyAuctionGate({
         </div>
 
         <div className="football-weekly-auction__theme">
-          <strong>{state.theme}</strong><span>Bids lock at midnight CT</span>
+          <div>
+            <small>TODAY’S BOARD</small>
+            <strong>{state.theme} TEAMS</strong>
+          </div>
+          <span>BIDS LOCK · RESULTS REVEAL AT MIDNIGHT CT</span>
         </div>
 
         <div className="football-weekly-auction__team-stack">
@@ -332,7 +345,7 @@ export function FootballWeeklyAuctionGate({
 
         {submitted ? (
           <div className="football-weekly-auction__submitted-actions">
-            <div><strong>BIDS SUBMITTED</strong><span>You can still edit until midnight CT.</span></div>
+            <div><strong>BIDS SUBMITTED</strong><span>Edit until midnight CT. Results reveal then.</span></div>
             <button type="button" disabled={busy} onClick={() => setEditing(true)}>EDIT BIDS</button>
             <button className="football-weekly-auction__primary" type="button" disabled={busy} onClick={onContinue}>
               CONTINUE TO DAILY CHALLENGE

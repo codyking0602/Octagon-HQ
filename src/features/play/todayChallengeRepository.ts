@@ -238,13 +238,20 @@ export class TodayChallengeRepositoryError extends Error {
   code: string;
   stale: boolean;
   signInRequired: boolean;
+  previewGameType: DailyGameType | null;
+  previewCentralDay: string | null;
+  previewScheduleVersion: string | null;
 
-  constructor(code: string, message: string) {
+  constructor(code: string, message: string, details?: Record<string, unknown> | null) {
     super(message);
     this.name = "TodayChallengeRepositoryError";
     this.code = code;
     this.stale = code === "STALE_PROGRESS" || code === "DAILY_IDENTITY_CHANGED";
     this.signInRequired = code === "SIGN_IN_REQUIRED";
+    const gameType = gameTypeSchema.safeParse(details?.game_type);
+    this.previewGameType = gameType.success ? gameType.data : null;
+    this.previewCentralDay = typeof details?.central_day === "string" ? details.central_day : null;
+    this.previewScheduleVersion = typeof details?.schedule_version === "string" ? details.schedule_version : null;
   }
 }
 
@@ -299,7 +306,7 @@ async function invokeRuntime(client: TodayChallengeClient, body: Record<string, 
   const message = typeof payload?.message === "string"
     ? payload.message
     : error.message || "Octagon HQ could not sync Today’s Challenge.";
-  throw new TodayChallengeRepositoryError(code, message);
+  throw new TodayChallengeRepositoryError(code, message, payload);
 }
 
 async function rpc(client: TodayChallengeClient, name: string, args?: Record<string, unknown>) {

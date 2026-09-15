@@ -215,19 +215,38 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
   }
 
   if (!projection || !adapter) {
-    const weeklyAuctionRequired = sport === "football"
+    const weeklyAuctionError = sport === "football"
       && runtime.error instanceof TodayChallengeRepositoryError
-      && runtime.error.code === "WEEKLY_AUCTION_REQUIRED";
+      && runtime.error.code === "WEEKLY_AUCTION_REQUIRED"
+      ? runtime.error
+      : null;
+    const previewAdapter = weeklyAuctionError?.previewGameType
+      ? todayChallengeAdapter(weeklyAuctionError.previewGameType)
+      : null;
 
-    if (weeklyAuctionRequired) {
+    if (weeklyAuctionError && previewAdapter && weeklyAuctionError.previewCentralDay) {
       return (
-        <section className="today-hub-gate" data-sport={sport}>
-          <div>
-            <p className="eyebrow">TODAY’S CHALLENGE</p>
-            <h2>Weekly Auction comes first.</h2>
-            <p>Submit today’s Weekly Auction bids to unlock Football Daily.</p>
+        <section className="today-hub" data-sport={sport} data-game={weeklyAuctionError.previewGameType ?? undefined}>
+          <div className="today-hub__carousel" aria-label="Today’s Challenge">
+            <button className="today-hub-card" type="button" onClick={() => navigate("/football/today")}>
+              <div className="today-hub-card__topline">
+                <span>TODAY’S CHALLENGE</span>
+                <b>{dayLabel(weeklyAuctionError.previewCentralDay).toUpperCase()}</b>
+              </div>
+              <div className="today-hub-card__body">
+                <small>OFFICIAL DAILY</small>
+                <h2>{previewAdapter.title}</h2>
+                <p>{previewAdapter.footballInstructions}</p>
+              </div>
+              <em>{previewAdapter.cta.toUpperCase()} →</em>
+            </button>
           </div>
-          <button type="button" onClick={() => navigate("/football/today")}>START TODAY’S AUCTION</button>
+          <DailyChallengeStandings
+            standings={overview.standings}
+            loading={overview.standingsLoading}
+            error={overview.error instanceof Error ? overview.error : null}
+            onRefresh={() => { void overview.refresh(); }}
+          />
         </section>
       );
     }

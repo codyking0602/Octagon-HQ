@@ -175,13 +175,18 @@ describe("generalized Today’s Challenge hub", () => {
     expect(card).not.toHaveTextContent(/\bUFC\b/i);
   });
 
-  it("routes the Football Weekly Auction gate instead of showing a load failure", () => {
+  it("keeps the canonical Football Daily card visible while Weekly Auction bids are required", () => {
     useTodayChallengeRuntime.mockReturnValue({
       projection: null,
       loading: false,
       error: new TodayChallengeRepositoryError(
         "WEEKLY_AUCTION_REQUIRED",
         "Submit today’s Weekly Auction bids before starting Football Daily.",
+        {
+          central_day: "2026-09-15",
+          schedule_version: "football-daily-v1",
+          game_type: "find_leader",
+        },
       ),
       busy: false,
       configured: true,
@@ -191,9 +196,10 @@ describe("generalized Today’s Challenge hub", () => {
 
     render(<TodayChallengeHub sport="football" />);
 
-    expect(screen.getByRole("heading", { name: "Weekly Auction comes first." })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Find the Leader" })).toBeInTheDocument();
+    expect(screen.queryByText(/weekly auction comes first/i)).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "The official game did not load." })).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "START TODAY’S AUCTION" }));
+    fireEvent.click(screen.getByRole("button", { name: /find the leader/i }));
     expect(navigate).toHaveBeenCalledWith("/football/today");
   });
 

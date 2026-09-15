@@ -41,9 +41,15 @@ const json = (body: unknown, status = 200) => new Response(JSON.stringify(body),
   },
 });
 
-const safeError = (status: number, code: string, message: string) => json({
+const safeError = (
+  status: number,
+  code: string,
+  message: string,
+  details: Record<string, unknown> = {},
+) => json({
   code,
   message,
+  ...details,
   deployment_sha: DEPLOYED_SOURCE_SHA,
 }, status);
 
@@ -660,6 +666,17 @@ Deno.serve(async (request) => {
     });
 
     if (body.sport === "football") {
+      const previewRequest = await admin.rpc("get_daily_challenge_materialization_request", {
+        p_sport: "football",
+      });
+      if (previewRequest.error) {
+        throw new Error("The Football Daily preview request failed.");
+      }
+      const preview = requiredRecord(previewRequest.data, "Football Daily preview");
+      const previewDay = requiredString(preview.central_day, "Football preview Central day");
+      const previewScheduleVersion = requiredString(preview.schedule_version, "Football preview schedule version");
+      const previewGame = requiredString(preview.expected_game, "Football preview game");
+
       const weeklyGate = await admin.rpc("football_weekly_auction_daily_gate", {
         p_profile_id: profileId,
       });
@@ -672,6 +689,11 @@ Deno.serve(async (request) => {
           409,
           "WEEKLY_AUCTION_REQUIRED",
           "Submit today’s Weekly Auction bids before starting Football Daily.",
+          {
+            central_day: previewDay,
+            schedule_version: previewScheduleVersion,
+            game_type: previewGame,
+          },
         );
       }
 

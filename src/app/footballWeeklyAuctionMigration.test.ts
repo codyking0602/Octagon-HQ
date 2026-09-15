@@ -1,6 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT } from "../features/back-room/footballWeeklyAuctionPresentation";
+import {
+  FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT,
+  footballWeeklyAuctionTeamIdentity,
+} from "../features/back-room/footballWeeklyAuctionPresentation";
 
 const migration = readFileSync("supabase/migrations/202612310129_football_weekly_auction.sql", "utf8");
 const bankrollFloorRepair = readFileSync("supabase/migrations/202612310130_football_weekly_auction_bankroll_floor.sql", "utf8");
@@ -93,6 +96,14 @@ describe("Football Weekly Auction live contract", () => {
   it("ships the approved card research and final team-color treatment", () => {
     expect(FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT).toBe(13);
     expect(gate).toContain("View season ↗");
+    expect(gate).toContain("TODAY’S BOARD");
+    expect(gate).toContain("RESULTS REVEAL AT MIDNIGHT CT");
+    expect(gate).toContain("setLogoFailed(true)");
+    expect(gate).toContain('identity.finalApRank == null ? "NR"');
+    expect(footballWeeklyAuctionTeamIdentity("cfb-best-alabama-2009", "Alabama", 2009).finalApRank).toBe(1);
+    expect(footballWeeklyAuctionTeamIdentity("cfb-best-lsu-2011", "LSU", 2011).finalApRank).toBe(2);
+    expect(footballWeeklyAuctionTeamIdentity("cfb-best-auburn-2013", "Auburn", 2013).finalApRank).toBe(2);
+    expect(footballWeeklyAuctionTeamIdentity("weekly-cfb-fresno-state-2013", "Fresno State", 2013).finalApRank).toBeNull();
     expect(styles).toContain("rgba(var(--weekly-team-rgb), .17)");
     expect(styles).toContain(".football-weekly-auction__result-team::before");
   });
