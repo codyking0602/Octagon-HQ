@@ -6,80 +6,13 @@ import {
   type PickHistory,
   type PickSeasonStanding,
 } from "./picksModel";
+import { picksSeasonStandings } from "./picksSeasonStandings";
 import { FootballWeekRecap } from "./FootballWeekRecap";
 import { LatestEventRecap } from "./LatestEventRecap";
 import { resolvePicksDestination } from "./picksDestination";
 
 function winPercentageLabel(correct: number, incorrect: number) {
   return `${pickWinPercentage(correct, incorrect).toFixed(1)}%`;
-}
-
-function aggregateFallbackStandings(history: PickHistory): PickSeasonStanding[] {
-  const totals = new Map<string, Omit<PickSeasonStanding, "rank">>();
-
-  history.events.forEach((event) => {
-    event.groupResults.forEach((result) => {
-      const key = result.profileId ?? `name:${result.displayName.trim().toLowerCase()}`;
-      const current = totals.get(key) ?? {
-        profileId: result.profileId ?? null,
-        displayName: result.displayName,
-        isCurrentUser: result.isCurrentUser,
-        eventsEntered: 0,
-        correct: 0,
-        incorrect: 0,
-        missing: 0,
-        excluded: 0,
-        basePoints: 0,
-        lockBonus: 0,
-        totalPoints: 0,
-      };
-
-      totals.set(key, {
-        ...current,
-        profileId: result.profileId ?? current.profileId,
-        displayName: result.displayName,
-        isCurrentUser: current.isCurrentUser || result.isCurrentUser,
-        eventsEntered: current.eventsEntered + 1,
-        correct: current.correct + result.correct,
-        incorrect: current.incorrect + result.incorrect,
-        missing: current.missing + result.missing,
-        excluded: current.excluded + result.excluded,
-        basePoints: current.basePoints + result.basePoints,
-        lockBonus: current.lockBonus + result.lockBonus,
-        totalPoints: current.totalPoints + result.totalPoints,
-      });
-    });
-  });
-
-  const ordered = Array.from(totals.values()).sort((left, right) => (
-    right.totalPoints - left.totalPoints
-    || left.displayName.localeCompare(right.displayName)
-  ));
-
-  let previousPoints: number | null = null;
-  let previousRank = 0;
-  return ordered.map((standing, index) => {
-    const rank = previousPoints === standing.totalPoints ? previousRank : index + 1;
-    previousPoints = standing.totalPoints;
-    previousRank = rank;
-    return { ...standing, rank };
-  });
-}
-
-function footballAccumulatedStandings(standings: readonly PickSeasonStanding[]) {
-  const ordered = standings.slice().sort((left, right) => (
-    right.totalPoints - left.totalPoints
-    || left.displayName.localeCompare(right.displayName)
-  ));
-  let previousPoints: number | null = null;
-  let previousRank = 0;
-
-  return ordered.map((standing, index) => {
-    const rank = previousPoints === standing.totalPoints ? previousRank : index + 1;
-    previousPoints = standing.totalPoints;
-    previousRank = rank;
-    return { ...standing, rank };
-  });
 }
 
 function standingClassName(standing: PickSeasonStanding) {
@@ -127,20 +60,20 @@ export function PicksSeasonHub({
   );
   const targetEventId = destination.kind === "archived-event" ? destination.eventId : "";
   const recapRequested = destination.kind === "archived-event" && destination.recapRequested;
+  const standingsRequested = searchParams.get("view") === "standings";
   const targetEvent = useMemo(
     () => history.events.find((event) => event.eventId === targetEventId) ?? null,
     [history.events, targetEventId],
   );
   const [activeTab, setActiveTab] = useState<"standings" | "events">(
-    targetEventId ? "events" : "standings",
+    targetEventId && !standingsRequested ? "events" : "standings",
   );
-  const [hubOpen, setHubOpen] = useState(Boolean(targetEventId));
+  const [hubOpen, setHubOpen] = useState(Boolean(targetEventId || standingsRequested));
   const hubRef = useRef<HTMLElement | null>(null);
-  const standings = useMemo(() => {
-    const canonicalStandings = history.seasonStandings ?? [];
-    const source = canonicalStandings.length ? canonicalStandings : aggregateFallbackStandings(history);
-    return football ? footballAccumulatedStandings(source) : source;
-  }, [football, history]);
+  const standings = useMemo(
+    () => picksSeasonStandings(history, football ? "football" : "mma"),
+    [football, history],
+  );
   const currentStanding = standings.find((standing) => standing.isCurrentUser) ?? null;
   const leaderPoints = standings.reduce(
     (highest, standing) => Math.max(highest, standingPoints(standing)),
@@ -159,19 +92,28 @@ export function PicksSeasonHub({
   const targetIsLatest = Boolean(latestEvent && latestEvent.eventId === targetEventId);
 
   useEffect(() => {
-    if (!targetEventId) return;
+    if (!targetEventId || standingsRequested) return;
     setActiveTab("events");
     setHubOpen(true);
-  }, [targetEventId]);
+  }, [standingsRequested, targetEventId]);
 
   useEffect(() => {
-    if (!targetEvent || !hubOpen || activeTab !== "events") return undefined;
+    if (!standingsRequested) return;
+    setActiveTab("standings");
+    setHubOpen(true);
+  }, [standingsRequested]);
+
+  useEffect(() => {
+    const shouldFocusEvent = Boolean(targetEvent && !standingsRequested && hubOpen && activeTab === "events");
+    const shouldFocusStandings = standingsRequested && hubOpen && activeTab === "standings";
+    if (!shouldFocusEvent && !shouldFocusStandings) return undefined;
+
     const frame = requestAnimationFrame(() => {
-      hubRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      hubRef.current?.scrollIntoView({ behavior: "smooth", block: shouldFocusStandings ? "start" : "center" });
       hubRef.current?.focus({ preventScroll: true });
     });
     return () => cancelAnimationFrame(frame);
-  }, [activeTab, hubOpen, targetEvent]);
+  }, [activeTab, hubOpen, standingsRequested, targetEvent]);
 
   if (loading && !history.events.length) {
     return (
@@ -193,6 +135,7 @@ export function PicksSeasonHub({
   return (
     <section
       ref={hubRef}
+      id="picks-season-standings"
       className="picks-history picks-season-section"
       aria-labelledby="picks-season-title"
       aria-current={targetEvent ? "true" : undefined}

@@ -6,6 +6,7 @@ import {
   pickProgress,
   pickRecord,
 } from "../picks/picksModel";
+import { picksSeasonStandings } from "../picks/picksSeasonStandings";
 import { usePicks } from "../picks/PicksProvider";
 import {
   TodayChallengeRepositoryError,
@@ -199,7 +200,7 @@ export default function HomePage() {
             : picksProgress.total > 0
               ? `${picksRemaining} PICK${picksRemaining === 1 ? "" : "S"} LEFT`
               : "WAITING FOR CARD";
-  const ufcStandings = picks.history?.seasonStandings ?? [];
+  const ufcStandings = picksSeasonStandings(picks.history, "mma");
   const currentUfcStanding = ufcStandings.find((standing) => standing.isCurrentUser) ?? null;
   const currentUfcRank = currentUfcStanding
     ? groupRankLabel(currentUfcStanding.rank, ufcStandings)
@@ -207,7 +208,7 @@ export default function HomePage() {
   const currentUfcRankLabel = currentUfcRank
     ? currentUfcRank.startsWith("T-") ? currentUfcRank : `#${currentUfcRank}`
     : "";
-  const footballStandings = picks.footballHistory?.seasonStandings ?? [];
+  const footballStandings = picksSeasonStandings(picks.footballHistory, "football");
   const currentFootballStanding = footballStandings.find((standing) => standing.isCurrentUser) ?? null;
   const currentFootballRank = currentFootballStanding
     ? groupRankLabel(currentFootballStanding.rank, footballStandings)
@@ -296,7 +297,11 @@ export default function HomePage() {
             <div className="picks-progress__track" aria-hidden="true"><span style={{ width: `${picksPercent}%` }} /></div>
             <small className="home-event-card__picks-status">{picksStatus}</small>
           </div>
-          <div className="home-event-card__standing" aria-label="UFC Picks season standing">
+          <Link
+            className="home-event-card__standing"
+            to="/picks?view=standings#picks-season-standings"
+            aria-label="Open UFC Picks season standings"
+          >
             <span>{recordSeason} PICKS STANDING</span>
             <b>{signedIn && currentUfcRankLabel ? `${currentUfcRankLabel} OF ${ufcStandings.length}` : "—"}</b>
             <small>
@@ -306,7 +311,7 @@ export default function HomePage() {
                   ? `${currentUfcStanding.totalPoints} PTS`
                   : "NO STANDING YET"}
             </small>
-          </div>
+          </Link>
         </div>
         {currentEvent ? (
           identity.profile ? (
