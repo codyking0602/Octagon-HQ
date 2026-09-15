@@ -486,10 +486,12 @@ export function hitTheNumberScore({
   if (!Number.isFinite(distance) || distance < 0) throw new Error("Hit the Number score distance cannot be negative.");
   if (status === "perfect") return 100;
 
-  const averageContribution = target / pickCount;
+  // Bob Barker scoring is normalized against the target itself so the curve
+  // behaves identically across small UFC counts and large Football totals.
+  // Pick count validates the board shape but never changes score calibration.
   const rawScore = status === "bust"
-    ? 50 - (50 * distance / averageContribution)
-    : 100 - (50 * distance / averageContribution);
+    ? 50 - (50 * distance / target)
+    : 100 - (50 * distance / target);
   const roundedScore = Math.round(rawScore);
 
   return status === "bust"
