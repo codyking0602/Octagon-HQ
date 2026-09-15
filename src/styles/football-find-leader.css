@@ -185,6 +185,11 @@
     radial-gradient(circle at 50% 42%, rgba(var(--football-accent-rgb), .12), transparent 55%),
     #17191e;
 }
+.football-find-card__visual.has-logo {
+  border: 1px solid var(--football-logo-backplate-border, rgba(74, 63, 49, .22));
+  background: var(--football-logo-backplate, #E7E1D7);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
+}
 .football-find-card__visual img {
   width: 74px;
   height: 74px;
