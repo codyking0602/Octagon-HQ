@@ -666,7 +666,17 @@ Deno.serve(async (request) => {
     });
 
     if (body.sport === "football") {
-      const materialized = await materializeFootballToday(admin);
+      const previewRequest = await admin.rpc("get_daily_challenge_materialization_request", {
+        p_sport: "football",
+      });
+      if (previewRequest.error) {
+        throw new Error("The Football Daily preview request failed.");
+      }
+      const preview = requiredRecord(previewRequest.data, "Football Daily preview");
+      const previewDay = requiredString(preview.central_day, "Football preview Central day");
+      const previewScheduleVersion = requiredString(preview.schedule_version, "Football preview schedule version");
+      const previewGame = requiredString(preview.expected_game, "Football preview game");
+
       const weeklyGate = await admin.rpc("football_weekly_auction_daily_gate", {
         p_profile_id: profileId,
       });
@@ -680,12 +690,14 @@ Deno.serve(async (request) => {
           "WEEKLY_AUCTION_REQUIRED",
           "Submit today’s Weekly Auction bids before starting Football Daily.",
           {
-            central_day: materialized.centralDay,
-            schedule_version: materialized.scheduleVersion,
-            game_type: materialized.gameType,
+            central_day: previewDay,
+            schedule_version: previewScheduleVersion,
+            game_type: previewGame,
           },
         );
       }
+
+      const materialized = await materializeFootballToday(admin);
       let context = await getContext(admin, materialized.dailyChallengeId, profileId);
       context = await finalizePending(userClient, admin, context, profileId);
 
