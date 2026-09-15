@@ -377,7 +377,7 @@ describe("Home Your HQ", () => {
           eventsEntered: 3,
         },
         {
-          rank: 2,
+          rank: 3,
           profileId: cody.id,
           displayName: cody.displayName,
           isCurrentUser: true,
@@ -385,9 +385,9 @@ describe("Home Your HQ", () => {
           incorrect: 3,
           missing: 0,
           excluded: 0,
-          basePoints: 36,
+          basePoints: 46,
           lockBonus: 4,
-          totalPoints: 40,
+          totalPoints: 50,
           eventsEntered: 3,
         },
       ],
@@ -483,7 +483,7 @@ describe("Home Your HQ", () => {
 
     const football = screen.getByText("Football Picks").closest("article")!;
     expect(within(football).getByText("9-3")).toBeInTheDocument();
-    expect(within(football).getByText("#2 OF 2 · PICKS STANDING")).toBeInTheDocument();
+    expect(within(football).getByText("#1 OF 2 · PICKS STANDING")).toBeInTheDocument();
     expect(within(football).getByText("#1 · WEEKLY GAMES")).toBeInTheDocument();
 
     const ufc = screen.getByText("UFC Picks").closest("article")!;
