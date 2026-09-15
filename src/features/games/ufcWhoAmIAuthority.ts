@@ -86,6 +86,12 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   if (divisions.length > 1) clues.push(clue("division-count", `I competed in ${divisions.length} UFC divisions.`, "helpful"));
   if (activeDecades.length > 1) clues.push(clue("decades", `My UFC career crossed ${activeDecades.length} decades.`, "helpful"));
   if (titleWins.length) clues.push(clue("title-wins", `I won ${titleWins.length} UFC title fights.`, "strong"));
+  if (subject.id === "ufc:demetrious-johnson") {
+    clues.push(
+      clue("inaugural-flyweight-champion", "I became the inaugural UFC flyweight champion.", "strong"),
+      clue("record-eleven-title-defenses", "I set a UFC record with 11 consecutive successful title defenses.", "giveaway"),
+    );
+  }
   if (koWins.length > submissionWins.length && koWins.length >= 3) clues.push(clue("finish-style", "My UFC wins leaned much more toward knockouts than submissions.", "helpful"));
   if (submissionWins.length > koWins.length && submissionWins.length >= 3) clues.push(clue("finish-style", "My UFC wins leaned more toward submissions than knockouts.", "helpful"));
 
