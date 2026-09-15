@@ -51,9 +51,10 @@ describe("Football Hit the Number selection presentation", () => {
     expect(pageSource).toContain("subjectDisplaySubtitle(subject, plan.metricId)");
   });
 
-  it("honors canonical light-backplate media treatment on the dark HTN surface", () => {
-    expect(presentationSource).toContain('asset.darkSurfaceTreatment === "light-backplate"');
-    expect(presentationSource).toContain('background: lightBackplate ? "#fff"');
+  it("uses the shared warm ivory logo backplate for every Football team/program mark", () => {
+    expect(presentationSource).toContain('background: "var(--football-logo-backplate, #E7E1D7)"');
+    expect(presentationSource).toContain('border: "1px solid var(--football-logo-backplate-border, rgba(74, 63, 49, .22))"');
+    expect(presentationSource).not.toContain('asset.darkSurfaceTreatment === "light-backplate"');
     expect(surfaceSource).not.toContain('subjectId.includes("ohio-state")');
   });
 });
