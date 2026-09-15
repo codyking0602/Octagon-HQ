@@ -78,6 +78,11 @@ describe("UFC 331 Picks fight-week polish", () => {
 
     expect(migration).toContain("main-renato-moicano-brian-ortega");
     expect(migration).toContain("result_status = 'cancelled'");
+    expect(migration).toContain("card_segment = null");
+    expect(migration).toContain("set segment_sequence = null");
+    expect(migration.indexOf("set segment_sequence = null")).toBeLessThan(
+      migration.indexOf("set card_segment = 'main'"),
+    );
     expect(migration).toContain("'prelim-gable-steveson-sean-sharaf'");
     expect(migration).toContain("card_segment = 'main'");
     expect(migration).toContain("'card_segment', bout.card_segment");
