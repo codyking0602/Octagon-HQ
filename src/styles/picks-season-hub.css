@@ -131,6 +131,10 @@
   gap: 8px;
 }
 
+.picks-season-standings {
+  scroll-margin-top: 118px;
+}
+
 .picks-season-panel-heading {
   display: flex;
   align-items: end;

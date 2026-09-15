@@ -227,7 +227,7 @@ describe("Home UFC HQ", () => {
     expect(within(section).getByText("#2 OF 3")).toBeInTheDocument();
     expect(within(section).getByText("2026 PICKS STANDING")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "Open UFC Picks season standings" }))
-      .toHaveAttribute("href", "/picks?view=standings#picks-season-standings");
+      .toHaveAttribute("href", "/picks?view=standings#picks-season-leaderboard");
     expect(within(section).getByText("69 PTS")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "View UFC Championship Standings" }))
       .toHaveAttribute("href", "/play?standings=me#championship-standings");

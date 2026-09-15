@@ -419,7 +419,7 @@ export function FootballHq({
           </div>
           <Link
             className="home-event-card__standing"
-            to="/football/picks?view=standings#picks-season-standings"
+            to="/football/picks?view=standings#picks-season-leaderboard"
             aria-label="Open Football Picks season standings"
           >
             <span>{season} PICKS STANDING</span>

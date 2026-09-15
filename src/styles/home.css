@@ -65,14 +65,13 @@
 
 .hq-stat__standings small {
   display: block;
-  overflow: hidden;
   color: var(--text-muted);
   font-size: 8px;
   font-weight: 900;
   letter-spacing: .035em;
   line-height: 1.22;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: normal;
+  white-space: normal;
 }
 
 .hq-stat.is-unavailable > strong,
