@@ -77,6 +77,7 @@ const suppressedCareerSpanSubjectIds = new Set([
   "peyton-manning",
   "troy-aikman",
   "nfl-ahman-green",
+  "nfl-jim-thorpe",
 ]);
 
 const active2026SubjectIds = new Set([
@@ -279,6 +280,8 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:pass-rush-receive-td-game", conceptId: "curated:pass-rush-receive-td-game", text: "I became the first quarterback in NFL history with a passing, rushing, and receiving touchdown in the same game.", band: "strong", facet: "accomplishments", revealPriority: 20 },
     { id: "curated:bills-total-td-record", conceptId: "curated:bills-total-td-record", text: "In 2024 I passed Jim Kelly for the most total touchdowns in Bills franchise history.", band: "strong", facet: "accomplishments", revealPriority: 22 },
     { id: "curated:jersey-17", conceptId: "curated:jersey-17", text: "I wear No. 17 in the NFL.", band: "giveaway", facet: "identity", revealPriority: 10 },
+    { id: "curated:three-pass-three-rush", conceptId: "curated:three-pass-three-rush", text: "In 2024 I became the first player in NFL history with three passing touchdowns and three rushing touchdowns in the same game.", band: "strong", facet: "accomplishments", revealPriority: 20 },
+    { id: "curated:six-rush-td-seven-seasons", conceptId: "curated:six-rush-td-seven-seasons", text: "I became the first quarterback in NFL history with at least six rushing touchdowns in seven consecutive seasons.", band: "strong", facet: "style", revealPriority: 22 },
   ]],
   ["kurt-warner", [{ id: "curated:super-bowl-xxxiv-mvp", conceptId: "curated:super-bowl-xxxiv-mvp", text: "I became Super Bowl XXXIV MVP in my first season as the Rams' starting quarterback.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
   ["nfl-lamar-jackson", [
@@ -286,14 +289,22 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:qb-rushing-record", conceptId: "curated:qb-rushing-record", text: "I passed Michael Vick in 2024 to become the NFL's career rushing-yard leader among quarterbacks.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
     { id: "curated:2019-qb-rushing-season-record", conceptId: "curated:2019-qb-rushing-season-record", text: "In my 2019 MVP season I set the single-season quarterback rushing record with 1,206 yards.", band: "strong", facet: "accomplishments", revealPriority: 16 },
     { id: "curated:jersey-8", conceptId: "curated:jersey-8", text: "I wear No. 8 in the NFL.", band: "giveaway", facet: "identity", revealPriority: 10 },
+    { id: "curated:houdini-run", conceptId: "curated:houdini-run", text: "My 47-yard spinning touchdown run against Cincinnati in 2019 became one of the signature highlights of my career.", band: "strong", facet: "style", revealPriority: 18 },
+    { id: "curated:youngest-two-time-mvp", conceptId: "curated:youngest-two-time-mvp", text: "At 27, I became the youngest quarterback in NFL history to win multiple MVP awards.", band: "strong", facet: "accomplishments", revealPriority: 20 },
   ]],
   ["nfl-otto-graham", [{ id: "curated:ten-title-games", conceptId: "curated:ten-title-games", text: "I led Cleveland to a league championship game in each of my ten pro seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 12 }]],
-  ["nfl-sammy-baugh", [{ id: "curated:two-washington-titles", conceptId: "curated:two-washington-titles", text: "I led Washington to NFL championships in 1937 and 1942.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["nfl-sammy-baugh", [
+    { id: "curated:two-washington-titles", conceptId: "curated:two-washington-titles", text: "I led Washington to NFL championships in 1937 and 1942.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:1943-triple-crown", conceptId: "curated:1943-triple-crown", text: "In 1943 I led the NFL in passing, punting, and defensive interceptions.", band: "giveaway", facet: "style", revealPriority: 12 },
+    { id: "curated:slingin-sammy", conceptId: "curated:slingin-sammy", text: "I was famously known as 'Slingin' Sammy.'", band: "giveaway", facet: "nickname", revealPriority: 8 },
+  ]],
   ["nfl-patrick-mahomes", [
     { id: "curated:three-super-bowl-mvps", conceptId: "curated:three-super-bowl-mvps", text: "I won three Super Bowl MVP awards before turning 30.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
     { id: "curated:2018-fifty-touchdown-mvp", conceptId: "curated:2018-fifty-touchdown-mvp", text: "In my first season as a full-time starter, I threw for 5,097 yards and 50 touchdowns and won the 2018 NFL MVP award.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
     { id: "curated:alex-smith-rookie-year", conceptId: "curated:alex-smith-rookie-year", text: "I spent my rookie season behind Alex Smith before taking over as Kansas City's starter.", band: "strong", facet: "career-path", revealPriority: 18 },
     { id: "curated:jersey-15", conceptId: "curated:jersey-15", text: "I wear No. 15 in the NFL.", band: "giveaway", facet: "identity", revealPriority: 10 },
+    { id: "curated:thirteen-second-drive", conceptId: "curated:thirteen-second-drive", text: "With 13 seconds left against Buffalo in the 2021 divisional round, I completed two passes to set up the tying field goal before winning in overtime.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
+    { id: "curated:youngest-mvp-and-super-bowl", conceptId: "curated:youngest-mvp-and-super-bowl", text: "At 24, I became the youngest player to win both an NFL MVP award and a Super Bowl title.", band: "strong", facet: "accomplishments", revealPriority: 18 },
   ]],
   ["steve-young", [{ id: "curated:montana-to-super-bowl-mvp", conceptId: "curated:montana-to-super-bowl-mvp", text: "I succeeded Joe Montana in San Francisco and later threw six touchdown passes as Super Bowl XXIX MVP.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
   ["nfl-terry-bradshaw", [
@@ -314,6 +325,11 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["nfl-doak-walker", [{ id: "curated:1948-heisman", conceptId: "curated:1948-heisman", text: "I won the 1948 Heisman Trophy at SMU.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
   ["eric-dickerson", [{ id: "curated:2105-rushing", conceptId: "curated:2105-rushing", text: "I set the NFL single-season rushing record with 2,105 yards in 1984.", band: "giveaway", facet: "accomplishments", revealPriority: 8 }]],
   ["nfl-harold-red-grange", [{ id: "curated:galloping-ghost", conceptId: "curated:galloping-ghost", text: "I was famously nicknamed the 'Galloping Ghost.'", band: "giveaway", facet: "nickname", revealPriority: 8 }]],
+  ["nfl-jim-thorpe", [
+    { id: "curated:carlisle-all-american", conceptId: "curated:carlisle-all-american", text: "I was a consensus All-American at Carlisle in both 1911 and 1912.", band: "strong", facet: "accomplishments", revealPriority: 15 },
+    { id: "curated:harvard-upset", conceptId: "curated:harvard-upset", text: "In 1911 I kicked four field goals in Carlisle's 18-15 upset of Harvard.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+    { id: "curated:canton-championships", conceptId: "curated:canton-championships", text: "As a star and coach, I helped the Canton Bulldogs claim pro football championships in 1916, 1917, and 1919.", band: "giveaway", facet: "career-path", revealPriority: 10 },
+  ]],
   ["ladainian-tomlinson", [{ id: "curated:2006-touchdown-record", conceptId: "curated:2006-touchdown-record", text: "I scored an NFL-record 31 total touchdowns in my 2006 MVP season.", band: "giveaway", facet: "accomplishments", revealPriority: 8 }]],
   ["nfl-paul-hornung", [
     { id: "curated:1961-mvp", conceptId: "curated:1961-mvp", text: "I was the AP NFL MVP for the 1961 season.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
