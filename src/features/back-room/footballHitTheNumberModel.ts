@@ -1,4 +1,5 @@
 import {
+  hitTheNumberBoardQualityScore,
   hitTheNumberScore,
   type HitTheNumberResultStatus,
 } from "../play/hitTheNumberEngine";
@@ -159,10 +160,10 @@ export const FOOTBALL_HIT_THE_NUMBER_RECOGNIZABLE_POOL_DEPTH = 24;
 export const FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY = {
   minimumLegalSelections: 6,
   goodUnderMinScore: 90,
-  badUnderMaxScore: 85,
-  meaningfulBustMaxScore: 49,
-  midScoreMin: 75,
-  midScoreMax: 89,
+  badUnderMaxScore: 75,
+  meaningfulBustMaxScore: 40,
+  midScoreMin: 50,
+  midScoreMax: 85,
 } as const;
 
 function careerSpecialSubjectEligible(subject: FootballSubjectProfile) {
@@ -920,7 +921,7 @@ function minimumGoodUnderScore(plan: FootballHitTheNumberPlan) {
   const fact = getFootballFact(plan.subjectIds[0]!, plan.metricId);
   if (!fact) return 90;
   const resolution = 10 ** -fact.definition.decimals;
-  return Math.min(90, hitTheNumberScore({
+  return Math.min(90, hitTheNumberBoardQualityScore({
     status: "under",
     target: plan.target,
     distance: resolution,
@@ -946,7 +947,7 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
     if (Math.abs(total - plan.target) < 1e-9) return false;
     legalSelectionCount += 1;
     const status: HitTheNumberResultStatus = total > plan.target ? "bust" : "under";
-    const score = hitTheNumberScore({
+    const score = hitTheNumberBoardQualityScore({
       status,
       target: plan.target,
       distance: Math.abs(plan.target - total),
@@ -957,10 +958,8 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
       if (score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.badUnderMaxScore) hasBadUnder = true;
     }
     if (
-      (status === "under"
-        && score >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMin
-        && score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMax)
-      || (status === "bust" && score >= 35)
+      score >= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMin
+      && score <= FOOTBALL_HIT_THE_NUMBER_POOL_QUALITY.midScoreMax
     ) {
       hasMiddlingOutcome = true;
     }
