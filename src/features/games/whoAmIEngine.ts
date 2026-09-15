@@ -1,4 +1,4 @@
-import { assembleWhoAmIRevealClues } from "./whoAmIRevealEngine";
+import { assembleWhoAmIRevealClues } from "./whoAmIRevealPlanner";
 
 export type WhoAmISport = "ufc" | "football";
 export type WhoAmILeague = "UFC" | "NFL" | "CFB";
