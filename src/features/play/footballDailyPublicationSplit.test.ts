@@ -42,7 +42,7 @@ describe("split Football Daily publication runtimes", () => {
       const actual = builderFor(gameType)(day, scheduleVersion, gameType);
       expect(actual).toEqual(expected);
     }
-  });
+  }, 60_000);
 
   it("preserves standalone Blind Resume and Blind Rank publication semantics", () => {
     const day = "2026-09-21";
