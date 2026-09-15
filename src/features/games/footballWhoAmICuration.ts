@@ -203,6 +203,10 @@ const clueTextOverrides = new Map<string, Pick<WhoAmIClue, "text" | "band" | "fa
 
 const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["nfl-bart-starr", [{ id: "curated:five-championships", conceptId: "curated:five-championships", text: "I quarterbacked Green Bay to five NFL championships under Vince Lombardi.", band: "giveaway", facet: "accomplishments", revealPriority: 12 }]],
+  ["nfl-bobby-layne", [
+    { id: "curated:three-lions-titles", conceptId: "curated:three-lions-titles", text: "I helped lead Detroit to NFL championships in 1952, 1953 and 1957.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:retired-passing-leader", conceptId: "curated:retired-passing-leader", text: "When I retired after the 1962 season, I ranked first in NFL history in completions, passing yards and touchdown passes.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+  ]],
   ["brett-favre", [
     { id: "curated:three-straight-mvps", conceptId: "curated:three-straight-mvps", text: "I won the AP NFL MVP award three straight seasons from 1995 through 1997.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
     { id: "curated:green-bay-ironman", conceptId: "curated:green-bay-ironman", text: "I became Green Bay's defining quarterback while building an NFL-record streak of 297 consecutive regular-season starts.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
