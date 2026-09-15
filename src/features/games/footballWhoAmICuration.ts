@@ -1097,6 +1097,26 @@ const batch3TextOverrides = new Map<string, Partial<WhoAmIClue>>([
     facet: "relationships",
     revealPriority: 8,
   }],
+  ["nfl-joe-thomas:identity:historic-consecutive-snap-streak", {
+    band: "strong",
+    facet: "accomplishments",
+    revealPriority: 14,
+  }],
+  ["nfl-joe-thomas:identity:blocked-for-twenty-quarterbacks", {
+    band: "strong",
+    facet: "relationships",
+    revealPriority: 16,
+  }],
+  ["nfl-joe-thomas:identity:decade-long-pro-bowl-opening", {
+    band: "strong",
+    facet: "accomplishments",
+    revealPriority: 16,
+  }],
+  ["nfl-joe-thomas:identity:first-ballot-hall-entry", {
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
 ]);
 
 function applyBatch3IdentityCuration(subjectId: string, clue: WhoAmIClue) {
@@ -1619,6 +1639,37 @@ function batch3ClueQualityScore(subject: FootballSubjectProfile, clue: WhoAmIClu
   return score;
 }
 
+const batch3ForcedPoolIds = new Map<string, ReadonlySet<string>>([
+  ["nfl-joe-thomas", new Set([
+    "position",
+    "era",
+    "curated3:thomas-wisconsin",
+    "curated3-replay:thomas-left-tackle",
+    "curated3:thomas-73",
+    "identity:ten-thousand-snap-streak",
+    "identity:twenty-starting-quarterbacks",
+    "identity:ten-straight-pro-bowls",
+    "curated3:thomas-draft",
+    "identity:first-ballot-browns-tackle",
+    "curated3:thomas-browns-only",
+    "curated3-replay:thomas-six-ap1",
+  ])],
+  ["nfl-orlando-pace", new Set([
+    "position",
+    "era",
+    "identity:started-first-day-freshman-camp",
+    "identity:pancake-block-famous",
+    "identity:first-sophomore-lombardi",
+    "identity:fourth-in-heisman",
+    "identity:first-overall-1997",
+    "curated3:pace-rams",
+    "curated3:pace-probowls",
+    "curated3:pace-sb34",
+    "curated3-replay:pace-left-tackle",
+    "curated3-replay:pace-76",
+  ])],
+]);
+
 function trimNflBatch3Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
   const target = 16;
   if (clues.length <= target) return [...clues];
@@ -1663,6 +1714,8 @@ function curateNflBatch3Clues(subject: FootballSubjectProfile, rawClues: readonl
 
   curated.push(...(batch3SupplementalClues.get(subject.id) ?? []));
   curated.push(...(batch3ReplayDepthClues.get(subject.id) ?? []));
+  const forcedPool = batch3ForcedPoolIds.get(subject.id);
+  if (forcedPool) return curated.filter((clue) => forcedPool.has(clue.id));
   return trimNflBatch3Pool(subject, curated);
 }
 
