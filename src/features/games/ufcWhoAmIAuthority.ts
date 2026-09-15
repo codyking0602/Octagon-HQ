@@ -4,7 +4,7 @@ import {
 } from "../back-room/ufcFactualLedger";
 import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
 import { whoAmIClueSelectionClass, whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
-import { isUfcWhoAmICalibrationSubject, shouldUseUfcWhoAmIIdentityConcept } from "./ufcWhoAmICuration";
+import { isUfcWhoAmICalibrationSubject, shouldUseUfcWhoAmIIdentityConcept, ufcWhoAmIIdentityFacetOverride } from "./ufcWhoAmICuration";
 import {
   createWhoAmIRound,
   type WhoAmICandidate,
@@ -23,15 +23,19 @@ function ufcPersonIdentityClues(subject: UfcFactualSubject): WhoAmIClue[] {
   if (!knowledge) return [];
   const clues = knowledge.facts
     .filter((fact) => shouldUseUfcWhoAmIIdentityConcept(subject.id, fact.conceptId))
-    .map((fact) => whoAmIIdentityKnowledgeClue({
-      subjectId: subject.id,
-      subjectName: subject.name,
-      subjectKind: "fighter",
-      league: "UFC",
-      factId: fact.factId,
-      conceptId: fact.conceptId,
-      value: fact.value,
-    }));
+    .map((fact) => {
+      const identityClue = whoAmIIdentityKnowledgeClue({
+        subjectId: subject.id,
+        subjectName: subject.name,
+        subjectKind: "fighter",
+        league: "UFC",
+        factId: fact.factId,
+        conceptId: fact.conceptId,
+        value: fact.value,
+      });
+      const facetOverride = ufcWhoAmIIdentityFacetOverride(subject.id, fact.conceptId);
+      return facetOverride ? { ...identityClue, facet: facetOverride } : identityClue;
+    });
 
   if (!isUfcWhoAmICalibrationSubject(subject.id)) return clues;
 
