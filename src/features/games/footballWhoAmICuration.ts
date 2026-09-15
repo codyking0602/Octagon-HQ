@@ -959,6 +959,17 @@ function batch2ShouldSuppressMetric(subject: FootballSubjectProfile, clue: WhoAm
   return false;
 }
 
+function trimNflBatch2Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const target = subject.id === "nfl-jerry-rice" || subject.id === "mike-ditka" ? 12 : 16;
+  if (clues.length <= target) return [...clues];
+
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+  const selected = new Set(ranked.slice(0, target).map((entry) => entry.clue.id));
+  return clues.filter((clue) => selected.has(clue.id));
+}
+
 function curateNflBatch2Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
   const retained = batch2RetainedIdentityConcepts.get(subject.id);
   let colorUsed = false;
@@ -989,7 +1000,7 @@ function curateNflBatch2Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(batch2SupplementalClues.get(subject.id) ?? []));
-  return trimDeepPool(subject, curated);
+  return trimNflBatch2Pool(subject, curated);
 }
 
 export function isNflWhoAmIBatch2Subject(subjectId: string) {
