@@ -4,23 +4,23 @@ select set_config('request.jwt.claim.role','service_role',true);
 
 do $best_cfb_contract$
 begin
-  if (select count(*) from private.draft_room_cfb_best_teams_pool) <> 132 then
-    raise exception 'Best CFB Teams must have exactly 132 approved seasons';
+  if (select count(*) from private.draft_room_cfb_best_teams_pool where season_reference like 'cfb-best-%') <> 132 then
+    raise exception 'Best CFB Teams must preserve exactly 132 original approved seasons';
   end if;
-  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='SEC') <> 32 then
-    raise exception 'SEC pool must have exactly 32 seasons';
+  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='SEC' and season_reference like 'cfb-best-%') <> 32 then
+    raise exception 'SEC original pool must have exactly 32 seasons';
   end if;
-  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='Big Ten') <> 32 then
-    raise exception 'Big Ten pool must have exactly 32 seasons';
+  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='Big Ten' and season_reference like 'cfb-best-%') <> 32 then
+    raise exception 'Big Ten original pool must have exactly 32 seasons';
   end if;
-  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='Big 12') <> 32 then
-    raise exception 'Big 12 pool must have exactly 32 seasons';
+  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='Big 12' and season_reference like 'cfb-best-%') <> 32 then
+    raise exception 'Big 12 original pool must have exactly 32 seasons';
   end if;
-  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='ACC') <> 32 then
-    raise exception 'ACC pool must have exactly 32 seasons';
+  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='ACC' and season_reference like 'cfb-best-%') <> 32 then
+    raise exception 'ACC original pool must have exactly 32 seasons';
   end if;
-  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='Notre Dame') <> 4 then
-    raise exception 'Notre Dame wildcard pool must have exactly four seasons';
+  if (select count(*) from private.draft_room_cfb_best_teams_pool where conference_bucket='Notre Dame' and season_reference like 'cfb-best-%') <> 4 then
+    raise exception 'Notre Dame wildcard original pool must have exactly four seasons';
   end if;
 
   if (select hidden_grade from private.draft_room_cfb_best_teams_pool where school='LSU' and season_year=2019) <> 100.00 then

@@ -31,6 +31,12 @@ const repositoryMocks = vi.hoisted(() => ({
   advance: vi.fn(),
 }));
 
+const weeklyRepositoryMocks = vi.hoisted(() => ({
+  load: vi.fn(),
+  submit: vi.fn(),
+  acknowledgeFinal: vi.fn(),
+}));
+
 vi.mock("../identity/IdentityProvider", () => ({
   useIdentity: () => ({
     status: "ready",
@@ -44,6 +50,10 @@ vi.mock("../play/todayChallengeRepository", () => ({
   TodayChallengeRepositoryError: class TodayChallengeRepositoryError extends Error {
     stale = false;
   },
+}));
+
+vi.mock("../play/footballWeeklyAuctionRepository", () => ({
+  createFootballWeeklyAuctionRepository: () => weeklyRepositoryMocks,
 }));
 
 function projectionFor(day = "2026-09-04", scheduleVersion = "football-blind-resume-v4-test"): TodayChallengeProjection {
@@ -73,6 +83,10 @@ describe("Football Blind Resume Daily v4", () => {
   beforeEach(() => {
     repositoryMocks.loadToday.mockReset();
     repositoryMocks.advance.mockReset();
+    weeklyRepositoryMocks.load.mockReset();
+    weeklyRepositoryMocks.submit.mockReset();
+    weeklyRepositoryMocks.acknowledgeFinal.mockReset();
+    weeklyRepositoryMocks.load.mockResolvedValue({ available: false });
   });
 
   it("keeps the locked three-round, three-stage scoring contract and 100-point normalization", () => {
