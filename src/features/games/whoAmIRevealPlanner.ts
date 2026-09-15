@@ -5,7 +5,7 @@ import {
 } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet } from "./whoAmIEngine";
 
-const REVEAL_SHORTLIST_EXTRA = 4;
+const REVEAL_SHORTLIST_EXTRA = 8;
 const REVEAL_TARGETS = {
   broad: 2,
   helpful: 2,
@@ -96,58 +96,54 @@ export function assembleWhoAmIRevealClues(
   );
 
   const broad = shortlist.filter((clue) => clue.band === "broad").slice(0, REVEAL_TARGETS.broad);
-  const helpfulPool = shortlist.filter((clue) => clue.band === "helpful");
-  const helpful = ranked(helpfulPool, random)
+  const helpful = ranked(shortlist.filter((clue) => clue.band === "helpful"), random)
     .sort(qualityFirst)
     .slice(0, REVEAL_TARGETS.helpful)
     .sort((left, right) => left.index - right.index)
     .map((entry) => entry.value);
-  const strong = shortlist.filter((clue) => clue.band === "strong");
-  const giveaway = shortlist.filter((clue) => clue.band === "giveaway");
+  const latePool = shortlist.filter((clue) => clue.band === "strong" || clue.band === "giveaway");
+  const strongCount = latePool.filter((clue) => clue.band === "strong").length;
 
   if (
     broad.length < REVEAL_TARGETS.broad
     || helpful.length < REVEAL_TARGETS.helpful
-    || strong.length < REVEAL_TARGETS.strong
-    || strong.length + giveaway.length < REVEAL_TARGETS.strong + REVEAL_TARGETS.final
+    || strongCount < REVEAL_TARGETS.strong
+    || latePool.length < REVEAL_TARGETS.strong + REVEAL_TARGETS.final
   ) {
     return assembleWhoAmIClues(clues, limit, random);
   }
 
-  const rankedStrong = ranked(strong, random).sort((left, right) => {
-    const strengthDifference = recognitionStrength(left.value) - recognitionStrength(right.value);
-    if (Math.abs(strengthDifference) > 12) return strengthDifference;
-    return left.variationRank - right.variationRank
-      || strengthDifference
-      || left.index - right.index;
-  });
+  const rankedLate = ranked(latePool, random).sort(qualityFirst);
+  const final: RankedClue[] = [];
+  let unreservedStrong = strongCount;
 
-  const coreStrong = rankedStrong
-    .slice(0, REVEAL_TARGETS.strong)
-    .map((entry) => entry.value);
-  const coreStrongIds = new Set(coreStrong.map((clue) => clue.id));
-
-  const finalPool = ranked([
-    ...strong.filter((clue) => !coreStrongIds.has(clue.id)),
-    ...giveaway,
-  ], random).sort((left, right) => {
-    const strengthDifference = recognitionStrength(right.value) - recognitionStrength(left.value);
-    if (Math.abs(strengthDifference) > 12) return strengthDifference;
-    return left.variationRank - right.variationRank
-      || strengthDifference
-      || BAND_RANK[right.value.band] - BAND_RANK[left.value.band]
-      || left.index - right.index;
-  });
-
-  const final = finalPool
-    .slice(0, REVEAL_TARGETS.final)
-    .sort(revealOrder)
-    .map((entry) => entry.value);
+  for (const candidate of rankedLate) {
+    if (final.length >= REVEAL_TARGETS.final) break;
+    if (
+      candidate.value.band === "strong"
+      && unreservedStrong - 1 < REVEAL_TARGETS.strong
+    ) {
+      continue;
+    }
+    final.push(candidate);
+    if (candidate.value.band === "strong") unreservedStrong -= 1;
+  }
 
   if (final.length < REVEAL_TARGETS.final) {
     return assembleWhoAmIClues(clues, limit, random);
   }
 
-  const orderedStrong = ranked(coreStrong).sort(revealOrder).map((entry) => entry.value);
-  return [...broad, ...helpful, ...orderedStrong, ...final];
+  const finalIds = new Set(final.map((entry) => entry.value.id));
+  const coreStrong = rankedLate
+    .filter((entry) => entry.value.band === "strong" && !finalIds.has(entry.value.id))
+    .slice(0, REVEAL_TARGETS.strong);
+
+  if (coreStrong.length < REVEAL_TARGETS.strong) {
+    return assembleWhoAmIClues(clues, limit, random);
+  }
+
+  const orderedStrong = [...coreStrong].sort(revealOrder).map((entry) => entry.value);
+  const orderedFinal = [...final].sort(revealOrder).map((entry) => entry.value);
+
+  return [...broad, ...helpful, ...orderedStrong, ...orderedFinal];
 }
