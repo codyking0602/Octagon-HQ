@@ -26,6 +26,16 @@ describe("Football Weekly Auction live contract", () => {
     expect(gate).toContain("$0 = pass");
   });
 
+  it("uses the calibrated board-shape generator rather than fixed strength shortcuts", () => {
+    expect(migration).toContain("for v_attempt in 1..500 loop");
+    expect(migration).toContain("for v_shape_attempt in 1..30 loop");
+    expect(migration).toContain("94 + floor(random() * 9) * 0.5");
+    expect(migration).toContain("88.5 + floor(random() * 14) * 0.5");
+    expect(migration).toContain("other.hidden_grade >= blue.hidden_grade + 1.5");
+    expect(migration).toContain("other.hidden_grade <= blue.hidden_grade + 4.5");
+    expect(migration).toContain("abs(pool.hidden_grade - v_target) + random() * 0.3");
+  });
+
   it("resolves bid ties by prior collection size, prior spend, then random", () => {
     expect(migration).toContain("bid.amount desc");
     expect(migration).toContain("award.day_index < p_day_index");
