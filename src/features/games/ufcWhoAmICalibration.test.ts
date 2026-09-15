@@ -24,6 +24,8 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
     const universe = getUfcWhoAmIUniverse();
     const candidateById = new Map(universe.candidates.map((candidate) => [candidate.id, candidate]));
     const report: Array<Record<string, unknown>> = [];
+    let nonForcedGiveawayBoards = 0;
+    let totalBoards = 0;
 
     for (const subjectId of UFC_WHO_AM_I_CALIBRATION_SUBJECT_IDS) {
       const candidate = candidateById.get(subjectId);
@@ -41,6 +43,17 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
 
       for (const sequence of sequences) {
         expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+        expect(sequence.slice(0, 2).every((clue) => clue.band === "broad")).toBe(true);
+        expect(sequence.slice(2, 4).every((clue) => clue.band === "helpful")).toBe(true);
+        expect(
+          sequence.slice(4).every((clue) => clue.band === "strong" || clue.band === "giveaway"),
+          `${subjectId} should use six strong-or-later clues after the opening two rounds`,
+        ).toBe(true);
+
+        totalBoards += 1;
+        if (sequence.filter((clue) => clue.band === "giveaway").length < 2) {
+          nonForcedGiveawayBoards += 1;
+        }
 
         const classes = sequence.map(whoAmIClueSelectionClass);
         expect(
@@ -82,6 +95,10 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
       });
     }
 
-    console.info("UFC Who Am I full-100 calibration", JSON.stringify(report));
+    expect(nonForcedGiveawayBoards).toBeGreaterThan(0);
+    console.info(
+      "UFC Who Am I full-100 calibration",
+      JSON.stringify({ report, nonForcedGiveawayBoards, totalBoards }),
+    );
   }, 90_000);
 });
