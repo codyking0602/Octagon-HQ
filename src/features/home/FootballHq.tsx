@@ -6,6 +6,7 @@ import { footballMatchupBreakdownsForEvent } from "../picks/footballMatchupBreak
 import { footballDateTimeLabel } from "../picks/footballTime";
 import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../picks/picksModel";
+import { picksSeasonStandings } from "../picks/picksSeasonStandings";
 import type { DailyChallengeChampionshipSnapshot } from "../play/dailyChallengeChampionship";
 import { WeeklyGamesStandingLink } from "./WeeklyGamesStandingLink";
 
@@ -364,7 +365,7 @@ export function FootballHq({
   const progressPercent = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
   const remaining = Math.max(0, progress.total - progress.completed);
   const locked = event ? eventPicksLocked(event) : false;
-  const standings = history?.seasonStandings ?? [];
+  const standings = picksSeasonStandings(history, "football");
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
   const rank = standing ? standingLabel(standing.rank, standings) : "";
   const matchupBreakdowns = event ? footballMatchupBreakdownsForEvent(event) : [];
@@ -416,11 +417,15 @@ export function FootballHq({
             <div className="picks-progress__track" aria-hidden="true"><span style={{ width: `${progressPercent}%` }} /></div>
             <small className="home-event-card__picks-status">{status}</small>
           </div>
-          <div className="home-event-card__standing" aria-label="Football Picks season standing">
+          <Link
+            className="home-event-card__standing"
+            to="/football/picks?view=standings#picks-season-standings"
+            aria-label="Open Football Picks season standings"
+          >
             <span>{season} PICKS STANDING</span>
             <b>{signedIn && rank ? `${rank} OF ${standings.length}` : "—"}</b>
             <small>{standing ? `${standing.totalPoints} PTS · ${pickRecord(summary)}` : signedIn ? pickRecord(summary) : "SIGN IN TO TRACK"}</small>
-          </div>
+          </Link>
         </div>
         <Link className="secondary-action" to="/football/picks">OPEN PICKS →</Link>
       </section>
