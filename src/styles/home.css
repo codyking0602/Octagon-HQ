@@ -51,9 +51,9 @@
 .hq-stat > small {
   margin-top: auto;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 8.5px;
   font-weight: 900;
-  letter-spacing: .1em;
+  letter-spacing: .085em;
 }
 
 .hq-stat__standings {
@@ -67,9 +67,9 @@
   display: block;
   overflow: hidden;
   color: var(--text-muted);
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 900;
-  letter-spacing: .045em;
+  letter-spacing: .035em;
   line-height: 1.22;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -657,13 +657,13 @@
   }
 
   .hq-stat > small {
-    font-size: 6.5px;
+    font-size: 7.5px;
     line-height: 1.2;
   }
 
   .hq-stat__standings small {
-    font-size: 6.5px;
-    letter-spacing: .025em;
+    font-size: 7.25px;
+    letter-spacing: .015em;
   }
 
   .ranking-spotlight__actions {
