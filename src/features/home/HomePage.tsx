@@ -299,7 +299,7 @@ export default function HomePage() {
           </div>
           <Link
             className="home-event-card__standing"
-            to="/picks?view=standings#picks-season-standings"
+            to="/picks?view=standings#picks-season-leaderboard"
             aria-label="Open UFC Picks season standings"
           >
             <span>{recordSeason} PICKS STANDING</span>
