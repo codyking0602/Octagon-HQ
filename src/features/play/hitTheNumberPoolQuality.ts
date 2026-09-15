@@ -1,5 +1,5 @@
 import {
-  hitTheNumberScore,
+  hitTheNumberBoardQualityScore,
   hitTheNumberStatRows,
   type HitTheNumberResultStatus,
   type HitTheNumberStatRow,
@@ -16,10 +16,10 @@ export const HIT_THE_NUMBER_RANDOM_POOL_QUALITY = {
   candidateAttempts: 64,
   minimumLegalSelections: 6,
   goodUnderMinScore: 90,
-  badUnderMaxScore: 85,
-  meaningfulBustMaxScore: 49,
-  midScoreMin: 75,
-  midScoreMax: 89,
+  badUnderMaxScore: 75,
+  meaningfulBustMaxScore: 40,
+  midScoreMin: 50,
+  midScoreMax: 85,
 } as const;
 
 export interface HitTheNumberPoolQualityResult {
@@ -120,7 +120,7 @@ export function hitTheNumberRandomPoolQuality(
     if (status === "perfect") return;
 
     legalSelectionCount += 1;
-    const score = hitTheNumberScore({
+    const score = hitTheNumberBoardQualityScore({
       status,
       target: plan.target,
       distance: Math.abs(plan.target - total),
@@ -133,10 +133,8 @@ export function hitTheNumberRandomPoolQuality(
       lowestBustScore = lowestBustScore == null ? score : Math.min(lowestBustScore, score);
     }
     if (
-      (status === "under"
-        && score >= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.midScoreMin
-        && score <= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.midScoreMax)
-      || (status === "bust" && score >= 35)
+      score >= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.midScoreMin
+      && score <= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.midScoreMax
     ) {
       hasMidScore = true;
     }
