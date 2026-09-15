@@ -893,6 +893,7 @@ const batch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch2Supplement("ditka-iron", "I became widely known as 'Iron Mike.'", "giveaway", "nickname", 9),
     batch2Supplement("ditka-coach", "I later coached the 1985 Bears to a Super Bowl XX championship.", "giveaway", "career-path", 8),
     batch2Supplement("ditka-89", "No. 89 became my signature number as a Bears tight end.", "helpful", "identity"),
+    batch2Supplement("ditka-pitt-two-way", "At Pitt I led the team in receiving for three straight seasons while also playing defense and punting.", "helpful", "background"),
   ]],
   ["ozzie-newsome", [
     batch2Supplement("ozzie-era", "My playing career ran from the late 1970s through the 1980s.", "broad", "era", 30),
@@ -981,6 +982,7 @@ const batch2ForcedPoolIds = new Map<string, ReadonlySet<string>>([
     "identity:pr7-mike-ditka-early-modern-tight-end",
     "curated2:ditka-pitt",
     "curated2:ditka-89",
+    "curated2:ditka-pitt-two-way",
     "fact:nfl-career-receiving-yards",
     "identity:pr7-mike-ditka-letter-to-halas",
     "identity:resume-mike-ditka-01",
