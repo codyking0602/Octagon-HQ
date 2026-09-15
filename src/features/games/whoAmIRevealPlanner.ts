@@ -68,7 +68,7 @@ function ranked(values: readonly WhoAmIClue[], random?: () => number): RankedClu
 
 function qualityFirst(left: RankedClue, right: RankedClue) {
   const strengthDifference = recognitionStrength(right.value) - recognitionStrength(left.value);
-  if (Math.abs(strengthDifference) > 12) return strengthDifference;
+  if (Math.abs(strengthDifference) > 30) return strengthDifference;
   return left.variationRank - right.variationRank
     || strengthDifference
     || left.index - right.index;
