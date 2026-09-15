@@ -1117,6 +1117,31 @@ const batch3TextOverrides = new Map<string, Partial<WhoAmIClue>>([
     facet: "accomplishments",
     revealPriority: 8,
   }],
+  ["nfl-orlando-pace:identity:immediate-ohio-state-starter", {
+    band: "helpful",
+    facet: "background",
+    revealPriority: 14,
+  }],
+  ["nfl-orlando-pace:identity:pancake-block-identity", {
+    band: "helpful",
+    facet: "style",
+    revealPriority: 14,
+  }],
+  ["nfl-orlando-pace:identity:historic-lombardi-award", {
+    band: "strong",
+    facet: "accomplishments",
+    revealPriority: 14,
+  }],
+  ["nfl-orlando-pace:identity:lineman-heisman-finish", {
+    band: "strong",
+    facet: "accomplishments",
+    revealPriority: 16,
+  }],
+  ["nfl-orlando-pace:identity:offensive-lineman-first-overall", {
+    band: "giveaway",
+    facet: "career-path",
+    revealPriority: 8,
+  }],
 ]);
 
 function applyBatch3IdentityCuration(subjectId: string, clue: WhoAmIClue) {
@@ -1193,7 +1218,7 @@ const batch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch3Supplement("pace-ohio-state", "I starred at Ohio State before entering the NFL.", "helpful", "background"),
     batch3Supplement("pace-rams", "I protected the blind side for the St. Louis Rams' 'Greatest Show on Turf.'", "giveaway", "career-path", 9),
     batch3Supplement("pace-probowls", "I was selected to seven Pro Bowls.", "strong", "accomplishments"),
-    batch3Supplement("pace-sb34", "I won Super Bowl XXXIV with the Rams.", "giveaway", "accomplishments", 8),
+    batch3Supplement("pace-sb34", "I won Super Bowl XXXIV with the Rams.", "strong", "accomplishments", 12),
   ]],
   ["nfl-steve-hutchinson", [
     batch3Supplement("hutch-michigan", "I played college football at Michigan.", "helpful", "background"),
@@ -1659,14 +1684,14 @@ const batch3ForcedPoolIds = new Map<string, ReadonlySet<string>>([
     "era",
     "identity:started-first-day-freshman-camp",
     "identity:pancake-block-famous",
+    "curated3:pace-ohio-state",
+    "curated3-replay:pace-76",
     "identity:first-sophomore-lombardi",
     "identity:fourth-in-heisman",
-    "identity:first-overall-1997",
-    "curated3:pace-rams",
     "curated3:pace-probowls",
     "curated3:pace-sb34",
-    "curated3-replay:pace-left-tackle",
-    "curated3-replay:pace-76",
+    "identity:first-overall-1997",
+    "curated3:pace-rams",
   ])],
 ]);
 
