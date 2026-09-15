@@ -985,6 +985,7 @@ const batch2ForcedPoolIds = new Map<string, ReadonlySet<string>>([
     "identity:pr7-mike-ditka-letter-to-halas",
     "identity:resume-mike-ditka-01",
     "curated2:ditka-rookie",
+    "curated2:ditka-fifth",
     "curated2:ditka-iron",
     "curated2:ditka-coach",
   ])],
