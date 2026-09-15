@@ -7,9 +7,10 @@ import {
   pickRecord,
 } from "../picks/picksModel";
 import { usePicks } from "../picks/PicksProvider";
-import type {
-  TodayChallengeLeaderboard,
-  TodayChallengeProjection,
+import {
+  TodayChallengeRepositoryError,
+  type TodayChallengeLeaderboard,
+  type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
 import { todayChallengeAdapter } from "../play/todaysChallengeAdapters";
 import {
@@ -52,6 +53,7 @@ function TodayChallengeCard({
   error,
   projection,
   leaderboard,
+  gatedPreview = false,
 }: {
   sport: "ufc" | "football";
   title: string;
@@ -61,22 +63,25 @@ function TodayChallengeCard({
   error: string;
   projection: TodayChallengeProjection | null;
   leaderboard: TodayChallengeLeaderboard | null;
+  gatedPreview?: boolean;
 }) {
   const attempt = projection?.officialAttempt ?? null;
   const rank = todayRank(leaderboard);
   const status = !signedIn
     ? "SIGN IN"
-    : loading && !projection
-      ? "LOADING"
-      : error && !projection
-        ? "UNAVAILABLE"
-        : attempt
-          ? "COMPLETED"
-          : (projection?.progressRevision ?? 0) > 0
-            ? "IN PROGRESS"
-            : projection
-              ? "NOT PLAYED"
-              : "UNAVAILABLE";
+    : gatedPreview
+      ? "READY"
+      : loading && !projection
+        ? "LOADING"
+        : error && !projection
+          ? "UNAVAILABLE"
+          : attempt
+            ? "COMPLETED"
+            : (projection?.progressRevision ?? 0) > 0
+              ? "IN PROGRESS"
+              : projection
+                ? "NOT PLAYED"
+                : "UNAVAILABLE";
   const sportLabel = sport === "ufc" ? "UFC" : "FOOTBALL";
 
   return (
@@ -96,6 +101,8 @@ function TodayChallengeCard({
           <p>Sign in to track today’s score and standing.</p>
         ) : attempt ? (
           <p>{rank ? `#${rank} today` : "Official score locked"}</p>
+        ) : gatedPreview ? (
+          <p>Ready when you are.</p>
         ) : status === "IN PROGRESS" ? (
           <p>Pick up where you left off.</p>
         ) : status === "NOT PLAYED" ? (
@@ -109,10 +116,12 @@ function TodayChallengeCard({
       <div className="home-challenge-card__result">
         {attempt ? (
           <strong>{attempt.normalizedScore}<small>/100</small></strong>
+        ) : gatedPreview ? (
+          <strong>PLAY NOW</strong>
         ) : (
           <strong>{status}</strong>
         )}
-        <span>OPEN <b aria-hidden="true">→</b></span>
+        <span>{gatedPreview ? "" : "OPEN "}<b aria-hidden="true">→</b></span>
       </div>
     </Link>
   );
@@ -145,7 +154,17 @@ export default function HomePage() {
     sport: "football",
   });
   const ufcDailyAdapter = todayChallengeAdapter(ufcDailyRuntime.projection?.gameType);
-  const footballDailyAdapter = todayChallengeAdapter(footballDailyRuntime.projection?.gameType);
+  const footballWeeklyAuctionGate = footballDailyRuntime.error instanceof TodayChallengeRepositoryError
+    && footballDailyRuntime.error.code === "WEEKLY_AUCTION_REQUIRED"
+    ? footballDailyRuntime.error
+    : null;
+  const footballDailyAdapter = todayChallengeAdapter(
+    footballDailyRuntime.projection?.gameType ?? footballWeeklyAuctionGate?.previewGameType,
+  );
+  const footballDailyGatedPreview = Boolean(
+    footballWeeklyAuctionGate?.previewGameType
+      && footballWeeklyAuctionGate.previewCentralDay,
+  );
   const spotlight = dailyRankingSpotlight(allTime, new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Chicago",
     year: "numeric",
@@ -210,6 +229,7 @@ export default function HomePage() {
       error={footballDailyError}
       projection={footballDailyRuntime.projection}
       leaderboard={footballDailyOverview.leaderboard}
+      gatedPreview={footballDailyGatedPreview}
     />
   );
 
