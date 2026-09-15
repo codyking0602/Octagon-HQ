@@ -272,6 +272,10 @@ export default function PicksPage() {
 
               <section className="picks-card-list" aria-label={`${activeEvent.name} fight picks`}>
                 {orderedBouts.map((bout, index) => {
+                  const segmentIndex = orderedBouts
+                    .slice(0, index + 1)
+                    .filter((candidate) => (candidate.cardSegment ?? "main") === (bout.cardSegment ?? "main"))
+                    .length;
                   const selection = picks.selections[bout.boutId] ?? null;
                   const saving = picks.savingBoutId === bout.boutId;
                   const removed = bout.includedInPicks === false;
@@ -310,7 +314,7 @@ export default function PicksPage() {
                     >
                       <header className="pick-bout-card__meta">
                         <div className="pick-bout-card__heading">
-                          <span>{fightCardLabel(bout, index)}</span>
+                          <span>{fightCardLabel(bout, index, segmentIndex)}</span>
                           <small>{bout.weightClass}</small>
                         </div>
                         {!removed && !cancelled ? (
