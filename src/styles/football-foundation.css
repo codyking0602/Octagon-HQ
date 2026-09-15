@@ -753,12 +753,11 @@
   flex: 0 0 auto;
   place-items: center;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, .22);
+  border: 1px solid var(--football-logo-backplate-border, rgba(74, 63, 49, .22));
   border-radius: 999px;
-  background:
-    linear-gradient(145deg, rgba(var(--build-qb-team-rgb), .4), rgba(7, 17, 29, .95));
+  background: var(--football-logo-backplate, #E7E1D7);
   box-shadow:
-    0 0 0 1px rgba(var(--build-qb-team-rgb), .18),
+    0 0 0 1px rgba(var(--build-qb-team-rgb), .12),
     0 5px 16px rgba(0, 0, 0, .24);
 }
 
@@ -785,7 +784,7 @@
   height: 100%;
   padding: 4px;
   object-fit: contain;
-  background: rgba(7, 17, 29, .96);
+  background: transparent;
 }
 
 .app-shell--football-room .football-room-page.auction-page .build-qb-team-mark--compact img {
