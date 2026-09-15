@@ -4,7 +4,6 @@ import type {
 } from "./todayChallengeRepository";
 
 export interface DailyChallengeChampionshipSnapshot {
-  entry: TodayChallengeStandingsEntry;
   rank: number;
   weeklyTitles: number;
 }
@@ -44,7 +43,6 @@ export function currentDailyChallengeChampionship(
   if (!rank) return null;
 
   return {
-    entry: current,
     rank,
     weeklyTitles: current.weeklyTitles,
   };
