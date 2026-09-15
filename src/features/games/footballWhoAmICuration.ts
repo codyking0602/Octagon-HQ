@@ -622,7 +622,7 @@ const batch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch2Supplement("hutson-packers", "I spent my entire pro career with Green Bay and helped the Packers win three NFL championships.", "giveaway", "career-path", 10),
   ]],
   ["nfl-jerry-rice", [
-    batch2Supplement("rice-three-sb", "I won three Super Bowls with San Francisco.", "giveaway", "accomplishments", 9),
+    batch2Supplement("rice-three-sb", "I won three Super Bowls with San Francisco.", "strong", "accomplishments", 9),
     batch2Supplement("rice-sb23-mvp", "I was the MVP of Super Bowl XXIII after catching 11 passes for 215 yards and a touchdown.", "giveaway", "accomplishments", 8),
     batch2Supplement("rice-records", "I retired as the NFL's career leader in receptions, receiving yards and receiving touchdowns.", "giveaway", "accomplishments", 7),
     batch2Supplement("rice-mvsu", "I played college football at Mississippi Valley State.", "helpful", "background"),
@@ -889,7 +889,7 @@ const batch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch2Supplement("ditka-era", "My playing career ran from the 1960s into the early 1970s.", "broad", "era", 30),
     batch2Supplement("ditka-pitt", "I starred at Pitt before entering the NFL.", "helpful", "background"),
     batch2Supplement("ditka-fifth", "Chicago selected me No. 5 overall in the 1961 NFL Draft.", "giveaway", "career-path", 10),
-    batch2Supplement("ditka-rookie", "As a rookie I became the first NFL tight end to top 1,000 receiving yards in a season and won Rookie of the Year.", "giveaway", "accomplishments", 8),
+    batch2Supplement("ditka-rookie", "As a rookie I became the first NFL tight end to top 1,000 receiving yards in a season and won Rookie of the Year.", "strong", "accomplishments", 8),
     batch2Supplement("ditka-iron", "I became widely known as 'Iron Mike.'", "giveaway", "nickname", 9),
     batch2Supplement("ditka-coach", "I later coached the 1985 Bears to a Super Bowl XX championship.", "giveaway", "career-path", 8),
     batch2Supplement("ditka-89", "No. 89 became my signature number as a Bears tight end.", "helpful", "identity"),
@@ -959,6 +959,37 @@ function batch2ShouldSuppressMetric(subject: FootballSubjectProfile, clue: WhoAm
   return false;
 }
 
+const batch2ForcedPoolIds = new Map<string, ReadonlySet<string>>([
+  ["nfl-jerry-rice", new Set([
+    "position",
+    "era",
+    "school",
+    "identity:football-after-cutting-class",
+    "curated2:rice-80",
+    "curated2:rice-route-work",
+    "draft-pick",
+    "identity:49ers-traded-up",
+    "identity:edgewood-hill-workout",
+    "curated2:rice-three-sb",
+    "curated2:rice-sb23-mvp",
+    "curated2:rice-records",
+  ])],
+  ["mike-ditka", new Set([
+    "position",
+    "curated2:ditka-era",
+    "identity:pr7-mike-ditka-dentistry-plan",
+    "identity:pr7-mike-ditka-early-modern-tight-end",
+    "curated2:ditka-pitt",
+    "curated2:ditka-89",
+    "fact:nfl-career-receiving-yards",
+    "identity:pr7-mike-ditka-letter-to-halas",
+    "identity:resume-mike-ditka-01",
+    "curated2:ditka-rookie",
+    "curated2:ditka-iron",
+    "curated2:ditka-coach",
+  ])],
+]);
+
 function trimNflBatch2Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
   const target = subject.id === "nfl-jerry-rice" || subject.id === "mike-ditka" ? 12 : 16;
   if (clues.length <= target) return [...clues];
@@ -1000,6 +1031,8 @@ function curateNflBatch2Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(batch2SupplementalClues.get(subject.id) ?? []));
+  const forcedPool = batch2ForcedPoolIds.get(subject.id);
+  if (forcedPool) return curated.filter((clue) => forcedPool.has(clue.id));
   return trimNflBatch2Pool(subject, curated);
 }
 
