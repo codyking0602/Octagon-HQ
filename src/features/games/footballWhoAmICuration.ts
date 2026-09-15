@@ -67,6 +67,39 @@ export const NFL_WHO_AM_I_BATCH_1_SUBJECT_IDS = [
 const batchSubjectIds = new Set<string>(NFL_WHO_AM_I_BATCH_1_SUBJECT_IDS);
 const keep = (...conceptIds: string[]) => new Set(conceptIds);
 
+const suppressedBatchStructuralClueIds = new Set(["player-career-start", "player-career-end"]);
+const suppressedCareerSpanSubjectIds = new Set([
+  "nfl-aaron-rodgers",
+  "brett-favre",
+  "nfl-josh-allen",
+  "nfl-lamar-jackson",
+  "nfl-patrick-mahomes",
+  "peyton-manning",
+  "troy-aikman",
+  "nfl-ahman-green",
+]);
+
+const partialQuarterbackRushingSubjectIds = new Set([
+  "brett-favre",
+  "dan-marino",
+  "nfl-fran-tarkenton",
+  "nfl-jim-kelly",
+  "joe-montana",
+  "joe-namath",
+  "john-elway",
+  "johnny-unitas",
+  "kurt-warner",
+  "nfl-otto-graham",
+  "peyton-manning",
+  "nfl-roger-staubach",
+  "nfl-sammy-baugh",
+  "nfl-sid-luckman",
+  "steve-young",
+  "nfl-terry-bradshaw",
+  "troy-aikman",
+  "nfl-ya-tittle",
+]);
+
 const retainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-aaron-rodgers", keep("identity:high-school-recruiting-overlook", "identity:butte-junior-college-breakthrough", "identity:garrett-cross-recruiting-discovery", "identity:teenage-cal-breakthrough", "identity:2005-draft-wait")],
   ["nfl-bart-starr", keep("identity:alabama-injury-and-benching", "identity:johnny-dee-draft-tip", "identity:lombardi-career-rescue", "identity:ice-bowl-sneak-call", "identity:pro-bowls")],
@@ -157,6 +190,12 @@ const facetOverrides = new Map<string, WhoAmIClueFacet>([
 ]);
 
 const clueTextOverrides = new Map<string, Pick<WhoAmIClue, "text" | "band" | "facet" | "revealPriority">>([
+  ["troy-aikman:era", {
+    text: "I was active in the 1980s, 1990s and 2000s.",
+    band: "broad",
+    facet: "era",
+    revealPriority: 20,
+  }],
   ["nfl-bart-starr:identity:ice-bowl-sneak-call", {
     text: "On the final drive of the Ice Bowl, I proposed a quarterback sneak to Vince Lombardi and scored the winning touchdown myself.",
     band: "giveaway",
@@ -213,7 +252,11 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cam-newton", [{ id: "curated:2015-mvp", conceptId: "curated:2015-mvp", text: "I was the 2015 AP NFL MVP after leading Carolina to a 15-1 regular season.", band: "giveaway", facet: "accomplishments", revealPriority: 12 }]],
   ["drew-brees", [{ id: "curated:super-bowl-xliv-mvp", conceptId: "curated:super-bowl-xliv-mvp", text: "I was Super Bowl XLIV MVP after leading New Orleans to the first championship in franchise history.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
-  ["nfl-jim-kelly", [{ id: "curated:four-straight-super-bowls", conceptId: "curated:four-straight-super-bowls", text: "I quarterbacked Buffalo to four consecutive Super Bowl appearances.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["nfl-fran-tarkenton", [{ id: "curated:1975-mvp", conceptId: "curated:1975-mvp", text: "I was named the NFL's Most Valuable Player in 1975.", band: "giveaway", facet: "accomplishments", revealPriority: 12 }]],
+  ["nfl-jim-kelly", [
+    { id: "curated:four-straight-super-bowls", conceptId: "curated:four-straight-super-bowls", text: "I quarterbacked Buffalo to four consecutive Super Bowl appearances.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:eleven-bills-seasons", conceptId: "curated:eleven-bills-seasons", text: "I spent all 11 of my NFL seasons with the Buffalo Bills.", band: "strong", facet: "career-path", revealPriority: 16 },
+  ]],
   ["joe-montana", [{ id: "curated:four-super-bowl-wins", conceptId: "curated:four-super-bowl-wins", text: "I went 4-0 as San Francisco's starting quarterback in Super Bowls.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
   ["nfl-josh-allen", [{ id: "curated:2024-mvp", conceptId: "curated:2024-mvp", text: "I won the AP NFL MVP award for the 2024 season.", band: "giveaway", facet: "accomplishments", revealPriority: 15 }]],
   ["kurt-warner", [{ id: "curated:super-bowl-xxxiv-mvp", conceptId: "curated:super-bowl-xxxiv-mvp", text: "I became Super Bowl XXXIV MVP in my first season as the Rams' starting quarterback.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
@@ -222,7 +265,10 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["nfl-sammy-baugh", [{ id: "curated:two-washington-titles", conceptId: "curated:two-washington-titles", text: "I led Washington to NFL championships in 1937 and 1942.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
   ["nfl-patrick-mahomes", [{ id: "curated:three-super-bowl-mvps", conceptId: "curated:three-super-bowl-mvps", text: "I won three Super Bowl MVP awards before turning 30.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
   ["steve-young", [{ id: "curated:montana-to-super-bowl-mvp", conceptId: "curated:montana-to-super-bowl-mvp", text: "I succeeded Joe Montana in San Francisco and later threw six touchdown passes as Super Bowl XXIX MVP.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
-  ["nfl-terry-bradshaw", [{ id: "curated:four-super-bowls", conceptId: "curated:four-super-bowls", text: "I quarterbacked Pittsburgh to four Super Bowl championships in six seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["nfl-terry-bradshaw", [
+    { id: "curated:four-super-bowls", conceptId: "curated:four-super-bowls", text: "I quarterbacked Pittsburgh to four Super Bowl championships in six seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:1978-mvp", conceptId: "curated:1978-mvp", text: "I was the NFL's Most Valuable Player in 1978.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
   ["tom-brady", [{ id: "curated:seven-super-bowls", conceptId: "curated:seven-super-bowls", text: "I won seven Super Bowl championships as a starting quarterback.", band: "giveaway", facet: "accomplishments", revealPriority: 8 }]],
   ["troy-aikman", [{ id: "curated:three-super-bowls", conceptId: "curated:three-super-bowls", text: "I quarterbacked Dallas to three Super Bowl championships in four seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
   ["andrew-luck", [
@@ -230,10 +276,18 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:first-overall-2012", conceptId: "curated:first-overall-2012", text: "Indianapolis selected me No. 1 overall in the 2012 NFL Draft.", band: "giveaway", facet: "career-path", revealPriority: 12 },
     { id: "curated:colts-only", conceptId: "curated:colts-only", text: "I spent my entire NFL career with the Indianapolis Colts.", band: "giveaway", facet: "career-path", revealPriority: 15 },
   ]],
+  ["nfl-bronko-nagurski", [
+    { id: "curated:both-sides-all-america", conceptId: "curated:both-sides-all-america", text: "At Minnesota I earned All-America honors at both fullback and tackle.", band: "strong", facet: "accomplishments", revealPriority: 15 },
+    { id: "curated:bears-title-impact", conceptId: "curated:bears-title-impact", text: "I made defining plays for Chicago's 1932 and 1933 league titles and returned to score in the 1943 NFL Championship Game.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+  ]],
   ["nfl-doak-walker", [{ id: "curated:1948-heisman", conceptId: "curated:1948-heisman", text: "I won the 1948 Heisman Trophy at SMU.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
   ["eric-dickerson", [{ id: "curated:2105-rushing", conceptId: "curated:2105-rushing", text: "I set the NFL single-season rushing record with 2,105 yards in 1984.", band: "giveaway", facet: "accomplishments", revealPriority: 8 }]],
   ["nfl-harold-red-grange", [{ id: "curated:galloping-ghost", conceptId: "curated:galloping-ghost", text: "I was famously nicknamed the 'Galloping Ghost.'", band: "giveaway", facet: "nickname", revealPriority: 8 }]],
   ["ladainian-tomlinson", [{ id: "curated:2006-touchdown-record", conceptId: "curated:2006-touchdown-record", text: "I scored an NFL-record 31 total touchdowns in my 2006 MVP season.", band: "giveaway", facet: "accomplishments", revealPriority: 8 }]],
+  ["nfl-paul-hornung", [
+    { id: "curated:1961-mvp", conceptId: "curated:1961-mvp", text: "I was the AP NFL MVP for the 1961 season.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:four-lombardi-titles", conceptId: "curated:four-lombardi-titles", text: "I played on four of Vince Lombardi's five Green Bay championship teams.", band: "strong", facet: "accomplishments", revealPriority: 15 },
+  ]],
   ["nfl-oj-simpson", [{ id: "curated:2003-in-fourteen", conceptId: "curated:2003-in-fourteen", text: "In 1973 I became the first NFL player to rush for 2,000 yards in a season, reaching 2,003 in 14 games.", band: "giveaway", facet: "accomplishments", revealPriority: 8 }]],
   ["nfl-ahman-green", [
     { id: "curated:packers-rushing-leader", conceptId: "curated:packers-rushing-leader", text: "I finished as the Packers' all-time leading rusher with 8,322 yards.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
@@ -304,6 +358,12 @@ export function curateFootballWhoAmIClues(
   const curated: WhoAmIClue[] = [];
 
   for (const rawClue of rawClues) {
+    if (suppressedBatchStructuralClueIds.has(rawClue.id)) continue;
+    if (rawClue.id === "career-span" && suppressedCareerSpanSubjectIds.has(subject.id)) continue;
+    if (
+      partialQuarterbackRushingSubjectIds.has(subject.id)
+      && /^fact:nfl-career-rushing-/.test(rawClue.id)
+    ) continue;
     if (rawClue.identityKnowledge && retained && !retained.has(rawClue.conceptId ?? "")) continue;
     const clue = applyIdentityCuration(subject.id, rawClue);
     if (clue.identityKnowledge) {
