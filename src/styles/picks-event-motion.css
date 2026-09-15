@@ -57,6 +57,36 @@
   animation: picks-event-header-sheen 6.5s ease-in-out infinite;
 }
 
+/* Numbered PPVs get a slower, warmer premium motion pass without changing Fight Night motion. */
+.picks-event-hero.has-poster.is-numbered-event .picks-event-hero__poster {
+  animation-duration: 20s;
+  animation-timing-function: cubic-bezier(.22, .62, .32, 1);
+}
+
+.picks-event-hero.has-poster.is-numbered-event .picks-event-hero__poster::before {
+  background:
+    radial-gradient(circle, rgba(255, 241, 203, .72) 0 1.4px, transparent 2px),
+    radial-gradient(circle, rgba(211, 166, 83, .5) 0 1.8px, transparent 2.4px),
+    radial-gradient(circle, rgba(255, 223, 151, .38) 0 1.1px, transparent 1.7px),
+    radial-gradient(circle at 52% 88%, rgba(196, 136, 42, .18), transparent 40%);
+  opacity: .34;
+  animation-duration: 22s;
+}
+
+.picks-page .picks-event-hero.has-poster.is-numbered-event .picks-event-hero__poster::after {
+  background: linear-gradient(
+    112deg,
+    transparent 0 40%,
+    rgba(236, 203, 134, .04) 43%,
+    rgba(255, 235, 190, .26) 47%,
+    rgba(202, 150, 59, .62) 50%,
+    rgba(255, 230, 174, .3) 53%,
+    rgba(236, 203, 134, .05) 57%,
+    transparent 61% 100%
+  );
+  animation-duration: 11s;
+}
+
 /* Reuse the persisted event artwork as a blurred, low-opacity light source below the hero.
    This keeps the dark Picks UI intact while letting each event supply its own atmosphere. */
 .picks-page.has-event-atmosphere .picks-card-zone {
