@@ -46,6 +46,15 @@ describe("football matchup breakdowns", () => {
     ]);
   });
 
+  it("frames LSU-Ole Miss around Lane Kiffin's return to Oxford", () => {
+    const breakdown = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-lsu-ole-miss");
+    const setup = breakdown?.setup.join(" ") ?? "";
+
+    expect(setup).toContain("Lane Kiffin is going back to Oxford in LSU colors");
+    expect(setup).toContain("Vaught-Hemingway is going to be venomous");
+    expect(setup).toContain("try to beat the program he built");
+  });
+
   it("does not surface a breakdown for an unrelated slate", () => {
     const event = footballEvent([["texas", "Texas Longhorns", "texas-state", "Texas State Bobcats"]]);
     expect(footballMatchupBreakdownsForEvent(event)).toEqual([]);
