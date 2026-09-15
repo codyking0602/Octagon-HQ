@@ -1,8 +1,8 @@
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
-import { FootballHq } from "./FootballHq";
+import { FootballHq, footballSpotlightKindAt } from "./FootballHq";
 
 afterEach(() => {
   cleanup();
@@ -164,20 +164,20 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("#2 OF 2")).toBeInTheDocument();
     expect(within(hq).getByText("DAILY CHALLENGE")).toBeInTheDocument();
 
-    expect(within(hq).getByText("Kamario Taylor")).toBeInTheDocument();
-    expect(within(hq).getByText("354")).toBeInTheDocument();
+    expect(within(hq).getByText("Drew Mestemaker")).toBeInTheDocument();
+    expect(within(hq).getByText("317")).toBeInTheDocument();
     expect(within(hq).getByText("PYDS")).toBeInTheDocument();
-    expect(within(hq).getByText("59")).toBeInTheDocument();
+    expect(within(hq).getByText("109")).toBeInTheDocument();
     expect(within(hq).getByText("RYDS")).toBeInTheDocument();
-    expect(within(hq).getByText("5")).toBeInTheDocument();
+    expect(within(hq).getByText("426")).toBeInTheDocument();
+    expect(within(hq).getByText("TOTAL YDS")).toBeInTheDocument();
+    expect(within(hq).getByText("3")).toBeInTheDocument();
     expect(within(hq).getByText("TOTAL TDS")).toBeInTheDocument();
-    expect(within(hq).getByText("191.0")).toBeInTheDocument();
-    expect(within(hq).getByText("QB RTG")).toBeInTheDocument();
     expect(within(hq).queryByText(/LAST WEEK/)).not.toBeInTheDocument();
-    expect(within(hq).getByText("VS ULM · W 62–13 · 6'4\" · 230 LB")).toBeInTheDocument();
+    expect(within(hq).getByText("VS #6 OREGON · W 39–31 · 6'3\" · 215 LB")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
-      "https://youtu.be/g-rXa8_YAZw?is=iqhMr2kCswMHKGLO",
+      "https://okstate.com/news/2026/9/12/cowboy-football-oklahoma-state-stuns-no-6-oregon-39-31",
     );
     expect(within(hq).queryByRole("link", { name: /VIEW PLAYER/i })).not.toBeInTheDocument();
 
@@ -224,7 +224,7 @@ describe("Football HQ Home summary", () => {
           error=""
           signedIn
           dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
-          playerPhotoSource="https://example.com/kamario.webp"
+          playerPhotoSources={{ cfb: "https://example.com/drew.webp" }}
           canManagePlayerPhoto
           onManagePlayerPhoto={onManagePlayerPhoto}
         />
@@ -243,6 +243,9 @@ describe("Football HQ Home summary", () => {
   });
 
   it("keeps the Picks and Player Spotlight structure when the weekly slate is not published", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-08T19:30:00Z"));
+
     render(
       <MemoryRouter>
         <FootballHq
@@ -261,7 +264,81 @@ describe("Football HQ Home summary", () => {
     const hq = screen.getByRole("region", { name: "Football HQ" });
     expect(within(hq).getByText("FOOTBALL PICKS")).toBeInTheDocument();
     expect(within(hq).getByText("WAITING")).toBeInTheDocument();
-    expect(within(hq).getByText("Kamario Taylor")).toBeInTheDocument();
+    expect(within(hq).getByText("Drew Mestemaker")).toBeInTheDocument();
     expect(within(hq).queryByLabelText("Football Games of the Week")).not.toBeInTheDocument();
+  });
+
+  it("uses the locked Central Time spotlight schedule", () => {
+    expect(footballSpotlightKindAt(new Date("2026-09-12T23:00:00Z"))).toBe("cfb");
+    expect(footballSpotlightKindAt(new Date("2026-09-13T14:00:00Z"))).toBe("nfl");
+    expect(footballSpotlightKindAt(new Date("2026-09-14T14:00:00Z"))).toBe("nfl");
+    expect(footballSpotlightKindAt(new Date("2026-09-15T19:59:00Z"))).toBe("cfb");
+    expect(footballSpotlightKindAt(new Date("2026-09-15T20:00:00Z"))).toBe("nfl");
+  });
+
+  it("switches the live card from Drew to Josh Allen after the 3 PM CT weekday handoff", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-15T19:59:45Z"));
+
+    render(
+      <MemoryRouter>
+        <FootballHq
+          event={event}
+          selections={{}}
+          history={history}
+          summary={summary}
+          loading={false}
+          error=""
+          signedIn
+          dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
+          playerPhotoSources={{
+            cfb: "https://example.com/drew.webp",
+            nfl: "https://example.com/josh.webp",
+          }}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("Drew Mestemaker")).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(30_000);
+    });
+
+    expect(screen.getByText("Josh Allen")).toBeInTheDocument();
+    expect(screen.getByText("334")).toBeInTheDocument();
+    expect(screen.getByText("PASS TD")).toBeInTheDocument();
+    expect(screen.getByText("RUSH TD")).toBeInTheDocument();
+    expect(screen.getByText("130.5")).toBeInTheDocument();
+    expect(screen.getByText("AT HOUSTON · W 36–31 · 6'5\" · 237 LB")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://www.buffalobills.com/game-day/2026/reg-week1/bills-at-texans/",
+    );
+  });
+
+  it("keeps the populated sport live when the scheduled sport photo has not been uploaded yet", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-15T21:00:00Z"));
+
+    render(
+      <MemoryRouter>
+        <FootballHq
+          event={event}
+          selections={{}}
+          history={history}
+          summary={summary}
+          loading={false}
+          error=""
+          signedIn
+          dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
+          playerPhotoSources={{ cfb: "https://example.com/drew.webp" }}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("Drew Mestemaker")).toBeInTheDocument();
+    expect(screen.getByAltText("Drew Mestemaker")).toHaveAttribute("src", "https://example.com/drew.webp");
+    expect(screen.queryByText("Josh Allen")).not.toBeInTheDocument();
   });
 });
