@@ -14,6 +14,11 @@
   box-shadow: 0 3px 10px rgba(0, 0, 0, .22);
 }
 
+.app-shell--football-room .football-subject-visual[data-visual-kind="team-mark"] .football-subject-visual__fallback,
+.app-shell--football-room .football-subject-visual[data-visual-kind="program-mark"] .football-subject-visual__fallback {
+  color: #211d18;
+}
+
 .app-shell--football-room .football-rank-five-current .football-subject-visual,
 .app-shell--football-room .football-keep-cut-current .football-subject-visual {
   width: 74px;
