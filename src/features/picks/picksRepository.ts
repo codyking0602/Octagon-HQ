@@ -39,7 +39,9 @@ const spotlightSchema = z.object({
 });
 
 const boutSchema = z.object({
-  bout_id: z.string(), locks_at: z.string().optional(), is_locked: z.boolean().optional(), position: z.number().int().positive(), weight_class: z.string(),
+  bout_id: z.string(), locks_at: z.string().optional(), is_locked: z.boolean().optional(), position: z.number().int().positive(),
+  card_segment: z.enum(["main", "prelim"]).nullable().optional().default(null),
+  segment_sequence: z.number().int().positive().nullable().optional().default(null), weight_class: z.string(),
   red_fighter_slug: z.string(), red_fighter_name: z.string(), blue_fighter_slug: z.string(), blue_fighter_name: z.string(),
   home_team_slug: z.string().nullable().optional().default(null), away_team_slug: z.string().nullable().optional().default(null),
   home_team_logo_url: z.string().url().nullable().optional().default(null), away_team_logo_url: z.string().url().nullable().optional().default(null),
@@ -169,7 +171,8 @@ export function mapPickEvent(value: unknown): PickEvent | null {
     headerStoragePath: parsed.header_storage_path, headerNaturalWidth: parsed.header_natural_width, headerNaturalHeight: parsed.header_natural_height,
     spotlights: parsed.spotlights.map(mapSpotlight),
     bouts: parsed.bouts.map((bout) => ({
-      boutId: bout.bout_id, locksAt: bout.locks_at, isLocked: bout.is_locked, position: bout.position, weightClass: bout.weight_class,
+      boutId: bout.bout_id, locksAt: bout.locks_at, isLocked: bout.is_locked, position: bout.position,
+      cardSegment: bout.card_segment, segmentSequence: bout.segment_sequence, weightClass: bout.weight_class,
       redFighterSlug: bout.red_fighter_slug, redFighterName: bout.red_fighter_name, blueFighterSlug: bout.blue_fighter_slug, blueFighterName: bout.blue_fighter_name,
       homeTeamSlug: bout.home_team_slug, awayTeamSlug: bout.away_team_slug, homeTeamLogoUrl: bout.home_team_logo_url, awayTeamLogoUrl: bout.away_team_logo_url,
       frozenSpreadHome: bout.frozen_spread_home, spreadSource: bout.spread_source, spreadFrozenAt: bout.spread_frozen_at,
