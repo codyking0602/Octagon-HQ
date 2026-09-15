@@ -327,6 +327,147 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
       },
     ],
   },
+
+  {
+    id: "2026-lsu-ole-miss",
+    title: "LSU vs. Ole Miss",
+    venue: "Vaught-Hemingway Stadium · Oxford",
+    teams: [
+      { name: "LSU", aliases: ["lsu", "lsu-tigers", "louisiana-state", "louisiana-state-tigers"] },
+      { name: "Ole Miss", aliases: ["ole-miss", "ole-miss-rebels", "mississippi", "mississippi-rebels"] },
+    ],
+    setup: [
+      "A top-10 Magnolia Bowl arrives with both teams 2–0: No. 7 LSU goes to Oxford to face No. 8 Ole Miss one year after the Rebels won this matchup 24–19 in Vaught-Hemingway.",
+      "LSU has paired 48.0 points and 586.0 yards per game with a defense that has already produced 10 sacks and 17 tackles for loss. Ole Miss has shown a different kind of pressure through Trinidad Chambliss and Deuce Alexander, who helped the Rebels survive Louisville before a cleaner Week 2 win over Charlotte. The swing factor is whether Ole Miss can create explosives before LSU's front starts controlling the down.",
+    ],
+    keyMatchups: [
+      {
+        title: "Sam Leavitt's ball security vs. Ole Miss' back end",
+        body: "Leavitt has been the engine of LSU's offense, but Louisiana Tech also intercepted him three times in the first half before LSU pulled away. Oxford is a much harsher place to survive that kind of turnover stretch. Ole Miss needs to disguise enough coverage to make Leavitt hold the ball and give its rush time to affect the pocket.",
+        edge: "Even",
+      },
+      {
+        title: "Trinidad Chambliss + Deuce Alexander vs. LSU's secondary",
+        body: "Chambliss opened the season with 336 passing yards and three touchdowns against Louisville, with Alexander supplying 159 yards and two long scores. LSU's answer is pressure: the Tigers have 10 sacks through two games and have consistently forced quarterbacks to speed up. Ole Miss needs explosives without turning every possession into a long protection test.",
+        edge: "Even",
+      },
+      {
+        title: "LSU's run game + Trey'Dez Green vs. Ole Miss' front",
+        body: "LSU already has 456 rushing yards and eight rushing touchdowns, which gives Lane Kiffin a way to keep Leavitt out of obvious passing downs. Green adds the middle-of-the-field matchup that punishes linebackers for stepping downhill. Ole Miss has to win early downs without creating easy play-action windows behind them.",
+        edge: "LSU",
+      },
+    ],
+    pathsToWin: [
+      {
+        team: "LSU",
+        body: "Keep Leavitt on schedule, lean on the run game and avoid the turnover sequence that made the Louisiana Tech game uncomfortable. Defensively, compress Chambliss before Alexander can uncover downfield and make Ole Miss sustain drives instead of living on explosives.",
+      },
+      {
+        team: "Ole Miss",
+        body: "Win the turnover margin and make LSU play from third-and-long. Offensively, use Chambliss' movement and Deuce Alexander's vertical ability to punish LSU before the pass rush arrives, while Kewan Lacy gives the Rebels enough balance to keep the Tigers from teeing off.",
+      },
+    ],
+    playersToWatch: [
+      {
+        team: "LSU",
+        players: [
+          { name: "Sam Leavitt", position: "QB", body: "He has 574 passing yards and nine total touchdowns through two games, but his response to the three-interception first half against Louisiana Tech is the part Ole Miss will test." },
+          { name: "Trey'Dez Green", position: "TE", body: "LSU's leading receiver through two games at 162 yards. His size and middle-of-the-field value give Leavitt a high-percentage answer when Ole Miss brings pressure." },
+          { name: "TJ Dottery", position: "LB", body: "LSU's early tackles leader sits at the center of a defense that has allowed only 221.5 yards per game and has been consistently disruptive behind the line." },
+        ],
+      },
+      {
+        team: "Ole Miss",
+        players: [
+          { name: "Trinidad Chambliss", position: "QB", body: "He has already shown he can carry the offense through the air, and LSU's pressure will force him to create without giving the Tigers easy negative plays." },
+          { name: "Deuce Alexander", position: "WR", body: "Thirteen catches for 235 yards through two games. He is the Rebel most capable of flipping field position with one downfield win." },
+          { name: "Jaylon Braxton", position: "CB", body: "The veteran corner is a key piece of the Ole Miss plan against an LSU offense that can attack with both size and speed. His ability to hold up outside gives the Rebels more freedom to pressure Leavitt." },
+        ],
+      },
+    ],
+    unitEdges: [
+      {
+        title: "LSU OFFENSE vs. OLE MISS DEFENSE",
+        edge: "LSU — SLIGHT",
+        body: "LSU's balance is the separator: the Tigers can run, create quarterback movement and attack the middle with Green. Ole Miss can absolutely change the matchup with takeaways, but LSU has more ways to stay on schedule.",
+      },
+      {
+        title: "OLE MISS OFFENSE vs. LSU DEFENSE",
+        edge: "LSU — SLIGHT",
+        body: "Chambliss and Alexander give Ole Miss real explosive-play answers, but LSU's combination of pressure production and early-down defense makes the Rebels prove they can protect long enough to use them.",
+      },
+    ],
+  },
+  {
+    id: "2026-bills-lions",
+    title: "Bills vs. Lions",
+    venue: "Highmark Stadium · Orchard Park",
+    teams: [
+      { name: "Buffalo Bills", aliases: ["buffalo", "buffalo-bills", "bills"] },
+      { name: "Detroit Lions", aliases: ["detroit", "detroit-lions", "lions"] },
+    ],
+    setup: [
+      "Buffalo opens the new Highmark Stadium on Thursday night with both teams 1–0. The Bills arrive after Josh Allen accounted for four touchdowns in a 36–31 win at Houston, while Detroit survived New Orleans 31–30 in overtime.",
+      "The short week puts two very different stress points in the spotlight. Buffalo wants Allen spreading the field to DJ Moore and Dalton Kincaid, while Detroit can make the game run through Jahmyr Gibbs after his 186 scrimmage-yard opener. The defense that tackles better in space and creates pressure without losing rush-lane discipline will control the matchup.",
+    ],
+    keyMatchups: [
+      {
+        title: "Josh Allen vs. Detroit's rush lanes",
+        body: "Detroit has enough front talent to make protection difficult, but simply getting pressure is not enough against Allen. Aidan Hutchinson and the Lions have to squeeze the pocket without creating escape lanes that turn broken plays into explosives. Buffalo can make that even harder with quick game and Allen's designed movement.",
+        edge: "Bills — slight",
+      },
+      {
+        title: "Jahmyr Gibbs vs. Buffalo's second level",
+        body: "Gibbs carried 29 times for 156 yards and two touchdowns in Week 1, then added five catches. Buffalo cannot treat him as only a run-game problem because his receiving usage can pull linebackers out of structure and create space elsewhere. The Bills need clean fits and gang tackling before Gibbs gets into open grass.",
+        edge: "Lions — slight",
+      },
+      {
+        title: "Detroit's pass game vs. Buffalo's secondary",
+        body: "Houston threw for 274 yards and two touchdowns against Buffalo, while Detroit still has Amon-Ra St. Brown, Jameson Williams and Sam LaPorta around Jared Goff. The Bills' best answer is making Goff hold the ball long enough for Greg Rousseau and the front to arrive rather than asking the secondary to survive extended coverage.",
+        edge: "Lions — slight",
+      },
+    ],
+    pathsToWin: [
+      {
+        team: "Buffalo Bills",
+        body: "Let Allen dictate the game with tempo, movement and matchup hunting instead of living in long-developing protection. Defensively, rally multiple bodies to Gibbs, keep Goff out of play-action rhythm and make Detroit string together long drives without free explosives.",
+      },
+      {
+        team: "Detroit Lions",
+        body: "Make Gibbs the foundation, stay ahead of the chains and use play action to attack Buffalo's secondary. On defense, rush Allen with discipline rather than chasing sacks, force Buffalo to earn third downs and keep his scramble game from becoming the answer whenever the first read is covered.",
+      },
+    ],
+    playersToWatch: [
+      {
+        team: "Buffalo Bills",
+        players: [
+          { name: "Josh Allen", position: "QB", body: "He opened 2026 with 334 passing yards, two passing touchdowns and two rushing scores. Detroit has to defend the play after the play without giving him easy escape lanes." },
+          { name: "DJ Moore", position: "WR", body: "Five catches for 100 yards and a touchdown in his Bills debut. His ability to win at multiple levels gives Allen another matchup piece Detroit has to account for outside the pocket." },
+          { name: "Greg Rousseau", position: "EDGE", body: "Two sacks and two forced fumbles in Week 1, including the strip sack that sealed the game. Buffalo needs him affecting Goff before Detroit's route combinations fully develop." },
+        ],
+      },
+      {
+        team: "Detroit Lions",
+        players: [
+          { name: "Jahmyr Gibbs", position: "RB", body: "Detroit's opener ran through him: 156 rushing yards, two touchdowns and another 30 yards receiving. His versatility is the cleanest way to stress Buffalo on every down." },
+          { name: "Amon-Ra St. Brown", position: "WR", body: "He caught both of Jared Goff's touchdown passes in Week 1 and remains Detroit's most reliable answer when the offense needs a conversion against tight coverage." },
+          { name: "Aidan Hutchinson", position: "EDGE", body: "Detroit's best chance to disrupt Buffalo without sacrificing coverage numbers starts with Hutchinson creating pressure while keeping Allen contained." },
+        ],
+      },
+    ],
+    unitEdges: [
+      {
+        title: "BILLS OFFENSE vs. LIONS DEFENSE",
+        edge: "BILLS — SLIGHT",
+        body: "Detroit's front can absolutely make this difficult, but Allen's ability to beat pressure with both his arm and legs gives Buffalo an extra answer when the original play breaks down.",
+      },
+      {
+        title: "LIONS OFFENSE vs. BILLS DEFENSE",
+        edge: "LIONS — SLIGHT",
+        body: "Buffalo has disruptive front-line pieces, but Gibbs plus Detroit's receiving depth can stress the Bills horizontally and vertically. The matchup tilts toward Detroit if Goff consistently gets clean early-down looks.",
+      },
+    ],
+  },
 ];
 
 function normalizeTeamToken(value: string) {
