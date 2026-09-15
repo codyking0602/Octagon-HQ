@@ -122,7 +122,7 @@ function render(){
  var stack=document.getElementById('teamStack');stack.innerHTML='';
  current().forEach(function(t){
   var el=document.createElement('article');el.className='team';el.style.setProperty('--team',t.color);el.style.setProperty('--rgb',t.rgb);
-  el.innerHTML='<div class="teamTop"><div class="logo"><img src="'+t.logo+'" alt=""></div><div><div class="teamName">'+t.name+' <span>· '+t.year+'</span></div><span class="resume">'+t.resume+'</span><a class="seasonLink" target="_blank" rel="noreferrer" href="'+t.url+'">View season ↗</a></div></div><div class="bidRow"><button onclick="bid(\''+t.id+'\',-1)" '+(submitted?'disabled':'')+'>−</button><div class="bidBox"><span>Bid</span><b>$</b><input inputmode="numeric" type="number" value="'+t.bid+'" onchange="setBid(\''+t.id+'\',this.value)" '+(submitted?'disabled':'')+'></div><button onclick="bid(\''+t.id+'\',1)" '+(submitted?'disabled':'')+'>+</button></div>';
+  el.innerHTML='<div class="teamTop"><div class="logo"><img src="'+t.logo+'" alt=""></div><div><div class="teamName">'+t.name+' <span>· '+t.year+'</span></div><span class="resume">'+t.resume+'</span><a class="seasonLink" target="_blank" rel="noreferrer" href="'+t.url+'">View season ↗</a></div></div><div class="bidRow"><button onclick="bid(&quot;'+t.id+'&quot;,-1)" '+(submitted?'disabled':'')+'>−</button><div class="bidBox"><span>Bid</span><b>$</b><input inputmode="numeric" type="number" value="'+t.bid+'" onchange="setBid(&quot;'+t.id+'&quot;,this.value)" '+(submitted?'disabled':'')+'></div><button onclick="bid(&quot;'+t.id+'&quot;,1)" '+(submitted?'disabled':'')+'>+</button></div>';
   stack.appendChild(el);
  });
  var legal=committed()<=remaining;
