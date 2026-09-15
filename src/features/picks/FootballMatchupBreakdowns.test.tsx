@@ -38,12 +38,12 @@ describe("FootballMatchupBreakdowns", () => {
   });
 
   it("opens the exact authored breakdown requested by this week's canonical Football Picks URL", async () => {
-    window.history.replaceState({}, "", "/football/picks?matchup=2026-cowboys-giants");
+    window.history.replaceState({}, "", "/football/picks?matchup=2026-bills-lions");
     render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
 
-    expect(await screen.findByRole("dialog")).toHaveTextContent("Cowboys vs. Giants");
-    expect(screen.getByText("DALLAS OFFENSE vs. GIANTS DEFENSE")).toBeInTheDocument();
-    expect(screen.getByText("GIANTS OFFENSE vs. DALLAS DEFENSE")).toBeInTheDocument();
+    expect(await screen.findByRole("dialog")).toHaveTextContent("Bills vs. Lions");
+    expect(screen.getByText("BILLS OFFENSE vs. LIONS DEFENSE")).toBeInTheDocument();
+    expect(screen.getByText("LIONS OFFENSE vs. BILLS DEFENSE")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Close matchup breakdown" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
