@@ -28,7 +28,12 @@ describe("notification push registration repair", () => {
     expect(pushConnection).toContain("if (stale) await stale.unsubscribe().catch(() => false)");
     expect(pushConnection.match(/createNotificationPushSubscription\(registration, publicKey\)/g))
       .toHaveLength(2);
-    expect(pushConnection).not.toContain("localStorage");
+    expect(pushConnection).toContain('pushIntentStorageKey = "octagon-notification-push-intent"');
+    expect(pushConnection).toContain("window.localStorage.setItem(pushIntentStorageKey, intent)");
+    expect(pushConnection.match(/localStorage\.setItem\(/g)).toHaveLength(1);
+    expect(pushConnection).not.toContain('localStorage.setItem("endpoint"');
+    expect(pushConnection).not.toContain('localStorage.setItem("p256dh"');
+    expect(pushConnection).not.toContain('localStorage.setItem("auth"');
     expect(pushConnection).not.toContain("setInterval");
   });
 
