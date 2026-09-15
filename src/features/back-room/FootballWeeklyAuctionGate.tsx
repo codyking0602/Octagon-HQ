@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import "../../styles/football-weekly-auction.css";
 import type {
   FootballWeeklyAuctionActiveState,
   FootballWeeklyAuctionFinal,
