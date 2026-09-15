@@ -57,13 +57,6 @@ export function footballSpotlightKindAt(now = new Date()): FootballSpotlightKind
   return hour < 15 ? "cfb" : "nfl";
 }
 
-const TEAM_BRAND_COLORS: Readonly<Record<string, string>> = {
-  "Texas": "#BF5700",
-  "Ohio State": "#BB0000",
-  "Dallas Cowboys": "#041E42",
-  "New York Giants": "#0B2265",
-};
-
 const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
   aqua: "#008E97",
   black: "#171717",
@@ -73,6 +66,7 @@ const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
   cardinal: "#8C1515",
   crimson: "#9E1B32",
   garnet: "#73000A",
+  gold: "#D4A72C",
   green: "#0B5D3B",
   maroon: "#5D1725",
   navy: "#041E42",
@@ -83,12 +77,32 @@ const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
   teal: "#006D75",
 };
 
-function teamCardColor(name: string) {
+const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
+  "Buffalo Bills:red": "#C60C30",
+  "Detroit Lions:blue": "#0076B6",
+  "LSU:gold": "#FDD023",
+  "Ole Miss:navy": "#14213D",
+  "Texas:orange": "#BF5700",
+};
+
+const HOME_LOGO_NEUTRALS = new Set(["white", "cream", "gray", "silver"]);
+const HOME_WHITE_LOGO_TEAMS = new Set(["Texas"]);
+
+export function footballHqTeamPresentationFor(name: string) {
   const metadata = footballTeamSchoolMetadataFor(name);
   const canonicalName = metadata?.name ?? name;
-  return TEAM_BRAND_COLORS[canonicalName]
-    ?? SEMANTIC_TEAM_COLORS[metadata?.colors[0] ?? ""]
+  const colors = metadata?.colors ?? [];
+  const backgroundToken = colors.slice(1).find((color) => !HOME_LOGO_NEUTRALS.has(color))
+    ?? colors[0]
+    ?? "blue";
+  const color = TEAM_COLOR_OVERRIDES[`${canonicalName}:${backgroundToken}`]
+    ?? SEMANTIC_TEAM_COLORS[backgroundToken]
     ?? "#1F4E79";
+
+  return {
+    color,
+    logoTreatment: HOME_WHITE_LOGO_TEAMS.has(canonicalName) ? "white" as const : "full-color" as const,
+  };
 }
 
 function standingLabel(rank: number, standings: readonly { rank: number }[]) {
@@ -223,9 +237,20 @@ function PlayerSpotlight({
   );
 }
 
-function TeamMark({ logoUrl, name }: { logoUrl: string | null; name: string }) {
+function TeamMark({
+  logoUrl,
+  name,
+  logoTreatment,
+}: {
+  logoUrl: string | null;
+  name: string;
+  logoTreatment: "full-color" | "white";
+}) {
   return (
-    <span className={`football-hq-team-mark${logoUrl ? "" : " is-empty"}`} aria-hidden="true">
+    <span
+      className={`football-hq-team-mark${logoUrl ? "" : " is-empty"}${logoTreatment === "white" ? " is-white-logo" : ""}`}
+      aria-hidden="true"
+    >
       {logoUrl ? <img src={logoUrl} alt="" loading="lazy" /> : <b>{name.slice(0, 2).toUpperCase()}</b>}
     </span>
   );
@@ -243,6 +268,8 @@ function FeaturedGameRow({
   const label = isCollegeGame(game.weightClass) ? "COLLEGE GAME OF THE WEEK" : "NFL GAME OF THE WEEK";
   const firstTeam = breakdown.teams[0];
   const secondTeam = breakdown.teams[1];
+  const firstPresentation = footballHqTeamPresentationFor(firstTeam.name);
+  const secondPresentation = footballHqTeamPresentationFor(secondTeam.name);
 
   return (
     <Link
@@ -253,13 +280,21 @@ function FeaturedGameRow({
       <div className="football-hq-game-row__main">
         <span>{label}</span>
         <div className="football-hq-game-row__teams">
-          <div style={{ "--team-color": teamCardColor(firstTeam.name) } as CSSProperties}>
-            <TeamMark logoUrl={logoForTeam(game, firstTeam)} name={firstTeam.name} />
+          <div style={{ "--team-color": firstPresentation.color } as CSSProperties}>
+            <TeamMark
+              logoUrl={logoForTeam(game, firstTeam)}
+              name={firstTeam.name}
+              logoTreatment={firstPresentation.logoTreatment}
+            />
             <strong>{fullTeamNameForGame(game, firstTeam)}</strong>
           </div>
           <b>VS</b>
-          <div style={{ "--team-color": teamCardColor(secondTeam.name) } as CSSProperties}>
-            <TeamMark logoUrl={logoForTeam(game, secondTeam)} name={secondTeam.name} />
+          <div style={{ "--team-color": secondPresentation.color } as CSSProperties}>
+            <TeamMark
+              logoUrl={logoForTeam(game, secondTeam)}
+              name={secondTeam.name}
+              logoTreatment={secondPresentation.logoTreatment}
+            />
             <strong>{fullTeamNameForGame(game, secondTeam)}</strong>
           </div>
         </div>
