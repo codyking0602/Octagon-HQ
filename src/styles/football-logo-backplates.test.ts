@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import hitNumberSource from "../features/back-room/FootballHitTheNumberPresentation.tsx?raw";
+import blindResumeCss from "./blind-resume-alignment.css?raw";
+import footballFindLeaderCss from "./football-find-leader.css?raw";
 import footballFoundationCss from "./football-foundation.css?raw";
 import footballPicksCss from "./football-picks.css?raw";
 import footballSelectionCss from "./football-picks-team-selection.css?raw";
@@ -17,6 +20,8 @@ describe("Football logo backplates", () => {
       footballVisualCss,
       footballWeeklyAuctionCss,
       footballFoundationCss,
+      footballFindLeaderCss,
+      blindResumeCss,
     ]) {
       expect(css).toContain("var(--football-logo-backplate, #E7E1D7)");
     }
@@ -25,5 +30,9 @@ describe("Football logo backplates", () => {
     expect(footballSelectionCss).not.toContain("background: #202426;");
     expect(footballVisualCss).not.toContain("#101113");
     expect(footballFoundationCss).toContain("background: transparent;");
+    expect(footballFindLeaderCss).toContain(".football-find-card__visual.has-logo");
+    expect(blindResumeCss).toContain(".football-today-page .football-blind-resume-logo");
+    expect(hitNumberSource).toContain('background: "var(--football-logo-backplate, #E7E1D7)"');
+    expect(hitNumberSource).not.toContain('background: lightBackplate ? "#fff"');
   });
 });
