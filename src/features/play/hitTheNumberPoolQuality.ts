@@ -1,5 +1,5 @@
 import {
-  hitTheNumberScore,
+  hitTheNumberBoardQualityScore,
   hitTheNumberStatRows,
   type HitTheNumberResultStatus,
   type HitTheNumberStatRow,
@@ -120,7 +120,7 @@ export function hitTheNumberRandomPoolQuality(
     if (status === "perfect") return;
 
     legalSelectionCount += 1;
-    const score = hitTheNumberScore({
+    const score = hitTheNumberBoardQualityScore({
       status,
       target: plan.target,
       distance: Math.abs(plan.target - total),

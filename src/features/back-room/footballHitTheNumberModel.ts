@@ -1,4 +1,5 @@
 import {
+  hitTheNumberBoardQualityScore,
   hitTheNumberScore,
   type HitTheNumberResultStatus,
 } from "../play/hitTheNumberEngine";
@@ -920,7 +921,7 @@ function minimumGoodUnderScore(plan: FootballHitTheNumberPlan) {
   const fact = getFootballFact(plan.subjectIds[0]!, plan.metricId);
   if (!fact) return 90;
   const resolution = 10 ** -fact.definition.decimals;
-  return Math.min(90, hitTheNumberScore({
+  return Math.min(90, hitTheNumberBoardQualityScore({
     status: "under",
     target: plan.target,
     distance: resolution,
@@ -946,7 +947,7 @@ export function footballHitTheNumberPlanQuality(plan: FootballHitTheNumberPlan):
     if (Math.abs(total - plan.target) < 1e-9) return false;
     legalSelectionCount += 1;
     const status: HitTheNumberResultStatus = total > plan.target ? "bust" : "under";
-    const score = hitTheNumberScore({
+    const score = hitTheNumberBoardQualityScore({
       status,
       target: plan.target,
       distance: Math.abs(plan.target - total),

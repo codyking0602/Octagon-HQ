@@ -351,19 +351,19 @@ describe("Hit the Number foundation", () => {
       target: 93,
       distance: 5,
       pickCount: 7,
-    })).toBe(81);
+    })).toBe(97);
     expect(hitTheNumberScore({
       status: "under",
       target: 93,
       distance: 1,
       pickCount: 7,
-    })).toBe(96);
+    })).toBe(99);
     expect(hitTheNumberScore({
       status: "bust",
       target: 93,
       distance: 1,
       pickCount: 7,
-    })).toBe(46);
+    })).toBe(49);
     expect(hitTheNumberScore({
       status: "perfect",
       target: 93,
@@ -401,7 +401,7 @@ describe("Hit the Number foundation", () => {
       status: "bust",
       total: 51,
       distance: 1,
-      score: 46,
+      score: 49,
     });
     expect(() => gradeHitTheNumberSelection(setup, ["a", "b", "c", "a"], rows)).toThrow(
       "Hit the Number selections must be unique.",
@@ -421,7 +421,7 @@ describe("Hit the Number foundation", () => {
       status: "under",
       total: 49,
       distance: 1,
-      score: 96,
+      score: 99,
     });
   });
 });
