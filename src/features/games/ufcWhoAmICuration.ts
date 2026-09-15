@@ -195,7 +195,7 @@ const retainedConceptsBySubject = new Map<string, ReadonlySet<string>>([
   ["ufc:deiveson-figueiredo", new Set(["marajoara-grappling-origin"])],
   ["ufc:vitor-belfort", new Set(["street-sparring-tissue-mouthguards", "carlson-gracie-protege", "teenage-move-to-los-angeles"])],
   ["ufc:tom-aspinall", new Set(["martial-arts-father-andy", "jiu-jitsu-first-background", "tyson-fury-training-influence", "speed-over-heavyweight-stereotype"])],
-  ["ufc:royce-gracie", new Set(["chosen-as-unimposing-gracie-representative"])],
+  ["ufc:royce-gracie", new Set(["adult-sparring-by-fourteen", "moved-to-rorion-california-garage", "chosen-as-unimposing-gracie-representative"])],
   ["ufc:anthony-pettis", new Set(["showtime-nickname-from-roufus", "brother-sergio-fighter-family"])],
   ["ufc:shogun-rua", new Set(["brother-ninja-inspired-start", "chute-boxe-hard-sparring-culture", "japan-second-home"])],
   ["ufc:dan-henderson", new Set(["father-high-school-wrestling-coach", "two-time-greco-roman-olympian", "mma-funded-third-olympic-bid", "randy-couture-mma-bridge", "team-quest-founder"])],
@@ -213,6 +213,11 @@ const retainedConceptsBySubject = new Map<string, ReadonlySet<string>>([
   ["ufc:diego-lopes", new Set(["moved-to-mexico-to-teach-bjj", "alexa-grasso-coach", "donald-cerrone-idol-and-training"])],
 ]);
 
+const identityFacetOverrides = new Map<string, "style" | "career-path">([
+  ["ufc:royce-gracie:adult-sparring-by-fourteen", "style"],
+  ["ufc:royce-gracie:moved-to-rorion-california-garage", "career-path"],
+]);
+
 const calibrationSubjectIds = new Set<string>(UFC_WHO_AM_I_CALIBRATION_SUBJECT_IDS);
 
 export function isUfcWhoAmICalibrationSubject(subjectId: string) {
@@ -226,4 +231,8 @@ export function shouldUseUfcWhoAmIIdentityConcept(subjectId: string, conceptId: 
 
 export function retainedUfcWhoAmIIdentityConcepts(subjectId: string) {
   return retainedConceptsBySubject.get(subjectId) ?? null;
+}
+
+export function ufcWhoAmIIdentityFacetOverride(subjectId: string, conceptId: string) {
+  return identityFacetOverrides.get(`${subjectId}:${conceptId}`) ?? null;
 }
