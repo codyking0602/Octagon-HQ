@@ -1,7 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import TodayChallengeHub from "./TodayChallengeHub";
-import type { TodayChallengeProjection } from "./todayChallengeRepository";
+import {
+  TodayChallengeRepositoryError,
+  type TodayChallengeProjection,
+} from "./todayChallengeRepository";
 
 const navigate = vi.fn();
 const openDialog = vi.fn();
@@ -170,6 +173,28 @@ describe("generalized Today’s Challenge hub", () => {
     expect(card).toHaveTextContent("Eliminate nine players without removing today’s verified stat leader.");
     expect(card).not.toHaveTextContent(/fighters?/i);
     expect(card).not.toHaveTextContent(/\bUFC\b/i);
+  });
+
+  it("routes the Football Weekly Auction gate instead of showing a load failure", () => {
+    useTodayChallengeRuntime.mockReturnValue({
+      projection: null,
+      loading: false,
+      error: new TodayChallengeRepositoryError(
+        "WEEKLY_AUCTION_REQUIRED",
+        "Submit today’s Weekly Auction bids before starting Football Daily.",
+      ),
+      busy: false,
+      configured: true,
+      advance: vi.fn(),
+      refresh: vi.fn(),
+    });
+
+    render(<TodayChallengeHub sport="football" />);
+
+    expect(screen.getByRole("heading", { name: "Weekly Auction comes first." })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "The official game did not load." })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "START TODAY’S AUCTION" }));
+    expect(navigate).toHaveBeenCalledWith("/football/today");
   });
 
   it("keeps cumulative standings collapsed, then reveals one-row member stats and game averages", () => {
