@@ -568,6 +568,9 @@ const batch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch2Supplement("jeanty-heisman-runnerup", "I finished second in the 2024 Heisman Trophy voting.", "strong"),
     batch2Supplement("jeanty-sixth", "Las Vegas selected me No. 6 overall in the 2025 NFL Draft.", "giveaway", "career-path", 10),
     batch2Supplement("jeanty-raiders-2", "I wear No. 2 for the Raiders.", "strong", "identity"),
+    batch2Supplement("jeanty-unanimous-aa", "I became the first unanimous All-American in Boise State football history in 2024.", "strong", "accomplishments"),
+    batch2Supplement("jeanty-30-touchdowns", "I scored 30 total touchdowns during Boise State's 2024 season.", "strong", "production"),
+    batch2Supplement("jeanty-cfp", "I helped Boise State win the 2024 Mountain West title and earn the No. 3 seed in the College Football Playoff.", "strong", "accomplishments"),
   ]],
   ["nfl-bijan-robinson", [
     batch2Supplement("bijan-texas", "I played college football at Texas.", "helpful", "background"),
@@ -812,6 +815,8 @@ const batch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch2Supplement("gates-116", "My 116 receiving touchdowns remain the NFL record for a tight end.", "giveaway", "accomplishments", 8),
     batch2Supplement("gates-hof", "I was inducted into the Pro Football Hall of Fame in 2025.", "strong"),
     batch2Supplement("gates-probowls", "I was selected to eight consecutive Pro Bowls.", "strong"),
+    batch2Supplement("gates-chargers-only", "I spent all 16 of my NFL seasons with the Chargers.", "giveaway", "career-path", 10),
+    batch2Supplement("gates-allpro", "I earned first-team All-Pro honors three straight seasons from 2004 through 2006.", "strong", "accomplishments"),
   ]],
   ["nfl-charlie-sanders", [
     batch2Supplement("sanders-lions", "I spent my entire 10-season NFL career with Detroit.", "giveaway", "career-path", 10),
@@ -891,7 +896,8 @@ const batch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
 ]);
 
 function applyBatch2IdentityCuration(subjectId: string, clue: WhoAmIClue) {
-  const override = batch2TextOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id));
+  const override = batch2TextOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id))
+    ?? batch2TextOverrides.get(subjectId + ":" + clue.id);
   return override ? { ...clue, ...override } : clue;
 }
 
@@ -971,7 +977,12 @@ export function curateFootballWhoAmIClues(
       partialQuarterbackRushingSubjectIds.has(subject.id)
       && /^fact:nfl-career-rushing-/.test(rawClue.id)
     ) continue;
-    if (rawClue.identityKnowledge && retained && !retained.has(rawClue.conceptId ?? "")) continue;
+    if (
+      rawClue.identityKnowledge
+      && retained
+      && !retained.has(rawClue.conceptId ?? "")
+      && !retained.has(rawClue.id)
+    ) continue;
     const clue = applyIdentityCuration(subject.id, rawClue);
     if (clue.identityKnowledge) {
       const selectionClass = whoAmIClueSelectionClass(clue);
