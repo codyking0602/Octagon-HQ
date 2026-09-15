@@ -15,25 +15,25 @@
 }
 
 .football-weekly-auction__cover {
-  padding: 22px 18px;
+  padding: 16px 18px;
   text-align: center;
 }
 
 .football-weekly-auction__cover h1,
 .football-weekly-auction__final h1 {
-  margin: 8px 0 6px;
+  margin: 5px 0 4px;
   font-size: clamp(1.75rem, 8vw, 2.25rem);
   line-height: .98;
 }
 
 .football-weekly-auction__lede {
   display: block;
-  margin-bottom: 18px;
-  font-size: 1.05rem;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
 
 .football-weekly-auction__rules {
-  padding: 13px 15px;
+  padding: 10px 13px;
   text-align: left;
   border: 1px solid rgba(222,181,91,.3);
   border-radius: 14px;
@@ -41,9 +41,9 @@
 }
 
 .football-weekly-auction__rules p {
-  margin: 8px 0;
-  font-size: .88rem;
-  line-height: 1.45;
+  margin: 5px 0;
+  font-size: .8rem;
+  line-height: 1.32;
 }
 
 .football-weekly-auction__rules small {
@@ -53,24 +53,20 @@
 }
 
 .football-weekly-auction__rules ul {
-  margin: 8px 0 12px;
-  padding-left: 20px;
+  margin: 5px 0 7px;
+  padding-left: 19px;
 }
 
 .football-weekly-auction__rules li {
-  margin: 6px 0;
-  font-size: .88rem;
-}
-
-.football-weekly-auction__unlock {
-  margin: 14px 0 10px;
-  color: #aebbc4;
-  font-size: .78rem;
+  margin: 3px 0;
+  font-size: .8rem;
+  line-height: 1.3;
 }
 
 .football-weekly-auction__primary {
   width: 100%;
   min-height: 48px;
+  margin-top: 10px;
   border: 1px solid #48d38c;
   border-radius: 12px;
   background: linear-gradient(180deg, #3bd184, #19985c);
@@ -215,20 +211,44 @@
 
 .football-weekly-auction__theme {
   display: flex;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 10px;
-  margin: 13px 2px 8px;
+  gap: 14px;
+  margin: 14px 2px 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(126,199,242,.16);
+  border-radius: 10px;
+  background: rgba(126,199,242,.05);
+}
+
+.football-weekly-auction__theme div {
+  min-width: 0;
+}
+
+.football-weekly-auction__theme small {
+  display: block;
+  margin-bottom: 2px;
+  color: #7f919d;
+  font-size: .5rem;
+  font-weight: 900;
+  letter-spacing: .11em;
 }
 
 .football-weekly-auction__theme strong {
+  display: block;
   color: #7ec7f2;
-  font-size: .74rem;
-  letter-spacing: .08em;
+  font-size: .9rem;
+  letter-spacing: .07em;
 }
 
 .football-weekly-auction__theme span {
-  color: #80929e;
-  font-size: .66rem;
+  max-width: 175px;
+  color: #a3b3bd;
+  font-size: .56rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: right;
+  letter-spacing: .025em;
 }
 
 .football-weekly-auction__team-stack {
@@ -597,4 +617,8 @@
     width: 44px;
     height: 44px;
   }
+}
+
+.football-weekly-auction__submitted-actions .football-weekly-auction__primary {
+  margin-top: 0;
 }
