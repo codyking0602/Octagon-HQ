@@ -8,13 +8,29 @@ declare
   v_event_id constant text := 'ufc-331-joshua-van-vs-alexandre-pantoja-2026-09-19';
 begin
   if exists (select 1 from public.pick_events where event_id = v_event_id) then
+    -- Free the cancelled bout's main-card sequence before resequencing.
     update public.pick_bouts
     set included_in_picks = false,
+        card_segment = null,
+        segment_sequence = null,
         result_status = 'cancelled',
         winner_fighter_slug = null,
         result_recorded_at = coalesce(result_recorded_at, now())
     where event_id = v_event_id
       and bout_id = 'main-renato-moicano-brian-ortega';
+
+    -- Menifield currently owns main-card sequence 1. Clear that slot first so
+    -- the promoted Steveson bout can take it without tripping the unique key.
+    update public.pick_bouts
+    set segment_sequence = null
+    where event_id = v_event_id
+      and bout_id = 'main-alonzo-menifield-iwo-baraniewski';
+
+    update public.pick_bouts
+    set segment_sequence = 2,
+        locks_at = '2026-09-20T01:30:00Z'::timestamptz
+    where event_id = v_event_id
+      and bout_id = 'main-alonzo-menifield-iwo-baraniewski';
 
     -- The promoted heavyweight bout now opens the 9 p.m. ET main card.
     update public.pick_bouts
@@ -23,12 +39,6 @@ begin
         locks_at = '2026-09-20T01:00:00Z'::timestamptz
     where event_id = v_event_id
       and bout_id = 'prelim-gable-steveson-sean-sharaf';
-
-    update public.pick_bouts
-    set segment_sequence = 2,
-        locks_at = '2026-09-20T01:30:00Z'::timestamptz
-    where event_id = v_event_id
-      and bout_id = 'main-alonzo-menifield-iwo-baraniewski';
 
     update public.pick_bouts
     set card_segment = 'prelim',
