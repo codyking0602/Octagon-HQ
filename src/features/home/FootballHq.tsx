@@ -6,6 +6,8 @@ import { footballMatchupBreakdownsForEvent } from "../picks/footballMatchupBreak
 import { footballDateTimeLabel } from "../picks/footballTime";
 import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../picks/picksModel";
+import type { DailyChallengeChampionshipSnapshot } from "../play/dailyChallengeChampionship";
+import { WeeklyGamesStandingLink } from "./WeeklyGamesStandingLink";
 
 export type FootballSpotlightKind = "cfb" | "nfl";
 
@@ -321,6 +323,8 @@ export function FootballHq({
   error,
   signedIn,
   dailyChallenge,
+  weeklyGames,
+  weeklyGamesLoading,
   playerPhotoSources = {},
   canManagePlayerPhoto = false,
   onManagePlayerPhoto,
@@ -333,6 +337,8 @@ export function FootballHq({
   error: string;
   signedIn: boolean;
   dailyChallenge: ReactNode;
+  weeklyGames: DailyChallengeChampionshipSnapshot | null;
+  weeklyGamesLoading: boolean;
   playerPhotoSources?: Readonly<Partial<Record<FootballSpotlightKind, string | null>>>;
   canManagePlayerPhoto?: boolean;
   onManagePlayerPhoto?: () => void;
@@ -411,13 +417,20 @@ export function FootballHq({
             <small className="home-event-card__picks-status">{status}</small>
           </div>
           <div className="home-event-card__standing" aria-label="Football Picks season standing">
-            <span>{season} STANDING</span>
+            <span>{season} PICKS STANDING</span>
             <b>{signedIn && rank ? `${rank} OF ${standings.length}` : "—"}</b>
             <small>{standing ? `${standing.totalPoints} PTS · ${pickRecord(summary)}` : signedIn ? pickRecord(summary) : "SIGN IN TO TRACK"}</small>
           </div>
         </div>
         <Link className="secondary-action" to="/football/picks">OPEN PICKS →</Link>
       </section>
+
+      <WeeklyGamesStandingLink
+        sport="football"
+        standing={weeklyGames}
+        loading={weeklyGamesLoading}
+        signedIn={signedIn}
+      />
 
       {dailyChallenge}
 
