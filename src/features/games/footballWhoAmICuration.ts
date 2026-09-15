@@ -581,6 +581,8 @@ const batch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch2Supplement("bijan-scrimmage-2025", "I led the NFL with 2,298 yards from scrimmage in 2025.", "strong", "production"),
     batch2Supplement("bijan-probowls", "I made the Pro Bowl in both 2024 and 2025.", "strong"),
     batch2Supplement("bijan-arizona-record", "I left high school as Arizona's all-time rushing leader.", "strong", "background"),
+    batch2Supplement("bijan-unanimous-aa", "I was a unanimous first-team All-American at Texas in 2022.", "strong", "accomplishments"),
+    batch2Supplement("bijan-2024-rushing", "I rushed for 1,456 yards and 14 touchdowns for Atlanta in 2024.", "strong", "production"),
   ]],
   ["nfl-chris-johnson", [
     batch2Supplement("cj-draft", "Tennessee selected me No. 24 overall in the 2008 NFL Draft.", "strong", "career-path"),
@@ -927,7 +929,12 @@ function curateNflBatch2Clues(subject: FootballSubjectProfile, rawClues: readonl
     if (rawClue.id === "career-span" && batch2SuppressedCareerSpanSubjectIds.has(subject.id)) continue;
     if (subject.id === "nfl-kellen-winslow" && rawClue.id === "era") continue;
     if (batch2ShouldSuppressMetric(subject, rawClue)) continue;
-    if (rawClue.identityKnowledge && retained && !retained.has(rawClue.conceptId ?? "")) continue;
+    if (
+      rawClue.identityKnowledge
+      && retained
+      && !retained.has(rawClue.conceptId ?? "")
+      && !retained.has(rawClue.id)
+    ) continue;
 
     const clue = applyBatch2IdentityCuration(subject.id, rawClue);
     if (clue.identityKnowledge) {
