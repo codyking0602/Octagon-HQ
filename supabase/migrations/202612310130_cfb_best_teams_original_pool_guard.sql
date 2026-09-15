@@ -24,11 +24,9 @@ begin
 
   v_next := replace(
     v_next,
+    'where season.conference_bucket=v_context',
     'where season.conference_bucket=v_context' || chr(10) ||
-    '        and not (season.season_reference=any(v_refs))',
-    'where season.conference_bucket=v_context' || chr(10) ||
-    '        and season.season_reference like ''cfb-best-%''' || chr(10) ||
-    '        and not (season.season_reference=any(v_refs))'
+    '        and season.season_reference like ''cfb-best-%'''
   );
 
   if v_next = v_definition then
