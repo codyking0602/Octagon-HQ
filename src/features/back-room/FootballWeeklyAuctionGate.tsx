@@ -325,7 +325,7 @@ export function FootballWeeklyAuctionGate({
 
         {!legal ? (
           <p className="football-weekly-auction__error">
-            Today’s bids can total at most {"$"}{state.max_commit} with your current bankroll protection.
+            Today’s bids can total at most {"$"}{state.max_commit} from your remaining weekly bankroll.
           </p>
         ) : null}
         {error ? <p className="football-weekly-auction__error">{error}</p> : null}
