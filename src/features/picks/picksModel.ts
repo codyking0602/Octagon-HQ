@@ -27,6 +27,8 @@ export interface PickBout {
   /** Effective server-owned state; never use browser time for authorization. */
   isLocked?: boolean;
   position: number;
+  cardSegment?: "main" | "prelim" | null;
+  segmentSequence?: number | null;
   weightClass: string;
   redFighterSlug: string;
   redFighterName: string;
@@ -303,4 +305,12 @@ export function groupRankLabel(rank: number, results: readonly { rank: number }[
 
 export function mainCardFightLabel(index: number) {
   return index === 0 ? "MAIN EVENT" : `MAIN CARD · FIGHT ${index + 1}`;
+}
+
+export function fightCardLabel(bout: PickBout, index: number, segmentIndex = index + 1) {
+  if (index === 0) return "MAIN EVENT";
+  if (bout.cardSegment === "prelim") {
+    return `PRELIMS · FIGHT ${segmentIndex}`;
+  }
+  return `MAIN CARD · FIGHT ${segmentIndex}`;
 }

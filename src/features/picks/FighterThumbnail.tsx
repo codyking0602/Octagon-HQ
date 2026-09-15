@@ -17,9 +17,22 @@ const thumbnailBySlug = new Map(
 const thumbnailSlugAliases = new Map([
   ["jan-b-achowicz", "jan-blachowicz"],
   ["jan-błachowicz", "jan-blachowicz"],
+  ["alexandre-pantoja", "alex-pantoja"],
 ]);
 
 const remotePhotoBySlug = new Map([
+  ["joshua-van", "https://a.espncdn.com/i/headshots/mma/players/full/5120301.png"],
+  ["arman-tsarukyan", "https://a.espncdn.com/i/headshots/mma/players/full/4419372.png"],
+  ["mauricio-ruffy", "https://a.espncdn.com/i/headshots/mma/players/full/5122238.png"],
+  ["patricio-pitbull", "https://a.espncdn.com/i/headshots/mma/players/full/2532870.png"],
+  ["dooho-choi", "https://a.espncdn.com/i/headshots/mma/players/full/3093026.png"],
+  ["alonzo-menifield", "https://a.espncdn.com/i/headshots/mma/players/full/3948876.png"],
+  ["iwo-baraniewski", "https://a.espncdn.com/i/headshots/mma/players/full/5307810.png"],
+  ["sean-sharaf", "https://a.espncdn.com/i/headshots/mma/players/full/5240957.png"],
+  ["charles-jourdain", "https://a.espncdn.com/i/headshots/mma/players/full/4421978.png"],
+  ["robelis-despaigne", "https://a.espncdn.com/i/headshots/mma/players/full/5189560.png"],
+  ["michael-aswell-jr", "https://a.espncdn.com/i/headshots/mma/players/full/5212738.png"],
+  ["joosang-yoo", "https://a.espncdn.com/i/headshots/mma/players/full/5282139.png"],
   ["dan-hooker", "https://a.espncdn.com/i/headshots/mma/players/full/3109135.png"],
   ["salahdine-parnasse", "https://a.espncdn.com/i/headshots/mma/players/full/4312859.png"],
   ["fares-ziam", "https://a.espncdn.com/i/headshots/mma/players/full/4083018.png"],

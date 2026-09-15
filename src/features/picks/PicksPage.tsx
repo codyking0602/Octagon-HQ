@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   americanOddsLabel,
-  mainCardFightLabel,
+  fightCardLabel,
   pickBoutLocked,
   pickEventPresentation,
   pickProgress,
@@ -137,6 +137,9 @@ export default function PicksPage() {
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
   const eventPoster = pickEventPoster(activeEvent);
+  const numberedUfcEvent = Boolean(
+    activeEvent?.sport !== "football" && activeEvent?.name.match(/^UFC\s+\d+\b/i),
+  );
   const eventVisualStyle = eventPoster
     ? ({
         "--picks-event-poster": `url("${eventPoster.src}")`,
@@ -182,7 +185,7 @@ export default function PicksPage() {
       {activeEvent && activeLifecycle ? (
         <>
           <section
-            className={`surface-card picks-event-hero${eventPoster ? " has-poster" : ""}`}
+            className={`surface-card picks-event-hero${eventPoster ? " has-poster" : ""}${numberedUfcEvent ? " is-numbered-event" : ""}`}
             aria-labelledby="picks-event-title"
           >
             <div className="picks-event-hero__poster" aria-hidden="true">
@@ -205,7 +208,7 @@ export default function PicksPage() {
               <div className="picks-event-hero__facts" aria-label="Event details">
                 <span>{eventDate(activeEvent.startsAt)}</span>
                 <span>{activeEvent.venue} · {activeEvent.location}</span>
-                <span>MAIN CARD ONLY</span>
+                <span>{numberedUfcEvent ? "MAIN + PRELIMS" : "MAIN CARD ONLY"}</span>
                 <span>{progress.total} FIGHTS</span>
               </div>
 
@@ -269,6 +272,10 @@ export default function PicksPage() {
 
               <section className="picks-card-list" aria-label={`${activeEvent.name} fight picks`}>
                 {orderedBouts.map((bout, index) => {
+                  const segmentIndex = orderedBouts
+                    .slice(0, index + 1)
+                    .filter((candidate) => (candidate.cardSegment ?? "main") === (bout.cardSegment ?? "main"))
+                    .length;
                   const selection = picks.selections[bout.boutId] ?? null;
                   const saving = picks.savingBoutId === bout.boutId;
                   const removed = bout.includedInPicks === false;
@@ -307,7 +314,7 @@ export default function PicksPage() {
                     >
                       <header className="pick-bout-card__meta">
                         <div className="pick-bout-card__heading">
-                          <span>{mainCardFightLabel(index)}</span>
+                          <span>{fightCardLabel(bout, index, segmentIndex)}</span>
                           <small>{bout.weightClass}</small>
                         </div>
                         {!removed && !cancelled ? (

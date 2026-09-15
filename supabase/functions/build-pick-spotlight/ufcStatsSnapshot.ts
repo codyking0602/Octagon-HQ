@@ -263,6 +263,86 @@ const fighters: Record<string, UfcStatsSnapshotFighter> = {
     takedownDefense: 63,
     submissionAverage: 0,
   },
+  "joshua van": {
+    name: "Joshua Van", record: "17-2-0", dob: "2001-10-10", height: "5' 5\"", reach: "65\"", stance: "Orthodox",
+    slpm: 8.43, strikingAccuracy: 57, sapm: 5.82, strikingDefense: 58,
+    takedownAverage: 0.82, takedownAccuracy: 63, takedownDefense: 76, submissionAverage: 0.21,
+  },
+  "alexandre pantoja": {
+    name: "Alexandre Pantoja", record: "30-6-0", dob: "1990-04-16", height: "5' 5\"", reach: "67\"", stance: "Orthodox",
+    slpm: 4.38, strikingAccuracy: 50, sapm: 3.88, strikingDefense: 49,
+    takedownAverage: 2.79, takedownAccuracy: 47, takedownDefense: 69, submissionAverage: 1.0,
+  },
+  "arman tsarukyan": {
+    name: "Arman Tsarukyan", record: "23-3-0", dob: "1996-10-11", height: "5' 7\"", reach: "72.5\"", stance: "Orthodox",
+    slpm: 3.85, strikingAccuracy: 50, sapm: 1.8, strikingDefense: 55,
+    takedownAverage: 3.26, takedownAccuracy: 37, takedownDefense: 75, submissionAverage: 0.1,
+  },
+  "mauricio ruffy": {
+    name: "Mauricio Ruffy", record: "14-2-0", dob: "1996-06-17", height: "5' 11\"", reach: "75\"", stance: "Orthodox",
+    slpm: 4.19, strikingAccuracy: 57, sapm: 3.83, strikingDefense: 59,
+    takedownAverage: 0, takedownAccuracy: 0, takedownDefense: 87, submissionAverage: 0,
+  },
+  "patricio pitbull": {
+    name: "Patricio Pitbull", record: "37-9-0", dob: "1987-07-07", height: "5' 6\"", reach: "67\"", stance: "Orthodox",
+    slpm: 2.77, strikingAccuracy: 46, sapm: 4.61, strikingDefense: 56,
+    takedownAverage: 1.26, takedownAccuracy: 33, takedownDefense: 74, submissionAverage: 0.47,
+  },
+  "dooho choi": {
+    name: "Dooho Choi", record: "17-4-1", dob: "1991-04-10", height: "5' 10\"", reach: "70\"", stance: "Orthodox",
+    slpm: 4.67, strikingAccuracy: 56, sapm: 4.02, strikingDefense: 56,
+    takedownAverage: 1.43, takedownAccuracy: 53, takedownDefense: 47, submissionAverage: 0.6,
+  },
+  "alonzo menifield": {
+    name: "Alonzo Menifield", record: "18-6-1", dob: "1987-10-18", height: "6' 0\"", reach: "76\"", stance: "Orthodox",
+    slpm: 3.77, strikingAccuracy: 53, sapm: 3.81, strikingDefense: 50,
+    takedownAverage: 0.5, takedownAccuracy: 31, takedownDefense: 78, submissionAverage: 0.2,
+  },
+  "iwo baraniewski": {
+    name: "Iwo Baraniewski", record: "9-0-0", dob: "1998-11-20", height: "6' 0.5\"", reach: "73.5\"", stance: "Orthodox",
+    slpm: 11.35, strikingAccuracy: 58, sapm: 8.65, strikingDefense: 53,
+    takedownAverage: 0, takedownAccuracy: 0, takedownDefense: 100, submissionAverage: 0,
+  },
+  "gable steveson": {
+    name: "Gable Steveson", record: "4-0-0", dob: "2000-05-31", height: "5' 11\"", reach: "74\"", stance: "Orthodox",
+    slpm: 16.29, strikingAccuracy: 72, sapm: 5.17, strikingDefense: 61,
+    takedownAverage: 0, takedownAccuracy: 0, takedownDefense: null, submissionAverage: 0,
+  },
+  "sean sharaf": {
+    name: "Sean Sharaf", record: "4-2-0", dob: "1993-07-11", height: "6' 2\"", reach: "76\"", stance: "Orthodox",
+    slpm: 7.41, strikingAccuracy: 44, sapm: 15, strikingDefense: 42,
+    takedownAverage: 0.93, takedownAccuracy: 11, takedownDefense: 0, submissionAverage: 0,
+  },
+  "marlon vera": {
+    name: "Marlon Vera", record: "23-12-1", dob: "1992-12-02", height: "5' 8\"", reach: "70.5\"", stance: "Switch",
+    slpm: 4.18, strikingAccuracy: 47, sapm: 5.34, strikingDefense: 50,
+    takedownAverage: 0.47, takedownAccuracy: 39, takedownDefense: 71, submissionAverage: 0.8,
+  },
+  "charles jourdain": {
+    name: "Charles Jourdain", record: "18-8-1", dob: "1995-11-27", height: "5' 9\"", reach: "69\"", stance: "Switch",
+    slpm: 5.48, strikingAccuracy: 49, sapm: 4.25, strikingDefense: 56,
+    takedownAverage: 0.33, takedownAccuracy: 21, takedownDefense: 47, submissionAverage: 0.7,
+  },
+  "tai tuivasa": {
+    name: "Tai Tuivasa", record: "15-10-0", dob: "1993-03-16", height: "6' 2\"", reach: "75\"", stance: "Southpaw",
+    slpm: 3.37, strikingAccuracy: 49, sapm: 4.61, strikingDefense: 43,
+    takedownAverage: 0, takedownAccuracy: 0, takedownDefense: 59, submissionAverage: 0,
+  },
+  "robelis despaigne": {
+    name: "Robelis Despaigne", record: "5-2-0", dob: "1988-09-09", height: "6' 7\"", reach: "84\"", stance: "Orthodox",
+    slpm: 2.11, strikingAccuracy: 59, sapm: 2.54, strikingDefense: 46,
+    takedownAverage: 0, takedownAccuracy: 0, takedownDefense: 50, submissionAverage: 0,
+  },
+  "michael aswell jr": {
+    name: "Michael Aswell Jr", record: "11-5-0", dob: "2000-09-27", height: "5' 8\"", reach: "69\"", stance: "Orthodox",
+    slpm: 7.6, strikingAccuracy: 43, sapm: 7.03, strikingDefense: 52,
+    takedownAverage: 0.24, takedownAccuracy: 25, takedownDefense: 56, submissionAverage: 0,
+  },
+  "joosang yoo": {
+    name: "JooSang Yoo", record: "9-1-0", dob: "1994-01-21", height: "5' 7\"", reach: "71\"", stance: "Orthodox",
+    slpm: 6.36, strikingAccuracy: 58, sapm: 4.99, strikingDefense: 56,
+    takedownAverage: 0, takedownAccuracy: 0, takedownDefense: 50, submissionAverage: 0,
+  },
 };
 
 function normalizeName(value: string) {
