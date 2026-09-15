@@ -4,7 +4,7 @@ import { FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT } from "../features
 
 const migration = readFileSync("supabase/migrations/202612310129_football_weekly_auction.sql", "utf8");
 const bankrollFloorRepair = readFileSync("supabase/migrations/202612310130_football_weekly_auction_bankroll_floor.sql", "utf8");
-const transitionMigration = readFileSync("supabase/migrations/202612310131_football_troy_transition_carry.sql", "utf8");
+const transitionMigration = readFileSync("supabase/migrations/202612310132_football_troy_transition_carry.sql", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 const gate = readFileSync("src/features/back-room/FootballWeeklyAuctionGate.tsx", "utf8");
