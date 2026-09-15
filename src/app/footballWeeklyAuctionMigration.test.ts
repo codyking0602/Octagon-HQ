@@ -20,8 +20,8 @@ describe("Football Weekly Auction live contract", () => {
   it("uses the locked three-team forty-dollar sealed bidding rules", () => {
     expect(migration).toContain("slot integer not null check (slot between 1 and 3)");
     expect(migration).toContain("amount integer not null check (amount between 0 and 40)");
-    expect(migration).toContain("when p_owned <= 0 then 2 when p_owned = 1 then 1 else 0");
     expect(migration).toContain("v_bid1 + v_bid2 + v_bid3");
+    expect(migration).toContain("v_max := v_bankroll");
     expect(migration).toContain("v_total > v_max");
     expect(gate).toContain("$0 = pass");
   });
