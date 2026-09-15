@@ -121,6 +121,20 @@ describe("PicksSeasonHub", () => {
     expect(screen.getByText("STANDINGS & EVENTS").closest("details")).not.toHaveAttribute("open");
   });
 
+  it("opens the standings tab directly from a Home standings link", () => {
+    render(
+      <MemoryRouter initialEntries={["/picks?view=standings#picks-season-standings"]}>
+        <PicksSeasonHub history={history} loading={false} />
+      </MemoryRouter>,
+    );
+
+    const hub = document.querySelector("#picks-season-standings");
+    expect(hub).not.toBeNull();
+    expect(screen.getByText("STANDINGS & EVENTS").closest("details")).toHaveAttribute("open");
+    expect(screen.getByRole("tab", { name: "STANDINGS" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Season leaderboard")).toBeInTheDocument();
+  });
+
   it("presents UFC standings unchanged with their canonical ranks and totals", () => {
     render(<MemoryRouter><PicksSeasonHub history={history} loading={false} /></MemoryRouter>);
 
