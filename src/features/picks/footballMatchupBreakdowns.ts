@@ -337,8 +337,8 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
       { name: "Ole Miss", aliases: ["ole-miss", "ole-miss-rebels", "mississippi", "mississippi-rebels"] },
     ],
     setup: [
-      "A top-10 Magnolia Bowl arrives with both teams 2–0: No. 7 LSU goes to Oxford to face No. 8 Ole Miss one year after the Rebels won this matchup 24–19 in Vaught-Hemingway.",
-      "LSU has paired 48.0 points and 586.0 yards per game with a defense that has already produced 10 sacks and 17 tackles for loss. Ole Miss has shown a different kind of pressure through Trinidad Chambliss and Deuce Alexander, who helped the Rebels survive Louisville before a cleaner Week 2 win over Charlotte. The swing factor is whether Ole Miss can create explosives before LSU's front starts controlling the down.",
+      "Forget the polite version: Lane Kiffin is going back to Oxford in LSU colors. He spent six seasons building Ole Miss into a national contender, left for the Tigers, and now his first trip back is a top-10 Magnolia Bowl. Vaught-Hemingway is going to be venomous, Ole Miss gets a clean shot at the coach who left, and Kiffin gets to walk into his old stadium with No. 7 LSU and try to beat the program he built.",
+      "And the football is good enough to match the grudge. LSU is averaging 48.0 points and 586.0 yards per game with 10 sacks and 17 tackles for loss on defense. Ole Miss has Trinidad Chambliss and Deuce Alexander threatening explosives, plus every emotional reason to land the first punch. The swing is whether the Rebels can turn that hostility into early pressure, or whether LSU's front and Kiffin's offense settle the game down and make Oxford watch him control it from the other sideline.",
     ],
     keyMatchups: [
       {
