@@ -303,6 +303,10 @@ export function groupRankLabel(rank: number, results: readonly { rank: number }[
   return results.filter((result) => result.rank === rank).length > 1 ? `T-${rank}` : `${rank}`;
 }
 
+export function mainCardFightLabel(index: number) {
+  return index === 0 ? "MAIN EVENT" : `MAIN CARD · FIGHT ${index + 1}`;
+}
+
 export function fightCardLabel(bout: PickBout, index: number, segmentIndex = index + 1) {
   if (index === 0) return "MAIN EVENT";
   if (bout.cardSegment === "prelim") {
