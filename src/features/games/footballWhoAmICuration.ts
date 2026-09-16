@@ -4057,7 +4057,7 @@ const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("smith-first-pick", "Buffalo selected me No. 1 overall in the 1985 NFL Draft.", "giveaway", "career-path", 9),
   ]],
   ["cfb-chase-young", [
-    cfbBatch3Clue("young-16-5", "I led the nation with 16.5 sacks for Ohio State in 2019.", "helpful", "production", 19),
+    cfbBatch3Clue("young-16-5", "I led the nation with 16.5 sacks for Ohio State in 2019.", "helpful", "accomplishments", 19),
     cfbBatch3Clue("young-award-sweep", "In 2019 I won the Nagurski Trophy, Bednarik Award and Ted Hendricks Award.", "giveaway", "accomplishments", 7),
     cfbBatch3Clue("young-big-ten-dpoy", "I was the Big Ten Defensive Player of the Year and Defensive Lineman of the Year in 2019.", "strong", "accomplishments", 15),
     cfbBatch3Clue("young-heisman-finalist", "I became a Heisman Trophy finalist as a defensive end in 2019.", "strong", "accomplishments", 13),
@@ -4204,9 +4204,10 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("smith-22-sacks-1983", "I recorded 22 sacks for Virginia Tech in 1983.", "helpful", "production", 21),
   ]],
   ["cfb-chase-young", [
-    cfbBatch3Clue("young-2019-tfl", "I recorded 21 tackles for loss during my 2019 Ohio State season.", "helpful", "production", 22),
+    cfbBatch3Clue("young-2019-tfl", "I finished second nationally with 21.5 tackles for loss during my 2019 Ohio State season.", "helpful", "accomplishments", 22),
     cfbBatch3Clue("young-number-two", "I wore No. 2 while starring at defensive end for Ohio State.", "helpful", "identity", 20),
     cfbBatch3Clue("young-team-captain", "My Ohio State teammates selected me as a team captain for the 2019 season.", "helpful", "identity", 21),
+    cfbBatch3Clue("young-unanimous-aa", "I was a unanimous first-team All-American at Ohio State in 2019.", "strong", "accomplishments", 16),
   ]],
   ["cfb-lee-roy-selmon", [
     cfbBatch3Clue("selmon-two-national-titles", "I helped Oklahoma win national championships in both 1974 and 1975.", "helpful", "accomplishments", 19),
@@ -4228,6 +4229,7 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("carter-cfp-run", "I helped Penn State reach the College Football Playoff semifinal in my final college season.", "strong", "accomplishments", 18),
     cfbBatch3Clue("carter-award-finalist", "I was a finalist for the Bednarik, Nagurski and Lombardi awards in 2024.", "helpful", "accomplishments", 18),
     cfbBatch3Clue("carter-ten-sacks", "I became Penn State's first player with at least 10 sacks in a season since Carl Nassib in 2015.", "helpful", "accomplishments", 21),
+    cfbBatch3Clue("carter-number-eleven", "I wore No. 11 at Penn State.", "helpful", "identity", 20),
   ]],
   ["cfb-aidan-hutchinson", [
     cfbBatch3Clue("hutchinson-two-time-captain", "My Michigan teammates elected me a team captain twice.", "helpful", "identity", 21),
@@ -4282,6 +4284,79 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("simmons-acc-aa", "I was the ACC Defensive Player of the Year and a unanimous All-American in 2019.", "helpful", "accomplishments", 18),
     cfbBatch3Clue("simmons-eighth-pick", "Arizona selected me No. 8 overall in the 2020 NFL Draft.", "giveaway", "career-path", 8),
   ]],
+]);
+
+const cfbBatch3ForcedPoolIds = new Map<string, ReadonlySet<string>>([
+  ["cfb-chase-young", new Set([
+    "position",
+    "school",
+    "identity:pr8-cfb-chase-young--track-for-football-speed",
+    "curated-cfb3:young-16-5",
+    "curated-cfb3:young-2019-tfl",
+    "curated-cfb3:young-team-captain",
+    "role-school",
+    "curated-cfb3:young-big-ten-dpoy",
+    "curated-cfb3:young-heisman-finalist",
+    "curated-cfb3:young-unanimous-aa",
+    "curated-cfb3:young-award-sweep",
+    "curated-cfb3:young-second-pick",
+  ])],
+  ["cfb-abdul-carter", new Set([
+    "position",
+    "school",
+    "identity:pr9-cfb-abdul-carter--linebacker-to-edge-switch",
+    "curated-cfb3:carter-award-finalist",
+    "curated-cfb3:carter-ten-sacks",
+    "curated-cfb3:carter-number-eleven",
+    "role-school",
+    "recognition:first-team-all-america",
+    "curated-cfb3:carter-big-ten-dpoy",
+    "curated-cfb3:carter-unanimous-aa",
+    "curated-cfb3:carter-cfp-run",
+    "identity:resume-cfb-abdul-carter-01",
+  ])],
+  ["cfb-john-henderson", new Set([
+    "position",
+    "school",
+    "identity:pr9-cfb-john-henderson--partial-qualifier-1998",
+    "identity:pr9-cfb-john-henderson--played-through-ankle-2001",
+    "curated-cfb3:henderson-sec-dpoy",
+    "curated-cfb3:henderson-two-aa",
+    "role-school",
+    "recognition:first-team-all-america",
+    "identity:resume-cfb-john-henderson-02",
+    "curated-cfb3:henderson-2000-line",
+    "identity:pr9-cfb-john-henderson--big-john-nickname",
+    "curated-cfb3:henderson-ninth-pick",
+  ])],
+  ["cfb-roquan-smith", new Set([
+    "position",
+    "school",
+    "curated-cfb3:roquan-sec-title-mvp",
+    "curated-cfb3:roquan-consensus-aa",
+    "curated-cfb3:roquan-rose-bowl-mvp",
+    "curated-cfb3:roquan-team-captain-mvp",
+    "role-school",
+    "recognition:first-team-all-america",
+    "curated-cfb3:roquan-sec-dpoy",
+    "curated-cfb3:roquan-sec-title",
+    "curated-cfb3:roquan-butkus",
+    "curated-cfb3:roquan-eighth-pick",
+  ])],
+  ["cfb-derrick-johnson", new Set([
+    "position",
+    "school",
+    "curated-cfb3:johnson-rose-bowl",
+    "curated-cfb3:johnson-holiday-bowl-mvp",
+    "curated-cfb3:johnson-award-finalist",
+    "curated-cfb3:johnson-2003-team-mvp",
+    "role-school",
+    "identity:resume-cfb-derrick-johnson-02",
+    "curated-cfb3:johnson-big12-dpoy",
+    "curated-cfb3:johnson-unanimous-aa",
+    "identity:resume-cfb-derrick-johnson-03",
+    "curated-cfb3:johnson-award-double",
+  ])],
 ]);
 
 function cfbBatch3ApplyOverride(subjectId: string, clue: WhoAmIClue) {
@@ -4370,6 +4445,8 @@ function curateCfbBatch3Clues(subject: FootballSubjectProfile, rawClues: readonl
 
   curated.push(...(cfbBatch3SupplementalClues.get(subject.id) ?? []));
   curated.push(...(cfbBatch3ReplayDepthClues.get(subject.id) ?? []));
+  const forcedPool = cfbBatch3ForcedPoolIds.get(subject.id);
+  if (forcedPool) return curated.filter((clue) => forcedPool.has(clue.id));
   return trimCfbBatch3Pool(subject, curated);
 }
 
