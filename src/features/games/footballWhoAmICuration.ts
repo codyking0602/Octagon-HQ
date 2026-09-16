@@ -4192,7 +4192,7 @@ const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
 const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-jake-matthews", [
     cfbBatch3Clue("matthews-two-all-sec", "I earned first-team All-SEC honors in both 2012 and 2013.", "helpful", "accomplishments", 20),
-    cfbBatch3Clue("matthews-2012-sec-offense", "In 2012 I helped an Texas A&M offense lead the SEC in rushing, passing, scoring and total offense.", "helpful", "production", 23),
+    cfbBatch3Clue("matthews-2012-sec-offense", "In 2012 I helped a Texas A&M offense lead the SEC in rushing, passing, scoring and total offense.", "helpful", "production", 23),
   ]],
   ["cfb-bruce-smith", [
     cfbBatch3Clue("smith-78-retired", "Virginia Tech retired the No. 78 jersey I wore for the Hokies.", "helpful", "identity", 20),
