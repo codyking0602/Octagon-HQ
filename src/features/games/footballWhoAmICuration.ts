@@ -1931,7 +1931,7 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["nfl-harry-carson", [
     batch4Clue("carson-scsu", "I played college football at South Carolina State.", "helpful", "background"),
     batch4Clue("carson-fourth-round", "The Giants selected me in the fourth round of the 1976 NFL Draft.", "helpful", "career-path"),
-    batch4Clue("carson-giants-only", "I spent all 13 of my NFL seasons with the New York Giants.", "helpful", "career-path", 16),
+    batch4Clue("carson-giants-only", "I spent all 13 of my NFL seasons with the New York Giants.", "helpful", "career-path", 24),
     batch4Clue("carson-lt-banks", "I formed a famous Giants linebacker trio with Lawrence Taylor and Carl Banks.", "strong", "role", 12),
     batch4Clue("carson-hof", "I was elected to the Pro Football Hall of Fame in 2006.", "strong", "accomplishments"),
     batch4Clue("carson-53", "No. 53 became my signature number with the Giants.", "helpful", "identity"),
@@ -2102,8 +2102,8 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["nfl-darren-sharper", [
     batch4Clue("sharper-wm", "I played college football at William & Mary.", "helpful", "background"),
-    batch4Clue("sharper-second", "Green Bay selected me in the second round of the 1997 NFL Draft.", "strong", "career-path"),
-    batch4Clue("sharper-path", "My NFL career included Green Bay, Minnesota and New Orleans.", "strong", "career-path"),
+    batch4Clue("sharper-second", "Green Bay selected me in the second round of the 1997 NFL Draft.", "helpful", "career-path", 18),
+    batch4Clue("sharper-path", "My NFL career included Green Bay, Minnesota and New Orleans.", "helpful", "career-path", 20),
     batch4Clue("sharper-five-pb", "I was selected to five Pro Bowls.", "strong", "accomplishments"),
     batch4Clue("sharper-sb44", "I won Super Bowl XLIV in my first season with New Orleans.", "giveaway", "accomplishments", 9),
     batch4Clue("sharper-qb-safety", "I arrived at college as a quarterback prospect before becoming a safety.", "helpful", "role"),
@@ -2120,6 +2120,7 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("hall-two-way-vt", "Virginia Tech used me at wide receiver as well as defensive back.", "helpful", "role"),
     batch4Clue("hall-safety", "Late in my career I moved from cornerback to safety.", "helpful", "role"),
     batch4Clue("hall-23", "No. 23 became my signature number in Washington.", "helpful", "identity"),
+    batch4Clue("hall-pro-bowl-mvp", "I was named MVP of the 2011 Pro Bowl after recording an interception and returning a fumble for a touchdown.", "strong", "accomplishments"),
   ]],
   ["nfl-devin-mccourty", [
     batch4Clue("mccourty-rutgers", "I played college football at Rutgers.", "helpful", "background"),
