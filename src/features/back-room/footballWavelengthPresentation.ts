@@ -5,7 +5,6 @@ import {
 
 export function footballWavelengthCategoryLabel(category: FootballWavelengthCategory) {
   if (category === "MEDIA ENERGY") return "ENTERTAINMENT VALUE";
-  if (category === "OFFENSIVE CHAOS") return "OFFENSIVE UNPREDICTABILITY";
   return category;
 }
 
@@ -13,7 +12,7 @@ const FOOTBALL_WAVELENGTH_CLUE_DESCRIPTORS = {
   "NFL LEGACY": "NFL legacy",
   GUNSLINGER: "gunslinger instinct",
   "QB CARRY JOB": "quarterback carry-job level",
-  "OFFENSIVE CHAOS": "offensive unpredictability",
+  "SCHEME & PLAY CREATIVITY": "scheme and play creativity",
   "FANBASE INSANITY": "fanbase insanity",
   "PROGRAM TRADITION": "program tradition",
   "UNIFORM QUALITY": "uniform quality",
@@ -46,10 +45,8 @@ export function footballWavelengthClueDescriptor(category: FootballWavelengthCat
 export function footballWavelengthCluePrompt(category: FootballWavelengthCategory) {
   const question = category === "MEDIA ENERGY"
     ? "How entertaining or compelling is this subject to football fans?"
-    : category === "OFFENSIVE CHAOS"
-      ? "How unpredictable, unconventional, or off-script is this offense?"
-      : FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS.find((anchor) => anchor.category === category)?.ratingQuestion
-        ?? "Where does it land on the Football HQ scale?";
+    : FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS.find((anchor) => anchor.category === category)?.ratingQuestion
+      ?? "Where does it land on the Football HQ scale?";
 
   return `${question} Rate it on Football HQ’s calibrated 1–100 opinion scale.`;
 }

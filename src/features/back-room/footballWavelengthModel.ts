@@ -12,15 +12,15 @@ import { footballWavelengthExpansionCategories } from "./footballWavelengthExpan
 import { footballWavelengthCanonicalSubjectForClue } from "./footballWavelengthSubjectAuthority";
 
 export const FOOTBALL_WAVELENGTH_GAME_ID = "football-wavelength";
-export const FOOTBALL_WAVELENGTH_CATALOG_VERSION = "football-wavelength-catalog-v3" as const;
-export const FOOTBALL_WAVELENGTH_CALIBRATION_VERSION = "football-wavelength-calibration-v2" as const;
+export const FOOTBALL_WAVELENGTH_CATALOG_VERSION = "football-wavelength-catalog-v4" as const;
+export const FOOTBALL_WAVELENGTH_CALIBRATION_VERSION = "football-wavelength-calibration-v3" as const;
 export const FOOTBALL_WAVELENGTH_TARGET_POLICY_VERSION = WAVELENGTH_TARGET_POLICY_VERSION;
 
 export type FootballWavelengthCategory =
   | "NFL LEGACY"
   | "GUNSLINGER"
   | "QB CARRY JOB"
-  | "OFFENSIVE CHAOS"
+  | "SCHEME & PLAY CREATIVITY"
   | "FANBASE INSANITY"
   | "PROGRAM TRADITION"
   | "UNIFORM QUALITY"
@@ -58,7 +58,7 @@ const FOOTBALL_WAVELENGTH_THEME_FAMILY_BY_CATEGORY = {
   "NFL LEGACY": "reputation",
   GUNSLINGER: "quarterback",
   "QB CARRY JOB": "quarterback",
-  "OFFENSIVE CHAOS": "offense",
+  "SCHEME & PLAY CREATIVITY": "offense",
   "FANBASE INSANITY": "game-day-culture",
   "PROGRAM TRADITION": "tradition-organization",
   "UNIFORM QUALITY": "game-day-culture",
@@ -128,7 +128,7 @@ export const FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS: readonly FootballWavelengthCa
   { category: "NFL LEGACY", ratingQuestion: "How large is this subject's NFL legacy?", bottomTier: "NFL footnote", average: "Meaningful NFL career", exceptional: "Defining NFL history" },
   { category: "GUNSLINGER", ratingQuestion: "How strong is the gunslinger tendency?", bottomTier: "Risk-averse distributor", average: "Will challenge windows", exceptional: "Lives for the dangerous throw" },
   { category: "QB CARRY JOB", ratingQuestion: "How much does the quarterback feel like the engine carrying the offense?", bottomTier: "Mostly along for the ride", average: "Important co-driver", exceptional: "The offense lives or dies with him" },
-  { category: "OFFENSIVE CHAOS", ratingQuestion: "How chaotic is the offensive experience?", bottomTier: "Rigid and predictable", average: "Normal variation", exceptional: "Beautiful football anarchy" },
+  { category: "SCHEME & PLAY CREATIVITY", ratingQuestion: "How creative or unconventional is this scheme or play?", bottomTier: "Rigid and conventional", average: "Some creative wrinkles", exceptional: "Constantly invents problems defenses have not seen" },
   { category: "FANBASE INSANITY", ratingQuestion: "How irrationally intense is the fanbase?", bottomTier: "Detached", average: "Normal committed fandom", exceptional: "Football is a civic religion" },
   { category: "PROGRAM TRADITION", ratingQuestion: "How deep is the college program's football tradition?", bottomTier: "Little historical weight", average: "Real regional history", exceptional: "Foundational blue-blood tradition" },
   { category: "UNIFORM QUALITY", ratingQuestion: "How good is the football uniform identity?", bottomTier: "Design liability", average: "Perfectly fine look", exceptional: "Untouchable football aesthetic" },
@@ -216,21 +216,21 @@ const baseFootballWavelengthClues: readonly FootballWavelengthClue[] = [
     ["josh-allen", "Josh Allen", 99],
     ["mahomes-2022-chiefs", "Patrick Mahomes on the 2022 Chiefs", 100],
   ]),
-  ...defineFootballWavelengthCategory("OFFENSIVE CHAOS", "chaos", [
-    ["iowa", "Iowa offense", 2],
-    ["2022-broncos", "2022 Broncos offense", 8],
-    ["2023-steelers", "2023 Steelers offense", 14],
-    ["harbaugh", "Jim Harbaugh offense", 35],
-    ["army", "Army triple option", 48],
-    ["kliff-kingsbury", "Kliff Kingsbury offense", 72],
-    ["lincoln-riley", "Lincoln Riley offense", 79],
-    ["gus-malzahn", "Gus Malzahn Auburn offense", 84],
-    ["2007-patriots", "2007 Patriots", 86],
-    ["chip-kelly", "Chip Kelly Oregon", 88],
-    ["2010-oregon", "2010 Oregon", 91],
-    ["2019-lsu", "2019 LSU", 93],
-    ["boise-trick-play-era", "Boise State trick-play era", 95],
-    ["mike-leach", "Mike Leach Air Raid", 97],
+  ...defineFootballWavelengthCategory("SCHEME & PLAY CREATIVITY", "chaos", [
+    ["iowa", "Iowa offense", 12],
+    ["2022-broncos", "2022 Broncos offense", 18],
+    ["2023-steelers", "2023 Steelers offense", 22],
+    ["harbaugh", "Jim Harbaugh offense", 58],
+    ["army", "Army triple option", 84],
+    ["kliff-kingsbury", "Kliff Kingsbury offense", 82],
+    ["lincoln-riley", "Lincoln Riley offense", 91],
+    ["gus-malzahn", "Gus Malzahn Auburn offense", 93],
+    ["2007-patriots", "2007 Patriots", 88],
+    ["chip-kelly", "Chip Kelly Oregon", 96],
+    ["2010-oregon", "2010 Oregon", 95],
+    ["2019-lsu", "2019 LSU", 86],
+    ["boise-trick-play-era", "Boise State trick-play era", 98],
+    ["mike-leach", "Mike Leach Air Raid", 100],
     ["band-play", "Cal–Stanford band play", 100],
   ]),
   ...defineFootballWavelengthCategory("FANBASE INSANITY", "fans", [

@@ -48,6 +48,6 @@ describe("Football Wavelength canonical subject authority", () => {
   });
 
   it("keeps Wavelength-only concepts explicit instead of inventing a second canonical roster", () => {
-    expect(footballWavelengthCanonicalSubjectForClue(clue("OFFENSIVE CHAOS", "Cal–Stanford band play"))).toBeNull();
+    expect(footballWavelengthCanonicalSubjectForClue(clue("SCHEME & PLAY CREATIVITY", "Cal–Stanford band play"))).toBeNull();
   });
 });

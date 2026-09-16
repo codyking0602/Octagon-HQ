@@ -15,13 +15,13 @@ describe("Football Wavelength presentation", () => {
     expect(footballWavelengthCluePrompt("MEDIA ENERGY")).toContain("calibrated 1–100 opinion scale");
   });
 
-  it("presents Offensive Chaos as clear offensive unpredictability language", () => {
-    expect(footballWavelengthCategoryLabel("OFFENSIVE CHAOS")).toBe("OFFENSIVE UNPREDICTABILITY");
-    expect(footballWavelengthClueDescriptor("OFFENSIVE CHAOS")).toBe("offensive unpredictability");
-    expect(footballWavelengthCluePrompt("OFFENSIVE CHAOS")).toContain(
-      "How unpredictable, unconventional, or off-script is this offense?",
+  it("presents the former chaos bucket as a clear creativity question", () => {
+    expect(footballWavelengthCategoryLabel("SCHEME & PLAY CREATIVITY")).toBe("SCHEME & PLAY CREATIVITY");
+    expect(footballWavelengthClueDescriptor("SCHEME & PLAY CREATIVITY")).toBe("scheme and play creativity");
+    expect(footballWavelengthCluePrompt("SCHEME & PLAY CREATIVITY")).toContain(
+      "How creative or unconventional is this scheme or play?",
     );
-    expect(footballWavelengthCluePrompt("OFFENSIVE CHAOS")).not.toContain("chaotic");
+    expect(footballWavelengthCluePrompt("SCHEME & PLAY CREATIVITY")).not.toContain("chaotic");
   });
 
   it("uses the canonical Football Wavelength page shell for the Daily game", () => {
