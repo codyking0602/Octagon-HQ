@@ -1,6 +1,8 @@
 import type { ChallengeJson } from "../challenges/challengeModel";
+import { getFootballWhoAmIUniverse, getUfcWhoAmIUniverse } from "../games/whoAmIAuthority";
 import {
   WHO_AM_I_CLUE_LIMIT,
+  type WhoAmICandidate,
   type WhoAmIClue,
   type WhoAmILeague,
   type WhoAmIRound,
@@ -97,6 +99,54 @@ export function whoAmIChallengeGameVersion(sport: WhoAmISport) {
 
 export function whoAmIChallengePath(sport: WhoAmISport) {
   return sport === "football" ? "/football/who-am-i" : "/play/who-am-i";
+}
+
+function subjectFromCandidate(candidate: WhoAmICandidate): WhoAmISubject {
+  const { id, name, kind, eraBand, rescueGroup } = candidate;
+  return {
+    id,
+    name,
+    kind,
+    ...(eraBand ? { eraBand } : {}),
+    ...(rescueGroup ? { rescueGroup } : {}),
+  };
+}
+
+export function whoAmISharedChallengeUrl(round: WhoAmIRound, origin: string) {
+  const url = new URL(whoAmIChallengePath(round.sport), origin);
+  url.searchParams.set("league", round.league);
+  url.searchParams.set("answer", round.hiddenSubject.id);
+  round.clues.forEach((clue) => url.searchParams.append("clue", clue.id));
+  return url.toString();
+}
+
+export function sharedWhoAmIRound(
+  searchParams: URLSearchParams,
+  expectedSport: WhoAmISport,
+): WhoAmIRound | null {
+  const league = searchParams.get("league");
+  const answerId = searchParams.get("answer")?.trim() ?? "";
+  const clueIds = searchParams.getAll("clue").filter(Boolean);
+  if (!answerId || clueIds.length !== WHO_AM_I_CLUE_LIMIT || new Set(clueIds).size !== clueIds.length) return null;
+
+  const universe = expectedSport === "ufc"
+    ? league === "UFC" ? getUfcWhoAmIUniverse() : null
+    : league === "NFL" || league === "CFB" ? getFootballWhoAmIUniverse(league) : null;
+  if (!universe) return null;
+
+  const candidate = universe.candidates.find((entry) => entry.id === answerId);
+  if (!candidate) return null;
+  const cluesById = new Map(candidate.clues.map((clue) => [clue.id, clue]));
+  const clues = clueIds.map((id) => cluesById.get(id) ?? null);
+  if (clues.some((clue) => !clue)) return null;
+
+  return {
+    sport: expectedSport,
+    league: universe.league as WhoAmILeague,
+    subjects: universe.candidates.map(subjectFromCandidate),
+    hiddenSubject: subjectFromCandidate(candidate),
+    clues: clues as WhoAmIClue[],
+  };
 }
 
 export function whoAmIChallengeSetup(round: WhoAmIRound): ChallengeJson {
