@@ -22,7 +22,7 @@ function seededRandom(seed: number) {
 }
 
 const TRANSFER_ANCHORS: Readonly<Record<string, readonly string[]>> = {
-  "cfb-cam-newton": ["Florida", "Auburn"],
+  "cfb-cam-newton": ["Florida", "Blinn", "Auburn"],
   "cfb-joe-burrow": ["Ohio State", "LSU"],
   "cfb-baker-mayfield": ["Texas Tech", "Oklahoma"],
   "cfb-caleb-williams": ["Oklahoma", "USC"],
