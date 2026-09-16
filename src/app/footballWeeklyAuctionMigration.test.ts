@@ -7,6 +7,7 @@ import {
 
 const migration = readFileSync("supabase/migrations/202612310129_football_weekly_auction.sql", "utf8");
 const bankrollFloorRepair = readFileSync("supabase/migrations/202612310130_football_weekly_auction_bankroll_floor.sql", "utf8");
+const dynamicBankroll = readFileSync("supabase/migrations/202612310137_football_weekly_auction_dynamic_bankroll.sql", "utf8");
 const transitionMigration = readFileSync("supabase/migrations/202612310132_football_troy_transition_carry.sql", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
@@ -27,9 +28,28 @@ describe("Football Weekly Auction live contract", () => {
     expect(migration).toContain("amount integer not null check (amount between 0 and 40)");
     expect(migration).toContain("v_bid1 + v_bid2 + v_bid3");
     expect(bankrollFloorRepair).toContain("when p_owned <= 0 then 2 when p_owned = 1 then 1 else 0");
-    expect(bankrollFloorRepair).toContain("v_max := greatest(v_bankroll - v_floor, 0)");
-    expect(migration).toContain("v_total > v_max");
+    expect(dynamicBankroll).toContain("football_weekly_auction_bids_preserve_completion");
+    expect(dynamicBankroll).toContain("'max_commit', v_bankroll");
+    expect(dynamicBankroll).toContain("v_max := v_bankroll");
+    expect(dynamicBankroll).toContain("greatest(p_bid1, p_bid2, p_bid3) <= p_bankroll - 1");
+    expect(dynamicBankroll).toContain("p_bid1 + p_bid2 + p_bid3 - least(p_bid1, p_bid2, p_bid3)");
+    expect(dynamicBankroll).toContain("v_total > v_max");
     expect(gate).toContain("$0 = pass");
+  });
+
+
+  it("keeps won teams viewable during the active week without revealing grades", () => {
+    expect(gate).toContain("MY TEAMS");
+    expect(gate).toContain('aria-haspopup="dialog"');
+    expect(gate).toContain("state.collection.map");
+    expect(gate).toContain("<small>PAID</small>");
+    const myTeamsDialog = gate.slice(
+      gate.indexOf("function MyTeamsDialog"),
+      gate.indexOf("function TeamCard"),
+    );
+    expect(myTeamsDialog).not.toContain("entry.grade");
+    expect(styles).toContain(".football-weekly-auction__collection-backdrop");
+    expect(styles).toContain(".football-weekly-auction__collection-sheet");
   });
 
   it("uses the calibrated board-shape generator rather than fixed strength shortcuts", () => {
