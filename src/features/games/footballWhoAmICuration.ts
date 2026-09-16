@@ -4491,7 +4491,7 @@ export const CFB_WHO_AM_I_BATCH_4_SUBJECT_IDS = [
   "dabo-swinney-cfb",
   "kirby-smart-cfb",
   "nick-saban-cfb",
-  "pete-carroll",
+  "pete-carroll-cfb",
   "steve-spurrier-cfb",
   "tom-osborne",
   "urban-meyer-cfb",
