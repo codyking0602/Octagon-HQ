@@ -4539,6 +4539,227 @@ const cfbBatch4GenericIdentityConcepts = new Set([
 const cfbBatch4MalformedFirstPerson = /\\bme\\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored|appeared|did|blocked|listed|pushed|exploited|coached|instituted|drove)\\b|\\bsaid\\s+me\\b|\\b(?:three|four)\\s+me\\s+brothers\\b|\\bI\\s+scholarship\\s+opportunities\\b|\\bI\\s+to\\s+sit\\b|\\bI\\s+a\\b|\\bI\\s+died\\b|\\bI\\s+has\\b|\\bme\\s+and\\s+my\\b|\\bFuture\\s+and\\s+I\\s+quarterback\\b|\\bWilliam\\s+myself\\b|\\bI\\s+saw\\s+me\\b|\\bAfter\\s+(?:got|left)\\b|\\bWhile\\s+was\\b|\\bWhen\\s+finally\\s+got\\b|\\bthe\\s+skinny\\s+me\\b|\\bQuarterback\\s+and\\s+I\\s+[A-Z]/i;
 const cfbBatch4OffFieldFiller = /\b(?:academic|degree|engineering|poultry|poetry|paleontolog|community[- ]service|volunteer|fundraising|charity|business venture|real estate|horseman|horse|catfishing|restaurant|tattoo|service station|coal mine|naval service|navy service|military service)\b|\bmajor(?:ed)?\s+(?:in|at)\b/i;
 
+
+function cfbBatch4Clue(
+  id: string,
+  text: string,
+  band: WhoAmIClue["band"] = "strong",
+  facet: WhoAmIClue["facet"] = "accomplishments",
+  revealPriority = 14,
+): WhoAmIClue {
+  return { id: "curated-cfb4:" + id, conceptId: "curated-cfb4:" + id, text, band, facet, revealPriority };
+}
+
+const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-patrick-peterson", [
+    cfbBatch4Clue("peterson-thorpe-bednarik", "In 2010 I won both the Jim Thorpe Award and the Bednarik Award at LSU.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("peterson-three-way-scores", "I scored LSU touchdowns three different ways: punt return, interception return and return of a blocked field goal.", "strong", "production", 16),
+    cfbBatch4Clue("peterson-return-double", "As a junior I led the SEC in both punt-return and kickoff-return average.", "strong", "style", 15),
+    cfbBatch4Clue("peterson-west-virginia-punt", "I returned a punt for a touchdown against West Virginia in 2010 and celebrated with a spontaneous Heisman pose.", "helpful", "identity", 20),
+  ]],
+  ["cfb-tyrann-mathieu", [
+    cfbBatch4Clue("mathieu-honey-badger", "My relentless LSU style became nationally associated with the nickname Honey Badger.", "giveaway", "identity", 8),
+    cfbBatch4Clue("mathieu-eleven-forced-fumbles", "I forced a school-record 11 fumbles during only two seasons at LSU.", "strong", "production", 16),
+    cfbBatch4Clue("mathieu-bednarik", "I won the 2011 Bednarik Award as the nation's top defensive player.", "giveaway", "accomplishments", 7),
+  ]],
+  ["cfb-antoine-winfield-jr", [
+    cfbBatch4Clue("winfield-unanimous-aa", "I was a unanimous All-American for Minnesota in 2019.", "strong", "accomplishments", 15),
+    cfbBatch4Clue("winfield-big-ten-db", "I was the Big Ten Defensive Back of the Year in 2019.", "giveaway", "accomplishments", 9),
+    cfbBatch4Clue("winfield-seven-picks", "I made seven interceptions in 2019, tying Minnesota's single-season record.", "strong", "production", 17),
+  ]],
+  ["cfb-budda-baker", [
+    cfbBatch4Clue("baker-three-way-prep", "In high school I played safety, running back and return specialist on three consecutive undefeated state-title teams.", "helpful", "background", 22),
+    cfbBatch4Clue("baker-track-titles", "I won Washington state high-school track titles in the 100 meters, 200 meters and relays.", "helpful", "background", 23),
+    cfbBatch4Clue("baker-oregon-to-washington", "I originally committed to Oregon before changing course and playing for Washington.", "strong", "career-path", 17),
+  ]],
+  ["cfb-caleb-downs", [
+    cfbBatch4Clue("downs-bama-tackle-leader", "As a true freshman I became the first Alabama freshman in at least 50 years to lead the team in tackles, finishing with 107.", "strong", "production", 15),
+    cfbBatch4Clue("downs-sec-freshman", "I was the SEC Freshman of the Year in 2023.", "strong", "accomplishments", 14),
+    cfbBatch4Clue("downs-transfer", "After one season at Alabama, I transferred to Ohio State before the 2024 season.", "giveaway", "career-path", 8),
+    cfbBatch4Clue("downs-2024-unanimous-aa", "I became a unanimous first-team All-American at Ohio State in 2024.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("downs-two-school-awards", "My first two college seasons produced major honors at two schools: SEC Freshman of the Year at Alabama and Big Ten Defensive Back of the Year at Ohio State.", "giveaway", "identity", 7),
+  ]],
+  ["cfb-champ-bailey", [
+    cfbBatch4Clue("bailey-three-phase", "At Georgia I played major snaps on defense, offense and special teams.", "strong", "style", 14),
+    cfbBatch4Clue("bailey-nagurski", "I won the 1998 Bronko Nagurski Award as the nation's top defensive player.", "giveaway", "accomplishments", 8),
+    cfbBatch4Clue("bailey-1998-receiving", "During my 1998 All-America season I also caught 47 passes for 744 yards and five touchdowns.", "strong", "production", 15),
+    cfbBatch4Clue("bailey-long-jump", "I competed in Georgia track and set a school indoor long-jump record.", "helpful", "background", 22),
+  ]],
+  ["cfb-derwin-james", [
+    cfbBatch4Clue("james-youth-positions", "Before becoming a safety, I played quarterback, running back and wide receiver in youth football.", "helpful", "background", 22),
+    cfbBatch4Clue("james-offer-at-fourteen", "Florida State offered me a scholarship when I was a 14-year-old high-school freshman.", "strong", "career-path", 16),
+    cfbBatch4Clue("james-2017-aa", "I earned first-team All-America recognition at Florida State in 2017.", "strong", "accomplishments", 14),
+  ]],
+  ["cfb-jabrill-peppers", [
+    cfbBatch4Clue("peppers-fifteen-positions", "Michigan credited me with lining up at 15 different positions during the 2016 season.", "giveaway", "style", 7),
+    cfbBatch4Clue("peppers-hornung", "I won the 2016 Paul Hornung Award as the nation's most versatile player.", "giveaway", "accomplishments", 8),
+    cfbBatch4Clue("peppers-three-big-ten-awards", "In 2016 I became the first Big Ten player to win three conference individual awards in the same season.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("peppers-heisman-finalist", "I finished fifth in the 2016 Heisman Trophy voting as a defensive and return star.", "strong", "accomplishments", 12),
+    cfbBatch4Clue("peppers-four-state-titles", "I won four straight New Jersey state football championships across two high schools.", "helpful", "background", 23),
+  ]],
+  ["cfb-jamal-adams", [
+    cfbBatch4Clue("adams-first-team-aa", "I earned first-team All-America recognition at LSU in 2016.", "strong", "accomplishments", 15),
+    cfbBatch4Clue("adams-team-captain", "LSU named me a permanent team captain for the 2016 season.", "strong", "identity", 17),
+    cfbBatch4Clue("adams-three-coordinators", "I played for three different defensive coordinators during my three seasons at LSU.", "helpful", "career-path", 23),
+  ]],
+  ["cfb-earl-thomas", [
+    cfbBatch4Clue("thomas-ten-interceptions", "I finished my Texas career with 10 interceptions in only two playing seasons.", "strong", "production", 16),
+    cfbBatch4Clue("thomas-four-sport-prep", "In high school I lettered in football, basketball, baseball and track while playing defensive back, running back and receiver.", "helpful", "background", 22),
+    cfbBatch4Clue("thomas-33-breakups", "I recorded 33 pass breakups during my Texas career.", "strong", "production", 18),
+  ]],
+  ["cfb-cooper-dejean", [
+    cfbBatch4Clue("dejean-only-fbs-offer", "Iowa was my only FBS scholarship offer despite a four-sport high-school career.", "strong", "career-path", 16),
+    cfbBatch4Clue("dejean-high-school-qb", "I was a high-school quarterback as well as a defensive back before Iowa recruited me for defense.", "helpful", "background", 22),
+    cfbBatch4Clue("dejean-state-title-play", "In a high-school state championship game I blocked an extra point, later scored the tying touchdown and then scored the winning touchdown.", "strong", "accomplishments", 17),
+  ]],
+  ["cfb-sean-taylor", [
+    cfbBatch4Clue("taylor-2001-title-team", "I was one of only four true freshmen to play for Miami's 2001 national-championship team.", "strong", "accomplishments", 16),
+    cfbBatch4Clue("taylor-ten-picks", "I tied Miami's single-season record with 10 interceptions in 2003.", "strong", "production", 14),
+    cfbBatch4Clue("taylor-big-east-dpoy", "I was the 2003 Big East Defensive Player of the Year.", "giveaway", "accomplishments", 8),
+  ]],
+  ["barry-switzer", [
+    cfbBatch4Clue("switzer-wishbone", "As Oklahoma's offensive coordinator in 1970, I pushed the program to switch to the wishbone offense.", "giveaway", "style", 8),
+    cfbBatch4Clue("switzer-three-titles", "As Oklahoma head coach I won three national championships.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("switzer-integration", "I aggressively recruited Black players across Oklahoma's roster, including at quarterback, during a major period of integration in the region.", "strong", "career-path", 17),
+    cfbBatch4Clue("switzer-arkansas-player", "Before coaching at Oklahoma, I played college football at Arkansas.", "helpful", "background", 23),
+  ]],
+  ["bear-bryant", [
+    cfbBatch4Clue("bryant-six-titles", "I won six national championships as Alabama's head coach.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("bryant-323-wins", "I finished my college head-coaching career with 323 wins.", "strong", "production", 15),
+    cfbBatch4Clue("bryant-junction", "At Texas A&M, my famously demanding 1954 preseason camp produced the group remembered as the Junction Boys.", "giveaway", "identity", 8),
+    cfbBatch4Clue("bryant-broken-leg", "As an Alabama player in 1935, I played against Tennessee despite a broken bone in my leg.", "helpful", "background", 22),
+  ]],
+  ["bobby-bowden-cfb", [
+    cfbBatch4Clue("bowden-two-titles", "I led Florida State to national championships in 1993 and 1999.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("bowden-fsu-dynasty", "My Florida State teams finished in the AP top five for 14 consecutive seasons from 1987 through 2000.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("bowden-howard-transfer", "As a player I transferred from Alabama to Howard College after Alabama's rules for married players affected my path.", "helpful", "career-path", 22),
+    cfbBatch4Clue("bowden-track-coach", "Early in my coaching career I also served as a head track coach while building my football resume.", "helpful", "background", 23),
+  ]],
+  ["dabo-swinney-cfb", [
+    cfbBatch4Clue("swinney-two-titles", "I led Clemson to two national championships.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("swinney-walk-on", "I entered Alabama as a regular student and earned a spot on the football team through a walk-on tryout.", "strong", "career-path", 16),
+    cfbBatch4Clue("swinney-spiller-card", "While recruiting C.J. Spiller, I wrote an informal commitment on the back of a business card and later kept it framed.", "strong", "career-path", 17),
+    cfbBatch4Clue("swinney-clemson-2003", "I joined Clemson's staff in 2003 and eventually took over as head coach during the 2008 season.", "strong", "career-path", 15),
+    cfbBatch4Clue("swinney-playoff-run", "I turned Clemson into a playoff-era power that reached the College Football Playoff in six consecutive seasons from 2015 through 2020.", "strong", "accomplishments", 12),
+    cfbBatch4Clue("swinney-alabama-title-player", "I was a receiver on Alabama's 1992 national-championship team before entering coaching.", "helpful", "background", 21),
+  ]],
+  ["kirby-smart-cfb", [
+    cfbBatch4Clue("smart-two-titles", "I led Georgia to back-to-back national championships after the 2021 and 2022 seasons.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("smart-georgia-player", "Before coaching Georgia, I played defensive back for the Bulldogs.", "strong", "identity", 16),
+    cfbBatch4Clue("smart-2005-rbs", "Despite my defensive background, I returned to Georgia in 2005 to coach running backs.", "helpful", "career-path", 22),
+    cfbBatch4Clue("smart-saban-college-path", "I worked under Nick Saban at LSU and Alabama before becoming Georgia's head coach.", "strong", "career-path", 15),
+  ]],
+  ["nick-saban-cfb", [
+    cfbBatch4Clue("saban-seven-titles", "I won seven major-college national championships as a head coach, one at LSU and six at Alabama.", "giveaway", "accomplishments", 6),
+    cfbBatch4Clue("saban-kent-state-ga", "Don James gave me a graduate-assistant opportunity at Kent State that helped redirect me into coaching.", "helpful", "career-path", 21),
+    cfbBatch4Clue("saban-two-title-programs", "I won national championships as head coach at two SEC programs.", "strong", "identity", 14),
+    cfbBatch4Clue("saban-alabama-six", "My Alabama teams won six national championships between the 2009 and 2020 seasons.", "giveaway", "accomplishments", 8),
+  ]],
+  ["pete-carroll-cfb", [
+    cfbBatch4Clue("carroll-two-usc-titles", "I led USC to national championships in 2003 and 2004.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("carroll-pacific-safety", "My own college playing path went through junior college before I became a free safety at Pacific.", "helpful", "background", 22),
+    cfbBatch4Clue("carroll-seven-pac10", "My USC teams won seven consecutive Pac-10 championships from 2002 through 2008.", "strong", "accomplishments", 12),
+    cfbBatch4Clue("carroll-win-forever", "At USC I built the program around a competition-centered philosophy that became known as Win Forever.", "strong", "style", 16),
+  ]],
+  ["steve-spurrier-cfb", [
+    cfbBatch4Clue("spurrier-1996-title", "I coached Florida to the 1996 national championship.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("spurrier-six-sec", "My Florida teams won six SEC championships.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("spurrier-heisman", "Long before I coached Florida, I won the 1966 Heisman Trophy as the Gators' quarterback.", "giveaway", "identity", 6),
+    cfbBatch4Clue("spurrier-qb-punter", "At Florida I handled punting duties in addition to playing quarterback.", "helpful", "background", 22),
+    cfbBatch4Clue("spurrier-fun-n-gun", "My Florida offenses became famous for the pass-heavy Fun 'n' Gun attack.", "giveaway", "style", 8),
+  ]],
+  ["tom-osborne", [
+    cfbBatch4Clue("osborne-three-titles", "I led Nebraska to three national championships in my final four seasons as head coach.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("osborne-255-wins", "I finished my Nebraska head-coaching career with 255 wins.", "strong", "production", 15),
+    cfbBatch4Clue("osborne-nine-win-streak", "Every one of my 25 Nebraska teams won at least nine games.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("osborne-hastings-three-sport", "I played football and basketball and competed in track at Hastings College.", "helpful", "background", 22),
+    cfbBatch4Clue("osborne-devaney-path", "Bob Devaney brought me into Nebraska's program before I eventually succeeded him as head coach.", "strong", "career-path", 16),
+    cfbBatch4Clue("osborne-nebraska-offense", "Before becoming head coach, I helped build the Nebraska offense that became the foundation of my long tenure.", "strong", "style", 17),
+  ]],
+  ["woody-hayes", [
+    cfbBatch4Clue("hayes-thirteen-big-ten", "My Ohio State teams won 13 Big Ten championships.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("hayes-205-wins", "I won 205 games as Ohio State's head coach.", "strong", "production", 15),
+    cfbBatch4Clue("hayes-ten-year-war", "My rivalry with former assistant Bo Schembechler at Michigan became known as the Ten-Year War.", "giveaway", "relationships", 8),
+    cfbBatch4Clue("hayes-national-title-teams", "I coached multiple Ohio State national-championship teams across nearly three decades in Columbus.", "strong", "accomplishments", 14),
+    cfbBatch4Clue("hayes-gator-bowl-end", "My Ohio State tenure ended after the sideline incident with Clemson's Charlie Bauman in the 1978 Gator Bowl.", "giveaway", "identity", 9),
+  ]],
+  ["bill-snyder-cfb", [
+    cfbBatch4Clue("snyder-two-big12", "I won two conference championships as Kansas State's head coach.", "strong", "accomplishments", 14),
+    cfbBatch4Clue("snyder-miracle-manhattan", "I took over a Kansas State program that had gone 0-26-1 immediately before my arrival and led the turnaround known as the Miracle of Manhattan.", "giveaway", "identity", 7),
+    cfbBatch4Clue("snyder-retire-return", "I retired after the 2005 season, returned as Kansas State head coach in 2009 and rebuilt the program again.", "strong", "career-path", 15),
+    cfbBatch4Clue("snyder-hayden-fry", "Before Kansas State, I spent a decade as Hayden Fry's offensive coordinator at Iowa.", "strong", "career-path", 17),
+  ]],
+  ["bob-stoops-cfb", [
+    cfbBatch4Clue("stoops-2000-title", "I coached Oklahoma to the 2000 national championship in my second season as head coach.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("stoops-ten-big12", "My Oklahoma teams won 10 Big 12 championships.", "giveaway", "accomplishments", 8),
+    cfbBatch4Clue("stoops-iowa-db", "I played defensive back at Iowa before starting my coaching career there.", "helpful", "background", 22),
+    cfbBatch4Clue("stoops-three-brothers", "I was the oldest of three brothers who played defensive back at Iowa.", "helpful", "background", 23),
+    cfbBatch4Clue("stoops-iowa-ga", "After my final Iowa playing season, I stayed with the Hawkeyes as a graduate assistant and volunteer coach.", "helpful", "career-path", 20),
+  ]],
+  ["brian-kelly-cfb", [
+    cfbBatch4Clue("kelly-assumption-captain", "I was a four-year linebacker at Assumption College and captained the team in my final two seasons.", "helpful", "background", 22),
+    cfbBatch4Clue("kelly-grand-valley", "My first college head-coaching job was at Grand Valley State, where I remained for 13 seasons.", "strong", "career-path", 17),
+    cfbBatch4Clue("kelly-major-stage", "I coached Notre Dame to a BCS national-title game and later to two College Football Playoff appearances.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("kelly-300-wins", "My college head-coaching career surpassed 300 victories.", "strong", "production", 16),
+  ]],
+  ["chip-kelly", [
+    cfbBatch4Clue("kelly-unh-qb-safety", "I played both quarterback and safety at New Hampshire.", "helpful", "background", 22),
+    cfbBatch4Clue("kelly-defensive-start", "My coaching career began on defense and special teams before I became known for offense.", "strong", "career-path", 18),
+    cfbBatch4Clue("kelly-three-conference", "I became the first Oregon coach to win three consecutive undisputed conference championships.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("kelly-2010-title-game", "I coached Oregon to an unbeaten 2010 regular season and the BCS National Championship Game.", "giveaway", "accomplishments", 8),
+  ]],
+  ["chris-petersen-cfb", [
+    cfbBatch4Clue("petersen-uc-davis-qb", "I began at Sacramento City College before transferring to UC Davis, where I became a standout quarterback.", "helpful", "background", 22),
+    cfbBatch4Clue("petersen-first-season-fiesta", "In my first season as Boise State head coach, I went unbeaten and won the Fiesta Bowl over Oklahoma with a series of famous trick plays.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("petersen-okg", "My recruiting philosophy at Boise State emphasized players I called OKGs, short for Our Kind of Guys.", "strong", "style", 16),
+    cfbBatch4Clue("petersen-boise-washington", "I produced two unbeaten Boise State teams and later took Washington to the College Football Playoff.", "strong", "career-path", 13),
+  ]],
+  ["dan-lanning", [
+    cfbBatch4Clue("lanning-william-jewell", "I played linebacker at William Jewell College before beginning my coaching career in high school.", "helpful", "background", 22),
+    cfbBatch4Clue("lanning-pitt-drive", "While still a high-school coach, I drove roughly 13 hours overnight to Pittsburgh without an appointment to chase a Division I opportunity.", "strong", "career-path", 18),
+    cfbBatch4Clue("lanning-georgia-dc", "Before becoming a head coach, I was Georgia's defensive coordinator during its 2021 national-championship season.", "strong", "career-path", 14),
+    cfbBatch4Clue("lanning-oregon-first-hc", "Oregon gave me my first head-coaching job before the 2022 season.", "strong", "career-path", 16),
+    cfbBatch4Clue("lanning-big-ten-title", "I led Oregon to the Big Ten championship in the program's first season in the conference.", "giveaway", "accomplishments", 8),
+    cfbBatch4Clue("lanning-2024-regular", "My 2024 Oregon team completed an unbeaten regular season before the College Football Playoff.", "strong", "accomplishments", 12),
+  ]],
+  ["ed-orgeron", [
+    cfbBatch4Clue("orgeron-2019-title", "I led LSU to a 15-0 season and the 2019 national championship.", "giveaway", "accomplishments", 6),
+    cfbBatch4Clue("orgeron-2019-sec", "My 2019 LSU team also won the SEC championship and beat seven top-10 opponents.", "strong", "accomplishments", 12),
+    cfbBatch4Clue("orgeron-coach-o", "My gravelly Cajun voice and high-energy recruiting style became central to the Coach O identity at LSU.", "giveaway", "identity", 8),
+    cfbBatch4Clue("orgeron-lsu-dream", "I grew up in Louisiana following LSU football and later returned to lead the Tigers as head coach.", "strong", "career-path", 17),
+  ]],
+  ["frank-beamer-cfb", [
+    cfbBatch4Clue("beamer-238-vt", "I won a school-record 238 games as Virginia Tech's head coach.", "strong", "production", 14),
+    cfbBatch4Clue("beamer-23-bowls", "My Virginia Tech teams reached a bowl game in 23 consecutive seasons.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("beamer-1999-title-game", "I led Virginia Tech through an undefeated 1999 regular season and into the national championship game.", "giveaway", "accomplishments", 8),
+    cfbBatch4Clue("beamer-ball", "My program became famous for game-changing offense, defense and especially special teams under the label Beamer Ball.", "giveaway", "style", 7),
+    cfbBatch4Clue("beamer-seven-conference", "My Virginia Tech teams won seven conference championships.", "strong", "accomplishments", 15),
+    cfbBatch4Clue("beamer-vt-player", "Before coaching Virginia Tech, I played defensive back there.", "helpful", "background", 22),
+  ]],
+  ["gary-patterson-cfb", [
+    cfbBatch4Clue("patterson-181", "I won 181 games at TCU, the most by a head coach in program history.", "strong", "production", 14),
+    cfbBatch4Clue("patterson-rose-bowl", "I led TCU to a 13-0 season capped by a Rose Bowl win over Wisconsin.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("patterson-six-conference", "My TCU teams won six conference championships across three different leagues.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("patterson-2014-big12", "I coached TCU to a Big 12 championship and a No. 3 final AP ranking in 2014.", "strong", "accomplishments", 12),
+    cfbBatch4Clue("patterson-425", "My defenses became closely associated with an adaptable 4-2-5 scheme.", "giveaway", "style", 9),
+    cfbBatch4Clue("patterson-franchione", "I coached with Dennis Franchione at several stops before succeeding him as TCU's head coach.", "strong", "career-path", 17),
+  ]],
+]);
+
+function cfbBatch4AnswerNameLeak(subject: FootballSubjectProfile, clue: WhoAmIClue) {
+  if (!clue.identityKnowledge) return false;
+  const text = clue.text.toLowerCase();
+  if (text.includes(subject.name.toLowerCase())) return true;
+  const surname = subject.name
+    .replace(/\b(?:Jr\.?|Sr\.?|II|III|IV)\b/gi, "")
+    .trim()
+    .split(/\s+/)
+    .at(-1)
+    ?.replace(/[^A-Za-z'-]/g, "");
+  if (!surname || surname.length < 5) return false;
+  return new RegExp("\\b" + surname.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&") + "\\b", "i").test(clue.text);
+}
+
 function isCfbBatch4NflStageLeak(clue: WhoAmIClue) {
   if (!clue.identityKnowledge) return false;
   const text = clue.text.toLowerCase();
@@ -4548,12 +4769,13 @@ function isCfbBatch4NflStageLeak(clue: WhoAmIClue) {
   );
 }
 
-function shouldSuppressCfbBatch4Clue(clue: WhoAmIClue) {
+function shouldSuppressCfbBatch4Clue(subject: FootballSubjectProfile, clue: WhoAmIClue) {
   if (cfbBatch4StructuralClueIds.has(clue.id)) return true;
   if (cfbBatch4GenericMetricIds.has(clue.id)) return true;
   if (clue.conceptId && cfbBatch4GenericIdentityConcepts.has(clue.conceptId)) return true;
   if (/\b1 (?:sacks|defensive interceptions|pass breakups)\b/i.test(clue.text)) return true;
   if (isCfbBatch4NflStageLeak(clue)) return true;
+  if (cfbBatch4AnswerNameLeak(subject, clue)) return true;
   if (clue.identityKnowledge && cfbBatch4MalformedFirstPerson.test(clue.text)) return true;
   if (clue.identityKnowledge && cfbBatch4OffFieldFiller.test(clue.text)) return true;
   return false;
@@ -4580,6 +4802,12 @@ function trimCfbBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoA
     selected.add(entry.clue.id);
     selectedConcepts.add(concept);
   }
+  if (selected.size < target) {
+    for (const entry of ranked) {
+      if (selected.size >= target) break;
+      selected.add(entry.clue.id);
+    }
+  }
   return clues.filter((clue) => selected.has(clue.id));
 }
 
@@ -4592,7 +4820,7 @@ function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonl
     const clue = rawClue.id === "era"
       ? { ...rawClue, text: rawClue.text.replace(/^I was active in /, subject.kind === "coach" ? "My college head-coaching career came in " : "My college career came in ") }
       : rawClue;
-    if (shouldSuppressCfbBatch4Clue(clue)) continue;
+    if (shouldSuppressCfbBatch4Clue(subject, clue)) continue;
 
     if (clue.identityKnowledge) {
       const selectionClass = whoAmIClueSelectionClass(clue);
@@ -4608,6 +4836,7 @@ function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonl
     }
     curated.push(clue);
   }
+  curated.push(...(cfbBatch4SupplementalClues.get(subject.id) ?? []));
   return trimCfbBatch4Pool(subject, curated);
 }
 
