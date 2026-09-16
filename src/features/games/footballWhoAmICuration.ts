@@ -4536,7 +4536,27 @@ const cfbBatch4GenericIdentityConcepts = new Set([
   "identity:career-interceptions-thrown",
 ]);
 
-const cfbBatch4MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored|appeared|did|blocked|listed|pushed|exploited|coached|instituted|drove)\b|\bsaid\s+me\b|\b(?:three|four)\s+me\s+brothers\b|\bI\s+scholarship\s+opportunities\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
+const cfbBatch4SuppressedClueIds = new Set([
+  "identity:pr8-suwanee-housing-and-coach-support",
+  "identity:pr8-sugar-bowl-end-zone-interception",
+  "identity:pr9-cfb-budda-baker--budda-nickname-origin",
+  "identity:pr9-cfb-champ-bailey--roland-champ-nickname",
+  "identity:pr7-champ-bailey-mother-gave-champ-nickname",
+  "identity:pr9-cfb-earl-thomas--four-sport-two-way-prep-athlete",
+  "identity:pr9-cfb-earl-thomas--church-musician",
+  "identity:pr9-cfb-eric-weddle--san-diego-state-three-interception-three-touchdown-game",
+  "identity:pr9-cfb-eric-weddle--armed-forces-bowl-final-play-interception",
+  "identity:pr9-cfb-kyle-hamilton--inside-the-garage-podcast",
+  "identity:pr9-cfb-malcolm-jenkins--high-school-receiving-role",
+  "identity:pr8-bear-bryant-bear-wrestling-nickname",
+  "identity:pr8-pete-carroll--bob-troppmann-mentor",
+  "identity:pr8-pete-carroll--firings-triggered-philosophy-reset",
+  "identity:pr9-bill-snyder--hayden-fry-apprenticeship",
+  "identity:pr9-ed-orgeron--bear-bryant-visit-turned-away",
+  "identity:pr9-gary-patterson-cfb--franchione-multi-stop-coaching-partnership",
+]);
+
+const cfbBatch4MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored|appeared|did|blocked|listed|pushed|exploited|coached|instituted|drove)\b|\bsaid\s+me\b|\b(?:three|four)\s+me\s+brothers\b|\bI\s+scholarship\s+opportunities\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]|\bwhen\s+me\b|\bme\s+(?:intercepted|lettered|contributed|co-hosted|accepted|used|succeeded)\b|\bAfter[’']s\b|\binjurthis player\b|\bnicknamed\s+me\s+[“\"']?me\b|\bnickname\s+[“\"']?me\b|[“\"']me[”\"']\s+was\b/i;
 const cfbBatch4OffFieldFiller = /\b(?:academic|degree|engineering|poultry|poetry|paleontolog|community[- ]service|volunteer|fundraising|charity|business venture|real estate|horseman|horse|catfishing|restaurant|tattoo|service station|coal mine|naval service|navy service|military service)\b|\bmajor(?:ed)?\s+(?:in|at)\b/i;
 
 
@@ -4757,7 +4777,7 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("stoops-ten-big12", "My Oklahoma teams won 10 Big 12 championships.", "giveaway", "accomplishments", 8),
     cfbBatch4Clue("stoops-iowa-db", "I played defensive back at Iowa before starting my coaching career there.", "helpful", "background", 22),
     cfbBatch4Clue("stoops-three-brothers", "I was the oldest of three brothers who played defensive back at Iowa.", "helpful", "background", 23),
-    cfbBatch4Clue("stoops-iowa-ga", "After my final Iowa playing season, I stayed with the Hawkeyes as a graduate assistant and volunteer coach.", "helpful", "career-path", 20),
+    cfbBatch4Clue("stoops-iowa-ga", "After my final Iowa playing season, I stayed with the Hawkeyes as a graduate assistant before moving into full-time coaching.", "helpful", "career-path", 20),
   ]],
   ["brian-kelly-cfb", [
     cfbBatch4Clue("kelly-assumption-captain", "I was a four-year linebacker at Assumption College and captained the team in my final two seasons.", "helpful", "background", 22),
@@ -4795,7 +4815,7 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("beamer-238-vt", "I won a school-record 238 games as Virginia Tech's head coach.", "strong", "production", 14),
     cfbBatch4Clue("beamer-23-bowls", "My Virginia Tech teams reached a bowl game in 23 consecutive seasons.", "strong", "accomplishments", 13),
     cfbBatch4Clue("beamer-1999-title-game", "I led Virginia Tech through an undefeated 1999 regular season and into the national championship game.", "giveaway", "accomplishments", 8),
-    cfbBatch4Clue("beamer-ball", "My program became famous for game-changing offense, defense and especially special teams under the label Beamer Ball.", "giveaway", "style", 7),
+    cfbBatch4Clue("beamer-ball", "My Virginia Tech program became famous for blocked kicks and special-teams touchdowns as a defining part of its identity.", "giveaway", "style", 7),
     cfbBatch4Clue("beamer-seven-conference", "My Virginia Tech teams won seven conference championships.", "strong", "accomplishments", 15),
     cfbBatch4Clue("beamer-vt-player", "Before coaching Virginia Tech, I played defensive back there.", "helpful", "background", 22),
   ]],
@@ -4810,11 +4830,10 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
 ]);
 
 function cfbBatch4AnswerNameLeak(subject: FootballSubjectProfile, clue: WhoAmIClue) {
-  if (!clue.identityKnowledge) return false;
   const text = clue.text.toLowerCase();
   if (text.includes(subject.name.toLowerCase())) return true;
   const surname = subject.name
-    .replace(/\b(?:Jr\.?|Sr\.?|II|III|IV)\b/gi, "")
+    .replace(/\s+(?:Jr\.?|Sr\.?|II|III|IV)$/i, "")
     .trim()
     .split(/\s+/)
     .at(-1)
@@ -4824,7 +4843,6 @@ function cfbBatch4AnswerNameLeak(subject: FootballSubjectProfile, clue: WhoAmICl
 }
 
 function isCfbBatch4NflStageLeak(clue: WhoAmIClue) {
-  if (!clue.identityKnowledge) return false;
   const text = clue.text.toLowerCase();
   return (
     /\bnfl\b|super bowl|all-pro|pro bowl|nfl mvp|defensive player of the year|professional football hall of fame/.test(text)
@@ -4833,15 +4851,20 @@ function isCfbBatch4NflStageLeak(clue: WhoAmIClue) {
 }
 
 function shouldSuppressCfbBatch4Clue(subject: FootballSubjectProfile, clue: WhoAmIClue) {
+  if (cfbBatch4SuppressedClueIds.has(clue.id)) return true;
   if (clue.id.startsWith("fact:nfl-")) return true;
+  if (
+    clue.id === "fact:cfb-coach-career-wins"
+    && (subject.id === "frank-beamer-cfb" || subject.id === "brian-kelly-cfb")
+  ) return true;
   if (cfbBatch4StructuralClueIds.has(clue.id)) return true;
   if (cfbBatch4GenericMetricIds.has(clue.id)) return true;
   if (clue.conceptId && cfbBatch4GenericIdentityConcepts.has(clue.conceptId)) return true;
   if (/\b1 (?:sacks|defensive interceptions|pass breakups)\b/i.test(clue.text)) return true;
   if (isCfbBatch4NflStageLeak(clue)) return true;
   if (cfbBatch4AnswerNameLeak(subject, clue)) return true;
-  if (clue.identityKnowledge && cfbBatch4MalformedFirstPerson.test(clue.text)) return true;
-  if (clue.identityKnowledge && cfbBatch4OffFieldFiller.test(clue.text)) return true;
+  if (cfbBatch4MalformedFirstPerson.test(clue.text)) return true;
+  if (cfbBatch4OffFieldFiller.test(clue.text)) return true;
   return false;
 }
 
@@ -4879,6 +4902,47 @@ function trimCfbBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoA
   return clues.filter((clue) => selected.has(clue.id));
 }
 
+function rebalanceCfbBatch4ReplayBands(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const balanced = clues.map((clue) => (
+    clue.id === "era" && clue.band === "broad"
+      ? { ...clue, band: "helpful" as const }
+      : clue
+  ));
+
+  const isLate = (clue: WhoAmIClue) => clue.band === "strong" || clue.band === "giveaway";
+  const helpfulCount = () => balanced.filter((clue) => clue.band === "helpful").length;
+  const lateCount = () => balanced.filter(isLate).length;
+
+  while (lateCount() < 7 && helpfulCount() > 3) {
+    const candidate = balanced
+      .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+      .filter(({ clue }) => (
+        clue.band === "helpful"
+        && clue.id !== "era"
+        && whoAmIClueSelectionClass(clue) === "sports-identity"
+      ))
+      .sort((left, right) => right.score - left.score || left.index - right.index)[0];
+    if (!candidate) break;
+    balanced[candidate.index] = { ...candidate.clue, band: "strong" };
+  }
+
+  while (helpfulCount() < 3 && lateCount() > 7) {
+    const candidate = balanced
+      .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+      .filter(({ clue }) => (
+        clue.band === "strong"
+        && clue.id !== "role-school"
+        && clue.id !== "recognition:first-team-all-america"
+        && whoAmIClueSelectionClass(clue) === "sports-identity"
+      ))
+      .sort((left, right) => left.score - right.score || left.index - right.index)[0];
+    if (!candidate) break;
+    balanced[candidate.index] = { ...candidate.clue, band: "helpful" };
+  }
+
+  return balanced;
+}
+
 function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
   let colorUsed = false;
   let relationshipUsed = false;
@@ -4888,7 +4952,9 @@ function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonl
     const overriddenClue = cfbBatch4ApplyOverride(subject.id, rawClue);
     const clue = overriddenClue.id === "era"
       ? { ...overriddenClue, text: overriddenClue.text.replace(/^I was active in /, subject.kind === "coach" ? "My college head-coaching career came in " : "My college career came in ") }
-      : overriddenClue;
+      : subject.kind === "coach" && overriddenClue.id === "school"
+        ? { ...overriddenClue, text: overriddenClue.text.replace(/^I played college football at /, "I was a college head coach at ") }
+        : overriddenClue;
     if (shouldSuppressCfbBatch4Clue(subject, clue)) continue;
 
     if (clue.identityKnowledge) {
@@ -4905,8 +4971,11 @@ function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonl
     }
     curated.push(clue);
   }
-  curated.push(...(cfbBatch4SupplementalClues.get(subject.id) ?? []));
-  return trimCfbBatch4Pool(subject, curated);
+  curated.push(
+    ...(cfbBatch4SupplementalClues.get(subject.id) ?? [])
+      .filter((clue) => !shouldSuppressCfbBatch4Clue(subject, clue)),
+  );
+  return rebalanceCfbBatch4ReplayBands(subject, trimCfbBatch4Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch4Subject(subjectId: string) {
