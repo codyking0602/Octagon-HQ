@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { getFootballFact, type FootballFactMetricId } from "../back-room/footballFactualStatsCore";
 import {
   footballWhoAmIApplicableIdentityFacts,
   footballWhoAmIApplicableMetricFacts,
@@ -114,6 +115,26 @@ describe("CFB Who Am I batch 3 calibration", () => {
       }
       for (const clue of candidate.clues.filter((entry) => entry.id.startsWith("fact:"))) {
         expect(metricIds.has(clue.id.slice("fact:".length) as never), subjectId + " foreign metric " + clue.id).toBe(true);
+      }
+    }
+  });
+
+  it("does not present a bounded 2014+ source window as a full college career", () => {
+    const subjects = new Map(getFootballWhoAmILaunchPool("CFB").subjects.map((subject) => [subject.id, subject]));
+    const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+
+    for (const subjectId of CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS) {
+      const subject = subjects.get(subjectId)!;
+      for (const clue of candidates.get(subjectId)!.clues.filter((entry) => /^fact:cfb-career-/.test(entry.id))) {
+        const metricId = clue.id.slice("fact:".length) as FootballFactMetricId;
+        const fact = getFootballFact(subjectId, metricId);
+        const bounded2014Source = fact?.sources.some((source) => /2014-2025/.test(source.coverage)) ?? false;
+        if (bounded2014Source) {
+          expect(
+            subject.startSeason ?? 2014,
+            subjectId + " exposes partial " + metricId + " as a career total",
+          ).toBeGreaterThanOrEqual(2014);
+        }
       }
     }
   });
