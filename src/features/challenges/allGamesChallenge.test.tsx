@@ -167,6 +167,42 @@ describe("all-game challenge contracts", () => {
     expect(screen.getByText("Delta")).toBeInTheDocument();
   });
 
+  it("renders Who Am I scores and completion paths after both players finish", () => {
+    const row = challenge(
+      "who-am-i",
+      "/play/who-am-i",
+      {
+        version: "who-am-i-challenge-v1",
+        round: {
+          hiddenSubject: { id: "alpha", name: "Alpha Fighter", kind: "fighter" },
+        },
+      },
+      {
+        score: 95,
+        outcome: "correct",
+        outcomeLabel: "NATURAL SOLVE",
+        cluesUsed: 4,
+        naturalMisses: 0,
+        rescueMisses: 0,
+      },
+      {
+        score: 45,
+        outcome: "rescued",
+        outcomeLabel: "RECOVERED",
+        cluesUsed: 10,
+        naturalMisses: 1,
+        rescueMisses: 0,
+      },
+    );
+
+    renderDetails(row);
+    expect(screen.getByText("Alpha Fighter")).toBeInTheDocument();
+    expect(screen.getByText("95/100")).toBeInTheDocument();
+    expect(screen.getByText("45/100")).toBeInTheDocument();
+    expect(screen.getByText("NATURAL SOLVE")).toBeInTheDocument();
+    expect(screen.getByText("RECOVERED")).toBeInTheDocument();
+  });
+
   it("lets the recipient decline while preserving a declined state for the sender", () => {
     const row = createPlayChallenge({
       code: "IGNORE01",
