@@ -2791,8 +2791,22 @@ function cfbBatch1ApplyOverride(subjectId: string, clue: WhoAmIClue) {
 
 function shouldSuppressCfbBatch1Clue(clue: WhoAmIClue) {
   if (cfbBatch1StructuralClueIds.has(clue.id)) return true;
-  if (clue.id === "fact:cfb-career-games" || clue.id === "fact:cfb-career-starts") return true;
-  if (clue.conceptId === "identity:career-games" || clue.conceptId === "identity:career-starts") return true;
+  if (
+    clue.id === "fact:cfb-career-games"
+    || clue.id === "fact:cfb-career-starts"
+    || clue.id === "fact:cfb-career-passing-completions"
+    || clue.id === "fact:cfb-career-passing-attempts"
+    || clue.id === "fact:cfb-career-rushing-attempts"
+    || clue.id === "fact:cfb-career-interceptions-thrown"
+  ) return true;
+  if (
+    clue.conceptId === "identity:career-games"
+    || clue.conceptId === "identity:career-starts"
+    || clue.conceptId === "identity:career-passing-completions"
+    || clue.conceptId === "identity:career-passing-attempts"
+    || clue.conceptId === "identity:career-rushing-attempts"
+    || clue.conceptId === "identity:career-interceptions-thrown"
+  ) return true;
   if (clue.conceptId && cfbBatch1SuppressedIdentityConcepts.has(clue.conceptId)) return true;
   if (isCfbBatch1NflStageLeak(clue)) return true;
   return false;
