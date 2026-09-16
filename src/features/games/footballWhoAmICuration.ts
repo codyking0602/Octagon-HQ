@@ -2706,9 +2706,9 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-andrew-luck", [
     cfbBatch1Clue("luck-stanford", "I quarterbacked Stanford and finished as the Heisman runner-up in both 2010 and 2011.", "giveaway", "accomplishments", 9),
-    cfbBatch1Clue("luck-orange", "I led Stanford to a 12-win season and an Orange Bowl victory after the 2010 season.", "strong", "accomplishments"),
+    cfbBatch1Clue("luck-orange", "I led Stanford to a 12-win season and an Orange Bowl victory after the 2010 season.", "helpful", "accomplishments"),
     cfbBatch1Clue("luck-bcs-bowls", "I led Stanford to consecutive BCS bowl appearances, first the Orange Bowl and then the Fiesta Bowl.", "strong", "accomplishments"),
-    cfbBatch1Clue("luck-conference-poy", "I was the conference offensive player of the year in both 2010 and 2011.", "strong", "accomplishments"),
+    cfbBatch1Clue("luck-conference-poy", "I was the conference offensive player of the year in both 2010 and 2011.", "helpful", "accomplishments"),
     cfbBatch1Clue("luck-2011-awards", "I won both the Maxwell Award and Walter Camp Award in 2011.", "strong", "accomplishments"),
     cfbBatch1Clue("luck-unitas", "I won the Johnny Unitas Golden Arm Award in 2011.", "strong", "accomplishments"),
     cfbBatch1Clue("luck-redshirt", "After redshirting in 2008, I became Stanford's starting quarterback in 2009.", "helpful", "career-path"),
@@ -2789,6 +2789,10 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("leinart-heisman", "I won the 2004 Heisman Trophy as USC's quarterback.", "giveaway", "accomplishments", 8),
     cfbBatch1Clue("leinart-title", "I quarterbacked USC through an undefeated 2004 season and a national championship.", "giveaway", "accomplishments", 9),
     cfbBatch1Clue("leinart-notre-dame", "My late quarterback sneak at Notre Dame in 2005 finished one of the era's most famous games.", "strong", "accomplishments"),
+  ]],
+  ["cfb-paul-hornung", [
+    cfbBatch1Clue("hornung-number-5", "I wore No. 5 at Notre Dame.", "strong", "identity"),
+    cfbBatch1Clue("hornung-all-america", "I earned All-America honors in both 1955 and 1956 at Notre Dame.", "strong", "accomplishments"),
   ]],
   ["cfb-roger-staubach", [
     cfbBatch1Clue("staubach-heisman", "I won the 1963 Heisman Trophy while playing quarterback at Navy.", "giveaway", "accomplishments", 8),
