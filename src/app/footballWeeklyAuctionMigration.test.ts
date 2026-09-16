@@ -8,6 +8,7 @@ import {
 const migration = readFileSync("supabase/migrations/202612310129_football_weekly_auction.sql", "utf8");
 const bankrollFloorRepair = readFileSync("supabase/migrations/202612310130_football_weekly_auction_bankroll_floor.sql", "utf8");
 const dynamicBankroll = readFileSync("supabase/migrations/202612310137_football_weekly_auction_dynamic_bankroll.sql", "utf8");
+const fullPoolRepair = readFileSync("supabase/migrations/202612310138_football_weekly_auction_full_233_pool.sql", "utf8");
 const transitionMigration = readFileSync("supabase/migrations/202612310132_football_troy_transition_carry.sql", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
@@ -60,6 +61,11 @@ describe("Football Weekly Auction live contract", () => {
     expect(migration).toContain("other.hidden_grade >= blue.hidden_grade + 1.5");
     expect(migration).toContain("other.hidden_grade <= blue.hidden_grade + 4.5");
     expect(migration).toContain("abs(pool.hidden_grade - v_target) + random() * 0.3");
+    expect(fullPoolRepair).toContain("v_pool_count <> 233");
+    expect(fullPoolRepair).not.toContain("pool.season_reference like 'cfb-best-%'");
+    expect(fullPoolRepair).not.toContain("blue.season_reference like 'cfb-best-%'");
+    expect(fullPoolRepair).toContain("private.football_weekly_auction_daily_entries");
+    expect(fullPoolRepair).toContain("board.lock_at > now()");
   });
 
   it("resolves bid ties by prior collection size, prior spend, then random", () => {
@@ -119,11 +125,14 @@ describe("Football Weekly Auction live contract", () => {
     expect(gate).toContain("TODAY’S BOARD");
     expect(gate).toContain("RESULTS REVEAL AT MIDNIGHT CT");
     expect(gate).toContain("setLogoFailed(true)");
-    expect(gate).toContain('identity.finalApRank == null ? "NR"');
+    expect(gate).not.toContain('identity.finalApRank == null ? "NR"');
     expect(footballWeeklyAuctionTeamIdentity("cfb-best-alabama-2009", "Alabama", 2009).finalApRank).toBe(1);
     expect(footballWeeklyAuctionTeamIdentity("cfb-best-lsu-2011", "LSU", 2011).finalApRank).toBe(2);
     expect(footballWeeklyAuctionTeamIdentity("cfb-best-auburn-2013", "Auburn", 2013).finalApRank).toBe(2);
     expect(footballWeeklyAuctionTeamIdentity("weekly-cfb-fresno-state-2013", "Fresno State", 2013).finalApRank).toBeNull();
+    const expansion = footballWeeklyAuctionTeamIdentity("weekly-cfb-florida-2001", "Florida", 2001);
+    expect(expansion.logoSrc).toContain("ncaa");
+    expect(expansion.finalApRank).toBeNull();
     expect(styles).toContain("rgba(var(--weekly-team-rgb), .17)");
     expect(styles).toContain(".football-weekly-auction__result-team::before");
     expect(styles).toContain("align-self: start");

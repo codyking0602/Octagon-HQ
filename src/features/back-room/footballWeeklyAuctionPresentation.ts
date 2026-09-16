@@ -3,6 +3,8 @@ import {
   cfbBestTeamSeasonPresentation,
   cfbBestTeamSeasonVisualIdentity,
 } from "./cfbBestTeamSeasonPresentation";
+import { footballCfbTeamMediaId } from "./footballMediaIdentity";
+import { footballTeamAssets } from "./footballSubjectAssets";
 
 export type FootballWeeklyAuctionTeamIdentity = {
   primary: string;
@@ -214,11 +216,12 @@ export function footballWeeklyAuctionTeamIdentity(
 
   const season = cfbBestTeamSeasonPresentation(seasonReference);
   const visual = cfbBestTeamSeasonVisualIdentity(seasonReference);
+  const fallbackAsset = footballTeamAssets[footballCfbTeamMediaId(school)];
   return {
     primary: visual?.primary ?? "#27445A",
     primaryRgb: visual?.primaryRgb ?? "39, 68, 90",
     secondary: visual?.secondary ?? "#FFFFFF",
-    logoSrc: visual?.logoSrc ?? null,
+    logoSrc: visual?.logoSrc ?? fallbackAsset?.src ?? null,
     resume: season?.summary ?? school + " · " + seasonYear,
     finalApRank: FINAL_AP_RANK_BY_SEASON_REFERENCE[seasonReference] ?? null,
     sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/" + schoolSlug(school) + "/" + seasonYear + ".html",
