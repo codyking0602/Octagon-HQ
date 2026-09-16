@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { createUfcWhoAmIRound } from "../games/whoAmIAuthority";
 import type { WhoAmIRound, WhoAmISubject } from "../games/whoAmIEngine";
 import {
+  sharedWhoAmIRound,
   storedWhoAmIChallengeRound,
   whoAmIChallengeSetup,
+  whoAmISharedChallengeUrl,
 } from "./whoAmIChallenge";
 
 const subjects: readonly WhoAmISubject[] = [
@@ -38,6 +41,18 @@ describe("Who Am I profile challenge contract", () => {
     expect(restored?.hiddenSubject).toEqual(source.hiddenSubject);
     expect(restored?.subjects).toEqual(source.subjects);
     expect(restored?.clues).toEqual(source.clues);
+  });
+
+  it("reconstructs an external share from an opaque round token without exposing the answer in the URL", () => {
+    const source = createUfcWhoAmIRound(() => 0.42);
+    const url = whoAmISharedChallengeUrl(source, "https://example.test");
+    const parsedUrl = new URL(url);
+    const restored = sharedWhoAmIRound(parsedUrl.searchParams, "ufc");
+
+    expect(parsedUrl.searchParams.has("round")).toBe(true);
+    expect(url).not.toContain(source.hiddenSubject.id);
+    expect(restored?.hiddenSubject.id).toBe(source.hiddenSubject.id);
+    expect(restored?.clues.map((clue) => clue.id)).toEqual(source.clues.map((clue) => clue.id));
   });
 
   it("rejects a stored round for the wrong sport", () => {
