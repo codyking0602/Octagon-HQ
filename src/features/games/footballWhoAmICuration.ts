@@ -3398,7 +3398,7 @@ const cfbBatch2SuppressedIdentityConcepts = new Set([
   "identity:cfb-orlando-pace--sandusky-basketball-athlete",
 ]);
 
-const cfbBatch2MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly)\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
+const cfbBatch2MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly)\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]|\bAfter[’']s\b|\binjurthis player\b/i;
 
 const cfbBatch2IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
   ["cfb-darren-sproles:identity:2003-big12-title-game", {
@@ -4575,6 +4575,19 @@ const cfbBatch4IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
     band: "helpful",
     facet: "career-path",
   }],
+  ["cfb-ed-reed:identity:pr8-cfb-ed-reed--hurt-dawg-halftime-leadership", {
+    text: "While injured during the 2001 Florida State game, I delivered a famous halftime challenge demanding that Miami play to its standard.",
+    band: "helpful",
+    facet: "career-path",
+  }],
+  ["cfb-ed-reed:identity:high-school-four-football-roles", {
+    band: "helpful",
+    facet: "career-path",
+  }],
+  ["cfb-ed-reed:identity:miami-track-participant", {
+    band: "helpful",
+    facet: "career-path",
+  }],
 ]);
 
 function cfbBatch4ApplyOverride(subjectId: string, clue: WhoAmIClue) {
@@ -4594,6 +4607,13 @@ function cfbBatch4Clue(
 }
 
 const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-travis-hunter", [
+    cfbBatch4Clue("hunter-jackson-state-colorado", "I played one season at Jackson State before transferring to Colorado.", "giveaway", "career-path", 7),
+  ]],
+  ["cfb-ed-reed", [
+    cfbBatch4Clue("reed-two-star-miami-find", "I described myself as a two-star recruit before Miami found me while scholarship sanctions forced its staff to search creatively.", "helpful", "career-path", 20),
+    cfbBatch4Clue("reed-fsu-halftime", "During Miami's 2001 game at Florida State, I delivered a halftime challenge that became one of the signature leadership moments of my college career.", "helpful", "career-path", 19),
+  ]],
   ["cfb-patrick-peterson", [
     cfbBatch4Clue("peterson-thorpe-bednarik", "In 2010 I won both the Jim Thorpe Award and the Bednarik Award at LSU.", "giveaway", "accomplishments", 7),
     cfbBatch4Clue("peterson-three-way-scores", "I scored LSU touchdowns three different ways: punt return, interception return and return of a blocked field goal.", "strong", "production", 16),
@@ -4813,6 +4833,7 @@ function isCfbBatch4NflStageLeak(clue: WhoAmIClue) {
 }
 
 function shouldSuppressCfbBatch4Clue(subject: FootballSubjectProfile, clue: WhoAmIClue) {
+  if (clue.id.startsWith("fact:nfl-")) return true;
   if (cfbBatch4StructuralClueIds.has(clue.id)) return true;
   if (cfbBatch4GenericMetricIds.has(clue.id)) return true;
   if (clue.conceptId && cfbBatch4GenericIdentityConcepts.has(clue.conceptId)) return true;
@@ -4828,7 +4849,11 @@ function trimCfbBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoA
   const target = 16;
   if (clues.length <= target) return [...clues];
 
-  const requiredIds = new Set(subject.kind === "coach" ? [] : ["position", "school"]);
+  const requiredIds = new Set(subject.kind === "coach" ? [] : [
+    "position",
+    "school",
+    ...(subject.id === "cfb-travis-hunter" ? ["curated-cfb4:hunter-jackson-state-colorado"] : []),
+  ]);
   const required = clues.filter((clue) => requiredIds.has(clue.id));
   const requiredIdSet = new Set(required.map((clue) => clue.id));
   const ranked = clues
