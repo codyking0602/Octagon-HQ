@@ -1842,7 +1842,7 @@ const batch4RetainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-darrell-green", keep("identity:darrell-green-track-speed-identity")],
   ["nfl-darrelle-revis", keep("identity:darrelle-revis-acl-near-retirement", "identity:darrelle-revis-anticipatory-film-study")],
   ["nfl-darren-sharper", keep("identity:darren-sharper-mike-tomlin-college-relationship", "identity:darren-sharper-jamie-sharper-draft")],
-  ["nfl-deangelo-hall", keep("identity:deangelo-hall-green-sanders-role-models")],
+  ["nfl-deangelo-hall", keep("identity:deangelo-hall-green-sanders-role-models", "identity:deangelo-hall-shanahan-practice-reset")],
   ["nfl-devin-mccourty", keep()],
   ["nfl-dick-lebeau", keep("identity:dick-lebeau-ohio-state-qb-halfback", "identity:dick-lebeau-coach-dad", "identity:dick-lebeau-coached-to-eighty", "identity:pro-bowls")],
   ["nfl-donnie-shell", keep("identity:donnie-shell-bill-nunn-willie-jeffries", "identity:donnie-shell-torpedo-nickname", "identity:donnie-shell-fifth-1974-hall-of-famer", "identity:pro-bowls", "identity:five-all-pro-selections")],
@@ -2107,6 +2107,7 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("sharper-five-pb", "I was selected to five Pro Bowls.", "strong", "accomplishments"),
     batch4Clue("sharper-sb44", "I won Super Bowl XLIV in my first season with New Orleans.", "giveaway", "accomplishments", 9),
     batch4Clue("sharper-qb-safety", "I arrived at college as a quarterback prospect before becoming a safety.", "helpful", "career-path"),
+    batch4Clue("sharper-jamie", "My older brother Jamie also entered the NFL in 1997 as a second-round pick.", "strong", "relationships"),
     batch4Clue("sharper-11-pick-sixes", "I returned 11 interceptions for touchdowns, second-most in NFL history when I retired.", "strong", "accomplishments"),
     batch4Clue("sharper-2009-return-record", "In 2009 I set an NFL single-season record with 376 interception-return yards.", "strong", "accomplishments"),
   ]],
@@ -2119,7 +2120,7 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("hall-four-int", "I tied an NFL single-game record with four interceptions against Chicago in 2010.", "giveaway", "accomplishments", 8),
     batch4Clue("hall-two-way-vt", "Virginia Tech used me at wide receiver as well as defensive back.", "helpful", "career-path"),
     batch4Clue("hall-safety", "Late in my career I moved from cornerback to safety.", "helpful", "career-path"),
-    batch4Clue("hall-23", "No. 23 became my signature number in Washington.", "strong", "identity"),
+    batch4Clue("hall-23", "No. 23 became my signature number in Washington.", "helpful", "identity"),
     batch4Clue("hall-pro-bowl-mvp", "I was named MVP of the 2011 Pro Bowl after recording an interception and returning a fumble for a touchdown.", "strong", "accomplishments"),
   ]],
   ["nfl-devin-mccourty", [
@@ -2409,13 +2410,25 @@ function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue)
     subject.id === "nfl-harry-carson"
     && clue.conceptId === "identity:harry-carson-college-line-to-middle-linebacker"
   ) {
-    return { ...clue, band: "strong", facet: "career-path", revealPriority: 16 };
+    return { ...clue, band: "helpful", facet: "career-path", revealPriority: 18 };
   }
   if (
     subject.id === "nfl-harry-carson"
     && clue.conceptId === "identity:harry-carson-gatorade-shower"
   ) {
-    return { ...clue, band: "giveaway", facet: "identity", revealPriority: 12 };
+    return { ...clue, band: "strong", facet: "identity", revealPriority: 16 };
+  }
+  if (
+    subject.id === "nfl-harry-carson"
+    && clue.conceptId === "identity:harry-carson-parcells-team-conduit"
+  ) {
+    return { ...clue, band: "strong", facet: "role", revealPriority: 18 };
+  }
+  if (
+    subject.id === "nfl-darren-sharper"
+    && clue.conceptId === "identity:darren-sharper-scout-wakeup-call"
+  ) {
+    return { ...clue, band: "helpful", facet: "career-path", revealPriority: 20 };
   }
   if (
     subject.id === "bill-cowher"
@@ -2443,11 +2456,17 @@ const batch4FocusedPoolIds = new Map<string, ReadonlySet<string>>([
     "curated4:carson-fourth-round",
     "curated4:carson-giants-only",
     "curated4:carson-53",
+    "identity:pr7-harry-carson-college-line-to-middle-linebacker",
+    "identity:harry-carson-college-line-to-middle-linebacker",
     "curated4:carson-lt-banks",
     "curated4:carson-hof",
+    "identity:resume-nfl-harry-carson-03",
     "identity:pro-bowls",
-    "identity:harry-carson-college-line-to-middle-linebacker",
+    "identity:pr7-harry-carson-gatorade-shower",
     "identity:harry-carson-gatorade-shower",
+    "identity:pr7-harry-carson-parcells-team-conduit",
+    "identity:harry-carson-parcells-team-conduit",
+    "identity:resume-nfl-harry-carson-04",
     "identity:super-bowl-xxi-title",
   ])],
   ["nfl-darren-sharper", new Set([
@@ -2457,10 +2476,13 @@ const batch4FocusedPoolIds = new Map<string, ReadonlySet<string>>([
     "curated4:sharper-second",
     "curated4:sharper-path",
     "curated4:sharper-qb-safety",
+    "identity:pr7-darren-sharper-scout-wakeup-call",
+    "identity:darren-sharper-scout-wakeup-call",
     "curated4:sharper-five-pb",
     "curated4:sharper-11-pick-sixes",
     "curated4:sharper-2009-return-record",
-    "identity:darren-sharper-scout-wakeup-call",
+    "curated4:sharper-jamie",
+    "identity:pr7-darren-sharper-mike-tomlin-college-relationship",
     "identity:darren-sharper-mike-tomlin-college-relationship",
     "curated4:sharper-sb44",
   ])],
@@ -2471,11 +2493,14 @@ const batch4FocusedPoolIds = new Map<string, ReadonlySet<string>>([
     "curated4:hall-path",
     "curated4:hall-two-way-vt",
     "curated4:hall-safety",
+    "curated4:hall-23",
     "curated4:hall-eighth",
     "curated4:hall-three-pb",
     "curated4:hall-pro-bowl-mvp",
-    "curated4:hall-23",
+    "identity:pr7-deangelo-hall-green-sanders-role-models",
     "identity:deangelo-hall-green-sanders-role-models",
+    "identity:pr7-deangelo-hall-shanahan-practice-reset",
+    "identity:deangelo-hall-shanahan-practice-reset",
     "curated4:hall-four-int",
   ])],
 ]);
