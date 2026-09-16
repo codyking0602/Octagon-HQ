@@ -4643,6 +4643,7 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("berry-thorpe-2009", "I won the 2009 Jim Thorpe Award as the nation's top defensive back.", "giveaway", "accomplishments", 8),
     cfbBatch4Clue("berry-sec-dpoy-2008", "I was the SEC Defensive Player of the Year in 2008.", "strong", "accomplishments", 14),
     cfbBatch4Clue("berry-two-unanimous-aa", "I became the first Tennessee player to earn unanimous All-America honors twice.", "strong", "accomplishments", 13),
+    cfbBatch4Clue("berry-delayed-commitment", "I knew relatively early that I wanted Tennessee, but delayed announcing my commitment so recruiters would keep visiting my high school and evaluating my teammates.", "strong", "career-path", 17),
   ]],
   ["cfb-kyle-hamilton", [
     cfbBatch4Clue("hamilton-first-stadium-snap", "On my first defensive snap in Notre Dame Stadium, I returned an interception for a touchdown against New Mexico.", "strong", "accomplishments", 15),
@@ -4653,9 +4654,6 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-ed-reed", [
     cfbBatch4Clue("reed-two-star-miami-find", "I described myself as a two-star recruit before Miami found me while scholarship sanctions forced its staff to search creatively.", "strong", "career-path", 16),
     cfbBatch4Clue("reed-fsu-halftime", "During Miami's 2001 game at Florida State, I delivered a halftime challenge that became one of the signature leadership moments of my college career.", "strong", "career-path", 15),
-  ]],
-  ["cfb-eric-berry", [
-    cfbBatch4Clue("berry-delayed-commitment", "I knew relatively early that I wanted Tennessee, but delayed announcing my commitment so recruiters would keep visiting my high school and evaluating my teammates.", "strong", "career-path", 17),
   ]],
   ["cfb-patrick-peterson", [
     cfbBatch4Clue("peterson-thorpe-bednarik", "In 2010 I won both the Jim Thorpe Award and the Bednarik Award at LSU.", "giveaway", "accomplishments", 7),
