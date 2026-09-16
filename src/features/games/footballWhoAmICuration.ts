@@ -4926,64 +4926,63 @@ function trimCfbBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoA
   return clues.filter((clue) => selected.has(clue.id));
 }
 
-function rebalanceCfbBatch4ReplayBands(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
-  const balanced = clues.map((clue) => (
+function cfbBatch4ReplayStrength(clue: WhoAmIClue) {
+  const facet = whoAmIClueFacet(clue);
+  const base: Readonly<Record<WhoAmIClue["facet"], number>> = {
+    role: 20,
+    era: 20,
+    background: 40,
+    style: 55,
+    "career-path": 75,
+    accomplishments: 85,
+    relationships: 80,
+    nickname: 100,
+    "off-field": 35,
+    production: 25,
+    identity: 60,
+  };
+  let strength = base[facet ?? "identity"] ?? 60;
+  const text = clue.text.toLowerCase();
+  const selectionClass = whoAmIClueSelectionClass(clue);
+
+  if (selectionClass === "sports-identity") strength += 10;
+  else if (selectionClass === "identity-color") strength -= 10;
+  else strength -= 35;
+
+  if (/\b(?:heisman|mvp|hall of fame|no\. 1 overall|first overall|first quarterback|champion|championship|title|all-america|all-american|all-pro)\b/.test(text)) strength += 15;
+  if (/\b(?:defeated|lost to|fought|shared the octagon|played for|head coach for|transferred from|transferred to|drafted|selected no\.)\b/.test(text)) strength += 12;
+  if (/\b(?:signature|celebration|nickname|moniker|jersey number|wore no\.)\b/.test(text)) strength += 18;
+  if (/\b\d{2,4}\b/.test(text) && facet === "production") strength -= 5;
+  if (/\b\d+\s+(?:ufc\s+)?(?:wins|fights|games|starts)\b/.test(text) && facet === "production") strength -= 8;
+
+  return strength;
+}
+
+function rebalanceCfbBatch4ReplayBands(_subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const normalized = clues.map((clue) => (
     clue.id === "era" && clue.band === "broad"
       ? { ...clue, band: "helpful" as const }
       : clue
   ));
 
-  const isLate = (clue: WhoAmIClue) => clue.band === "strong" || clue.band === "giveaway";
-  const helpfulCount = () => balanced.filter((clue) => clue.band === "helpful").length;
-  const strongCount = () => balanced.filter((clue) => clue.band === "strong").length;
-  const giveawayCount = () => balanced.filter((clue) => clue.band === "giveaway").length;
-  const lateCount = () => balanced.filter(isLate).length;
+  const helpfulCandidates = normalized
+    .map((clue, index) => ({ clue, index, strength: cfbBatch4ReplayStrength(clue) }))
+    .filter(({ clue }) => (
+      clue.band !== "broad"
+      && clue.band !== "giveaway"
+      && whoAmIClueSelectionClass(clue) === "sports-identity"
+    ))
+    .sort((left, right) => left.strength - right.strength || left.index - right.index)
+    .slice(0, 3);
 
-  const promoteHelpful = () => {
-    const candidate = balanced
-      .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
-      .filter(({ clue }) => (
-        clue.band === "helpful"
-        && clue.id !== "era"
-        && whoAmIClueSelectionClass(clue) === "sports-identity"
-      ))
-      .sort((left, right) => right.score - left.score || left.index - right.index)[0];
-    if (!candidate) return false;
-    balanced[candidate.index] = { ...candidate.clue, band: "strong" };
-    return true;
-  };
+  const helpfulIds = new Set(helpfulCandidates.map(({ clue }) => clue.id));
 
-  while (strongCount() < 4 && helpfulCount() > 4) {
-    if (!promoteHelpful()) break;
-  }
-  while (lateCount() < 6 && helpfulCount() > 4) {
-    if (!promoteHelpful()) break;
-  }
-
-  while (helpfulCount() < 4 && lateCount() > 6) {
-    const strongCandidate = strongCount() > 4
-      ? balanced
-        .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
-        .filter(({ clue }) => (
-          clue.band === "strong"
-          && clue.id !== "role-school"
-          && clue.id !== "recognition:first-team-all-america"
-          && whoAmIClueSelectionClass(clue) === "sports-identity"
-        ))
-        .sort((left, right) => left.score - right.score || left.index - right.index)[0]
-      : undefined;
-    const giveawayCandidate = !strongCandidate && giveawayCount() > 2
-      ? balanced
-        .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
-        .filter(({ clue }) => clue.band === "giveaway" && whoAmIClueSelectionClass(clue) === "sports-identity")
-        .sort((left, right) => left.score - right.score || left.index - right.index)[0]
-      : undefined;
-    const candidate = strongCandidate ?? giveawayCandidate;
-    if (!candidate) break;
-    balanced[candidate.index] = { ...candidate.clue, band: "helpful" };
-  }
-
-  return balanced;
+  return normalized.map((clue) => {
+    if (clue.band === "broad" || clue.band === "giveaway") return clue;
+    return helpfulIds.has(clue.id)
+      ? { ...clue, band: "helpful" as const }
+      : { ...clue, band: "strong" as const };
+  });
 }
 
 function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
