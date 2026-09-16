@@ -3281,6 +3281,13 @@ const cfbBatch2GenericIdentityConcepts = new Set([
   "identity:career-targets",
   "identity:career-interceptions-thrown",
 ]);
+const cfbBatch2PartialCareerMetricSubjectIds = new Set([
+  "cfb-ezekiel-elliott",
+  "cfb-amari-cooper",
+  "cfb-hunter-henry",
+  "cfb-jake-butt",
+]);
+
 
 const cfbBatch2SuppressedIdentityConcepts = new Set([
   "identity:cfb-cedric-benson--first-high-school-dave-campbell-cover",
@@ -3596,6 +3603,27 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("jones-two-position-awards", "I won the Outland Trophy as a left tackle in 2011 and the Rimington Trophy as a center in 2012.", "giveaway", "accomplishments", 8),
     cfbBatch2Clue("jones-title-positions", "I started on three Alabama national-title teams while playing right guard, left tackle and center.", "strong", "identity", 17),
   ]],
+  ["cfb-ezekiel-elliott", [
+    cfbBatch2Clue("elliott-career-yards", "I left Ohio State with 3,961 career rushing yards, the second-most in program history at the time.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("elliott-postseason-run", "During Ohio State's 2014 championship postseason, I rushed for 696 yards and eight touchdowns across the Big Ten title game, Sugar Bowl and national championship game.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("elliott-2015-big-ten", "I was the Big Ten Offensive Player of the Year and Running Back of the Year in 2015.", "strong", "accomplishments", 17),
+  ]],
+  ["cfb-amari-cooper", [
+    cfbBatch2Clue("cooper-career-line", "Across three Alabama seasons from 2012 through 2014, I caught 228 passes for 3,463 yards and 31 touchdowns.", "strong", "production", 18),
+    cfbBatch2Clue("cooper-biletnikoff", "I won the 2014 Biletnikoff Award and finished third in Heisman Trophy voting.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("cooper-2014-honors", "I was a unanimous first-team All-American and SEC Offensive Player of the Year in 2014.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("cooper-fourth-pick", "I became the No. 4 overall pick in the 2015 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-hunter-henry", [
+    cfbBatch2Clue("henry-career-line", "From 2013 through 2015 at Arkansas, I caught 116 passes for 1,661 yards and nine touchdowns.", "strong", "production", 18),
+    cfbBatch2Clue("henry-consensus-aa", "I was a consensus first-team All-American in 2015.", "strong", "accomplishments", 16),
+  ]],
+  ["cfb-jake-butt", [
+    cfbBatch2Clue("butt-career-records", "I finished Michigan with tight-end program records of 138 receptions and 1,646 receiving yards.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("butt-mackey", "I won the 2016 John Mackey Award as the nation's top tight end.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("butt-two-time-aa", "I was an All-American in both 2015 and 2016 and won Big Ten Tight End of the Year twice.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("butt-career-td", "I caught 11 touchdown passes during my four-year Michigan career.", "strong", "production", 21),
+  ]],
 ]);
 
 function cfbBatch2ApplyOverride(subjectId: string, clue: WhoAmIClue) {
@@ -3614,6 +3642,7 @@ function isCfbBatch2NflStageLeak(clue: WhoAmIClue) {
 
 function shouldSuppressCfbBatch2Clue(subject: FootballSubjectProfile, clue: WhoAmIClue) {
   if (cfbBatch2StructuralClueIds.has(clue.id)) return true;
+  if (cfbBatch2PartialCareerMetricSubjectIds.has(subject.id) && /^fact:cfb-career-/.test(clue.id)) return true;
   if (cfbBatch2GenericMetricIds.has(clue.id)) return true;
   if (clue.conceptId && cfbBatch2GenericIdentityConcepts.has(clue.conceptId)) return true;
   if (clue.conceptId && cfbBatch2SuppressedIdentityConcepts.has(clue.conceptId)) return true;
