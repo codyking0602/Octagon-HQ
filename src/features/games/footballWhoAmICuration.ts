@@ -2768,6 +2768,131 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("simpson-heisman", "I won the 1968 Heisman Trophy.", "giveaway", "accomplishments", 8),
     cfbBatch1Clue("simpson-first-pick", "I became the No. 1 overall pick in the 1969 NFL Draft.", "giveaway", "career-path", 10),
   ]],
+  ["cfb-doug-flutie", [
+    cfbBatch1Clue("flutie-hail-mary", "My last-second touchdown pass to Gerard Phelan beat Miami in 1984 in one of college football's most famous finishes.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("flutie-heisman", "I won the 1984 Heisman Trophy at Boston College.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-jim-plunkett", [
+    cfbBatch1Clue("plunkett-heisman", "I won the 1970 Heisman Trophy at Stanford.", "giveaway", "accomplishments", 9),
+    cfbBatch1Clue("plunkett-rose", "I finished that season by leading Stanford past Ohio State in the Rose Bowl.", "strong", "accomplishments"),
+    cfbBatch1Clue("plunkett-latino", "I became the first Latino winner of the Heisman Trophy.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-johnny-manziel", [
+    cfbBatch1Clue("manziel-freshman-heisman", "In 2012 I became the first freshman to win the Heisman Trophy.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("manziel-alabama", "As a freshman I led Texas A&M to a road upset of No. 1 Alabama.", "strong", "accomplishments"),
+  ]],
+  ["cfb-lamar-jackson", [
+    cfbBatch1Clue("lamar-heisman", "In 2016 I became Louisville's first Heisman Trophy winner.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("lamar-dual-threat", "My Heisman season paired more than 3,500 passing yards with more than 1,500 rushing yards.", "strong", "production"),
+  ]],
+  ["cfb-matt-leinart", [
+    cfbBatch1Clue("leinart-heisman", "I won the 2004 Heisman Trophy as USC's quarterback.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("leinart-title", "I quarterbacked USC through an undefeated 2004 season and a national championship.", "giveaway", "accomplishments", 9),
+    cfbBatch1Clue("leinart-notre-dame", "My late quarterback sneak at Notre Dame in 2005 finished one of the era's most famous games.", "strong", "accomplishments"),
+  ]],
+  ["cfb-roger-staubach", [
+    cfbBatch1Clue("staubach-heisman", "I won the 1963 Heisman Trophy while playing quarterback at Navy.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("staubach-cotton", "I led Navy to a No. 2 national ranking and a Cotton Bowl matchup with No. 1 Texas after the 1963 season.", "strong", "accomplishments"),
+  ]],
+  ["cfb-tim-tebow", [
+    cfbBatch1Clue("tebow-sophomore", "In 2007 I became the first sophomore to win the Heisman Trophy.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("tebow-titles", "I was part of Florida national championship teams in 2006 and 2008.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-vince-young", [
+    cfbBatch1Clue("young-title", "I led Texas to an undefeated national championship season in 2005.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("young-rose", "On fourth-and-five with the national title on the line, I ran for the winning touchdown against USC.", "giveaway", "accomplishments", 7),
+  ]],
+  ["cfb-brady-quinn", [
+    cfbBatch1Clue("quinn-heisman-finishes", "I finished in the top four of the Heisman voting in both 2005 and 2006 at Notre Dame.", "strong", "accomplishments"),
+    cfbBatch1Clue("quinn-records", "I left Notre Dame as the program's career leader in passing yards and touchdown passes.", "strong", "accomplishments"),
+  ]],
+  ["cfb-carson-palmer", [
+    cfbBatch1Clue("palmer-heisman", "I won the 2002 Heisman Trophy at USC.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("palmer-orange", "I closed my USC career by leading a decisive Orange Bowl win over Iowa.", "strong", "accomplishments"),
+  ]],
+  ["cfb-charlie-ward", [
+    cfbBatch1Clue("ward-heisman-title", "In 1993 I won the Heisman Trophy and led Florida State to its first national championship.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("ward-basketball", "I also played point guard for Florida State and later chose a first-round NBA career instead of the NFL.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-chris-weinke", [
+    cfbBatch1Clue("weinke-title", "I quarterbacked Florida State to the 1999 national championship.", "strong", "accomplishments"),
+    cfbBatch1Clue("weinke-oldest-heisman", "I won the 2000 Heisman Trophy at age 28 after returning from professional baseball.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-colt-brennan", [
+    cfbBatch1Clue("brennan-58", "I threw 58 touchdown passes in 2006, setting the NCAA single-season record at the time.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("brennan-undefeated", "I led Hawaii through an undefeated 2007 regular season and into the Sugar Bowl.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-colt-mccoy", [
+    cfbBatch1Clue("mccoy-wins", "I finished my Texas career with 45 victories as a starting quarterback, an NCAA record at the time.", "strong", "accomplishments"),
+    cfbBatch1Clue("mccoy-2009", "I led Texas to the 2009 Big 12 championship and the national championship game.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-dak-prescott", [
+    cfbBatch1Clue("dak-number-one", "In 2014 I led Mississippi State to the first No. 1 ranking in program history.", "giveaway", "accomplishments", 9),
+    cfbBatch1Clue("dak-15", "I wore No. 15 at Mississippi State in tribute to Tim Tebow.", "strong", "identity"),
+  ]],
+  ["cfb-danny-wuerffel", [
+    cfbBatch1Clue("wuerffel-heisman-title", "I won the Heisman Trophy in 1996 and finished the season by leading Florida to a national championship.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("wuerffel-spurrier", "My head coach at Florida had also won the Heisman as a Gators quarterback.", "strong", "relationships"),
+  ]],
+  ["cfb-deshaun-watson", [
+    cfbBatch1Clue("watson-title", "I threw the game-winning touchdown with one second left to beat Alabama for the 2016 national championship.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("watson-clemson", "I left Clemson after three seasons with a national title and two straight championship-game appearances.", "strong", "accomplishments"),
+  ]],
+  ["cfb-eric-crouch", [
+    cfbBatch1Clue("crouch-heisman", "I won the 2001 Heisman Trophy while running Nebraska's option offense.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("crouch-black41", "Against No. 1 Oklahoma, I caught a 63-yard touchdown on the trick play known as Black 41 Flash Reverse.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-adrian-peterson", [
+    cfbBatch1Clue("peterson-freshman", "As a true freshman at Oklahoma in 2004, I rushed for 1,925 yards and finished second in Heisman voting.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("peterson-title-game", "That freshman season ended with Oklahoma playing for the national championship.", "strong", "accomplishments"),
+  ]],
+  ["cfb-archie-griffin", [
+    cfbBatch1Clue("griffin-two-heismans", "I remain the only player to win the Heisman Trophy twice, taking it in 1974 and 1975.", "giveaway", "accomplishments", 7),
+    cfbBatch1Clue("griffin-rose", "My Ohio State teams reached four consecutive Rose Bowls.", "strong", "accomplishments"),
+  ]],
+  ["cfb-darren-mcfadden", [
+    cfbBatch1Clue("mcfadden-doak", "I won the Doak Walker Award in both 2006 and 2007 at Arkansas.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("mcfadden-heisman", "I finished second in the Heisman voting in consecutive seasons.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-derrick-henry", [
+    cfbBatch1Clue("henry-heisman", "I won the 2015 Heisman Trophy after rushing for more than 2,200 yards.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("henry-title", "My final Alabama season ended with a national championship.", "strong", "accomplishments"),
+  ]],
+  ["cfb-earl-campbell", [
+    cfbBatch1Clue("campbell-heisman", "I won the 1977 Heisman Trophy in my final season at Texas.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("campbell-1744", "I rushed for 1,744 yards during that Heisman season.", "strong", "production"),
+  ]],
+  ["cfb-ernie-davis", [
+    cfbBatch1Clue("davis-title", "I helped Syracuse win the 1959 national championship while wearing the program's famous No. 44.", "giveaway", "accomplishments", 9),
+    cfbBatch1Clue("davis-heisman", "In 1961 I became the first Black player to win the Heisman Trophy.", "giveaway", "accomplishments", 7),
+  ]],
+  ["cfb-herschel-walker", [
+    cfbBatch1Clue("walker-title", "As a freshman I helped Georgia complete an undefeated 1980 season and win the national championship.", "giveaway", "accomplishments", 9),
+    cfbBatch1Clue("walker-heisman", "I won the 1982 Heisman Trophy in my third and final Georgia season.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-marcus-allen", [
+    cfbBatch1Clue("allen-heisman", "I won the 1981 Heisman Trophy at USC.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("allen-2000", "That season I became the first player in NCAA history to rush for more than 2,000 yards in a season.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-reggie-bush", [
+    cfbBatch1Clue("bush-goalline", "On the decisive late goal-line play at Notre Dame in 2005, I pushed quarterback Matt Leinart from behind as he crossed the goal line.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("bush-heisman", "My 2005 Heisman Trophy was formally reinstated in 2024.", "giveaway", "accomplishments", 9),
+    cfbBatch1Clue("bush-title", "I was a major part of USC's undefeated 2004 national championship team.", "strong", "accomplishments"),
+  ]],
+  ["cfb-ricky-williams", [
+    cfbBatch1Clue("ricky-heisman", "I won the 1998 Heisman Trophy at Texas.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("ricky-record", "I finished at Texas with 6,279 rushing yards after breaking the major-college career rushing record.", "giveaway", "accomplishments", 9),
+    cfbBatch1Clue("ricky-34", "I wore No. 34 as a senior in tribute to Texas legend Earl Campbell.", "strong", "identity"),
+  ]],
+  ["cfb-tony-dorsett", [
+    cfbBatch1Clue("dorsett-title", "I won the Heisman Trophy and a national championship with Pittsburgh in 1976.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("dorsett-record", "I finished my Pitt career with 6,082 rushing yards, then the NCAA career record.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-ashton-jeanty", [
+    cfbBatch1Clue("jeanty-2601", "I rushed for 2,601 yards in my final Boise State season.", "giveaway", "production", 8),
+    cfbBatch1Clue("jeanty-awards", "That season I won both the Maxwell Award and the Doak Walker Award.", "giveaway", "accomplishments", 9),
+    cfbBatch1Clue("jeanty-heisman", "I finished second in the Heisman voting after that record-setting season.", "strong", "accomplishments"),
+  ]],
   ["cfb-bijan-robinson", [
     cfbBatch1Clue("bijan-doak", "I won the Doak Walker Award as the nation's top running back in 2022.", "strong", "accomplishments"),
     cfbBatch1Clue("bijan-all-america", "I was a unanimous first-team All-American in my final Texas season.", "strong", "accomplishments"),
