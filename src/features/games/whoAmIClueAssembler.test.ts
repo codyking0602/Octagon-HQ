@@ -480,7 +480,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
           clue.sourceFactId === fact.factId
           || clue.conceptId === `identity:${fact.conceptId}`
         )));
-        const intentionallyCurated = (league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id) || isNflWhoAmIBatch3Subject(candidate.id) || isNflWhoAmIBatch4Subject(candidate.id))) || (league === "CFB" && (isCfbWhoAmIBatch1Subject(candidate.id) || isCfbWhoAmIBatch2Subject(candidate.id) || isCfbWhoAmIBatch3Subject(candidate.id)));
+        const intentionallyCurated = (league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id) || isNflWhoAmIBatch3Subject(candidate.id) || isNflWhoAmIBatch4Subject(candidate.id))) || (league === "CFB" && (isCfbWhoAmIBatch1Subject(candidate.id) || isCfbWhoAmIBatch2Subject(candidate.id) || isCfbWhoAmIBatch3Subject(candidate.id) || isCfbWhoAmIBatch4Subject(candidate.id)));
 
         if (!intentionallyCurated) {
           expect(
