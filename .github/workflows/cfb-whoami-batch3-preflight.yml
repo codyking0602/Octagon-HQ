@@ -23,4 +23,4 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx vitest run src/features/games/whoAmICfbBatch3Audit.test.ts --reporter=verbose
+      - run: npm test -- src/features/games/whoAmICfbBatch3Audit.test.ts --reporter=verbose
