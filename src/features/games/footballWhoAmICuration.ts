@@ -3572,17 +3572,17 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-john-hannah", [
     cfbBatch2Clue("hannah-two-aa", "I was a two-time football All-American at Alabama in 1971 and 1972.", "strong", "accomplishments", 16),
     cfbBatch2Clue("hannah-unanimous", "I was a unanimous All-American in 1972.", "strong", "accomplishments", 18),
-    cfbBatch2Clue("hannah-all-sec", "I earned All-SEC honors in both 1971 and 1972.", "strong", "accomplishments", 22),
+    cfbBatch2Clue("hannah-all-sec", "I earned All-SEC honors in both 1971 and 1972.", "helpful", "accomplishments", 22),
     cfbBatch2Clue("hannah-fourth-pick", "New England selected me No. 4 overall in the 1973 NFL Draft.", "giveaway", "career-path", 8),
-    cfbBatch2Clue("hannah-number", "I wore No. 73 while playing offensive guard at Alabama.", "strong", "identity", 20),
+    cfbBatch2Clue("hannah-number", "I wore No. 73 while playing offensive guard at Alabama.", "helpful", "identity", 20),
     cfbBatch2Clue("hannah-bryant", "Bear Bryant described me as the finest offensive lineman he had ever been around.", "strong", "relationships", 18),
   ]],
   ["cfb-orlando-pace", [
     cfbBatch2Clue("pace-lombardi", "I won the Lombardi Award twice at Ohio State, becoming its first sophomore winner and first two-time winner.", "giveaway", "accomplishments", 8),
     cfbBatch2Clue("pace-outland", "I won the 1996 Outland Trophy as the nation's top interior lineman.", "strong", "accomplishments", 16),
     cfbBatch2Clue("pace-heisman-fourth", "As an offensive tackle, I finished fourth in the 1996 Heisman Trophy voting.", "giveaway", "accomplishments", 9),
-    cfbBatch2Clue("pace-two-aa", "I was a first-team All-American at Ohio State in both 1995 and 1996.", "strong", "accomplishments", 17),
-    cfbBatch2Clue("pace-big-ten-mvp", "I was named the Big Ten's most valuable player in 1996 as an offensive tackle.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("pace-two-aa", "I was a first-team All-American at Ohio State in both 1995 and 1996.", "helpful", "accomplishments", 17),
+    cfbBatch2Clue("pace-big-ten-mvp", "I was named the Big Ten's most valuable player in 1996 as an offensive tackle.", "helpful", "accomplishments", 18),
   ]],
   ["cfb-darren-sproles", [
     cfbBatch2Clue("sproles-2003-aa", "I was a first-team All-American in 2003 as Kansas State won the Big 12 championship.", "strong", "accomplishments", 18),
@@ -3593,18 +3593,18 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("howard-big-ten-scoring", "In 1991 I became the first receiver to lead the Big Ten in scoring.", "strong", "accomplishments", 19),
   ]],
   ["cfb-desean-jackson", [
-    cfbBatch2Clue("jackson-return-aa", "I was a first-team All-American punt returner in 2006 after leading the nation at 18.2 yards per return.", "strong", "accomplishments", 17),
+    cfbBatch2Clue("jackson-return-aa", "I was a first-team All-American punt returner in 2006 after leading the nation at 18.2 yards per return.", "helpful", "accomplishments", 17),
     cfbBatch2Clue("jackson-randy-moss", "I won the inaugural Randy Moss Award as the nation's top return specialist in 2006.", "strong", "accomplishments", 18),
-    cfbBatch2Clue("jackson-four-pr-td", "I returned four punts for touchdowns in 2006, setting Cal and Pac-10 single-season records.", "strong", "production", 20),
+    cfbBatch2Clue("jackson-four-pr-td", "I returned four punts for touchdowns in 2006, setting Cal and Pac-10 single-season records.", "helpful", "production", 20),
   ]],
   ["cfb-jordan-shipley", [
     cfbBatch2Clue("shipley-2009-aa", "I was a consensus first-team All-American and Biletnikoff Award finalist in 2009.", "strong", "accomplishments", 16),
-    cfbBatch2Clue("shipley-2009-records", "In 2009 I set Texas single-season records with 116 receptions and 1,485 receiving yards.", "strong", "production", 20),
-    cfbBatch2Clue("shipley-title-game", "In the national championship game after the 2009 season, I caught 10 passes for 122 yards and two touchdowns against Alabama.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("shipley-2009-records", "In 2009 I set Texas single-season records with 116 receptions and 1,485 receiving yards.", "helpful", "production", 20),
+    cfbBatch2Clue("shipley-title-game", "In the national championship game after the 2009 season, I caught 10 passes for 122 yards and two touchdowns against Alabama.", "helpful", "accomplishments", 18),
   ]],
   ["cfb-tim-brown", [
     cfbBatch2Clue("brown-heisman-receiver", "I won the 1987 Heisman Trophy as a receiver and return specialist at Notre Dame.", "giveaway", "accomplishments", 7),
-    cfbBatch2Clue("brown-msu-returns", "Against Michigan State in 1987, I returned consecutive punts 66 and 71 yards for touchdowns.", "strong", "accomplishments", 17),
+    cfbBatch2Clue("brown-msu-returns", "Against Michigan State in 1987, I returned consecutive punts 66 and 71 yards for touchdowns.", "helpful", "accomplishments", 17),
   ]],
   ["cfb-dwayne-allen", [
     cfbBatch2Clue("allen-consensus-aa", "I was a consensus first-team All-American in 2011.", "strong", "accomplishments", 16),
@@ -3613,20 +3613,22 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-heath-miller", [
     cfbBatch2Clue("miller-unanimous-aa", "I was a unanimous All-American at Virginia in 2004.", "strong", "accomplishments", 16),
-    cfbBatch2Clue("miller-acc-td-record", "I finished my Virginia career with 20 touchdown catches, then the ACC record for a tight end.", "strong", "accomplishments", 19),
+    cfbBatch2Clue("miller-acc-td-record", "I finished my Virginia career with 20 touchdown catches, then the ACC record for a tight end.", "helpful", "accomplishments", 19),
   ]],
   ["cfb-hunter-henry", [
     cfbBatch2Clue("henry-fourth-25", "On fourth-and-25 in overtime at Ole Miss in 2015, I threw the blind backward lateral that kept Arkansas' winning drive alive.", "giveaway", "accomplishments", 8),
     cfbBatch2Clue("henry-mackey", "I won the 2015 John Mackey Award as the nation's top tight end.", "giveaway", "accomplishments", 7),
+    cfbBatch2Clue("henry-career-line", "From 2013 through 2015 at Arkansas, I caught 116 passes for 1,661 yards and nine touchdowns.", "helpful", "production", 18),
+    cfbBatch2Clue("henry-consensus-aa", "I was a consensus first-team All-American in 2015.", "helpful", "accomplishments", 16),
   ]],
   ["cfb-kellen-winslow-ii", [
-    cfbBatch2Clue("winslow-consensus-aa", "I was a consensus first-team All-American and unanimous first-team All-Big East selection in 2003.", "strong", "accomplishments", 16),
-    cfbBatch2Clue("winslow-fiesta", "In the 2002 season's national championship game, I caught 11 passes for 122 yards and a touchdown against Ohio State.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("winslow-consensus-aa", "I was a consensus first-team All-American and unanimous first-team All-Big East selection in 2003.", "helpful", "accomplishments", 16),
+    cfbBatch2Clue("winslow-fiesta", "In the 2002 season's national championship game, I caught 11 passes for 122 yards and a touchdown against Ohio State.", "helpful", "accomplishments", 18),
     cfbBatch2Clue("winslow-mackey", "I won the 2003 John Mackey Award as the nation's top tight end.", "giveaway", "accomplishments", 8),
   ]],
   ["cfb-barrett-jones", [
     cfbBatch2Clue("jones-two-position-awards", "I won the Outland Trophy as a left tackle in 2011 and the Rimington Trophy as a center in 2012.", "giveaway", "accomplishments", 8),
-    cfbBatch2Clue("jones-title-positions", "I started on three Alabama national-title teams while playing right guard, left tackle and center.", "strong", "identity", 17),
+    cfbBatch2Clue("jones-title-positions", "I started on three Alabama national-title teams while playing right guard, left tackle and center.", "helpful", "identity", 17),
   ]],
   ["cfb-ezekiel-elliott", [
     cfbBatch2Clue("elliott-career-yards", "I left Ohio State with 3,961 career rushing yards, the second-most in program history at the time.", "strong", "accomplishments", 18),
@@ -3639,15 +3641,11 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("cooper-2014-honors", "I was a unanimous first-team All-American and SEC Offensive Player of the Year in 2014.", "strong", "accomplishments", 16),
     cfbBatch2Clue("cooper-fourth-pick", "I became the No. 4 overall pick in the 2015 NFL Draft.", "giveaway", "career-path", 9),
   ]],
-  ["cfb-hunter-henry", [
-    cfbBatch2Clue("henry-career-line", "From 2013 through 2015 at Arkansas, I caught 116 passes for 1,661 yards and nine touchdowns.", "strong", "production", 18),
-    cfbBatch2Clue("henry-consensus-aa", "I was a consensus first-team All-American in 2015.", "strong", "accomplishments", 16),
-  ]],
   ["cfb-jake-butt", [
-    cfbBatch2Clue("butt-career-records", "I finished Michigan with tight-end program records of 138 receptions and 1,646 receiving yards.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("butt-career-records", "I finished Michigan with tight-end program records of 138 receptions and 1,646 receiving yards.", "helpful", "accomplishments", 18),
     cfbBatch2Clue("butt-mackey", "I won the 2016 John Mackey Award as the nation's top tight end.", "giveaway", "accomplishments", 8),
     cfbBatch2Clue("butt-two-time-aa", "I was an All-American in both 2015 and 2016 and won Big Ten Tight End of the Year twice.", "strong", "accomplishments", 16),
-    cfbBatch2Clue("butt-career-td", "I caught 11 touchdown passes during my four-year Michigan career.", "strong", "production", 21),
+    cfbBatch2Clue("butt-career-td", "I caught 11 touchdown passes during my four-year Michigan career.", "helpful", "production", 21),
   ]],
 ]);
 
