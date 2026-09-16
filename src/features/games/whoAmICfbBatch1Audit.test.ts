@@ -101,7 +101,7 @@ describe("CFB Who Am I batch 1 calibration", () => {
 
   it("keeps retained identity copy polished after first-person redaction", () => {
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
-    const brokenFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also)\b|\bI\s+to\s+sit\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b/i;
+    const brokenFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also)\b|\bI\s+to\s+sit\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+got\b|\bWhile\s+was\b/i;
     for (const subjectId of CFB_WHO_AM_I_BATCH_1_SUBJECT_IDS) {
       const candidate = candidates.get(subjectId)!;
       for (const clue of candidate.clues) {
