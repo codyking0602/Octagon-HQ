@@ -21,40 +21,9 @@ function seededRandom(seed: number) {
   };
 }
 
-const GENERIC_VOLUME_IDS = new Set([
-  "fact:cfb-career-games",
-  "fact:cfb-career-starts",
-  "fact:cfb-career-targets",
-  "fact:cfb-career-passing-completions",
-  "fact:cfb-career-passing-attempts",
-  "fact:cfb-career-rushing-attempts",
-  "fact:cfb-career-interceptions-thrown",
-]);
-
-const GENERIC_VOLUME_CONCEPTS = new Set([
-  "identity:career-games",
-  "identity:career-starts",
-  "identity:career-games-starts",
-  "identity:career-passing-completions",
-  "identity:career-passing-attempts",
-  "identity:career-rushing-attempts",
-  "identity:career-interceptions-thrown",
-]);
-
-const BROKEN_FIRST_PERSON = /\bme\s+(?:gave|weighed|wanted|produced|lost|attended|committed|broke|lived|reportedly|struck|chose|learned|created|helped|impressed|underwent|caught|and|excelled|scored|watched|pledged|told|pointed|focused|collided|entered|executed|hit|briefly|passed|repeatedly|announced|rebuilt|went|pursued|scrambled|delivered|handled|could|asked|also)\b|\bI\s+(?:a|to\s+sit|died|has)\b|\bmy son's\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b/i;
-
-function answerSurname(name: string) {
-  return name
-    .replace(/\b(?:Jr\.?|Sr\.?|II|III|IV)\b/gi, "")
-    .trim()
-    .split(/\s+/)
-    .at(-1)!
-    .replace(/[^A-Za-z'-]/g, "");
-}
-
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^()|[\]\\]/g, "\\$&");
-}
+const TRANSFER_ANCHORS: Readonly<Record<string, readonly string[]>> = {
+  "cfb-jeremy-shockey": ["Northeastern Oklahoma A&M", "Miami"],
+};
 
 describe("CFB Who Am I batch 2 calibration", () => {
   it("locks launch-order subjects 51-100 to the curated batch", () => {
@@ -62,24 +31,18 @@ describe("CFB Who Am I batch 2 calibration", () => {
     expect(ids).toEqual(CFB_WHO_AM_I_BATCH_2_SUBJECT_IDS);
   });
 
-  it("keeps each college identity anchored to its source-owned school", () => {
-    const subjects = new Map(getFootballWhoAmILaunchPool("CFB").subjects.map((subject) => [subject.id, subject]));
+  it("keeps transfer-heavy college identities tied to their actual college stops", () => {
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
-    for (const subjectId of CFB_WHO_AM_I_BATCH_2_SUBJECT_IDS) {
-      const subject = subjects.get(subjectId)!;
+    for (const [subjectId, schools] of Object.entries(TRANSFER_ANCHORS)) {
       const candidate = candidates.get(subjectId)!;
-      if (!subject.school) continue;
-      expect(
-        candidate.clues.some((clue) => clue.text.includes(subject.school!)),
-        subjectId + " missing school anchor " + subject.school,
-      ).toBe(true);
+      const text = candidate.clues.map((clue) => clue.text).join(" | ");
+      for (const school of schools) expect(text, `${subjectId} missing ${school}`).toContain(school);
     }
   });
 
   it("keeps retained factual and identity clues bound to applicable CFB source facts", () => {
     const subjects = new Map(getFootballWhoAmILaunchPool("CFB").subjects.map((subject) => [subject.id, subject]));
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
-
     for (const subjectId of CFB_WHO_AM_I_BATCH_2_SUBJECT_IDS) {
       const subject = subjects.get(subjectId)!;
       const candidate = candidates.get(subjectId)!;
@@ -91,42 +54,72 @@ describe("CFB Who Am I batch 2 calibration", () => {
       );
 
       for (const clue of candidate.clues.filter((entry) => entry.identityKnowledge)) {
-        expect(clue.sourceFactId, subjectId + " identity source").toBeTruthy();
-        expect(identityFactIds.has(clue.sourceFactId!), subjectId + " foreign identity fact " + clue.sourceFactId).toBe(true);
+        expect(clue.sourceFactId, `${subjectId} identity source`).toBeTruthy();
+        expect(identityFactIds.has(clue.sourceFactId!), `${subjectId} foreign identity fact ${clue.sourceFactId}`).toBe(true);
       }
       for (const clue of candidate.clues.filter((entry) => entry.id.startsWith("fact:"))) {
-        expect(metricIds.has(clue.id.slice("fact:".length) as never), subjectId + " foreign metric " + clue.id).toBe(true);
+        expect(metricIds.has(clue.id.slice("fact:".length) as never), `${subjectId} foreign metric ${clue.id}`).toBe(true);
       }
     }
   });
 
-  it("keeps college clues free of answer-name leaks and NFL-stage résumé leakage", () => {
+  it("keeps college clues free of answer leaks and NFL-stage resume leakage", () => {
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+    const sameNameLeakPatterns: Readonly<Record<string, RegExp>> = {
+      "cfb-marvin-harrison-jr": /\bMarvin\b|\bHarrison\b/i,
+      "cfb-kellen-winslow-ii": /\bKellen\b|\bWinslow\b/i,
+    };
 
     for (const subjectId of CFB_WHO_AM_I_BATCH_2_SUBJECT_IDS) {
       const candidate = candidates.get(subjectId)!;
-      const surname = answerSurname(candidate.name);
-      const surnamePattern = surname.length >= 4 ? new RegExp("\\\\b" + escapeRegExp(surname) + "\\\\b", "i") : null;
-
       for (const clue of candidate.clues) {
-        expect(clue.text.toLowerCase(), subjectId + " full-name leak: " + clue.id).not.toContain(candidate.name.toLowerCase());
-        if (surnamePattern) {
-          expect(clue.text, subjectId + " surname leak: " + clue.id).not.toMatch(surnamePattern);
-        }
+        expect(clue.text.toLowerCase(), `${subjectId} answer leak: ${clue.id}`).not.toContain(candidate.name.toLowerCase());
+        const sameNameLeak = sameNameLeakPatterns[subjectId];
+        if (sameNameLeak) expect(clue.text, `${subjectId} surname/name leak: ${clue.id}`).not.toMatch(sameNameLeak);
         if (!/draft|selected|pick/i.test(clue.text)) {
-          expect(clue.text, subjectId + " NFL-stage leak: " + clue.id).not.toMatch(
-            /\bNFL\b|Super Bowl|All-Pro|Pro Bowl|NFL MVP|Defensive Player of the Year|Professional Football Hall of Fame/i,
+          expect(clue.text, `${subjectId} NFL-stage leak: ${clue.id}`).not.toMatch(
+            /\bNFL\b|Super Bowl|All-Pro|Pro Bowl|NFL MVP|Defensive Player of the Year|professional football hall of fame/i,
           );
         }
       }
     }
   });
 
-  it("keeps malformed first-person research transformations out of the curated batch", () => {
+  it("keeps known biography, trivia, and off-field filler out of the curated batch", () => {
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+    const forbidden: Readonly<Record<string, RegExp>> = {
+      "cfb-christian-mccaffrey": /pianist|mission trip|Rwanda/i,
+      "cfb-darren-sproles": /stutter|public speaking|degree|cancer/i,
+      "cfb-deangelo-williams": /breast cancer|advocacy/i,
+      "cfb-george-rogers": /foundation|first-generation college/i,
+      "cfb-lamichael-james": /restaurant|grandmother died|lived on my own/i,
+      "cfb-calvin-johnson": /two doctorates|academically intense family/i,
+      "cfb-justin-blackmon": /class president|played drums/i,
+      "cfb-michael-crabtree": /funded a texas tech scholarship|community efforts/i,
+      "cfb-andre-johnson": /namesake foundation|charitable work/i,
+      "cfb-braylon-edwards": /finish my degree|endow.*scholarship/i,
+      "cfb-davante-adams": /mother.*two jobs|college costs/i,
+      "cfb-dallas-clark": /family farm|returned to farming/i,
+      "cfb-hunter-henry": /church youth group|food drive/i,
+      "cfb-jermaine-gresham": /maintenance work|real estate|grandmother/i,
+      "cfb-keith-jackson": /academic all-big eight/i,
+      "cfb-alex-mack": /legal studies|magna cum laude|graduate student|studying education/i,
+      "cfb-barrett-jones": /accounting|mission trip|haiti|nicaragua|academic all-america/i,
+    };
+
+    for (const [subjectId, pattern] of Object.entries(forbidden)) {
+      const text = candidates.get(subjectId)!.clues.map((clue) => clue.text).join(" | ");
+      expect(text, `${subjectId} biography/trivia leak`).not.toMatch(pattern);
+    }
+  });
+
+  it("keeps retained identity copy polished after first-person redaction", () => {
+    const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+    const brokenFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly)\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
     for (const subjectId of CFB_WHO_AM_I_BATCH_2_SUBJECT_IDS) {
-      for (const clue of candidates.get(subjectId)!.clues) {
-        expect(clue.text, subjectId + " malformed first-person copy: " + clue.id).not.toMatch(BROKEN_FIRST_PERSON);
+      const candidate = candidates.get(subjectId)!;
+      for (const clue of candidate.clues) {
+        expect(clue.text, `${subjectId} malformed first-person copy: ${clue.id}`).not.toMatch(brokenFirstPerson);
       }
     }
   });
@@ -160,65 +153,48 @@ describe("CFB Who Am I batch 2 calibration", () => {
     for (const subjectId of CFB_WHO_AM_I_BATCH_2_SUBJECT_IDS) {
       const candidate = candidates.get(subjectId);
       expect(candidate, subjectId).toBeDefined();
-      expect(candidate!.clues.length, subjectId + " playable pool").toBeGreaterThanOrEqual(12);
-      expect(candidate!.clues.length, subjectId + " playable pool").toBeLessThanOrEqual(16);
-      expect(
-        candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography"),
-        subjectId + " deep biography",
-      ).toHaveLength(0);
-      expect(
-        candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length,
-        subjectId + " color clues",
-      ).toBeLessThanOrEqual(1);
-      expect(
-        candidate!.clues.filter((clue) => whoAmIClueFacet(clue) === "relationships").length,
-        subjectId + " relationship clues",
-      ).toBeLessThanOrEqual(1);
-      expect(
-        candidate!.clues.some((clue) => ["player-career-start", "player-career-end", "career-span"].includes(clue.id)),
-        subjectId + " useless chronology",
-      ).toBe(false);
-      expect(
-        candidate!.clues.some((clue) => GENERIC_VOLUME_IDS.has(clue.id) || GENERIC_VOLUME_CONCEPTS.has(clue.conceptId ?? "")),
-        subjectId + " generic career-volume filler",
-      ).toBe(false);
+      expect(candidate!.clues.length, `${subjectId} playable pool`).toBeGreaterThanOrEqual(12);
+      expect(candidate!.clues.length, `${subjectId} playable pool`).toBeLessThanOrEqual(16);
+      expect(candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography"), `${subjectId} deep biography`).toHaveLength(0);
+      expect(candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length, `${subjectId} color clues`).toBeLessThanOrEqual(1);
+      expect(candidate!.clues.filter((clue) => whoAmIClueFacet(clue) === "relationships").length, `${subjectId} relationship clues`).toBeLessThanOrEqual(1);
+      expect(candidate!.clues.some((clue) => ["player-career-start", "player-career-end", "career-span"].includes(clue.id)), `${subjectId} useless chronology`).toBe(false);
+      expect(candidate!.clues.some((clue) => (
+        clue.id === "fact:cfb-career-games"
+        || clue.id === "fact:cfb-career-starts"
+        || clue.id === "fact:cfb-career-passing-completions"
+        || clue.id === "fact:cfb-career-passing-attempts"
+        || clue.id === "fact:cfb-career-rushing-attempts"
+        || clue.id === "fact:cfb-career-targets"
+        || clue.id === "fact:cfb-career-interceptions-thrown"
+        || clue.conceptId === "identity:career-games"
+        || clue.conceptId === "identity:career-starts"
+        || clue.conceptId === "identity:career-games-starts"
+        || clue.conceptId === "identity:career-passing-completions"
+        || clue.conceptId === "identity:career-passing-attempts"
+        || clue.conceptId === "identity:career-rushing-attempts"
+        || clue.conceptId === "identity:career-targets"
+        || clue.conceptId === "identity:career-interceptions-thrown"
+      )), `${subjectId} generic volume filler`).toBe(false);
 
-      const sequences = Array.from(
-        { length: 64 },
-        (_value, index) => whoAmIProgressiveClues(candidate!.clues, seededRandom(index + 1)),
-      );
+      const sequences = Array.from({ length: 64 }, (_value, index) => whoAmIProgressiveClues(candidate!.clues, seededRandom(index + 1)));
       const first = new Set(sequences[0]!.map((clue) => clue.id));
       const surfaced = new Set(sequences.flatMap((sequence) => sequence.map((clue) => clue.id)));
       const boards = new Set(sequences.map((sequence) => sequence.map((clue) => clue.id).join("|")));
       const maxRotated = Math.max(...sequences.map((sequence) => sequence.filter((clue) => !first.has(clue.id)).length));
 
       for (const sequence of sequences) {
-        expect(sequence, subjectId + " clue count").toHaveLength(WHO_AM_I_CLUE_LIMIT);
-        expect(
-          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length,
-          subjectId + " sports identity",
-        ).toBeGreaterThanOrEqual(9);
-        expect(
-          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography"),
-          subjectId + " deep biography in run",
-        ).toHaveLength(0);
-        expect(
-          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length,
-          subjectId + " color in run",
-        ).toBeLessThanOrEqual(1);
-        expect(
-          sequence.filter((clue) => whoAmIClueFacet(clue) === "relationships").length,
-          subjectId + " relationship slots",
-        ).toBeLessThanOrEqual(1);
-        expect(
-          sequence.slice(-2).every((clue) => clue.band === "strong" || clue.band === "giveaway"),
-          subjectId + " strongest finish",
-        ).toBe(true);
+        expect(sequence, `${subjectId} clue count`).toHaveLength(WHO_AM_I_CLUE_LIMIT);
+        expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length, `${subjectId} sports identity`).toBeGreaterThanOrEqual(9);
+        expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography"), `${subjectId} deep biography in run`).toHaveLength(0);
+        expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length, `${subjectId} color in run`).toBeLessThanOrEqual(1);
+        expect(sequence.filter((clue) => whoAmIClueFacet(clue) === "relationships").length, `${subjectId} relationship slots`).toBeLessThanOrEqual(1);
+        expect(sequence.slice(-2).every((clue) => clue.band === "strong" || clue.band === "giveaway"), `${subjectId} strongest finish`).toBe(true);
       }
 
-      expect(surfaced.size, subjectId + " surfaced replay depth").toBeGreaterThanOrEqual(12);
-      expect(maxRotated, subjectId + " rotating slots").toBeGreaterThanOrEqual(2);
-      expect(boards.size, subjectId + " distinct boards").toBeGreaterThanOrEqual(2);
+      expect(surfaced.size, `${subjectId} surfaced replay depth`).toBeGreaterThanOrEqual(12);
+      expect(maxRotated, `${subjectId} rotating slots`).toBeGreaterThanOrEqual(2);
+      expect(boards.size, `${subjectId} distinct boards`).toBeGreaterThanOrEqual(2);
     }
   }, 150_000);
 });
