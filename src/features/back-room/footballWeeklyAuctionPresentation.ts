@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import {
   cfbBestTeamSeasonPresentation,
   cfbBestTeamSeasonVisualIdentity,
+  cfbBestTeamSchoolVisualIdentity,
 } from "./cfbBestTeamSeasonPresentation";
 import { footballCfbTeamMediaId } from "./footballMediaIdentity";
 import { footballTeamAssets } from "./footballSubjectAssets";
@@ -180,6 +181,103 @@ const WILDCARD_PRESENTATION: Readonly<Record<string, Omit<FootballWeeklyAuctionT
   "weekly-cfb-boise-state-2024": { primary: "#0033A0", primaryRgb: "0, 51, 160", secondary: "#D64309", logoSrc: "https://a.espncdn.com/i/teamlogos/ncaa/500/68.png", resume: "12–2 · No. 8 Final AP · Lost Fiesta Bowl", sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/boise-state/2024.html" },
 });
 
+
+type FootballWeeklyAuctionExpansionPresentation = {
+  resume: string;
+  finalApRank: number;
+};
+
+const EXPANSION_PRESENTATION: Readonly<Record<string, FootballWeeklyAuctionExpansionPresentation>> = Object.freeze({
+  "weekly-cfb-florida-2001": { resume: "10–2 · Orange Bowl Champion", finalApRank: 3 },
+  "weekly-cfb-tennessee-2001": { resume: "11–2 · Citrus Bowl Champion", finalApRank: 4 },
+  "weekly-cfb-texas-2001": { resume: "11–2 · Holiday Bowl Champion", finalApRank: 5 },
+  "weekly-cfb-oklahoma-2002": { resume: "12–2 · Big 12 Champion · Rose Bowl Champion", finalApRank: 5 },
+  "weekly-cfb-georgia-2002": { resume: "13–1 · SEC Champion · Sugar Bowl Champion", finalApRank: 3 },
+  "weekly-cfb-oklahoma-2003": { resume: "12–2 · National Runner-Up", finalApRank: 3 },
+  "weekly-cfb-georgia-2003": { resume: "11–3 · Capital One Bowl Champion", finalApRank: 7 },
+  "weekly-cfb-oklahoma-2004": { resume: "12–1 · Big 12 Champion · National Runner-Up", finalApRank: 3 },
+  "weekly-cfb-lsu-2006": { resume: "11–2 · Sugar Bowl Champion", finalApRank: 3 },
+  "weekly-cfb-florida-2007": { resume: "9–4 · Capital One Bowl Appearance", finalApRank: 13 },
+  "weekly-cfb-texas-2008": { resume: "12–1 · Fiesta Bowl Champion", finalApRank: 4 },
+  "weekly-cfb-florida-2009": { resume: "13–1 · Sugar Bowl Champion", finalApRank: 3 },
+  "weekly-cfb-texas-2009": { resume: "13–1 · Big 12 Champion · National Runner-Up", finalApRank: 2 },
+  "weekly-cfb-alabama-2010": { resume: "10–3 · Capital One Bowl Champion", finalApRank: 10 },
+  "weekly-cfb-oklahoma-2011": { resume: "10–3 · Insight Bowl Champion", finalApRank: 16 },
+  "weekly-cfb-georgia-2012": { resume: "12–2 · Capital One Bowl Champion", finalApRank: 5 },
+  "weekly-cfb-florida-2012": { resume: "11–2 · Sugar Bowl Appearance", finalApRank: 9 },
+  "weekly-cfb-alabama-2013": { resume: "11–2 · Sugar Bowl Appearance", finalApRank: 7 },
+  "weekly-cfb-alabama-2014": { resume: "12–2 · SEC Champion · CFP Semifinalist", finalApRank: 4 },
+  "weekly-cfb-georgia-2014": { resume: "10–3 · Belk Bowl Champion", finalApRank: 9 },
+  "weekly-cfb-oklahoma-2015": { resume: "11–2 · Big 12 Champion · CFP Semifinalist", finalApRank: 5 },
+  "weekly-cfb-alabama-2017": { resume: "13–1 · National Champion", finalApRank: 1 },
+  "weekly-cfb-alabama-2018": { resume: "14–1 · SEC Champion · National Runner-Up", finalApRank: 2 },
+  "weekly-cfb-georgia-2018": { resume: "11–3 · Sugar Bowl Appearance", finalApRank: 7 },
+  "weekly-cfb-oklahoma-2018": { resume: "12–2 · Big 12 Champion · CFP Semifinalist", finalApRank: 4 },
+  "weekly-cfb-alabama-2019": { resume: "11–2 · Citrus Bowl Champion", finalApRank: 8 },
+  "weekly-cfb-georgia-2019": { resume: "12–2 · Sugar Bowl Champion", finalApRank: 4 },
+  "weekly-cfb-georgia-2020": { resume: "8–2 · Peach Bowl Champion", finalApRank: 7 },
+  "weekly-cfb-alabama-2021": { resume: "13–2 · SEC Champion · National Runner-Up", finalApRank: 2 },
+  "weekly-cfb-texas-2024": { resume: "13–3 · CFP Semifinalist", finalApRank: 4 },
+  "weekly-cfb-ole-miss-2024": { resume: "10–3 · Gator Bowl Champion", finalApRank: 11 },
+  "weekly-cfb-nebraska-2000": { resume: "10–2 · Alamo Bowl Champion", finalApRank: 8 },
+  "weekly-cfb-oregon-2001": { resume: "11–1 · Pac-10 Champion · Fiesta Bowl Champion", finalApRank: 2 },
+  "weekly-cfb-usc-2002": { resume: "11–2 · Pac-10 Co-Champion · Orange Bowl Champion", finalApRank: 4 },
+  "weekly-cfb-ohio-state-2005": { resume: "10–2 · Fiesta Bowl Champion", finalApRank: 4 },
+  "weekly-cfb-usc-2006": { resume: "11–2 · Rose Bowl Champion", finalApRank: 4 },
+  "weekly-cfb-usc-2007": { resume: "11–2 · Rose Bowl Champion", finalApRank: 3 },
+  "weekly-cfb-oregon-2007": { resume: "9–4 · Sun Bowl Champion", finalApRank: 23 },
+  "weekly-cfb-penn-state-2008": { resume: "11–2 · Big Ten Co-Champion · Rose Bowl Appearance", finalApRank: 8 },
+  "weekly-cfb-ohio-state-2008": { resume: "10–3 · Big Ten Co-Champion · Fiesta Bowl Appearance", finalApRank: 9 },
+  "weekly-cfb-penn-state-2009": { resume: "11–2 · Capital One Bowl Champion", finalApRank: 9 },
+  "weekly-cfb-oregon-2011": { resume: "12–2 · Pac-12 Champion · Rose Bowl Champion", finalApRank: 4 },
+  "weekly-cfb-oregon-2013": { resume: "11–2 · Alamo Bowl Champion", finalApRank: 9 },
+  "weekly-cfb-ohio-state-2015": { resume: "12–1 · Fiesta Bowl Champion", finalApRank: 4 },
+  "weekly-cfb-ohio-state-2016": { resume: "11–2 · CFP Semifinalist", finalApRank: 6 },
+  "weekly-cfb-michigan-2016": { resume: "10–3 · Orange Bowl Appearance", finalApRank: 10 },
+  "weekly-cfb-ohio-state-2017": { resume: "12–2 · Big Ten Champion · Cotton Bowl Champion", finalApRank: 5 },
+  "weekly-cfb-penn-state-2017": { resume: "11–2 · Fiesta Bowl Champion", finalApRank: 8 },
+  "weekly-cfb-ohio-state-2018": { resume: "13–1 · Big Ten Champion · Rose Bowl Champion", finalApRank: 3 },
+  "weekly-cfb-michigan-2018": { resume: "10–3 · Peach Bowl Appearance", finalApRank: 14 },
+  "weekly-cfb-wisconsin-2019": { resume: "10–4 · Rose Bowl Appearance", finalApRank: 11 },
+  "weekly-cfb-ohio-state-2021": { resume: "11–2 · Rose Bowl Champion", finalApRank: 6 },
+  "weekly-cfb-ohio-state-2022": { resume: "11–2 · CFP Semifinalist", finalApRank: 4 },
+  "weekly-cfb-penn-state-2022": { resume: "11–2 · Rose Bowl Champion", finalApRank: 7 },
+  "weekly-cfb-ohio-state-2023": { resume: "11–2 · Cotton Bowl Appearance", finalApRank: 10 },
+  "weekly-cfb-oregon-2023": { resume: "12–2 · Fiesta Bowl Champion", finalApRank: 6 },
+  "weekly-cfb-oregon-2025": { resume: "13–2 · CFP Semifinalist", finalApRank: 4 },
+  "weekly-cfb-ohio-state-2025": { resume: "12–2 · CFP Quarterfinalist", finalApRank: 5 },
+  "weekly-cfb-tcu-2009": { resume: "12–1 · Mountain West Champion · Fiesta Bowl Appearance", finalApRank: 6 },
+  "weekly-cfb-byu-2009": { resume: "11–2 · Las Vegas Bowl Champion", finalApRank: 12 },
+  "weekly-cfb-oklahoma-state-2010": { resume: "11–2 · Alamo Bowl Champion", finalApRank: 13 },
+  "weekly-cfb-baylor-2015": { resume: "10–3 · Russell Athletic Bowl Champion", finalApRank: 13 },
+  "weekly-cfb-tcu-2015": { resume: "11–2 · Alamo Bowl Champion", finalApRank: 7 },
+  "weekly-cfb-west-virginia-2016": { resume: "10–3 · Russell Athletic Bowl Appearance", finalApRank: 18 },
+  "weekly-cfb-tcu-2017": { resume: "11–3 · Alamo Bowl Champion", finalApRank: 9 },
+  "weekly-cfb-ucf-2018": { resume: "12–1 · AAC Champion · Fiesta Bowl Appearance", finalApRank: 11 },
+  "weekly-cfb-cincinnati-2020": { resume: "9–1 · AAC Champion · Peach Bowl Appearance", finalApRank: 8 },
+  "weekly-cfb-byu-2021": { resume: "10–3 · Independence Bowl Appearance", finalApRank: 19 },
+  "weekly-cfb-kansas-2023": { resume: "9–4 · Guaranteed Rate Bowl Champion", finalApRank: 23 },
+  "weekly-cfb-colorado-2024": { resume: "9–4 · Alamo Bowl Appearance", finalApRank: 25 },
+  "weekly-cfb-virginia-tech-2000": { resume: "11–1 · Gator Bowl Champion", finalApRank: 6 },
+  "weekly-cfb-florida-state-2003": { resume: "10–3 · ACC Champion · Orange Bowl Appearance", finalApRank: 11 },
+  "weekly-cfb-virginia-tech-2006": { resume: "10–3 · Chick-fil-A Bowl Appearance", finalApRank: 19 },
+  "weekly-cfb-virginia-tech-2009": { resume: "10–3 · Chick-fil-A Bowl Champion", finalApRank: 10 },
+  "weekly-cfb-stanford-2013": { resume: "11–3 · Pac-12 Champion · Rose Bowl Appearance", finalApRank: 11 },
+  "weekly-cfb-clemson-2017": { resume: "12–2 · ACC Champion · CFP Semifinalist", finalApRank: 4 },
+  "weekly-cfb-clemson-2020": { resume: "10–2 · ACC Champion · CFP Semifinalist", finalApRank: 3 },
+  "weekly-cfb-north-carolina-2020": { resume: "8–4 · Orange Bowl Appearance", finalApRank: 18 },
+  "weekly-cfb-clemson-2022": { resume: "11–3 · ACC Champion · Orange Bowl Appearance", finalApRank: 13 },
+  "weekly-cfb-louisville-2023": { resume: "10–4 · ACC Runner-Up · Holiday Bowl Appearance", finalApRank: 19 },
+  "weekly-cfb-miami-2024": { resume: "10–3 · Pop-Tarts Bowl Appearance", finalApRank: 18 },
+  "weekly-cfb-notre-dame-2005": { resume: "9–3 · Fiesta Bowl Appearance", finalApRank: 9 },
+  "weekly-cfb-notre-dame-2006": { resume: "10–3 · Sugar Bowl Appearance", finalApRank: 17 },
+  "weekly-cfb-notre-dame-2015": { resume: "10–3 · Fiesta Bowl Appearance", finalApRank: 11 },
+  "weekly-cfb-notre-dame-2021": { resume: "11–2 · Fiesta Bowl Appearance", finalApRank: 8 },
+  "weekly-cfb-notre-dame-2022": { resume: "9–4 · Gator Bowl Champion", finalApRank: 18 },
+  "weekly-cfb-notre-dame-2023": { resume: "10–3 · Sun Bowl Champion", finalApRank: 14 },
+  "weekly-cfb-notre-dame-2025": { resume: "10–2 · No Bowl", finalApRank: 10 },
+});
+
 const SPORTS_REFERENCE_SLUGS: Readonly<Record<string, string>> = Object.freeze({
   "BYU": "brigham-young",
   "LSU": "louisiana-state",
@@ -216,14 +314,16 @@ export function footballWeeklyAuctionTeamIdentity(
 
   const season = cfbBestTeamSeasonPresentation(seasonReference);
   const visual = cfbBestTeamSeasonVisualIdentity(seasonReference);
+  const schoolVisual = cfbBestTeamSchoolVisualIdentity(school);
+  const expansion = EXPANSION_PRESENTATION[seasonReference];
   const fallbackAsset = footballTeamAssets[footballCfbTeamMediaId(school)];
   return {
-    primary: visual?.primary ?? "#27445A",
-    primaryRgb: visual?.primaryRgb ?? "39, 68, 90",
-    secondary: visual?.secondary ?? "#FFFFFF",
-    logoSrc: visual?.logoSrc ?? fallbackAsset?.src ?? null,
-    resume: season?.summary ?? school + " · " + seasonYear,
-    finalApRank: FINAL_AP_RANK_BY_SEASON_REFERENCE[seasonReference] ?? null,
+    primary: visual?.primary ?? schoolVisual?.primary ?? "#27445A",
+    primaryRgb: visual?.primaryRgb ?? schoolVisual?.primaryRgb ?? "39, 68, 90",
+    secondary: visual?.secondary ?? schoolVisual?.secondary ?? "#FFFFFF",
+    logoSrc: visual?.logoSrc ?? schoolVisual?.logoSrc ?? fallbackAsset?.src ?? null,
+    resume: season?.summary ?? expansion?.resume ?? school + " · " + seasonYear,
+    finalApRank: FINAL_AP_RANK_BY_SEASON_REFERENCE[seasonReference] ?? expansion?.finalApRank ?? null,
     sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/" + schoolSlug(school) + "/" + seasonYear + ".html",
   };
 }
@@ -237,3 +337,4 @@ export function footballWeeklyAuctionTeamStyle(identity: FootballWeeklyAuctionTe
 }
 
 export const FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT = Object.keys(WILDCARD_PRESENTATION).length;
+export const FOOTBALL_WEEKLY_AUCTION_EXPANSION_PRESENTATION_COUNT = Object.keys(EXPANSION_PRESENTATION).length;
