@@ -4904,6 +4904,15 @@ function shouldSuppressCfbBatch4Clue(subject: FootballSubjectProfile, clue: WhoA
     subject.id === "cfb-kyle-hamilton"
     && (clue.id === "career-path" || clue.id === "affiliation:florida-state" || clue.id === "identity:pr9-cfb-kyle-hamilton--first-notre-dame-stadium-snap-pick-six")
   ) return true;
+  if (
+    subject.id === "brian-kelly-cfb"
+    && (
+      clue.id === "affiliation:central-michigan"
+      || clue.id === "affiliation:cincinnati"
+      || clue.id === "affiliation:lsu"
+      || clue.id === "historical-conference:independent"
+    )
+  ) return true;
   if (cfbBatch4SuppressedClueIds.has(clue.id)) return true;
   if (clue.id.startsWith("fact:nfl-")) return true;
   if (
