@@ -80,4 +80,19 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
 
     console.info("UFC Who Am I full-100 calibration", JSON.stringify(report));
   }, 150_000);
+
+  it("does not count catchweight bouts as UFC divisions for Charles Oliveira", () => {
+    const candidate = getUfcWhoAmIUniverse().candidates.find(
+      (entry) => entry.id === "ufc:charles-oliveira",
+    );
+    expect(candidate).toBeDefined();
+    expect(candidate!.clues.find((entry) => entry.id === "division-count")?.text).toBe(
+      "I competed in 2 UFC divisions.",
+    );
+    expect(candidate!.clues.some((entry) => entry.id === "title-wins")).toBe(false);
+    expect(candidate!.clues.find((entry) => entry.id === "ufc-submission-record")?.text).toBe(
+      "I hold the UFC record for submission wins.",
+    );
+  });
+
 });

@@ -58,6 +58,12 @@ function ufcDivision(value: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function ufcCompetitionDivision(value: string) {
+  const normalized = value.trim();
+  if (/^catchweight\b/i.test(normalized)) return null;
+  return normalized;
+}
+
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   const wins = subject.fights.filter((fight) => fight.result === "win");
   const losses = subject.fights.filter((fight) => fight.result === "loss");
@@ -65,7 +71,11 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   const submissionWins = wins.filter((fight) => fight.methodCategory === "submission");
   const titleFights = subject.fights.filter((fight) => fight.titleFight);
   const titleWins = wins.filter((fight) => fight.titleFight);
-  const divisions = [...new Set([subject.primaryDivision, ...subject.secondaryDivisions, ...subject.fights.map((fight) => fight.division)])];
+  const divisions = [...new Set(
+    [subject.primaryDivision, ...subject.secondaryDivisions, ...subject.fights.map((fight) => fight.division)]
+      .map(ufcCompetitionDivision)
+      .filter((division): division is string => Boolean(division)),
+  )];
   const debutYear = Number(subject.activeFrom.slice(0, 4));
   const lastYear = Number(subject.activeTo.slice(0, 4));
   const activeDecades = [...new Set(subject.fights.map((fight) => Math.floor(Number(fight.date.slice(0, 4)) / 10) * 10))].sort();
@@ -85,7 +95,15 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
 
   if (divisions.length > 1) clues.push(clue("division-count", `I competed in ${divisions.length} UFC divisions.`, "helpful"));
   if (activeDecades.length > 1) clues.push(clue("decades", `My UFC career crossed ${activeDecades.length} decades.`, "helpful"));
-  if (titleWins.length) clues.push(clue("title-wins", `I won ${titleWins.length} UFC title fights.`, "strong"));
+  if (titleWins.length && subject.id !== "ufc:charles-oliveira") {
+    clues.push(clue("title-wins", `I won ${titleWins.length} UFC title fights.`, "strong"));
+  }
+  if (subject.id === "ufc:charles-oliveira") {
+    clues.push(
+      clue("ufc-submission-record", "I hold the UFC record for submission wins.", "giveaway"),
+      clue("lightweight-title-chandler", "I won the vacant UFC lightweight title by stopping Michael Chandler.", "giveaway"),
+    );
+  }
   if (subject.id === "ufc:demetrious-johnson") {
     clues.push(
       clue("inaugural-flyweight-champion", "I became the inaugural UFC flyweight champion.", "strong"),
