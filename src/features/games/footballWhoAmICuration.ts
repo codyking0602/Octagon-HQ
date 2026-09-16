@@ -3892,7 +3892,7 @@ const cfbBatch3SuppressedIdentityConcepts = new Set([
   "identity:cfb-manti-teo--hawaiian-elder-respect-leadership",
   "identity:cfb-manti-teo--declan-sullivan-response",
   "identity:cfb-manti-teo--catfishing-hoax",
-  "identity:pr8-cfb-manti-teo--eagle-scout-service",
+  "identity:cfb-manti-teo--eagle-scout-service",
   "identity:montezuma-rural-roots",
   "identity:montezuma-youth-camp",
   "identity:michael-phelps-swim-training",
