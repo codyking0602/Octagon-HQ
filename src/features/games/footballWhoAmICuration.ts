@@ -3508,7 +3508,7 @@ const cfbBatch2IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
   }],
   ["cfb-kellen-winslow-ii:identity:cfb-kellen-winslow-ii--miami-receiver-to-tight-end", {
     text: "I began my Miami career at wide receiver before moving to tight end.",
-    band: "strong",
+    band: "helpful",
     facet: "career-path",
     revealPriority: 20,
   }],
@@ -3583,6 +3583,8 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("pace-heisman-fourth", "As an offensive tackle, I finished fourth in the 1996 Heisman Trophy voting.", "giveaway", "accomplishments", 9),
     cfbBatch2Clue("pace-two-aa", "I was a first-team All-American at Ohio State in both 1995 and 1996.", "helpful", "accomplishments", 17),
     cfbBatch2Clue("pace-big-ten-mvp", "I was named the Big Ten's most valuable player in 1996 as an offensive tackle.", "helpful", "accomplishments", 18),
+    cfbBatch2Clue("pace-pancakes", "My junior year became famous for the pancake block, with Ohio State crediting me with 80 of them.", "helpful", "style", 20),
+    cfbBatch2Clue("pace-no-sacks", "I did not allow a sack in either of my final two Ohio State seasons.", "helpful", "style", 22),
   ]],
   ["cfb-darren-sproles", [
     cfbBatch2Clue("sproles-2003-aa", "I was a first-team All-American in 2003 as Kansas State won the Big 12 championship.", "strong", "accomplishments", 18),
@@ -3596,6 +3598,8 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("jackson-return-aa", "I was a first-team All-American punt returner in 2006 after leading the nation at 18.2 yards per return.", "helpful", "accomplishments", 17),
     cfbBatch2Clue("jackson-randy-moss", "I won the inaugural Randy Moss Award as the nation's top return specialist in 2006.", "strong", "accomplishments", 18),
     cfbBatch2Clue("jackson-four-pr-td", "I returned four punts for touchdowns in 2006, setting Cal and Pac-10 single-season records.", "helpful", "production", 20),
+    cfbBatch2Clue("jackson-2005-bowl", "As a freshman in the 2005 Las Vegas Bowl, I caught six passes for 130 yards and two touchdowns against BYU.", "helpful", "production", 23),
+    cfbBatch2Clue("jackson-first-touch", "My first college reception was a 31-yard touchdown, and my first punt return in that same opener went 49 yards for another score.", "helpful", "style", 21),
   ]],
   ["cfb-jordan-shipley", [
     cfbBatch2Clue("shipley-2009-aa", "I was a consensus first-team All-American and Biletnikoff Award finalist in 2009.", "strong", "accomplishments", 16),
@@ -3605,6 +3609,8 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-tim-brown", [
     cfbBatch2Clue("brown-heisman-receiver", "I won the 1987 Heisman Trophy as a receiver and return specialist at Notre Dame.", "giveaway", "accomplishments", 7),
     cfbBatch2Clue("brown-msu-returns", "Against Michigan State in 1987, I returned consecutive punts 66 and 71 yards for touchdowns.", "helpful", "accomplishments", 17),
+    cfbBatch2Clue("brown-1986-all-purpose", "As a junior in 1986, I set a Notre Dame single-season record with 1,937 all-purpose yards.", "helpful", "production", 22),
+    cfbBatch2Clue("brown-six-return-td", "Across my Notre Dame career, I scored six return touchdowns: three on punts and three on kickoffs.", "helpful", "style", 20),
   ]],
   ["cfb-dwayne-allen", [
     cfbBatch2Clue("allen-consensus-aa", "I was a consensus first-team All-American in 2011.", "strong", "accomplishments", 16),
@@ -3636,9 +3642,9 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("elliott-2015-big-ten", "I was the Big Ten Offensive Player of the Year and Running Back of the Year in 2015.", "strong", "accomplishments", 17),
   ]],
   ["cfb-amari-cooper", [
-    cfbBatch2Clue("cooper-career-line", "Across three Alabama seasons from 2012 through 2014, I caught 228 passes for 3,463 yards and 31 touchdowns.", "strong", "production", 18),
+    cfbBatch2Clue("cooper-career-line", "Across three Alabama seasons from 2012 through 2014, I caught 228 passes for 3,463 yards and 31 touchdowns.", "helpful", "production", 18),
     cfbBatch2Clue("cooper-biletnikoff", "I won the 2014 Biletnikoff Award and finished third in Heisman Trophy voting.", "giveaway", "accomplishments", 8),
-    cfbBatch2Clue("cooper-2014-honors", "I was a unanimous first-team All-American and SEC Offensive Player of the Year in 2014.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("cooper-2014-honors", "I was a unanimous first-team All-American and SEC Offensive Player of the Year in 2014.", "helpful", "accomplishments", 16),
     cfbBatch2Clue("cooper-fourth-pick", "I became the No. 4 overall pick in the 2015 NFL Draft.", "giveaway", "career-path", 9),
   ]],
   ["cfb-jake-butt", [
