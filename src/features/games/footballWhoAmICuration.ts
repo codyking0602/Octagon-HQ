@@ -4647,6 +4647,10 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-kyle-hamilton", [
     cfbBatch4Clue("hamilton-first-stadium-snap", "On my first defensive snap in Notre Dame Stadium, I returned an interception for a touchdown against New Mexico.", "strong", "accomplishments", 15),
+    cfbBatch4Clue("hamilton-four-freshman-picks", "As a Notre Dame freshman in 2019, I made four interceptions, one of only four FBS freshmen with at least four that season.", "strong", "production", 16),
+    cfbBatch4Clue("hamilton-2020-tackle-leader", "I led Notre Dame with 63 tackles in 11 games during the 2020 season and earned first-team All-ACC honors.", "strong", "production", 14),
+    cfbBatch4Clue("hamilton-two-picks-fsu", "I opened the 2021 season with two interceptions in Notre Dame's overtime win at Florida State.", "strong", "accomplishments", 17),
+    cfbBatch4Clue("hamilton-career-eight-picks", "Across three seasons at Notre Dame, I totaled 138 tackles and eight interceptions.", "strong", "production", 18),
   ]],
   ["cfb-travis-hunter", [
     cfbBatch4Clue("hunter-jackson-state-colorado", "I played one season at Jackson State before transferring to Colorado.", "giveaway", "career-path", 7),
@@ -4875,6 +4879,10 @@ function isCfbBatch4NflStageLeak(clue: WhoAmIClue) {
 }
 
 function shouldSuppressCfbBatch4Clue(subject: FootballSubjectProfile, clue: WhoAmIClue) {
+  if (
+    subject.id === "cfb-kyle-hamilton"
+    && (clue.id === "career-path" || clue.id === "affiliation:florida-state" || clue.id === "identity:pr9-cfb-kyle-hamilton--first-notre-dame-stadium-snap-pick-six")
+  ) return true;
   if (cfbBatch4SuppressedClueIds.has(clue.id)) return true;
   if (clue.id.startsWith("fact:nfl-")) return true;
   if (
