@@ -20,6 +20,20 @@ function sequenceKey(ids: readonly string[]) {
 }
 
 describe("UFC Who Am I calibration full 100-fighter population", () => {
+
+  it("treats catchweight bouts as catchweights, not separate UFC divisions", () => {
+    const candidate = getUfcWhoAmIUniverse().candidates.find(
+      (entry) => entry.id === "ufc:charles-oliveira",
+    );
+    expect(candidate).toBeDefined();
+
+    const divisionCount = candidate!.clues.find((clue) => clue.id === "division-count");
+    expect(divisionCount?.text).toBe("I competed in 2 UFC divisions.");
+    expect(candidate!.clues.some((clue) => /9 UFC divisions/i.test(clue.text))).toBe(false);
+    expect(candidate!.clues.some((clue) => clue.id === "ufc-submission-record")).toBe(true);
+    expect(candidate!.clues.some((clue) => clue.id === "title-wins")).toBe(false);
+  });
+
   it("keeps the playable pool sports-first while preserving real replay depth", () => {
     const universe = getUfcWhoAmIUniverse();
     const candidateById = new Map(universe.candidates.map((candidate) => [candidate.id, candidate]));
