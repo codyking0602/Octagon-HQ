@@ -744,6 +744,13 @@ if (!charlesOliveiraBaseline) {
 
 const charlesOliveira = {
   ...charlesOliveiraBaseline,
+  facts: {
+    ...charlesOliveiraBaseline.facts,
+    identity: {
+      ...charlesOliveiraBaseline.facts.identity,
+      secondaryDivisions: ["Featherweight"],
+    },
+  },
   presentation: {
     ...charlesOliveiraBaseline.presentation,
     oneLiner:
