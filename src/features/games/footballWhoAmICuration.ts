@@ -1931,8 +1931,8 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["nfl-harry-carson", [
     batch4Clue("carson-scsu", "I played college football at South Carolina State.", "helpful", "background"),
     batch4Clue("carson-fourth-round", "The Giants selected me in the fourth round of the 1976 NFL Draft.", "helpful", "career-path"),
-    batch4Clue("carson-giants-only", "I spent all 13 of my NFL seasons with the New York Giants.", "giveaway", "career-path", 10),
-    batch4Clue("carson-lt-banks", "I formed a famous Giants linebacker trio with Lawrence Taylor and Carl Banks.", "giveaway", "role", 9),
+    batch4Clue("carson-giants-only", "I spent all 13 of my NFL seasons with the New York Giants.", "strong", "career-path", 12),
+    batch4Clue("carson-lt-banks", "I formed a famous Giants linebacker trio with Lawrence Taylor and Carl Banks.", "strong", "role", 12),
     batch4Clue("carson-hof", "I was elected to the Pro Football Hall of Fame in 2006.", "strong", "accomplishments"),
     batch4Clue("carson-53", "No. 53 became my signature number with the Giants.", "helpful", "identity"),
   ]],
@@ -2107,14 +2107,13 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("sharper-five-pb", "I was selected to five Pro Bowls.", "strong", "accomplishments"),
     batch4Clue("sharper-sb44", "I won Super Bowl XLIV in my first season with New Orleans.", "giveaway", "accomplishments", 9),
     batch4Clue("sharper-qb-safety", "I arrived at college as a quarterback prospect before becoming a safety.", "helpful", "role"),
-    batch4Clue("sharper-jamie", "My older brother Jamie also entered the NFL in 1997 as a second-round pick.", "helpful", "relationships"),
     batch4Clue("sharper-11-pick-sixes", "I returned 11 interceptions for touchdowns, second-most in NFL history when I retired.", "strong", "accomplishments"),
     batch4Clue("sharper-2009-return-record", "In 2009 I set an NFL single-season record with 376 interception-return yards.", "strong", "accomplishments"),
   ]],
   ["nfl-deangelo-hall", [
     batch4Clue("hall-vt", "I played college football at Virginia Tech.", "helpful", "background"),
     batch4Clue("hall-eighth", "Atlanta selected me No. 8 overall in the 2004 NFL Draft.", "strong", "career-path"),
-    batch4Clue("hall-path", "I played for Atlanta, Oakland and Washington.", "strong", "career-path"),
+    batch4Clue("hall-path", "I played for Atlanta, Oakland and Washington.", "helpful", "career-path"),
     batch4Clue("hall-three-pb", "I was selected to three Pro Bowls.", "helpful", "accomplishments"),
     batch4Clue("hall-four-int", "I tied an NFL single-game record with four interceptions against Chicago in 2010.", "giveaway", "accomplishments", 8),
     batch4Clue("hall-two-way-vt", "Virginia Tech used me at wide receiver as well as defensive back.", "helpful", "role"),
@@ -2209,13 +2208,13 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("parcells-pats-sb31", "I later took New England to Super Bowl XXXI.", "helpful", "career-path"),
   ]],
   ["bill-walsh", [
-    batch4Clue("walsh-49ers", "San Francisco was my only NFL head-coaching job.", "giveaway", "career-path", 10),
+    batch4Clue("walsh-49ers", "San Francisco was my only NFL head-coaching job.", "strong", "career-path", 12),
     batch4Clue("walsh-three-rings", "I won Super Bowls XVI, XIX and XXIII with the 49ers.", "giveaway", "accomplishments", 8),
     batch4Clue("walsh-west-coast", "The passing system associated with me became known as the West Coast offense.", "giveaway", "style", 9),
     batch4Clue("walsh-montana", "Joe Montana became the quarterback most closely associated with my offense in San Francisco.", "helpful", "career-path"),
     batch4Clue("walsh-hof", "I was elected to the Pro Football Hall of Fame in 1993.", "strong", "accomplishments"),
     batch4Clue("walsh-montana-draft", "I selected Joe Montana in the third round of the 1979 NFL Draft.", "strong", "career-path"),
-    batch4Clue("walsh-two-coy", "I was AP NFL Coach of the Year in 1981 and 1984.", "strong", "accomplishments"),
+    batch4Clue("walsh-two-coy", "I was AP NFL Coach of the Year in 1981 and 1984.", "helpful", "accomplishments"),
   ]],
   ["chuck-noll", [
     batch4Clue("noll-steelers-only", "Pittsburgh was my only NFL head-coaching job.", "giveaway", "career-path", 10),
@@ -2228,13 +2227,13 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("noll-colts-dc", "Before Pittsburgh hired me, I coordinated Baltimore's defense under Don Shula.", "strong", "career-path"),
   ]],
   ["don-shula", [
-    batch4Clue("shula-colts-dolphins", "I was head coach of the Baltimore Colts before spending 26 seasons with the Miami Dolphins.", "strong", "career-path"),
-    batch4Clue("shula-347", "I retired with an NFL-record 347 total head-coaching victories.", "giveaway", "accomplishments", 9),
+    batch4Clue("shula-colts-dolphins", "I was head coach of the Baltimore Colts before spending 26 seasons with the Miami Dolphins.", "helpful", "career-path"),
+    batch4Clue("shula-347", "I retired with an NFL-record 347 total head-coaching victories.", "strong", "accomplishments", 14),
     batch4Clue("shula-perfect", "I coached the 1972 Dolphins to the NFL's only perfect season.", "giveaway", "accomplishments", 8),
     batch4Clue("shula-two-rings", "I won back-to-back Super Bowls VII and VIII with Miami.", "giveaway", "accomplishments", 8),
     batch4Clue("shula-six-sb", "I coached in six Super Bowls across Baltimore and Miami.", "strong", "accomplishments"),
     batch4Clue("shula-hof", "I was elected to the Pro Football Hall of Fame in 1997.", "strong", "accomplishments"),
-    batch4Clue("shula-sb3", "Before Miami, I led Baltimore to Super Bowl III.", "strong", "career-path"),
+    batch4Clue("shula-sb3", "Before Miami, I led Baltimore to Super Bowl III.", "helpful", "career-path"),
   ]],
   ["nfl-earl-curly-lambeau", [
     batch4Clue("lambeau-founder", "I helped found the Green Bay Packers and served as player, captain and coach in the club's early years.", "giveaway", "career-path", 9),
@@ -2270,9 +2269,9 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["joe-gibbs", [
     batch4Clue("gibbs-washington", "Both of my NFL head-coaching stints came with Washington.", "giveaway", "career-path", 10),
     batch4Clue("gibbs-three-rings", "I won three Super Bowls with three different starting quarterbacks.", "giveaway", "accomplishments", 8),
-    batch4Clue("gibbs-qbs", "Joe Theismann, Doug Williams and Mark Rypien each quarterbacked one of my Super Bowl champions.", "giveaway", "relationships", 9),
-    batch4Clue("gibbs-hogs", "My championship teams became closely associated with the offensive line nicknamed 'The Hogs.'", "giveaway", "style", 9),
-    batch4Clue("gibbs-nascar", "Between my two NFL coaching stints, I built a championship NASCAR organization that carried my name.", "giveaway", "career-path", 8),
+    batch4Clue("gibbs-qbs", "Joe Theismann, Doug Williams and Mark Rypien each quarterbacked one of my Super Bowl champions.", "strong", "relationships", 14),
+    batch4Clue("gibbs-hogs", "My championship teams became closely associated with the offensive line nicknamed 'The Hogs.'", "strong", "style", 14),
+    batch4Clue("gibbs-nascar", "Between my two NFL coaching stints, I built a championship NASCAR organization that carried my name.", "helpful", "career-path", 18),
     batch4Clue("gibbs-hof", "I was elected to the Pro Football Hall of Fame in 1996.", "strong", "accomplishments"),
     batch4Clue("gibbs-four-sb", "I led Washington to four Super Bowl appearances, winning three.", "strong", "accomplishments"),
     batch4Clue("gibbs-two-stints", "I coached Washington from 1981 through 1992, then returned for a second stint from 2004 through 2007.", "helpful", "career-path"),
@@ -2327,8 +2326,8 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("lombardi-sweep", "The Packers sweep became the signature running play of my Green Bay teams.", "strong", "style"),
   ]],
   ["bill-cowher", [
-    batch4Clue("cowher-steelers", "Pittsburgh was my only NFL head-coaching job.", "giveaway", "career-path", 10),
-    batch4Clue("cowher-1992", "I succeeded Chuck Noll as Steelers head coach in 1992.", "giveaway", "career-path", 9),
+    batch4Clue("cowher-steelers", "Pittsburgh was my only NFL head-coaching job.", "strong", "career-path", 12),
+    batch4Clue("cowher-1992", "I succeeded Chuck Noll as Steelers head coach in 1992.", "helpful", "career-path", 14),
     batch4Clue("cowher-two-sb", "I led Pittsburgh to Super Bowls XXX and XL.", "strong", "accomplishments"),
     batch4Clue("cowher-sb40", "I won Super Bowl XL with the Steelers.", "giveaway", "accomplishments", 8),
     batch4Clue("cowher-chin", "My intense sideline style and jutting jaw produced the nickname 'The Chin.'", "giveaway", "nickname", 9),
@@ -2404,6 +2403,12 @@ function batch4ShouldSuppress(subject: FootballSubjectProfile, clue: WhoAmIClue)
 }
 
 function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue): WhoAmIClue {
+  if (
+    subject.id === "bill-cowher"
+    && clue.conceptId === "identity:super-bowl-onside-kick-gamble"
+  ) {
+    return { ...clue, band: "strong", facet: "accomplishments", revealPriority: 16 };
+  }
   if (subject.id === "pete-carroll" && clue.id === "era") {
     return { ...clue, text: "I was an NFL head coach in the 1990s, 2010s and 2020s." };
   }
