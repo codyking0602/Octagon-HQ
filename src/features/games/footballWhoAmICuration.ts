@@ -3598,6 +3598,7 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("jackson-return-aa", "I was a first-team All-American punt returner in 2006 after leading the nation at 18.2 yards per return.", "helpful", "accomplishments", 17),
     cfbBatch2Clue("jackson-randy-moss", "I won the inaugural Randy Moss Award as the nation's top return specialist in 2006.", "strong", "accomplishments", 18),
     cfbBatch2Clue("jackson-four-pr-td", "I returned four punts for touchdowns in 2006, setting Cal and Pac-10 single-season records.", "helpful", "production", 20),
+    cfbBatch2Clue("jackson-two-time-aa", "I earned first-team All-America recognition in both 2006 and 2007, first as a returner and then as an all-purpose player.", "helpful", "accomplishments", 19),
     cfbBatch2Clue("jackson-2005-bowl", "As a freshman in the 2005 Las Vegas Bowl, I caught six passes for 130 yards and two touchdowns against BYU.", "helpful", "production", 23),
     cfbBatch2Clue("jackson-first-touch", "My first college reception was a 31-yard touchdown, and my first punt return in that same opener went 49 yards for another score.", "helpful", "style", 21),
   ]],
