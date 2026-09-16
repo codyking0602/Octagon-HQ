@@ -4713,8 +4713,8 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-cooper-dejean", [
     cfbBatch4Clue("dejean-only-fbs-offer", "Iowa was my only FBS scholarship offer despite a four-sport high-school career.", "strong", "career-path", 16),
-    cfbBatch4Clue("dejean-high-school-qb", "I was a high-school quarterback as well as a defensive back before Iowa recruited me for defense.", "helpful", "background", 22),
-    cfbBatch4Clue("dejean-state-title-play", "In a high-school state championship game I blocked an extra point, later scored the tying touchdown and then scored the winning touchdown.", "strong", "accomplishments", 17),
+    cfbBatch4Clue("dejean-high-school-qb", "I was a high-school quarterback as well as a defensive back before Iowa recruited me for defense.", "helpful", "career-path", 20),
+    cfbBatch4Clue("dejean-state-title-play", "In a high-school state championship game I blocked an extra point, later scored the tying touchdown and then scored the winning touchdown.", "helpful", "career-path", 20),
   ]],
   ["cfb-sean-taylor", [
     cfbBatch4Clue("taylor-2001-title-team", "I was one of only four true freshmen to play for Miami's 2001 national-championship team.", "strong", "accomplishments", 16),
