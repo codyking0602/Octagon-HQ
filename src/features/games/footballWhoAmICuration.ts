@@ -1749,6 +1749,677 @@ export function isNflWhoAmIBatch3Subject(subjectId: string) {
 }
 
 
+
+const NFL_WHO_AM_I_BATCH_4_SUBJECT_IDS = [
+  "nfl-dave-robinson",
+  "nfl-dave-wilcox",
+  "nfl-demarcus-ware",
+  "derrick-brooks",
+  "nfl-derrick-thomas",
+  "nfl-harry-carson",
+  "nfl-charles-woodson",
+  "deion-sanders",
+  "nfl-dick-night-train-lane",
+  "nfl-ed-reed",
+  "nfl-emlen-tunnell",
+  "ronnie-lott",
+  "nfl-troy-polamalu",
+  "nfl-aeneas-williams",
+  "nfl-aqib-talib",
+  "nfl-asante-samuel",
+  "brian-dawkins",
+  "champ-bailey",
+  "nfl-charles-tillman",
+  "nfl-cliff-harris",
+  "nfl-darrell-green",
+  "nfl-darrelle-revis",
+  "nfl-darren-sharper",
+  "nfl-deangelo-hall",
+  "nfl-devin-mccourty",
+  "nfl-dick-lebeau",
+  "nfl-donnie-shell",
+  "nfl-dre-bly",
+  "nfl-emmitt-thomas",
+  "nfl-eric-allen",
+  "andy-reid",
+  "bill-belichick",
+  "bill-parcells",
+  "bill-walsh",
+  "chuck-noll",
+  "don-shula",
+  "nfl-earl-curly-lambeau",
+  "nfl-george-halas",
+  "nfl-jimmy-johnson-coach",
+  "joe-gibbs",
+  "nfl-john-madden",
+  "paul-brown",
+  "pete-carroll",
+  "tom-landry",
+  "vince-lombardi",
+  "bill-cowher",
+  "nfl-bud-grant",
+  "dick-vermeil",
+  "nfl-don-coryell",
+  "nfl-george-allen",
+] as const;
+
+const batch4SubjectIds = new Set<string>(NFL_WHO_AM_I_BATCH_4_SUBJECT_IDS);
+
+const batch4PartialCareerCoverageSubjectIds = new Set<string>([
+  "derrick-brooks",
+  "nfl-derrick-thomas",
+  "nfl-charles-woodson",
+  "nfl-aeneas-williams",
+  "brian-dawkins",
+  "nfl-darren-sharper",
+  "nfl-darrell-green",
+  "nfl-eric-allen",
+]);
+
+const batch4Active2026SubjectIds = new Set<string>(["andy-reid"]);
+
+const batch4RetainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
+  ["nfl-dave-robinson", keep("identity:dave-robinson-two-way-end-to-linebacker", "identity:dave-robinson-tight-end-jam-technique", "identity:dave-robinson-retirement-trade-return", "identity:pro-bowls", "identity:two-super-bowl-titles")],
+  ["nfl-dave-wilcox", keep("identity:dave-wilcox-afl-nfl-choice", "identity:dave-wilcox-hula-bowl-defensive-first", "identity:dave-wilcox-intimidator-nickname-contrast", "identity:dave-wilcox-internal-1306-grade", "identity:pro-bowls", "identity:five-all-nfl-selections")],
+  ["nfl-demarcus-ware", keep("identity:demarcus-ware-lanky-receiver-to-pass-rusher", "identity:demarcus-ware-pass-rush-notebook")],
+  ["derrick-brooks", keep()],
+  ["nfl-derrick-thomas", keep()],
+  ["nfl-harry-carson", keep("identity:harry-carson-college-line-to-middle-linebacker", "identity:harry-carson-parcells-team-conduit", "identity:harry-carson-gatorade-shower", "identity:pro-bowls", "identity:super-bowl-xxi-title")],
+  ["nfl-charles-woodson", keep()],
+  ["deion-sanders", keep()],
+  ["nfl-dick-night-train-lane", keep("identity:offense-to-defense-position-switch", "identity:night-train-song-nickname", "identity:rookie-fourteen-interceptions", "identity:clothesline-tackling-style", "identity:pro-bowls")],
+  ["nfl-ed-reed", keep("identity:2001-boston-college-lateral")],
+  ["nfl-emlen-tunnell", keep("identity:college-status-draft-confusion", "identity:hitchhike-giants-tryout", "identity:first-black-giant-and-hall-pioneer", "identity:pro-bowls")],
+  ["ronnie-lott", keep()],
+  ["nfl-troy-polamalu", keep("identity:quiet-to-tasmanian-devil-persona", "identity:iconic-long-hair")],
+  ["nfl-aeneas-williams", keep("identity:accounting-student-late-football-walkon", "identity:late-career-corner-to-safety-switch")],
+  ["nfl-aqib-talib", keep("identity:kansas-two-way-corner-receiver")],
+  ["nfl-asante-samuel", keep("identity:quarterback-dream-to-defensive-back", "identity:route-combination-anticipation", "identity:eighteen-interception-first-camp")],
+  ["brian-dawkins", keep("identity:weapon-x-alter-ego", "identity:free-lance-safety-role")],
+  ["champ-bailey", keep("identity:champ-bailey-georgia-long-jump-record", "identity:nfl-draft-1999")],
+  ["nfl-charles-tillman", keep("identity:charles-tillman-peanut-nickname-origin", "identity:charles-tillman-peanut-punch-development", "identity:charles-tillman-high-school-film-study")],
+  ["nfl-cliff-harris", keep("identity:cliff-harris-undrafted-seventeen-rounds", "identity:cliff-harris-captain-crash", "identity:cliff-harris-small-college-award", "identity:pro-bowls", "identity:six-all-pro-all-nfc-selections")],
+  ["nfl-darrell-green", keep("identity:darrell-green-track-speed-identity", "identity:darrell-green-deliberate-one-franchise-career", "identity:pro-bowls", "identity:two-super-bowl-titles")],
+  ["nfl-darrelle-revis", keep("identity:darrelle-revis-acl-near-retirement", "identity:darrelle-revis-anticipatory-film-study")],
+  ["nfl-darren-sharper", keep("identity:darren-sharper-underrecruited-quarterback", "identity:darren-sharper-quarterback-to-safety", "identity:darren-sharper-jamie-sharper-draft")],
+  ["nfl-deangelo-hall", keep("identity:deangelo-hall-green-sanders-role-models", "identity:deangelo-hall-virginia-tech-wide-receiver-experiment", "identity:deangelo-hall-corner-to-safety-reinvention")],
+  ["nfl-devin-mccourty", keep("identity:devin-mccourty-safety-corner-safety-arc")],
+  ["nfl-dick-lebeau", keep("identity:dick-lebeau-ohio-state-qb-halfback", "identity:dick-lebeau-zone-blitz-night-train-origin", "identity:dick-lebeau-coach-dad", "identity:dick-lebeau-coached-to-eighty", "identity:pro-bowls")],
+  ["nfl-donnie-shell", keep("identity:donnie-shell-bill-nunn-willie-jeffries", "identity:donnie-shell-torpedo-nickname", "identity:donnie-shell-fifth-1974-hall-of-famer", "identity:pro-bowls", "identity:five-all-pro-selections")],
+  ["nfl-dre-bly", keep("identity:dre-bly-freshman-consensus-all-american", "identity:dre-bly-three-straight-first-team-all-america", "identity:dre-bly-rude-boys", "identity:dre-bly-returned-unc-rude-boys-coach")],
+  ["nfl-emmitt-thomas", keep("identity:emmitt-thomas-qb-wr-to-corner", "identity:emmitt-thomas-coached-offense-first", "identity:emmitt-thomas-51-year-nfl-circle", "identity:pro-bowls", "identity:super-bowl-iv-title")],
+  ["nfl-eric-allen", keep("identity:eric-allen-nearly-retired-before-raiders", "identity:eric-allen-charles-woodson-oracle", "identity:eric-allen-fog-bowl-tuck-rule-bookends", "identity:pro-bowls", "identity:upi-defensive-player-of-year-1993")],
+  ["andy-reid", keep("identity:punt-pass-kick-giant-kid", "identity:byu-offensive-line-roots", "identity:holmgren-byu-connection", "identity:unexpected-favre-quarterback-coach")],
+  ["bill-belichick", keep("identity:navy-coaching-family", "identity:lacrosse-first-sport-preference", "identity:entry-level-nfl-origin")],
+  ["bill-parcells", keep("identity:big-tuna-nickname-origin", "identity:drafted-never-played-nfl", "identity:earn-the-star-rookie-tradition")],
+  ["bill-walsh", keep("identity:cincinnati-west-coast-origin", "identity:greg-cook-injury-offensive-pivot", "identity:late-head-coaching-breakthrough", "identity:49ers-three-year-turnaround", "identity:coaching-tree-legacy")],
+  ["chuck-noll", keep("identity:messenger-guard-player-role", "identity:teacher-first-philosophy", "identity:emperor-nickname", "identity:four-super-bowl-titles")],
+  ["don-shula", keep("identity:pro-playing-career", "identity:youngest-head-coach-breakthrough", "identity:two-franchise-head-coach-identity", "identity:career-coaching-wins", "identity:perfect-season-1972")],
+  ["nfl-earl-curly-lambeau", keep("identity:indian-packing-job-team-origin", "identity:player-coach-captain-founder", "identity:six-nfl-titles")],
+  ["nfl-george-halas", keep("identity:yankees-outfielder-before-nfl", "identity:a-e-staley-team-origin", "identity:nfl-founding-meeting", "identity:bears-every-role", "identity:t-formation-modernization", "identity:six-nfl-titles")],
+  ["nfl-jimmy-johnson-coach", keep("identity:arkansas-teammate-jerry-jones", "identity:landry-replacement-after-sale", "identity:herschel-walker-conditional-pick-trick", "identity:draft-obsession-team-builder", "identity:jones-split-after-dynasty")],
+  ["joe-gibbs", keep("identity:don-coryell-protege", "identity:three-super-bowls-three-quarterbacks", "identity:retired-to-build-nascar-team")],
+  ["nfl-john-madden", keep("identity:injury-led-film-education", "identity:teacher-before-famous-coach", "identity:don-coryell-apprenticeship", "identity:video-game-eleven-on-eleven-insistence", "identity:regular-season-record", "identity:super-bowl-xi-title")],
+  ["paul-brown", keep("identity:year-round-professional-coaching", "identity:messenger-guard-playcalling", "identity:early-radio-helmet-experiment", "identity:pro-football-integration", "identity:eight-league-championships")],
+  ["pete-carroll", keep("identity:jets-fake-spike-collapse", "identity:buffalo-banners-win-forever-seed", "identity:post-patriots-john-wooden-reset", "identity:always-compete-philosophy", "identity:music-driven-practices")],
+  ["tom-landry", keep("identity:multi-role-playing-career", "identity:player-coach-transition", "identity:flex-defense-identity", "identity:sideline-fedora-identity", "identity:two-super-bowl-titles")],
+  ["vince-lombardi", keep("identity:fordham-seven-blocks", "identity:pre-packers-coaching-path", "identity:washington-coaching-return", "identity:career-coaching-record", "identity:five-nfl-titles")],
+  ["bill-cowher", keep("identity:linebacker-special-teamer-to-coach", "identity:chin-and-fiery-sideline-persona", "identity:super-bowl-onside-kick-gamble", "identity:succeeding-noll-without-replacing-him")],
+  ["nfl-bud-grant", keep("identity:chose-nba-before-nfl", "identity:cfl-player-to-young-head-coach", "identity:no-heaters-cold-weather-rule", "identity:four-super-bowl-appearances")],
+  ["dick-vermeil", keep("identity:dick-vermeil-first-full-time-special-teams-coach", "identity:dick-vermeil-burnout-broadcasting-return", "identity:dick-vermeil-vince-papale-open-tryout", "identity:dick-vermeil-emotional-leadership")],
+  ["nfl-don-coryell", keep("identity:don-coryell-madden-gibbs-coaching-tree", "identity:don-coryell-air-coryell-roster-constraint", "identity:don-coryell-tight-end-mismatch-system", "identity:nfl-coach-of-year-1974")],
+  ["nfl-george-allen", keep("identity:george-allen-future-is-now", "identity:george-allen-first-full-time-special-teams-coach", "identity:george-allen-left-footed-practice-punter", "identity:george-allen-double-o-spy-patrol", "identity:nfl-coach-of-year-1967")],
+]);
+
+function batch4Clue(
+  id: string,
+  text: string,
+  band: WhoAmIClue["band"] = "strong",
+  facet: WhoAmIClue["facet"] = "accomplishments",
+  revealPriority = 16,
+): WhoAmIClue {
+  return { id: "curated4:" + id, conceptId: "curated4:" + id, text, band, facet, revealPriority };
+}
+
+const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["nfl-dave-robinson", [
+    batch4Clue("robinson-penn-state", "I played college football at Penn State.", "helpful", "background"),
+    batch4Clue("robinson-packers-first", "Green Bay selected me in the first round of the 1963 NFL Draft.", "strong", "career-path"),
+    batch4Clue("robinson-packers-washington", "I spent 10 seasons with Green Bay before finishing with two seasons in Washington.", "strong", "career-path"),
+    batch4Clue("robinson-three-titles", "I started at linebacker on three straight championship teams in Green Bay, including the winners of Super Bowls I and II.", "giveaway", "accomplishments", 9),
+    batch4Clue("robinson-hof", "I was elected to the Pro Football Hall of Fame in 2013.", "strong", "accomplishments"),
+  ]],
+  ["nfl-dave-wilcox", [
+    batch4Clue("wilcox-oregon", "I finished my college career at Oregon after beginning at Boise Junior College.", "helpful", "background"),
+    batch4Clue("wilcox-29", "San Francisco selected me No. 29 overall in the 1964 NFL Draft.", "strong", "career-path"),
+    batch4Clue("wilcox-49ers-only", "I spent all 11 of my NFL seasons with the San Francisco 49ers.", "giveaway", "career-path", 10),
+    batch4Clue("wilcox-hof", "I was elected to the Pro Football Hall of Fame in 2000.", "strong", "accomplishments"),
+  ]],
+  ["nfl-demarcus-ware", [
+    batch4Clue("ware-troy", "I played college football at Troy.", "helpful", "background"),
+    batch4Clue("ware-eleventh", "Dallas selected me No. 11 overall in the 2005 NFL Draft.", "strong", "career-path"),
+    batch4Clue("ware-cowboys-broncos", "My NFL career was split between the Dallas Cowboys and Denver Broncos.", "strong", "career-path"),
+    batch4Clue("ware-nine-pro-bowls", "I was selected to nine Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("ware-super-bowl-50", "I won Super Bowl 50 with Denver.", "giveaway", "accomplishments", 9),
+    batch4Clue("ware-hof", "I was elected to the Pro Football Hall of Fame in 2023.", "strong", "accomplishments"),
+    batch4Clue("ware-94", "No. 94 became my signature NFL jersey number.", "helpful", "identity"),
+  ]],
+  ["derrick-brooks", [
+    batch4Clue("brooks-fsu", "I was a three-time All-American at Florida State.", "helpful", "background"),
+    batch4Clue("brooks-28", "Tampa Bay selected me No. 28 overall in the 1995 NFL Draft.", "strong", "career-path"),
+    batch4Clue("brooks-bucs-only", "I spent all 14 of my NFL seasons with the Tampa Bay Buccaneers.", "giveaway", "career-path", 10),
+    batch4Clue("brooks-eleven-pro-bowls", "I was selected to 11 Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("brooks-dpoy", "I was the NFL Defensive Player of the Year in 2002.", "strong", "accomplishments"),
+    batch4Clue("brooks-sb37", "I returned an interception for a touchdown in Tampa Bay's Super Bowl XXXVII victory.", "giveaway", "accomplishments", 8),
+    batch4Clue("brooks-55", "Tampa Bay retired my No. 55.", "giveaway", "identity", 10),
+    batch4Clue("brooks-hof", "I was elected to the Pro Football Hall of Fame in 2014.", "strong", "accomplishments"),
+    batch4Clue("brooks-ap", "I earned six first-team All-Pro selections.", "strong", "accomplishments"),
+    batch4Clue("brooks-cornerstone", "I was the long-term weak-side linebacker at the heart of Tampa Bay's championship-era defense.", "helpful", "role"),
+  ]],
+  ["nfl-derrick-thomas", [
+    batch4Clue("thomas-alabama", "I won the Butkus Award as an All-American at Alabama.", "helpful", "background"),
+    batch4Clue("thomas-fourth", "Kansas City selected me No. 4 overall in the 1989 NFL Draft.", "strong", "career-path"),
+    batch4Clue("thomas-chiefs-only", "I spent my entire 11-season NFL career with the Kansas City Chiefs.", "giveaway", "career-path", 10),
+    batch4Clue("thomas-droy", "I was the NFL Defensive Rookie of the Year in 1989.", "strong", "accomplishments"),
+    batch4Clue("thomas-nine-pro-bowls", "I was selected to nine consecutive Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("thomas-seven-sacks", "I set an NFL single-game record with seven sacks against Seattle in 1990.", "giveaway", "accomplishments", 8),
+    batch4Clue("thomas-58", "Kansas City retired my No. 58.", "giveaway", "identity", 10),
+    batch4Clue("thomas-126", "I finished my career with 126.5 sacks.", "strong", "production"),
+    batch4Clue("thomas-hof", "I was elected to the Pro Football Hall of Fame in 2009.", "strong", "accomplishments"),
+    batch4Clue("thomas-90s", "No NFL player recorded more sacks during the 1990s than I did.", "strong", "accomplishments"),
+  ]],
+  ["nfl-harry-carson", [
+    batch4Clue("carson-scsu", "I played college football at South Carolina State.", "helpful", "background"),
+    batch4Clue("carson-fourth-round", "The Giants selected me in the fourth round of the 1976 NFL Draft.", "strong", "career-path"),
+    batch4Clue("carson-giants-only", "I spent all 13 of my NFL seasons with the New York Giants.", "giveaway", "career-path", 10),
+    batch4Clue("carson-lt-banks", "I formed a famous Giants linebacker trio with Lawrence Taylor and Carl Banks.", "giveaway", "role", 9),
+    batch4Clue("carson-hof", "I was elected to the Pro Football Hall of Fame in 2006.", "strong", "accomplishments"),
+  ]],
+  ["nfl-charles-woodson", [
+    batch4Clue("woodson-michigan", "I won the Heisman Trophy at Michigan in 1997.", "giveaway", "background", 10),
+    batch4Clue("woodson-fourth", "Oakland selected me No. 4 overall in the 1998 NFL Draft.", "strong", "career-path"),
+    batch4Clue("woodson-rookie", "I was the AP Defensive Rookie of the Year in 1998.", "strong", "accomplishments"),
+    batch4Clue("woodson-raiders-packers", "I played only for the Raiders and Packers during my 18 NFL seasons.", "strong", "career-path"),
+    batch4Clue("woodson-dpoy", "I was the NFL Defensive Player of the Year in 2009.", "strong", "accomplishments"),
+    batch4Clue("woodson-sb45", "I won Super Bowl XLV with Green Bay.", "giveaway", "accomplishments", 9),
+    batch4Clue("woodson-nine-pro-bowls", "I was selected to nine Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("woodson-50-20", "I became the first NFL player to reach both 50 interceptions and 20 sacks.", "strong", "accomplishments"),
+    batch4Clue("woodson-hof", "I was elected to the Pro Football Hall of Fame in 2021.", "strong", "accomplishments"),
+    batch4Clue("woodson-24", "No. 24 became my signature NFL jersey number.", "helpful", "identity"),
+  ]],
+  ["deion-sanders", [
+    batch4Clue("deion-fsu", "I played college football at Florida State.", "helpful", "background"),
+    batch4Clue("deion-fifth", "Atlanta selected me No. 5 overall in the 1989 NFL Draft.", "strong", "career-path"),
+    batch4Clue("deion-prime-time", "“Prime Time” became my signature nickname.", "giveaway", "nickname", 9),
+    batch4Clue("deion-five-teams", "My NFL career included Atlanta, San Francisco, Dallas, Washington and Baltimore.", "strong", "career-path"),
+    batch4Clue("deion-1994-dpoy", "I was the NFL Defensive Player of the Year in 1994 with San Francisco.", "strong", "accomplishments"),
+    batch4Clue("deion-back-to-back", "I won Super Bowls in consecutive seasons with the 49ers and Cowboys.", "giveaway", "accomplishments", 8),
+    batch4Clue("deion-return", "Cornerback, punt returner and kick returner were all major parts of my NFL identity.", "helpful", "role"),
+    batch4Clue("deion-21", "No. 21 became my signature NFL jersey number.", "helpful", "identity"),
+    batch4Clue("deion-baseball", "I also reached Major League Baseball while building my football career.", "strong", "career-path"),
+    batch4Clue("deion-hof", "I was elected to the Pro Football Hall of Fame in 2011.", "strong", "accomplishments"),
+  ]],
+  ["nfl-dick-night-train-lane", [
+    batch4Clue("lane-undrafted", "I entered the NFL as an undrafted free agent with the Los Angeles Rams in 1952.", "strong", "career-path"),
+    batch4Clue("lane-three-teams", "I played for the Rams, Cardinals and Lions.", "helpful", "career-path"),
+    batch4Clue("lane-68", "I finished with 68 career interceptions.", "strong", "production"),
+    batch4Clue("lane-hof", "I was elected to the Pro Football Hall of Fame in 1974.", "strong", "accomplishments"),
+    batch4Clue("lane-record", "My 14 interceptions as a rookie came in a 12-game season and remain an NFL single-season record.", "giveaway", "accomplishments", 8),
+  ]],
+  ["nfl-ed-reed", [
+    batch4Clue("reed-20", "No. 20 became my signature number in Baltimore.", "helpful", "identity"),
+    batch4Clue("reed-ravens", "I spent my first 11 NFL seasons with the Baltimore Ravens.", "giveaway", "career-path", 10),
+    batch4Clue("reed-nine-pro-bowls", "I was selected to nine Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("reed-sb47", "I intercepted a pass in Baltimore's Super Bowl XLVII victory.", "giveaway", "accomplishments", 8),
+    batch4Clue("reed-return-record", "I hold the NFL career record for interception-return yardage.", "strong", "accomplishments"),
+    batch4Clue("reed-long-returns", "I own the two longest interception returns in NFL history, 107 and 106 yards.", "giveaway", "accomplishments", 9),
+    batch4Clue("reed-hof", "I was elected to the Pro Football Hall of Fame in 2019.", "strong", "accomplishments"),
+  ]],
+  ["nfl-emlen-tunnell", [
+    batch4Clue("tunnell-giants-packers", "I played for the New York Giants before finishing with the Green Bay Packers.", "strong", "career-path"),
+    batch4Clue("tunnell-free-agent", "I entered the NFL as an undrafted free agent in 1948.", "strong", "career-path"),
+    batch4Clue("tunnell-79", "I retired with a then-record 79 career interceptions.", "strong", "production"),
+    batch4Clue("tunnell-umbrella", "I was the deep safety in the Giants' famed Umbrella Defense.", "strong", "role"),
+    batch4Clue("tunnell-hof", "I was elected to the Pro Football Hall of Fame in 1967.", "strong", "accomplishments"),
+    batch4Clue("tunnell-nine-pro-bowls", "I was selected to nine Pro Bowls.", "strong", "accomplishments"),
+  ]],
+  ["ronnie-lott", [
+    batch4Clue("lott-usc", "I played college football at USC.", "helpful", "background"),
+    batch4Clue("lott-eighth", "San Francisco selected me No. 8 overall in the 1981 NFL Draft.", "strong", "career-path"),
+    batch4Clue("lott-three-teams", "I played for the 49ers, Raiders and Jets.", "strong", "career-path"),
+    batch4Clue("lott-four-super-bowls", "I won four Super Bowls with San Francisco.", "giveaway", "accomplishments", 8),
+    batch4Clue("lott-ten-pro-bowls", "I made 10 Pro Bowls across cornerback, free safety and strong safety.", "strong", "accomplishments"),
+    batch4Clue("lott-pinky", "I chose to have the tip of an injured pinky amputated rather than face a longer recovery.", "giveaway", "identity", 9),
+    batch4Clue("lott-42", "No. 42 became my signature number with the 49ers.", "helpful", "identity"),
+    batch4Clue("lott-63", "I finished with 63 career interceptions.", "strong", "production"),
+    batch4Clue("lott-hof", "I was elected to the Pro Football Hall of Fame in 2000.", "strong", "accomplishments"),
+    batch4Clue("lott-hard-hit", "A punishing, linebacker-like tackling style became central to my reputation in the secondary.", "helpful", "style"),
+  ]],
+  ["nfl-troy-polamalu", [
+    batch4Clue("polamalu-steelers-only", "I spent my entire 12-season NFL career with the Pittsburgh Steelers.", "giveaway", "career-path", 10),
+    batch4Clue("polamalu-43", "No. 43 became my signature number in Pittsburgh.", "helpful", "identity"),
+    batch4Clue("polamalu-two-sb", "I won Super Bowls XL and XLIII with Pittsburgh.", "giveaway", "accomplishments", 8),
+    batch4Clue("polamalu-eight-pb", "I was selected to eight Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("polamalu-2010-dpoy", "I was the NFL Defensive Player of the Year in 2010.", "strong", "accomplishments"),
+    batch4Clue("polamalu-afc-title", "My 40-yard interception-return touchdown helped seal the 2008 AFC Championship Game.", "strong", "accomplishments"),
+    batch4Clue("polamalu-hof", "I was elected to the Pro Football Hall of Fame in 2020.", "strong", "accomplishments"),
+    batch4Clue("polamalu-hair", "My long hair became one of the most recognizable visual signatures in the NFL.", "helpful", "identity"),
+  ]],
+  ["nfl-aeneas-williams", [
+    batch4Clue("williams-southern", "I walked on at Southern University and eventually led the nation in interceptions as a senior.", "strong", "background"),
+    batch4Clue("williams-59", "The Phoenix Cardinals selected me No. 59 overall in the 1991 NFL Draft.", "strong", "career-path"),
+    batch4Clue("williams-cardinals-rams", "I spent 10 seasons with the Cardinals and my final four with the St. Louis Rams.", "strong", "career-path"),
+    batch4Clue("williams-eight-pb", "I was selected to eight Pro Bowls, seven at cornerback and one at safety.", "strong", "accomplishments"),
+    batch4Clue("williams-55", "I finished with 55 career interceptions.", "strong", "production"),
+    batch4Clue("williams-safety", "I successfully moved from cornerback to safety late in my career.", "helpful", "role"),
+    batch4Clue("williams-hof", "I was elected to the Pro Football Hall of Fame in 2014.", "strong", "accomplishments"),
+    batch4Clue("williams-rams-sb", "I helped the Rams reach Super Bowl XXXVI.", "strong", "accomplishments"),
+  ]],
+  ["nfl-aqib-talib", [
+    batch4Clue("talib-kansas", "I played college football at Kansas.", "helpful", "background"),
+    batch4Clue("talib-20", "Tampa Bay selected me No. 20 overall in the 2008 NFL Draft.", "strong", "career-path"),
+    batch4Clue("talib-path", "My NFL stops were Tampa Bay, New England, Denver and the Rams.", "strong", "career-path"),
+    batch4Clue("talib-five-pb", "I was selected to five straight Pro Bowls from 2013 through 2017.", "strong", "accomplishments"),
+    batch4Clue("talib-ap1", "I earned first-team All-Pro honors in 2016.", "strong", "accomplishments"),
+    batch4Clue("talib-sb50", "I was part of Denver's 'No Fly Zone' secondary on the Super Bowl 50 champions.", "giveaway", "accomplishments", 8),
+    batch4Clue("talib-pick-sixes", "I returned 10 interceptions for touchdowns during my NFL career.", "strong", "production"),
+    batch4Clue("talib-21", "No. 21 became my signature jersey number.", "helpful", "identity"),
+    batch4Clue("talib-press", "Physical press coverage and constant trash talk were hallmarks of my cornerback style.", "helpful", "style"),
+  ]],
+  ["nfl-asante-samuel", [
+    batch4Clue("samuel-ucf", "I played college football at UCF.", "helpful", "background"),
+    batch4Clue("samuel-120", "New England selected me in the fourth round, No. 120 overall, in the 2003 NFL Draft.", "strong", "career-path"),
+    batch4Clue("samuel-path", "I played for the Patriots, Eagles and Falcons.", "strong", "career-path"),
+    batch4Clue("samuel-two-rings", "I won Super Bowls XXXVIII and XXXIX with New England.", "giveaway", "accomplishments", 8),
+    batch4Clue("samuel-ten-picks", "I tied for the NFL lead with 10 interceptions in 2006.", "strong", "accomplishments"),
+    batch4Clue("samuel-four-pb", "I was selected to four Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("samuel-51", "I finished my NFL career with 51 interceptions.", "strong", "production"),
+    batch4Clue("samuel-ballhawk", "Reading route combinations and quarterback tendencies made ball-hawking anticipation central to my style.", "helpful", "style"),
+  ]],
+  ["brian-dawkins", [
+    batch4Clue("dawkins-clemson", "I played college football at Clemson.", "helpful", "background"),
+    batch4Clue("dawkins-61", "Philadelphia selected me No. 61 overall in the 1996 NFL Draft.", "strong", "career-path"),
+    batch4Clue("dawkins-eagles-broncos", "I spent 13 seasons with Philadelphia before finishing with three in Denver.", "strong", "career-path"),
+    batch4Clue("dawkins-nine-pb", "I was selected to nine Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("dawkins-weapon-x", "“Weapon X” became my signature alter ego and nickname.", "giveaway", "nickname", 8),
+    batch4Clue("dawkins-20", "Philadelphia retired my No. 20.", "giveaway", "identity", 10),
+    batch4Clue("dawkins-sb39", "I started at safety for Philadelphia in Super Bowl XXXIX.", "strong", "accomplishments"),
+    batch4Clue("dawkins-hof", "I was elected to the Pro Football Hall of Fame in 2018.", "strong", "accomplishments"),
+  ]],
+  ["champ-bailey", [
+    batch4Clue("bailey-georgia", "I starred at Georgia on offense, defense and special teams.", "helpful", "background"),
+    batch4Clue("bailey-seventh", "Washington selected me No. 7 overall in the 1999 NFL Draft.", "strong", "career-path"),
+    batch4Clue("bailey-was-den", "I played five seasons in Washington before spending the rest of my career with Denver.", "strong", "career-path"),
+    batch4Clue("bailey-portis", "A 2004 blockbuster trade sent me to Denver in a deal built around running back Clinton Portis.", "giveaway", "career-path", 9),
+    batch4Clue("bailey-12-pb", "My 12 Pro Bowl selections are the most ever by a defensive back.", "strong", "accomplishments"),
+    batch4Clue("bailey-2006", "I led the NFL with 10 interceptions in 2006.", "strong", "accomplishments"),
+    batch4Clue("bailey-100", "I returned a playoff interception 100 yards against New England before being tackled at the 1-yard line.", "strong", "accomplishments"),
+    batch4Clue("bailey-hof", "I was elected to the Pro Football Hall of Fame in 2019.", "strong", "accomplishments"),
+    batch4Clue("bailey-24", "No. 24 became my signature NFL jersey number.", "helpful", "identity"),
+  ]],
+  ["nfl-charles-tillman", [
+    batch4Clue("tillman-ull", "I played college football at Louisiana-Lafayette.", "helpful", "background"),
+    batch4Clue("tillman-35", "Chicago selected me No. 35 overall in the 2003 NFL Draft.", "strong", "career-path"),
+    batch4Clue("tillman-bears-panthers", "I spent 12 seasons with Chicago before finishing my career with Carolina.", "strong", "career-path"),
+    batch4Clue("tillman-peanut-punch", "The ball-stripping technique associated with me became known league-wide as the 'Peanut Punch.'", "giveaway", "style", 8),
+    batch4Clue("tillman-two-pb", "I was selected to two Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("tillman-42-ff", "I forced 42 fumbles during my career, including 10 in 2012.", "strong", "production"),
+    batch4Clue("tillman-sb41", "I started at cornerback for Chicago in Super Bowl XLI.", "strong", "accomplishments"),
+    batch4Clue("tillman-def-td", "I set Bears records for defensive touchdowns and interception-return touchdowns.", "strong", "accomplishments"),
+  ]],
+  ["nfl-cliff-harris", [
+    batch4Clue("harris-ouachita", "I played college football at Ouachita Baptist.", "helpful", "background"),
+    batch4Clue("harris-cowboys-only", "I spent all 10 of my NFL seasons with the Dallas Cowboys.", "giveaway", "career-path", 10),
+    batch4Clue("harris-two-rings", "I won Super Bowls VI and XII with Dallas.", "giveaway", "accomplishments", 8),
+    batch4Clue("harris-six-pb", "I was selected to six Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("harris-hof", "I was elected to the Pro Football Hall of Fame in 2020.", "strong", "accomplishments"),
+    batch4Clue("harris-crash", "“Captain Crash” captured my reputation as a collision-heavy free safety.", "giveaway", "nickname", 9),
+  ]],
+  ["nfl-darrell-green", [
+    batch4Clue("green-tami", "I played college football at Texas A&I.", "helpful", "background"),
+    batch4Clue("green-28-pick", "Washington selected me No. 28 overall in the 1983 NFL Draft.", "strong", "career-path"),
+    batch4Clue("green-20", "I spent all 20 of my NFL seasons with Washington.", "giveaway", "career-path", 9),
+    batch4Clue("green-speed", "Elite speed remained a defining trait throughout one of the longest cornerback careers in league history.", "helpful", "style"),
+    batch4Clue("green-two-rings", "I won Super Bowls XXII and XXVI with Washington.", "giveaway", "accomplishments", 8),
+    batch4Clue("green-seven-pb", "I was selected to seven Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("green-54", "I finished with 54 career interceptions.", "strong", "production"),
+    batch4Clue("green-hof", "I was elected to the Pro Football Hall of Fame in 2008.", "strong", "accomplishments"),
+  ]],
+  ["nfl-darrelle-revis", [
+    batch4Clue("revis-island", "The phrase 'Revis Island' became shorthand for the isolation coverage I played against top receivers.", "giveaway", "nickname", 8),
+    batch4Clue("revis-jets", "The New York Jets were the franchise most closely associated with my career.", "giveaway", "career-path", 10),
+    batch4Clue("revis-seven-pb", "I was selected to seven Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("revis-four-ap1", "I earned first-team All-Pro honors four times.", "strong", "accomplishments"),
+    batch4Clue("revis-sb49", "I won Super Bowl XLIX during my one season with New England.", "giveaway", "accomplishments", 9),
+    batch4Clue("revis-hof", "I was elected to the Pro Football Hall of Fame in 2023.", "strong", "accomplishments"),
+    batch4Clue("revis-24", "No. 24 became my signature number with the Jets.", "helpful", "identity"),
+  ]],
+  ["nfl-darren-sharper", [
+    batch4Clue("sharper-wm", "I played college football at William & Mary.", "helpful", "background"),
+    batch4Clue("sharper-second", "Green Bay selected me in the second round of the 1997 NFL Draft.", "strong", "career-path"),
+    batch4Clue("sharper-path", "My NFL career included Green Bay, Minnesota and New Orleans.", "strong", "career-path"),
+    batch4Clue("sharper-five-pb", "I was selected to five Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("sharper-sb44", "I won Super Bowl XLIV in my first season with New Orleans.", "giveaway", "accomplishments", 9),
+    batch4Clue("sharper-qb-safety", "I arrived at college as a quarterback prospect before becoming a safety.", "helpful", "role"),
+    batch4Clue("sharper-jamie", "My older brother Jamie also entered the NFL in 1997 as a second-round pick.", "helpful", "relationships"),
+  ]],
+  ["nfl-deangelo-hall", [
+    batch4Clue("hall-vt", "I played college football at Virginia Tech.", "helpful", "background"),
+    batch4Clue("hall-eighth", "Atlanta selected me No. 8 overall in the 2004 NFL Draft.", "strong", "career-path"),
+    batch4Clue("hall-path", "I played for Atlanta, Oakland and Washington.", "strong", "career-path"),
+    batch4Clue("hall-three-pb", "I was selected to three Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("hall-four-int", "I tied an NFL single-game record with four interceptions against Chicago in 2010.", "giveaway", "accomplishments", 8),
+    batch4Clue("hall-two-way-vt", "Virginia Tech used me at wide receiver as well as defensive back.", "helpful", "role"),
+    batch4Clue("hall-safety", "Late in my career I moved from cornerback to safety.", "helpful", "role"),
+    batch4Clue("hall-23", "No. 23 became my signature number in Washington.", "helpful", "identity"),
+  ]],
+  ["nfl-devin-mccourty", [
+    batch4Clue("mccourty-rutgers", "I played college football at Rutgers.", "helpful", "background"),
+    batch4Clue("mccourty-32", "New England selected me No. 32 overall in the 2010 NFL Draft.", "strong", "career-path"),
+    batch4Clue("mccourty-pats-only", "I spent all 13 of my NFL seasons with the New England Patriots.", "giveaway", "career-path", 10),
+    batch4Clue("mccourty-cb-s", "I entered the NFL at cornerback before becoming a long-term safety.", "helpful", "role"),
+    batch4Clue("mccourty-three-rings", "I won three Super Bowls with New England.", "giveaway", "accomplishments", 8),
+    batch4Clue("mccourty-four-pb", "I was selected to four Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("mccourty-captain", "I served as a Patriots team captain for many seasons.", "strong", "role"),
+    batch4Clue("mccourty-jason", "My twin brother Jason joined me in New England and won Super Bowl LIII with me.", "strong", "relationships"),
+  ]],
+  ["nfl-dick-lebeau", [
+    batch4Clue("lebeau-ohio-state", "I was part of Ohio State's 1957 national championship team.", "helpful", "background"),
+    batch4Clue("lebeau-browns-cut", "Cleveland drafted me in 1959 but cut me before my rookie season.", "strong", "career-path"),
+    batch4Clue("lebeau-lions", "I then spent all 14 of my playing seasons with the Detroit Lions.", "giveaway", "career-path", 10),
+    batch4Clue("lebeau-62", "I finished my playing career with 62 interceptions.", "strong", "production"),
+    batch4Clue("lebeau-zone-blitz", "As a coach, I became one of the figures most closely associated with the zone blitz.", "giveaway", "style", 8),
+    batch4Clue("lebeau-steelers", "My coaching legacy is especially tied to Pittsburgh's defenses.", "giveaway", "career-path", 9),
+    batch4Clue("lebeau-hof", "I was elected to the Pro Football Hall of Fame in 2010 for my playing career.", "strong", "accomplishments"),
+  ]],
+  ["nfl-donnie-shell", [
+    batch4Clue("shell-scsu", "I played college football at South Carolina State.", "helpful", "background"),
+    batch4Clue("shell-undrafted", "I joined Pittsburgh as an undrafted rookie in 1974.", "strong", "career-path"),
+    batch4Clue("shell-steelers-only", "I spent all 14 of my NFL seasons with the Pittsburgh Steelers.", "giveaway", "career-path", 10),
+    batch4Clue("shell-four-rings", "I won four Super Bowls with Pittsburgh.", "giveaway", "accomplishments", 8),
+    batch4Clue("shell-51", "I finished with 51 career interceptions.", "strong", "production"),
+    batch4Clue("shell-hof", "I was elected to the Pro Football Hall of Fame in 2020.", "strong", "accomplishments"),
+  ]],
+  ["nfl-dre-bly", [
+    batch4Clue("bly-unc", "I played college football at North Carolina.", "helpful", "background"),
+    batch4Clue("bly-rams", "The St. Louis Rams selected me in the second round of the 1999 NFL Draft.", "strong", "career-path"),
+    batch4Clue("bly-sb34", "I won Super Bowl XXXIV as a rookie with the Rams.", "giveaway", "accomplishments", 9),
+    batch4Clue("bly-path", "My NFL stops included the Rams, Lions, Broncos and 49ers.", "strong", "career-path"),
+    batch4Clue("bly-two-pb", "I was selected to two Pro Bowls while with Detroit.", "strong", "accomplishments"),
+    batch4Clue("bly-43", "I finished with 43 career interceptions.", "strong", "production"),
+    batch4Clue("bly-rude-boys", "I coined 'Rude Boys' for North Carolina's defensive backs and later returned to coach that position group.", "strong", "identity"),
+  ]],
+  ["nfl-emmitt-thomas", [
+    batch4Clue("emmitt-bishop", "I played college football at Bishop College.", "helpful", "background"),
+    batch4Clue("emmitt-undrafted", "I joined Kansas City as an undrafted free agent in 1966.", "strong", "career-path"),
+    batch4Clue("emmitt-chiefs-only", "I spent all 13 of my playing seasons with the Kansas City Chiefs.", "giveaway", "career-path", 10),
+    batch4Clue("emmitt-58", "I finished with a Chiefs-record 58 career interceptions.", "strong", "production"),
+    batch4Clue("emmitt-five-pb", "I was selected to five Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("emmitt-sb4", "I intercepted a pass in Kansas City's Super Bowl IV victory.", "giveaway", "accomplishments", 8),
+    batch4Clue("emmitt-18", "Kansas City retired my No. 18.", "giveaway", "identity", 9),
+    batch4Clue("emmitt-hof", "I was elected to the Pro Football Hall of Fame in 2008.", "strong", "accomplishments"),
+  ]],
+  ["nfl-eric-allen", [
+    batch4Clue("allen-asu", "I played college football at Arizona State.", "helpful", "background"),
+    batch4Clue("allen-eagles", "Philadelphia selected me in the second round of the 1988 NFL Draft.", "strong", "career-path"),
+    batch4Clue("allen-path", "I played for the Eagles, Saints and Raiders.", "strong", "career-path"),
+    batch4Clue("allen-six-pb", "I was selected to six Pro Bowls.", "strong", "accomplishments"),
+    batch4Clue("allen-54", "I finished with 54 career interceptions.", "strong", "production"),
+    batch4Clue("allen-weather", "My playoff career was bookended by the Fog Bowl and the Tuck Rule game.", "giveaway", "career-path", 9),
+    batch4Clue("allen-hof", "I was elected to the Pro Football Hall of Fame in 2025.", "strong", "accomplishments"),
+  ]],
+  ["andy-reid", [
+    batch4Clue("reid-eagles-chiefs", "I became an NFL head coach with Philadelphia in 1999 and took over Kansas City in 2013.", "strong", "career-path"),
+    batch4Clue("reid-current", "I entered the 2026 season as Kansas City's head coach.", "strong", "career-path"),
+    batch4Clue("reid-three-rings", "I have won three Super Bowls as Kansas City's head coach: LIV, LVII and LVIII.", "giveaway", "accomplishments", 8),
+    batch4Clue("reid-eagles-sb", "I also led Philadelphia to Super Bowl XXXIX.", "strong", "accomplishments"),
+    batch4Clue("reid-byu", "I played offensive line at BYU before beginning my coaching career.", "helpful", "background"),
+    batch4Clue("reid-favre", "Before becoming a head coach, I coached Brett Favre as Green Bay's quarterbacks coach.", "strong", "career-path"),
+  ]],
+  ["bill-belichick", [
+    batch4Clue("belichick-browns-pats", "My NFL head-coaching stops were Cleveland and New England.", "strong", "career-path"),
+    batch4Clue("belichick-six", "I won six Super Bowls as New England's head coach.", "giveaway", "accomplishments", 8),
+    batch4Clue("belichick-giants-dc", "Before my head-coaching success, I coordinated the Giants defense for two Super Bowl champions.", "strong", "career-path"),
+    batch4Clue("belichick-pats-24", "I spent 24 seasons as the Patriots' head coach.", "giveaway", "career-path", 9),
+    batch4Clue("belichick-navy", "I learned film study from my father, a longtime coach and scout at Navy.", "helpful", "relationships"),
+    batch4Clue("belichick-colts-entry", "My NFL coaching career began at the bottom of the Baltimore Colts staff in 1975.", "helpful", "career-path"),
+    batch4Clue("belichick-three-dpoy", "Three different Patriots won AP Defensive Player of the Year under me.", "strong", "accomplishments"),
+  ]],
+  ["bill-parcells", [
+    batch4Clue("parcells-four-teams", "I was head coach of the Giants, Patriots, Jets and Cowboys.", "strong", "career-path"),
+    batch4Clue("parcells-two-rings", "I won Super Bowls XXI and XXV with the New York Giants.", "giveaway", "accomplishments", 8),
+    batch4Clue("parcells-tuna", "“The Big Tuna” became my enduring nickname.", "giveaway", "nickname", 9),
+    batch4Clue("parcells-drafted", "Detroit drafted me as a linebacker in 1964, but I never played an NFL regular-season game.", "helpful", "career-path"),
+    batch4Clue("parcells-belichick", "Bill Belichick served as my defensive coordinator on both Giants Super Bowl champions.", "strong", "relationships"),
+    batch4Clue("parcells-hof", "I was elected to the Pro Football Hall of Fame in 2013.", "strong", "accomplishments"),
+    batch4Clue("parcells-three-sb", "I led two different franchises to the Super Bowl as a head coach.", "strong", "accomplishments"),
+  ]],
+  ["bill-walsh", [
+    batch4Clue("walsh-49ers", "San Francisco was my only NFL head-coaching job.", "giveaway", "career-path", 10),
+    batch4Clue("walsh-three-rings", "I won Super Bowls XVI, XIX and XXIII with the 49ers.", "giveaway", "accomplishments", 8),
+    batch4Clue("walsh-west-coast", "The passing system associated with me became known as the West Coast offense.", "giveaway", "style", 9),
+    batch4Clue("walsh-montana", "Joe Montana became the quarterback most closely associated with my offense in San Francisco.", "strong", "relationships"),
+    batch4Clue("walsh-hof", "I was elected to the Pro Football Hall of Fame in 1993.", "strong", "accomplishments"),
+  ]],
+  ["chuck-noll", [
+    batch4Clue("noll-steelers-only", "Pittsburgh was my only NFL head-coaching job.", "giveaway", "career-path", 10),
+    batch4Clue("noll-four", "I became the first head coach to win four Super Bowls.", "giveaway", "accomplishments", 8),
+    batch4Clue("noll-74-class", "My 1974 Steelers rookie class produced four drafted Hall of Famers, plus undrafted Donnie Shell.", "strong", "accomplishments"),
+    batch4Clue("noll-emperor", "Players called me 'The Emperor' because of my reserved, authoritative style.", "strong", "nickname"),
+    batch4Clue("noll-hof", "I was elected to the Pro Football Hall of Fame in 1993.", "strong", "accomplishments"),
+    batch4Clue("noll-69", "I took over Pittsburgh in 1969 and remained head coach through 1991.", "helpful", "career-path"),
+  ]],
+  ["don-shula", [
+    batch4Clue("shula-colts-dolphins", "I was head coach of the Baltimore Colts before spending 26 seasons with the Miami Dolphins.", "strong", "career-path"),
+    batch4Clue("shula-347", "I retired with an NFL-record 347 total head-coaching victories.", "giveaway", "accomplishments", 9),
+    batch4Clue("shula-perfect", "I coached the 1972 Dolphins to the NFL's only perfect season.", "giveaway", "accomplishments", 8),
+    batch4Clue("shula-two-rings", "I won back-to-back Super Bowls VII and VIII with Miami.", "giveaway", "accomplishments", 8),
+    batch4Clue("shula-six-sb", "I coached in six Super Bowls across Baltimore and Miami.", "strong", "accomplishments"),
+    batch4Clue("shula-hof", "I was elected to the Pro Football Hall of Fame in 1997.", "strong", "accomplishments"),
+  ]],
+  ["nfl-earl-curly-lambeau", [
+    batch4Clue("lambeau-founder", "I helped found the Green Bay Packers and served as player, captain and coach in the club's early years.", "giveaway", "career-path", 9),
+    batch4Clue("lambeau-packing", "My job at the Indian Packing Company helped supply the team name 'Packers.'", "giveaway", "identity", 8),
+    batch4Clue("lambeau-six", "I coached Green Bay to six NFL championships.", "giveaway", "accomplishments", 8),
+    batch4Clue("lambeau-field", "Green Bay's home stadium carries my surname.", "giveaway", "identity", 7),
+    batch4Clue("lambeau-pass", "I was an early pro-football advocate of using the forward pass as a core offensive weapon.", "strong", "style"),
+    batch4Clue("lambeau-hof", "I was a charter member of the Pro Football Hall of Fame's 1963 class.", "strong", "accomplishments"),
+    batch4Clue("lambeau-notre-dame", "I briefly played at Notre Dame under Knute Rockne before returning home to Green Bay.", "helpful", "background"),
+  ]],
+  ["nfl-george-halas", [
+    batch4Clue("halas-staleys-bears", "I took charge of the Decatur Staleys and developed that club into the Chicago Bears.", "giveaway", "career-path", 9),
+    batch4Clue("halas-founder", "I participated in the meetings that created the league that became the NFL.", "strong", "accomplishments"),
+    batch4Clue("halas-six", "I won six NFL championships as Chicago's head coach.", "giveaway", "accomplishments", 8),
+    batch4Clue("halas-324", "I won 324 games as a professional head coach.", "strong", "production"),
+    batch4Clue("halas-papa-bear", "“Papa Bear” became a signature nickname for me.", "giveaway", "nickname", 9),
+    batch4Clue("halas-trophy", "The NFC championship trophy is named in my honor.", "giveaway", "accomplishments", 8),
+    batch4Clue("halas-hof", "I was a charter member of the Pro Football Hall of Fame's 1963 class.", "strong", "accomplishments"),
+  ]],
+  ["nfl-jimmy-johnson-coach", [
+    batch4Clue("jimmy-arkansas", "I played on Arkansas' 1964 national championship team alongside future Cowboys owner Jerry Jones.", "strong", "background"),
+    batch4Clue("jimmy-miami", "Before the NFL, I coached Miami to the 1987 college national championship.", "strong", "career-path"),
+    batch4Clue("jimmy-cowboys", "I replaced Tom Landry as Dallas head coach in 1989.", "giveaway", "career-path", 9),
+    batch4Clue("jimmy-two-rings", "I won consecutive Super Bowls XXVII and XXVIII with the Cowboys.", "giveaway", "accomplishments", 8),
+    batch4Clue("jimmy-walker", "The Herschel Walker trade supplied a huge draft-pick haul that fueled my Dallas rebuild.", "giveaway", "career-path", 9),
+    batch4Clue("jimmy-dolphins", "I later returned to the NFL as head coach of the Miami Dolphins.", "strong", "career-path"),
+    batch4Clue("jimmy-hof", "I was elected to the Pro Football Hall of Fame in 2020.", "strong", "accomplishments"),
+  ]],
+  ["joe-gibbs", [
+    batch4Clue("gibbs-washington", "Both of my NFL head-coaching stints came with Washington.", "giveaway", "career-path", 10),
+    batch4Clue("gibbs-three-rings", "I won three Super Bowls with three different starting quarterbacks.", "giveaway", "accomplishments", 8),
+    batch4Clue("gibbs-qbs", "Joe Theismann, Doug Williams and Mark Rypien each quarterbacked one of my Super Bowl champions.", "giveaway", "relationships", 9),
+    batch4Clue("gibbs-hogs", "My championship teams became closely associated with the offensive line nicknamed 'The Hogs.'", "giveaway", "style", 9),
+    batch4Clue("gibbs-nascar", "Between my two NFL coaching stints, I built Joe Gibbs Racing into a championship NASCAR organization.", "giveaway", "career-path", 8),
+    batch4Clue("gibbs-hof", "I was elected to the Pro Football Hall of Fame in 1996.", "strong", "accomplishments"),
+  ]],
+  ["nfl-john-madden", [
+    batch4Clue("madden-raiders", "The Raiders were my only NFL head-coaching team.", "giveaway", "career-path", 10),
+    batch4Clue("madden-sb11", "I coached Oakland to victory in Super Bowl XI.", "giveaway", "accomplishments", 8),
+    batch4Clue("madden-record", "My NFL regular-season coaching record was 103-32-7.", "strong", "production"),
+    batch4Clue("madden-no-losing", "I never had a losing season as an NFL head coach.", "strong", "accomplishments"),
+    batch4Clue("madden-broadcast", "After coaching, I became one of football's most recognizable television analysts.", "strong", "career-path"),
+    batch4Clue("madden-game", "My name became the title of a long-running football video-game franchise.", "giveaway", "identity", 7),
+    batch4Clue("madden-hof", "I was elected to the Pro Football Hall of Fame in 2006.", "strong", "accomplishments"),
+  ]],
+  ["paul-brown", [
+    batch4Clue("brown-browns-name", "The Cleveland Browns franchise was named after me.", "giveaway", "identity", 7),
+    batch4Clue("brown-bengals", "I later co-founded the Cincinnati Bengals and served as their first head coach.", "giveaway", "career-path", 8),
+    batch4Clue("brown-eight-titles", "I won eight league championships as a professional head coach.", "strong", "accomplishments"),
+    batch4Clue("brown-film", "I helped make film study, classroom teaching and systematic player grading standard parts of pro coaching.", "strong", "style"),
+    batch4Clue("brown-radio", "My staff experimented with radio communication inside a quarterback's helmet decades before it became standard.", "strong", "identity"),
+    batch4Clue("brown-hof", "I was elected to the Pro Football Hall of Fame in 1967.", "strong", "accomplishments"),
+  ]],
+  ["pete-carroll", [
+    batch4Clue("carroll-jets-pats", "My first two NFL head-coaching jobs were with the Jets and Patriots in the 1990s.", "strong", "career-path"),
+    batch4Clue("carroll-usc", "I returned to the NFL after a championship run as USC's head coach.", "strong", "career-path"),
+    batch4Clue("carroll-seahawks", "I coached Seattle from 2010 through 2023.", "giveaway", "career-path", 10),
+    batch4Clue("carroll-sb48", "I coached Seattle to a 43-8 victory in Super Bowl XLVIII.", "giveaway", "accomplishments", 8),
+    batch4Clue("carroll-legion", "The 'Legion of Boom' secondary became the signature unit of my championship Seahawks.", "giveaway", "style", 9),
+    batch4Clue("carroll-raiders", "I returned for one season as the Las Vegas Raiders' head coach in 2025.", "strong", "career-path"),
+    batch4Clue("carroll-compete", "“Always Compete” became a central phrase in my coaching philosophy.", "strong", "identity"),
+  ]],
+  ["tom-landry", [
+    batch4Clue("landry-original", "I was the first head coach in Dallas Cowboys history.", "giveaway", "career-path", 9),
+    batch4Clue("landry-29", "I remained the Cowboys' head coach for 29 seasons.", "giveaway", "career-path", 9),
+    batch4Clue("landry-two-rings", "I won Super Bowls VI and XII with Dallas.", "giveaway", "accomplishments", 8),
+    batch4Clue("landry-flex", "The flex defense became one of the schemes most closely associated with me.", "strong", "style"),
+    batch4Clue("landry-fedora", "A fedora became my trademark sideline look.", "giveaway", "identity", 9),
+    batch4Clue("landry-winning", "My Cowboys posted 20 consecutive winning seasons from 1966 through 1985.", "strong", "accomplishments"),
+    batch4Clue("landry-hof", "I was elected to the Pro Football Hall of Fame in 1990.", "strong", "accomplishments"),
+  ]],
+  ["vince-lombardi", [
+    batch4Clue("lombardi-packers", "Green Bay hired me for my first NFL head-coaching job in 1959.", "strong", "career-path"),
+    batch4Clue("lombardi-five", "I coached the Packers to five NFL championships in seven seasons.", "giveaway", "accomplishments", 8),
+    batch4Clue("lombardi-first-two", "My teams won the first two Super Bowls.", "giveaway", "accomplishments", 7),
+    batch4Clue("lombardi-trophy", "The trophy presented to the Super Bowl champion bears my surname.", "giveaway", "identity", 6),
+    batch4Clue("lombardi-washington", "I finished my head-coaching career with one season in Washington.", "strong", "career-path"),
+    batch4Clue("lombardi-hof", "I was elected to the Pro Football Hall of Fame in 1971.", "strong", "accomplishments"),
+  ]],
+  ["bill-cowher", [
+    batch4Clue("cowher-steelers", "Pittsburgh was my only NFL head-coaching job.", "giveaway", "career-path", 10),
+    batch4Clue("cowher-1992", "I succeeded Chuck Noll as Steelers head coach in 1992.", "giveaway", "career-path", 9),
+    batch4Clue("cowher-two-sb", "I led Pittsburgh to Super Bowls XXX and XL.", "strong", "accomplishments"),
+    batch4Clue("cowher-sb40", "I won Super Bowl XL with the Steelers.", "giveaway", "accomplishments", 8),
+    batch4Clue("cowher-chin", "My intense sideline style and jutting jaw produced the nickname 'The Chin.'", "giveaway", "nickname", 9),
+    batch4Clue("cowher-hof", "I was elected to the Pro Football Hall of Fame in 2020.", "strong", "accomplishments"),
+  ]],
+  ["nfl-bud-grant", [
+    batch4Clue("grant-vikings", "Minnesota was my only NFL head-coaching job.", "giveaway", "career-path", 10),
+    batch4Clue("grant-four-sb", "I coached the Vikings to four Super Bowl appearances.", "giveaway", "accomplishments", 8),
+    batch4Clue("grant-nba", "Before my football career fully took off, I played in the NBA and won a championship with the Minneapolis Lakers.", "giveaway", "career-path", 9),
+    batch4Clue("grant-winnipeg", "I became a championship head coach with the Winnipeg Blue Bombers before taking over the Vikings.", "strong", "career-path"),
+    batch4Clue("grant-cold", "I discouraged sideline heaters and extra cold-weather gear, treating Minnesota's climate as an advantage.", "strong", "style"),
+    batch4Clue("grant-hof", "I was elected to the Pro Football Hall of Fame in 1994.", "strong", "accomplishments"),
+  ]],
+  ["dick-vermeil", [
+    batch4Clue("vermeil-three", "I was an NFL head coach for Philadelphia, the St. Louis Rams and Kansas City.", "strong", "career-path"),
+    batch4Clue("vermeil-papale", "An Eagles open tryout during my first season gave Vince Papale the opportunity later dramatized in Invincible.", "giveaway", "career-path", 9),
+    batch4Clue("vermeil-break", "I left coaching for roughly 15 years after burnout before returning with the Rams.", "strong", "career-path"),
+    batch4Clue("vermeil-sb34", "I coached the St. Louis Rams to victory in Super Bowl XXXIV.", "giveaway", "accomplishments", 8),
+    batch4Clue("vermeil-greatest-show", "My Rams championship team became known as the 'Greatest Show on Turf.'", "giveaway", "style", 9),
+    batch4Clue("vermeil-hof", "I was elected to the Pro Football Hall of Fame in 2022.", "strong", "accomplishments"),
+  ]],
+  ["nfl-don-coryell", [
+    batch4Clue("coryell-cardinals-chargers", "My NFL head-coaching jobs were with the Cardinals and Chargers.", "strong", "career-path"),
+    batch4Clue("coryell-air", "The aggressive vertical passing system associated with my Chargers became known as 'Air Coryell.'", "giveaway", "style", 8),
+    batch4Clue("coryell-fouts", "Dan Fouts was the quarterback most closely associated with my San Diego offense.", "strong", "relationships"),
+    batch4Clue("coryell-winslow", "I helped turn tight end Kellen Winslow into a movable receiving mismatch.", "strong", "style"),
+    batch4Clue("coryell-madden-gibbs", "My San Diego State staffs included future Hall of Fame coaches John Madden and Joe Gibbs.", "giveaway", "relationships", 9),
+    batch4Clue("coryell-hof", "I was elected to the Pro Football Hall of Fame in 2023.", "strong", "accomplishments"),
+  ]],
+  ["nfl-george-allen", [
+    batch4Clue("allen-rams-washington", "My NFL head-coaching stops were the Rams and Washington.", "strong", "career-path"),
+    batch4Clue("allen-future-now", "My veteran-heavy roster building became associated with the phrase 'The future is now.'", "giveaway", "identity", 9),
+    batch4Clue("allen-over-hill", "My veteran-heavy Washington teams were nicknamed the 'Over-the-Hill Gang.'", "giveaway", "nickname", 9),
+    batch4Clue("allen-sb7", "I coached Washington to Super Bowl VII.", "strong", "accomplishments"),
+    batch4Clue("allen-special-teams", "I created the NFL's first full-time special-teams coaching position and hired Dick Vermeil for it.", "strong", "career-path"),
+    batch4Clue("allen-hof", "I was elected to the Pro Football Hall of Fame in 2002.", "strong", "accomplishments"),
+  ]],
+]);
+
+function batch4ShouldSuppress(subject: FootballSubjectProfile, clue: WhoAmIClue) {
+  if (
+    clue.id === "player-career-start"
+    || clue.id === "player-career-end"
+    || clue.id === "coach-start"
+    || clue.id === "coach-end"
+    || clue.id === "career-span"
+    || clue.id === "coach-affiliation-count"
+    || clue.id === "career-path"
+    || clue.id.startsWith("affiliation:")
+  ) return true;
+
+  if (clue.id.startsWith("fact:nfl-coach-")) return true;
+  if (batch4PartialCareerCoverageSubjectIds.has(subject.id) && /^fact:nfl-career-/.test(clue.id)) return true;
+  if (batch4Active2026SubjectIds.has(subject.id) && /^fact:nfl-(?:career|coach)-/.test(clue.id)) return true;
+  if (
+    clue.id === "fact:nfl-career-games"
+    || clue.id === "fact:nfl-career-solo-tackles"
+    || clue.id === "fact:nfl-career-tackles-for-loss"
+    || clue.id === "fact:nfl-career-forced-fumbles"
+    || clue.id === "fact:nfl-career-sacks"
+    || clue.id === "fact:nfl-career-passes-defended"
+  ) return true;
+  return false;
+}
+
+function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue): WhoAmIClue {
+  if (subject.id === "pete-carroll" && clue.id === "era") {
+    return { ...clue, text: "I was an NFL head coach in the 1990s, 2010s and 2020s." };
+  }
+  if (subject.id === "dick-vermeil" && clue.id === "era") {
+    return { ...clue, text: "My NFL head-coaching career stretched across the 1970s, 1980s, 1990s and 2000s." };
+  }
+  if (subject.id === "bill-belichick" && clue.id === "era") {
+    return { ...clue, text: "I was an NFL head coach in the 1990s, 2000s, 2010s and 2020s." };
+  }
+  return clue;
+}
+
+function trimNflBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const target = 16;
+  if (clues.length <= target) return [...clues];
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+  const selected = new Set(ranked.slice(0, target).map((entry) => entry.clue.id));
+  return clues.filter((clue) => selected.has(clue.id));
+}
+
+function curateNflBatch4Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
+  const retained = batch4RetainedIdentityConcepts.get(subject.id);
+  let colorUsed = false;
+  const curated: WhoAmIClue[] = [];
+
+  for (const rawClue of rawClues) {
+    if (batch4ShouldSuppress(subject, rawClue)) continue;
+    if (
+      rawClue.identityKnowledge
+      && retained
+      && !retained.has(rawClue.conceptId ?? "")
+      && !retained.has(rawClue.id)
+    ) continue;
+
+    const clue = batch4ApplyOverrides(subject, rawClue);
+    if (clue.identityKnowledge) {
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      if (selectionClass === "deep-biography") continue;
+      if (selectionClass === "identity-color") {
+        if (colorUsed) continue;
+        colorUsed = true;
+      }
+    }
+    curated.push(clue);
+  }
+
+  curated.push(...(batch4SupplementalClues.get(subject.id) ?? []));
+  return trimNflBatch4Pool(subject, curated);
+}
+
+export function isNflWhoAmIBatch4Subject(subjectId: string) {
+  return batch4SubjectIds.has(subjectId);
+}
+
 function applyBatch2IdentityCuration(subjectId: string, clue: WhoAmIClue) {
   const override = batch2TextOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id))
     ?? batch2TextOverrides.get(subjectId + ":" + clue.id);
@@ -1863,6 +2534,7 @@ export function curateFootballWhoAmIClues(
   rawClues: readonly WhoAmIClue[],
 ): WhoAmIClue[] {
   if (subject.league !== "NFL") return [...rawClues];
+  if (batch4SubjectIds.has(subject.id)) return curateNflBatch4Clues(subject, rawClues);
   if (batch3SubjectIds.has(subject.id)) return curateNflBatch3Clues(subject, rawClues);
   if (batch2SubjectIds.has(subject.id)) return curateNflBatch2Clues(subject, rawClues);
   if (!batchSubjectIds.has(subject.id)) return [...rawClues];
