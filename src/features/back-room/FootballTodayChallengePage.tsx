@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
 import { OfficialWhoAmIDailyView } from "../play/OfficialWhoAmIDailyView";
@@ -491,6 +491,8 @@ export function FootballTodayChallengeResult({
 
 export default function FootballTodayChallengePage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editWeeklyAuction = searchParams.get("weekly") === "edit";
   const identity = useIdentity();
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const repository = useMemo(() => createTodayChallengeRepository(undefined, "football"), []);
@@ -552,7 +554,10 @@ export default function FootballTodayChallengePage() {
       .then(async (nextWeekly) => {
         if (!active) return;
         setWeeklyState(nextWeekly);
-        if (nextWeekly.available && (nextWeekly.previous_final || !nextWeekly.submitted_today)) {
+        if (
+          nextWeekly.available
+          && (nextWeekly.previous_final || !nextWeekly.submitted_today || editWeeklyAuction)
+        ) {
           setShowWeeklyAuction(true);
           return;
         }
@@ -584,7 +589,7 @@ export default function FootballTodayChallengePage() {
       .finally(() => { if (active) setWeeklyBusy(false); });
 
     return () => { active = false; };
-  }, [repository, signedIn, weeklyRepository]);
+  }, [editWeeklyAuction, repository, signedIn, weeklyRepository]);
 
   async function submitWeeklyBids(bids: Record<1 | 2 | 3, number>) {
     if (!weeklyRepository || weeklyBusy) return;
