@@ -79,6 +79,26 @@ describe("CFB Who Am I batch 1 calibration", () => {
     }
   });
 
+  it("keeps known biography, trivia, and surname leaks out of the curated batch", () => {
+    const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+    const forbidden: Readonly<Record<string, RegExp>> = {
+      "cfb-andrew-luck": /valedictorian|architectural design|academic all-america hall/i,
+      "cfb-billy-cannon": /dentistry|orthodontics|counterfeit/i,
+      "cfb-bijan-robinson": /mustard|grandfather|near-drowning/i,
+      "cfb-deshaun-watson": /habitat for humanity|warrick dunn.*home/i,
+      "cfb-fernando-mendoza": /catholic charities|bachelor.?s degree|final three cal classes/i,
+      "cfb-reggie-bush": /Bush Push/i,
+      "cfb-tony-dorsett": /steel mill|sportscaster/i,
+    };
+    for (const [subjectId, pattern] of Object.entries(forbidden)) {
+      const text = candidates.get(subjectId)!.clues.map((clue) => clue.text).join(" | ");
+      expect(text, `${subjectId} biography/trivia leak`).not.toMatch(pattern);
+    }
+
+    const obrien = candidates.get("cfb-davey-obrien")!.clues.map((clue) => clue.text).join(" | ");
+    expect(obrien).not.toMatch(/O['’]?Brien/i);
+  });
+
   it("prints compact replay diagnostics for all 50 subjects before enforcing hard gates", () => {
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
     const report = CFB_WHO_AM_I_BATCH_1_SUBJECT_IDS.map((subjectId) => {
@@ -113,7 +133,20 @@ describe("CFB Who Am I batch 1 calibration", () => {
       expect(candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography"), `${subjectId} deep biography`).toHaveLength(0);
       expect(candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length, `${subjectId} color clues`).toBeLessThanOrEqual(1);
       expect(candidate!.clues.some((clue) => ["player-career-start", "player-career-end", "career-span"].includes(clue.id)), `${subjectId} useless chronology`).toBe(false);
-      expect(candidate!.clues.some((clue) => clue.id === "fact:cfb-career-games" || clue.id === "fact:cfb-career-starts" || clue.conceptId === "identity:career-games"), `${subjectId} generic volume filler`).toBe(false);
+      expect(candidate!.clues.some((clue) => (
+        clue.id === "fact:cfb-career-games"
+        || clue.id === "fact:cfb-career-starts"
+        || clue.id === "fact:cfb-career-passing-completions"
+        || clue.id === "fact:cfb-career-passing-attempts"
+        || clue.id === "fact:cfb-career-rushing-attempts"
+        || clue.id === "fact:cfb-career-interceptions-thrown"
+        || clue.conceptId === "identity:career-games"
+        || clue.conceptId === "identity:career-starts"
+        || clue.conceptId === "identity:career-passing-completions"
+        || clue.conceptId === "identity:career-passing-attempts"
+        || clue.conceptId === "identity:career-rushing-attempts"
+        || clue.conceptId === "identity:career-interceptions-thrown"
+      )), `${subjectId} generic volume filler`).toBe(false);
 
       const sequences = Array.from({ length: 64 }, (_value, index) => whoAmIProgressiveClues(candidate!.clues, seededRandom(index + 1)));
       const first = new Set(sequences[0]!.map((clue) => clue.id));
