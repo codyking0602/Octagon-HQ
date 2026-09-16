@@ -272,7 +272,8 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         if (!source) continue;
         covered += 1;
         const identityClues = candidate.clues.filter((clue) => clue.identityKnowledge);
-        if ((league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id) || isNflWhoAmIBatch3Subject(candidate.id) || isNflWhoAmIBatch4Subject(candidate.id))) || (league === "CFB" && (isCfbWhoAmIBatch1Subject(candidate.id) || isCfbWhoAmIBatch2Subject(candidate.id) || isCfbWhoAmIBatch3Subject(candidate.id)))) {
+        if ((league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id) || isNflWhoAmIBatch3Subject(candidate.id) || isNflWhoAmIBatch4Subject(candidate.id))) || (league === "CFB" && (isCfbWhoAmIBatch1Subject(candidate.id) || isCfbWhoAmIBatch2Subject(candidate.id) || isCfbWhoAmIBatch3Subject(candidate.id)
+          || isCfbWhoAmIBatch4Subject(candidate.id)))) {
           const subject = launchSubjectById.get(candidate.id);
           if (!subject) throw new Error(`Missing launch subject for ${candidate.id}.`);
           const applicableFactIds = new Set(footballWhoAmIApplicableIdentityFacts(subject).map(({ fact }) => fact.factId));
