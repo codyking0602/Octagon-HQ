@@ -4548,12 +4548,9 @@ const cfbBatch4SuppressedClueIds = new Set([
   "identity:pr9-cfb-eric-weddle--armed-forces-bowl-final-play-interception",
   "identity:pr9-cfb-kyle-hamilton--inside-the-garage-podcast",
   "identity:pr9-cfb-malcolm-jenkins--high-school-receiving-role",
-  "identity:pr8-bear-bryant-bear-wrestling-nickname",
-  "identity:pr8-pete-carroll--bob-troppmann-mentor",
   "identity:pr8-pete-carroll--firings-triggered-philosophy-reset",
   "identity:pr9-bill-snyder--hayden-fry-apprenticeship",
   "identity:pr9-ed-orgeron--bear-bryant-visit-turned-away",
-  "identity:pr9-gary-patterson-cfb--franchione-multi-stop-coaching-partnership",
 ]);
 
 const cfbBatch4MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored|appeared|did|blocked|listed|pushed|exploited|coached|instituted|drove)\b|\bsaid\s+me\b|\b(?:three|four)\s+me\s+brothers\b|\bI\s+scholarship\s+opportunities\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]|\bwhen\s+me\b|\bme\s+(?:intercepted|lettered|contributed|co-hosted|accepted|used|succeeded)\b|\bAfter[’']s\b|\binjurthis player\b|\bnicknamed\s+me\s+[“\"']?me\b|\bnickname\s+[“\"']?me\b|[“\"']me[”\"']\s+was\b/i;
@@ -4608,6 +4605,21 @@ const cfbBatch4IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
     band: "helpful",
     facet: "career-path",
   }],
+  ["bear-bryant:identity:pr8-bear-bryant-bear-wrestling-nickname", {
+    text: "As a teenager in Fordyce, Arkansas, I accepted a theater promotion to wrestle a captive bear.",
+    band: "helpful",
+    facet: "identity",
+  }],
+  ["pete-carroll-cfb:identity:pr8-pete-carroll--bob-troppmann-mentor", {
+    text: "I credited high-school coach Bob Troppmann as a foundational mentor, worked his camp for years and later called him from the USC sideline before games.",
+    band: "helpful",
+    facet: "career-path",
+  }],
+  ["gary-patterson-cfb:identity:pr9-gary-patterson-cfb--franchione-multi-stop-coaching-partnership", {
+    text: "Dennis Franchione and I coached together at Kansas State, Tennessee Tech, Pittsburg State, New Mexico and TCU before I succeeded him as TCU head coach.",
+    band: "strong",
+    facet: "career-path",
+  }],
 ]);
 
 function cfbBatch4ApplyOverride(subjectId: string, clue: WhoAmIClue) {
@@ -4627,6 +4639,12 @@ function cfbBatch4Clue(
 }
 
 const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-kyle-hamilton", [
+    cfbBatch4Clue("hamilton-first-stadium-snap", "On my first defensive snap in Notre Dame Stadium, I returned an interception for a touchdown against New Mexico.", "strong", "accomplishments", 15),
+  ]],
+  ["frank-beamer-cfb", [
+    cfbBatch4Clue("beamer-newspaper-vpi", "Newspaper coverage of my high-school play helped catch VPI coaches' attention and led me to Virginia Tech as a player.", "helpful", "career-path", 21),
+  ]],
   ["cfb-travis-hunter", [
     cfbBatch4Clue("hunter-jackson-state-colorado", "I played one season at Jackson State before transferring to Colorado.", "giveaway", "career-path", 7),
   ]],
@@ -4911,9 +4929,11 @@ function rebalanceCfbBatch4ReplayBands(subject: FootballSubjectProfile, clues: r
 
   const isLate = (clue: WhoAmIClue) => clue.band === "strong" || clue.band === "giveaway";
   const helpfulCount = () => balanced.filter((clue) => clue.band === "helpful").length;
+  const strongCount = () => balanced.filter((clue) => clue.band === "strong").length;
+  const giveawayCount = () => balanced.filter((clue) => clue.band === "giveaway").length;
   const lateCount = () => balanced.filter(isLate).length;
 
-  while (lateCount() < 7 && helpfulCount() > 3) {
+  const promoteHelpful = () => {
     const candidate = balanced
       .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
       .filter(({ clue }) => (
@@ -4922,20 +4942,37 @@ function rebalanceCfbBatch4ReplayBands(subject: FootballSubjectProfile, clues: r
         && whoAmIClueSelectionClass(clue) === "sports-identity"
       ))
       .sort((left, right) => right.score - left.score || left.index - right.index)[0];
-    if (!candidate) break;
+    if (!candidate) return false;
     balanced[candidate.index] = { ...candidate.clue, band: "strong" };
+    return true;
+  };
+
+  while (strongCount() < 4 && helpfulCount() > 4) {
+    if (!promoteHelpful()) break;
+  }
+  while (lateCount() < 6 && helpfulCount() > 4) {
+    if (!promoteHelpful()) break;
   }
 
-  while (helpfulCount() < 3 && lateCount() > 7) {
-    const candidate = balanced
-      .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
-      .filter(({ clue }) => (
-        clue.band === "strong"
-        && clue.id !== "role-school"
-        && clue.id !== "recognition:first-team-all-america"
-        && whoAmIClueSelectionClass(clue) === "sports-identity"
-      ))
-      .sort((left, right) => left.score - right.score || left.index - right.index)[0];
+  while (helpfulCount() < 4 && lateCount() > 6) {
+    const strongCandidate = strongCount() > 4
+      ? balanced
+        .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+        .filter(({ clue }) => (
+          clue.band === "strong"
+          && clue.id !== "role-school"
+          && clue.id !== "recognition:first-team-all-america"
+          && whoAmIClueSelectionClass(clue) === "sports-identity"
+        ))
+        .sort((left, right) => left.score - right.score || left.index - right.index)[0]
+      : undefined;
+    const giveawayCandidate = !strongCandidate && giveawayCount() > 2
+      ? balanced
+        .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+        .filter(({ clue }) => clue.band === "giveaway" && whoAmIClueSelectionClass(clue) === "sports-identity")
+        .sort((left, right) => left.score - right.score || left.index - right.index)[0]
+      : undefined;
+    const candidate = strongCandidate ?? giveawayCandidate;
     if (!candidate) break;
     balanced[candidate.index] = { ...candidate.clue, band: "helpful" };
   }
