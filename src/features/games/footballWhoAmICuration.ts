@@ -4639,6 +4639,11 @@ function cfbBatch4Clue(
 }
 
 const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-eric-berry", [
+    cfbBatch4Clue("berry-thorpe-2009", "I won the 2009 Jim Thorpe Award as the nation's top defensive back.", "giveaway", "accomplishments", 8),
+    cfbBatch4Clue("berry-sec-dpoy-2008", "I was the SEC Defensive Player of the Year in 2008.", "strong", "accomplishments", 14),
+    cfbBatch4Clue("berry-two-unanimous-aa", "I became the first Tennessee player to earn unanimous All-America honors twice.", "strong", "accomplishments", 13),
+  ]],
   ["cfb-kyle-hamilton", [
     cfbBatch4Clue("hamilton-first-stadium-snap", "On my first defensive snap in Notre Dame Stadium, I returned an interception for a touchdown against New Mexico.", "strong", "accomplishments", 15),
   ]],
