@@ -447,7 +447,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         .filter((fact) => CFB_WHO_AM_I_RESUME_METRICS.has(fact.metricId))
         .filter((fact) => Number(fact.value) !== 0)
         .filter((fact) => footballWhoAmIMetricFactIsPlayable(subject, fact));
-      if (!isCfbWhoAmIBatch1Subject(candidate.id) && !isCfbWhoAmIBatch2Subject(candidate.id) && !isCfbWhoAmIBatch3Subject(candidate.id)) {
+      if (!isCfbWhoAmIBatch1Subject(candidate.id) && !isCfbWhoAmIBatch2Subject(candidate.id) && !isCfbWhoAmIBatch3Subject(candidate.id) && !isCfbWhoAmIBatch4Subject(candidate.id)) {
         for (const fact of canonicalResumeFacts) {
           expect(
             candidate.clues.some((clue) => (
