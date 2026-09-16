@@ -4644,13 +4644,15 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["frank-beamer-cfb", [
     cfbBatch4Clue("beamer-newspaper-vpi", "Newspaper coverage of my high-school play helped catch VPI coaches' attention and led me to Virginia Tech as a player.", "helpful", "career-path", 21),
+    cfbBatch4Clue("beamer-radford-start", "After graduating from Virginia Tech, I began my coaching career at Radford High School.", "helpful", "career-path", 20),
+    cfbBatch4Clue("beamer-two-conferences", "I won conference championships with Virginia Tech in both the Big East and the ACC.", "strong", "accomplishments", 14),
   ]],
   ["cfb-travis-hunter", [
     cfbBatch4Clue("hunter-jackson-state-colorado", "I played one season at Jackson State before transferring to Colorado.", "giveaway", "career-path", 7),
   ]],
   ["cfb-ed-reed", [
-    cfbBatch4Clue("reed-two-star-miami-find", "I described myself as a two-star recruit before Miami found me while scholarship sanctions forced its staff to search creatively.", "helpful", "career-path", 20),
-    cfbBatch4Clue("reed-fsu-halftime", "During Miami's 2001 game at Florida State, I delivered a halftime challenge that became one of the signature leadership moments of my college career.", "helpful", "career-path", 19),
+    cfbBatch4Clue("reed-two-star-miami-find", "I described myself as a two-star recruit before Miami found me while scholarship sanctions forced its staff to search creatively.", "strong", "career-path", 16),
+    cfbBatch4Clue("reed-fsu-halftime", "During Miami's 2001 game at Florida State, I delivered a halftime challenge that became one of the signature leadership moments of my college career.", "strong", "career-path", 15),
   ]],
   ["cfb-patrick-peterson", [
     cfbBatch4Clue("peterson-thorpe-bednarik", "In 2010 I won both the Jim Thorpe Award and the Bednarik Award at LSU.", "giveaway", "accomplishments", 7),
