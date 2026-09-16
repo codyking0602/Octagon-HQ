@@ -80,4 +80,18 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
 
     console.info("UFC Who Am I full-100 calibration", JSON.stringify(report));
   }, 150_000);
+  it("keeps Charles Oliveira division and title-win facts canonical", () => {
+    const charles = getUfcWhoAmIUniverse().candidates.find(
+      (candidate) => candidate.id === "ufc:charles-oliveira",
+    );
+
+    expect(charles).toBeDefined();
+    expect(charles!.clues.find((clue) => clue.id === "division-count")?.text).toBe(
+      "I competed in 2 UFC divisions.",
+    );
+    expect(charles!.clues.find((clue) => clue.id === "title-wins")?.text).toBe(
+      "I won 2 UFC title fights.",
+    );
+  });
+
 });
