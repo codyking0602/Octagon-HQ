@@ -4502,9 +4502,9 @@ export const CFB_WHO_AM_I_BATCH_4_SUBJECT_IDS = [
   "chip-kelly",
   "chris-petersen-cfb",
   "dan-lanning",
-  "deion-sanders",
   "ed-orgeron",
   "frank-beamer-cfb",
+  "gary-patterson-cfb",
 ] as const;
 
 const cfbBatch4SubjectIds = new Set<string>(CFB_WHO_AM_I_BATCH_4_SUBJECT_IDS);
