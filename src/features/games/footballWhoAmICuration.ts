@@ -3369,6 +3369,12 @@ const cfbBatch2SuppressedIdentityConcepts = new Set([
 const cfbBatch2MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly)\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
 
 const cfbBatch2IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["cfb-darren-sproles:identity:2003-big12-title-game", {
+    text: "In the 2003 Big 12 Championship Game against No. 1 Oklahoma, I had 235 rushing yards and 88 receiving yards in Kansas State's 35-7 win.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
   ["cfb-darren-sproles:identity:cfb-darren-sproles--number-43-for-father", {
     text: "I wore No. 43 at Kansas State, the same number my father Larry had worn.",
     band: "strong",
@@ -3496,7 +3502,7 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-ladainian-tomlinson", [
     cfbBatch2Clue("tomlinson-doak", "I won the 2000 Doak Walker Award after leading the nation in rushing for a second straight season.", "giveaway", "accomplishments", 8),
     cfbBatch2Clue("tomlinson-2158", "As a senior at TCU in 2000, I rushed for 2,158 yards.", "strong", "production", 22),
-    cfbBatch2Clue("tomlinson-heisman-fourth", "I finished fourth in the 2000 Heisman Trophy voting after TCU's first 10-win season.", "strong", "accomplishments", 17),
+    cfbBatch2Clue("tomlinson-heisman-fourth", "I finished fourth in the 2000 Heisman Trophy voting.", "strong", "accomplishments", 17),
     cfbBatch2Clue("tomlinson-rushing-titles", "I led the nation in rushing in both 1999 and 2000.", "strong", "accomplishments", 19),
   ]],
   ["cfb-lamichael-james", [
@@ -3537,7 +3543,7 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("hannah-all-sec", "I earned All-SEC honors in both 1971 and 1972.", "strong", "accomplishments", 22),
     cfbBatch2Clue("hannah-fourth-pick", "New England selected me No. 4 overall in the 1973 NFL Draft.", "giveaway", "career-path", 8),
     cfbBatch2Clue("hannah-number", "I wore No. 73 while playing offensive guard at Alabama.", "strong", "identity", 20),
-    cfbBatch2Clue("hannah-sec-titles", "Alabama won SEC championships in both 1971 and 1972 while I anchored the offensive line.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("hannah-bryant", "Bear Bryant described me as the finest offensive lineman he had ever been around.", "strong", "relationships", 18),
   ]],
   ["cfb-orlando-pace", [
     cfbBatch2Clue("pace-lombardi", "I won the Lombardi Award twice at Ohio State, becoming its first sophomore winner and first two-time winner.", "giveaway", "accomplishments", 8),
@@ -3547,7 +3553,7 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("pace-big-ten-mvp", "I was named the Big Ten's most valuable player in 1996 as an offensive tackle.", "strong", "accomplishments", 18),
   ]],
   ["cfb-darren-sproles", [
-    cfbBatch2Clue("sproles-all-big12", "I earned first-team All-Big 12 honors in 2003 as Kansas State won the conference championship.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("sproles-2003-aa", "I was a first-team All-American in 2003 as Kansas State won the Big 12 championship.", "strong", "accomplishments", 18),
     cfbBatch2Clue("sproles-records", "I left Kansas State holding the program's career, single-season and single-game rushing records.", "strong", "accomplishments", 20),
   ]],
   ["cfb-desmond-howard", [
