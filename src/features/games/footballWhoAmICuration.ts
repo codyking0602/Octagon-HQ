@@ -374,7 +374,7 @@ function clueQualityScore(subject: FootballSubjectProfile, clue: WhoAmIClue) {
   if (/fact:nfl-career-(?:passing|rushing|receiving)-(?:attempts|completions|receptions)$/.test(id)) score -= 20;
   if (/fact:nfl-career-(?:.*per-game|.*percentage|.*ratio|.*per-attempt)$/.test(id)) score -= 30;
   if (/fact:nfl-career-interceptions-thrown/.test(id)) score -= 10;
-  if (/curated:/.test(id) || /curated-cfb1:/.test(id) || /curated-cfb2:/.test(id)) score += 45;
+  if (/curated:/.test(id) || /curated-cfb1:/.test(id) || /curated-cfb2:/.test(id) || /curated-cfb3:/.test(id)) score += 45;
   if (/fact:cfb-(?:heisman-awards|all-america-selections|national-championships-won|nfl-draft-overall-pick)/.test(id)) score += 38;
   if (/fact:cfb-best-season-(?:passing-yards|passing-touchdowns|rushing-yards|rushing-touchdowns|receiving-yards|receiving-touchdowns|sacks|tackles-for-loss|defensive-interceptions)$/.test(id)) score += 22;
   if (/fact:cfb-career-(?:passing-yards|passing-touchdowns|rushing-yards|rushing-touchdowns|receiving-yards|receiving-touchdowns|sacks|defensive-interceptions)$/.test(id)) score += 14;
@@ -3665,7 +3665,7 @@ function isCfbBatch2NflStageLeak(clue: WhoAmIClue) {
   if (!clue.identityKnowledge) return false;
   const text = clue.text.toLowerCase();
   return (
-    /\bnfl\b|super bowl|all-pro|pro bowl|nfl mvp|defensive player of the year|professional football hall of fame/.test(text)
+    /\bnfl\b|super bowl|all-pro|pro bowl|nfl mvp|nfl defensive player of the year|professional football hall of fame/.test(text)
     && !/draft|selected|pick/.test(text)
   );
 }
@@ -3746,6 +3746,712 @@ function curateCfbBatch2Clues(subject: FootballSubjectProfile, rawClues: readonl
 
 export function isCfbWhoAmIBatch2Subject(subjectId: string) {
   return cfbBatch2SubjectIds.has(subjectId);
+}
+
+
+export const CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS = [
+  "cfb-brandon-scherff",
+  "cfb-bryant-mckinnie",
+  "cfb-dbrickashaw-ferguson",
+  "cfb-david-decastro",
+  "cfb-jake-long",
+  "cfb-jake-matthews",
+  "cfb-joe-alt",
+  "cfb-joe-thomas",
+  "cfb-aaron-donald",
+  "cfb-bruce-smith",
+  "cfb-chase-young",
+  "cfb-jadeveon-clowney",
+  "cfb-lee-roy-selmon",
+  "cfb-myles-garrett",
+  "cfb-ndamukong-suh",
+  "cfb-will-anderson-jr",
+  "cfb-abdul-carter",
+  "cfb-aidan-hutchinson",
+  "cfb-brian-orakpo",
+  "cfb-chris-long",
+  "cfb-david-pollack",
+  "cfb-dwight-freeney",
+  "cfb-gerald-mccoy",
+  "cfb-glenn-dorsey",
+  "cfb-haloti-ngata",
+  "cfb-jj-watt",
+  "cfb-jalen-carter",
+  "cfb-joey-bosa",
+  "cfb-john-henderson",
+  "cfb-jonathan-allen",
+  "cfb-julius-peppers",
+  "cfb-kayvon-thibodeaux",
+  "cfb-derrick-thomas",
+  "cfb-luke-kuechly",
+  "cfb-manti-teo",
+  "cfb-roquan-smith",
+  "cfb-von-miller",
+  "cfb-aj-hawk",
+  "cfb-brian-urlacher",
+  "cfb-cj-mosley",
+  "cfb-dan-morgan",
+  "cfb-derrick-johnson",
+  "cfb-devin-white",
+  "cfb-isaiah-simmons",
+  "cfb-james-laurinaitis",
+  "cfb-jaylon-smith",
+  "cfb-khalil-mack",
+  "cfb-micah-parsons",
+  "cfb-nakobe-dean",
+  "cfb-patrick-willis",
+] as const;
+
+const cfbBatch3SubjectIds = new Set<string>(CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS);
+const cfbBatch3StructuralClueIds = new Set(["player-career-start", "player-career-end", "career-span"]);
+const cfbBatch3GenericMetricIds = new Set([
+  "fact:cfb-career-games",
+  "fact:cfb-career-starts",
+  "fact:cfb-career-targets",
+  "fact:cfb-career-passing-completions",
+  "fact:cfb-career-passing-attempts",
+  "fact:cfb-career-rushing-attempts",
+  "fact:cfb-career-interceptions-thrown",
+]);
+const cfbBatch3GenericIdentityConcepts = new Set([
+  "identity:career-games",
+  "identity:career-starts",
+  "identity:career-games-starts",
+  "identity:career-passing-completions",
+  "identity:career-passing-attempts",
+  "identity:career-rushing-attempts",
+  "identity:career-targets",
+  "identity:career-interceptions-thrown",
+]);
+
+const cfbBatch3SuppressedMetricClueIds = new Map<string, ReadonlySet<string>>([
+  ["cfb-chase-young", new Set(["fact:cfb-career-sacks", "fact:cfb-career-forced-fumbles", "fact:cfb-best-season-sacks"])],
+  ["cfb-myles-garrett", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks", "fact:cfb-career-forced-fumbles", "fact:cfb-career-defensive-interceptions", "fact:cfb-best-season-defensive-interceptions"])],
+  ["cfb-will-anderson-jr", new Set(["fact:cfb-career-sacks", "fact:cfb-career-defensive-interceptions", "fact:cfb-best-season-defensive-interceptions"])],
+  ["cfb-abdul-carter", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks"])],
+  ["cfb-aidan-hutchinson", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks"])],
+  ["cfb-kayvon-thibodeaux", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks"])],
+  ["cfb-jalen-carter", new Set(["fact:cfb-career-sacks"])],
+  ["cfb-joey-bosa", new Set(["fact:cfb-career-sacks"])],
+  ["cfb-jonathan-allen", new Set(["fact:cfb-career-sacks", "fact:cfb-career-forced-fumbles", "fact:cfb-best-season-sacks"])],
+  ["cfb-roquan-smith", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks", "fact:cfb-career-pass-breakups"])],
+  ["cfb-devin-white", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks", "fact:cfb-career-defensive-interceptions", "fact:cfb-best-season-defensive-interceptions"])],
+  ["cfb-isaiah-simmons", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks", "fact:cfb-career-defensive-interceptions", "fact:cfb-best-season-defensive-interceptions"])],
+  ["cfb-micah-parsons", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks"])],
+  ["cfb-nakobe-dean", new Set(["fact:cfb-career-defensive-interceptions", "fact:cfb-best-season-defensive-interceptions"])],
+]);
+
+const cfbBatch3SuppressedIdentityConcepts = new Set([
+  "identity:cfb-dbrickashaw-ferguson--thorn-birds-name-origin",
+  "identity:cfb-dbrickashaw-ferguson--religious-studies-degree-early",
+  "identity:cfb-david-decastro--south-african-rugby-family",
+  "identity:cfb-david-decastro--mother-delayed-football-start",
+  "identity:cfb-david-decastro--management-science-engineering-major",
+  "identity:cfb-jake-long--whole-school-leadership-reputation",
+  "identity:cfb-jake-long--survived-house-fire",
+  "identity:cfb-jake-matthews--bruce-matthews-son",
+  "identity:cfb-jake-matthews--fell-for-am-on-kevin-visits",
+  "identity:cfb-jake-matthews--elkins-line-with-brother-mike",
+  "identity:cfb-jake-matthews--four-brothers-aggies",
+  "identity:consecutive-starts",
+  "identity:cfb-joe-alt--brother-mark-hockey",
+  "identity:cfb-joe-alt--mechanical-engineering",
+  "identity:cfb-aaron-donald--basement-workout-origin",
+  "identity:cfb-aaron-donald--pitt-return-and-gift",
+  "identity:bruce-smith-reluctant-football-father-no-quit",
+  "identity:cfb-chase-young--father-accountability",
+  "identity:cfb-chase-young--ian-thomas-mentor",
+  "identity:mother-frito-lay-motivation",
+  "identity:doo-doo-nickname-origin",
+  "identity:youngest-of-nine-farm",
+  "identity:college-community-service",
+  "identity:built-usf-football-program",
+  "identity:myles-garrett-paleontology-dinosaur-interest",
+  "identity:myles-garrett-poetry-maya-angelou",
+  "identity:myles-garrett-athletic-family-brea-aandm-link",
+  "identity:cfb-ndamukong-suh--house-of-spears-name",
+  "identity:cfb-ndamukong-suh--mother-pushed-degree-return",
+  "identity:cfb-will-anderson-jr--youngest-with-five-sisters",
+  "identity:cfb-will-anderson-jr--father-provoked-competitive-edge",
+  "identity:cfb-abdul-carter--father-bloomsburg-defender",
+  "identity:cfb-abdul-carter--deion-barnes-same-street",
+  "identity:cfb-aidan-hutchinson--whole-family-michigan-tie",
+  "identity:cfb-brian-orakpo--parents-nigerian-immigrants",
+  "identity:cfb-david-pollack--family-faith",
+  "identity:cfb-kayvon-thibodeaux--wants-to-start-school",
+  "identity:cfb-dwight-freeney--mother-track-background",
+  "identity:cfb-gerald-mccoy--mother-died-senior-year",
+  "identity:cfb-glenn-dorsey--family-katrina",
+  "identity:cfb-haloti-ngata--parents-died-young",
+  "identity:cfb-jj-watt--family-sports",
+  "identity:cfb-jalen-carter--family-background",
+  "identity:cfb-joey-bosa--bosa-football-family",
+  "identity:cfb-john-henderson--family-hardship",
+  "identity:cfb-jonathan-allen--military-family",
+  "identity:cfb-julius-peppers--family-background",
+  "identity:cfb-derrick-thomas--father-killed-vietnam",
+  "identity:cfb-luke-kuechly--family-athletes",
+  "identity:cfb-manti-teo--hawaiian-elder-respect-leadership",
+  "identity:cfb-manti-teo--declan-sullivan-response",
+  "identity:cfb-manti-teo--catfishing-hoax",
+  "identity:cfb-manti-teo--eagle-scout-service",
+  "identity:montezuma-rural-roots",
+  "identity:montezuma-youth-camp",
+  "identity:michael-phelps-swim-training",
+  "identity:region-title-running-back-switch",
+  "identity:ucla-signing-day-reversal",
+  "identity:von-miller-returned-senior-degree-family",
+  "identity:von-miller-poultry-science-chicken-farming",
+  "identity:von-miller-childhood-glasses-vons-vision",
+  "identity:cfb-aj-hawk--childhood-with-mike-nugent",
+  "identity:cfb-aj-hawk--played-with-brother-ryan",
+  "identity:cfb-aj-hawk--community-park-upbringing",
+  "identity:cfb-cj-mosley--younger-brother-jamey-alabama-walkon",
+  "identity:cfb-dan-morgan--miami-fan-before-hurricane",
+  "identity:cfb-derrick-johnson--waco-baylor-brother-upbringing",
+  "identity:cfb-derrick-johnson--brother-kept-recruitment-neutral",
+  "identity:cfb-derrick-johnson--extended-college-football-family",
+  "identity:cfb-derrick-johnson--waco-homesickness-and-tattoo",
+  "identity:cfb-devin-white--daisy-mae-horseman",
+  "identity:cfb-devin-white--rode-horse-to-final-and-stadium",
+  "identity:cfb-james-laurinaitis--father-animal-road-warriors",
+  "identity:cfb-jaylon-smith--older-brother-rod-smith",
+  "identity:cfb-khalil-mack--competitive-multi-sport-family",
+  "identity:cfb-nakobe-dean--mechanical-engineering-major",
+  "identity:cfb-nakobe-dean--returned-to-finish-degree",
+  "identity:cfb-nakobe-dean--brother-nikolas-ole-miss",
+  "identity:cfb-patrick-willis--worked-young-to-help-family",
+  "identity:cfb-patrick-willis--moved-with-siblings-to-coach",
+  "identity:pitt-giving-back",
+  "identity:cfb-jj-watt--foundation-started-in-college",
+  "identity:cfb-derrick-thomas--third-and-long-literacy",
+  "identity:luke-kuechly-jesuit-boston-college-fit",
+  "identity:cfb-chase-young--rose-bowl-travel-loan-suspension",
+]);
+
+const cfbBatch3MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored)\b|\bsaid\s+me\b|\bfour\s+me\s+brothers\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
+
+const cfbBatch3IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["cfb-bryant-mckinnie:identity:cfb-bryant-mckinnie--lackawanna-juco-conversion", {
+    text: "I moved from defensive end to offensive line at Lackawanna Junior College before transferring to Miami.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 20,
+  }],
+  ["cfb-bryant-mckinnie:identity:cfb-bryant-mckinnie--no-sacks-at-miami", {
+    text: "Miami credits me with not allowing a sack at left tackle during my two seasons with the Hurricanes.",
+    band: "strong",
+    facet: "style",
+    revealPriority: 18,
+  }],
+  ["cfb-jadeveon-clowney:identity:outback-bowl-the-hit", {
+    text: "In the 2013 Outback Bowl against Michigan, I blasted Vincent Smith, forced a fumble and recovered it on the play remembered simply as 'The Hit.'",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 7,
+  }],
+  ["cfb-brian-urlacher:identity:cfb-brian-urlacher--lobo-hybrid-position", {
+    text: "At New Mexico, I played the hybrid 'Lobo' role, blending middle-linebacker and free-safety responsibilities.",
+    band: "giveaway",
+    facet: "role",
+    revealPriority: 9,
+  }],
+  ["cfb-dan-morgan:identity:cfb-dan-morgan--first-defensive-award-triple-sweep", {
+    text: "In 2000 I became the first player to win the Bednarik, Butkus and Nagurski awards in the same season.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
+  ["cfb-khalil-mack:identity:cfb-khalil-mack--number-46-video-game-motivation", {
+    text: "I kept No. 46 at Buffalo partly because I remembered being rated 46 overall in the NCAA football video game and used it as motivation.",
+    band: "strong",
+    facet: "identity",
+    revealPriority: 18,
+  }],
+  ["cfb-brandon-scherff:identity:cfb-brandon-scherff--quarterback-to-two-way-line", {
+    text: "After my sophomore quarterback season, I shifted to offensive and defensive line for my final two high-school seasons before Iowa recruited me as a lineman.",
+  }],
+  ["cfb-jake-matthews:identity:cfb-jake-matthews--four-brothers-aggies", {
+    text: "I was one of four brothers who played football at Texas A&M.",
+  }],
+  ["cfb-joe-thomas:identity:cfb-joe-thomas--three-sport-high-school-captain", {
+    text: "In high school I participated in football, basketball and track, and captained both the football and basketball teams.",
+  }],
+  ["cfb-aidan-hutchinson:identity:cfb-aidan-hutchinson--michigan-legacy-no-97", {
+    text: "My father Chris was a Michigan captain and team MVP, and I followed him to Michigan wearing the same No. 97.",
+  }],
+  ["cfb-gerald-mccoy:identity:cfb-gerald-mccoy--elite-recruit-redshirted", {
+    text: "Despite arriving as one of the nation's most celebrated defensive recruits, I redshirted in 2006.",
+  }],
+  ["cfb-glenn-dorsey:identity:cfb-glenn-dorsey--band-or-football-choice", {
+    text: "At East Ascension High School, I participated in both band and football until overlapping practice schedules forced me to choose football.",
+  }],
+  ["cfb-glenn-dorsey:identity:cfb-glenn-dorsey--first-college-snap-forced-fumble", {
+    text: "On the first collegiate snap of my LSU career, I forced a fumble against Oregon State.",
+  }],
+  ["cfb-derrick-thomas:identity:cfb-derrick-thomas--kentucky-leadership-moment", {
+    text: "During Alabama's 1988 game with Kentucky, I challenged teammates not to accept losing and then produced impact plays on defense and special teams as the Tide rallied.",
+  }],
+  ["cfb-aj-hawk:identity:cfb-aj-hawk--quinn-fiesta-family-rivalry", {
+    text: "In the 2006 Fiesta Bowl, I faced Notre Dame quarterback Brady Quinn while dating Quinn's sister Laura.",
+  }],
+  ["cfb-cj-mosley:identity:cfb-cj-mosley--chose-alabama-over-national-offers", {
+    text: "Despite offers from programs including Auburn, Florida State, Georgia, Stanford, Oklahoma and LSU, I stayed in-state for Alabama.",
+  }],
+  ["cfb-cj-mosley:identity:cfb-cj-mosley--mentored-reggie-ragland", {
+    text: "Reggie Ragland, who succeeded me at Alabama, said I mentored him, taught him about leadership and was the smartest player he had played with.",
+  }],
+  ["cfb-jaylon-smith:identity:cfb-jaylon-smith--high-school-running-back-linebacker", {
+    text: "At Bishop Luers, I starred on both sides of the ball as a running back and linebacker.",
+  }],
+]);
+
+function cfbBatch3Clue(
+  id: string,
+  text: string,
+  band: WhoAmIClue["band"] = "strong",
+  facet: WhoAmIClue["facet"] = "accomplishments",
+  revealPriority = 14,
+): WhoAmIClue {
+  return { id: "curated-cfb3:" + id, conceptId: "curated-cfb3:" + id, text, band, facet, revealPriority };
+}
+
+const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-dbrickashaw-ferguson", [
+    cfbBatch3Clue("ferguson-49-starts", "I started all 49 games I played at Virginia, a school record for an offensive lineman.", "helpful", "production", 22),
+    cfbBatch3Clue("ferguson-jersey-retired", "Virginia retired my jersey after a career that included first-team All-America honors in 2005.", "strong", "identity", 17),
+  ]],
+  ["cfb-david-decastro", [
+    cfbBatch3Clue("decastro-39-right-guard", "I started all 39 games of my Stanford career at right guard.", "helpful", "production", 22),
+    cfbBatch3Clue("decastro-outland-finalist", "I was a finalist for the 2011 Outland Trophy while earning unanimous All-America honors.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("decastro-line-protection", "During my three seasons as a starter, Stanford's offensive line allowed only 24 sacks.", "helpful", "style", 24),
+  ]],
+  ["cfb-jake-long", [
+    cfbBatch3Clue("long-40-starts", "I started 40 games at Michigan.", "helpful", "production", 23),
+    cfbBatch3Clue("long-two-time-captain", "My Michigan teammates elected me a team captain twice.", "helpful", "identity", 21),
+  ]],
+  ["cfb-jake-matthews", [
+    cfbBatch3Clue("matthews-manziel-line", "As a junior in 2012, I helped block for freshman Heisman Trophy winner Johnny Manziel.", "helpful", "production", 20),
+    cfbBatch3Clue("matthews-outland-finalist", "I was an Outland Trophy finalist as a Texas A&M senior in 2013.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("matthews-sixth-pick", "Atlanta selected me No. 6 overall in the 2014 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-joe-alt", [
+    cfbBatch3Clue("alt-two-time-aa", "I earned first-team All-America recognition in each of my final two Notre Dame seasons.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("alt-fifth-pick", "The Chargers selected me No. 5 overall in the 2024 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-joe-thomas", [
+    cfbBatch3Clue("thomas-captain-comvp", "I was a Wisconsin team captain and co-MVP as a senior in 2006.", "helpful", "identity", 20),
+    cfbBatch3Clue("thomas-two-aa", "I earned first-team All-America honors in both 2005 and 2006.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("thomas-third-pick", "Cleveland selected me No. 3 overall in the 2007 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-aaron-donald", [
+    { ...cfbBatch3Clue("donald-morning-workouts", "My father introduced me to disciplined early-morning weight training while I was young, a habit that became central to my football development.", "helpful", "style", 22), conceptId: "identity:father-morning-workouts" },
+    cfbBatch3Clue("donald-award-sweep", "In 2013 I won the Nagurski, Bednarik, Outland and Lombardi awards at Pitt.", "giveaway", "accomplishments", 7),
+    cfbBatch3Clue("donald-66-tfl", "I finished my Pitt career with 66 tackles for loss, an extraordinary total for an interior defensive lineman.", "helpful", "production", 20),
+    cfbBatch3Clue("donald-97-retired", "Pitt later retired the No. 97 jersey I wore for the Panthers.", "strong", "identity", 16),
+  ]],
+  ["cfb-bruce-smith", [
+    cfbBatch3Clue("smith-outland", "I won the 1984 Outland Trophy at Virginia Tech.", "giveaway", "accomplishments", 8),
+    cfbBatch3Clue("smith-46-sacks", "I recorded 46 sacks during my Virginia Tech career.", "helpful", "production", 20),
+    cfbBatch3Clue("smith-two-aa", "I was a two-time All-American for the Hokies.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("smith-first-pick", "Buffalo selected me No. 1 overall in the 1985 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-chase-young", [
+    cfbBatch3Clue("young-16-5", "I led the nation with 16.5 sacks for Ohio State in 2019.", "helpful", "accomplishments", 19),
+    cfbBatch3Clue("young-award-sweep", "In 2019 I won the Nagurski Trophy, Bednarik Award and Ted Hendricks Award.", "giveaway", "accomplishments", 7),
+    cfbBatch3Clue("young-big-ten-dpoy", "I was the Big Ten Defensive Player of the Year and Defensive Lineman of the Year in 2019.", "strong", "accomplishments", 15),
+    cfbBatch3Clue("young-heisman-finalist", "I became a Heisman Trophy finalist as a defensive end in 2019.", "strong", "accomplishments", 13),
+    cfbBatch3Clue("young-second-pick", "Washington selected me No. 2 overall in the 2020 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-jadeveon-clowney", [
+    cfbBatch3Clue("clowney-hendricks", "I won the 2012 Ted Hendricks Award as the nation's top defensive end.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("clowney-sec-dpoy", "I was the SEC Defensive Player of the Year in 2012.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("clowney-first-pick", "Houston selected me No. 1 overall in the 2014 NFL Draft.", "giveaway", "career-path", 8),
+  ]],
+  ["cfb-lee-roy-selmon", [
+    cfbBatch3Clue("selmon-32-1-1", "Oklahoma went 32-1-1 during my three seasons as a starting defensive lineman.", "helpful", "accomplishments", 22),
+    cfbBatch3Clue("selmon-hall", "I entered the College Football Hall of Fame in 1988.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("selmon-93", "I wore No. 93 on Oklahoma's defensive line.", "helpful", "identity", 20),
+    cfbBatch3Clue("selmon-1975-aa", "I finished my Oklahoma career as one of the nation's most decorated linemen in 1975.", "strong", "identity", 19),
+  ]],
+  ["cfb-ndamukong-suh", [
+    cfbBatch3Clue("suh-award-sweep", "In 2009 I swept the Outland, Lombardi, Bednarik and Nagurski awards.", "giveaway", "accomplishments", 7),
+    cfbBatch3Clue("suh-heisman-fourth", "I finished fourth in the 2009 Heisman Trophy voting as a defensive tackle.", "giveaway", "accomplishments", 9),
+    cfbBatch3Clue("suh-title-game", "I had 4.5 sacks and seven tackles for loss against Texas in the 2009 Big 12 Championship Game.", "giveaway", "accomplishments", 8),
+    cfbBatch3Clue("suh-215-tackles", "I finished my Nebraska career with 215 tackles and 57 tackles for loss.", "helpful", "production", 21),
+    cfbBatch3Clue("suh-second-pick", "Detroit selected me No. 2 overall in the 2010 NFL Draft.", "giveaway", "career-path", 10),
+  ]],
+  ["cfb-will-anderson-jr", [
+    cfbBatch3Clue("anderson-career-sacks", "I left Alabama with 34.5 career sacks, second in program history behind Derrick Thomas.", "helpful", "production", 19),
+    cfbBatch3Clue("anderson-two-nagurski", "I won the Bronko Nagurski Trophy in both 2021 and 2022.", "giveaway", "accomplishments", 8),
+    cfbBatch3Clue("anderson-two-sec-dpoy", "I was the SEC Defensive Player of the Year in both 2021 and 2022.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("anderson-two-unanimous-aa", "I became Alabama's first two-time unanimous All-American.", "strong", "accomplishments", 15),
+    cfbBatch3Clue("anderson-third-pick", "Houston selected me No. 3 overall in the 2023 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-abdul-carter", [
+    cfbBatch3Clue("carter-career-sacks", "I finished my Penn State career with 23 sacks and 39.5 tackles for loss.", "helpful", "production", 20),
+    cfbBatch3Clue("carter-big-ten-dpoy", "I was the Big Ten Defensive Player of the Year and Defensive Lineman of the Year in 2024.", "strong", "accomplishments", 15),
+    cfbBatch3Clue("carter-unanimous-aa", "I became Penn State's first unanimous consensus All-American since Saquon Barkley.", "strong", "accomplishments", 17),
+  ]],
+  ["cfb-aidan-hutchinson", [
+    cfbBatch3Clue("hutchinson-14-sacks", "I set Michigan's single-season sack record with 14 in 2021.", "helpful", "production", 19),
+    cfbBatch3Clue("hutchinson-big-ten-dpoy", "I was the Big Ten Defensive Player of the Year in 2021.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("hutchinson-consensus-aa", "I was a consensus first-team All-American in 2021.", "strong", "accomplishments", 18),
+  ]],
+  ["cfb-chris-long", [
+    cfbBatch3Clue("long-acc-dpoy", "I was the ACC Defensive Player of the Year in 2007.", "strong", "accomplishments", 15),
+    cfbBatch3Clue("long-unanimous-aa", "I became a unanimous All-American at Virginia in 2007.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("long-second-pick", "St. Louis selected me No. 2 overall in the 2008 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-kayvon-thibodeaux", [
+    cfbBatch3Clue("thibodeaux-freshman-dpoy", "I was the Pac-12 Freshman Defensive Player of the Year in 2019.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("thibodeaux-morris", "I won the 2020 Morris Trophy as the Pac-12's top defensive lineman.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("thibodeaux-title-mvp", "I was MVP of the 2020 Pac-12 Championship Game after helping Oregon beat USC.", "giveaway", "accomplishments", 9),
+    cfbBatch3Clue("thibodeaux-two-year-sacks", "Across my first two Oregon seasons, I totaled 12 sacks and 23.5 tackles for loss.", "helpful", "production", 20),
+  ]],
+  ["cfb-jj-watt", [
+    cfbBatch3Clue("watt-2010-all-big-ten", "I earned first-team All-Big Ten honors at Wisconsin in 2010.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("watt-2010-production", "In my final Wisconsin season, I recorded 21 tackles for loss and seven sacks.", "helpful", "production", 20),
+    cfbBatch3Clue("watt-11th-pick", "Houston selected me No. 11 overall in the 2011 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-jalen-carter", [
+    cfbBatch3Clue("carter-two-titles", "I was part of Georgia's back-to-back national championship teams in 2021 and 2022.", "giveaway", "accomplishments", 9),
+    cfbBatch3Clue("carter-unanimous-aa", "I was a unanimous first-team All-American in 2022.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("carter-ninth-pick", "Philadelphia selected me No. 9 overall in the 2023 NFL Draft.", "giveaway", "career-path", 10),
+  ]],
+  ["cfb-john-henderson", [
+    cfbBatch3Clue("henderson-sec-dpoy", "I was the SEC Defensive Player of the Year in 2000.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("henderson-ninth-pick", "Jacksonville selected me No. 9 overall in the 2002 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-jonathan-allen", [
+    cfbBatch3Clue("allen-award-sweep", "As an Alabama senior I won the Nagurski, Bednarik, Hendricks and Lombardi awards.", "giveaway", "accomplishments", 7),
+    cfbBatch3Clue("allen-sec-dpoy", "I was the SEC Defensive Player of the Year in 2016.", "strong", "accomplishments", 15),
+    cfbBatch3Clue("allen-28-5", "I finished my Alabama career with 28.5 sacks, second in school history at the time.", "helpful", "production", 19),
+    cfbBatch3Clue("allen-national-title", "I was a starting defensive lineman on Alabama's 2015 national championship team.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("allen-17th-pick", "Washington selected me No. 17 overall in the 2017 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-derrick-thomas", [
+    cfbBatch3Clue("thomas-27-sacks", "I recorded 27 sacks for Alabama in 1988.", "giveaway", "production", 8),
+    cfbBatch3Clue("thomas-52-sacks", "I finished my Alabama career with 52 sacks and 68 tackles for loss.", "helpful", "production", 19),
+    cfbBatch3Clue("thomas-butkus", "I won the 1988 Butkus Award.", "giveaway", "accomplishments", 7),
+    cfbBatch3Clue("thomas-heisman-top-ten", "I finished in the top 10 of the 1988 Heisman Trophy voting.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("thomas-hall", "I was elected to the College Football Hall of Fame.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("thomas-fourth-pick", "Kansas City selected me No. 4 overall in the 1989 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-roquan-smith", [
+    cfbBatch3Clue("roquan-butkus", "I won the 2017 Butkus Award as the nation's top linebacker.", "giveaway", "accomplishments", 7),
+    cfbBatch3Clue("roquan-sec-dpoy", "I was the SEC Defensive Player of the Year in 2017.", "strong", "accomplishments", 15),
+    cfbBatch3Clue("roquan-137", "I led Georgia with 137 tackles during the 2017 season.", "helpful", "production", 19),
+    cfbBatch3Clue("roquan-sec-title", "I helped Georgia win the 2017 SEC championship and reach the national title game.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("roquan-eighth-pick", "Chicago selected me No. 8 overall in the 2018 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-von-miller", [
+    cfbBatch3Clue("miller-second-pick", "Denver selected me No. 2 overall in the 2011 NFL Draft.", "giveaway", "career-path", 9),
+    cfbBatch3Clue("miller-first-team-aa", "I was a first-team All-American during my Texas A&M career.", "strong", "accomplishments", 18),
+  ]],
+  ["cfb-aj-hawk", [
+    cfbBatch3Clue("hawk-national-title", "I was a starting linebacker on Ohio State's 2002 national championship team.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("hawk-two-time-aa", "I earned first-team All-America honors in each of my final two Ohio State seasons.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("hawk-fifth-pick", "Green Bay selected me No. 5 overall in the 2006 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-brian-urlacher", [
+    cfbBatch3Clue("urlacher-178", "I led the nation with a New Mexico school-record 178 tackles in 1998.", "helpful", "production", 19),
+    cfbBatch3Clue("urlacher-mwc-poy", "I was the Mountain West Player of the Year in 1999.", "strong", "accomplishments", 15),
+    cfbBatch3Clue("urlacher-consensus-aa", "I was a consensus first-team All-American in 1999 while playing free safety in New Mexico's hybrid defense.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("urlacher-six-rec-td", "As a senior I also caught six touchdown passes while contributing on offense.", "helpful", "style", 21),
+    cfbBatch3Clue("urlacher-44", "New Mexico later honored the No. 44 jersey I wore for the Lobos.", "helpful", "identity", 20),
+  ]],
+  ["cfb-dan-morgan", [
+    cfbBatch3Clue("morgan-512", "I left Miami as the program's career tackles leader with 512.", "helpful", "production", 19),
+    cfbBatch3Clue("morgan-four-100", "I became the first Miami player with at least 100 tackles in four straight seasons.", "helpful", "accomplishments", 20),
+    cfbBatch3Clue("morgan-11th-pick", "Carolina selected me No. 11 overall in the 2001 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-derrick-johnson", [
+    cfbBatch3Clue("johnson-award-double", "I won both the 2004 Butkus Award and Bronko Nagurski Trophy.", "giveaway", "accomplishments", 7),
+    cfbBatch3Clue("johnson-big12-dpoy", "I was the unanimous Big 12 Defensive Player of the Year in 2004.", "strong", "accomplishments", 15),
+    cfbBatch3Clue("johnson-unanimous-aa", "I was a unanimous first-team All-American in 2004.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("johnson-nine-fumbles", "I forced nine fumbles in 2004, tying the NCAA single-season record.", "helpful", "production", 19),
+    cfbBatch3Clue("johnson-number-11", "I wore No. 11 at Texas.", "helpful", "identity", 20),
+  ]],
+  ["cfb-james-laurinaitis", [
+    cfbBatch3Clue("laurinaitis-three-consensus-aa", "I became a three-time consensus All-American at Ohio State.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("laurinaitis-number-33", "I wore No. 33 at Ohio State.", "helpful", "identity", 21),
+  ]],
+  ["cfb-micah-parsons", [
+    cfbBatch3Clue("parsons-big-ten-lb", "I was the Big Ten Linebacker of the Year as a sophomore in 2019.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("parsons-2019-line", "In 2019 I led Penn State with 109 tackles and added 14 tackles for loss.", "helpful", "production", 20),
+    cfbBatch3Clue("parsons-cotton-mvp", "I was the defensive MVP of Penn State's 2019 Cotton Bowl win over Memphis.", "giveaway", "accomplishments", 9),
+    cfbBatch3Clue("parsons-12th-pick", "Dallas selected me No. 12 overall in the 2021 NFL Draft.", "giveaway", "career-path", 10),
+  ]],
+  ["cfb-nakobe-dean", [
+    cfbBatch3Clue("dean-butkus", "I won the 2021 Butkus Award as the nation's top linebacker.", "giveaway", "accomplishments", 7),
+    cfbBatch3Clue("dean-national-title", "I was a leader of Georgia's defense on the 2021 national championship team.", "giveaway", "accomplishments", 9),
+    cfbBatch3Clue("dean-unanimous-aa", "I was a unanimous All-American in 2021.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("dean-2021-line", "In 2021 I made 72 tackles, 10.5 tackles for loss and six sacks.", "helpful", "production", 19),
+    cfbBatch3Clue("dean-pick-six", "My 2021 season included a 50-yard interception return for a touchdown against Florida.", "helpful", "accomplishments", 20),
+    cfbBatch3Clue("dean-third-round", "Philadelphia selected me in the third round of the 2022 NFL Draft.", "strong", "career-path", 14),
+  ]],
+]);
+
+const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-jake-matthews", [
+    cfbBatch3Clue("matthews-two-all-sec", "I earned first-team All-SEC honors in both 2012 and 2013.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("matthews-2012-sec-offense", "In 2012 I helped a Texas A&M offense lead the SEC in rushing, passing, scoring and total offense.", "helpful", "production", 23),
+    cfbBatch3Clue("matthews-deep-snapper", "In 2012 I also served as Texas A&M's deep snapper while starting at tackle.", "helpful", "role", 21),
+  ]],
+  ["cfb-bruce-smith", [
+    cfbBatch3Clue("smith-78-retired", "Virginia Tech retired the No. 78 jersey I wore for the Hokies.", "helpful", "identity", 20),
+    cfbBatch3Clue("smith-22-sacks-1983", "I recorded 22 sacks for Virginia Tech in 1983.", "helpful", "production", 21),
+  ]],
+  ["cfb-chase-young", [
+    cfbBatch3Clue("young-2019-tfl", "I finished second nationally with 21.5 tackles for loss during my 2019 Ohio State season.", "helpful", "accomplishments", 22),
+    cfbBatch3Clue("young-number-two", "I wore No. 2 while starring at defensive end for Ohio State.", "helpful", "identity", 20),
+    cfbBatch3Clue("young-team-captain", "My Ohio State teammates selected me as a team captain for the 2019 season.", "strong", "identity", 18),
+    cfbBatch3Clue("young-unanimous-aa", "I was a unanimous first-team All-American at Ohio State in 2019.", "strong", "accomplishments", 16),
+  ]],
+  ["cfb-lee-roy-selmon", [
+    cfbBatch3Clue("selmon-two-national-titles", "I helped Oklahoma win national championships in both 1974 and 1975.", "helpful", "accomplishments", 19),
+    cfbBatch3Clue("selmon-two-time-aa", "I earned All-America honors in both 1974 and 1975 at Oklahoma.", "helpful", "accomplishments", 21),
+  ]],
+  ["cfb-myles-garrett", [
+    cfbBatch3Clue("garrett-career-pressure", "I finished my Texas A&M career with 32.5 sacks and 48.5 tackles for loss.", "helpful", "production", 19),
+    cfbBatch3Clue("garrett-2015-line", "In 2015 I led the SEC with 12.5 sacks, 19.5 tackles for loss and five forced fumbles.", "helpful", "production", 20),
+    cfbBatch3Clue("garrett-two-first-team-aa", "I earned consensus first-team All-America honors in each of my final two Texas A&M seasons.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("garrett-unanimous-2016", "I was a unanimous first-team All-American in 2016.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("garrett-first-aggie-no1", "I became the first Texas A&M player selected No. 1 overall in the NFL Draft.", "giveaway", "career-path", 8),
+    cfbBatch3Clue("garrett-number-15", "I wore No. 15 on Texas A&M's defensive line.", "helpful", "identity", 21),
+    cfbBatch3Clue("garrett-freshman-sack-record", "As a freshman in 2014, I set Texas A&M and SEC freshman records with 11.5 sacks.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("garrett-team-defensive-mvp", "Texas A&M named me its team Defensive MVP after my 2014 freshman season.", "helpful", "accomplishments", 20),
+    cfbBatch3Clue("garrett-award-finalist", "As a junior in 2016, I was a finalist for the Bednarik and Lombardi awards.", "helpful", "accomplishments", 21),
+  ]],
+  ["cfb-abdul-carter", [
+    cfbBatch3Clue("carter-2024-line", "In 2024 I recorded 12 sacks and a nation-leading 23.5 tackles for loss for Penn State.", "helpful", "production", 19),
+    cfbBatch3Clue("carter-cfp-run", "I helped Penn State reach the College Football Playoff semifinal in my final college season.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("carter-award-finalist", "I was a finalist for the Bednarik, Nagurski and Lombardi awards in 2024.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("carter-ten-sacks", "I became Penn State's first player with at least 10 sacks in a season since Carl Nassib in 2015.", "helpful", "accomplishments", 21),
+    cfbBatch3Clue("carter-number-eleven", "I wore No. 11 at Penn State.", "helpful", "identity", 20),
+  ]],
+  ["cfb-aidan-hutchinson", [
+    cfbBatch3Clue("hutchinson-two-time-captain", "My Michigan teammates elected me a team captain twice.", "helpful", "identity", 21),
+    cfbBatch3Clue("hutchinson-ohio-state", "I recorded three sacks against Ohio State in 2021 as Michigan won the rivalry game and advanced to the Big Ten title game.", "helpful", "accomplishments", 19),
+  ]],
+  ["cfb-jj-watt", [
+    cfbBatch3Clue("watt-lott", "I won the 2010 Lott IMPACT Trophy at Wisconsin.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("watt-team-mvp", "Wisconsin named me its team MVP after my final college season.", "helpful", "identity", 21),
+    cfbBatch3Clue("watt-blocked-kicks", "I blocked four kicks during my Wisconsin career.", "helpful", "style", 22),
+  ]],
+  ["cfb-joey-bosa", [
+    cfbBatch3Clue("bosa-2014-line", "In 2014 I recorded 13.5 sacks and 21 tackles for loss for Ohio State.", "helpful", "production", 20),
+    cfbBatch3Clue("bosa-big-ten-dpoy", "I was the Big Ten Defensive Player of the Year and Defensive Lineman of the Year in 2014.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("bosa-national-title", "I was a starting defensive end on Ohio State's 2014 national championship team.", "helpful", "accomplishments", 21),
+  ]],
+  ["cfb-john-henderson", [
+    cfbBatch3Clue("henderson-two-aa", "I earned first-team All-America recognition in both 2000 and 2001 at Tennessee.", "helpful", "accomplishments", 20),
+    cfbBatch3Clue("henderson-2000-line", "In 2000 I recorded 12 sacks and 21 tackles for loss for Tennessee.", "strong", "production", 17),
+  ]],
+  ["cfb-kayvon-thibodeaux", [
+    cfbBatch3Clue("thibodeaux-freshman-line", "As an Oregon freshman in 2019, I set a program freshman record with nine sacks and added 14 tackles for loss.", "helpful", "production", 20),
+    cfbBatch3Clue("thibodeaux-number-five", "I wore No. 5 on Oregon's defensive line.", "helpful", "identity", 22),
+  ]],
+  ["cfb-derrick-thomas", [
+    cfbBatch3Clue("thomas-consensus-aa", "I was a consensus first-team All-American for Alabama in 1988.", "helpful", "accomplishments", 19),
+    cfbBatch3Clue("thomas-number-55", "I wore No. 55 while terrorizing quarterbacks at Alabama.", "helpful", "identity", 20),
+  ]],
+  ["cfb-roquan-smith", [
+    cfbBatch3Clue("roquan-2017-disruption", "My 2017 Georgia season included 14 tackles for loss and 6.5 sacks.", "helpful", "production", 20),
+    cfbBatch3Clue("roquan-sec-title-mvp", "I was named MVP of the 2017 SEC Championship Game after Georgia beat Auburn.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("roquan-consensus-aa", "I was a consensus first-team All-American in 2017.", "helpful", "accomplishments", 19),
+    cfbBatch3Clue("roquan-number-three", "I wore No. 3 at Georgia.", "helpful", "identity", 22),
+    cfbBatch3Clue("roquan-rose-bowl-mvp", "I was the defensive MVP of Georgia's Rose Bowl win over Oklahoma after the 2017 season.", "helpful", "accomplishments", 17),
+    cfbBatch3Clue("roquan-team-captain-mvp", "Georgia named me a permanent team captain and its defensive MVP for the 2017 season.", "helpful", "identity", 20),
+  ]],
+  ["cfb-derrick-johnson", [
+    cfbBatch3Clue("johnson-2004-line", "As a Texas senior in 2004, I made 130 tackles and 19 tackles for loss.", "helpful", "production", 20),
+    cfbBatch3Clue("johnson-rose-bowl", "I helped Texas finish 11-1 with a Rose Bowl victory over Michigan after the 2004 season.", "helpful", "accomplishments", 22),
+    cfbBatch3Clue("johnson-holiday-bowl-mvp", "I was the defensive MVP of Texas's 2001 Holiday Bowl win over Washington.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("johnson-award-finalist", "As a senior I was a finalist for the Bednarik, Lombardi and Lott awards.", "helpful", "accomplishments", 20),
+    cfbBatch3Clue("johnson-2003-team-mvp", "Texas named me its team MVP after my 2003 junior season.", "helpful", "accomplishments", 19),
+  ]],
+  ["cfb-devin-white", [
+    cfbBatch3Clue("white-career-line", "I finished my LSU career with 286 tackles, 29 tackles for loss and 8.5 sacks.", "helpful", "production", 19),
+    cfbBatch3Clue("white-sec-tackles", "I led the SEC in tackles in each of my final two LSU seasons.", "helpful", "accomplishments", 20),
+    cfbBatch3Clue("white-consensus-aa", "I was a consensus first-team All-American in 2018.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("white-fifth-pick", "Tampa Bay selected me No. 5 overall in the 2019 NFL Draft.", "giveaway", "career-path", 8),
+  ]],
+  ["cfb-isaiah-simmons", [
+    cfbBatch3Clue("simmons-2019-line", "In 2019 I made 107 tackles with 16 tackles for loss, eight sacks and three interceptions for Clemson.", "helpful", "production", 19),
+    cfbBatch3Clue("simmons-butkus", "I won the 2019 Butkus Award as the nation's top linebacker.", "helpful", "accomplishments", 17),
+    cfbBatch3Clue("simmons-acc-aa", "I was the ACC Defensive Player of the Year and a unanimous All-American in 2019.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("simmons-eighth-pick", "Arizona selected me No. 8 overall in the 2020 NFL Draft.", "giveaway", "career-path", 8),
+  ]],
+]);
+
+const cfbBatch3ForcedPoolIds = new Map<string, ReadonlySet<string>>([
+  ["cfb-chase-young", new Set([
+    "position",
+    "school",
+    "identity:pr8-cfb-chase-young--track-for-football-speed",
+    "curated-cfb3:young-16-5",
+    "curated-cfb3:young-2019-tfl",
+    "curated-cfb3:young-number-two",
+    "role-school",
+    "curated-cfb3:young-big-ten-dpoy",
+    "curated-cfb3:young-heisman-finalist",
+    "curated-cfb3:young-team-captain",
+    "curated-cfb3:young-award-sweep",
+    "curated-cfb3:young-second-pick",
+  ])],
+  ["cfb-abdul-carter", new Set([
+    "position",
+    "school",
+    "identity:pr9-cfb-abdul-carter--linebacker-to-edge-switch",
+    "curated-cfb3:carter-award-finalist",
+    "curated-cfb3:carter-ten-sacks",
+    "curated-cfb3:carter-number-eleven",
+    "role-school",
+    "recognition:first-team-all-america",
+    "curated-cfb3:carter-big-ten-dpoy",
+    "curated-cfb3:carter-unanimous-aa",
+    "curated-cfb3:carter-cfp-run",
+    "identity:resume-cfb-abdul-carter-01",
+  ])],
+  ["cfb-john-henderson", new Set([
+    "position",
+    "school",
+    "identity:pr9-cfb-john-henderson--partial-qualifier-1998",
+    "identity:pr9-cfb-john-henderson--played-through-ankle-2001",
+    "curated-cfb3:henderson-sec-dpoy",
+    "curated-cfb3:henderson-two-aa",
+    "role-school",
+    "recognition:first-team-all-america",
+    "identity:resume-cfb-john-henderson-02",
+    "curated-cfb3:henderson-2000-line",
+    "identity:pr9-cfb-john-henderson--big-john-nickname",
+    "curated-cfb3:henderson-ninth-pick",
+  ])],
+  ["cfb-roquan-smith", new Set([
+    "position",
+    "school",
+    "curated-cfb3:roquan-sec-title-mvp",
+    "curated-cfb3:roquan-consensus-aa",
+    "curated-cfb3:roquan-rose-bowl-mvp",
+    "curated-cfb3:roquan-team-captain-mvp",
+    "role-school",
+    "recognition:first-team-all-america",
+    "curated-cfb3:roquan-sec-dpoy",
+    "curated-cfb3:roquan-sec-title",
+    "curated-cfb3:roquan-butkus",
+    "curated-cfb3:roquan-eighth-pick",
+  ])],
+  ["cfb-derrick-johnson", new Set([
+    "position",
+    "school",
+    "curated-cfb3:johnson-rose-bowl",
+    "curated-cfb3:johnson-holiday-bowl-mvp",
+    "curated-cfb3:johnson-award-finalist",
+    "curated-cfb3:johnson-2003-team-mvp",
+    "role-school",
+    "identity:resume-cfb-derrick-johnson-02",
+    "curated-cfb3:johnson-big12-dpoy",
+    "curated-cfb3:johnson-unanimous-aa",
+    "identity:resume-cfb-derrick-johnson-03",
+    "curated-cfb3:johnson-award-double",
+  ])],
+]);
+
+function cfbBatch3ApplyOverride(subjectId: string, clue: WhoAmIClue) {
+  const override = cfbBatch3IdentityOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id));
+  const curated = override ? { ...clue, ...override } : clue;
+  if (curated.id === "era") {
+    return { ...curated, text: curated.text.replace(/^I was active in /, "My college career came in ") };
+  }
+  return curated;
+}
+
+function isCfbBatch3NflStageLeak(clue: WhoAmIClue) {
+  if (!clue.identityKnowledge) return false;
+  const text = clue.text.toLowerCase();
+  return (
+    /\bnfl\b|super bowl|all-pro|pro bowl|nfl mvp|defensive player of the year|professional football hall of fame/.test(text)
+    && !/draft|selected|pick/.test(text)
+  );
+}
+
+function shouldSuppressCfbBatch3Clue(subject: FootballSubjectProfile, clue: WhoAmIClue) {
+  if (cfbBatch3StructuralClueIds.has(clue.id)) return true;
+  if (cfbBatch3SuppressedMetricClueIds.get(subject.id)?.has(clue.id)) return true;
+  if (/\b1 (?:sacks|defensive interceptions|pass breakups)\b/i.test(clue.text)) return true;
+  if (cfbBatch3GenericMetricIds.has(clue.id)) return true;
+  if (clue.conceptId && cfbBatch3GenericIdentityConcepts.has(clue.conceptId)) return true;
+  if (clue.conceptId && cfbBatch3SuppressedIdentityConcepts.has(clue.conceptId)) return true;
+  if (isCfbBatch3NflStageLeak(clue)) return true;
+  if (clue.identityKnowledge && cfbBatch3MalformedFirstPerson.test(clue.text)) return true;
+  return false;
+}
+
+function trimCfbBatch3Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const target = 16;
+  if (clues.length <= target) return [...clues];
+
+  const requiredIds = new Set(["position", "school"]);
+  const required = clues.filter((clue) => requiredIds.has(clue.id));
+  const requiredIdSet = new Set(required.map((clue) => clue.id));
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+    .filter((entry) => !requiredIdSet.has(entry.clue.id))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+
+  const selected = new Set(required.map((clue) => clue.id));
+  const selectedConcepts = new Set(required.map((clue) => clue.conceptId ?? clue.id));
+  for (const entry of ranked) {
+    if (selected.size >= target) break;
+    const concept = entry.clue.conceptId ?? entry.clue.id;
+    if (selectedConcepts.has(concept)) continue;
+    selected.add(entry.clue.id);
+    selectedConcepts.add(concept);
+  }
+  if (selected.size < target) {
+    for (const entry of ranked) {
+      if (selected.size >= target) break;
+      selected.add(entry.clue.id);
+    }
+  }
+  return clues.filter((clue) => selected.has(clue.id));
+}
+
+function curateCfbBatch3Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
+  let colorUsed = false;
+  let relationshipUsed = false;
+  const curated: WhoAmIClue[] = [];
+
+  for (const rawClue of rawClues) {
+    const clue = cfbBatch3ApplyOverride(subject.id, rawClue);
+    if (shouldSuppressCfbBatch3Clue(subject, clue)) continue;
+
+    if (clue.identityKnowledge) {
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      if (selectionClass === "deep-biography") continue;
+      if (selectionClass === "identity-color") {
+        if (colorUsed) continue;
+        colorUsed = true;
+      }
+      if (whoAmIClueFacet(clue) === "relationships") {
+        if (relationshipUsed) continue;
+        relationshipUsed = true;
+      }
+    }
+    curated.push(clue);
+  }
+
+  curated.push(...(cfbBatch3SupplementalClues.get(subject.id) ?? []));
+  curated.push(...(cfbBatch3ReplayDepthClues.get(subject.id) ?? []));
+  const forcedPool = cfbBatch3ForcedPoolIds.get(subject.id);
+  if (forcedPool) return curated.filter((clue) => forcedPool.has(clue.id));
+  return trimCfbBatch3Pool(subject, curated);
+}
+
+export function isCfbWhoAmIBatch3Subject(subjectId: string) {
+  return cfbBatch3SubjectIds.has(subjectId);
 }
 
 function applyBatch2IdentityCuration(subjectId: string, clue: WhoAmIClue) {
@@ -3866,6 +4572,9 @@ export function curateFootballWhoAmIClues(
   }
   if (subject.league === "CFB" && cfbBatch2SubjectIds.has(subject.id)) {
     return curateCfbBatch2Clues(subject, rawClues);
+  }
+  if (subject.league === "CFB" && cfbBatch3SubjectIds.has(subject.id)) {
+    return curateCfbBatch3Clues(subject, rawClues);
   }
   if (subject.league !== "NFL") return [...rawClues];
   if (batch4SubjectIds.has(subject.id)) return curateNflBatch4Clues(subject, rawClues);
