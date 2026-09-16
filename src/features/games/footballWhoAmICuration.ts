@@ -2626,12 +2626,15 @@ const cfbBatch1SuppressedIdentityConcepts = new Set([
   "identity:hall-of-fame-father-introduction",
   "identity:cfb-billy-cannon--dentistry-during-pro-career",
   "identity:cfb-billy-cannon--counterfeiting-conviction",
+  "identity:cfb-baker-mayfield--texas-tech-walk-on",
+  "identity:cfb-baker-mayfield--transferred-and-walked-on-oklahoma",
   "identity:cfb-bijan-robinson--raised-with-grandfather-cleo",
   "identity:cfb-bijan-robinson--grandfather-pac12-official",
   "identity:cfb-bijan-robinson--bijan-mustardson",
   "identity:grandfather-referee-father-figure",
   "identity:cfb-brady-quinn--finance-political-science-double-major",
   "identity:cfb-brady-quinn--law-school-aspiration",
+  "identity:cfb-caleb-williams--followed-lincoln-riley-to-usc",
   "identity:cfb-charlie-ward--thomasville-near-tallahassee",
   "identity:cfb-danny-wuerffel--desire-street-ministries",
   "identity:cfb-drew-brees--industrial-management-business-expectation",
@@ -2641,6 +2644,7 @@ const cfbBatch1SuppressedIdentityConcepts = new Set([
   "identity:cfb-fernando-mendoza--cal-degree-three-years",
   "identity:cfb-fernando-mendoza--cuban-family-service-trip",
   "identity:cfb-joe-burrow--basketball-point-guard",
+  "identity:cfb-joe-burrow--lost-osu-job-then-lsu-transfer",
   "identity:cfb-joe-burrow--destroyed-second-place-trophy",
   "identity:oj-simpson-rickets-leg-braces",
   "identity:ricky-williams-returned-to-texas-finished-degree",
@@ -2703,8 +2707,11 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-andrew-luck", [
     cfbBatch1Clue("luck-stanford", "I quarterbacked Stanford and finished as the Heisman runner-up in both 2010 and 2011.", "giveaway", "accomplishments", 9),
     cfbBatch1Clue("luck-orange", "I led Stanford to a 12-win season and an Orange Bowl victory after the 2010 season.", "strong", "accomplishments"),
+    cfbBatch1Clue("luck-bcs-bowls", "I led Stanford to consecutive BCS bowl appearances, first the Orange Bowl and then the Fiesta Bowl.", "strong", "accomplishments"),
+    cfbBatch1Clue("luck-conference-poy", "I was the conference offensive player of the year in both 2010 and 2011.", "strong", "accomplishments"),
     cfbBatch1Clue("luck-2011-awards", "I won both the Maxwell Award and Walter Camp Award in 2011.", "strong", "accomplishments"),
-    cfbBatch1Clue("luck-first-pick", "I became the No. 1 overall pick in the 2012 NFL Draft.", "giveaway", "career-path", 8),
+    cfbBatch1Clue("luck-unitas", "I won the Johnny Unitas Golden Arm Award in 2011.", "strong", "accomplishments"),
+    cfbBatch1Clue("luck-redshirt", "After redshirting in 2008, I became Stanford's starting quarterback in 2009.", "helpful", "career-path"),
     cfbBatch1Clue("luck-12", "No. 12 was my Stanford jersey number.", "strong", "identity"),
   ]],
   ["cfb-baker-mayfield", [
@@ -2740,7 +2747,6 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-fernando-mendoza", [
     cfbBatch1Clue("mendoza-transfer", "My college quarterback path included California before I transferred to Indiana.", "strong", "career-path"),
-    cfbBatch1Clue("mendoza-brother", "My younger brother was already a quarterback at Indiana and helped shape my transfer decision.", "strong", "relationships"),
     cfbBatch1Clue("mendoza-two-star", "I developed from a lightly recruited two-star prospect into a Power-conference starting quarterback.", "strong", "career-path"),
   ]],
   ["cfb-doak-walker", [
@@ -2755,7 +2761,6 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-barry-sanders", [
     cfbBatch1Clue("sanders-1988", "My 1988 season at Oklahoma State produced the Heisman Trophy and one of the most prolific rushing seasons in college football history.", "giveaway", "accomplishments", 8),
-    cfbBatch1Clue("sanders-thomas", "I spent my first two Oklahoma State seasons behind Thurman Thomas before taking over the backfield.", "strong", "relationships"),
     cfbBatch1Clue("sanders-third-pick", "Detroit selected me No. 3 overall in the 1989 NFL Draft.", "strong", "career-path"),
   ]],
   ["cfb-o-j-simpson", [
