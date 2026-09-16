@@ -112,11 +112,35 @@ function subjectFromCandidate(candidate: WhoAmICandidate): WhoAmISubject {
   };
 }
 
+function encodeSharedRound(round: WhoAmIRound) {
+  const payload = JSON.stringify({
+    league: round.league,
+    answerId: round.hiddenSubject.id,
+    clueIds: round.clues.map((clue) => clue.id),
+  });
+  return btoa(payload).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function decodeSharedRound(value: string) {
+  if (!/^[A-Za-z0-9_-]{8,4096}$/.test(value)) return null;
+  try {
+    const padded = value.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(value.length / 4) * 4, "=");
+    const parsed = JSON.parse(atob(padded)) as Record<string, unknown>;
+    const league = typeof parsed.league === "string" ? parsed.league : "";
+    const answerId = typeof parsed.answerId === "string" ? parsed.answerId : "";
+    const clueIds = Array.isArray(parsed.clueIds)
+      ? parsed.clueIds.filter((id): id is string => typeof id === "string" && Boolean(id))
+      : [];
+    if (!answerId || clueIds.length !== WHO_AM_I_CLUE_LIMIT || new Set(clueIds).size !== clueIds.length) return null;
+    return { league, answerId, clueIds };
+  } catch {
+    return null;
+  }
+}
+
 export function whoAmISharedChallengeUrl(round: WhoAmIRound, origin: string) {
   const url = new URL(whoAmIChallengePath(round.sport), origin);
-  url.searchParams.set("league", round.league);
-  url.searchParams.set("answer", round.hiddenSubject.id);
-  round.clues.forEach((clue) => url.searchParams.append("clue", clue.id));
+  url.searchParams.set("round", encodeSharedRound(round));
   return url.toString();
 }
 
@@ -124,20 +148,18 @@ export function sharedWhoAmIRound(
   searchParams: URLSearchParams,
   expectedSport: WhoAmISport,
 ): WhoAmIRound | null {
-  const league = searchParams.get("league");
-  const answerId = searchParams.get("answer")?.trim() ?? "";
-  const clueIds = searchParams.getAll("clue").filter(Boolean);
-  if (!answerId || clueIds.length !== WHO_AM_I_CLUE_LIMIT || new Set(clueIds).size !== clueIds.length) return null;
+  const shared = decodeSharedRound(searchParams.get("round")?.trim() ?? "");
+  if (!shared) return null;
 
   const universe = expectedSport === "ufc"
-    ? league === "UFC" ? getUfcWhoAmIUniverse() : null
-    : league === "NFL" || league === "CFB" ? getFootballWhoAmIUniverse(league) : null;
+    ? shared.league === "UFC" ? getUfcWhoAmIUniverse() : null
+    : shared.league === "NFL" || shared.league === "CFB" ? getFootballWhoAmIUniverse(shared.league) : null;
   if (!universe) return null;
 
-  const candidate = universe.candidates.find((entry) => entry.id === answerId);
+  const candidate = universe.candidates.find((entry) => entry.id === shared.answerId);
   if (!candidate) return null;
   const cluesById = new Map(candidate.clues.map((clue) => [clue.id, clue]));
-  const clues = clueIds.map((id) => cluesById.get(id) ?? null);
+  const clues = shared.clueIds.map((id) => cluesById.get(id) ?? null);
   if (clues.some((clue) => !clue)) return null;
 
   return {
