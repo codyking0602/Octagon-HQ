@@ -11,7 +11,7 @@ import {
   getUfcWhoAmIUniverse,
 } from "./whoAmIAuthority";
 import { assembleWhoAmIClues, whoAmIClueFacet, whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
-import { isCfbWhoAmIBatch1Subject, isCfbWhoAmIBatch2Subject, isCfbWhoAmIBatch3Subject, isNflWhoAmIBatch1Subject, isNflWhoAmIBatch2Subject, isNflWhoAmIBatch3Subject, isNflWhoAmIBatch4Subject } from "./footballWhoAmICuration";
+import { isCfbWhoAmIBatch1Subject, isCfbWhoAmIBatch2Subject, isCfbWhoAmIBatch3Subject, isCfbWhoAmIBatch4Subject, isNflWhoAmIBatch1Subject, isNflWhoAmIBatch2Subject, isNflWhoAmIBatch3Subject, isNflWhoAmIBatch4Subject } from "./footballWhoAmICuration";
 import { isUfcWhoAmICalibrationSubject, shouldUseUfcWhoAmIIdentityConcept } from "./ufcWhoAmICuration";
 import {
   WHO_AM_I_CLUE_LIMIT,
