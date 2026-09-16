@@ -7,12 +7,16 @@ import type {
   FootballWeeklyAuctionTeam,
 } from "../play/footballWeeklyAuctionRepository";
 import {
+  evaluateFootballWeeklyAuctionBids,
+  type FootballWeeklyAuctionBidMap,
+} from "../play/footballWeeklyAuctionBidSafety";
+import {
   footballWeeklyAuctionTeamIdentity,
   footballWeeklyAuctionTeamStyle,
   type FootballWeeklyAuctionTeamIdentity,
 } from "./footballWeeklyAuctionPresentation";
 
-type BidMap = Record<1 | 2 | 3, number>;
+type BidMap = FootballWeeklyAuctionBidMap;
 type FinalTab = "standings" | "collection" | "grades";
 
 function TeamMark({ identity, school }: { identity: FootballWeeklyAuctionTeamIdentity; school: string }) {
@@ -89,6 +93,69 @@ function PriorResults({ results }: { results: FootballWeeklyAuctionPriorResult[]
         </article>
       ))}
     </section>
+  );
+}
+
+function MyTeamsDialog({
+  state,
+  onClose,
+}: {
+  state: FootballWeeklyAuctionActiveState;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
+  return (
+    <div
+      className="football-weekly-auction__collection-backdrop"
+      role="presentation"
+      onMouseDown={onClose}
+    >
+      <section
+        className="football-weekly-auction__collection-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-label="My Weekly Auction teams"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <header>
+          <div>
+            <p className="eyebrow">WEEKLY AUCTION</p>
+            <h2>MY TEAMS</h2>
+            <span>{state.collection.length} won this week</span>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Close my teams">×</button>
+        </header>
+        <div className="football-weekly-auction__collection-list">
+          {state.collection.map((entry) => {
+            const identity = footballWeeklyAuctionTeamIdentity(
+              entry.season_reference,
+              entry.school,
+              entry.season_year,
+            );
+            return (
+              <article
+                key={entry.season_reference}
+                style={footballWeeklyAuctionTeamStyle(identity)}
+              >
+                <TeamMark identity={identity} school={entry.school} />
+                <div>
+                  <strong>{entry.school} <span>· {entry.season_year}</span></strong>
+                  <small>{rankedResume(identity)}</small>
+                </div>
+                <b><small>PAID</small>{"$"}{entry.winning_bid}</b>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -277,6 +344,7 @@ export function FootballWeeklyAuctionGate({
     3: state.bids["3"] ?? 0,
   }), [state.bids]);
   const [bids, setBids] = useState<BidMap>(initialBids);
+  const [collectionOpen, setCollectionOpen] = useState(false);
 
   useEffect(() => {
     setBids(initialBids);
@@ -297,12 +365,14 @@ export function FootballWeeklyAuctionGate({
     return <RulesCover onStart={() => setIntroDismissed(true)} />;
   }
 
-  const committed = bids[1] + bids[2] + bids[3];
-  const legal = committed <= state.max_commit;
+  const bidSafety = evaluateFootballWeeklyAuctionBids(state.bankroll, state.owned_count, bids);
+  const committed = bidSafety.committed;
+  const legal = bidSafety.legal && committed <= state.max_commit;
   const submitted = state.submitted_today && !editing;
 
   return (
     <div className="football-weekly-auction">
+      {collectionOpen ? <MyTeamsDialog state={state} onClose={() => setCollectionOpen(false)} /> : null}
       <PriorResults results={state.prior_results} />
       <section className="football-weekly-auction__board surface-card">
         <header className="football-weekly-auction__board-head">
@@ -311,7 +381,17 @@ export function FootballWeeklyAuctionGate({
         </header>
 
         <div className="football-weekly-auction__status">
-          <div><small>TEAMS OWNED</small><strong>{state.owned_count}</strong></div>
+          <button
+            className="football-weekly-auction__status-action"
+            type="button"
+            disabled={!state.collection.length}
+            onClick={() => setCollectionOpen(true)}
+            aria-haspopup="dialog"
+          >
+            <small>MY TEAMS</small>
+            <strong>{state.owned_count}</strong>
+            <span>{state.collection.length ? "VIEW ›" : "NONE YET"}</span>
+          </button>
           <div><small>COMMITTED</small><strong>{"$"}{committed}</strong></div>
           <div><small>MAX TODAY</small><strong>{"$"}{state.max_commit}</strong></div>
         </div>
@@ -338,7 +418,9 @@ export function FootballWeeklyAuctionGate({
 
         {!legal ? (
           <p className="football-weekly-auction__error">
-            Today’s bids can total at most {"$"}{state.max_commit} with your current bankroll protection.
+            {committed > state.max_commit
+              ? "Today’s bids can total at most $" + state.max_commit + "."
+              : bidSafety.message}
           </p>
         ) : null}
         {error ? <p className="football-weekly-auction__error">{error}</p> : null}
