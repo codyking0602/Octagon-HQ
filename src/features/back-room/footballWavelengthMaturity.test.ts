@@ -46,8 +46,8 @@ const approvedNewCategories = [
 
 describe("Football Wavelength maturity", () => {
   it("owns one calibrated 540-item catalog across 27 distinct football categories", () => {
-    expect(FOOTBALL_WAVELENGTH_CATALOG_VERSION).toBe("football-wavelength-catalog-v3");
-    expect(FOOTBALL_WAVELENGTH_CALIBRATION_VERSION).toBe("football-wavelength-calibration-v2");
+    expect(FOOTBALL_WAVELENGTH_CATALOG_VERSION).toBe("football-wavelength-catalog-v4");
+    expect(FOOTBALL_WAVELENGTH_CALIBRATION_VERSION).toBe("football-wavelength-calibration-v3");
     expect(FOOTBALL_WAVELENGTH_TARGET_POLICY_VERSION).toBe(WAVELENGTH_TARGET_POLICY_VERSION);
     expect(FOOTBALL_WAVELENGTH_EXPANSION_CLUE_COUNT).toBe(240);
     expect(footballWavelengthClues).toHaveLength(540);
