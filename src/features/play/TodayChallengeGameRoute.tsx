@@ -14,6 +14,7 @@ const PROFILE_CHALLENGE_GAME_ID: Partial<Record<DailyGameType, PlayGameId>> = {
   blind_rank_5: "blind-rank",
   keep_4_cut_4: "keep-cut",
   hit_the_number: "hit-the-number",
+  who_am_i: "who-am-i",
 };
 
 function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJson } | null {
