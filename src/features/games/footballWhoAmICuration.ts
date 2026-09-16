@@ -4027,7 +4027,7 @@ const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("long-two-time-captain", "My Michigan teammates elected me a team captain twice.", "helpful", "identity", 21),
   ]],
   ["cfb-jake-matthews", [
-    cfbBatch3Clue("matthews-manziel-line", "As a junior in 2012, I helped block for freshman Heisman Trophy winner Johnny Manziel.", "helpful", "relationships", 20),
+    cfbBatch3Clue("matthews-manziel-line", "As a junior in 2012, I helped block for freshman Heisman Trophy winner Johnny Manziel.", "helpful", "production", 20),
     cfbBatch3Clue("matthews-outland-finalist", "I was an Outland Trophy finalist as a Texas A&M senior in 2013.", "strong", "accomplishments", 17),
     cfbBatch3Clue("matthews-sixth-pick", "Atlanta selected me No. 6 overall in the 2014 NFL Draft.", "giveaway", "career-path", 9),
   ]],
@@ -4171,7 +4171,7 @@ const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-james-laurinaitis", [
     cfbBatch3Clue("laurinaitis-three-consensus-aa", "I became a three-time consensus All-American at Ohio State.", "strong", "accomplishments", 16),
-    cfbBatch3Clue("laurinaitis-returned-senior", "I returned to Ohio State for my senior season after drawing strong NFL interest as a junior.", "helpful", "career-path", 21),
+    cfbBatch3Clue("laurinaitis-number-33", "I wore No. 33 at Ohio State.", "helpful", "identity", 21),
   ]],
   ["cfb-micah-parsons", [
     cfbBatch3Clue("parsons-big-ten-lb", "I was the Big Ten Linebacker of the Year as a sophomore in 2019.", "strong", "accomplishments", 16),
