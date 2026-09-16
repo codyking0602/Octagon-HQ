@@ -4206,7 +4206,7 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-chase-young", [
     cfbBatch3Clue("young-2019-tfl", "I finished second nationally with 21.5 tackles for loss during my 2019 Ohio State season.", "helpful", "accomplishments", 22),
     cfbBatch3Clue("young-number-two", "I wore No. 2 while starring at defensive end for Ohio State.", "helpful", "identity", 20),
-    cfbBatch3Clue("young-team-captain", "My Ohio State teammates selected me as a team captain for the 2019 season.", "helpful", "identity", 21),
+    cfbBatch3Clue("young-team-captain", "My Ohio State teammates selected me as a team captain for the 2019 season.", "strong", "identity", 18),
     cfbBatch3Clue("young-unanimous-aa", "I was a unanimous first-team All-American at Ohio State in 2019.", "strong", "accomplishments", 16),
   ]],
   ["cfb-lee-roy-selmon", [
