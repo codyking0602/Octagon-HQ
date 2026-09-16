@@ -1,28 +1,34 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { WhoAmIRound } from "../games/whoAmIEngine";
 import { createFootballWhoAmIRound } from "../games/whoAmIAuthority";
 import WhoAmIPage from "./WhoAmIPage";
 import {
+  sharedWhoAmIRound,
   storedWhoAmIChallengeRound,
   whoAmIChallengeGameVersion,
-  whoAmIChallengePath,
   whoAmIChallengeResultJson,
+  whoAmISharedChallengeUrl,
   whoAmIChallengeSetup,
   type WhoAmICompletedResult,
 } from "./whoAmIChallenge";
 
 export default function FootballWhoAmIPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { beginChallenge } = usePlayChallenges();
   const profileMatch = useProfileChallengeMatch("who-am-i");
   const challengeRound = profileMatch.challenge
     ? storedWhoAmIChallengeRound(profileMatch.challenge.setup, "football")
     : null;
+  const sharedRound = profileMatch.code
+    ? null
+    : sharedWhoAmIRound(searchParams, "football");
+  const initialRound = challengeRound ?? sharedRound;
 
   async function challengeSomeone(round: WhoAmIRound, result: WhoAmICompletedResult) {
-    const shareUrl = new URL(whoAmIChallengePath("football"), window.location.origin).toString();
+    const shareUrl = whoAmISharedChallengeUrl(round, window.location.origin);
     return beginChallenge({
       gameId: "who-am-i",
       gameVersion: whoAmIChallengeGameVersion("football"),
@@ -73,7 +79,7 @@ export default function FootballWhoAmIPage() {
   return (
     <WhoAmIPage
       sport="football"
-      initialRound={challengeRound ?? undefined}
+      initialRound={initialRound ?? undefined}
       challengeFrom={profileMatch.creator?.displayName}
       onChallenge={challengeSomeone}
       onAllGames={() => navigate("/football")}
