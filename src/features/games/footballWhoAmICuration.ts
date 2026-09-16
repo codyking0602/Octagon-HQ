@@ -4559,6 +4559,11 @@ const cfbBatch4OffFieldFiller = /\b(?:academic|degree|engineering|poultry|poetry
 
 
 const cfbBatch4IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["cfb-kyle-hamilton:affiliation:notre-dame", {
+    text: "I played college football at Notre Dame.",
+    band: "broad",
+    facet: "background",
+  }],
   ["cfb-sean-taylor:identity:pr8-sean-taylor-gulliver-three-position-football", {
     text: "At Gulliver Prep, I played running back, defensive back and linebacker before becoming known as a safety.",
     band: "helpful",
