@@ -2086,7 +2086,7 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("green-hof", "I was elected to the Pro Football Hall of Fame in 2008.", "strong", "accomplishments"),
   ]],
   ["nfl-darrelle-revis", [
-    batch4Clue("revis-island", "The phrase 'Revis Island' became shorthand for the isolation coverage I played against top receivers.", "giveaway", "nickname", 8),
+    batch4Clue("revis-island", "An island-themed nickname became shorthand for the isolation coverage I played against top receivers.", "giveaway", "nickname", 8),
     batch4Clue("revis-jets", "The New York Jets were the franchise most closely associated with my career.", "giveaway", "career-path", 10),
     batch4Clue("revis-seven-pb", "I was selected to seven Pro Bowls.", "strong", "accomplishments"),
     batch4Clue("revis-four-ap1", "I earned first-team All-Pro honors four times.", "strong", "accomplishments"),
@@ -2251,7 +2251,7 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("gibbs-three-rings", "I won three Super Bowls with three different starting quarterbacks.", "giveaway", "accomplishments", 8),
     batch4Clue("gibbs-qbs", "Joe Theismann, Doug Williams and Mark Rypien each quarterbacked one of my Super Bowl champions.", "giveaway", "relationships", 9),
     batch4Clue("gibbs-hogs", "My championship teams became closely associated with the offensive line nicknamed 'The Hogs.'", "giveaway", "style", 9),
-    batch4Clue("gibbs-nascar", "Between my two NFL coaching stints, I built Joe Gibbs Racing into a championship NASCAR organization.", "giveaway", "career-path", 8),
+    batch4Clue("gibbs-nascar", "Between my two NFL coaching stints, I built a championship NASCAR organization that carried my name.", "giveaway", "career-path", 8),
     batch4Clue("gibbs-hof", "I was elected to the Pro Football Hall of Fame in 1996.", "strong", "accomplishments"),
     batch4Clue("gibbs-four-sb", "I led Washington to four Super Bowl appearances, winning three.", "strong", "accomplishments"),
     batch4Clue("gibbs-two-stints", "I coached Washington from 1981 through 1992, then returned for a second stint from 2004 through 2007.", "strong", "career-path"),
@@ -2337,7 +2337,7 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["nfl-don-coryell", [
     batch4Clue("coryell-cardinals-chargers", "My NFL head-coaching jobs were with the Cardinals and Chargers.", "strong", "career-path"),
-    batch4Clue("coryell-air", "The aggressive vertical passing system associated with my Chargers became known as 'Air Coryell.'", "giveaway", "style", 8),
+    batch4Clue("coryell-air", "My Chargers’ aggressive vertical passing system became famous under an “Air” nickname built around my surname.", "giveaway", "style", 8),
     batch4Clue("coryell-fouts", "Dan Fouts was the quarterback most closely associated with my San Diego offense.", "strong", "relationships"),
     batch4Clue("coryell-winslow", "I helped turn tight end Kellen Winslow into a movable receiving mismatch.", "strong", "style"),
     batch4Clue("coryell-madden-gibbs", "My San Diego State staffs included future Hall of Fame coaches John Madden and Joe Gibbs.", "giveaway", "relationships", 9),
