@@ -16,7 +16,7 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const WHO_AM_I_DAILY_CONTENT_VERSION = "who-am-i-daily-v1" as const;
+export const WHO_AM_I_DAILY_CONTENT_VERSION = "who-am-i-daily-v2" as const;
 
 type JsonRecord = Record<string, unknown>;
 

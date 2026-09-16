@@ -80,4 +80,16 @@ describe("UFC Who Am I calibration full 100-fighter population", () => {
 
     console.info("UFC Who Am I full-100 calibration", JSON.stringify(report));
   }, 150_000);
+
+  it("does not count catchweight labels as UFC divisions or ineligible wins as title wins", () => {
+    const universe = getUfcWhoAmIUniverse();
+    const charles = universe.candidates.find((candidate) => candidate.id === "ufc:charles-oliveira");
+    expect(charles).toBeDefined();
+    expect(charles?.clues.find((clue) => clue.id === "division-count")?.text)
+      .toBe("I competed in 2 UFC divisions.");
+    expect(charles?.clues.find((clue) => clue.id === "title-wins")?.text)
+      .toBe("I won 2 UFC title fights.");
+    expect(charles?.clues.some((clue) => clue.text.includes("9 UFC divisions"))).toBe(false);
+  });
+
 });
