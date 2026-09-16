@@ -25,6 +25,20 @@ const TRANSFER_ANCHORS: Readonly<Record<string, readonly string[]>> = {
   "cfb-jeremy-shockey": ["Northeastern Oklahoma A&M", "Miami"],
 };
 
+const PARTIAL_CAREER_METRIC_SUBJECT_IDS = [
+  "cfb-ezekiel-elliott",
+  "cfb-amari-cooper",
+  "cfb-hunter-henry",
+  "cfb-jake-butt",
+] as const;
+
+const FULL_CAREER_ANCHORS: Readonly<Record<(typeof PARTIAL_CAREER_METRIC_SUBJECT_IDS)[number], RegExp>> = {
+  "cfb-ezekiel-elliott": /3,961 career rushing yards|696 yards and eight touchdowns/i,
+  "cfb-amari-cooper": /228 passes for 3,463 yards and 31 touchdowns|2014 Biletnikoff Award/i,
+  "cfb-hunter-henry": /116 passes for 1,661 yards and nine touchdowns/i,
+  "cfb-jake-butt": /138 receptions and 1,646 receiving yards|11 touchdown passes/i,
+};
+
 describe("CFB Who Am I batch 2 calibration", () => {
   it("locks launch-order subjects 51-100 to the curated batch", () => {
     const ids = getFootballWhoAmILaunchPool("CFB").subjects.slice(50, 100).map((subject) => subject.id);
@@ -110,6 +124,20 @@ describe("CFB Who Am I batch 2 calibration", () => {
     for (const [subjectId, pattern] of Object.entries(forbidden)) {
       const text = candidates.get(subjectId)!.clues.map((clue) => clue.text).join(" | ");
       expect(text, `${subjectId} biography/trivia leak`).not.toMatch(pattern);
+    }
+  });
+
+  it("does not present partial source windows as full college-career totals", () => {
+    const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+
+    for (const subjectId of PARTIAL_CAREER_METRIC_SUBJECT_IDS) {
+      const candidate = candidates.get(subjectId)!;
+      expect(
+        candidate.clues.some((clue) => /^fact:cfb-career-/.test(clue.id)),
+        subjectId + " partial career metric leakage",
+      ).toBe(false);
+      const text = candidate.clues.map((clue) => clue.text).join(" | ");
+      expect(text, subjectId + " missing verified full-career replacement anchor").toMatch(FULL_CAREER_ANCHORS[subjectId]);
     }
   });
 
