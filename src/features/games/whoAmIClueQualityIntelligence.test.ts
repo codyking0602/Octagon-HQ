@@ -526,9 +526,10 @@ describe("Who Am I clue-quality intelligence", () => {
   it("treats defensive-back interceptions as role-relevant sports identity production", () => {
     const candidate = getFootballWhoAmIUniverse("NFL").candidates.find((entry) => entry.id === "nfl-darrell-green");
     expect(candidate).toBeTruthy();
-    const interceptions = candidate!.clues.find((clue) => clue.id === "fact:nfl-career-interceptions");
+    const interceptions = candidate!.clues.find((clue) => /54 career interceptions/i.test(clue.text));
     expect(interceptions).toBeTruthy();
     expect(interceptions!.band).toBe("strong");
+    expect(whoAmIClueSelectionClass(interceptions!)).toBe("sports-identity");
 
     for (const seed of [1, 7, 19]) {
       const sequence = whoAmIProgressiveClues(candidate!.clues, seededRandom(seed));
