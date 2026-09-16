@@ -53,7 +53,7 @@ describe("official Who Am I Daily runtime", () => {
     const football = buildFootballOfficialDailySetup("who_am_i", "2026-10-01", "test-football-who-am-i-v1");
     const footballAgain = buildFootballOfficialDailySetup("who_am_i", "2026-10-01", "test-football-who-am-i-v1");
     expect(footballAgain).toEqual(football);
-    expect(football.contentVersion).toBe("who-am-i-daily-v1");
+    expect(football.contentVersion).toBe("who-am-i-daily-v2");
     expect(["NFL", "CFB"]).toContain(football.publicSetup.league);
 
     const publicJson = JSON.stringify({
