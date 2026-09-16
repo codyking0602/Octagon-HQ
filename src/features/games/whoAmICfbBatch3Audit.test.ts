@@ -21,12 +21,48 @@ function seededRandom(seed: number) {
   };
 }
 
-const TRANSFER_ANCHORS: Readonly<Record<string, readonly string[]>> = {
-  "cfb-bryant-mckinnie": ["Lackawanna", "Miami"],
-  "cfb-jj-watt": ["Central Michigan", "Wisconsin"],
-};
+const GENERIC_VOLUME_IDS = new Set([
+  "fact:cfb-career-games",
+  "fact:cfb-career-starts",
+  "fact:cfb-career-targets",
+  "fact:cfb-career-passing-completions",
+  "fact:cfb-career-passing-attempts",
+  "fact:cfb-career-rushing-attempts",
+  "fact:cfb-career-interceptions-thrown",
+]);
 
-const brokenFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly)\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
+const GENERIC_VOLUME_CONCEPTS = new Set([
+  "identity:career-games",
+  "identity:career-starts",
+  "identity:career-games-starts",
+  "identity:career-passing-completions",
+  "identity:career-passing-attempts",
+  "identity:career-rushing-attempts",
+  "identity:career-targets",
+  "identity:career-interceptions-thrown",
+]);
+
+const BROKEN_FIRST_PERSON = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly)\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
+
+const OFF_FIELD_FILLER = /\b(?:academic|degree|major(?:ed)?|engineering|poultry|poetry|paleontolog|community[- ]service|volunteer|fundraising|charity|business venture|real estate|horseman|horse|catfishing)\b/i;
+
+const TRANSFER_SCHOOL_ANCHORS = new Map<string, readonly RegExp[]>([
+  ["cfb-bryant-mckinnie", [/\bLackawanna\b/i, /\bMiami\b/i]],
+  ["cfb-jj-watt", [/\bCentral Michigan\b/i, /\bWisconsin\b/i]],
+]);
+
+function answerSurname(name: string) {
+  return name
+    .replace(/\b(?:Jr\.?|Sr\.?|II|III|IV)\b/gi, "")
+    .trim()
+    .split(/\s+/)
+    .at(-1)!
+    .replace(/[^A-Za-z'-]/g, "");
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^()|[\]\\]/g, "\\$&");
+}
 
 describe("CFB Who Am I batch 3 calibration", () => {
   it("locks launch-order subjects 101-150 to the curated batch", () => {
@@ -34,18 +70,34 @@ describe("CFB Who Am I batch 3 calibration", () => {
     expect(ids).toEqual(CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS);
   });
 
-  it("keeps transfer-heavy identities tied to their actual college stops", () => {
+  it("keeps each college identity anchored to its source-owned school", () => {
+    const subjects = new Map(getFootballWhoAmILaunchPool("CFB").subjects.map((subject) => [subject.id, subject]));
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
-    for (const [subjectId, schools] of Object.entries(TRANSFER_ANCHORS)) {
+    for (const subjectId of CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS) {
+      const subject = subjects.get(subjectId)!;
       const candidate = candidates.get(subjectId)!;
-      const text = candidate.clues.map((clue) => clue.text).join(" | ");
-      for (const school of schools) expect(text, `${subjectId} missing ${school}`).toContain(school);
+      if (!subject.school) continue;
+      expect(
+        candidate.clues.some((clue) => clue.text.includes(subject.school!)),
+        subjectId + " missing school anchor " + subject.school,
+      ).toBe(true);
+    }
+  });
+
+  it("preserves important transfer-school identity without cross-school attribution", () => {
+    const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+    for (const [subjectId, patterns] of TRANSFER_SCHOOL_ANCHORS) {
+      const text = candidates.get(subjectId)!.clues.map((clue) => clue.text).join(" ");
+      for (const pattern of patterns) {
+        expect(text, subjectId + " missing transfer-school anchor " + pattern).toMatch(pattern);
+      }
     }
   });
 
   it("keeps retained factual and identity clues bound to applicable CFB source facts", () => {
     const subjects = new Map(getFootballWhoAmILaunchPool("CFB").subjects.map((subject) => [subject.id, subject]));
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+
     for (const subjectId of CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS) {
       const subject = subjects.get(subjectId)!;
       const candidate = candidates.get(subjectId)!;
@@ -57,60 +109,56 @@ describe("CFB Who Am I batch 3 calibration", () => {
       );
 
       for (const clue of candidate.clues.filter((entry) => entry.identityKnowledge)) {
-        expect(clue.sourceFactId, `${subjectId} identity source`).toBeTruthy();
-        expect(identityFactIds.has(clue.sourceFactId!), `${subjectId} foreign identity fact ${clue.sourceFactId}`).toBe(true);
+        expect(clue.sourceFactId, subjectId + " identity source").toBeTruthy();
+        expect(identityFactIds.has(clue.sourceFactId!), subjectId + " foreign identity fact " + clue.sourceFactId).toBe(true);
       }
       for (const clue of candidate.clues.filter((entry) => entry.id.startsWith("fact:"))) {
-        expect(metricIds.has(clue.id.slice("fact:".length) as never), `${subjectId} foreign metric ${clue.id}`).toBe(true);
+        expect(metricIds.has(clue.id.slice("fact:".length) as never), subjectId + " foreign metric " + clue.id).toBe(true);
       }
     }
   });
 
-  it("keeps college clues free of answer leaks and NFL-stage resume leakage", () => {
+  it("keeps college clues free of answer-name leaks and NFL-stage resume leakage", () => {
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+
     for (const subjectId of CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS) {
       const candidate = candidates.get(subjectId)!;
+      const surname = answerSurname(candidate.name);
+      const surnamePattern = surname.length >= 5 ? new RegExp("\\b" + escapeRegExp(surname) + "\\b", "i") : null;
+
       for (const clue of candidate.clues) {
-        expect(clue.text.toLowerCase(), `${subjectId} answer leak: ${clue.id}`).not.toContain(candidate.name.toLowerCase());
+        expect(clue.text.toLowerCase(), subjectId + " full-name leak: " + clue.id).not.toContain(candidate.name.toLowerCase());
+        if (surnamePattern) {
+          expect(clue.text, subjectId + " surname leak: " + clue.id).not.toMatch(surnamePattern);
+        }
         if (!/draft|selected|pick/i.test(clue.text)) {
-          expect(clue.text, `${subjectId} NFL-stage leak: ${clue.id}`).not.toMatch(
-            /\bNFL\b|Super Bowl|All-Pro|Pro Bowl|NFL MVP|Defensive Player of the Year|professional football hall of fame/i,
+          expect(clue.text, subjectId + " NFL-stage leak: " + clue.id).not.toMatch(
+            /\bNFL\b|Super Bowl|All-Pro|Pro Bowl|NFL MVP|Defensive Player of the Year|Professional Football Hall of Fame/i,
           );
         }
       }
     }
   });
 
-  it("keeps generic volume, chronology, malformed redaction, and biography filler out", () => {
+  it("keeps academic, business, charity, and unrelated personal filler out of the curated batch", () => {
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
     for (const subjectId of CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS) {
-      const candidate = candidates.get(subjectId)!;
-      expect(candidate.clues.some((clue) => ["player-career-start", "player-career-end", "career-span"].includes(clue.id)), `${subjectId} useless chronology`).toBe(false);
-      expect(candidate.clues.some((clue) => (
-        clue.id === "fact:cfb-career-games"
-        || clue.id === "fact:cfb-career-starts"
-        || clue.id === "fact:cfb-career-passing-completions"
-        || clue.id === "fact:cfb-career-passing-attempts"
-        || clue.id === "fact:cfb-career-rushing-attempts"
-        || clue.id === "fact:cfb-career-targets"
-        || clue.id === "fact:cfb-career-interceptions-thrown"
-        || clue.conceptId === "identity:career-games"
-        || clue.conceptId === "identity:career-starts"
-        || clue.conceptId === "identity:career-games-starts"
-        || clue.conceptId === "identity:career-passing-completions"
-        || clue.conceptId === "identity:career-passing-attempts"
-        || clue.conceptId === "identity:career-rushing-attempts"
-        || clue.conceptId === "identity:career-targets"
-        || clue.conceptId === "identity:career-interceptions-thrown"
-      )), `${subjectId} generic volume filler`).toBe(false);
-      for (const clue of candidate.clues) {
-        expect(clue.text, `${subjectId} malformed first-person copy: ${clue.id}`).not.toMatch(brokenFirstPerson);
+      for (const clue of candidates.get(subjectId)!.clues.filter((entry) => entry.identityKnowledge)) {
+        expect(clue.text, subjectId + " off-field filler: " + clue.id).not.toMatch(OFF_FIELD_FILLER);
       }
-      expect(candidate.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography"), `${subjectId} deep biography`).toHaveLength(0);
     }
   });
 
-  it("prints compact 64-seed replay diagnostics for all 50 subjects", () => {
+  it("keeps malformed first-person research transformations out of the curated batch", () => {
+    const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+    for (const subjectId of CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS) {
+      for (const clue of candidates.get(subjectId)!.clues) {
+        expect(clue.text, subjectId + " malformed first-person copy: " + clue.id).not.toMatch(BROKEN_FIRST_PERSON);
+      }
+    }
+  });
+
+  it("prints compact replay diagnostics for all 50 subjects before enforcing hard gates", () => {
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
     const report = CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS.map((subjectId) => {
       const candidate = candidates.get(subjectId)!;
@@ -128,39 +176,85 @@ describe("CFB Who Am I batch 3 calibration", () => {
         maxColor: Math.max(...sequences.map((sequence) => sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length)),
         maxRelationships: Math.max(...sequences.map((sequence) => sequence.filter((clue) => whoAmIClueFacet(clue) === "relationships").length)),
         minFinalStrong: Math.min(...sequences.map((sequence) => sequence.slice(-2).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length)),
+        clues: candidate.clues.map((clue) => ({
+          id: clue.id,
+          conceptId: clue.conceptId,
+          text: clue.text,
+          band: clue.band,
+          facet: whoAmIClueFacet(clue),
+          selectionClass: whoAmIClueSelectionClass(clue),
+          sourceFactId: clue.sourceFactId,
+        })),
       };
     });
     console.info("CFB WHO AM I BATCH 3 PREFLIGHT", JSON.stringify(report));
   }, 150_000);
 
-  it("keeps every batch-three pool sports-first, replayable, and strong late", () => {
+  it("keeps every batch-three pool sports-first, replayable, and free of filler", () => {
     const candidates = new Map(getFootballWhoAmIUniverse("CFB").candidates.map((candidate) => [candidate.id, candidate]));
+
     for (const subjectId of CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS) {
       const candidate = candidates.get(subjectId);
       expect(candidate, subjectId).toBeDefined();
-      expect(candidate!.clues.length, `${subjectId} playable pool`).toBeGreaterThanOrEqual(12);
-      expect(candidate!.clues.length, `${subjectId} playable pool`).toBeLessThanOrEqual(16);
-      expect(candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length, `${subjectId} color clues`).toBeLessThanOrEqual(1);
-      expect(candidate!.clues.filter((clue) => whoAmIClueFacet(clue) === "relationships").length, `${subjectId} relationship clues`).toBeLessThanOrEqual(1);
+      expect(candidate!.clues.length, subjectId + " playable pool").toBeGreaterThanOrEqual(12);
+      expect(candidate!.clues.length, subjectId + " playable pool").toBeLessThanOrEqual(16);
+      expect(
+        candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography"),
+        subjectId + " deep biography",
+      ).toHaveLength(0);
+      expect(
+        candidate!.clues.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length,
+        subjectId + " color clues",
+      ).toBeLessThanOrEqual(1);
+      expect(
+        candidate!.clues.filter((clue) => whoAmIClueFacet(clue) === "relationships").length,
+        subjectId + " relationship clues",
+      ).toBeLessThanOrEqual(1);
+      expect(
+        candidate!.clues.some((clue) => ["player-career-start", "player-career-end", "career-span"].includes(clue.id)),
+        subjectId + " useless chronology",
+      ).toBe(false);
+      expect(
+        candidate!.clues.some((clue) => GENERIC_VOLUME_IDS.has(clue.id) || GENERIC_VOLUME_CONCEPTS.has(clue.conceptId ?? "")),
+        subjectId + " generic career-volume filler",
+      ).toBe(false);
 
-      const sequences = Array.from({ length: 64 }, (_value, index) => whoAmIProgressiveClues(candidate!.clues, seededRandom(index + 1)));
+      const sequences = Array.from(
+        { length: 64 },
+        (_value, index) => whoAmIProgressiveClues(candidate!.clues, seededRandom(index + 1)),
+      );
       const first = new Set(sequences[0]!.map((clue) => clue.id));
       const surfaced = new Set(sequences.flatMap((sequence) => sequence.map((clue) => clue.id)));
       const boards = new Set(sequences.map((sequence) => sequence.map((clue) => clue.id).join("|")));
       const maxRotated = Math.max(...sequences.map((sequence) => sequence.filter((clue) => !first.has(clue.id)).length));
 
       for (const sequence of sequences) {
-        expect(sequence, `${subjectId} clue count`).toHaveLength(WHO_AM_I_CLUE_LIMIT);
-        expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length, `${subjectId} sports identity`).toBeGreaterThanOrEqual(9);
-        expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography"), `${subjectId} deep biography in run`).toHaveLength(0);
-        expect(sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length, `${subjectId} color in run`).toBeLessThanOrEqual(1);
-        expect(sequence.filter((clue) => whoAmIClueFacet(clue) === "relationships").length, `${subjectId} relationship slots`).toBeLessThanOrEqual(1);
-        expect(sequence.slice(-2).every((clue) => clue.band === "strong" || clue.band === "giveaway"), `${subjectId} strongest finish`).toBe(true);
+        expect(sequence, subjectId + " clue count").toHaveLength(WHO_AM_I_CLUE_LIMIT);
+        expect(
+          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length,
+          subjectId + " sports identity",
+        ).toBeGreaterThanOrEqual(9);
+        expect(
+          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography"),
+          subjectId + " deep biography in run",
+        ).toHaveLength(0);
+        expect(
+          sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length,
+          subjectId + " color in run",
+        ).toBeLessThanOrEqual(1);
+        expect(
+          sequence.filter((clue) => whoAmIClueFacet(clue) === "relationships").length,
+          subjectId + " relationship slots",
+        ).toBeLessThanOrEqual(1);
+        expect(
+          sequence.slice(-2).every((clue) => clue.band === "strong" || clue.band === "giveaway"),
+          subjectId + " strongest finish",
+        ).toBe(true);
       }
 
-      expect(surfaced.size, `${subjectId} surfaced replay depth`).toBeGreaterThanOrEqual(12);
-      expect(maxRotated, `${subjectId} rotating slots`).toBeGreaterThanOrEqual(2);
-      expect(boards.size, `${subjectId} distinct boards`).toBeGreaterThanOrEqual(2);
+      expect(surfaced.size, subjectId + " surfaced replay depth").toBeGreaterThanOrEqual(12);
+      expect(maxRotated, subjectId + " rotating slots").toBeGreaterThanOrEqual(2);
+      expect(boards.size, subjectId + " distinct boards").toBeGreaterThanOrEqual(2);
     }
   }, 150_000);
 });
