@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
+  FOOTBALL_WEEKLY_AUCTION_EXPANSION_PRESENTATION_COUNT,
   FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT,
   footballWeeklyAuctionTeamIdentity,
 } from "../features/back-room/footballWeeklyAuctionPresentation";
@@ -14,6 +15,17 @@ const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.t
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 const gate = readFileSync("src/features/back-room/FootballWeeklyAuctionGate.tsx", "utf8");
 const styles = readFileSync("src/styles/football-weekly-auction.css", "utf8");
+const expansionAudit = JSON.parse(
+  readFileSync("data/generated/football/cfb/weekly-auction-team-grade-expansion-v1.json", "utf8"),
+) as {
+  additions: Array<{
+    season_reference: string;
+    season_year: number;
+    school: string;
+    conference_bucket: string;
+  }>;
+};
+const expansionSeasons = expansionAudit.additions.filter((entry) => entry.conference_bucket !== "Wildcard");
 
 describe("Football Weekly Auction live contract", () => {
   it("owns the Tuesday through Monday seven-day server lifecycle", () => {
@@ -121,6 +133,8 @@ describe("Football Weekly Auction live contract", () => {
 
   it("ships the approved card research and final team-color treatment", () => {
     expect(FOOTBALL_WEEKLY_AUCTION_WILDCARD_PRESENTATION_COUNT).toBe(13);
+    expect(FOOTBALL_WEEKLY_AUCTION_EXPANSION_PRESENTATION_COUNT).toBe(88);
+    expect(expansionSeasons).toHaveLength(88);
     expect(gate).toContain("View season ↗");
     expect(gate).toContain("TODAY’S BOARD");
     expect(gate).toContain("RESULTS REVEAL AT MIDNIGHT CT");
@@ -132,7 +146,24 @@ describe("Football Weekly Auction live contract", () => {
     expect(footballWeeklyAuctionTeamIdentity("weekly-cfb-fresno-state-2013", "Fresno State", 2013).finalApRank).toBeNull();
     const expansion = footballWeeklyAuctionTeamIdentity("weekly-cfb-florida-2001", "Florida", 2001);
     expect(expansion.logoSrc).toContain("ncaa");
-    expect(expansion.finalApRank).toBeNull();
+    expect(expansion.finalApRank).toBe(3);
+    expect(expansion.resume).toBe("10–2 · Orange Bowl Champion");
+    expect(expansion.primary).toBe("#0021A5");
+
+    for (const entry of expansionSeasons) {
+      const identity = footballWeeklyAuctionTeamIdentity(
+        entry.season_reference,
+        entry.school,
+        entry.season_year,
+      );
+      expect(identity.resume, entry.season_reference).not.toBe(`${entry.school} · ${entry.season_year}`);
+      expect(identity.finalApRank, entry.season_reference).not.toBeNull();
+      expect(identity.logoSrc, entry.season_reference).toContain("ncaa");
+      expect(identity.primary, entry.season_reference).not.toBe("#27445A");
+      expect(identity.sportsReferenceUrl, entry.season_reference).toContain(String(entry.season_year));
+    }
+    expect(footballWeeklyAuctionTeamIdentity("weekly-cfb-oklahoma-2011", "Oklahoma", 2011).finalApRank).toBe(16);
+    expect(footballWeeklyAuctionTeamIdentity("weekly-cfb-notre-dame-2025", "Notre Dame", 2025).finalApRank).toBe(10);
     expect(styles).toContain("rgba(var(--weekly-team-rgb), .17)");
     expect(styles).toContain(".football-weekly-auction__result-team::before");
     expect(styles).toContain("align-self: start");
