@@ -185,18 +185,29 @@ export function cfbBestTeamSeasonPresentation(itemReference: string | null | und
   return ref ? PRESENTATION_BY_SEASON_REFERENCE[ref] ?? null : null;
 }
 
-export function cfbBestTeamSeasonVisualIdentity(itemReference: string | null | undefined): BuildQbVisualIdentity | null {
-  const season = cfbBestTeamSeasonPresentation(itemReference);
+export function cfbBestTeamSchoolVisualIdentity(school: string): BuildQbVisualIdentity | null {
+  const season = Object.values(PRESENTATION_BY_SEASON_REFERENCE).find((entry) => entry.school === school);
   if (!season) return null;
-  const assetSchool = ASSET_SCHOOL_ALIASES[season.school] ?? season.school;
+  const assetSchool = ASSET_SCHOOL_ALIASES[school] ?? school;
   const asset = footballTeamAssets[footballCfbTeamMediaId(assetSchool)];
   return {
     teamCode: season.schoolCode,
-    teamName: `${season.school} · ${season.year}`,
+    teamName: school,
     primary: season.primary,
     primaryRgb: rgbChannels(season.primary),
     secondary: season.secondary,
     logoSrc: asset?.src ?? null,
+  };
+}
+
+export function cfbBestTeamSeasonVisualIdentity(itemReference: string | null | undefined): BuildQbVisualIdentity | null {
+  const season = cfbBestTeamSeasonPresentation(itemReference);
+  if (!season) return null;
+  const schoolVisual = cfbBestTeamSchoolVisualIdentity(season.school);
+  if (!schoolVisual) return null;
+  return {
+    ...schoolVisual,
+    teamName: `${season.school} · ${season.year}`,
   };
 }
 
