@@ -4564,6 +4564,20 @@ const cfbBatch4IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
     band: "broad",
     facet: "background",
   }],
+  ["steve-spurrier-cfb:affiliation:south-carolina", {
+    band: "strong",
+    facet: "career-path",
+  }],
+  ["dan-lanning:affiliation:oregon", {
+    text: "I was a college head coach at Oregon.",
+    band: "broad",
+    facet: "role",
+  }],
+  ["ed-orgeron:affiliation:lsu", {
+    text: "I was a college head coach at LSU.",
+    band: "broad",
+    facet: "role",
+  }],
   ["cfb-sean-taylor:identity:pr8-sean-taylor-gulliver-three-position-football", {
     text: "At Gulliver Prep, I played running back, defensive back and linebacker before becoming known as a safety.",
     band: "helpful",
@@ -4750,7 +4764,7 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("bowden-track-coach", "Early in my coaching career I also served as a head track coach while building my football resume.", "helpful", "background", 23),
   ]],
   ["dabo-swinney-cfb", [
-    cfbBatch4Clue("swinney-two-titles", "I led Clemson to two national championships.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("swinney-six-acc-run", "I led Clemson to six consecutive outright ACC championships from 2015 through 2020.", "strong", "accomplishments", 12),
     cfbBatch4Clue("swinney-walk-on", "I entered Alabama as a regular student and earned a spot on the football team through a walk-on tryout.", "strong", "career-path", 16),
     cfbBatch4Clue("swinney-spiller-card", "While recruiting C.J. Spiller, I wrote an informal commitment on the back of a business card and later kept it framed.", "strong", "career-path", 17),
     cfbBatch4Clue("swinney-clemson-2003", "I joined Clemson's staff in 2003 and eventually took over as head coach during the 2008 season.", "strong", "career-path", 15),
@@ -4770,7 +4784,7 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("saban-alabama-six", "My Alabama teams won six national championships between the 2009 and 2020 seasons.", "giveaway", "accomplishments", 8),
   ]],
   ["pete-carroll-cfb", [
-    cfbBatch4Clue("carroll-two-usc-titles", "I led USC to national championships in 2003 and 2004.", "giveaway", "accomplishments", 7),
+    cfbBatch4Clue("carroll-2004-ap-no1", "My 2004 USC team held the AP No. 1 ranking from preseason through the entire campaign and won the Orange Bowl.", "strong", "accomplishments", 12),
     cfbBatch4Clue("carroll-pacific-safety", "My own college playing path went through junior college before I became a free safety at Pacific.", "helpful", "background", 22),
     cfbBatch4Clue("carroll-seven-pac10", "My USC teams won seven consecutive Pac-10 championships from 2002 through 2008.", "strong", "accomplishments", 12),
     cfbBatch4Clue("carroll-win-forever", "At USC I built the program around a competition-centered philosophy that became known as Win Forever.", "strong", "style", 16),
@@ -4784,7 +4798,7 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["tom-osborne", [
     cfbBatch4Clue("osborne-three-titles", "I led Nebraska to three national championships in my final four seasons as head coach.", "giveaway", "accomplishments", 7),
-    cfbBatch4Clue("osborne-255-wins", "I finished my Nebraska head-coaching career with 255 wins.", "strong", "production", 15),
+    cfbBatch4Clue("osborne-thirteen-conference", "I led Nebraska to 13 conference championships during my 25 seasons as head coach.", "strong", "accomplishments", 14),
     cfbBatch4Clue("osborne-nine-win-streak", "Every one of my 25 Nebraska teams won at least nine games.", "strong", "accomplishments", 13),
     cfbBatch4Clue("osborne-hastings-three-sport", "I played football and basketball and competed in track at Hastings College.", "helpful", "background", 22),
     cfbBatch4Clue("osborne-devaney-path", "Bob Devaney brought me into Nebraska's program before I eventually succeeded him as head coach.", "strong", "career-path", 16),
@@ -4792,7 +4806,7 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["woody-hayes", [
     cfbBatch4Clue("hayes-thirteen-big-ten", "My Ohio State teams won 13 Big Ten championships.", "giveaway", "accomplishments", 7),
-    cfbBatch4Clue("hayes-205-wins", "I won 205 games as Ohio State's head coach.", "strong", "production", 15),
+    cfbBatch4Clue("hayes-eleven-bowls", "I led Ohio State to 11 bowl games, including eight Rose Bowls.", "strong", "accomplishments", 14),
     cfbBatch4Clue("hayes-ten-year-war", "My rivalry with former assistant Bo Schembechler at Michigan became known as the Ten-Year War.", "giveaway", "relationships", 8),
     cfbBatch4Clue("hayes-national-title-teams", "I coached multiple Ohio State national-championship teams across nearly three decades in Columbus.", "strong", "accomplishments", 14),
     cfbBatch4Clue("hayes-gator-bowl-end", "My Ohio State tenure ended after the sideline incident with Clemson's Charlie Bauman in the 1978 Gator Bowl.", "giveaway", "identity", 9),
@@ -4811,8 +4825,8 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("stoops-iowa-ga", "After my final Iowa playing season, I stayed with the Hawkeyes as a graduate assistant before moving into full-time coaching.", "helpful", "career-path", 20),
   ]],
   ["brian-kelly-cfb", [
-    cfbBatch4Clue("kelly-assumption-captain", "I was a four-year linebacker at Assumption College and captained the team in my final two seasons.", "helpful", "background", 22),
-    cfbBatch4Clue("kelly-grand-valley", "My first college head-coaching job was at Grand Valley State, where I remained for 13 seasons.", "strong", "career-path", 17),
+    cfbBatch4Clue("kelly-cincinnati-2008-title", "I led Cincinnati to the 2008 Big East championship and the program's first BCS bowl berth.", "strong", "accomplishments", 15),
+    cfbBatch4Clue("kelly-cincinnati-2009-run", "My 2009 Cincinnati team opened 10-0 and reached No. 5 in the BCS standings before the regular season ended.", "strong", "accomplishments", 16),
     cfbBatch4Clue("kelly-major-stage", "I coached Notre Dame to a BCS national-title game and later to two College Football Playoff appearances.", "strong", "accomplishments", 13),
     cfbBatch4Clue("kelly-300-wins", "My college head-coaching career surpassed 300 victories.", "strong", "production", 16),
   ]],
