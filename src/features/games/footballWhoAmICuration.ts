@@ -374,7 +374,7 @@ function clueQualityScore(subject: FootballSubjectProfile, clue: WhoAmIClue) {
   if (/fact:nfl-career-(?:passing|rushing|receiving)-(?:attempts|completions|receptions)$/.test(id)) score -= 20;
   if (/fact:nfl-career-(?:.*per-game|.*percentage|.*ratio|.*per-attempt)$/.test(id)) score -= 30;
   if (/fact:nfl-career-interceptions-thrown/.test(id)) score -= 10;
-  if (/curated:/.test(id) || /curated-cfb1:/.test(id) || /curated-cfb2:/.test(id)) score += 45;
+  if (/curated:/.test(id) || /curated-cfb1:/.test(id) || /curated-cfb2:/.test(id) || /curated-cfb3:/.test(id)) score += 45;
   if (/fact:cfb-(?:heisman-awards|all-america-selections|national-championships-won|nfl-draft-overall-pick)/.test(id)) score += 38;
   if (/fact:cfb-best-season-(?:passing-yards|passing-touchdowns|rushing-yards|rushing-touchdowns|receiving-yards|receiving-touchdowns|sacks|tackles-for-loss|defensive-interceptions)$/.test(id)) score += 22;
   if (/fact:cfb-career-(?:passing-yards|passing-touchdowns|rushing-yards|rushing-touchdowns|receiving-yards|receiving-touchdowns|sacks|defensive-interceptions)$/.test(id)) score += 14;
@@ -3748,6 +3748,302 @@ export function isCfbWhoAmIBatch2Subject(subjectId: string) {
   return cfbBatch2SubjectIds.has(subjectId);
 }
 
+
+export const CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS = [
+  "cfb-brandon-scherff",
+  "cfb-bryant-mckinnie",
+  "cfb-dbrickashaw-ferguson",
+  "cfb-david-decastro",
+  "cfb-jake-long",
+  "cfb-jake-matthews",
+  "cfb-joe-alt",
+  "cfb-joe-thomas",
+  "cfb-aaron-donald",
+  "cfb-bruce-smith",
+  "cfb-chase-young",
+  "cfb-jadeveon-clowney",
+  "cfb-lee-roy-selmon",
+  "cfb-myles-garrett",
+  "cfb-ndamukong-suh",
+  "cfb-will-anderson-jr",
+  "cfb-abdul-carter",
+  "cfb-aidan-hutchinson",
+  "cfb-brian-orakpo",
+  "cfb-chris-long",
+  "cfb-david-pollack",
+  "cfb-derrick-brown",
+  "cfb-dwight-freeney",
+  "cfb-gerald-mccoy",
+  "cfb-glenn-dorsey",
+  "cfb-haloti-ngata",
+  "cfb-jj-watt",
+  "cfb-jalen-carter",
+  "cfb-joey-bosa",
+  "cfb-john-henderson",
+  "cfb-jonathan-allen",
+  "cfb-julius-peppers",
+  "cfb-derrick-thomas",
+  "cfb-luke-kuechly",
+  "cfb-manti-teo",
+  "cfb-roquan-smith",
+  "cfb-von-miller",
+  "cfb-aj-hawk",
+  "cfb-brian-urlacher",
+  "cfb-cj-mosley",
+  "cfb-dan-morgan",
+  "cfb-derrick-johnson",
+  "cfb-devin-white",
+  "cfb-isaiah-simmons",
+  "cfb-james-laurinaitis",
+  "cfb-jaylon-smith",
+  "cfb-khalil-mack",
+  "cfb-micah-parsons",
+  "cfb-nakobe-dean",
+  "cfb-patrick-willis",
+] as const;
+
+const cfbBatch3SubjectIds = new Set<string>(CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS);
+const cfbBatch3StructuralClueIds = new Set(["player-career-start", "player-career-end", "career-span"]);
+const cfbBatch3GenericMetricIds = new Set([
+  "fact:cfb-career-games",
+  "fact:cfb-career-starts",
+  "fact:cfb-career-targets",
+  "fact:cfb-career-passing-completions",
+  "fact:cfb-career-passing-attempts",
+  "fact:cfb-career-rushing-attempts",
+  "fact:cfb-career-interceptions-thrown",
+]);
+const cfbBatch3GenericIdentityConcepts = new Set([
+  "identity:career-games",
+  "identity:career-starts",
+  "identity:career-games-starts",
+  "identity:career-passing-completions",
+  "identity:career-passing-attempts",
+  "identity:career-rushing-attempts",
+  "identity:career-targets",
+  "identity:career-interceptions-thrown",
+]);
+
+const cfbBatch3SuppressedIdentityConcepts = new Set([
+  "identity:cfb-dbrickashaw-ferguson--thorn-birds-name-origin",
+  "identity:cfb-dbrickashaw-ferguson--religious-studies-degree-early",
+  "identity:cfb-david-decastro--south-african-rugby-family",
+  "identity:cfb-david-decastro--mother-delayed-football-start",
+  "identity:cfb-david-decastro--management-science-engineering-major",
+  "identity:cfb-jake-long--whole-school-leadership-reputation",
+  "identity:cfb-jake-long--survived-house-fire",
+  "identity:cfb-jake-matthews--bruce-matthews-son",
+  "identity:cfb-jake-matthews--four-brothers-aggies",
+  "identity:cfb-jake-matthews--fell-for-am-on-kevin-visits",
+  "identity:cfb-jake-matthews--elkins-line-with-brother-mike",
+  "identity:cfb-joe-alt--father-john-alt",
+  "identity:cfb-joe-alt--brother-mark-hockey",
+  "identity:cfb-joe-alt--mechanical-engineering",
+  "identity:cfb-aaron-donald--basement-workout-origin",
+  "identity:cfb-aaron-donald--pitt-return-and-gift",
+  "identity:bruce-smith-reluctant-football-father-no-quit",
+  "identity:cfb-chase-young--father-accountability",
+  "identity:cfb-chase-young--ian-thomas-mentor",
+  "identity:mother-frito-lay-motivation",
+  "identity:doo-doo-nickname-origin",
+  "identity:youngest-of-nine-farm",
+  "identity:college-community-service",
+  "identity:built-usf-football-program",
+  "identity:myles-garrett-paleontology-dinosaur-interest",
+  "identity:myles-garrett-poetry-maya-angelou",
+  "identity:myles-garrett-athletic-family-brea-aandm-link",
+  "identity:cfb-ndamukong-suh--house-of-spears-name",
+  "identity:cfb-ndamukong-suh--mother-pushed-degree-return",
+  "identity:cfb-will-anderson-jr--youngest-with-five-sisters",
+  "identity:cfb-will-anderson-jr--father-provoked-competitive-edge",
+  "identity:cfb-abdul-carter--father-bloomsburg-defender",
+  "identity:cfb-abdul-carter--deion-barnes-same-street",
+  "identity:cfb-aidan-hutchinson--michigan-legacy-no-97",
+  "identity:cfb-aidan-hutchinson--whole-family-michigan-tie",
+  "identity:cfb-brian-orakpo--parents-nigerian-immigrants",
+  "identity:cfb-chris-long--howie-long-son",
+  "identity:cfb-david-pollack--family-faith",
+  "identity:cfb-dwight-freeney--mother-track-background",
+  "identity:cfb-gerald-mccoy--mother-died-senior-year",
+  "identity:cfb-glenn-dorsey--family-katrina",
+  "identity:cfb-haloti-ngata--parents-died-young",
+  "identity:cfb-jj-watt--family-sports",
+  "identity:cfb-jalen-carter--family-background",
+  "identity:cfb-joey-bosa--bosa-football-family",
+  "identity:cfb-john-henderson--family-hardship",
+  "identity:cfb-jonathan-allen--military-family",
+  "identity:cfb-julius-peppers--family-background",
+  "identity:cfb-derrick-thomas--father-killed-vietnam",
+  "identity:cfb-luke-kuechly--family-athletes",
+  "identity:cfb-manti-teo--hawaiian-elder-respect-leadership",
+  "identity:cfb-manti-teo--declan-sullivan-response",
+  "identity:cfb-manti-teo--catfishing-hoax",
+  "identity:montezuma-rural-roots",
+  "identity:montezuma-youth-camp",
+  "identity:michael-phelps-swim-training",
+  "identity:von-miller-returned-senior-degree-family",
+  "identity:von-miller-poultry-science-chicken-farming",
+  "identity:von-miller-childhood-glasses-vons-vision",
+  "identity:cfb-aj-hawk--childhood-with-mike-nugent",
+  "identity:cfb-aj-hawk--played-with-brother-ryan",
+  "identity:cfb-aj-hawk--community-park-upbringing",
+  "identity:cfb-cj-mosley--younger-brother-jamey-alabama-walkon",
+  "identity:cfb-dan-morgan--miami-fan-before-hurricane",
+  "identity:cfb-derrick-johnson--waco-baylor-brother-upbringing",
+  "identity:cfb-derrick-johnson--brother-kept-recruitment-neutral",
+  "identity:cfb-derrick-johnson--extended-college-football-family",
+  "identity:cfb-derrick-johnson--waco-homesickness-and-tattoo",
+  "identity:cfb-devin-white--daisy-mae-horseman",
+  "identity:cfb-devin-white--rode-horse-to-final-and-stadium",
+  "identity:cfb-james-laurinaitis--father-animal-road-warriors",
+  "identity:cfb-jaylon-smith--older-brother-rod-smith",
+  "identity:cfb-khalil-mack--competitive-multi-sport-family",
+  "identity:cfb-nakobe-dean--mechanical-engineering-major",
+  "identity:cfb-nakobe-dean--returned-to-finish-degree",
+  "identity:cfb-nakobe-dean--brother-nikolas-ole-miss",
+  "identity:cfb-patrick-willis--worked-young-to-help-family",
+  "identity:cfb-patrick-willis--moved-with-siblings-to-coach",
+]);
+
+const cfbBatch3MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly)\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
+
+const cfbBatch3IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["cfb-bryant-mckinnie:identity:cfb-bryant-mckinnie--lackawanna-juco-conversion", {
+    text: "I moved from defensive end to offensive line at Lackawanna Junior College before transferring to Miami.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 20,
+  }],
+  ["cfb-bryant-mckinnie:identity:cfb-bryant-mckinnie--no-sacks-at-miami", {
+    text: "Miami credits me with not allowing a sack at left tackle during my two seasons with the Hurricanes.",
+    band: "strong",
+    facet: "style",
+    revealPriority: 18,
+  }],
+  ["cfb-jadeveon-clowney:identity:outback-bowl-the-hit", {
+    text: "In the 2013 Outback Bowl against Michigan, I blasted Vincent Smith, forced a fumble and recovered it on the play remembered simply as 'The Hit.'",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 7,
+  }],
+  ["cfb-brian-urlacher:identity:cfb-brian-urlacher--lobo-hybrid-position", {
+    text: "At New Mexico, I played the hybrid 'Lobo' role, blending middle-linebacker and free-safety responsibilities.",
+    band: "giveaway",
+    facet: "role",
+    revealPriority: 9,
+  }],
+  ["cfb-dan-morgan:identity:cfb-dan-morgan--first-defensive-award-triple-sweep", {
+    text: "In 2000 I became the first player to win the Bednarik, Butkus and Nagurski awards in the same season.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
+  ["cfb-khalil-mack:identity:cfb-khalil-mack--number-46-video-game-motivation", {
+    text: "I kept No. 46 at Buffalo partly because I remembered being rated 46 overall in the NCAA football video game and used it as motivation.",
+    band: "strong",
+    facet: "identity",
+    revealPriority: 18,
+  }],
+]);
+
+function cfbBatch3Clue(
+  id: string,
+  text: string,
+  band: WhoAmIClue["band"] = "strong",
+  facet: WhoAmIClue["facet"] = "accomplishments",
+  revealPriority = 14,
+): WhoAmIClue {
+  return { id: "curated-cfb3:" + id, conceptId: "curated-cfb3:" + id, text, band, facet, revealPriority };
+}
+
+const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([]);
+
+function cfbBatch3ApplyOverride(subjectId: string, clue: WhoAmIClue) {
+  const override = cfbBatch3IdentityOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id));
+  return override ? { ...clue, ...override } : clue;
+}
+
+function isCfbBatch3NflStageLeak(clue: WhoAmIClue) {
+  if (!clue.identityKnowledge) return false;
+  const text = clue.text.toLowerCase();
+  return (
+    /\bnfl\b|super bowl|all-pro|pro bowl|nfl mvp|defensive player of the year|professional football hall of fame/.test(text)
+    && !/draft|selected|pick/.test(text)
+  );
+}
+
+function shouldSuppressCfbBatch3Clue(subject: FootballSubjectProfile, clue: WhoAmIClue) {
+  if (cfbBatch3StructuralClueIds.has(clue.id)) return true;
+  if (cfbBatch3GenericMetricIds.has(clue.id)) return true;
+  if (clue.conceptId && cfbBatch3GenericIdentityConcepts.has(clue.conceptId)) return true;
+  if (clue.conceptId && cfbBatch3SuppressedIdentityConcepts.has(clue.conceptId)) return true;
+  if (isCfbBatch3NflStageLeak(clue)) return true;
+  if (clue.identityKnowledge && cfbBatch3MalformedFirstPerson.test(clue.text)) return true;
+  return false;
+}
+
+function trimCfbBatch3Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const target = 16;
+  if (clues.length <= target) return [...clues];
+
+  const requiredIds = new Set(["position", "school"]);
+  const required = clues.filter((clue) => requiredIds.has(clue.id));
+  const requiredIdSet = new Set(required.map((clue) => clue.id));
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+    .filter((entry) => !requiredIdSet.has(entry.clue.id))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+
+  const selected = new Set(required.map((clue) => clue.id));
+  const selectedConcepts = new Set(required.map((clue) => clue.conceptId ?? clue.id));
+  for (const entry of ranked) {
+    if (selected.size >= target) break;
+    const concept = entry.clue.conceptId ?? entry.clue.id;
+    if (selectedConcepts.has(concept)) continue;
+    selected.add(entry.clue.id);
+    selectedConcepts.add(concept);
+  }
+  if (selected.size < target) {
+    for (const entry of ranked) {
+      if (selected.size >= target) break;
+      selected.add(entry.clue.id);
+    }
+  }
+  return clues.filter((clue) => selected.has(clue.id));
+}
+
+function curateCfbBatch3Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
+  let colorUsed = false;
+  let relationshipUsed = false;
+  const curated: WhoAmIClue[] = [];
+
+  for (const rawClue of rawClues) {
+    const clue = cfbBatch3ApplyOverride(subject.id, rawClue);
+    if (shouldSuppressCfbBatch3Clue(subject, clue)) continue;
+
+    if (clue.identityKnowledge) {
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      if (selectionClass === "deep-biography") continue;
+      if (selectionClass === "identity-color") {
+        if (colorUsed) continue;
+        colorUsed = true;
+      }
+      if (whoAmIClueFacet(clue) === "relationships") {
+        if (relationshipUsed) continue;
+        relationshipUsed = true;
+      }
+    }
+    curated.push(clue);
+  }
+
+  curated.push(...(cfbBatch3SupplementalClues.get(subject.id) ?? []));
+  return trimCfbBatch3Pool(subject, curated);
+}
+
+export function isCfbWhoAmIBatch3Subject(subjectId: string) {
+  return cfbBatch3SubjectIds.has(subjectId);
+}
+
 function applyBatch2IdentityCuration(subjectId: string, clue: WhoAmIClue) {
   const override = batch2TextOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id))
     ?? batch2TextOverrides.get(subjectId + ":" + clue.id);
@@ -3866,6 +4162,9 @@ export function curateFootballWhoAmIClues(
   }
   if (subject.league === "CFB" && cfbBatch2SubjectIds.has(subject.id)) {
     return curateCfbBatch2Clues(subject, rawClues);
+  }
+  if (subject.league === "CFB" && cfbBatch3SubjectIds.has(subject.id)) {
+    return curateCfbBatch3Clues(subject, rawClues);
   }
   if (subject.league !== "NFL") return [...rawClues];
   if (batch4SubjectIds.has(subject.id)) return curateNflBatch4Clues(subject, rawClues);
