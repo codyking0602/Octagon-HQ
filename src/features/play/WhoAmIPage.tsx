@@ -15,6 +15,7 @@ import {
   type WhoAmISubject,
 } from "../games/whoAmIEngine";
 import WhoAmIPresentation from "./WhoAmIPresentation";
+import type { WhoAmICompletedResult } from "./whoAmIChallenge";
 
 type Phase = "start" | "playing" | "rescue" | "result";
 type ResultState = "correct" | "rescued" | "incorrect";
@@ -72,10 +73,23 @@ function normalized(value: string) {
 interface WhoAmIPageProps {
   sport: WhoAmISport;
   createRound: (excludedSubjectIdsByLeague: RecentSubjectExclusions) => WhoAmIRound;
+  initialRound?: WhoAmIRound;
+  challengeFrom?: string;
+  onChallenge?: (round: WhoAmIRound, result: WhoAmICompletedResult) => Promise<string>;
+  onAllGames?: () => void;
+  onComplete?: (round: WhoAmIRound, result: WhoAmICompletedResult) => void;
 }
 
-export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
-  const [round, setRound] = useState<WhoAmIRound>(() => createRound(recentSubjectExclusions()));
+export default function WhoAmIPage({
+  sport,
+  createRound,
+  initialRound,
+  challengeFrom,
+  onChallenge,
+  onAllGames,
+  onComplete,
+}: WhoAmIPageProps) {
+  const [round, setRound] = useState<WhoAmIRound>(() => initialRound ?? createRound(recentSubjectExclusions()));
   const [phase, setPhase] = useState<Phase>("start");
   const [resultState, setResultState] = useState<ResultState>("incorrect");
   const [revealedCount, setRevealedCount] = useState(WHO_AM_I_CLUES_PER_REVEAL);
@@ -89,9 +103,34 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
   const [rejectedRescueSubjectIds, setRejectedRescueSubjectIds] = useState<Set<string>>(() => new Set());
   const [rescueChoices, setRescueChoices] = useState<readonly WhoAmISubject[]>([]);
   const [reviewCluesOpen, setReviewCluesOpen] = useState(false);
+  const [challengeStatus, setChallengeStatus] = useState("");
   const latestClueRef = useRef<HTMLElement | null>(null);
   const shouldScrollAfterReveal = useRef(false);
   const guessInputRef = useRef<HTMLInputElement | null>(null);
+
+  const initialRoundKey = initialRound
+    ? `${initialRound.league}:${initialRound.hiddenSubject.id}:${initialRound.clues.map((clue) => clue.id).join(",")}`
+    : "";
+
+  useEffect(() => {
+    if (!initialRound) return;
+    setRound(initialRound);
+    setPhase("start");
+    setResultState("incorrect");
+    setRevealedCount(WHO_AM_I_CLUES_PER_REVEAL);
+    setWrongGuesses(0);
+    setRescueMisses(0);
+    setGuessOpen(false);
+    setGuessSearch("");
+    setSelectedGuess(null);
+    setGuessNotice(null);
+    setRejectedSubjectIds(new Set());
+    setRejectedRescueSubjectIds(new Set());
+    setRescueChoices([]);
+    setReviewCluesOpen(false);
+    setChallengeStatus("");
+    shouldScrollAfterReveal.current = false;
+  }, [initialRoundKey]);
 
   useEffect(() => {
     rememberRecentSubject(round.league, round.hiddenSubject.id);
@@ -149,6 +188,7 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
     setRejectedRescueSubjectIds(new Set());
     setRescueChoices([]);
     setReviewCluesOpen(false);
+    setChallengeStatus("");
     shouldScrollAfterReveal.current = false;
   }
 
@@ -243,6 +283,33 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
     : resultState === "rescued"
       ? "RECOVERED"
       : "MISS";
+  const completedResult: WhoAmICompletedResult = {
+    score: finalScore,
+    outcome: resultState,
+    outcomeLabel: resultLabel,
+    cluesUsed: revealedCount,
+    naturalMisses: wrongGuesses,
+    rescueMisses,
+    answerId: round.hiddenSubject.id,
+    answerName: round.hiddenSubject.name,
+    league: round.league,
+  };
+  const completionKey = phase === "result"
+    ? `${round.hiddenSubject.id}:${finalScore}:${revealedCount}:${wrongGuesses}:${rescueMisses}:${resultState}`
+    : "";
+  const reportedCompletionRef = useRef("");
+
+  useEffect(() => {
+    if (!completionKey || !onComplete || reportedCompletionRef.current === completionKey) return;
+    reportedCompletionRef.current = completionKey;
+    onComplete(round, completedResult);
+  }, [completionKey, onComplete, round]);
+
+  async function challengeSomeone() {
+    if (!onChallenge || phase !== "result") return;
+    setChallengeStatus("");
+    setChallengeStatus(await onChallenge(round, completedResult));
+  }
 
   return (
     <WhoAmIPresentation
@@ -269,6 +336,10 @@ export default function WhoAmIPage({ sport, createRound }: WhoAmIPageProps) {
       resultLabel={resultLabel}
       resultName={round.hiddenSubject.name}
       finalScore={finalScore}
+      challengeFrom={challengeFrom}
+      challengeStatus={challengeStatus}
+      onChallenge={onChallenge ? () => void challengeSomeone() : undefined}
+      onAllGames={onAllGames}
       onStart={() => setPhase("playing")}
       onOpenGuess={openGuess}
       onRevealMore={revealMore}
