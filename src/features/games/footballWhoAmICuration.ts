@@ -1797,7 +1797,7 @@ export const NFL_WHO_AM_I_BATCH_4_SUBJECT_IDS = [
   "joe-gibbs",
   "nfl-john-madden",
   "paul-brown",
-  "pete-carroll-cfb",
+  "pete-carroll",
   "tom-landry",
   "vince-lombardi",
   "bill-cowher",
