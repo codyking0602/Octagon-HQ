@@ -4454,6 +4454,167 @@ export function isCfbWhoAmIBatch3Subject(subjectId: string) {
   return cfbBatch3SubjectIds.has(subjectId);
 }
 
+export const CFB_WHO_AM_I_BATCH_4_SUBJECT_IDS = [
+  "cfb-paul-posluszny",
+  "cfb-rolando-mcclain",
+  "cfb-charles-woodson",
+  "cfb-deion-sanders",
+  "cfb-ed-reed",
+  "cfb-eric-berry",
+  "cfb-minkah-fitzpatrick",
+  "cfb-patrick-peterson",
+  "cfb-sean-taylor",
+  "cfb-travis-hunter",
+  "cfb-tyrann-mathieu",
+  "cfb-aaron-ross",
+  "cfb-antoine-winfield-jr",
+  "cfb-budda-baker",
+  "cfb-caleb-downs",
+  "cfb-champ-bailey",
+  "cfb-cooper-dejean",
+  "cfb-darqueze-dennard",
+  "cfb-derwin-james",
+  "cfb-earl-thomas",
+  "cfb-eric-weddle",
+  "cfb-jabrill-peppers",
+  "cfb-jalen-ramsey",
+  "cfb-jamal-adams",
+  "cfb-jeff-okudah",
+  "cfb-kyle-hamilton",
+  "cfb-malaki-starks",
+  "cfb-malcolm-jenkins",
+  "cfb-michael-huff",
+  "cfb-morris-claiborne",
+  "barry-switzer",
+  "bear-bryant",
+  "bobby-bowden",
+  "dabo-swinney",
+  "kirby-smart",
+  "nick-saban",
+  "pete-carroll",
+  "steve-spurrier",
+  "tom-osborne",
+  "urban-meyer",
+  "woody-hayes",
+  "bill-snyder",
+  "bob-stoops",
+  "brian-kelly",
+  "chip-kelly",
+  "chris-petersen",
+  "dan-lanning",
+  "deion-sanders",
+  "ed-orgeron",
+  "frank-beamer",
+] as const;
+
+const cfbBatch4SubjectIds = new Set<string>(CFB_WHO_AM_I_BATCH_4_SUBJECT_IDS);
+const cfbBatch4StructuralClueIds = new Set([
+  "player-career-start",
+  "player-career-end",
+  "career-span",
+  "coach-affiliation-count",
+]);
+const cfbBatch4GenericMetricIds = new Set([
+  "fact:cfb-career-games",
+  "fact:cfb-career-starts",
+  "fact:cfb-career-targets",
+  "fact:cfb-career-passing-completions",
+  "fact:cfb-career-passing-attempts",
+  "fact:cfb-career-rushing-attempts",
+  "fact:cfb-career-interceptions-thrown",
+  "fact:cfb-coach-career-losses",
+  "fact:cfb-coach-career-ties",
+]);
+const cfbBatch4GenericIdentityConcepts = new Set([
+  "identity:career-games",
+  "identity:career-starts",
+  "identity:career-games-starts",
+  "identity:career-passing-completions",
+  "identity:career-passing-attempts",
+  "identity:career-rushing-attempts",
+  "identity:career-targets",
+  "identity:career-interceptions-thrown",
+]);
+
+const cfbBatch4MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored)\b|\bsaid\s+me\b|\bfour\s+me\s+brothers\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
+const cfbBatch4OffFieldFiller = /\b(?:academic|degree|engineering|poultry|poetry|paleontolog|community[- ]service|volunteer|fundraising|charity|business venture|real estate|horseman|horse|catfishing|restaurant|tattoo|service station|coal mine|naval service|navy service|military service)\b|\bmajor(?:ed)?\s+(?:in|at)\b/i;
+
+function isCfbBatch4NflStageLeak(clue: WhoAmIClue) {
+  if (!clue.identityKnowledge) return false;
+  const text = clue.text.toLowerCase();
+  return (
+    /\bnfl\b|super bowl|all-pro|pro bowl|nfl mvp|defensive player of the year|professional football hall of fame/.test(text)
+    && !/draft|selected|pick/.test(text)
+  );
+}
+
+function shouldSuppressCfbBatch4Clue(clue: WhoAmIClue) {
+  if (cfbBatch4StructuralClueIds.has(clue.id)) return true;
+  if (cfbBatch4GenericMetricIds.has(clue.id)) return true;
+  if (clue.conceptId && cfbBatch4GenericIdentityConcepts.has(clue.conceptId)) return true;
+  if (/\b1 (?:sacks|defensive interceptions|pass breakups)\b/i.test(clue.text)) return true;
+  if (isCfbBatch4NflStageLeak(clue)) return true;
+  if (clue.identityKnowledge && cfbBatch4MalformedFirstPerson.test(clue.text)) return true;
+  if (clue.identityKnowledge && cfbBatch4OffFieldFiller.test(clue.text)) return true;
+  return false;
+}
+
+function trimCfbBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const target = 16;
+  if (clues.length <= target) return [...clues];
+
+  const requiredIds = new Set(subject.kind === "coach" ? [] : ["position", "school"]);
+  const required = clues.filter((clue) => requiredIds.has(clue.id));
+  const requiredIdSet = new Set(required.map((clue) => clue.id));
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+    .filter((entry) => !requiredIdSet.has(entry.clue.id))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+
+  const selected = new Set(required.map((clue) => clue.id));
+  const selectedConcepts = new Set(required.map((clue) => clue.conceptId ?? clue.id));
+  for (const entry of ranked) {
+    if (selected.size >= target) break;
+    const concept = entry.clue.conceptId ?? entry.clue.id;
+    if (selectedConcepts.has(concept)) continue;
+    selected.add(entry.clue.id);
+    selectedConcepts.add(concept);
+  }
+  return clues.filter((clue) => selected.has(clue.id));
+}
+
+function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
+  let colorUsed = false;
+  let relationshipUsed = false;
+  const curated: WhoAmIClue[] = [];
+
+  for (const rawClue of rawClues) {
+    const clue = rawClue.id === "era"
+      ? { ...rawClue, text: rawClue.text.replace(/^I was active in /, subject.kind === "coach" ? "My college head-coaching career came in " : "My college career came in ") }
+      : rawClue;
+    if (shouldSuppressCfbBatch4Clue(clue)) continue;
+
+    if (clue.identityKnowledge) {
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      if (selectionClass === "deep-biography") continue;
+      if (selectionClass === "identity-color") {
+        if (colorUsed) continue;
+        colorUsed = true;
+      }
+      if (whoAmIClueFacet(clue) === "relationships") {
+        if (relationshipUsed) continue;
+        relationshipUsed = true;
+      }
+    }
+    curated.push(clue);
+  }
+  return trimCfbBatch4Pool(subject, curated);
+}
+
+export function isCfbWhoAmIBatch4Subject(subjectId: string) {
+  return cfbBatch4SubjectIds.has(subjectId);
+}
+
 function applyBatch2IdentityCuration(subjectId: string, clue: WhoAmIClue) {
   const override = batch2TextOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id))
     ?? batch2TextOverrides.get(subjectId + ":" + clue.id);
@@ -4575,6 +4736,9 @@ export function curateFootballWhoAmIClues(
   }
   if (subject.league === "CFB" && cfbBatch3SubjectIds.has(subject.id)) {
     return curateCfbBatch3Clues(subject, rawClues);
+  }
+  if (subject.league === "CFB" && cfbBatch4SubjectIds.has(subject.id)) {
+    return curateCfbBatch4Clues(subject, rawClues);
   }
   if (subject.league !== "NFL") return [...rawClues];
   if (batch4SubjectIds.has(subject.id)) return curateNflBatch4Clues(subject, rawClues);
