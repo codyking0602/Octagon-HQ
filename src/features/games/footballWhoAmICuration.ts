@@ -4536,9 +4536,52 @@ const cfbBatch4GenericIdentityConcepts = new Set([
   "identity:career-interceptions-thrown",
 ]);
 
-const cfbBatch4MalformedFirstPerson = /\\bme\\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored|appeared|did|blocked|listed|pushed|exploited|coached|instituted|drove)\\b|\\bsaid\\s+me\\b|\\b(?:three|four)\\s+me\\s+brothers\\b|\\bI\\s+scholarship\\s+opportunities\\b|\\bI\\s+to\\s+sit\\b|\\bI\\s+a\\b|\\bI\\s+died\\b|\\bI\\s+has\\b|\\bme\\s+and\\s+my\\b|\\bFuture\\s+and\\s+I\\s+quarterback\\b|\\bWilliam\\s+myself\\b|\\bI\\s+saw\\s+me\\b|\\bAfter\\s+(?:got|left)\\b|\\bWhile\\s+was\\b|\\bWhen\\s+finally\\s+got\\b|\\bthe\\s+skinny\\s+me\\b|\\bQuarterback\\s+and\\s+I\\s+[A-Z]/i;
+const cfbBatch4MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored|appeared|did|blocked|listed|pushed|exploited|coached|instituted|drove)\b|\bsaid\s+me\b|\b(?:three|four)\s+me\s+brothers\b|\bI\s+scholarship\s+opportunities\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
 const cfbBatch4OffFieldFiller = /\b(?:academic|degree|engineering|poultry|poetry|paleontolog|community[- ]service|volunteer|fundraising|charity|business venture|real estate|horseman|horse|catfishing|restaurant|tattoo|service station|coal mine|naval service|navy service|military service)\b|\bmajor(?:ed)?\s+(?:in|at)\b/i;
 
+
+
+const cfbBatch4IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["cfb-sean-taylor:identity:pr8-sean-taylor-gulliver-three-position-football", {
+    text: "At Gulliver Prep, I played running back, defensive back and linebacker before becoming known as a safety.",
+    band: "helpful",
+    facet: "career-path",
+  }],
+  ["cfb-sean-taylor:identity:pr8-sean-taylor-gulliver-only-loss-missed", {
+    text: "Gulliver Prep's state-championship team went 14-1, and its only loss came in a game I did not play.",
+  }],
+  ["cfb-sean-taylor:identity:pr8-sean-taylor-local-miami-true-freshman", {
+    text: "I chose nearby Miami over other major programs and was one of only four true freshmen to play for the 2001 national-championship Hurricanes, initially contributing in sub packages and on special teams.",
+    band: "helpful",
+    facet: "career-path",
+  }],
+  ["cfb-sean-taylor:identity:pr8-sean-taylor-replaced-ed-reed", {
+    text: "When I became a full-time Miami starter, I stepped into the safety role vacated by Ed Reed.",
+    band: "helpful",
+    facet: "career-path",
+  }],
+  ["cfb-jeff-okudah:identity:pr9-cfb-jeff-okudah--high-school-receiver-production", {
+    text: "Although recruited as an elite defensive back, I was also a productive high-school receiver and averaged more than 24 yards per catch as a junior.",
+    band: "helpful",
+    facet: "career-path",
+  }],
+  ["cfb-jeff-okudah:identity:pr9-cfb-jeff-okudah--nike-testing-behind-dobbins", {
+    text: "At The Opening, I finished second in Nike+ athletic testing to fellow future Ohio State signee J.K. Dobbins.",
+    band: "helpful",
+    facet: "career-path",
+  }],
+  ["cfb-jeff-okudah:identity:pr9-cfb-jeff-okudah--ranked-top-corner-and-safety", {
+    text: "As a recruit, I was evaluated at the very top of the class at both cornerback and safety rather than as a one-position defensive back.",
+    band: "helpful",
+    facet: "career-path",
+  }],
+]);
+
+function cfbBatch4ApplyOverride(subjectId: string, clue: WhoAmIClue) {
+  const override = cfbBatch4IdentityOverrides.get(subjectId + ":" + clue.id)
+    ?? cfbBatch4IdentityOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id));
+  return override ? { ...clue, ...override } : clue;
+}
 
 function cfbBatch4Clue(
   id: string,
@@ -4817,9 +4860,10 @@ function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonl
   const curated: WhoAmIClue[] = [];
 
   for (const rawClue of rawClues) {
-    const clue = rawClue.id === "era"
-      ? { ...rawClue, text: rawClue.text.replace(/^I was active in /, subject.kind === "coach" ? "My college head-coaching career came in " : "My college career came in ") }
-      : rawClue;
+    const overriddenClue = cfbBatch4ApplyOverride(subject.id, rawClue);
+    const clue = overriddenClue.id === "era"
+      ? { ...overriddenClue, text: overriddenClue.text.replace(/^I was active in /, subject.kind === "coach" ? "My college head-coaching career came in " : "My college career came in ") }
+      : overriddenClue;
     if (shouldSuppressCfbBatch4Clue(subject, clue)) continue;
 
     if (clue.identityKnowledge) {
