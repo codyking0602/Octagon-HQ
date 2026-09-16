@@ -111,8 +111,8 @@ describe("Wavelength cross-sport source and calibration parity", () => {
     expect(WAVELENGTH_CONTRACT_VERSIONS.catalog).toBe(WAVELENGTH_CATALOG_VERSION);
     expect(WAVELENGTH_CONTRACT_VERSIONS.calibration).toBe(WAVELENGTH_CALIBRATION_VERSION);
     expect(WAVELENGTH_CONTRACT_VERSIONS.targetPolicy).toBe(WAVELENGTH_TARGET_POLICY_VERSION);
-    expect(FOOTBALL_WAVELENGTH_CATALOG_VERSION).toBe("football-wavelength-catalog-v3");
-    expect(FOOTBALL_WAVELENGTH_CALIBRATION_VERSION).toBe("football-wavelength-calibration-v2");
+    expect(FOOTBALL_WAVELENGTH_CATALOG_VERSION).toBe("football-wavelength-catalog-v4");
+    expect(FOOTBALL_WAVELENGTH_CALIBRATION_VERSION).toBe("football-wavelength-calibration-v3");
     expect(FOOTBALL_WAVELENGTH_TARGET_POLICY_VERSION).toBe(WAVELENGTH_TARGET_POLICY_VERSION);
     expect(wavelengthTargets).toEqual(Array.from({ length: 100 }, (_, index) => index + 1));
   });
