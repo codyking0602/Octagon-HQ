@@ -4731,6 +4731,7 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("taylor-big-east-dpoy", "I was the 2003 Big East Defensive Player of the Year.", "giveaway", "accomplishments", 8),
   ]],
   ["barry-switzer", [
+    cfbBatch4Clue("switzer-oklahoma-head-coach", "I was the head coach at Oklahoma.", "broad", "background", 24),
     cfbBatch4Clue("switzer-wishbone", "As Oklahoma's offensive coordinator in 1970, I pushed the program to switch to the wishbone offense.", "giveaway", "style", 8),
     cfbBatch4Clue("switzer-three-titles", "As Oklahoma head coach I won three national championships.", "giveaway", "accomplishments", 7),
     cfbBatch4Clue("switzer-integration", "I aggressively recruited Black players across Oklahoma's roster, including at quarterback, during a major period of integration in the region.", "strong", "career-path", 17),
