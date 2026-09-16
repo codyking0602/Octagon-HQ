@@ -110,7 +110,7 @@ const partialQuarterbackRushingSubjectIds = new Set([
 
 const retainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-aaron-rodgers", keep("identity:high-school-recruiting-overlook", "identity:butte-junior-college-breakthrough", "identity:garrett-cross-recruiting-discovery", "identity:teenage-cal-breakthrough", "identity:2005-draft-wait")],
-  ["nfl-bart-starr", keep("identity:alabama-injury-and-benching", "identity:johnny-dee-draft-tip", "identity:lombardi-career-rescue", "identity:ice-bowl-sneak-call", "identity:resume-nfl-harry-carson-03")],
+  ["nfl-bart-starr", keep("identity:alabama-injury-and-benching", "identity:johnny-dee-draft-tip", "identity:lombardi-career-rescue", "identity:ice-bowl-sneak-call", "identity:pro-bowls")],
   ["nfl-bobby-layne", keep("identity:texas-baseball-two-sport-star", "identity:cotton-bowl-all-forty-points", "identity:doak-walker-lifelong-football-partnership", "identity:buddy-parker-two-team-relationship", "identity:pro-bowls")],
   ["brett-favre", keep("identity:father-wishbone-background", "identity:overlooked-high-school-quarterback", "identity:third-string-college-breakthrough", "identity:post-crash-alabama-return")],
   ["cam-newton", keep("identity:florida-blinn-auburn-path", "identity:blinn-junior-college-reset", "identity:one-year-auburn-window")],
@@ -1824,7 +1824,7 @@ const batch4RetainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-demarcus-ware", keep("identity:demarcus-ware-lanky-receiver-to-pass-rusher", "identity:demarcus-ware-pass-rush-notebook")],
   ["derrick-brooks", keep()],
   ["nfl-derrick-thomas", keep("identity:three-all-pro-selections")],
-  ["nfl-harry-carson", keep("identity:pr7-harry-carson-college-line-to-middle-linebacker", "identity:harry-carson-parcells-team-conduit", "identity:pro-bowls", "identity:resume-nfl-harry-carson-04")],
+  ["nfl-harry-carson", keep("identity:harry-carson-college-line-to-middle-linebacker", "identity:harry-carson-parcells-team-conduit", "identity:harry-carson-gatorade-shower", "identity:pro-bowls", "identity:super-bowl-xxi-title")],
   ["nfl-charles-woodson", keep()],
   ["deion-sanders", keep()],
   ["nfl-dick-night-train-lane", keep("identity:offense-to-defense-position-switch", "identity:night-train-song-nickname", "identity:clothesline-tackling-style", "identity:pro-bowls")],
@@ -1841,8 +1841,8 @@ const batch4RetainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-cliff-harris", keep("identity:cliff-harris-undrafted-seventeen-rounds", "identity:cliff-harris-free-safety-archetype", "identity:cliff-harris-small-college-award", "identity:six-all-pro-all-nfc-selections")],
   ["nfl-darrell-green", keep("identity:darrell-green-track-speed-identity")],
   ["nfl-darrelle-revis", keep("identity:darrelle-revis-acl-near-retirement", "identity:darrelle-revis-anticipatory-film-study")],
-  ["nfl-darren-sharper", keep("identity:pr7-darren-sharper-mike-tomlin-college-relationship", "identity:darren-sharper-jamie-sharper-draft")],
-  ["nfl-deangelo-hall", keep("identity:pr7-deangelo-hall-green-sanders-role-models", "identity:deangelo-hall-shanahan-practice-reset")],
+  ["nfl-darren-sharper", keep("identity:darren-sharper-scout-wakeup-call", "identity:darren-sharper-mike-tomlin-college-relationship")],
+  ["nfl-deangelo-hall", keep("identity:deangelo-hall-green-sanders-role-models", "identity:deangelo-hall-shanahan-practice-reset")],
   ["nfl-devin-mccourty", keep()],
   ["nfl-dick-lebeau", keep("identity:dick-lebeau-ohio-state-qb-halfback", "identity:dick-lebeau-coach-dad", "identity:dick-lebeau-coached-to-eighty", "identity:pro-bowls")],
   ["nfl-donnie-shell", keep("identity:donnie-shell-bill-nunn-willie-jeffries", "identity:donnie-shell-torpedo-nickname", "identity:donnie-shell-fifth-1974-hall-of-famer", "identity:pro-bowls", "identity:five-all-pro-selections")],
@@ -2414,7 +2414,7 @@ function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue)
   }
   if (
     subject.id === "nfl-harry-carson"
-    && clue.conceptId === "identity:pr7-harry-carson-gatorade-shower"
+    && clue.conceptId === "identity:harry-carson-gatorade-shower"
   ) {
     return { ...clue, band: "strong", facet: "identity", revealPriority: 16 };
   }
@@ -2426,7 +2426,7 @@ function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue)
   }
   if (
     subject.id === "nfl-darren-sharper"
-    && clue.conceptId === "identity:pr7-darren-sharper-scout-wakeup-call"
+    && clue.conceptId === "identity:darren-sharper-scout-wakeup-call"
   ) {
     return { ...clue, band: "helpful", facet: "career-path", revealPriority: 20 };
   }
@@ -2457,17 +2457,12 @@ const batch4FocusedPoolIds = new Map<string, ReadonlySet<string>>([
     "curated4:carson-giants-only",
     "curated4:carson-53",
     "identity:pr7-harry-carson-college-line-to-middle-linebacker",
-    "identity:harry-carson-college-line-to-middle-linebacker",
     "curated4:carson-lt-banks",
     "curated4:carson-hof",
     "identity:resume-nfl-harry-carson-03",
-    "identity:pro-bowls",
     "identity:pr7-harry-carson-gatorade-shower",
-    "identity:harry-carson-gatorade-shower",
     "identity:pr7-harry-carson-parcells-team-conduit",
-    "identity:harry-carson-parcells-team-conduit",
     "identity:resume-nfl-harry-carson-04",
-    "identity:super-bowl-xxi-title",
   ])],
   ["nfl-darren-sharper", new Set([
     "position",
@@ -2477,13 +2472,11 @@ const batch4FocusedPoolIds = new Map<string, ReadonlySet<string>>([
     "curated4:sharper-path",
     "curated4:sharper-qb-safety",
     "identity:pr7-darren-sharper-scout-wakeup-call",
-    "identity:darren-sharper-scout-wakeup-call",
     "curated4:sharper-five-pb",
     "curated4:sharper-11-pick-sixes",
     "curated4:sharper-2009-return-record",
     "curated4:sharper-jamie",
     "identity:pr7-darren-sharper-mike-tomlin-college-relationship",
-    "identity:darren-sharper-mike-tomlin-college-relationship",
     "curated4:sharper-sb44",
   ])],
   ["nfl-deangelo-hall", new Set([
@@ -2498,9 +2491,7 @@ const batch4FocusedPoolIds = new Map<string, ReadonlySet<string>>([
     "curated4:hall-three-pb",
     "curated4:hall-pro-bowl-mvp",
     "identity:pr7-deangelo-hall-green-sanders-role-models",
-    "identity:deangelo-hall-green-sanders-role-models",
     "identity:pr7-deangelo-hall-shanahan-practice-reset",
-    "identity:deangelo-hall-shanahan-practice-reset",
     "curated4:hall-four-int",
   ])],
 ]);
