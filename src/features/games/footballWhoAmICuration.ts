@@ -4928,7 +4928,7 @@ function trimCfbBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoA
 
 function cfbBatch4ReplayStrength(clue: WhoAmIClue) {
   const facet = whoAmIClueFacet(clue);
-  const base: Readonly<Record<WhoAmIClue["facet"], number>> = {
+  const base: Readonly<Record<NonNullable<WhoAmIClue["facet"]>, number>> = {
     role: 20,
     era: 20,
     background: 40,
