@@ -1,3 +1,4 @@
+// Focused preflight trigger.
 import { describe, expect, it } from "vitest";
 import { getFootballFact, type FootballFactMetricId } from "../back-room/footballFactualStatsCore";
 import {
