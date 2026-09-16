@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { WhoAmIRound, WhoAmISubject } from "../games/whoAmIEngine";
 import WhoAmIPage from "./WhoAmIPage";
+import type { WhoAmICompletedResult } from "./whoAmIChallenge";
 
 const subjects: readonly WhoAmISubject[] = [
   { id: "alpha", name: "Alpha Fighter", kind: "fighter", eraBand: "modern", rescueGroup: "lightweight" },
@@ -210,7 +211,7 @@ describe("Who Am I mature gameplay loop", () => {
   });
 
   it("offers the standard casual challenge actions and sends the exact completed round", async () => {
-    const onChallenge = vi.fn(async () => "CHALLENGE READY");
+    const onChallenge = vi.fn(async (_round: WhoAmIRound, _result: WhoAmICompletedResult) => "CHALLENGE READY");
     const onAllGames = vi.fn();
 
     render(
