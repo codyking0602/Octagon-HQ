@@ -2616,6 +2616,9 @@ const cfbBatch1StructuralClueIds = new Set([
 
 const cfbBatch1SuppressedIdentityConcepts = new Set([
   "identity:cfb-andrew-luck--high-school-valedictorian",
+  "identity:cfb-davey-obrien--gaston-avenue-bulldogs",
+  "identity:cfb-davey-obrien--left-nfl-for-fbi",
+  "identity:nfl-draft-1939",
   "identity:cfb-andrew-luck--architectural-design-major",
   "identity:cfb-andrew-luck--academic-father-son-hall",
   "identity:architecture-degree-designed-home",
@@ -2644,6 +2647,24 @@ const cfbBatch1SuppressedIdentityConcepts = new Set([
 ]);
 
 const cfbBatch1IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["cfb-davey-obrien:identity:cfb-davey-obrien--tiny-high-school-quarterback", {
+    text: "At about 5-foot-7 and 118 pounds, I still became an all-state high-school quarterback.",
+    band: "helpful",
+    facet: "background",
+    revealPriority: 28,
+  }],
+  ["cfb-davey-obrien:identity:cfb-davey-obrien--behind-sammy-baugh", {
+    text: "At TCU, I first waited behind Sammy Baugh before succeeding him at quarterback.",
+    band: "strong",
+    facet: "relationships",
+    revealPriority: 24,
+  }],
+  ["cfb-davey-obrien:identity:cfb-davey-obrien--heisman-stagecoach-arrival", {
+    text: "When I went to New York to receive the Heisman, Fort Worth supporters arranged for a stagecoach to carry me to the ceremony.",
+    band: "strong",
+    facet: "identity",
+    revealPriority: 32,
+  }],
   ["cfb-bryce-young:identity:cfb-bryce-young--father-craig-quarterback-tutor", {
     text: "My father had quarterback experience and closely tutored my development at the position.",
     band: "helpful",
@@ -2672,6 +2693,7 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("obrien-1938-title", "I quarterbacked TCU through an undefeated 1938 season and a national championship.", "giveaway", "accomplishments", 9),
     cfbBatch1Clue("obrien-awards", "My 1938 season ended with both the Heisman Trophy and the Maxwell Award.", "giveaway", "accomplishments", 8),
     cfbBatch1Clue("obrien-draft", "Philadelphia selected me No. 4 overall in the 1939 NFL Draft.", "strong", "career-path"),
+    cfbBatch1Clue("obrien-all-american", "I was a unanimous All-American at quarterback in 1938.", "strong", "accomplishments"),
   ]],
   ["cfb-joe-burrow", [
     cfbBatch1Clue("burrow-transfer", "I began at Ohio State before transferring to LSU for my final two college seasons.", "strong", "career-path"),
