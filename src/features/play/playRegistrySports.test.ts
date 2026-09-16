@@ -54,7 +54,7 @@ describe("sport-aware Play registry", () => {
     expect(new Set(playGameCatalog.map((game) => `${game.sport}:${game.id}`)).size).toBe(playGameCatalog.length);
   });
 
-  it("preserves shared challenge support while Football Who Am I joins the official Daily contract", () => {
+  it("preserves shared challenge support while Football Who Am I joins Daily and direct challenges", () => {
     const footballGames = playGamesForSport("football");
     for (const game of footballGames.filter((candidate) => !["who-am-i", "draft-room"].includes(candidate.id))) {
       expect(game.lineup).toMatchObject({
@@ -90,7 +90,7 @@ describe("sport-aware Play registry", () => {
       defaultType: "replayable",
       supportedTypes: ["daily", "replayable"],
       replayBehavior: "new-lineup",
-      challengeEligible: false,
+      challengeEligible: true,
       dailyEligible: true,
       streakEligible: true,
       reminderEligible: true,

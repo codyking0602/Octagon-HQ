@@ -1,7 +1,8 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { WhoAmIRound, WhoAmISubject } from "../games/whoAmIEngine";
 import WhoAmIPage from "./WhoAmIPage";
+import type { WhoAmICompletedResult } from "./whoAmIChallenge";
 
 const subjects: readonly WhoAmISubject[] = [
   { id: "alpha", name: "Alpha Fighter", kind: "fighter", eraBand: "modern", rescueGroup: "lightweight" },
@@ -207,5 +208,41 @@ describe("Who Am I mature gameplay loop", () => {
     expect(screen.getByText("CLUES 9–10")).toBeInTheDocument();
     expect(container.querySelectorAll(".twenty-questions-review-pair")).toHaveLength(5);
     expect(screen.getByText("Detail 10")).toBeInTheDocument();
+  });
+
+  it("offers the standard casual challenge actions and sends the exact completed round", async () => {
+    const onChallenge = vi.fn(async (_round: WhoAmIRound, _result: WhoAmICompletedResult) => "CHALLENGE READY");
+    const onAllGames = vi.fn();
+
+    render(
+      <WhoAmIPage
+        sport="ufc"
+        createRound={round}
+        onChallenge={onChallenge}
+        onAllGames={onAllGames}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "START ROUND" }));
+    fireEvent.click(screen.getByRole("button", { name: "GUESS NOW · 100 PTS" }));
+    guess("Alpha");
+
+    fireEvent.click(screen.getByRole("button", { name: "CHALLENGE SOMEONE" }));
+    await waitFor(() => expect(onChallenge).toHaveBeenCalledTimes(1));
+
+    const [sentRound, sentResult] = onChallenge.mock.calls[0]!;
+    expect(sentRound.hiddenSubject.id).toBe("alpha");
+    expect(sentRound.clues.map((clue) => clue.id)).toEqual(round().clues.map((clue) => clue.id));
+    expect(sentResult).toMatchObject({
+      score: 100,
+      outcome: "correct",
+      cluesUsed: 2,
+      naturalMisses: 0,
+      answerId: "alpha",
+    });
+    expect(await screen.findByText("CHALLENGE READY")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "ALL GAMES" }));
+    expect(onAllGames).toHaveBeenCalledTimes(1);
   });
 });

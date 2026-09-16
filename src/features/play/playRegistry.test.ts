@@ -68,7 +68,7 @@ describe("Play game lineup contracts", () => {
     }
   });
 
-  it("adds official Daily ownership to Who Am I without changing casual replay or enabling direct challenges", () => {
+  it("adds official Daily ownership to Who Am I while keeping casual replay and enabling exact challenges", () => {
     expect(playGameDefinition("who-am-i").lineup).toMatchObject({
       defaultType: "replayable",
       supportedTypes: ["daily", "replayable"],
@@ -76,7 +76,7 @@ describe("Play game lineup contracts", () => {
       newLineupControl: "result-replay",
       lineupSize: 1,
       completionState: "identity-guessed-or-clue-limit",
-      challengeEligible: false,
+      challengeEligible: true,
       dailyEligible: true,
       streakEligible: true,
       reminderEligible: true,

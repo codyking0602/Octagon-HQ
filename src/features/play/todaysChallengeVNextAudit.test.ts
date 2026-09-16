@@ -66,14 +66,14 @@ describe("Stage 11 Today’s Challenge vNext audit", () => {
     expect(dailyDouble.scoringVersion).toBe("play-official-score-v4");
   });
 
-  it("promotes Who Am I into the existing official Daily contract without changing casual default", () => {
+  it("promotes Who Am I into the existing official Daily contract with casual challenge parity", () => {
     for (const sport of ["ufc", "football"] as const) {
       const game = playGameDefinition("who-am-i", sport);
       expect(game.availability).toBeUndefined();
       expect(game.lineup).toMatchObject({
         defaultType: "replayable",
         supportedTypes: ["daily", "replayable"],
-        challengeEligible: false,
+        challengeEligible: true,
         dailyEligible: true,
         streakEligible: true,
         reminderEligible: true,

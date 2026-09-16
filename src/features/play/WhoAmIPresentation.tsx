@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
+import { GameResultActions } from "./GameResultActions";
 import {
   WHO_AM_I_CLUE_LIMIT,
   WHO_AM_I_CLUES_PER_REVEAL,
@@ -50,6 +51,10 @@ export interface WhoAmIPresentationProps {
   busy?: boolean;
   daily?: boolean;
   dailyContext?: string;
+  challengeFrom?: string;
+  challengeStatus?: string;
+  onChallenge?: () => void;
+  onAllGames?: () => void;
   onStart?: () => void;
   onOpenGuess: () => void;
   onRevealMore: () => void;
@@ -97,6 +102,10 @@ export default function WhoAmIPresentation({
   busy = false,
   daily = false,
   dailyContext,
+  challengeFrom,
+  challengeStatus = "",
+  onChallenge,
+  onAllGames,
   onStart,
   onOpenGuess,
   onRevealMore,
@@ -139,6 +148,13 @@ export default function WhoAmIPresentation({
 
   return (
     <main className="page twenty-questions-page who-am-i-page" data-sport={sport} data-daily={daily ? "true" : undefined}>
+      {challengeFrom ? (
+        <section className="challenge-game-banner">
+          <span>PROFILE CHALLENGE</span>
+          <strong>{challengeFrom} sent this exact Who Am I board.</strong>
+          <small>Play the same hidden identity and clue progression. Both scores reveal after you finish.</small>
+        </section>
+      ) : null}
       <section className="twenty-questions-shell">
         <header className="twenty-questions-header">
           <div>
@@ -364,7 +380,16 @@ export default function WhoAmIPresentation({
                 </div>
               </div>
             ) : null}
-            {onReplay ? <button className="twenty-questions-primary" type="button" onClick={onReplay}>PLAY AGAIN</button> : null}
+            {!daily && onChallenge && onReplay && onAllGames ? (
+              <GameResultActions
+                onChallenge={onChallenge}
+                onReplay={onReplay}
+                onAllGames={onAllGames}
+                status={challengeStatus}
+              />
+            ) : onReplay ? (
+              <button className="twenty-questions-primary" type="button" onClick={onReplay}>PLAY AGAIN</button>
+            ) : null}
           </section>
         ) : null}
       </section>

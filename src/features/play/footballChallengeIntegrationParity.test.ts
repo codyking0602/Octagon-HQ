@@ -14,6 +14,7 @@ const footballChallengeGames: readonly { id: PlayGameId; route: string }[] = [
   { id: "wavelength", route: "/football/wavelength" },
   { id: "blind-resume", route: "/football/blind-resume" },
   { id: "hit-the-number", route: "/football/hit-the-number" },
+  { id: "who-am-i", route: "/football/who-am-i" },
   { id: "find-leader", route: "/football/find-leader" },
 ];
 
@@ -60,13 +61,22 @@ describe("Football standalone challenge integration parity", () => {
       reminderEligible: false,
     });
 
-    for (const game of challengeGames.filter((candidate) => candidate.id !== "draft-room")) {
+    for (const game of challengeGames.filter((candidate) => !["draft-room", "who-am-i"].includes(candidate.id))) {
       expect(game.lineup.supportedTypes).toContain("curated");
       expect(game.lineup.historyRecording).toBe("casual-and-challenge");
       expect(game.lineup.dailyEligible).toBe(false);
       expect(game.lineup.streakEligible).toBe(false);
       expect(game.lineup.reminderEligible).toBe(false);
     }
+
+    expect(playGameDefinition("who-am-i", "football").lineup).toMatchObject({
+      supportedTypes: ["daily", "replayable"],
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+    });
 
     expect(games.map((game) => game.id)).not.toContain("20-questions");
     expect(playGameDefinition("20-questions", "football").availability).toBe("retired");

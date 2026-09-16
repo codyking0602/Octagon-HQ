@@ -178,6 +178,7 @@ export function challengeResultScoreLabel(challenge: PlayChallenge, result: Chal
     const total = typeof row?.total === "number" && Number.isFinite(row.total) ? row.total : null;
     return total === null ? (score === null ? "DONE" : `${score}/100`) : String(total);
   }
+  if (challenge.gameId === "who-am-i") return score === null ? "DONE" : `${score}/100`;
   return "DONE";
 }
 
@@ -408,6 +409,49 @@ function HitTheNumberDetails({ challenge, creatorName, responderName }: DetailPr
   ) : null;
 }
 
+function WhoAmIDetails({ challenge, creatorName, responderName }: DetailProps) {
+  const setup = record(challenge.setup);
+  const round = record(setup?.round ?? null);
+  const hiddenSubject = record(round?.hiddenSubject ?? null);
+  const answer = typeof hiddenSubject?.name === "string" ? hiddenSubject.name : "Who Am I answer";
+
+  function Path({ label, name, result }: { label: string; name: string; result: ChallengeJson }) {
+    const row = record(result);
+    const outcome = typeof row?.outcomeLabel === "string" ? row.outcomeLabel : "COMPLETE";
+    const cluesUsed = typeof row?.cluesUsed === "number" ? row.cluesUsed : null;
+    const naturalMisses = typeof row?.naturalMisses === "number" ? row.naturalMisses : null;
+    const rescueMisses = typeof row?.rescueMisses === "number" ? row.rescueMisses : null;
+    return (
+      <article className="challenge-detail-card">
+        <header>
+          <span><small>{label}</small><strong>{name}</strong></span>
+          <b>{challengeResultScoreLabel(challenge, result)}</b>
+        </header>
+        <div className="challenge-detail-label">{outcome}</div>
+        <p>
+          {cluesUsed === null ? "Round complete" : `${cluesUsed} clues used`}
+          {naturalMisses === null ? "" : ` · ${naturalMisses} natural miss${naturalMisses === 1 ? "" : "es"}`}
+          {rescueMisses ? ` · ${rescueMisses} recovery miss${rescueMisses === 1 ? "" : "es"}` : ""}
+        </p>
+      </article>
+    );
+  }
+
+  return challenge.responderResult ? (
+    <div className="challenge-better-than-comparison">
+      <section className="challenge-game-banner" aria-label="Who Am I answer">
+        <span>ANSWER</span>
+        <strong>{answer}</strong>
+        <small>Both players received the same hidden identity and clue progression.</small>
+      </section>
+      <div className="challenge-detail-columns">
+        <Path label="SENDER" name={creatorName} result={challenge.creatorResult} />
+        <Path label="RESPONDER" name={responderName} result={challenge.responderResult} />
+      </div>
+    </div>
+  ) : null;
+}
+
 interface DetailProps {
   challenge: PlayChallenge;
   creatorName: string;
@@ -423,5 +467,6 @@ export function ChallengeResultDetails(props: DetailProps) {
   if (props.challenge.gameId === "keep-cut") return <KeepCutDetails {...props} />;
   if (props.challenge.gameId === "better-than") return <BetterThanDetails {...props} />;
   if (props.challenge.gameId === "hit-the-number") return <HitTheNumberDetails {...props} />;
+  if (props.challenge.gameId === "who-am-i") return <WhoAmIDetails {...props} />;
   return null;
 }
