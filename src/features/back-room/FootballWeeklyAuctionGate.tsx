@@ -37,8 +37,8 @@ function rankedResume(identity: FootballWeeklyAuctionTeamIdentity) {
   const cleaned = identity.resume
     .replace(/ · No\. \d+ Final AP/, "")
     .replace(/No\. \d+ Final AP · /, "");
-  const rank = identity.finalApRank == null ? "NR" : `#${identity.finalApRank}`;
-  return `${rank} · ${cleaned}`;
+  if (identity.finalApRank == null) return cleaned;
+  return `#${identity.finalApRank} · ${cleaned}`;
 }
 
 function RulesCover({ onStart }: { onStart: () => void }) {
