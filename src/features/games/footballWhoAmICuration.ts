@@ -1750,7 +1750,7 @@ export function isNflWhoAmIBatch3Subject(subjectId: string) {
 
 
 
-const NFL_WHO_AM_I_BATCH_4_SUBJECT_IDS = [
+export const NFL_WHO_AM_I_BATCH_4_SUBJECT_IDS = [
   "nfl-dave-robinson",
   "nfl-dave-wilcox",
   "nfl-demarcus-ware",
