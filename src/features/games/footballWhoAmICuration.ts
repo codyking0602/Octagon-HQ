@@ -2781,9 +2781,9 @@ const cfbBatch1IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
   }],
   ["cfb-bryce-young:identity:cfb-bryce-young--father-craig-quarterback-tutor", {
     text: "My father had quarterback experience and closely tutored my development at the position.",
-    band: "helpful",
+    band: "strong",
     facet: "style",
-    revealPriority: 35,
+    revealPriority: 28,
   }],
   ["cfb-caleb-williams:identity:cfb-caleb-williams--red-river-bench-spark", {
     text: "As an Oklahoma freshman, I replaced Spencer Rattler during the 2021 Red River game and helped lead a historic comeback over Texas.",
@@ -3013,7 +3013,7 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-charlie-ward", [
     cfbBatch1Clue("ward-heisman-title", "In 1993 I won the Heisman Trophy and led Florida State to its first national championship.", "giveaway", "accomplishments", 8),
-    cfbBatch1Clue("ward-basketball", "I also played point guard for Florida State and later chose a first-round NBA career instead of the NFL.", "giveaway", "career-path", 9),
+    cfbBatch1Clue("ward-basketball", "I also played point guard for Florida State and became a first-round NBA pick after college.", "giveaway", "career-path", 9),
   ]],
   ["cfb-chris-weinke", [
     cfbBatch1Clue("weinke-title", "I quarterbacked Florida State to the 1999 national championship.", "strong", "accomplishments"),
@@ -3143,10 +3143,18 @@ function shouldSuppressCfbBatch1Clue(subject: FootballSubjectProfile, clue: WhoA
 function trimCfbBatch1Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
   const target = 16;
   if (clues.length <= target) return [...clues];
+
+  const requiredIds = new Set(["position", "school"]);
+  const required = clues.filter((clue) => requiredIds.has(clue.id));
+  const requiredIdSet = new Set(required.map((clue) => clue.id));
   const ranked = clues
     .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+    .filter((entry) => !requiredIdSet.has(entry.clue.id))
     .sort((left, right) => right.score - left.score || left.index - right.index);
-  const selected = new Set(ranked.slice(0, target).map((entry) => entry.clue.id));
+  const selected = new Set([
+    ...required.map((clue) => clue.id),
+    ...ranked.slice(0, Math.max(0, target - required.length)).map((entry) => entry.clue.id),
+  ]);
   return clues.filter((clue) => selected.has(clue.id));
 }
 
