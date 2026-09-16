@@ -4690,7 +4690,7 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("bailey-long-jump", "I competed in Georgia track and set a school indoor long-jump record.", "helpful", "background", 22),
   ]],
   ["cfb-derwin-james", [
-    cfbBatch4Clue("james-youth-positions", "Before becoming a safety, I played quarterback, running back and wide receiver in youth football.", "helpful", "background", 22),
+    cfbBatch4Clue("james-youth-positions", "Before moving to safety as a high-school freshman, I had played quarterback, running back and wide receiver.", "helpful", "career-path", 22),
     cfbBatch4Clue("james-offer-at-fourteen", "Florida State offered me a scholarship when I was a 14-year-old high-school freshman.", "strong", "career-path", 16),
     cfbBatch4Clue("james-2017-aa", "I earned first-team All-America recognition at Florida State in 2017.", "strong", "accomplishments", 14),
   ]],
