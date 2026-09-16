@@ -420,7 +420,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         }
 
         const identityBacked = candidate.clues.some((clue) => clue.identityKnowledge);
-        const intentionallyCurated = (league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id) || isNflWhoAmIBatch3Subject(candidate.id) || isNflWhoAmIBatch4Subject(candidate.id))) || (league === "CFB" && (isCfbWhoAmIBatch1Subject(candidate.id) || isCfbWhoAmIBatch2Subject(candidate.id) || isCfbWhoAmIBatch3Subject(candidate.id)));
+        const intentionallyCurated = (league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id) || isNflWhoAmIBatch3Subject(candidate.id) || isNflWhoAmIBatch4Subject(candidate.id))) || (league === "CFB" && (isCfbWhoAmIBatch1Subject(candidate.id) || isCfbWhoAmIBatch2Subject(candidate.id) || isCfbWhoAmIBatch3Subject(candidate.id) || isCfbWhoAmIBatch4Subject(candidate.id)));
         if (identityBacked) identityBackedCandidates += 1;
         if (sequence.length === WHO_AM_I_CLUE_LIMIT) {
           playable += 1;
