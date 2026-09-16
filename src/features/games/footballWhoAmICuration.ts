@@ -3665,7 +3665,7 @@ function isCfbBatch2NflStageLeak(clue: WhoAmIClue) {
   if (!clue.identityKnowledge) return false;
   const text = clue.text.toLowerCase();
   return (
-    /\bnfl\b|super bowl|all-pro|pro bowl|nfl mvp|defensive player of the year|professional football hall of fame/.test(text)
+    /\bnfl\b|super bowl|all-pro|pro bowl|nfl mvp|nfl defensive player of the year|professional football hall of fame/.test(text)
     && !/draft|selected|pick/.test(text)
   );
 }
@@ -3826,7 +3826,7 @@ const cfbBatch3GenericIdentityConcepts = new Set([
 
 const cfbBatch3SuppressedMetricClueIds = new Map<string, ReadonlySet<string>>([
   ["cfb-chase-young", new Set(["fact:cfb-career-sacks", "fact:cfb-career-forced-fumbles", "fact:cfb-best-season-sacks"])],
-  ["cfb-myles-garrett", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks", "fact:cfb-career-defensive-interceptions", "fact:cfb-best-season-defensive-interceptions"])],
+  ["cfb-myles-garrett", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks", "fact:cfb-career-forced-fumbles", "fact:cfb-career-defensive-interceptions", "fact:cfb-best-season-defensive-interceptions"])],
   ["cfb-will-anderson-jr", new Set(["fact:cfb-career-sacks", "fact:cfb-career-defensive-interceptions", "fact:cfb-best-season-defensive-interceptions"])],
   ["cfb-abdul-carter", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks"])],
   ["cfb-aidan-hutchinson", new Set(["fact:cfb-career-sacks", "fact:cfb-best-season-sacks"])],
@@ -3852,6 +3852,8 @@ const cfbBatch3SuppressedIdentityConcepts = new Set([
   "identity:cfb-jake-matthews--bruce-matthews-son",
   "identity:cfb-jake-matthews--fell-for-am-on-kevin-visits",
   "identity:cfb-jake-matthews--elkins-line-with-brother-mike",
+  "identity:cfb-jake-matthews--four-brothers-aggies",
+  "identity:consecutive-starts",
   "identity:cfb-joe-alt--brother-mark-hockey",
   "identity:cfb-joe-alt--mechanical-engineering",
   "identity:cfb-aaron-donald--basement-workout-origin",
@@ -3896,6 +3898,8 @@ const cfbBatch3SuppressedIdentityConcepts = new Set([
   "identity:montezuma-rural-roots",
   "identity:montezuma-youth-camp",
   "identity:michael-phelps-swim-training",
+  "identity:region-title-running-back-switch",
+  "identity:ucla-signing-day-reversal",
   "identity:von-miller-returned-senior-degree-family",
   "identity:von-miller-poultry-science-chicken-farming",
   "identity:von-miller-childhood-glasses-vons-vision",
@@ -4116,7 +4120,7 @@ const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("carter-ninth-pick", "Philadelphia selected me No. 9 overall in the 2023 NFL Draft.", "giveaway", "career-path", 10),
   ]],
   ["cfb-john-henderson", [
-    cfbBatch3Clue("henderson-sec-dpoy", "I was the SEC Defensive Player of the Year in 2000.", "strong", "accomplishments", 16),
+    cfbBatch3Clue("henderson-sec-dpoy", "I was the SEC Defensive Player of the Year in 2000.", "helpful", "accomplishments", 18),
     cfbBatch3Clue("henderson-ninth-pick", "Jacksonville selected me No. 9 overall in the 2002 NFL Draft.", "giveaway", "career-path", 9),
   ]],
   ["cfb-jonathan-allen", [
@@ -4191,8 +4195,9 @@ const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
 
 const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-jake-matthews", [
-    cfbBatch3Clue("matthews-two-all-sec", "I earned first-team All-SEC honors in both 2012 and 2013.", "helpful", "accomplishments", 20),
+    cfbBatch3Clue("matthews-two-all-sec", "I earned first-team All-SEC honors in both 2012 and 2013.", "strong", "accomplishments", 18),
     cfbBatch3Clue("matthews-2012-sec-offense", "In 2012 I helped a Texas A&M offense lead the SEC in rushing, passing, scoring and total offense.", "helpful", "production", 23),
+    cfbBatch3Clue("matthews-deep-snapper", "In 2012 I also served as Texas A&M's deep snapper while starting at tackle.", "helpful", "role", 21),
   ]],
   ["cfb-bruce-smith", [
     cfbBatch3Clue("smith-78-retired", "Virginia Tech retired the No. 78 jersey I wore for the Hokies.", "helpful", "identity", 20),
@@ -4201,6 +4206,7 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-chase-young", [
     cfbBatch3Clue("young-2019-tfl", "I recorded 21 tackles for loss during my 2019 Ohio State season.", "helpful", "production", 22),
     cfbBatch3Clue("young-number-two", "I wore No. 2 while starring at defensive end for Ohio State.", "helpful", "identity", 20),
+    cfbBatch3Clue("young-team-captain", "My Ohio State teammates selected me as a team captain for the 2019 season.", "helpful", "identity", 21),
   ]],
   ["cfb-lee-roy-selmon", [
     cfbBatch3Clue("selmon-two-national-titles", "I helped Oklahoma win national championships in both 1974 and 1975.", "helpful", "accomplishments", 19),
@@ -4213,10 +4219,15 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("garrett-unanimous-2016", "I was a unanimous first-team All-American in 2016.", "strong", "accomplishments", 16),
     cfbBatch3Clue("garrett-first-aggie-no1", "I became the first Texas A&M player selected No. 1 overall in the NFL Draft.", "giveaway", "career-path", 8),
     cfbBatch3Clue("garrett-number-15", "I wore No. 15 on Texas A&M's defensive line.", "helpful", "identity", 21),
+    cfbBatch3Clue("garrett-freshman-sack-record", "As a freshman in 2014, I set Texas A&M and SEC freshman records with 11.5 sacks.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("garrett-team-defensive-mvp", "Texas A&M named me its team Defensive MVP after my 2014 freshman season.", "helpful", "accomplishments", 20),
+    cfbBatch3Clue("garrett-award-finalist", "As a junior in 2016, I was a finalist for the Bednarik and Lombardi awards.", "helpful", "accomplishments", 21),
   ]],
   ["cfb-abdul-carter", [
     cfbBatch3Clue("carter-2024-line", "In 2024 I recorded 12 sacks and a nation-leading 23.5 tackles for loss for Penn State.", "helpful", "production", 19),
     cfbBatch3Clue("carter-cfp-run", "I helped Penn State reach the College Football Playoff semifinal in my final college season.", "strong", "accomplishments", 18),
+    cfbBatch3Clue("carter-award-finalist", "I was a finalist for the Bednarik, Nagurski and Lombardi awards in 2024.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("carter-ten-sacks", "I became Penn State's first player with at least 10 sacks in a season since Carl Nassib in 2015.", "helpful", "accomplishments", 21),
   ]],
   ["cfb-aidan-hutchinson", [
     cfbBatch3Clue("hutchinson-two-time-captain", "My Michigan teammates elected me a team captain twice.", "helpful", "identity", 21),
@@ -4234,7 +4245,7 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-john-henderson", [
     cfbBatch3Clue("henderson-two-aa", "I earned first-team All-America recognition in both 2000 and 2001 at Tennessee.", "helpful", "accomplishments", 20),
-    cfbBatch3Clue("henderson-2000-line", "In 2000 I recorded 12 sacks and 21 tackles for loss for Tennessee.", "helpful", "production", 21),
+    cfbBatch3Clue("henderson-2000-line", "In 2000 I recorded 12 sacks and 21 tackles for loss for Tennessee.", "strong", "production", 17),
   ]],
   ["cfb-kayvon-thibodeaux", [
     cfbBatch3Clue("thibodeaux-freshman-line", "As an Oregon freshman in 2019, I set a program freshman record with nine sacks and added 14 tackles for loss.", "helpful", "production", 20),
@@ -4249,10 +4260,15 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("roquan-sec-title-mvp", "I was named MVP of the 2017 SEC Championship Game after Georgia beat Auburn.", "helpful", "accomplishments", 18),
     cfbBatch3Clue("roquan-consensus-aa", "I was a consensus first-team All-American in 2017.", "helpful", "accomplishments", 19),
     cfbBatch3Clue("roquan-number-three", "I wore No. 3 at Georgia.", "helpful", "identity", 22),
+    cfbBatch3Clue("roquan-rose-bowl-mvp", "I was the defensive MVP of Georgia's Rose Bowl win over Oklahoma after the 2017 season.", "helpful", "accomplishments", 17),
+    cfbBatch3Clue("roquan-team-captain-mvp", "Georgia named me a permanent team captain and its defensive MVP for the 2017 season.", "helpful", "identity", 20),
   ]],
   ["cfb-derrick-johnson", [
     cfbBatch3Clue("johnson-2004-line", "As a Texas senior in 2004, I made 130 tackles and 19 tackles for loss.", "helpful", "production", 20),
     cfbBatch3Clue("johnson-rose-bowl", "I helped Texas finish 11-1 with a Rose Bowl victory over Michigan after the 2004 season.", "helpful", "accomplishments", 22),
+    cfbBatch3Clue("johnson-holiday-bowl-mvp", "I was the defensive MVP of Texas's 2001 Holiday Bowl win over Washington.", "helpful", "accomplishments", 18),
+    cfbBatch3Clue("johnson-award-finalist", "As a senior I was a finalist for the Bednarik, Lombardi and Lott awards.", "helpful", "accomplishments", 20),
+    cfbBatch3Clue("johnson-2003-team-mvp", "Texas named me its team MVP after my 2003 junior season.", "helpful", "accomplishments", 19),
   ]],
   ["cfb-devin-white", [
     cfbBatch3Clue("white-career-line", "I finished my LSU career with 286 tackles, 29 tackles for loss and 8.5 sacks.", "helpful", "production", 19),
