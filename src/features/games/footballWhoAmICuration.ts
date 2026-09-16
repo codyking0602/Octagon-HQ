@@ -2614,29 +2614,73 @@ const cfbBatch1StructuralClueIds = new Set([
   "career-span",
 ]);
 
+const cfbBatch1SpecificHeismanSubjectIds = new Set<string>([
+  "cfb-cam-newton",
+  "cfb-joe-burrow",
+  "cfb-baker-mayfield",
+  "cfb-bryce-young",
+  "cfb-caleb-williams",
+  "cfb-doug-flutie",
+  "cfb-jim-plunkett",
+  "cfb-johnny-manziel",
+  "cfb-lamar-jackson",
+  "cfb-matt-leinart",
+  "cfb-roger-staubach",
+  "cfb-tim-tebow",
+  "cfb-carson-palmer",
+  "cfb-charlie-ward",
+  "cfb-chris-weinke",
+  "cfb-danny-wuerffel",
+  "cfb-eric-crouch",
+  "cfb-archie-griffin",
+  "cfb-derrick-henry",
+  "cfb-earl-campbell",
+  "cfb-ernie-davis",
+  "cfb-herschel-walker",
+  "cfb-marcus-allen",
+  "cfb-o-j-simpson",
+  "cfb-reggie-bush",
+  "cfb-ricky-williams",
+  "cfb-tony-dorsett",
+]);
+
+
 const cfbBatch1SuppressedIdentityConcepts = new Set([
   "identity:cfb-andrew-luck--high-school-valedictorian",
-  "identity:cfb-davey-obrien--gaston-avenue-bulldogs",
-  "identity:cfb-davey-obrien--left-nfl-for-fbi",
-  "identity:nfl-draft-1939",
   "identity:cfb-andrew-luck--architectural-design-major",
   "identity:cfb-andrew-luck--academic-father-son-hall",
   "identity:architecture-degree-designed-home",
-  "identity:cfb-barry-sanders--roofing-with-father",
-  "identity:hall-of-fame-father-introduction",
-  "identity:cfb-billy-cannon--dentistry-during-pro-career",
-  "identity:cfb-billy-cannon--counterfeiting-conviction",
+  "identity:cfb-davey-obrien--gaston-avenue-bulldogs",
+  "identity:cfb-davey-obrien--left-nfl-for-fbi",
+  "identity:nfl-draft-1939",
   "identity:cfb-baker-mayfield--texas-tech-walk-on",
   "identity:cfb-baker-mayfield--transferred-and-walked-on-oklahoma",
+  "identity:cfb-barry-sanders--roofing-with-father",
+  "identity:hall-of-fame-father-introduction",
+  "identity:father-third-best-introduction",
+  "identity:cfb-billy-cannon--halloween-run",
+  "identity:cfb-billy-cannon--dentistry-during-pro-career",
+  "identity:cfb-billy-cannon--counterfeiting-conviction",
   "identity:cfb-bijan-robinson--raised-with-grandfather-cleo",
   "identity:cfb-bijan-robinson--grandfather-pac12-official",
+  "identity:cfb-bijan-robinson--childhood-near-drowning-swim-safety",
   "identity:cfb-bijan-robinson--bijan-mustardson",
   "identity:grandfather-referee-father-figure",
+  "identity:cfb-brady-quinn--middle-school-notre-dame-visits",
   "identity:cfb-brady-quinn--finance-political-science-double-major",
   "identity:cfb-brady-quinn--law-school-aspiration",
+  "identity:cfb-c-j-stroud--youngest-of-four-competitive-siblings",
+  "identity:cfbfast-r-player-4432577-c-j-stroud--youngest-of-four-competitive-siblings",
+  "identity:cfbfast-r-player-4432577-c-j-stroud--rancho-cucamonga-state-semifinal-run",
   "identity:cfb-caleb-williams--followed-lincoln-riley-to-usc",
+  "identity:cfb-carson-palmer--troy-nickname-after-ucla-qb",
   "identity:cfb-charlie-ward--thomasville-near-tallahassee",
+  "identity:cfb-charlie-ward--chose-nba-after-nfl-draft-uncertainty",
+  "identity:cfb-colt-brennan--worcester-academy-merit-scholarship",
+  "identity:cfb-colt-mccoy--peru-mission-work",
   "identity:cfb-danny-wuerffel--desire-street-ministries",
+  "identity:cfb-deshaun-watson--815-gainesville-roots",
+  "identity:cfb-deshaun-watson--habitat-warrick-dunn-home",
   "identity:cfb-drew-brees--industrial-management-business-expectation",
   "identity:tom-house-throwing-rebuild",
   "identity:katrina-lakeview-calling",
@@ -2646,11 +2690,47 @@ const cfbBatch1SuppressedIdentityConcepts = new Set([
   "identity:cfb-joe-burrow--basketball-point-guard",
   "identity:cfb-joe-burrow--lost-osu-job-then-lsu-transfer",
   "identity:cfb-joe-burrow--destroyed-second-place-trophy",
+  "identity:cfb-roger-staubach--volunteered-for-vietnam",
+  "identity:raked-leaves-turning-point",
+  "identity:cfb-vince-young--raked-leaves-turning-point",
+  "identity:cfb-vince-young--rose-bowl-fourth-and-five",
+  "identity:cfb-andre-ware--alvin-cc-two-jobs",
+  "identity:brother-brian-tragedy",
+  "identity:elite-athletic-parents",
+  "identity:palestine-summer-giveback",
+  "identity:archie-griffin-parents-work-ethic",
+  "identity:archie-griffin-grew-up-around-ohio-state",
+  "identity:archie-griffin-woody-hayes-childrens-hospital",
+  "identity:archie-griffin-tank-youth-football",
+  "identity:cfb-barry-sanders--declined-high-school-record-chase",
+  "identity:rural-work-ethic",
+  "identity:boomer-heisman-ceremony",
+  "identity:darren-mcfadden-leecie-henson-mentor",
+  "identity:cfb-doak-walker--asked-colliers-to-honor-someone-else",
+  "identity:earl-campbell-arrived-texas-with-little",
+  "identity:earl-campbell-ann-campbell-controlled-recruiting",
+  "identity:earl-campbell-buy-mother-house-motivation",
+  "identity:ernie-davis-elmira-multisport-52-straight",
+  "identity:cfb-herschel-walker--schoolwork-before-signing",
+  "identity:eight-intentional-fumbles",
+  "identity:five-touchdown-title-game",
   "identity:oj-simpson-rickets-leg-braces",
+  "identity:oj-simpson-willie-mays-youth-intervention",
+  "identity:super-bowl-student-reporter",
+  "identity:alex-smith-helix-teammate",
+  "identity:bush-push",
   "identity:ricky-williams-returned-to-texas-finished-degree",
+  "identity:cfb-tony-dorsett--steel-mill-motivation",
+  "identity:cfb-tony-dorsett--media-friendly-sportscaster-ambition",
 ]);
 
 const cfbBatch1IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["cfb-cam-newton:identity:auburn-visit-scheme-questions", {
+    text: "During my Auburn recruitment, I focused heavily on how Gus Malzahn's offense would use me and talked openly about competing for college football's top honors.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 24,
+  }],
   ["cfb-davey-obrien:identity:cfb-davey-obrien--tiny-high-school-quarterback", {
     text: "At about 5-foot-7 and 118 pounds, I still became an all-state high-school quarterback.",
     band: "helpful",
@@ -2669,11 +2749,131 @@ const cfbBatch1IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
     facet: "identity",
     revealPriority: 32,
   }],
+  ["cfb-johnny-manziel:identity:johnny-manziel-alabama-bobble-improvisation", {
+    text: "In the 2012 win at Alabama, I collided with my own lineman, lost the ball, recovered it on the move and still threw across my body for a touchdown to Ryan Swope.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 9,
+  }],
+  ["cfb-lamar-jackson:identity:lamar-jackson-quarterback-only-recruiting-demand", {
+    text: "Some recruiters projected me as an athlete, but my mother and I insisted that my college choice give me a real opportunity to play quarterback.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 22,
+  }],
+  ["cfb-paul-hornung:identity:paul-hornung-one-platoon-do-everything-role", {
+    text: "In Notre Dame's one-platoon era, I handled quarterback and running-back duties, played defensive back, punted and kicked.",
+    band: "strong",
+    facet: "role",
+    revealPriority: 22,
+  }],
+  ["cfb-tim-tebow:identity:ole-miss-promise", {
+    text: "After Florida's upset loss to Ole Miss in 2008, I delivered an emotional postgame promise about how hard my team would play from that point forward.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 12,
+  }],
+  ["cfb-baker-mayfield:identity:cfb-baker-mayfield--sat-2014-transfer-rule", {
+    text: "I had to sit out the 2014 season after transferring to Oklahoma under the transfer rules then in place.",
+    band: "helpful",
+    facet: "career-path",
+    revealPriority: 26,
+  }],
   ["cfb-bryce-young:identity:cfb-bryce-young--father-craig-quarterback-tutor", {
     text: "My father had quarterback experience and closely tutored my development at the position.",
     band: "helpful",
     facet: "style",
     revealPriority: 35,
+  }],
+  ["cfb-caleb-williams:identity:cfb-caleb-williams--red-river-bench-spark", {
+    text: "As an Oklahoma freshman, I replaced Spencer Rattler during the 2021 Red River game and helped lead a historic comeback over Texas.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 10,
+  }],
+  ["cfb-colt-brennan:identity:cfb-colt-brennan--saddleback-juco-reset", {
+    text: "After Colorado, I rebuilt my football career at Saddleback Community College and earned all-conference and state offensive-player recognition.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 24,
+  }],
+  ["cfb-dak-prescott:identity:cfbfast-r-player-512030-dak-prescott--2013-egg-bowl-injury-return", {
+    text: "After missing time with a nerve injury in my non-throwing arm, I entered the 2013 Egg Bowl in the fourth quarter, tied the game and scored the winning overtime touchdown on fourth-and-1.",
+    band: "strong",
+    facet: "accomplishments",
+    revealPriority: 18,
+  }],
+  ["cfb-deshaun-watson:identity:cfb-deshaun-watson--championship-crush-to-renfrow", {
+    text: "On Clemson's final drive of the 2016 national championship game, I executed the play 'Crush' and found Hunter Renfrow for the winning touchdown with one second remaining against Alabama.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
+  ["cfb-drew-brees:identity:cfb-drew-brees--joe-tiller-purdue-fit", {
+    text: "New Purdue coach Joe Tiller saw me as a fit for the spread passing system he was bringing to West Lafayette and gave me the opportunity Texas programs had not.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 24,
+  }],
+  ["cfb-drew-brees:identity:cfb-drew-brees--holy-toledo-ohio-state-touchdown", {
+    text: "In 2000 against Ohio State, I hit Seth Morales for a 64-yard late touchdown on the play remembered by the 'Holy Toledo!' radio call.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 9,
+  }],
+  ["cfb-eric-crouch:identity:cfb-eric-crouch--newcombe-qb-battle-nearly-left", {
+    text: "After losing the quarterback job to Bobby Newcombe in 1999, I briefly went home and considered leaving before Frank Solich persuaded me to return.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 24,
+  }],
+  ["cfb-eric-crouch:identity:cfb-eric-crouch--black-41-flash-reverse", {
+    text: "Against No. 1 Oklahoma in 2001, I caught a 63-yard touchdown pass on the trick play known as 'Black 41 Flash Reverse.'",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 9,
+  }],
+  ["cfb-fernando-mendoza:identity:cfb-fernando-mendoza--alberto-indiana-transfer-link", {
+    text: "My younger brother Alberto was already a quarterback at Indiana, and his experience with the staff and culture helped shape my transfer decision.",
+    band: "strong",
+    facet: "relationships",
+    revealPriority: 24,
+  }],
+  ["cfb-billy-sims:identity:switzer-halftime-payphone", {
+    text: "While I was leaning toward Baylor, Barry Switzer called me from a pay phone during halftime of an Oklahoma game at Colorado and kept recruiting me.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 24,
+  }],
+  ["cfb-bo-jackson:identity:bo-jackson-bo-over-the-top", {
+    text: "As a freshman in the 1982 Iron Bowl, I scored the decisive touchdown by going over the top on fourth-and-goal, ending Alabama's nine-game winning streak in the rivalry.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 9,
+  }],
+  ["cfb-derrick-henry:identity:derrick-henry-ken-hall-record", {
+    text: "At Yulee High School, I broke the national high-school career rushing record that Ken Hall had held for 59 years.",
+    band: "strong",
+    facet: "accomplishments",
+    revealPriority: 24,
+  }],
+  ["cfb-herschel-walker:identity:cfb-herschel-walker--bill-bates-debut-run", {
+    text: "In my first college game at Tennessee in 1980, I ran through safety Bill Bates on a touchdown that became permanently linked to my Georgia identity.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 9,
+  }],
+  ["cfb-o-j-simpson:identity:oj-simpson-usc-world-record-relay", {
+    text: "At USC, I also competed in track and ran on a 440-yard relay team that set a world record.",
+    band: "strong",
+    facet: "style",
+    revealPriority: 28,
+  }],
+  ["cfb-o-j-simpson:identity:oj-simpson-1967-ucla-weaving-touchdown", {
+    text: "In the 1967 USC-UCLA rivalry game, I broke a long fourth-quarter touchdown run that provided the decisive points in USC's 21-20 win.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 9,
   }],
 ]);
 
@@ -2695,7 +2895,7 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-davey-obrien", [
     cfbBatch1Clue("obrien-1938-title", "I quarterbacked TCU through an undefeated 1938 season and a national championship.", "giveaway", "accomplishments", 9),
-    cfbBatch1Clue("obrien-awards", "My 1938 season ended with both the Heisman Trophy and the Maxwell Award.", "giveaway", "accomplishments", 8),
+    cfbBatch1Clue("obrien-maxwell", "I also won the Maxwell Award in 1938.", "strong", "accomplishments", 14),
     cfbBatch1Clue("obrien-draft", "Philadelphia selected me No. 4 overall in the 1939 NFL Draft.", "strong", "career-path"),
     cfbBatch1Clue("obrien-all-american", "I was a unanimous All-American at quarterback in 1938.", "strong", "accomplishments"),
   ]],
@@ -2737,7 +2937,6 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-drew-brees", [
     cfbBatch1Clue("brees-big-ten", "I led Purdue to the 2000 Big Ten championship and its first Rose Bowl appearance in more than three decades.", "giveaway", "accomplishments", 9),
     cfbBatch1Clue("brees-maxwell", "I won the Maxwell Award in 2000.", "strong", "accomplishments"),
-    cfbBatch1Clue("brees-holy-toledo", "A late 64-yard touchdown against Ohio State in 2000 became famous for the 'Holy Toledo!' radio call.", "giveaway", "accomplishments", 8),
     cfbBatch1Clue("brees-draft", "I was selected No. 32 overall in the 2001 NFL Draft.", "strong", "career-path"),
   ]],
   ["cfb-eli-manning", [
@@ -2763,7 +2962,6 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("sanders-third-pick", "Detroit selected me No. 3 overall in the 1989 NFL Draft.", "strong", "career-path"),
   ]],
   ["cfb-o-j-simpson", [
-    cfbBatch1Clue("simpson-juco", "I reached USC after beginning my college career at City College of San Francisco.", "strong", "career-path"),
     cfbBatch1Clue("simpson-1967-title", "I helped USC win the 1967 national championship.", "strong", "accomplishments"),
     cfbBatch1Clue("simpson-heisman", "I won the 1968 Heisman Trophy.", "giveaway", "accomplishments", 8),
     cfbBatch1Clue("simpson-first-pick", "I became the No. 1 overall pick in the 1969 NFL Draft.", "giveaway", "career-path", 10),
@@ -2779,7 +2977,6 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-johnny-manziel", [
     cfbBatch1Clue("manziel-freshman-heisman", "In 2012 I became the first freshman to win the Heisman Trophy.", "giveaway", "accomplishments", 8),
-    cfbBatch1Clue("manziel-alabama", "As a freshman I led Texas A&M to a road upset of No. 1 Alabama.", "strong", "accomplishments"),
   ]],
   ["cfb-lamar-jackson", [
     cfbBatch1Clue("lamar-heisman", "In 2016 I became Louisville's first Heisman Trophy winner.", "giveaway", "accomplishments", 8),
@@ -2839,12 +3036,10 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("wuerffel-spurrier", "My head coach at Florida had also won the Heisman as a Gators quarterback.", "strong", "relationships"),
   ]],
   ["cfb-deshaun-watson", [
-    cfbBatch1Clue("watson-title", "I threw the game-winning touchdown with one second left to beat Alabama for the 2016 national championship.", "giveaway", "accomplishments", 8),
     cfbBatch1Clue("watson-clemson", "I left Clemson after three seasons with a national title and two straight championship-game appearances.", "strong", "accomplishments"),
   ]],
   ["cfb-eric-crouch", [
     cfbBatch1Clue("crouch-heisman", "I won the 2001 Heisman Trophy while running Nebraska's option offense.", "giveaway", "accomplishments", 8),
-    cfbBatch1Clue("crouch-black41", "Against No. 1 Oklahoma, I caught a 63-yard touchdown on the trick play known as Black 41 Flash Reverse.", "giveaway", "accomplishments", 9),
   ]],
   ["cfb-adrian-peterson", [
     cfbBatch1Clue("peterson-freshman", "As a true freshman at Oklahoma in 2004, I rushed for 1,925 yards and finished second in Heisman voting.", "giveaway", "accomplishments", 8),
@@ -2918,8 +3113,12 @@ function cfbBatch1ApplyOverride(subjectId: string, clue: WhoAmIClue) {
   return override ? { ...clue, ...override } : clue;
 }
 
-function shouldSuppressCfbBatch1Clue(clue: WhoAmIClue) {
+function shouldSuppressCfbBatch1Clue(subject: FootballSubjectProfile, clue: WhoAmIClue) {
   if (cfbBatch1StructuralClueIds.has(clue.id)) return true;
+  if (
+    cfbBatch1SpecificHeismanSubjectIds.has(subject.id)
+    && (clue.id === "heisman" || clue.id === "fact:cfb-heisman-awards")
+  ) return true;
   if (
     clue.id === "fact:cfb-career-games"
     || clue.id === "fact:cfb-career-starts"
@@ -2957,7 +3156,7 @@ function curateCfbBatch1Clues(subject: FootballSubjectProfile, rawClues: readonl
   const curated: WhoAmIClue[] = [];
 
   for (const rawClue of rawClues) {
-    if (shouldSuppressCfbBatch1Clue(rawClue)) continue;
+    if (shouldSuppressCfbBatch1Clue(subject, rawClue)) continue;
     const clue = cfbBatch1ApplyOverride(subject.id, rawClue);
     if (clue.identityKnowledge) {
       const selectionClass = whoAmIClueSelectionClass(clue);
