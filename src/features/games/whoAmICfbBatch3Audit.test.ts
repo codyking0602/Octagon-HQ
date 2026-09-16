@@ -1,6 +1,5 @@
 // Focused preflight trigger.
 import { describe, expect, it } from "vitest";
-import { getFootballFact, type FootballFactMetricId } from "../back-room/footballFactualStatsCore";
 import {
   footballWhoAmIApplicableIdentityFacts,
   footballWhoAmIApplicableMetricFacts,
@@ -8,6 +7,7 @@ import {
   getFootballWhoAmILaunchPool,
   getFootballWhoAmIUniverse,
 } from "./footballWhoAmIAuthority";
+import { getFootballFact, type FootballFactMetricId } from "../back-room/footballFactualStatsCore";
 import { CFB_WHO_AM_I_BATCH_3_SUBJECT_IDS } from "./footballWhoAmICuration";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import { WHO_AM_I_CLUE_LIMIT, whoAmIProgressiveClues } from "./whoAmIEngine";
