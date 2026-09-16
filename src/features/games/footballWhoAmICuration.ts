@@ -3278,6 +3278,7 @@ const cfbBatch2GenericIdentityConcepts = new Set([
   "identity:career-passing-completions",
   "identity:career-passing-attempts",
   "identity:career-rushing-attempts",
+  "identity:career-targets",
   "identity:career-interceptions-thrown",
 ]);
 
@@ -3342,6 +3343,17 @@ const cfbBatch2SuppressedIdentityConcepts = new Set([
   "identity:cfb-kellen-winslow-ii--father-kellen-winslow",
   "identity:cfb-kellen-winslow-ii--high-school-multi-role-kicker",
   "identity:cfb-kellen-winslow-ii--uncle-david-basketball",
+  "identity:cfb-davante-adams--first-scholarship-eased-family-burden",
+  "identity:cfb-michael-crabtree--dallas-and-tech-giveback",
+  "identity:cfb-braylon-edwards--returned-to-finish-degree",
+  "identity:cfb-keith-jackson--four-time-academic-all-big-eight",
+  "identity:cfb-alex-mack--legal-studies-magna-cum-laude",
+  "identity:cfb-alex-mack--graduate-student-education",
+  "identity:cfb-barrett-jones--accounting-bachelors-and-masters",
+  "identity:cfb-barrett-jones--four-time-academic-all-american",
+  "identity:cfb-barrett-jones--haiti-nicaragua-mission-trips",
+  "identity:megatron-nickname-origin",
+  "identity:cfb-marvin-harrison-jr--grew-during-covid-shutdown",
 ]);
 
 const cfbBatch2MalformedFirstPerson = /\bme\s+(?:gave|weighed|wanted|produced|lost|attended|committed|broke|lived|reportedly|struck|chose|learned|created|helped|impressed|underwent|caught|and|excelled|scored|watched|pledged|told|pointed)\b|\bI\s+a\b|\bI\s+died\b|\bmy son's\b|\bAfter\s+left\b|\bWhen\s+finally\s+got\b|\bI\s+has\b/i;
@@ -3421,6 +3433,30 @@ const cfbBatch2IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
     band: "giveaway",
     facet: "accomplishments",
     revealPriority: 7,
+  }],
+  ["cfb-marvin-harrison-jr:identity:cfb-marvin-harrison-jr--father-marvin-harrison", {
+    text: "My father was a Pro Football Hall of Fame wide receiver.",
+    band: "giveaway",
+    facet: "relationships",
+    revealPriority: 6,
+  }],
+  ["cfb-marvin-harrison-jr:identity:cfb-marvin-harrison-jr--st-josephs-with-kyle-mccord", {
+    text: "At St. Joseph's Prep, I formed a quarterback-receiver partnership with Kyle McCord before both of us went to Ohio State.",
+    band: "helpful",
+    facet: "career-path",
+    revealPriority: 28,
+  }],
+  ["cfb-marvin-harrison-jr:identity:cfb-marvin-harrison-jr--extreme-jugs-work-routine", {
+    text: "Ohio State teammates and coaches described my habit of doing extra JUGS-machine and route work at unusually early and late hours.",
+    band: "helpful",
+    facet: "style",
+    revealPriority: 30,
+  }],
+  ["cfb-kyle-pitts:identity:cfb-kyle-pitts--trask-second-team-connection", {
+    text: "My on-field chemistry with quarterback Kyle Trask began in 2018 when we worked together with Florida's second-team offense.",
+    band: "strong",
+    facet: "relationships",
+    revealPriority: 22,
   }],
   ["cfb-kellen-winslow-ii:identity:cfb-kellen-winslow-ii--miami-receiver-to-tight-end", {
     text: "I began my Miami career at wide receiver before moving to tight end.",
