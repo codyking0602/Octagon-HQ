@@ -4602,8 +4602,8 @@ const cfbBatch4IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
     facet: "career-path",
   }],
   ["cfb-ed-reed:identity:miami-track-participant", {
-    band: "helpful",
-    facet: "career-path",
+    band: "strong",
+    facet: "style",
   }],
   ["bear-bryant:identity:pr8-bear-bryant-bear-wrestling-nickname", {
     text: "As a teenager in Fordyce, Arkansas, I accepted a theater promotion to wrestle a captive bear.",
@@ -4641,11 +4641,6 @@ function cfbBatch4Clue(
 const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-kyle-hamilton", [
     cfbBatch4Clue("hamilton-first-stadium-snap", "On my first defensive snap in Notre Dame Stadium, I returned an interception for a touchdown against New Mexico.", "strong", "accomplishments", 15),
-  ]],
-  ["frank-beamer-cfb", [
-    cfbBatch4Clue("beamer-newspaper-vpi", "Newspaper coverage of my high-school play helped catch VPI coaches' attention and led me to Virginia Tech as a player.", "helpful", "career-path", 21),
-    cfbBatch4Clue("beamer-radford-start", "After graduating from Virginia Tech, I began my coaching career at Radford High School.", "helpful", "career-path", 20),
-    cfbBatch4Clue("beamer-two-conferences", "I won conference championships with Virginia Tech in both the Big East and the ACC.", "strong", "accomplishments", 14),
   ]],
   ["cfb-travis-hunter", [
     cfbBatch4Clue("hunter-jackson-state-colorado", "I played one season at Jackson State before transferring to Colorado.", "giveaway", "career-path", 7),
@@ -4838,6 +4833,9 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("beamer-ball", "My Virginia Tech program became famous for blocked kicks and special-teams touchdowns as a defining part of its identity.", "giveaway", "style", 7),
     cfbBatch4Clue("beamer-seven-conference", "My Virginia Tech teams won seven conference championships.", "strong", "accomplishments", 15),
     cfbBatch4Clue("beamer-vt-player", "Before coaching Virginia Tech, I played defensive back there.", "helpful", "background", 22),
+    cfbBatch4Clue("beamer-newspaper-vpi", "Newspaper coverage of my high-school play helped catch VPI coaches' attention and led me to Virginia Tech as a player.", "helpful", "career-path", 21),
+    cfbBatch4Clue("beamer-radford-start", "After graduating from Virginia Tech, I began my coaching career at Radford High School.", "helpful", "career-path", 20),
+    cfbBatch4Clue("beamer-two-conferences", "I won conference championships with Virginia Tech in both the Big East and the ACC.", "strong", "accomplishments", 14),
   ]],
   ["gary-patterson-cfb", [
     cfbBatch4Clue("patterson-181", "I won 181 games at TCU, the most by a head coach in program history.", "strong", "production", 14),
