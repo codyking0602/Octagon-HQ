@@ -41,14 +41,14 @@ export const footballWavelengthExpansionCategories = [
     ],
   },
   {
-    category: "OFFENSIVE CHAOS",
+    category: "SCHEME & PLAY CREATIVITY",
     prefix: "chaos",
     seeds: [
-      ["2000-ravens", "2000 Ravens offense", 18],
-      ["1984-byu", "1984 BYU offense", 75],
-      ["2022-usc", "2022 USC offense", 82],
-      ["2023-dolphins", "2023 Dolphins offense", 86],
-      ["2012-baylor", "2012 Baylor offense", 94],
+      ["2000-ravens", "2000 Ravens offense", 10],
+      ["1984-byu", "1984 BYU offense", 94],
+      ["2022-usc", "2022 USC offense", 84],
+      ["2023-dolphins", "2023 Dolphins offense", 97],
+      ["2012-baylor", "2012 Baylor offense", 96],
     ],
   },
   {
