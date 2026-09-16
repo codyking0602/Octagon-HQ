@@ -47,7 +47,7 @@ describe("Football Wavelength canonical generation", () => {
   it("groups obviously related category labels under the same generation family", () => {
     expect(footballWavelengthThemeFamilyForCategory("GUNSLINGER")).toBe(footballWavelengthThemeFamilyForCategory("BIG ARM TALENT"));
     expect(footballWavelengthThemeFamilyForCategory("QB CARRY JOB")).toBe(footballWavelengthThemeFamilyForCategory("SYSTEM QB PERCEPTION"));
-    expect(footballWavelengthThemeFamilyForCategory("OFFENSIVE CHAOS")).toBe(footballWavelengthThemeFamilyForCategory("OFFENSIVE INNOVATION"));
+    expect(footballWavelengthThemeFamilyForCategory("SCHEME & PLAY CREATIVITY")).toBe(footballWavelengthThemeFamilyForCategory("OFFENSIVE INNOVATION"));
     expect(footballWavelengthThemeFamilyForCategory("PROGRAM TRADITION")).not.toBe(footballWavelengthThemeFamilyForCategory("GUNSLINGER"));
   });
 });
