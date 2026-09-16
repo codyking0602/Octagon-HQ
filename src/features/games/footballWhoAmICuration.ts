@@ -2694,6 +2694,7 @@ const cfbBatch1SuppressedIdentityConcepts = new Set([
   "identity:raked-leaves-turning-point",
   "identity:cfb-vince-young--raked-leaves-turning-point",
   "identity:cfb-vince-young--rose-bowl-fourth-and-five",
+  "identity:rose-bowl-fourth-and-five",
   "identity:cfb-andre-ware--alvin-cc-two-jobs",
   "identity:brother-brian-tragedy",
   "identity:father-iowa-state-game",
@@ -2899,6 +2900,8 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("obrien-maxwell", "I also won the Maxwell Award in 1938.", "strong", "accomplishments", 14),
     cfbBatch1Clue("obrien-draft", "Philadelphia selected me No. 4 overall in the 1939 NFL Draft.", "strong", "career-path"),
     cfbBatch1Clue("obrien-all-american", "I was a unanimous All-American at quarterback in 1938.", "strong", "accomplishments"),
+    cfbBatch1Clue("obrien-double-wing", "TCU coach Dutch Meyer built a pass-heavy double-wing offense around my skills at quarterback.", "helpful", "style", 27),
+    cfbBatch1Clue("obrien-sugar", "I finished the undefeated 1938 season by throwing a touchdown pass and kicking a field goal in a Sugar Bowl win over Carnegie Tech.", "strong", "accomplishments", 22),
   ]],
   ["cfb-joe-burrow", [
     cfbBatch1Clue("burrow-transfer", "I began at Ohio State before transferring to LSU for my final two college seasons.", "strong", "career-path"),
@@ -2939,6 +2942,10 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("brees-big-ten", "I led Purdue to the 2000 Big Ten championship and its first Rose Bowl appearance in more than three decades.", "giveaway", "accomplishments", 9),
     cfbBatch1Clue("brees-maxwell", "I won the Maxwell Award in 2000.", "strong", "accomplishments"),
     cfbBatch1Clue("brees-draft", "I was selected No. 32 overall in the 2001 NFL Draft.", "strong", "career-path"),
+    cfbBatch1Clue("brees-heisman-finalist", "I was a Heisman Trophy finalist twice during my Purdue career.", "strong", "accomplishments", 24),
+    cfbBatch1Clue("brees-big-ten-poy", "I was twice named Big Ten Offensive Player of the Year.", "helpful", "accomplishments", 28),
+    cfbBatch1Clue("brees-number-15", "I wore No. 15 at Purdue.", "helpful", "identity", 30),
+    cfbBatch1Clue("brees-record-book", "I left Purdue having set two NCAA records, 13 Big Ten records and 19 school records.", "helpful", "production", 30),
   ]],
   ["cfb-eli-manning", [
     cfbBatch1Clue("eli-maxwell", "I won the Maxwell Award in my final season at Ole Miss.", "strong", "accomplishments"),
@@ -3004,6 +3011,12 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("young-title", "I led Texas to an undefeated national championship season in 2005.", "giveaway", "accomplishments", 8),
     cfbBatch1Clue("young-rose", "On fourth-and-five with the national title on the line, I ran for the winning touchdown against USC.", "giveaway", "accomplishments", 7),
   ]],
+  ["cfb-andre-ware", [
+    cfbBatch1Clue("ware-1989-production", "In my 1989 Heisman season at Houston, I threw for 4,699 yards and 46 touchdowns.", "strong", "production", 24),
+    cfbBatch1Clue("ware-records", "Houston's run-and-shoot offense helped me set 26 NCAA records during my 1989 season.", "helpful", "production", 28),
+    cfbBatch1Clue("ware-smu", "During that season, I threw six touchdown passes as Houston beat SMU 95-21.", "helpful", "accomplishments", 30),
+    cfbBatch1Clue("ware-seventh-pick", "Detroit selected me No. 7 overall in the 1990 NFL Draft.", "strong", "career-path", 22),
+  ]],
   ["cfb-brady-quinn", [
     cfbBatch1Clue("quinn-heisman-finishes", "I finished in the top four of the Heisman voting in both 2005 and 2006 at Notre Dame.", "strong", "accomplishments"),
     cfbBatch1Clue("quinn-records", "I left Notre Dame as the program's career leader in passing yards and touchdown passes.", "strong", "accomplishments"),
@@ -3045,6 +3058,10 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-adrian-peterson", [
     cfbBatch1Clue("peterson-freshman", "As a true freshman at Oklahoma in 2004, I rushed for 1,925 yards and finished second in Heisman voting.", "giveaway", "accomplishments", 8),
     cfbBatch1Clue("peterson-title-game", "That freshman season ended with Oklahoma playing for the national championship.", "strong", "accomplishments"),
+    cfbBatch1Clue("peterson-all-big12", "I earned All-Big 12 honors in each of my three seasons at Oklahoma.", "helpful", "accomplishments", 28),
+    cfbBatch1Clue("peterson-doak-finalist", "As a freshman, I became the first freshman ever named a finalist for the Doak Walker Award.", "strong", "accomplishments", 24),
+    cfbBatch1Clue("peterson-collarbone", "I broke my collarbone on a touchdown run at Iowa State in 2006 and missed seven games.", "helpful", "career-path", 28),
+    cfbBatch1Clue("peterson-seventh-pick", "Minnesota selected me No. 7 overall in the 2007 NFL Draft.", "strong", "career-path", 22),
   ]],
   ["cfb-archie-griffin", [
     cfbBatch1Clue("griffin-two-heismans", "I remain the only player to win the Heisman Trophy twice, taking it in 1974 and 1975.", "giveaway", "accomplishments", 7),
