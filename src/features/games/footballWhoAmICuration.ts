@@ -2542,6 +2542,125 @@ export function isNflWhoAmIBatch4Subject(subjectId: string) {
   return batch4SubjectIds.has(subjectId);
 }
 
+
+/**
+ * CFB Who Am I calibration batch 1 (launch-order subjects 1-50).
+ *
+ * College identity stays stage-owned: school/transfer path, college awards,
+ * championships, signature seasons and draft transition may identify the
+ * player, while NFL-stage résumé and deep biography are intentionally excluded.
+ */
+export const CFB_WHO_AM_I_BATCH_1_SUBJECT_IDS = [
+  "cfb-cam-newton",
+  "cfb-davey-obrien",
+  "cfb-doug-flutie",
+  "cfb-jim-plunkett",
+  "cfb-joe-burrow",
+  "cfb-johnny-manziel",
+  "cfb-lamar-jackson",
+  "cfb-matt-leinart",
+  "cfb-paul-hornung",
+  "cfb-roger-staubach",
+  "cfb-tim-tebow",
+  "cfb-vince-young",
+  "cfb-andre-ware",
+  "cfb-andrew-luck",
+  "cfb-baker-mayfield",
+  "cfb-brady-quinn",
+  "cfb-bryce-young",
+  "cfb-c-j-stroud",
+  "cfb-caleb-williams",
+  "cfb-carson-palmer",
+  "cfb-charlie-ward",
+  "cfb-chris-weinke",
+  "cfb-colt-brennan",
+  "cfb-colt-mccoy",
+  "cfb-dak-prescott",
+  "cfb-danny-wuerffel",
+  "cfb-deshaun-watson",
+  "cfb-drew-brees",
+  "cfb-eli-manning",
+  "cfb-eric-crouch",
+  "cfb-fernando-mendoza",
+  "cfb-adrian-peterson",
+  "cfb-archie-griffin",
+  "cfb-barry-sanders",
+  "cfb-billy-cannon",
+  "cfb-billy-sims",
+  "cfb-bo-jackson",
+  "cfb-darren-mcfadden",
+  "cfb-derrick-henry",
+  "cfb-doak-walker",
+  "cfb-earl-campbell",
+  "cfb-ernie-davis",
+  "cfb-herschel-walker",
+  "cfb-marcus-allen",
+  "cfb-o-j-simpson",
+  "cfb-reggie-bush",
+  "cfb-ricky-williams",
+  "cfb-tony-dorsett",
+  "cfb-ashton-jeanty",
+  "cfb-bijan-robinson",
+] as const;
+
+const cfbBatch1SubjectIds = new Set<string>(CFB_WHO_AM_I_BATCH_1_SUBJECT_IDS);
+const cfbBatch1StructuralClueIds = new Set([
+  "player-career-start",
+  "player-career-end",
+  "career-span",
+]);
+
+function isCfbBatch1NflStageLeak(clue: WhoAmIClue) {
+  if (!clue.identityKnowledge) return false;
+  const text = clue.text.toLowerCase();
+  return (
+    /\bnfl\b|super bowl|all-pro|pro bowl|professional football hall of fame/.test(text)
+    && !/draft|selected|pick/.test(text)
+  );
+}
+
+function shouldSuppressCfbBatch1Clue(clue: WhoAmIClue) {
+  if (cfbBatch1StructuralClueIds.has(clue.id)) return true;
+  if (clue.id === "fact:cfb-career-games" || clue.id === "fact:cfb-career-starts") return true;
+  if (clue.conceptId === "identity:career-games" || clue.conceptId === "identity:career-starts") return true;
+  if (isCfbBatch1NflStageLeak(clue)) return true;
+  return false;
+}
+
+function trimCfbBatch1Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const target = 16;
+  if (clues.length <= target) return [...clues];
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+  const selected = new Set(ranked.slice(0, target).map((entry) => entry.clue.id));
+  return clues.filter((clue) => selected.has(clue.id));
+}
+
+function curateCfbBatch1Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
+  let colorUsed = false;
+  const curated: WhoAmIClue[] = [];
+
+  for (const clue of rawClues) {
+    if (shouldSuppressCfbBatch1Clue(clue)) continue;
+    if (clue.identityKnowledge) {
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      if (selectionClass === "deep-biography") continue;
+      if (selectionClass === "identity-color") {
+        if (colorUsed) continue;
+        colorUsed = true;
+      }
+    }
+    curated.push(clue);
+  }
+
+  return trimCfbBatch1Pool(subject, curated);
+}
+
+export function isCfbWhoAmIBatch1Subject(subjectId: string) {
+  return cfbBatch1SubjectIds.has(subjectId);
+}
+
 function applyBatch2IdentityCuration(subjectId: string, clue: WhoAmIClue) {
   const override = batch2TextOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id))
     ?? batch2TextOverrides.get(subjectId + ":" + clue.id);
@@ -2655,6 +2774,9 @@ export function curateFootballWhoAmIClues(
   subject: FootballSubjectProfile,
   rawClues: readonly WhoAmIClue[],
 ): WhoAmIClue[] {
+  if (subject.league === "CFB" && cfbBatch1SubjectIds.has(subject.id)) {
+    return curateCfbBatch1Clues(subject, rawClues);
+  }
   if (subject.league !== "NFL") return [...rawClues];
   if (batch4SubjectIds.has(subject.id)) return curateNflBatch4Clues(subject, rawClues);
   if (batch3SubjectIds.has(subject.id)) return curateNflBatch3Clues(subject, rawClues);
