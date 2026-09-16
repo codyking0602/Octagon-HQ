@@ -46,7 +46,7 @@ const GENERIC_VOLUME_CONCEPTS = new Set([
   "identity:career-interceptions-thrown",
 ]);
 
-const BROKEN_FIRST_PERSON = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored|appeared|did|blocked|listed|pushed|exploited|coached|instituted|drove)\b|\bsaid\s+me\b|\b(?:three|four)\s+me\s+brothers\b|\bI\s+scholarship\s+opportunities\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]|\bAfter[’']s\b|\binjurthis player\b/i;
+const BROKEN_FIRST_PERSON = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored|appeared|did|blocked|listed|pushed|exploited|coached|instituted|drove)\b|\bsaid\s+me\b|\b(?:three|four)\s+me\s+brothers\b|\bI\s+scholarship\s+opportunities\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]|\bAfter[’']s\b|\binjurthis player\b|\bwhen\s+me\b|\bme\s+(?:intercepted|lettered|contributed|co-hosted|accepted|used|succeeded)\b|\bAfter[’']s\b|\binjurthis player\b|\bnicknamed\s+me\s+[“\"']?me\b|\bnickname\s+[“\"']?me\b|[“\"']me[”\"']\s+was\b/i;
 
 const OFF_FIELD_FILLER = /\b(?:academic|degree|engineering|poultry|poetry|paleontolog|community[- ]service|volunteer|fundraising|charity|business venture|real estate|horseman|horse|catfishing|restaurant|tattoo|service station|coal mine|naval service|navy service|military service)\b|\bmajor(?:ed)?\s+(?:in|at)\b/i;
 
@@ -57,7 +57,7 @@ const TRANSFER_SCHOOL_ANCHORS = new Map<string, readonly RegExp[]>([
 
 function answerSurname(name: string) {
   return name
-    .replace(/\b(?:Jr\.?|Sr\.?|II|III|IV)\b/gi, "")
+    .replace(/\s+(?:Jr\.?|Sr\.?|II|III|IV)$/i, "")
     .trim()
     .split(/\s+/)
     .at(-1)!
