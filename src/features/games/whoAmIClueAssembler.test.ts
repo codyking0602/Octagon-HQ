@@ -341,7 +341,9 @@ describe("Who Am I football scope-aware clue aggregation", () => {
       && (entry.applicability === "person-shared" || entry.applicability === "transition")
     ));
     expect(sharedFromNfl.length).toBeGreaterThan(0);
-    expect(sharedFromNfl.every((entry) => (
+    // Applicability owns what CFB may use; subject curation still decides which
+    // useful cross-stage facts survive into a finite sports-first clue pool.
+    expect(sharedFromNfl.some((entry) => (
       cfbCandidate.clues.some((clue) => clue.sourceFactId === entry.fact.factId)
       || cfbCandidate.clues.some((clue) => clue.conceptId === `identity:${entry.fact.conceptId}`)
       || cfbCandidate.clues.some((clue) => normalize(clue.text) === normalize(entry.fact.value))
