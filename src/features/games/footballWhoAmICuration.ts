@@ -4828,7 +4828,8 @@ const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch4Clue("kelly-cincinnati-2008-title", "I led Cincinnati to the 2008 Big East championship and the program's first BCS bowl berth.", "strong", "accomplishments", 15),
     cfbBatch4Clue("kelly-cincinnati-2009-run", "My 2009 Cincinnati team opened 10-0 and reached No. 5 in the BCS standings before the regular season ended.", "strong", "accomplishments", 16),
     cfbBatch4Clue("kelly-major-stage", "I coached Notre Dame to a BCS national-title game and later to two College Football Playoff appearances.", "strong", "accomplishments", 13),
-    cfbBatch4Clue("kelly-300-wins", "My college head-coaching career surpassed 300 victories.", "strong", "production", 16),
+    cfbBatch4Clue("kelly-gvsu-back-to-back-titles", "At Grand Valley State, I won back-to-back Division II national championships in 2002 and 2003.", "strong", "accomplishments", 14),
+    cfbBatch4Clue("kelly-gvsu-offensive-machine", "My 2001 Grand Valley State team averaged 58.4 points and 600.8 yards per game on its way to the Division II national-title game.", "strong", "style", 18),
   ]],
   ["chip-kelly", [
     cfbBatch4Clue("kelly-unh-qb-safety", "I played both quarterback and safety at New Hampshire.", "helpful", "background", 22),
