@@ -2747,7 +2747,6 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-fernando-mendoza", [
     cfbBatch1Clue("mendoza-transfer", "My college quarterback path included California before I transferred to Indiana.", "strong", "career-path"),
-    cfbBatch1Clue("mendoza-two-star", "I developed from a lightly recruited two-star prospect into a Power-conference starting quarterback.", "strong", "career-path"),
   ]],
   ["cfb-doak-walker", [
     cfbBatch1Clue("walker-heisman", "I won the 1948 Heisman Trophy at SMU.", "giveaway", "accomplishments", 8),
