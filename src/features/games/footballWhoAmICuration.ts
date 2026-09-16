@@ -2696,6 +2696,7 @@ const cfbBatch1SuppressedIdentityConcepts = new Set([
   "identity:cfb-vince-young--rose-bowl-fourth-and-five",
   "identity:cfb-andre-ware--alvin-cc-two-jobs",
   "identity:brother-brian-tragedy",
+  "identity:father-iowa-state-game",
   "identity:elite-athletic-parents",
   "identity:palestine-summer-giveback",
   "identity:archie-griffin-parents-work-ethic",
