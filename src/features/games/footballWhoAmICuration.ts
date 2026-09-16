@@ -2107,7 +2107,7 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("sharper-five-pb", "I was selected to five Pro Bowls.", "strong", "accomplishments"),
     batch4Clue("sharper-sb44", "I won Super Bowl XLIV in my first season with New Orleans.", "giveaway", "accomplishments", 9),
     batch4Clue("sharper-qb-safety", "I arrived at college as a quarterback prospect before becoming a safety.", "helpful", "career-path"),
-    batch4Clue("sharper-jamie", "My older brother Jamie also entered the NFL in 1997 as a second-round pick.", "strong", "relationships"),
+    batch4Clue("sharper-jamie", "My older brother Jamie was also an NFL player, and we were both selected in the second round of the 1997 NFL Draft.", "strong", "relationships"),
     batch4Clue("sharper-11-pick-sixes", "I returned 11 interceptions for touchdowns, second-most in NFL history when I retired.", "strong", "accomplishments"),
     batch4Clue("sharper-2009-return-record", "In 2009 I set an NFL single-season record with 376 interception-return yards.", "strong", "accomplishments"),
   ]],
