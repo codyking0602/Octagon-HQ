@@ -14,6 +14,7 @@ const factualFightSchema = z.object({
   result: resultSchema,
   methodCategory: methodCategorySchema,
   titleFight: z.boolean(),
+  titleWinEligible: z.boolean().optional(),
   interimTitleFight: z.boolean(),
 }).strict();
 
@@ -106,6 +107,7 @@ function rankedSubjects(): UfcFactualSubject[] {
         result: fight.officialResult,
         methodCategory: normalizeMethodCategory(fight.methodCategory),
         titleFight: isTitleFight(fight.championshipType),
+        titleWinEligible: fight.championshipEligible,
         interimTitleFight: fight.championshipType.toLowerCase().includes("interim"),
       })),
     };

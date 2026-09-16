@@ -64,8 +64,11 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   const koWins = wins.filter((fight) => fight.methodCategory === "ko-tko");
   const submissionWins = wins.filter((fight) => fight.methodCategory === "submission");
   const titleFights = subject.fights.filter((fight) => fight.titleFight);
-  const titleWins = wins.filter((fight) => fight.titleFight);
-  const divisions = [...new Set([subject.primaryDivision, ...subject.secondaryDivisions, ...subject.fights.map((fight) => fight.division)])];
+  const titleWins = wins.filter((fight) => fight.titleFight && fight.titleWinEligible !== false);
+  const divisions = [...new Set(
+    [subject.primaryDivision, ...subject.secondaryDivisions]
+      .filter((division) => !division.toLowerCase().startsWith("catchweight")),
+  )];
   const debutYear = Number(subject.activeFrom.slice(0, 4));
   const lastYear = Number(subject.activeTo.slice(0, 4));
   const activeDecades = [...new Set(subject.fights.map((fight) => Math.floor(Number(fight.date.slice(0, 4)) / 10) * 10))].sort();
