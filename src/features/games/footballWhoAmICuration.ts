@@ -374,7 +374,7 @@ function clueQualityScore(subject: FootballSubjectProfile, clue: WhoAmIClue) {
   if (/fact:nfl-career-(?:passing|rushing|receiving)-(?:attempts|completions|receptions)$/.test(id)) score -= 20;
   if (/fact:nfl-career-(?:.*per-game|.*percentage|.*ratio|.*per-attempt)$/.test(id)) score -= 30;
   if (/fact:nfl-career-interceptions-thrown/.test(id)) score -= 10;
-  if (/curated:/.test(id) || /curated-cfb1:/.test(id)) score += 45;
+  if (/curated:/.test(id) || /curated-cfb1:/.test(id) || /curated-cfb2:/.test(id)) score += 45;
   if (/fact:cfb-(?:heisman-awards|all-america-selections|national-championships-won|nfl-draft-overall-pick)/.test(id)) score += 38;
   if (/fact:cfb-best-season-(?:passing-yards|passing-touchdowns|rushing-yards|rushing-touchdowns|receiving-yards|receiving-touchdowns|sacks|tackles-for-loss|defensive-interceptions)$/.test(id)) score += 22;
   if (/fact:cfb-career-(?:passing-yards|passing-touchdowns|rushing-yards|rushing-touchdowns|receiving-yards|receiving-touchdowns|sacks|defensive-interceptions)$/.test(id)) score += 14;
@@ -3207,6 +3207,547 @@ export function isCfbWhoAmIBatch1Subject(subjectId: string) {
   return cfbBatch1SubjectIds.has(subjectId);
 }
 
+export const CFB_WHO_AM_I_BATCH_2_SUBJECT_IDS = [
+  "cfb-cedric-benson",
+  "cfb-christian-mccaffrey",
+  "cfb-dalvin-cook",
+  "cfb-darren-sproles",
+  "cfb-deangelo-williams",
+  "cfb-eddie-george",
+  "cfb-ezekiel-elliott",
+  "cfb-george-rogers",
+  "cfb-jamaal-charles",
+  "cfb-ladainian-tomlinson",
+  "cfb-lamichael-james",
+  "cfb-calvin-johnson",
+  "cfb-desmond-howard",
+  "cfb-devonta-smith",
+  "cfb-justin-blackmon",
+  "cfb-larry-fitzgerald",
+  "cfb-michael-crabtree",
+  "cfb-a-j-brown",
+  "cfb-amari-cooper",
+  "cfb-andre-johnson",
+  "cfb-brandin-cooks",
+  "cfb-braylon-edwards",
+  "cfb-davante-adams",
+  "cfb-desean-jackson",
+  "cfb-dez-bryant",
+  "cfb-jamarr-chase",
+  "cfb-jordan-shipley",
+  "cfb-marqise-lee",
+  "cfb-marvin-harrison-jr",
+  "cfb-mike-evans",
+  "cfb-peter-warrick",
+  "cfb-ryan-broyles",
+  "cfb-sammy-watkins",
+  "cfb-tim-brown",
+  "cfb-brock-bowers",
+  "cfb-chase-coffman",
+  "cfb-dallas-clark",
+  "cfb-dwayne-allen",
+  "cfb-heath-miller",
+  "cfb-hunter-henry",
+  "cfb-jake-butt",
+  "cfb-jeremy-shockey",
+  "cfb-jermaine-gresham",
+  "cfb-keith-jackson",
+  "cfb-kellen-winslow-ii",
+  "cfb-kyle-pitts",
+  "cfb-john-hannah",
+  "cfb-orlando-pace",
+  "cfb-alex-mack",
+  "cfb-barrett-jones",
+] as const;
+
+const cfbBatch2SubjectIds = new Set<string>(CFB_WHO_AM_I_BATCH_2_SUBJECT_IDS);
+const cfbBatch2StructuralClueIds = new Set(["player-career-start", "player-career-end", "career-span"]);
+const cfbBatch2GenericMetricIds = new Set([
+  "fact:cfb-career-games",
+  "fact:cfb-career-starts",
+  "fact:cfb-career-targets",
+  "fact:cfb-career-passing-completions",
+  "fact:cfb-career-passing-attempts",
+  "fact:cfb-career-rushing-attempts",
+  "fact:cfb-career-interceptions-thrown",
+]);
+const cfbBatch2GenericIdentityConcepts = new Set([
+  "identity:career-games",
+  "identity:career-starts",
+  "identity:career-games-starts",
+  "identity:career-passing-completions",
+  "identity:career-passing-attempts",
+  "identity:career-rushing-attempts",
+  "identity:career-targets",
+  "identity:career-interceptions-thrown",
+]);
+const cfbBatch2PartialCareerMetricSubjectIds = new Set([
+  "cfb-ezekiel-elliott",
+  "cfb-amari-cooper",
+  "cfb-hunter-henry",
+  "cfb-jake-butt",
+]);
+
+
+const cfbBatch2SuppressedIdentityConcepts = new Set([
+  "identity:cfb-cedric-benson--first-high-school-dave-campbell-cover",
+  "identity:cfb-cedric-benson--quit-baseball-before-senior-year",
+  "identity:cfb-christian-mccaffrey--pianist",
+  "identity:cfb-christian-mccaffrey--rwanda-mission-trip",
+  "identity:christian-mccaffrey-multigenerational-athletic-family",
+  "identity:cfbfast-r-player-3116593-dalvin-cook--moved-to-grandmother-for-miami-central",
+  "identity:cfbfast-r-player-3116593-dalvin-cook--youth-handoffs-from-brother-deandre",
+  "identity:cfbfast-r-player-3116593-dalvin-cook--joseph-yearby-friend-to-rival",
+  "identity:cfbfast-r-player-3116593-dalvin-cook--clemson-florida-fsu-recruiting-flips",
+  "identity:cfb-darren-sproles--tank-nickname-birthweight",
+  "identity:cfb-darren-sproles--childhood-stutter-public-speaking",
+  "identity:cfb-darren-sproles--mother-annette-academics",
+  "identity:cfb-deangelo-williams--family-breast-cancer-advocacy",
+  "identity:cfb-eddie-george--illinois-fumbles-cooper-stuck-with-him",
+  "identity:cfb-ezekiel-elliott--missouri-athlete-family",
+  "identity:cfb-ezekiel-elliott--gus-frerotte-high-school-coach",
+  "identity:cfb-ezekiel-elliott--mizzou-late-recruiting-pull",
+  "identity:cfb-george-rogers--two-dollar-insurance-aunt-othella",
+  "identity:cfb-george-rogers--foundation-first-generation-students",
+  "identity:cfb-jamaal-charles--raised-by-mother-aunt-grandmother",
+  "identity:cfb-jamaal-charles--broke-joe-washington-port-arthur-record",
+  "identity:emmitt-smith-formative-encounter",
+  "identity:cfb-lamichael-james--raised-by-grandmother",
+  "identity:cfb-lamichael-james--lived-alone-senior-year",
+  "identity:cfb-lamichael-james--kenjon-barner-friendship",
+  "identity:cfb-lamichael-james--returned-to-eugene-restaurants",
+  "identity:cfb-calvin-johnson--academic-family",
+  "identity:pr8-devonta-smith-butler-town-park-childhood",
+  "identity:pr8-devonta-smith-mother-social-worker-influence",
+  "identity:pr8-devonta-smith-chose-alabama-for-structure",
+  "identity:devonta-smith-no-ac-gym-recruiting-image",
+  "identity:cfb-justin-blackmon--class-president",
+  "identity:cfb-justin-blackmon--drummer",
+  "identity:pr8-cfb-larry-fitzgerald--promise-to-mother",
+  "identity:father",
+  "identity:cfbfast-r-player-4047646-a-j-brown--middle-name-spelling-story",
+  "identity:pr7-parents-instilled-ceiling-obsession",
+  "identity:cfb-andre-johnson--foundation-single-parent-youth",
+  "identity:childhood-scarcity-shaped-foundation",
+  "identity:cfb-brandin-cooks--raised-by-mother-after-fathers-death",
+  "identity:cfb-braylon-edwards--endowed-no-1-scholarship",
+  "identity:cfb-braylon-edwards--returned-to-finish-degree",
+  "identity:cfb-davante-adams--mother-worked-two-jobs",
+  "identity:davante-adams-childhood-raiders-fan",
+  "identity:cfb-davante-adams--first-scholarship-eased-family-burden",
+  "identity:pr7-dez-bryant-unstable-childhood-structure",
+  "identity:pr7-dez-bryant-david-wells-father-figure",
+  "identity:cfb-jordan-shipley--childhood-with-colt-mccoy",
+  "identity:pr8-hunting-fishing-with-father",
+  "identity:cfb-chase-coffman--all-four-siblings-c-names",
+  "identity:cfb-dallas-clark--century-family-farm-return",
+  "identity:cfb-hunter-henry--church-fca-food-drive",
+  "identity:cfb-jake-butt--medal-speech-rubadeau",
+  "identity:cfb-jermaine-gresham--maintenance-job",
+  "identity:cfb-jermaine-gresham--real-estate-interest",
+  "identity:cfb-jermaine-gresham--grandmother-shaped-life",
+  "identity:cfb-keith-jackson--four-time-academic-all-big-eight",
+  "identity:cfb-keith-jackson--ou-radio-broadcast-crew",
+  "identity:cfb-alex-mack--legal-studies-magna-cum-laude",
+  "identity:cfb-alex-mack--graduate-student-education",
+  "identity:cfb-barrett-jones--accounting-bachelors-and-masters",
+  "identity:cfb-barrett-jones--four-time-academic-all-american",
+  "identity:cfb-barrett-jones--haiti-nicaragua-mission-trips",
+  "identity:hannah-alabama-family",
+  "identity:big-oak-signing-bonus-pledge",
+  "identity:pregame-visualization-routine",
+  "identity:play-through-pain-code",
+  "identity:cfb-kellen-winslow-ii--father-kellen-winslow",
+  "identity:cfb-kellen-winslow-ii--high-school-multi-role-kicker",
+  "identity:cfb-kellen-winslow-ii--uncle-david-basketball",
+  "identity:cfb-davante-adams--first-scholarship-eased-family-burden",
+  "identity:cfb-michael-crabtree--dallas-and-tech-giveback",
+  "identity:cfb-braylon-edwards--returned-to-finish-degree",
+  "identity:cfb-keith-jackson--four-time-academic-all-big-eight",
+  "identity:cfb-alex-mack--legal-studies-magna-cum-laude",
+  "identity:cfb-alex-mack--graduate-student-education",
+  "identity:cfb-barrett-jones--accounting-bachelors-and-masters",
+  "identity:cfb-barrett-jones--four-time-academic-all-american",
+  "identity:cfb-barrett-jones--haiti-nicaragua-mission-trips",
+  "identity:megatron-nickname-origin",
+  "identity:cfb-marvin-harrison-jr--grew-during-covid-shutdown",
+  "identity:cfb-amari-cooper--teddy-bridgewater-teammate",
+  "identity:cfb-amari-cooper--coconut-grove-barnyard-football",
+  "identity:cfb-amari-cooper--chess-from-music-teacher",
+  "identity:cfb-amari-cooper--route-runner-brand",
+  "identity:quiet-receiver-mentor",
+  "identity:cfb-michael-crabtree--academic-eligibility-fight",
+  "identity:cfb-desean-jackson--team-jackson-family-training",
+  "identity:desean-jackson-team-jackson-childhood-training",
+  "identity:cfb-desean-jackson--long-commute-to-long-beach-poly",
+  "identity:desean-jackson-richard-sherman-baseball",
+  "identity:cfb-jordan-shipley--west-texas-moves-and-stephen-mcgee",
+  "identity:cfb-peter-warrick--payton-warrick-foundation",
+  "identity:cfb-tim-brown--multisport-student-leadership",
+  "identity:cfb-heath-miller--parents-work-ethic-example",
+  "identity:cfb-heath-miller--fourth-generation-southwest-virginia",
+  "identity:cfb-eddie-george--childhood-heisman-speech-practice",
+  "identity:cfb-ladainian-tomlinson--walter-payton-idol",
+  "identity:butterfingers-early-nickname",
+  "identity:cfb-brandin-cooks--stepbrother-maurice-washington",
+  "identity:cfb-dwayne-allen--basketball-first-sport",
+  "identity:cfb-dwayne-allen--wayne-inman-football-mentor",
+  "identity:cfb-dallas-clark--mother-died-before-graduation",
+  "identity:cfb-dallas-clark--walk-on-linebacker-brother-motivation",
+  "identity:cfb-ryan-broyles--returned-senior-to-finish-degree",
+  "identity:cfb-orlando-pace--sandusky-basketball-athlete",
+]);
+
+const cfbBatch2MalformedFirstPerson = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly)\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
+
+const cfbBatch2IdentityOverrides = new Map<string, Partial<WhoAmIClue>>([
+  ["cfb-darren-sproles:identity:2003-big12-title-game", {
+    text: "In the 2003 Big 12 Championship Game against No. 1 Oklahoma, I had 235 rushing yards and 88 receiving yards in Kansas State's 35-7 win.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
+  ["cfb-darren-sproles:identity:cfb-darren-sproles--number-43-for-father", {
+    text: "I wore No. 43 at Kansas State, the same number my father Larry had worn.",
+    band: "strong",
+    facet: "identity",
+    revealPriority: 24,
+  }],
+  ["cfb-deangelo-williams:identity:cfb-deangelo-williams--state-title-game-three-way-touchdowns", {
+    text: "During my high-school state-title run, I scored in the championship game as a runner, receiver and returner.",
+    band: "helpful",
+    facet: "style",
+    revealPriority: 30,
+  }],
+  ["cfb-ezekiel-elliott:identity:cfb-ezekiel-elliott--sugar-bowl-85-yard-run", {
+    text: "Against No. 1 Alabama in the 2015 Sugar Bowl, I broke an 85-yard fourth-quarter touchdown run that helped seal Ohio State's CFP semifinal win.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
+  ["cfb-calvin-johnson:identity:cfb-calvin-johnson--first-day-vertical-record", {
+    text: "On my first official day at Georgia Tech, I reportedly broke the program's vertical-jump record with a 42-inch leap.",
+    band: "strong",
+    facet: "style",
+    revealPriority: 22,
+  }],
+  ["cfb-desmond-howard:identity:pr8-spontaneous-heisman-pose", {
+    text: "After returning a punt for a touchdown against Ohio State in 1991, I struck the Heisman pose in the end zone.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 7,
+  }],
+  ["cfb-amari-cooper:identity:cfb-amari-cooper--alabama-camp-earned-saban-offer", {
+    text: "At an Alabama camp, I impressed Nick Saban during one-on-one work and was called into his office for a scholarship offer.",
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 22,
+  }],
+  ["cfb-jamarr-chase:identity:cfb-jamarr-chase--national-title-game-221-two-touchdowns", {
+    text: "In LSU's national-championship win over Clemson after the 2019 season, I caught nine passes for 221 yards and two touchdowns.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 7,
+  }],
+  ["cfb-peter-warrick:identity:cfb-peter-warrick--sugar-bowl-three-score-performance", {
+    text: "In the 2000 Sugar Bowl national championship game, I scored on two receptions and a 59-yard punt return and also caught a two-point conversion.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 7,
+  }],
+  ["cfb-dallas-clark:identity:cfb-dallas-clark--purdue-95-yard-and-winning-touchdowns", {
+    text: "Against Purdue in 2002, I caught a 95-yard touchdown and later the winning touchdown on fourth-and-goal from the 7-yard line.",
+    band: "strong",
+    facet: "accomplishments",
+    revealPriority: 16,
+  }],
+  ["cfb-keith-jackson:identity:cfb-keith-jackson--88-yard-nebraska-reverse", {
+    text: "Against No. 2 Nebraska in 1985, I scored on an 88-yard tight-end reverse.",
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
+  ["cfb-heath-miller:identity:cfb-heath-miller--quarterback-to-tight-end-conversion", {
+    band: "strong",
+    facet: "career-path",
+    revealPriority: 18,
+  }],
+  ["cfb-heath-miller:identity:mackey-award-2004", {
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 8,
+  }],
+  ["cfb-justin-blackmon:identity:two-biletnikoff-awards", {
+    band: "giveaway",
+    facet: "accomplishments",
+    revealPriority: 7,
+  }],
+  ["cfb-marvin-harrison-jr:identity:cfb-marvin-harrison-jr--father-marvin-harrison", {
+    text: "My father was a Pro Football Hall of Fame wide receiver.",
+    band: "giveaway",
+    facet: "relationships",
+    revealPriority: 6,
+  }],
+  ["cfb-marvin-harrison-jr:identity:cfb-marvin-harrison-jr--st-josephs-with-kyle-mccord", {
+    text: "At St. Joseph's Prep, I formed a quarterback-receiver partnership with Kyle McCord before both of us went to Ohio State.",
+    band: "helpful",
+    facet: "career-path",
+    revealPriority: 28,
+  }],
+  ["cfb-marvin-harrison-jr:identity:cfb-marvin-harrison-jr--extreme-jugs-work-routine", {
+    text: "Ohio State teammates and coaches described my habit of doing extra JUGS-machine and route work at unusually early and late hours.",
+    band: "helpful",
+    facet: "style",
+    revealPriority: 30,
+  }],
+  ["cfb-kyle-pitts:identity:cfb-kyle-pitts--trask-second-team-connection", {
+    text: "My on-field chemistry with quarterback Kyle Trask began in 2018 when we worked together with Florida's second-team offense.",
+    band: "strong",
+    facet: "relationships",
+    revealPriority: 22,
+  }],
+  ["cfb-kellen-winslow-ii:identity:cfb-kellen-winslow-ii--miami-receiver-to-tight-end", {
+    text: "I began my Miami career at wide receiver before moving to tight end.",
+    band: "helpful",
+    facet: "career-path",
+    revealPriority: 20,
+  }],
+  ["cfb-kellen-winslow-ii:identity:cfb-kellen-winslow-ii--true-freshman-title-team-special-teams", {
+    text: "As a true freshman on Miami's 2001 national championship team, I contributed heavily on special teams, including tackles in the Rose Bowl.",
+    band: "strong",
+    facet: "accomplishments",
+    revealPriority: 18,
+  }],
+]);
+
+function cfbBatch2Clue(
+  id: string,
+  text: string,
+  band: WhoAmIClue["band"] = "strong",
+  facet: WhoAmIClue["facet"] = "accomplishments",
+  revealPriority = 14,
+): WhoAmIClue {
+  return { id: "curated-cfb2:" + id, conceptId: "curated-cfb2:" + id, text, band, facet, revealPriority };
+}
+
+const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-ladainian-tomlinson", [
+    cfbBatch2Clue("tomlinson-doak", "I won the 2000 Doak Walker Award after leading the nation in rushing for a second straight season.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("tomlinson-2158", "As a senior at TCU in 2000, I rushed for 2,158 yards.", "strong", "production", 22),
+    cfbBatch2Clue("tomlinson-heisman-fourth", "I finished fourth in the 2000 Heisman Trophy voting.", "strong", "accomplishments", 17),
+    cfbBatch2Clue("tomlinson-rushing-titles", "I led the nation in rushing in both 1999 and 2000.", "strong", "accomplishments", 19),
+  ]],
+  ["cfb-lamichael-james", [
+    cfbBatch2Clue("james-doak", "I won the 2010 Doak Walker Award after leading the nation with 1,731 rushing yards.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("james-unanimous-aa", "In 2010 I became Oregon's first unanimous All-American.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("james-heisman-title-game", "I finished third in the 2010 Heisman voting as Oregon reached its first national championship game.", "strong", "accomplishments", 16),
+  ]],
+  ["cfb-andre-johnson", [
+    cfbBatch2Clue("andre-rose-199", "In Miami's national-title Rose Bowl win after the 2001 season, I had 199 receiving yards and two touchdowns.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("andre-2002", "In my final Miami season, I topped 1,000 receiving yards and caught nine touchdown passes.", "strong", "production", 22),
+    cfbBatch2Clue("andre-third-pick", "Houston selected me No. 3 overall in the 2003 NFL Draft.", "giveaway", "career-path", 9),
+    cfbBatch2Clue("andre-national-title", "I was a starting receiver on Miami's undefeated 2001 national championship team.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("andre-big-east", "I earned first-team All-Big East honors in my final Miami season.", "strong", "accomplishments", 19),
+  ]],
+  ["cfb-davante-adams", [
+    cfbBatch2Clue("adams-freshman", "I was Mountain West Freshman of the Year in 2012 after catching 102 passes for 1,312 yards and 14 touchdowns.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("adams-2013", "In 2013 I led the nation with 131 receptions and 24 touchdown catches while setting a Fresno State record with 1,718 receiving yards.", "giveaway", "production", 8),
+    cfbBatch2Clue("adams-38-td", "I left Fresno State after only two playing seasons with school career records for receptions and touchdown catches.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("adams-two-aa", "I earned All-America recognition in both of my playing seasons at Fresno State.", "strong", "accomplishments", 20),
+  ]],
+  ["cfb-dez-bryant", [
+    cfbBatch2Clue("dez-24th-pick", "Dallas selected me No. 24 overall in the 2010 NFL Draft.", "giveaway", "career-path", 9),
+    cfbBatch2Clue("dez-return-star", "My Oklahoma State career included three punt-return touchdowns in addition to 29 receiving touchdowns.", "strong", "style", 22),
+    cfbBatch2Clue("dez-2008-aa", "I was a consensus All-American and Biletnikoff Award runner-up in 2008.", "strong", "accomplishments", 17),
+    cfbBatch2Clue("dez-2008-line", "My 2008 season produced 87 catches for 1,480 yards and 19 receiving touchdowns.", "strong", "production", 21),
+  ]],
+  ["cfb-ryan-broyles", [
+    cfbBatch2Clue("broyles-two-biletnikoff-finals", "I was a Biletnikoff Award finalist in both 2010 and 2011.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("broyles-2010-aa", "As a 2010 consensus All-American, I caught 131 passes for 1,622 yards and 14 touchdowns.", "strong", "accomplishments", 18),
+  ]],
+  ["cfb-jermaine-gresham", [
+    cfbBatch2Clue("gresham-2008", "In 2008 I caught 66 passes for 950 yards and 14 touchdowns at Oklahoma.", "strong", "production", 20),
+    cfbBatch2Clue("gresham-title-run", "I was an All-American on an Oklahoma team that won a third straight Big 12 title and reached the BCS Championship Game.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-john-hannah", [
+    cfbBatch2Clue("hannah-two-aa", "I was a two-time football All-American at Alabama in 1971 and 1972.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("hannah-unanimous", "I was a unanimous All-American in 1972.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("hannah-all-sec", "I earned All-SEC honors in both 1971 and 1972.", "helpful", "accomplishments", 22),
+    cfbBatch2Clue("hannah-fourth-pick", "New England selected me No. 4 overall in the 1973 NFL Draft.", "giveaway", "career-path", 8),
+    cfbBatch2Clue("hannah-number", "I wore No. 73 while playing offensive guard at Alabama.", "helpful", "identity", 20),
+    cfbBatch2Clue("hannah-bryant", "Bear Bryant described me as the finest offensive lineman he had ever been around.", "strong", "relationships", 18),
+  ]],
+  ["cfb-orlando-pace", [
+    cfbBatch2Clue("pace-lombardi", "I won the Lombardi Award twice at Ohio State, becoming its first sophomore winner and first two-time winner.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("pace-outland", "I won the 1996 Outland Trophy as the nation's top interior lineman.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("pace-heisman-fourth", "As an offensive tackle, I finished fourth in the 1996 Heisman Trophy voting.", "giveaway", "accomplishments", 9),
+    cfbBatch2Clue("pace-two-aa", "I was a first-team All-American at Ohio State in both 1995 and 1996.", "helpful", "accomplishments", 17),
+    cfbBatch2Clue("pace-big-ten-mvp", "I was named the Big Ten's most valuable player in 1996 as an offensive tackle.", "helpful", "accomplishments", 18),
+    cfbBatch2Clue("pace-pancakes", "My junior year became famous for the pancake block, with Ohio State crediting me with 80 of them.", "helpful", "style", 20),
+    cfbBatch2Clue("pace-no-sacks", "I did not allow a sack in either of my final two Ohio State seasons.", "helpful", "style", 22),
+  ]],
+  ["cfb-darren-sproles", [
+    cfbBatch2Clue("sproles-2003-aa", "I was a first-team All-American in 2003 as Kansas State won the Big 12 championship.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("sproles-records", "I left Kansas State holding the program's career, single-season and single-game rushing records.", "strong", "accomplishments", 20),
+  ]],
+  ["cfb-desmond-howard", [
+    cfbBatch2Clue("howard-maxwell-walter-camp", "Along with the 1991 Heisman Trophy, I won the Maxwell Award and Walter Camp Player of the Year.", "strong", "accomplishments", 15),
+    cfbBatch2Clue("howard-big-ten-scoring", "In 1991 I became the first receiver to lead the Big Ten in scoring.", "strong", "accomplishments", 19),
+  ]],
+  ["cfb-desean-jackson", [
+    cfbBatch2Clue("jackson-return-aa", "I was a first-team All-American punt returner in 2006 after leading the nation at 18.2 yards per return.", "helpful", "accomplishments", 17),
+    cfbBatch2Clue("jackson-randy-moss", "I won the inaugural Randy Moss Award as the nation's top return specialist in 2006.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("jackson-four-pr-td", "I returned four punts for touchdowns in 2006, setting Cal and Pac-10 single-season records.", "helpful", "production", 20),
+    cfbBatch2Clue("jackson-two-time-aa", "My two first-team All-America selections came in different roles: returner in 2006 and all-purpose player in 2007.", "helpful", "style", 19),
+    cfbBatch2Clue("jackson-2005-bowl", "As a freshman in the 2005 Las Vegas Bowl, I caught six passes for 130 yards and two touchdowns against BYU.", "helpful", "production", 23),
+    cfbBatch2Clue("jackson-first-touch", "My first college reception was a 31-yard touchdown, and my first punt return in that same opener went 49 yards for another score.", "helpful", "style", 21),
+  ]],
+  ["cfb-jordan-shipley", [
+    cfbBatch2Clue("shipley-2009-aa", "I was a consensus first-team All-American and Biletnikoff Award finalist in 2009.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("shipley-2009-records", "In 2009 I set Texas single-season records with 116 receptions and 1,485 receiving yards.", "helpful", "production", 20),
+    cfbBatch2Clue("shipley-title-game", "In the national championship game after the 2009 season, I caught 10 passes for 122 yards and two touchdowns against Alabama.", "helpful", "accomplishments", 18),
+  ]],
+  ["cfb-tim-brown", [
+    cfbBatch2Clue("brown-heisman-receiver", "I won the 1987 Heisman Trophy as a receiver and return specialist at Notre Dame.", "giveaway", "accomplishments", 7),
+    cfbBatch2Clue("brown-msu-returns", "Against Michigan State in 1987, I returned consecutive punts 66 and 71 yards for touchdowns.", "helpful", "accomplishments", 17),
+    cfbBatch2Clue("brown-1986-all-purpose", "As a junior in 1986, I set a Notre Dame single-season record with 1,937 all-purpose yards.", "helpful", "production", 22),
+    cfbBatch2Clue("brown-six-return-td", "Across my Notre Dame career, I scored six return touchdowns: three on punts and three on kickoffs.", "helpful", "style", 20),
+  ]],
+  ["cfb-dwayne-allen", [
+    cfbBatch2Clue("allen-consensus-aa", "I was a consensus first-team All-American in 2011.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("allen-acc-title", "I caught two touchdown passes in Clemson's 2011 ACC Championship Game victory over Virginia Tech.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("allen-mackey", "I became Clemson's first John Mackey Award winner in 2011.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-heath-miller", [
+    cfbBatch2Clue("miller-unanimous-aa", "I was a unanimous All-American at Virginia in 2004.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("miller-acc-td-record", "I finished my Virginia career with 20 touchdown catches, then the ACC record for a tight end.", "helpful", "accomplishments", 19),
+  ]],
+  ["cfb-hunter-henry", [
+    cfbBatch2Clue("henry-fourth-25", "On fourth-and-25 in overtime at Ole Miss in 2015, I threw the blind backward lateral that kept Arkansas' winning drive alive.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("henry-mackey", "I won the 2015 John Mackey Award as the nation's top tight end.", "giveaway", "accomplishments", 7),
+    cfbBatch2Clue("henry-career-line", "From 2013 through 2015 at Arkansas, I caught 116 passes for 1,661 yards and nine touchdowns.", "helpful", "production", 18),
+    cfbBatch2Clue("henry-consensus-aa", "I was a consensus first-team All-American in 2015.", "helpful", "accomplishments", 16),
+  ]],
+  ["cfb-kellen-winslow-ii", [
+    cfbBatch2Clue("winslow-consensus-aa", "I was a consensus first-team All-American and unanimous first-team All-Big East selection in 2003.", "helpful", "accomplishments", 16),
+    cfbBatch2Clue("winslow-fiesta", "In the 2002 season's national championship game, I caught 11 passes for 122 yards and a touchdown against Ohio State.", "helpful", "accomplishments", 18),
+    cfbBatch2Clue("winslow-mackey", "I won the 2003 John Mackey Award as the nation's top tight end.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-barrett-jones", [
+    cfbBatch2Clue("jones-two-position-awards", "I won the Outland Trophy as a left tackle in 2011 and the Rimington Trophy as a center in 2012.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("jones-title-positions", "I started on three Alabama national-title teams while playing right guard, left tackle and center.", "helpful", "identity", 17),
+  ]],
+  ["cfb-ezekiel-elliott", [
+    cfbBatch2Clue("elliott-career-yards", "I left Ohio State with 3,961 career rushing yards, the second-most in program history at the time.", "strong", "accomplishments", 18),
+    cfbBatch2Clue("elliott-postseason-run", "During Ohio State's 2014 championship postseason, I rushed for 696 yards and eight touchdowns across the Big Ten title game, Sugar Bowl and national championship game.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("elliott-2015-big-ten", "I was the Big Ten Offensive Player of the Year and Running Back of the Year in 2015.", "strong", "accomplishments", 17),
+  ]],
+  ["cfb-amari-cooper", [
+    cfbBatch2Clue("cooper-career-line", "Across three Alabama seasons from 2012 through 2014, I caught 228 passes for 3,463 yards and 31 touchdowns.", "helpful", "production", 18),
+    cfbBatch2Clue("cooper-biletnikoff", "I won the 2014 Biletnikoff Award and finished third in Heisman Trophy voting.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("cooper-2014-honors", "I was a unanimous first-team All-American and SEC Offensive Player of the Year in 2014.", "helpful", "accomplishments", 16),
+    cfbBatch2Clue("cooper-fourth-pick", "I became the No. 4 overall pick in the 2015 NFL Draft.", "giveaway", "career-path", 9),
+  ]],
+  ["cfb-jake-butt", [
+    cfbBatch2Clue("butt-career-records", "I finished Michigan with tight-end program records of 138 receptions and 1,646 receiving yards.", "helpful", "accomplishments", 18),
+    cfbBatch2Clue("butt-mackey", "I won the 2016 John Mackey Award as the nation's top tight end.", "giveaway", "accomplishments", 8),
+    cfbBatch2Clue("butt-two-time-aa", "I was an All-American in both 2015 and 2016 and won Big Ten Tight End of the Year twice.", "strong", "accomplishments", 16),
+    cfbBatch2Clue("butt-career-td", "I caught 11 touchdown passes during my four-year Michigan career.", "helpful", "production", 21),
+  ]],
+]);
+
+function cfbBatch2ApplyOverride(subjectId: string, clue: WhoAmIClue) {
+  const override = cfbBatch2IdentityOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id));
+  return override ? { ...clue, ...override } : clue;
+}
+
+function isCfbBatch2NflStageLeak(clue: WhoAmIClue) {
+  if (!clue.identityKnowledge) return false;
+  const text = clue.text.toLowerCase();
+  return (
+    /\bnfl\b|super bowl|all-pro|pro bowl|nfl mvp|defensive player of the year|professional football hall of fame/.test(text)
+    && !/draft|selected|pick/.test(text)
+  );
+}
+
+function shouldSuppressCfbBatch2Clue(subject: FootballSubjectProfile, clue: WhoAmIClue) {
+  if (cfbBatch2StructuralClueIds.has(clue.id)) return true;
+  if (cfbBatch2PartialCareerMetricSubjectIds.has(subject.id) && /^fact:cfb-career-/.test(clue.id)) return true;
+  if (cfbBatch2GenericMetricIds.has(clue.id)) return true;
+  if (clue.conceptId && cfbBatch2GenericIdentityConcepts.has(clue.conceptId)) return true;
+  if (clue.conceptId && cfbBatch2SuppressedIdentityConcepts.has(clue.conceptId)) return true;
+  if (isCfbBatch2NflStageLeak(clue)) return true;
+  if (clue.identityKnowledge && cfbBatch2MalformedFirstPerson.test(clue.text)) return true;
+  if (
+    subject.id === "cfb-kellen-winslow-ii"
+    && /\bWinslow\b/i.test(clue.text)
+    && !cfbBatch2IdentityOverrides.has(subject.id + ":" + (clue.conceptId ?? clue.id))
+  ) return true;
+  return false;
+}
+
+function trimCfbBatch2Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  const target = 16;
+  if (clues.length <= target) return [...clues];
+
+  const requiredIds = new Set(["position", "school"]);
+  const required = clues.filter((clue) => requiredIds.has(clue.id));
+  const requiredIdSet = new Set(required.map((clue) => clue.id));
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: clueQualityScore(subject, clue) }))
+    .filter((entry) => !requiredIdSet.has(entry.clue.id))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+
+  const selected = new Set(required.map((clue) => clue.id));
+  const selectedConcepts = new Set(required.map((clue) => clue.conceptId ?? clue.id));
+  for (const entry of ranked) {
+    if (selected.size >= target) break;
+    const concept = entry.clue.conceptId ?? entry.clue.id;
+    if (selectedConcepts.has(concept)) continue;
+    selected.add(entry.clue.id);
+    selectedConcepts.add(concept);
+  }
+  if (selected.size < target) {
+    for (const entry of ranked) {
+      if (selected.size >= target) break;
+      selected.add(entry.clue.id);
+    }
+  }
+  return clues.filter((clue) => selected.has(clue.id));
+}
+
+function curateCfbBatch2Clues(subject: FootballSubjectProfile, rawClues: readonly WhoAmIClue[]) {
+  let colorUsed = false;
+  let relationshipUsed = false;
+  const curated: WhoAmIClue[] = [];
+
+  for (const rawClue of rawClues) {
+    const clue = cfbBatch2ApplyOverride(subject.id, rawClue);
+    if (shouldSuppressCfbBatch2Clue(subject, clue)) continue;
+
+    if (clue.identityKnowledge) {
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      if (selectionClass === "deep-biography") continue;
+      if (selectionClass === "identity-color") {
+        if (colorUsed) continue;
+        colorUsed = true;
+      }
+      if (whoAmIClueFacet(clue) === "relationships") {
+        if (relationshipUsed) continue;
+        relationshipUsed = true;
+      }
+    }
+    curated.push(clue);
+  }
+
+  curated.push(...(cfbBatch2SupplementalClues.get(subject.id) ?? []));
+  return trimCfbBatch2Pool(subject, curated);
+}
+
+export function isCfbWhoAmIBatch2Subject(subjectId: string) {
+  return cfbBatch2SubjectIds.has(subjectId);
+}
+
 function applyBatch2IdentityCuration(subjectId: string, clue: WhoAmIClue) {
   const override = batch2TextOverrides.get(subjectId + ":" + (clue.conceptId ?? clue.id))
     ?? batch2TextOverrides.get(subjectId + ":" + clue.id);
@@ -3322,6 +3863,9 @@ export function curateFootballWhoAmIClues(
 ): WhoAmIClue[] {
   if (subject.league === "CFB" && cfbBatch1SubjectIds.has(subject.id)) {
     return curateCfbBatch1Clues(subject, rawClues);
+  }
+  if (subject.league === "CFB" && cfbBatch2SubjectIds.has(subject.id)) {
+    return curateCfbBatch2Clues(subject, rawClues);
   }
   if (subject.league !== "NFL") return [...rawClues];
   if (batch4SubjectIds.has(subject.id)) return curateNflBatch4Clues(subject, rawClues);
