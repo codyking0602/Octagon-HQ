@@ -1929,7 +1929,7 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("thomas-90s", "No NFL player recorded more sacks during the 1990s than I did.", "strong", "accomplishments"),
   ]],
   ["nfl-harry-carson", [
-    batch4Clue("carson-scsu", "I played college football at South Carolina State.", "helpful", "background"),
+    batch4Clue("carson-scsu", "I played college football at South Carolina State.", "helpful", "career-path"),
     batch4Clue("carson-fourth-round", "The Giants selected me in the fourth round of the 1976 NFL Draft.", "helpful", "career-path"),
     batch4Clue("carson-giants-only", "I spent all 13 of my NFL seasons with the New York Giants.", "helpful", "career-path", 24),
     batch4Clue("carson-lt-banks", "I formed a famous Giants linebacker trio with Lawrence Taylor and Carl Banks.", "strong", "role", 12),
@@ -2101,25 +2101,25 @@ const batch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     batch4Clue("revis-24", "No. 24 became my signature number with the Jets.", "helpful", "identity"),
   ]],
   ["nfl-darren-sharper", [
-    batch4Clue("sharper-wm", "I played college football at William & Mary.", "helpful", "background"),
+    batch4Clue("sharper-wm", "I played college football at William & Mary.", "helpful", "career-path"),
     batch4Clue("sharper-second", "Green Bay selected me in the second round of the 1997 NFL Draft.", "helpful", "career-path", 18),
     batch4Clue("sharper-path", "My NFL career included Green Bay, Minnesota and New Orleans.", "helpful", "career-path", 20),
     batch4Clue("sharper-five-pb", "I was selected to five Pro Bowls.", "strong", "accomplishments"),
     batch4Clue("sharper-sb44", "I won Super Bowl XLIV in my first season with New Orleans.", "giveaway", "accomplishments", 9),
-    batch4Clue("sharper-qb-safety", "I arrived at college as a quarterback prospect before becoming a safety.", "helpful", "role"),
+    batch4Clue("sharper-qb-safety", "I arrived at college as a quarterback prospect before becoming a safety.", "helpful", "career-path"),
     batch4Clue("sharper-11-pick-sixes", "I returned 11 interceptions for touchdowns, second-most in NFL history when I retired.", "strong", "accomplishments"),
     batch4Clue("sharper-2009-return-record", "In 2009 I set an NFL single-season record with 376 interception-return yards.", "strong", "accomplishments"),
   ]],
   ["nfl-deangelo-hall", [
-    batch4Clue("hall-vt", "I played college football at Virginia Tech.", "helpful", "background"),
+    batch4Clue("hall-vt", "I played college football at Virginia Tech.", "helpful", "career-path"),
     batch4Clue("hall-eighth", "Atlanta selected me No. 8 overall in the 2004 NFL Draft.", "strong", "career-path"),
     batch4Clue("hall-path", "I played for Atlanta, Oakland and Washington.", "helpful", "career-path"),
-    batch4Clue("hall-three-pb", "I was selected to three Pro Bowls.", "helpful", "accomplishments"),
+    batch4Clue("hall-three-pb", "I was selected to three Pro Bowls.", "strong", "accomplishments"),
     batch4Clue("hall-pro-bowl-mvp", "I was named MVP of the 2011 Pro Bowl.", "strong", "accomplishments", 16),
     batch4Clue("hall-four-int", "I tied an NFL single-game record with four interceptions against Chicago in 2010.", "giveaway", "accomplishments", 8),
-    batch4Clue("hall-two-way-vt", "Virginia Tech used me at wide receiver as well as defensive back.", "helpful", "role"),
-    batch4Clue("hall-safety", "Late in my career I moved from cornerback to safety.", "helpful", "role"),
-    batch4Clue("hall-23", "No. 23 became my signature number in Washington.", "helpful", "identity"),
+    batch4Clue("hall-two-way-vt", "Virginia Tech used me at wide receiver as well as defensive back.", "helpful", "career-path"),
+    batch4Clue("hall-safety", "Late in my career I moved from cornerback to safety.", "helpful", "career-path"),
+    batch4Clue("hall-23", "No. 23 became my signature number in Washington.", "strong", "identity"),
     batch4Clue("hall-pro-bowl-mvp", "I was named MVP of the 2011 Pro Bowl after recording an interception and returning a fumble for a touchdown.", "strong", "accomplishments"),
   ]],
   ["nfl-devin-mccourty", [
@@ -2406,6 +2406,18 @@ function batch4ShouldSuppress(subject: FootballSubjectProfile, clue: WhoAmIClue)
 
 function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue): WhoAmIClue {
   if (
+    subject.id === "nfl-harry-carson"
+    && clue.conceptId === "identity:harry-carson-college-line-to-middle-linebacker"
+  ) {
+    return { ...clue, band: "strong", facet: "career-path", revealPriority: 16 };
+  }
+  if (
+    subject.id === "nfl-harry-carson"
+    && clue.conceptId === "identity:harry-carson-gatorade-shower"
+  ) {
+    return { ...clue, band: "giveaway", facet: "identity", revealPriority: 12 };
+  }
+  if (
     subject.id === "bill-cowher"
     && clue.conceptId === "identity:super-bowl-onside-kick-gamble"
   ) {
@@ -2422,6 +2434,51 @@ function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue)
   }
   return clue;
 }
+
+const batch4FocusedPoolIds = new Map<string, ReadonlySet<string>>([
+  ["nfl-harry-carson", new Set([
+    "position",
+    "era",
+    "curated4:carson-scsu",
+    "curated4:carson-fourth-round",
+    "curated4:carson-giants-only",
+    "curated4:carson-53",
+    "curated4:carson-lt-banks",
+    "curated4:carson-hof",
+    "identity:pro-bowls",
+    "identity:harry-carson-college-line-to-middle-linebacker",
+    "identity:harry-carson-gatorade-shower",
+    "identity:super-bowl-xxi-title",
+  ])],
+  ["nfl-darren-sharper", new Set([
+    "position",
+    "era",
+    "curated4:sharper-wm",
+    "curated4:sharper-second",
+    "curated4:sharper-path",
+    "curated4:sharper-qb-safety",
+    "curated4:sharper-five-pb",
+    "curated4:sharper-11-pick-sixes",
+    "curated4:sharper-2009-return-record",
+    "identity:darren-sharper-scout-wakeup-call",
+    "identity:darren-sharper-mike-tomlin-college-relationship",
+    "curated4:sharper-sb44",
+  ])],
+  ["nfl-deangelo-hall", new Set([
+    "position",
+    "era",
+    "curated4:hall-vt",
+    "curated4:hall-path",
+    "curated4:hall-two-way-vt",
+    "curated4:hall-safety",
+    "curated4:hall-eighth",
+    "curated4:hall-three-pb",
+    "curated4:hall-pro-bowl-mvp",
+    "curated4:hall-23",
+    "identity:deangelo-hall-green-sanders-role-models",
+    "curated4:hall-four-int",
+  ])],
+]);
 
 function trimNflBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
   const target = 16;
@@ -2460,6 +2517,8 @@ function curateNflBatch4Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(batch4SupplementalClues.get(subject.id) ?? []));
+  const focusedPool = batch4FocusedPoolIds.get(subject.id);
+  if (focusedPool) return curated.filter((clue) => focusedPool.has(clue.id));
   return trimNflBatch4Pool(subject, curated);
 }
 
