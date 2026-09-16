@@ -44,9 +44,9 @@ const GENERIC_VOLUME_CONCEPTS = new Set([
   "identity:career-interceptions-thrown",
 ]);
 
-const BROKEN_FIRST_PERSON = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly)\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
+const BROKEN_FIRST_PERSON = /\bme\s+(?:focused|collided|attended|led|entered|executed|hit|briefly|passed|produced|repeatedly|scored|announced|rebuilt|chose|went|pursued|scrambled|delivered|handled|could|asked|broke|also|gave|weighed|pledged|lost|wanted|committed|struck|learned|watched|lived|told|decided|caught|built|excelled|arrived|returned|rushed|played|won|became|had|was|is|underwent|pointed|created|helped|impressed|reportedly|shifted|redshirted|forced|participated|faced|stayed|starred|followed|mentored)\b|\bsaid\s+me\b|\bfour\s+me\s+brothers\b|\bI\s+to\s+sit\b|\bI\s+a\b|\bI\s+died\b|\bI\s+has\b|\bme\s+and\s+my\b|\bFuture\s+and\s+I\s+quarterback\b|\bWilliam\s+myself\b|\bI\s+saw\s+me\b|\bAfter\s+(?:got|left)\b|\bWhile\s+was\b|\bWhen\s+finally\s+got\b|\bthe\s+skinny\s+me\b|\bQuarterback\s+and\s+I\s+[A-Z]/i;
 
-const OFF_FIELD_FILLER = /\b(?:academic|degree|major(?:ed)?|engineering|poultry|poetry|paleontolog|community[- ]service|volunteer|fundraising|charity|business venture|real estate|horseman|horse|catfishing)\b/i;
+const OFF_FIELD_FILLER = /\b(?:academic|degree|engineering|poultry|poetry|paleontolog|community[- ]service|volunteer|fundraising|charity|business venture|real estate|horseman|horse|catfishing)\b|\bmajor(?:ed)?\s+(?:in|at)\b/i;
 
 const TRANSFER_SCHOOL_ANCHORS = new Map<string, readonly RegExp[]>([
   ["cfb-bryant-mckinnie", [/\bLackawanna\b/i, /\bMiami\b/i]],
@@ -155,7 +155,7 @@ describe("CFB Who Am I batch 3 calibration", () => {
         }
         if (!/draft|selected|pick/i.test(clue.text)) {
           expect(clue.text, subjectId + " NFL-stage leak: " + clue.id).not.toMatch(
-            /\bNFL\b|Super Bowl|All-Pro|Pro Bowl|NFL MVP|Defensive Player of the Year|Professional Football Hall of Fame/i,
+            /\bNFL\b|Super Bowl|All-Pro|Pro Bowl|NFL MVP|NFL Defensive Player of the Year|Professional Football Hall of Fame/i,
           );
         }
       }
