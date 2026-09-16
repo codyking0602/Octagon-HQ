@@ -4204,7 +4204,7 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-lee-roy-selmon", [
     cfbBatch3Clue("selmon-two-national-titles", "I helped Oklahoma win national championships in both 1974 and 1975.", "helpful", "accomplishments", 19),
-    cfbBatch3Clue("selmon-two-time-aa", "I was a two-time consensus All-American at Oklahoma.", "helpful", "accomplishments", 21),
+    cfbBatch3Clue("selmon-two-time-aa", "I earned All-America honors in both 1974 and 1975 at Oklahoma.", "helpful", "accomplishments", 21),
   ]],
   ["cfb-myles-garrett", [
     cfbBatch3Clue("garrett-career-pressure", "I finished my Texas A&M career with 32.5 sacks and 48.5 tackles for loss.", "helpful", "production", 19),
