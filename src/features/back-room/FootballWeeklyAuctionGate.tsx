@@ -311,28 +311,27 @@ export function FootballWeeklyAuctionGate({
   return (
     <div className="football-weekly-auction">
       {auctionTableOpen ? <FootballWeeklyAuctionTableDialog onClose={() => setAuctionTableOpen(false)} /> : null}
+      <div className="football-weekly-auction__status">
+        <button
+          className="football-weekly-auction__status-action"
+          type="button"
+          onClick={() => setAuctionTableOpen(true)}
+          aria-haspopup="dialog"
+          aria-label="Open Auction Table"
+        >
+          <small>AUCTION TABLE</small>
+          <strong>{state.owned_count}</strong>
+          <span>YOUR TEAMS · VIEW ›</span>
+        </button>
+        <div><small>COMMITTED</small><strong>{"$"}{committed}</strong></div>
+        <div><small>MAX TODAY</small><strong>{"$"}{state.max_commit}</strong></div>
+      </div>
       <PriorResults results={state.prior_results} />
       <section className="football-weekly-auction__board surface-card">
         <header className="football-weekly-auction__board-head">
           <div><p className="eyebrow">WEEKLY AUCTION</p><h1>DAY {state.day_index} OF 7</h1></div>
           <div className="football-weekly-auction__bank"><strong>{"$"}{state.bankroll}</strong><span>REMAINING</span></div>
         </header>
-
-        <div className="football-weekly-auction__status">
-          <button
-            className="football-weekly-auction__status-action"
-            type="button"
-            onClick={() => setAuctionTableOpen(true)}
-            aria-haspopup="dialog"
-            aria-label="Open Auction Table"
-          >
-            <small>AUCTION TABLE</small>
-            <strong>{state.owned_count}</strong>
-            <span>YOUR TEAMS · VIEW ›</span>
-          </button>
-          <div><small>COMMITTED</small><strong>{"$"}{committed}</strong></div>
-          <div><small>MAX TODAY</small><strong>{"$"}{state.max_commit}</strong></div>
-        </div>
 
         <div className="football-weekly-auction__theme">
           <div>
