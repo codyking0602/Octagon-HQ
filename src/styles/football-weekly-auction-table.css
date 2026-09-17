@@ -251,11 +251,11 @@
 
 @media (max-width: 430px) {
   .football-weekly-auction-table__backdrop {
-    padding: 12px 10px calc(12px + env(safe-area-inset-bottom));
+    padding: 12px 10px calc(74px + var(--safe-bottom));
   }
 
   .football-weekly-auction-table__sheet {
-    max-height: calc(100dvh - 92px - env(safe-area-inset-bottom));
+    max-height: calc(100dvh - 92px - var(--safe-bottom));
   }
 
   .football-weekly-auction-table__player > button {
