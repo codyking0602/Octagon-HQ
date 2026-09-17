@@ -41,7 +41,7 @@ function HQMark({ onClick }: { onClick: () => void }) {
   return (
     <button className="millionaire-hq" type="button" onClick={onClick} aria-label="Back to games">
       <span aria-hidden="true" className="millionaire-hq__mark">⬡</span>
-      <strong>HQ</strong>
+      <strong>THE HQ</strong>
     </button>
   );
 }
