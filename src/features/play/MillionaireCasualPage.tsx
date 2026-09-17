@@ -19,7 +19,6 @@ import {
   MILLIONAIRE_REVEAL_DELAY_MS,
   MILLIONAIRE_TIME_BANK_MS,
   millionaireCasualRun,
-  millionaireHostAsset,
   millionaireLeagueLabel,
   millionaireMoneyLabel,
   millionaireTimeLabel,
@@ -125,7 +124,7 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
               <p><b>STAT SHEET</b><span>Extra clue.</span></p>
               <p><b>DOUBLE DIP</b><span>2 attempts; no walk-away.</span></p>
             </div>
-            <small>Each once • −2 PTS each • No lifelines Q8 • 50:50 + Double Dip can’t stack.</small>
+            <small>Each lifeline can be used once and costs 2 PTS. No lifelines on Q8. 50:50 and Double Dip cannot be used on the same question.</small>
           </section>
         </div>
 
@@ -163,7 +162,6 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const level = currentQuestion?.level ?? MILLIONAIRE_LEVELS[Math.min(7, gameState.completedQuestions)]!;
   const levelNumber = gameState.currentQuestionIndex + 1;
   const q8 = level === "Q8";
-  const hostSrc = millionaireHostAsset(league);
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
 
   function schedule(callback: () => void, delay: number) {
@@ -278,9 +276,6 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
       <header className="millionaire-title"><span>{millionaireLeagueLabel(league)} DAILY</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{MILLIONAIRE_BASE_PTS[level]} PTS</span></section>
       <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}><div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div></div>
-      <div className={`millionaire-host-stage${statSheetOpen ? " is-covered" : ""}`} aria-hidden="true">
-        <img className="millionaire-host" src={hostSrc} alt="" draggable={false} />
-      </div>
 
       <aside className="millionaire-lifelines" aria-label="Lifelines">
         {lifelines.map((lifeline) => {
