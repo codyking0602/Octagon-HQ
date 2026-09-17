@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { MILLIONAIRE_LEVELS, type MillionaireChoiceId } from "../games/millionaireAuthority";
@@ -26,6 +27,7 @@ import {
   type MillionaireLeague,
 } from "./MillionaireCasualModel";
 import "./MillionaireCasualPage.css";
+import "./MillionaireCasualPolish.css";
 
 type MillionaireCasualPageProps = { scope: "ufc" | "football" };
 type PlayPhase = "answering" | "locked" | "revealed" | "settled";
@@ -46,10 +48,23 @@ function HQMark({ onClick }: { onClick: () => void }) {
   );
 }
 
+function StudioBackdrop() {
+  return (
+    <>
+      <div className="millionaire-arena" aria-hidden="true">
+        <i className="millionaire-beam millionaire-beam--one" />
+        <i className="millionaire-beam millionaire-beam--two" />
+        <i className="millionaire-beam millionaire-beam--three" />
+      </div>
+      <div className="millionaire-crowd" aria-hidden="true" />
+    </>
+  );
+}
+
 function LeagueChooser({ onChoose, onBack }: { onChoose: (league: "nfl" | "cfb") => void; onBack: () => void }) {
   return (
     <div className="millionaire-shell millionaire-shell--chooser">
-      <div className="millionaire-arena" aria-hidden="true" />
+      <StudioBackdrop />
       <HQMark onClick={onBack} />
       <section className="millionaire-league-chooser" aria-labelledby="millionaire-league-title">
         <p>FOOTBALL DAILY</p>
@@ -59,6 +74,60 @@ function LeagueChooser({ onChoose, onBack }: { onChoose: (league: "nfl" | "cfb")
           <button type="button" onClick={() => onChoose("nfl")}><strong>NFL</strong><small>Pro Football</small></button>
           <button type="button" onClick={() => onChoose("cfb")}><strong>CFB</strong><small>College Football</small></button>
         </div>
+      </section>
+      <RotatePrompt />
+    </div>
+  );
+}
+
+function MillionaireRulesIntro({ league, onStart, onBack }: { league: MillionaireLeague; onStart: () => void; onBack: () => void }) {
+  const run = useMemo(() => millionaireCasualRun(league), [league]);
+
+  return (
+    <div className="millionaire-shell millionaire-shell--rules">
+      <StudioBackdrop />
+      <HQMark onClick={onBack} />
+      <section className="millionaire-rules" aria-labelledby="millionaire-rules-title">
+        <header>
+          <span>{millionaireLeagueLabel(league)} DAILY</span>
+          <h1 id="millionaire-rules-title">MILLIONAIRE</h1>
+          <p>8 questions. One run to $1,000,000.</p>
+        </header>
+
+        <div className="millionaire-rules__body">
+          <section className="millionaire-rules__ladder" aria-label="Money and points ladder">
+            {MILLIONAIRE_LEVELS.slice().reverse().map((level, reverseIndex) => {
+              const index = 7 - reverseIndex;
+              const checkpoint = level === "Q3" || level === "Q6";
+              return (
+                <div key={level} className={checkpoint ? "is-checkpoint" : ""}>
+                  <b>{index + 1}</b>
+                  <strong>{millionaireMoneyLabel(run[index]!.money)}</strong>
+                  <span>{MILLIONAIRE_BASE_PTS[level]} PTS</span>
+                  {checkpoint ? <small>CHECKPOINT</small> : null}
+                </div>
+              );
+            })}
+          </section>
+
+          <section className="millionaire-rules__how" aria-label="How to play">
+            <h2>HOW TO PLAY</h2>
+            <div className="millionaire-rules__quick">
+              <p><strong>2:30</strong><span>Shared time bank for all 8 questions. Time only breaks ties.</span></p>
+              <p><strong>Q3 + Q6</strong><span>Checkpoints protect your money if a later answer ends the run.</span></p>
+              <p><strong>Q7 + Q8</strong><span>Before each, choose to play on or walk away with your current money.</span></p>
+            </div>
+            <h3>LIFELINES</h3>
+            <div className="millionaire-rules__lifelines">
+              <p><b>50:50</b><span>Removes two wrong answers.</span></p>
+              <p><b>STAT SHEET</b><span>Reveals an extra clue.</span></p>
+              <p><b>DOUBLE DIP</b><span>Two attempts; no walk-away on that question.</span></p>
+            </div>
+            <small>Each lifeline can be used once and costs 2 PTS. No lifelines on Q8. 50:50 and Double Dip cannot be used on the same question.</small>
+          </section>
+        </div>
+
+        <button className="millionaire-rules__start" type="button" onClick={onStart}>START GAME</button>
       </section>
       <RotatePrompt />
     </div>
@@ -213,12 +282,14 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
 
   return (
     <div className="millionaire-shell">
-      <div className="millionaire-arena" aria-hidden="true"><i className="millionaire-beam millionaire-beam--one" /><i className="millionaire-beam millionaire-beam--two" /><i className="millionaire-beam millionaire-beam--three" /></div>
+      <StudioBackdrop />
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{millionaireLeagueLabel(league)} DAILY</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{MILLIONAIRE_BASE_PTS[level]} PTS</span></section>
       <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}><div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div></div>
-      <img className={`millionaire-host${statSheetOpen ? " is-covered" : ""}`} src={hostSrc} alt="" draggable={false} />
+      <div className={`millionaire-host-stage${statSheetOpen ? " is-covered" : ""}`} aria-hidden="true">
+        <img className="millionaire-host" src={hostSrc} alt="" draggable={false} />
+      </div>
 
       <aside className="millionaire-lifelines" aria-label="Lifelines">
         {lifelines.map((lifeline) => {
@@ -297,8 +368,22 @@ export default function MillionaireCasualPage({ scope }: MillionaireCasualPagePr
   const identity = useIdentity();
   const navigate = useNavigate();
   const [footballLeague, setFootballLeague] = useState<"nfl" | "cfb" | null>(null);
+  const [gameStarted, setGameStarted] = useState(false);
   const backRoute = scope === "ufc" ? "/play" : "/football";
+
   if (!identity.profile?.canControlPicks) return <Navigate to={backRoute} replace />;
-  if (scope === "football" && footballLeague === null) return <LeagueChooser onChoose={setFootballLeague} onBack={() => navigate(backRoute)} />;
-  return <MillionaireGame key={scope === "ufc" ? "ufc" : footballLeague!} league={scope === "ufc" ? "ufc" : footballLeague!} onBack={() => navigate(backRoute)} onChangeLeague={scope === "football" ? () => setFootballLeague(null) : undefined} />;
+
+  let content;
+  if (scope === "football" && footballLeague === null) {
+    content = <LeagueChooser onChoose={(league) => { setFootballLeague(league); setGameStarted(false); }} onBack={() => navigate(backRoute)} />;
+  } else {
+    const league: MillionaireLeague = scope === "ufc" ? "ufc" : footballLeague!;
+    const introBack = scope === "football" ? () => setFootballLeague(null) : () => navigate(backRoute);
+    const changeLeague = scope === "football" ? () => { setGameStarted(false); setFootballLeague(null); } : undefined;
+    content = gameStarted
+      ? <MillionaireGame key={league} league={league} onBack={() => navigate(backRoute)} onChangeLeague={changeLeague} />
+      : <MillionaireRulesIntro league={league} onStart={() => setGameStarted(true)} onBack={introBack} />;
+  }
+
+  return createPortal(content, document.body);
 }
