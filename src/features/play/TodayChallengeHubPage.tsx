@@ -15,8 +15,7 @@ export default function TodayChallengeHubPage() {
       <TodayChallengeHub />
       <ChallengeCenter />
 
-      <PlayLandingGameLibrary
-        sport="ufc"
+      <PlayLandingGameLibrary sport="ufc"
         onNavigate={navigate}
         millionaireVisible={Boolean(identity.profile?.canControlPicks)}
       />
