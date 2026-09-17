@@ -64,6 +64,7 @@ function FootballWeeklyAuctionQuickAccess({ onOpen }: { onOpen: () => void }) {
 export default function FootballBackRoomPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const identity = useIdentity();
   const entrySurface = (location.state as FootballEntryState | null)?.footballEntry;
   const entryRequested = entrySurface === "play";
   const showTransition = entryRequested;
@@ -81,7 +82,11 @@ export default function FootballBackRoomPage() {
       <TodayChallengeHub sport="football" />
       <FootballWeeklyAuctionQuickAccess onOpen={() => navigate("/football/today?weekly=edit")} />
       <ChallengeCenter sport="football" />
-      <PlayLandingGameLibrary sport="football" onNavigate={navigate} />
+      <PlayLandingGameLibrary
+        sport="football"
+        onNavigate={navigate}
+        millionaireVisible={Boolean(identity.profile?.canControlPicks)}
+      />
     </div>
   );
 }
