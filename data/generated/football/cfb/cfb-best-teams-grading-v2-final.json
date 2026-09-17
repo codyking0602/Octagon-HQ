@@ -38,5 +38,5 @@
       "Recognition and historical identity remain membership-only factors and do not change grades after admission."
     ]
   },
-  "runtime_note": "No production behavior changes are authorized by this artifact. Runtime adoption must freeze or version already-materialized Weekly Auction weeks before replacing the shared grade authority."
+  "runtime_note": "No production behavior changes are authorized by this artifact. The already-materialized current Weekly Auction remains on its legacy pool, grades, and generator; the 257-team v2 authority should begin with the next Weekly board, and newly generated Casual rooms can adopt v2 once the Casual generator is recalibrated."
 }
