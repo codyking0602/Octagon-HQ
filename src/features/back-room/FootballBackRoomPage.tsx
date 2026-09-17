@@ -82,8 +82,7 @@ export default function FootballBackRoomPage() {
       <TodayChallengeHub sport="football" />
       <FootballWeeklyAuctionQuickAccess onOpen={() => navigate("/football/today?weekly=edit")} />
       <ChallengeCenter sport="football" />
-      <PlayLandingGameLibrary
-        sport="football"
+      <PlayLandingGameLibrary sport="football"
         onNavigate={navigate}
         millionaireVisible={Boolean(identity.profile?.canControlPicks)}
       />
