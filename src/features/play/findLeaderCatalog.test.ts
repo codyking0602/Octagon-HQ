@@ -37,7 +37,6 @@ const DEPTH_CATEGORY_IDS = [
   "repeat-opponent-wins-all-time",
   "wins-after-first-loss-all-time",
   "bounce-back-wins-all-time",
-  "divisions-with-ufc-win",
   "divisions-with-ufc-finish",
   "most-ufc-wins-single-year",
   "most-ufc-finishes-single-year",
@@ -50,12 +49,16 @@ describe("Find the Leader category depth", () => {
     const metrics = new Set(findLeaderQuestions.map((definition) => definition.metric));
     const families = new Set(findLeaderQuestions.map((definition) => definition.family));
 
-    expect(findLeaderQuestions.length).toBeGreaterThanOrEqual(84);
-    expect(metrics.size).toBeGreaterThanOrEqual(44);
+    expect(findLeaderQuestions.length).toBeGreaterThanOrEqual(83);
+    expect(metrics.size).toBeGreaterThanOrEqual(43);
     expect(families.has("volume")).toBe(true);
     expect(families.has("rivalry")).toBe(true);
     expect(families.has("versatility")).toBe(true);
     expect(families.has("supplemental")).toBe(true);
+  });
+
+  it("retires the leaky UFC win-divisions category from the canonical catalog", () => {
+    expect(findLeaderQuestions.some((definition) => definition.id === "divisions-with-ufc-win")).toBe(false);
   });
 
   it("activates the UFCStats supplemental categories in the canonical catalog", () => {
