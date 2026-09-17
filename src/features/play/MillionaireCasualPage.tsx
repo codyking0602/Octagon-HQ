@@ -29,6 +29,7 @@ import {
 import "./MillionaireCasualPage.css";
 import "./MillionaireCasualPolish.css";
 import "./MillionairePortrait.css";
+import "./MillionairePortraitRefine.css";
 
 type MillionaireCasualPageProps = { scope: "ufc" | "football" };
 type PlayPhase = "answering" | "locked" | "revealed" | "settled";
@@ -91,7 +92,7 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
         <header>
           <span>{millionaireLeagueLabel(league)} DAILY</span>
           <h1 id="millionaire-rules-title">MILLIONAIRE</h1>
-          <p>8 questions. Climb the ladder to $1,000,000.</p>
+          <p>8 questions. $500 to $1,000,000.</p>
         </header>
 
         <div className="millionaire-rules__body">
@@ -113,18 +114,18 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
           <section className="millionaire-rules__how" aria-label="How to play">
             <h2>HOW TO PLAY</h2>
             <div className="millionaire-rules__quick">
-              <p><strong>2:30 TIME BANK</strong><span>Shared across all 8 questions. Time only breaks leaderboard ties.</span></p>
-              <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4, Q5, or Q6 and you leave with $5,000.</span></p>
-              <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7 or Q8 and you leave with $100,000.</span></p>
-              <p><strong>WALK AWAY</strong><span>Before Q7 and Q8, take your current money or keep playing.</span></p>
+              <p><strong>2:30 TIME BANK</strong><span>Shared across all 8. Time only breaks leaderboard ties.</span></p>
+              <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: leave with $5,000.</span></p>
+              <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: leave with $100,000.</span></p>
+              <p><strong>WALK AWAY</strong><span>Before Q7/Q8, take your money or keep playing.</span></p>
             </div>
             <h3>LIFELINES</h3>
             <div className="millionaire-rules__lifelines">
-              <p><b>50:50</b><span>Removes two wrong answers.</span></p>
-              <p><b>STAT SHEET</b><span>Reveals an extra clue.</span></p>
-              <p><b>DOUBLE DIP</b><span>Two attempts; no walk-away on that question.</span></p>
+              <p><b>50:50</b><span>Remove 2 wrong answers.</span></p>
+              <p><b>STAT SHEET</b><span>Extra clue.</span></p>
+              <p><b>DOUBLE DIP</b><span>2 attempts; no walk-away.</span></p>
             </div>
-            <small>Each lifeline can be used once and costs 2 PTS. No lifelines on Q8. 50:50 and Double Dip cannot be used on the same question.</small>
+            <small>Each once • −2 PTS each • No lifelines Q8 • 50:50 + Double Dip can’t stack.</small>
           </section>
         </div>
 
