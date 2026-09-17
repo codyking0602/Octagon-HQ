@@ -24,9 +24,9 @@ type FootballCareerMediaSubject = {
 const projection = careerMediaJson as unknown as CareerMediaProjection;
 const nflCareerTeamCodeBySubjectId = new Map(projection.nflCareerTeamCodes ?? []);
 const cfbCareerProgramBySubjectId = new Map(projection.cfbCareerPrograms ?? []);
-const reviewedCfbCareerProgramByName = new Map([
+const reviewedCfbCareerProgramByName = new Map<string, string>([
   ["samdarnold", "USC"],
-] as const);
+]);
 
 export const footballCareerCfbProgramMediaOwners = (projection.cfbProgramMediaOwners ?? []).map(
   ([programName, sourceProgramId]) => ({ programName, sourceProgramId }),
