@@ -189,7 +189,6 @@ export const findLeaderQuestions: readonly FindLeaderQuestionDefinition[] = [
   q("repeat-opponent-wins-all-time", "Who has the most UFC wins against opponents they fought multiple times?", "UFC wins against repeat opponents", "REPEAT WINS", "repeat-opponent-wins", "rivalry"),
   q("wins-after-first-loss-all-time", "Who has the most UFC wins after their first UFC loss?", "UFC wins after first UFC loss", "POST-LOSS WINS", "wins-after-first-loss", "durability"),
   q("bounce-back-wins-all-time", "Who has the most UFC wins immediately following a UFC loss?", "UFC bounce-back wins after a loss", "BOUNCE-BACK WINS", "bounce-back-wins", "durability"),
-  q("divisions-with-ufc-win", "Who has earned UFC wins in the most different divisions?", "UFC divisions with a win", "WIN DIVISIONS", "divisions-with-win", "versatility"),
   q("divisions-with-ufc-finish", "Who has earned UFC finishes in the most different divisions?", "UFC divisions with a finish", "FINISH DIVISIONS", "divisions-with-finish", "versatility"),
   q("most-ufc-wins-single-year", "Who has the most UFC wins in their best calendar year?", "most UFC wins in one calendar year", "BEST-YEAR WINS", "best-year-wins", "volume"),
   q("most-ufc-finishes-single-year", "Who has the most UFC finishes in their best calendar year?", "most UFC finishes in one calendar year", "BEST-YEAR FINISHES", "best-year-finishes", "volume"),
