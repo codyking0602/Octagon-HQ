@@ -1,8 +1,6 @@
-/* Focused landscape playtest refinement.
-   The approved host source file stays untouched: this layer mechanically composes
-   nfl-host-3 into the existing studio bay and keeps every gameplay control live. */
+/* Focused landscape Millionaire playtest refinement.
+   The host and studio are baked into one mechanical composite plate; live game UI stays above it. */
 
-/* Keep the full experience clear of landscape safe areas / camera cutouts. */
 .millionaire-shell {
   inset:
     max(6px, env(safe-area-inset-top))
@@ -16,73 +14,20 @@
   box-shadow: 0 0 0 1px rgba(113, 157, 220, 0.13), 0 14px 38px rgba(0, 0, 0, 0.46);
 }
 
-/* Compose the female NFL host into one studio plate instead of presenting a
-   rectangular photo as a floating layer. Black source pixels disappear into the
-   set through screen blending; edge feathering happens on the complete plate. */
-.millionaire-shell--game .millionaire-host-stage {
-  left: 11.4%;
-  bottom: 26.8%;
-  width: 36.6%;
-  height: 62%;
-  overflow: hidden;
-  isolation: isolate;
+.millionaire-shell--game {
+  background-color: #01050f;
   background-image:
-    linear-gradient(90deg, #01040b 0%, rgba(1, 4, 11, 0.22) 11%, rgba(1, 4, 11, 0.04) 50%, rgba(1, 4, 11, 0.24) 89%, #01040b 100%),
-    linear-gradient(180deg, rgba(1, 4, 11, 0.18) 0%, rgba(3, 24, 60, 0.02) 52%, rgba(1, 5, 14, 0.72) 100%),
-    url("/assets/millionaire/hosts/nfl-host-3.webp"),
-    radial-gradient(ellipse at 49% 57%, rgba(24, 102, 221, 0.38) 0%, rgba(8, 47, 118, 0.18) 42%, transparent 70%),
-    linear-gradient(180deg, #01040b 0%, #03142f 58%, #020814 100%);
+    linear-gradient(180deg, rgba(0, 4, 15, 0.04), rgba(0, 3, 12, 0.12)),
+    url("/assets/millionaire/millionaire-nfl-host-3-plate.webp");
+  background-position: center, center;
+  background-size: 100% 100%, cover;
   background-repeat: no-repeat;
-  background-position: center, center, 50% 100%, center, center;
-  background-size: 100% 100%, 100% 100%, auto 103%, 100% 100%, 100% 100%;
-  background-blend-mode: normal, normal, screen, normal, normal;
-  box-shadow:
-    -34px 0 62px rgba(2, 31, 79, 0.64),
-    34px 0 62px rgba(2, 31, 79, 0.64),
-    0 22px 38px rgba(0, 0, 0, 0.34),
-    inset 0 -24px 38px rgba(0, 0, 0, 0.38);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.7) 4%, #000 12%, #000 88%, rgba(0, 0, 0, 0.7) 96%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.7) 4%, #000 12%, #000 88%, rgba(0, 0, 0, 0.7) 96%, transparent 100%);
-  transition: opacity 180ms ease;
 }
 
-.millionaire-shell--game .millionaire-host-stage::before {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  left: 4%;
-  right: 4%;
-  bottom: -10%;
-  width: auto;
-  height: 31%;
-  border-top: 1px solid rgba(235, 183, 54, 0.28);
-  border-radius: 50%;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(25, 104, 224, 0.36), rgba(5, 31, 75, 0.12) 44%, transparent 72%);
-  box-shadow: 0 -7px 24px rgba(31, 111, 235, 0.12);
-  pointer-events: none;
-}
-
-.millionaire-shell--game .millionaire-host-stage::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  width: auto;
-  background:
-    radial-gradient(ellipse at 22% 46%, rgba(44, 130, 255, 0.10), transparent 35%),
-    linear-gradient(180deg, transparent 0 78%, rgba(0, 4, 12, 0.34) 100%);
-  pointer-events: none;
-}
-
-/* The source remains available in the approved host registry, but the playtest
-   now renders it only as part of the composed studio plate above. */
-.millionaire-shell--game .millionaire-host-stage > .millionaire-host {
+.millionaire-shell--game .millionaire-arena,
+.millionaire-shell--game .millionaire-crowd,
+.millionaire-shell--game .millionaire-host-stage {
   display: none;
-}
-
-.millionaire-shell--game .millionaire-host-stage.is-covered {
-  opacity: 0.18;
 }
 
 /* Separate the top plaque and timer so their gold rings never collide. */
@@ -108,23 +53,7 @@
     0 4px 11px rgba(0, 0, 0, 0.38);
 }
 
-/* Show the locked plain-language lifeline note without changing the rules layout. */
-.millionaire-rules__how > small {
-  font-size: 0;
-}
-
-.millionaire-rules__how > small::after {
-  content: "Each lifeline can be used once and costs 2 PTS. No lifelines on Q8. 50:50 and Double Dip cannot be used on the same question.";
-  font-size: clamp(0.5rem, 0.76vw, 0.68rem);
-  line-height: 1.3;
-}
-
 @media (max-height: 620px) and (orientation: landscape) {
-  .millionaire-shell--game .millionaire-host-stage {
-    bottom: 28.2%;
-    height: 59.5%;
-  }
-
   .millionaire-shell--game .millionaire-stakes {
     top: 1.8%;
     min-height: 9.5%;
@@ -137,11 +66,6 @@
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
-  .millionaire-shell--game .millionaire-host-stage {
-    bottom: 29.7%;
-    height: 56.5%;
-  }
-
   .millionaire-shell--game .millionaire-stakes {
     top: 1.4%;
     min-height: 9.2%;
@@ -153,8 +77,7 @@
   }
 }
 
-/* Landscape-only is intentional for Millionaire. This last-loaded layer restores
-   the rotation gate that the portrait playtest override had disabled. */
+/* Landscape-only is intentional for Millionaire. */
 @media (orientation: portrait) and (max-width: 900px) {
   .millionaire-shell {
     inset: 0;
@@ -191,11 +114,5 @@
     white-space: pre-line;
     text-shadow: 0 2px 10px #000;
     pointer-events: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .millionaire-shell--game .millionaire-host-stage {
-    transition: none;
   }
 }
