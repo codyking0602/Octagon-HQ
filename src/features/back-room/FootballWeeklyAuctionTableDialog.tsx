@@ -48,7 +48,7 @@ function TeamRow({ team }: { team: FootballWeeklyAuctionTableTeam }) {
     >
       <TeamMark identity={identity} school={team.school} />
       <div>
-        <strong>{team.school} <span>· {team.season_year}</span></strong>
+        <strong>{team.school} <span>· {team.season_year} · WON ${team.price_paid}</span></strong>
         <small>{rankedResume(identity)}</small>
       </div>
     </article>

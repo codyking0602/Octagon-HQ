@@ -6,6 +6,7 @@ const auctionTableTeamSchema = z.object({
   school: z.string(),
   season_year: z.coerce.number().int(),
   display_label: z.string(),
+  price_paid: z.coerce.number().int().nonnegative(),
 });
 
 const auctionTablePlayerSchema = z.object({
