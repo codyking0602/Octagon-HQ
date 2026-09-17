@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { useIdentity } from "../identity/IdentityProvider";
 import { playGameDefinition, type PlayGameId, type PlaySport } from "./playRegistry";
 
 export const PLAY_LANDING_COMMON_GAME_ORDER = [
@@ -45,17 +44,17 @@ type PlayLandingGameLibraryProps = {
   sport: PlaySport;
   onNavigate: (route: string) => void;
   footer?: ReactNode;
+  millionaireVisible?: boolean;
 };
 
 export function PlayLandingGameLibrary({
   sport,
   onNavigate,
   footer,
+  millionaireVisible = false,
 }: PlayLandingGameLibraryProps) {
-  const identity = useIdentity();
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
-  const millionaireVisible = Boolean(identity.profile?.canControlPicks);
   const millionaireRoute = sport === "ufc" ? "/play/millionaire" : "/football/millionaire";
 
   return (
