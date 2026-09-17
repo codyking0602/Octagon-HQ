@@ -128,7 +128,8 @@ export function AppShell() {
   const footballGameTitle = FOOTBALL_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
   const isFootballGame = Boolean(footballGameTitle);
-  const isGame = isPlayGame || isFootballGame;
+  const isMillionaireGame = location.pathname === "/play/millionaire" || location.pathname === "/football/millionaire";
+  const isGame = isPlayGame || isFootballGame || isMillionaireGame;
   const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const sportContext = sportContextForPath(location.pathname);
@@ -149,7 +150,7 @@ export function AppShell() {
     >
       <RouteScrollManager />
 
-      {isFootballGame ? (
+      {isMillionaireGame ? null : isFootballGame ? (
         <header className="app-header app-header--game app-header--football-game">
           <Link className="game-header__back" to="/football" aria-label="Return to Football HQ">
             <span aria-hidden="true">←</span>
@@ -210,7 +211,7 @@ export function AppShell() {
         </main>
       </BrandedPullToRefresh>
 
-      {isBackRoom ? null : <BottomNavigation themeScope={themeScope} />}
+      {isBackRoom || isMillionaireGame ? null : <BottomNavigation themeScope={themeScope} />}
     </div>
   );
 }
