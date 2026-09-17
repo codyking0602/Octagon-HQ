@@ -1,245 +1,201 @@
-@media (orientation: portrait) and (max-width: 900px) {
-  /* Rules should read like a game intro, not a scrollable manual. */
-  .millionaire-shell--rules {
-    overflow: hidden;
-  }
+/* Focused landscape playtest refinement.
+   The approved host source file stays untouched: this layer mechanically composes
+   nfl-host-3 into the existing studio bay and keeps every gameplay control live. */
 
-  .millionaire-rules {
-    position: absolute;
-    inset: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom));
-    width: auto;
-    min-height: 0;
-    margin: 0;
-    padding: 3.15rem 0.72rem 0.7rem;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    gap: 0.42rem;
-    border-radius: 14px;
-  }
+/* Keep the full experience clear of landscape safe areas / camera cutouts. */
+.millionaire-shell {
+  inset:
+    max(6px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right))
+    max(6px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+  width: auto;
+  height: auto;
+  min-height: 0;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(113, 157, 220, 0.13), 0 14px 38px rgba(0, 0, 0, 0.46);
+}
 
-  .millionaire-rules > header > span {
-    font-size: 0.58rem;
-  }
+/* Compose the female NFL host into one studio plate instead of presenting a
+   rectangular photo as a floating layer. Black source pixels disappear into the
+   set through screen blending; edge feathering happens on the complete plate. */
+.millionaire-shell--game .millionaire-host-stage {
+  left: 11.4%;
+  bottom: 26.8%;
+  width: 36.6%;
+  height: 62%;
+  overflow: hidden;
+  isolation: isolate;
+  background-image:
+    linear-gradient(90deg, #01040b 0%, rgba(1, 4, 11, 0.22) 11%, rgba(1, 4, 11, 0.04) 50%, rgba(1, 4, 11, 0.24) 89%, #01040b 100%),
+    linear-gradient(180deg, rgba(1, 4, 11, 0.18) 0%, rgba(3, 24, 60, 0.02) 52%, rgba(1, 5, 14, 0.72) 100%),
+    url("/assets/millionaire/hosts/nfl-host-3.webp"),
+    radial-gradient(ellipse at 49% 57%, rgba(24, 102, 221, 0.38) 0%, rgba(8, 47, 118, 0.18) 42%, transparent 70%),
+    linear-gradient(180deg, #01040b 0%, #03142f 58%, #020814 100%);
+  background-repeat: no-repeat;
+  background-position: center, center, 50% 100%, center, center;
+  background-size: 100% 100%, 100% 100%, auto 103%, 100% 100%, 100% 100%;
+  background-blend-mode: normal, normal, screen, normal, normal;
+  box-shadow:
+    -34px 0 62px rgba(2, 31, 79, 0.64),
+    34px 0 62px rgba(2, 31, 79, 0.64),
+    0 22px 38px rgba(0, 0, 0, 0.34),
+    inset 0 -24px 38px rgba(0, 0, 0, 0.38);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.7) 4%, #000 12%, #000 88%, rgba(0, 0, 0, 0.7) 96%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.7) 4%, #000 12%, #000 88%, rgba(0, 0, 0, 0.7) 96%, transparent 100%);
+  transition: opacity 180ms ease;
+}
 
-  .millionaire-rules h1 {
-    margin-top: 0.04rem;
-    font-size: 1.75rem;
-  }
+.millionaire-shell--game .millionaire-host-stage::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  left: 4%;
+  right: 4%;
+  bottom: -10%;
+  width: auto;
+  height: 31%;
+  border-top: 1px solid rgba(235, 183, 54, 0.28);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(25, 104, 224, 0.36), rgba(5, 31, 75, 0.12) 44%, transparent 72%);
+  box-shadow: 0 -7px 24px rgba(31, 111, 235, 0.12);
+  pointer-events: none;
+}
 
-  .millionaire-rules > header > p {
-    margin-top: 0.14rem;
-    font-size: 0.64rem;
-  }
+.millionaire-shell--game .millionaire-host-stage::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: auto;
+  background:
+    radial-gradient(ellipse at 22% 46%, rgba(44, 130, 255, 0.10), transparent 35%),
+    linear-gradient(180deg, transparent 0 78%, rgba(0, 4, 12, 0.34) 100%);
+  pointer-events: none;
+}
 
-  .millionaire-rules__body {
-    min-height: 0;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 0.4rem;
-  }
+/* The source remains available in the approved host registry, but the playtest
+   now renders it only as part of the composed studio plate above. */
+.millionaire-shell--game .millionaire-host-stage > .millionaire-host {
+  display: none;
+}
 
-  .millionaire-rules__how {
-    grid-row: 1;
-    min-height: 0;
-  }
+.millionaire-shell--game .millionaire-host-stage.is-covered {
+  opacity: 0.18;
+}
 
-  .millionaire-rules__ladder {
-    grid-row: 2;
-    min-height: 0;
-    height: 100%;
-    grid-template-rows: repeat(8, minmax(0, 1fr));
-    border-radius: 9px;
-  }
+/* Separate the top plaque and timer so their gold rings never collide. */
+.millionaire-shell--game .millionaire-stakes {
+  left: 39.2%;
+  top: 2.4%;
+  width: 21.6%;
+  min-height: 9.8%;
+}
 
-  .millionaire-rules__how h2 {
-    font-size: 0.74rem;
-    line-height: 1;
-  }
+.millionaire-shell--game .millionaire-clock {
+  left: 44.45%;
+  top: 16.4%;
+  width: clamp(92px, 11.6vw, 172px);
+}
 
-  .millionaire-rules__quick {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.34rem;
-    margin-top: 0.34rem;
-  }
+/* Keep the classic 2x2 board but lighten the default frame treatment. */
+.millionaire-shell--game .millionaire-answers button {
+  box-shadow:
+    inset 0 0 0 1px rgba(234, 181, 60, 0.94),
+    inset 0 0 0 2px rgba(93, 61, 7, 0.36),
+    inset 0 0 18px rgba(44, 124, 242, 0.14),
+    0 4px 11px rgba(0, 0, 0, 0.38);
+}
 
-  .millionaire-rules__quick p {
-    min-height: 0;
-    padding: 0.42rem 0.48rem;
-    border-radius: 8px;
-  }
+/* Show the locked plain-language lifeline note without changing the rules layout. */
+.millionaire-rules__how > small {
+  font-size: 0;
+}
 
-  .millionaire-rules__quick strong {
-    font-size: 0.66rem;
-  }
+.millionaire-rules__how > small::after {
+  content: "Each lifeline can be used once and costs 2 PTS. No lifelines on Q8. 50:50 and Double Dip cannot be used on the same question.";
+  font-size: clamp(0.5rem, 0.76vw, 0.68rem);
+  line-height: 1.3;
+}
 
-  .millionaire-rules__quick span {
-    margin-top: 0.16rem;
-    font-size: 0.56rem;
-    line-height: 1.24;
-  }
-
-  .millionaire-rules__how h3 {
-    margin-top: 0.4rem;
-    font-size: 0.66rem;
-  }
-
-  .millionaire-rules__lifelines {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.3rem;
-    margin-top: 0.28rem;
-  }
-
-  .millionaire-rules__lifelines p {
-    min-height: 0;
-    padding: 0.38rem 0.38rem;
-    border-radius: 8px;
-  }
-
-  .millionaire-rules__lifelines b {
-    font-size: 0.61rem;
-  }
-
-  .millionaire-rules__lifelines span {
-    margin-top: 0.12rem;
-    font-size: 0.52rem;
-    line-height: 1.18;
-  }
-
-  .millionaire-rules__how > small {
-    margin-top: 0.34rem;
-    padding-top: 0;
-    font-size: 0.5rem;
-    line-height: 1.2;
-    text-align: center;
-  }
-
-  .millionaire-rules__ladder > div {
-    padding: 0 4.5%;
-  }
-
-  .millionaire-rules__ladder b {
-    font-size: 0.59rem;
-  }
-
-  .millionaire-rules__ladder strong {
-    font-size: 0.66rem;
-  }
-
-  .millionaire-rules__ladder span {
-    font-size: 0.49rem;
-  }
-
-  .millionaire-rules__ladder small {
-    left: 61%;
-    bottom: -0.26rem;
-    padding: 0.02rem 0.24rem;
-    font-size: 0.25rem;
-  }
-
-  .millionaire-rules__start {
-    width: 100%;
-    min-width: 0;
-    min-height: 44px;
-    margin-top: 0;
-    padding: 0.35rem 1rem;
-    font-size: 0.82rem;
-  }
-
-  /* Keep the distinct Millionaire 2x2 answer board in portrait. */
-  .millionaire-answers {
-    left: 4%;
-    right: 4%;
-    top: 65.5%;
-    bottom: max(2.4%, env(safe-area-inset-bottom));
-    height: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 0.48rem 0.42rem;
-  }
-
-  .millionaire-answers button {
-    grid-template-columns: 17% 83%;
-    min-width: 0;
-    min-height: 0;
-    padding: 0 8%;
-    clip-path: polygon(7% 0, 93% 0, 100% 50%, 93% 100%, 7% 100%, 0 50%);
-  }
-
-  .millionaire-answers b {
-    font-size: clamp(0.82rem, 3.8vw, 0.98rem);
-  }
-
-  .millionaire-answers span {
-    overflow: visible;
-    text-overflow: clip;
-    white-space: normal;
-    font-size: clamp(0.72rem, 3.35vw, 0.92rem);
-    line-height: 1.08;
-  }
-
-  /* The shipped host WebPs are opaque. Blend their black photo background out at
-     render time so the untouched approved asset reads as part of the studio. */
+@media (max-height: 620px) and (orientation: landscape) {
   .millionaire-shell--game .millionaire-host-stage {
-    background: transparent;
-    box-shadow: none;
-    overflow: visible;
-    isolation: isolate;
+    bottom: 28.2%;
+    height: 59.5%;
   }
 
-  .millionaire-shell--game .millionaire-host-stage::before,
-  .millionaire-shell--game .millionaire-host-stage::after {
-    content: none;
+  .millionaire-shell--game .millionaire-stakes {
+    top: 1.8%;
+    min-height: 9.5%;
   }
 
-  .millionaire-shell--game .millionaire-host-stage > .millionaire-host {
-    left: -5%;
-    bottom: -2%;
-    width: 110%;
-    height: 104%;
-    object-fit: contain;
-    object-position: center bottom;
-    mix-blend-mode: screen;
-    filter: contrast(1.04) saturate(0.94) brightness(0.98);
-    -webkit-mask-image: linear-gradient(180deg, #000 0 90%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
-    mask-image: linear-gradient(180deg, #000 0 90%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
-  }
-
-  .millionaire-shell--game .millionaire-crowd {
-    opacity: 0.9;
+  .millionaire-shell--game .millionaire-clock {
+    top: 15.6%;
+    width: clamp(88px, 11.1vw, 148px);
   }
 }
 
-@media (orientation: portrait) and (max-width: 900px) and (max-height: 720px) {
-  .millionaire-rules {
-    padding-top: 2.8rem;
-    gap: 0.3rem;
+@media (max-height: 500px) and (orientation: landscape) {
+  .millionaire-shell--game .millionaire-host-stage {
+    bottom: 29.7%;
+    height: 56.5%;
   }
 
-  .millionaire-rules h1 {
-    font-size: 1.5rem;
+  .millionaire-shell--game .millionaire-stakes {
+    top: 1.4%;
+    min-height: 9.2%;
   }
 
-  .millionaire-rules > header > p {
-    font-size: 0.57rem;
+  .millionaire-shell--game .millionaire-clock {
+    top: 14.9%;
+    width: clamp(80px, 10.2vw, 128px);
+  }
+}
+
+/* Landscape-only is intentional for Millionaire. This last-loaded layer restores
+   the rotation gate that the portrait playtest override had disabled. */
+@media (orientation: portrait) and (max-width: 900px) {
+  .millionaire-shell {
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    border-radius: 0;
+    overflow: hidden !important;
   }
 
-  .millionaire-rules__quick p,
-  .millionaire-rules__lifelines p {
-    padding-top: 0.3rem;
-    padding-bottom: 0.3rem;
+  .millionaire-shell > * {
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 
-  .millionaire-rules__quick span,
-  .millionaire-rules__lifelines span {
-    font-size: 0.48rem;
+  .millionaire-shell::before {
+    content: "↻\A ROTATE TO PLAY\A Millionaire is landscape only.";
+    position: absolute;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-content: center;
+    padding: 2rem;
+    visibility: visible;
+    color: #f7fbff;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(22, 88, 194, 0.3), transparent 36%),
+      linear-gradient(180deg, #020a1a, #04183a 55%, #010711);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.65;
+    letter-spacing: 0.05em;
+    text-align: center;
+    white-space: pre-line;
+    text-shadow: 0 2px 10px #000;
+    pointer-events: none;
   }
+}
 
-  .millionaire-rules__how > small {
-    font-size: 0.45rem;
-  }
-
-  .millionaire-rules__start {
-    min-height: 40px;
+@media (prefers-reduced-motion: reduce) {
+  .millionaire-shell--game .millionaire-host-stage {
+    transition: none;
   }
 }
