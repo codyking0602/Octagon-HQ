@@ -44,15 +44,18 @@ type PlayLandingGameLibraryProps = {
   sport: PlaySport;
   onNavigate: (route: string) => void;
   footer?: ReactNode;
+  millionaireVisible?: boolean;
 };
 
 export function PlayLandingGameLibrary({
   sport,
   onNavigate,
   footer,
+  millionaireVisible = false,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
+  const millionaireRoute = sport === "ufc" ? "/play/millionaire" : "/football/millionaire";
 
   return (
     <section className="play-landing-library" data-sport={sport} aria-labelledby={`${sport}-all-games-title`}>
@@ -62,10 +65,24 @@ export function PlayLandingGameLibrary({
           <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
           <p>Quick games and blind tests, ready whenever the debate starts.</p>
         </div>
-        <span>{games.length} LIVE</span>
+        <span>{games.length + (millionaireVisible ? 1 : 0)} LIVE</span>
       </header>
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
+        {millionaireVisible ? (
+          <button
+            className="play-landing-game-card is-strategic"
+            type="button"
+            onClick={() => onNavigate(millionaireRoute)}
+          >
+            <span className="play-landing-game-card__icon" aria-hidden="true">$</span>
+            <span className="play-landing-game-card__status">PLAY NOW</span>
+            <strong>Millionaire</strong>
+            <small>Climb eight questions, protect your checkpoints, and use your lifelines on the way to $1,000,000.</small>
+            <em>PLAY →</em>
+          </button>
+        ) : null}
+
         {games.map((game) => {
           const strategic = (sport === "ufc" && game.id === PLAY_LANDING_UFC_STRATEGIC_GAME)
             || (sport === "football" && game.id === PLAY_LANDING_FOOTBALL_STRATEGIC_GAME);
