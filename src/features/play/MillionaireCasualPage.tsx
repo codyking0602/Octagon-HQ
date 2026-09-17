@@ -28,6 +28,7 @@ import {
 } from "./MillionaireCasualModel";
 import "./MillionaireCasualPage.css";
 import "./MillionaireCasualPolish.css";
+import "./MillionairePortrait.css";
 
 type MillionaireCasualPageProps = { scope: "ufc" | "football" };
 type PlayPhase = "answering" | "locked" | "revealed" | "settled";
@@ -75,7 +76,6 @@ function LeagueChooser({ onChoose, onBack }: { onChoose: (league: "nfl" | "cfb")
           <button type="button" onClick={() => onChoose("cfb")}><strong>CFB</strong><small>College Football</small></button>
         </div>
       </section>
-      <RotatePrompt />
     </div>
   );
 }
@@ -91,7 +91,7 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
         <header>
           <span>{millionaireLeagueLabel(league)} DAILY</span>
           <h1 id="millionaire-rules-title">MILLIONAIRE</h1>
-          <p>8 questions. One run to $1,000,000.</p>
+          <p>8 questions. Climb the ladder to $1,000,000.</p>
         </header>
 
         <div className="millionaire-rules__body">
@@ -113,9 +113,10 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
           <section className="millionaire-rules__how" aria-label="How to play">
             <h2>HOW TO PLAY</h2>
             <div className="millionaire-rules__quick">
-              <p><strong>2:30</strong><span>Shared time bank for all 8 questions. Time only breaks ties.</span></p>
-              <p><strong>Q3 + Q6</strong><span>Checkpoints protect your money if a later answer ends the run.</span></p>
-              <p><strong>Q7 + Q8</strong><span>Before each, choose to play on or walk away with your current money.</span></p>
+              <p><strong>2:30 TIME BANK</strong><span>Shared across all 8 questions. Time only breaks leaderboard ties.</span></p>
+              <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4, Q5, or Q6 and you leave with $5,000.</span></p>
+              <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7 or Q8 and you leave with $100,000.</span></p>
+              <p><strong>WALK AWAY</strong><span>Before Q7 and Q8, take your current money or keep playing.</span></p>
             </div>
             <h3>LIFELINES</h3>
             <div className="millionaire-rules__lifelines">
@@ -129,22 +130,11 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
 
         <button className="millionaire-rules__start" type="button" onClick={onStart}>START GAME</button>
       </section>
-      <RotatePrompt />
     </div>
   );
 }
 
-function RotatePrompt() {
-  return (
-    <div className="millionaire-portrait-rotate" role="status">
-      <span aria-hidden="true">↻</span>
-      <strong>Rotate to play</strong>
-      <small>Millionaire is built for landscape.</small>
-    </div>
-  );
-}
-
-function useLandscapeGameChrome() {
+function useFullscreenGameChrome() {
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -166,7 +156,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const timerIds = useRef<number[]>([]);
   const timeoutQueued = useRef(false);
 
-  useLandscapeGameChrome();
+  useFullscreenGameChrome();
 
   const currentQuestion = currentMillionaireQuestion(run, gameState);
   const level = currentQuestion?.level ?? MILLIONAIRE_LEVELS[Math.min(7, gameState.completedQuestions)]!;
@@ -281,7 +271,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
 
   return (
-    <div className="millionaire-shell">
+    <div className="millionaire-shell millionaire-shell--game">
       <StudioBackdrop />
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{millionaireLeagueLabel(league)} DAILY</span><strong>MILLIONAIRE</strong></header>
@@ -359,7 +349,6 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
           </div>
         </>
       )}
-      <RotatePrompt />
     </div>
   );
 }

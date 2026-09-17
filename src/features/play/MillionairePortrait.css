@@ -1,0 +1,532 @@
+/* Mobile portrait layout for Millionaire. The approved host files remain untouched;
+   only their CSS crop, scale, and position are changed. */
+
+/* Blend the rectangular source photo into the studio without modifying the asset. */
+.millionaire-host-stage {
+  background:
+    radial-gradient(ellipse at 50% 86%, rgba(18, 79, 174, 0.22), transparent 48%),
+    #01040b;
+  box-shadow:
+    -36px 0 64px rgba(2, 31, 79, 0.9),
+    36px 0 64px rgba(2, 31, 79, 0.9),
+    0 28px 42px rgba(0, 0, 0, 0.52);
+}
+
+.millionaire-host-stage::before,
+.millionaire-host-stage::after {
+  width: 23%;
+}
+
+.millionaire-host-stage::before {
+  background: linear-gradient(90deg, #01040b 10%, rgba(1, 4, 11, 0.72) 42%, rgba(1, 4, 11, 0));
+}
+
+.millionaire-host-stage::after {
+  background: linear-gradient(270deg, #01040b 10%, rgba(1, 4, 11, 0.72) 42%, rgba(1, 4, 11, 0));
+}
+
+.millionaire-host-stage > .millionaire-host {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+@media (orientation: portrait) and (max-width: 900px) {
+  /* Override the old rotate-to-play gate. */
+  .millionaire-shell > *:not(.millionaire-portrait-rotate) {
+    visibility: visible;
+  }
+
+  .millionaire-portrait-rotate {
+    display: none !important;
+  }
+
+  .millionaire-shell {
+    width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  .millionaire-arena {
+    background:
+      linear-gradient(90deg, transparent 0 3%, rgba(8, 77, 181, 0.26) 3.2% 3.7%, transparent 4% 96%, rgba(8, 77, 181, 0.26) 96.3% 96.8%, transparent 97%),
+      radial-gradient(ellipse at 50% 34%, rgba(8, 81, 198, 0.42) 0 18%, transparent 58%),
+      linear-gradient(180deg, rgba(0, 6, 18, 0.08), rgba(0, 6, 18, 0.58));
+  }
+
+  .millionaire-arena::before {
+    left: -35%;
+    right: -35%;
+    bottom: -9%;
+    height: 35%;
+  }
+
+  .millionaire-arena::after {
+    inset: 9% 2% 43%;
+    background-size: 28px 20px, 100% 100%;
+    opacity: 0.4;
+  }
+
+  .millionaire-beam {
+    width: 17%;
+    height: 68%;
+    opacity: 0.45;
+  }
+
+  .millionaire-crowd {
+    left: 14%;
+    right: 3%;
+    top: 15%;
+    height: 38%;
+    opacity: 0.76;
+  }
+
+  .millionaire-crowd::before,
+  .millionaire-crowd::after {
+    background-size: 38px 50px, 38px 50px;
+  }
+
+  .millionaire-hq {
+    left: 4%;
+    top: max(1.7%, env(safe-area-inset-top));
+    gap: 0.28rem;
+  }
+
+  .millionaire-hq__mark {
+    font-size: 1.45rem;
+  }
+
+  .millionaire-hq strong {
+    font-size: 0.93rem;
+    letter-spacing: 0.04em;
+  }
+
+  .millionaire-title {
+    right: 4%;
+    top: max(1.9%, env(safe-area-inset-top));
+    width: 48%;
+    text-align: right;
+  }
+
+  .millionaire-title span {
+    font-size: 0.58rem;
+    letter-spacing: 0.17em;
+  }
+
+  .millionaire-title strong {
+    font-size: 1.2rem;
+  }
+
+  .millionaire-title::after {
+    width: 100%;
+    margin-top: 0.28rem;
+  }
+
+  .millionaire-stakes {
+    left: 23%;
+    top: 7.5%;
+    width: 54%;
+    min-height: 6.6%;
+    border-width: 2px;
+  }
+
+  .millionaire-stakes strong {
+    font-size: clamp(1.3rem, 7vw, 1.75rem);
+  }
+
+  .millionaire-stakes span {
+    margin-top: 0.12rem;
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+  }
+
+  .millionaire-clock {
+    left: 39%;
+    top: 14.7%;
+    width: clamp(76px, 22vw, 92px);
+    border-width: 2px;
+  }
+
+  .millionaire-clock strong {
+    font-size: 1.55rem;
+  }
+
+  .millionaire-clock span {
+    margin-top: 0.2rem;
+    font-size: 0.42rem;
+  }
+
+  .millionaire-host-stage {
+    left: 18.5%;
+    top: 21.5%;
+    bottom: auto;
+    width: 47.5%;
+    height: 30.5%;
+    background:
+      radial-gradient(ellipse at 50% 96%, rgba(31, 104, 213, 0.28), transparent 55%),
+      #01040b;
+    box-shadow:
+      -24px 0 42px rgba(2, 33, 86, 0.92),
+      24px 0 42px rgba(2, 33, 86, 0.92),
+      0 18px 28px rgba(0, 0, 0, 0.52);
+  }
+
+  .millionaire-host-stage::before,
+  .millionaire-host-stage::after {
+    width: 28%;
+  }
+
+  .millionaire-host-stage > .millionaire-host {
+    left: 2%;
+    bottom: -1%;
+    width: 96%;
+    height: 101%;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  .millionaire-lifelines {
+    left: 3%;
+    top: 20.2%;
+    width: 13.5%;
+    gap: clamp(0.72rem, 1.8vh, 1rem);
+  }
+
+  .millionaire-lifelines button {
+    border-width: 1.5px;
+    box-shadow:
+      0 0 0 2px rgba(0, 7, 22, 0.88),
+      0 0 0 3px rgba(211, 155, 30, 0.62),
+      inset 0 0 14px rgba(64, 151, 255, 0.38),
+      0 5px 14px rgba(0, 0, 0, 0.46);
+  }
+
+  .millionaire-lifelines b {
+    font-size: clamp(0.63rem, 3.5vw, 0.82rem);
+  }
+
+  .millionaire-lifelines span {
+    font-size: clamp(0.34rem, 1.75vw, 0.46rem);
+  }
+
+  .millionaire-ladder {
+    right: 2.2%;
+    top: 17.4%;
+    width: 30.5%;
+    height: 34.5%;
+    border-width: 1.5px;
+  }
+
+  .millionaire-ladder > div {
+    grid-template-columns: 12% 55% 33%;
+    padding: 0 4%;
+  }
+
+  .millionaire-ladder b {
+    font-size: clamp(0.48rem, 2.4vw, 0.62rem);
+  }
+
+  .millionaire-ladder strong {
+    font-size: clamp(0.48rem, 2.5vw, 0.64rem);
+  }
+
+  .millionaire-ladder span {
+    font-size: clamp(0.34rem, 1.8vw, 0.46rem);
+  }
+
+  .millionaire-ladder small {
+    left: 36%;
+    padding: 0.03rem 0.24rem;
+    font-size: 0.26rem;
+    letter-spacing: 0.035em;
+  }
+
+  .millionaire-question {
+    left: 4%;
+    right: 4%;
+    top: 53.5%;
+    bottom: auto;
+    min-height: 10.5%;
+    max-height: 11.8%;
+    padding: 2.6% 8%;
+    clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+  }
+
+  .millionaire-question strong {
+    max-width: 96%;
+    font-size: clamp(0.95rem, 4.6vw, 1.2rem);
+    line-height: 1.18;
+  }
+
+  .millionaire-question small {
+    max-width: 94%;
+    font-size: 0.6rem;
+    line-height: 1.18;
+  }
+
+  .millionaire-answers {
+    left: 4%;
+    right: 4%;
+    top: 65.5%;
+    bottom: max(2.4%, env(safe-area-inset-bottom));
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.42rem, 1vh, 0.62rem);
+  }
+
+  .millionaire-answers button {
+    grid-template-columns: 12% 88%;
+    min-height: 0;
+    padding: 0 7%;
+    clip-path: polygon(4% 0, 96% 0, 100% 50%, 96% 100%, 4% 100%, 0 50%);
+  }
+
+  .millionaire-answers b {
+    font-size: 1rem;
+  }
+
+  .millionaire-answers span {
+    overflow: visible;
+    text-overflow: clip;
+    font-size: clamp(0.86rem, 4.2vw, 1.05rem);
+    line-height: 1.12;
+    white-space: normal;
+  }
+
+  .millionaire-stat-sheet {
+    left: 7%;
+    right: 7%;
+    top: 24%;
+    width: auto;
+    min-height: 25%;
+    padding: 8% 7% 6%;
+  }
+
+  .millionaire-stat-sheet > span {
+    font-size: 0.72rem;
+  }
+
+  .millionaire-stat-sheet > strong {
+    font-size: 1.25rem;
+  }
+
+  .millionaire-stat-sheet p {
+    font-size: 0.88rem;
+  }
+
+  .millionaire-decision,
+  .millionaire-results {
+    left: 6%;
+    right: 6%;
+    top: 17%;
+    min-height: 57%;
+    padding: 8% 6%;
+  }
+
+  .millionaire-decision > strong {
+    font-size: 1.12rem;
+  }
+
+  .millionaire-decision > p {
+    font-size: 0.74rem;
+  }
+
+  .millionaire-decision > div {
+    gap: 0.65rem;
+  }
+
+  .millionaire-decision button {
+    min-height: 88px;
+  }
+
+  .millionaire-results > strong {
+    font-size: clamp(2.5rem, 13vw, 4rem);
+  }
+
+  .millionaire-results__score b {
+    font-size: 2.6rem;
+  }
+
+  .millionaire-results dl {
+    width: 100%;
+  }
+
+  .millionaire-results dl > div {
+    font-size: 0.72rem;
+  }
+
+  .millionaire-results__actions button {
+    font-size: 0.66rem;
+  }
+
+  /* Rules screen: readable rather than compressed. Scrolling is intentional. */
+  .millionaire-shell--rules {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .millionaire-shell--rules .millionaire-crowd {
+    top: 11%;
+    height: 48%;
+    opacity: 0.45;
+  }
+
+  .millionaire-rules {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    width: calc(100% - 20px);
+    min-height: calc(100dvh - 20px);
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 3.6rem 0.9rem 1rem;
+    border-radius: 15px;
+  }
+
+  .millionaire-rules > header > span {
+    font-size: 0.66rem;
+  }
+
+  .millionaire-rules h1 {
+    margin-top: 0.12rem;
+    font-size: 2.15rem;
+  }
+
+  .millionaire-rules > header > p {
+    margin-top: 0.3rem;
+    font-size: 0.76rem;
+  }
+
+  .millionaire-rules__body {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+  }
+
+  .millionaire-rules__how h2 {
+    font-size: 0.92rem;
+  }
+
+  .millionaire-rules__how h3 {
+    margin-top: 0.85rem;
+    font-size: 0.76rem;
+  }
+
+  .millionaire-rules__quick {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+    margin-top: 0.55rem;
+  }
+
+  .millionaire-rules__lifelines {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+    margin-top: 0.45rem;
+  }
+
+  .millionaire-rules__quick p,
+  .millionaire-rules__lifelines p {
+    padding: 0.72rem 0.68rem;
+    border-radius: 9px;
+  }
+
+  .millionaire-rules__quick strong,
+  .millionaire-rules__lifelines b {
+    font-size: 0.78rem;
+  }
+
+  .millionaire-rules__quick span,
+  .millionaire-rules__lifelines span {
+    margin-top: 0.28rem;
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  .millionaire-rules__how > small {
+    margin-top: 0.65rem;
+    padding-top: 0;
+    font-size: 0.64rem;
+    line-height: 1.4;
+  }
+
+  .millionaire-rules__ladder {
+    min-height: 352px;
+    grid-template-rows: repeat(8, 44px);
+    border-radius: 10px;
+  }
+
+  .millionaire-rules__ladder b {
+    font-size: 0.72rem;
+  }
+
+  .millionaire-rules__ladder strong {
+    font-size: 0.8rem;
+  }
+
+  .millionaire-rules__ladder span {
+    font-size: 0.58rem;
+  }
+
+  .millionaire-rules__ladder small {
+    left: 60%;
+    font-size: 0.32rem;
+  }
+
+  .millionaire-rules__start {
+    width: 100%;
+    min-width: 0;
+    min-height: 54px;
+    margin-top: 0.15rem;
+    font-size: 0.92rem;
+  }
+
+  /* Casual-only football chooser still works naturally when held portrait. */
+  .millionaire-shell--chooser {
+    overflow-y: auto;
+  }
+
+  .millionaire-league-chooser {
+    left: 5%;
+    right: 5%;
+    top: 50%;
+    width: auto;
+    transform: translateY(-50%);
+    padding: 1.5rem 1rem;
+  }
+
+  .millionaire-league-chooser > div {
+    grid-template-columns: 1fr;
+  }
+
+  .millionaire-league-chooser button {
+    min-height: 92px;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 390px) {
+  .millionaire-lifelines {
+    width: 12.8%;
+  }
+
+  .millionaire-ladder {
+    width: 31.5%;
+  }
+
+  .millionaire-host-stage {
+    left: 17.5%;
+    width: 48.5%;
+  }
+
+  .millionaire-rules__quick {
+    grid-template-columns: 1fr;
+  }
+}
