@@ -10,6 +10,7 @@ import {
   evaluateFootballWeeklyAuctionBids,
   type FootballWeeklyAuctionBidMap,
 } from "../play/footballWeeklyAuctionBidSafety";
+import { FootballWeeklyAuctionTableDialog } from "./FootballWeeklyAuctionTableDialog";
 import {
   footballWeeklyAuctionTeamIdentity,
   footballWeeklyAuctionTeamStyle,
@@ -93,69 +94,6 @@ function PriorResults({ results }: { results: FootballWeeklyAuctionPriorResult[]
         </article>
       ))}
     </section>
-  );
-}
-
-function MyTeamsDialog({
-  state,
-  onClose,
-}: {
-  state: FootballWeeklyAuctionActiveState;
-  onClose: () => void;
-}) {
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
-
-  return (
-    <div
-      className="football-weekly-auction__collection-backdrop"
-      role="presentation"
-      onMouseDown={onClose}
-    >
-      <section
-        className="football-weekly-auction__collection-sheet"
-        role="dialog"
-        aria-modal="true"
-        aria-label="My Weekly Auction teams"
-        onMouseDown={(event) => event.stopPropagation()}
-      >
-        <header>
-          <div>
-            <p className="eyebrow">WEEKLY AUCTION</p>
-            <h2>MY TEAMS</h2>
-            <span>{state.collection.length} won this week</span>
-          </div>
-          <button type="button" onClick={onClose} aria-label="Close my teams">×</button>
-        </header>
-        <div className="football-weekly-auction__collection-list">
-          {state.collection.map((entry) => {
-            const identity = footballWeeklyAuctionTeamIdentity(
-              entry.season_reference,
-              entry.school,
-              entry.season_year,
-            );
-            return (
-              <article
-                key={entry.season_reference}
-                style={footballWeeklyAuctionTeamStyle(identity)}
-              >
-                <TeamMark identity={identity} school={entry.school} />
-                <div>
-                  <strong>{entry.school} <span>· {entry.season_year}</span></strong>
-                  <small>{rankedResume(identity)}</small>
-                </div>
-                <b><small>PAID</small>{"$"}{entry.winning_bid}</b>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-    </div>
   );
 }
 
@@ -344,7 +282,7 @@ export function FootballWeeklyAuctionGate({
     3: state.bids["3"] ?? 0,
   }), [state.bids]);
   const [bids, setBids] = useState<BidMap>(initialBids);
-  const [collectionOpen, setCollectionOpen] = useState(false);
+  const [auctionTableOpen, setAuctionTableOpen] = useState(false);
 
   useEffect(() => {
     setBids(initialBids);
@@ -372,7 +310,7 @@ export function FootballWeeklyAuctionGate({
 
   return (
     <div className="football-weekly-auction">
-      {collectionOpen ? <MyTeamsDialog state={state} onClose={() => setCollectionOpen(false)} /> : null}
+      {auctionTableOpen ? <FootballWeeklyAuctionTableDialog onClose={() => setAuctionTableOpen(false)} /> : null}
       <PriorResults results={state.prior_results} />
       <section className="football-weekly-auction__board surface-card">
         <header className="football-weekly-auction__board-head">
@@ -384,13 +322,13 @@ export function FootballWeeklyAuctionGate({
           <button
             className="football-weekly-auction__status-action"
             type="button"
-            disabled={!state.collection.length}
-            onClick={() => setCollectionOpen(true)}
+            onClick={() => setAuctionTableOpen(true)}
             aria-haspopup="dialog"
+            aria-label="Open Auction Table"
           >
-            <small>MY TEAMS</small>
+            <small>AUCTION TABLE</small>
             <strong>{state.owned_count}</strong>
-            <span>{state.collection.length ? "VIEW ›" : "NONE YET"}</span>
+            <span>YOUR TEAMS · VIEW ›</span>
           </button>
           <div><small>COMMITTED</small><strong>{"$"}{committed}</strong></div>
           <div><small>MAX TODAY</small><strong>{"$"}{state.max_commit}</strong></div>

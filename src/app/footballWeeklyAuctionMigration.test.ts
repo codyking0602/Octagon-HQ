@@ -10,11 +10,15 @@ const migration = readFileSync("supabase/migrations/202612310129_football_weekly
 const bankrollFloorRepair = readFileSync("supabase/migrations/202612310130_football_weekly_auction_bankroll_floor.sql", "utf8");
 const dynamicBankroll = readFileSync("supabase/migrations/202612310137_football_weekly_auction_dynamic_bankroll.sql", "utf8");
 const fullPoolRepair = readFileSync("supabase/migrations/202612310138_football_weekly_auction_full_233_pool.sql", "utf8");
+const auctionTableMigration = readFileSync("supabase/migrations/202612310142_football_weekly_auction_table.sql", "utf8");
 const transitionMigration = readFileSync("supabase/migrations/202612310132_football_troy_transition_carry.sql", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 const gate = readFileSync("src/features/back-room/FootballWeeklyAuctionGate.tsx", "utf8");
+const auctionTableDialog = readFileSync("src/features/back-room/FootballWeeklyAuctionTableDialog.tsx", "utf8");
+const careerMediaContext = readFileSync("src/features/back-room/footballCareerMediaContext.ts", "utf8");
 const styles = readFileSync("src/styles/football-weekly-auction.css", "utf8");
+const auctionTableStyles = readFileSync("src/styles/football-weekly-auction-table.css", "utf8");
 const expansionAudit = JSON.parse(
   readFileSync("data/generated/football/cfb/weekly-auction-team-grade-expansion-v1.json", "utf8"),
 ) as {
@@ -50,19 +54,38 @@ describe("Football Weekly Auction live contract", () => {
     expect(gate).toContain("$0 = pass");
   });
 
+  it("replaces My Teams with a public resolved Auction Table while keeping current bids sealed", () => {
+    expect(gate).toContain("AUCTION TABLE");
+    expect(gate).toContain("FootballWeeklyAuctionTableDialog");
+    expect(gate).not.toContain("MY TEAMS");
+    expect(auctionTableDialog).toContain("Resolved teams + bankrolls. Today’s bids stay sealed.");
+    expect(auctionTableDialog).toContain("player.bankroll");
+    expect(auctionTableDialog).toContain("player.owned_count");
+    expect(auctionTableDialog).toContain("player.teams.map");
+    expect(auctionTableDialog).not.toContain("winning_bid");
 
-  it("keeps won teams viewable during the active week without revealing grades", () => {
-    expect(gate).toContain("MY TEAMS");
-    expect(gate).toContain('aria-haspopup="dialog"');
-    expect(gate).toContain("state.collection.map");
-    expect(gate).toContain("<small>PAID</small>");
-    const myTeamsDialog = gate.slice(
-      gate.indexOf("function MyTeamsDialog"),
-      gate.indexOf("function TeamCard"),
+    const publicTableFunction = auctionTableMigration.slice(
+      auctionTableMigration.indexOf("create or replace function public.get_football_weekly_auction_table"),
+      auctionTableMigration.indexOf("revoke all on function public.get_football_weekly_auction_table"),
     );
-    expect(myTeamsDialog).not.toContain("entry.grade");
-    expect(styles).toContain(".football-weekly-auction__collection-backdrop");
-    expect(styles).toContain(".football-weekly-auction__collection-sheet");
+    expect(publicTableFunction).toContain("private.football_weekly_auction_awards");
+    expect(publicTableFunction).toContain("private.football_weekly_auction_daily_entries");
+    expect(publicTableFunction).not.toContain("private.football_weekly_auction_bids");
+    expect(publicTableFunction).not.toContain("hidden_grade");
+  });
+
+  it("keeps the Auction Table fully scrollable above fixed mobile navigation", () => {
+    expect(auctionTableStyles).toContain("z-index: 5000");
+    expect(auctionTableStyles).toContain("100dvh");
+    expect(auctionTableStyles).toContain("overflow-y: auto");
+    expect(auctionTableStyles).toContain("env(safe-area-inset-bottom)");
+    expect(auctionTableStyles).toContain("-webkit-overflow-scrolling: touch");
+  });
+
+  it("pins Sam Darnold to USC at the shared CFB career relationship owner", () => {
+    expect(careerMediaContext).toContain('["samdarnold", "USC"]');
+    expect(careerMediaContext).toContain("reviewedCfbCareerProgramByName");
+    expect(careerMediaContext).toContain("return reviewedProgram");
   });
 
   it("uses the calibrated board-shape generator rather than fixed strength shortcuts", () => {

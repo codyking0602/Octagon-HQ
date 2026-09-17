@@ -17,12 +17,16 @@ type FootballCareerMediaSubject = {
   id: string;
   kind: string;
   league: FootballCanonicalSubject["league"];
+  name?: string;
   school?: string;
 };
 
 const projection = careerMediaJson as unknown as CareerMediaProjection;
 const nflCareerTeamCodeBySubjectId = new Map(projection.nflCareerTeamCodes ?? []);
 const cfbCareerProgramBySubjectId = new Map(projection.cfbCareerPrograms ?? []);
+const reviewedCfbCareerProgramByName = new Map<string, string>([
+  ["samdarnold", "USC"],
+]);
 
 export const footballCareerCfbProgramMediaOwners = (projection.cfbProgramMediaOwners ?? []).map(
   ([programName, sourceProgramId]) => ({ programName, sourceProgramId }),
@@ -32,12 +36,18 @@ function projectionIdFor(subject: FootballCareerMediaSubject) {
   return footballRecognitionProjectionSubjectIdFor(subject as FootballCanonicalSubject);
 }
 
+function normalizedPlayerName(name?: string) {
+  return name?.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "") ?? "";
+}
+
 /**
  * Canonical representative-program relationship for a CFB player career. Text and
  * imagery must consume this same value so transfer/source projection never drifts.
  */
 export function footballCareerCfbDisplayProgram(subject: FootballCareerMediaSubject) {
   if (subject.kind !== "player-career" || subject.league !== "CFB") return null;
+  const reviewedProgram = reviewedCfbCareerProgramByName.get(normalizedPlayerName(subject.name));
+  if (reviewedProgram) return reviewedProgram;
   const projectionId = projectionIdFor(subject);
   return cfbCareerProgramBySubjectId.get(subject.id)
     ?? (projectionId ? cfbCareerProgramBySubjectId.get(projectionId) : undefined)
