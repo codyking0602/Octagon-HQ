@@ -163,7 +163,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const levelNumber = gameState.currentQuestionIndex + 1;
   const q8 = level === "Q8";
   const stagePlate = league === "ufc"
-    ? "/assets/millionaire/ufc-host-1-plate.png"
+    ? "/assets/millionaire/ufc-final-host-plate.png"
     : "/assets/millionaire/millionaire-locked-reference.png";
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
 
