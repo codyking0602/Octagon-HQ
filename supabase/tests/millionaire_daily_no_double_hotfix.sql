@@ -6,11 +6,11 @@ declare
 begin
   select * into strict v_ufc
   from private.daily_challenge_schedule_versions
-  where version = 'play-rotation-v8-millionaire';
+  where version = 'play-rotation-v9-millionaire-no-double';
 
   select * into strict v_football
   from private.daily_challenge_schedule_versions
-  where version = 'football-daily-v10-millionaire';
+  where version = 'football-daily-v11-millionaire-no-double';
 
   if array_length(v_ufc.game_cycle, 1) <> 26
     or (select count(*) from unnest(v_ufc.game_cycle) g where g = 'find_leader') <> 5
