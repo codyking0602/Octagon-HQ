@@ -25,6 +25,7 @@ import {
   footballTodayGameForDay,
   footballTodayScheduleVersionForDay,
   FOOTBALL_TODAY_SCHEDULE_VERSION,
+  FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION,
 } from "./footballTodayChallengeSession";
 
 type JsonRecord = Record<string, unknown>;
@@ -42,6 +43,7 @@ function isoDay(offset: number) {
 }
 
 function setupScheduleVersion(day: string) {
+  if (day >= "2026-09-19") return FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION;
   if (day >= "2026-09-13") return FOOTBALL_TODAY_SCHEDULE_VERSION;
   return day >= "2026-09-12" ? "football-daily-v5" : "football-daily-v1";
 }
@@ -72,7 +74,7 @@ function blindResumeActions(day: string, revealStage: 1 | 2 | 3, correct: boolea
 }
 
 describe("Football Today’s Challenge session", () => {
-  it("preserves historical Football days and uses the exact 20-slot future rotation", () => {
+  it("preserves historical Football days and starts the 24-slot Millionaire rotation on September 19", () => {
     expect([
       footballTodayGameForDay("2026-08-22"),
       footballTodayGameForDay("2026-08-23"),
@@ -97,14 +99,18 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-09-13")).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
     expect(FOOTBALL_TODAY_SCHEDULE_VERSION).toBe("football-daily-v7-hit-number-pool-cleanup");
 
-    const future = Array.from({ length: 20 }, (_unused, offset) => {
-      const day = new Date(Date.UTC(2026, 8, 12 + offset)).toISOString().slice(0, 10);
+    expect(footballTodayScheduleVersionForDay("2026-09-19")).toBe(FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION);
+    expect(footballTodayGameForDay("2026-09-19")).toBe("millionaire");
+
+    const future = Array.from({ length: 24 }, (_unused, offset) => {
+      const day = new Date(Date.UTC(2026, 8, 19 + offset)).toISOString().slice(0, 10);
       return footballTodayGameForDay(day);
     });
     expect(future.filter((game) => game === "find_leader")).toHaveLength(5);
     expect(future.filter((game) => game === "wavelength")).toHaveLength(5);
     expect(future.filter((game) => game === "hit_the_number")).toHaveLength(4);
     expect(future.filter((game) => game === "who_am_i")).toHaveLength(4);
+    expect(future.filter((game) => game === "millionaire")).toHaveLength(4);
     expect(future.filter((game) => game === "keep_4_cut_4")).toHaveLength(2);
     expect(future).not.toContain("blind_resume");
     expect(future).not.toContain("blind_rank_5");
@@ -300,12 +306,12 @@ describe("Football Today’s Challenge session", () => {
   });
 
   it("persists complete future Daily Double child setups for immutable gameplay", () => {
-    const publication = buildFootballTodayPersistenceSetup("2026-09-17");
+    const publication = buildFootballTodayPersistenceSetup("2026-10-01");
     const initial = publication.publicSetup.initial_state as JsonRecord;
     const rankChild = publication.privateSetupEvidence.blind_rank_5 as JsonRecord;
     const keepChild = publication.privateSetupEvidence.keep_4_cut_4 as JsonRecord;
 
-    expect(publication.scheduleVersion).toBe(FOOTBALL_TODAY_SCHEDULE_VERSION);
+    expect(publication.scheduleVersion).toBe(FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION);
     expect(publication.gameType).toBe("keep_4_cut_4");
     expect(initial.combo_stage).toBe("blind_rank_5");
     expect((initial.blind_rank_5 as JsonRecord).complete).toBe(false);
