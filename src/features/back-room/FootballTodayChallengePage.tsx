@@ -595,7 +595,7 @@ export default function FootballTodayChallengePage() {
     return () => { active = false; };
   }, [editWeeklyAuction, repository, signedIn, weeklyRepository]);
 
-  async function submitWeeklyBids(bids: Record<1 | 2 | 3, number>) {
+  async function submitWeeklyBids(bids: Record<number, number>) {
     if (!weeklyRepository || weeklyBusy) return;
     setWeeklyBusy(true);
     setWeeklyError(null);
