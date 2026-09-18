@@ -14,21 +14,27 @@ import {
 } from "../games/millionaireAuthority";
 import {
   MILLIONAIRE_TIME_BANK_MS,
-  millionaireCasualRun,
   millionaireTimeoutTransition,
   type MillionaireLeague,
 } from "./MillionaireCasualModel";
+import {
+  MILLIONAIRE_DAILY_RUN_COUNT,
+  millionaireDailyRun,
+} from "./millionaireDailyQuestionBank";
 import type {
   OfficialDailyAdvanceResult,
   OfficialDailyRuntimeContext,
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v1" as const;
+export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v2-10-run-rotation" as const;
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
-export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
+export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
+export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
 const FOOTBALL_MILLIONAIRE_CYCLE_LENGTH = 22;
 const FOOTBALL_MILLIONAIRE_SLOTS = [0, 7, 13, 19] as const;
+const UFC_MILLIONAIRE_CYCLE_LENGTH = 26;
+const UFC_MILLIONAIRE_SLOTS = [0, 8, 15, 23] as const;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -52,21 +58,65 @@ function centralDayNumber(day: string) {
   return Math.floor(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])) / 86_400_000);
 }
 
-export function millionaireFootballDailyLeague(day: string): "cfb" | "nfl" {
-  const offset = centralDayNumber(day) - centralDayNumber(FOOTBALL_MILLIONAIRE_DAILY_ANCHOR);
-  const cycle = Math.floor(offset / FOOTBALL_MILLIONAIRE_CYCLE_LENGTH);
-  const slot = ((offset % FOOTBALL_MILLIONAIRE_CYCLE_LENGTH) + FOOTBALL_MILLIONAIRE_CYCLE_LENGTH)
-    % FOOTBALL_MILLIONAIRE_CYCLE_LENGTH;
-  const position = FOOTBALL_MILLIONAIRE_SLOTS.indexOf(slot as (typeof FOOTBALL_MILLIONAIRE_SLOTS)[number]);
+function appearanceIndex(
+  day: string,
+  anchor: string,
+  cycleLength: number,
+  slots: readonly number[],
+  label: string,
+) {
+  const offset = centralDayNumber(day) - centralDayNumber(anchor);
+  const cycle = Math.floor(offset / cycleLength);
+  const slot = ((offset % cycleLength) + cycleLength) % cycleLength;
+  const position = slots.indexOf(slot);
   if (position < 0) {
-    throw new Error(`Football Millionaire is not scheduled on ${day}.`);
+    throw new Error(`${label} Millionaire is not scheduled on ${day}.`);
   }
-  const appearance = cycle * FOOTBALL_MILLIONAIRE_SLOTS.length + position;
-  return appearance % 2 === 0 ? "cfb" : "nfl";
+  return cycle * slots.length + position;
+}
+
+export function millionaireFootballDailyAppearance(day: string) {
+  return appearanceIndex(
+    day,
+    FOOTBALL_MILLIONAIRE_DAILY_ANCHOR,
+    FOOTBALL_MILLIONAIRE_CYCLE_LENGTH,
+    FOOTBALL_MILLIONAIRE_SLOTS,
+    "Football",
+  );
+}
+
+export function millionaireUfcDailyAppearance(day: string) {
+  return appearanceIndex(
+    day,
+    MILLIONAIRE_DAILY_ANCHOR,
+    UFC_MILLIONAIRE_CYCLE_LENGTH,
+    UFC_MILLIONAIRE_SLOTS,
+    "UFC",
+  );
+}
+
+export function millionaireFootballDailyLeague(day: string): "cfb" | "nfl" {
+  return millionaireFootballDailyAppearance(day) % 2 === 0 ? "cfb" : "nfl";
 }
 
 export function millionaireDailyLeague(sport: "ufc" | "football", day: string): MillionaireLeague {
   return sport === "ufc" ? "ufc" : millionaireFootballDailyLeague(day);
+}
+
+export function millionaireDailyLeagueAppearance(sport: "ufc" | "football", day: string) {
+  if (sport === "ufc") return millionaireUfcDailyAppearance(day);
+  return Math.floor(millionaireFootballDailyAppearance(day) / 2);
+}
+
+export function millionaireDailyRunIndex(sport: "ufc" | "football", day: string) {
+  const appearance = millionaireDailyLeagueAppearance(sport, day);
+  return ((appearance % MILLIONAIRE_DAILY_RUN_COUNT) + MILLIONAIRE_DAILY_RUN_COUNT)
+    % MILLIONAIRE_DAILY_RUN_COUNT;
+}
+
+export function millionaireDailyHostNumber(sport: "ufc" | "football", day: string) {
+  const appearance = millionaireDailyLeagueAppearance(sport, day);
+  return ((appearance % 3) + 3) % 3 + 1;
 }
 
 function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string) {
@@ -184,7 +234,9 @@ export function buildMillionaireDailySetup(
   scheduleVersion: string,
 ): OfficialDailySetupPublication {
   const league = millionaireDailyLeague(sport, day);
-  const run = millionaireCasualRun(league);
+  const runIndex = millionaireDailyRunIndex(sport, day);
+  const hostNumber = millionaireDailyHostNumber(sport, day);
+  const run = millionaireDailyRun(league, runIndex);
   assertMillionaireRun(run);
   const state = createMillionaireState(run);
   const proof = proofFor(run, league, day, scheduleVersion);
@@ -195,6 +247,8 @@ export function buildMillionaireDailySetup(
     publicSetup: {
       runtime_version: MILLIONAIRE_DAILY_CONTENT_VERSION,
       league,
+      run_number: runIndex + 1,
+      host_number: hostNumber,
       question_count: 8,
       time_bank_ms: MILLIONAIRE_TIME_BANK_MS,
       questions: run.map(millionairePublicQuestion),
@@ -202,6 +256,8 @@ export function buildMillionaireDailySetup(
     },
     revealSetup: {
       league,
+      run_number: runIndex + 1,
+      host_number: hostNumber,
       questions: run.map((question) => ({
         id: question.id,
         correct_choice_id: question.correctChoiceId,
@@ -210,6 +266,8 @@ export function buildMillionaireDailySetup(
     },
     privateSetupEvidence: {
       league,
+      run_number: runIndex + 1,
+      host_number: hostNumber,
       proof,
       run,
     },
