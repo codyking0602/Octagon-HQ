@@ -168,4 +168,4 @@ See `docs/nfl-build-qb-weekly-economy-audit.md`.
 
 This remains calibration/design work rather than a live Weekly cutover.
 
-Runtime implementation must reuse the existing sealed-bid Weekly architecture, use the repaired Dan Fouts canonical identity, preserve the existing field-lock behavior, and keep future cards / grades server-owned.
+Runtime implementation must reuse the existing sealed-bid Weekly architecture, repair Dan Fouts's canonical identity in the runtime implementation, preserve the existing field-lock behavior, and keep future cards / grades server-owned.
