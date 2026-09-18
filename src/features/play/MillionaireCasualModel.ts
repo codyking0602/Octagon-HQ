@@ -45,19 +45,19 @@ export const MILLIONAIRE_BASE_PTS = {
 
 export const MILLIONAIRE_HOSTS: Record<MillionaireLeague, readonly [string, string, string]> = {
   cfb: [
-    "/assets/millionaire/hosts/cfb-host-1.webp",
-    "/assets/millionaire/hosts/cfb-host-2.webp",
-    "/assets/millionaire/hosts/cfb-host-3.webp",
+    "/assets/millionaire/Cfb1.png",
+    "/assets/millionaire/Cfb2.png",
+    "/assets/millionaire/Cfb3.png",
   ],
   nfl: [
-    "/assets/millionaire/hosts/nfl-host-1.webp",
-    "/assets/millionaire/hosts/nfl-host-2.webp",
-    "/assets/millionaire/hosts/nfl-host-3.webp",
+    "/assets/millionaire/Nfl1.png",
+    "/assets/millionaire/Nfl2.png",
+    "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png",
   ],
   ufc: [
-    "/assets/millionaire/hosts/ufc-host-1.webp",
-    "/assets/millionaire/hosts/ufc-host-2.webp",
-    "/assets/millionaire/hosts/ufc-host-3.webp",
+    "/assets/millionaire/Ufc1.png",
+    "/assets/millionaire/Ufc2.png",
+    "/assets/millionaire/Ufc3.png",
   ],
 };
 

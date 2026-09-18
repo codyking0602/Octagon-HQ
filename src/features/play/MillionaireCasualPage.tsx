@@ -21,6 +21,7 @@ import {
   millionaireCasualRun,
   millionaireLeagueLabel,
   millionaireMoneyLabel,
+  millionaireHostAsset,
   millionaireTimeLabel,
   millionaireTimeoutTransition,
   type MillionaireLeague,
@@ -189,7 +190,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const levelNumber = gameState.currentQuestionIndex + 1;
   const q8 = level === "Q8";
   const stageScale = useMillionaireStageScale();
-  const stageBackground = "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png";
+  const stageBackground = millionaireHostAsset(league);
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
 
   function schedule(callback: () => void, delay: number) {
