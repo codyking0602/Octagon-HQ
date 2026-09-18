@@ -317,8 +317,12 @@
 }
 
 .millionaire-shell--fixed-stage .millionaire-lifelines button:first-child b {
-  transform: translateY(-7px);
+  transform: none;
   font-size: 22px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-lifelines button:first-child span {
+  display: none;
 }
 
 .millionaire-shell--fixed-stage .millionaire-lifelines button:nth-child(2) b {
