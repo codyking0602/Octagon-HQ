@@ -486,6 +486,39 @@ language sql stable security definer set search_path='' as $$
 $$;
 revoke all on function private.cfb_best_teams_weekly_pool(date) from public,anon,authenticated;
 
+alter table private.football_weekly_auction_board
+  drop constraint if exists football_weekly_auction_board_season_reference_fkey;
+
+create or replace function private.validate_football_weekly_auction_board_authority()
+returns trigger language plpgsql set search_path='' as $
+begin
+  if new.week_start >= date '2026-09-22' then
+    if not exists(
+      select 1
+      from private.cfb_best_teams_v2_authority
+      where season_reference=new.season_reference
+    ) then
+      raise exception 'Weekly Auction v2 board reference is outside the v2 authority';
+    end if;
+  elsif not exists(
+    select 1
+    from private.draft_room_cfb_best_teams_pool
+    where season_reference=new.season_reference
+  ) then
+    raise exception 'Weekly Auction legacy board reference is outside the legacy authority';
+  end if;
+  return new;
+end;
+$;
+
+drop trigger if exists validate_football_weekly_auction_board_authority
+  on private.football_weekly_auction_board;
+create trigger validate_football_weekly_auction_board_authority
+before insert or update of week_start,season_reference
+on private.football_weekly_auction_board
+for each row execute function private.validate_football_weekly_auction_board_authority();
+revoke all on function private.validate_football_weekly_auction_board_authority() from public,anon,authenticated;
+
 CREATE OR REPLACE FUNCTION private.materialize_football_weekly_auction_week(p_week_start date)
  RETURNS void
  LANGUAGE plpgsql
