@@ -234,10 +234,10 @@ During full-population grading:
 
 Examples:
 
-- If Jay Cutler's Arm is 96, any quarterback graded 97+ must genuinely have a stronger functional arm case.
-- If Tom Brady's Mobility is 71, slower runners with materially worse pocket movement should not automatically grade above him just because they accumulated more incidental rushing yards.
-- If Cam Newton's Accuracy is 77, a quarterback placed below him must have a genuinely weaker repeatable NFL placement profile.
-- If Alex Smith's Processing is 91, a 93+ grade should reflect clearly stronger read/decision capability, not merely a more successful career.
+- If Jay Cutler's Arm is 95, any quarterback graded above him must genuinely have a stronger functional arm case.
+- If Tom Brady's Mobility is 72, slower runners with materially worse pocket movement should not automatically grade above him just because they accumulated more incidental rushing yards.
+- If Cam Newton's Accuracy is 68.5, a quarterback placed below him must have a genuinely weaker repeatable NFL placement profile.
+- If Alex Smith's Processing is 91.5, a materially higher grade should reflect clearly stronger read/decision capability, not merely a more successful career.
 
 ## Next step
 
