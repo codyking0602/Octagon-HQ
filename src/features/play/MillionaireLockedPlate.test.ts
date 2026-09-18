@@ -33,6 +33,10 @@ describe("Millionaire locked plate presentation contract", () => {
     expect(refineCss).toContain("linear-gradient(180deg, #021435, #010818)");
   });
 
+  it("matches lifeline hit-state overlays to the rendered locked-plate circles", () => {
+    expect(refineCss).toContain("aspect-ratio: 1.137 / 1;");
+  });
+
   it("keeps live answer text clear of the baked A-D labels", () => {
     expect(refineCss).toContain("grid-template-columns: 17% 83%;");
   });
