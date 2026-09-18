@@ -66,7 +66,7 @@ function answerCorrect(run: MillionaireRun, state: MillionaireState, count = 1) 
 describe("Millionaire locked ladder and score contract", () => {
   it("uses the locked checkpoints, walk-away gates, money ladder, and leaderboard ladder", () => {
     expect(MILLIONAIRE_CHECKPOINT_LEVELS).toEqual([3, 6]);
-    expect(MILLIONAIRE_WALK_AWAY_QUESTION_LEVELS).toEqual([7, 8]);
+    expect(MILLIONAIRE_WALK_AWAY_QUESTION_LEVELS).toEqual([8]);
     expect(MILLIONAIRE_LIFELINE_PENALTY).toBe(2);
     expect(MILLIONAIRE_LEVELS.map((level) => MILLIONAIRE_MONEY_BY_LEVEL[level]))
       .toEqual([500, 1_000, 5_000, 10_000, 50_000, 100_000, 500_000, 1_000_000]);
@@ -140,7 +140,7 @@ describe("Millionaire progression and settlement", () => {
     });
   });
 
-  it("settles wrong answers to zero before Q3, $5k after Q3, and $100k after Q6", () => {
+  it("settles wrong answers to checkpoints and makes Q8 a real 90-to-80 risk", () => {
     const run = fixtureRun();
 
     const q1Loss = advanceMillionaireRuntime(run, createMillionaireState(run), { type: "answer", choiceId: "B" });
@@ -155,23 +155,26 @@ describe("Millionaire progression and settlement", () => {
     const afterQ6 = answerCorrect(run, createMillionaireState(run), 6);
     const q7Loss = advanceMillionaireRuntime(run, afterQ6, { type: "answer", choiceId: "B" });
     expect(q7Loss.state).toMatchObject({ status: "lost", finalMoney: 100_000, baseScore: 80, score: 80 });
+
+    const afterQ7 = answerCorrect(run, createMillionaireState(run), 7);
+    const q8Loss = advanceMillionaireRuntime(run, afterQ7, { type: "answer", choiceId: "B" });
+    expect(q8Loss.state).toMatchObject({ status: "lost", finalMoney: 100_000, baseScore: 80, score: 80 });
   });
 
-  it("allows walking away only before Q7 and Q8 and preserves the earned money and score", () => {
+  it("offers the walk-away decision only before Q8 and preserves the earned 90-point result", () => {
     const run = fixtureRun();
     const initial = createMillionaireState(run);
     expect(millionaireCanWalkAway(initial)).toBe(false);
-    expect(() => advanceMillionaireRuntime(run, initial, { type: "walk_away" })).toThrow("only available before Q7 or Q8");
+    expect(() => advanceMillionaireRuntime(run, initial, { type: "walk_away" })).toThrow("only available before Q8");
 
     const beforeQ7 = answerCorrect(run, initial, 6);
-    expect(millionaireCanWalkAway(beforeQ7)).toBe(true);
-    expect(advanceMillionaireRuntime(run, beforeQ7, { type: "walk_away" }).state)
-      .toMatchObject({ status: "walked-away", finalMoney: 100_000, score: 80 });
+    expect(millionaireCanWalkAway(beforeQ7)).toBe(false);
+    expect(() => advanceMillionaireRuntime(run, beforeQ7, { type: "walk_away" })).toThrow("only available before Q8");
 
     const beforeQ8 = answerCorrect(run, initial, 7);
     expect(millionaireCanWalkAway(beforeQ8)).toBe(true);
     expect(advanceMillionaireRuntime(run, beforeQ8, { type: "walk_away" }).state)
-      .toMatchObject({ status: "walked-away", finalMoney: 500_000, score: 90 });
+      .toMatchObject({ status: "walked-away", finalMoney: 500_000, baseScore: 90, score: 90 });
   });
 
   it("awards $1,000,000 and 100 for a perfect no-lifeline run", () => {
@@ -264,14 +267,14 @@ describe("Millionaire lifeline invariants", () => {
     expect(recovered.state.questionState.doubleDipWrongChoiceIds).toEqual([]);
   });
 
-  it("disables walking away on a Q7/Q8 question once Double Dip is activated", () => {
+  it("does not offer walking away on Q7, including after Double Dip is activated", () => {
     const run = fixtureRun();
     const beforeQ7 = answerCorrect(run, createMillionaireState(run), 6);
-    expect(millionaireCanWalkAway(beforeQ7)).toBe(true);
+    expect(millionaireCanWalkAway(beforeQ7)).toBe(false);
 
     const doubleDip = advanceMillionaireRuntime(run, beforeQ7, { type: "use_lifeline", lifeline: "double-dip" }).state;
     expect(millionaireCanWalkAway(doubleDip)).toBe(false);
-    expect(() => advanceMillionaireRuntime(run, doubleDip, { type: "walk_away" })).toThrow("not during Double Dip");
+    expect(() => advanceMillionaireRuntime(run, doubleDip, { type: "walk_away" })).toThrow("only available before Q8");
   });
 
   it("disables all lifelines on Q8", () => {
