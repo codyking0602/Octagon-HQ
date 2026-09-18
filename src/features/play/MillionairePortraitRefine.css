@@ -1,5 +1,6 @@
 /* Locked Millionaire landscape composition.
-   The approved reference plate is the visual target; gameplay UI remains live above it. */
+   The approved reference plate owns the studio art and chrome.
+   Live DOM is limited to changing text, hit targets, and gameplay state. */
 
 .millionaire-shell {
   inset:
@@ -15,11 +16,16 @@
 }
 
 .millionaire-shell--game {
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh;
+  border-radius: 0;
+  box-shadow: none;
   isolation: isolate;
   background: #01050f;
 }
 
-/* The approved composition is a real DOM image, not a CSS recreation. */
 .millionaire-shell--game::after {
   content: none;
 }
@@ -36,7 +42,7 @@
   max-width: none;
   object-fit: fill;
   z-index: 1;
-  border-radius: inherit;
+  border-radius: 0;
   pointer-events: none;
   user-select: none;
 }
@@ -53,91 +59,499 @@
 
 .millionaire-shell--game .millionaire-arena,
 .millionaire-shell--game .millionaire-crowd,
-.millionaire-shell--game .millionaire-host-stage {
-  display: none;
-}
-
-/* The locked reference does not need a separate HQ mark. */
+.millionaire-shell--game .millionaire-host-stage,
 .millionaire-shell--game .millionaire-hq {
   display: none;
 }
 
-/* Match the approved reference geometry rather than reinterpreting it. */
+/* The CFB plate already contains the approved title exactly. NFL/UFC only replace
+   the small league line; the baked MILLIONAIRE wordmark remains untouched. */
 .millionaire-shell--game .millionaire-title {
-  right: 1.8%;
-  top: 2.2%;
-  width: 22.2%;
+  right: 3.15%;
+  top: 2.15%;
+  width: 18.8%;
+  padding: 0;
+  background: transparent;
+  text-align: center;
+  text-shadow: 0 3px 10px #000;
+  pointer-events: none;
 }
 
+.millionaire-shell--game .millionaire-title::after {
+  display: none;
+}
+
+.millionaire-shell--game .millionaire-title strong {
+  visibility: hidden;
+}
+
+.millionaire-shell--game .millionaire-title span {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(0.58rem, 1.34vw, 1.25rem);
+  line-height: 1.08;
+}
+
+.millionaire-shell--game:not(.millionaire-shell--cfb) .millionaire-title::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 8%;
+  right: 8%;
+  top: -8%;
+  height: 36%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(3, 12, 31, 0.99), rgba(4, 18, 45, 0.98));
+  box-shadow: 0 0 10px 8px rgba(3, 14, 34, 0.9);
+}
+
+.millionaire-shell--game.millionaire-shell--cfb .millionaire-title {
+  visibility: hidden;
+}
+
+/* Keep the baked stakes plate. Q1 is already exact; later questions repaint only
+   the inner text field, never the gold frame. */
 .millionaire-shell--game .millionaire-stakes {
-  left: 35.4%;
+  left: 38.4%;
   top: 3.1%;
-  width: 21.2%;
-  min-height: 11.2%;
+  width: 23.2%;
+  min-height: 11.6%;
+  border: 0;
+  clip-path: none;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: 0 3px 10px #000;
+  pointer-events: none;
 }
 
+.millionaire-shell--game .millionaire-stakes::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 13%;
+  right: 13%;
+  top: 10%;
+  bottom: 8%;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 10%, rgba(28, 87, 176, 0.52), transparent 58%),
+    linear-gradient(180deg, rgba(7, 49, 108, 0.99), rgba(3, 24, 59, 0.99) 78%);
+  box-shadow: 0 0 12px 9px rgba(3, 25, 61, 0.82);
+}
+
+.millionaire-shell--game .millionaire-stakes strong {
+  font-size: clamp(1.35rem, 3.6vw, 3.45rem);
+  line-height: 0.95;
+}
+
+.millionaire-shell--game .millionaire-stakes span {
+  margin-top: 0.25rem;
+  font-size: clamp(0.66rem, 1.35vw, 1.22rem);
+}
+
+.millionaire-shell--game.millionaire-shell--q1 .millionaire-stakes {
+  visibility: hidden;
+}
+
+/* Keep the approved timer ring. Only the changing digits are painted over the
+   baked sample time; TIME BANK and every ring/detail stay in the locked image. */
 .millionaire-shell--game .millionaire-clock {
-  left: 43.7%;
-  top: 15.7%;
-  width: clamp(94px, 12vw, 190px);
+  left: 43.55%;
+  top: 15.95%;
+  width: 12.8%;
+  aspect-ratio: 1;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
 }
 
+.millionaire-shell--game .millionaire-clock::before,
+.millionaire-shell--game .millionaire-clock::after {
+  display: none;
+}
+
+.millionaire-shell--game .millionaire-clock div {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  text-shadow: 0 3px 12px #000;
+}
+
+.millionaire-shell--game .millionaire-clock strong {
+  position: relative;
+  z-index: 2;
+  display: block;
+  transform: translateY(-9%);
+  padding: 0.02em 0.14em;
+  font-size: clamp(1.4rem, 3.28vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.millionaire-shell--game .millionaire-clock strong::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -20% -17%;
+  border-radius: 999px;
+  background: #071c40;
+  box-shadow: 0 0 9px 7px #071c40;
+}
+
+.millionaire-shell--game .millionaire-clock span {
+  display: none;
+}
+
+.millionaire-shell--game .millionaire-clock.is-low,
+.millionaire-shell--game .millionaire-clock.is-critical {
+  box-shadow: none;
+  animation: none;
+}
+
+/* Lifeline art/icons come entirely from the locked plate. These are invisible
+   hit targets plus subtle state washes after a lifeline is used/active. */
 .millionaire-shell--game .millionaire-lifelines {
   left: 2.5%;
-  top: 14.7%;
-  width: 7.6%;
-  gap: clamp(0.42rem, 1.55vh, 0.95rem);
+  top: 14.35%;
+  width: 7.9%;
+  gap: clamp(0.36rem, 1.18vh, 0.72rem);
 }
 
+.millionaire-shell--game .millionaire-lifelines button {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  color: transparent;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+  opacity: 1;
+  filter: none;
+  cursor: pointer;
+}
+
+.millionaire-shell--game .millionaire-lifelines button b,
+.millionaire-shell--game .millionaire-lifelines button span {
+  visibility: hidden;
+}
+
+.millionaire-shell--game .millionaire-lifelines button:disabled {
+  opacity: 1;
+  filter: none;
+  cursor: default;
+}
+
+.millionaire-shell--game .millionaire-lifelines button.is-spent::after {
+  content: "";
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background: rgba(0, 5, 18, 0.58);
+  box-shadow: inset 0 0 0 2px rgba(218, 171, 60, 0.34);
+}
+
+.millionaire-shell--game .millionaire-lifelines button.is-active::after {
+  content: "";
+  position: absolute;
+  inset: 3%;
+  border: 2px solid rgba(255, 215, 104, 0.88);
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(244, 190, 54, 0.52), inset 0 0 16px rgba(244, 190, 54, 0.16);
+}
+
+/* The ladder frame, labels, checkpoint tags and values are baked. Live DOM only
+   provides the moving row highlight. Q1's baked highlight is neutralized after Q1. */
 .millionaire-shell--game .millionaire-ladder {
-  right: 2.9%;
-  top: 13.4%;
-  width: 21.2%;
-  height: 57.8%;
+  right: 1.55%;
+  top: 13.75%;
+  width: 21.25%;
+  height: 58.8%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  pointer-events: none;
 }
 
+.millionaire-shell--game .millionaire-ladder > div {
+  position: relative;
+  min-height: 0;
+  padding: 0 4%;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  opacity: 1;
+}
+
+.millionaire-shell--game .millionaire-ladder b,
+.millionaire-shell--game .millionaire-ladder strong,
+.millionaire-shell--game .millionaire-ladder span,
+.millionaire-shell--game .millionaire-ladder small {
+  visibility: hidden;
+}
+
+.millionaire-shell--game .millionaire-ladder > div.is-current::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 3px 3px;
+  background: linear-gradient(90deg, rgba(224, 150, 17, 0.2), rgba(255, 211, 89, 0.32), rgba(224, 150, 17, 0.2));
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 220, 112, 0.96),
+    inset 0 0 18px rgba(248, 190, 43, 0.34),
+    0 0 10px rgba(245, 184, 45, 0.2);
+  pointer-events: none;
+}
+
+.millionaire-shell--game:not(.millionaire-shell--q1) .millionaire-ladder > div:last-child::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 2px 3px 3px;
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(19, 72, 146, 0.18), transparent 52%),
+    linear-gradient(180deg, rgba(2, 20, 53, 0.985), rgba(1, 8, 24, 0.99));
+  box-shadow: inset 0 1px 0 rgba(226, 169, 41, 0.4);
+}
+
+.millionaire-shell--game:not(.millionaire-shell--q1) .millionaire-ladder > div:last-child b,
+.millionaire-shell--game:not(.millionaire-shell--q1) .millionaire-ladder > div:last-child strong,
+.millionaire-shell--game:not(.millionaire-shell--q1) .millionaire-ladder > div:last-child span {
+  position: relative;
+  z-index: 2;
+  visibility: visible;
+}
+
+.millionaire-shell--game:not(.millionaire-shell--q1) .millionaire-ladder > div:last-child b {
+  color: #eebd45;
+}
+
+.millionaire-shell--game:not(.millionaire-shell--q1) .millionaire-ladder > div:last-child strong,
+.millionaire-shell--game:not(.millionaire-shell--q1) .millionaire-ladder > div:last-child span {
+  color: #f8fbff;
+}
+
+.millionaire-shell--game.millionaire-shell--q1 .millionaire-ladder > div.is-current::before {
+  display: none;
+}
+
+/* Preserve the approved question plate. A soft center patch erases only the baked
+   sample prompt when live copy differs. */
 .millionaire-shell--game .millionaire-question {
-  left: 12.5%;
-  right: 24.4%;
-  bottom: 28.2%;
-  min-height: 15.6%;
-  padding: 1% 6%;
+  left: 12.4%;
+  right: 22.7%;
+  bottom: 27.0%;
+  min-height: 16.0%;
+  padding: 1% 7%;
+  clip-path: none;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  text-shadow: 0 3px 9px #000;
+  pointer-events: none;
 }
 
+.millionaire-shell--game .millionaire-question::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 11%;
+  right: 11%;
+  top: 20%;
+  bottom: 20%;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 50% 0, rgba(34, 103, 207, 0.18), transparent 58%),
+    linear-gradient(180deg, rgba(7, 49, 108, 0.995), rgba(3, 25, 62, 0.995) 82%);
+  box-shadow: 0 0 12px 10px rgba(3, 27, 66, 0.86);
+}
+
+.millionaire-shell--game .millionaire-question strong,
+.millionaire-shell--game .millionaire-question small {
+  position: relative;
+  z-index: 2;
+}
+
+.millionaire-shell--game .millionaire-question strong {
+  max-width: 92%;
+  font-size: clamp(0.92rem, 2.08vw, 2rem);
+  line-height: 1.16;
+}
+
+.millionaire-shell--game .millionaire-question.is-locked {
+  box-shadow: none;
+}
+
+/* The approved CFB Q1 copy in the plate is itself the reference. Leave it fully
+   untouched in the resting state, then switch to live masking for reveal states. */
+.millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-question::before {
+  display: none;
+}
+
+.millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-question strong {
+  visibility: hidden;
+}
+
+/* Preserve each baked answer bar and gold A-D marker. Only the changing answer text
+   gets a small interior patch. Selection/reveal states are translucent washes over
+   the approved plate rather than replacement buttons. */
 .millionaire-shell--game .millionaire-answers {
   left: 12.5%;
-  right: 13.3%;
-  bottom: 8.5%;
-  height: 18.2%;
-  gap: 1.25vh 1.4%;
+  right: 12.5%;
+  bottom: 6.7%;
+  height: 18.8%;
+  gap: clamp(0.3rem, 1.15vh, 0.62rem) 1.8%;
 }
 
-.millionaire-shell--game .millionaire-question,
 .millionaire-shell--game .millionaire-answers button {
-  box-shadow:
-    inset 0 0 0 2px #f0bd42,
-    inset 0 0 0 4px rgba(84, 54, 6, 0.48),
-    inset 0 0 22px rgba(43, 126, 242, 0.16),
-    0 5px 14px rgba(0, 0, 0, 0.48);
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  grid-template-columns: 11% 89%;
+  padding: 0 5%;
+  border: 0;
+  clip-path: polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%);
+  color: #fff;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: 0 2px 7px #000;
+  opacity: 1;
+  filter: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.millionaire-shell--game .millionaire-answers button::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 17%;
+  right: 6%;
+  top: 16%;
+  bottom: 16%;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 0, rgba(40, 119, 226, 0.16), transparent 56%),
+    linear-gradient(180deg, rgba(8, 55, 118, 0.995), rgba(3, 25, 60, 0.995) 82%);
+  box-shadow: 0 0 9px 7px rgba(4, 28, 66, 0.84);
+  pointer-events: none;
+}
+
+.millionaire-shell--game .millionaire-answers button::after {
+  content: none;
+}
+
+.millionaire-shell--game .millionaire-answers b {
+  visibility: hidden;
+}
+
+.millionaire-shell--game .millionaire-answers span {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(0.74rem, 1.68vw, 1.58rem);
+  font-weight: 720;
+  white-space: nowrap;
+}
+
+.millionaire-shell--game .millionaire-answers button:not(:disabled):active {
+  transform: scale(0.995);
+}
+
+.millionaire-shell--game .millionaire-answers button.is-selected::after,
+.millionaire-shell--game .millionaire-answers button.is-correct::after,
+.millionaire-shell--game .millionaire-answers button.is-wrong::after,
+.millionaire-shell--game .millionaire-answers button.is-removed::after,
+.millionaire-shell--game .millionaire-answers button.is-double-dip-spent::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 1px;
+  clip-path: inherit;
+  pointer-events: none;
+}
+
+.millionaire-shell--game .millionaire-answers button.is-selected::after {
+  background: rgba(232, 173, 37, 0.78);
+  box-shadow: inset 0 0 0 2px rgba(255, 239, 169, 0.9);
+}
+
+.millionaire-shell--game .millionaire-answers button.is-selected::before {
+  background: linear-gradient(180deg, rgba(239, 188, 64, 0.98), rgba(189, 126, 13, 0.98));
+}
+
+.millionaire-shell--game .millionaire-answers button.is-correct::after {
+  background: rgba(11, 112, 63, 0.82);
+  box-shadow: inset 0 0 0 2px rgba(88, 237, 143, 0.9);
+}
+
+.millionaire-shell--game .millionaire-answers button.is-correct::before {
+  background: linear-gradient(180deg, rgba(15, 128, 75, 0.98), rgba(6, 74, 43, 0.98));
+}
+
+.millionaire-shell--game .millionaire-answers button.is-wrong::after {
+  background: rgba(142, 24, 38, 0.84);
+  box-shadow: inset 0 0 0 2px rgba(255, 104, 118, 0.86);
+}
+
+.millionaire-shell--game .millionaire-answers button.is-wrong::before {
+  background: linear-gradient(180deg, rgba(151, 28, 42, 0.98), rgba(91, 16, 27, 0.98));
+}
+
+.millionaire-shell--game .millionaire-answers button.is-removed,
+.millionaire-shell--game .millionaire-answers button.is-double-dip-spent:not(.is-wrong) {
+  opacity: 1;
+  filter: none;
+}
+
+.millionaire-shell--game .millionaire-answers button.is-removed::after {
+  background: rgba(0, 5, 17, 0.9);
+}
+
+.millionaire-shell--game .millionaire-answers button.is-removed span {
+  visibility: hidden;
+}
+
+.millionaire-shell--game .millionaire-answers button.is-double-dip-spent:not(.is-wrong)::after {
+  background: rgba(0, 6, 20, 0.62);
+}
+
+.millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-answers button::before {
+  display: none;
+}
+
+.millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-answers span {
+  visibility: hidden;
 }
 
 @media (max-height: 620px) and (orientation: landscape) {
-  .millionaire-shell--game .millionaire-clock {
-    width: clamp(86px, 11.5vw, 154px);
-  }
-
   .millionaire-shell--game .millionaire-question strong {
     font-size: clamp(0.84rem, 2vw, 1.55rem);
+  }
+
+  .millionaire-shell--game .millionaire-clock strong {
+    font-size: clamp(1.35rem, 3.1vw, 2.7rem);
   }
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
-  .millionaire-shell--game .millionaire-clock {
-    width: clamp(76px, 10.8vw, 126px);
+  .millionaire-shell--game .millionaire-question strong {
+    font-size: clamp(0.78rem, 1.9vw, 1.35rem);
   }
 
-  .millionaire-shell--game .millionaire-question {
-    min-height: 15.2%;
+  .millionaire-shell--game .millionaire-clock strong {
+    font-size: clamp(1.2rem, 2.9vw, 2.35rem);
   }
 }
 
@@ -179,56 +593,4 @@
     text-shadow: 0 2px 10px #000;
     pointer-events: none;
   }
-}
-
-
-/* Cover the baked Q1 copy with the live controls at the exact locked-plate geometry.
-   This keeps the approved studio image untouched while preventing double-rendered text. */
-.millionaire-shell--game .millionaire-title {
-  right: 2.6%;
-  top: 2.2%;
-  width: 20.2%;
-  padding: 0.35% 0 0.5%;
-  background: linear-gradient(180deg, rgba(1, 10, 29, 0.98), rgba(1, 12, 31, 0.96));
-}
-
-.millionaire-shell--game .millionaire-stakes {
-  left: 35.4%;
-  top: 3.0%;
-  width: 26.1%;
-  min-height: 14.2%;
-}
-
-.millionaire-shell--game .millionaire-clock {
-  left: 43.1%;
-  top: 14.3%;
-  width: clamp(104px, 13.7vw, 206px);
-}
-
-.millionaire-shell--game .millionaire-lifelines {
-  left: 2.0%;
-  top: 14.0%;
-  width: 8.6%;
-  gap: clamp(0.35rem, 1.15vh, 0.78rem);
-}
-
-.millionaire-shell--game .millionaire-ladder {
-  right: 1.6%;
-  top: 13.0%;
-  width: 22.6%;
-  height: 58.4%;
-}
-
-.millionaire-shell--game .millionaire-question {
-  left: 12.4%;
-  right: 24.0%;
-  bottom: 27.6%;
-  min-height: 15.4%;
-}
-
-.millionaire-shell--game .millionaire-answers {
-  left: 12.4%;
-  right: 12.5%;
-  bottom: 7.2%;
-  height: 18.8%;
 }
