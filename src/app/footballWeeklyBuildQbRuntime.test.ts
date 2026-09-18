@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  "supabase/migrations/202612310148_nfl_build_qb_weekly_runtime.sql",
+  "supabase/migrations/202612310150_nfl_build_qb_weekly_runtime.sql",
   "utf8",
 );
 const grading = JSON.parse(
