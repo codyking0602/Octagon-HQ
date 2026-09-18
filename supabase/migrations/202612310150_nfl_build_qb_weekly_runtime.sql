@@ -932,6 +932,19 @@ begin
   perform private.materialize_football_weekly_auction_week(v_week_start);
   perform private.materialize_football_weekly_auction_participants(v_week_start);
 
+  if (
+    select week.subject_key='nfl-build-qb'
+      and (
+        select count(*)
+        from private.football_weekly_auction_participants participant
+        where participant.week_start=v_week_start
+      ) <> 6
+    from private.football_weekly_auction_weeks week
+    where week.week_start=v_week_start
+  ) then
+    raise exception 'NFL Build a QB Weekly requires exactly six locked participants';
+  end if;
+
   for v_due in
     select board.week_start,board.day_index
     from private.football_weekly_auction_board board
