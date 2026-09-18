@@ -9,10 +9,20 @@ function score(value: number | null | undefined) {
   return value == null ? "—" : value.toFixed(1);
 }
 
+function dailyDoubleAverage(entry: TodayChallengeStandingsEntry) {
+  const blindRank = entry.gameAverages.blindRank5 ?? null;
+  const keepCut = entry.gameAverages.keep4Cut4 ?? null;
+  if (blindRank === null && keepCut === null) return null;
+  if (blindRank === null) return keepCut;
+  if (keepCut === null) return blindRank;
+  return (blindRank + keepCut) / 2;
+}
+
 const GAME_AVERAGES = [
   ["Find the Leader", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.findLeader],
   ["Wavelength", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.wavelength],
   ["Blind Resume", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.blindResume],
+  ["Daily Double", dailyDoubleAverage],
   ["Hit the Number", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.hitTheNumber],
   ["Who Am I", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.whoAmI],
   ["Millionaire", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.millionaire],
