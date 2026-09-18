@@ -162,6 +162,9 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const level = currentQuestion?.level ?? MILLIONAIRE_LEVELS[Math.min(7, gameState.completedQuestions)]!;
   const levelNumber = gameState.currentQuestionIndex + 1;
   const q8 = level === "Q8";
+  const stagePlate = league === "ufc"
+    ? "/assets/millionaire/ufc-host-1-plate.png"
+    : "/assets/millionaire/millionaire-locked-reference.png";
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
 
   function schedule(callback: () => void, delay: number) {
@@ -271,7 +274,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
 
   return (
     <div className={`millionaire-shell millionaire-shell--game millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--${phase}`}>
-      <img className="millionaire-locked-stage" src="/assets/millionaire/millionaire-locked-reference.png" alt="" aria-hidden="true" />
+      <img className="millionaire-locked-stage" src={stagePlate} alt="" aria-hidden="true" />
       <StudioBackdrop />
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{millionaireLeagueLabel(league)} DAILY</span><strong>MILLIONAIRE</strong></header>
