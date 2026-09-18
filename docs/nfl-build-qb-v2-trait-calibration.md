@@ -55,7 +55,7 @@ These bands do not need equal populations. One trait may naturally have more 90s
 
 ## Definition
 
-**Arm measures functional NFL throwing talent: the quarterback's ability to generate useful velocity, distance, trajectory, and release solutions across NFL throws.**
+**Arm measures functional NFL throwing talent: the quarterback's ability to generate useful velocity, distance, and release solutions across NFL throws.**
 
 Evaluate:
 
@@ -64,9 +64,9 @@ Evaluate:
 - ability to attack every field level;
 - arm elasticity / torque from varied bases and arm angles;
 - ability to retain useful velocity when the platform is imperfect;
-- difficult opposite-hash, boundary, layered, and late-window throws.
+- difficult opposite-hash, boundary, and late-window throws that demand physical arm access.
 
-Do **not** grade Arm as maximum throwing distance alone.
+Do **not** grade Arm as maximum throwing distance alone. Touch, trajectory finesse, and placement quality belong primarily to Accuracy; Arm only owns the physical ability to generate the throw.
 
 Do not reward:
 - whether the quarterback chose the correct target — Processing;
@@ -77,8 +77,8 @@ A quarterback can have a huge arm and poor Accuracy or Processing. A quarterback
 
 ## Arm calibration anchors
 
-- **Patrick Mahomes — 100.0:** historical ceiling for functional arm talent because power, elasticity, trajectory variety, arm angles, and off-platform velocity all remain elite.
-- **Josh Allen — 99.5:** historical-ceiling raw power with elite functional drive ability at every field level.
+- **Josh Allen — 100.0:** historical ceiling for functional NFL arm power: rare drive velocity and distance that remain available from imperfect platforms.
+- **Patrick Mahomes — 99.5:** just below the pure-power ceiling, with exceptional velocity retention, arm-angle versatility, elasticity, and off-platform access.
 - **John Elway — 99.0:** historical power/velocity benchmark.
 - **Matthew Stafford — 98.0:** rare drive velocity, deep power, and angle/platform flexibility.
 - **Brett Favre — 97.5:** exceptional velocity and difficult-throw power.
