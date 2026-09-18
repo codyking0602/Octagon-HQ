@@ -58,6 +58,8 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(migration).toContain("array['Arm','Accuracy','Processing','Mobility']");
     expect(migration).toContain("count(*) from private.football_weekly_auction_board where week_start=p_week_start)=28");
     expect(migration).toContain("having count(*)<>7");
+    expect(migration).toContain("NFL Build a QB Weekly requires exactly six locked participants");
+    expect(migration).toContain(") <> 6");
     expect(migration).not.toContain("makeup");
     expect(gate).toContain("TODAY’S FOUR TRAITS");
   });
