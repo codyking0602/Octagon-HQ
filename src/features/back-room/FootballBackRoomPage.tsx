@@ -13,7 +13,7 @@ import type { FootballEntryState } from "./footballEntrySession";
 
 type WeeklyAuctionQuickState = Pick<
   FootballWeeklyAuctionActiveState,
-  "bankroll" | "owned_count" | "submitted_today" | "previous_final"
+  "bankroll" | "owned_count" | "submitted_today" | "previous_final" | "subject_key"
 >;
 
 function FootballWeeklyAuctionQuickAccess({ onOpen }: { onOpen: () => void }) {
@@ -54,7 +54,7 @@ function FootballWeeklyAuctionQuickAccess({ onOpen }: { onOpen: () => void }) {
           <small>WEEKLY AUCTION</small>
           <strong>EDIT BIDS</strong>
         </span>
-        <b>{state.owned_count} TEAM{state.owned_count === 1 ? "" : "S"} · {"$"}{state.bankroll} LEFT</b>
+        <b>{state.owned_count} {state.subject_key === "nfl-build-qb" ? "TRAIT" : "TEAM"}{state.owned_count === 1 ? "" : "S"} · {"$"}{state.bankroll} LEFT</b>
         <em>OPEN →</em>
       </button>
     </section>
