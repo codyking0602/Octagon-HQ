@@ -23,7 +23,7 @@ const authorityInsert = migration.slice(
   migration.indexOf("on conflict(item_reference)", migration.indexOf("insert into private.nfl_build_qb_v2_authority")),
 );
 const migratedTraitRows = new Map(
-  [...authorityInsert.matchAll(/\\('build-qb-[^']+','([^']+)','[^']+',([0-9.]+),([0-9.]+),([0-9.]+),([0-9.]+),([0-9.]+)\\)/g)]
+  [...authorityInsert.matchAll(/\('build-qb-[^']+','([^']+)','[^']+',([0-9.]+),([0-9.]+),([0-9.]+),([0-9.]+),([0-9.]+)\)/g)]
     .map((match) => [match[1], {
       Arm: Number(match[2]),
       Accuracy: Number(match[3]),
