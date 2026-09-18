@@ -55,6 +55,10 @@ This is the first broad yes-pass before trait grading. It intentionally contains
 - Troy Aikman
 - Joe Namath
 - Dan Fouts
+- Fran Tarkenton
+- Bart Starr
+- Jim Kelly
+- Ken Stabler
 
 ### 2000–2004 selective core
 
@@ -72,6 +76,8 @@ This is the first broad yes-pass before trait grading. It intentionally contains
 - Carson Palmer
 - Rich Gannon
 - Matt Hasselbeck
+- Chad Pennington
+- Jake Delhomme
 
 ### 2005–2009 broader selective core
 
@@ -85,6 +91,7 @@ This is the first broad yes-pass before trait grading. It intentionally contains
 - Ryan Fitzpatrick
 - Mark Sanchez
 - Vince Young
+- Matt Schaub
 
 ### 2010+ full-speed recognizable pool
 
@@ -142,6 +149,15 @@ This is the first broad yes-pass before trait grading. It intentionally contains
 - Johnny Manziel
 - Will Levis
 - Case Keenum
+- Jacoby Brissett
+- Blaine Gabbert
+- Josh Rosen
+- Sam Howell
+- Desmond Ridder
+- Malik Willis
+- Spencer Rattler
+- Drew Lock
+- Dwayne Haskins
 - Kenny Pickett
 - Michael Penix Jr.
 - J.J. McCarthy
@@ -149,39 +165,63 @@ This is the first broad yes-pass before trait grading. It intentionally contains
 - Jaxson Dart
 - Shedeur Sanders
 
-**First-pass yes count: 96.**
+**Proposed population count after second pass: 112.**
 
 This count is an output of the first editorial pass, not a target.
 
-## Borderline / second-pass review
+## Second-pass decisions
 
-These names are not in the first-pass 96, but should be explicitly reviewed before population lock:
+### Added after review
 
-- Ken Stabler
+- Fran Tarkenton — clears the pre-2000 bar as an all-time-level quarterback and recognizable historical name.
+- Bart Starr — clears the pre-2000 bar as an iconic championship-era quarterback.
+- Jim Kelly — clears the pre-2000 bar as a highly recognizable Hall-of-Fame-level quarterback.
+- Ken Stabler — clears the pre-2000 bar because the MVP / championship / Raiders identity is strong enough.
+- Chad Pennington — 2000s accuracy specialist with a distinct Build a QB profile.
+- Jake Delhomme — recognizable 2000s starter with a Super Bowl identity hook.
+- Matt Schaub — recognizable 2005-09-era starter whose peak extends into the full-speed 2010 window.
+- Jacoby Brissett — modern recognizable lower-tier starter / journeyman.
+- Blaine Gabbert — modern recognizable first-round bust / lower-tier card.
+- Josh Rosen — modern recognizable first-round bust / lower-tier card.
+- Sam Howell — recent recognizable starter.
+- Desmond Ridder — recent recognizable starter.
+- Malik Willis — recent recognizable specialist with a distinct physical-tool profile.
+- Spencer Rattler — recent recognizable quarterback with a distinct arm-talent profile.
+- Drew Lock — modern recognizable lower-tier quarterback with a clear arm-strength identity.
+- Dwayne Haskins — modern recognizable first-round quarterback with enough NFL/scouting evidence for a legitimate trait profile.
+
+### Cut after review
+
 - Ken Anderson
 - Len Dawson
 - Sonny Jurgensen
 - Bob Griese
 - Drew Bledsoe
 - Jeff Garcia
-- Chad Pennington
-- Matt Schaub
 - Jake Plummer
 - Kerry Collins
 - Vinny Testaverde
 - Matt Cassel
-- Jacoby Brissett
 - Josh McCown
 - Brian Hoyer
-- Blaine Gabbert
-- Josh Rosen
-- Sam Howell
-- Desmond Ridder
-- Malik Willis
-- Spencer Rattler
 - Tyler Shough
+- Joe Theismann
+- Boomer Esiason
+- Otto Graham
+- Y.A. Tittle
+- Brad Johnson
+- Trent Green
+- Mark Brunell
+- Aaron Brooks
+- Marc Bulger
+- David Garrard
+- Josh Freeman
+- Paxton Lynch
+- EJ Manuel
+- Mason Rudolph
+- Joe Milton III
 
-The older names face the stronger era bar. The modern/borderline names face the recognition/usefulness bar.
+The cuts are not claims that these quarterbacks were poor players. They fail this subject's combined era/recognition/usefulness bar relative to the kept population.
 
 ## Obvious completeness rule
 
@@ -193,11 +233,8 @@ Examples include Justin Fields, Robert Griffin III, Zach Wilson, Anthony Richard
 
 Therefore the 122-QB historical list is evidence and a candidate source, not a population ceiling.
 
-## Next population step
+## Population gate before grading
 
-Before any grading:
+The editorial membership pass is now proposed at **112 quarterbacks**. Before grading begins, run one final identity/binding validation on the 112 names and treat any technical identity gap as a registry repair problem, not a reason to silently remove a player.
 
-1. Validate every provisional YES identity against the canonical registry / exact source binding.
-2. Resolve the remaining borderline list using the locked era/recognition curve.
-3. Freeze the final population.
-4. Only then define and calibrate Arm, Accuracy, Processing, and Mobility.
+Once that validation is clean, freeze population and move to trait definitions and anchor calibration for Arm, Accuracy, Processing, and Mobility.
