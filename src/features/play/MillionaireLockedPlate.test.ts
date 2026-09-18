@@ -5,8 +5,11 @@ const pageSource = readFileSync("src/features/play/MillionaireCasualPage.tsx", "
 const refineCss = readFileSync("src/features/play/MillionairePortraitRefine.css", "utf8");
 
 describe("Millionaire locked plate presentation contract", () => {
-  it("keeps the committed locked PNG as the game plate", () => {
-    expect(pageSource).toContain('src="/assets/millionaire/millionaire-locked-reference.png"');
+  it("uses the UFC host 1 plate while keeping the approved reference for football", () => {
+    expect(pageSource).toContain('league === "ufc"');
+    expect(pageSource).toContain('"/assets/millionaire/ufc-host-1-plate.png"');
+    expect(pageSource).toContain('"/assets/millionaire/millionaire-locked-reference.png"');
+    expect(pageSource).toContain('src={stagePlate}');
   });
 
   it("exposes league, level, and phase state without rebuilding the plate", () => {
