@@ -19,7 +19,7 @@ begin
     or v_ufc.sport <> 'ufc'
     or v_ufc.starts_on <> date '2026-09-19'
     or v_ufc.anchor_day <> date '2026-09-19'
-    or coalesce(array_length(v_ufc.game_cycle, 1), 0) <> 28 then
+    or coalesce(array_length(v_ufc.game_cycle, 1), 0) <> 26 then
     raise exception 'UFC Millionaire Daily schedule identity is invalid: %', row_to_json(v_ufc);
   end if;
 
@@ -29,7 +29,7 @@ begin
     or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'hit_the_number') <> 4
     or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'who_am_i') <> 4
     or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'millionaire') <> 4
-    or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'keep_4_cut_4') <> 2 then
+    or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'keep_4_cut_4') <> 0 then
     raise exception 'UFC Millionaire Daily mix is invalid: %', v_ufc.game_cycle;
   end if;
 
@@ -37,7 +37,7 @@ begin
     or v_football.sport <> 'football'
     or v_football.starts_on <> date '2026-09-19'
     or v_football.anchor_day <> date '2026-09-19'
-    or coalesce(array_length(v_football.game_cycle, 1), 0) <> 24 then
+    or coalesce(array_length(v_football.game_cycle, 1), 0) <> 22 then
     raise exception 'Football Millionaire Daily schedule identity is invalid: %', row_to_json(v_football);
   end if;
 
@@ -46,7 +46,7 @@ begin
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'hit_the_number') <> 4
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'who_am_i') <> 4
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'millionaire') <> 4
-    or (select count(*) from unnest(v_football.game_cycle) game where game = 'keep_4_cut_4') <> 2
+    or (select count(*) from unnest(v_football.game_cycle) game where game = 'keep_4_cut_4') <> 0
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'blind_resume') <> 0 then
     raise exception 'Football Millionaire Daily mix is invalid: %', v_football.game_cycle;
   end if;
