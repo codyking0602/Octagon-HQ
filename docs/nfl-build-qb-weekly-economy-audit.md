@@ -149,7 +149,7 @@ This remains calibration/design work only.
 
 Before live wiring:
 
-1. repair Dan Fouts and Jim Kelly canonical identity bindings;
+1. use the repaired Dan Fouts canonical identity; Jim Kelly already resolves through the Pro Hall historical seed;
 2. implement the one-pass-per-trait state and validation in the existing Weekly backend;
 3. generalize the current completion-preserving bankroll helper from three generic teams to four required trait slots;
 4. verify six locked participants and late-join exclusion;
