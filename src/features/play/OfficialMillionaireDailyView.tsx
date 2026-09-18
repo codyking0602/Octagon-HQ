@@ -96,7 +96,9 @@ export function OfficialMillionaireDailyView({
     Math.max(0, Number(state.time_remaining_ms ?? MILLIONAIRE_TIME_BANK_MS)),
   );
   const [timeRemainingMs, setTimeRemainingMs] = useState(initialTime);
-  const [walkPromptOpen, setWalkPromptOpen] = useState(false);
+  const [walkPromptOpen, setWalkPromptOpen] = useState(
+    currentIndex === 7 && completedQuestions === 7 && status === "playing",
+  );
   const [statSheetOpen, setStatSheetOpen] = useState(false);
   const timeoutSent = useRef(false);
   const priorIndex = useRef(currentIndex);
