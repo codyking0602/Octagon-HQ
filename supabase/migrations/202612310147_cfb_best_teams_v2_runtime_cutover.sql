@@ -475,6 +475,14 @@ from private.cfb_best_teams_v2_authority
 on conflict(item_reference) do update set subject_key=excluded.subject_key,season_year=excluded.season_year,primary_name=excluded.primary_name,
 board_bucket=excluded.board_bucket,identity_group=excluded.identity_group,display_label=excluded.display_label,hidden_grade=excluded.hidden_grade;
 
+alter table private.football_weekly_auction_board
+  drop constraint if exists football_weekly_auction_board_season_reference_fkey;
+alter table private.football_weekly_auction_board
+  add constraint football_weekly_auction_board_item_reference_fkey
+  foreign key (season_reference)
+  references private.football_weekly_auction_items(item_reference)
+  on delete restrict;
+
 create or replace function private.cfb_best_teams_weekly_pool(p_week_start date)
 returns table(season_reference text,season_year integer,school text,conference_bucket text,display_label text,hidden_grade numeric)
 language sql stable security definer set search_path='' as $$
