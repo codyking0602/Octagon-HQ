@@ -2,7 +2,9 @@
 
 ## Status
 
-Working population pass only. No trait grades are changed or implied by membership.
+**Population locked: 112 quarterbacks.**
+
+No trait grade is created or implied by membership.
 
 This audit starts from the existing 60-QB Build a QB subject, the repository's broader 122-QB playable NFL quarterback universe, and an explicit missing-name check for recognizable modern quarterbacks that the existing 122 snapshot may not contain.
 
@@ -165,7 +167,7 @@ This is the first broad yes-pass before trait grading. It intentionally contains
 - Jaxson Dart
 - Shedeur Sanders
 
-**Proposed population count after second pass: 112.**
+**Locked population count: 112.**
 
 This count is an output of the first editorial pass, not a target.
 
@@ -233,8 +235,8 @@ Examples include Justin Fields, Robert Griffin III, Zach Wilson, Anthony Richard
 
 Therefore the 122-QB historical list is evidence and a candidate source, not a population ceiling.
 
-## Population gate before grading
+## Population validation
 
-The editorial membership pass is now proposed at **112 quarterbacks**. Before grading begins, run one final identity/binding validation on the 112 names and treat any technical identity gap as a registry repair problem, not a reason to silently remove a player.
+The final population contains **112 unique quarterbacks with zero missing canonical/source identities** after the Dan Fouts historical identity repair. Jim Kelly already resolves through the Pro Hall historical seed.
 
-Once that validation is clean, freeze population and move to trait definitions and anchor calibration for Arm, Accuracy, Processing, and Mobility.
+Population is frozen for v2 grading. Any future membership change requires an explicit population revision rather than silently changing the grading universe.
