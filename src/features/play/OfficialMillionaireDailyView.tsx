@@ -6,8 +6,8 @@ import {
 } from "../games/millionaireAuthority";
 import {
   MILLIONAIRE_BASE_PTS,
+  MILLIONAIRE_HOSTS,
   MILLIONAIRE_TIME_BANK_MS,
-  millionaireHostAsset,
   millionaireLeagueLabel,
   millionaireMoneyLabel,
   millionaireTimeLabel,
@@ -142,7 +142,8 @@ export function OfficialMillionaireDailyView({
     onAdvance({ type: "timeout", time_remaining_ms: 0 });
   }, [busy, onAdvance, projection.officialAttempt, status, timeRemainingMs]);
 
-  const stageBackground = millionaireHostAsset(league, projection.centralDay);
+  const hostNumber = Math.min(3, Math.max(1, Math.trunc(Number(setup.host_number ?? 1))));
+  const stageBackground = MILLIONAIRE_HOSTS[league][hostNumber - 1] ?? MILLIONAIRE_HOSTS[league][0];
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
   const q8 = currentIndex === 7;
   const currentMoney = Number(state.current_money ?? 0);
