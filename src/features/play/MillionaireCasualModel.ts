@@ -179,7 +179,8 @@ export function millionaireTimeoutTransition(run: MillionaireRun, state: Million
   if (state.status !== "playing") throw new Error("Millionaire run is already settled.");
   const current = currentMillionaireQuestion(run, state);
   if (!current) throw new Error("Millionaire current question is unavailable.");
-  const baseScore = millionaireScoreForCompletedQuestions(state.completedQuestions);
+  const settledCompletedQuestions = current.level === "Q8" ? 6 : state.completedQuestions;
+  const baseScore = millionaireScoreForCompletedQuestions(settledCompletedQuestions);
   const score = millionaireScoreAfterLifelines(baseScore, state.lifelinesUsed);
   return {
     state: { ...state, status: "lost", finalMoney: millionaireCheckpointMoney(state.completedQuestions), baseScore, score },
