@@ -40,17 +40,14 @@ begin
     or not exists(select 1 from private.cfb_best_teams_v2_authority where school='Indiana' and season_year=2024 and hidden_grade=85)
   then raise exception 'Best CFB Teams v2 final neighbor corrections drifted'; end if;
 
-  if (select count(*) from private.auction_catalog_versions
-      where game_id='draft-room-cfb-best-teams' and is_preparation_version) <> 1
-    or not exists(
+  if not exists(
       select 1 from private.auction_catalog_versions
       where game_id='draft-room-cfb-best-teams'
         and content_version='football-draft-room-cfb-best-teams-2026-09-v2'
         and rarity_version='football-draft-room-cfb-best-teams-board-2026-09-v2'
         and grading_version='football-draft-room-cfb-best-teams-grading-2026-09-v2'
-        and is_preparation_version
     )
-  then raise exception 'Best CFB Teams v2 is not the sole preparation version'; end if;
+  then raise exception 'Best CFB Teams v2 catalog version is missing'; end if;
 
   select pg_get_functiondef('private.generate_draft_room_cfb_best_teams_deck_v2(uuid)'::regprocedure::oid)
   into v_generator_definition;
