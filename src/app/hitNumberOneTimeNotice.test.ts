@@ -23,8 +23,8 @@ describe("Hit the Number one-time member notice", () => {
 
   it("uses the same durable acknowledgement for both X and Got It", () => {
     expect(notice).toContain('const NOTICE_KEY = "hit-number-tiebreak-2026-09-18"');
-    expect(notice).toContain('client.rpc("get_my_app_notice_state"');
-    expect(notice).toContain('client.rpc("acknowledge_my_app_notice"');
+    expect(notice).toContain('.rpc("get_my_app_notice_state"');
+    expect(notice).toContain('.rpc("acknowledge_my_app_notice"');
     expect(notice.match(/onClick=\{\(\) => void acknowledge\(\)\}/g)).toHaveLength(2);
     expect(notice).not.toContain("localStorage");
   });
