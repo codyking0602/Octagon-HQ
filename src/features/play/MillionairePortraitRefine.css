@@ -523,15 +523,6 @@
   background: rgba(0, 6, 20, 0.62);
 }
 
-.millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-answers button::before {
-  display: none;
-}
-
-.millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-answers span {
-  visibility: hidden;
-}
-
-
 /* Clean production plate.
    The artwork contains only static chrome. Live DOM owns every changing value/state,
    so this surface needs positioning and hit targets only — no text-erasing masks. */
