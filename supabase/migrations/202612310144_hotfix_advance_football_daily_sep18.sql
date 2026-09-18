@@ -18,12 +18,6 @@ declare
   v_existing_game text;
   v_attempt_count integer;
 begin
-  if v_central_today <> v_target_day then
-    raise exception 'September 18 Football Daily hotfix is only safe on %, current Central day is %',
-      v_target_day,
-      v_central_today;
-  end if;
-
   select schedule.game_cycle
   into v_source_cycle
   from private.daily_challenge_schedule_versions schedule
@@ -52,6 +46,12 @@ begin
     and daily.central_day = v_target_day;
 
   if v_existing_daily_id is not null then
+    if v_central_today <> v_target_day then
+      raise exception 'September 18 Football Daily row replacement is only safe on %, current Central day is %',
+        v_target_day,
+        v_central_today;
+    end if;
+
     if v_existing_game is distinct from 'keep_4_cut_4' then
       raise exception 'refusing to replace unexpected published Football Daily game % on %',
         v_existing_game,
