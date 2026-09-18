@@ -80,17 +80,17 @@ A quarterback can have a huge arm and poor Accuracy or Processing. A quarterback
 - **Josh Allen — 100.0:** historical ceiling for functional NFL arm power: rare drive velocity and distance that remain available from imperfect platforms.
 - **Patrick Mahomes — 99.5:** just below the pure-power ceiling, with exceptional velocity retention, arm-angle versatility, elasticity, and off-platform access.
 - **John Elway — 99.0:** historical power/velocity benchmark.
+- **Anthony Richardson — 98.5:** rare raw NFL power and velocity; the grade is for the demonstrated physical arm, not overall quarterback performance.
+- **Brett Favre — 98.0:** historical fastball/power benchmark.
+- **Justin Herbert — 98.0:** rare modern power and full-field drive capacity.
 - **Matthew Stafford — 98.0:** rare drive velocity, deep power, and angle/platform flexibility.
-- **Brett Favre — 97.5:** exceptional velocity and difficult-throw power.
-- **Aaron Rodgers — 97.0:** elite velocity plus unusually efficient generation from varied platforms.
-- **Justin Herbert — 97.0:** rare modern NFL power and full-field drive capacity.
-- **Michael Vick — 96.5:** exceptional velocity and deep power, especially considering release/platform variety.
-- **Jay Cutler — 96.0:** explicit specialist anchor: lower overall quarterback value does not prevent a truly elite Arm grade.
-- **Joe Flacco — 95.0:** elite deep/drive arm without the same full functional elasticity as the ceiling group.
-- **Joe Burrow — 88.0:** clearly sufficient NFL arm with good functional access, but Arm is not the defining elite tool.
-- **Drew Brees — 82.0:** strong enough to execute the full offense, but placement/processing are far more defining than raw functional power.
-
-The Cutler anchor is especially important: population tier, career greatness, and trait grade are separate.
+- **Aaron Rodgers — 97.5:** elite velocity plus unusually efficient generation from varied platforms.
+- **Dan Marino — 97.5:** elite drive velocity and release power across demanding NFL throws.
+- **Michael Vick — 97.5:** exceptional velocity and deep power from a compact release.
+- **Jay Cutler — 95.0:** specialist anchor: lower overall quarterback value does not prevent a truly elite Arm grade.
+- **Joe Flacco — 94.0:** elite deep/drive arm without the same total functional package as the ceiling group.
+- **Joe Burrow — 90.5:** high-end functional arm, but physical throwing power is not the defining trait.
+- **Drew Brees — 80.0:** functional NFL arm whose elite value came much more from placement and processing than physical power.
 
 ---
 
@@ -121,16 +121,18 @@ If a quarterback throws accurately while moving, the **movement creation** belon
 ## Accuracy calibration anchors
 
 - **Drew Brees — 100.0:** historical placement/consistency ceiling across field levels.
+- **Joe Burrow — 99.5:** modern historical-ceiling placement benchmark.
 - **Aaron Rodgers — 99.0:** rare placement precision combined with low-error consistency across difficult throws.
-- **Joe Burrow — 98.5:** modern elite placement benchmark, particularly intermediate and leverage-sensitive throws.
-- **Peyton Manning — 98.0:** elite repeatable placement with exceptional timing/location control.
-- **Tom Brady — 97.5:** elite placement, especially in timing, leverage, and pressure contexts.
-- **Tua Tagovailoa — 96.0:** high-end modern precision/anticipatory placement; scheme efficiency alone does not own the grade.
-- **C.J. Stroud — 95.5:** elite demonstrated NFL placement through his established sample.
-- **Philip Rivers — 94.5:** consistently high-level functional placement despite unconventional mechanics.
-- **Josh Allen — 90.5:** developed into a strong/high-end placement quarterback, but Accuracy remains below his Arm ceiling.
-- **Lamar Jackson — 88.5:** clearly capable NFL placement with major growth, but not an all-time Accuracy trait.
-- **Cam Newton — 77.0:** powerful throws and major playmaking value do not erase inconsistent repeatable placement.
+- **Peyton Manning — 98.5:** elite repeatable placement with exceptional timing/location control.
+- **Tom Brady — 98.5:** elite placement, especially in timing, leverage, and pressure contexts.
+- **Jayden Daniels — 97.5:** demonstrated elite early-career NFL ball location; youth does not add a bonus beyond what has been shown.
+- **Joe Montana — 98.0:** historical precision/touch benchmark.
+- **Patrick Mahomes — 96.0:** elite placement across conventional and unconventional platforms.
+- **Troy Aikman — 96.0:** historical high-end timing and placement benchmark.
+- **Tua Tagovailoa — 96.0:** elite anticipatory placement; scheme efficiency alone does not own the grade.
+- **Josh Allen — 93.5:** developed into elite placement at peak, clearly below his Arm ceiling.
+- **Lamar Jackson — 93.5:** peak version now has genuinely elite ball placement; this grade does not come from rushing value.
+- **Cam Newton — 68.5:** major physical tools and playmaking value do not erase inconsistent repeatable placement.
 
 ---
 
@@ -164,15 +166,18 @@ A quarterback can compensate for weaker Arm or Mobility with elite Processing, a
 
 - **Peyton Manning — 100.0:** historical benchmark for pre-snap command, recognition, sequencing, and control.
 - **Tom Brady — 100.0:** historical benchmark for recognition, progression, situational decision quality, and pressure answers.
-- **Drew Brees — 98.5:** elite diagnostic speed and progression/timing command.
-- **Aaron Rodgers — 98.0:** elite recognition and decision control with rare mistake avoidance at peak.
-- **Patrick Mahomes — 97.5:** elite processing plus the ability to preserve correct decisions as structure breaks down.
-- **Joe Burrow — 96.0:** elite modern timing, recognition, and progression benchmark.
-- **Matthew Stafford — 94.0:** high-end coverage recognition and difficult-window decision capability.
-- **Alex Smith — 91.0:** strong decision discipline anchor without implying elite physical traits.
-- **Jared Goff — 89.5:** high-end in-structure processing with more vulnerability when the picture changes under pressure.
-- **Michael Vick — 76.0:** extraordinary physical tools do not automatically create a high Processing grade.
-- **Johnny Manziel — 61.0:** example of severe NFL processing/structure limitations despite real improvisational talent.
+- **Aaron Rodgers — 99.0:** elite recognition and decision control with rare mistake avoidance at peak.
+- **Drew Brees — 99.0:** elite diagnostic speed and progression/timing command.
+- **Joe Montana — 99.0:** historical benchmark for timing, progression discipline, and high-leverage decision quality.
+- **Joe Burrow — 98.5:** elite modern timing, recognition, and progression benchmark.
+- **Patrick Mahomes — 98.0:** elite processing plus the ability to preserve good decisions as structure breaks down.
+- **Lamar Jackson — 95.5:** peak version reflects elite recognition and decision growth independent of his rushing value.
+- **Josh Allen — 95.5:** peak version reflects elite decision growth independent of his arm and rushing traits.
+- **Matthew Stafford — 94.5:** high-end coverage recognition and difficult-window decision capability.
+- **Alex Smith — 91.5:** strong decision-discipline anchor without implying elite physical traits.
+- **Jared Goff — 93.0:** high-end in-structure processing with more vulnerability when the picture changes under pressure.
+- **Michael Vick — 75.0:** extraordinary physical tools do not automatically create a high Processing grade.
+- **Johnny Manziel — 52.0:** severe NFL structure/decision limitations despite real improvisational talent.
 
 ---
 
@@ -201,15 +206,17 @@ Do not reward:
 
 - **Lamar Jackson — 100.0:** historical ceiling because elite rushing threat, escape ability, and creation all coexist.
 - **Michael Vick — 99.5:** historical open-field / escape benchmark with extraordinary movement stress on a defense.
-- **Kyler Murray — 98.0:** elite rushing/escape threat with exceptional short-area movement.
-- **Josh Allen — 97.0:** elite functional movement through power, scrambling, designed-run value, and creation.
-- **Steve Young — 96.0:** historical high-end combination of rushing, escape, and functional quarterback movement.
-- **Patrick Mahomes — 95.0:** not the same designed-run threat as Lamar/Kyler, but extraordinary escape, pocket manipulation, and outside-structure creation.
-- **Aaron Rodgers — 93.0:** elite prime pocket movement, rollout/escape ability, and functional scrambling without being an elite volume runner.
-- **Tony Romo — 88.0:** strong pocket/escape mobility despite not being a major designed-run weapon.
-- **Joe Burrow — 84.0:** useful pocket movement and scrambling, but movement is not a defining offensive weapon.
-- **Tom Brady — 71.0:** almost no rushing threat, but excellent subtle pocket movement keeps him well above the true statue floor.
-- **Philip Rivers — 60.0:** major movement limitation; processing and anticipation often compensated for it.
+- **Robert Griffin III — 99.0:** elite peak rushing threat and explosive movement before injuries altered the profile.
+- **Anthony Richardson — 98.5:** rare physical rushing/escape ceiling demonstrated in the NFL, with availability not counted as a trait penalty.
+- **Kyler Murray — 98.5:** elite rushing/escape threat with exceptional short-area movement.
+- **Josh Allen — 98.0:** elite functional movement through power, scrambling, designed-run value, and creation.
+- **Steve Young — 96.5:** historical high-end combination of rushing, escape, and functional quarterback movement.
+- **Patrick Mahomes — 95.5:** extraordinary escape, pocket manipulation, and outside-structure creation without Lamar-level designed-run threat.
+- **Aaron Rodgers — 92.5:** elite prime pocket movement, rollout/escape ability, and functional scrambling without being an elite volume runner.
+- **Tony Romo — 85.5:** strong pocket/escape mobility despite not being a major designed-run weapon.
+- **Joe Burrow — 83.0:** useful pocket movement and scrambling, but movement is not a defining offensive weapon.
+- **Tom Brady — 72.0:** almost no rushing threat, but excellent subtle pocket movement keeps him well above the true statue floor.
+- **Philip Rivers — 58.0:** severe movement limitation; anticipation and processing often compensated for it.
 
 ---
 
