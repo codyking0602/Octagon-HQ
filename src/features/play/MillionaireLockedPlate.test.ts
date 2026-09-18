@@ -5,8 +5,8 @@ const pageSource = readFileSync("src/features/play/MillionaireCasualPage.tsx", "
 const fixedCss = readFileSync("src/features/play/MillionaireFixedStage.css", "utf8");
 
 describe("Millionaire fixed-stage presentation contract", () => {
-  it("uses one background-only host/studio asset for every sport", () => {
-    expect(pageSource).toContain('const stageBackground = "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png"');
+  it("uses the sport-scoped rotating background host without changing fixed-stage geometry", () => {
+    expect(pageSource).toContain("const stageBackground = millionaireHostAsset(league);");
     expect(pageSource).toContain('className="millionaire-stage-background"');
     expect(pageSource).not.toContain("millionaire-locked-stage");
     expect(pageSource).not.toContain("stagePlate");
