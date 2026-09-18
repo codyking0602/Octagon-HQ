@@ -146,6 +146,20 @@ alter table private.football_weekly_auction_items
   alter column season_year drop not null,
   add column if not exists grading_inputs jsonb not null default '{}'::jsonb;
 
+-- The original catalog was intentionally CFB-only and enforced an 86-point floor.
+-- Generalize the storage range for new subjects without weakening that CFB rule.
+alter table private.football_weekly_auction_items
+  drop constraint if exists football_weekly_auction_items_hidden_grade_check,
+  drop constraint if exists football_weekly_auction_items_hidden_grade_subject_check,
+  add constraint football_weekly_auction_items_hidden_grade_subject_check check (
+    hidden_grade between 0.0 and 100.0
+    and hidden_grade * 2 = trunc(hidden_grade * 2)
+    and (
+      subject_key <> 'cfb-best-teams-since-2000'
+      or hidden_grade >= 86.0
+    )
+  );
+
 insert into private.football_weekly_auction_subjects(
   subject_key,display_name,short_label,competition_level,item_kind,
   rotation_order,eligible_from,is_active
