@@ -25,7 +25,7 @@ import type {
 } from "./todaysChallengeRuntime";
 
 export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v1" as const;
-export const MILLIONAIRE_DAILY_SCORING_VERSION = "millionaire-score-v1" as const;
+export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 const FOOTBALL_MILLIONAIRE_CYCLE_LENGTH = 22;
 const FOOTBALL_MILLIONAIRE_SLOTS = [0, 7, 13, 19] as const;
