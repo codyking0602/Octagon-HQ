@@ -281,11 +281,15 @@ for each statement execute function private.protect_cfb_best_teams_v2_authority(
 revoke all on function private.protect_cfb_best_teams_v2_authority() from public,anon,authenticated;
 
 insert into private.auction_catalog_versions(content_version,rarity_version,grading_version,is_preparation_version,game_id)
-values ('football-draft-room-cfb-best-teams-2026-09-v2','football-draft-room-cfb-best-teams-board-2026-09-v2','football-draft-room-cfb-best-teams-grading-2026-09-v2',true,'draft-room-cfb-best-teams');
+values ('football-draft-room-cfb-best-teams-2026-09-v2','football-draft-room-cfb-best-teams-board-2026-09-v2','football-draft-room-cfb-best-teams-grading-2026-09-v2',false,'draft-room-cfb-best-teams');
 update private.auction_catalog_versions
 set is_preparation_version=false
 where game_id='draft-room-cfb-best-teams'
-  and content_version<>'football-draft-room-cfb-best-teams-2026-09-v2';
+  and is_preparation_version;
+update private.auction_catalog_versions
+set is_preparation_version=true
+where game_id='draft-room-cfb-best-teams'
+  and content_version='football-draft-room-cfb-best-teams-2026-09-v2';
 
 alter table private.draft_room_cfb_best_teams_board_entries
   drop constraint if exists draft_room_cfb_best_teams_board_entries_season_reference_fkey;
