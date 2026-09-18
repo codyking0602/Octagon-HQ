@@ -200,7 +200,7 @@
       "name": "Philip Rivers",
       "Arm": 82.5,
       "Accuracy": 90.5,
-      "Processing": 96,
+      "Processing": 95,
       "Mobility": 55,
       "overall": 81
     },
@@ -296,25 +296,25 @@
       "name": "Matthew Stafford",
       "Arm": 98,
       "Accuracy": 91.5,
-      "Processing": 92.5,
+      "Processing": 94.5,
       "Mobility": 75.5,
-      "overall": 89.5
+      "overall": 90
     },
     {
       "name": "Matt Ryan",
       "Arm": 82.5,
       "Accuracy": 92.5,
-      "Processing": 97,
+      "Processing": 94.5,
       "Mobility": 68.5,
-      "overall": 85
+      "overall": 84.5
     },
     {
       "name": "Tony Romo",
       "Arm": 84,
       "Accuracy": 90.5,
-      "Processing": 90.5,
+      "Processing": 92,
       "Mobility": 85.5,
-      "overall": 87.5
+      "overall": 88
     },
     {
       "name": "Joe Flacco",
@@ -336,9 +336,9 @@
       "name": "Alex Smith",
       "Arm": 75.5,
       "Accuracy": 89,
-      "Processing": 90.5,
+      "Processing": 91.5,
       "Mobility": 87,
-      "overall": 85.5
+      "overall": 86
     },
     {
       "name": "Ryan Fitzpatrick",
@@ -424,7 +424,7 @@
       "name": "Kirk Cousins",
       "Arm": 82.5,
       "Accuracy": 92.5,
-      "Processing": 95,
+      "Processing": 94,
       "Mobility": 66.5,
       "overall": 84
     },
@@ -432,7 +432,7 @@
       "name": "Jared Goff",
       "Arm": 83.5,
       "Accuracy": 94.5,
-      "Processing": 92.5,
+      "Processing": 93,
       "Mobility": 61,
       "overall": 83
     },
@@ -472,9 +472,9 @@
       "name": "Justin Herbert",
       "Arm": 98,
       "Accuracy": 90.5,
-      "Processing": 95,
+      "Processing": 94.5,
       "Mobility": 85.5,
-      "overall": 92.5
+      "overall": 92
     },
     {
       "name": "Derek Carr",
@@ -544,9 +544,9 @@
       "name": "Brock Purdy",
       "Arm": 79.5,
       "Accuracy": 93.5,
-      "Processing": 95,
+      "Processing": 94.5,
       "Mobility": 83,
-      "overall": 88
+      "overall": 87.5
     },
     {
       "name": "Tua Tagovailoa",
@@ -623,8 +623,8 @@
     {
       "name": "Jayden Daniels",
       "Arm": 87.5,
-      "Accuracy": 98,
-      "Processing": 95,
+      "Accuracy": 97.5,
+      "Processing": 94.5,
       "Mobility": 98,
       "overall": 94.5
     },
@@ -769,8 +769,8 @@
       "Arm": 94,
       "Accuracy": 60.5,
       "Processing": 54,
-      "Mobility": 95.5,
-      "overall": 76
+      "Mobility": 94,
+      "overall": 75.5
     },
     {
       "name": "Mac Jones",
@@ -925,5 +925,5 @@
       "overall": 82.5
     }
   ],
-  "calibrationRevision": "trait-wide-scale-audit-v2"
+  "calibrationRevision": "trait-wide-pairwise-audit-v3"
 }
