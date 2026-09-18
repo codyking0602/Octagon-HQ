@@ -11,6 +11,7 @@ const bankrollFloorRepair = readFileSync("supabase/migrations/202612310130_footb
 const dynamicBankroll = readFileSync("supabase/migrations/202612310137_football_weekly_auction_dynamic_bankroll.sql", "utf8");
 const fullPoolRepair = readFileSync("supabase/migrations/202612310138_football_weekly_auction_full_233_pool.sql", "utf8");
 const auctionTableMigration = readFileSync("supabase/migrations/202612310142_football_weekly_auction_table.sql", "utf8");
+const fieldLockMigration = readFileSync("supabase/migrations/202612310145_football_weekly_auction_field_lock.sql", "utf8");
 const transitionMigration = readFileSync("supabase/migrations/202612310132_football_troy_transition_carry.sql", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
@@ -135,6 +136,16 @@ describe("Football Weekly Auction live contract", () => {
     expect(migration).toContain("'bids', coalesce((");
     expect(migration).toContain("entry.day_index = v_day_index - 1");
     expect(gate).toContain("View all bids");
+  });
+
+  it("locks the competitor field at Tuesday midnight and defers midweek joins", () => {
+    expect(fieldLockMigration).toContain("private.football_weekly_auction_participants");
+    expect(fieldLockMigration).toContain("field_locked_at");
+    expect(fieldLockMigration).toContain("profile.created_at >= v_previous_lock_at");
+    expect(fieldLockMigration).toContain("profile.created_at < v_lock_at");
+    expect(fieldLockMigration).toContain("Weekly Auction field is locked for this week");
+    expect(fieldLockMigration).toContain("'eligible_week_start', v_week_start + 7");
+    expect(fieldLockMigration).toContain("from private.football_weekly_auction_participants");
   });
 
   it("gates every official Football Daily runtime request behind today's submission", () => {
