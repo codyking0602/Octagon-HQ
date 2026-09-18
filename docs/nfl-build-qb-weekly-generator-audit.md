@@ -11,7 +11,7 @@ The Weekly generator exists to create interesting auction markets from truthful 
 ## Locked weekly board structure
 
 - Seven days.
-- Four auctions per day.
+- Exactly four auctions per day.
 - Exactly one auction for each trait every day:
   - Arm
   - Accuracy
@@ -151,14 +151,21 @@ Across all 50,000 simulated weeks:
 - true low-end cards appeared only in the 5% Chaos caliber;
 - Standard remains the dominant experience.
 
+## Economy / completion handoff
+
+The downstream six-player economy calibration is now complete:
+
+- $40 bankroll.
+- One free pass per trait for the week.
+- After that trait's pass is used, later offers for the still-unfilled trait require at least a $1 bid.
+- Exactly four auctions remain on every day; there are no makeup cards.
+- Completion-preserving bid validation must protect at least $1 for each trait that would remain unfilled under every possible set of today's wins.
+- Full-participation simulation completed all six four-trait rosters in 100% of tested weeks.
+
+See `docs/nfl-build-qb-weekly-economy-audit.md`.
+
 ## Runtime boundary
 
-This is a generator calibration artifact, not live Weekly behavior yet.
+This remains calibration/design work rather than a live Weekly cutover.
 
-Before runtime wiring:
-
-1. use the repaired Dan Fouts canonical identity; Jim Kelly already resolves through the Pro Hall historical seed.
-2. Simulate the six-player auction economy against this 28-card supply.
-3. Compare candidate weekly bankrolls rather than inheriting the CFB $40 amount automatically.
-4. Define incomplete-roster handling.
-5. Only then wire the canonical grades and generator into the existing sealed-bid Weekly architecture.
+Runtime implementation must reuse the existing sealed-bid Weekly architecture, use the repaired Dan Fouts canonical identity, preserve the existing field-lock behavior, and keep future cards / grades server-owned.
