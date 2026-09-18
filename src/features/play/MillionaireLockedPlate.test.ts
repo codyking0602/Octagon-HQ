@@ -33,6 +33,10 @@ describe("Millionaire locked plate presentation contract", () => {
     expect(refineCss).toContain("linear-gradient(180deg, #021435, #010818)");
   });
 
+  it("keeps live answer text clear of the baked A-D labels", () => {
+    expect(refineCss).toContain("grid-template-columns: 17% 83%;");
+  });
+
   it("preserves the exact baked CFB Q1 resting composition", () => {
     expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--cfb .millionaire-title");
     expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--q1 .millionaire-stakes");
