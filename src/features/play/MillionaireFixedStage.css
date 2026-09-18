@@ -669,6 +669,183 @@
   min-height: 470px;
 }
 
+/* Final fixed-stage polish: full polygon outlines + readable overlay typography. */
+.millionaire-shell--fixed-stage .millionaire-stakes,
+.millionaire-shell--fixed-stage .millionaire-question,
+.millionaire-shell--fixed-stage .millionaire-answers button {
+  background: #efb93a;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.48), 0 0 12px rgba(245, 188, 49, 0.22);
+}
+
+.millionaire-shell--fixed-stage .millionaire-stakes::before,
+.millionaire-shell--fixed-stage .millionaire-question::before,
+.millionaire-shell--fixed-stage .millionaire-answers button::before {
+  content: "";
+  display: block !important;
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 0, rgba(45, 126, 238, 0.20), transparent 56%),
+    linear-gradient(180deg, rgba(8, 53, 118, 0.995), rgba(3, 24, 59, 0.998) 82%);
+}
+
+.millionaire-shell--fixed-stage .millionaire-stakes::before {
+  inset: 3px;
+  clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
+}
+
+.millionaire-shell--fixed-stage .millionaire-question::before {
+  inset: 3px;
+  clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+}
+
+.millionaire-shell--fixed-stage .millionaire-answers button::before {
+  inset: 2px;
+  clip-path: polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%);
+}
+
+.millionaire-shell--fixed-stage .millionaire-stakes strong,
+.millionaire-shell--fixed-stage .millionaire-stakes span,
+.millionaire-shell--fixed-stage .millionaire-question strong,
+.millionaire-shell--fixed-stage .millionaire-question small,
+.millionaire-shell--fixed-stage .millionaire-answers button b,
+.millionaire-shell--fixed-stage .millionaire-answers button span {
+  position: relative;
+  z-index: 3;
+}
+
+.millionaire-shell--fixed-stage .millionaire-answers button.is-selected::before {
+  background: linear-gradient(180deg, #ffe17a, #d69a16);
+}
+
+.millionaire-shell--fixed-stage .millionaire-answers button.is-correct {
+  background: #57f08f;
+}
+
+.millionaire-shell--fixed-stage .millionaire-answers button.is-correct::before {
+  background: linear-gradient(180deg, #11834e, #07502f);
+}
+
+.millionaire-shell--fixed-stage .millionaire-answers button.is-wrong {
+  background: #ff6674;
+}
+
+.millionaire-shell--fixed-stage .millionaire-answers button.is-wrong::before {
+  background: linear-gradient(180deg, #a51f2d, #65121d);
+}
+
+.millionaire-shell--fixed-stage .millionaire-stat-sheet {
+  padding: 44px 36px 34px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-stat-sheet button {
+  top: 18px;
+  right: 20px;
+  width: 38px;
+  height: 38px;
+  font-size: 30px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-stat-sheet > span {
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-stat-sheet > strong {
+  margin-top: 8px;
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+.millionaire-shell--fixed-stage .millionaire-stat-sheet p {
+  margin-top: 20px;
+  font-size: 20px;
+  line-height: 1.45;
+}
+
+.millionaire-shell--fixed-stage .millionaire-decision,
+.millionaire-shell--fixed-stage .millionaire-results {
+  padding: 48px 64px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-decision > span,
+.millionaire-shell--fixed-stage .millionaire-results > span {
+  font-size: 17px;
+  letter-spacing: 3px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-decision > strong {
+  margin-top: 12px;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.millionaire-shell--fixed-stage .millionaire-decision > p {
+  margin: 10px 0 24px;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.millionaire-shell--fixed-stage .millionaire-decision button {
+  min-height: 86px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-decision button small {
+  font-size: 12px;
+  letter-spacing: 1.2px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-decision button b {
+  margin-top: 4px;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.millionaire-shell--fixed-stage .millionaire-decision button em {
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-results > strong {
+  margin-top: 10px;
+  font-size: 58px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-results__score {
+  gap: 8px;
+  margin-top: 18px;
+  padding: 10px 22px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-results__score b {
+  font-size: 46px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-results__score small {
+  font-size: 14px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-results dl {
+  width: 520px;
+  margin: 22px 0;
+}
+
+.millionaire-shell--fixed-stage .millionaire-results dl > div {
+  padding: 7px 0;
+  font-size: 16px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-results__actions {
+  gap: 10px;
+}
+
+.millionaire-shell--fixed-stage .millionaire-results__actions button {
+  min-height: 48px;
+  padding: 10px 18px;
+  font-size: 14px;
+}
+
 /* The fixed renderer is landscape-only. */
 @media (orientation: portrait) and (max-width: 900px) {
   .millionaire-shell--fixed-stage > .millionaire-stage-canvas {

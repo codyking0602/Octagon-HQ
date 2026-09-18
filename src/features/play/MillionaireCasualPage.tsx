@@ -21,6 +21,7 @@ import {
   millionaireCasualRun,
   millionaireLeagueLabel,
   millionaireMoneyLabel,
+  millionaireHostAsset,
   millionaireTimeLabel,
   millionaireTimeoutTransition,
   type MillionaireLeague,
@@ -117,7 +118,7 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
               <p><strong>2:30 TIME BANK</strong><span>Shared across all 8. Time only breaks leaderboard ties.</span></p>
               <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: leave with $5,000.</span></p>
               <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: leave with $100,000.</span></p>
-              <p><strong>WALK AWAY</strong><span>Before Q7/Q8, take your money or keep playing.</span></p>
+              <p><strong>WALK AWAY</strong><span>Before Q8, bank $500,000 / 90 PTS or risk the checkpoint for $1,000,000 / 100 PTS.</span></p>
             </div>
             <h3>LIFELINES</h3>
             <div className="millionaire-rules__lifelines">
@@ -189,7 +190,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const levelNumber = gameState.currentQuestionIndex + 1;
   const q8 = level === "Q8";
   const stageScale = useMillionaireStageScale();
-  const stageBackground = "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png";
+  const stageBackground = millionaireHostAsset(league);
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
 
   function schedule(callback: () => void, delay: number) {

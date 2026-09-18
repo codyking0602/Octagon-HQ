@@ -9,6 +9,7 @@ import {
 } from "./OfficialBlindRankResult";
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
 import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
+import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -43,7 +44,7 @@ function RuntimeStatus({ error, onRefresh }: { error: unknown; onRefresh?: () =>
 }
 
 export function officialDailyGameAllowsCasualReplay(gameType: DailyGameType) {
-  return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4";
+  return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4" && gameType !== "millionaire";
 }
 
 function OfficialResultActions({
@@ -106,6 +107,8 @@ export function OfficialTodayChallengeContent({
         />
       ) : projection.gameType === "who_am_i" ? (
         <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
+      ) : projection.gameType === "millionaire" ? (
+        <OfficialMillionaireDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
       ) : (
         <OfficialTodayChallengeView
           projection={presentationProjection}

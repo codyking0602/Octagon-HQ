@@ -96,6 +96,18 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Fighter total",
     nativeDisplay: (attempt) => `${attempt.nativeScore}`,
   },
+  millionaire: {
+    gameType: "millionaire",
+    gameId: "millionaire",
+    title: "Millionaire",
+    dailyRoute: "/play/millionaire?mode=daily",
+    casualRoute: "/play/millionaire",
+    cta: "Climb the ladder",
+    instructions: "Answer eight UFC questions, manage three lifelines, and decide whether to risk Q8 for $1,000,000.",
+    footballInstructions: "Answer eight NFL or CFB questions, manage three lifelines, and decide whether to risk Q8 for $1,000,000.",
+    nativeResultLabel: "Millionaire score",
+    nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
+  },
   who_am_i: {
     gameType: "who_am_i",
     gameId: "who-am-i",

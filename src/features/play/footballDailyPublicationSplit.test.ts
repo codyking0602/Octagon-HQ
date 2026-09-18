@@ -3,6 +3,7 @@ import { buildFootballDailyPersistenceSetup as buildBlindResume } from "./footba
 import { buildFootballDailyPersistenceSetup as buildComparison } from "./footballDailyPublicationComparison";
 import { buildFootballDailyPersistenceSetup as buildFindLeader } from "./footballDailyPublicationFindLeader";
 import { buildFootballDailyPersistenceSetup as buildHitNumber } from "./footballDailyPublicationHitNumber";
+import { buildFootballDailyPersistenceSetup as buildMillionaire } from "./footballDailyPublicationMillionaire";
 import { buildFootballDailyPersistenceSetup as buildWavelength } from "./footballDailyPublicationWavelength";
 import { buildFootballDailyPersistenceSetup as buildWhoAmI } from "./footballDailyPublicationWhoAmI";
 import {
@@ -20,6 +21,7 @@ const builderFor = (gameType: OfficialDailyGameType) => {
     case "find_leader": return buildFindLeader;
     case "blind_resume": return buildBlindResume;
     case "hit_the_number": return buildHitNumber;
+    case "millionaire": return buildMillionaire;
     case "blind_rank_5":
     case "keep_4_cut_4":
       return buildComparison;

@@ -12,6 +12,7 @@ const gameTypeSchema = z.enum([
   "keep_4_cut_4",
   "hit_the_number",
   "who_am_i",
+  "millionaire",
 ]);
 const attemptSchema = z.object({
   native_score: z.coerce.number().int(),
@@ -93,6 +94,7 @@ const standingsEntrySchema = z.object({
     keep_4_cut_4: z.coerce.number().nullable(),
     hit_the_number: z.coerce.number().nullable().optional(),
     who_am_i: z.coerce.number().nullable().optional(),
+    millionaire: z.coerce.number().nullable().optional(),
   }),
   is_current_user: z.boolean(),
   weekly_rank: z.coerce.number().int().positive(),
@@ -188,6 +190,7 @@ export interface TodayChallengeStandingsEntry {
     keep4Cut4: number | null;
     hitTheNumber: number | null;
     whoAmI: number | null;
+    millionaire: number | null;
   };
   isCurrentUser: boolean;
   weeklyRank: number;
@@ -428,6 +431,7 @@ export function createTodayChallengeRepository(
             keep4Cut4: entry.game_averages.keep_4_cut_4,
             hitTheNumber: entry.game_averages.hit_the_number ?? null,
             whoAmI: entry.game_averages.who_am_i ?? null,
+            millionaire: entry.game_averages.millionaire ?? null,
           },
           isCurrentUser: entry.is_current_user,
         })),

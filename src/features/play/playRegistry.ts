@@ -13,6 +13,7 @@ export type PlayGameId =
   | "hit-the-number"
   | "20-questions"
   | "who-am-i"
+  | "millionaire"
   | "draft-room";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
@@ -46,6 +47,7 @@ export type PlayCompletionState =
   | "target-selection-locked"
   | "identity-guessed-or-question-limit"
   | "identity-guessed-or-clue-limit"
+  | "millionaire-settled"
   | "draft-room-complete";
 
 export interface PlayGameLineupDefinition {
@@ -81,6 +83,30 @@ export interface PlayGameDefinition {
 }
 
 export const playGameCatalog = [
+  {
+    sport: "ufc",
+    id: "millionaire",
+    route: "/play/millionaire",
+    icon: "$1M",
+    title: "Millionaire",
+    description: "Climb an eight-question UFC money ladder with three lifelines and one final walk-away decision.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily", "curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 8,
+      completionState: "millionaire-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "Eight calibrated questions from Q1 through Q8 with checkpoints, lifelines, and a Q8 risk decision.",
+    },
+  },
   {
     sport: "ufc",
     id: "auction",
@@ -287,6 +313,30 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily-and-casual",
       difficultyModel: "A cutoff-centered eight-fighter board revealed one fighter at a time with every Keep/Cut decision locked.",
+    },
+  },
+  {
+    sport: "football",
+    id: "millionaire",
+    route: "/football/millionaire",
+    icon: "$1M",
+    title: "Millionaire",
+    description: "Climb an eight-question NFL or college football money ladder with three lifelines and one final walk-away decision.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily", "curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 8,
+      completionState: "millionaire-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "One canonical NFL or CFB eight-question ladder per Football Daily date with checkpoints, lifelines, and a Q8 risk decision.",
     },
   },
   {

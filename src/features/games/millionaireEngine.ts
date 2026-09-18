@@ -20,7 +20,7 @@ export const MILLIONAIRE_OCTAGON_SCORE_BY_LEVEL = {
 } as const;
 
 export const MILLIONAIRE_CHECKPOINT_LEVELS = [3, 6] as const;
-export const MILLIONAIRE_WALK_AWAY_QUESTION_LEVELS = [7, 8] as const;
+export const MILLIONAIRE_WALK_AWAY_QUESTION_LEVELS = [8] as const;
 export const MILLIONAIRE_LIFELINE_PENALTY = 2;
 
 export type MillionaireRun = readonly [
@@ -169,7 +169,7 @@ export function currentMillionairePublicQuestion(run: MillionaireRun, state: Mil
 export function millionaireCanWalkAway(state: MillionaireState) {
   if (state.status !== "playing" || state.questionState.doubleDipActive) return false;
   const questionLevel = state.currentQuestionIndex + 1;
-  return MILLIONAIRE_WALK_AWAY_QUESTION_LEVELS.includes(questionLevel as 7 | 8);
+  return MILLIONAIRE_WALK_AWAY_QUESTION_LEVELS.includes(questionLevel as 8);
 }
 
 function revealFor(question: MillionaireRuntimeQuestion): MillionaireQuestionReveal {
@@ -325,7 +325,8 @@ function answer(run: MillionaireRun, state: MillionaireState, choiceId: Milliona
   }
 
   const finalMoney = millionaireCheckpointMoney(state.completedQuestions);
-  const scoring = scoringState(state.completedQuestions, state.lifelinesUsed);
+  const settledCompletedQuestions = millionaireLevelNumber(question.level) === 8 ? 6 : state.completedQuestions;
+  const scoring = scoringState(settledCompletedQuestions, state.lifelinesUsed);
   return {
     state: {
       ...state,
@@ -341,7 +342,7 @@ function answer(run: MillionaireRun, state: MillionaireState, choiceId: Milliona
 
 function walkAway(state: MillionaireState): MillionaireTransitionResult {
   assertPlayable(state);
-  if (!millionaireCanWalkAway(state)) throw new Error("Walk away is only available before Q7 or Q8 and not during Double Dip.");
+  if (!millionaireCanWalkAway(state)) throw new Error("Walk away is only available before Q8 and not during Double Dip.");
   const scoring = scoringState(state.completedQuestions, state.lifelinesUsed);
   return {
     state: {

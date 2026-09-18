@@ -45,19 +45,19 @@ export const MILLIONAIRE_BASE_PTS = {
 
 export const MILLIONAIRE_HOSTS: Record<MillionaireLeague, readonly [string, string, string]> = {
   cfb: [
-    "/assets/millionaire/hosts/cfb-host-1.webp",
-    "/assets/millionaire/hosts/cfb-host-2.webp",
-    "/assets/millionaire/hosts/cfb-host-3.webp",
+    "/assets/millionaire/Cfb1.png",
+    "/assets/millionaire/Cfb2.png",
+    "/assets/millionaire/Cfb3.png",
   ],
   nfl: [
-    "/assets/millionaire/hosts/nfl-host-1.webp",
-    "/assets/millionaire/hosts/nfl-host-2.webp",
-    "/assets/millionaire/hosts/nfl-host-3.webp",
+    "/assets/millionaire/Nfl1.png",
+    "/assets/millionaire/Nfl2.png",
+    "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png",
   ],
   ufc: [
-    "/assets/millionaire/hosts/ufc-host-1.webp",
-    "/assets/millionaire/hosts/ufc-host-2.webp",
-    "/assets/millionaire/hosts/ufc-host-3.webp",
+    "/assets/millionaire/Ufc1.png",
+    "/assets/millionaire/Ufc2.png",
+    "/assets/millionaire/Ufc3.png",
   ],
 };
 
@@ -137,14 +137,78 @@ function question(
 }
 
 const cfbSeeds: readonly QuestionSeed[] = [
-  { prompt: "Which school is nicknamed the Crimson Tide?", choices: ["Alabama", "Auburn", "Georgia", "Oklahoma"], correct: "A", explanation: "Alabama's athletic teams are known as the Crimson Tide.", statSheet: "The program plays its home games at Bryant-Denny Stadium in Tuscaloosa.", fiftyFifty: ["A", "C"], type: "program-identity" },
-  { prompt: "Which trophy is awarded annually to college football's most outstanding player?", choices: ["Heisman Trophy", "Lombardi Trophy", "Butkus Trophy", "Maxwell Club Cup"], correct: "A", explanation: "The Heisman Trophy honors the most outstanding player in college football.", statSheet: "Its ceremony is traditionally held in New York, and the award dates to the 1930s.", fiftyFifty: ["A", "C"], type: "award" },
-  { prompt: "At which college did Peyton Manning play his football?", choices: ["Tennessee", "Ole Miss", "LSU", "Florida"], correct: "A", explanation: "Manning played quarterback at Tennessee from 1994 through 1997.", statSheet: "He wore No. 16 and finished his college career as an SEC champion.", fiftyFifty: ["A", "B"], type: "player-school" },
-  { prompt: "Which team won the 2005 season national title behind quarterback Vince Young?", choices: ["Texas", "USC", "Oklahoma", "Florida"], correct: "A", explanation: "Texas beat USC in the Rose Bowl to finish the 2005 season undefeated and win the national championship.", statSheet: "The title game ended with a famous fourth-down touchdown in the Rose Bowl.", fiftyFifty: ["A", "B"], type: "championship" },
-  { prompt: "Which coach led Clemson to national titles in the 2016 and 2018 seasons?", choices: ["Dabo Swinney", "Jimbo Fisher", "Kirby Smart", "Brian Kelly"], correct: "A", explanation: "Dabo Swinney coached Clemson to national championships in the 2016 and 2018 seasons.", statSheet: "Both championship runs ended with victories over Alabama.", fiftyFifty: ["A", "C"], type: "coach" },
-  { prompt: "Who won the 2019 Heisman Trophy while leading LSU to a 15-0 season?", choices: ["Joe Burrow", "Tua Tagovailoa", "Jalen Hurts", "Trevor Lawrence"], correct: "A", explanation: "Joe Burrow won the 2019 Heisman and quarterbacked LSU to a 15-0 national-title season.", statSheet: "He transferred to Baton Rouge after beginning his college career at Ohio State.", fiftyFifty: ["A", "C"], type: "award-season" },
-  { prompt: "Which team beat Miami in double overtime to win the national championship at the 2003 Fiesta Bowl?", choices: ["Ohio State", "Florida State", "Nebraska", "USC"], correct: "A", explanation: "Ohio State defeated Miami 31-24 in double overtime in the 2003 Fiesta Bowl.", statSheet: "The Buckeyes entered the title game unbeaten under second-year coach Jim Tressel.", fiftyFifty: ["A", "D"], type: "championship-game" },
-  { prompt: "Which program finished No. 1 in the final AP poll for the 1990 season?", choices: ["Colorado", "Georgia Tech", "Miami", "Washington"], correct: "A", explanation: "Colorado finished No. 1 in the final AP poll for the 1990 season, while Georgia Tech topped the Coaches poll.", statSheet: null, fiftyFifty: ["A", "B"], type: "historical-ranking" },
+  {
+    prompt: "Who won the 2019 Heisman Trophy?",
+    choices: ["Joe Burrow", "Jalen Hurts", "Justin Fields", "Chase Young"],
+    correct: "A",
+    explanation: "Joe Burrow won the 2019 Heisman Trophy after leading LSU through an undefeated championship season.",
+    statSheet: "The winner led LSU to an undefeated national championship season.",
+    fiftyFifty: ["A", "B"],
+    type: "awards",
+  },
+  {
+    prompt: "Who won the first College Football Playoff national championship?",
+    choices: ["Ohio State", "Oregon", "Alabama", "Florida State"],
+    correct: "A",
+    explanation: "Ohio State won the first College Football Playoff national championship after the 2014 season.",
+    statSheet: "The champion entered the four-team playoff as the No. 4 seed.",
+    fiftyFifty: ["A", "C"],
+    type: "championship",
+  },
+  {
+    prompt: "Who did Clemson defeat to win the 2016 national championship?",
+    choices: ["Alabama", "Ohio State", "Oklahoma", "Florida State"],
+    correct: "A",
+    explanation: "Clemson defeated Alabama 35-31 to win the 2016 national championship.",
+    statSheet: "Deshaun Watson threw the winning touchdown with one second left.",
+    fiftyFifty: ["A", "B"],
+    type: "championship",
+  },
+  {
+    prompt: "Which of these Heisman winners won the award most recently?",
+    choices: ["Marcus Mariota", "Baker Mayfield", "Joe Burrow", "Bryce Young"],
+    correct: "D",
+    explanation: "Bryce Young won the Heisman Trophy in 2021, later than the other three choices.",
+    statSheet: "The answer became Alabama's first quarterback to win the Heisman.",
+    fiftyFifty: ["C", "D"],
+    type: "chronology",
+  },
+  {
+    prompt: "Which school produced consecutive Heisman winners in 2004 and 2005?",
+    choices: ["USC", "Oklahoma", "Florida", "Alabama"],
+    correct: "A",
+    explanation: "USC produced Matt Leinart in 2004 and Reggie Bush in 2005.",
+    statSheet: "Both winners played offense for Pete Carroll.",
+    fiftyFifty: ["A", "B"],
+    type: "awards-history",
+  },
+  {
+    prompt: "Which Heisman-winning quarterback did NOT win his conference championship in his Heisman season?",
+    choices: ["Cam Newton", "Joe Burrow", "Baker Mayfield", "Lamar Jackson"],
+    correct: "D",
+    explanation: "Lamar Jackson won the 2016 Heisman at Louisville, but Clemson won the ACC championship that season.",
+    statSheet: "The answer became Louisville's first Heisman Trophy winner.",
+    fiftyFifty: ["C", "D"],
+    type: "awards-postseason",
+  },
+  {
+    prompt: "Which CFP national champion did NOT win its conference championship?",
+    choices: ["2014 Ohio State", "2016 Clemson", "2017 Alabama", "2019 LSU"],
+    correct: "C",
+    explanation: "2017 Alabama did not win the SEC championship before going on to win the College Football Playoff national title.",
+    statSheet: "The answer won the national title on Tua Tagovailoa's overtime touchdown pass to DeVonta Smith.",
+    fiftyFifty: ["A", "C"],
+    type: "playoff-history",
+  },
+  {
+    prompt: "Which Heisman-winning quarterback threw the fewest touchdown passes in his Heisman season?",
+    choices: ["Tim Tebow 2007", "Cam Newton 2010", "Johnny Manziel 2012", "Lamar Jackson 2016"],
+    correct: "C",
+    explanation: "Johnny Manziel threw 26 touchdown passes in 2012, fewer than the other three quarterbacks listed.",
+    statSheet: null,
+    fiftyFifty: ["A", "C"],
+    type: "stat-comparison",
+  },
 ];
 
 const nflSeeds: readonly QuestionSeed[] = [
@@ -179,7 +243,8 @@ export function millionaireTimeoutTransition(run: MillionaireRun, state: Million
   if (state.status !== "playing") throw new Error("Millionaire run is already settled.");
   const current = currentMillionaireQuestion(run, state);
   if (!current) throw new Error("Millionaire current question is unavailable.");
-  const baseScore = millionaireScoreForCompletedQuestions(state.completedQuestions);
+  const settledCompletedQuestions = current.level === "Q8" ? 6 : state.completedQuestions;
+  const baseScore = millionaireScoreForCompletedQuestions(settledCompletedQuestions);
   const score = millionaireScoreAfterLifelines(baseScore, state.lifelinesUsed);
   return {
     state: { ...state, status: "lost", finalMoney: millionaireCheckpointMoney(state.completedQuestions), baseScore, score },
