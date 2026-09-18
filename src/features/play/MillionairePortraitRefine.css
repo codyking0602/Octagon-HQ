@@ -15,11 +15,34 @@
 }
 
 .millionaire-shell--game {
-  background-color: #01050f;
-  background-image: url("/assets/millionaire/millionaire-locked-reference.webp");
-  background-position: center;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+  isolation: isolate;
+  background: #01050f;
+}
+
+/* Render the locked approved image itself as the visual plate. Keeping it on its
+   own layer prevents the older shell/background rules from painting over it. */
+.millionaire-shell--game::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: url("/assets/millionaire/millionaire-locked-reference.webp") center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+.millionaire-shell--game > * {
+  position: absolute;
+}
+
+.millionaire-shell--game .millionaire-title,
+.millionaire-shell--game .millionaire-stakes,
+.millionaire-shell--game .millionaire-clock,
+.millionaire-shell--game .millionaire-lifelines,
+.millionaire-shell--game .millionaire-ladder,
+.millionaire-shell--game .millionaire-question,
+.millionaire-shell--game .millionaire-answers {
+  z-index: 20;
 }
 
 .millionaire-shell--game .millionaire-arena,
