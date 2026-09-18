@@ -25,6 +25,14 @@ describe("Millionaire locked plate presentation contract", () => {
     expect(refineCss).toMatch(/\.millionaire-shell--game \.millionaire-answers button \{[\s\S]*?background: transparent;[\s\S]*?box-shadow: none;/);
   });
 
+  it("keeps gameplay inside the device safe area and masks baked later-question numbers", () => {
+    const gameRule = refineCss.match(/\.millionaire-shell--game \{[\s\S]*?\}/)?.[0] ?? "";
+    expect(gameRule).not.toContain("inset: 0;");
+    expect(gameRule).not.toContain("width: 100vw;");
+    expect(refineCss).toContain("linear-gradient(180deg, #07316c, #03183b 78%)");
+    expect(refineCss).toContain("linear-gradient(180deg, #021435, #010818)");
+  });
+
   it("preserves the exact baked CFB Q1 resting composition", () => {
     expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--cfb .millionaire-title");
     expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--q1 .millionaire-stakes");
