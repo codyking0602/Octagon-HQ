@@ -3,7 +3,9 @@ import type { MillionaireRuntimeQuestion } from "../games/millionaireAuthority";
 import {
   advanceMillionaireDailyRuntime,
   buildMillionaireDailySetup,
+  millionaireDailyHostNumber,
   millionaireDailyLeague,
+  millionaireDailyRunIndex,
   millionaireFootballDailyLeague,
 } from "./millionaireDailyRuntime";
 import type { OfficialDailyRuntimeContext } from "./todaysChallengeRuntime";
@@ -50,6 +52,36 @@ describe("Millionaire official Daily runtime", () => {
     expect(millionaireDailyLeague("football", "2026-09-19")).toBe("cfb");
     expect(millionaireDailyLeague("ufc", "2026-09-19")).toBe("ufc");
     expect(millionaireFootballDailyLeague("2026-09-26")).toBe("nfl");
+  });
+
+  it("rotates ten league-specific runs before repeating and advances hosts 1-2-3 by appearance", () => {
+    const ufcDays = [
+      "2026-09-19", "2026-09-27", "2026-10-04", "2026-10-12", "2026-10-15",
+      "2026-10-23", "2026-10-30", "2026-11-07", "2026-11-10", "2026-11-18",
+    ];
+    const cfbDays = [
+      "2026-09-19", "2026-10-02", "2026-10-11", "2026-10-24", "2026-11-02",
+      "2026-11-15", "2026-11-24", "2026-12-07", "2026-12-16", "2026-12-29",
+    ];
+    const nflDays = [
+      "2026-09-26", "2026-10-08", "2026-10-18", "2026-10-30", "2026-11-09",
+      "2026-11-21", "2026-12-01", "2026-12-13", "2026-12-23", "2027-01-04",
+    ];
+
+    expect(ufcDays.map((day) => millionaireDailyRunIndex("ufc", day))).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(cfbDays.map((day) => millionaireDailyRunIndex("football", day))).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(nflDays.map((day) => millionaireDailyRunIndex("football", day))).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+    expect(ufcDays.slice(0, 6).map((day) => millionaireDailyHostNumber("ufc", day))).toEqual([1, 2, 3, 1, 2, 3]);
+    expect(cfbDays.slice(0, 6).map((day) => millionaireDailyHostNumber("football", day))).toEqual([1, 2, 3, 1, 2, 3]);
+    expect(nflDays.slice(0, 6).map((day) => millionaireDailyHostNumber("football", day))).toEqual([1, 2, 3, 1, 2, 3]);
+
+    const debut = buildMillionaireDailySetup("football", cfbDays[0]!, "football-daily-v11-millionaire-no-double");
+    const tenth = buildMillionaireDailySetup("football", cfbDays[9]!, "football-daily-v11-millionaire-no-double");
+    expect(debut.publicSetup).toMatchObject({ league: "cfb", run_number: 1, host_number: 1 });
+    expect(tenth.publicSetup).toMatchObject({ league: "cfb", run_number: 10, host_number: 1 });
+    expect((debut.publicSetup.questions as Record<string, unknown>[])[0]!.id)
+      .not.toBe((tenth.publicSetup.questions as Record<string, unknown>[])[0]!.id);
   });
 
   it("publishes eight public questions without leaking the answer key", () => {
