@@ -46,6 +46,12 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(pageSource).toContain("MILLIONAIRE_BASE_PTS[ladderLevel]");
   });
 
+  it("does not hide CFB Q1 answer text on the first render", () => {
+    const refineCss = readFileSync("src/features/play/MillionairePortraitRefine.css", "utf8");
+    expect(refineCss).not.toContain("millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-answers span");
+    expect(refineCss).not.toMatch(/millionaire-shell--cfb[\s\S]*?millionaire-shell--q1[\s\S]*?\.millionaire-answers span[\s\S]*?visibility:\s*hidden/);
+  });
+
   it("keeps gameplay states independent from the background image", () => {
     expect(fixedCss).toContain(".millionaire-answers button.is-selected");
     expect(fixedCss).toContain(".millionaire-answers button.is-correct");
