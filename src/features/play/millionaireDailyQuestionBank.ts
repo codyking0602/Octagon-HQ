@@ -2892,15 +2892,15 @@ const BANKS: Record<MillionaireLeague, readonly (readonly DailyQuestionSeed[])[]
       },
       {
         "type": "title-change",
-        "prompt": "Who did Joanna Jedrzejczyk defeat to win the UFC strawweight championship?",
+        "prompt": "Who won the inaugural UFC strawweight championship?",
         "choices": [
           "Carla Esparza",
+          "Joanna Jedrzejczyk",
           "Rose Namajunas",
-          "Jessica Andrade",
-          "Claudia Gadelha"
+          "Jessica Andrade"
         ],
         "answer": "Carla Esparza",
-        "statSheet": "Joanna captured the belt at UFC 185."
+        "statSheet": "She won the title through The Ultimate Fighter 20 tournament final."
       },
       {
         "type": "title-fight",
