@@ -10,7 +10,7 @@ Recognition decides membership. Facts decide readiness. Partial or identity-only
 
 | Pool | Universe | A | B | C | Full | Partial | Identity-only | Missing fact groups | Historical review | Omissions |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| QB | 133 | 27 | 44 | 62 | 133 | 0 | 0 | 0 | 0 | 0 |
+| QB | 133 | 28 | 43 | 62 | 133 | 0 | 0 | 0 | 0 | 0 |
 | RB | 178 | 20 | 36 | 122 | 178 | 0 | 0 | 0 | 0 | 0 |
 | WR | 250 | 7 | 51 | 192 | 250 | 0 | 0 | 0 | 0 | 0 |
 | TE | 73 | 1 | 12 | 60 | 73 | 0 | 0 | 0 | 0 | 0 |
