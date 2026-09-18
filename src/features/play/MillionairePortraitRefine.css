@@ -387,16 +387,6 @@
   box-shadow: none;
 }
 
-/* The approved CFB Q1 copy in the plate is itself the reference. Leave it fully
-   untouched in the resting state, then switch to live masking for reveal states. */
-.millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-question::before {
-  display: none;
-}
-
-.millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-question strong {
-  visibility: hidden;
-}
-
 /* Preserve each baked answer bar and gold A-D marker. Only the changing answer text
    gets a small interior patch. Selection/reveal states are translucent washes over
    the approved plate rather than replacement buttons. */

@@ -38,6 +38,11 @@ import {
   WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,
 } from "./officialScoreContract";
 import {
+  advanceMillionaireDailyRuntime,
+  buildMillionaireDailySetup,
+  MILLIONAIRE_DAILY_SCORING_VERSION,
+} from "./millionaireDailyRuntime";
+import {
   WAVELENGTH_CONTRACT_VERSIONS,
   createWavelengthRound,
   nextWavelengthClue,
@@ -55,7 +60,8 @@ export type OfficialDailyGameType =
   | "blind_rank_5"
   | "keep_4_cut_4"
   | "hit_the_number"
-  | "who_am_i";
+  | "who_am_i"
+  | "millionaire";
 
 export const OFFICIAL_DAILY_RUNTIME_VERSION = "official-daily-runtime-v1";
 export const OFFICIAL_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;
@@ -70,7 +76,8 @@ export interface OfficialDailySetupPublication {
   scoringVersion:
     | typeof OFFICIAL_DAILY_SCORING_VERSION
     | typeof WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION
-    | typeof BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION;
+    | typeof BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION
+    | typeof MILLIONAIRE_DAILY_SCORING_VERSION;
   publicSetup: Record<string, unknown>;
   revealSetup: Record<string, unknown>;
   privateSetupEvidence: Record<string, unknown>;
@@ -560,6 +567,7 @@ export function buildOfficialDailySetup(
       OFFICIAL_DAILY_RUNTIME_VERSION,
       OFFICIAL_DAILY_SCORING_VERSION,
     ) as OfficialDailySetupPublication;
+    case "millionaire": return buildMillionaireDailySetup("ufc", day, scheduleVersion);
     case "who_am_i": return buildWhoAmIDailyPublication(
       createUfcWhoAmIRound(
         seededLineupRandom(OFFICIAL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
@@ -883,6 +891,7 @@ export function advanceOfficialDailyRuntime(
     case "keep_4_cut_4": return advanceKeepCut(context, parsedAction);
     case "hit_the_number": return advanceOfficialHitTheNumberDailyRuntime(context, parsedAction);
     case "who_am_i": return advanceWhoAmIDailyRuntime(context, parsedAction);
+    case "millionaire": return advanceMillionaireDailyRuntime(context, parsedAction);
     default: throw new Error(`Unsupported official daily game ${String(context.gameType)}.`);
   }
 }

@@ -63,6 +63,10 @@ function gameProgress(projection: TodayChallengeProjection) {
       return state.phase === "recovery"
         ? "RECOVERY BOARD"
         : `${Number(state.revealed_count ?? 2)}/10 CLUES`;
+    case "millionaire":
+      return state.complete === true
+        ? "8-QUESTION LADDER COMPLETE"
+        : `Q${Number(state.current_question_index ?? 0) + 1} OF 8`;
   }
 }
 

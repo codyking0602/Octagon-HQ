@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
 import { OfficialWhoAmIDailyView } from "../play/OfficialWhoAmIDailyView";
+import { OfficialMillionaireDailyView } from "../play/OfficialMillionaireDailyView";
 import {
   createTodayChallengeRepository,
   TodayChallengeRepositoryError,
@@ -40,6 +41,7 @@ const GAME_LABELS = {
   keep_4_cut_4: "KEEP 4 / CUT 4",
   hit_the_number: "HIT THE NUMBER",
   who_am_i: "WHO AM I?",
+  millionaire: "MILLIONAIRE",
 } as const;
 
 type JsonRecord = Record<string, unknown>;
@@ -486,6 +488,8 @@ export function FootballTodayChallengeResult({
       return <HitTheNumber projection={projection} advance={advance} />;
     case "who_am_i":
       return <OfficialWhoAmIDailyView projection={projection} busy={false} onAdvance={advance} />;
+    case "millionaire":
+      return <OfficialMillionaireDailyView projection={projection} busy={false} onAdvance={advance} />;
   }
 }
 
@@ -730,6 +734,26 @@ export default function FootballTodayChallengePage() {
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
         <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={advance} />
+        {projection.officialAttempt ? (
+          <div className="game-result-actions-wrap">
+            <div className="game-result-actions">
+              <button className="primary-action" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+              <button className="find-secondary-action" type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+            </div>
+            <p className="game-action-status" role="status">{shareStatus}</p>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (projection.gameType === "millionaire") {
+    return (
+      <div className="official-daily-page">
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        {busy ? <div className="football-today-busy">LOCKING…</div> : null}
+        <OfficialMillionaireDailyView projection={projection} busy={busy} onAdvance={advance} />
         {projection.officialAttempt ? (
           <div className="game-result-actions-wrap">
             <div className="game-result-actions">

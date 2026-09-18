@@ -17,7 +17,9 @@ const FOOTBALL_MIDDAY_SCHEDULE_VERSION = "football-daily-v2" as const;
 const FOOTBALL_RESUMED_SCHEDULE_VERSION = "football-daily-v3" as const;
 const FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION = "football-daily-v5" as const;
 export const FOOTBALL_TODAY_SCHEDULE_VERSION = "football-daily-v7-hit-number-pool-cleanup" as const;
+export const FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION = "football-daily-v10-millionaire" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
+const FOOTBALL_MILLIONAIRE_CUTOVER_DAY = "2026-09-19";
 const FOOTBALL_TODAY_QUESTION_REFRESH_DAY = "2026-09-13";
 const FOOTBALL_HISTORICAL_ANCHOR_DAY = "2026-08-22";
 const FOOTBALL_HISTORICAL_CYCLE: readonly OfficialDailyGameType[] = [
@@ -49,6 +51,33 @@ const FOOTBALL_FUTURE_CYCLE: readonly OfficialDailyGameType[] = [
   "wavelength",
   "find_leader",
 ];
+const FOOTBALL_MILLIONAIRE_CYCLE: readonly OfficialDailyGameType[] = [
+  "millionaire",
+  "find_leader",
+  "wavelength",
+  "hit_the_number",
+  "who_am_i",
+  "find_leader",
+  "wavelength",
+  "millionaire",
+  "hit_the_number",
+  "who_am_i",
+  "find_leader",
+  "wavelength",
+  "keep_4_cut_4",
+  "hit_the_number",
+  "millionaire",
+  "who_am_i",
+  "find_leader",
+  "wavelength",
+  "hit_the_number",
+  "who_am_i",
+  "millionaire",
+  "find_leader",
+  "wavelength",
+  "keep_4_cut_4",
+];
+
 const FOOTBALL_TODAY_GAME_OVERRIDES: Readonly<Record<string, OfficialDailyGameType>> = {
   "2026-09-04": "blind_resume",
 };
@@ -130,6 +159,7 @@ function dayNumber(day: string) {
 
 export function footballTodayScheduleVersionForDay(day: string): string {
   dayNumber(day);
+  if (day >= FOOTBALL_MILLIONAIRE_CUTOVER_DAY) return FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION;
   if (day >= FOOTBALL_TODAY_QUESTION_REFRESH_DAY) return FOOTBALL_TODAY_SCHEDULE_VERSION;
   if (day >= FOOTBALL_TODAY_CUTOVER_DAY) return FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION;
   if (day === "2026-09-04") return FOOTBALL_MIDDAY_SCHEDULE_VERSION;
@@ -139,6 +169,7 @@ export function footballTodayScheduleVersionForDay(day: string): string {
 
 function footballTodaySetupScheduleVersionForDay(day: string): string {
   dayNumber(day);
+  if (day >= FOOTBALL_MILLIONAIRE_CUTOVER_DAY) return FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION;
   if (day >= FOOTBALL_TODAY_QUESTION_REFRESH_DAY) return FOOTBALL_TODAY_SCHEDULE_VERSION;
   return day >= FOOTBALL_TODAY_CUTOVER_DAY
     ? FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION
@@ -147,6 +178,11 @@ function footballTodaySetupScheduleVersionForDay(day: string): string {
 
 export function footballTodayGameForDay(day: string): OfficialDailyGameType {
   const currentDayNumber = dayNumber(day);
+  if (day >= FOOTBALL_MILLIONAIRE_CUTOVER_DAY) {
+    const offset = currentDayNumber - dayNumber(FOOTBALL_MILLIONAIRE_CUTOVER_DAY);
+    const index = ((offset % FOOTBALL_MILLIONAIRE_CYCLE.length) + FOOTBALL_MILLIONAIRE_CYCLE.length) % FOOTBALL_MILLIONAIRE_CYCLE.length;
+    return FOOTBALL_MILLIONAIRE_CYCLE[index]!;
+  }
   if (day >= FOOTBALL_TODAY_CUTOVER_DAY) {
     const offset = currentDayNumber - dayNumber(FOOTBALL_TODAY_CUTOVER_DAY);
     const index = ((offset % FOOTBALL_FUTURE_CYCLE.length) + FOOTBALL_FUTURE_CYCLE.length) % FOOTBALL_FUTURE_CYCLE.length;
@@ -261,6 +297,24 @@ function grade(
           (id) => id !== String(context.privateGradingEvidence.hidden_subject_id ?? ""),
         ).length,
         recovery_guesses: stringArray(finalSubmission.recovery_guesses ?? [], "Football Who Am I Recovery guesses"),
+      },
+    };
+  }
+
+  if (gameType === "millionaire") {
+    const score = Number(finalSubmission.base_score ?? 0) - (Number(finalSubmission.lifelines_used ?? 0) * 2);
+    if (!Number.isInteger(score) || score < 0 || score > 100) throw new Error("Football Millionaire score is invalid.");
+    return {
+      native: score,
+      normalized: score,
+      result: {
+        outcome: finalSubmission.outcome,
+        completed_questions: finalSubmission.completed_questions,
+        final_money: finalSubmission.final_money,
+        base_score: finalSubmission.base_score,
+        lifelines_used: finalSubmission.lifelines_used,
+        time_remaining_ms: finalSubmission.time_remaining_ms,
+        score,
       },
     };
   }
