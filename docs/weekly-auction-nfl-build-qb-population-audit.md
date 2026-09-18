@@ -237,6 +237,6 @@ Therefore the 122-QB historical list is evidence and a candidate source, not a p
 
 ## Population validation
 
-The final population contains **112 unique quarterbacks with zero missing canonical/source identities** after the Dan Fouts historical identity repair. Jim Kelly already resolves through the Pro Hall historical seed.
+The final population contains **112 unique quarterbacks**. Jim Kelly already resolves through the Pro Hall historical seed. Dan Fouts is the one known runtime identity repair still required before wiring the population into the live catalog; that technical gap does not change his population membership.
 
 Population is frozen for v2 grading. Any future membership change requires an explicit population revision rather than silently changing the grading universe.
