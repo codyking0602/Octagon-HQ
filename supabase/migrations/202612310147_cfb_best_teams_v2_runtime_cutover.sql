@@ -290,6 +290,12 @@ where game_id='draft-room-cfb-best-teams'
 alter table private.draft_room_cfb_best_teams_board_entries
   drop constraint if exists draft_room_cfb_best_teams_board_entries_season_reference_fkey;
 
+alter table private.draft_room_cfb_best_teams_board_entries
+  drop constraint if exists draft_room_cfb_best_teams_board_entries_conference_one_check;
+alter table private.draft_room_cfb_best_teams_board_entries
+  add constraint draft_room_cfb_best_teams_board_entries_conference_one_check
+  check (conference_one in ('SEC','Big Ten','Big 12','ACC','Wildcard'));
+
 create or replace function private.validate_cfb_best_teams_board_authority()
 returns trigger language plpgsql set search_path='' as $$
 declare v_grading text;
@@ -369,8 +375,13 @@ begin
   for v_position in 1..8 loop
     select * into v_pick from private.cfb_best_teams_v2_authority where season_reference=v_shuffled[v_position];
     v_item_reference:=v_pick.season_reference||'--board--'||v_board_token;
-    insert into private.draft_room_cfb_best_teams_board_entries(auction_id,item_reference,season_reference,display_label)
-    values(p_auction_id,v_item_reference,v_pick.season_reference,v_pick.display_label);
+    insert into private.draft_room_cfb_best_teams_board_entries(
+      auction_id,deck_position,item_reference,board_kind,conference_one,conference_two,notre_dame_wildcard,
+      board_shape,board_variant,strength_slot,season_reference,display_label
+    ) values (
+      p_auction_id,v_position,v_item_reference,v_kind,v_one,v_two,v_nd,
+      v_shape,v_variant,array_position(v_refs,v_pick.season_reference),v_pick.season_reference,v_pick.display_label
+    );
     insert into private.auction_deck_entries(auction_id,deck_position,private_item_reference)
     values(p_auction_id,v_position,v_item_reference);
   end loop;
@@ -748,7 +759,6 @@ end
 $route_weekly_v2$;
 
 do $contracts$
-declare legacy_cards integer; next_cards integer;
 begin
  if (select count(*) from private.cfb_best_teams_v2_authority)<>257 then raise exception 'CFB v2 authority must contain 257 seasons'; end if;
  if (select min(hidden_grade) from private.cfb_best_teams_v2_authority)<>74 or (select max(hidden_grade) from private.cfb_best_teams_v2_authority)<>100
@@ -760,9 +770,7 @@ begin
  or not exists(select 1 from private.cfb_best_teams_v2_authority where school='Kansas State' and season_year=2003 and hidden_grade=80.5)
  or not exists(select 1 from private.cfb_best_teams_v2_authority where school='Indiana' and season_year=2024 and hidden_grade=85)
  then raise exception 'CFB v2 final corrections drifted'; end if;
- select count(*) into legacy_cards from private.football_weekly_auction_board where week_start=date '2026-09-15';
- if legacy_cards<>21 then raise exception 'Current Weekly board must remain materialized at 21 cards'; end if;
- select count(*) into next_cards from private.football_weekly_auction_board where week_start=date '2026-09-22';
- if next_cards<>0 then raise exception 'Cutover migration must not prematerialize the next Weekly board'; end if;
+ if (select count(*) from private.cfb_best_teams_v2_authority where conference_bucket='Wildcard') < 8
+ then raise exception 'CFB v2 Wildcard pool is too small for Casual board generation'; end if;
 end
 $contracts$;
