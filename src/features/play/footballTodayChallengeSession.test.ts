@@ -74,7 +74,7 @@ function blindResumeActions(day: string, revealStage: 1 | 2 | 3, correct: boolea
 }
 
 describe("Football Today’s Challenge session", () => {
-  it("preserves historical Football days and starts the 24-slot Millionaire rotation on September 19", () => {
+  it("preserves historical Football days and starts the 22-slot Millionaire rotation on September 19", () => {
     expect([
       footballTodayGameForDay("2026-08-22"),
       footballTodayGameForDay("2026-08-23"),
@@ -102,7 +102,7 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-09-19")).toBe(FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION);
     expect(footballTodayGameForDay("2026-09-19")).toBe("millionaire");
 
-    const future = Array.from({ length: 24 }, (_unused, offset) => {
+    const future = Array.from({ length: 22 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 8, 19 + offset)).toISOString().slice(0, 10);
       return footballTodayGameForDay(day);
     });
@@ -111,7 +111,7 @@ describe("Football Today’s Challenge session", () => {
     expect(future.filter((game) => game === "hit_the_number")).toHaveLength(4);
     expect(future.filter((game) => game === "who_am_i")).toHaveLength(4);
     expect(future.filter((game) => game === "millionaire")).toHaveLength(4);
-    expect(future.filter((game) => game === "keep_4_cut_4")).toHaveLength(2);
+    expect(future).not.toContain("keep_4_cut_4");
     expect(future).not.toContain("blind_resume");
     expect(future).not.toContain("blind_rank_5");
 
@@ -305,13 +305,12 @@ describe("Football Today’s Challenge session", () => {
     expect(keep.reveal_setup).toBeNull();
   });
 
-  it("persists complete future Daily Double child setups for immutable gameplay", () => {
-    const publication = buildFootballTodayPersistenceSetup("2026-10-01");
+  it("preserves historical Daily Double child setups without scheduling new ones", () => {
+    const publication = buildFootballTodayPersistenceSetup("2026-08-25");
     const initial = publication.publicSetup.initial_state as JsonRecord;
     const rankChild = publication.privateSetupEvidence.blind_rank_5 as JsonRecord;
     const keepChild = publication.privateSetupEvidence.keep_4_cut_4 as JsonRecord;
 
-    expect(publication.scheduleVersion).toBe(FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION);
     expect(publication.gameType).toBe("keep_4_cut_4");
     expect(initial.combo_stage).toBe("blind_rank_5");
     expect((initial.blind_rank_5 as JsonRecord).complete).toBe(false);

@@ -12,7 +12,7 @@ function contextFor(sport: "ufc" | "football", day = "2026-09-19"): OfficialDail
   const publication = buildMillionaireDailySetup(
     sport,
     day,
-    sport === "ufc" ? "play-rotation-v8-millionaire" : "football-daily-v10-millionaire",
+    sport === "ufc" ? "play-rotation-v8-millionaire" : "football-daily-v11-millionaire-no-double",
   );
   return {
     gameType: "millionaire",
@@ -56,7 +56,7 @@ describe("Millionaire official Daily runtime", () => {
     const publication = buildMillionaireDailySetup(
       "football",
       "2026-09-19",
-      "football-daily-v10-millionaire",
+      "football-daily-v11-millionaire-no-double",
     );
     const questions = publication.publicSetup.questions as Record<string, unknown>[];
     expect(questions).toHaveLength(8);

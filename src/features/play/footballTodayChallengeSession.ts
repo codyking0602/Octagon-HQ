@@ -17,7 +17,7 @@ const FOOTBALL_MIDDAY_SCHEDULE_VERSION = "football-daily-v2" as const;
 const FOOTBALL_RESUMED_SCHEDULE_VERSION = "football-daily-v3" as const;
 const FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION = "football-daily-v5" as const;
 export const FOOTBALL_TODAY_SCHEDULE_VERSION = "football-daily-v7-hit-number-pool-cleanup" as const;
-export const FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION = "football-daily-v10-millionaire" as const;
+export const FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION = "football-daily-v11-millionaire-no-double" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
 const FOOTBALL_MILLIONAIRE_CUTOVER_DAY = "2026-09-19";
 const FOOTBALL_TODAY_QUESTION_REFRESH_DAY = "2026-09-13";
@@ -64,7 +64,6 @@ const FOOTBALL_MILLIONAIRE_CYCLE: readonly OfficialDailyGameType[] = [
   "who_am_i",
   "find_leader",
   "wavelength",
-  "keep_4_cut_4",
   "hit_the_number",
   "millionaire",
   "who_am_i",
@@ -75,7 +74,6 @@ const FOOTBALL_MILLIONAIRE_CYCLE: readonly OfficialDailyGameType[] = [
   "millionaire",
   "find_leader",
   "wavelength",
-  "keep_4_cut_4",
 ];
 
 const FOOTBALL_TODAY_GAME_OVERRIDES: Readonly<Record<string, OfficialDailyGameType>> = {

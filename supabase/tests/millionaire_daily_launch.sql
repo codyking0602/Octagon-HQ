@@ -9,17 +9,17 @@ declare
 begin
   select * into v_ufc
   from private.daily_challenge_schedule_versions
-  where version = 'play-rotation-v8-millionaire';
+  where version = 'play-rotation-v9-millionaire-no-double';
 
   select * into v_football
   from private.daily_challenge_schedule_versions
-  where version = 'football-daily-v10-millionaire';
+  where version = 'football-daily-v11-millionaire-no-double';
 
   if v_ufc.version is null
     or v_ufc.sport <> 'ufc'
     or v_ufc.starts_on <> date '2026-09-19'
     or v_ufc.anchor_day <> date '2026-09-19'
-    or coalesce(array_length(v_ufc.game_cycle, 1), 0) <> 28 then
+    or coalesce(array_length(v_ufc.game_cycle, 1), 0) <> 26 then
     raise exception 'UFC Millionaire Daily schedule identity is invalid: %', row_to_json(v_ufc);
   end if;
 
@@ -29,7 +29,7 @@ begin
     or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'hit_the_number') <> 4
     or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'who_am_i') <> 4
     or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'millionaire') <> 4
-    or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'keep_4_cut_4') <> 2 then
+    or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'keep_4_cut_4') <> 0 then
     raise exception 'UFC Millionaire Daily mix is invalid: %', v_ufc.game_cycle;
   end if;
 
@@ -37,7 +37,7 @@ begin
     or v_football.sport <> 'football'
     or v_football.starts_on <> date '2026-09-19'
     or v_football.anchor_day <> date '2026-09-19'
-    or coalesce(array_length(v_football.game_cycle, 1), 0) <> 24 then
+    or coalesce(array_length(v_football.game_cycle, 1), 0) <> 22 then
     raise exception 'Football Millionaire Daily schedule identity is invalid: %', row_to_json(v_football);
   end if;
 
@@ -46,17 +46,17 @@ begin
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'hit_the_number') <> 4
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'who_am_i') <> 4
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'millionaire') <> 4
-    or (select count(*) from unnest(v_football.game_cycle) game where game = 'keep_4_cut_4') <> 2
+    or (select count(*) from unnest(v_football.game_cycle) game where game = 'keep_4_cut_4') <> 0
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'blind_resume') <> 0 then
     raise exception 'Football Millionaire Daily mix is invalid: %', v_football.game_cycle;
   end if;
 
   if private.daily_challenge_schedule_for_day(date '2026-09-18', 'ufc') <> 'play-rotation-v7'
     or private.daily_challenge_schedule_for_day(date '2026-09-18', 'football') <> 'football-daily-v9-sep18-advance'
-    or private.daily_challenge_schedule_for_day(date '2026-09-19', 'ufc') <> 'play-rotation-v8-millionaire'
-    or private.daily_challenge_schedule_for_day(date '2026-09-19', 'football') <> 'football-daily-v10-millionaire'
-    or private.daily_challenge_expected_game('play-rotation-v8-millionaire', date '2026-09-19') <> 'millionaire'
-    or private.daily_challenge_expected_game('football-daily-v10-millionaire', date '2026-09-19') <> 'millionaire' then
+    or private.daily_challenge_schedule_for_day(date '2026-09-19', 'ufc') <> 'play-rotation-v9-millionaire-no-double'
+    or private.daily_challenge_schedule_for_day(date '2026-09-19', 'football') <> 'football-daily-v11-millionaire-no-double'
+    or private.daily_challenge_expected_game('play-rotation-v9-millionaire-no-double', date '2026-09-19') <> 'millionaire'
+    or private.daily_challenge_expected_game('football-daily-v11-millionaire-no-double', date '2026-09-19') <> 'millionaire' then
     raise exception 'September 19 Millionaire debut mapping is invalid';
   end if;
 
