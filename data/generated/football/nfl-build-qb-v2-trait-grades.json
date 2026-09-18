@@ -30,91 +30,91 @@
   "rows": [
     {
       "name": "Johnny Unitas",
-      "Arm": 87.5,
-      "Accuracy": 86,
+      "Arm": 92,
+      "Accuracy": 90,
       "Processing": 97.5,
       "Mobility": 67.5,
-      "overall": 84.5
+      "overall": 87
     },
     {
       "name": "Joe Montana",
-      "Arm": 82,
+      "Arm": 84,
       "Accuracy": 98,
       "Processing": 99,
       "Mobility": 80,
-      "overall": 90
+      "overall": 90.5
     },
     {
       "name": "Brett Favre",
       "Arm": 98,
-      "Accuracy": 81.5,
-      "Processing": 77,
+      "Accuracy": 86,
+      "Processing": 86,
       "Mobility": 81,
-      "overall": 84.5
+      "overall": 88
     },
     {
       "name": "Dan Marino",
       "Arm": 97.5,
       "Accuracy": 92.5,
       "Processing": 98.5,
-      "Mobility": 56,
-      "overall": 86
+      "Mobility": 70,
+      "overall": 89.5
     },
     {
       "name": "John Elway",
       "Arm": 99,
-      "Accuracy": 81.5,
-      "Processing": 84,
+      "Accuracy": 84.5,
+      "Processing": 91,
       "Mobility": 88.5,
-      "overall": 88.5
+      "overall": 91
     },
     {
       "name": "Steve Young",
-      "Arm": 88.5,
+      "Arm": 91,
       "Accuracy": 94.5,
       "Processing": 97,
       "Mobility": 96.5,
-      "overall": 94
+      "overall": 95
     },
     {
       "name": "Roger Staubach",
-      "Arm": 86,
+      "Arm": 89,
       "Accuracy": 87.5,
       "Processing": 92.5,
       "Mobility": 95.5,
-      "overall": 90.5
+      "overall": 91
     },
     {
       "name": "Terry Bradshaw",
       "Arm": 94,
-      "Accuracy": 69,
-      "Processing": 75,
+      "Accuracy": 72,
+      "Processing": 82,
       "Mobility": 78.5,
-      "overall": 79
+      "overall": 81.5
     },
     {
       "name": "Warren Moon",
       "Arm": 95.5,
-      "Accuracy": 84.5,
-      "Processing": 85.5,
+      "Accuracy": 87,
+      "Processing": 90,
       "Mobility": 82,
-      "overall": 87
+      "overall": 88.5
     },
     {
       "name": "Troy Aikman",
       "Arm": 91,
       "Accuracy": 96,
       "Processing": 95,
-      "Mobility": 63,
-      "overall": 86.5
+      "Mobility": 65,
+      "overall": 87
     },
     {
       "name": "Joe Namath",
       "Arm": 94,
-      "Accuracy": 74.5,
-      "Processing": 78.5,
+      "Accuracy": 78,
+      "Processing": 84,
       "Mobility": 57,
-      "overall": 76
+      "overall": 78.5
     },
     {
       "name": "Dan Fouts",
@@ -143,130 +143,130 @@
     {
       "name": "Jim Kelly",
       "Arm": 92.5,
-      "Accuracy": 83,
-      "Processing": 87.5,
+      "Accuracy": 86,
+      "Processing": 90,
       "Mobility": 74.5,
-      "overall": 84.5
+      "overall": 86
     },
     {
       "name": "Ken Stabler",
       "Arm": 86,
       "Accuracy": 80,
-      "Processing": 81.5,
+      "Processing": 86,
       "Mobility": 73.5,
-      "overall": 80.5
+      "overall": 81.5
     },
     {
       "name": "Tom Brady",
-      "Arm": 86,
+      "Arm": 89,
       "Accuracy": 98.5,
       "Processing": 100,
-      "Mobility": 67.5,
-      "overall": 88
+      "Mobility": 72,
+      "overall": 90
     },
     {
       "name": "Peyton Manning",
-      "Arm": 87.5,
+      "Arm": 90,
       "Accuracy": 98.5,
       "Processing": 100,
-      "Mobility": 55,
-      "overall": 85.5
+      "Mobility": 68,
+      "overall": 89
     },
     {
       "name": "Kurt Warner",
       "Arm": 85.5,
       "Accuracy": 92.5,
       "Processing": 95,
-      "Mobility": 60,
-      "overall": 83.5
+      "Mobility": 64,
+      "overall": 84.5
     },
     {
       "name": "Drew Brees",
-      "Arm": 76.5,
+      "Arm": 80,
       "Accuracy": 100,
       "Processing": 99,
-      "Mobility": 69.5,
-      "overall": 86.5
+      "Mobility": 72,
+      "overall": 88
     },
     {
       "name": "Ben Roethlisberger",
       "Arm": 92.5,
-      "Accuracy": 81.5,
-      "Processing": 83,
+      "Accuracy": 85,
+      "Processing": 89,
       "Mobility": 83,
-      "overall": 85
+      "overall": 87.5
     },
     {
       "name": "Philip Rivers",
-      "Arm": 82.5,
+      "Arm": 88,
       "Accuracy": 90.5,
       "Processing": 95,
-      "Mobility": 55,
-      "overall": 81
+      "Mobility": 58,
+      "overall": 83
     },
     {
       "name": "Eli Manning",
       "Arm": 87.5,
-      "Accuracy": 78.5,
-      "Processing": 84,
-      "Mobility": 61,
-      "overall": 78
-    },
-    {
-      "name": "Donovan McNabb",
-      "Arm": 91,
-      "Accuracy": 76,
-      "Processing": 83,
-      "Mobility": 92.5,
-      "overall": 85.5
-    },
-    {
-      "name": "Steve McNair",
-      "Arm": 89.5,
-      "Accuracy": 80,
-      "Processing": 84,
-      "Mobility": 94,
-      "overall": 87
-    },
-    {
-      "name": "Daunte Culpepper",
-      "Arm": 95,
-      "Accuracy": 77.5,
-      "Processing": 76,
-      "Mobility": 92.5,
-      "overall": 85.5
-    },
-    {
-      "name": "Michael Vick",
-      "Arm": 97.5,
-      "Accuracy": 66.5,
-      "Processing": 68.5,
-      "Mobility": 99.5,
-      "overall": 83
-    },
-    {
-      "name": "Carson Palmer",
-      "Arm": 94,
-      "Accuracy": 86,
-      "Processing": 81.5,
+      "Accuracy": 84,
+      "Processing": 90,
       "Mobility": 64,
       "overall": 81.5
     },
     {
+      "name": "Donovan McNabb",
+      "Arm": 91,
+      "Accuracy": 82,
+      "Processing": 89,
+      "Mobility": 92.5,
+      "overall": 88.5
+    },
+    {
+      "name": "Steve McNair",
+      "Arm": 89.5,
+      "Accuracy": 84,
+      "Processing": 89,
+      "Mobility": 94,
+      "overall": 89
+    },
+    {
+      "name": "Daunte Culpepper",
+      "Arm": 95,
+      "Accuracy": 82,
+      "Processing": 82,
+      "Mobility": 92.5,
+      "overall": 88
+    },
+    {
+      "name": "Michael Vick",
+      "Arm": 97.5,
+      "Accuracy": 68,
+      "Processing": 75,
+      "Mobility": 99.5,
+      "overall": 85
+    },
+    {
+      "name": "Carson Palmer",
+      "Arm": 94,
+      "Accuracy": 89,
+      "Processing": 89,
+      "Mobility": 64,
+      "overall": 84
+    },
+    {
       "name": "Rich Gannon",
       "Arm": 80.5,
-      "Accuracy": 86,
-      "Processing": 92.5,
+      "Accuracy": 90,
+      "Processing": 94,
       "Mobility": 87,
-      "overall": 86.5
+      "overall": 88
     },
     {
       "name": "Matt Hasselbeck",
-      "Arm": 78.5,
-      "Accuracy": 84.5,
+      "Arm": 80,
+      "Accuracy": 89,
       "Processing": 90.5,
       "Mobility": 70.5,
-      "overall": 81
+      "overall": 82.5
     },
     {
       "name": "Chad Pennington",
@@ -279,10 +279,10 @@
     {
       "name": "Jake Delhomme",
       "Arm": 82,
-      "Accuracy": 77.5,
-      "Processing": 78.5,
+      "Accuracy": 82,
+      "Processing": 82,
       "Mobility": 72.5,
-      "overall": 77.5
+      "overall": 79.5
     },
     {
       "name": "Aaron Rodgers",
@@ -327,42 +327,42 @@
     {
       "name": "Jay Cutler",
       "Arm": 95,
-      "Accuracy": 74.5,
-      "Processing": 68.5,
+      "Accuracy": 78,
+      "Processing": 78,
       "Mobility": 80,
-      "overall": 79.5
+      "overall": 83
     },
     {
       "name": "Alex Smith",
-      "Arm": 75.5,
+      "Arm": 80,
       "Accuracy": 89,
       "Processing": 91.5,
       "Mobility": 87,
-      "overall": 86
+      "overall": 87
     },
     {
       "name": "Ryan Fitzpatrick",
       "Arm": 80,
-      "Accuracy": 73,
-      "Processing": 83,
+      "Accuracy": 78,
+      "Processing": 88,
       "Mobility": 78.5,
-      "overall": 78.5
+      "overall": 81
     },
     {
       "name": "Mark Sanchez",
       "Arm": 82.5,
-      "Accuracy": 70,
-      "Processing": 67.5,
+      "Accuracy": 72,
+      "Processing": 70,
       "Mobility": 72.5,
-      "overall": 73
+      "overall": 74.5
     },
     {
       "name": "Vince Young",
       "Arm": 87,
-      "Accuracy": 65.5,
-      "Processing": 62.5,
+      "Accuracy": 66.5,
+      "Processing": 65,
       "Mobility": 95.5,
-      "overall": 77.5
+      "overall": 78.5
     },
     {
       "name": "Matt Schaub",
@@ -425,16 +425,16 @@
       "Arm": 82.5,
       "Accuracy": 92.5,
       "Processing": 94,
-      "Mobility": 66.5,
-      "overall": 84
+      "Mobility": 68,
+      "overall": 84.5
     },
     {
       "name": "Jared Goff",
       "Arm": 83.5,
       "Accuracy": 94.5,
       "Processing": 93,
-      "Mobility": 61,
-      "overall": 83
+      "Mobility": 65,
+      "overall": 84
     },
     {
       "name": "Dak Prescott",
@@ -503,26 +503,26 @@
     {
       "name": "Jameis Winston",
       "Arm": 91.5,
-      "Accuracy": 74.5,
-      "Processing": 65.5,
+      "Accuracy": 76,
+      "Processing": 70,
       "Mobility": 76.5,
-      "overall": 77
+      "overall": 78.5
     },
     {
       "name": "Nick Foles",
       "Arm": 83.5,
       "Accuracy": 81.5,
       "Processing": 81.5,
-      "Mobility": 68.5,
-      "overall": 79
+      "Mobility": 68,
+      "overall": 78.5
     },
     {
       "name": "Colin Kaepernick",
       "Arm": 92.5,
       "Accuracy": 69,
-      "Processing": 71.5,
+      "Processing": 76,
       "Mobility": 98,
-      "overall": 83
+      "overall": 84
     },
     {
       "name": "Deshaun Watson",
@@ -550,11 +550,11 @@
     },
     {
       "name": "Tua Tagovailoa",
-      "Arm": 76.5,
+      "Arm": 80.5,
       "Accuracy": 96,
       "Processing": 94,
       "Mobility": 74.5,
-      "overall": 85.5
+      "overall": 86.5
     },
     {
       "name": "Trevor Lawrence",
@@ -925,5 +925,5 @@
       "overall": 82.5
     }
   ],
-  "calibrationRevision": "trait-wide-pairwise-audit-v3"
+  "calibrationRevision": "trait-wide-cross-era-audit-v4"
 }
