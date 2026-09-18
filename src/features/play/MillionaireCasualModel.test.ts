@@ -4,6 +4,7 @@ import {
   MILLIONAIRE_REVEAL_DELAY_MS,
   MILLIONAIRE_TIME_BANK_MS,
   millionaireCasualRun,
+  millionaireHostAsset,
   millionaireHostNumber,
   millionaireTimeLabel,
   millionaireTimeoutTransition,
@@ -66,6 +67,38 @@ describe("Millionaire private casual runtime", () => {
     ];
     expect(new Set(numbers.slice(0, 3))).toEqual(new Set([1, 2, 3]));
     expect(numbers[3]).toBe(numbers[0]);
+  });
+
+  it("uses the nine approved sport-scoped background hosts", () => {
+    expect([
+      millionaireHostAsset("cfb", "2026-09-17"),
+      millionaireHostAsset("cfb", "2026-09-18"),
+      millionaireHostAsset("cfb", "2026-09-19"),
+    ].sort()).toEqual([
+      "/assets/millionaire/Cfb1.png",
+      "/assets/millionaire/Cfb2.png",
+      "/assets/millionaire/Cfb3.png",
+    ].sort());
+
+    expect([
+      millionaireHostAsset("nfl", "2026-09-17"),
+      millionaireHostAsset("nfl", "2026-09-18"),
+      millionaireHostAsset("nfl", "2026-09-19"),
+    ].sort()).toEqual([
+      "/assets/millionaire/Nfl1.png",
+      "/assets/millionaire/Nfl2.png",
+      "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png",
+    ].sort());
+
+    expect([
+      millionaireHostAsset("ufc", "2026-09-17"),
+      millionaireHostAsset("ufc", "2026-09-18"),
+      millionaireHostAsset("ufc", "2026-09-19"),
+    ].sort()).toEqual([
+      "/assets/millionaire/Ufc1.png",
+      "/assets/millionaire/Ufc2.png",
+      "/assets/millionaire/Ufc3.png",
+    ].sort());
   });
 
   it("settles a timeout to the latest checkpoint", () => {
