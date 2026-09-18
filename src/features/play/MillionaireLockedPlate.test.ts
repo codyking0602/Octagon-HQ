@@ -5,10 +5,11 @@ const pageSource = readFileSync("src/features/play/MillionaireCasualPage.tsx", "
 const refineCss = readFileSync("src/features/play/MillionairePortraitRefine.css", "utf8");
 
 describe("Millionaire locked plate presentation contract", () => {
-  it("uses the final UFC host plate while keeping the approved reference for football", () => {
-    expect(pageSource).toContain('league === "ufc"');
-    expect(pageSource).toContain('"/assets/millionaire/ufc-final-host-plate.png"');
+  it("uses the clean production plate for the UFC playtest while keeping the approved reference for football", () => {
+    expect(pageSource).toContain('usesCleanProductionPlate = league === "ufc"');
+    expect(pageSource).toContain('"/assets/millionaire/wide_cinematic_game_show_studio_template_dark_bl_1.png"');
     expect(pageSource).toContain('"/assets/millionaire/millionaire-locked-reference.png"');
+    expect(pageSource).toContain('" millionaire-shell--clean-plate"');
     expect(pageSource).toContain('src={stagePlate}');
   });
 
@@ -44,15 +45,19 @@ describe("Millionaire locked plate presentation contract", () => {
     expect(refineCss).toContain("grid-template-columns: 17% 83%;");
   });
 
-  it("aligns the live UFC fields to the permanent host plate", () => {
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--ufc .millionaire-ladder");
-    expect(refineCss).toContain("width: 20.8%;");
-    expect(refineCss).toContain("height: 51.5%;");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--ufc .millionaire-question");
-    expect(refineCss).toContain("bottom: 32.5%;");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--ufc .millionaire-answers");
-    expect(refineCss).toContain("bottom: 14.8%;");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--ufc.millionaire-shell--q1 .millionaire-stakes");
+  it("uses the clean plate without text-erasing masks", () => {
+    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-question::before");
+    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-answers button::before");
+    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-ladder > div::after");
+    expect(refineCss).toContain("display: none;");
+    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-question");
+    expect(refineCss).toContain("bottom: 34.55%;");
+    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-answers");
+    expect(refineCss).toContain("bottom: 16.7%;");
+    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-ladder");
+    expect(refineCss).toContain("height: 51.6%;");
+    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-answers b");
+    expect(refineCss).toContain("visibility: visible;");
   });
 
   it("preserves the exact baked CFB Q1 resting composition", () => {
