@@ -489,7 +489,7 @@ begin
   end if;
 
   if position(
-    'materialize_football_weekly_auction_participants',
+    'materialize_football_weekly_auction_participants' in
     pg_get_functiondef(
       'private.maintain_football_weekly_auction(timestamp with time zone)'::regprocedure::oid
     )
@@ -498,7 +498,7 @@ begin
   end if;
 
   if position(
-    'Weekly Auction field is locked for this week',
+    'Weekly Auction field is locked for this week' in
     pg_get_functiondef(
       'public.submit_my_football_weekly_auction_bids(jsonb,timestamp with time zone)'::regprocedure::oid
     )
