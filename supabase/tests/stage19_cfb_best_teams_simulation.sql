@@ -30,9 +30,15 @@ begin
 
   select pg_get_functiondef('private.materialize_football_weekly_auction_week(date)'::regprocedure::oid)
   into v_weekly_definition;
+  if position('materialize_football_weekly_auction_week_cfb' in v_weekly_definition)=0
+    or position('materialize_football_weekly_build_qb_week' in v_weekly_definition)=0
+  then raise exception 'Weekly Auction subject router drifted'; end if;
+
+  select pg_get_functiondef('private.materialize_football_weekly_auction_week_cfb(date)'::regprocedure::oid)
+  into v_weekly_definition;
   if position('2026-09-22' in v_weekly_definition)=0
     or position('cfb_best_teams_v2_authority' in v_weekly_definition)=0
-  then raise exception 'Weekly Auction v2 cutover boundary or authority drifted'; end if;
+  then raise exception 'Weekly Auction preserved CFB v2 boundary or authority drifted'; end if;
 
   -- If the current legacy week exists in the test fixture, rematerialization must be a no-op.
   if (select count(*) from private.football_weekly_auction_board where week_start=date '2026-09-15')=21 then
