@@ -1558,10 +1558,12 @@ begin
     raise exception 'NFL Build a QB completion-preserving bankroll contract drifted';
   end if;
 
-  select subject_key into v_subject
-  from private.football_weekly_auction_weeks
-  where week_start=date '2026-09-15';
-  if v_subject is distinct from 'cfb-best-teams-since-2000' then
+  if exists (
+    select 1
+    from private.football_weekly_auction_weeks
+    where week_start=date '2026-09-15'
+      and subject_key is distinct from 'cfb-best-teams-since-2000'
+  ) then
     raise exception 'NFL Build a QB migration rewrote the active CFB Weekly subject';
   end if;
 
