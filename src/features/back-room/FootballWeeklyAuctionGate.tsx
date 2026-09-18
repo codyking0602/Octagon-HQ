@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import "../../styles/football-weekly-auction.css";
 import type {
   FootballWeeklyAuctionActiveState,
+  FootballWeeklyAuctionCfbState,
   FootballWeeklyAuctionFinal,
   FootballWeeklyAuctionPriorResult,
   FootballWeeklyAuctionTeam,
@@ -11,6 +12,10 @@ import {
   type FootballWeeklyAuctionBidMap,
 } from "../play/footballWeeklyAuctionBidSafety";
 import { FootballWeeklyAuctionTableDialog } from "./FootballWeeklyAuctionTableDialog";
+import {
+  FootballWeeklyBuildQbFinalResult,
+  FootballWeeklyBuildQbGate,
+} from "./FootballWeeklyBuildQbGate";
 import {
   footballWeeklyAuctionTeamIdentity,
   footballWeeklyAuctionTeamStyle,
@@ -257,7 +262,7 @@ function FinalResult({
   );
 }
 
-export function FootballWeeklyAuctionGate({
+function FootballWeeklyCfbAuctionGate({
   state,
   busy,
   error,
@@ -266,7 +271,7 @@ export function FootballWeeklyAuctionGate({
   onAcknowledgeFinal,
   onContinue,
 }: {
-  state: FootballWeeklyAuctionActiveState;
+  state: FootballWeeklyAuctionCfbState;
   busy: boolean;
   error: string | null;
   forceBoard?: boolean;
@@ -288,16 +293,6 @@ export function FootballWeeklyAuctionGate({
     setBids(initialBids);
     setEditing(!state.submitted_today);
   }, [initialBids, state.submitted_today]);
-
-  if (state.previous_final) {
-    return (
-      <FinalResult
-        result={state.previous_final}
-        busy={busy}
-        onAcknowledge={() => void onAcknowledgeFinal(state.previous_final!.week_start)}
-      />
-    );
-  }
 
   if (state.show_intro && !introDismissed && !forceBoard) {
     return <RulesCover onStart={() => setIntroDismissed(true)} />;
@@ -382,5 +377,68 @@ export function FootballWeeklyAuctionGate({
         )}
       </section>
     </div>
+  );
+}
+
+
+export function FootballWeeklyAuctionGate({
+  state,
+  busy,
+  error,
+  forceBoard = false,
+  onSubmit,
+  onAcknowledgeFinal,
+  onContinue,
+}: {
+  state: FootballWeeklyAuctionActiveState;
+  busy: boolean;
+  error: string | null;
+  forceBoard?: boolean;
+  onSubmit: (bids: Record<number, number>) => Promise<void>;
+  onAcknowledgeFinal: (weekStart: string) => Promise<void>;
+  onContinue: () => void;
+}) {
+  if (state.previous_final) {
+    if (state.previous_final.subject_key === "nfl-build-qb") {
+      return (
+        <FootballWeeklyBuildQbFinalResult
+          result={state.previous_final}
+          busy={busy}
+          onAcknowledge={() => void onAcknowledgeFinal(state.previous_final!.week_start)}
+        />
+      );
+    }
+    return (
+      <FinalResult
+        result={state.previous_final}
+        busy={busy}
+        onAcknowledge={() => void onAcknowledgeFinal(state.previous_final!.week_start)}
+      />
+    );
+  }
+
+  if (state.subject_key === "nfl-build-qb") {
+    return (
+      <FootballWeeklyBuildQbGate
+        state={state}
+        busy={busy}
+        error={error}
+        forceBoard={forceBoard}
+        onSubmit={onSubmit}
+        onContinue={onContinue}
+      />
+    );
+  }
+
+  return (
+    <FootballWeeklyCfbAuctionGate
+      state={state}
+      busy={busy}
+      error={error}
+      forceBoard={forceBoard}
+      onSubmit={onSubmit}
+      onAcknowledgeFinal={onAcknowledgeFinal}
+      onContinue={onContinue}
+    />
   );
 }
