@@ -270,7 +270,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
 
   return (
-    <div className="millionaire-shell millionaire-shell--game">
+    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--${phase}`}>
       <img className="millionaire-locked-stage" src="/assets/millionaire/millionaire-locked-reference.png" alt="" aria-hidden="true" />
       <StudioBackdrop />
       <HQMark onClick={onBack} />
