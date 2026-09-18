@@ -1,15 +1,16 @@
--- Emergency Football Daily schedule hotfix for September 17, 2026.
--- Move the Keep 4 / Blind 5 comparison slot from September 17 to September 18
--- by swapping it with September 18 Hit the Number. Preserve every later slot.
+-- Emergency Football Daily schedule hotfix for September 18, 2026.
+-- Advance today's Daily from Keep 4 / Blind 5 to the next canonical challenge, Who Am I,
+-- by swapping September 18 and September 19. Preserve every later slot.
 --
--- September 17 had already been materialized and completed only by the product owner
--- before this hotfix. Replace that stale Daily row so all players see the new canonical game.
+-- September 18 had already been materialized and completed only once before this hotfix.
+-- Replace that stale Daily row so all players see the new canonical game.
 do $$
 declare
-  v_target_day constant date := date '2026-09-17';
-  v_next_day constant date := date '2026-09-18';
-  v_source_version constant text := 'football-daily-v7-hit-number-pool-cleanup';
-  v_replacement_version constant text := 'football-daily-v8-sep17-swap';
+  v_target_day constant date := date '2026-09-18';
+  v_next_day constant date := date '2026-09-19';
+  v_following_day constant date := date '2026-09-20';
+  v_source_version constant text := 'football-daily-v8-sep17-swap';
+  v_replacement_version constant text := 'football-daily-v9-sep18-advance';
   v_central_today date := private.daily_challenge_central_day(now());
   v_source_cycle text[];
   v_replacement_cycle text[];
@@ -29,14 +30,14 @@ begin
 
   if private.daily_challenge_schedule_for_day(v_target_day, 'football') is distinct from v_source_version
     or private.daily_challenge_expected_game(v_source_version, v_target_day) is distinct from 'keep_4_cut_4'
-    or private.daily_challenge_expected_game(v_source_version, v_next_day) is distinct from 'hit_the_number' then
-    raise exception 'source Football Daily September 17/18 mapping changed unexpectedly';
+    or private.daily_challenge_expected_game(v_source_version, v_next_day) is distinct from 'who_am_i' then
+    raise exception 'source Football Daily September 18/19 mapping changed unexpectedly';
   end if;
 
-  -- v7 keeps the September 12 anchor. September 17/18 are cycle slots 6/7.
+  -- The September 12 anchor makes September 18/19 cycle slots 7/8.
   v_replacement_cycle := v_source_cycle;
-  v_replacement_cycle[6] := 'hit_the_number';
-  v_replacement_cycle[7] := 'keep_4_cut_4';
+  v_replacement_cycle[7] := 'who_am_i';
+  v_replacement_cycle[8] := 'keep_4_cut_4';
 
   select daily.id, daily.game_type
   into v_existing_daily_id, v_existing_game
@@ -46,7 +47,7 @@ begin
 
   if v_existing_daily_id is not null then
     if v_central_today <> v_target_day then
-      raise exception 'September 17 Football Daily row replacement is only safe on %, current Central day is %',
+      raise exception 'September 18 Football Daily row replacement is only safe on %, current Central day is %',
         v_target_day,
         v_central_today;
     end if;
@@ -62,8 +63,8 @@ begin
     from private.daily_challenge_attempts attempt
     where attempt.daily_challenge_id = v_existing_daily_id;
 
-    -- One owner playtest existed when this hotfix was prepared. Refuse to erase a second
-    -- player's completed result if traffic reaches the old game before deployment finishes.
+    -- One completed play existed when this hotfix was prepared. Refuse to erase a
+    -- second player's completed result if traffic reaches the old game before deployment.
     if v_attempt_count > 1 then
       raise exception 'refusing Football Daily hotfix because % completed attempts now exist', v_attempt_count;
     end if;
@@ -101,11 +102,11 @@ begin
   end if;
 
   if private.daily_challenge_schedule_for_day(v_target_day, 'football') is distinct from v_replacement_version
-    or private.daily_challenge_expected_game(v_replacement_version, v_target_day) is distinct from 'hit_the_number'
+    or private.daily_challenge_expected_game(v_replacement_version, v_target_day) is distinct from 'who_am_i'
     or private.daily_challenge_expected_game(v_replacement_version, v_next_day) is distinct from 'keep_4_cut_4'
-    or private.daily_challenge_expected_game(v_replacement_version, date '2026-09-19')
-      is distinct from private.daily_challenge_expected_game(v_source_version, date '2026-09-19') then
-    raise exception 'replacement Football Daily schedule did not preserve the intended September 17/18 swap';
+    or private.daily_challenge_expected_game(v_replacement_version, v_following_day)
+      is distinct from private.daily_challenge_expected_game(v_source_version, v_following_day) then
+    raise exception 'replacement Football Daily schedule did not preserve the intended September 18/19 swap';
   end if;
 
   if v_existing_daily_id is not null then
