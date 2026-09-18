@@ -64,7 +64,6 @@ const FOOTBALL_MILLIONAIRE_CYCLE: readonly OfficialDailyGameType[] = [
   "who_am_i",
   "find_leader",
   "wavelength",
-  "keep_4_cut_4",
   "hit_the_number",
   "millionaire",
   "who_am_i",
@@ -75,7 +74,6 @@ const FOOTBALL_MILLIONAIRE_CYCLE: readonly OfficialDailyGameType[] = [
   "millionaire",
   "find_leader",
   "wavelength",
-  "keep_4_cut_4",
 ];
 
 const FOOTBALL_TODAY_GAME_OVERRIDES: Readonly<Record<string, OfficialDailyGameType>> = {
