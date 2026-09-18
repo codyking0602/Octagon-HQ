@@ -4,6 +4,7 @@ import {
   MILLIONAIRE_REVEAL_DELAY_MS,
   MILLIONAIRE_TIME_BANK_MS,
   millionaireCasualRun,
+  millionaireHostAsset,
   millionaireHostNumber,
   millionaireTimeLabel,
   millionaireTimeoutTransition,
@@ -57,6 +58,22 @@ describe("Millionaire private casual runtime", () => {
     });
   });
 
+  it("uses CFB Calibration Bank v2 Run 1 for the full CFB playtest", () => {
+    const run = millionaireCasualRun("cfb");
+    expect(run.map((question) => question.prompt)).toEqual([
+      "Who won the 2019 Heisman Trophy?",
+      "Who won the first College Football Playoff national championship?",
+      "Who did Clemson defeat to win the 2016 national championship?",
+      "Which of these Heisman winners won the award most recently?",
+      "Which school produced consecutive Heisman winners in 2004 and 2005?",
+      "Which Heisman-winning quarterback did NOT win his conference championship in his Heisman season?",
+      "Which CFP national champion did NOT win its conference championship?",
+      "Which Heisman-winning quarterback threw the fewest touchdown passes in his Heisman season?",
+    ]);
+    expect(run.slice(0, 7).every((question) => Boolean(question.statSheet))).toBe(true);
+    expect(run[7].statSheet).toBeNull();
+  });
+
   it.each(leagues)("rotates %s hosts canonically 1 → 2 → 3 and repeats", (league) => {
     const numbers = [
       millionaireHostNumber(league, "2026-09-17"),
@@ -66,6 +83,38 @@ describe("Millionaire private casual runtime", () => {
     ];
     expect(new Set(numbers.slice(0, 3))).toEqual(new Set([1, 2, 3]));
     expect(numbers[3]).toBe(numbers[0]);
+  });
+
+  it("uses the nine approved sport-scoped background hosts", () => {
+    expect([
+      millionaireHostAsset("cfb", "2026-09-17"),
+      millionaireHostAsset("cfb", "2026-09-18"),
+      millionaireHostAsset("cfb", "2026-09-19"),
+    ].sort()).toEqual([
+      "/assets/millionaire/Cfb1.png",
+      "/assets/millionaire/Cfb2.png",
+      "/assets/millionaire/Cfb3.png",
+    ].sort());
+
+    expect([
+      millionaireHostAsset("nfl", "2026-09-17"),
+      millionaireHostAsset("nfl", "2026-09-18"),
+      millionaireHostAsset("nfl", "2026-09-19"),
+    ].sort()).toEqual([
+      "/assets/millionaire/Nfl1.png",
+      "/assets/millionaire/Nfl2.png",
+      "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png",
+    ].sort());
+
+    expect([
+      millionaireHostAsset("ufc", "2026-09-17"),
+      millionaireHostAsset("ufc", "2026-09-18"),
+      millionaireHostAsset("ufc", "2026-09-19"),
+    ].sort()).toEqual([
+      "/assets/millionaire/Ufc1.png",
+      "/assets/millionaire/Ufc2.png",
+      "/assets/millionaire/Ufc3.png",
+    ].sort());
   });
 
   it("settles a timeout to the latest checkpoint", () => {
@@ -81,6 +130,12 @@ describe("Millionaire private casual runtime", () => {
     const q7Timeout = millionaireTimeoutTransition(secondCheckpoint.run, secondCheckpoint.state).state;
     expect(q7Timeout.finalMoney).toBe(100_000);
     expect(q7Timeout.score).toBe(80);
+
+    const beforeQ8 = answerCorrectly("cfb", 7);
+    const q8Timeout = millionaireTimeoutTransition(beforeQ8.run, beforeQ8.state).state;
+    expect(q8Timeout.finalMoney).toBe(100_000);
+    expect(q8Timeout.baseScore).toBe(80);
+    expect(q8Timeout.score).toBe(80);
   });
 
   it("keeps lifeline deductions when the time bank expires", () => {

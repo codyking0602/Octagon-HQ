@@ -50,6 +50,13 @@ const bundles = [
     smoke: { day: "2026-09-18", gameType: "hit_the_number" },
   },
   {
+    label: "Football Daily Millionaire publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationMillionaire.ts"),
+    fileName: "football-publication-millionaire.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smoke: { day: "2026-09-19", gameType: "millionaire" },
+  },
+  {
     label: "Football Daily comparison publication runtime",
     entry: resolve(repoRoot, "src/features/play/footballDailyPublicationComparison.ts"),
     fileName: "football-publication-comparison.generated.mjs",

@@ -257,6 +257,7 @@ jobs:
             test -f supabase/functions/daily-challenge-runtime/football-publication-find-leader.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-publication-blind-resume.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-publication-hit-the-number.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-publication-millionaire.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-publication-comparison.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs
             supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
@@ -416,6 +417,9 @@ jobs:
           fi
           if [ -f supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql ]; then
             require_remote_migration "202612310122"
+          fi
+          if [ -f supabase/migrations/202612310148_millionaire_daily_launch.sql ]; then
+            require_remote_migration "202612310148"
           fi
           if [ -f supabase/migrations/202612310125_stage21_draft_room_public_release.sql ]; then
             require_remote_migration "202612310125"

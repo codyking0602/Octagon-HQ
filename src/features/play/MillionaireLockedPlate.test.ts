@@ -5,8 +5,8 @@ const pageSource = readFileSync("src/features/play/MillionaireCasualPage.tsx", "
 const fixedCss = readFileSync("src/features/play/MillionaireFixedStage.css", "utf8");
 
 describe("Millionaire fixed-stage presentation contract", () => {
-  it("uses one background-only host/studio asset for every sport", () => {
-    expect(pageSource).toContain('const stageBackground = "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png"');
+  it("uses the sport-scoped rotating background host without changing fixed-stage geometry", () => {
+    expect(pageSource).toContain("const stageBackground = millionaireHostAsset(league);");
     expect(pageSource).toContain('className="millionaire-stage-background"');
     expect(pageSource).not.toContain("millionaire-locked-stage");
     expect(pageSource).not.toContain("stagePlate");
@@ -46,11 +46,33 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(pageSource).toContain("MILLIONAIRE_BASE_PTS[ladderLevel]");
   });
 
+  it("does not hide CFB Q1 answer text on the first render", () => {
+    const refineCss = readFileSync("src/features/play/MillionairePortraitRefine.css", "utf8");
+    expect(refineCss).not.toContain("millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-answers span");
+  });
+
+  it("does not hide CFB Q1 question text on the fixed-stage renderer", () => {
+    const refineCss = readFileSync("src/features/play/MillionairePortraitRefine.css", "utf8");
+    expect(refineCss).not.toContain("millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-question strong");
+  });
+
   it("keeps gameplay states independent from the background image", () => {
     expect(fixedCss).toContain(".millionaire-answers button.is-selected");
     expect(fixedCss).toContain(".millionaire-answers button.is-correct");
     expect(fixedCss).toContain(".millionaire-answers button.is-wrong");
     expect(fixedCss).toContain(".millionaire-lifelines button.is-spent");
     expect(fixedCss).toContain(".millionaire-ladder > div.is-current::before");
+  });
+
+  it("renders complete angled outlines and fixed-size dialog typography", () => {
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-stakes::before[\s\S]*?inset: 3px;[\s\S]*?clip-path:/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-question::before[\s\S]*?inset: 3px;[\s\S]*?clip-path:/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-answers button::before[\s\S]*?inset: 2px;[\s\S]*?clip-path:/);
+    expect(fixedCss).toContain(".millionaire-shell--fixed-stage .millionaire-stat-sheet p");
+    expect(fixedCss).toContain("font-size: 20px;");
+    expect(fixedCss).toContain(".millionaire-shell--fixed-stage .millionaire-decision > strong");
+    expect(fixedCss).toContain("font-size: 28px;");
+    expect(fixedCss).toContain(".millionaire-shell--fixed-stage .millionaire-results > strong");
+    expect(fixedCss).toContain("font-size: 58px;");
   });
 });

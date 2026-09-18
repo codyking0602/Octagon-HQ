@@ -121,6 +121,9 @@ function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
     case "hit_the_number":
       runtime = import("./football-publication-hit-the-number.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
       break;
+    case "millionaire":
+      runtime = import("./football-publication-millionaire.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
     case "blind_rank_5":
     case "keep_4_cut_4":
       runtime = import("./football-publication-comparison.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
