@@ -53,4 +53,16 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(fixedCss).toContain(".millionaire-lifelines button.is-spent");
     expect(fixedCss).toContain(".millionaire-ladder > div.is-current::before");
   });
+
+  it("renders complete angled outlines and fixed-size dialog typography", () => {
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-stakes::before[\s\S]*?inset: 3px;[\s\S]*?clip-path:/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-question::before[\s\S]*?inset: 3px;[\s\S]*?clip-path:/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-answers button::before[\s\S]*?inset: 2px;[\s\S]*?clip-path:/);
+    expect(fixedCss).toContain(".millionaire-shell--fixed-stage .millionaire-stat-sheet p");
+    expect(fixedCss).toContain("font-size: 20px;");
+    expect(fixedCss).toContain(".millionaire-shell--fixed-stage .millionaire-decision > strong");
+    expect(fixedCss).toContain("font-size: 28px;");
+    expect(fixedCss).toContain(".millionaire-shell--fixed-stage .millionaire-results > strong");
+    expect(fixedCss).toContain("font-size: 58px;");
+  });
 });
