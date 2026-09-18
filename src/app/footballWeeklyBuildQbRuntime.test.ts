@@ -59,7 +59,7 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(migration).toContain("'Mobility',qb.mobility");
     expect(migration).toContain("football_weekly_auction_items_hidden_grade_subject_check");
     expect(migration).toContain("subject_key <> 'cfb-best-teams-since-2000'");
-    expect(migration).toContain("or hidden_grade >= 86.0");
+    expect(migration).toContain("or hidden_grade >= 74.0");
     expect(migratedTraitRows.size).toBe(112);
     for (const row of grading.rows) {
       expect(migratedTraitRows.get(row.name)).toEqual({
