@@ -46,11 +46,12 @@ describe("Millionaire locked plate presentation contract", () => {
 
   it("aligns the live UFC fields to the permanent host plate", () => {
     expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--ufc .millionaire-ladder");
-    expect(refineCss).toContain("height: 50%;");
+    expect(refineCss).toContain("width: 20.8%;");
+    expect(refineCss).toContain("height: 51.5%;");
     expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--ufc .millionaire-question");
-    expect(refineCss).toContain("bottom: 36.4%;");
+    expect(refineCss).toContain("bottom: 32.5%;");
     expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--ufc .millionaire-answers");
-    expect(refineCss).toContain("bottom: 18.7%;");
+    expect(refineCss).toContain("bottom: 14.8%;");
     expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--ufc.millionaire-shell--q1 .millionaire-stakes");
   });
 
