@@ -271,6 +271,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
 
   return (
     <div className="millionaire-shell millionaire-shell--game">
+      <img className="millionaire-locked-stage" src="/assets/millionaire/millionaire-locked-reference.webp" alt="" aria-hidden="true" />
       <StudioBackdrop />
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{millionaireLeagueLabel(league)} DAILY</span><strong>MILLIONAIRE</strong></header>
