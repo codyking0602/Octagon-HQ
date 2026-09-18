@@ -180,3 +180,55 @@
     pointer-events: none;
   }
 }
+
+
+/* Cover the baked Q1 copy with the live controls at the exact locked-plate geometry.
+   This keeps the approved studio image untouched while preventing double-rendered text. */
+.millionaire-shell--game .millionaire-title {
+  right: 2.6%;
+  top: 2.2%;
+  width: 20.2%;
+  padding: 0.35% 0 0.5%;
+  background: linear-gradient(180deg, rgba(1, 10, 29, 0.98), rgba(1, 12, 31, 0.96));
+}
+
+.millionaire-shell--game .millionaire-stakes {
+  left: 35.4%;
+  top: 3.0%;
+  width: 26.1%;
+  min-height: 14.2%;
+}
+
+.millionaire-shell--game .millionaire-clock {
+  left: 43.1%;
+  top: 14.3%;
+  width: clamp(104px, 13.7vw, 206px);
+}
+
+.millionaire-shell--game .millionaire-lifelines {
+  left: 2.0%;
+  top: 14.0%;
+  width: 8.6%;
+  gap: clamp(0.35rem, 1.15vh, 0.78rem);
+}
+
+.millionaire-shell--game .millionaire-ladder {
+  right: 1.6%;
+  top: 13.0%;
+  width: 22.6%;
+  height: 58.4%;
+}
+
+.millionaire-shell--game .millionaire-question {
+  left: 12.4%;
+  right: 24.0%;
+  bottom: 27.6%;
+  min-height: 15.4%;
+}
+
+.millionaire-shell--game .millionaire-answers {
+  left: 12.4%;
+  right: 12.5%;
+  bottom: 7.2%;
+  height: 18.8%;
+}
