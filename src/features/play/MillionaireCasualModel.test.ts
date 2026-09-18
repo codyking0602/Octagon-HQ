@@ -58,6 +58,22 @@ describe("Millionaire private casual runtime", () => {
     });
   });
 
+  it("uses CFB Calibration Bank v2 Run 1 for the full CFB playtest", () => {
+    const run = millionaireCasualRun("cfb");
+    expect(run.map((question) => question.prompt)).toEqual([
+      "Who won the 2019 Heisman Trophy?",
+      "Who won the first College Football Playoff national championship?",
+      "Who did Clemson defeat to win the 2016 national championship?",
+      "Which of these Heisman winners won the award most recently?",
+      "Which school produced consecutive Heisman winners in 2004 and 2005?",
+      "Which Heisman-winning quarterback did NOT win his conference championship in his Heisman season?",
+      "Which CFP national champion did NOT win its conference championship?",
+      "Which Heisman-winning quarterback threw the fewest touchdown passes in his Heisman season?",
+    ]);
+    expect(run.slice(0, 7).every((question) => Boolean(question.statSheet))).toBe(true);
+    expect(run[7].statSheet).toBeNull();
+  });
+
   it.each(leagues)("rotates %s hosts canonically 1 → 2 → 3 and repeats", (league) => {
     const numbers = [
       millionaireHostNumber(league, "2026-09-17"),
