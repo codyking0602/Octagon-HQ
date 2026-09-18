@@ -1,11 +1,12 @@
--- Correct the September 19 Millionaire launch cycles before the cutover day.
--- Daily Double remains available historically but is not scheduled in either new cycle.
+-- Supersede the September 19 Millionaire launch schedules with the exact approved
+-- no-Daily-Double rotations. Schedule identities are immutable, so this creates
+-- new versions at the same cutover timestamp; created_at ordering makes them canonical.
 
 do $fix$
 declare
   v_cutover constant date := date '2026-09-19';
-  v_ufc_version constant text := 'play-rotation-v8-millionaire';
-  v_football_version constant text := 'football-daily-v10-millionaire';
+  v_ufc_version constant text := 'play-rotation-v9-millionaire-no-double';
+  v_football_version constant text := 'football-daily-v11-millionaire-no-double';
   v_ufc_cycle constant text[] := array[
     'millionaire',
     'find_leader','wavelength','blind_resume','hit_the_number','who_am_i',
@@ -28,32 +29,14 @@ begin
     from private.daily_challenge_attempts attempt
     join private.daily_challenges daily on daily.id = attempt.daily_challenge_id
     where daily.central_day >= v_cutover
-      and daily.schedule_version in (v_ufc_version, v_football_version)
+      and daily.schedule_version in (
+        'play-rotation-v8-millionaire',
+        'football-daily-v10-millionaire',
+        v_ufc_version,
+        v_football_version
+      )
   ) then
-    raise exception 'cannot correct Millionaire Daily rotation after a September 19+ attempt exists';
-  end if;
-
-  -- Prematerialized future boards are safe to discard before anyone has played them.
-  delete from private.daily_challenges daily
-  where daily.central_day >= v_cutover
-    and daily.schedule_version in (v_ufc_version, v_football_version);
-
-  update private.daily_challenge_schedule_versions
-  set game_cycle = v_ufc_cycle
-  where version = v_ufc_version
-    and sport = 'ufc';
-
-  if not found then
-    raise exception 'UFC Millionaire schedule identity is missing';
-  end if;
-
-  update private.daily_challenge_schedule_versions
-  set game_cycle = v_football_cycle
-  where version = v_football_version
-    and sport = 'football';
-
-  if not found then
-    raise exception 'Football Millionaire schedule identity is missing';
+    raise exception 'cannot replace the September 19+ rotation after an official attempt exists';
   end if;
 
   if coalesce(array_length(v_ufc_cycle, 1), 0) <> 26
@@ -77,11 +60,26 @@ begin
     raise exception 'corrected Football Millionaire Daily cycle mix is invalid';
   end if;
 
+  if exists (
+    select 1
+    from private.daily_challenge_schedule_versions
+    where version in (v_ufc_version, v_football_version)
+  ) then
+    raise exception 'corrected Millionaire Daily schedule identities already exist';
+  end if;
+
+  insert into private.daily_challenge_schedule_versions (
+    version, time_zone, anchor_day, starts_on, game_cycle, sport
+  )
+  values
+    (v_ufc_version, 'America/Chicago', v_cutover, v_cutover, v_ufc_cycle, 'ufc'),
+    (v_football_version, 'America/Chicago', v_cutover, v_cutover, v_football_cycle, 'football');
+
   if private.daily_challenge_schedule_for_day(v_cutover, 'ufc') is distinct from v_ufc_version
     or private.daily_challenge_expected_game(v_ufc_version, v_cutover) is distinct from 'millionaire'
     or private.daily_challenge_schedule_for_day(v_cutover, 'football') is distinct from v_football_version
     or private.daily_challenge_expected_game(v_football_version, v_cutover) is distinct from 'millionaire' then
-    raise exception 'September 19 Millionaire debut changed while correcting the rotations';
+    raise exception 'corrected September 19 Millionaire schedules did not become canonical';
   end if;
 end
 $fix$;
