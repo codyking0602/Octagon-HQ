@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const pageSource = readFileSync(new URL("./MillionaireCasualPage.tsx", import.meta.url), "utf8");
-const refineCss = readFileSync(new URL("./MillionairePortraitRefine.css", import.meta.url), "utf8");
+const pageSource = readFileSync("src/features/play/MillionaireCasualPage.tsx", "utf8");
+const refineCss = readFileSync("src/features/play/MillionairePortraitRefine.css", "utf8");
 
 describe("Millionaire locked plate presentation contract", () => {
   it("keeps the committed locked PNG as the game plate", () => {
