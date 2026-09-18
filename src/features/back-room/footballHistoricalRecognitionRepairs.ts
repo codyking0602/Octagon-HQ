@@ -199,6 +199,7 @@ export const footballHistoricalRecognitionRepairs: readonly FootballHistoricalRe
   player("ken-anderson", "Ken Anderson", "NFL", "QB", 1971, 1986, "B", "mvp-all-pro"),
   player("nfl-mark-moseley", "Mark Moseley", "NFL", "K", 1970, 1986, "B", "mvp-all-pro"),
   player("nfl-joe-theismann", "Joe Theismann", "NFL", "QB", 1974, 1985, "B", "mvp-all-pro"),
+  player("dan-fouts", "Dan Fouts", "NFL", "QB", 1973, 1987, "A", "pro-football-hall-of-fame", undefined, ["San Diego Chargers"]),
   player("dan-marino", "Dan Marino", "NFL", "QB", 1983, 1999, "A", "mvp-all-pro"),
   player("john-elway", "John Elway", "NFL", "QB", 1983, 1998, "A", "mvp-all-pro"),
   player("nfl-boomer-esiason", "Boomer Esiason", "NFL", "QB", 1984, 1997, "B", "mvp-all-pro"),
