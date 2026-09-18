@@ -157,7 +157,7 @@ This is a generator calibration artifact, not live Weekly behavior yet.
 
 Before runtime wiring:
 
-1. Repair canonical identity bindings for Dan Fouts and Jim Kelly.
+1. use the repaired Dan Fouts canonical identity; Jim Kelly already resolves through the Pro Hall historical seed.
 2. Simulate the six-player auction economy against this 28-card supply.
 3. Compare candidate weekly bankrolls rather than inheriting the CFB $40 amount automatically.
 4. Define incomplete-roster handling.
