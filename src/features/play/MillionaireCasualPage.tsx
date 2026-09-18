@@ -29,6 +29,7 @@ import "./MillionaireCasualPage.css";
 import "./MillionaireCasualPolish.css";
 import "./MillionairePortrait.css";
 import "./MillionairePortraitRefine.css";
+import "./MillionaireFixedStage.css";
 
 type MillionaireCasualPageProps = { scope: "ufc" | "football" };
 type PlayPhase = "answering" | "locked" | "revealed" | "settled";
@@ -142,6 +143,31 @@ function useFullscreenGameChrome() {
   }, []);
 }
 
+const MILLIONAIRE_STAGE_WIDTH = 1600;
+const MILLIONAIRE_STAGE_HEIGHT = 900;
+
+function useMillionaireStageScale() {
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const syncScale = () => {
+      const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      setScale(Math.min(viewportWidth / MILLIONAIRE_STAGE_WIDTH, viewportHeight / MILLIONAIRE_STAGE_HEIGHT));
+    };
+
+    syncScale();
+    window.addEventListener("resize", syncScale);
+    window.visualViewport?.addEventListener("resize", syncScale);
+    return () => {
+      window.removeEventListener("resize", syncScale);
+      window.visualViewport?.removeEventListener("resize", syncScale);
+    };
+  }, []);
+
+  return scale;
+}
+
 function MillionaireGame({ league, onBack, onChangeLeague }: { league: MillionaireLeague; onBack: () => void; onChangeLeague?: () => void }) {
   const run = useMemo(() => millionaireCasualRun(league), [league]);
   const [gameState, setGameState] = useState<MillionaireState>(() => createMillionaireState(run));
@@ -162,10 +188,8 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const level = currentQuestion?.level ?? MILLIONAIRE_LEVELS[Math.min(7, gameState.completedQuestions)]!;
   const levelNumber = gameState.currentQuestionIndex + 1;
   const q8 = level === "Q8";
-  const usesCleanProductionPlate = league === "ufc";
-  const stagePlate = usesCleanProductionPlate
-    ? "/assets/millionaire/wide_cinematic_game_show_studio_template_dark_bl_1.png"
-    : "/assets/millionaire/millionaire-locked-reference.png";
+  const stageScale = useMillionaireStageScale();
+  const stageBackground = "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png";
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
 
   function schedule(callback: () => void, delay: number) {
@@ -274,9 +298,12 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
 
   return (
-    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--${phase}${usesCleanProductionPlate ? " millionaire-shell--clean-plate" : ""}`}>
-      <img className="millionaire-locked-stage" src={stagePlate} alt="" aria-hidden="true" />
-      <StudioBackdrop />
+    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--${phase}`}>
+      <div
+        className="millionaire-stage-canvas"
+        style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
+      >
+      <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{millionaireLeagueLabel(league)} DAILY</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{MILLIONAIRE_BASE_PTS[level]} PTS</span></section>
@@ -350,6 +377,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }

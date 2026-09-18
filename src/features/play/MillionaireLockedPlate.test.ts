@@ -2,68 +2,55 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const pageSource = readFileSync("src/features/play/MillionaireCasualPage.tsx", "utf8");
-const refineCss = readFileSync("src/features/play/MillionairePortraitRefine.css", "utf8");
+const fixedCss = readFileSync("src/features/play/MillionaireFixedStage.css", "utf8");
 
-describe("Millionaire locked plate presentation contract", () => {
-  it("uses the clean production plate for the UFC playtest while keeping the approved reference for football", () => {
-    expect(pageSource).toContain('usesCleanProductionPlate = league === "ufc"');
-    expect(pageSource).toContain('"/assets/millionaire/wide_cinematic_game_show_studio_template_dark_bl_1.png"');
-    expect(pageSource).toContain('"/assets/millionaire/millionaire-locked-reference.png"');
-    expect(pageSource).toContain('" millionaire-shell--clean-plate"');
-    expect(pageSource).toContain('src={stagePlate}');
+describe("Millionaire fixed-stage presentation contract", () => {
+  it("uses one background-only host/studio asset for every sport", () => {
+    expect(pageSource).toContain('const stageBackground = "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png"');
+    expect(pageSource).toContain('className="millionaire-stage-background"');
+    expect(pageSource).not.toContain("millionaire-locked-stage");
+    expect(pageSource).not.toContain("stagePlate");
+    expect(pageSource).not.toContain("usesCleanProductionPlate");
   });
 
-  it("exposes league, level, and phase state without rebuilding the plate", () => {
-    expect(pageSource).toContain("millionaire-shell--${league}");
-    expect(pageSource).toContain("millionaire-shell--${level.toLowerCase()}");
-    expect(pageSource).toContain("millionaire-shell--${phase}");
+  it("renders gameplay on a single fixed 1600x900 coordinate system", () => {
+    expect(pageSource).toContain("const MILLIONAIRE_STAGE_WIDTH = 1600");
+    expect(pageSource).toContain("const MILLIONAIRE_STAGE_HEIGHT = 900");
+    expect(pageSource).toContain("Math.min(viewportWidth / MILLIONAIRE_STAGE_WIDTH, viewportHeight / MILLIONAIRE_STAGE_HEIGHT)");
+    expect(pageSource).toContain('className="millionaire-stage-canvas"');
+    expect(pageSource).toContain('translate(-50%, -50%) scale(${stageScale})');
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage > \.millionaire-stage-canvas \{[\s\S]*?width: 1600px;[\s\S]*?height: 900px;/);
   });
 
-  it("lets the locked artwork own the timer, lifeline, ladder, question, and answer chrome", () => {
-    expect(refineCss).toContain(".millionaire-shell--game .millionaire-locked-stage");
-    expect(refineCss).toContain("object-fit: fill;");
-    expect(refineCss).toMatch(/\.millionaire-shell--game \.millionaire-clock \{[\s\S]*?background: transparent;[\s\S]*?box-shadow: none;/);
-    expect(refineCss).toMatch(/\.millionaire-shell--game \.millionaire-lifelines button \{[\s\S]*?background: transparent;[\s\S]*?box-shadow: none;/);
-    expect(refineCss).toMatch(/\.millionaire-shell--game \.millionaire-ladder \{[\s\S]*?background: transparent;[\s\S]*?box-shadow: none;/);
-    expect(refineCss).toMatch(/\.millionaire-shell--game \.millionaire-question \{[\s\S]*?background: transparent;[\s\S]*?box-shadow: none;/);
-    expect(refineCss).toMatch(/\.millionaire-shell--game \.millionaire-answers button \{[\s\S]*?background: transparent;[\s\S]*?box-shadow: none;/);
+  it("uses the image only for the photographic background", () => {
+    expect(fixedCss).toMatch(/\.millionaire-stage-background \{[\s\S]*?width: 1600px;[\s\S]*?height: 900px;[\s\S]*?object-fit: cover;/);
+    expect(fixedCss).toContain(".millionaire-shell--fixed-stage .millionaire-arena");
+    expect(fixedCss).toContain(".millionaire-shell--fixed-stage .millionaire-locked-stage");
+    expect(fixedCss).toContain("display: none !important;");
   });
 
-  it("keeps gameplay inside the device safe area and masks baked later-question numbers", () => {
-    const gameRule = refineCss.match(/\.millionaire-shell--game \{[\s\S]*?\}/)?.[0] ?? "";
-    expect(gameRule).not.toContain("inset: 0;");
-    expect(gameRule).not.toContain("width: 100vw;");
-    expect(refineCss).toContain("linear-gradient(180deg, #07316c, #03183b 78%)");
-    expect(refineCss).toContain("linear-gradient(180deg, #021435, #010818)");
+  it("owns all gameplay chrome in CSS instead of baked plate pixels", () => {
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-stakes \{[\s\S]*?clip-path:/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-clock \{[\s\S]*?conic-gradient/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-ladder \{[\s\S]*?grid-template-rows: repeat\(8, 1fr\)/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-question \{[\s\S]*?left: 266px;[\s\S]*?top: 510px;/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-answers \{[\s\S]*?left: 252px;[\s\S]*?top: 650px;/);
   });
 
-  it("matches lifeline hit-state overlays to the rendered locked-plate circles", () => {
-    expect(refineCss).toContain("aspect-ratio: 1.137 / 1;");
+  it("keeps all changing content live in React", () => {
+    expect(pageSource).toContain("{millionaireLeagueLabel(league)} DAILY");
+    expect(pageSource).toContain("millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)");
+    expect(pageSource).toContain("millionaireTimeLabel(timeRemainingMs)");
+    expect(pageSource).toContain("{currentQuestion?.prompt}");
+    expect(pageSource).toContain("{choice.text}");
+    expect(pageSource).toContain("MILLIONAIRE_BASE_PTS[ladderLevel]");
   });
 
-  it("keeps live answer text clear of the baked A-D labels", () => {
-    expect(refineCss).toContain("grid-template-columns: 17% 83%;");
-  });
-
-  it("uses the clean plate without text-erasing masks", () => {
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-question::before");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-answers button::before");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-ladder > div::after");
-    expect(refineCss).toContain("display: none;");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-question");
-    expect(refineCss).toContain("bottom: 34.55%;");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-answers");
-    expect(refineCss).toContain("bottom: 16.7%;");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-ladder");
-    expect(refineCss).toContain("height: 51.6%;");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--clean-plate .millionaire-answers b");
-    expect(refineCss).toContain("visibility: visible;");
-  });
-
-  it("preserves the exact baked CFB Q1 resting composition", () => {
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--cfb .millionaire-title");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--q1 .millionaire-stakes");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-question::before");
-    expect(refineCss).toContain(".millionaire-shell--game.millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-answers button::before");
+  it("keeps gameplay states independent from the background image", () => {
+    expect(fixedCss).toContain(".millionaire-answers button.is-selected");
+    expect(fixedCss).toContain(".millionaire-answers button.is-correct");
+    expect(fixedCss).toContain(".millionaire-answers button.is-wrong");
+    expect(fixedCss).toContain(".millionaire-lifelines button.is-spent");
+    expect(fixedCss).toContain(".millionaire-ladder > div.is-current::before");
   });
 });
