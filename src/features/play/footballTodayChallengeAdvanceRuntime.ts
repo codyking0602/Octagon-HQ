@@ -9,6 +9,7 @@ import {
   type FootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
 import { advanceWhoAmIDailyRuntime } from "./whoAmIDailyRuntime";
+import { advanceMillionaireDailyRuntime } from "./millionaireDailyRuntime";
 import type {
   OfficialDailyAdvanceResult,
   OfficialDailyRuntimeContext,
@@ -382,6 +383,7 @@ export function advanceFootballOfficialDailyRuntime(
     case "keep_4_cut_4": return advanceKeepCut(context, parsed);
     case "hit_the_number": return advanceHitTheNumber(context, parsed);
     case "who_am_i": return advanceWhoAmIDailyRuntime(context, parsed);
+    case "millionaire": return advanceMillionaireDailyRuntime(context, parsed);
     default: throw new Error(`Unsupported Football official daily game ${String(context.gameType)}.`);
   }
 }
