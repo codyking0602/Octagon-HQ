@@ -1,8 +1,8 @@
 -- Launch Millionaire as a canonical Daily Challenge on September 19, 2026.
--- Daily Double leaves the future rotation entirely. Historical schedules/results remain immutable.
+-- Historical schedules/results remain immutable. Existing Daily Double cadence is preserved.
 -- New mixes:
---   Football: Find 5 / Wavelength 5 / Hit 4 / Who Am I 4 / Millionaire 4 = 22
---   UFC: Find 5 / Wavelength 5 / Blind Resume 4 / Hit 4 / Who Am I 4 / Millionaire 4 = 26
+--   Football: Find 5 / Wavelength 5 / Hit 4 / Who Am I 4 / Millionaire 4 / Daily Double 2 = 24
+--   UFC: Find 5 / Wavelength 5 / Blind Resume 4 / Hit 4 / Who Am I 4 / Millionaire 4 / Daily Double 2 = 28
 
 -- Extend all canonical Daily game-type constraints without disturbing historical rows.
 alter table private.daily_challenge_setups
@@ -215,17 +215,17 @@ declare
     'millionaire',
     'find_leader','wavelength','blind_resume','hit_the_number','who_am_i',
     'find_leader','wavelength','millionaire','blind_resume','hit_the_number','who_am_i',
-    'find_leader','wavelength','blind_resume','millionaire','hit_the_number','who_am_i',
-    'find_leader','wavelength','blind_resume','hit_the_number','millionaire','who_am_i',
-    'find_leader','wavelength'
+    'find_leader','wavelength','keep_4_cut_4','blind_resume','millionaire','hit_the_number','who_am_i',
+    'find_leader','wavelength','blind_resume','hit_the_number','who_am_i','millionaire',
+    'find_leader','wavelength','keep_4_cut_4'
   ]::text[];
   v_football_cycle constant text[] := array[
     'millionaire',
     'find_leader','wavelength','hit_the_number','who_am_i',
     'find_leader','wavelength','millionaire','hit_the_number','who_am_i',
-    'find_leader','wavelength','hit_the_number','millionaire','who_am_i',
+    'find_leader','wavelength','keep_4_cut_4','hit_the_number','millionaire','who_am_i',
     'find_leader','wavelength','hit_the_number','who_am_i','millionaire',
-    'find_leader','wavelength'
+    'find_leader','wavelength','keep_4_cut_4'
   ]::text[];
 begin
   if private.daily_challenge_schedule_for_day(v_cutover - 1, 'ufc') is distinct from 'play-rotation-v7'
@@ -251,24 +251,25 @@ begin
     raise exception 'Millionaire Daily schedule identity already exists';
   end if;
 
-  if coalesce(array_length(v_ufc_cycle, 1), 0) <> 26
+  if coalesce(array_length(v_ufc_cycle, 1), 0) <> 28
     or (select count(*) from unnest(v_ufc_cycle) game where game = 'find_leader') <> 5
     or (select count(*) from unnest(v_ufc_cycle) game where game = 'wavelength') <> 5
     or (select count(*) from unnest(v_ufc_cycle) game where game = 'blind_resume') <> 4
     or (select count(*) from unnest(v_ufc_cycle) game where game = 'hit_the_number') <> 4
     or (select count(*) from unnest(v_ufc_cycle) game where game = 'who_am_i') <> 4
     or (select count(*) from unnest(v_ufc_cycle) game where game = 'millionaire') <> 4
-    or (select count(*) from unnest(v_ufc_cycle) game where game = 'keep_4_cut_4') <> 0 then
+    or (select count(*) from unnest(v_ufc_cycle) game where game = 'keep_4_cut_4') <> 2 then
     raise exception 'UFC Millionaire Daily cycle mix is invalid';
   end if;
 
-  if coalesce(array_length(v_football_cycle, 1), 0) <> 22
+  if coalesce(array_length(v_football_cycle, 1), 0) <> 24
     or (select count(*) from unnest(v_football_cycle) game where game = 'find_leader') <> 5
     or (select count(*) from unnest(v_football_cycle) game where game = 'wavelength') <> 5
     or (select count(*) from unnest(v_football_cycle) game where game = 'hit_the_number') <> 4
     or (select count(*) from unnest(v_football_cycle) game where game = 'who_am_i') <> 4
     or (select count(*) from unnest(v_football_cycle) game where game = 'millionaire') <> 4
-    or (select count(*) from unnest(v_football_cycle) game where game in ('blind_resume','keep_4_cut_4')) <> 0 then
+    or (select count(*) from unnest(v_football_cycle) game where game = 'keep_4_cut_4') <> 2
+    or (select count(*) from unnest(v_football_cycle) game where game = 'blind_resume') <> 0 then
     raise exception 'Football Millionaire Daily cycle mix is invalid';
   end if;
 
