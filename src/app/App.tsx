@@ -4,6 +4,7 @@ import { useIdentity } from "../features/identity/IdentityProvider";
 import { AppProviders } from "./providers";
 import { appRouter } from "./router";
 import { BootScreen } from "./BootScreen";
+import { HitTheNumberUpdateNotice } from "./HitTheNumberUpdateNotice";
 
 async function waitForFirstPaint(): Promise<void> {
   if (document.fonts?.ready) {
@@ -33,7 +34,12 @@ function AppRuntime() {
 
   return !paintReady || !identity.ready
     ? <BootScreen />
-    : <RouterProvider router={appRouter} />;
+    : (
+        <>
+          <RouterProvider router={appRouter} />
+          <HitTheNumberUpdateNotice />
+        </>
+      );
 }
 
 export function App() {
