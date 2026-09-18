@@ -128,6 +128,8 @@ This is the first broad yes-pass before trait grading. It intentionally contains
 - Mitchell Trubisky
 - Blake Bortles
 - Sam Bradford
+- Tim Tebow
+- Colt McCoy
 - Geno Smith
 - Justin Fields
 - Robert Griffin III
@@ -140,14 +142,20 @@ This is the first broad yes-pass before trait grading. It intentionally contains
 - Johnny Manziel
 - Will Levis
 - Case Keenum
+- Kenny Pickett
+- Michael Penix Jr.
+- J.J. McCarthy
+- Cam Ward
+- Jaxson Dart
+- Shedeur Sanders
 
-**First-pass yes count: 88.**
+**First-pass yes count: 96.**
 
 This count is an output of the first editorial pass, not a target.
 
 ## Borderline / second-pass review
 
-These names are not in the first-pass 88, but should be explicitly reviewed before population lock:
+These names are not in the first-pass 96, but should be explicitly reviewed before population lock:
 
 - Ken Stabler
 - Ken Anderson
@@ -165,6 +173,13 @@ These names are not in the first-pass 88, but should be explicitly reviewed befo
 - Jacoby Brissett
 - Josh McCown
 - Brian Hoyer
+- Blaine Gabbert
+- Josh Rosen
+- Sam Howell
+- Desmond Ridder
+- Malik Willis
+- Spencer Rattler
+- Tyler Shough
 
 The older names face the stronger era bar. The modern/borderline names face the recognition/usefulness bar.
 
@@ -172,14 +187,17 @@ The older names face the stronger era bar. The modern/borderline names face the 
 
 Do not assume the repository's current 122-QB historical-consensus universe is complete enough to define the v2 population by itself.
 
-For example, recognizable modern trait subjects such as Justin Fields can be absent from that historical-consensus snapshot even though they are obvious Build a QB candidates. Before population lock, run a separate modern-completeness check against the canonical NFL QB registry and current recognition evidence.
+The completeness check confirmed that this matters in practice. The repository's promoted recognition snapshot contains 106 A/B/C NFL quarterbacks, while the exact NFL source registry contains additional modern quarterbacks who are obvious Build a QB candidates but are not promoted into that older historical-consensus pool.
+
+Examples include Justin Fields, Robert Griffin III, Zach Wilson, Anthony Richardson, Bryce Young, Drake Maye, Trey Lance, Will Levis, Kenny Pickett, Michael Penix Jr., J.J. McCarthy, Cam Ward, Jaxson Dart, and Shedeur Sanders. These identities exist in the exact NFL source registry even when they are absent from the 122-QB historical-consensus ordering.
+
+Therefore the 122-QB historical list is evidence and a candidate source, not a population ceiling.
 
 ## Next population step
 
 Before any grading:
 
 1. Validate every provisional YES identity against the canonical registry / exact source binding.
-2. Run the modern-completeness check for missing recognizable 2010+ quarterbacks.
-3. Resolve the borderline list.
-4. Freeze the final population.
-5. Only then define and calibrate Arm, Accuracy, Processing, and Mobility.
+2. Resolve the remaining borderline list using the locked era/recognition curve.
+3. Freeze the final population.
+4. Only then define and calibrate Arm, Accuracy, Processing, and Mobility.
