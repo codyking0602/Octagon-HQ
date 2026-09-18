@@ -490,7 +490,7 @@ alter table private.football_weekly_auction_board
   drop constraint if exists football_weekly_auction_board_season_reference_fkey;
 
 create or replace function private.validate_football_weekly_auction_board_authority()
-returns trigger language plpgsql set search_path='' as $
+returns trigger language plpgsql set search_path='' as $weekly_board_guard$
 begin
   if new.week_start >= date '2026-09-22' then
     if not exists(
@@ -509,7 +509,7 @@ begin
   end if;
   return new;
 end;
-$;
+$weekly_board_guard$;
 
 drop trigger if exists validate_football_weekly_auction_board_authority
   on private.football_weekly_auction_board;
