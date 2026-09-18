@@ -50,22 +50,23 @@ begin
     if v_before<>v_after then raise exception 'Current legacy Weekly board changed during v2 cutover'; end if;
   end if;
 
-  perform private.materialize_football_weekly_auction_week(date '2026-09-22');
+  -- Sep 22 is NFL Build a QB; Sep 29 is the next CFB subject week.
+  perform private.materialize_football_weekly_auction_week(date '2026-09-29');
 
-  if (select count(*) from private.football_weekly_auction_board where week_start=date '2026-09-22')<>21
-    or (select count(distinct b.season_reference) from private.football_weekly_auction_board b where b.week_start=date '2026-09-22')<>21
+  if (select count(*) from private.football_weekly_auction_board where week_start=date '2026-09-29')<>21
+    or (select count(distinct b.season_reference) from private.football_weekly_auction_board b where b.week_start=date '2026-09-29')<>21
     or exists(
       select 1 from private.football_weekly_auction_board b
       left join private.cfb_best_teams_v2_authority p on p.season_reference=b.season_reference
-      where b.week_start=date '2026-09-22' and p.season_reference is null
+      where b.week_start=date '2026-09-29' and p.season_reference is null
     )
-  then raise exception 'Next Weekly board did not materialize entirely from CFB v2'; end if;
+  then raise exception 'Next CFB Weekly board did not materialize entirely from CFB v2'; end if;
 
   if (select count(distinct p.school)
       from private.football_weekly_auction_board b
       join private.cfb_best_teams_v2_authority p using(season_reference)
-      where b.week_start=date '2026-09-22')<>21
-  then raise exception 'Next Weekly board repeated a school'; end if;
+      where b.week_start=date '2026-09-29')<>21
+  then raise exception 'Next CFB Weekly board repeated a school'; end if;
 end;
 $best_cfb_calibration$;
 
