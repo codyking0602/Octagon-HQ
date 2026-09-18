@@ -18,6 +18,21 @@ const grading = JSON.parse(
     overall: number;
   }>;
 };
+const authorityInsert = migration.slice(
+  migration.indexOf("insert into private.nfl_build_qb_v2_authority"),
+  migration.indexOf("on conflict(item_reference)", migration.indexOf("insert into private.nfl_build_qb_v2_authority")),
+);
+const migratedTraitRows = new Map(
+  [...authorityInsert.matchAll(/\\('build-qb-[^']+','([^']+)','[^']+',([0-9.]+),([0-9.]+),([0-9.]+),([0-9.]+),([0-9.]+)\\)/g)]
+    .map((match) => [match[1], {
+      Arm: Number(match[2]),
+      Accuracy: Number(match[3]),
+      Processing: Number(match[4]),
+      Mobility: Number(match[5]),
+      overall: Number(match[6]),
+    }] as const),
+);
+
 const repository = readFileSync(
   "src/features/play/footballWeeklyAuctionRepository.ts",
   "utf8",
@@ -42,6 +57,16 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(migration).toContain("'Accuracy',qb.accuracy");
     expect(migration).toContain("'Processing',qb.processing");
     expect(migration).toContain("'Mobility',qb.mobility");
+    expect(migratedTraitRows.size).toBe(112);
+    for (const row of grading.rows) {
+      expect(migratedTraitRows.get(row.name)).toEqual({
+        Arm: row.Arm,
+        Accuracy: row.Accuracy,
+        Processing: row.Processing,
+        Mobility: row.Mobility,
+        overall: row.overall,
+      });
+    }
   });
 
   it("routes the next Tuesday to NFL Build a QB while preserving the active CFB week", () => {
