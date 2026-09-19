@@ -3175,25 +3175,32 @@ function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
   return clues
     .filter((clue) => !CFB_PR3_WEAK_VOLUME_CLUE_IDS.has(clue.id))
     .map((clue): WhoAmIClue => {
-      const profile = whoAmIRevealProfile(clue);
+      const categorizedClue: WhoAmIClue = clue.id === "position" || clue.id === "role"
+        ? { ...clue, facet: "role" }
+        : clue.id === "era"
+          ? { ...clue, facet: "era" }
+          : clue.id === "school"
+            ? { ...clue, facet: "background" }
+            : clue;
+      const profile = whoAmIRevealProfile(categorizedClue);
 
       if (profile.category === "nickname-persona" || profile.category === "jersey-number") {
-        return clue.band === "giveaway" ? clue : { ...clue, band: "giveaway" };
+        return categorizedClue.band === "giveaway" ? categorizedClue : { ...categorizedClue, band: "giveaway" };
       }
       if (
         profile.category === "school"
         && profile.identifyingPower !== "broad"
-        && (clue.band === "broad" || clue.band === "helpful")
+        && (categorizedClue.band === "broad" || categorizedClue.band === "helpful")
       ) {
-        return { ...clue, band: "strong" };
+        return { ...categorizedClue, band: "strong" };
       }
-      if (clue.band === "broad" && profile.earliestClue > 2) {
-        return { ...clue, band: "helpful" };
+      if (categorizedClue.band === "broad" && profile.earliestClue > 2) {
+        return { ...categorizedClue, band: "helpful" };
       }
-      if (clue.band === "helpful" && profile.earliestClue > 4) {
-        return { ...clue, band: "strong" };
+      if (categorizedClue.band === "helpful" && profile.earliestClue > 4) {
+        return { ...categorizedClue, band: "strong" };
       }
-      return clue;
+      return categorizedClue;
     })
     .filter((clue) => {
       if (whoAmIRevealProfile(clue).category !== "personal-biography") return true;
