@@ -75,11 +75,15 @@ describe("completed Picks event recaps", () => {
     expect(gamrotSalkilldWatchMomentRepair).not.toContain("cron.schedule");
   });
 
-  it("publishes recap input through the existing watch-moment and lifecycle owners", () => {
+  it("publishes the required YouTube recap through the canonical watch-moment release owner", () => {
     expect(controlSource).toContain("RECAP URL");
     expect(controlSource).toContain("PUBLISH EVENT RECAP");
-    expect(controlSource).toContain("sends the recap notification to members");
-    expect(controlSource.indexOf("setWatchMoments!")).toBeLessThan(controlSource.indexOf("completeEvent(event.eventId)"));
+    expect(controlSource).toContain("final standings will publish");
+    expect(controlSource).toContain("Add the YouTube recap URL before publishing final standings.");
+    expect(controlSource).toContain("youtube.com");
+    expect(controlSource).toContain("youtu.be");
+    expect(controlSource).toContain("setWatchMoments!");
+    expect(controlSource).not.toContain("completeEvent(event.eventId)");
     expect(controlRepositorySource).toContain('client.rpc("set_pick_event_watch_moments"');
     expect(controlRepositorySource).toContain('client.rpc("transition_pick_event"');
     expect(controlRepositorySource).not.toContain("from(\"pick_events\")");

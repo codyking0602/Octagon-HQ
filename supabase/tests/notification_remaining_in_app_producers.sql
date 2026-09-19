@@ -183,7 +183,8 @@ begin
     raise exception 'Hourly replay duplicated an incomplete-Picks reminder: %', v_snapshot;
   end if;
 
-  -- Resolve every included fight and prove the single owner completion action.
+  -- Resolve every included fight. PR2 deliberately does not create an owner
+  -- "complete event" prompt: publishing the required YouTube recap is the final action.
   perform set_config('request.jwt.claim.role', 'service_role', true);
   update public.pick_events
   set status = 'locked'
@@ -199,19 +200,18 @@ begin
   perform set_config('request.jwt.claim.role', 'authenticated', true);
   perform set_config('request.jwt.claim.sub', v_owner::text, true);
   v_snapshot := public.get_notification_snapshot(50);
-  if not exists (
-    select 1 from jsonb_array_elements(v_snapshot->'items') item
-    where item->>'kind' = 'event_ready_to_complete'
-      and item->>'route' = '/picks/control'
-      and item->>'action_label' = 'COMPLETE EVENT'
-  ) then
-    raise exception 'Resolved locked event did not create the one owner completion action: %', v_snapshot;
-  end if;
   if exists (
     select 1 from jsonb_array_elements(v_snapshot->'items') item
-    where item->>'kind' = 'all_results_entered'
+    where item->>'kind' in ('event_ready_to_complete', 'all_results_entered')
   ) then
-    raise exception 'Event completion created duplicate all-results-entered noise: %', v_snapshot;
+    raise exception 'Resolved event created obsolete owner completion noise: %', v_snapshot;
+  end if;
+  if not exists (
+    select 1 from jsonb_array_elements(v_snapshot->'items') item
+    where item->>'kind' = 'monitoring_repeatedly_failed'
+      and item->>'route' = '/picks/monitoring'
+  ) then
+    raise exception 'Suppressing completion noise also removed an actionable monitoring exception: %', v_snapshot;
   end if;
 
   -- A correction to a completed event changes member standings immediately.

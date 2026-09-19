@@ -73,7 +73,7 @@ describe("Fight Night Control results lifecycle", () => {
     await waitFor(() => expect(repo.loadControlEvent).toHaveBeenCalledWith("ufc-329"));
   });
 
-  it("publishes the supplied recap URL before completing the event", async () => {
+  it("publishes the supplied YouTube recap as the one final release action", async () => {
     const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
     renderPage(repo);
     const recapInput = await screen.findByRole("textbox", { name: "RECAP URL" });
@@ -82,30 +82,38 @@ describe("Fight Night Control results lifecycle", () => {
     });
     fireEvent.change(recapInput, { target: { value: "https://youtu.be/example" } });
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
-    await waitFor(() => expect(repo.completeEvent).toHaveBeenCalledWith("ufc-control"));
-    expect(repo.setWatchMoments).toHaveBeenCalledWith("ufc-control", [{ title: "Alpha vs. Bravo", url: "https://youtu.be/example" }]);
-    expect(vi.mocked(repo.setWatchMoments!).mock.invocationCallOrder[0]).toBeLessThan(vi.mocked(repo.completeEvent).mock.invocationCallOrder[0]);
-    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("sends the recap notification to members"));
+    await waitFor(() => expect(repo.setWatchMoments).toHaveBeenCalledWith(
+      "ufc-control",
+      [{ title: "Alpha vs. Bravo", url: "https://youtu.be/example" }],
+    ));
+    expect(repo.completeEvent).not.toHaveBeenCalled();
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("final standings will publish"));
   });
 
-  it("allows an intentional publish without a recap URL", async () => {
+  it("requires a YouTube recap URL before final standings can release", async () => {
     const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
     renderPage(repo);
     fireEvent.click(await screen.findByRole("button", { name: "PUBLISH EVENT RECAP" }));
-    await waitFor(() => expect(repo.completeEvent).toHaveBeenCalledWith("ufc-control"));
+    expect(await screen.findByText("Add the YouTube recap URL before publishing final standings.")).toBeInTheDocument();
     expect(repo.setWatchMoments).not.toHaveBeenCalled();
+    expect(repo.completeEvent).not.toHaveBeenCalled();
   });
 
-  it("rejects an invalid recap URL before publishing", async () => {
+  it("rejects invalid or non-YouTube recap URLs before publishing", async () => {
     const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
     renderPage(repo);
     const recapInput = await screen.findByRole("textbox", { name: "RECAP URL" });
     await act(async () => {
       await Promise.resolve();
     });
-    fireEvent.change(recapInput, { target: { value: "not-a-url" } });
+
+    fireEvent.change(recapInput, { target: { value: "https://example.com/video" } });
     fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
-    expect(await screen.findByText("Enter a valid http or https recap URL, or leave the field blank.")).toBeInTheDocument();
+    expect(await screen.findByText("Enter a secure YouTube recap URL (youtube.com or youtu.be).")).toBeInTheDocument();
+
+    fireEvent.change(recapInput, { target: { value: "http://youtu.be/example" } });
+    fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
+
     expect(repo.setWatchMoments).not.toHaveBeenCalled();
     expect(repo.completeEvent).not.toHaveBeenCalled();
   });

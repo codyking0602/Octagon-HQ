@@ -397,7 +397,7 @@ begin
     ), to_jsonb('Meta APEX'::text), to_jsonb('Latest Arena'::text), null, null, 1
   );
 
-  -- Auto-applied odds remain visible but have no approval proposal.
+  -- Auto-applied odds remain in backend evidence but are no longer owner work.
   perform pg_temp.monitor_finding(
     v_run, 'monitor-approval', 'odds-applied', 'odds_change',
     'American odds changed and were applied automatically.',
@@ -415,25 +415,25 @@ begin
   if (v_inbox->>'unresolved_count')::integer <> jsonb_array_length(v_pending) then
     raise exception 'pending count does not equal unique visible unresolved findings';
   end if;
-  if jsonb_array_length(v_pending) <> 2 then
-    raise exception 'expected only newest venue and applied odds findings, got %', jsonb_array_length(v_pending);
+  if jsonb_array_length(v_pending) <> 1 then
+    raise exception 'expected only the newest actionable venue finding, got %', jsonb_array_length(v_pending);
   end if;
   if not exists (
     select 1 from jsonb_array_elements(v_pending) item
     where item->>'finding_key' = 'venue-latest'
   ) or exists (
     select 1 from jsonb_array_elements(v_pending) item
-    where item->>'finding_key' in ('venue-first', 'stale-weight-current')
+    where item->>'finding_key' in ('venue-first', 'stale-weight-current', 'odds-applied')
   ) then
-    raise exception 'pending inbox did not reconcile stale or superseded findings';
+    raise exception 'pending inbox did not reconcile stale, superseded, or automatic receipt findings';
   end if;
   if not exists (
-    select 1 from jsonb_array_elements(v_pending) item
-    where item->>'finding_key' = 'odds-applied'
-      and item->'source_details'->>'automatically_applied' = 'true'
-      and not (item->'source_details' ? 'approval_proposal')
+    select 1
+    from public.pick_monitoring_findings finding
+    where finding.finding_key = 'odds-applied'
+      and finding.source_details->>'automatically_applied' = 'true'
   ) then
-    raise exception 'automatically applied odds were not acknowledgment-only';
+    raise exception 'suppressing the routine odds receipt removed its backend audit evidence';
   end if;
 
   if (select count(*) from public.pick_card_change_actions where event_id = 'monitor-approval') <> 7 then
