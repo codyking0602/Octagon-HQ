@@ -97,10 +97,19 @@ function mainBoardPublicState(
 
 function fastMoneyReveal(pack: FamilyFeudPack, state: FamilyFeudState) {
   if (state.phase !== "complete") return [];
-  return state.fastMoneyResults.map((result, index) => {
-    const question = pack.fastMoney[index]!;
+  return pack.fastMoney.map((question, index) => {
+    const result = state.fastMoneyResults[index];
+    if (!result) {
+      return {
+        question_id: question.id,
+        prompt: question.prompt,
+        submitted_answer: "NO ANSWER",
+        points: 0,
+        board_rank: null,
+      };
+    }
     const canonical = result.entityId ? entityPresentation(pack, result.entityId) : null;
-    const submitted = canonical?.display_name ?? result.submittedText;
+    const submitted = canonical?.display_name ?? result.submittedText || "NO ANSWER";
     const rankedAnswerIndex = result.entityId
       ? question.answers.findIndex((answer) => answer.entityId === result.entityId)
       : -1;
