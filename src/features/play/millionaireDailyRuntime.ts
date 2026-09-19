@@ -46,15 +46,18 @@ function balanceRun(run: MillionaireRun, runIndex: number): MillionaireRun {
     })) as unknown as MillionaireRuntimeQuestion["choices"];
     const correctChoiceId = MILLIONAIRE_CHOICE_IDS[slot]!;
     const second = MILLIONAIRE_CHOICE_IDS[(slot + 1) % 4]!;
-    const survivorChoiceIds = [correctChoiceId, second] as [MillionaireChoiceId, MillionaireChoiceId];
-    const removalChoiceIds = MILLIONAIRE_CHOICE_IDS.filter((id) => !survivorChoiceIds.includes(id))
-      as [MillionaireChoiceId, MillionaireChoiceId];
+    const removalChoiceIds = MILLIONAIRE_CHOICE_IDS.filter(
+      (id) => id !== correctChoiceId && id !== second,
+    );
 
     return {
       ...question,
       choices,
       correctChoiceId,
-      fiftyFifty: { survivorChoiceIds, removalChoiceIds },
+      fiftyFifty: {
+        survivorChoiceIds: [correctChoiceId, second],
+        removalChoiceIds: [removalChoiceIds[0]!, removalChoiceIds[1]!],
+      },
     };
   }) as unknown as MillionaireRun;
 }
