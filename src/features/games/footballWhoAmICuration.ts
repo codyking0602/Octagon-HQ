@@ -3169,21 +3169,65 @@ const CFB_PR3_WEAK_VOLUME_CLUE_IDS: ReadonlySet<string> = new Set([
   "fact:cfb-career-rushing-yards-per-attempt",
 ] as const);
 
-function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
-  let personalBiographyUsed = false;
+const CFB_PR3_EXACT_CHRONOLOGY_IDS = new Set([
+  "career-span",
+  "coach-start",
+  "coach-end",
+  "player-career-start",
+  "player-career-end",
+]);
 
-  const curated = clues
-    .filter((clue) => !CFB_PR3_WEAK_VOLUME_CLUE_IDS.has(clue.id))
+const CFB_PR3_SPORTS_PATH_TEXT = /\b(?:high[- ]school|prep|recruit(?:ed|ing|ment)?|prospect|walk[- ]on|redshirt|junior college|juco|position change|position switch|depth chart|scholarship offer|multi-sport|two-sport|three-sport|four-sport|lettered)\b/i;
+
+function cfbPr3EraClue(subject: FootballSubjectProfile): WhoAmIClue | null {
+  const seasons = [subject.startSeason, subject.endSeason].filter((value): value is number => value != null);
+  if (seasons.length === 0) return null;
+  const firstDecade = Math.floor(Math.min(...seasons) / 10) * 10;
+  const lastDecade = Math.floor(Math.max(...seasons) / 10) * 10;
+  const text = firstDecade === lastDecade
+    ? `I was active in college football in the ${firstDecade}s.`
+    : `My college football career spanned the ${firstDecade}s and ${lastDecade}s.`;
+  return {
+    id: "pr3-era",
+    conceptId: "pr3-era",
+    text,
+    band: "broad",
+    facet: "era",
+    revealPriority: 35,
+  };
+}
+
+function finalizeCfbPr3Content(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  let personalBiographyUsed = false;
+  const withoutChronology = clues.filter((clue) => (
+    !CFB_PR3_WEAK_VOLUME_CLUE_IDS.has(clue.id)
+    && !CFB_PR3_EXACT_CHRONOLOGY_IDS.has(clue.id)
+  ));
+  const withEra = withoutChronology.some((clue) => clue.id === "era" || clue.id === "pr3-era")
+    ? withoutChronology
+    : (() => {
+      const era = cfbPr3EraClue(subject);
+      return era ? [era, ...withoutChronology] : withoutChronology;
+    })();
+
+  const curated = withEra
     .map((clue): WhoAmIClue => {
-      const categorizedClue: WhoAmIClue = clue.id === "position" || clue.id === "role"
-        ? { ...clue, facet: "role" }
-        : clue.id === "era"
-          ? { ...clue, facet: "era" }
+      const structuralClue: WhoAmIClue = clue.id === "position" || clue.id === "role"
+        ? { ...clue, band: "broad", facet: "role" }
+        : clue.id === "era" || clue.id === "pr3-era"
+          ? { ...clue, band: "broad", facet: "era" }
           : clue.id === "school"
             ? { ...clue, facet: "background" }
             : clue.id.startsWith("fact:")
               ? { ...clue, facet: "production" }
               : clue;
+      const categorizedClue = (
+        structuralClue.identityKnowledge
+        && structuralClue.facet === "identity"
+        && CFB_PR3_SPORTS_PATH_TEXT.test(structuralClue.text)
+      )
+        ? { ...structuralClue, facet: "career-path" as const }
+        : structuralClue;
       const profile = whoAmIRevealProfile(categorizedClue);
 
       if (profile.category === "nickname-persona" || profile.category === "jersey-number") {
@@ -3191,7 +3235,7 @@ function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
       }
       if (
         profile.category === "school"
-        && profile.identifyingPower !== "broad"
+        && profile.identifyingPower === "signature"
         && (categorizedClue.band === "broad" || categorizedClue.band === "helpful")
       ) {
         return { ...categorizedClue, band: "strong" };
@@ -3211,17 +3255,18 @@ function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
       return true;
     });
 
-  const existingFoundation = curated.filter((clue) => (
-    clue.band === "helpful" && whoAmIRevealProfile(clue).earliestClue <= 4
-  )).length;
-  const foundationNeeded = Math.max(0, 2 - existingFoundation);
-  if (foundationNeeded === 0) return curated;
+  const helpfulProfiles = curated
+    .filter((clue) => clue.band === "helpful")
+    .map((clue) => whoAmIRevealProfile(clue));
+  let earlyFoundation = helpfulProfiles.filter((profile) => profile.earliestClue <= 3).length;
+  let totalFoundation = helpfulProfiles.filter((profile) => profile.earliestClue <= 4).length;
+  if (earlyFoundation >= 1 && totalFoundation >= 2) return curated;
 
   const categoryRank: Readonly<Record<string, number>> = {
     "team-path": 0,
-    production: 1,
-    accomplishments: 2,
-    "sports-biography": 3,
+    "sports-biography": 1,
+    production: 2,
+    accomplishments: 3,
     style: 4,
     identity: 5,
   };
@@ -3235,7 +3280,7 @@ function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
       && profile.earliestClue <= 4
       && profile.category !== "personal-biography"
       && profile.category !== "relationships"
-      && !(profile.category === "school" && profile.identifyingPower !== "broad")
+      && !(profile.category === "school" && profile.identifyingPower === "signature")
       && (profile.category !== "identity" || clue.id === "conference")
     ))
     .sort((left, right) => (
@@ -3245,7 +3290,15 @@ function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
       || left.index - right.index
     ));
 
-  const rebandIndexes = new Set(candidates.slice(0, foundationNeeded).map(({ index }) => index));
+  const rebandIndexes = new Set<number>();
+  for (const candidate of candidates) {
+    if (earlyFoundation >= 1 && totalFoundation >= 2) break;
+    if (candidate.profile.earliestClue > 3 && earlyFoundation < 1) continue;
+    rebandIndexes.add(candidate.index);
+    totalFoundation += 1;
+    if (candidate.profile.earliestClue <= 3) earlyFoundation += 1;
+  }
+
   return curated.map((clue, index) => (
     rebandIndexes.has(index) ? { ...clue, band: "helpful" } : clue
   ));
@@ -3293,7 +3346,7 @@ function curateCfbBatch1Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(cfbBatch1SupplementalClues.get(subject.id) ?? []));
-  return finalizeCfbPr3Content(trimCfbBatch1Pool(subject, curated));
+  return finalizeCfbPr3Content(subject, trimCfbBatch1Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch1Subject(subjectId: string) {
@@ -3834,7 +3887,7 @@ function curateCfbBatch2Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(cfbBatch2SupplementalClues.get(subject.id) ?? []));
-  return finalizeCfbPr3Content(trimCfbBatch2Pool(subject, curated));
+  return finalizeCfbPr3Content(subject, trimCfbBatch2Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch2Subject(subjectId: string) {
@@ -4539,8 +4592,8 @@ function curateCfbBatch3Clues(subject: FootballSubjectProfile, rawClues: readonl
   curated.push(...(cfbBatch3SupplementalClues.get(subject.id) ?? []));
   curated.push(...(cfbBatch3ReplayDepthClues.get(subject.id) ?? []));
   const forcedPool = cfbBatch3ForcedPoolIds.get(subject.id);
-  if (forcedPool) return finalizeCfbPr3Content(curated.filter((clue) => forcedPool.has(clue.id)));
-  return finalizeCfbPr3Content(trimCfbBatch3Pool(subject, curated));
+  if (forcedPool) return finalizeCfbPr3Content(subject, curated.filter((clue) => forcedPool.has(clue.id)));
+  return finalizeCfbPr3Content(subject, trimCfbBatch3Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch3Subject(subjectId: string) {
@@ -5155,7 +5208,7 @@ function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonl
     ...(cfbBatch4SupplementalClues.get(subject.id) ?? [])
       .filter((clue) => !shouldSuppressCfbBatch4Clue(subject, clue)),
   );
-  return finalizeCfbPr3Content(rebalanceCfbBatch4ReplayBands(subject, trimCfbBatch4Pool(subject, curated)));
+  return finalizeCfbPr3Content(subject, rebalanceCfbBatch4ReplayBands(subject, trimCfbBatch4Pool(subject, curated)));
 }
 
 export function isCfbWhoAmIBatch4Subject(subjectId: string) {
