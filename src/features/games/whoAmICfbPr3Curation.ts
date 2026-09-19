@@ -61,6 +61,10 @@ function pr3Clue(
 }
 
 const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-ernie-davis", [
+    pr3Clue("davis-cotton-bowl", "As a sophomore I was Cotton Bowl MVP, scoring twice in Syracuse's 23-14 win over Texas that completed an 11-0 national-championship season.", "giveaway", "accomplishments", 8),
+    pr3Clue("davis-two-time-all-american", "I earned All-America honors in both 1960 and 1961, with the second selection unanimous.", "strong", "identity"),
+  ]],
   ["cfb-hunter-henry", [
     pr3Clue("henry-full-career", "Across my Arkansas career, I caught 116 passes for 1,661 yards and nine touchdowns, becoming one of eight SEC tight ends to reach 100 receptions.", "strong", "identity"),
   ]],
