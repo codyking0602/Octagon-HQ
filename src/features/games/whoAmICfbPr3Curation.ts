@@ -522,10 +522,10 @@ export function refineCfbWhoAmIContent(
         return { ...clue, text: clue.text.replace(" while wearing the program's famous No. 44", "") };
       }
       if (subject.id === "cfb-lamichael-james" && /wore no\.\s*21|no\.\s*21\b/i.test(clue.text)) {
-        return { ...clue, band: "giveaway" as const, revealPriority: 6 };
+        return null;
       }
       return clue;
-    })
+    }).filter((clue): clue is WhoAmIClue => clue !== null)
     : withSupplemental;
   const withOrientation = ensureOrientationClues(subject, subjectAdjusted);
   const withConference = ensureConferenceFoundation(subject, withOrientation);
