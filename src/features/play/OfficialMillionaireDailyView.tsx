@@ -6,8 +6,11 @@ import {
   type MillionaireChoiceId,
 } from "../games/millionaireAuthority";
 import {
+  MILLIONAIRE_ANSWER_REVEAL_HOLD_MS,
   MILLIONAIRE_BASE_PTS,
+  MILLIONAIRE_DOUBLE_DIP_MISS_MS,
   MILLIONAIRE_HOSTS,
+  MILLIONAIRE_REVEAL_DELAY_MS,
   MILLIONAIRE_TIME_BANK_MS,
   millionaireLeagueLabel,
   millionaireMoneyLabel,
@@ -22,6 +25,22 @@ import "./MillionairePortraitRefine.css";
 import "./MillionaireFixedStage.css";
 
 type JsonRecord = Record<string, unknown>;
+
+type DailyAnswerFeedback = {
+  phase: "locked" | "revealed";
+  selectedChoiceId: MillionaireChoiceId;
+  correctChoiceId: MillionaireChoiceId | null;
+  answerOutcome: string | null;
+  question: JsonRecord;
+  choices: JsonRecord[];
+  currentIndex: number;
+  completedQuestions: number;
+  level: (typeof MILLIONAIRE_LEVELS)[number];
+  removedChoices: string[];
+  doubleDipMisses: string[];
+  startedRevision: number;
+  lockedAt: number;
+};
 
 function record(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? value as JsonRecord : {};
@@ -106,6 +125,7 @@ export function OfficialMillionaireDailyView({
   const [rulesOpen, setRulesOpen] = useState(
     projection.progressRevision === 0 && !projection.officialAttempt && status === "playing",
   );
+  const [answerFeedback, setAnswerFeedback] = useState<DailyAnswerFeedback | null>(null);
   const timeoutSent = useRef(false);
   const priorIndex = useRef(currentIndex);
 
@@ -123,12 +143,13 @@ export function OfficialMillionaireDailyView({
   }, [projection.progressRevision, state.time_remaining_ms]);
 
   useEffect(() => {
+    if (answerFeedback) return;
     if (currentIndex === 7 && completedQuestions === 7 && status === "playing" && priorIndex.current !== 7) {
       setWalkPromptOpen(true);
     }
     if (currentIndex !== 7) setWalkPromptOpen(false);
     priorIndex.current = currentIndex;
-  }, [completedQuestions, currentIndex, status]);
+  }, [answerFeedback, completedQuestions, currentIndex, status]);
 
   const lifelineReveal = record(state.last_lifeline_reveal);
   useEffect(() => {
@@ -138,20 +159,56 @@ export function OfficialMillionaireDailyView({
   }, [projection.progressRevision, lifelineReveal.text, lifelineReveal.type]);
 
   useEffect(() => {
-    if (rulesOpen || projection.officialAttempt || status !== "playing" || busy || walkPromptOpen || timeRemainingMs <= 0) return;
+    if (rulesOpen || answerFeedback || projection.officialAttempt || status !== "playing" || busy || walkPromptOpen || timeRemainingMs <= 0) return;
     const started = performance.now();
     const starting = timeRemainingMs;
     const id = window.setInterval(() => {
       setTimeRemainingMs(Math.max(0, starting - (performance.now() - started)));
     }, 100);
     return () => window.clearInterval(id);
-  }, [busy, currentIndex, projection.officialAttempt, rulesOpen, status, walkPromptOpen]);
+  }, [answerFeedback, busy, currentIndex, projection.officialAttempt, rulesOpen, status, walkPromptOpen]);
 
   useEffect(() => {
-    if (rulesOpen || projection.officialAttempt || status !== "playing" || busy || timeRemainingMs > 0 || timeoutSent.current) return;
+    if (rulesOpen || answerFeedback || projection.officialAttempt || status !== "playing" || busy || timeRemainingMs > 0 || timeoutSent.current) return;
     timeoutSent.current = true;
     onAdvance({ type: "timeout", time_remaining_ms: 0 });
-  }, [busy, onAdvance, projection.officialAttempt, rulesOpen, status, timeRemainingMs]);
+  }, [answerFeedback, busy, onAdvance, projection.officialAttempt, rulesOpen, status, timeRemainingMs]);
+
+  useEffect(() => {
+    if (!answerFeedback || answerFeedback.phase !== "locked") return;
+    if (projection.progressRevision <= answerFeedback.startedRevision) return;
+
+    const answerOutcome = String(state.last_answer_outcome ?? "");
+    if (!["correct", "wrong", "double-dip-continue"].includes(answerOutcome)) return;
+
+    const reveal = record(state.last_question_reveal);
+    const rawCorrectChoiceId = String(reveal.correctChoiceId ?? "");
+    const correctChoiceId = ["A", "B", "C", "D"].includes(rawCorrectChoiceId)
+      ? rawCorrectChoiceId as MillionaireChoiceId
+      : null;
+    const revealDelay = answerOutcome === "double-dip-continue"
+      ? 0
+      : MILLIONAIRE_REVEAL_DELAY_MS[answerFeedback.level];
+    const remainingDelay = Math.max(0, revealDelay - (performance.now() - answerFeedback.lockedAt));
+
+    const id = window.setTimeout(() => {
+      setAnswerFeedback((current) => (
+        current && current.startedRevision === answerFeedback.startedRevision
+          ? { ...current, phase: "revealed", correctChoiceId, answerOutcome }
+          : current
+      ));
+    }, remainingDelay);
+    return () => window.clearTimeout(id);
+  }, [projection.progressRevision]);
+
+  useEffect(() => {
+    if (!answerFeedback || answerFeedback.phase !== "revealed") return;
+    const hold = answerFeedback.answerOutcome === "double-dip-continue"
+      ? MILLIONAIRE_DOUBLE_DIP_MISS_MS
+      : MILLIONAIRE_ANSWER_REVEAL_HOLD_MS;
+    const id = window.setTimeout(() => setAnswerFeedback(null), hold);
+    return () => window.clearTimeout(id);
+  }, [answerFeedback]);
 
   const hostNumber = Math.min(3, Math.max(1, Math.trunc(Number(setup.host_number ?? 1))));
   const stageBackground = MILLIONAIRE_HOSTS[league][hostNumber - 1] ?? MILLIONAIRE_HOSTS[league][0];
