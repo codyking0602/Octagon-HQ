@@ -3,7 +3,7 @@ import {
   whoAmIClueFacet,
   whoAmIClueSelectionClass,
 } from "./whoAmIClueAssembler";
-import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet } from "./whoAmIEngine";
+import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet, WhoAmILeague } from "./whoAmIEngine";
 import {
   whoAmIClueHasHardEditorialFailure,
   whoAmICluesShareInformation,
@@ -204,6 +204,7 @@ export function assembleWhoAmIRevealClues(
   clues: readonly WhoAmIClue[],
   limit: number,
   random: () => number = () => 0.5,
+  league?: WhoAmILeague,
 ) {
   const eligibleClues = eligibleRevealPool(clues, limit);
   if (limit !== 10) return assembleWhoAmIClues(eligibleClues, limit, random);
@@ -231,6 +232,7 @@ export function assembleWhoAmIRevealClues(
   ) {
     return orderWhoAmICluesByRevealArchitectureIfPossible(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      league,
     );
   }
 
@@ -253,6 +255,7 @@ export function assembleWhoAmIRevealClues(
   if (final.length < REVEAL_TARGETS.final) {
     return orderWhoAmICluesByRevealArchitectureIfPossible(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      league,
     );
   }
 
@@ -264,6 +267,7 @@ export function assembleWhoAmIRevealClues(
   if (coreStrong.length < REVEAL_TARGETS.strong) {
     return orderWhoAmICluesByRevealArchitectureIfPossible(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      league,
     );
   }
 
@@ -278,6 +282,7 @@ export function assembleWhoAmIRevealClues(
   if (repeatsSemanticInformation) {
     return orderWhoAmICluesByRevealArchitectureIfPossible(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      league,
     );
   }
 
@@ -292,6 +297,7 @@ export function assembleWhoAmIRevealClues(
   ) {
     return orderWhoAmICluesByRevealArchitectureIfPossible(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      league,
     );
   }
 
@@ -315,9 +321,9 @@ export function assembleWhoAmIRevealClues(
     if (swap.candidateVariationRank < swap.currentVariationRank) {
       const varied = [...planned];
       varied[swap.selectedIndex] = swap.candidate;
-      return orderWhoAmICluesByRevealArchitectureIfPossible(varied);
+      return orderWhoAmICluesByRevealArchitectureIfPossible(varied, league);
     }
   }
 
-  return orderWhoAmICluesByRevealArchitectureIfPossible(planned);
+  return orderWhoAmICluesByRevealArchitectureIfPossible(planned, league);
 }
