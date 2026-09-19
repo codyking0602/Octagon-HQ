@@ -50,10 +50,21 @@ describe("Millionaire fixed-stage presentation contract", () => {
   it("gives official Daily the rules intro, fullscreen priority, and a completion exit", () => {
     expect(dailySource).toContain('className="millionaire-shell millionaire-shell--rules"');
     expect(dailySource).toContain("START GAME");
-    expect(dailySource).toContain("rulesOpen || projection.officialAttempt");
+    expect(dailySource).toContain("rulesOpen || answerFeedback || projection.officialAttempt");
     expect(dailySource).toContain("CONTINUE");
     expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \{[\s\S]*?z-index: 99999 !important;/);
     expect(fixedCss).toMatch(/\.millionaire-shell--rules \{[\s\S]*?z-index: 99999 !important;/);
+  });
+
+  it("portals official Daily out of the app shell and restores answer feedback states", () => {
+    expect(dailySource).toContain('import { createPortal } from "react-dom";');
+    expect(dailySource).toContain("document.body");
+    expect(dailySource).toContain('phase: "locked"');
+    expect(dailySource).toContain('"is-selected"');
+    expect(dailySource).toContain('"is-correct"');
+    expect(dailySource).toContain('"is-wrong"');
+    expect(dailySource).toContain("MILLIONAIRE_ANSWER_REVEAL_HOLD_MS");
+    expect(dailySource).toContain("MILLIONAIRE_DOUBLE_DIP_MISS_MS");
   });
 
   it("does not hide CFB Q1 answer text on the first render", () => {
