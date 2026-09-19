@@ -537,7 +537,19 @@ export function refineCfbWhoAmIContent(
   const withoutStatSoup = capGenericProduction(rebanded);
   const withoutRepeatedSignatures = trimCategoryRepetition(withoutStatSoup);
   const withoutPersonalBiography = capPersonalBiography(withoutRepeatedSignatures);
-  // Existing batch contracts require enough editorial depth for replay. PR3
-  // should improve weak clues, not shrink an otherwise valid CFB pool below 12.
-  return withoutPersonalBiography.length >= 12 ? withoutPersonalBiography : rebanded;
+  if (withoutPersonalBiography.length >= 12) return withoutPersonalBiography;
+
+  // Keep the signature-category cleanup even for thin legacy pools, then restore
+  // only the highest-value non-signature clues needed for replay depth.
+  const retainedIds = new Set(withoutPersonalBiography.map((clue) => clue.id));
+  const restored = [...withoutPersonalBiography];
+  for (const clue of rebanded) {
+    if (restored.length >= 12) break;
+    if (retainedIds.has(clue.id)) continue;
+    const category = whoAmIRevealProfile(clue).category;
+    if (category === "jersey-number" || category === "nickname-persona" || category === "personal-biography") continue;
+    restored.push(clue);
+    retainedIds.add(clue.id);
+  }
+  return restored.length >= 12 ? restored : withoutPersonalBiography;
 }
