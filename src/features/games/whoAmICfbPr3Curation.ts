@@ -61,6 +61,50 @@ function pr3Clue(
 }
 
 const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-vince-young", [
+    pr3Clue("young-2005-awards-title", "I won the Maxwell Award and Davey O'Brien Award in 2005 while leading Texas to the national championship.", "giveaway", "accomplishments", 8),
+    pr3Clue("young-rose-bowl-mvp", "I earned Rose Bowl Offensive MVP honors twice, including after rushing for 200 yards and three touchdowns in the 41-38 title-game win over USC.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-deshaun-watson", [
+    pr3Clue("watson-title-winner", "I threw the national-championship-winning touchdown pass to Hunter Renfrow with one second left against Alabama.", "giveaway", "accomplishments", 9),
+    pr3Clue("watson-two-time-qb-awards", "I won both the Davey O'Brien Award and Manning Award in consecutive seasons.", "strong", "accomplishments"),
+  ]],
+  ["cfb-eddie-george", [
+    pr3Clue("george-1995-awards", "In 1995 I won the Heisman Trophy, Doak Walker Award, Maxwell Award and Walter Camp Player of the Year honor.", "giveaway", "accomplishments", 9),
+    pr3Clue("george-illinois-record", "I set an Ohio State single-game rushing record with 314 yards against Illinois in 1995.", "giveaway", "records", 8),
+  ]],
+  ["cfb-marvin-harrison-jr", [
+    pr3Clue("harrison-biletnikoff", "I won the 2023 Biletnikoff Award as college football's outstanding receiver and was a Heisman Trophy finalist.", "giveaway", "accomplishments", 9),
+    pr3Clue("harrison-two-time-unanimous", "I became Ohio State's first two-time All-American receiver, earning unanimous honors in both 2022 and 2023.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-brady-quinn", [
+    pr3Clue("quinn-2006-awards", "In 2006 I won the Maxwell Award as college football's player of the year and the Johnny Unitas Golden Arm Award.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-colt-mccoy", [
+    pr3Clue("mccoy-2008-awards", "In 2008 I won the Walter Camp Player of the Year and Archie Griffin Award and finished second in the Heisman voting.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-danny-wuerffel", [
+    pr3Clue("wuerffel-heisman-title", "In 1996 I won the Heisman Trophy, Maxwell Award and Davey O'Brien Award before leading Florida to the national championship.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-archie-griffin", [
+    pr3Clue("griffin-two-heismans", "I remain the only player to win the Heisman Trophy twice, taking it in 1974 and 1975.", "giveaway", "accomplishments", 9),
+    pr3Clue("griffin-four-rose-bowls", "I am the only player to start in four Rose Bowl games, one after each of my four Ohio State seasons.", "giveaway", "records", 8),
+    pr3Clue("griffin-big-ten-titles", "I helped Ohio State win four consecutive Big Ten championships and was a three-time first-team All-American.", "strong", "accomplishments"),
+  ]],
+  ["cfb-earl-campbell", [
+    pr3Clue("campbell-1977-heisman", "I won the 1977 Heisman Trophy after leading the nation in both rushing and scoring.", "giveaway", "accomplishments", 9),
+    pr3Clue("campbell-1977-swc", "I led Texas through an 11-0 regular season and a Southwest Conference championship in 1977.", "strong", "accomplishments"),
+    pr3Clue("campbell-all-america", "I was a two-time consensus All-American at Texas.", "strong", "accomplishments"),
+  ]],
+  ["cfb-eric-crouch", [
+    pr3Clue("crouch-option-style", "I quarterbacked Nebraska's option offense and was a major rushing threat from the position.", "helpful", "style", 25),
+    pr3Clue("crouch-2001-heisman", "I won the 2001 Heisman Trophy after a season in which I ran, passed and even caught a 63-yard touchdown against Oklahoma.", "giveaway", "accomplishments", 9),
+    pr3Clue("crouch-fiesta-mvp", "I was the offensive MVP of Nebraska's Fiesta Bowl win over Tennessee after the 1999 season.", "strong", "accomplishments"),
+  ]],
+  ["cfb-luke-kuechly", [
+    pr3Clue("kuechly-acc-role", "I played middle linebacker in the ACC.", "helpful", "style", 22),
+    pr3Clue("kuechly-2011-awards", "In 2011 I won the Butkus, Nagurski and Lombardi awards and was named ACC Defensive Player of the Year.", "giveaway", "accomplishments", 8),
+  ]],
   ["cfb-a-j-brown", [
     pr3Clue("aj-brown-2018-all-sec", "In 2018 I earned first-team All-SEC honors after breaking my own Ole Miss single-season receiving-yardage record.", "strong", "accomplishments"),
   ]],
