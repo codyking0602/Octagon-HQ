@@ -66,7 +66,10 @@ function normalizedRecapUrl(value: string) {
   if (!trimmed) return null;
   try {
     const url = new URL(trimmed);
-    if (url.protocol !== "https:" && url.protocol !== "http:") return undefined;
+    const hostname = url.hostname.toLowerCase().replace(/^www\./, "");
+    if (url.protocol !== "https:" || (hostname !== "youtube.com" && hostname !== "youtu.be")) {
+      return undefined;
+    }
     return url.toString();
   } catch {
     return undefined;
@@ -206,26 +209,29 @@ export default function PicksControlPage({
   function completeEvent() {
     if (!event || !event.canComplete) return;
     const watchUrl = normalizedRecapUrl(recapUrl);
-    if (watchUrl === undefined) {
-      setError("Enter a valid http or https recap URL, or leave the field blank.");
+    if (watchUrl === null) {
+      setError("Add the YouTube recap URL before publishing final standings.");
       return;
     }
-    if (watchUrl && !repository?.setWatchMoments) {
+    if (watchUrl === undefined) {
+      setError("Enter a secure YouTube recap URL (youtube.com or youtu.be).");
+      return;
+    }
+    if (!repository?.setWatchMoments) {
       setError("Recap URL publishing is not connected on this build.");
       return;
     }
     if (!window.confirm(
-      "Publish this event recap now? This completes the event and sends the recap notification to members. Later official-result corrections remain available through the audited correction action.",
+      "Publish this YouTube recap now? This is the final release step: the event will complete, the Picks winner and final standings will publish, and members will receive the recap notification.",
     )) return;
     const title = event.subtitle.trim().length >= 3
       ? event.subtitle.trim().slice(0, 120)
       : "Must-Watch Moment";
-    void runAction("complete", async () => {
-      if (watchUrl) {
-        await repository!.setWatchMoments!(event.eventId, [{ title, url: watchUrl }]);
-      }
-      await repository!.completeEvent(event.eventId);
-    }, "Event recap published.");
+    void runAction(
+      "complete",
+      () => repository.setWatchMoments!(event.eventId, [{ title, url: watchUrl }]),
+      "Event recap published. Final standings are live.",
+    );
   }
 
   if (!identity.ready || loading) {
@@ -471,7 +477,7 @@ export default function PicksControlPage({
           <h2>{event.canComplete ? "Publish event recap" : "Complete event"}</h2>
           {event.canComplete ? (
             <>
-              <p>All {resolved} active fight results are ready. Add the recap URL now, review the publish summary, then send the finished recap to everyone.</p>
+              <p>All {resolved} active fight results are ready. Add the YouTube recap now; publishing it releases the Picks winner, final standings, and finished recap together.</p>
               <label className="picks-control-recap-url">
                 <span>RECAP URL</span>
                 <input
@@ -485,12 +491,12 @@ export default function PicksControlPage({
                   disabled={Boolean(busyAction)}
                   onChange={(inputEvent) => setRecapUrl(inputEvent.target.value)}
                 />
-                <small>Optional. Leave blank to publish without a link.</small>
+                <small>Required. Final standings stay hidden until this YouTube recap is published.</small>
               </label>
               <div className="picks-control-recap-preview" aria-label="Recap publish preview">
                 <span>RECAP PREVIEW</span>
                 <strong>{event.name}</strong>
-                <small>{resolved} FIGHTS GRADED · {recapUrl.trim() ? "1 URL READY" : "NO URL"} · MEMBER NOTIFICATION ON PUBLISH</small>
+                <small>{resolved} FIGHTS GRADED · {recapUrl.trim() ? "1 VIDEO READY" : "VIDEO REQUIRED"} · FINAL STANDINGS RELEASE ON PUBLISH</small>
               </div>
             </>
           ) : (
