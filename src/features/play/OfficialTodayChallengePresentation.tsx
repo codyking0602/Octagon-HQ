@@ -123,6 +123,10 @@ function FindLeaderView({ projection, busy, onAdvance }: OfficialGameViewProps) 
       thumbUrl: String(row.thumb_url ?? ""),
       value: integer(row.value),
     })).sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
+    const revealedById = new Map(revealed.map((row) => [row.id, row]));
+    const eliminationOrder = eliminated
+      .map((id) => revealedById.get(id))
+      .filter((row): row is (typeof revealed)[number] => Boolean(row));
     const leader = revealed.find((row) => row.id === leaderId) ?? revealed[0];
     const perfect = attempt.nativeScore === 10;
     return (
@@ -140,6 +144,24 @@ function FindLeaderView({ projection, busy, onAdvance }: OfficialGameViewProps) 
             </article>
           ) : null}
         </section>
+        {eliminationOrder.length ? (
+          <section className="surface-card find-reveal find-elimination-order">
+            <header className="section-heading">
+              <div><p className="eyebrow">ELIMINATION ORDER</p><h2>Actual picks, round by round</h2></div>
+              <strong>{eliminationOrder.length} PICKS</strong>
+            </header>
+            <div className="find-reveal__grid">
+              {eliminationOrder.map((row, index) => (
+                <article className={`find-reveal__row${row.id === leaderId ? " is-leader" : ""}`} key={row.id}>
+                  <b>R{index + 1}</b>
+                  <FighterPhoto name={row.name} src={row.thumbUrl} className="find-reveal__photo" />
+                  <span><strong>{row.name}</strong><small>{row.division}</small></span>
+                  <em>{row.value}<small>{statLabel}</small></em>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
         <section className="surface-card find-reveal">
           <header className="section-heading">
             <div><p className="eyebrow">FULL STAT REVEAL</p><h2>{question}</h2></div>
