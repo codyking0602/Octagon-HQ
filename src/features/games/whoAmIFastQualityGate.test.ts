@@ -8,6 +8,10 @@ import {
   whoAmISemanticSetKey,
 } from "./whoAmISemanticQuality";
 import { whoAmIQualityCompatibleReplayTargets } from "./whoAmIRevealPlanner";
+import {
+  whoAmIRevealArchitectureCanOrder,
+  whoAmIRevealArchitectureSatisfied,
+} from "./whoAmIRevealArchitecture";
 
 function seededRandom(seed: number) {
   let state = seed >>> 0;
@@ -91,6 +95,13 @@ describe("Who Am I fast targeted editorial gate", () => {
           sequence.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length,
           `${candidate.id} needs a strong finish`,
         ).toBeGreaterThanOrEqual(3);
+
+        if (whoAmIRevealArchitectureCanOrder(sequence)) {
+          expect(
+            whoAmIRevealArchitectureSatisfied(sequence),
+            `${candidate.id} must use the standardized reveal order when its selected board supports it`,
+          ).toBe(true);
+        }
       }
 
       if (replayTargets.boards > 1) {
