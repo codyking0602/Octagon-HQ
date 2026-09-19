@@ -155,6 +155,45 @@ button.play-game-card { cursor: pointer; }
 .find-result-hero article small { color: var(--ufc-red-strong); font-size: 8px; font-weight: 950; letter-spacing: .1em; }
 .find-result-hero article strong { font-size: 18px; }
 .find-result-hero article b { color: var(--text-secondary); font-size: 10px; }
+.find-elimination-order { gap: 12px; padding: 16px; }
+.find-elimination-order .section-heading h2 { margin-top: 4px; font-size: 19px; line-height: 1.05; }
+.find-elimination-order__list { display: grid; gap: 5px; }
+.find-elimination-order__row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: #0b0b0d;
+}
+.find-elimination-order__row > b { color: var(--text-muted); font-size: 11px; }
+.find-elimination-order__row > span { display: grid; gap: 2px; min-width: 0; }
+.find-elimination-order__row > span strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.find-elimination-order__row > span small { overflow: hidden; color: var(--text-muted); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.find-elimination-order__row > em {
+  color: #79df9b;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .07em;
+}
+.find-elimination-order__row.is-fatal { border-color: rgba(229, 9, 20, .7); background: rgba(229, 9, 20, .07); }
+.find-elimination-order__row.is-fatal > em { color: var(--ufc-red-strong); }
+.find-elimination-order__standing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 11px;
+  border: 1px solid rgba(47, 191, 98, .46);
+  border-radius: 11px;
+  background: rgba(47, 191, 98, .08);
+}
+.find-elimination-order__standing span { color: #70dd96; font-size: 8px; font-weight: 950; letter-spacing: .08em; }
+.find-elimination-order__standing strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 .find-reveal { gap: 14px; padding: 16px; }
 .find-reveal .section-heading { align-items: flex-start; }
 .find-reveal .section-heading h2 { margin-top: 5px; font-size: 20px; line-height: 1.05; }

@@ -125,6 +125,13 @@ function FindLeaderView({ projection, busy, onAdvance }: OfficialGameViewProps) 
     })).sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
     const leader = revealed.find((row) => row.id === leaderId) ?? revealed[0];
     const perfect = attempt.nativeScore === 10;
+    const storedEliminated = strings(attempt.publicResult.eliminated_ids);
+    const resultEliminated = storedEliminated.length ? storedEliminated : eliminated;
+    const revealedById = new Map(revealed.map((row) => [row.id, row]));
+    const eliminationOrder = resultEliminated
+      .map((id) => revealedById.get(id))
+      .filter((row): row is (typeof revealed)[number] => Boolean(row));
+    const fatalId = perfect ? null : resultEliminated.at(-1) ?? null;
     return (
       <div className="find-game page" data-game="find_leader">
         <section className={`find-result-hero ${perfect ? "is-perfect" : ""}`}>
@@ -138,6 +145,32 @@ function FindLeaderView({ projection, busy, onAdvance }: OfficialGameViewProps) 
               <FighterPhoto name={leader.name} src={leader.thumbUrl} className="find-result-hero__photo" />
               <span><small>GROUP LEADER</small><strong>{leader.name}</strong><b>{leader.value} {statLabel}</b></span>
             </article>
+          ) : null}
+        </section>
+        <section className="surface-card find-elimination-order" aria-label="Find the Leader elimination order">
+          <header className="section-heading">
+            <div>
+              <p className="eyebrow">ELIMINATION ORDER</p>
+              <h2>{perfect ? "Nine safe picks" : `Run ended on pick ${eliminationOrder.length}`}</h2>
+            </div>
+          </header>
+          <div className="find-elimination-order__list">
+            {eliminationOrder.map((row, index) => (
+              <article
+                className={`find-elimination-order__row${row.id === fatalId ? " is-fatal" : ""}`}
+                key={`${index}-${row.id}`}
+              >
+                <b>{index + 1}</b>
+                <span><strong>{row.name}</strong><small>{row.division}</small></span>
+                <em>{row.id === fatalId ? "LEADER" : "SAFE"}</em>
+              </article>
+            ))}
+          </div>
+          {perfect && leader ? (
+            <div className="find-elimination-order__standing">
+              <span>LEFT STANDING</span>
+              <strong>{leader.name}</strong>
+            </div>
           ) : null}
         </section>
         <section className="surface-card find-reveal">

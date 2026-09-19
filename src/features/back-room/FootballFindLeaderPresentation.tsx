@@ -122,6 +122,10 @@ export function FootballFindLeaderPresentation({
       .sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
     const leader = revealed.find((candidate) => candidate.id === leaderId) ?? revealed[0];
     const fatalRound = result.perfect ? null : result.score / 10;
+    const candidatesById = new Map(candidates.map((candidate) => [candidate.id, candidate]));
+    const eliminationOrder = eliminatedIds
+      .map((id) => candidatesById.get(id))
+      .filter((candidate): candidate is FootballFindLeaderPresentationCandidate => Boolean(candidate));
 
     return (
       <>
@@ -143,6 +147,35 @@ export function FootballFindLeaderPresentation({
                 <b>{formatValue(leader.value)} {shortLabel}</b>
               </span>
             </article>
+          ) : null}
+        </section>
+
+        <section className="football-find-order" aria-label="Find the Leader elimination order">
+          <header>
+            <p className="eyebrow">ELIMINATION ORDER</p>
+            <h2>{result.perfect ? "Nine safe picks" : `Run ended on pick ${eliminationOrder.length}`}</h2>
+          </header>
+          <div>
+            {eliminationOrder.map((candidate, index) => (
+              <article
+                className={candidate.id === result.fatalId ? "is-fatal" : ""}
+                key={`${index}-${candidate.id}`}
+              >
+                <em>{index + 1}</em>
+                <span className="football-find-order__identity">
+                  <strong>{candidate.displayName ?? candidate.name}</strong>
+                  {candidate.season != null ? <small>{candidate.season}</small> : null}
+                </span>
+                <b>{candidate.id === result.fatalId ? "LEADER" : "SAFE"}</b>
+              </article>
+            ))}
+          </div>
+          {result.perfect && leader ? (
+            <footer>
+              <span>LEFT STANDING</span>
+              <strong>{leader.displayName ?? leader.name}</strong>
+              {leader.season != null ? <small>{leader.season}</small> : null}
+            </footer>
           ) : null}
         </section>
 

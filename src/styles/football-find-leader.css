@@ -365,6 +365,100 @@
   font-size: 10px;
 }
 
+.football-find-order {
+  display: grid;
+  gap: 12px;
+  margin-bottom: .8rem;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 19px;
+  background: #121316;
+}
+.football-find-order .eyebrow { color: var(--football-accent, #e26f20); }
+.football-find-order header h2 { margin: 5px 0 0; font-size: 19px; line-height: 1.05; }
+.football-find-order > div { display: grid; gap: 5px; }
+.football-find-order article {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, .075);
+  border-radius: 11px;
+  background: #18191d;
+}
+.football-find-order article.is-fatal {
+  border-color: rgba(169, 76, 66, .62);
+  background: rgba(169, 76, 66, .08);
+}
+.football-find-order article > em {
+  color: var(--football-accent, #e26f20);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 950;
+}
+.football-find-order__identity {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.football-find-order__identity strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.football-find-order__identity small {
+  padding: 2px 5px;
+  border-radius: 999px;
+  background: rgba(var(--football-accent-rgb), .1);
+  color: var(--football-accent, #e26f20);
+  font-size: 7px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+.football-find-order article > b {
+  color: #79df9b;
+  font-size: 8px;
+  letter-spacing: .07em;
+}
+.football-find-order article.is-fatal > b { color: #d9877e; }
+.football-find-order footer {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 11px;
+  border: 1px solid rgba(47, 191, 98, .46);
+  border-radius: 11px;
+  background: rgba(47, 191, 98, .08);
+}
+.football-find-order footer > span {
+  color: #70dd96;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+.football-find-order footer > strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.football-find-order footer > small {
+  padding: 2px 5px;
+  border-radius: 999px;
+  background: rgba(var(--football-accent-rgb), .1);
+  color: var(--football-accent, #e26f20);
+  font-size: 7px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
 .football-find-reveal {
   display: grid;
   gap: 14px;
