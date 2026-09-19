@@ -159,10 +159,32 @@ describe("Family Feud engine contract", () => {
     expect(transition.outcome).toEqual({ type: "board-strike", boardIndex: 0, strikes: 1 });
   });
 
-  it("counts nonsense as a strike but repeated correct answers do not double-penalize", () => {
+  it("counts nonsense as a strike but repeated submissions do not double-penalize", () => {
     let state = createFamilyFeudState();
     let transition = submitFamilyFeudMainAnswer(pack, state, "not a real player");
     expect(transition.outcome).toEqual({ type: "board-strike", boardIndex: 0, strikes: 1 });
+
+    state = transition.state;
+    transition = submitFamilyFeudMainAnswer(pack, state, "not a real player");
+    expect(transition.outcome).toEqual({
+      type: "already-guessed",
+      boardIndex: 0,
+      entityId: null,
+    });
+    expect(transition.state.mainBoards[0]!.strikes).toBe(1);
+
+    state = transition.state;
+    transition = submitFamilyFeudMainAnswer(pack, state, "Mahomes");
+    expect(transition.outcome).toEqual({ type: "board-strike", boardIndex: 0, strikes: 2 });
+
+    state = transition.state;
+    transition = submitFamilyFeudMainAnswer(pack, state, "Patrick Mahomes");
+    expect(transition.outcome).toEqual({
+      type: "already-guessed",
+      boardIndex: 0,
+      entityId: "mahomes",
+    });
+    expect(transition.state.mainBoards[0]!.strikes).toBe(2);
 
     state = transition.state;
     transition = submitFamilyFeudMainAnswer(pack, state, "Stafford");
@@ -255,7 +277,7 @@ describe("Family Feud engine contract", () => {
     state = {
       ...state,
       fastMoneyResults: [
-        { questionId: "fm-1", entityId: "stafford", points: 40, matchKind: "surname" },
+        { questionId: "fm-1", submittedText: "Stafford", entityId: "stafford", points: 40, matchKind: "surname" },
       ],
     };
     expect(familyFeudScore(pack, state)).toEqual({
