@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { MonitoringEvent } from "./manualMonitoringRunner";
-import { adaptEspnUfcLiveFightState, shouldPollEspnLiveFightState } from "./espnLiveFightState";
+import { adaptEspnUfcLiveFightState, ESPN_UFC_SCOREBOARD_URL, shouldPollEspnLiveFightState } from "./espnLiveFightState";
 
 const event: MonitoringEvent = {
   event_id: "ufc-fight-night-hernandez-rodrigues",
@@ -51,6 +51,10 @@ const sourceEvent = (id: string, competitions: unknown[]) => ({
 });
 
 describe("ESPN UFC live fight state", () => {
+  it("uses the Supabase-reachable ESPN web API host", () => {
+    expect(ESPN_UFC_SCOREBOARD_URL).toBe("https://site.web.api.espn.com/apis/site/v2/sports/mma/ufc/scoreboard");
+  });
+
   it("opens only for the fight-night window using the real prelim boundary when available", () => {
     expect(shouldPollEspnLiveFightState(event, new Date("2026-08-22T20:59:59Z"))).toBe(false);
     expect(shouldPollEspnLiveFightState(event, new Date("2026-08-22T21:00:00Z"))).toBe(true);
