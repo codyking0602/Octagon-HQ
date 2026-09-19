@@ -9,14 +9,10 @@ alter table public.pick_events
 comment on column public.pick_events.recap_video_required is
   'When true for an MMA Picks event, at least one canonical YouTube watch moment is required before the event may become complete.';
 
--- The currently published UFC card predates this gate. Opt it in without touching
--- completed history or Football.
-update public.pick_events
-set recap_video_required = true,
-    updated_at = now()
-where sport = 'mma'
-  and status in ('upcoming', 'locked')
-  and not recap_video_required;
+-- Existing published rows keep their prior behavior during schema replay.
+-- Future MMA cards opt in through the canonical publication wrapper below.
+-- The currently live production UFC card is an explicit deployment cutover so
+-- fresh-database fixtures and historical replays are never reclassified.
 
 -- Fail closed at the row owner so no alternate completion path can publish a
 -- required UFC recap before its video exists.
