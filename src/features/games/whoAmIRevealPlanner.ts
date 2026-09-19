@@ -9,6 +9,7 @@ import {
   whoAmICluesShareInformation,
   whoAmISemanticClueKey,
 } from "./whoAmISemanticQuality";
+import { orderWhoAmICluesByRevealArchitectureIfPossible } from "./whoAmIRevealArchitecture";
 
 const REVEAL_SHORTLIST_EXTRA = 4;
 
@@ -228,7 +229,9 @@ export function assembleWhoAmIRevealClues(
     || strongCount < REVEAL_TARGETS.strong
     || latePool.length < REVEAL_TARGETS.strong + REVEAL_TARGETS.final
   ) {
-    return assembleWhoAmIClues(eligibleClues, limit, random);
+    return orderWhoAmICluesByRevealArchitectureIfPossible(
+      assembleWhoAmIClues(eligibleClues, limit, random),
+    );
   }
 
   const rankedLate = ranked(latePool, random).sort(qualityFirst);
@@ -248,7 +251,9 @@ export function assembleWhoAmIRevealClues(
   }
 
   if (final.length < REVEAL_TARGETS.final) {
-    return assembleWhoAmIClues(eligibleClues, limit, random);
+    return orderWhoAmICluesByRevealArchitectureIfPossible(
+      assembleWhoAmIClues(eligibleClues, limit, random),
+    );
   }
 
   const finalIds = new Set(final.map((entry) => entry.value.id));
@@ -257,7 +262,9 @@ export function assembleWhoAmIRevealClues(
     .slice(0, REVEAL_TARGETS.strong);
 
   if (coreStrong.length < REVEAL_TARGETS.strong) {
-    return assembleWhoAmIClues(eligibleClues, limit, random);
+    return orderWhoAmICluesByRevealArchitectureIfPossible(
+      assembleWhoAmIClues(eligibleClues, limit, random),
+    );
   }
 
   const orderedStrong = [...coreStrong].sort(revealOrder).map((entry) => entry.value);
@@ -269,7 +276,9 @@ export function assembleWhoAmIRevealClues(
     ))
   ));
   if (repeatsSemanticInformation) {
-    return assembleWhoAmIClues(eligibleClues, limit, random);
+    return orderWhoAmICluesByRevealArchitectureIfPossible(
+      assembleWhoAmIClues(eligibleClues, limit, random),
+    );
   }
 
   const selectionClasses = planned.map(whoAmIClueSelectionClass);
@@ -281,7 +290,9 @@ export function assembleWhoAmIRevealClues(
     || new Set(facets).size < 4
     || facets.filter((facet) => facet === "relationships").length > 1
   ) {
-    return assembleWhoAmIClues(eligibleClues, limit, random);
+    return orderWhoAmICluesByRevealArchitectureIfPossible(
+      assembleWhoAmIClues(eligibleClues, limit, random),
+    );
   }
 
   // Replay must rotate information, not merely reorder the same ten clues.
@@ -304,9 +315,9 @@ export function assembleWhoAmIRevealClues(
     if (swap.candidateVariationRank < swap.currentVariationRank) {
       const varied = [...planned];
       varied[swap.selectedIndex] = swap.candidate;
-      return varied;
+      return orderWhoAmICluesByRevealArchitectureIfPossible(varied);
     }
   }
 
-  return planned;
+  return orderWhoAmICluesByRevealArchitectureIfPossible(planned);
 }
