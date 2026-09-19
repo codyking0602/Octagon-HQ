@@ -3159,7 +3159,7 @@ function shouldSuppressCfbBatch1Clue(subject: FootballSubjectProfile, clue: WhoA
   return false;
 }
 
-const CFB_PR3_WEAK_VOLUME_CLUE_IDS = new Set([
+const CFB_PR3_WEAK_VOLUME_CLUE_IDS: ReadonlySet<string> = new Set([
   "fact:cfb-career-games",
   "fact:cfb-career-starts",
   "fact:cfb-career-targets",
@@ -3173,7 +3173,7 @@ function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
   let personalBiographyUsed = false;
 
   return clues
-    .filter((clue) => !CFB_PR3_WEAK_VOLUME_CLUE_IDS.has(clue.id as never))
+    .filter((clue) => !CFB_PR3_WEAK_VOLUME_CLUE_IDS.has(clue.id))
     .map((clue): WhoAmIClue => {
       const profile = whoAmIRevealProfile(clue);
 
