@@ -521,7 +521,7 @@ export function refineCfbWhoAmIContent(
       if (subject.id === "cfb-ernie-davis" && clue.text.includes("while wearing the program's famous No. 44")) {
         return { ...clue, text: clue.text.replace(" while wearing the program's famous No. 44", "") };
       }
-      if (subject.id === "cfb-lamichael-james" && /wore no\.\s*21|no\.\s*21\b/i.test(clue.text)) {
+      if (subject.id === "cfb-lamichael-james" && whoAmIRevealProfile(clue).category === "jersey-number") {
         return null;
       }
       return clue;
