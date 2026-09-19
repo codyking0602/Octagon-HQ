@@ -1,4 +1,4 @@
-import type { WhoAmIClue, WhoAmIClueBand } from "./whoAmIEngine";
+import type { WhoAmIClue, WhoAmIClueBand, WhoAmIRevealCoordinate } from "./whoAmIEngine";
 
 export type WhoAmIRevealCategory =
   | "role"
@@ -89,6 +89,22 @@ const BAND_RANK: Readonly<Record<WhoAmIClueBand, number>> = {
   strong: 2,
   giveaway: 3,
 };
+
+function revealCoordinateBudget(position: number) {
+  if (position <= 4) return 1;
+  if (position <= 6) return 2;
+  if (position <= 8) return 3;
+  return Number.POSITIVE_INFINITY;
+}
+
+export function whoAmIRevealCoordinateWindowSatisfied(clues: readonly WhoAmIClue[]) {
+  const exposed = new Set<WhoAmIRevealCoordinate>();
+  for (let index = 0; index < clues.length; index += 1) {
+    for (const coordinate of clues[index]!.revealCoordinates ?? []) exposed.add(coordinate);
+    if (exposed.size > revealCoordinateBudget(index + 1)) return false;
+  }
+  return true;
+}
 
 function clueText(clue: WhoAmIClue) {
   return `${clue.id} ${clue.conceptId ?? ""} ${clue.text}`.toLowerCase();
@@ -237,7 +253,8 @@ export function whoAmIClueAllowedAtRevealPosition(clue: WhoAmIClue, zeroBasedInd
 
 export function whoAmIRevealArchitectureSatisfied(clues: readonly WhoAmIClue[]) {
   return clues.every((clue, index) => whoAmIClueAllowedAtRevealPosition(clue, index))
-    && clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length <= 1;
+    && clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length <= 1
+    && whoAmIRevealCoordinateWindowSatisfied(clues);
 }
 
 function preferredBandRank(position: number, band: WhoAmIClueBand) {
@@ -282,10 +299,12 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
       return ordered;
     }
 
-    const previousBand = chosen.at(-1)?.clue.band;
     const candidates = remaining
       .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
-      .filter(({ clue }) => previousBand === undefined || BAND_RANK[clue.band] >= BAND_RANK[previousBand])
+      .filter(({ clue }) => whoAmIRevealCoordinateWindowSatisfied([
+        ...chosen.map((entry) => entry.clue),
+        clue,
+      ]))
       .filter(({ clue }) => (
         !preserveStrongFinalTwo
         || position < 9
