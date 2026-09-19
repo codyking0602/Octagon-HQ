@@ -570,6 +570,20 @@ function isGenericCareerGames(clue: WhoAmIClue) {
   );
 }
 
+const SEMANTIC_CAPACITY_INPUT_CACHE = new WeakMap<readonly WhoAmIClue[], readonly WhoAmIClue[]>();
+
+function semanticCapacityInput(clues: readonly WhoAmIClue[]) {
+  const cached = SEMANTIC_CAPACITY_INPUT_CACHE.get(clues);
+  if (cached) return cached;
+
+  const eligible = clues
+    .filter((clue) => clue.text.trim().length > 0)
+    .filter((clue) => !whoAmIClueHasHardEditorialFailure(clue))
+    .filter((clue) => !isGenericCareerTargets(clue));
+  SEMANTIC_CAPACITY_INPUT_CACHE.set(clues, eligible);
+  return eligible;
+}
+
 function recognitionStrength(entry: Pick<PreparedClue, "facet" | "clue">) {
   const base: Readonly<Record<WhoAmIClueFacet, number>> = {
     role: 20,
@@ -1069,7 +1083,7 @@ export function assembleWhoAmIClues(
 
   if (
     hasSemanticCollision(selected)
-    && whoAmISemanticIndependentCapacity(prepared.map((entry) => entry.clue), limit) >= limit
+    && whoAmISemanticIndependentCapacity(semanticCapacityInput(clues), limit) >= limit
   ) {
     const selectedSet = new Set(selected);
     const ordered = [
