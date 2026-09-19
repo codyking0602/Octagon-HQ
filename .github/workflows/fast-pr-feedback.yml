@@ -71,7 +71,7 @@ jobs:
               src/features/games/whoAmI*.ts|src/features/games/footballWhoAmI*.ts|src/features/games/ufcWhoAmI*.ts|src/features/back-room/footballPersonIdentity*.ts|src/features/back-room/ufcPersonIdentity*.ts)
                 saw_whoami=true
                 ;;
-              package.json|.github/workflows/fast-pr-feedback.yml|.github/workflows/validate.yml)
+              package.json|.github/workflows/fast-pr-feedback.yml|.github/workflows/validate.yml|src/app/fastPrFeedbackWorkflow.contract.test.ts)
                 ;;
               *)
                 whoami_only=false
