@@ -11,6 +11,7 @@ import { whoAmIQualityCompatibleReplayTargets } from "./whoAmIRevealPlanner";
 import {
   whoAmIRevealArchitectureCanOrder,
   whoAmIRevealArchitectureSatisfied,
+  whoAmIRevealProfile,
 } from "./whoAmIRevealArchitecture";
 
 function seededRandom(seed: number) {
@@ -69,6 +70,30 @@ describe("Who Am I fast targeted editorial gate", () => {
         whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
       ));
       const replayTargets = whoAmIQualityCompatibleReplayTargets(candidate.clues, sequences);
+
+      if (universe.league === "CFB") {
+        for (const clue of candidate.clues) {
+          const profile = whoAmIRevealProfile(clue);
+          if (clue.band === "broad") {
+            expect(
+              profile.earliestClue,
+              `${candidate.id} broad clue cannot reach its reveal window: ${clue.text}`,
+            ).toBeLessThanOrEqual(2);
+          }
+          if (clue.band === "helpful") {
+            expect(
+              profile.earliestClue,
+              `${candidate.id} helpful clue must be rebanded later: ${clue.text}`,
+            ).toBeLessThanOrEqual(4);
+          }
+          if (clue.band === "strong") {
+            expect(
+              profile.earliestClue,
+              `${candidate.id} strong clue belongs in the final giveaway band: ${clue.text}`,
+            ).toBeLessThanOrEqual(8);
+          }
+        }
+      }
 
       for (const sequence of sequences) {
         expect(sequence, `${candidate.id} must still produce a complete board`).toHaveLength(WHO_AM_I_CLUE_LIMIT);
