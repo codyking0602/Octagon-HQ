@@ -1,7 +1,7 @@
 import { canonicalFightPair, fighterMatch } from "../../../supabase/functions/sync-next-ufc-event/normalization.ts";
 import type { MonitoringBout, MonitoringEvent } from "./manualMonitoringRunner.ts";
 
-export const ESPN_UFC_SCOREBOARD_URL = "https://site.api.espn.com/apis/site/v2/sports/mma/ufc/scoreboard";
+export const ESPN_UFC_SCOREBOARD_URL = "https://site.web.api.espn.com/apis/site/v2/sports/mma/ufc/scoreboard";
 
 const HOUR_MS = 60 * 60 * 1000;
 const EVENT_MATCH_WINDOW_MS = 18 * HOUR_MS;
