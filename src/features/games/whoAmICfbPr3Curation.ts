@@ -266,9 +266,35 @@ function capGenericProduction(clues: readonly WhoAmIClue[]) {
     .filter(({ clue }) => whoAmIClueFacet(clue) === "production")
     .sort((left, right) => right.score - left.score || left.index - right.index);
 
-  if (production.length <= 3) return [...clues];
-  const keep = new Set(production.slice(0, 3).map(({ clue }) => clue.id));
+  if (production.length <= 2) return [...clues];
+  const nonProductionCount = clues.length - production.length;
+  const keepCount = Math.max(2, Math.min(production.length, 12 - nonProductionCount));
+  const keep = new Set(production.slice(0, keepCount).map(({ clue }) => clue.id));
   return clues.filter((clue) => whoAmIClueFacet(clue) !== "production" || keep.has(clue.id));
+}
+
+function capSignatureCategory(
+  clues: readonly WhoAmIClue[],
+  category: "jersey-number" | "nickname-persona",
+) {
+  const matches = clues.filter((clue) => whoAmIRevealProfile(clue).category === category);
+  if (matches.length <= 1) return [...clues];
+
+  const keep = [...matches].sort((left, right) => (
+    bandRank(right.band) - bandRank(left.band)
+    || (right.revealPriority ?? 50) - (left.revealPriority ?? 50)
+  ))[0]!;
+  const filtered = clues.filter((clue) => (
+    whoAmIRevealProfile(clue).category !== category || clue.id === keep.id
+  ));
+  return filtered.length >= 12 ? filtered : [...clues];
+}
+
+function trimCategoryRepetition(clues: readonly WhoAmIClue[]) {
+  return capSignatureCategory(
+    capSignatureCategory(clues, "jersey-number"),
+    "nickname-persona",
+  );
 }
 
 function ensureConferenceFoundation(
@@ -324,5 +350,7 @@ export function refineCfbWhoAmIContent(
   const withOrientation = ensureOrientationClues(subject, clues);
   const withConference = ensureConferenceFoundation(subject, withOrientation);
   const rebanded = withConference.map(rebandCfbClue);
-  return capPersonalBiography(capGenericProduction(rebanded));
+  const withoutStatSoup = capGenericProduction(rebanded);
+  const withoutRepeatedSignatures = trimCategoryRepetition(withoutStatSoup);
+  return capPersonalBiography(withoutRepeatedSignatures);
 }
