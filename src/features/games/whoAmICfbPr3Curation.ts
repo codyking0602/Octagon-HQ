@@ -24,6 +24,20 @@ const POWERHOUSE_SCHOOL_TERMS = [
   "texas a&m",
 ] as const;
 
+const DISTINCTIVE_CFB_SCHOOL_TERMS = [
+  "oregon state",
+  "mississippi valley state",
+  "hawaii",
+  "boston college",
+  "fresno state",
+  "marshall",
+  "northern illinois",
+  "boise state",
+  "memphis",
+  "utah state",
+  "san diego state",
+] as const;
+
 const STRONG_IDENTITY_SIGNALS = /\b(?:heisman|all-america|all-american|player of the year|national championship|conference championship|bowl|playoff|record|first player|only player|unanimous|consensus|draft|selected no\.|overall pick|transferred|transfer|junior college|juco|walk-on|walk on|position change|converted from|switched from)\b/i;
 const SIGNATURE_SIGNALS = /\b(?:nickname|known as|called the|jersey number|wore no\.|wear no\.|no\. \d{1,2}\b|historic play|game-winning|last-second|walk-off|miracle)\b/i;
 const GENERIC_VOLUME = /\b(?:career|across \d+ seasons?|in \d+ games?|for my career)\b.*\b\d[\d,]*(?:\.\d+)?\b/i;
@@ -92,20 +106,27 @@ function cfbSchoolReband(clue: WhoAmIClue) {
   if (profile.category !== "school") return clue;
 
   const text = `${clue.id} ${clue.conceptId ?? ""} ${clue.text}`.toLowerCase();
+  if (clue.id === "conference" || clue.id === "pr3:conference") {
+    return { ...clue, band: "helpful" as const };
+  }
+  if (includesAny(text, DISTINCTIVE_CFB_SCHOOL_TERMS)) {
+    return atLeastBand(clue, "strong");
+  }
   if (includesAny(text, POWERHOUSE_SCHOOL_TERMS)) {
-    return atLeastBand(atMostBand(clue, "helpful"), "helpful");
+    return { ...clue, band: "helpful" as const };
   }
 
-  // A non-powerhouse school usually shrinks the answer universe far more than
-  // Alabama/Ohio State/Georgia. Treat that as real narrowing content rather
-  // than an early orientation clue.
-  return atLeastBand(clue, "strong");
+  // Most school clues are useful foundation at clue 4. Only unusually
+  // identifying programs are promoted into the strong band above.
+  return { ...clue, band: "helpful" as const };
 }
 
 function cfbSportsBiographyReband(clue: WhoAmIClue) {
   const profile = whoAmIRevealProfile(clue);
   if (profile.category !== "sports-biography") return clue;
-  return atLeastBand(clue, "strong");
+  return profile.identifyingPower === "signature"
+    ? atLeastBand(clue, "strong")
+    : atLeastBand(clue, "helpful");
 }
 
 function cfbLateAnchorReband(clue: WhoAmIClue) {
@@ -228,6 +249,48 @@ function ensureOrientationClues(
   return next;
 }
 
+function productionValue(clue: WhoAmIClue) {
+  const text = `${clue.id} ${clue.text}`.toLowerCase();
+  let score = 0;
+  if (SUPERLATIVE_SIGNAL.test(text)) score += 100;
+  if (/best-season|single-season|in \d{4}/.test(text)) score += 45;
+  if (/career/.test(text)) score -= 20;
+  if (clue.band === "giveaway") score += 20;
+  if (clue.band === "strong") score += 10;
+  return score;
+}
+
+function capGenericProduction(clues: readonly WhoAmIClue[]) {
+  const production = clues
+    .map((clue, index) => ({ clue, index, score: productionValue(clue) }))
+    .filter(({ clue }) => whoAmIClueFacet(clue) === "production")
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+
+  if (production.length <= 3) return [...clues];
+  const keep = new Set(production.slice(0, 3).map(({ clue }) => clue.id));
+  return clues.filter((clue) => whoAmIClueFacet(clue) !== "production" || keep.has(clue.id));
+}
+
+function ensureConferenceFoundation(
+  subject: FootballSubjectProfile,
+  clues: readonly WhoAmIClue[],
+) {
+  if (!subject.conference || clues.some((clue) => clue.id === "conference" || clue.id === "pr3:conference")) {
+    return [...clues];
+  }
+  return [
+    ...clues,
+    {
+      id: "pr3:conference",
+      conceptId: "pr3:conference",
+      text: `I competed in the ${subject.conference}.`,
+      band: "helpful" as const,
+      facet: "background" as const,
+      revealPriority: 30,
+    },
+  ];
+}
+
 function rebandCfbClue(clue: WhoAmIClue) {
   let next = annotateCfbCategoryMetadata(normalizeCfbDraftCopy(clue));
   next = cfbOrientationReband(next);
@@ -258,5 +321,8 @@ export function refineCfbWhoAmIContent(
   clues: readonly WhoAmIClue[],
 ): WhoAmIClue[] {
   if (subject.league !== "CFB") return [...clues];
-  return capPersonalBiography(ensureOrientationClues(subject, clues).map(rebandCfbClue));
+  const withOrientation = ensureOrientationClues(subject, clues);
+  const withConference = ensureConferenceFoundation(subject, withOrientation);
+  const rebanded = withConference.map(rebandCfbClue);
+  return capPersonalBiography(capGenericProduction(rebanded));
 }
