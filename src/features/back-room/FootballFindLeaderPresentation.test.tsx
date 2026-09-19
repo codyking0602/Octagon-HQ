@@ -79,6 +79,39 @@ describe("Football Find the Leader candidate identity presentation", () => {
     );
   });
 
+  it("shows the actual elimination sequence before the stat-sorted result reveal", () => {
+    const html = renderToStaticMarkup(
+      <FootballFindLeaderPresentation
+        question="Who has the most?"
+        context="Highest total among the ten shown."
+        categoryLabel="NFL"
+        statLabel="Passing yards"
+        shortLabel="YDS"
+        candidates={[
+          { id: "alpha", name: "Alpha Leader", subtitle: "NFL career", value: 30 },
+          { id: "beta", name: "Beta Pick", subtitle: "NFL career", value: 10 },
+          { id: "gamma", name: "Gamma Pick", subtitle: "NFL career", value: 20 },
+        ]}
+        leaderId="alpha"
+        eliminatedIds={["beta", "gamma", "alpha"]}
+        result={{ score: 30, perfect: false, fatalId: "alpha" }}
+        eyebrow="TODAY'S CHALLENGE"
+        renderVisual={() => <span className="test-visual" />}
+      />,
+    );
+
+    const start = html.indexOf("football-find-pick-order");
+    const end = html.indexOf("FULL STAT REVEAL");
+    const pickOrder = html.slice(start, end);
+    expect(start).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(start);
+    expect(pickOrder.indexOf("Beta Pick")).toBeLessThan(pickOrder.indexOf("Gamma Pick"));
+    expect(pickOrder.indexOf("Gamma Pick")).toBeLessThan(pickOrder.indexOf("Alpha Leader"));
+    expect(pickOrder).toContain(">R1<");
+    expect(pickOrder).toContain(">R2<");
+    expect(pickOrder).toContain(">R3<");
+  });
+
   it("keeps the compact phone card while reserving a non-shrinking season lane", () => {
     const css = readFileSync(resolve("src/styles/football-find-leader.css"), "utf8");
     const phoneCss = css.slice(css.indexOf("@media (max-width: 640px)"));
