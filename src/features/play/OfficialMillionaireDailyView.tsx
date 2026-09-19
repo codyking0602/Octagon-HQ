@@ -71,10 +71,12 @@ export function OfficialMillionaireDailyView({
   projection,
   busy,
   onAdvance,
+  onExit,
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
   onAdvance: (action: JsonRecord) => void;
+  onExit?: () => void;
 }) {
   const setup = projection.publicSetup;
   const state = projection.publicState;
@@ -102,6 +104,11 @@ export function OfficialMillionaireDailyView({
   const [statSheetOpen, setStatSheetOpen] = useState(false);
   const timeoutSent = useRef(false);
   const priorIndex = useRef(currentIndex);
+
+  useEffect(() => {
+    document.body.classList.add("millionaire-daily-active");
+    return () => document.body.classList.remove("millionaire-daily-active");
+  }, []);
 
   useEffect(() => {
     setTimeRemainingMs(Math.min(
@@ -240,6 +247,7 @@ export function OfficialMillionaireDailyView({
               <div><dt>Lifelines used</dt><dd>{result.lifelinesUsed}{result.lifelinesUsed ? ` (-${result.lifelinesUsed * 2})` : ""}</dd></div>
               <div><dt>Time remaining</dt><dd>{millionaireTimeLabel(result.timeRemainingMs)}</dd></div>
             </dl>
+            {onExit ? <button className="millionaire-results__continue" type="button" onClick={onExit}>CONTINUE</button> : null}
           </section>
         ) : (
           <>
