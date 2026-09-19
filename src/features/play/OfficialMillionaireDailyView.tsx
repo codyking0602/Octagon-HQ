@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   MILLIONAIRE_LEVELS,
   MILLIONAIRE_MONEY_BY_LEVEL,
@@ -165,7 +166,7 @@ export function OfficialMillionaireDailyView({
   };
 
   if (rulesOpen) {
-    return (
+    return createPortal(
       <div className="millionaire-shell millionaire-shell--rules">
         <div className="millionaire-arena" aria-hidden="true" />
         <div className="millionaire-crowd" aria-hidden="true" />
@@ -209,11 +210,12 @@ export function OfficialMillionaireDailyView({
           </div>
           <button className="millionaire-rules__start" type="button" onClick={() => setRulesOpen(false)}>START GAME</button>
         </section>
-      </div>
+      </div>,
+      document.body,
     );
   }
 
-  return (
+  return createPortal(
     <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--answering`}>
       <div className="millionaire-stage-canvas" style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}>
         <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
@@ -326,5 +328,6 @@ export function OfficialMillionaireDailyView({
         )}
       </div>
     </div>
+    document.body,
   );
 }
