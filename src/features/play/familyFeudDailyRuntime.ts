@@ -109,7 +109,7 @@ function fastMoneyReveal(pack: FamilyFeudPack, state: FamilyFeudState) {
       };
     }
     const canonical = result.entityId ? entityPresentation(pack, result.entityId) : null;
-    const submitted = canonical?.display_name ?? result.submittedText || "NO ANSWER";
+    const submitted = canonical?.display_name ?? (result.submittedText || "NO ANSWER");
     const rankedAnswerIndex = result.entityId
       ? question.answers.findIndex((answer) => answer.entityId === result.entityId)
       : -1;
