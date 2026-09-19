@@ -102,6 +102,9 @@ export function OfficialMillionaireDailyView({
     currentIndex === 7 && completedQuestions === 7 && status === "playing",
   );
   const [statSheetOpen, setStatSheetOpen] = useState(false);
+  const [rulesOpen, setRulesOpen] = useState(
+    projection.progressRevision === 0 && !projection.officialAttempt && status === "playing",
+  );
   const timeoutSent = useRef(false);
   const priorIndex = useRef(currentIndex);
 
@@ -134,20 +137,20 @@ export function OfficialMillionaireDailyView({
   }, [projection.progressRevision, lifelineReveal.text, lifelineReveal.type]);
 
   useEffect(() => {
-    if (projection.officialAttempt || status !== "playing" || busy || walkPromptOpen || timeRemainingMs <= 0) return;
+    if (rulesOpen || projection.officialAttempt || status !== "playing" || busy || walkPromptOpen || timeRemainingMs <= 0) return;
     const started = performance.now();
     const starting = timeRemainingMs;
     const id = window.setInterval(() => {
       setTimeRemainingMs(Math.max(0, starting - (performance.now() - started)));
     }, 100);
     return () => window.clearInterval(id);
-  }, [busy, currentIndex, projection.officialAttempt, status, walkPromptOpen]);
+  }, [busy, currentIndex, projection.officialAttempt, rulesOpen, status, walkPromptOpen]);
 
   useEffect(() => {
-    if (projection.officialAttempt || status !== "playing" || busy || timeRemainingMs > 0 || timeoutSent.current) return;
+    if (rulesOpen || projection.officialAttempt || status !== "playing" || busy || timeRemainingMs > 0 || timeoutSent.current) return;
     timeoutSent.current = true;
     onAdvance({ type: "timeout", time_remaining_ms: 0 });
-  }, [busy, onAdvance, projection.officialAttempt, status, timeRemainingMs]);
+  }, [busy, onAdvance, projection.officialAttempt, rulesOpen, status, timeRemainingMs]);
 
   const hostNumber = Math.min(3, Math.max(1, Math.trunc(Number(setup.host_number ?? 1))));
   const stageBackground = MILLIONAIRE_HOSTS[league][hostNumber - 1] ?? MILLIONAIRE_HOSTS[league][0];
@@ -160,6 +163,41 @@ export function OfficialMillionaireDailyView({
     if (busy || projection.officialAttempt) return;
     onAdvance({ ...action, time_remaining_ms: Math.max(0, Math.floor(timeRemainingMs)) });
   };
+
+  if (rulesOpen) {
+    return (
+      <div className="millionaire-shell millionaire-shell--rules">
+        <div className="millionaire-arena" aria-hidden="true" />
+        <div className="millionaire-crowd" aria-hidden="true" />
+        <section className="millionaire-rules" aria-labelledby="millionaire-daily-rules-title">
+          <header>
+            <span>{millionaireLeagueLabel(league)} DAILY</span>
+            <h1 id="millionaire-daily-rules-title">MILLIONAIRE</h1>
+            <p>8 questions. $500 to $1,000,000.</p>
+          </header>
+          <div className="millionaire-rules__body">
+            <section className="millionaire-rules__how" aria-label="How to play">
+              <h2>HOW TO PLAY</h2>
+              <div className="millionaire-rules__quick">
+                <p><strong>2:30 TIME BANK</strong><span>Shared across all 8. Time only breaks leaderboard ties.</span></p>
+                <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: leave with $5,000.</span></p>
+                <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: leave with $100,000.</span></p>
+                <p><strong>WALK AWAY</strong><span>Before Q8, bank $500,000 / 90 PTS or risk the checkpoint for $1,000,000 / 100 PTS.</span></p>
+              </div>
+              <h3>LIFELINES</h3>
+              <div className="millionaire-rules__lifelines">
+                <p><b>50:50</b><span>Remove 2 wrong answers.</span></p>
+                <p><b>STAT SHEET</b><span>Extra clue.</span></p>
+                <p><b>DOUBLE DIP</b><span>2 attempts; no walk-away.</span></p>
+              </div>
+              <small>Each lifeline can be used once and costs 2 PTS. No lifelines on Q8. 50:50 and Double Dip cannot be used on the same question.</small>
+            </section>
+          </div>
+          <button className="millionaire-rules__start" type="button" onClick={() => setRulesOpen(false)}>START GAME</button>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--answering`}>
