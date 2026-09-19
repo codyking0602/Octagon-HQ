@@ -27,9 +27,9 @@ function answerCorrectly(league: MillionaireLeague, count: number) {
 }
 
 describe("Millionaire private casual runtime", () => {
-  it("locks the shared game clock to 2:30", () => {
-    expect(MILLIONAIRE_TIME_BANK_MS).toBe(150_000);
-    expect(millionaireTimeLabel(MILLIONAIRE_TIME_BANK_MS)).toBe("2:30");
+  it("locks the shared game clock to 2:00", () => {
+    expect(MILLIONAIRE_TIME_BANK_MS).toBe(120_000);
+    expect(millionaireTimeLabel(MILLIONAIRE_TIME_BANK_MS)).toBe("2:00");
   });
 
   it("uses the approved reveal pacing without result-specific timing", () => {

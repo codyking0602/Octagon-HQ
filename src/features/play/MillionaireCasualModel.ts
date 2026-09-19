@@ -16,7 +16,7 @@ import {
 
 export type MillionaireLeague = "ufc" | "nfl" | "cfb";
 
-export const MILLIONAIRE_TIME_BANK_MS = 150_000;
+export const MILLIONAIRE_TIME_BANK_MS = 120_000;
 
 export const MILLIONAIRE_REVEAL_DELAY_MS = {
   Q1: 90,

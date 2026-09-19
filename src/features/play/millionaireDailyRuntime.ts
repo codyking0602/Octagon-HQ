@@ -28,10 +28,11 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v3-balanced-answers" as const;
+export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v4-two-minute-bank" as const;
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
 export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
+const MILLIONAIRE_LEGACY_TIME_BANK_MS = 150_000;
 const MILLIONAIRE_ANSWER_POSITION_PATTERN = [0, 1, 2, 3, 1, 2, 3, 0] as const;
 
 function balanceRun(run: MillionaireRun, runIndex: number): MillionaireRun {
@@ -335,16 +336,19 @@ export function advanceMillionaireDailyRuntime(
   const state = stateFromPublic(context.publicState);
   if (state.status !== "playing") throw new Error("Millionaire run is already settled.");
 
+  // September 19 boards were published with the original 2:30 bank. Accept that
+  // persisted state during the cutover, but cap every live action to the new
+  // canonical 2:00 bank so today's UFC and Football runs switch safely in place.
   const priorTime = integer(
     context.publicState.time_remaining_ms,
     "Millionaire time remaining",
     0,
-    MILLIONAIRE_TIME_BANK_MS,
+    MILLIONAIRE_LEGACY_TIME_BANK_MS,
   );
   const requestedTime = action.time_remaining_ms == null
     ? priorTime
-    : integer(action.time_remaining_ms, "Millionaire time remaining", 0, MILLIONAIRE_TIME_BANK_MS);
-  const timeRemainingMs = Math.min(priorTime, requestedTime);
+    : integer(action.time_remaining_ms, "Millionaire time remaining", 0, MILLIONAIRE_LEGACY_TIME_BANK_MS);
+  const timeRemainingMs = Math.min(priorTime, requestedTime, MILLIONAIRE_TIME_BANK_MS);
 
   const transition = action.type === "timeout" || timeRemainingMs === 0
     ? millionaireTimeoutTransition(run, state)

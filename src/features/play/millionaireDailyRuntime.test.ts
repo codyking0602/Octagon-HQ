@@ -97,6 +97,30 @@ describe("Millionaire official Daily runtime", () => {
     }
   });
 
+  it("publishes a two-minute bank and caps legacy 2:30 launch state to two minutes", () => {
+    const publication = buildMillionaireDailySetup(
+      "ufc",
+      "2026-09-19",
+      "play-rotation-v9-millionaire-no-double",
+    );
+    expect(publication.publicSetup.time_bank_ms).toBe(120_000);
+    expect((publication.publicSetup.initial_state as Record<string, unknown>).time_remaining_ms).toBe(120_000);
+
+    const legacyContext = {
+      ...contextFor("ufc"),
+      publicState: {
+        ...contextFor("ufc").publicState,
+        time_remaining_ms: 150_000,
+      },
+    };
+    const result = advanceMillionaireDailyRuntime(legacyContext, {
+      type: "use_lifeline",
+      lifeline: "stat-sheet",
+      time_remaining_ms: 150_000,
+    });
+    expect(result.publicState.time_remaining_ms).toBe(120_000);
+  });
+
   it("publishes eight public questions without leaking the answer key", () => {
     const publication = buildMillionaireDailySetup(
       "football",
