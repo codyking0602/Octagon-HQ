@@ -299,7 +299,7 @@ export function OfficialMillionaireDailyView({
               <div><dt>Lifelines used</dt><dd>{result.lifelinesUsed}{result.lifelinesUsed ? ` (-${result.lifelinesUsed * 2})` : ""}</dd></div>
               <div><dt>Time remaining</dt><dd>{millionaireTimeLabel(result.timeRemainingMs)}</dd></div>
             </dl>
-            {onExit ? <button className="millionaire-results__continue" type="button" onClick={onExit}>CONTINUE</button> : null}
+            {onExit ? <button className="millionaire-rules__start millionaire-results__continue" type="button" onClick={onExit}>CONTINUE</button> : null}
           </section>
         ) : (
           <>
