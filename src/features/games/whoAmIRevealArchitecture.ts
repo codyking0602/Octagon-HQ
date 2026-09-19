@@ -4,6 +4,7 @@ import type {
   WhoAmIIdentityCoordinate,
   WhoAmILeague,
 } from "./whoAmIEngine";
+import { whoAmICluesShareInformation } from "./whoAmISemanticQuality";
 
 export type WhoAmIRevealCategory =
   | "role"
@@ -69,23 +70,23 @@ const WINDOWS: Readonly<Record<
   role: { broad: [1, 4], specific: [3, 6], signature: [5, 8] },
   era: { broad: [1, 4], specific: [3, 6], signature: [5, 8] },
   school: { broad: [3, 6], specific: [4, 8], signature: [6, 10] },
-  "sports-biography": { broad: [3, 6], specific: [4, 8], signature: [6, 10] },
-  "draft-entry": { broad: [3, 6], specific: [5, 8], signature: [6, 10] },
-  "team-path": { broad: [3, 6], specific: [5, 8], signature: [7, 10] },
-  production: { broad: [4, 8], specific: [5, 9], signature: [6, 10] },
-  accomplishments: { broad: [4, 8], specific: [5, 9], signature: [6, 10] },
-  championships: { broad: [5, 8], specific: [5, 9], signature: [6, 10] },
-  records: { broad: [6, 9], specific: [6, 10], signature: [7, 10] },
-  style: { broad: [2, 6], specific: [5, 9], signature: [6, 10] },
+  "sports-biography": { broad: [1, 6], specific: [2, 8], signature: [4, 10] },
+  "draft-entry": { broad: [1, 6], specific: [2, 8], signature: [4, 10] },
+  "team-path": { broad: [1, 6], specific: [2, 8], signature: [5, 10] },
+  production: { broad: [2, 8], specific: [3, 9], signature: [5, 10] },
+  accomplishments: { broad: [1, 8], specific: [2, 9], signature: [5, 10] },
+  championships: { broad: [2, 8], specific: [3, 9], signature: [5, 10] },
+  records: { broad: [2, 9], specific: [3, 10], signature: [5, 10] },
+  style: { broad: [1, 6], specific: [2, 9], signature: [5, 10] },
   relationships: { broad: [5, 8], specific: [7, 10], signature: [8, 10] },
-  "signature-moment": { broad: [7, 10], specific: [8, 10], signature: [9, 10] },
+  "signature-moment": { broad: [3, 10], specific: [5, 10], signature: [8, 10] },
   "jersey-number": { broad: [8, 10], specific: [8, 10], signature: [8, 10] },
   "nickname-persona": { broad: [9, 10], specific: [9, 10], signature: [9, 10] },
   "personal-biography": { broad: [8, 10], specific: [8, 10], signature: [9, 10] },
   nationality: { broad: [2, 5], specific: [4, 7], signature: [6, 9] },
   "ufc-division": { broad: [1, 4], specific: [3, 6], signature: [5, 8] },
   "ufc-gym": { broad: [4, 7], specific: [5, 8], signature: [7, 10] },
-  identity: { broad: [3, 7], specific: [5, 9], signature: [7, 10] },
+  identity: { broad: [2, 7], specific: [4, 9], signature: [7, 10] },
 };
 
 const BAND_RANK: Readonly<Record<WhoAmIClueBand, number>> = {
@@ -367,6 +368,10 @@ function scheduleRevealArchitecture(
         whoAmIRevealProfile(clue).category !== "personal-biography"
         || chosen.every((entry) => whoAmIRevealProfile(entry.clue).category !== "personal-biography")
       ))
+      .filter(({ clue }) => chosen.every((entry) => (
+        (entry.clue.conceptId ?? entry.clue.id) !== (clue.conceptId ?? clue.id)
+        && !whoAmICluesShareInformation(entry.clue, clue)
+      )))
       .filter(({ clue }) => (
         !preserveStrongFinalTwo
         || position < 9
