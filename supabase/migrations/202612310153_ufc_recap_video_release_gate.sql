@@ -82,6 +82,55 @@ revoke all on function public.publish_pick_event_draft(uuid)
 grant execute on function public.publish_pick_event_draft(uuid)
   to authenticated;
 
+-- The trusted live-state monitor also owns the automatic move from the legacy
+-- stored "upcoming" state to "locked" once the canonical event lock has passed.
+-- Per-fight ESPN locking still applies earlier when needed; this only removes the
+-- obsolete owner step and makes the post-fight recap release surface reachable.
+alter function public.record_pick_bout_live_states(text,jsonb)
+  rename to record_pick_bout_live_states_ufc_recap_core;
+alter function public.record_pick_bout_live_states_ufc_recap_core(text,jsonb)
+  set schema private;
+revoke all on function private.record_pick_bout_live_states_ufc_recap_core(text,jsonb)
+  from public, anon, authenticated, service_role;
+
+create function public.record_pick_bout_live_states(
+  p_event_id text,
+  p_observations jsonb
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $
+declare
+  v_event_id text := lower(trim(p_event_id));
+  v_result jsonb;
+  v_event public.pick_events;
+begin
+  v_result := private.record_pick_bout_live_states_ufc_recap_core(
+    v_event_id,
+    p_observations
+  );
+
+  select event.* into v_event
+  from public.pick_events event
+  where event.event_id = v_event_id;
+
+  if v_event.status = 'upcoming'
+    and now() >= v_event.locks_at
+  then
+    perform public.transition_pick_event(v_event.event_id, 'locked');
+  end if;
+
+  return v_result;
+end;
+$;
+
+revoke all on function public.record_pick_bout_live_states(text,jsonb)
+  from public, anon, authenticated;
+grant execute on function public.record_pick_bout_live_states(text,jsonb)
+  to service_role;
+
 -- Saving the canonical YouTube recap is the final owner action. Once every
 -- included fight is resolved, this wrapper advances the existing lifecycle:
 -- upcoming -> locked (when needed) -> complete. That existing completion owner
