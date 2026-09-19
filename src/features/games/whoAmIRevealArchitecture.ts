@@ -247,25 +247,30 @@ export function whoAmIRevealProfile(clue: WhoAmIClue): WhoAmIRevealProfile {
   return { category, identifyingPower, earliestClue, latestClue };
 }
 
-function footballSchedulingEarliestClue(profile: WhoAmIRevealProfile) {
+function footballSchedulingEarliestClue(
+  clue: WhoAmIClue,
+  profile: WhoAmIRevealProfile,
+) {
   const { category, identifyingPower, earliestClue } = profile;
+  if ((clue.revealCoordinates?.length ?? 0) > 0) return earliestClue;
+
   const byPower = (broad: number, specific: number, signature: number) => (
     identifyingPower === "broad" ? broad : identifyingPower === "specific" ? specific : signature
   );
 
   switch (category) {
-    case "sports-biography": return Math.min(earliestClue, byPower(2, 3, 5));
-    case "draft-entry": return Math.min(earliestClue, byPower(2, 3, 5));
-    case "team-path": return Math.min(earliestClue, byPower(2, 3, 5));
-    case "production": return Math.min(earliestClue, byPower(2, 4, 6));
-    case "accomplishments": return Math.min(earliestClue, byPower(1, 3, 5));
-    case "championships": return Math.min(earliestClue, byPower(2, 3, 5));
-    case "records": return Math.min(earliestClue, byPower(3, 4, 6));
-    case "style": return Math.min(earliestClue, byPower(1, 3, 5));
-    case "relationships": return Math.min(earliestClue, byPower(4, 6, 8));
-    case "signature-moment": return Math.min(earliestClue, byPower(4, 6, 8));
-    case "identity": return Math.min(earliestClue, byPower(2, 4, 6));
-    default: return earliestClue;
+    case "personal-biography":
+    case "jersey-number":
+    case "nickname-persona":
+      return earliestClue;
+    case "relationships":
+      return Math.min(earliestClue, byPower(2, 3, 5));
+    case "signature-moment":
+      return Math.min(earliestClue, byPower(3, 4, 6));
+    default:
+      // Once football's major identity coordinates are budgeted separately,
+      // sports-first non-coordinate clues are allowed to do the early orienting.
+      return Math.min(earliestClue, byPower(1, 2, 4));
   }
 }
 
@@ -273,7 +278,7 @@ export function whoAmIClueAllowedAtRevealPosition(clue: WhoAmIClue, zeroBasedInd
   const profile = whoAmIRevealProfile(clue);
   const earliestClue = clue.revealCoordinates === undefined
     ? profile.earliestClue
-    : footballSchedulingEarliestClue(profile);
+    : footballSchedulingEarliestClue(clue, profile);
   return zeroBasedIndex + 1 >= earliestClue;
 }
 
