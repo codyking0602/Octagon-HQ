@@ -67,6 +67,13 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(dailySource).toContain("MILLIONAIRE_DOUBLE_DIP_MISS_MS");
   });
 
+  it("keeps Daily suspense progressive after the authoritative verdict", () => {
+    expect(dailySource).toContain("MILLIONAIRE_REVEAL_DELAY_MS[answerFeedback.level]");
+    expect(dailySource).toContain("}, revealDelay);");
+    expect(dailySource).not.toContain("remainingDelay");
+    expect(dailySource).not.toContain("lockedAt");
+  });
+
   it("does not hide CFB Q1 answer text on the first render", () => {
     const refineCss = readFileSync("src/features/play/MillionairePortraitRefine.css", "utf8");
     expect(refineCss).not.toContain("millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-answers span");
