@@ -62,7 +62,7 @@ function pr3Clue(
 
 const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-hunter-henry", [
-    pr3Clue("henry-full-career", "Across my Arkansas career, I caught 116 passes for 1,661 yards and nine touchdowns.", "strong", "identity"),
+    pr3Clue("henry-full-career", "Across my Arkansas career, I caught 116 passes for 1,661 yards and nine touchdowns, becoming one of eight SEC tight ends to reach 100 receptions.", "strong", "identity"),
   ]],
   ["cfb-christian-mccaffrey", [
     pr3Clue("mccaffrey-ap-player-year", "I was the 2015 AP College Football Player of the Year and finished second in Heisman Trophy voting.", "strong", "accomplishments"),
