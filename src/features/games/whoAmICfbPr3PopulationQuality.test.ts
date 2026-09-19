@@ -49,6 +49,12 @@ describe("Who Am I PR3 CFB population quality", () => {
 
         if (!whoAmIRevealArchitectureSatisfied(board)) {
           problems.push(`${candidate.id} seed ${seed}: PR2 reveal architecture not satisfied`);
+          if (seed === 1 && problems.filter((problem) => problem.includes("DETAIL ")).length < 10) {
+            problems.push(`DETAIL ${candidate.id}: ${board.map((clue, index) => {
+              const profile = whoAmIRevealProfile(clue);
+              return `${index + 1}:${clue.band}/${profile.category}/${profile.identifyingPower}/>=${profile.earliestClue}/${clue.id}`;
+            }).join(" | ")}`);
+          }
         }
 
         const profiles = board.map(whoAmIRevealProfile);
