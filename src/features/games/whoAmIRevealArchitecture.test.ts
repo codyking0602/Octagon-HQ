@@ -12,8 +12,15 @@ function clue(
   text: string,
   band: WhoAmIClue["band"],
   facet: NonNullable<WhoAmIClue["facet"]>,
+  revealCoordinates: NonNullable<WhoAmIClue["revealCoordinates"]> = [],
 ): WhoAmIClue {
-  return { id, text, band, facet };
+  return {
+    id,
+    text,
+    band,
+    facet,
+    ...(revealCoordinates.length ? { revealCoordinates } : {}),
+  };
 }
 
 describe("Who Am I standardized reveal architecture", () => {
@@ -76,9 +83,9 @@ describe("Who Am I standardized reveal architecture", () => {
 
   it("reorders within the existing band ladder without changing its clue set", () => {
     const selected: WhoAmIClue[] = [
-      clue("role", "I played wide receiver.", "broad", "role"),
-      clue("era", "I played in the 2000s and 2010s.", "broad", "era"),
-      clue("school", "I played college football at Alabama.", "helpful", "background"),
+      clue("role", "I played wide receiver.", "broad", "role", ["position"]),
+      clue("era", "I played in the 2000s and 2010s.", "broad", "era", ["era"]),
+      clue("school", "I played college football at Alabama.", "helpful", "background", ["school"]),
       clue("style-helpful", "I was known for precise route running.", "helpful", "style"),
       clue("name-change", "I legally changed my surname to Ochocinco.", "strong", "nickname"),
       clue("production", "I finished with more than 700 receptions.", "strong", "production"),
@@ -95,10 +102,38 @@ describe("Who Am I standardized reveal architecture", () => {
     expect(ordered.findIndex((entry) => entry.id === "name-change")).toBeGreaterThanOrEqual(8);
     expect(ordered.findIndex((entry) => entry.id === "jersey")).toBeGreaterThanOrEqual(7);
     expect(ordered.slice(-2).every((entry) => entry.band === "strong" || entry.band === "giveaway")).toBe(true);
-    for (let index = 1; index < ordered.length; index += 1) {
-      const rank = { broad: 0, helpful: 1, strong: 2, giveaway: 3 } as const;
-      expect(rank[ordered[index]!.band]).toBeGreaterThanOrEqual(rank[ordered[index - 1]!.band]);
-    }
+
+    const coordinateCount = (count: number) => new Set(
+      ordered.slice(0, count).flatMap((entry) => entry.revealCoordinates ?? []),
+    ).size;
+    expect(coordinateCount(4)).toBeLessThanOrEqual(1);
+    expect(coordinateCount(6)).toBeLessThanOrEqual(2);
+    expect(coordinateCount(8)).toBeLessThanOrEqual(3);
+    expect(whoAmIRevealArchitectureSatisfied(ordered)).toBe(true);
+  });
+
+  it("treats a clue that exposes two major coordinates as too identifying for clues 1-4", () => {
+    const roleSchool = clue(
+      "role-school",
+      "At Clemson, I played quarterback.",
+      "helpful",
+      "identity",
+      ["school", "position"],
+    );
+    const fillers: WhoAmIClue[] = [
+      clue("style", "I was a dangerous runner in space.", "broad", "style"),
+      clue("award", "I earned conference player-of-the-year honors.", "helpful", "accomplishments"),
+      clue("draft", "I was a first-round NFL draft pick.", "strong", "career-path"),
+      clue("title", "I won a national championship.", "strong", "accomplishments"),
+      clue("record", "I set a school record in a postseason game.", "strong", "accomplishments"),
+      clue("moment", "I delivered a late game-winning drive.", "strong", "accomplishments"),
+      clue("era", "I played in the 2010s.", "broad", "era", ["era"]),
+      clue("jersey", "I wore No. 4.", "giveaway", "identity"),
+      clue("nickname", "I had a widely known nickname.", "giveaway", "nickname"),
+    ];
+
+    const ordered = orderWhoAmICluesByRevealArchitectureIfPossible([roleSchool, ...fillers]);
+    expect(ordered.findIndex((entry) => entry.id === "role-school")).toBeGreaterThanOrEqual(4);
     expect(whoAmIRevealArchitectureSatisfied(ordered)).toBe(true);
   });
 
