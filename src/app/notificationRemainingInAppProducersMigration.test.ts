@@ -87,7 +87,7 @@ describe("remaining in-app notification producers", () => {
     );
   });
 
-  it("collapses owner operations into three clear review actions", () => {
+  it("keeps only actionable owner operations after UFC recap auto-release", () => {
     expect(migration).toContain("'event_draft_ready'");
     expect(migration).toContain("'monitoring_repeatedly_failed'");
     expect(migration).toContain("'event_ready_to_complete'");
@@ -101,7 +101,10 @@ describe("remaining in-app notification producers", () => {
       "Three consecutive monitoring failures did not create the owner review action",
     );
     expect(integrationSql).toContain(
-      "Resolved locked event did not create the one owner completion action",
+      "Resolved event created obsolete owner completion noise",
+    );
+    expect(integrationSql).toContain(
+      "Suppressing completion noise also removed an actionable monitoring exception",
     );
   });
 
