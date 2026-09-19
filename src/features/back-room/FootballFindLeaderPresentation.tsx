@@ -120,6 +120,10 @@ export function FootballFindLeaderPresentation({
     const revealed = [...candidates]
       .filter((candidate): candidate is FootballFindLeaderPresentationCandidate & { value: number } => typeof candidate.value === "number")
       .sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
+    const revealedById = new Map(revealed.map((candidate) => [candidate.id, candidate]));
+    const eliminationOrder = eliminatedIds
+      .map((id) => revealedById.get(id))
+      .filter((candidate): candidate is FootballFindLeaderPresentationCandidate & { value: number } => Boolean(candidate));
     const leader = revealed.find((candidate) => candidate.id === leaderId) ?? revealed[0];
     const fatalRound = result.perfect ? null : result.score / 10;
 
@@ -145,6 +149,24 @@ export function FootballFindLeaderPresentation({
             </article>
           ) : null}
         </section>
+
+        {eliminationOrder.length ? (
+          <section className="football-find-reveal football-find-pick-order">
+            <header><p className="eyebrow">ELIMINATION ORDER</p><h2>Actual picks, round by round</h2></header>
+            <div>
+              {eliminationOrder.map((candidate, index) => (
+                <article className={candidate.id === result.fatalId ? "is-fatal" : ""} key={candidate.id}>
+                  <em>R{index + 1}</em>
+                  <span>
+                    <strong>{candidate.name}</strong>
+                    {showCandidateContext ? <small>{candidate.subtitle}</small> : null}
+                  </span>
+                  <b>{formatValue(candidate.value)}<small>{shortLabel || statLabel}</small></b>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className="football-find-reveal">
           <header><p className="eyebrow">FULL STAT REVEAL</p><h2>{question}</h2></header>
