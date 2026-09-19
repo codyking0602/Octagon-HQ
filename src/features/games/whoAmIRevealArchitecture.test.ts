@@ -68,7 +68,7 @@ describe("Who Am I standardized reveal architecture", () => {
     expect(whoAmIRevealProfile(juco)).toMatchObject({
       category: "sports-biography",
       identifyingPower: "signature",
-      earliestClue: 6,
+      earliestClue: 4,
     });
     expect(whoAmIRevealProfile(upbringing)).toMatchObject({
       category: "personal-biography",
