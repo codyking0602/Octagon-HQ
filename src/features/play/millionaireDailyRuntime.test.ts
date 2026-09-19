@@ -84,6 +84,19 @@ describe("Millionaire official Daily runtime", () => {
       .not.toBe((tenth.publicSetup.questions as Record<string, unknown>[])[0]!.id);
   });
 
+  it("publishes two answers in each A/B/C/D slot", () => {
+    for (const sport of ["ufc", "football"] as const) {
+      const publication = buildMillionaireDailySetup(
+        sport,
+        "2026-09-19",
+        sport === "ufc" ? "play-rotation-v9-millionaire-no-double" : "football-daily-v11-millionaire-no-double",
+      );
+      const run = publication.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+      expect(["A", "B", "C", "D"].map((id) => run.filter((question) => question.correctChoiceId === id).length))
+        .toEqual([2, 2, 2, 2]);
+    }
+  });
+
   it("publishes eight public questions without leaking the answer key", () => {
     const publication = buildMillionaireDailySetup(
       "football",
