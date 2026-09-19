@@ -88,6 +88,27 @@ function effectivelyRepeated(left: string, right: string) {
   return overlap / Math.min(leftTokens.size, rightTokens.size) >= 0.8;
 }
 
+const EFFECTIVE_REPEAT_CACHE = new WeakMap<WhoAmIClue, WeakMap<WhoAmIClue, boolean>>();
+
+function cluesEffectivelyRepeated(left: WhoAmIClue, right: WhoAmIClue) {
+  if (left === right) return true;
+
+  const cached = EFFECTIVE_REPEAT_CACHE.get(left)?.get(right);
+  if (cached != null) return cached;
+
+  const result = effectivelyRepeated(left.text, right.text);
+
+  const leftCache = EFFECTIVE_REPEAT_CACHE.get(left) ?? new WeakMap<WhoAmIClue, boolean>();
+  leftCache.set(right, result);
+  EFFECTIVE_REPEAT_CACHE.set(left, leftCache);
+
+  const rightCache = EFFECTIVE_REPEAT_CACHE.get(right) ?? new WeakMap<WhoAmIClue, boolean>();
+  rightCache.set(left, result);
+  EFFECTIVE_REPEAT_CACHE.set(right, rightCache);
+
+  return result;
+}
+
 export function whoAmIClueFacet(clue: WhoAmIClue): WhoAmIClueFacet {
   if (clue.facet) return clue.facet;
   const haystack = `${clue.id} ${clue.text}`.toLowerCase();
@@ -648,12 +669,22 @@ interface PreparedClue {
   selectionClass: WhoAmIClueSelectionClass;
 }
 
-function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
-  return clues
-    .map((clue, index): PreparedClue => {
+type PreparedClueStatic = Omit<PreparedClue, "variationRank">;
+
+const PREPARED_CLUE_STATIC_CACHE = new WeakMap<
+  readonly WhoAmIClue[],
+  readonly PreparedClueStatic[]
+>();
+
+function preparedClueStatics(clues: readonly WhoAmIClue[]) {
+  const cached = PREPARED_CLUE_STATIC_CACHE.get(clues);
+  if (cached) return cached;
+
+  const prepared = clues
+    .map((clue, index): PreparedClueStatic => {
       const facet = whoAmIClueFacet(clue);
       const selectionClass = whoAmIClueSelectionClass(clue);
-      const base: PreparedClue = {
+      const base: PreparedClueStatic = {
         clue,
         index,
         facet,
@@ -662,7 +693,6 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
           + playabilityPenalty(clue.text, Boolean(clue.identityKnowledge))
           + selectionPriorityPenalty(selectionClass)
           + (isGenericCareerGames(clue) ? 80 : 0),
-        variationRank: random(),
         semanticFamily: null,
         strength: 0,
         selectionClass,
@@ -674,6 +704,16 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
     .filter((entry) => entry.clue.text.trim().length > 0)
     .filter((entry) => !whoAmIClueHasHardEditorialFailure(entry.clue))
     .filter((entry) => !isGenericCareerTargets(entry.clue));
+
+  PREPARED_CLUE_STATIC_CACHE.set(clues, prepared);
+  return prepared;
+}
+
+function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
+  return preparedClueStatics(clues).map((entry): PreparedClue => ({
+    ...entry,
+    variationRank: random(),
+  }));
 }
 
 export function assembleWhoAmIClues(
@@ -714,7 +754,7 @@ export function assembleWhoAmIClues(
     if (
       !options.allowNearDuplicate
       && selected.some((other) => (
-        effectivelyRepeated(other.clue.text, entry.clue.text)
+        cluesEffectivelyRepeated(other.clue, entry.clue)
         && !tokenOverlapStillDistinct(other, entry)
       ))
     ) return false;
@@ -903,7 +943,7 @@ export function assembleWhoAmIClues(
         if (otherSelected.some((entry) => whoAmICluesShareInformation(entry.clue, candidate.clue))) return [];
         if (otherSelected.some((entry) => (
           normalize(entry.clue.text) === normalize(candidate.clue.text)
-          || effectivelyRepeated(entry.clue.text, candidate.clue.text)
+          || cluesEffectivelyRepeated(entry.clue, candidate.clue)
         ))) return [];
         if (
           candidate.semanticFamily
@@ -967,7 +1007,7 @@ export function assembleWhoAmIClues(
         .filter((candidate) => !otherSelected.some((entry) => (
           normalize(entry.clue.text) === normalize(candidate.clue.text)
           || (
-            effectivelyRepeated(entry.clue.text, candidate.clue.text)
+            cluesEffectivelyRepeated(entry.clue, candidate.clue)
             && !tokenOverlapStillDistinct(entry, candidate)
           )
         )))
@@ -1034,7 +1074,7 @@ export function assembleWhoAmIClues(
             .filter((candidate) => !others.some((other) => whoAmICluesShareInformation(other.clue, candidate.clue)))
             .filter((candidate) => !others.some((other) => (
               normalize(other.clue.text) === normalize(candidate.clue.text)
-              || effectivelyRepeated(other.clue.text, candidate.clue.text)
+              || cluesEffectivelyRepeated(other.clue, candidate.clue)
             )))
             .filter((candidate) => {
               const lateAfter = currentLate + Number(
@@ -1132,7 +1172,7 @@ export function assembleWhoAmIClues(
         if (chosen.some((entry) => whoAmICluesShareInformation(entry.clue, candidate.clue))) continue;
         if (chosen.some((entry) => (
           normalize(entry.clue.text) === normalize(candidate.clue.text)
-          || effectivelyRepeated(entry.clue.text, candidate.clue.text)
+          || cluesEffectivelyRepeated(entry.clue, candidate.clue)
         ))) continue;
 
         chosen.push(candidate);
@@ -1214,7 +1254,7 @@ export function assembleWhoAmIClues(
         other !== current
         && (
           normalize(other.clue.text) === normalize(candidate.clue.text)
-          || effectivelyRepeated(other.clue.text, candidate.clue.text)
+          || cluesEffectivelyRepeated(other.clue, candidate.clue)
         )
       )))
       .filter((candidate) => (
