@@ -85,6 +85,12 @@ describe("Who Am I fast targeted editorial gate", () => {
               profile.earliestClue,
               `${candidate.id} helpful clue must be rebanded later: ${clue.text}`,
             ).toBeLessThanOrEqual(4);
+            if (profile.category === "school") {
+              expect(
+                profile.identifyingPower,
+                `${candidate.id} identifying school belongs after the foundation clues: ${clue.text}`,
+              ).toBe("broad");
+            }
           }
           if (clue.band === "strong") {
             expect(
