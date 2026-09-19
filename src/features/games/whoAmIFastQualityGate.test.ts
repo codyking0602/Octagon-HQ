@@ -96,7 +96,12 @@ describe("Who Am I fast targeted editorial gate", () => {
           `${candidate.id} needs a strong finish`,
         ).toBeGreaterThanOrEqual(3);
 
-        if (whoAmIRevealArchitectureCanOrder(sequence)) {
+        if (universe.league === "CFB") {
+          expect(
+            whoAmIRevealArchitectureSatisfied(sequence),
+            `${candidate.id} must satisfy the standardized CFB reveal architecture after PR3 content curation`,
+          ).toBe(true);
+        } else if (whoAmIRevealArchitectureCanOrder(sequence)) {
           expect(
             whoAmIRevealArchitectureSatisfied(sequence),
             `${candidate.id} must use the standardized reveal order when its selected board supports it`,
