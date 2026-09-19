@@ -3172,7 +3172,7 @@ const CFB_PR3_WEAK_VOLUME_CLUE_IDS: ReadonlySet<string> = new Set([
 function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
   let personalBiographyUsed = false;
 
-  return clues
+  const curated = clues
     .filter((clue) => !CFB_PR3_WEAK_VOLUME_CLUE_IDS.has(clue.id))
     .map((clue): WhoAmIClue => {
       const categorizedClue: WhoAmIClue = clue.id === "position" || clue.id === "role"
@@ -3181,7 +3181,9 @@ function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
           ? { ...clue, facet: "era" }
           : clue.id === "school"
             ? { ...clue, facet: "background" }
-            : clue;
+            : clue.id.startsWith("fact:")
+              ? { ...clue, facet: "production" }
+              : clue;
       const profile = whoAmIRevealProfile(categorizedClue);
 
       if (profile.category === "nickname-persona" || profile.category === "jersey-number") {
@@ -3208,13 +3210,52 @@ function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
       personalBiographyUsed = true;
       return true;
     });
+
+  const existingFoundation = curated.filter((clue) => (
+    clue.band === "helpful" && whoAmIRevealProfile(clue).earliestClue <= 4
+  )).length;
+  const foundationNeeded = Math.max(0, 2 - existingFoundation);
+  if (foundationNeeded === 0) return curated;
+
+  const categoryRank: Readonly<Record<string, number>> = {
+    "team-path": 0,
+    production: 1,
+    accomplishments: 2,
+    "sports-biography": 3,
+    style: 4,
+    identity: 5,
+  };
+  const candidates = curated
+    .map((clue, index) => {
+      const asHelpful: WhoAmIClue = { ...clue, band: "helpful" };
+      return { clue, index, profile: whoAmIRevealProfile(asHelpful) };
+    })
+    .filter(({ clue, profile }) => (
+      clue.band === "strong"
+      && profile.earliestClue <= 4
+      && profile.category !== "personal-biography"
+      && profile.category !== "relationships"
+      && !(profile.category === "school" && profile.identifyingPower !== "broad")
+      && (profile.category !== "identity" || clue.id === "conference")
+    ))
+    .sort((left, right) => (
+      left.profile.earliestClue - right.profile.earliestClue
+      || (left.profile.identifyingPower === "broad" ? -1 : 1)
+      || (categoryRank[left.profile.category] ?? 9) - (categoryRank[right.profile.category] ?? 9)
+      || left.index - right.index
+    ));
+
+  const rebandIndexes = new Set(candidates.slice(0, foundationNeeded).map(({ index }) => index));
+  return curated.map((clue, index) => (
+    rebandIndexes.has(index) ? { ...clue, band: "helpful" } : clue
+  ));
 }
 
 function trimCfbBatch1Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
   const target = 16;
   if (clues.length <= target) return [...clues];
 
-  const requiredIds = new Set(["position", "school"]);
+  const requiredIds = new Set(["position", "era", "school", "conference"]);
   const required = clues.filter((clue) => requiredIds.has(clue.id));
   const requiredIdSet = new Set(required.map((clue) => clue.id));
   const ranked = clues
@@ -3742,7 +3783,7 @@ function trimCfbBatch2Pool(subject: FootballSubjectProfile, clues: readonly WhoA
   const target = 16;
   if (clues.length <= target) return [...clues];
 
-  const requiredIds = new Set(["position", "school"]);
+  const requiredIds = new Set(["position", "era", "school", "conference"]);
   const required = clues.filter((clue) => requiredIds.has(clue.id));
   const requiredIdSet = new Set(required.map((clue) => clue.id));
   const ranked = clues
@@ -4445,7 +4486,7 @@ function trimCfbBatch3Pool(subject: FootballSubjectProfile, clues: readonly WhoA
   const target = 16;
   if (clues.length <= target) return [...clues];
 
-  const requiredIds = new Set(["position", "school"]);
+  const requiredIds = new Set(["position", "era", "school", "conference"]);
   const required = clues.filter((clue) => requiredIds.has(clue.id));
   const requiredIdSet = new Set(required.map((clue) => clue.id));
   const ranked = clues
@@ -4986,9 +5027,16 @@ function trimCfbBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoA
   const target = 16;
   if (clues.length <= target) return [...clues];
 
-  const requiredIds = new Set(subject.kind === "coach" ? [] : [
-    "position",
+  const requiredIds = new Set(subject.kind === "coach" ? [
+    "role",
+    "era",
     "school",
+    "conference",
+  ] : [
+    "position",
+    "era",
+    "school",
+    "conference",
     ...(subject.id === "cfb-travis-hunter" ? ["curated-cfb4:hunter-jackson-state-colorado"] : []),
   ]);
   const required = clues.filter((clue) => requiredIds.has(clue.id));
