@@ -39,7 +39,6 @@ type DailyAnswerFeedback = {
   removedChoices: string[];
   doubleDipMisses: string[];
   startedRevision: number;
-  lockedAt: number;
 };
 
 function record(value: unknown): JsonRecord {
@@ -189,15 +188,17 @@ export function OfficialMillionaireDailyView({
     const revealDelay = answerOutcome === "double-dip-continue"
       ? 0
       : MILLIONAIRE_REVEAL_DELAY_MS[answerFeedback.level];
-    const remainingDelay = Math.max(0, revealDelay - (performance.now() - answerFeedback.lockedAt));
 
+    // Daily must preserve the same Q1→Q8 suspense curve as Casual. The server
+    // remains authoritative, so start that presentation delay once its verdict
+    // is available instead of letting network time flatten the later questions.
     const id = window.setTimeout(() => {
       setAnswerFeedback((current) => (
         current && current.startedRevision === answerFeedback.startedRevision
           ? { ...current, phase: "revealed", correctChoiceId, answerOutcome }
           : current
       ));
-    }, remainingDelay);
+    }, revealDelay);
     return () => window.clearTimeout(id);
   }, [projection.progressRevision]);
 
@@ -245,7 +246,6 @@ export function OfficialMillionaireDailyView({
       removedChoices: [...removedChoices],
       doubleDipMisses: [...doubleDipMisses],
       startedRevision: projection.progressRevision,
-      lockedAt: performance.now(),
     });
     advance({ type: "answer", choice_id: choiceId });
   };
@@ -279,7 +279,7 @@ export function OfficialMillionaireDailyView({
             <section className="millionaire-rules__how" aria-label="How to play">
               <h2>HOW TO PLAY</h2>
               <div className="millionaire-rules__quick">
-                <p><strong>2:30 TIME BANK</strong><span>Shared across all 8. Time only breaks leaderboard ties.</span></p>
+                <p><strong>{millionaireTimeLabel(MILLIONAIRE_TIME_BANK_MS)} TIME BANK</strong><span>Shared across all 8. Time only breaks leaderboard ties.</span></p>
                 <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: leave with $5,000.</span></p>
                 <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: leave with $100,000.</span></p>
                 <p><strong>WALK AWAY</strong><span>Before Q8, bank $500,000 / 90 PTS or risk the checkpoint for $1,000,000 / 100 PTS.</span></p>
