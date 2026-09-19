@@ -3,6 +3,7 @@
    The photo supplies only the host/studio. React + CSS own all game UI. */
 
 .millionaire-shell--fixed-stage {
+  z-index: 99999 !important;
   inset: 0 !important;
   width: 100vw !important;
   height: 100dvh !important;
