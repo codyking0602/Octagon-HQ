@@ -259,6 +259,8 @@ Deno.serve(async (request) => {
   ) {
     const observedAt = liveStateNow.toISOString();
     try {
+      // ESPN's site.api host rejects production Supabase egress with HTTP 403.
+      // Keep UFC live-state polling on the site.web.api host proven reachable from this runtime.
       const liveResponse = await fetch(ESPN_UFC_SCOREBOARD_URL, {
         headers: { Accept: "application/json" },
         signal: AbortSignal.timeout(10_000),
