@@ -74,10 +74,12 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-christian-mccaffrey", [
     pr3Clue("mccaffrey-ap-player-year", "I was the 2015 AP College Football Player of the Year and finished second in Heisman Trophy voting.", "strong", "accomplishments"),
     pr3Clue("mccaffrey-pac12-rose", "In 2015 I helped Stanford win the Pac-12 and Rose Bowl championships and was named Pac-12 Offensive Player of the Year.", "strong", "identity"),
+    pr3Clue("mccaffrey-pac12-title-game", "In the 2015 Pac-12 Championship Game I became the only FBS player to post 200 rushing, 100 receiving and 100 kickoff-return yards in one game.", "giveaway", "identity", 8),
   ]],
   ["cfb-kyle-hamilton", [
     pr3Clue("hamilton-consensus-all-america", "I was a consensus All-American safety in 2021 despite being limited to seven games by injury.", "strong", "accomplishments"),
     pr3Clue("hamilton-fsu-two-picks", "I intercepted two passes in Notre Dame's 2021 season-opening overtime win at Florida State.", "strong", "identity"),
+    pr3Clue("hamilton-purdue", "Against Purdue in 2021 I made 10 tackles, stopped a fourth-down conversion and later intercepted a pass in the red zone.", "strong", "identity"),
   ]],
   ["cfb-brandon-scherff", [
     pr3Clue("scherff-unanimous-all-america", "At Iowa I was a unanimous consensus first-team All-American in 2014.", "strong", "identity"),
@@ -476,7 +478,7 @@ function ensureConferenceFoundation(
 }
 
 function rebandCfbClue(clue: WhoAmIClue) {
-  let next = annotateCfbCategoryMetadata(normalizeCfbDraftCopy(clue));
+  let next = annotateCfbCategoryMetadata(clue);
   next = cfbOrientationReband(next);
   next = cfbSchoolReband(next);
   next = cfbSportsBiographyReband(next);
