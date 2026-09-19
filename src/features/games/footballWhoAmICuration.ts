@@ -1,4 +1,5 @@
 import type { FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
+import { refineCfbWhoAmIContent } from "./cfbWhoAmIPr3Curation";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueFacet } from "./whoAmIEngine";
 
@@ -5176,16 +5177,16 @@ export function curateFootballWhoAmIClues(
   rawClues: readonly WhoAmIClue[],
 ): WhoAmIClue[] {
   if (subject.league === "CFB" && cfbBatch1SubjectIds.has(subject.id)) {
-    return curateCfbBatch1Clues(subject, rawClues);
+    return refineCfbWhoAmIContent(subject, curateCfbBatch1Clues(subject, rawClues));
   }
   if (subject.league === "CFB" && cfbBatch2SubjectIds.has(subject.id)) {
-    return curateCfbBatch2Clues(subject, rawClues);
+    return refineCfbWhoAmIContent(subject, curateCfbBatch2Clues(subject, rawClues));
   }
   if (subject.league === "CFB" && cfbBatch3SubjectIds.has(subject.id)) {
-    return curateCfbBatch3Clues(subject, rawClues);
+    return refineCfbWhoAmIContent(subject, curateCfbBatch3Clues(subject, rawClues));
   }
   if (subject.league === "CFB" && cfbBatch4SubjectIds.has(subject.id)) {
-    return curateCfbBatch4Clues(subject, rawClues);
+    return refineCfbWhoAmIContent(subject, curateCfbBatch4Clues(subject, rawClues));
   }
   if (subject.league !== "NFL") return [...rawClues];
   if (batch4SubjectIds.has(subject.id)) return curateNflBatch4Clues(subject, rawClues);
