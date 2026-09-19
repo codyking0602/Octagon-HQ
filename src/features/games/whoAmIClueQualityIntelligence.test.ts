@@ -227,6 +227,7 @@ describe("Who Am I clue-quality intelligence", () => {
       { id: "s-heisman-two", text: "My college résumé includes a Heisman award.", band: "strong", facet: "accomplishments", identityKnowledge: true },
       { id: "s-title", text: "I won a national championship.", band: "strong", facet: "accomplishments" },
       { id: "s-rival", text: "I beat a major rival in a championship season.", band: "strong", facet: "relationships" },
+      { id: "s-signature", text: "I became known for a signature fourth-quarter comeback.", band: "strong", facet: "identity" },
       { id: "g-draft", text: "I was selected No. 1 overall in the NFL Draft.", band: "giveaway", facet: "career-path" },
       { id: "g-jersey", text: "I wore jersey number 1.", band: "giveaway", facet: "identity" },
     ];
@@ -234,6 +235,7 @@ describe("Who Am I clue-quality intelligence", () => {
     const sequence = assembleWhoAmIClues(clues, WHO_AM_I_CLUE_LIMIT, () => 0.5);
     expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
     expect(sequence.filter((clue) => /heisman/i.test(clue.text))).toHaveLength(1);
+    expect(sequence.filter((clue) => /draft/i.test(clue.text))).toHaveLength(1);
   });
 
   it("keeps strongly identifying color such as a signature celebration eligible", () => {

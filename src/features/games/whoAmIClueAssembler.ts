@@ -5,6 +5,11 @@ import type {
   WhoAmILeague,
   WhoAmISubjectKind,
 } from "./whoAmIEngine";
+import {
+  whoAmIClueHasHardEditorialFailure,
+  whoAmICluesShareInformation,
+  whoAmISemanticIndependentCapacity,
+} from "./whoAmISemanticQuality";
 
 const BAND_ORDER: readonly WhoAmIClueBand[] = ["broad", "helpful", "strong", "giveaway"];
 const BAND_TARGETS: Readonly<Record<WhoAmIClueBand, number>> = {
@@ -81,6 +86,27 @@ function effectivelyRepeated(left: string, right: string) {
     if (rightTokens.has(token)) overlap += 1;
   }
   return overlap / Math.min(leftTokens.size, rightTokens.size) >= 0.8;
+}
+
+const EFFECTIVE_REPEAT_CACHE = new WeakMap<WhoAmIClue, WeakMap<WhoAmIClue, boolean>>();
+
+function cluesEffectivelyRepeated(left: WhoAmIClue, right: WhoAmIClue) {
+  if (left === right) return true;
+
+  const cached = EFFECTIVE_REPEAT_CACHE.get(left)?.get(right);
+  if (cached != null) return cached;
+
+  const result = effectivelyRepeated(left.text, right.text);
+
+  const leftCache = EFFECTIVE_REPEAT_CACHE.get(left) ?? new WeakMap<WhoAmIClue, boolean>();
+  leftCache.set(right, result);
+  EFFECTIVE_REPEAT_CACHE.set(left, leftCache);
+
+  const rightCache = EFFECTIVE_REPEAT_CACHE.get(right) ?? new WeakMap<WhoAmIClue, boolean>();
+  rightCache.set(left, result);
+  EFFECTIVE_REPEAT_CACHE.set(right, rightCache);
+
+  return result;
 }
 
 export function whoAmIClueFacet(clue: WhoAmIClue): WhoAmIClueFacet {
@@ -382,7 +408,7 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
     .replace(/\bI\s+has\b/g, "I have")
     .replace(/\bme\s+myself\b/gi, "I")
     .replace(
-      /\bme\b(?=\s+(?:(?:affectionately|later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:adopted|began|became|called|credited|developed|diversified|earned|established|felt|grew|hurled|joined|made|moved|played|recorded|returned|said|signed|spoke|spent|started|thought|threw|transferred|won|worked)\b)/gi,
+      /\bme\b(?=\s+(?:(?:affectionately|later|eventually|also|then|personally|deliberately|ultimately)\s+)?(?:adopted|began|became|called|chose|continued|credited|developed|diversified|earned|established|felt|grew|handled|hurled|joined|made|moved|played|recorded|remained|returned|said|signed|spoke|spent|started|thought|threw|trained|transferred|used|won|worked)\b)/gi,
       "I",
     )
     .replace(
@@ -390,13 +416,17 @@ function firstPersonIdentityCopy(value: string, subjectKind: WhoAmISubjectKind) 
       "adopted a distinctive nickname myself",
     )
     .replace(/\bI\s+approaches\b/gi, "I approach")
+    .replace(/\bI\s+continues\b/gi, "I continue")
+    .replace(/\bI\s+remains\b/gi, "I remain")
     .replace(/\bI\s+uses\b/gi, "I use")
     .replace(/\bI\s+trains\b/gi, "I train")
     .replace(/\bI\s+plays\b/gi, "I play")
     .replace(/\bI\s+works\b/gi, "I work")
     .replace(/\bI\s+says\b/gi, "I say")
     .replace(/\bI\s+credits\b/gi, "I credit")
-    .replace(/\bI\s+calls\b/gi, "I call");
+    .replace(/\bI\s+calls\b/gi, "I call")
+    .replace(/\bI\b([^.!?;]{0,160})\band has\b/gi, "I$1 and I have")
+    .replace(/\bI met ([^;.!?]+);\s*they later married\b/gi, "I met $1; we later married");
   return sentenceCase(text);
 }
 
@@ -457,6 +487,29 @@ function anonymizeIdentityValue(
     return token;
   });
 
+  // Pronouns in the same clause after a named third party belong to that person,
+  // not automatically to the hidden subject. Protect them from the first-person
+  // transform so "train with him" can never become "train with me".
+  const protectedPronouns: Array<[string, string]> = [];
+  const subjectReferenceTerms = [`this ${label}`, firstName, lastName].filter((term) => term.length >= 2);
+  for (const [nameToken] of protectedNames) {
+    const tokenPattern = escapeRegExp(nameToken);
+    text = text.replace(
+      new RegExp(`(${tokenPattern}[^.!?;]{0,120})\\b(him|her|his|hers)\\b`, "gi"),
+      (_match, prefix: string, pronoun: string) => {
+        const afterThirdPartyName = prefix.slice(nameToken.length);
+        const subjectRestated = subjectReferenceTerms.some((term) => (
+          new RegExp(`\\b${escapeRegExp(term)}\\b`, "i").test(afterThirdPartyName)
+        ));
+        if (subjectRestated) return `${prefix}${pronoun}`;
+
+        const pronounToken = `__WHO_AM_I_PROTECTED_PRONOUN_${protectedPronouns.length}__`;
+        protectedPronouns.push([pronounToken, pronoun]);
+        return `${prefix}${pronounToken}`;
+      },
+    );
+  }
+
   const terms = [...new Set([firstName, lastName].filter((term) => term.length >= 2))]
     .sort((left, right) => right.length - left.length);
 
@@ -470,7 +523,9 @@ function anonymizeIdentityValue(
 
   text = text.replace(new RegExp(`\\bthe this ${escapeRegExp(label)}\\b`, "gi"), `this ${label}'s namesake`);
   text = text.replace(/^this /, "This ");
-  return firstPersonIdentityCopy(tightenIdentityCopy(text), subjectKind);
+  let transformed = firstPersonIdentityCopy(tightenIdentityCopy(text), subjectKind);
+  for (const [token, original] of protectedPronouns) transformed = transformed.replace(token, original);
+  return transformed;
 }
 
 function playabilityPenalty(text: string, identityKnowledge: boolean) {
@@ -534,6 +589,20 @@ function isGenericCareerGames(clue: WhoAmIClue) {
   return /\b(?:played|appeared in|recorded)\s+[\d,]+\s+(?:regular-season\s+)?(?:nfl\s+|college\s+)?games\b/.test(
     clue.text.toLowerCase(),
   );
+}
+
+const SEMANTIC_CAPACITY_INPUT_CACHE = new WeakMap<readonly WhoAmIClue[], readonly WhoAmIClue[]>();
+
+function semanticCapacityInput(clues: readonly WhoAmIClue[]) {
+  const cached = SEMANTIC_CAPACITY_INPUT_CACHE.get(clues);
+  if (cached) return cached;
+
+  const eligible = clues
+    .filter((clue) => clue.text.trim().length > 0)
+    .filter((clue) => !whoAmIClueHasHardEditorialFailure(clue))
+    .filter((clue) => !isGenericCareerTargets(clue));
+  SEMANTIC_CAPACITY_INPUT_CACHE.set(clues, eligible);
+  return eligible;
 }
 
 function recognitionStrength(entry: Pick<PreparedClue, "facet" | "clue">) {
@@ -600,12 +669,22 @@ interface PreparedClue {
   selectionClass: WhoAmIClueSelectionClass;
 }
 
-function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
-  return clues
-    .map((clue, index): PreparedClue => {
+type PreparedClueStatic = Omit<PreparedClue, "variationRank">;
+
+const PREPARED_CLUE_STATIC_CACHE = new WeakMap<
+  readonly WhoAmIClue[],
+  readonly PreparedClueStatic[]
+>();
+
+function preparedClueStatics(clues: readonly WhoAmIClue[]) {
+  const cached = PREPARED_CLUE_STATIC_CACHE.get(clues);
+  if (cached) return cached;
+
+  const prepared = clues
+    .map((clue, index): PreparedClueStatic => {
       const facet = whoAmIClueFacet(clue);
       const selectionClass = whoAmIClueSelectionClass(clue);
-      const base: PreparedClue = {
+      const base: PreparedClueStatic = {
         clue,
         index,
         facet,
@@ -614,7 +693,6 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
           + playabilityPenalty(clue.text, Boolean(clue.identityKnowledge))
           + selectionPriorityPenalty(selectionClass)
           + (isGenericCareerGames(clue) ? 80 : 0),
-        variationRank: random(),
         semanticFamily: null,
         strength: 0,
         selectionClass,
@@ -624,7 +702,18 @@ function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
       return base;
     })
     .filter((entry) => entry.clue.text.trim().length > 0)
+    .filter((entry) => !whoAmIClueHasHardEditorialFailure(entry.clue))
     .filter((entry) => !isGenericCareerTargets(entry.clue));
+
+  PREPARED_CLUE_STATIC_CACHE.set(clues, prepared);
+  return prepared;
+}
+
+function preparedClues(clues: readonly WhoAmIClue[], random: () => number) {
+  return preparedClueStatics(clues).map((entry): PreparedClue => ({
+    ...entry,
+    variationRank: random(),
+  }));
 }
 
 export function assembleWhoAmIClues(
@@ -647,6 +736,7 @@ export function assembleWhoAmIClues(
     relaxBiographyLimit: boolean;
     relaxChronologyLimit?: boolean;
     allowCareerGamesFallback?: boolean;
+    allowSemanticOverlap?: boolean;
   };
 
   const canUse = (
@@ -655,12 +745,16 @@ export function assembleWhoAmIClues(
   ) => {
     if (isGenericCareerGames(entry.clue) && !options.allowCareerGamesFallback) return false;
     if (selectedConcepts.has(entry.conceptId)) return false;
+    if (
+      !options.allowSemanticOverlap
+      && selected.some((other) => whoAmICluesShareInformation(other.clue, entry.clue))
+    ) return false;
     const normalizedText = normalize(entry.clue.text);
     if (selectedTexts.some((text) => normalize(text) === normalizedText)) return false;
     if (
       !options.allowNearDuplicate
       && selected.some((other) => (
-        effectivelyRepeated(other.clue.text, entry.clue.text)
+        cluesEffectivelyRepeated(other.clue, entry.clue)
         && !tokenOverlapStillDistinct(other, entry)
       ))
     ) return false;
@@ -808,6 +902,27 @@ export function assembleWhoAmIClues(
     );
   }
 
+  // PR1 makes semantic uniqueness the normal path, but the existing population
+  // still contains a few pools with fewer than ten independent information lanes.
+  // Keep those rounds playable until their sport cleanup replaces the debt rather
+  // than returning a nine-clue game. Exact/near-copy protections remain active.
+  if (selected.length < limit) {
+    take(
+      prepared.filter((entry) => !selected.includes(entry)).sort(lateFirst),
+      limit - selected.length,
+      {
+        allowNearDuplicate: false,
+        relaxFacetLimit: true,
+        relaxSemanticFamily: true,
+        relaxPersonalLimit: true,
+        relaxBiographyLimit: true,
+        relaxChronologyLimit: true,
+        allowCareerGamesFallback: true,
+        allowSemanticOverlap: true,
+      },
+    );
+  }
+
   const lateStageCount = () => selected.filter((entry) => (
     entry.clue.band === "strong" || entry.clue.band === "giveaway"
   )).length;
@@ -825,9 +940,10 @@ export function assembleWhoAmIClues(
         if (candidate.selectionClass !== "sports-identity" && otherPersonalCount >= 3) return [];
         if (candidate.selectionClass === "deep-biography" && otherBiographyCount >= 1) return [];
         if (otherSelected.some((entry) => entry.conceptId === candidate.conceptId)) return [];
+        if (otherSelected.some((entry) => whoAmICluesShareInformation(entry.clue, candidate.clue))) return [];
         if (otherSelected.some((entry) => (
           normalize(entry.clue.text) === normalize(candidate.clue.text)
-          || effectivelyRepeated(entry.clue.text, candidate.clue.text)
+          || cluesEffectivelyRepeated(entry.clue, candidate.clue)
         ))) return [];
         if (
           candidate.semanticFamily
@@ -887,10 +1003,11 @@ export function assembleWhoAmIClues(
           return lateAfterSwap >= 3;
         })
         .filter((candidate) => !otherSelected.some((entry) => entry.conceptId === candidate.conceptId))
+        .filter((candidate) => !otherSelected.some((entry) => whoAmICluesShareInformation(entry.clue, candidate.clue)))
         .filter((candidate) => !otherSelected.some((entry) => (
           normalize(entry.clue.text) === normalize(candidate.clue.text)
           || (
-            effectivelyRepeated(entry.clue.text, candidate.clue.text)
+            cluesEffectivelyRepeated(entry.clue, candidate.clue)
             && !tokenOverlapStillDistinct(entry, candidate)
           )
         )))
@@ -918,6 +1035,156 @@ export function assembleWhoAmIClues(
     ));
     const quotaSwap = quotaSwaps[0]!;
     selected[quotaSwap.selectedIndex] = quotaSwap.candidate;
+  }
+
+  // Greedy selection can occasionally need the legacy playability fallback even
+  // when the full candidate pool contains a clean replacement. Repair any remaining
+  // semantic collision before replay variation so a duplicate lane never survives
+  // merely because it was chosen earlier in the pass.
+  for (let repairPass = 0; repairPass < limit; repairPass += 1) {
+    let repaired = false;
+
+    for (let leftIndex = 0; leftIndex < selected.length && !repaired; leftIndex += 1) {
+      for (let rightIndex = leftIndex + 1; rightIndex < selected.length && !repaired; rightIndex += 1) {
+        const left = selected[leftIndex]!;
+        const right = selected[rightIndex]!;
+        if (!whoAmICluesShareInformation(left.clue, right.clue)) continue;
+
+        const victims = [
+          { entry: left, index: leftIndex },
+          { entry: right, index: rightIndex },
+        ].sort((a, b) => {
+          const aComposite = Number(/role-school/i.test(`${a.entry.clue.id} ${a.entry.clue.conceptId ?? ""}`));
+          const bComposite = Number(/role-school/i.test(`${b.entry.clue.id} ${b.entry.clue.conceptId ?? ""}`));
+          return bComposite - aComposite
+            || b.entry.priority - a.entry.priority
+            || a.entry.strength - b.entry.strength;
+        });
+
+        for (const victim of victims) {
+          const others = selected.filter((_entry, index) => index !== victim.index);
+          const currentLate = others.filter((entry) => (
+            entry.clue.band === "strong" || entry.clue.band === "giveaway"
+          )).length;
+          const currentSports = others.filter((entry) => entry.selectionClass === "sports-identity").length;
+
+          const replacements = prepared
+            .filter((candidate) => !selected.includes(candidate))
+            .filter((candidate) => !others.some((other) => other.conceptId === candidate.conceptId))
+            .filter((candidate) => !others.some((other) => whoAmICluesShareInformation(other.clue, candidate.clue)))
+            .filter((candidate) => !others.some((other) => (
+              normalize(other.clue.text) === normalize(candidate.clue.text)
+              || cluesEffectivelyRepeated(other.clue, candidate.clue)
+            )))
+            .filter((candidate) => {
+              const lateAfter = currentLate + Number(
+                candidate.clue.band === "strong" || candidate.clue.band === "giveaway",
+              );
+              if (lateAfter < 3) return false;
+
+              const sportsAfter = currentSports + Number(candidate.selectionClass === "sports-identity");
+              if (sportsAfter < sportsIdentityTarget) return false;
+
+              const personalAfter = others.filter((entry) => entry.selectionClass !== "sports-identity").length
+                + Number(candidate.selectionClass !== "sports-identity");
+              const biographyAfter = others.filter((entry) => entry.selectionClass === "deep-biography").length
+                + Number(candidate.selectionClass === "deep-biography");
+              if (personalAfter > 3 || biographyAfter > 1) return false;
+
+              const sameFacet = others.filter((entry) => entry.facet === candidate.facet).length;
+              if (candidate.facet === "relationships" && sameFacet >= 1) return false;
+              const facetLimit = FACET_LIMITS[candidate.facet];
+              return facetLimit == null || sameFacet < facetLimit;
+            })
+            .sort((a, b) => (
+              Math.abs(bandRank(a.clue.band) - bandRank(victim.entry.clue.band))
+              - Math.abs(bandRank(b.clue.band) - bandRank(victim.entry.clue.band))
+              || a.priority - b.priority
+              || b.strength - a.strength
+              || a.index - b.index
+            ));
+
+          if (!replacements.length) continue;
+          selected[victim.index] = replacements[0]!;
+          repaired = true;
+          break;
+        }
+      }
+    }
+
+    if (!repaired) break;
+  }
+
+  const hasSemanticCollision = (entries: readonly PreparedClue[]) => (
+    entries.some((left, leftIndex) => entries.some((right, rightIndex) => (
+      rightIndex > leftIndex && whoAmICluesShareInformation(left.clue, right.clue)
+    )))
+  );
+
+  if (
+    hasSemanticCollision(selected)
+    && whoAmISemanticIndependentCapacity(semanticCapacityInput(clues), limit) >= limit
+  ) {
+    const selectedSet = new Set(selected);
+    const ordered = [
+      ...selected,
+      ...prepared
+        .filter((entry) => !selectedSet.has(entry))
+        .sort((left, right) => (
+          left.priority - right.priority
+          || right.strength - left.strength
+          || left.index - right.index
+        )),
+    ];
+
+    let visited = 0;
+    const maxVisited = 50_000;
+    let cleanBoard: PreparedClue[] | null = null;
+    const chosen: PreparedClue[] = [];
+
+    const searchCleanBoard = (start: number) => {
+      visited += 1;
+      if (visited > maxVisited || cleanBoard) return;
+
+      if (chosen.length === limit) {
+        const lateCount = chosen.filter((entry) => (
+          entry.clue.band === "strong" || entry.clue.band === "giveaway"
+        )).length;
+        const sportsCount = chosen.filter((entry) => entry.selectionClass === "sports-identity").length;
+        const biographyCount = chosen.filter((entry) => entry.selectionClass === "deep-biography").length;
+        const relationshipCount = chosen.filter((entry) => entry.facet === "relationships").length;
+        if (
+          lateCount >= 3
+          && sportsCount >= sportsIdentityTarget
+          && biographyCount <= 1
+          && relationshipCount <= 1
+        ) {
+          cleanBoard = [...chosen];
+        }
+        return;
+      }
+
+      if (chosen.length + (ordered.length - start) < limit) return;
+
+      for (let index = start; index < ordered.length; index += 1) {
+        const candidate = ordered[index]!;
+        if (chosen.some((entry) => entry.conceptId === candidate.conceptId)) continue;
+        if (chosen.some((entry) => whoAmICluesShareInformation(entry.clue, candidate.clue))) continue;
+        if (chosen.some((entry) => (
+          normalize(entry.clue.text) === normalize(candidate.clue.text)
+          || cluesEffectivelyRepeated(entry.clue, candidate.clue)
+        ))) continue;
+
+        chosen.push(candidate);
+        searchCleanBoard(index + 1);
+        chosen.pop();
+        if (cleanBoard) return;
+      }
+    };
+
+    searchCleanBoard(0);
+    const recoveredBoard = cleanBoard as PreparedClue[] | null;
+    if (recoveredBoard) selected.splice(0, selected.length, ...recoveredBoard);
   }
 
   const selectedSnapshot = [...selected];
@@ -976,14 +1243,18 @@ export function assembleWhoAmIClues(
         const replayFacetLimit = FACET_LIMITS[candidate.facet] ?? 2;
         return otherFacetCount < replayFacetLimit;
       })
+      .filter((candidate) => !whoAmICluesShareInformation(current.clue, candidate.clue))
       .filter((candidate) => !selectedSnapshot.some((other) => (
         other !== current && other.conceptId === candidate.conceptId
+      )))
+      .filter((candidate) => !selectedSnapshot.some((other) => (
+        other !== current && whoAmICluesShareInformation(other.clue, candidate.clue)
       )))
       .filter((candidate) => !selectedSnapshot.some((other) => (
         other !== current
         && (
           normalize(other.clue.text) === normalize(candidate.clue.text)
-          || effectivelyRepeated(other.clue.text, candidate.clue.text)
+          || cluesEffectivelyRepeated(other.clue, candidate.clue)
         )
       )))
       .filter((candidate) => (

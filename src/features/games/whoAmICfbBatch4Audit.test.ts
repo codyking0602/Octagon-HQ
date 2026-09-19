@@ -11,6 +11,8 @@ import { getFootballFact, type FootballFactMetricId } from "../back-room/footbal
 import { CFB_WHO_AM_I_BATCH_4_SUBJECT_IDS } from "./footballWhoAmICuration";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import { WHO_AM_I_CLUE_LIMIT, whoAmIProgressiveClues } from "./whoAmIEngine";
+import { whoAmISemanticClueKey, whoAmISemanticSetKey } from "./whoAmISemanticQuality";
+import { whoAmIQualityCompatibleReplayTargets } from "./whoAmIRevealPlanner";
 
 function seededRandom(seed: number) {
   let state = seed >>> 0;
@@ -188,14 +190,14 @@ describe("CFB Who Am I batch 4 calibration", () => {
     const report = CFB_WHO_AM_I_BATCH_4_SUBJECT_IDS.map((subjectId) => {
       const candidate = candidates.get(subjectId)!;
       const sequences = Array.from({ length: 64 }, (_value, index) => whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1)));
-      const first = new Set(sequences[0]!.map((clue) => clue.id));
-      const surfaced = new Set(sequences.flatMap((sequence) => sequence.map((clue) => clue.id)));
+      const first = new Set(sequences[0]!.map(whoAmISemanticClueKey));
+      const surfaced = new Set(sequences.flatMap((sequence) => sequence.map(whoAmISemanticClueKey)));
       return {
         id: subjectId,
         pool: candidate.clues.length,
         surfaced: surfaced.size,
-        boards: new Set(sequences.map((sequence) => sequence.map((clue) => clue.id).join("|"))).size,
-        rotated: Math.max(...sequences.map((sequence) => sequence.filter((clue) => !first.has(clue.id)).length)),
+        boards: new Set(sequences.map(whoAmISemanticSetKey)).size,
+        rotated: Math.max(...sequences.map((sequence) => sequence.filter((clue) => !first.has(whoAmISemanticClueKey(clue))).length)),
         minSports: Math.min(...sequences.map((sequence) => sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length)),
         maxDeep: Math.max(...sequences.map((sequence) => sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "deep-biography").length)),
         maxColor: Math.max(...sequences.map((sequence) => sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "identity-color").length)),
@@ -248,10 +250,10 @@ describe("CFB Who Am I batch 4 calibration", () => {
         { length: 64 },
         (_value, index) => whoAmIProgressiveClues(candidate!.clues, seededRandom(index + 1)),
       );
-      const first = new Set(sequences[0]!.map((clue) => clue.id));
-      const surfaced = new Set(sequences.flatMap((sequence) => sequence.map((clue) => clue.id)));
-      const boards = new Set(sequences.map((sequence) => sequence.map((clue) => clue.id).join("|")));
-      const maxRotated = Math.max(...sequences.map((sequence) => sequence.filter((clue) => !first.has(clue.id)).length));
+      const first = new Set(sequences[0]!.map(whoAmISemanticClueKey));
+      const surfaced = new Set(sequences.flatMap((sequence) => sequence.map(whoAmISemanticClueKey)));
+      const boards = new Set(sequences.map(whoAmISemanticSetKey));
+      const maxRotated = Math.max(...sequences.map((sequence) => sequence.filter((clue) => !first.has(whoAmISemanticClueKey(clue))).length));
 
       for (const sequence of sequences) {
         expect(sequence, subjectId + " clue count").toHaveLength(WHO_AM_I_CLUE_LIMIT);
@@ -277,9 +279,10 @@ describe("CFB Who Am I batch 4 calibration", () => {
         ).toBe(true);
       }
 
-      expect(surfaced.size, subjectId + " surfaced replay depth").toBeGreaterThanOrEqual(12);
-      expect(maxRotated, subjectId + " rotating slots").toBeGreaterThanOrEqual(2);
-      expect(boards.size, subjectId + " distinct boards").toBeGreaterThanOrEqual(2);
+      const semanticTargets = whoAmIQualityCompatibleReplayTargets(candidate!.clues, sequences);
+      expect(surfaced.size, subjectId + " surfaced replay depth").toBeGreaterThanOrEqual(semanticTargets.surfaced);
+      expect(maxRotated, subjectId + " rotating slots").toBeGreaterThanOrEqual(semanticTargets.rotated);
+      expect(boards.size, subjectId + " distinct boards").toBeGreaterThanOrEqual(semanticTargets.boards);
     }
   }, 150_000);
 });
