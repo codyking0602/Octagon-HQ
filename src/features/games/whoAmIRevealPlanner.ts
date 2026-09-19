@@ -175,10 +175,16 @@ export function whoAmIQualityCompatibleReplayTargets(
 ) {
   const boardSize = boards[0]?.length ?? 0;
   const eligibleClues = eligibleRevealPool(clues, boardSize);
-  const baselineSurfaced = boards.reduce((best, planned) => (
+  const distinctBoards = [...new Map(
+    boards.map((planned) => [
+      planned.map((clue) => clue.id).sort().join("|"),
+      planned,
+    ]),
+  ).values()];
+  const baselineSurfaced = distinctBoards.reduce((best, planned) => (
     Math.max(best, new Set(planned.map(whoAmISemanticClueKey)).size)
   ), 0);
-  const hasReplayDepth = boards.some((planned) => (
+  const hasReplayDepth = distinctBoards.some((planned) => (
     boardReachedReplayPlanning(planned)
     && qualityCompatibleReplayOptions(planned, eligibleClues).length > 0
   ));
