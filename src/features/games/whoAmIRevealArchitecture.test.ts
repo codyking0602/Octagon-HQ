@@ -74,17 +74,17 @@ describe("Who Am I standardized reveal architecture", () => {
     });
   });
 
-  it("reorders a selected board without changing its clue set", () => {
+  it("reorders within the existing band ladder without changing its clue set", () => {
     const selected: WhoAmIClue[] = [
       clue("role", "I played wide receiver.", "broad", "role"),
       clue("era", "I played in the 2000s and 2010s.", "broad", "era"),
-      clue("school", "I played college football at Oregon State.", "helpful", "background"),
-      clue("team", "I spent most of my career with Cincinnati.", "helpful", "career-path"),
-      clue("production", "I finished with more than 700 receptions.", "strong", "production"),
+      clue("school", "I played college football at Alabama.", "helpful", "background"),
+      clue("style-helpful", "I was known for precise route running.", "helpful", "style"),
       clue("name-change", "I legally changed my surname to Ochocinco.", "strong", "nickname"),
+      clue("production", "I finished with more than 700 receptions.", "strong", "production"),
       clue("draft", "I was selected No. 36 overall in the NFL Draft.", "strong", "career-path"),
       clue("award", "I earned six Pro Bowl selections.", "strong", "accomplishments"),
-      clue("style", "I was known for precise route running.", "strong", "style"),
+      clue("team", "I spent most of my career with Cincinnati.", "strong", "career-path"),
       clue("jersey", "I wore No. 85.", "giveaway", "identity"),
     ];
 
@@ -92,10 +92,13 @@ describe("Who Am I standardized reveal architecture", () => {
     const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected);
 
     expect(ordered.map((entry) => entry.id).sort()).toEqual(selected.map((entry) => entry.id).sort());
-    expect(ordered.findIndex((entry) => entry.id === "school")).toBeGreaterThanOrEqual(5);
     expect(ordered.findIndex((entry) => entry.id === "name-change")).toBeGreaterThanOrEqual(8);
     expect(ordered.findIndex((entry) => entry.id === "jersey")).toBeGreaterThanOrEqual(7);
     expect(ordered.slice(-2).every((entry) => entry.band === "strong" || entry.band === "giveaway")).toBe(true);
+    for (let index = 1; index < ordered.length; index += 1) {
+      const rank = { broad: 0, helpful: 1, strong: 2, giveaway: 3 } as const;
+      expect(rank[ordered[index]!.band]).toBeGreaterThanOrEqual(rank[ordered[index - 1]!.band]);
+    }
     expect(whoAmIRevealArchitectureSatisfied(ordered)).toBe(true);
   });
 
