@@ -8,6 +8,7 @@ import {
   type MillionaireState,
 } from "../games/millionaireEngine";
 import {
+  MILLIONAIRE_CHOICE_IDS,
   millionairePublicQuestion,
   type MillionaireChoiceId,
   type MillionaireRuntimeQuestion,
@@ -31,6 +32,33 @@ export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v3-balanced-
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
 export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
+const MILLIONAIRE_ANSWER_POSITION_PATTERN = [0, 1, 2, 3, 1, 2, 3, 0] as const;
+
+function balanceRun(run: MillionaireRun, runIndex: number): MillionaireRun {
+  return run.map((question, questionIndex) => {
+    const answer = question.choices.find((choice) => choice.id === question.correctChoiceId)!;
+    const slot = (MILLIONAIRE_ANSWER_POSITION_PATTERN[questionIndex]! + runIndex) % 4;
+    const others = question.choices.filter((choice) => choice.id !== question.correctChoiceId);
+    let otherIndex = 0;
+    const choices = MILLIONAIRE_CHOICE_IDS.map((id, index) => ({
+      id,
+      text: index === slot ? answer.text : others[otherIndex++]!.text,
+    })) as MillionaireRuntimeQuestion["choices"];
+    const correctChoiceId = MILLIONAIRE_CHOICE_IDS[slot]!;
+    const second = MILLIONAIRE_CHOICE_IDS[(slot + 1) % 4]!;
+    const survivorChoiceIds = [correctChoiceId, second] as [MillionaireChoiceId, MillionaireChoiceId];
+    const removalChoiceIds = MILLIONAIRE_CHOICE_IDS.filter((id) => !survivorChoiceIds.includes(id))
+      as [MillionaireChoiceId, MillionaireChoiceId];
+
+    return {
+      ...question,
+      choices,
+      correctChoiceId,
+      fiftyFifty: { survivorChoiceIds, removalChoiceIds },
+    };
+  }) as unknown as MillionaireRun;
+}
+
 const FOOTBALL_MILLIONAIRE_CYCLE_LENGTH = 22;
 const FOOTBALL_MILLIONAIRE_SLOTS = [0, 7, 13, 19] as const;
 const UFC_MILLIONAIRE_CYCLE_LENGTH = 26;
@@ -236,7 +264,7 @@ export function buildMillionaireDailySetup(
   const league = millionaireDailyLeague(sport, day);
   const runIndex = millionaireDailyRunIndex(sport, day);
   const hostNumber = millionaireDailyHostNumber(sport, day);
-  const run = millionaireDailyRun(league, runIndex);
+  const run = balanceRun(millionaireDailyRun(league, runIndex), runIndex);
   assertMillionaireRun(run);
   const state = createMillionaireState(run);
   const proof = proofFor(run, league, day, scheduleVersion);
