@@ -1,0 +1,1 @@
+-- Reset September 19 Millionaire launch-day attempts after the production fixes.
