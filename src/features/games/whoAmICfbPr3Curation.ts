@@ -61,9 +61,25 @@ function pr3Clue(
 }
 
 const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-hunter-henry", [
+    pr3Clue("henry-full-career", "Across my Arkansas career, I caught 116 passes for 1,661 yards and nine touchdowns.", "strong", "identity"),
+  ]],
+  ["cfb-christian-mccaffrey", [
+    pr3Clue("mccaffrey-ap-player-year", "I was the 2015 AP College Football Player of the Year and finished second in Heisman Trophy voting.", "strong", "accomplishments"),
+    pr3Clue("mccaffrey-pac12-rose", "In 2015 I helped Stanford win the Pac-12 and Rose Bowl championships and was named Pac-12 Offensive Player of the Year.", "strong", "identity"),
+  ]],
+  ["cfb-kyle-hamilton", [
+    pr3Clue("hamilton-consensus-all-america", "I was a consensus All-American safety in 2021 despite being limited to seven games by injury.", "strong", "accomplishments"),
+    pr3Clue("hamilton-fsu-two-picks", "I intercepted two passes in Notre Dame's 2021 season-opening overtime win at Florida State.", "strong", "identity"),
+  ]],
+  ["cfb-brandon-scherff", [
+    pr3Clue("scherff-unanimous-all-america", "At Iowa I was a unanimous consensus first-team All-American in 2014.", "strong", "identity"),
+  ]],
   ["cfb-dak-prescott", [
     pr3Clue("dak-two-time-all-sec", "I was a two-time All-American and earned first-team All-SEC honors in both 2014 and 2015.", "strong", "accomplishments"),
     pr3Clue("dak-bowl-mvps", "I earned MVP honors in both the 2013 Liberty Bowl and the 2015 Belk Bowl for Mississippi State.", "strong", "accomplishments"),
+    pr3Clue("dak-38-school-records", "I finished my Mississippi State career owning 38 school records across single-game, single-season and career categories.", "giveaway", "identity", 9),
+    pr3Clue("dak-9000-2500", "I became one of four FBS players to finish a career with more than 9,000 passing yards and 2,500 rushing yards.", "strong", "identity"),
   ]],
   ["cfb-vince-young", [
     pr3Clue("young-2005-awards-title", "I won the Maxwell Award and Davey O'Brien Award in 2005 while leading Texas to the national championship.", "giveaway", "accomplishments", 8),
