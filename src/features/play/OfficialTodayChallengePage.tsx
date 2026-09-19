@@ -67,7 +67,7 @@ export function OfficialTodayChallengeContent({
   busy,
   onAdvance,
   onNavigate,
-  showMillionaireExit = true,
+  showMillionaireExit = false,
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
@@ -211,6 +211,7 @@ export default function OfficialTodayChallengePage({
         busy={runtime.busy}
         onAdvance={(action) => { void runtime.advance(action); }}
         onNavigate={(route) => navigate(route)}
+        showMillionaireExit
       />
     </div>
   );
