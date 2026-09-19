@@ -55,8 +55,16 @@ describe("Who Am I PR3 CFB population quality", () => {
         }
 
         const productionCount = profiles.filter(({ category }) => category === "production").length;
-        if (productionCount > 2) {
+        if (productionCount > 4) {
           problems.push(`${candidate.id} seed ${seed}: ${productionCount} production clues create stat soup`);
+        }
+
+        const genericCareerVolumeCount = board.filter((clue) => (
+          /\b(?:career|across \d+ seasons?|for my career)\b.*\b\d[\d,]*(?:\.\d+)?\b/i.test(clue.text)
+          && !/\b(?:record|leader|most|first|only|ncaa|nation|nationally)\b/i.test(clue.text)
+        )).length;
+        if (genericCareerVolumeCount > 2) {
+          problems.push(`${candidate.id} seed ${seed}: ${genericCareerVolumeCount} generic career-volume clues`);
         }
 
         const jerseyCount = profiles.filter(({ category }) => category === "jersey-number").length;
