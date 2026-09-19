@@ -43,6 +43,89 @@ const SIGNATURE_SIGNALS = /\b(?:nickname|known as|called the|jersey number|wore 
 const GENERIC_VOLUME = /\b(?:career|across \d+ seasons?|in \d+ games?|for my career)\b.*\b\d[\d,]*(?:\.\d+)?\b/i;
 const SUPERLATIVE_SIGNAL = /\b(?:record|leader|most|fewest|first|only|single-season|single game|school record|conference record|ncaa|nation|nationally)\b/i;
 
+function pr3Clue(
+  id: string,
+  text: string,
+  band: WhoAmIClueBand,
+  facet: NonNullable<WhoAmIClue["facet"]>,
+  revealPriority = 16,
+): WhoAmIClue {
+  return {
+    id: `pr3:${id}`,
+    conceptId: `pr3:${id}`,
+    text,
+    band,
+    facet,
+    revealPriority,
+  };
+}
+
+const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-a-j-brown", [
+    pr3Clue("aj-brown-2018-all-sec", "In 2018 I earned first-team All-SEC honors after breaking my own Ole Miss single-season receiving-yardage record.", "strong", "accomplishments"),
+  ]],
+  ["cfb-aaron-ross", [
+    pr3Clue("aaron-ross-thorpe", "I won the 2006 Jim Thorpe Award as college football's top defensive back.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-brock-bowers", [
+    pr3Clue("bowers-two-mackeys", "I became the first two-time winner of the John Mackey Award, taking the honor in both 2022 and 2023.", "giveaway", "accomplishments", 8),
+    pr3Clue("bowers-three-all-america", "I became just the third Georgia player to earn first-team All-America recognition in three different seasons.", "strong", "accomplishments"),
+  ]],
+  ["cfb-charles-woodson", [
+    pr3Clue("woodson-ohio-state-three-way", "Against Ohio State in 1997, I returned a punt 78 yards for a touchdown, intercepted a pass in the end zone and caught a 37-yard pass that set up a touchdown.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-dalvin-cook", [
+    pr3Clue("cook-orange-bowl-mvp", "I was Orange Bowl MVP after rushing for 145 yards against Michigan in my final college game.", "strong", "accomplishments"),
+    pr3Clue("cook-fsu-rushing-record", "I broke Florida State's 20-year-old career rushing record and finished as the program's all-time leading rusher.", "giveaway", "records", 9),
+  ]],
+  ["cfb-darqueze-dennard", [
+    pr3Clue("dennard-thorpe", "In 2013 I became the first Michigan State player to win the Jim Thorpe Award.", "giveaway", "accomplishments", 9),
+  ]],
+  ["cfb-deion-sanders", [
+    pr3Clue("deion-thorpe-three-sport", "I won the 1988 Jim Thorpe Award and was also a three-sport athlete in football, baseball and track at Florida State.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-devonta-smith", [
+    pr3Clue("devonta-title-first-half", "In the national-title game against Ohio State, I had 215 receiving yards and three touchdown catches in the first half alone.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-jalen-ramsey", [
+    pr3Clue("ramsey-true-freshman", "I became Florida State's first true freshman to start at cornerback since Deion Sanders, then started all 14 games for the 2013 national champions.", "strong", "career-path"),
+  ]],
+  ["cfb-jeremy-shockey", [
+    pr3Clue("shockey-fsu-winner", "My first touchdown catch for Miami was a 13-yard score in the final minute that beat then-No. 1 Florida State in 2000.", "giveaway", "accomplishments", 8),
+    pr3Clue("shockey-juco-path", "I reached Miami after one season at Northeast Oklahoma A&M, where I was a first-team junior-college All-American.", "strong", "career-path"),
+  ]],
+  ["cfb-malaki-starks", [
+    pr3Clue("starks-freshman-champ", "As a true freshman I started 14 games, earned FWAA Freshman All-America honors and helped Georgia win the 2022 national championship.", "strong", "accomplishments"),
+  ]],
+  ["cfb-marqise-lee", [
+    pr3Clue("lee-arizona-record", "I set a Pac-12 single-game record with 345 receiving yards against Arizona in 2012.", "giveaway", "records", 9),
+  ]],
+  ["cfb-michael-huff", [
+    pr3Clue("huff-title-stop", "Late in the 2005 national-title game, I stopped LenDale White on fourth-and-two to give Texas the ball for its winning drive.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-mike-evans", [
+    pr3Clue("evans-bama-record", "I broke Texas A&M's long-standing single-game receiving record with 279 yards against Alabama in 2013.", "strong", "records"),
+  ]],
+  ["cfb-minkah-fitzpatrick", [
+    pr3Clue("minkah-double-awards", "In 2017 I became just the third player in NCAA history to win the Bednarik and Jim Thorpe awards in the same season.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-morris-claiborne", [
+    pr3Clue("claiborne-thorpe-sec", "In 2011 I won the Jim Thorpe Award and was voted SEC Defensive Player of the Year.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-paul-posluszny", [
+    pr3Clue("posluszny-2005-awards", "In 2005 I won the Butkus Award and the first of my two Bednarik Awards while Penn State won the Big Ten and Orange Bowl.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-rolando-mcclain", [
+    pr3Clue("mcclain-butkus-captain", "I won the 2009 Butkus Award and served as a team captain for Alabama's national-championship defense.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-sammy-watkins", [
+    pr3Clue("watkins-orange-bowl", "In my final college game I was Orange Bowl MVP with 16 catches for 227 yards and two touchdowns against Ohio State.", "giveaway", "accomplishments", 8),
+  ]],
+  ["urban-meyer-cfb", [
+    pr3Clue("meyer-first-cfp-title", "I coached Ohio State to a 42-20 win over Oregon in the first College Football Playoff National Championship.", "giveaway", "accomplishments", 8),
+  ]],
+]);
+
 function includesAny(text: string, values: readonly string[]) {
   return values.some((value) => text.includes(value));
 }
@@ -187,7 +270,10 @@ function capPersonalBiography(clues: readonly WhoAmIClue[]) {
     .filter(({ clue }) => isPersonalBiography(clue))
     .sort((left, right) => right.score - left.score || left.index - right.index);
 
-  if (personal.length <= 1) return [...clues];
+  if (personal.length === 0) return [...clues];
+  const nonPersonal = clues.filter((clue) => !isPersonalBiography(clue));
+  if (nonPersonal.length >= 12) return nonPersonal;
+  if (personal.length === 1) return [...clues];
   const keepId = personal[0]!.clue.id;
   return clues.filter((clue) => !isPersonalBiography(clue) || clue.id === keepId);
 }
@@ -287,7 +373,7 @@ function capSignatureCategory(
   const filtered = clues.filter((clue) => (
     whoAmIRevealProfile(clue).category !== category || clue.id === keep.id
   ));
-  return filtered.length >= 12 ? filtered : [...clues];
+  return filtered.length >= 10 ? filtered : [...clues];
 }
 
 function trimCategoryRepetition(clues: readonly WhoAmIClue[]) {
@@ -347,7 +433,11 @@ export function refineCfbWhoAmIContent(
   clues: readonly WhoAmIClue[],
 ): WhoAmIClue[] {
   if (subject.league !== "CFB") return [...clues];
-  const withOrientation = ensureOrientationClues(subject, clues);
+  const withSupplemental = [
+    ...clues,
+    ...(CFB_PR3_SUPPLEMENTAL.get(subject.id) ?? []),
+  ];
+  const withOrientation = ensureOrientationClues(subject, withSupplemental);
   const withConference = ensureConferenceFoundation(subject, withOrientation);
   const rebanded = withConference.map(rebandCfbClue);
   const withoutStatSoup = capGenericProduction(rebanded);
