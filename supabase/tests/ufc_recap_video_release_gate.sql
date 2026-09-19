@@ -75,8 +75,28 @@ begin
   ) values (
     'ufc-recap-gate-upcoming','upcoming-main',1,'Welterweight',
     'alpha','Alpha','bravo','Bravo',
-    'blue_win','bravo',now()-interval '10 minutes',true
+    'pending',null,null,true
   );
+
+  perform public.record_pick_bout_live_states(
+    'ufc-recap-gate-upcoming',
+    jsonb_build_array(jsonb_build_object(
+      'bout_id','upcoming-main',
+      'state','final',
+      'provider','espn',
+      'source_event_id','espn-recap-gate',
+      'source_competition_id','espn-recap-gate-main',
+      'winner_fighter_slug','bravo',
+      'observed_at',now()
+    ))
+  );
+
+  if (select status from public.pick_events where event_id='ufc-recap-gate-upcoming') <> 'locked'
+    or (select result_status from public.pick_bouts
+        where event_id='ufc-recap-gate-upcoming' and bout_id='upcoming-main') <> 'blue_win'
+  then
+    raise exception 'trusted ESPN final did not grade the fight and advance the card to locked';
+  end if;
 
   perform public.set_pick_event_watch_moments(
     'ufc-recap-gate-upcoming',
@@ -87,7 +107,7 @@ begin
   );
 
   if (select status from public.pick_events where event_id='ufc-recap-gate-upcoming') <> 'complete' then
-    raise exception 'video publish did not advance upcoming UFC event through lock to complete';
+    raise exception 'video publish did not advance the automatically locked UFC event to complete';
   end if;
 
   -- A completed required UFC recap cannot have its release evidence cleared later.
