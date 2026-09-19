@@ -64,6 +64,8 @@ describe("Who Am I fast targeted editorial gate", () => {
 
     expect(selected.length, `No Who Am I subjects matched: ${targets.join(", ")}`).toBeGreaterThan(0);
 
+    const cfbRevealFailures: string[] = [];
+
     for (const { universe, candidate } of selected) {
       const semanticCapacity = whoAmISemanticIndependentCapacity(candidate.clues, 13);
       const sequences = Array.from({ length: 8 }, (_value, index) => (
@@ -101,7 +103,7 @@ describe("Who Am I fast targeted editorial gate", () => {
         }
       }
 
-      for (const sequence of sequences) {
+      for (const [sequenceIndex, sequence] of sequences.entries()) {
         expect(sequence, `${candidate.id} must still produce a complete board`).toHaveLength(WHO_AM_I_CLUE_LIMIT);
 
         for (const clue of sequence) {
@@ -128,10 +130,13 @@ describe("Who Am I fast targeted editorial gate", () => {
         ).toBeGreaterThanOrEqual(3);
 
         if (universe.league === "CFB") {
-          expect(
-            whoAmIRevealArchitectureSatisfied(sequence),
-            `${candidate.id} must satisfy the standardized CFB reveal architecture after PR3 content curation`,
-          ).toBe(true);
+          if (!whoAmIRevealArchitectureSatisfied(sequence)) {
+            const board = sequence.map((clue, index) => {
+              const profile = whoAmIRevealProfile(clue);
+              return `${index + 1}:${clue.band}/${profile.category}/${profile.identifyingPower}/>=${profile.earliestClue} ${clue.text}`;
+            }).join(" || ");
+            cfbRevealFailures.push(`${candidate.id} seed=${sequenceIndex + 1} :: ${board}`);
+          }
         } else if (whoAmIRevealArchitectureCanOrder(sequence)) {
           expect(
             whoAmIRevealArchitectureSatisfied(sequence),
@@ -147,5 +152,10 @@ describe("Who Am I fast targeted editorial gate", () => {
         ).toBeGreaterThan(1);
       }
     }
+
+    expect(
+      cfbRevealFailures,
+      `CFB PR3 reveal failures:\n${cfbRevealFailures.join("\n")}`,
+    ).toEqual([]);
   }, 150_000);
 });
