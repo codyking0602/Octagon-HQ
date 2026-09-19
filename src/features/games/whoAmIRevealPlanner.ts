@@ -15,7 +15,7 @@ import {
   whoAmIRevealArchitectureSatisfied,
 } from "./whoAmIRevealArchitecture";
 
-const REVEAL_SHORTLIST_EXTRA = 8;
+const REVEAL_SHORTLIST_EXTRA = 4;
 
 const REVEAL_TARGETS = {
   broad: 2,
@@ -218,6 +218,13 @@ export function assembleWhoAmIRevealClues(
     Math.min(eligibleClues.length, limit + REVEAL_SHORTLIST_EXTRA),
     random,
   );
+  const architectureShortlist = league === "CFB" || league === "NFL"
+    ? assembleWhoAmIClues(
+        eligibleClues,
+        Math.min(eligibleClues.length, limit + REVEAL_SHORTLIST_EXTRA * 2),
+        random,
+      )
+    : shortlist;
 
   const applyRevealArchitecture = (selected: readonly WhoAmIClue[]) => {
     const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected, league);
@@ -229,7 +236,7 @@ export function assembleWhoAmIRevealClues(
       return ordered;
     }
 
-    return selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(shortlist, league)
+    return selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(architectureShortlist, league)
       ?? ordered;
   };
 
