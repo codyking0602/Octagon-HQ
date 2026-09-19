@@ -101,7 +101,7 @@ returns jsonb
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $func$
 declare
   v_event_id text := lower(trim(p_event_id));
   v_result jsonb;
@@ -124,7 +124,7 @@ begin
 
   return v_result;
 end;
-$;
+$func$;
 
 revoke all on function public.record_pick_bout_live_states(text,jsonb)
   from public, anon, authenticated;
