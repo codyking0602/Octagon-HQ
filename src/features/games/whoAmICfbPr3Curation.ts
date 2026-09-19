@@ -61,6 +61,10 @@ function pr3Clue(
 }
 
 const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-braylon-edwards", [
+    pr3Clue("edwards-biletnikoff", "I won the 2004 Biletnikoff Award and was a unanimous first-team All-American at Michigan.", "giveaway", "accomplishments", 8),
+    pr3Clue("edwards-three-straight-1000", "I became the first Big Ten receiver to post three consecutive 1,000-yard seasons.", "strong", "accomplishments", 15),
+  ]],
   ["cfb-ernie-davis", [
     pr3Clue("davis-cotton-bowl", "As a sophomore I was Cotton Bowl MVP, scoring twice in Syracuse's 23-14 win over Texas that completed an 11-0 national-championship season.", "giveaway", "accomplishments", 8),
     pr3Clue("davis-two-time-all-american", "I earned All-America honors in both 1960 and 1961, with the second selection unanimous.", "strong", "identity"),
@@ -167,6 +171,7 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-jeremy-shockey", [
     pr3Clue("shockey-fsu-winner", "My first touchdown catch for Miami was a 13-yard score in the final minute that beat then-No. 1 Florida State in 2000.", "giveaway", "accomplishments", 8),
     pr3Clue("shockey-juco-path", "I reached Miami after one season at Northeast Oklahoma A&M, where I was a first-team junior-college All-American.", "strong", "career-path"),
+    pr3Clue("shockey-title-season", "I was a first-team All-Big East tight end on Miami's undefeated 2001 national championship team.", "strong", "accomplishments", 14),
   ]],
   ["cfb-malaki-starks", [
     pr3Clue("starks-freshman-champ", "As a true freshman I started 14 games, earned FWAA Freshman All-America honors and helped Georgia win the 2022 national championship.", "strong", "accomplishments"),
@@ -511,12 +516,16 @@ export function refineCfbWhoAmIContent(
     ...clues,
     ...(CFB_PR3_SUPPLEMENTAL.get(subject.id) ?? []),
   ];
-  const subjectAdjusted = subject.id === "cfb-ernie-davis"
-    ? withSupplemental.map((clue) => (
-      clue.text.includes("while wearing the program's famous No. 44")
-        ? { ...clue, text: clue.text.replace(" while wearing the program's famous No. 44", "") }
-        : clue
-    ))
+  const subjectAdjusted = (subject.id === "cfb-ernie-davis" || subject.id === "cfb-lamichael-james")
+    ? withSupplemental.map((clue) => {
+      if (subject.id === "cfb-ernie-davis" && clue.text.includes("while wearing the program's famous No. 44")) {
+        return { ...clue, text: clue.text.replace(" while wearing the program's famous No. 44", "") };
+      }
+      if (subject.id === "cfb-lamichael-james" && /wore no\.\s*21|no\.\s*21\b/i.test(clue.text)) {
+        return { ...clue, band: "giveaway" as const, revealPriority: 6 };
+      }
+      return clue;
+    })
     : withSupplemental;
   const withOrientation = ensureOrientationClues(subject, subjectAdjusted);
   const withConference = ensureConferenceFoundation(subject, withOrientation);
