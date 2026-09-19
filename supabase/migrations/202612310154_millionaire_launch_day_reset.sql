@@ -1,1 +1,1 @@
--- Reset September 19 Millionaire launch-day attempts after the production fixes.
+-- Release marker. No schema changes are required for this frontend/runtime release.
