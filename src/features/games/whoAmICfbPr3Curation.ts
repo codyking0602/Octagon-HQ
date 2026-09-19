@@ -72,6 +72,7 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-eddie-george", [
     pr3Clue("george-1995-awards", "In 1995 I won the Heisman Trophy, Doak Walker Award, Maxwell Award and Walter Camp Player of the Year honor.", "giveaway", "accomplishments", 9),
     pr3Clue("george-illinois-record", "I set an Ohio State single-game rushing record with 314 yards against Illinois in 1995.", "giveaway", "records", 8),
+    pr3Clue("george-1995-all-america", "I was a first-team All-American, Big Ten MVP and Ohio State team co-captain in 1995.", "strong", "accomplishments"),
   ]],
   ["cfb-marvin-harrison-jr", [
     pr3Clue("harrison-biletnikoff", "I won the 2023 Biletnikoff Award as college football's outstanding receiver and was a Heisman Trophy finalist.", "giveaway", "accomplishments", 9),
