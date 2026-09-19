@@ -45,6 +45,26 @@ function atMostBand(clue: WhoAmIClue, band: WhoAmIClueBand): WhoAmIClue {
   return bandRank(clue.band) <= bandRank(band) ? clue : { ...clue, band };
 }
 
+function annotateCfbCategoryMetadata(clue: WhoAmIClue): WhoAmIClue {
+  if (clue.id === "position" || clue.id === "role" || clue.id === "pr3:position" || clue.id === "pr3:role") {
+    return { ...clue, facet: "role" };
+  }
+  if (
+    clue.id === "era"
+    || clue.id === "pr3:era"
+    || clue.id === "player-career-start"
+    || clue.id === "player-career-end"
+    || clue.id === "coach-start"
+    || clue.id === "coach-end"
+  ) {
+    return { ...clue, facet: "era" };
+  }
+  if (clue.id === "school" || clue.id === "conference") {
+    return { ...clue, facet: "background" };
+  }
+  return clue;
+}
+
 function cfbSchoolReband(clue: WhoAmIClue) {
   const profile = whoAmIRevealProfile(clue);
   if (profile.category !== "school") return clue;
@@ -160,7 +180,7 @@ function ensureOrientationClues(
     });
   }
 
-  if (!next.some((clue) => clue.id === "era" || whoAmIClueFacet(clue) === "era")) {
+  if (!next.some((clue) => clue.id === "era" || clue.id === "pr3:era")) {
     const decades = subject.activeDecades ?? [];
     if (decades.length === 1) {
       next.push({
@@ -187,7 +207,7 @@ function ensureOrientationClues(
 }
 
 function rebandCfbClue(clue: WhoAmIClue) {
-  let next = clue;
+  let next = annotateCfbCategoryMetadata(clue);
   next = cfbOrientationReband(next);
   next = cfbSchoolReband(next);
   next = cfbSportsBiographyReband(next);
