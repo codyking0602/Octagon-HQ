@@ -357,7 +357,13 @@ function clueQualityScore(subject: FootballSubjectProfile, clue: WhoAmIClue) {
 
   if (clue.identityKnowledge) {
     score += 24;
-    if (whoAmIClueSelectionClass(clue) === "identity-color") score -= 14;
+    const selectionClass = whoAmIClueSelectionClass(clue);
+    if (selectionClass === "identity-color") score -= 14;
+    if (
+      subject.league === "CFB"
+      && selectionClass !== "deep-biography"
+      && CFB_PR3_SPORTS_PATH_TEXT.test(clue.text)
+    ) score += 42;
   }
   if (id === "position" || id === "era") score += 35;
   if (id === "school" || id === "draft-pick" || id === "draft-round" || id === "heisman" || id === "national-champion") score += 35;
@@ -3179,18 +3185,27 @@ const CFB_PR3_EXACT_CHRONOLOGY_IDS = new Set([
 
 const CFB_PR3_SPORTS_PATH_TEXT = /\b(?:high[- ]school|prep|recruit(?:ed|ing|ment)?|prospect|walk[- ]on|redshirt|junior college|juco|position change|position switch|depth chart|scholarship offer|multi-sport|two-sport|three-sport|four-sport|lettered)\b/i;
 
-function cfbPr3EraClue(subject: FootballSubjectProfile): WhoAmIClue | null {
-  const seasons = [subject.startSeason, subject.endSeason].filter((value): value is number => value != null);
+function cfbPr3EraClue(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]): WhoAmIClue | null {
+  const canonicalSeasons = [subject.startSeason, subject.endSeason].filter((value): value is number => value != null);
+  const draftSeason = subject.kind === "player-career" && subject.draftYear != null ? subject.draftYear - 1 : null;
+  const sourceYears = clues.flatMap((clue) => (
+    [...clue.text.matchAll(/\b(?:19|20)\d{2}\b/g)].map((match) => Number(match[0]))
+  )).filter((year) => year >= 1900 && year <= 2026);
+  const seasons = canonicalSeasons.length
+    ? canonicalSeasons
+    : draftSeason != null
+      ? [draftSeason]
+      : sourceYears.sort((left, right) => left - right);
   if (seasons.length === 0) return null;
-  const firstDecade = Math.floor(Math.min(...seasons) / 10) * 10;
-  const lastDecade = Math.floor(Math.max(...seasons) / 10) * 10;
-  const text = firstDecade === lastDecade
-    ? `I was active in college football in the ${firstDecade}s.`
-    : `My college football career spanned the ${firstDecade}s and ${lastDecade}s.`;
+
+  const representative = seasons[Math.floor((seasons.length - 1) / 2)]!;
+  const decade = Math.floor(representative / 10) * 10;
   return {
     id: "pr3-era",
     conceptId: "pr3-era",
-    text,
+    text: subject.kind === "coach"
+      ? `I was active as a college head coach in the ${decade}s.`
+      : `I played college football in the ${decade}s.`,
     band: "broad",
     facet: "era",
     revealPriority: 35,
@@ -3206,7 +3221,7 @@ function finalizeCfbPr3Content(subject: FootballSubjectProfile, clues: readonly 
   const withEra = withoutChronology.some((clue) => clue.id === "era" || clue.id === "pr3-era")
     ? withoutChronology
     : (() => {
-      const era = cfbPr3EraClue(subject);
+      const era = cfbPr3EraClue(subject, withoutChronology);
       return era ? [era, ...withoutChronology] : withoutChronology;
     })();
 
@@ -3255,53 +3270,54 @@ function finalizeCfbPr3Content(subject: FootballSubjectProfile, clues: readonly 
       return true;
     });
 
-  const helpfulProfiles = curated
-    .filter((clue) => clue.band === "helpful")
-    .map((clue) => whoAmIRevealProfile(clue));
-  let earlyFoundation = helpfulProfiles.filter((profile) => profile.earliestClue <= 3).length;
-  let totalFoundation = helpfulProfiles.filter((profile) => profile.earliestClue <= 4).length;
-  if (earlyFoundation >= 1 && totalFoundation >= 2) return curated;
-
   const categoryRank: Readonly<Record<string, number>> = {
     "team-path": 0,
-    "sports-biography": 1,
-    production: 2,
-    accomplishments: 3,
-    style: 4,
-    identity: 5,
+    school: 1,
+    "sports-biography": 2,
+    production: 3,
+    accomplishments: 4,
+    style: 5,
+    identity: 6,
   };
   const candidates = curated
     .map((clue, index) => {
       const asHelpful: WhoAmIClue = { ...clue, band: "helpful" };
-      return { clue, index, profile: whoAmIRevealProfile(asHelpful) };
+      return {
+        clue,
+        index,
+        profile: whoAmIRevealProfile(asHelpful),
+        quality: clueQualityScore(subject, clue),
+      };
     })
     .filter(({ clue, profile }) => (
-      clue.band === "strong"
+      (clue.band === "helpful" || clue.band === "strong")
       && profile.earliestClue <= 4
       && profile.category !== "personal-biography"
       && profile.category !== "relationships"
       && !(profile.category === "school" && profile.identifyingPower === "signature")
-      && (profile.category !== "identity" || clue.id === "conference")
-    ))
-    .sort((left, right) => (
-      left.profile.earliestClue - right.profile.earliestClue
-      || (left.profile.identifyingPower === "broad" ? -1 : 1)
-      || (categoryRank[left.profile.category] ?? 9) - (categoryRank[right.profile.category] ?? 9)
-      || left.index - right.index
+      && profile.category !== "jersey-number"
+      && profile.category !== "nickname-persona"
     ));
 
-  const rebandIndexes = new Set<number>();
-  for (const candidate of candidates) {
-    if (earlyFoundation >= 1 && totalFoundation >= 2) break;
-    if (candidate.profile.earliestClue > 3 && earlyFoundation < 1) continue;
-    rebandIndexes.add(candidate.index);
-    totalFoundation += 1;
-    if (candidate.profile.earliestClue <= 3) earlyFoundation += 1;
-  }
+  const byFoundationQuality = (left: (typeof candidates)[number], right: (typeof candidates)[number]) => (
+    (left.profile.identifyingPower === "broad" ? 0 : 1) - (right.profile.identifyingPower === "broad" ? 0 : 1)
+    || (categoryRank[left.profile.category] ?? 9) - (categoryRank[right.profile.category] ?? 9)
+    || right.quality - left.quality
+    || left.index - right.index
+  );
+  const first = candidates
+    .filter(({ profile }) => profile.earliestClue <= 3)
+    .sort(byFoundationQuality)[0];
+  const second = candidates
+    .filter(({ index, profile }) => index !== first?.index && profile.earliestClue <= 4)
+    .sort(byFoundationQuality)[0];
+  const foundationIndexes = new Set([first?.index, second?.index].filter((value): value is number => value != null));
 
-  return curated.map((clue, index) => (
-    rebandIndexes.has(index) ? { ...clue, band: "helpful" } : clue
-  ));
+  return curated.map((clue, index): WhoAmIClue => {
+    if (foundationIndexes.has(index)) return clue.band === "helpful" ? clue : { ...clue, band: "helpful" };
+    if (clue.band === "helpful") return { ...clue, band: "strong" };
+    return clue;
+  });
 }
 
 function trimCfbBatch1Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
