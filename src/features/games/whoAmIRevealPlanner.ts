@@ -9,9 +9,13 @@ import {
   whoAmICluesShareInformation,
   whoAmISemanticClueKey,
 } from "./whoAmISemanticQuality";
-import { orderWhoAmICluesByRevealArchitectureIfPossible } from "./whoAmIRevealArchitecture";
+import {
+  orderWhoAmICluesByRevealArchitectureIfPossible,
+  selectAndOrderWhoAmICluesByRevealArchitectureIfPossible,
+  whoAmIRevealArchitectureSatisfied,
+} from "./whoAmIRevealArchitecture";
 
-const REVEAL_SHORTLIST_EXTRA = 4;
+const REVEAL_SHORTLIST_EXTRA = 8;
 
 const REVEAL_TARGETS = {
   broad: 2,
@@ -215,6 +219,20 @@ export function assembleWhoAmIRevealClues(
     random,
   );
 
+  const applyRevealArchitecture = (selected: readonly WhoAmIClue[]) => {
+    const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected, league);
+    if (
+      league !== "CFB"
+      && league !== "NFL"
+      || whoAmIRevealArchitectureSatisfied(ordered, league)
+    ) {
+      return ordered;
+    }
+
+    return selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(shortlist, league)
+      ?? ordered;
+  };
+
   const broad = shortlist.filter((clue) => clue.band === "broad").slice(0, REVEAL_TARGETS.broad);
   const helpful = ranked(shortlist.filter((clue) => clue.band === "helpful"), random)
     .sort(qualityFirst)
@@ -230,9 +248,8 @@ export function assembleWhoAmIRevealClues(
     || strongCount < REVEAL_TARGETS.strong
     || latePool.length < REVEAL_TARGETS.strong + REVEAL_TARGETS.final
   ) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
-      league,
     );
   }
 
@@ -253,9 +270,8 @@ export function assembleWhoAmIRevealClues(
   }
 
   if (final.length < REVEAL_TARGETS.final) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
-      league,
     );
   }
 
@@ -265,9 +281,8 @@ export function assembleWhoAmIRevealClues(
     .slice(0, REVEAL_TARGETS.strong);
 
   if (coreStrong.length < REVEAL_TARGETS.strong) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
-      league,
     );
   }
 
@@ -280,9 +295,8 @@ export function assembleWhoAmIRevealClues(
     ))
   ));
   if (repeatsSemanticInformation) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
-      league,
     );
   }
 
@@ -295,9 +309,8 @@ export function assembleWhoAmIRevealClues(
     || new Set(facets).size < 4
     || facets.filter((facet) => facet === "relationships").length > 1
   ) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
-      league,
     );
   }
 
@@ -321,9 +334,9 @@ export function assembleWhoAmIRevealClues(
     if (swap.candidateVariationRank < swap.currentVariationRank) {
       const varied = [...planned];
       varied[swap.selectedIndex] = swap.candidate;
-      return orderWhoAmICluesByRevealArchitectureIfPossible(varied, league);
+      return applyRevealArchitecture(varied);
     }
   }
 
-  return orderWhoAmICluesByRevealArchitectureIfPossible(planned, league);
+  return applyRevealArchitecture(planned);
 }
