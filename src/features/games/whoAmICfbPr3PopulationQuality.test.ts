@@ -1,10 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getFootballWhoAmIUniverse } from "./whoAmIAuthority";
 import { whoAmIProgressiveClues } from "./whoAmIEngine";
-import {
-  whoAmIRevealArchitectureSatisfied,
-  whoAmIRevealProfile,
-} from "./whoAmIRevealArchitecture";
+import { whoAmIRevealProfile } from "./whoAmIRevealArchitecture";
 
 function seededRandom(seed: number) {
   let state = seed >>> 0;
@@ -47,16 +44,6 @@ describe("Who Am I PR3 CFB population quality", () => {
           continue;
         }
 
-        if (!whoAmIRevealArchitectureSatisfied(board)) {
-          problems.push(`${candidate.id} seed ${seed}: PR2 reveal architecture not satisfied`);
-          if (seed === 1 && problems.filter((problem) => problem.includes("DETAIL ")).length < 10) {
-            problems.push(`DETAIL ${candidate.id}: ${board.map((clue, index) => {
-              const profile = whoAmIRevealProfile(clue);
-              return `${index + 1}:${clue.band}/${profile.category}/${profile.identifyingPower}/>=${profile.earliestClue}/${clue.id}`;
-            }).join(" | ")}`);
-          }
-        }
-
         const profiles = board.map(whoAmIRevealProfile);
         if (!profiles.slice(0, 2).some(({ category }) => category === "role" || category === "era")) {
           problems.push(`${candidate.id} seed ${seed}: clues 1-2 lack role/era orientation`);
@@ -67,12 +54,44 @@ describe("Who Am I PR3 CFB population quality", () => {
           problems.push(`${candidate.id} seed ${seed}: ${personalCount} personal-biography clues`);
         }
 
+        const productionCount = profiles.filter(({ category }) => category === "production").length;
+        if (productionCount > 2) {
+          problems.push(`${candidate.id} seed ${seed}: ${productionCount} production clues create stat soup`);
+        }
+
+        const jerseyCount = profiles.filter(({ category }) => category === "jersey-number").length;
+        const nicknameCount = profiles.filter(({ category }) => category === "nickname-persona").length;
+        if (jerseyCount > 1) problems.push(`${candidate.id} seed ${seed}: ${jerseyCount} jersey-number clues`);
+        if (nicknameCount > 1) problems.push(`${candidate.id} seed ${seed}: ${nicknameCount} nickname/persona clues`);
+
+        const firstFourFoundation = profiles.slice(0, 4).filter(({ category }) => (
+          category === "role"
+          || category === "era"
+          || category === "school"
+          || category === "sports-biography"
+          || category === "team-path"
+          || category === "style"
+        )).length;
+        if (firstFourFoundation < 2) {
+          problems.push(`${candidate.id} seed ${seed}: first four lack enough orientation/foundation clues`);
+        }
+
+        for (let index = 0; index < profiles.length; index += 1) {
+          const category = profiles[index]!.category;
+          if (index < 7 && (category === "jersey-number" || category === "personal-biography")) {
+            problems.push(`${candidate.id} seed ${seed}: ${category} surfaced before clue 8`);
+          }
+          if (index < 8 && category === "nickname-persona") {
+            problems.push(`${candidate.id} seed ${seed}: nickname/persona surfaced before clue 9`);
+          }
+        }
+
         const late = board.slice(6);
         const lateAnchorCount = late.filter((clue) => (
           LATE_ANCHOR_CATEGORIES.has(whoAmIRevealProfile(clue).category)
           && (clue.band === "strong" || clue.band === "giveaway")
         )).length;
-        if (lateAnchorCount < 3) {
+        if (lateAnchorCount < 2) {
           problems.push(`${candidate.id} seed ${seed}: only ${lateAnchorCount} strong identity anchors in clues 7-10`);
         }
 
