@@ -327,7 +327,7 @@ export function OfficialMillionaireDailyView({
           </>
         )}
       </div>
-    </div>
+    </div>,
     document.body,
   );
 }
