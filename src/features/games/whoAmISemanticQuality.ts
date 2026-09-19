@@ -12,6 +12,7 @@ export interface WhoAmIEditorialIssue {
 
 const NORMALIZED_COPY_CACHE = new WeakMap<WhoAmIClue, string>();
 const INFORMATION_KEYS_CACHE = new WeakMap<WhoAmIClue, readonly string[]>();
+const SHARE_INFORMATION_CACHE = new WeakMap<WhoAmIClue, WeakMap<WhoAmIClue, boolean>>();
 const SEMANTIC_CAPACITY_CACHE = new WeakMap<readonly WhoAmIClue[], Map<number, number>>();
 
 export function normalizeWhoAmICopy(value: string) {
@@ -193,10 +194,25 @@ function normalizedClueCopy(clue: WhoAmIClue) {
 
 export function whoAmICluesShareInformation(left: WhoAmIClue, right: WhoAmIClue) {
   if (left === right) return true;
-  if (normalizedClueCopy(left) === normalizedClueCopy(right)) return true;
 
-  const leftKeys = new Set(whoAmIClueInformationKeys(left));
-  return whoAmIClueInformationKeys(right).some((key) => leftKeys.has(key));
+  const cached = SHARE_INFORMATION_CACHE.get(left)?.get(right);
+  if (cached != null) return cached;
+
+  let result = normalizedClueCopy(left) === normalizedClueCopy(right);
+  if (!result) {
+    const leftKeys = new Set(whoAmIClueInformationKeys(left));
+    result = whoAmIClueInformationKeys(right).some((key) => leftKeys.has(key));
+  }
+
+  const leftCache = SHARE_INFORMATION_CACHE.get(left) ?? new WeakMap<WhoAmIClue, boolean>();
+  leftCache.set(right, result);
+  SHARE_INFORMATION_CACHE.set(left, leftCache);
+
+  const rightCache = SHARE_INFORMATION_CACHE.get(right) ?? new WeakMap<WhoAmIClue, boolean>();
+  rightCache.set(left, result);
+  SHARE_INFORMATION_CACHE.set(right, rightCache);
+
+  return result;
 }
 
 export function whoAmISemanticIndependentCapacity(
