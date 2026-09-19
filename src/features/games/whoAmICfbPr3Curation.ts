@@ -71,7 +71,7 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-eddie-george", [
     pr3Clue("george-1995-awards", "In 1995 I won the Heisman Trophy, Doak Walker Award, Maxwell Award and Walter Camp Player of the Year honor.", "giveaway", "accomplishments", 9),
-    pr3Clue("george-illinois-record", "I set an Ohio State single-game rushing record with 314 yards against Illinois in 1995.", "giveaway", "accomplishments", 8),
+    pr3Clue("george-illinois-record", "I set an Ohio State single-game rushing record with 314 yards against Illinois in 1995.", "giveaway", "identity", 8),
     pr3Clue("george-1995-all-america", "I was a first-team All-American, Big Ten MVP and Ohio State team co-captain in 1995.", "strong", "accomplishments"),
   ]],
   ["cfb-marvin-harrison-jr", [
@@ -89,7 +89,7 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-archie-griffin", [
     pr3Clue("griffin-two-heismans", "I remain the only player to win the Heisman Trophy twice, taking it in 1974 and 1975.", "giveaway", "accomplishments", 9),
-    pr3Clue("griffin-four-rose-bowls", "I am the only player to start in four Rose Bowl games, one after each of my four Ohio State seasons.", "giveaway", "accomplishments", 8),
+    pr3Clue("griffin-four-rose-bowls", "I am the only player to start in four Rose Bowl games, one after each of my four Ohio State seasons.", "giveaway", "identity", 8),
     pr3Clue("griffin-big-ten-titles", "I helped Ohio State win four consecutive Big Ten championships and was a three-time first-team All-American.", "strong", "accomplishments"),
   ]],
   ["cfb-earl-campbell", [
@@ -121,7 +121,7 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-dalvin-cook", [
     pr3Clue("cook-orange-bowl-mvp", "I was Orange Bowl MVP after rushing for 145 yards against Michigan in my final college game.", "strong", "accomplishments"),
-    pr3Clue("cook-fsu-rushing-record", "I broke Florida State's 20-year-old career rushing record and finished as the program's all-time leading rusher.", "giveaway", "accomplishments", 9),
+    pr3Clue("cook-fsu-rushing-record", "I broke Florida State's 20-year-old career rushing record and finished as the program's all-time leading rusher.", "giveaway", "identity", 9),
   ]],
   ["cfb-darqueze-dennard", [
     pr3Clue("dennard-thorpe", "In 2013 I became the first Michigan State player to win the Jim Thorpe Award.", "giveaway", "accomplishments", 9),
@@ -143,13 +143,13 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
     pr3Clue("starks-freshman-champ", "As a true freshman I started 14 games, earned FWAA Freshman All-America honors and helped Georgia win the 2022 national championship.", "strong", "accomplishments"),
   ]],
   ["cfb-marqise-lee", [
-    pr3Clue("lee-arizona-record", "I set a Pac-12 single-game record with 345 receiving yards against Arizona in 2012.", "giveaway", "accomplishments", 9),
+    pr3Clue("lee-arizona-record", "I set a Pac-12 single-game record with 345 receiving yards against Arizona in 2012.", "giveaway", "identity", 9),
   ]],
   ["cfb-michael-huff", [
     pr3Clue("huff-title-stop", "Late in the 2005 national-title game, I stopped LenDale White on fourth-and-two to give Texas the ball for its winning drive.", "giveaway", "accomplishments", 8),
   ]],
   ["cfb-mike-evans", [
-    pr3Clue("evans-bama-record", "I broke Texas A&M's long-standing single-game receiving record with 279 yards against Alabama in 2013.", "strong", "accomplishments"),
+    pr3Clue("evans-bama-record", "I broke Texas A&M's long-standing single-game receiving record with 279 yards against Alabama in 2013.", "strong", "identity"),
   ]],
   ["cfb-minkah-fitzpatrick", [
     pr3Clue("minkah-double-awards", "In 2017 I became just the third player in NCAA history to win the Bednarik and Jim Thorpe awards in the same season.", "giveaway", "accomplishments", 8),
