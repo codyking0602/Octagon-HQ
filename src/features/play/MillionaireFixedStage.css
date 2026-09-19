@@ -2,6 +2,10 @@
    The 1600x900 canvas is the single source of presentation geometry.
    The photo supplies only the host/studio. React + CSS own all game UI. */
 
+.millionaire-shell--rules {
+  z-index: 99999 !important;
+}
+
 .millionaire-shell--fixed-stage {
   z-index: 99999 !important;
   inset: 0 !important;
