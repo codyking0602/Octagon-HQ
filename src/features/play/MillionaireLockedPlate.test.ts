@@ -50,7 +50,7 @@ describe("Millionaire fixed-stage presentation contract", () => {
   it("gives official Daily the rules intro, fullscreen priority, and a completion exit", () => {
     expect(dailySource).toContain('className="millionaire-shell millionaire-shell--rules"');
     expect(dailySource).toContain("START GAME");
-    expect(dailySource).toContain("rulesOpen || projection.officialAttempt");
+    expect(dailySource).toContain("rulesOpen || answerFeedback || projection.officialAttempt");
     expect(dailySource).toContain("CONTINUE");
     expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \{[\s\S]*?z-index: 99999 !important;/);
     expect(fixedCss).toMatch(/\.millionaire-shell--rules \{[\s\S]*?z-index: 99999 !important;/);
