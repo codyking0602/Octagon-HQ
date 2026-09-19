@@ -14,32 +14,63 @@ comment on column public.pick_events.recap_video_required is
 -- The currently live production UFC card is an explicit deployment cutover so
 -- fresh-database fixtures and historical replays are never reclassified.
 
--- Fail closed at the row owner so no alternate completion path can publish a
--- required UFC recap before its video exists.
-create or replace function private.enforce_pick_event_recap_video_gate()
-returns trigger
+-- transition_pick_event remains the one lifecycle owner. Wrap that canonical
+-- boundary so every application completion path fails closed until the required
+-- UFC recap video has been saved. Raw service-role fixture maintenance remains
+-- outside this application lifecycle contract.
+alter function public.transition_pick_event(text,text)
+  rename to transition_pick_event_ufc_recap_core;
+alter function public.transition_pick_event_ufc_recap_core(text,text)
+  set schema private;
+revoke all on function private.transition_pick_event_ufc_recap_core(text,text)
+  from public, anon, authenticated, service_role;
+
+create function public.transition_pick_event(
+  p_event_id text,
+  p_target_status text
+)
+returns public.pick_events
 language plpgsql
+security definer
 set search_path = ''
-as $$
+as $
+declare
+  v_event public.pick_events;
+  v_target_status text := lower(trim(p_target_status));
 begin
-  if new.sport = 'mma'
-    and new.recap_video_required
-    and new.status = 'complete'
-    and jsonb_array_length(coalesce(new.watch_moments, '[]'::jsonb)) = 0
+  if auth.role() is distinct from 'service_role'
+    and not public.is_pick_control_owner(auth.uid())
+  then
+    raise exception 'pick control owner required';
+  end if;
+
+  select event.* into v_event
+  from public.pick_events event
+  where event.event_id = lower(trim(p_event_id));
+
+  if not found then
+    raise exception 'event not found';
+  end if;
+
+  if v_target_status = 'complete'
+    and v_event.sport = 'mma'
+    and v_event.recap_video_required
+    and jsonb_array_length(coalesce(v_event.watch_moments, '[]'::jsonb)) = 0
   then
     raise exception 'UFC recap video is required before final standings can publish';
   end if;
-  return new;
+
+  return private.transition_pick_event_ufc_recap_core(
+    v_event.event_id,
+    v_target_status
+  );
 end;
-$$;
+$;
 
-revoke all on function private.enforce_pick_event_recap_video_gate()
-  from public, anon, authenticated;
-
-drop trigger if exists enforce_pick_event_recap_video_gate on public.pick_events;
-create trigger enforce_pick_event_recap_video_gate
-before insert or update on public.pick_events
-for each row execute function private.enforce_pick_event_recap_video_gate();
+revoke all on function public.transition_pick_event(text,text)
+  from public, anon;
+grant execute on function public.transition_pick_event(text,text)
+  to authenticated, service_role;
 
 -- Keep Event Setup as the only publication owner. Every newly published MMA card
 -- is opted into the recap-video gate after the established publication checks pass.
@@ -163,6 +194,14 @@ begin
 
   if not found then
     raise exception 'event not found';
+  end if;
+
+  if v_event.sport = 'mma'
+    and v_event.recap_video_required
+    and v_event.status = 'complete'
+    and jsonb_array_length(v_moments) = 0
+  then
+    raise exception 'UFC recap video is required before final standings can publish';
   end if;
 
   if v_event.sport = 'mma'
