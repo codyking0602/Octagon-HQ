@@ -61,6 +61,10 @@ function pr3Clue(
 }
 
 const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-dak-prescott", [
+    pr3Clue("dak-two-time-all-sec", "I was a two-time All-American and earned first-team All-SEC honors in both 2014 and 2015.", "strong", "accomplishments"),
+    pr3Clue("dak-bowl-mvps", "I earned MVP honors in both the 2013 Liberty Bowl and the 2015 Belk Bowl for Mississippi State.", "strong", "accomplishments"),
+  ]],
   ["cfb-vince-young", [
     pr3Clue("young-2005-awards-title", "I won the Maxwell Award and Davey O'Brien Award in 2005 while leading Texas to the national championship.", "giveaway", "accomplishments", 8),
     pr3Clue("young-rose-bowl-mvp", "I earned Rose Bowl Offensive MVP honors twice, including after rushing for 200 yards and three touchdowns in the 41-38 title-game win over USC.", "giveaway", "accomplishments", 9),
