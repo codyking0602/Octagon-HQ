@@ -39,6 +39,7 @@ type DailyAnswerFeedback = {
   removedChoices: string[];
   doubleDipMisses: string[];
   startedRevision: number;
+  lockedAt: number;
 };
 
 function record(value: unknown): JsonRecord {
@@ -189,16 +190,18 @@ export function OfficialMillionaireDailyView({
       ? 0
       : MILLIONAIRE_REVEAL_DELAY_MS[answerFeedback.level];
 
-    // Daily must preserve the same Q1→Q8 suspense curve as Casual. The server
-    // remains authoritative, so start that presentation delay once its verdict
-    // is available instead of letting network time flatten the later questions.
+    // Start the suspense clock at the tap, in parallel with the authoritative
+    // server request. Once the verdict arrives, wait only for any suspense time
+    // that remains. This matches Casual pacing without exposing the answer key.
+    const elapsedSinceLock = performance.now() - answerFeedback.lockedAt;
+    const remainingDelay = Math.max(0, revealDelay - elapsedSinceLock);
     const id = window.setTimeout(() => {
       setAnswerFeedback((current) => (
         current && current.startedRevision === answerFeedback.startedRevision
           ? { ...current, phase: "revealed", correctChoiceId, answerOutcome }
           : current
       ));
-    }, revealDelay);
+    }, remainingDelay);
     return () => window.clearTimeout(id);
   }, [projection.progressRevision]);
 
@@ -246,6 +249,7 @@ export function OfficialMillionaireDailyView({
       removedChoices: [...removedChoices],
       doubleDipMisses: [...doubleDipMisses],
       startedRevision: projection.progressRevision,
+      lockedAt: performance.now(),
     });
     advance({ type: "answer", choice_id: choiceId });
   };
