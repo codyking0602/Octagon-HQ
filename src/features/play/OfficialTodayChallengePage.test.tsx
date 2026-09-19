@@ -99,6 +99,45 @@ describe("official Today’s Challenge uses the canonical casual game presentati
     expect(onAdvance).toHaveBeenCalledWith({ eliminated_id: "fighter-1" });
   });
 
+  it("shows the saved Find the Leader elimination sequence before the stat-sorted reveal", () => {
+    const candidates = [
+      { id: "alpha", name: "Alpha Leader", division: "Lightweight", thumb_url: "/fighters/alpha.png" },
+      { id: "beta", name: "Beta Pick", division: "Welterweight", thumb_url: "/fighters/beta.png" },
+      { id: "gamma", name: "Gamma Pick", division: "Middleweight", thumb_url: "/fighters/gamma.png" },
+    ];
+    const { container } = renderView(projection(
+      "find_leader",
+      { question: "Who leads?", context: "Leave the leader standing.", stat_label: "UFC WINS", candidates },
+      { complete: true, eliminated_ids: ["beta", "gamma", "alpha"] },
+      {
+        revealSetup: {
+          leader_id: "alpha",
+          candidates: [
+            { ...candidates[0], value: 30 },
+            { ...candidates[1], value: 10 },
+            { ...candidates[2], value: 20 },
+          ],
+        },
+        officialAttempt: {
+          nativeScore: 3,
+          normalizedScore: 30,
+          completedAt: "2026-09-17T12:00:00Z",
+          publicResult: {},
+        },
+      },
+    ));
+
+    const pickOrder = container.querySelector(".find-elimination-order");
+    expect(pickOrder).not.toBeNull();
+    const text = pickOrder?.textContent ?? "";
+    expect(text).toContain("ELIMINATION ORDER");
+    expect(text.indexOf("Beta Pick")).toBeLessThan(text.indexOf("Gamma Pick"));
+    expect(text.indexOf("Gamma Pick")).toBeLessThan(text.indexOf("Alpha Leader"));
+    expect(text).toContain("R1");
+    expect(text).toContain("R2");
+    expect(text).toContain("R3");
+  });
+
   it("plays Wavelength through the casual clue and guess panel", () => {
     const { onAdvance, container } = renderView(projection(
       "wavelength",
