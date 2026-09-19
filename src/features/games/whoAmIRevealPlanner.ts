@@ -218,7 +218,7 @@ export function assembleWhoAmIRevealClues(
     Math.min(eligibleClues.length, limit + REVEAL_SHORTLIST_EXTRA),
     random,
   );
-  const architectureShortlist = league === "CFB" || league === "NFL"
+  const extendedArchitectureShortlist = league === "CFB" || league === "NFL"
     ? assembleWhoAmIClues(
         eligibleClues,
         Math.min(eligibleClues.length, limit + REVEAL_SHORTLIST_EXTRA * 2),
@@ -236,7 +236,8 @@ export function assembleWhoAmIRevealClues(
       return ordered;
     }
 
-    return selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(architectureShortlist, league)
+    return selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(shortlist, league)
+      ?? selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(extendedArchitectureShortlist, league)
       ?? ordered;
   };
 
