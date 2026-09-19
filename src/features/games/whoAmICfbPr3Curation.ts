@@ -62,7 +62,7 @@ function pr3Clue(
 
 const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-joe-burrow", [
-    pr3Clue("burrow-2019-sec-title", "I led LSU to the 2019 SEC championship before the Tigers completed a 15-0 national-title season.", "strong", "championships", 14),
+    pr3Clue("burrow-2019-sec-title", "I led LSU to the 2019 SEC championship before the Tigers completed a 15-0 national-title season.", "strong", "accomplishments", 14),
   ]],
   ["cfb-braylon-edwards", [
     pr3Clue("edwards-biletnikoff", "I won the 2004 Biletnikoff Award and was a unanimous first-team All-American at Michigan.", "giveaway", "accomplishments", 8),
