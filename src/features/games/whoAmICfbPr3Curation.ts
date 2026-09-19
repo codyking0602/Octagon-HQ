@@ -62,7 +62,29 @@ function annotateCfbCategoryMetadata(clue: WhoAmIClue): WhoAmIClue {
   if (clue.id === "school" || clue.id === "conference") {
     return { ...clue, facet: "background" };
   }
+  if (!clue.facet) {
+    return { ...clue, facet: whoAmIClueFacet(clue) };
+  }
   return clue;
+}
+
+function ordinal(value: number) {
+  const mod100 = value % 100;
+  if (mod100 >= 11 && mod100 <= 13) return `${value}th`;
+  if (value % 10 === 1) return `${value}st`;
+  if (value % 10 === 2) return `${value}nd`;
+  if (value % 10 === 3) return `${value}rd`;
+  return `${value}th`;
+}
+
+function normalizeCfbDraftCopy(clue: WhoAmIClue): WhoAmIClue {
+  if (!/draft|overall pick/i.test(`${clue.id} ${clue.text}`)) return clue;
+  const match = clue.text.match(/\bNo\.\s*(\d+)\s+overall\b/i);
+  if (!match) return clue;
+  const pick = Number(match[1]);
+  if (!Number.isFinite(pick)) return clue;
+  const replacement = pick === 1 ? "first overall" : `${ordinal(pick)} overall`;
+  return { ...clue, text: clue.text.replace(match[0], replacement) };
 }
 
 function cfbSchoolReband(clue: WhoAmIClue) {
@@ -207,7 +229,7 @@ function ensureOrientationClues(
 }
 
 function rebandCfbClue(clue: WhoAmIClue) {
-  let next = annotateCfbCategoryMetadata(clue);
+  let next = annotateCfbCategoryMetadata(normalizeCfbDraftCopy(clue));
   next = cfbOrientationReband(next);
   next = cfbSchoolReband(next);
   next = cfbSportsBiographyReband(next);
