@@ -64,6 +64,9 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-ernie-davis", [
     pr3Clue("davis-cotton-bowl", "As a sophomore I was Cotton Bowl MVP, scoring twice in Syracuse's 23-14 win over Texas that completed an 11-0 national-championship season.", "giveaway", "accomplishments", 8),
     pr3Clue("davis-two-time-all-american", "I earned All-America honors in both 1960 and 1961, with the second selection unanimous.", "strong", "identity"),
+    pr3Clue("davis-liberty-bowl", "In my final college game I rushed for 140 yards and a touchdown as Syracuse erased a 14-0 halftime deficit to beat Miami in the Liberty Bowl.", "strong", "identity"),
+    pr3Clue("davis-1960-efficiency", "In 1960 I averaged 7.8 yards per carry, a Syracuse single-season record.", "strong", "production"),
+    pr3Clue("davis-versatility", "At Syracuse I also caught passes, returned punts and kickoffs, and threw a touchdown pass.", "helpful", "style"),
   ]],
   ["cfb-hunter-henry", [
     pr3Clue("henry-full-career", "Across my Arkansas career, I caught 116 passes for 1,661 yards and nine touchdowns, becoming one of eight SEC tight ends to reach 100 receptions.", "strong", "identity"),
