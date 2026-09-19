@@ -67,11 +67,13 @@ export function OfficialTodayChallengeContent({
   busy,
   onAdvance,
   onNavigate,
+  showMillionaireExit = false,
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
   onAdvance: (action: Record<string, unknown>) => void;
   onNavigate: (route: string) => void;
+  showMillionaireExit?: boolean;
 }) {
   const adapter = todayChallengeAdapter(projection.gameType);
   const blindResumeV3 = projection.gameType === "blind_resume"
@@ -108,7 +110,14 @@ export function OfficialTodayChallengeContent({
       ) : projection.gameType === "who_am_i" ? (
         <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
       ) : projection.gameType === "millionaire" ? (
-        <OfficialMillionaireDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
+        <OfficialMillionaireDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={onAdvance}
+          onExit={showMillionaireExit
+            ? () => onNavigate(projection.sport === "football" ? "/football" : "/play")
+            : undefined}
+        />
       ) : (
         <OfficialTodayChallengeView
           projection={presentationProjection}
@@ -202,6 +211,7 @@ export default function OfficialTodayChallengePage({
         busy={runtime.busy}
         onAdvance={(action) => { void runtime.advance(action); }}
         onNavigate={(route) => navigate(route)}
+        showMillionaireExit
       />
     </div>
   );

@@ -753,7 +753,12 @@ export default function FootballTodayChallengePage() {
         {weeklyEditControl}
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
-        <OfficialMillionaireDailyView projection={projection} busy={busy} onAdvance={advance} />
+        <OfficialMillionaireDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={advance}
+          onExit={() => navigate("/football")}
+        />
         {projection.officialAttempt ? (
           <div className="game-result-actions-wrap">
             <div className="game-result-actions">

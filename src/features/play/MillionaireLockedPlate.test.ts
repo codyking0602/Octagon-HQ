@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const pageSource = readFileSync("src/features/play/MillionaireCasualPage.tsx", "utf8");
+const dailySource = readFileSync("src/features/play/OfficialMillionaireDailyView.tsx", "utf8");
 const fixedCss = readFileSync("src/features/play/MillionaireFixedStage.css", "utf8");
 
 describe("Millionaire fixed-stage presentation contract", () => {
@@ -44,6 +45,15 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(pageSource).toContain("{currentQuestion?.prompt}");
     expect(pageSource).toContain("{choice.text}");
     expect(pageSource).toContain("MILLIONAIRE_BASE_PTS[ladderLevel]");
+  });
+
+  it("gives official Daily the rules intro, fullscreen priority, and a completion exit", () => {
+    expect(dailySource).toContain('className="millionaire-shell millionaire-shell--rules"');
+    expect(dailySource).toContain("START GAME");
+    expect(dailySource).toContain("rulesOpen || projection.officialAttempt");
+    expect(dailySource).toContain("CONTINUE");
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \{[\s\S]*?z-index: 99999 !important;/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--rules \{[\s\S]*?z-index: 99999 !important;/);
   });
 
   it("does not hide CFB Q1 answer text on the first render", () => {
