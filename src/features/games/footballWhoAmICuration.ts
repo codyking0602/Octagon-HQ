@@ -1,5 +1,5 @@
 import type { FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
-import { refineCfbWhoAmIContent } from "./cfbWhoAmIPr3Curation";
+import { refineCfbWhoAmIContent } from "./whoAmICfbPr3Curation";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueFacet } from "./whoAmIEngine";
 
