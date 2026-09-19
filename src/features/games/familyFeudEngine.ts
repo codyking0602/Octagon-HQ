@@ -286,8 +286,13 @@ export function matchFamilyFeudAnswer(
   if (bestIds.length > 1) return { status: "ambiguous", entityIds: bestIds };
 
   const secondDistance = ranked[1]?.[1];
-  if (secondDistance != null && secondDistance <= bestDistance) {
-    return { status: "ambiguous", entityIds: ranked.filter((row) => row[1] <= bestDistance).map((row) => row[0]) };
+  if (secondDistance != null && secondDistance - bestDistance < 2) {
+    return {
+      status: "ambiguous",
+      entityIds: ranked
+        .filter((row) => row[1] <= bestDistance + 1)
+        .map((row) => row[0]),
+    };
   }
 
   return { status: "matched", entityId: bestIds[0]!, kind: "typo" };
