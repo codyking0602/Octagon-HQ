@@ -57,10 +57,10 @@ describe("Who Am I football reveal-coordinate architecture", () => {
           const firstSix = exposedCoordinateCount(board, 6);
           const firstEight = exposedCoordinateCount(board, 8);
           if (firstFour > 1) {
-            problems.push(`${candidate.id} seed ${seed}: clues 1-4 expose ${firstFour} major coordinates`);
+            problems.push(`${candidate.id} seed ${seed}: clues 1-4 expose ${firstFour} major coordinates — ${board.slice(0, 4).map((clue) => `${clue.id}[${(clue.revealCoordinates ?? []).join("+") || "none"}]`).join(" | ")}`);
           }
           if (firstSix > 2) {
-            problems.push(`${candidate.id} seed ${seed}: clues 1-6 expose ${firstSix} major coordinates`);
+            problems.push(`${candidate.id} seed ${seed}: clues 1-6 expose ${firstSix} major coordinates — ${board.slice(0, 6).map((clue) => `${clue.id}[${(clue.revealCoordinates ?? []).join("+") || "none"}]`).join(" | ")}`);
           }
           if (firstEight > 3) {
             problems.push(`${candidate.id} seed ${seed}: clues 1-8 expose ${firstEight} major coordinates`);
