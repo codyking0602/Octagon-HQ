@@ -814,8 +814,10 @@ function withFootballWhoAmIRevealCoordinates(
   subject: FootballSubjectProfile,
   clueValue: WhoAmIClue,
 ): WhoAmIClue {
-  const revealCoordinates = footballWhoAmIRevealCoordinates(subject, clueValue);
-  return revealCoordinates.length ? { ...clueValue, revealCoordinates } : clueValue;
+  return {
+    ...clueValue,
+    revealCoordinates: footballWhoAmIRevealCoordinates(subject, clueValue),
+  };
 }
 
 function footballCandidate(subject: FootballSubjectProfile): WhoAmICandidate {
