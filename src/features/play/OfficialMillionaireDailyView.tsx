@@ -176,6 +176,20 @@ export function OfficialMillionaireDailyView({
             <p>8 questions. $500 to $1,000,000.</p>
           </header>
           <div className="millionaire-rules__body">
+            <section className="millionaire-rules__ladder" aria-label="Money and points ladder">
+              {MILLIONAIRE_LEVELS.slice().reverse().map((ruleLevel, reverseIndex) => {
+                const index = 7 - reverseIndex;
+                const checkpoint = ruleLevel === "Q3" || ruleLevel === "Q6";
+                return (
+                  <div key={ruleLevel} className={checkpoint ? "is-checkpoint" : ""}>
+                    <b>{index + 1}</b>
+                    <strong>{millionaireMoneyLabel(MILLIONAIRE_MONEY_BY_LEVEL[ruleLevel])}</strong>
+                    <span>{MILLIONAIRE_BASE_PTS[ruleLevel]} PTS</span>
+                    {checkpoint ? <small>CHECKPOINT</small> : null}
+                  </div>
+                );
+              })}
+            </section>
             <section className="millionaire-rules__how" aria-label="How to play">
               <h2>HOW TO PLAY</h2>
               <div className="millionaire-rules__quick">
