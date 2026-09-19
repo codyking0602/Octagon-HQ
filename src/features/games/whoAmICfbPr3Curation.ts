@@ -536,5 +536,8 @@ export function refineCfbWhoAmIContent(
   const rebanded = withConference.map(rebandCfbClue);
   const withoutStatSoup = capGenericProduction(rebanded);
   const withoutRepeatedSignatures = trimCategoryRepetition(withoutStatSoup);
-  return capPersonalBiography(withoutRepeatedSignatures);
+  const withoutPersonalBiography = capPersonalBiography(withoutRepeatedSignatures);
+  // Existing batch contracts require enough editorial depth for replay. PR3
+  // should improve weak clues, not shrink an otherwise valid CFB pool below 12.
+  return withoutPersonalBiography.length >= 12 ? withoutPersonalBiography : rebanded;
 }
