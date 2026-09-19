@@ -11,6 +11,7 @@ import {
   submitFamilyFeudMainAnswer,
   timeoutFamilyFeudFastMoney,
   type FamilyFeudPack,
+  type FamilyFeudState,
 } from "./familyFeudEngine";
 
 const entities = [
@@ -237,7 +238,7 @@ describe("Family Feud engine contract", () => {
   });
 
   it("advances Fast Money with points for a board answer and zero for a valid off-board answer", () => {
-    let state = { ...createFamilyFeudState(), phase: "fast-money" as const };
+    let state: FamilyFeudState = { ...createFamilyFeudState(), phase: "fast-money" };
 
     let transition = submitFamilyFeudFastMoneyAnswer(pack, state, "Stafford", 29_000);
     expect(transition.outcome).toEqual({
