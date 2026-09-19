@@ -1,6 +1,7 @@
 import type { FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueFacet } from "./whoAmIEngine";
+import { whoAmIRevealProfile } from "./whoAmIRevealArchitecture";
 
 /**
  * NFL Who Am I calibration batch 1 (launch-order subjects 1-50).
@@ -3158,6 +3159,43 @@ function shouldSuppressCfbBatch1Clue(subject: FootballSubjectProfile, clue: WhoA
   return false;
 }
 
+const CFB_PR3_WEAK_VOLUME_CLUE_IDS = new Set([
+  "fact:cfb-career-games",
+  "fact:cfb-career-starts",
+  "fact:cfb-career-targets",
+  "fact:cfb-career-passing-completions",
+  "fact:cfb-career-passing-attempts",
+  "fact:cfb-career-rushing-attempts",
+  "fact:cfb-career-rushing-yards-per-attempt",
+] as const);
+
+function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
+  let personalBiographyUsed = false;
+
+  return clues
+    .filter((clue) => !CFB_PR3_WEAK_VOLUME_CLUE_IDS.has(clue.id as never))
+    .map((clue): WhoAmIClue => {
+      const profile = whoAmIRevealProfile(clue);
+
+      if (profile.category === "nickname-persona" || profile.category === "jersey-number") {
+        return clue.band === "giveaway" ? clue : { ...clue, band: "giveaway" };
+      }
+      if (clue.band === "broad" && profile.earliestClue > 2) {
+        return { ...clue, band: "helpful" };
+      }
+      if (clue.band === "helpful" && profile.earliestClue > 4) {
+        return { ...clue, band: "strong" };
+      }
+      return clue;
+    })
+    .filter((clue) => {
+      if (whoAmIRevealProfile(clue).category !== "personal-biography") return true;
+      if (personalBiographyUsed) return false;
+      personalBiographyUsed = true;
+      return true;
+    });
+}
+
 function trimCfbBatch1Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
   const target = 16;
   if (clues.length <= target) return [...clues];
@@ -3200,7 +3238,7 @@ function curateCfbBatch1Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(cfbBatch1SupplementalClues.get(subject.id) ?? []));
-  return trimCfbBatch1Pool(subject, curated);
+  return finalizeCfbPr3Content(trimCfbBatch1Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch1Subject(subjectId: string) {
@@ -3741,7 +3779,7 @@ function curateCfbBatch2Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(cfbBatch2SupplementalClues.get(subject.id) ?? []));
-  return trimCfbBatch2Pool(subject, curated);
+  return finalizeCfbPr3Content(trimCfbBatch2Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch2Subject(subjectId: string) {
@@ -4446,8 +4484,8 @@ function curateCfbBatch3Clues(subject: FootballSubjectProfile, rawClues: readonl
   curated.push(...(cfbBatch3SupplementalClues.get(subject.id) ?? []));
   curated.push(...(cfbBatch3ReplayDepthClues.get(subject.id) ?? []));
   const forcedPool = cfbBatch3ForcedPoolIds.get(subject.id);
-  if (forcedPool) return curated.filter((clue) => forcedPool.has(clue.id));
-  return trimCfbBatch3Pool(subject, curated);
+  if (forcedPool) return finalizeCfbPr3Content(curated.filter((clue) => forcedPool.has(clue.id)));
+  return finalizeCfbPr3Content(trimCfbBatch3Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch3Subject(subjectId: string) {
@@ -5055,7 +5093,7 @@ function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonl
     ...(cfbBatch4SupplementalClues.get(subject.id) ?? [])
       .filter((clue) => !shouldSuppressCfbBatch4Clue(subject, clue)),
   );
-  return rebalanceCfbBatch4ReplayBands(subject, trimCfbBatch4Pool(subject, curated));
+  return finalizeCfbPr3Content(rebalanceCfbBatch4ReplayBands(subject, trimCfbBatch4Pool(subject, curated)));
 }
 
 export function isCfbWhoAmIBatch4Subject(subjectId: string) {
