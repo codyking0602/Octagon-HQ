@@ -33,7 +33,7 @@ returns public.pick_events
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $transition$
 declare
   v_event public.pick_events;
   v_target_status text := lower(trim(p_target_status));
@@ -65,7 +65,7 @@ begin
     v_target_status
   );
 end;
-$;
+$transition$;
 
 revoke all on function public.transition_pick_event(text,text)
   from public, anon;
