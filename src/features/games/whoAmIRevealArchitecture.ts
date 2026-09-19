@@ -345,7 +345,7 @@ function scheduleRevealArchitecture(
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
   let explored = 0;
-  const MAX_NODES = clues.length > targetLength ? 150_000 : 60_000;
+  const MAX_NODES = clues.length > targetLength ? 25_000 : 5_000;
 
   const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
     explored += 1;
