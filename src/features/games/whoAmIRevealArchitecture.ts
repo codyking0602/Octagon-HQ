@@ -282,8 +282,10 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
       return ordered;
     }
 
+    const previousBand = chosen.at(-1)?.clue.band;
     const candidates = remaining
       .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
+      .filter(({ clue }) => previousBand === undefined || BAND_RANK[clue.band] >= BAND_RANK[previousBand])
       .filter(({ clue }) => (
         !preserveStrongFinalTwo
         || position < 9
