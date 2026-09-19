@@ -7,6 +7,7 @@ import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet } from "./whoAmIEngine
 import {
   whoAmIClueHasHardEditorialFailure,
   whoAmICluesShareInformation,
+  whoAmISemanticClueKey,
 } from "./whoAmISemanticQuality";
 
 const REVEAL_SHORTLIST_EXTRA = 4;
@@ -174,13 +175,19 @@ export function whoAmIQualityCompatibleReplayTargets(
 ) {
   const boardSize = boards[0]?.length ?? 0;
   const eligibleClues = eligibleRevealPool(clues, boardSize);
+  const baselineSurfaced = boards.reduce((best, planned) => (
+    Math.max(best, new Set(planned.map(whoAmISemanticClueKey)).size)
+  ), 0);
   const hasReplayDepth = boards.some((planned) => (
     boardReachedReplayPlanning(planned)
     && qualityCompatibleReplayOptions(planned, eligibleClues).length > 0
   ));
 
   return {
-    surfaced: boardSize + (hasReplayDepth ? 1 : 0),
+    // Legacy-safe boards can still contain fewer than ten independent facts.
+    // Replay depth is measured from the semantic information actually available
+    // on a quality-safe board, not from its raw ten clue slots.
+    surfaced: baselineSurfaced + (hasReplayDepth ? 1 : 0),
     rotated: hasReplayDepth ? 1 : 0,
     boards: hasReplayDepth ? 2 : 1,
   };
