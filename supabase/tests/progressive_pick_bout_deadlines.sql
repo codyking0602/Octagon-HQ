@@ -256,7 +256,9 @@ begin
 
   perform set_config('request.jwt.claim.role','service_role',true);
   update public.pick_events
-  set status='complete',completed_at=now()
+  set status='complete',
+      completed_at=now(),
+      recap_video_required=false
   where event_id=v_event.event_id;
   v_applied := private.apply_initial_pick_bout_deadlines(v_event.event_id, true);
   if v_applied then
