@@ -11,6 +11,7 @@ import { whoAmIQualityCompatibleReplayTargets } from "./whoAmIRevealPlanner";
 import {
   whoAmIRevealArchitectureCanOrder,
   whoAmIRevealArchitectureSatisfied,
+  whoAmIRevealProfile,
 } from "./whoAmIRevealArchitecture";
 
 function seededRandom(seed: number) {
@@ -63,6 +64,8 @@ describe("Who Am I fast targeted editorial gate", () => {
 
     expect(selected.length, `No Who Am I subjects matched: ${targets.join(", ")}`).toBeGreaterThan(0);
 
+    const cfbRevealFailures: string[] = [];
+
     for (const { universe, candidate } of selected) {
       const semanticCapacity = whoAmISemanticIndependentCapacity(candidate.clues, 13);
       const sequences = Array.from({ length: 8 }, (_value, index) => (
@@ -70,7 +73,37 @@ describe("Who Am I fast targeted editorial gate", () => {
       ));
       const replayTargets = whoAmIQualityCompatibleReplayTargets(candidate.clues, sequences);
 
-      for (const sequence of sequences) {
+      if (universe.league === "CFB") {
+        for (const clue of candidate.clues) {
+          const profile = whoAmIRevealProfile(clue);
+          if (clue.band === "broad") {
+            expect(
+              profile.earliestClue,
+              `${candidate.id} broad clue cannot reach its reveal window: ${clue.text}`,
+            ).toBeLessThanOrEqual(2);
+          }
+          if (clue.band === "helpful") {
+            expect(
+              profile.earliestClue,
+              `${candidate.id} helpful clue must be rebanded later: ${clue.text}`,
+            ).toBeLessThanOrEqual(4);
+            if (profile.category === "school") {
+              expect(
+                profile.identifyingPower,
+                `${candidate.id} signature school belongs after the foundation clues: ${clue.text}`,
+              ).not.toBe("signature");
+            }
+          }
+          if (clue.band === "strong") {
+            expect(
+              profile.earliestClue,
+              `${candidate.id} strong clue belongs in the final giveaway band: ${clue.text}`,
+            ).toBeLessThanOrEqual(8);
+          }
+        }
+      }
+
+      for (const [sequenceIndex, sequence] of sequences.entries()) {
         expect(sequence, `${candidate.id} must still produce a complete board`).toHaveLength(WHO_AM_I_CLUE_LIMIT);
 
         for (const clue of sequence) {
@@ -96,7 +129,15 @@ describe("Who Am I fast targeted editorial gate", () => {
           `${candidate.id} needs a strong finish`,
         ).toBeGreaterThanOrEqual(3);
 
-        if (whoAmIRevealArchitectureCanOrder(sequence)) {
+        if (universe.league === "CFB") {
+          if (!whoAmIRevealArchitectureSatisfied(sequence)) {
+            const board = sequence.map((clue, index) => {
+              const profile = whoAmIRevealProfile(clue);
+              return `${index + 1}[${clue.id}]:${clue.band}/${profile.category}/${profile.identifyingPower}/>=${profile.earliestClue} ${clue.text}`;
+            }).join(" || ");
+            cfbRevealFailures.push(`${candidate.id} seed=${sequenceIndex + 1} :: ${board}`);
+          }
+        } else if (whoAmIRevealArchitectureCanOrder(sequence)) {
           expect(
             whoAmIRevealArchitectureSatisfied(sequence),
             `${candidate.id} must use the standardized reveal order when its selected board supports it`,
@@ -111,5 +152,10 @@ describe("Who Am I fast targeted editorial gate", () => {
         ).toBeGreaterThan(1);
       }
     }
+
+    expect(
+      cfbRevealFailures,
+      `CFB PR3 reveal failures:\n${cfbRevealFailures.join("\n")}`,
+    ).toEqual([]);
   }, 150_000);
 });
