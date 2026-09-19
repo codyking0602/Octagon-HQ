@@ -66,7 +66,7 @@ describe("Who Am I fast targeted editorial gate", () => {
     for (const { universe, candidate } of selected) {
       const semanticCapacity = whoAmISemanticIndependentCapacity(candidate.clues, 13);
       const sequences = Array.from({ length: 8 }, (_value, index) => (
-        whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
+        whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1), universe.league)
       ));
       const replayTargets = whoAmIQualityCompatibleReplayTargets(candidate.clues, sequences);
 
@@ -96,9 +96,9 @@ describe("Who Am I fast targeted editorial gate", () => {
           `${candidate.id} needs a strong finish`,
         ).toBeGreaterThanOrEqual(3);
 
-        if (whoAmIRevealArchitectureCanOrder(sequence)) {
+        if (whoAmIRevealArchitectureCanOrder(sequence, universe.league)) {
           expect(
-            whoAmIRevealArchitectureSatisfied(sequence),
+            whoAmIRevealArchitectureSatisfied(sequence, universe.league),
             `${candidate.id} must use the standardized reveal order when its selected board supports it`,
           ).toBe(true);
         }
