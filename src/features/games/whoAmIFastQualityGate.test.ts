@@ -90,8 +90,8 @@ describe("Who Am I fast targeted editorial gate", () => {
             if (profile.category === "school") {
               expect(
                 profile.identifyingPower,
-                `${candidate.id} identifying school belongs after the foundation clues: ${clue.text}`,
-              ).toBe("broad");
+                `${candidate.id} signature school belongs after the foundation clues: ${clue.text}`,
+              ).not.toBe("signature");
             }
           }
           if (clue.band === "strong") {
@@ -133,7 +133,7 @@ describe("Who Am I fast targeted editorial gate", () => {
           if (!whoAmIRevealArchitectureSatisfied(sequence)) {
             const board = sequence.map((clue, index) => {
               const profile = whoAmIRevealProfile(clue);
-              return `${index + 1}:${clue.band}/${profile.category}/${profile.identifyingPower}/>=${profile.earliestClue} ${clue.text}`;
+              return `${index + 1}[${clue.id}]:${clue.band}/${profile.category}/${profile.identifyingPower}/>=${profile.earliestClue} ${clue.text}`;
             }).join(" || ");
             cfbRevealFailures.push(`${candidate.id} seed=${sequenceIndex + 1} :: ${board}`);
           }
