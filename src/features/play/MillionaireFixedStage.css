@@ -6,6 +6,11 @@
   z-index: 99999 !important;
 }
 
+body.millionaire-daily-active .app-header,
+body.millionaire-daily-active .bottom-nav {
+  display: none !important;
+}
+
 .millionaire-shell--fixed-stage {
   z-index: 99999 !important;
   inset: 0 !important;
