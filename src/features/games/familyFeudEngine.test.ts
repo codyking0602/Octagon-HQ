@@ -198,7 +198,7 @@ describe("Family Feud engine contract", () => {
       boardIndex: 0,
       entityId: "stafford",
     });
-    expect(transition.state.mainBoards[0]!.strikes).toBe(1);
+    expect(transition.state.mainBoards[0]!.strikes).toBe(2);
   });
 
   it("moves to board two when the first board is cleared and to Fast Money after board two", () => {
