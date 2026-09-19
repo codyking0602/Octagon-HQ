@@ -177,7 +177,8 @@ function identifyingPowerFor(
   }
 
   if (category === "sports-biography") {
-    if (/\b(?:junior college|juco|transferred|transfer portal)\b/.test(text) && /\b(?:to|from|at)\b/.test(text)) {
+    if (/\b(?:junior college|juco)\b/.test(text)) return "signature";
+    if (/\b(?:transferred|transfer portal)\b/.test(text) && /\b(?:to|from|at)\b/.test(text)) {
       return "signature";
     }
     return clue.band === "giveaway" ? "signature" : "specific";
@@ -259,6 +260,9 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
   const preserveStrongFinalTwo = clues.slice(-2).every((clue) => (
     clue.band === "strong" || clue.band === "giveaway"
   ));
+  const preserveStrongFinalFour = clues.slice(-4).filter((clue) => (
+    clue.band === "strong" || clue.band === "giveaway"
+  )).length >= 3;
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
   let explored = 0;
@@ -267,7 +271,16 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
   const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
     explored += 1;
     if (explored > MAX_NODES) return null;
-    if (position > clues.length) return chosen.map((entry) => entry.clue);
+    if (position > clues.length) {
+      const ordered = chosen.map((entry) => entry.clue);
+      if (
+        preserveStrongFinalFour
+        && ordered.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3
+      ) {
+        return null;
+      }
+      return ordered;
+    }
 
     const candidates = remaining
       .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
