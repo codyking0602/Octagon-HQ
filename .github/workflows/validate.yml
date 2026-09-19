@@ -2,7 +2,9 @@ name: Validate V2
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    # Draft PRs iterate through Fast PR Feedback. Run the expensive full suite
+    # only when a PR is opened/reopened ready, or explicitly marked ready.
+    types: [opened, reopened, ready_for_review]
   push:
     branches: [main]
 

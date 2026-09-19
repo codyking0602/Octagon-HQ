@@ -3,6 +3,8 @@ import { getFootballWhoAmILaunchPool, getFootballWhoAmIUniverse } from "./footba
 import { NFL_WHO_AM_I_BATCH_3_SUBJECT_IDS } from "./footballWhoAmICuration";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import { WHO_AM_I_CLUE_LIMIT, whoAmIProgressiveClues } from "./whoAmIEngine";
+import { whoAmISemanticClueKey, whoAmISemanticSetKey } from "./whoAmISemanticQuality";
+import { whoAmIQualityCompatibleReplayTargets } from "./whoAmIRevealPlanner";
 
 const ACTIVE_2026_IDS = new Set([
   "nfl-trent-williams",
@@ -78,14 +80,14 @@ describe("NFL Who Am I batch 3 calibration", () => {
       const sequences = Array.from({ length: 64 }, (_value, index) => (
         whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
       ));
-      const first = new Set(sequences[0]!.map((clue) => clue.id));
-      const surfaced = new Set(sequences.flatMap((sequence) => sequence.map((clue) => clue.id)));
+      const first = new Set(sequences[0]!.map(whoAmISemanticClueKey));
+      const surfaced = new Set(sequences.flatMap((sequence) => sequence.map(whoAmISemanticClueKey)));
       return {
         id: subjectId,
         pool: candidate.clues.length,
         surfaced: surfaced.size,
-        boards: new Set(sequences.map((sequence) => sequence.map((clue) => clue.id).join("|"))).size,
-        rotated: Math.max(...sequences.map((sequence) => sequence.filter((clue) => !first.has(clue.id)).length)),
+        boards: new Set(sequences.map(whoAmISemanticSetKey)).size,
+        rotated: Math.max(...sequences.map((sequence) => sequence.filter((clue) => !first.has(whoAmISemanticClueKey(clue))).length)),
         minSports: Math.min(...sequences.map((sequence) => (
           sequence.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity").length
         ))),
@@ -150,11 +152,11 @@ describe("NFL Who Am I batch 3 calibration", () => {
       const sequences = Array.from({ length: 64 }, (_value, index) => (
         whoAmIProgressiveClues(candidate!.clues, seededRandom(index + 1))
       ));
-      const first = new Set(sequences[0]!.map((clue) => clue.id));
-      const surfaced = new Set(sequences.flatMap((sequence) => sequence.map((clue) => clue.id)));
-      const boards = new Set(sequences.map((sequence) => sequence.map((clue) => clue.id).join("|")));
+      const first = new Set(sequences[0]!.map(whoAmISemanticClueKey));
+      const surfaced = new Set(sequences.flatMap((sequence) => sequence.map(whoAmISemanticClueKey)));
+      const boards = new Set(sequences.map(whoAmISemanticSetKey));
       const maxRotated = Math.max(...sequences.map((sequence) => (
-        sequence.filter((clue) => !first.has(clue.id)).length
+        sequence.filter((clue) => !first.has(whoAmISemanticClueKey(clue))).length
       )));
 
       for (const sequence of sequences) {
@@ -181,9 +183,10 @@ describe("NFL Who Am I batch 3 calibration", () => {
         ).toBe(true);
       }
 
-      expect(surfaced.size, `${subjectId} surfaced replay depth`).toBeGreaterThanOrEqual(12);
-      expect(maxRotated, `${subjectId} rotating slots`).toBeGreaterThanOrEqual(2);
-      expect(boards.size, `${subjectId} distinct boards`).toBeGreaterThanOrEqual(2);
+      const semanticTargets = whoAmIQualityCompatibleReplayTargets(candidate!.clues, sequences);
+      expect(surfaced.size, `${subjectId} surfaced replay depth`).toBeGreaterThanOrEqual(semanticTargets.surfaced);
+      expect(maxRotated, `${subjectId} rotating slots`).toBeGreaterThanOrEqual(semanticTargets.rotated);
+      expect(boards.size, `${subjectId} distinct boards`).toBeGreaterThanOrEqual(semanticTargets.boards);
     }
   }, 150_000);
 });

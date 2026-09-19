@@ -2,6 +2,13 @@ import { describe, expect, it } from "vitest";
 import { getFootballWhoAmIUniverse, getUfcWhoAmIUniverse } from "./whoAmIAuthority";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import {
+  whoAmIClueEditorialIssues,
+  whoAmICluesShareInformation,
+  whoAmISemanticIndependentCapacity,
+  whoAmISemanticSetKey,
+} from "./whoAmISemanticQuality";
+import { whoAmIQualityCompatibleReplayTargets } from "./whoAmIRevealPlanner";
+import {
   WHO_AM_I_CLUE_LIMIT,
   WHO_AM_I_RESCUE_OPTION_COUNT,
   whoAmIProgressiveClues,
@@ -37,7 +44,7 @@ function normalize(value: string) {
 
 
 function sequenceKey(sequence: readonly WhoAmIClue[]) {
-  return sequence.map((clue) => clue.id).join("|");
+  return whoAmISemanticSetKey(sequence);
 }
 
 function asSubject(candidate: WhoAmICandidate): WhoAmISubject {
@@ -56,6 +63,23 @@ function assertSequence(candidate: WhoAmICandidate, sequence: readonly WhoAmIClu
   expect(sequence.every((clue) => candidate.clues.includes(clue))).toBe(true);
   expect(new Set(sequence.map((clue) => clue.conceptId ?? clue.id)).size).toBe(sequence.length);
   expect(new Set(sequence.map((clue) => normalize(clue.text))).size).toBe(sequence.length);
+
+  for (const clue of sequence) {
+    expect(
+      whoAmIClueEditorialIssues(clue),
+      `${candidate.id} selected a hard editorial failure: ${clue.text}`,
+    ).toEqual([]);
+  }
+  if (whoAmISemanticIndependentCapacity(candidate.clues, WHO_AM_I_CLUE_LIMIT) >= WHO_AM_I_CLUE_LIMIT) {
+    for (let left = 0; left < sequence.length; left += 1) {
+      for (let right = left + 1; right < sequence.length; right += 1) {
+        expect(
+          whoAmICluesShareInformation(sequence[left]!, sequence[right]!),
+          `${candidate.id} repeats the same semantic information despite having enough independent clue lanes: "${sequence[left]!.text}" / "${sequence[right]!.text}"`,
+        ).toBe(false);
+      }
+    }
+  }
 
   for (let index = 1; index < sequence.length; index += 1) {
     expect(BAND_RANK[sequence[index]!.band]).toBeGreaterThanOrEqual(BAND_RANK[sequence[index - 1]!.band]);
@@ -84,6 +108,7 @@ describe("Who Am I mature whole-game simulation", () => {
         const sequences = Array.from({ length: 16 }, (_value, index) => (
           whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
         ));
+        const replayTargets = whoAmIQualityCompatibleReplayTargets(candidate.clues, sequences);
 
         for (const sequence of sequences) {
           assertSequence(candidate, sequence);
@@ -220,6 +245,7 @@ describe("Who Am I mature whole-game simulation", () => {
           name: candidate.name,
           candidateClues: candidate.clues.length,
           distinctSequences,
+          requiredReplayBoards: replayTargets.boards,
           minDistinctFacets: Math.min(...distinctFacetCounts),
           minIdentityClues: Math.min(...identityCounts),
           minSportsIdentityClues: Math.min(...sportsIdentityCounts),
@@ -260,7 +286,7 @@ describe("Who Am I mature whole-game simulation", () => {
       const underFourFacets = findings.filter((finding) => finding.minDistinctFacets < 4);
       const weakLateFinish = findings.filter((finding) => finding.minLateStrongOrGiveaway < 3);
       const deepReplayGaps = findings.filter((finding) => (
-        finding.candidateClues > 12 && finding.distinctSequences === 1
+        finding.requiredReplayBoards > 1 && finding.distinctSequences === 1
       ));
       const sportsIdentityGaps = findings.filter((finding) => finding.minSportsIdentityClues < 7);
       const biographyHeavyRounds = findings.filter((finding) => finding.maxDeepBiographyClues > 1);
@@ -269,7 +295,7 @@ describe("Who Am I mature whole-game simulation", () => {
       expect(sportsIdentityGaps, `${league} rounds should normally keep at least seven sports-identity clues`).toEqual([]);
       expect(biographyHeavyRounds, `${league} rounds should never be dominated by deep biography`).toEqual([]);
       expect(weakLateFinish, `${league} should finish with at least three strong/giveaway clues in the final four`).toEqual([]);
-      expect(deepReplayGaps, `${league} candidates deeper than the 12-clue floor should vary across replay seeds`).toEqual([]);
+      expect(deepReplayGaps, `${league} candidates with a quality-compatible alternate board should vary across replay seeds`).toEqual([]);
 
       console.info(
         `Who Am I Slice 13 simulation ${league}`,

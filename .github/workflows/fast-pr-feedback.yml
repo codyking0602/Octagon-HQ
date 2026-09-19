@@ -57,10 +57,54 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --silent --no-audit --no-fund
 
-      - name: Typecheck
+      - name: Classify draft scope
+        id: scope
+        run: |
+          mapfile -t changed_files < <(git diff --name-only "$BASE_SHA" "$SOURCE_SHA")
+          printf 'Changed files:\n'
+          printf '  %s\n' "${changed_files[@]}"
+
+          whoami_only=true
+          saw_whoami=false
+          for file in "${changed_files[@]}"; do
+            case "$file" in
+              src/features/games/whoAmI*.ts|src/features/games/footballWhoAmI*.ts|src/features/games/ufcWhoAmI*.ts|src/features/back-room/footballPersonIdentity*.ts|src/features/back-room/ufcPersonIdentity*.ts)
+                saw_whoami=true
+                ;;
+              package.json|.github/workflows/fast-pr-feedback.yml|.github/workflows/validate.yml)
+                ;;
+              *)
+                whoami_only=false
+                break
+                ;;
+            esac
+          done
+
+          if [ "$saw_whoami" != true ]; then
+            whoami_only=false
+          fi
+
+          echo "whoami_only=$whoami_only" >> "$GITHUB_OUTPUT"
+
+      - name: Standard typecheck
+        if: steps.scope.outputs.whoami_only != 'true'
         run: npm run typecheck
 
+      - name: Generate Who Am I source artifacts
+        if: steps.scope.outputs.whoami_only == 'true'
+        run: |
+          npm run generate:football-recognizability
+          npm run generate:football-cfb-player-seasons
+          npm run generate:football-factual-universe
+
+      - name: Run fast Who Am I semantic gate
+        if: steps.scope.outputs.whoami_only == 'true'
+        env:
+          WHO_AM_I_AUDIT_SUBJECTS: all
+        run: npm run test:whoami:fast
+
       - name: Run tests affected by this PR
+        if: steps.scope.outputs.whoami_only != 'true'
         run: npm test -- --changed="$BASE_SHA" --passWithNoTests
 
       - name: Summarize fast feedback
@@ -69,7 +113,8 @@ jobs:
           {
             echo "### Fast draft feedback passed"
             echo "- Exact draft head: \`$SOURCE_SHA\`"
-            echo "- Typecheck passed"
-            echo "- Tests affected by changes since \`$BASE_SHA\` passed"
-            echo "- Full validation still runs when the PR is marked ready"
+            echo "- Draft scope: Who Am I-only = \`${{ steps.scope.outputs.whoami_only }}\`"
+            echo "- Draft validation stayed on the lightweight path"
+            echo "- Fast semantic gate or affected tests passed"
+            echo "- Full validation still runs once the PR is marked ready"
           } >> "$GITHUB_STEP_SUMMARY"

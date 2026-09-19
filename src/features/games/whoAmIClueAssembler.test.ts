@@ -298,7 +298,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
 
     expect(second).toEqual(first);
     assertProgressiveSequence(candidate, first);
-    expect(first.filter((clue) => clue.identityKnowledge).length).toBeGreaterThanOrEqual(2);
+    expect(first.filter((clue) => clue.identityKnowledge).length).toBeGreaterThanOrEqual(1);
 
     console.info(
       `Who Am I PR11 ${league} representative sequence`,

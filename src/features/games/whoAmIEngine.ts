@@ -31,6 +31,12 @@ export interface WhoAmIClue {
   text: string;
   band: WhoAmIClueBand;
   conceptId?: string;
+  /**
+   * Stable semantic claims represented by this clue. Different source layers may
+   * use different clue/concept IDs while still expressing the same information.
+   * The assembler treats overlapping information keys as mutually exclusive.
+   */
+  informationKeys?: readonly string[];
   facet?: WhoAmIClueFacet;
   revealPriority?: number;
   identityKnowledge?: boolean;

@@ -4,6 +4,10 @@ import {
   whoAmIClueSelectionClass,
 } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet } from "./whoAmIEngine";
+import {
+  whoAmIClueHasHardEditorialFailure,
+  whoAmICluesShareInformation,
+} from "./whoAmISemanticQuality";
 
 const REVEAL_SHORTLIST_EXTRA = 4;
 
@@ -93,6 +97,95 @@ function eligibleRevealPool(clues: readonly WhoAmIClue[], limit: number) {
   return withoutGenericCareerGames.length >= limit ? withoutGenericCareerGames : clues;
 }
 
+type ReplaySwapOption = {
+  current: WhoAmIClue;
+  candidate: WhoAmIClue;
+  selectedIndex: number;
+};
+
+function qualityCompatibleReplayOptions(
+  planned: readonly WhoAmIClue[],
+  eligibleClues: readonly WhoAmIClue[],
+): ReplaySwapOption[] {
+  return planned.flatMap((current, selectedIndex): ReplaySwapOption[] => {
+    if (current.band !== "helpful" && current.band !== "strong") return [];
+    const currentClass = whoAmIClueSelectionClass(current);
+    const otherSelected = planned.filter((_clue, index) => index !== selectedIndex);
+
+    return eligibleClues
+      .filter((candidate) => !planned.includes(candidate))
+      .filter((candidate) => candidate.band === current.band)
+      .filter((candidate) => whoAmIClueSelectionClass(candidate) === currentClass)
+      .filter((candidate) => !isGenericCareerGames(candidate))
+      .filter((candidate) => !whoAmIClueHasHardEditorialFailure(candidate))
+      .filter((candidate) => Math.abs(recognitionStrength(candidate) - recognitionStrength(current)) <= 20)
+      .filter((candidate) => !whoAmICluesShareInformation(current, candidate))
+      .filter((candidate) => !otherSelected.some((other) => (
+        (other.conceptId ?? other.id) === (candidate.conceptId ?? candidate.id)
+        || whoAmICluesShareInformation(other, candidate)
+      )))
+      .filter((candidate) => {
+        const prospective = [...planned];
+        prospective[selectedIndex] = candidate;
+        const prospectiveClasses = prospective.map(whoAmIClueSelectionClass);
+        const prospectiveFacets = prospective.map(whoAmIClueFacet);
+        return (
+          prospectiveClasses.filter((selectionClass) => selectionClass === "sports-identity").length >= 7
+          && prospectiveClasses.filter((selectionClass) => selectionClass === "deep-biography").length <= 1
+          && new Set(prospectiveFacets).size >= 4
+          && prospectiveFacets.filter((facet) => facet === "relationships").length <= 1
+          && prospectiveFacets.filter((facet) => facet === "production").length <= 2
+        );
+      })
+      .map((candidate) => ({ current, candidate, selectedIndex }));
+  });
+}
+
+function boardReachedReplayPlanning(planned: readonly WhoAmIClue[]) {
+  if (planned.length !== 10) return false;
+  if (!planned.slice(0, 2).every((clue) => clue.band === "broad")) return false;
+  if (!planned.slice(2, 4).every((clue) => clue.band === "helpful")) return false;
+  if (!planned.slice(4).every((clue) => clue.band === "strong" || clue.band === "giveaway")) return false;
+  if (planned.slice(4).filter((clue) => clue.band === "strong").length < 4) return false;
+  if (planned.some((clue) => whoAmIClueHasHardEditorialFailure(clue))) return false;
+
+  const selectionClasses = planned.map(whoAmIClueSelectionClass);
+  const facets = planned.map(whoAmIClueFacet);
+  if (
+    selectionClasses.filter((selectionClass) => selectionClass === "sports-identity").length < 7
+    || selectionClasses.filter((selectionClass) => selectionClass === "deep-biography").length > 1
+    || new Set(facets).size < 4
+    || facets.filter((facet) => facet === "relationships").length > 1
+    || facets.filter((facet) => facet === "production").length > 2
+  ) {
+    return false;
+  }
+
+  return !planned.some((left, leftIndex) => (
+    planned.some((right, rightIndex) => (
+      rightIndex > leftIndex && whoAmICluesShareInformation(left, right)
+    ))
+  ));
+}
+
+export function whoAmIQualityCompatibleReplayTargets(
+  clues: readonly WhoAmIClue[],
+  boards: readonly (readonly WhoAmIClue[])[],
+) {
+  const boardSize = boards[0]?.length ?? 0;
+  const eligibleClues = eligibleRevealPool(clues, boardSize);
+  const hasReplayDepth = boards.some((planned) => (
+    boardReachedReplayPlanning(planned)
+    && qualityCompatibleReplayOptions(planned, eligibleClues).length > 0
+  ));
+
+  return {
+    surfaced: boardSize + (hasReplayDepth ? 1 : 0),
+    rotated: hasReplayDepth ? 1 : 0,
+    boards: hasReplayDepth ? 2 : 1,
+  };
+}
+
 export function assembleWhoAmIRevealClues(
   clues: readonly WhoAmIClue[],
   limit: number,
@@ -157,6 +250,15 @@ export function assembleWhoAmIRevealClues(
   const orderedStrong = [...coreStrong].sort(revealOrder).map((entry) => entry.value);
   const orderedFinal = [...final].sort(revealOrder).map((entry) => entry.value);
   const planned = [...broad, ...helpful, ...orderedStrong, ...orderedFinal];
+  const repeatsSemanticInformation = planned.some((left, leftIndex) => (
+    planned.some((right, rightIndex) => (
+      rightIndex > leftIndex && whoAmICluesShareInformation(left, right)
+    ))
+  ));
+  if (repeatsSemanticInformation) {
+    return assembleWhoAmIClues(eligibleClues, limit, random);
+  }
+
   const selectionClasses = planned.map(whoAmIClueSelectionClass);
   const facets = planned.map(whoAmIClueFacet);
 
@@ -167,6 +269,30 @@ export function assembleWhoAmIRevealClues(
     || facets.filter((facet) => facet === "relationships").length > 1
   ) {
     return assembleWhoAmIClues(eligibleClues, limit, random);
+  }
+
+  // Replay must rotate information, not merely reorder the same ten clues.
+  // Use the same quality-compatible option set that validation inspects.
+  const replayOptions = qualityCompatibleReplayOptions(planned, eligibleClues).map((option) => ({
+    ...option,
+    candidateVariationRank: random(),
+    currentVariationRank: random(),
+  }));
+
+  if (replayOptions.length) {
+    replayOptions.sort((left, right) => (
+      (left.candidateVariationRank - left.currentVariationRank)
+        - (right.candidateVariationRank - right.currentVariationRank)
+      || Math.abs(recognitionStrength(left.candidate) - recognitionStrength(left.current))
+        - Math.abs(recognitionStrength(right.candidate) - recognitionStrength(right.current))
+      || left.selectedIndex - right.selectedIndex
+    ));
+    const swap = replayOptions[0]!;
+    if (swap.candidateVariationRank < swap.currentVariationRank) {
+      const varied = [...planned];
+      varied[swap.selectedIndex] = swap.candidate;
+      return varied;
+    }
   }
 
   return planned;
