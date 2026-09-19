@@ -42,11 +42,14 @@ export type FamilyFeudPhase = "main" | "fast-money" | "complete";
 
 export interface FamilyFeudMainBoardState {
   revealedEntityIds: string[];
+  submittedEntityIds: string[];
+  submittedUnrecognized: string[];
   strikes: number;
 }
 
 export interface FamilyFeudFastMoneyResult {
   questionId: string;
+  submittedText: string;
   entityId: string | null;
   points: number;
   matchKind: FamilyFeudMatchKind | "unrecognized";
@@ -80,7 +83,7 @@ export type FamilyFeudOutcome =
     }
   | { type: "board-strike"; boardIndex: number; strikes: number }
   | { type: "ambiguous"; boardIndex: number | null }
-  | { type: "already-guessed"; boardIndex: number; entityId: string }
+  | { type: "already-guessed"; boardIndex: number; entityId: string | null }
   | {
       type: "fast-money-answer";
       questionIndex: number;
@@ -296,6 +299,8 @@ export function createFamilyFeudState(): FamilyFeudState {
     mainBoardIndex: 0,
     mainBoards: Array.from({ length: FAMILY_FEUD_MAIN_BOARD_COUNT }, () => ({
       revealedEntityIds: [],
+      submittedEntityIds: [],
+      submittedUnrecognized: [],
       strikes: 0,
     })),
     fastMoneyIndex: 0,
@@ -309,6 +314,8 @@ function cloneState(state: FamilyFeudState): FamilyFeudState {
     ...state,
     mainBoards: state.mainBoards.map((board) => ({
       revealedEntityIds: [...board.revealedEntityIds],
+      submittedEntityIds: [...board.submittedEntityIds],
+      submittedUnrecognized: [...board.submittedUnrecognized],
       strikes: board.strikes,
     })),
     fastMoneyResults: state.fastMoneyResults.map((result) => ({ ...result })),
@@ -391,12 +398,23 @@ export function submitFamilyFeudMainAnswer(
     return { state, outcome: { type: "ambiguous", boardIndex } };
   }
 
-  if (match.status === "matched" && board.revealedEntityIds.includes(match.entityId)) {
+  if (match.status === "matched" && board.submittedEntityIds.includes(match.entityId)) {
     return {
       state,
       outcome: { type: "already-guessed", boardIndex, entityId: match.entityId },
     };
   }
+  if (match.status === "unrecognized") {
+    const normalized = normalizeFamilyFeudInput(input);
+    if (board.submittedUnrecognized.includes(normalized)) {
+      return {
+        state,
+        outcome: { type: "already-guessed", boardIndex, entityId: null },
+      };
+    }
+    board.submittedUnrecognized.push(normalized);
+  }
+  if (match.status === "matched") board.submittedEntityIds.push(match.entityId);
 
   const slotIndex = match.status === "matched"
     ? question.answers.findIndex((answer) => answer.entityId === match.entityId)
@@ -480,6 +498,7 @@ export function submitFamilyFeudFastMoneyAnswer(
 
   state.fastMoneyResults.push({
     questionId: question.id,
+    submittedText: input.trim(),
     entityId,
     points,
     matchKind,
