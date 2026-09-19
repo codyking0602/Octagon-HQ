@@ -213,13 +213,41 @@ export function OfficialMillionaireDailyView({
   const hostNumber = Math.min(3, Math.max(1, Math.trunc(Number(setup.host_number ?? 1))));
   const stageBackground = MILLIONAIRE_HOSTS[league][hostNumber - 1] ?? MILLIONAIRE_HOSTS[league][0];
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
-  const q8 = currentIndex === 7;
+  const displayIndex = answerFeedback?.currentIndex ?? currentIndex;
+  const displayCompletedQuestions = answerFeedback?.completedQuestions ?? completedQuestions;
+  const displayQuestion = answerFeedback?.question ?? question;
+  const displayChoices = answerFeedback?.choices ?? choices;
+  const displayLevel = answerFeedback?.level ?? level;
+  const displayRemovedChoices = answerFeedback?.removedChoices ?? removedChoices;
+  const displayDoubleDipMisses = answerFeedback?.doubleDipMisses ?? doubleDipMisses;
+  const q8 = displayIndex === 7;
   const currentMoney = Number(state.current_money ?? 0);
-  const result = projection.officialAttempt ? officialResult(projection) : null;
+  const result = projection.officialAttempt && !answerFeedback ? officialResult(projection) : null;
+  const visualPhase = answerFeedback?.phase ?? "answering";
 
   const advance = (action: JsonRecord) => {
     if (busy || projection.officialAttempt) return;
     onAdvance({ ...action, time_remaining_ms: Math.max(0, Math.floor(timeRemainingMs)) });
+  };
+
+  const answer = (choiceId: MillionaireChoiceId) => {
+    if (busy || projection.officialAttempt || answerFeedback || walkPromptOpen) return;
+    setAnswerFeedback({
+      phase: "locked",
+      selectedChoiceId: choiceId,
+      correctChoiceId: null,
+      answerOutcome: null,
+      question,
+      choices,
+      currentIndex,
+      completedQuestions,
+      level,
+      removedChoices: [...removedChoices],
+      doubleDipMisses: [...doubleDipMisses],
+      startedRevision: projection.progressRevision,
+      lockedAt: performance.now(),
+    });
+    advance({ type: "answer", choice_id: choiceId });
   };
 
   if (rulesOpen) {
@@ -273,15 +301,15 @@ export function OfficialMillionaireDailyView({
   }
 
   return createPortal(
-    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--answering`}>
+    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${displayLevel.toLowerCase()} millionaire-shell--${visualPhase}`}>
       <div className="millionaire-stage-canvas" style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}>
         <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
         <header className="millionaire-title">
           <span>{millionaireLeagueLabel(league)} DAILY</span><strong>MILLIONAIRE</strong>
         </header>
-        <section className="millionaire-stakes" aria-label={`Question ${currentIndex + 1} value`}>
-          <strong>{millionaireMoneyLabel(Number(question.money ?? MILLIONAIRE_MONEY_BY_LEVEL[level]))}</strong>
-          <span>{MILLIONAIRE_BASE_PTS[level]} PTS</span>
+        <section className="millionaire-stakes" aria-label={`Question ${displayIndex + 1} value`}>
+          <strong>{millionaireMoneyLabel(Number(displayQuestion.money ?? MILLIONAIRE_MONEY_BY_LEVEL[displayLevel]))}</strong>
+          <span>{MILLIONAIRE_BASE_PTS[displayLevel]} PTS</span>
         </section>
         <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}>
           <div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div>
@@ -291,19 +319,19 @@ export function OfficialMillionaireDailyView({
           <button
             type="button"
             className={lifelinesUsed.fifty_fifty === true ? "is-spent" : ""}
-            disabled={busy || q8 || lifelinesUsed.fifty_fifty === true || questionState.double_dip_active === true || walkPromptOpen}
+            disabled={Boolean(answerFeedback) || busy || q8 || lifelinesUsed.fifty_fifty === true || questionState.double_dip_active === true || walkPromptOpen}
             onClick={() => advance({ type: "use_lifeline", lifeline: "fifty-fifty" })}
           ><b>50:50</b><span>50:50</span></button>
           <button
             type="button"
             className={lifelinesUsed.stat_sheet === true ? "is-spent" : ""}
-            disabled={busy || q8 || lifelinesUsed.stat_sheet === true || walkPromptOpen}
+            disabled={Boolean(answerFeedback) || busy || q8 || lifelinesUsed.stat_sheet === true || walkPromptOpen}
             onClick={() => advance({ type: "use_lifeline", lifeline: "stat-sheet" })}
           ><b>▥</b><span>STAT SHEET</span></button>
           <button
             type="button"
             className={`${lifelinesUsed.double_dip === true ? "is-spent" : ""}${questionState.double_dip_active === true ? " is-active" : ""}`}
-            disabled={busy || q8 || lifelinesUsed.double_dip === true || questionState.fifty_fifty_applied === true || walkPromptOpen}
+            disabled={Boolean(answerFeedback) || busy || q8 || lifelinesUsed.double_dip === true || questionState.fifty_fifty_applied === true || walkPromptOpen}
             onClick={() => advance({ type: "use_lifeline", lifeline: "double-dip" })}
           ><b>↝</b><span>{questionState.double_dip_active === true ? "2 PICKS" : "DOUBLE DIP"}</span></button>
         </aside>
@@ -312,8 +340,8 @@ export function OfficialMillionaireDailyView({
           {MILLIONAIRE_LEVELS.slice().reverse().map((ladderLevel, reverseIndex) => {
             const index = 7 - reverseIndex;
             const checkpoint = ladderLevel === "Q3" || ladderLevel === "Q6";
-            const current = !result && index === currentIndex;
-            const complete = index < completedQuestions;
+            const current = !result && index === displayIndex;
+            const complete = index < displayCompletedQuestions;
             return (
               <div key={ladderLevel} className={`${current ? "is-current" : ""}${complete ? " is-complete" : ""}${checkpoint ? " is-checkpoint" : ""}`}>
                 <b>{index + 1}</b>
@@ -362,19 +390,32 @@ export function OfficialMillionaireDailyView({
           </section>
         ) : (
           <>
-            <section className="millionaire-question" aria-live="polite"><strong>{String(question.prompt ?? "")}</strong></section>
+            <section className={`millionaire-question${answerFeedback?.phase === "locked" ? " is-locked" : ""}`} aria-live="polite"><strong>{String(displayQuestion.prompt ?? "")}</strong></section>
             <div className="millionaire-answers" aria-label="Answer choices">
-              {choices.map((choice) => {
+              {displayChoices.map((choice) => {
                 const id = String(choice.id ?? "") as MillionaireChoiceId;
-                const removed = removedChoices.includes(id);
-                const spent = doubleDipMisses.includes(id);
+                const removed = displayRemovedChoices.includes(id);
+                const spent = displayDoubleDipMisses.includes(id);
+                const selected = answerFeedback?.selectedChoiceId === id;
+                const correct = answerFeedback?.phase === "revealed" && answerFeedback.correctChoiceId === id;
+                const wrong = answerFeedback?.phase === "revealed"
+                  && selected
+                  && answerFeedback.answerOutcome !== "correct"
+                  && id !== answerFeedback.correctChoiceId;
+                const className = [
+                  removed ? "is-removed" : "",
+                  spent ? "is-double-dip-spent" : "",
+                  selected && answerFeedback?.phase === "locked" ? "is-selected" : "",
+                  correct ? "is-correct" : "",
+                  wrong ? "is-wrong" : "",
+                ].filter(Boolean).join(" ");
                 return (
                   <button
                     key={id}
                     type="button"
-                    className={`${removed ? "is-removed" : ""}${spent ? " is-double-dip-spent" : ""}`}
-                    disabled={busy || walkPromptOpen || removed || spent}
-                    onClick={() => advance({ type: "answer", choice_id: id })}
+                    className={className}
+                    disabled={Boolean(answerFeedback) || busy || walkPromptOpen || removed || spent}
+                    onClick={() => answer(id)}
                   >
                     <b>{id}</b><span>{String(choice.text ?? "")}</span>
                   </button>
