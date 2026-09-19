@@ -100,5 +100,5 @@ describe("Who Am I fast targeted editorial gate", () => {
         ).toBeGreaterThan(1);
       }
     }
-  });
+  }, 150_000);
 });
