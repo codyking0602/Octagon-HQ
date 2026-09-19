@@ -43,7 +43,7 @@ function balanceRun(run: MillionaireRun, runIndex: number): MillionaireRun {
     const choices = MILLIONAIRE_CHOICE_IDS.map((id, index) => ({
       id,
       text: index === slot ? answer.text : others[otherIndex++]!.text,
-    })) as MillionaireRuntimeQuestion["choices"];
+    })) as unknown as MillionaireRuntimeQuestion["choices"];
     const correctChoiceId = MILLIONAIRE_CHOICE_IDS[slot]!;
     const second = MILLIONAIRE_CHOICE_IDS[(slot + 1) % 4]!;
     const survivorChoiceIds = [correctChoiceId, second] as [MillionaireChoiceId, MillionaireChoiceId];
