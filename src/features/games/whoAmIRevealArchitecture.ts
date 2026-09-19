@@ -323,27 +323,33 @@ function preferredBandRank(position: number, band: WhoAmIClueBand) {
   return preferred.indexOf(band);
 }
 
-function scheduleRevealArchitecture(clues: readonly WhoAmIClue[], league?: WhoAmILeague) {
-  if (clues.length !== 10) return null;
-  if (clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length > 1) {
+function scheduleRevealArchitecture(
+  clues: readonly WhoAmIClue[],
+  league?: WhoAmILeague,
+  targetLength = clues.length,
+) {
+  if (targetLength !== 10 || clues.length < targetLength) return null;
+  if (
+    clues.length === targetLength
+    && clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length > 1
+  ) {
     return null;
   }
 
-  const preserveStrongFinalTwo = clues.slice(-2).every((clue) => (
+  const strongAvailable = clues.filter((clue) => (
     clue.band === "strong" || clue.band === "giveaway"
-  ));
-  const preserveStrongFinalFour = clues.slice(-4).filter((clue) => (
-    clue.band === "strong" || clue.band === "giveaway"
-  )).length >= 3;
+  )).length;
+  const preserveStrongFinalTwo = strongAvailable >= 2;
+  const preserveStrongFinalFour = strongAvailable >= 3;
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
   let explored = 0;
-  const MAX_NODES = 30_000;
+  const MAX_NODES = clues.length > targetLength ? 150_000 : 60_000;
 
   const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
     explored += 1;
     if (explored > MAX_NODES) return null;
-    if (position > clues.length) {
+    if (position > targetLength) {
       const ordered = chosen.map((entry) => entry.clue);
       if (
         preserveStrongFinalFour
@@ -357,6 +363,10 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[], league?: WhoAm
     const candidates = remaining
       .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
       .filter(({ clue }) => coordinateBudgetAllows(chosen.map((entry) => entry.clue), clue, position, league))
+      .filter(({ clue }) => (
+        whoAmIRevealProfile(clue).category !== "personal-biography"
+        || chosen.every((entry) => whoAmIRevealProfile(entry.clue).category !== "personal-biography")
+      ))
       .filter(({ clue }) => (
         !preserveStrongFinalTwo
         || position < 9
@@ -396,6 +406,13 @@ export function whoAmIRevealArchitectureCanOrder(
   league?: WhoAmILeague,
 ) {
   return whoAmIRevealArchitectureSatisfied(clues, league) || scheduleRevealArchitecture(clues, league) !== null;
+}
+
+export function selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(
+  clues: readonly WhoAmIClue[],
+  league?: WhoAmILeague,
+) {
+  return scheduleRevealArchitecture(clues, league, 10);
 }
 
 /**
