@@ -506,7 +506,14 @@ export function refineCfbWhoAmIContent(
     ...clues,
     ...(CFB_PR3_SUPPLEMENTAL.get(subject.id) ?? []),
   ];
-  const withOrientation = ensureOrientationClues(subject, withSupplemental);
+  const subjectAdjusted = subject.id === "cfb-ernie-davis"
+    ? withSupplemental.map((clue) => (
+      clue.text.includes("while wearing the program's famous No. 44")
+        ? { ...clue, text: clue.text.replace(" while wearing the program's famous No. 44", "") }
+        : clue
+    ))
+    : withSupplemental;
+  const withOrientation = ensureOrientationClues(subject, subjectAdjusted);
   const withConference = ensureConferenceFoundation(subject, withOrientation);
   const rebanded = withConference.map(rebandCfbClue);
   const withoutStatSoup = capGenericProduction(rebanded);
