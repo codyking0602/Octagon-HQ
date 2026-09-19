@@ -3180,6 +3180,13 @@ function finalizeCfbPr3Content(clues: readonly WhoAmIClue[]) {
       if (profile.category === "nickname-persona" || profile.category === "jersey-number") {
         return clue.band === "giveaway" ? clue : { ...clue, band: "giveaway" };
       }
+      if (
+        profile.category === "school"
+        && profile.identifyingPower !== "broad"
+        && (clue.band === "broad" || clue.band === "helpful")
+      ) {
+        return { ...clue, band: "strong" };
+      }
       if (clue.band === "broad" && profile.earliestClue > 2) {
         return { ...clue, band: "helpful" };
       }
