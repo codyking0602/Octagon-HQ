@@ -27,7 +27,7 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v2-10-run-rotation" as const;
+export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v3-balanced-answers" as const;
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
 export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
