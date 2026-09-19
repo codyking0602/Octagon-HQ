@@ -86,7 +86,7 @@ function cfbProductionReband(clue: WhoAmIClue) {
 
   // Raw career volume is supporting information, not a near-giveaway merely
   // because the number is large. Preserve genuinely record-setting totals.
-  return atMostBand(clue, "helpful");
+  return atMostBand(clue, "strong");
 }
 
 function cfbAccomplishmentReband(clue: WhoAmIClue) {
@@ -129,6 +129,63 @@ function capPersonalBiography(clues: readonly WhoAmIClue[]) {
   return clues.filter((clue) => !isPersonalBiography(clue) || clue.id === keepId);
 }
 
+function ensureOrientationClues(
+  subject: FootballSubjectProfile,
+  clues: readonly WhoAmIClue[],
+) {
+  const next = [...clues];
+
+  if (subject.kind === "coach") {
+    if (!next.some((clue) => clue.id === "role" || whoAmIClueFacet(clue) === "role")) {
+      next.unshift({
+        id: "pr3:role",
+        conceptId: "pr3:role",
+        text: "I am a college football head coach.",
+        band: "broad",
+        facet: "role",
+        revealPriority: 10,
+      });
+    }
+  } else if (
+    subject.position
+    && !next.some((clue) => clue.id === "position")
+  ) {
+    next.unshift({
+      id: "pr3:position",
+      conceptId: "pr3:position",
+      text: `I played ${subject.position}.`,
+      band: "broad",
+      facet: "role",
+      revealPriority: 10,
+    });
+  }
+
+  if (!next.some((clue) => clue.id === "era" || whoAmIClueFacet(clue) === "era")) {
+    const decades = subject.activeDecades ?? [];
+    if (decades.length === 1) {
+      next.push({
+        id: "pr3:era",
+        conceptId: "pr3:era",
+        text: `My college football career came in the ${decades[0]}s.`,
+        band: "broad",
+        facet: "era",
+        revealPriority: 20,
+      });
+    } else if (decades.length > 1) {
+      next.push({
+        id: "pr3:era",
+        conceptId: "pr3:era",
+        text: `My college football career spanned the ${decades[0]}s and ${decades[decades.length - 1]}s.`,
+        band: "broad",
+        facet: "era",
+        revealPriority: 20,
+      });
+    }
+  }
+
+  return next;
+}
+
 function rebandCfbClue(clue: WhoAmIClue) {
   let next = clue;
   next = cfbOrientationReband(next);
@@ -159,5 +216,5 @@ export function refineCfbWhoAmIContent(
   clues: readonly WhoAmIClue[],
 ): WhoAmIClue[] {
   if (subject.league !== "CFB") return [...clues];
-  return capPersonalBiography(clues.map(rebandCfbClue));
+  return capPersonalBiography(ensureOrientationClues(subject, clues).map(rebandCfbClue));
 }
