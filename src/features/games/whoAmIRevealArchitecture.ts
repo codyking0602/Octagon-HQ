@@ -499,17 +499,26 @@ function scheduleRevealArchitecture(
       return true;
     });
 
+    const slotsRemaining = targetLength - chosen.length;
     const sportsIdentityChosen = chosenClasses.filter((selectionClass) => selectionClass === "sports-identity").length;
     const sportsIdentityAvailable = semanticallyAvailable.filter(({ clue }) => (
       whoAmIClueSelectionClass(clue) === "sports-identity"
     )).length;
-    if (sportsIdentityChosen + sportsIdentityAvailable < 7) return null;
+    const sportsIdentityNeeded = Math.max(0, 7 - sportsIdentityChosen);
+    if (
+      sportsIdentityChosen + sportsIdentityAvailable < 7
+      || sportsIdentityNeeded > slotsRemaining
+    ) return null;
 
+    const chosenFacetSet = new Set(chosenFacets);
     const possibleFacets = new Set([
       ...chosenFacets,
       ...semanticallyAvailable.map(({ clue }) => whoAmIClueFacet(clue)),
     ]);
-    if (possibleFacets.size < 4) return null;
+    if (
+      possibleFacets.size < 4
+      || Math.max(0, 4 - chosenFacetSet.size) > slotsRemaining
+    ) return null;
 
     const exposed = new Set(chosen.flatMap((entry) => entry.clue.revealCoordinates ?? []));
     for (const windowEnd of [4, 6, 8] as const) {
@@ -525,13 +534,16 @@ function scheduleRevealArchitecture(
     }
 
     const lateChosen = chosen.slice(6).map((entry) => entry.clue);
+    const lateSlotsRemaining = Math.max(0, 4 - lateChosen.length);
     const strongLateNeeded = Math.max(
       0,
       3 - lateChosen.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length,
     );
     const anchorLateNeeded = Math.max(0, 2 - lateChosen.filter(isStrongLateAnchor).length);
     if (
-      semanticallyAvailable.filter(({ clue }) => clue.band === "strong" || clue.band === "giveaway").length < strongLateNeeded
+      strongLateNeeded > lateSlotsRemaining
+      || anchorLateNeeded > lateSlotsRemaining
+      || semanticallyAvailable.filter(({ clue }) => clue.band === "strong" || clue.band === "giveaway").length < strongLateNeeded
       || semanticallyAvailable.filter(({ clue }) => isStrongLateAnchor(clue)).length < anchorLateNeeded
     ) {
       return null;
@@ -562,6 +574,17 @@ function scheduleRevealArchitecture(
       .filter(({ clue }) => (
         !isFootballPool
         || position < targetLength
+        || isStrongLateAnchor(clue)
+      ))
+      .filter(({ clue }) => (
+        position < 7
+        || strongLateNeeded < lateSlotsRemaining
+        || clue.band === "strong"
+        || clue.band === "giveaway"
+      ))
+      .filter(({ clue }) => (
+        position < 7
+        || anchorLateNeeded < lateSlotsRemaining
         || isStrongLateAnchor(clue)
       ))
       .sort((left, right) => {
