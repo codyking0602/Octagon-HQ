@@ -395,7 +395,15 @@ function scheduleRevealArchitecture(
       return null;
     }
 
-    const stateKey = `${position}:${remaining.map((entry) => entry.originalIndex).sort((a, b) => a - b).join(",")}`;
+    const lateStrongCount = lateChosen.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length;
+    const lateAnchorCount = lateChosen.filter(isStrongLateAnchor).length;
+    const stateKey = [
+      position,
+      lateStrongCount,
+      lateAnchorCount,
+      [...exposed].sort().join("+"),
+      remaining.map((entry) => entry.originalIndex).sort((a, b) => a - b).join(","),
+    ].join(":");
     if (deadStates.has(stateKey)) return null;
 
     const candidates = semanticallyAvailable
