@@ -218,7 +218,7 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
   // Authored semantic tags are the highest-authority contract. Do not feed them
   // back through a bag-of-words classifier: a production tag stays production,
   // while a deliberate award/record tag can identify a separate accomplishment.
-  if (hasTag("nickname", "moniker", "persona", "alter-ego", "media-identity")) return "nickname";
+  if (hasTag("nickname", "moniker", "persona", "alter-ego")) return "nickname";
   if (hasTag("award", "awards", "championship", "championships", "title", "titles", "record", "records", "hall-of-fame", "heisman", "all-american", "all-pro", "milestone", "iconic-moment")) {
     return "accomplishments";
   }
@@ -226,10 +226,10 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
     return "career-path";
   }
   if (hasTag("production", "stat", "stats", "statistics")) return "production";
-  if (hasTag("relationship", "relationships", "family", "teammate", "teammates", "mentor")) return "relationships";
+  if (hasTag("relationship", "relationships", "teammate", "teammates", "mentor")) return "relationships";
   if (hasTag("style", "technique", "training", "boxing", "kickboxing", "wrestling", "grappling", "striking")) return "style";
-  if (hasTag("off-field", "work", "business", "media", "military", "community", "faith")) return "off-field";
-  if (hasTag("background", "childhood", "hometown", "high-school", "college", "junior-college", "recruiting", "education")) return "background";
+  if (hasTag("off-field")) return "off-field";
+  if (hasTag("background")) return "background";
 
   const haystack = conceptId.toLowerCase();
 
