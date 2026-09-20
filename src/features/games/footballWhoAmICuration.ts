@@ -3624,6 +3624,12 @@ const cfbBatch2SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch2Clue("miller-unanimous-aa", "I was a unanimous All-American at Virginia in 2004.", "strong", "accomplishments", 16),
     cfbBatch2Clue("miller-acc-td-record", "I finished my Virginia career with 20 touchdown catches, then the ACC record for a tight end.", "helpful", "accomplishments", 19),
   ]],
+  ["cfb-chase-coffman", [
+    cfbBatch2Clue("coffman-hurdle-style", "I became known for hurdling defenders when they dove at my legs, a move that became a signature part of my game.", "strong", "style", 17),
+  ]],
+  ["cfb-keith-jackson", [
+    cfbBatch2Clue("jackson-two-consensus-aa", "I was a consensus All-American at Oklahoma in both 1986 and 1987.", "strong", "accomplishments", 15),
+  ]],
   ["cfb-hunter-henry", [
     cfbBatch2Clue("henry-fourth-25", "On fourth-and-25 in overtime at Ole Miss in 2015, I threw the blind backward lateral that kept Arkansas' winning drive alive.", "giveaway", "accomplishments", 8),
     cfbBatch2Clue("henry-mackey", "I won the 2015 John Mackey Award as the nation's top tight end.", "giveaway", "accomplishments", 7),
@@ -4661,6 +4667,9 @@ function cfbBatch4Clue(
 }
 
 const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-eric-weddle", [
+    cfbBatch4Clue("weddle-two-mwc-dpoy", "I was the Mountain West Defensive Player of the Year in both 2005 and 2006.", "strong", "accomplishments", 14),
+  ]],
   ["cfb-eric-berry", [
     cfbBatch4Clue("berry-thorpe-2009", "I won the 2009 Jim Thorpe Award as the nation's top defensive back.", "giveaway", "accomplishments", 8),
     cfbBatch4Clue("berry-sec-dpoy-2008", "I was the SEC Defensive Player of the Year in 2008.", "strong", "accomplishments", 14),
