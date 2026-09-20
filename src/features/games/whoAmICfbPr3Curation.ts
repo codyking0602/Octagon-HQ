@@ -61,6 +61,9 @@ function pr3Clue(
 }
 
 const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-eric-weddle", [
+    pr3Clue("weddle-two-mwc-dpoy", "I was the Mountain West Defensive Player of the Year in both 2005 and 2006.", "strong", "accomplishments", 14),
+  ]],
   ["cfb-joe-burrow", [
     pr3Clue("burrow-2019-sec-title", "I led LSU to the 2019 SEC championship before the Tigers completed a 15-0 national-title season.", "strong", "accomplishments", 14),
     pr3Clue("burrow-peach-bowl", "I threw seven touchdown passes in the first half of LSU's 2019 Peach Bowl semifinal win over Oklahoma.", "strong", "accomplishments", 15),
