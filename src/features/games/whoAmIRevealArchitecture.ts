@@ -331,6 +331,7 @@ function scheduleRevealArchitecture(
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
   const deadStates = new Set<string>();
+  const isFootballPool = clues.some((clue) => clue.revealCoordinates !== undefined);
   const requireSemanticIndependence = whoAmISemanticIndependentCapacity(clues, targetLength) >= targetLength;
   let explored = 0;
   const MAX_NODES = 1_000_000;
@@ -348,6 +349,9 @@ function scheduleRevealArchitecture(
         return null;
       }
       if (ordered.slice(-4).filter(isStrongLateAnchor).length < 2) {
+        return null;
+      }
+      if (isFootballPool && !isStrongLateAnchor(ordered.at(-1)!)) {
         return null;
       }
       return ordered;
@@ -416,6 +420,11 @@ function scheduleRevealArchitecture(
         position < 9
         || clue.band === "strong"
         || clue.band === "giveaway"
+      ))
+      .filter(({ clue }) => (
+        !isFootballPool
+        || position < targetLength
+        || isStrongLateAnchor(clue)
       ))
       .sort((left, right) => {
         const leftProfile = whoAmIRevealProfile(left.clue);
