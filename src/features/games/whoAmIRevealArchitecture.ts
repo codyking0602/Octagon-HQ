@@ -325,6 +325,8 @@ function scheduleRevealArchitecture(
   targetLength = 10,
 ) {
   if (targetLength !== 10 || clues.length < targetLength) return null;
+  if (clues.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3) return null;
+  if (clues.filter(isStrongLateAnchor).length < 2) return null;
 
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
