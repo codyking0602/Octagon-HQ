@@ -12,7 +12,6 @@ import {
 import {
   isStrongLateAnchor,
   orderWhoAmICluesByRevealArchitectureIfPossible,
-  selectWhoAmICluesByRevealArchitectureIfPossible,
   whoAmIRevealArchitectureSatisfied,
   whoAmIRevealProfile,
 } from "./whoAmIRevealArchitecture";
@@ -214,11 +213,22 @@ function orderRevealBoardWithCoordinateRescue(
     if (whoAmIRevealArchitectureSatisfied(swapped)) return swapped;
   }
 
-  const expandedRescue = selectWhoAmICluesByRevealArchitectureIfPossible(
-    coordinateRescuePool(eligibleClues, limit, random),
-    limit,
-  );
-  return expandedRescue ?? ordered;
+  const rescuePool = coordinateRescuePool(eligibleClues, limit, random);
+
+  // Rescue must preserve the assembler's canonical semantic-selection contract.
+  // Re-select through the assembler, then let reveal architecture order that
+  // quality-safe set. The reveal scheduler must not pick directly from the raw
+  // rescue pool, because doing so can bypass facet caps and semantic uniqueness.
+  for (const pool of [rescuePool, eligibleClues]) {
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      const rescueSelection = assembleWhoAmIClues(pool, limit, random);
+      if (rescueSelection.length !== limit) continue;
+      const rescued = orderWhoAmICluesByRevealArchitectureIfPossible(rescueSelection);
+      if (whoAmIRevealArchitectureSatisfied(rescued)) return rescued;
+    }
+  }
+
+  return ordered;
 }
 
 type ReplaySwapOption = {
