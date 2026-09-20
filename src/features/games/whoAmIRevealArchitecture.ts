@@ -393,10 +393,16 @@ export function whoAmIRevealArchitectureSatisfied(clues: readonly WhoAmIClue[]) 
     && late.filter(isStrongLateAnchor).length >= 2
   );
 
+  const footballCompositionSatisfied = !isFootballBoard || (
+    clues.filter((clue) => whoAmIClueFacet(clue) === "production").length <= 2
+    && clues.filter(whoAmIClueIsGenericCareerVolume).length <= 2
+  );
+
   return clues.every((clue, index) => whoAmIClueAllowedAtRevealPosition(clue, index))
     && clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length <= 1
     && whoAmIRevealCoordinateWindowSatisfied(clues)
-    && footballLateQualitySatisfied;
+    && footballLateQualitySatisfied
+    && footballCompositionSatisfied;
 }
 
 function preferredBandRank(position: number, band: WhoAmIClueBand) {
@@ -455,6 +461,12 @@ function scheduleRevealArchitecture(
       if (isFootballPool && !isStrongLateAnchor(ordered.at(-1)!)) {
         return null;
       }
+      if (isFootballPool && ordered.filter((clue) => whoAmIClueFacet(clue) === "production").length > 2) {
+        return null;
+      }
+      if (isFootballPool && ordered.filter(whoAmIClueIsGenericCareerVolume).length > 2) {
+        return null;
+      }
 
       return ordered;
     }
@@ -466,10 +478,12 @@ function scheduleRevealArchitecture(
       whoAmIRevealProfile(clue).category === "personal-biography"
     ));
     const productionChosen = chosenClues.filter((clue) => whoAmIClueFacet(clue) === "production").length;
+    const genericCareerVolumeChosen = chosenClues.filter(whoAmIClueIsGenericCareerVolume).length;
 
     const semanticallyAvailable = remaining.filter(({ clue }) => {
       if (personalAlreadyChosen && whoAmIRevealProfile(clue).category === "personal-biography") return false;
-      if (productionChosen >= 4 && whoAmIClueFacet(clue) === "production") return false;
+      if (productionChosen >= 2 && whoAmIClueFacet(clue) === "production") return false;
+      if (genericCareerVolumeChosen >= 2 && whoAmIClueIsGenericCareerVolume(clue)) return false;
       if (
         requireSemanticIndependence
         && chosen.some((entry) => (
