@@ -4668,7 +4668,7 @@ function cfbBatch4Clue(
 
 const cfbBatch4SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-eric-weddle", [
-    cfbBatch4Clue("weddle-two-mwc-dpoy", "I was the Mountain West Defensive Player of the Year in both 2005 and 2006.", "strong", "accomplishments", 14),
+    cfbBatch4Clue("weddle-two-mwc-dpoy", "I was the Mountain West Defensive Player of the Year in both 2005 and 2006.", "giveaway", "accomplishments", 8),
   ]],
   ["cfb-eric-berry", [
     cfbBatch4Clue("berry-thorpe-2009", "I won the 2009 Jim Thorpe Award as the nation's top defensive back.", "giveaway", "accomplishments", 8),
