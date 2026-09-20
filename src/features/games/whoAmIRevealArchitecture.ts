@@ -140,7 +140,10 @@ function categoryFor(clue: WhoAmIClue): WhoAmIRevealCategory {
   const text = clueText(clue);
   const facet = whoAmIClueFacet(clue);
 
-  if (/\b(?:nickname|moniker|persona|alter ego|legally changed|changed (?:my|his|her) (?:name|surname)|name change)\b/.test(text)) {
+  if (
+    facet === "nickname"
+    || /\b(?:nickname|moniker|persona|alter ego|legally changed|changed (?:my|his|her) (?:name|surname)|name change)\b/.test(text)
+  ) {
     return "nickname-persona";
   }
   if (/\b(?:jersey number|wore no\.|wear no\.|number \d{1,2}\b|no\. \d{1,2}\b)\b/.test(text)) {
