@@ -196,6 +196,15 @@ function orderRevealBoardWithCoordinateRescue(
 ) {
   const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected);
   const isFootballBoard = selected.some((clue) => clue.revealCoordinates !== undefined);
+  const debugBart = selected.some((clue) => clue.id === "curated:five-championships");
+  if (debugBart) {
+    console.error("BART_REVEAL_DEBUG", JSON.stringify({
+      selected: selected.map((clue) => ({ id: clue.id, coordinates: clue.revealCoordinates })),
+      ordered: ordered.map((clue) => ({ id: clue.id, anchor: isStrongLateAnchor(clue), coordinates: clue.revealCoordinates })),
+      isFootballBoard,
+      orderedSatisfied: whoAmIRevealArchitectureSatisfied(ordered),
+    }));
+  }
   if (!isFootballBoard || whoAmIRevealArchitectureSatisfied(ordered)) return ordered;
 
   // If the selected board is already otherwise valid but its strongest identity
@@ -205,6 +214,9 @@ function orderRevealBoardWithCoordinateRescue(
     if (!isStrongLateAnchor(ordered[index]!)) continue;
     const swapped = [...ordered];
     [swapped[index], swapped[swapped.length - 1]] = [swapped[swapped.length - 1]!, swapped[index]!];
+    if (debugBart) {
+      console.error("BART_SWAP_DEBUG", index, isStrongLateAnchor(ordered[index]!), whoAmIRevealArchitectureSatisfied(swapped), swapped.map((clue) => clue.id).join("|"));
+    }
     if (whoAmIRevealArchitectureSatisfied(swapped)) return swapped;
   }
 
@@ -212,6 +224,12 @@ function orderRevealBoardWithCoordinateRescue(
     coordinateRescuePool(eligibleClues, limit, random),
     limit,
   );
+  if (debugBart) {
+    console.error("BART_EXPANDED_DEBUG", JSON.stringify({
+      result: expandedRescue?.map((clue) => ({ id: clue.id, anchor: isStrongLateAnchor(clue), coordinates: clue.revealCoordinates })) ?? null,
+      satisfied: expandedRescue ? whoAmIRevealArchitectureSatisfied(expandedRescue) : null,
+    }));
+  }
   return expandedRescue ?? ordered;
 }
 
