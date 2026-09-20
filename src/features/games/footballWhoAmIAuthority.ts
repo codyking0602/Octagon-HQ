@@ -792,7 +792,9 @@ function footballWhoAmIRevealCoordinates(
   }
 
   if (
-    clueValue.id === "era"
+    clueValue.facet === "era"
+    || clueValue.id === "era"
+    || clueValue.id.endsWith(":era")
     || clueValue.id === "player-career-start"
     || clueValue.id === "player-career-end"
     || clueValue.id === "coach-start"
