@@ -212,12 +212,30 @@ function defaultRevealPriority(clue: WhoAmIClue, facet: WhoAmIClueFacet) {
 }
 
 function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIClueFacet {
-  const haystack = `${conceptId} ${tags.join(" ")}`.toLowerCase();
+  const normalizedTags = new Set(tags.map((tag) => tag.toLowerCase()));
+  const hasTag = (...values: readonly string[]) => values.some((value) => normalizedTags.has(value));
 
-  // This is the canonical semantic assignment for authored identity knowledge.
+  // Authored semantic tags are the highest-authority contract. Do not feed them
+  // back through a bag-of-words classifier: a production tag stays production,
+  // while a deliberate award/record tag can identify a separate accomplishment.
+  if (hasTag("nickname", "moniker", "persona", "alter-ego", "media-identity")) return "nickname";
+  if (hasTag("award", "awards", "championship", "championships", "title", "titles", "record", "records", "hall-of-fame", "heisman", "all-american", "all-pro", "milestone", "iconic-moment")) {
+    return "accomplishments";
+  }
+  if (hasTag("career-path", "career-start", "career-turning-point", "transition", "draft", "transfer", "trade", "franchise", "playing-career", "coaching-path", "position-path")) {
+    return "career-path";
+  }
+  if (hasTag("production", "stat", "stats", "statistics")) return "production";
+  if (hasTag("relationship", "relationships", "family", "teammate", "teammates", "mentor")) return "relationships";
+  if (hasTag("style", "technique", "training", "boxing", "kickboxing", "wrestling", "grappling", "striking")) return "style";
+  if (hasTag("off-field", "work", "business", "media", "military", "community", "faith")) return "off-field";
+  if (hasTag("background", "childhood", "hometown", "high-school", "college", "junior-college", "recruiting", "education")) return "background";
+
+  const haystack = conceptId.toLowerCase();
+
   // Specific semantic concepts must win over incidental vocabulary inside the
-  // prose/concept id (for example, "one college start / undrafted" is a career
-  // path fact, not production merely because it contains "start").
+  // concept id (for example, "one college start / undrafted" is a career-path
+  // fact, not production merely because it contains "start").
   if (/\b(?:nickname|moniker)\b|called-|alter-ego/.test(haystack)) return "nickname";
   if (/\b(?:brothers?|sisters?|fathers?|mothers?|sons?|daughters?|family|mentor|teammates?|friends?|caregiver|relationships?)\b/.test(haystack)) {
     return "relationships";
