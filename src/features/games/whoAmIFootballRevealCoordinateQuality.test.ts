@@ -52,6 +52,14 @@ describe("Who Am I football reveal-coordinate architecture", () => {
           const board = boards[seedIndex]!;
           if (board.length !== WHO_AM_I_CLUE_LIMIT) {
             problems.push(`${candidate.id} seed ${seed}: only ${board.length} clues`);
+            if (seed === 1) {
+              problems.push(
+                `${candidate.id}: pool=${candidate.clues.length} ${candidate.clues.map((clue) => {
+                  const profile = whoAmIRevealProfile(clue);
+                  return `${clue.id}{facet=${whoAmIClueFacet(clue)}/category=${profile.category}/class=${whoAmIClueSelectionClass(clue)}/band=${clue.band}/coords=${(clue.revealCoordinates ?? []).join("+") || "none"}}`;
+                }).join(" | ")}`,
+              );
+            }
             continue;
           }
 
