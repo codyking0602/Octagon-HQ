@@ -13,6 +13,7 @@ import {
   orderWhoAmICluesByRevealArchitectureIfPossible,
   selectWhoAmICluesByRevealArchitectureIfPossible,
   whoAmIRevealArchitectureSatisfied,
+  whoAmIRevealProfile,
 } from "./whoAmIRevealArchitecture";
 
 const REVEAL_SHORTLIST_EXTRA = 4;
@@ -113,31 +114,76 @@ function coordinateRescuePool(
   limit: number,
   random: () => number,
 ) {
-  const expanded = assembleWhoAmIClues(
-    eligibleClues,
-    Math.min(eligibleClues.length, limit + 8),
+  const scored = ranked(
+    eligibleClues
+      .filter((clue) => !isGenericCareerGames(clue))
+      .filter((clue) => !whoAmIClueHasHardEditorialFailure(clue)),
     random,
-  );
-  const rankedExpanded = ranked(expanded, random)
-    .sort((left, right) => {
-      const classScore = (clue: WhoAmIClue) => {
-        const selectionClass = whoAmIClueSelectionClass(clue);
-        if (selectionClass === "sports-identity") return 40;
-        if (selectionClass === "identity-color") return 0;
-        return -80;
-      };
-      const qualityDifference = (
-        recognitionStrength(right.value) + classScore(right.value)
-      ) - (
-        recognitionStrength(left.value) + classScore(left.value)
-      );
-      return qualityDifference || left.variationRank - right.variationRank || left.index - right.index;
-    })
-    .map((entry) => entry.value);
+  ).sort((left, right) => {
+    const score = (clue: WhoAmIClue) => {
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      const profile = whoAmIRevealProfile(clue);
+      let value = recognitionStrength(clue);
+      if (selectionClass === "sports-identity") value += 50;
+      else if (selectionClass === "identity-color") value += 5;
+      else value -= 100;
+      if ((clue.revealCoordinates?.length ?? 0) === 0) value += 70;
+      if (
+        clue.band === "strong"
+        || clue.band === "giveaway"
+      ) value += 15;
+      if (
+        profile.category === "accomplishments"
+        || profile.category === "championships"
+        || profile.category === "records"
+        || profile.category === "signature-moment"
+        || profile.category === "style"
+      ) value += 20;
+      if (profile.category === "personal-biography") value -= 70;
+      if (isGenericCareerVolume(clue)) value -= 90;
+      return value;
+    };
+    return score(right.value) - score(left.value)
+      || left.variationRank - right.variationRank
+      || left.index - right.index;
+  });
 
-  const nonGeneric = rankedExpanded.filter((clue) => !isGenericCareerVolume(clue));
-  const generic = rankedExpanded.filter(isGenericCareerVolume).slice(0, 2);
-  return [...nonGeneric, ...generic];
+  const pool: WhoAmIClue[] = [];
+  const add = (clue: WhoAmIClue) => {
+    if (!pool.includes(clue)) pool.push(clue);
+  };
+
+  // Early windows need real football information that does not spend another
+  // identity coordinate. Seed the rescue pool with those facts first.
+  scored
+    .filter(({ value }) => (
+      (value.revealCoordinates?.length ?? 0) === 0
+      && whoAmIClueSelectionClass(value) === "sports-identity"
+      && !isGenericCareerVolume(value)
+    ))
+    .slice(0, 10)
+    .forEach(({ value }) => add(value));
+
+  // Preserve enough strong late anchors before filling with the next-best facts.
+  scored
+    .filter(({ value }) => value.band === "strong" || value.band === "giveaway")
+    .slice(0, 6)
+    .forEach(({ value }) => add(value));
+
+  scored
+    .filter(({ value }) => !isGenericCareerVolume(value))
+    .forEach(({ value }) => {
+      if (pool.length < limit + 8) add(value);
+    });
+
+  scored
+    .filter(({ value }) => isGenericCareerVolume(value))
+    .slice(0, 2)
+    .forEach(({ value }) => {
+      if (pool.length < limit + 8) add(value);
+    });
+
+  return pool.slice(0, Math.min(pool.length, limit + 8));
 }
 
 function orderRevealBoardWithCoordinateRescue(
@@ -150,9 +196,6 @@ function orderRevealBoardWithCoordinateRescue(
   const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected);
   const isFootballBoard = selected.some((clue) => clue.revealCoordinates !== undefined);
   if (!isFootballBoard || whoAmIRevealArchitectureSatisfied(ordered)) return ordered;
-
-  const shortlistRescue = selectWhoAmICluesByRevealArchitectureIfPossible(shortlist, limit);
-  if (shortlistRescue) return shortlistRescue;
 
   const expandedRescue = selectWhoAmICluesByRevealArchitectureIfPossible(
     coordinateRescuePool(eligibleClues, limit, random),
