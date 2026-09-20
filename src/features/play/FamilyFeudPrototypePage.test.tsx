@@ -87,9 +87,9 @@ describe("Sports Feud V2 private prototype", () => {
     expect(screen.getByText("WE ASKED FOOTBALL HQ")).toBeInTheDocument();
     expect(screen.getByText(/most electric Cowboys players of the 2020s/i)).toBeInTheDocument();
     expect(document.querySelectorAll(".feud-answer-slot")).toHaveLength(4);
-    expect(document.querySelector(".feud-stage-floor")).toBeInTheDocument();
-    expect(document.querySelectorAll(".feud-audience")).toHaveLength(2);
-    expect(document.querySelectorAll(".feud-podium")).toHaveLength(2);
+    expect(document.querySelector('img[src="/assets/sports-feud-main-stage.png"]')).toBeInTheDocument();
+    expect(document.querySelector(".feud-answer-board")).toBeInTheDocument();
+    expect(document.querySelector(".feud-strikes")).toBeInTheDocument();
   });
 
   it("accepts a lower-value good answer and banks its editorial point value", () => {
@@ -138,12 +138,16 @@ describe("Sports Feud V2 private prototype", () => {
     fireEvent.click(screen.getByRole("button", { name: "GO TO FAST MONEY" }));
     expect(screen.getByText("YOU MADE THE FINALE")).toBeInTheDocument();
     expect(screen.getByText("0:45")).toBeInTheDocument();
-    expect(document.querySelector(".feud-host")).toBeInTheDocument();
+    const introHost = document.querySelector(".feud-fast-host-asset") as HTMLImageElement | null;
+    expect(introHost).toBeInTheDocument();
+    expect(introHost?.getAttribute("src")).toMatch(/^\/assets\/[123]nfl\.jpeg$/);
+    expect(document.querySelector('img[src="/assets/sports-feud-fast-money-stage.png"]')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "START 45 SECONDS" }));
     expect(screen.getByText("1 OF 5")).toBeInTheDocument();
     expect(screen.getByLabelText("Fast Money answer")).toBeInTheDocument();
     expect(screen.queryByText(/\+[0-9]+ HQ POINTS/)).not.toBeInTheDocument();
-    expect(document.querySelector(".feud-fast-showdown .feud-host")).toBeInTheDocument();
+    expect(document.querySelector(".feud-fast-showdown .feud-fast-host-asset")).toBeInTheDocument();
+    expect(document.querySelectorAll(".feud-fast-board-progress > div")).toHaveLength(5);
   });
 });
