@@ -29,7 +29,7 @@ describe("Family Feud playable prototype", () => {
     expect(screen.getByText(/most passing TDs in the 2025 NFL season/i)).toBeInTheDocument();
     submitMainAnswer("Matthew Stafford");
 
-    expect(screen.getByText("MATTHEW STAFFORD")).toBeInTheDocument();
+    expect(screen.getByText("Matthew Stafford")).toBeInTheDocument();
     expect(screen.getByText("#1 — 30 POINTS")).toBeInTheDocument();
     expect(screen.getByText("30")).toBeInTheDocument();
   });
