@@ -332,7 +332,7 @@ function scheduleRevealArchitecture(
   const chosen: typeof entries = [];
   const deadStates = new Set<string>();
   let explored = 0;
-  const MAX_NODES = 100_000;
+  const MAX_NODES = 50_000;
 
   const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
     explored += 1;
@@ -354,22 +354,48 @@ function scheduleRevealArchitecture(
 
     if (remaining.length < targetLength - chosen.length) return null;
 
-    const stateKey = `${position}:${remaining.map((entry) => entry.originalIndex).sort((a, b) => a - b).join(",")}`;
-    if (deadStates.has(stateKey)) return null;
-
     const personalAlreadyChosen = chosen.some(({ clue }) => (
       whoAmIRevealProfile(clue).category === "personal-biography"
     ));
-
-    const candidates = remaining
-      .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
-      .filter(({ clue }) => (
-        !personalAlreadyChosen || whoAmIRevealProfile(clue).category !== "personal-biography"
-      ))
-      .filter(({ clue }) => !chosen.some((entry) => (
+    const semanticallyAvailable = remaining.filter(({ clue }) => (
+      (!personalAlreadyChosen || whoAmIRevealProfile(clue).category !== "personal-biography")
+      && !chosen.some((entry) => (
         (entry.clue.conceptId ?? entry.clue.id) === (clue.conceptId ?? clue.id)
         || whoAmICluesShareInformation(entry.clue, clue)
-      )))
+      ))
+    ));
+
+    const exposed = new Set(chosen.flatMap((entry) => entry.clue.revealCoordinates ?? []));
+    for (const windowEnd of [4, 6, 8] as const) {
+      if (position > windowEnd) continue;
+      const slotsRemainingInWindow = windowEnd - position + 1;
+      const compatible = semanticallyAvailable.filter(({ clue }) => {
+        if (!whoAmIClueAllowedAtRevealPosition(clue, windowEnd - 1)) return false;
+        const nextExposed = new Set(exposed);
+        for (const coordinate of clue.revealCoordinates ?? []) nextExposed.add(coordinate);
+        return nextExposed.size <= revealCoordinateBudget(windowEnd);
+      });
+      if (compatible.length < slotsRemainingInWindow) return null;
+    }
+
+    const lateChosen = chosen.slice(6).map((entry) => entry.clue);
+    const strongLateNeeded = Math.max(
+      0,
+      3 - lateChosen.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length,
+    );
+    const anchorLateNeeded = Math.max(0, 2 - lateChosen.filter(isStrongLateAnchor).length);
+    if (
+      semanticallyAvailable.filter(({ clue }) => clue.band === "strong" || clue.band === "giveaway").length < strongLateNeeded
+      || semanticallyAvailable.filter(({ clue }) => isStrongLateAnchor(clue)).length < anchorLateNeeded
+    ) {
+      return null;
+    }
+
+    const stateKey = `${position}:${remaining.map((entry) => entry.originalIndex).sort((a, b) => a - b).join(",")}`;
+    if (deadStates.has(stateKey)) return null;
+
+    const candidates = semanticallyAvailable
+      .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
       .filter(({ clue }) => whoAmIRevealCoordinateWindowSatisfied([
         ...chosen.map((entry) => entry.clue),
         clue,
