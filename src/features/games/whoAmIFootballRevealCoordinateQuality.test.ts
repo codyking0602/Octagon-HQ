@@ -74,6 +74,12 @@ describe("Who Am I football reveal-coordinate architecture", () => {
               problems.push(
                 `${candidate.id}: pool diagnostics total=${candidate.clues.length} noncoord=${nonCoordinate.length} sports-noncoord=${sportsNonCoordinate.length} strong=${strong.length}`,
               );
+              problems.push(
+                `${candidate.id}: board diagnostics ${board.map((clue, index) => {
+                  const profile = whoAmIRevealProfile(clue);
+                  return `${index + 1}:${clue.id}{${profile.category}/${profile.identifyingPower}/earliest=${profile.earliestClue}/coords=${(clue.revealCoordinates ?? []).join("+") || "none"}}`;
+                }).join(" | ")}`,
+              );
             }
           }
 
