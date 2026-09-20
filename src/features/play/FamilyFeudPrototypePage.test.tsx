@@ -140,7 +140,7 @@ describe("Sports Feud V2 private prototype", () => {
     expect(screen.getByText("0:45")).toBeInTheDocument();
     const introHost = document.querySelector(".feud-fast-host-asset") as HTMLImageElement | null;
     expect(introHost).toBeInTheDocument();
-    expect(introHost?.getAttribute("src")).toMatch(/^\/assets\/[123]nfl\.jpeg$/);
+    expect(introHost?.getAttribute("src")).toMatch(/^\/assets\/[123]nfl\.png$/);
     expect(document.querySelector('img[src="/assets/sports-feud-fast-money-stage.png"]')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "START 45 SECONDS" }));
