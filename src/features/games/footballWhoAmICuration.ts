@@ -162,14 +162,7 @@ const retainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-ahman-green", keep("identity:state-champion-sprinter", "identity:high-school-baseball-center-fielder")],
 ]);
 
-const bandOverrides = new Map<string, WhoAmIClue["band"]>([
-  ["kurt-warner:identity:one-college-start-undrafted", "strong"],
-  ["jim-brown:identity:syracuse-four-sport-profile", "strong"],
-  ["walter-payton:identity:first-football-play-touchdown", "strong"],
-]);
-
 const facetOverrides = new Map<string, WhoAmIClueFacet>([
-  ["walter-payton:identity:first-football-play-touchdown", "accomplishments"],
   ["cam-newton:identity:florida-blinn-auburn-path", "career-path"],
   ["cam-newton:identity:one-year-auburn-window", "career-path"],
   ["nfl-jim-kelly:identity:buffalo-no-huddle-identity", "style"],
@@ -355,8 +348,7 @@ function applyIdentityCuration(subjectId: string, clue: WhoAmIClue) {
   const override = clueTextOverrides.get(key);
   if (override) return { ...clue, ...override };
   const facet = facetOverrides.get(key);
-  const band = bandOverrides.get(key);
-  return facet || band ? { ...clue, ...(facet ? { facet } : {}), ...(band ? { band } : {}) } : clue;
+  return facet ? { ...clue, facet } : clue;
 }
 
 function clueQualityScore(subject: FootballSubjectProfile, clue: WhoAmIClue) {
