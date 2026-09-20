@@ -10,6 +10,7 @@ import {
   whoAmISemanticClueKey,
 } from "./whoAmISemanticQuality";
 import {
+  isStrongLateAnchor,
   orderWhoAmICluesByRevealArchitectureIfPossible,
   selectWhoAmICluesByRevealArchitectureIfPossible,
   whoAmIRevealArchitectureSatisfied,
@@ -196,6 +197,16 @@ function orderRevealBoardWithCoordinateRescue(
   const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected);
   const isFootballBoard = selected.some((clue) => clue.revealCoordinates !== undefined);
   if (!isFootballBoard || whoAmIRevealArchitectureSatisfied(ordered)) return ordered;
+
+  // If the selected board is already otherwise valid but its strongest identity
+  // anchor sits immediately before a raw stat, keep the same facts and swap the
+  // anchor into clue 10 before expanding the selection pool.
+  for (let index = ordered.length - 2; index >= 6; index -= 1) {
+    if (!isStrongLateAnchor(ordered[index]!)) continue;
+    const swapped = [...ordered];
+    [swapped[index], swapped[swapped.length - 1]] = [swapped[swapped.length - 1]!, swapped[index]!];
+    if (whoAmIRevealArchitectureSatisfied(swapped)) return swapped;
+  }
 
   const expandedRescue = selectWhoAmICluesByRevealArchitectureIfPossible(
     coordinateRescuePool(eligibleClues, limit, random),
