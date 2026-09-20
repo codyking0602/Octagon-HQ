@@ -32,88 +32,70 @@ const entities = [
 ] as const;
 
 const passingCandidates = [
-  "stafford",
-  "goff",
-  "maye",
-  "prescott",
-  "lawrence",
-  "caleb-williams",
-  "kyren-williams",
-  "mahomes",
-];
+  "stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams",
+  "kyren-williams", "mahomes",
+] as const;
 
 const rushingCandidates = [
-  "cook",
-  "henry",
-  "taylor",
-  "bijan",
-  "achane",
-  "kyren-williams",
-  "saquon",
-  "mahomes",
-];
+  "cook", "henry", "taylor", "bijan", "achane", "saquon", "kyren-williams", "mahomes",
+] as const;
 
-const mainOne = {
-  id: "passing-tds",
-  prompt: "Name the six QBs with the most passing TDs.",
-  candidateIds: passingCandidates,
-  answers: [
-    { entityId: "stafford", points: 30 },
-    { entityId: "goff", points: 24 },
-    { entityId: "maye", points: 18 },
-    { entityId: "prescott", points: 13 },
-    { entityId: "lawrence", points: 9 },
-    { entityId: "caleb-williams", points: 6 },
-  ],
-} as const;
+const mainPoints = [10, 8, 7, 5, 5, 4] as const;
+const fastPoints = [8, 7, 6, 5, 4, 3] as const;
 
-const mainTwo = {
-  id: "rushing-yards",
-  prompt: "Name the six players with the most rushing yards.",
-  candidateIds: rushingCandidates,
-  answers: [
-    { entityId: "cook", points: 30 },
-    { entityId: "henry", points: 24 },
-    { entityId: "taylor", points: 18 },
-    { entityId: "bijan", points: 13 },
-    { entityId: "achane", points: 9 },
-    { entityId: "kyren-williams", points: 6 },
-  ],
-} as const;
-
-function fastQuestion(id: string, candidates: readonly string[]) {
+function question(
+  id: string,
+  prompt: string,
+  candidates: readonly string[],
+  answerIds: readonly string[],
+  points: readonly number[],
+) {
   return {
     id,
-    prompt: "Fast Money " + id,
+    prompt,
     candidateIds: candidates,
-    answers: [
-      { entityId: candidates[0]!, points: 40 },
-      { entityId: candidates[1]!, points: 30 },
-      { entityId: candidates[2]!, points: 20 },
-      { entityId: candidates[3]!, points: 15 },
-      { entityId: candidates[4]!, points: 10 },
-      { entityId: candidates[5]!, points: 5 },
-    ],
+    answers: answerIds.map((entityId, index) => ({ entityId, points: points[index]! })),
   };
 }
 
+const mainOne = question(
+  "main-one",
+  "Name four good quarterback answers.",
+  passingCandidates,
+  ["stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams"],
+  mainPoints,
+);
+
+const mainTwo = question(
+  "main-two",
+  "Name four good running back answers.",
+  rushingCandidates,
+  ["cook", "henry", "taylor", "bijan", "achane", "saquon"],
+  mainPoints,
+);
+
+function fastQuestion(id: string, candidates: readonly string[], answerIds: readonly string[]) {
+  return question(id, "Fast Money " + id, candidates, answerIds, fastPoints);
+}
+
 const pack: FamilyFeudPack = {
-  id: "football-prototype",
+  id: "football-prototype-v2",
   sport: "football",
   entities,
   mainBoards: [mainOne, mainTwo],
   fastMoney: [
-    fastQuestion("fm-1", passingCandidates),
-    fastQuestion("fm-2", rushingCandidates),
-    fastQuestion("fm-3", passingCandidates),
-    fastQuestion("fm-4", rushingCandidates),
-    fastQuestion("fm-5", passingCandidates),
+    fastQuestion("fm-1", passingCandidates, ["stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams"]),
+    fastQuestion("fm-2", rushingCandidates, ["cook", "henry", "taylor", "bijan", "achane", "saquon"]),
+    fastQuestion("fm-3", passingCandidates, ["stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams"]),
+    fastQuestion("fm-4", rushingCandidates, ["cook", "henry", "taylor", "bijan", "achane", "saquon"]),
+    fastQuestion("fm-5", passingCandidates, ["stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams"]),
   ],
 };
 
-describe("Family Feud engine contract", () => {
-  it("validates the locked two-board plus five-question structure", () => {
+describe("Family Feud V2 engine contract", () => {
+  it("validates two main boards, larger accepted pools, and five Fast Money prompts", () => {
     expect(() => assertFamilyFeudPack(pack)).not.toThrow();
+    expect(pack.mainBoards.every((board) => board.answers.length > 4)).toBe(true);
     expect(() => assertFamilyFeudPack({ ...pack, mainBoards: [mainOne] })).toThrow(/two main boards/i);
   });
 
@@ -144,119 +126,93 @@ describe("Family Feud engine contract", () => {
     });
   });
 
-  it("returns ambiguous without leaking which candidate is on the board", () => {
+  it("returns ambiguous without a strike and without revealing a candidate", () => {
     expect(matchFamilyFeudAnswer(pack, mainOne, "Williams")).toEqual({
       status: "ambiguous",
       entityIds: ["caleb-williams", "kyren-williams"],
     });
-
     const transition = submitFamilyFeudMainAnswer(pack, createFamilyFeudState(), "Williams");
     expect(transition.outcome.type).toBe("ambiguous");
     expect(transition.state.mainBoards[0]!.strikes).toBe(0);
   });
 
-  it("counts a recognized candidate outside the six as a strike", () => {
-    const transition = submitFamilyFeudMainAnswer(pack, createFamilyFeudState(), "Mahomes");
+  it("counts a recognized but intentionally unaccepted candidate as a strike", () => {
+    const transition = submitFamilyFeudMainAnswer(pack, createFamilyFeudState(), "Patrick Mahomes");
     expect(transition.outcome).toEqual({ type: "board-strike", boardIndex: 0, strikes: 1 });
   });
 
-  it("counts nonsense as a strike but repeated submissions do not double-penalize", () => {
+  it("does not double-penalize duplicate wrong or duplicate recognized answers", () => {
     let state = createFamilyFeudState();
     let transition = submitFamilyFeudMainAnswer(pack, state, "not a real player");
-    expect(transition.outcome).toEqual({ type: "board-strike", boardIndex: 0, strikes: 1 });
-
-    state = transition.state;
-    transition = submitFamilyFeudMainAnswer(pack, state, "not a real player");
-    expect(transition.outcome).toEqual({
-      type: "already-guessed",
-      boardIndex: 0,
-      entityId: null,
-    });
     expect(transition.state.mainBoards[0]!.strikes).toBe(1);
 
     state = transition.state;
-    transition = submitFamilyFeudMainAnswer(pack, state, "Mahomes");
-    expect(transition.outcome).toEqual({ type: "board-strike", boardIndex: 0, strikes: 2 });
+    transition = submitFamilyFeudMainAnswer(pack, state, "not a real player");
+    expect(transition.outcome.type).toBe("already-guessed");
+    expect(transition.state.mainBoards[0]!.strikes).toBe(1);
 
     state = transition.state;
     transition = submitFamilyFeudMainAnswer(pack, state, "Patrick Mahomes");
-    expect(transition.outcome).toEqual({
-      type: "already-guessed",
-      boardIndex: 0,
-      entityId: "mahomes",
-    });
     expect(transition.state.mainBoards[0]!.strikes).toBe(2);
 
     state = transition.state;
-    transition = submitFamilyFeudMainAnswer(pack, state, "Stafford");
-    expect(transition.outcome).toMatchObject({ type: "board-correct", entityId: "stafford", points: 30 });
-
-    state = transition.state;
-    transition = submitFamilyFeudMainAnswer(pack, state, "Matthew Stafford");
-    expect(transition.outcome).toEqual({
-      type: "already-guessed",
-      boardIndex: 0,
-      entityId: "stafford",
-    });
+    transition = submitFamilyFeudMainAnswer(pack, state, "Mahomes");
+    expect(transition.outcome.type).toBe("already-guessed");
     expect(transition.state.mainBoards[0]!.strikes).toBe(2);
   });
 
-  it("moves to board two when the first board is cleared and to Fast Money after board two", () => {
+  it("clears a board after any four accepted answers, including lower-value good answers", () => {
     let state = createFamilyFeudState();
-    for (const answer of mainOne.answers) {
-      state = submitFamilyFeudMainAnswer(pack, state, answer.entityId === "caleb-williams" ? "Caleb Williams" : answer.entityId).state;
+    for (const answer of ["Caleb Williams", "Matthew Stafford", "Jared Goff", "Drake Maye"]) {
+      state = submitFamilyFeudMainAnswer(pack, state, answer).state;
     }
-    expect(state.phase).toBe("main");
     expect(state.mainBoardIndex).toBe(1);
-
-    for (const answer of mainTwo.answers) {
-      const entity = entities.find((row) => row.id === answer.entityId)!;
-      state = submitFamilyFeudMainAnswer(pack, state, entity.displayName).state;
-    }
-    expect(state.phase).toBe("fast-money");
-    expect(state.fastMoneyIndex).toBe(0);
-    expect(state.fastMoneyTimeRemainingMs).toBe(FAMILY_FEUD_FAST_MONEY_TIME_MS);
+    expect(state.mainBoards[0]!.revealedEntityIds).toEqual([
+      "caleb-williams", "stafford", "goff", "maye",
+    ]);
+    expect(familyFeudScore(pack, state).main).toBe(29);
   });
 
-  it("ends a main board after three strikes", () => {
+  it("ends a main board on the third strike without subtracting banked points", () => {
     let state = createFamilyFeudState();
-    for (const wrong of ["Mahomes", "Kyren Williams", "nonsense"]) {
+    state = submitFamilyFeudMainAnswer(pack, state, "Matthew Stafford").state;
+    for (const wrong of ["Patrick Mahomes", "Kyren Williams", "nonsense"]) {
       state = submitFamilyFeudMainAnswer(pack, state, wrong).state;
     }
     expect(state.mainBoardIndex).toBe(1);
     expect(state.mainBoards[0]!.strikes).toBe(3);
+    expect(familyFeudScore(pack, state).main).toBe(10);
   });
 
-  it("keeps ambiguous Fast Money answers on the same prompt while the clock continues", () => {
-    let state = createFamilyFeudState();
-    state = { ...state, phase: "fast-money" };
+  it("uses a 45-second Fast Money clock and keeps ambiguity on the same prompt", () => {
+    let state: FamilyFeudState = { ...createFamilyFeudState(), phase: "fast-money" };
+    expect(FAMILY_FEUD_FAST_MONEY_TIME_MS).toBe(45_000);
 
-    const transition = submitFamilyFeudFastMoneyAnswer(pack, state, "Williams", 24_000);
+    const transition = submitFamilyFeudFastMoneyAnswer(pack, state, "Williams", 36_000);
     expect(transition.outcome.type).toBe("ambiguous");
     expect(transition.state.fastMoneyIndex).toBe(0);
-    expect(transition.state.fastMoneyTimeRemainingMs).toBe(24_000);
+    expect(transition.state.fastMoneyTimeRemainingMs).toBe(36_000);
   });
 
-  it("advances Fast Money with points for a board answer and zero for a valid off-board answer", () => {
+  it("advances Fast Money with variable points and zero for a valid off-board answer", () => {
     let state: FamilyFeudState = { ...createFamilyFeudState(), phase: "fast-money" };
 
-    let transition = submitFamilyFeudFastMoneyAnswer(pack, state, "Stafford", 29_000);
+    let transition = submitFamilyFeudFastMoneyAnswer(pack, state, "Stafford", 44_000);
     expect(transition.outcome).toEqual({
       type: "fast-money-answer",
       questionIndex: 0,
       entityId: "stafford",
-      points: 40,
+      points: 8,
     });
 
     state = transition.state;
-    transition = submitFamilyFeudFastMoneyAnswer(pack, state, "Saquon Barkley", 25_000);
+    transition = submitFamilyFeudFastMoneyAnswer(pack, state, "Patrick Mahomes", 39_000);
     expect(transition.outcome).toEqual({
       type: "fast-money-answer",
       questionIndex: 1,
-      entityId: "saquon",
+      entityId: "mahomes",
       points: 0,
     });
-    expect(transition.state.fastMoneyIndex).toBe(2);
   });
 
   it("settles Fast Money on timeout", () => {
@@ -266,26 +222,26 @@ describe("Family Feud engine contract", () => {
     expect(transition.state.fastMoneyTimeRemainingMs).toBe(0);
   });
 
-  it("uses the locked 400-point raw game and curved HQ scale", () => {
-    expect(familyFeudHqScore(120)).toBe(55);
-    expect(familyFeudHqScore(180)).toBe(67);
-    expect(familyFeudHqScore(260)).toBe(81);
-    expect(familyFeudHqScore(330)).toBe(91);
-    expect(familyFeudHqScore(400)).toBe(100);
+  it("uses transparent direct 100-point scoring with no hidden curve", () => {
+    expect(familyFeudHqScore(0)).toBe(0);
+    expect(familyFeudHqScore(80)).toBe(80);
+    expect(familyFeudHqScore(90)).toBe(90);
+    expect(familyFeudHqScore(100)).toBe(100);
+    expect(familyFeudHqScore(120)).toBe(100);
 
     let state = createFamilyFeudState();
     state = submitFamilyFeudMainAnswer(pack, state, "Stafford").state;
     state = {
       ...state,
       fastMoneyResults: [
-        { questionId: "fm-1", submittedText: "Stafford", entityId: "stafford", points: 40, matchKind: "surname" },
+        { questionId: "fm-1", submittedText: "Stafford", entityId: "stafford", points: 8, matchKind: "surname" },
       ],
     };
     expect(familyFeudScore(pack, state)).toEqual({
-      main: 30,
-      fastMoney: 40,
-      raw: 70,
-      hq: 42,
+      main: 10,
+      fastMoney: 8,
+      raw: 18,
+      hq: 18,
     });
   });
 });

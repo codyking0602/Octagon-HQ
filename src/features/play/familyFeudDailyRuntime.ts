@@ -1,7 +1,11 @@
 import {
   FAMILY_FEUD_BOARD_ANSWER_COUNT,
   FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT,
+  FAMILY_FEUD_FAST_MONEY_RAW_MAX,
   FAMILY_FEUD_FAST_MONEY_TIME_MS,
+  FAMILY_FEUD_MAIN_BOARD_MAX,
+  FAMILY_FEUD_MAIN_RAW_MAX,
+  FAMILY_FEUD_RAW_MAX,
   FAMILY_FEUD_STRIKES_PER_BOARD,
   assertFamilyFeudPack,
   createFamilyFeudState,
@@ -11,11 +15,12 @@ import {
   timeoutFamilyFeudFastMoney,
   type FamilyFeudOutcome,
   type FamilyFeudPack,
+  type FamilyFeudRankedAnswer,
   type FamilyFeudState,
 } from "../games/familyFeudEngine";
 
-export const FAMILY_FEUD_DAILY_CONTENT_VERSION = "family-feud-daily-v1" as const;
-export const FAMILY_FEUD_DAILY_SCORING_VERSION = "family-feud-score-v1" as const;
+export const FAMILY_FEUD_DAILY_CONTENT_VERSION = "family-feud-daily-v2" as const;
+export const FAMILY_FEUD_DAILY_SCORING_VERSION = "family-feud-score-v2" as const;
 
 export interface FamilyFeudDailyPublication {
   setupKey: string;
@@ -65,6 +70,16 @@ function boardSettled(state: FamilyFeudState, boardIndex: number) {
     || board.strikes >= FAMILY_FEUD_STRIKES_PER_BOARD;
 }
 
+function answerById(
+  pack: FamilyFeudPack,
+  questionIndex: number,
+  entityId: string,
+): FamilyFeudRankedAnswer {
+  const answer = pack.mainBoards[questionIndex]!.answers.find((row) => row.entityId === entityId);
+  if (!answer) throw new Error("Family Feud revealed answer is outside its board.");
+  return answer;
+}
+
 function mainBoardPublicState(
   pack: FamilyFeudPack,
   state: FamilyFeudState,
@@ -72,24 +87,33 @@ function mainBoardPublicState(
 ) {
   const question = pack.mainBoards[boardIndex]!;
   const board = state.mainBoards[boardIndex]!;
-  const revealed = new Set(board.revealedEntityIds);
+  const foundIds = new Set(board.revealedEntityIds);
   const settled = boardSettled(state, boardIndex);
+  const foundAnswers = board.revealedEntityIds.map((entityId) => answerById(pack, boardIndex, entityId));
+  const missedAnswers = settled && foundAnswers.length < FAMILY_FEUD_BOARD_ANSWER_COUNT
+    ? question.answers
+        .filter((answer) => !foundIds.has(answer.entityId))
+        .slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT - foundAnswers.length)
+    : [];
+  const displayAnswers = [...foundAnswers, ...missedAnswers];
 
   return {
     id: question.id,
     prompt: question.prompt,
     strikes: board.strikes,
     strike_limit: FAMILY_FEUD_STRIKES_PER_BOARD,
+    required_answers: FAMILY_FEUD_BOARD_ANSWER_COUNT,
+    max_points: FAMILY_FEUD_MAIN_BOARD_MAX,
     settled,
-    slots: question.answers.map((answer, slotIndex) => {
-      const found = revealed.has(answer.entityId);
-      const visible = found || settled;
+    slots: Array.from({ length: FAMILY_FEUD_BOARD_ANSWER_COUNT }, (_value, slotIndex) => {
+      const answer = displayAnswers[slotIndex] ?? null;
+      const found = Boolean(answer && foundIds.has(answer.entityId));
       return {
         slot_index: slotIndex,
-        points: answer.points,
-        revealed: visible,
+        points: answer?.points ?? null,
+        revealed: Boolean(answer),
         found,
-        entity: visible ? entityPresentation(pack, answer.entityId) : null,
+        entity: answer ? entityPresentation(pack, answer.entityId) : null,
       };
     }),
   };
@@ -99,26 +123,22 @@ function fastMoneyReveal(pack: FamilyFeudPack, state: FamilyFeudState) {
   if (state.phase !== "complete") return [];
   return pack.fastMoney.map((question, index) => {
     const result = state.fastMoneyResults[index];
-    if (!result) {
-      return {
-        question_id: question.id,
-        prompt: question.prompt,
-        submitted_answer: "NO ANSWER",
-        points: 0,
-        board_rank: null,
-      };
-    }
-    const canonical = result.entityId ? entityPresentation(pack, result.entityId) : null;
-    const submitted = canonical?.display_name ?? (result.submittedText || "NO ANSWER");
-    const rankedAnswerIndex = result.entityId
+    const canonical = result?.entityId ? entityPresentation(pack, result.entityId) : null;
+    const submitted = canonical?.display_name ?? result?.submittedText ?? "NO ANSWER";
+    const rankedAnswerIndex = result?.entityId
       ? question.answers.findIndex((answer) => answer.entityId === result.entityId)
       : -1;
     return {
       question_id: question.id,
       prompt: question.prompt,
       submitted_answer: submitted,
-      points: result.points,
+      counted: Boolean(result && result.points > 0),
+      points: result?.points ?? 0,
       board_rank: rankedAnswerIndex >= 0 ? rankedAnswerIndex + 1 : null,
+      accepted_answers: question.answers.map((answer) => ({
+        entity: entityPresentation(pack, answer.entityId),
+        points: answer.points,
+      })),
     };
   });
 }
@@ -242,14 +262,17 @@ export function buildFamilyFeudDailySetup(
       sport: pack.sport,
       pack_id: pack.id,
       main_board_count: pack.mainBoards.length,
-      answers_per_board: FAMILY_FEUD_BOARD_ANSWER_COUNT,
+      answers_required_per_board: FAMILY_FEUD_BOARD_ANSWER_COUNT,
       strike_limit: FAMILY_FEUD_STRIKES_PER_BOARD,
+      main_board_max_points: FAMILY_FEUD_MAIN_BOARD_MAX,
+      main_max_points: FAMILY_FEUD_MAIN_RAW_MAX,
       fast_money_question_count: FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT,
       fast_money_time_ms: FAMILY_FEUD_FAST_MONEY_TIME_MS,
+      fast_money_max_points: FAMILY_FEUD_FAST_MONEY_RAW_MAX,
+      hq_score_max: FAMILY_FEUD_RAW_MAX,
       main_boards: pack.mainBoards.map((question) => ({
         id: question.id,
         prompt: question.prompt,
-        slot_points: question.answers.map((answer) => answer.points),
       })),
       fast_money_prompts: pack.fastMoney.map((question) => ({
         id: question.id,
@@ -260,16 +283,16 @@ export function buildFamilyFeudDailySetup(
     revealSetup: {
       main_boards: pack.mainBoards.map((question) => ({
         id: question.id,
-        answers: question.answers.map((answer, slotIndex) => ({
-          slot_index: slotIndex,
+        accepted_answers: question.answers.map((answer, rankIndex) => ({
+          rank: rankIndex + 1,
           entity: entityPresentation(pack, answer.entityId),
           points: answer.points,
         })),
       })),
       fast_money: pack.fastMoney.map((question) => ({
         id: question.id,
-        answers: question.answers.map((answer, slotIndex) => ({
-          rank: slotIndex + 1,
+        accepted_answers: question.answers.map((answer, rankIndex) => ({
+          rank: rankIndex + 1,
           entity: entityPresentation(pack, answer.entityId),
           points: answer.points,
         })),
@@ -281,7 +304,7 @@ export function buildFamilyFeudDailySetup(
     },
     privateGradingEvidence: {
       proof,
-      raw_max: 400,
+      raw_max: FAMILY_FEUD_RAW_MAX,
     },
   };
 }

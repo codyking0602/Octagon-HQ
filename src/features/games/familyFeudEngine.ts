@@ -29,14 +29,15 @@ export interface FamilyFeudPack {
 }
 
 export const FAMILY_FEUD_MAIN_BOARD_COUNT = 2;
-export const FAMILY_FEUD_BOARD_ANSWER_COUNT = 6;
+export const FAMILY_FEUD_BOARD_ANSWER_COUNT = 4;
 export const FAMILY_FEUD_STRIKES_PER_BOARD = 3;
 export const FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT = 5;
-export const FAMILY_FEUD_FAST_MONEY_TIME_MS = 30_000;
-export const FAMILY_FEUD_FAST_MONEY_POINTS = [40, 30, 20, 15, 10, 5] as const;
-export const FAMILY_FEUD_MAIN_RAW_MAX = 200;
-export const FAMILY_FEUD_FAST_MONEY_RAW_MAX = 200;
-export const FAMILY_FEUD_RAW_MAX = 400;
+export const FAMILY_FEUD_FAST_MONEY_TIME_MS = 45_000;
+export const FAMILY_FEUD_MAIN_BOARD_MAX = 30;
+export const FAMILY_FEUD_MAIN_RAW_MAX = 60;
+export const FAMILY_FEUD_FAST_MONEY_QUESTION_MAX = 8;
+export const FAMILY_FEUD_FAST_MONEY_RAW_MAX = 40;
+export const FAMILY_FEUD_RAW_MAX = 100;
 
 export type FamilyFeudPhase = "main" | "fast-money" | "complete";
 
@@ -105,6 +106,14 @@ function assertUnique(values: readonly string[], label: string) {
   if (new Set(values).size !== values.length) throw new Error(label + " must be unique.");
 }
 
+function assertDescendingPoints(answers: readonly FamilyFeudRankedAnswer[], label: string) {
+  for (let index = 1; index < answers.length; index += 1) {
+    if (answers[index]!.points > answers[index - 1]!.points) {
+      throw new Error(label + " must be ordered from highest to lowest points.");
+    }
+  }
+}
+
 export function assertFamilyFeudPack(pack: FamilyFeudPack) {
   assertNonEmpty(pack.id, "Family Feud pack id");
   if (pack.mainBoards.length !== FAMILY_FEUD_MAIN_BOARD_COUNT) {
@@ -128,15 +137,16 @@ export function assertFamilyFeudPack(pack: FamilyFeudPack) {
   allQuestions.forEach((question, questionIndex) => {
     assertNonEmpty(question.id, "Family Feud question id");
     assertNonEmpty(question.prompt, "Family Feud question prompt");
-    if (question.answers.length !== FAMILY_FEUD_BOARD_ANSWER_COUNT) {
-      throw new Error("Family Feud questions require exactly six ranked answers.");
+    if (question.answers.length < FAMILY_FEUD_BOARD_ANSWER_COUNT) {
+      throw new Error("Family Feud questions need at least four accepted answers.");
     }
-    if (question.candidateIds.length < FAMILY_FEUD_BOARD_ANSWER_COUNT) {
-      throw new Error("Family Feud candidate universes must contain at least six entities.");
+    if (question.candidateIds.length < question.answers.length) {
+      throw new Error("Family Feud candidate universes must contain every accepted answer.");
     }
 
     assertUnique(question.candidateIds, "Family Feud candidate ids");
     assertUnique(question.answers.map((answer) => answer.entityId), "Family Feud answer ids");
+    assertDescendingPoints(question.answers, "Family Feud answer points");
 
     for (const candidateId of question.candidateIds) {
       if (!entityIdSet.has(candidateId)) {
@@ -153,13 +163,14 @@ export function assertFamilyFeudPack(pack: FamilyFeudPack) {
     }
 
     if (questionIndex < FAMILY_FEUD_MAIN_BOARD_COUNT) {
-      const total = question.answers.reduce((sum, answer) => sum + answer.points, 0);
-      if (total !== 100) throw new Error("Each Family Feud main board must total 100 raw points.");
-    } else {
-      const points = question.answers.map((answer) => answer.points);
-      if (points.some((value, index) => value !== FAMILY_FEUD_FAST_MONEY_POINTS[index])) {
-        throw new Error("Fast Money boards must use the locked 40/30/20/15/10/5 ladder.");
+      const bestFour = question.answers
+        .slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT)
+        .reduce((sum, answer) => sum + answer.points, 0);
+      if (bestFour !== FAMILY_FEUD_MAIN_BOARD_MAX) {
+        throw new Error("The four highest-value main-board answers must total 30 HQ points.");
       }
+    } else if (question.answers[0]!.points !== FAMILY_FEUD_FAST_MONEY_QUESTION_MAX) {
+      throw new Error("Each Fast Money prompt must have a top answer worth 8 HQ points.");
     }
   });
 }
@@ -348,16 +359,26 @@ function entityDisplayName(pack: FamilyFeudPack, entityId: string) {
   return pack.entities.find((entity) => entity.id === entityId)?.displayName ?? entityId;
 }
 
+export function familyFeudMainBoardScore(
+  pack: FamilyFeudPack,
+  state: FamilyFeudState,
+  boardIndex: number,
+) {
+  const question = pack.mainBoards[boardIndex];
+  const board = state.mainBoards[boardIndex];
+  if (!question || !board) return 0;
+  const revealed = new Set(board.revealedEntityIds);
+  return question.answers.reduce(
+    (sum, answer) => sum + (revealed.has(answer.entityId) ? answer.points : 0),
+    0,
+  );
+}
+
 export function familyFeudMainRawScore(pack: FamilyFeudPack, state: FamilyFeudState) {
-  return pack.mainBoards.reduce((total, question, index) => {
-    const board = state.mainBoards[index];
-    if (!board) return total;
-    const revealed = new Set(board.revealedEntityIds);
-    return total + question.answers.reduce(
-      (sum, answer) => sum + (revealed.has(answer.entityId) ? answer.points : 0),
-      0,
-    );
-  }, 0);
+  return pack.mainBoards.reduce(
+    (total, _question, index) => total + familyFeudMainBoardScore(pack, state, index),
+    0,
+  );
 }
 
 export function familyFeudFastMoneyRawScore(state: FamilyFeudState) {
@@ -369,8 +390,7 @@ export function familyFeudRawScore(pack: FamilyFeudPack, state: FamilyFeudState)
 }
 
 export function familyFeudHqScore(rawScore: number) {
-  const safe = Math.max(0, Math.min(FAMILY_FEUD_RAW_MAX, rawScore));
-  return Math.round(100 * Math.sqrt(safe / FAMILY_FEUD_RAW_MAX));
+  return Math.round(Math.max(0, Math.min(FAMILY_FEUD_RAW_MAX, rawScore)));
 }
 
 export function familyFeudScore(pack: FamilyFeudPack, state: FamilyFeudState) {
@@ -421,19 +441,20 @@ export function submitFamilyFeudMainAnswer(
   }
   if (match.status === "matched") board.submittedEntityIds.push(match.entityId);
 
-  const slotIndex = match.status === "matched"
+  const answerIndex = match.status === "matched"
     ? question.answers.findIndex((answer) => answer.entityId === match.entityId)
     : -1;
 
-  if (slotIndex >= 0 && match.status === "matched") {
-    const answer = question.answers[slotIndex]!;
+  if (answerIndex >= 0 && match.status === "matched") {
+    const answer = question.answers[answerIndex]!;
+    const displaySlotIndex = board.revealedEntityIds.length;
     board.revealedEntityIds.push(answer.entityId);
     const outcome: FamilyFeudOutcome = {
       type: "board-correct",
       boardIndex,
       entityId: answer.entityId,
       displayName: entityDisplayName(pack, answer.entityId),
-      slotIndex,
+      slotIndex: displaySlotIndex,
       points: answer.points,
     };
     advanceMainPhase(state);
