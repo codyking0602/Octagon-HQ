@@ -818,7 +818,7 @@ export function assembleWhoAmIClues(
     // Production is a hard game-quality cap, not a preference to relax for
     // playability. If a pool cannot build ten clues without stat soup, that is
     // content debt for the population cleanup rather than permission to exceed it.
-    if (entry.facet === "production" && facetCount >= 2) return false;
+    if (entry.facet === "production" && facetCount >= 4) return false;
     if (whoAmIClueIsGenericCareerVolume(entry.clue) && selected.filter(({ clue }) => whoAmIClueIsGenericCareerVolume(clue)).length >= 2) return false;
     if (!options.relaxFacetLimit && facetLimit != null && facetCount >= facetLimit) return false;
     return true;
@@ -1226,7 +1226,7 @@ export function assembleWhoAmIClues(
           && sportsCount >= sportsIdentityTarget
           && biographyCount <= 1
           && relationshipCount <= 1
-          && productionCount <= 2
+          && productionCount <= 4
           && genericCareerVolumeCount <= 2
         ) {
           cleanBoard = [...chosen];
@@ -1244,7 +1244,7 @@ export function assembleWhoAmIClues(
           normalize(entry.clue.text) === normalize(candidate.clue.text)
           || cluesEffectivelyRepeated(entry.clue, candidate.clue)
         ))) continue;
-        if (candidate.facet === "production" && chosen.filter((entry) => entry.facet === "production").length >= 2) continue;
+        if (candidate.facet === "production" && chosen.filter((entry) => entry.facet === "production").length >= 4) continue;
         if (whoAmIClueIsGenericCareerVolume(candidate.clue) && chosen.filter(({ clue }) => whoAmIClueIsGenericCareerVolume(clue)).length >= 2) continue;
         if (candidate.facet === "relationships" && chosen.some((entry) => entry.facet === "relationships")) continue;
         if (candidate.selectionClass === "deep-biography" && chosen.some((entry) => entry.selectionClass === "deep-biography")) continue;
