@@ -1,4 +1,4 @@
-import { whoAmIClueFacet } from "./whoAmIClueAssembler";
+import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIRevealCoordinate } from "./whoAmIEngine";
 import { whoAmICluesShareInformation, whoAmISemanticIndependentCapacity } from "./whoAmISemanticQuality";
 
@@ -429,6 +429,22 @@ function scheduleRevealArchitecture(
       if (isFootballPool && !isStrongLateAnchor(ordered.at(-1)!)) {
         return null;
       }
+
+      // Selection during coordinate rescue must preserve the same canonical
+      // clue-quality contract as normal assembly rather than treating reveal
+      // architecture as permission to bypass semantic/facet protections.
+      const selectionClasses = ordered.map(whoAmIClueSelectionClass);
+      const facets = ordered.map(whoAmIClueFacet);
+      if (
+        selectionClasses.filter((selectionClass) => selectionClass === "sports-identity").length < 7
+        || selectionClasses.filter((selectionClass) => selectionClass === "deep-biography").length > 1
+        || new Set(facets).size < 4
+        || facets.filter((facet) => facet === "relationships").length > 1
+        || facets.filter((facet) => facet === "production").length > 2
+      ) {
+        return null;
+      }
+
       return ordered;
     }
 
