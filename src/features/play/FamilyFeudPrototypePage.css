@@ -2356,3 +2356,133 @@ body.family-feud-prototype-active .bottom-nav {
     transform: scale(1.72);
   }
 }
+
+
+/* Final Sports Feud mobile alignment pass. */
+
+/* Main board: structural number gutter instead of padding guesses. */
+.family-feud-prototype[data-scene="main"] .feud-answer-slot {
+  grid-template-columns: 34% minmax(0, 1fr) 18%;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot strong {
+  grid-column: 2;
+  min-width: 0;
+  padding: 0 2%;
+  font-size: clamp(7px, 1.95vw, 11px);
+  line-height: 1;
+  text-align: left;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot > span {
+  grid-column: 3;
+}
+
+/* Fast Money board: reserve the baked 1–5 circle lane permanently. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div {
+  padding: 0;
+  font-size: inherit;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div > span {
+  display: block;
+  width: 62%;
+  margin-left: 31%;
+  overflow: hidden;
+  color: inherit;
+  font-size: clamp(8px, 2.15vw, 12px);
+  font-weight: 900;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Keep the approved large host, but anchor the visible figure to the far-left lane. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  left: -21%;
+  bottom: 10.8%;
+  width: 52%;
+  height: 75%;
+  transform: scale(1.75);
+  transform-origin: left bottom;
+  object-position: left bottom;
+}
+
+/* Progress belongs inside the prompt card, not outside the physical set. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-progress {
+  top: 7%;
+  right: 4%;
+  min-width: 46px;
+  padding: 3px 6px;
+  font-size: clamp(6px, 1.55vw, 9px);
+  z-index: 14;
+}
+
+/* Keyboard-open mode uses normal flex layout so iOS owns the text baseline naturally. */
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry {
+  height: 76px;
+  padding: 9px;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry__row,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry__row {
+  position: static;
+  inset: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry input {
+  position: static;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  height: 54px;
+  margin: 0;
+  padding: 0 15px;
+  transform: none;
+  border: 0;
+  border-radius: 11px;
+  color: #07142d;
+  background: #fff;
+  font-size: 17px;
+  line-height: normal;
+  font-weight: 750;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry__row button,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry__row button {
+  position: static;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 54px;
+  margin: 0;
+  padding: 0;
+  transform: none;
+}
+
+/* Fully hide the baked inactive field before Fast Money starts. */
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro::after {
+  background: #01102c;
+  opacity: 1;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+  .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+    left: -22%;
+    bottom: 11%;
+    width: 50%;
+    height: 72%;
+    transform: scale(1.72);
+  }
+}
