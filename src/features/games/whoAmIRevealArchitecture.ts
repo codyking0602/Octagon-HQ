@@ -299,18 +299,12 @@ function preferredBandRank(position: number, band: WhoAmIClueBand) {
   return preferred.indexOf(band);
 }
 
-function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
-  if (clues.length !== 10) return null;
-  if (clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length > 1) {
-    return null;
-  }
+function scheduleRevealArchitecture(
+  clues: readonly WhoAmIClue[],
+  targetLength = 10,
+) {
+  if (targetLength !== 10 || clues.length < targetLength) return null;
 
-  const preserveStrongFinalTwo = clues.slice(-2).every((clue) => (
-    clue.band === "strong" || clue.band === "giveaway"
-  ));
-  const preserveStrongFinalFour = clues.slice(-4).filter((clue) => (
-    clue.band === "strong" || clue.band === "giveaway"
-  )).length >= 3;
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
   const deadStates = new Set<string>();
@@ -320,39 +314,53 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
   const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
     explored += 1;
     if (explored > MAX_NODES) return null;
-    const stateKey = `${position}:${remaining.map((entry) => entry.originalIndex).sort((a, b) => a - b).join(",")}`;
-    if (deadStates.has(stateKey)) return null;
-    if (position > clues.length) {
+
+    if (position > targetLength) {
       const ordered = chosen.map((entry) => entry.clue);
-      if (
-        preserveStrongFinalFour
-        && ordered.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3
-      ) {
+      if (ordered.slice(-2).some((clue) => clue.band !== "strong" && clue.band !== "giveaway")) {
+        return null;
+      }
+      if (ordered.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3) {
         return null;
       }
       return ordered;
     }
 
+    if (remaining.length < targetLength - chosen.length) return null;
+
+    const stateKey = `${position}:${remaining.map((entry) => entry.originalIndex).sort((a, b) => a - b).join(",")}`;
+    if (deadStates.has(stateKey)) return null;
+
+    const personalAlreadyChosen = chosen.some(({ clue }) => (
+      whoAmIRevealProfile(clue).category === "personal-biography"
+    ));
+
     const candidates = remaining
       .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
+      .filter(({ clue }) => (
+        !personalAlreadyChosen || whoAmIRevealProfile(clue).category !== "personal-biography"
+      ))
       .filter(({ clue }) => whoAmIRevealCoordinateWindowSatisfied([
         ...chosen.map((entry) => entry.clue),
         clue,
       ]))
       .filter(({ clue }) => (
-        !preserveStrongFinalTwo
-        || position < 9
+        position < 9
         || clue.band === "strong"
         || clue.band === "giveaway"
       ))
       .sort((left, right) => {
-        const leftPower = whoAmIRevealProfile(left.clue).identifyingPower;
-        const rightPower = whoAmIRevealProfile(right.clue).identifyingPower;
+        const leftProfile = whoAmIRevealProfile(left.clue);
+        const rightProfile = whoAmIRevealProfile(right.clue);
         const powerRank = { broad: 0, specific: 1, signature: 2 } as const;
+        const coordinatePreference = position <= 4
+          ? (left.clue.revealCoordinates?.length ?? 0) - (right.clue.revealCoordinates?.length ?? 0)
+          : 0;
         const powerPreference = position >= 7
-          ? powerRank[rightPower] - powerRank[leftPower]
-          : powerRank[leftPower] - powerRank[rightPower];
-        return preferredBandRank(position, left.clue.band) - preferredBandRank(position, right.clue.band)
+          ? powerRank[rightProfile.identifyingPower] - powerRank[leftProfile.identifyingPower]
+          : powerRank[leftProfile.identifyingPower] - powerRank[rightProfile.identifyingPower];
+        return coordinatePreference
+          || preferredBandRank(position, left.clue.band) - preferredBandRank(position, right.clue.band)
           || powerPreference
           || Math.abs(left.originalIndex - (position - 1)) - Math.abs(right.originalIndex - (position - 1))
           || BAND_RANK[left.clue.band] - BAND_RANK[right.clue.band]
@@ -372,6 +380,13 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
   };
 
   return search(1, entries);
+}
+
+export function selectWhoAmICluesByRevealArchitectureIfPossible(
+  clues: readonly WhoAmIClue[],
+  targetLength = 10,
+) {
+  return scheduleRevealArchitecture(clues, targetLength);
 }
 
 export function whoAmIRevealArchitectureCanOrder(clues: readonly WhoAmIClue[]) {
