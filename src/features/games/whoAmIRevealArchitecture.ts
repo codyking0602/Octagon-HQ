@@ -419,9 +419,29 @@ function preferredBandRank(position: number, band: WhoAmIClueBand) {
   return preferred.indexOf(band);
 }
 
+const REVEAL_CLUE_CACHE_IDS = new WeakMap<WhoAmIClue, number>();
+let nextRevealClueCacheId = 1;
+const UNSCHEDULABLE_EXACT_REVEAL_ORDERS = new Set<string>();
+
+function revealClueCacheId(clue: WhoAmIClue) {
+  const cached = REVEAL_CLUE_CACHE_IDS.get(clue);
+  if (cached != null) return cached;
+  const id = nextRevealClueCacheId;
+  nextRevealClueCacheId += 1;
+  REVEAL_CLUE_CACHE_IDS.set(clue, id);
+  return id;
+}
+
+function exactRevealOrderCacheKey(kind: "legacy" | "football", clues: readonly WhoAmIClue[]) {
+  return `${kind}:${clues.map(revealClueCacheId).join(",")}`;
+}
+
 function scheduleLegacyRevealArchitecture(clues: readonly WhoAmIClue[]) {
   if (clues.length !== 10) return null;
+  const cacheKey = exactRevealOrderCacheKey("legacy", clues);
+  if (UNSCHEDULABLE_EXACT_REVEAL_ORDERS.has(cacheKey)) return null;
   if (clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length > 1) {
+    UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(cacheKey);
     return null;
   }
 
@@ -494,7 +514,9 @@ function scheduleLegacyRevealArchitecture(clues: readonly WhoAmIClue[]) {
     return null;
   };
 
-  return search(1, entries);
+  const result = search(1, entries);
+  if (!result) UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(cacheKey);
+  return result;
 }
 
 function scheduleRevealArchitecture(
@@ -508,8 +530,19 @@ function scheduleRevealArchitecture(
     ? scheduleLegacyRevealArchitecture(clues)
     : null;
 
-  if (clues.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3) return null;
-  if (clues.filter(isStrongLateAnchor).length < 2) return null;
+  const exactCacheKey = clues.length === targetLength
+    ? exactRevealOrderCacheKey("football", clues)
+    : null;
+  if (exactCacheKey && UNSCHEDULABLE_EXACT_REVEAL_ORDERS.has(exactCacheKey)) return null;
+
+  if (clues.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3) {
+    if (exactCacheKey) UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(exactCacheKey);
+    return null;
+  }
+  if (clues.filter(isStrongLateAnchor).length < 2) {
+    if (exactCacheKey) UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(exactCacheKey);
+    return null;
+  }
 
   const isCfbPool = clues.some((clue) => clue.revealCoordinates?.includes("school"));
   const isNflPool = clues.some((clue) => clue.revealCoordinates?.includes("franchise"));
@@ -519,12 +552,15 @@ function scheduleRevealArchitecture(
   // planner can immediately widen to the canonical rescue pool.
   if (clues.length === targetLength) {
     if (clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length > 1) {
+      if (exactCacheKey) UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(exactCacheKey);
       return null;
     }
     if (isCfbPool && clues.filter((clue) => whoAmIClueFacet(clue) === "production").length > 4) {
+      if (exactCacheKey) UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(exactCacheKey);
       return null;
     }
     if (isCfbPool && clues.filter(whoAmIClueIsGenericCareerVolume).length > 2) {
+      if (exactCacheKey) UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(exactCacheKey);
       return null;
     }
   }
@@ -544,7 +580,10 @@ function scheduleRevealArchitecture(
       }
       return false;
     });
-  if (entries.length < targetLength) return null;
+  if (entries.length < targetLength) {
+    if (exactCacheKey) UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(exactCacheKey);
+    return null;
+  }
   const chosen: typeof entries = [];
   const deadStates = new Set<string>();
   const requireSemanticIndependence = whoAmISemanticIndependentCapacity(clues, targetLength) >= targetLength;
@@ -713,7 +752,9 @@ function scheduleRevealArchitecture(
     return null;
   };
 
-  return search(1, entries);
+  const result = search(1, entries);
+  if (!result && exactCacheKey) UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(exactCacheKey);
+  return result;
 }
 
 export function selectWhoAmICluesByRevealArchitectureIfPossible(
