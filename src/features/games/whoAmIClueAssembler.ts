@@ -630,7 +630,7 @@ function isGenericCareerGames(clue: WhoAmIClue) {
   );
 }
 
-function isGenericCareerVolume(clue: WhoAmIClue) {
+export function whoAmIClueIsGenericCareerVolume(clue: WhoAmIClue) {
   return /\b(?:career|across \d+ seasons?|for my career)\b.*\b\d[\d,]*(?:\.\d+)?\b/i.test(clue.text)
     && !/\b(?:record|leader|most|first|only|ncaa|nation|nationally|all-time)\b/i.test(clue.text);
 }
@@ -819,7 +819,7 @@ export function assembleWhoAmIClues(
     // playability. If a pool cannot build ten clues without stat soup, that is
     // content debt for the population cleanup rather than permission to exceed it.
     if (entry.facet === "production" && facetCount >= 2) return false;
-    if (isGenericCareerVolume(entry.clue) && selected.filter(({ clue }) => isGenericCareerVolume(clue)).length >= 2) return false;
+    if (whoAmIClueIsGenericCareerVolume(entry.clue) && selected.filter(({ clue }) => whoAmIClueIsGenericCareerVolume(clue)).length >= 2) return false;
     if (!options.relaxFacetLimit && facetLimit != null && facetCount >= facetLimit) return false;
     return true;
   };
@@ -1220,7 +1220,7 @@ export function assembleWhoAmIClues(
         const biographyCount = chosen.filter((entry) => entry.selectionClass === "deep-biography").length;
         const relationshipCount = chosen.filter((entry) => entry.facet === "relationships").length;
         const productionCount = chosen.filter((entry) => entry.facet === "production").length;
-        const genericCareerVolumeCount = chosen.filter(({ clue }) => isGenericCareerVolume(clue)).length;
+        const genericCareerVolumeCount = chosen.filter(({ clue }) => whoAmIClueIsGenericCareerVolume(clue)).length;
         if (
           lateCount >= 3
           && sportsCount >= sportsIdentityTarget
@@ -1245,7 +1245,7 @@ export function assembleWhoAmIClues(
           || cluesEffectivelyRepeated(entry.clue, candidate.clue)
         ))) continue;
         if (candidate.facet === "production" && chosen.filter((entry) => entry.facet === "production").length >= 2) continue;
-        if (isGenericCareerVolume(candidate.clue) && chosen.filter(({ clue }) => isGenericCareerVolume(clue)).length >= 2) continue;
+        if (whoAmIClueIsGenericCareerVolume(candidate.clue) && chosen.filter(({ clue }) => whoAmIClueIsGenericCareerVolume(clue)).length >= 2) continue;
         if (candidate.facet === "relationships" && chosen.some((entry) => entry.facet === "relationships")) continue;
         if (candidate.selectionClass === "deep-biography" && chosen.some((entry) => entry.selectionClass === "deep-biography")) continue;
 
