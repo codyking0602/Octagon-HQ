@@ -5201,6 +5201,7 @@ export function curateFootballWhoAmIClues(
 
   for (const rawClue of rawClues) {
     if (suppressedBatchStructuralClueIds.has(rawClue.id)) continue;
+    if (subject.id === "brett-favre" && rawClue.id === "era") continue;
     if (rawClue.id === "career-span" && suppressedCareerSpanSubjectIds.has(subject.id)) continue;
     if (active2026SubjectIds.has(subject.id) && /^fact:nfl-career-/.test(rawClue.id)) continue;
     if (
