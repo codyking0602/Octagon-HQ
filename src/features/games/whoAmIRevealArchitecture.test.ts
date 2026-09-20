@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { WhoAmIClue } from "./whoAmIEngine";
 import {
+  isStrongLateAnchor,
   orderWhoAmICluesByRevealArchitectureIfPossible,
   whoAmIRevealArchitectureCanOrder,
   whoAmIRevealArchitectureSatisfied,
@@ -38,6 +39,18 @@ describe("Who Am I standardized reveal architecture", () => {
       identifyingPower: "signature",
       earliestClue: 6,
     });
+  });
+
+  it("does not treat an inferred raw production stat as a strong late identity anchor", () => {
+    const rawProduction: WhoAmIClue = {
+      id: "fact:nfl-career-passing-touchdowns",
+      text: "I finished my NFL career with 152 passing touchdowns.",
+      band: "strong",
+      revealCoordinates: [],
+    };
+
+    expect(whoAmIRevealProfile(rawProduction).category).toBe("production");
+    expect(isStrongLateAnchor(rawProduction)).toBe(false);
   });
 
   it("reserves jersey numbers and nickname or name-change clues for the finish", () => {
