@@ -1,4 +1,4 @@
-import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
+import { whoAmIClueFacet } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIRevealCoordinate } from "./whoAmIEngine";
 import { whoAmICluesShareInformation, whoAmISemanticIndependentCapacity } from "./whoAmISemanticQuality";
 
@@ -456,21 +456,6 @@ function scheduleRevealArchitecture(
         return null;
       }
 
-      // Selection during coordinate rescue must preserve the same canonical
-      // clue-quality contract as normal assembly rather than treating reveal
-      // architecture as permission to bypass semantic/facet protections.
-      const selectionClasses = ordered.map(whoAmIClueSelectionClass);
-      const facets = ordered.map(whoAmIClueFacet);
-      if (
-        selectionClasses.filter((selectionClass) => selectionClass === "sports-identity").length < 7
-        || selectionClasses.filter((selectionClass) => selectionClass === "deep-biography").length > 1
-        || new Set(facets).size < 4
-        || facets.filter((facet) => facet === "relationships").length > 1
-        || facets.filter((facet) => facet === "production").length > 2
-      ) {
-        return null;
-      }
-
       return ordered;
     }
 
@@ -480,20 +465,11 @@ function scheduleRevealArchitecture(
     const personalAlreadyChosen = chosenClues.some((clue) => (
       whoAmIRevealProfile(clue).category === "personal-biography"
     ));
-    const chosenFacets = chosenClues.map(whoAmIClueFacet);
-    const chosenClasses = chosenClues.map(whoAmIClueSelectionClass);
-    const productionChosen = chosenFacets.filter((facet) => facet === "production").length;
-    const relationshipsChosen = chosenFacets.filter((facet) => facet === "relationships").length;
-    const deepBiographyChosen = chosenClasses.filter((selectionClass) => selectionClass === "deep-biography").length;
+    const productionChosen = chosenClues.filter((clue) => whoAmIClueFacet(clue) === "production").length;
 
     const semanticallyAvailable = remaining.filter(({ clue }) => {
-      const profile = whoAmIRevealProfile(clue);
-      const facet = whoAmIClueFacet(clue);
-      const selectionClass = whoAmIClueSelectionClass(clue);
-      if (personalAlreadyChosen && profile.category === "personal-biography") return false;
-      if (productionChosen >= 2 && facet === "production") return false;
-      if (relationshipsChosen >= 1 && facet === "relationships") return false;
-      if (deepBiographyChosen >= 1 && selectionClass === "deep-biography") return false;
+      if (personalAlreadyChosen && whoAmIRevealProfile(clue).category === "personal-biography") return false;
+      if (productionChosen >= 4 && whoAmIClueFacet(clue) === "production") return false;
       if (
         requireSemanticIndependence
         && chosen.some((entry) => (
@@ -505,27 +481,6 @@ function scheduleRevealArchitecture(
       }
       return true;
     });
-
-    const slotsRemaining = targetLength - chosen.length;
-    const sportsIdentityChosen = chosenClasses.filter((selectionClass) => selectionClass === "sports-identity").length;
-    const sportsIdentityAvailable = semanticallyAvailable.filter(({ clue }) => (
-      whoAmIClueSelectionClass(clue) === "sports-identity"
-    )).length;
-    const sportsIdentityNeeded = Math.max(0, 7 - sportsIdentityChosen);
-    if (
-      sportsIdentityChosen + sportsIdentityAvailable < 7
-      || sportsIdentityNeeded > slotsRemaining
-    ) return null;
-
-    const chosenFacetSet = new Set(chosenFacets);
-    const possibleFacets = new Set([
-      ...chosenFacets,
-      ...semanticallyAvailable.map(({ clue }) => whoAmIClueFacet(clue)),
-    ]);
-    if (
-      possibleFacets.size < 4
-      || Math.max(0, 4 - chosenFacetSet.size) > slotsRemaining
-    ) return null;
 
     const exposed = new Set(chosen.flatMap((entry) => entry.clue.revealCoordinates ?? []));
     for (const windowEnd of [4, 6, 8] as const) {
