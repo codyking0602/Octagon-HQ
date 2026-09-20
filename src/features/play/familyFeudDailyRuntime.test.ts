@@ -22,8 +22,9 @@ const entities = [
 }));
 
 const candidateIds = entities.map((entity) => entity.id);
-const mainPoints = [30, 24, 18, 13, 9, 6] as const;
-const fastPoints = [40, 30, 20, 15, 10, 5] as const;
+const acceptedIds = candidateIds.slice(0, 6);
+const mainPoints = [10, 8, 7, 5, 5, 4] as const;
+const fastPoints = [8, 7, 6, 5, 4, 3] as const;
 
 function question(id: string, prompt: string, points: readonly number[]) {
   return {
@@ -31,14 +32,14 @@ function question(id: string, prompt: string, points: readonly number[]) {
     prompt,
     candidateIds,
     answers: points.map((value, index) => ({
-      entityId: candidateIds[index]!,
+      entityId: acceptedIds[index]!,
       points: value,
     })),
   };
 }
 
 const pack: FamilyFeudPack = {
-  id: "persistence-fixture",
+  id: "persistence-fixture-v2",
   sport: "football",
   entities,
   mainBoards: [
@@ -54,7 +55,10 @@ const pack: FamilyFeudPack = {
   ],
 };
 
-function context(publication: ReturnType<typeof buildFamilyFeudDailySetup>, submissionState: Record<string, unknown> = {}) {
+function context(
+  publication: ReturnType<typeof buildFamilyFeudDailySetup>,
+  submissionState: Record<string, unknown> = {},
+) {
   return {
     setupKey: publication.setupKey,
     publicSetup: publication.publicSetup,
@@ -63,8 +67,23 @@ function context(publication: ReturnType<typeof buildFamilyFeudDailySetup>, subm
   };
 }
 
-describe("Family Feud Daily persistence contract", () => {
-  it("publishes prompts and slot values without leaking candidate or answer identities", () => {
+function strikeOutBothBoards(publication: ReturnType<typeof buildFamilyFeudDailySetup>) {
+  let submission: Record<string, unknown> = {};
+  let result: ReturnType<typeof advanceFamilyFeudDailyRuntime> | null = null;
+  for (let board = 0; board < 2; board += 1) {
+    for (const answer of ["Golf Seven", "Hotel Eight", "India Nine"]) {
+      result = advanceFamilyFeudDailyRuntime(
+        context(publication, submission),
+        { type: "answer", answer },
+      );
+      submission = result.submissionState;
+    }
+  }
+  return { submission, result: result! };
+}
+
+describe("Family Feud V2 Daily persistence contract", () => {
+  it("publishes prompts and rules without leaking accepted identities or candidate universes", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const publicJson = JSON.stringify(publication.publicSetup);
 
@@ -73,36 +92,53 @@ describe("Family Feud Daily persistence contract", () => {
     expect(publicJson).not.toContain("Alpha One");
     expect(publicJson).not.toContain("entity-1");
     expect(publicJson).not.toContain("candidateIds");
+    expect(publication.publicSetup).toMatchObject({
+      answers_required_per_board: 4,
+      main_board_max_points: 30,
+      main_max_points: 60,
+      fast_money_time_ms: 45_000,
+      fast_money_max_points: 40,
+      hq_score_max: 100,
+    });
 
     const initial = publication.publicSetup.initial_state as Record<string, unknown>;
     const boards = initial.main_boards as Array<Record<string, unknown>>;
     const slots = boards[0]!.slots as Array<Record<string, unknown>>;
-    expect(slots.every((slot) => slot.entity === null && slot.revealed === false)).toBe(true);
+    expect(slots).toHaveLength(4);
+    expect(slots.every((slot) =>
+      slot.entity === null && slot.points === null && slot.revealed === false
+    )).toBe(true);
   });
 
-  it("reveals a correct main-board slot but keeps the rest hidden while the board is live", () => {
+  it("reveals a found answer in the next visible slot while the remaining three stay hidden", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const result = advanceFamilyFeudDailyRuntime(
       context(publication),
-      { type: "answer", answer: "Alpha One" },
+      { type: "answer", answer: "Foxtrot Six" },
     );
 
     const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
     const slots = boards[0]!.slots as Array<Record<string, unknown>>;
     expect(slots[0]).toMatchObject({
       slot_index: 0,
-      points: 30,
+      points: 4,
       revealed: true,
       found: true,
-      entity: { id: "entity-1", display_name: "Alpha One" },
+      entity: { id: "entity-6", display_name: "Foxtrot Six" },
     });
-    expect(slots.slice(1).every((slot) => slot.entity === null)).toBe(true);
+    expect(slots.slice(1).every((slot) => slot.entity === null && slot.points === null)).toBe(true);
+    expect(result.publicState.main_points).toBe(4);
   });
 
-  it("reveals the remaining main board after the third strike", () => {
+  it("reveals the highest-value missed HQ answers after the third strike", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     let submission: Record<string, unknown> = {};
-    let result;
+
+    let result = advanceFamilyFeudDailyRuntime(
+      context(publication, submission),
+      { type: "answer", answer: "Foxtrot Six" },
+    );
+    submission = result.submissionState;
 
     for (const answer of ["Golf Seven", "Hotel Eight", "India Nine"]) {
       result = advanceFamilyFeudDailyRuntime(
@@ -112,57 +148,43 @@ describe("Family Feud Daily persistence contract", () => {
       submission = result.submissionState;
     }
 
-    const boards = result!.publicState.main_boards as Array<Record<string, unknown>>;
+    const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
     const firstBoard = boards[0]!;
     const slots = firstBoard.slots as Array<Record<string, unknown>>;
     expect(firstBoard).toMatchObject({ strikes: 3, settled: true });
-    expect(slots.every((slot) => slot.revealed === true && slot.entity !== null)).toBe(true);
-    expect(result!.publicState.main_board_index).toBe(1);
+    expect(slots).toHaveLength(4);
+    expect(slots.map((slot) => (slot.entity as Record<string, unknown>).display_name)).toEqual([
+      "Foxtrot Six",
+      "Alpha One",
+      "Bravo Two",
+      "Charlie Three",
+    ]);
+    expect(slots.map((slot) => slot.points)).toEqual([4, 10, 8, 7]);
+    expect(slots.map((slot) => slot.found)).toEqual([true, false, false, false]);
   });
 
-  it("moves through both boards into a hidden 30-second Fast Money round", () => {
+  it("moves through both boards into a hidden 45-second Fast Money round", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
-    let submission: Record<string, unknown> = {};
-    let result;
+    const { result } = strikeOutBothBoards(publication);
 
-    for (let board = 0; board < 2; board += 1) {
-      for (const answer of ["Golf Seven", "Hotel Eight", "India Nine"]) {
-        result = advanceFamilyFeudDailyRuntime(
-          context(publication, submission),
-          { type: "answer", answer },
-        );
-        submission = result.submissionState;
-      }
-    }
-
-    expect(result!.publicState.phase).toBe("fast-money");
-    expect(result!.publicState.fast_money).toMatchObject({
+    expect(result.publicState.phase).toBe("fast-money");
+    expect(result.publicState.fast_money).toMatchObject({
       answered_count: 0,
       question_index: 0,
       current_question: { id: "fast-1", prompt: "Fast one" },
-      time_remaining_ms: 30_000,
+      time_remaining_ms: 45_000,
       results: [],
       points: null,
     });
   });
 
-  it("does not reveal Fast Money points until all five answers are locked", () => {
+  it("keeps Fast Money values hidden during the clock, then reveals the user's result and full HQ board", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
-    let submission: Record<string, unknown> = {};
-
-    for (let board = 0; board < 2; board += 1) {
-      for (const answer of ["Golf Seven", "Hotel Eight", "India Nine"]) {
-        const result = advanceFamilyFeudDailyRuntime(
-          context(publication, submission),
-          { type: "answer", answer },
-        );
-        submission = result.submissionState;
-      }
-    }
+    let { submission } = strikeOutBothBoards(publication);
 
     let result = advanceFamilyFeudDailyRuntime(
       context(publication, submission),
-      { type: "answer", answer: "Alpha One", time_remaining_ms: 28_000 },
+      { type: "answer", answer: "Alpha One", time_remaining_ms: 44_000 },
     );
     submission = result.submissionState;
 
@@ -175,10 +197,10 @@ describe("Family Feud Daily persistence contract", () => {
     });
 
     for (const remaining of [
-      ["Bravo Two", 25_000],
-      ["Charlie Three", 20_000],
-      ["Delta Four", 15_000],
-      ["Echo Five", 10_000],
+      ["Bravo Two", 40_000],
+      ["Charlie Three", 35_000],
+      ["Delta Four", 30_000],
+      ["Echo Five", 25_000],
     ] as const) {
       result = advanceFamilyFeudDailyRuntime(
         context(publication, submission),
@@ -189,26 +211,33 @@ describe("Family Feud Daily persistence contract", () => {
 
     expect(result.complete).toBe(true);
     expect(result.finalSubmission).toMatchObject({
-      native_score: 115,
-      normalized_score: 54,
+      native_score: 30,
+      normalized_score: 30,
       main_points: 0,
-      fast_money_points: 115,
-      fast_money_time_remaining_ms: 10_000,
+      fast_money_points: 30,
+      fast_money_time_remaining_ms: 25_000,
     });
 
     const fastMoney = result.publicState.fast_money as Record<string, unknown>;
     const reveals = fastMoney.results as Array<Record<string, unknown>>;
-    expect(fastMoney.points).toBe(115);
+    expect(fastMoney.points).toBe(30);
     expect(reveals).toHaveLength(5);
-    expect(reveals.map((row) => row.points)).toEqual([40, 30, 20, 15, 10]);
-    expect(result.publicState.hq_score).toBe(54);
+    expect(reveals.map((row) => row.points)).toEqual([8, 7, 6, 5, 4]);
+    expect(reveals[0]).toMatchObject({
+      submitted_answer: "Alpha One",
+      counted: true,
+      board_rank: 1,
+    });
+    const accepted = reveals[0]!.accepted_answers as Array<Record<string, unknown>>;
+    expect(accepted[0]).toEqual({
+      entity: { id: "entity-1", display_name: "Alpha One" },
+      points: 8,
+    });
+    expect(result.publicState.hq_score).toBe(30);
   });
 
   it("settles unanswered Fast Money prompts at zero when time expires", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
-    const initial = publication.privateSetupEvidence.pack as FamilyFeudPack;
-    expect(initial.id).toBe(pack.id);
-
     const fastState = {
       phase: "fast-money",
       mainBoardIndex: 1,
@@ -218,7 +247,7 @@ describe("Family Feud Daily persistence contract", () => {
       ],
       fastMoneyIndex: 0,
       fastMoneyResults: [],
-      fastMoneyTimeRemainingMs: 30_000,
+      fastMoneyTimeRemainingMs: 45_000,
     };
 
     const result = advanceFamilyFeudDailyRuntime(
