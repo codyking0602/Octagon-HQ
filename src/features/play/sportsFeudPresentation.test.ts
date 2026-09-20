@@ -15,19 +15,19 @@ describe("Sports Feud presentation assets", () => {
 
   it("registers exactly three rotating hosts for UFC, NFL, and CFB", () => {
     expect(SPORTS_FEUD_HOSTS.ufc).toEqual([
-      "/assets/1ufc.jpeg",
-      "/assets/2ufc.jpeg",
-      "/assets/3ufc.jpeg",
+      "/assets/1ufc.png",
+      "/assets/2ufc.png",
+      "/assets/3ufc.png",
     ]);
     expect(SPORTS_FEUD_HOSTS.nfl).toEqual([
-      "/assets/1nfl.jpeg",
-      "/assets/2nfl.jpeg",
-      "/assets/3nfl.jpeg",
+      "/assets/1nfl.png",
+      "/assets/2nfl.png",
+      "/assets/3nfl.png",
     ]);
     expect(SPORTS_FEUD_HOSTS.cfb).toEqual([
-      "/assets/1cfb.jpeg",
-      "/assets/2cfb.jpeg",
-      "/assets/3cfb.jpeg",
+      "/assets/1cfb.png",
+      "/assets/2cfb.png",
+      "/assets/3cfb.png",
     ]);
   });
 
