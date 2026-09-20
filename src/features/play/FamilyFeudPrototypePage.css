@@ -1430,3 +1430,556 @@ body.family-feud-prototype-active .bottom-nav {
     transform: translateY(8px);
   }
 }
+
+
+/* Sports Feud photographic stage pass.
+   The uploaded plates own the physical studio. React/CSS own all live game state. */
+
+.feud-stage-plate {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-stage-plate--main,
+.family-feud-prototype[data-scene="fast-intro"] .feud-stage-plate--fast,
+.family-feud-prototype[data-scene="fast"] .feud-stage-plate--fast {
+  display: block;
+}
+
+.family-feud-prototype[data-scene="main"],
+.family-feud-prototype[data-scene="fast-intro"],
+.family-feud-prototype[data-scene="fast"] {
+  background: #01050e;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-back,
+.family-feud-prototype[data-scene="fast-intro"] .feud-back,
+.family-feud-prototype[data-scene="fast"] .feud-back {
+  top: 1.4%;
+  left: 2.5%;
+  width: 17%;
+  height: 5.2%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: transparent;
+  opacity: 0.01;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-back span,
+.family-feud-prototype[data-scene="fast-intro"] .feud-back span,
+.family-feud-prototype[data-scene="fast"] .feud-back span {
+  color: transparent;
+}
+
+/* MAIN BOARD — align live content with the blank four-slot stage plate. */
+.family-feud-prototype[data-scene="main"] .feud-main-stage {
+  z-index: 2;
+  inset: 0;
+  padding: 0;
+  gap: 0;
+  display: block;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-main-stage__top {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  min-height: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-main-stage__top .feud-brand {
+  display: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-strikes {
+  position: absolute;
+  top: 7.45%;
+  right: 4.6%;
+  width: 23.6%;
+  height: 5.5%;
+  padding: 0;
+  gap: 4%;
+  display: flex;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-strikes span {
+  width: 30.7%;
+  height: 100%;
+  border: 0;
+  color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-strikes span.is-on {
+  color: #fff;
+  border: 2px solid rgba(255, 103, 119, 0.94);
+  background: rgba(184, 8, 35, 0.9);
+  box-shadow:
+    0 0 0 3px rgba(255, 26, 57, 0.17),
+    0 0 22px rgba(255, 39, 70, 0.88);
+  animation: feud-photo-strike 380ms ease-out;
+}
+
+@keyframes feud-photo-strike {
+  0% { transform: scale(1.5); filter: brightness(2.1); }
+  62% { transform: scale(0.92); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.family-feud-prototype[data-scene="main"] .feud-question-card {
+  position: absolute;
+  left: 17.6%;
+  top: 16.45%;
+  width: 64.3%;
+  height: 11.7%;
+  padding: 2.1% 3.5% 1.7%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-question-card small {
+  margin-bottom: 0.2em;
+  color: #f6c958;
+  font-size: clamp(8px, 2.2vw, 13px);
+  font-weight: 950;
+  letter-spacing: 0.18em;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-question-card span {
+  color: #f4c752;
+  font-size: clamp(7px, 1.9vw, 11px);
+  letter-spacing: 0.18em;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-question-card h1 {
+  max-width: 95%;
+  margin-top: 0.35em;
+  color: #fff;
+  font-size: clamp(15px, 4vw, 24px);
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.72);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-board {
+  position: absolute;
+  left: 21.05%;
+  top: 32.15%;
+  width: 55.5%;
+  height: 13.15%;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 4.7% 2.7%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-board::before,
+.family-feud-prototype[data-scene="main"] .feud-answer-board::after {
+  content: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 21%;
+  align-items: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot > b {
+  display: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot strong {
+  padding: 0 3% 0 19%;
+  color: transparent;
+  font-size: clamp(10px, 3vw, 17px);
+  line-height: 1.03;
+  text-align: left;
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot > span {
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  border: 0;
+  color: transparent;
+  background: transparent;
+  font-size: clamp(13px, 3.6vw, 20px);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-revealed {
+  animation: feud-slot-flip 0.34s ease-out;
+  background: transparent;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-revealed strong,
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-revealed > span {
+  color: #fff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.72);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed strong,
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed > span {
+  color: #ffe29a;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-main-score {
+  position: absolute;
+  left: 50%;
+  top: 48.2%;
+  min-height: 0;
+  padding: 0.45em 1.1em;
+  transform: translateX(-50%);
+  border-color: rgba(247, 196, 69, 0.72);
+  background: rgba(0, 13, 39, 0.78);
+  backdrop-filter: blur(5px);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-review {
+  position: absolute;
+  z-index: 8;
+  left: 3%;
+  right: 3%;
+  bottom: 14.2%;
+  width: auto;
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(0, 13, 39, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry {
+  left: 3.2%;
+  right: auto;
+  bottom: 5.8%;
+  width: 93.6%;
+  height: 8.1%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry .feud-feedback,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry .feud-feedback {
+  position: absolute;
+  left: 8%;
+  right: 17%;
+  bottom: calc(100% + 6px);
+  min-height: 17px;
+  padding: 0;
+  color: #b9d4f2;
+  text-shadow: 0 2px 5px #000;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry__row,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry__row {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 12.6%;
+  gap: 2.1%;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input {
+  height: 100%;
+  padding: 0 4%;
+  border: 0;
+  border-radius: 10px;
+  color: #07152d;
+  background: transparent;
+  box-shadow: none;
+  font-size: clamp(16px, 4.8vw, 24px);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry__row button,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry__row button {
+  height: 100%;
+  border: 0;
+  border-radius: 12px;
+  color: transparent;
+  background: transparent;
+  box-shadow: none;
+  font-size: 0;
+}
+
+/* FAST MONEY — use the dedicated plate and layer the daily rotating host in the open left lane. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-stage {
+  z-index: 2;
+  inset: 0;
+  padding: 0;
+  gap: 0;
+  display: block;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-stage > header {
+  position: absolute;
+  z-index: 9;
+  inset: 0;
+  width: auto;
+  min-height: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-stage > header .feud-brand {
+  display: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-clock {
+  position: absolute;
+  left: 32.4%;
+  top: 17.55%;
+  width: 34.2%;
+  height: 5.8%;
+  border: 0;
+  border-radius: 0;
+  color: #ffd765;
+  background: transparent;
+  box-shadow: none;
+  font-size: clamp(30px, 8.7vw, 52px);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.82);
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-clock.is-low {
+  color: #ff6678;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-stage > header > span {
+  position: absolute;
+  top: 23.25%;
+  right: 8.5%;
+  color: #d4e5fb;
+  font-size: clamp(9px, 2.5vw, 14px);
+  text-shadow: 0 2px 5px #000;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-showdown {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  width: auto;
+  display: block;
+}
+
+.feud-fast-host-asset {
+  position: absolute;
+  z-index: 5;
+  left: -2.8%;
+  bottom: 9.4%;
+  width: 38.5%;
+  height: 60%;
+  object-fit: contain;
+  object-position: left bottom;
+  mix-blend-mode: darken;
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.42));
+  pointer-events: none;
+  user-select: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question {
+  position: absolute;
+  z-index: 8;
+  left: 25.4%;
+  top: 24.2%;
+  width: 59.1%;
+  height: 12.4%;
+  min-height: 0;
+  padding: 1.5% 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question small {
+  color: #f6c851;
+  font-size: clamp(7px, 2vw, 11px);
+  letter-spacing: 0.15em;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question h1 {
+  margin: 0.45em 0 0.35em;
+  max-width: 95%;
+  font-size: clamp(14px, 3.8vw, 23px);
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-dots {
+  gap: 5px;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-dots i {
+  width: 7px;
+  height: 7px;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress {
+  position: absolute;
+  z-index: 7;
+  left: 32.35%;
+  top: 38.45%;
+  width: 43.6%;
+  height: 20.25%;
+  display: grid;
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  gap: 1.1%;
+  pointer-events: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div {
+  min-width: 0;
+  padding: 0 15% 0 16%;
+  display: flex;
+  align-items: center;
+  color: transparent;
+  font-size: clamp(10px, 3vw, 17px);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.72);
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div.is-filled {
+  color: #fff;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div.is-current {
+  color: #a7c9f3;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro {
+  z-index: 2;
+  inset: 0;
+  padding: 0;
+  display: block;
+  text-align: center;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro__show {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  display: block;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  left: -2.8%;
+  bottom: 9.4%;
+  width: 38.5%;
+  height: 60%;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro__show > div:last-child {
+  position: static;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro__kicker,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro h1 {
+  display: none;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro__clock {
+  position: absolute;
+  left: 32.4%;
+  top: 17.55%;
+  width: 34.2%;
+  height: 5.8%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  color: #ffd765;
+  background: transparent;
+  box-shadow: none;
+  font-size: clamp(30px, 8.7vw, 52px);
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro > p {
+  position: absolute;
+  z-index: 9;
+  left: 26%;
+  top: 25.2%;
+  width: 58%;
+  margin: 0;
+  color: #dceaff;
+  font-size: clamp(11px, 3vw, 16px);
+  line-height: 1.25;
+  text-shadow: 0 2px 6px #000;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro > .feud-primary-button {
+  position: absolute;
+  z-index: 9;
+  left: 22%;
+  bottom: 7.15%;
+  width: 56%;
+  min-height: 48px;
+}
+
+/* Compact result language after the photographic-stage pass. */
+.family-feud-prototype .feud-result__breakdown p:last-child {
+  border-bottom: 0;
+}
+
+@media (max-height: 700px) {
+  .family-feud-prototype[data-scene="main"] .feud-main-stage,
+  .family-feud-prototype[data-scene="fast"] .feud-fast-stage {
+    padding: 0;
+    gap: 0;
+  }
+
+  .family-feud-prototype[data-scene="main"] .feud-answer-slot {
+    min-height: 0;
+  }
+
+  .family-feud-prototype[data-scene="fast"] .feud-fast-question {
+    min-height: 0;
+    padding: 1.5% 3%;
+  }
+}
