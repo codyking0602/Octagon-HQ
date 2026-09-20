@@ -109,6 +109,8 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const [timeRemainingMs, setTimeRemainingMs] = useState(FAMILY_FEUD_FAST_MONEY_TIME_MS);
   const [revealCount, setRevealCount] = useState(0);
   const [keyboardInset, setKeyboardInset] = useState(0);
+  const [viewportOffsetTop, setViewportOffsetTop] = useState(0);
+  const [stageHeight, setStageHeight] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const deadlineRef = useRef(0);
   const timeoutQueuedRef = useRef(false);
@@ -121,26 +123,45 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const score = familyFeudScore(pack, state);
 
   useEffect(() => {
-    document.body.classList.add("family-feud-prototype-active");
-    return () => document.body.classList.remove("family-feud-prototype-active");
+    const root = document.documentElement;
+    const body = document.body;
+    root.classList.add("family-feud-prototype-active");
+    body.classList.add("family-feud-prototype-active");
+    window.scrollTo(0, 0);
+    return () => {
+      root.classList.remove("family-feud-prototype-active");
+      body.classList.remove("family-feud-prototype-active");
+      window.scrollTo(0, 0);
+    };
   }, []);
 
   useEffect(() => {
     const viewport = window.visualViewport;
     const currentHeight = () => viewport?.height ?? window.innerHeight;
     baseViewportHeightRef.current = Math.max(window.innerHeight, currentHeight());
+    setStageHeight(Math.round(baseViewportHeightRef.current));
 
     const updateKeyboardInset = () => {
       const visibleHeight = currentHeight();
-      if (visibleHeight > baseViewportHeightRef.current - 48) {
-        baseViewportHeightRef.current = Math.max(baseViewportHeightRef.current, visibleHeight);
-      }
-      const offsetTop = viewport?.offsetTop ?? 0;
+      const offsetTop = Math.max(0, viewport?.offsetTop ?? 0);
       const obscured = Math.max(
         0,
-        baseViewportHeightRef.current - visibleHeight - Math.max(0, offsetTop),
+        baseViewportHeightRef.current - visibleHeight - offsetTop,
       );
-      setKeyboardInset(obscured >= 120 ? Math.round(obscured) : 0);
+      const keyboardOpen = obscured >= 120;
+
+      if (!keyboardOpen) {
+        baseViewportHeightRef.current = Math.max(window.innerHeight, visibleHeight);
+        setStageHeight(Math.round(baseViewportHeightRef.current));
+        setViewportOffsetTop(0);
+        setKeyboardInset(0);
+        return;
+      }
+
+      setStageHeight(Math.round(baseViewportHeightRef.current));
+      setViewportOffsetTop(Math.round(offsetTop));
+      setKeyboardInset(Math.round(obscured));
+      window.scrollTo(0, 0);
     };
 
     updateKeyboardInset();
@@ -155,9 +176,20 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     };
   }, []);
 
+  function focusAnswerInput() {
+    const input = inputRef.current;
+    if (!input) return;
+    try {
+      input.focus({ preventScroll: true });
+    } catch {
+      input.focus();
+    }
+    window.requestAnimationFrame(() => window.scrollTo(0, 0));
+  }
+
   useEffect(() => {
     if (scene !== "main" || boardReview) return;
-    const id = window.setTimeout(() => inputRef.current?.focus(), 80);
+    const id = window.setTimeout(focusAnswerInput, 80);
     return () => window.clearTimeout(id);
   }, [scene, displayBoardIndex, boardReview]);
 
@@ -169,7 +201,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     const interval = window.setInterval(() => {
       setTimeRemainingMs(Math.max(0, deadlineRef.current - performance.now()));
     }, 80);
-    const focusId = window.setTimeout(() => inputRef.current?.focus(), 80);
+    const focusId = window.setTimeout(focusAnswerInput, 80);
     return () => {
       window.clearInterval(interval);
       window.clearTimeout(focusId);
@@ -259,7 +291,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     setFeedback(transition.outcome);
 
     if (transition.outcome.type === "ambiguous") {
-      window.setTimeout(() => inputRef.current?.focus(), 0);
+      window.setTimeout(focusAnswerInput, 0);
       return;
     }
 
@@ -268,7 +300,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       setScene("reveal");
       return;
     }
-    window.setTimeout(() => inputRef.current?.focus(), 0);
+    window.setTimeout(focusAnswerInput, 0);
   }
 
   const mainQuestion = pack.mainBoards[displayBoardIndex]!;
@@ -321,7 +353,11 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       ].filter(Boolean).join(" ")}
       data-scope={scope}
       data-scene={scene}
-      style={{ "--feud-keyboard-inset": keyboardInset + "px" } as CSSProperties}
+      style={{
+        "--feud-keyboard-inset": keyboardInset + "px",
+        "--feud-viewport-offset": viewportOffsetTop + "px",
+        "--feud-stage-height": (stageHeight || window.innerHeight) + "px",
+      } as CSSProperties}
     >
       <StagePlate />
       <StagePlate fast />
