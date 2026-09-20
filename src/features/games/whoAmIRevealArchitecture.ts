@@ -113,7 +113,7 @@ function revealCoordinateBudget(position: number) {
   return Number.POSITIVE_INFINITY;
 }
 
-function isStrongLateAnchor(clue: WhoAmIClue) {
+export function isStrongLateAnchor(clue: WhoAmIClue) {
   return (clue.band === "strong" || clue.band === "giveaway")
     && LATE_ANCHOR_CATEGORIES.has(whoAmIRevealProfile(clue).category);
 }
