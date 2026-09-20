@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPresentation";
+import { isFamilyFeudPrototypeOwner } from "../play/familyFeudPrototypeAccess";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import {
   createFootballWeeklyAuctionRepository,
@@ -85,6 +86,7 @@ export default function FootballBackRoomPage() {
       <PlayLandingGameLibrary sport="football"
         onNavigate={navigate}
         millionaireVisible={Boolean(identity.profile?.canControlPicks)}
+        familyFeudVisible={isFamilyFeudPrototypeOwner(identity.profile)}
       />
     </div>
   );
