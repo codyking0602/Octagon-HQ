@@ -1,3 +1,4 @@
+import { whoAmIClueFacet } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIRevealCoordinate } from "./whoAmIEngine";
 import { whoAmICluesShareInformation, whoAmISemanticIndependentCapacity } from "./whoAmISemanticQuality";
 
@@ -137,7 +138,7 @@ function includesAny(text: string, values: readonly string[]) {
 
 function categoryFor(clue: WhoAmIClue): WhoAmIRevealCategory {
   const text = clueText(clue);
-  const facet = clue.facet ?? "identity";
+  const facet = whoAmIClueFacet(clue);
 
   if (/\b(?:nickname|moniker|persona|alter ego|legally changed|changed (?:my|his|her) (?:name|surname)|name change)\b/.test(text)) {
     return "nickname-persona";
