@@ -1721,14 +1721,20 @@ body.family-feud-prototype-active .bottom-nav {
 
 .family-feud-prototype[data-scene="main"] .feud-answer-entry input,
 .family-feud-prototype[data-scene="fast"] .feud-fast-entry input {
+  display: block;
+  min-height: 0;
   height: 100%;
+  margin: 0;
   padding: 0 4%;
   border: 0;
   border-radius: 10px;
   color: #07152d;
   background: transparent;
   box-shadow: none;
-  font-size: clamp(16px, 4.8vw, 24px);
+  font-size: 18px;
+  line-height: 1.15;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .family-feud-prototype[data-scene="main"] .feud-answer-entry__row button,
@@ -1807,13 +1813,12 @@ body.family-feud-prototype-active .bottom-nav {
 .feud-fast-host-asset {
   position: absolute;
   z-index: 5;
-  left: -2.8%;
-  bottom: 9.4%;
-  width: 38.5%;
-  height: 60%;
+  left: 1.5%;
+  bottom: 12.5%;
+  width: 33.5%;
+  height: 54%;
   object-fit: contain;
   object-position: left bottom;
-  mix-blend-mode: darken;
   filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.42));
   pointer-events: none;
   user-select: none;
@@ -1910,10 +1915,10 @@ body.family-feud-prototype-active .bottom-nav {
 }
 
 .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
-  left: -2.8%;
-  bottom: 9.4%;
-  width: 38.5%;
-  height: 60%;
+  left: 1.5%;
+  bottom: 12.5%;
+  width: 33.5%;
+  height: 54%;
 }
 
 .family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro__show > div:last-child {
@@ -1982,4 +1987,12 @@ body.family-feud-prototype-active .bottom-nav {
     min-height: 0;
     padding: 1.5% 3%;
   }
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input::placeholder,
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input::placeholder {
+  color: rgba(66, 72, 82, 0.52);
+  font-size: 18px;
+  font-weight: 700;
+  opacity: 1;
 }
