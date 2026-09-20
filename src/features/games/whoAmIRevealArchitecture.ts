@@ -419,15 +419,89 @@ function preferredBandRank(position: number, band: WhoAmIClueBand) {
   return preferred.indexOf(band);
 }
 
+function scheduleLegacyRevealArchitecture(clues: readonly WhoAmIClue[]) {
+  if (clues.length !== 10) return null;
+  if (clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length > 1) {
+    return null;
+  }
+
+  const preserveStrongFinalTwo = clues.slice(-2).every((clue) => (
+    clue.band === "strong" || clue.band === "giveaway"
+  ));
+  const preserveStrongFinalFour = clues.slice(-4).filter((clue) => (
+    clue.band === "strong" || clue.band === "giveaway"
+  )).length >= 3;
+  const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
+  const chosen: typeof entries = [];
+  let explored = 0;
+  const MAX_NODES = 30_000;
+
+  const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
+    explored += 1;
+    if (explored > MAX_NODES) return null;
+    if (position > clues.length) {
+      const ordered = chosen.map((entry) => entry.clue);
+      if (
+        preserveStrongFinalFour
+        && ordered.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3
+      ) {
+        return null;
+      }
+      return ordered;
+    }
+
+    const previousBand = chosen.at(-1)?.clue.band;
+    const candidates = remaining
+      .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
+      .filter(({ clue }) => previousBand === undefined || BAND_RANK[clue.band] >= BAND_RANK[previousBand])
+      .filter(({ clue }) => (
+        !preserveStrongFinalTwo
+        || position < 9
+        || clue.band === "strong"
+        || clue.band === "giveaway"
+      ))
+      .sort((left, right) => {
+        const leftPower = whoAmIRevealProfile(left.clue).identifyingPower;
+        const rightPower = whoAmIRevealProfile(right.clue).identifyingPower;
+        const powerRank = { broad: 0, specific: 1, signature: 2 } as const;
+        const powerPreference = position >= 7
+          ? powerRank[rightPower] - powerRank[leftPower]
+          : powerRank[leftPower] - powerRank[rightPower];
+        return preferredBandRank(position, left.clue.band) - preferredBandRank(position, right.clue.band)
+          || powerPreference
+          || Math.abs(left.originalIndex - (position - 1)) - Math.abs(right.originalIndex - (position - 1))
+          || BAND_RANK[left.clue.band] - BAND_RANK[right.clue.band]
+          || left.originalIndex - right.originalIndex;
+      });
+
+    for (const candidate of candidates) {
+      chosen.push(candidate);
+      const nextRemaining = remaining.filter((entry) => entry !== candidate);
+      const result = search(position + 1, nextRemaining);
+      if (result) return result;
+      chosen.pop();
+    }
+
+    return null;
+  };
+
+  return search(1, entries);
+}
+
 function scheduleRevealArchitecture(
   clues: readonly WhoAmIClue[],
   targetLength = 10,
 ) {
   if (targetLength !== 10 || clues.length < targetLength) return null;
+
+  const isFootballPool = clues.some((clue) => clue.revealCoordinates !== undefined);
+  if (!isFootballPool) return clues.length === targetLength
+    ? scheduleLegacyRevealArchitecture(clues)
+    : null;
+
   if (clues.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3) return null;
   if (clues.filter(isStrongLateAnchor).length < 2) return null;
 
-  const isFootballPool = clues.some((clue) => clue.revealCoordinates !== undefined);
   const isCfbPool = clues.some((clue) => clue.revealCoordinates?.includes("school"));
   const isNflPool = clues.some((clue) => clue.revealCoordinates?.includes("franchise"));
   // NFL content-depth cleanup remains PR4. The scheduler may use generic
