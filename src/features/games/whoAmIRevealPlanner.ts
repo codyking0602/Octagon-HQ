@@ -1,6 +1,7 @@
 import {
   assembleWhoAmIClues,
   whoAmIClueFacet,
+  whoAmIClueIsGenericCareerVolume,
   whoAmIClueSelectionClass,
 } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet } from "./whoAmIEngine";
@@ -106,11 +107,6 @@ function eligibleRevealPool(clues: readonly WhoAmIClue[], limit: number) {
   return withoutGenericCareerGames.length >= limit ? withoutGenericCareerGames : clues;
 }
 
-function isGenericCareerVolume(clue: WhoAmIClue) {
-  return /\b(?:career|across \d+ seasons?|for my career)\b.*\b\d[\d,]*(?:\.\d+)?\b/i.test(clue.text)
-    && !/\b(?:record|leader|most|first|only|ncaa|nation|nationally)\b/i.test(clue.text);
-}
-
 function coordinateRescuePool(
   eligibleClues: readonly WhoAmIClue[],
   limit: number,
@@ -142,7 +138,7 @@ function coordinateRescuePool(
         || profile.category === "style"
       ) value += 20;
       if (profile.category === "personal-biography") value -= 70;
-      if (isGenericCareerVolume(clue)) value -= 90;
+      if (whoAmIClueIsGenericCareerVolume(clue)) value -= 90;
       return value;
     };
     return score(right.value) - score(left.value)
@@ -161,7 +157,7 @@ function coordinateRescuePool(
     .filter(({ value }) => (
       (value.revealCoordinates?.length ?? 0) === 0
       && whoAmIClueSelectionClass(value) === "sports-identity"
-      && !isGenericCareerVolume(value)
+      && !whoAmIClueIsGenericCareerVolume(value)
     ))
     .slice(0, 10)
     .forEach(({ value }) => add(value));
@@ -179,13 +175,13 @@ function coordinateRescuePool(
     .forEach(({ value }) => add(value));
 
   scored
-    .filter(({ value }) => !isGenericCareerVolume(value))
+    .filter(({ value }) => !whoAmIClueIsGenericCareerVolume(value))
     .forEach(({ value }) => {
       if (pool.length < limit + 8) add(value);
     });
 
   scored
-    .filter(({ value }) => isGenericCareerVolume(value))
+    .filter(({ value }) => whoAmIClueIsGenericCareerVolume(value))
     .slice(0, 2)
     .forEach(({ value }) => {
       if (pool.length < limit + 8) add(value);
