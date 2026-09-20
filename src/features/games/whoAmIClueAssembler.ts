@@ -127,7 +127,16 @@ export function whoAmIClueFacet(clue: WhoAmIClue): WhoAmIClueFacet {
 
 export type WhoAmIClueSelectionClass = "sports-identity" | "identity-color" | "deep-biography";
 
+const CLUE_SELECTION_CLASS_CACHE = new WeakMap<WhoAmIClue, WhoAmIClueSelectionClass>();
+
 export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionClass {
+  const cached = CLUE_SELECTION_CLASS_CACHE.get(clue);
+  if (cached) return cached;
+
+  const remember = (value: WhoAmIClueSelectionClass) => {
+    CLUE_SELECTION_CLASS_CACHE.set(clue, value);
+    return value;
+  };
   const facet = whoAmIClueFacet(clue);
   const haystack = `${clue.conceptId ?? clue.id} ${clue.text}`.toLowerCase();
   const signatureIdentity = /\b(?:nickname|moniker|signature|celebration|persona|known for|called me|called the)\b/.test(haystack);
@@ -145,7 +154,7 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
   // generic sports vocabulary. Family facts are different: an actual football/MMA
   // relationship (for example, a famous sibling matchup or shared college path) is
   // sports identity, while a purely personal family story stays biography.
-  if (deepLifeBiography && personalFacet && !competitiveRelationship && !signatureIdentity) return "deep-biography";
+  if (deepLifeBiography && personalFacet && !competitiveRelationship && !signatureIdentity) return remember("deep-biography");
   if (
     familyBiography
     && personalFacet
@@ -155,9 +164,9 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
     && !sportsRelationship
     && !sportsBackground
     && !sportsIdentity
-  ) return "deep-biography";
-  if (signatureIdentity || sportsRelationship || strongSportsAnchor || sportsCareerEvent) return "sports-identity";
-  if (!clue.identityKnowledge) return "sports-identity";
+  ) return remember("deep-biography");
+  if (signatureIdentity || sportsRelationship || strongSportsAnchor || sportsCareerEvent) return remember("sports-identity");
+  if (!clue.identityKnowledge) return remember("sports-identity");
 
   if (
     facet === "role"
@@ -167,10 +176,10 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
     || facet === "accomplishments"
     || facet === "nickname"
     || facet === "production"
-  ) return "sports-identity";
-  if (facet === "background" && sportsBackground) return "sports-identity";
-  if (facet === "identity" && sportsIdentity) return "sports-identity";
-  return "identity-color";
+  ) return remember("sports-identity");
+  if (facet === "background" && sportsBackground) return remember("sports-identity");
+  if (facet === "identity" && sportsIdentity) return remember("sports-identity");
+  return remember("identity-color");
 }
 
 function defaultRevealPriority(clue: WhoAmIClue, facet: WhoAmIClueFacet) {
