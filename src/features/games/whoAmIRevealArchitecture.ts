@@ -403,10 +403,21 @@ function scheduleRevealArchitecture(
   if (clues.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3) return null;
   if (clues.filter(isStrongLateAnchor).length < 2) return null;
 
-  const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
+  const isFootballPool = clues.some((clue) => clue.revealCoordinates !== undefined);
+  const entries = clues
+    .map((clue, originalIndex) => ({ clue, originalIndex }))
+    .filter(({ clue }) => {
+      for (let position = 1; position <= targetLength; position += 1) {
+        if (!whoAmIClueAllowedAtRevealPosition(clue, position - 1)) continue;
+        if (position >= 9 && clue.band !== "strong" && clue.band !== "giveaway") continue;
+        if (isFootballPool && position === targetLength && !isStrongLateAnchor(clue)) continue;
+        return true;
+      }
+      return false;
+    });
+  if (entries.length < targetLength) return null;
   const chosen: typeof entries = [];
   const deadStates = new Set<string>();
-  const isFootballPool = clues.some((clue) => clue.revealCoordinates !== undefined);
   const requireSemanticIndependence = whoAmISemanticIndependentCapacity(clues, targetLength) >= targetLength;
   let explored = 0;
   const MAX_NODES = 1_000_000;
@@ -450,19 +461,47 @@ function scheduleRevealArchitecture(
 
     if (remaining.length < targetLength - chosen.length) return null;
 
-    const personalAlreadyChosen = chosen.some(({ clue }) => (
+    const chosenClues = chosen.map((entry) => entry.clue);
+    const personalAlreadyChosen = chosenClues.some((clue) => (
       whoAmIRevealProfile(clue).category === "personal-biography"
     ));
-    const semanticallyAvailable = remaining.filter(({ clue }) => (
-      (!personalAlreadyChosen || whoAmIRevealProfile(clue).category !== "personal-biography")
-      && (
-        !requireSemanticIndependence
-        || !chosen.some((entry) => (
+    const chosenFacets = chosenClues.map(whoAmIClueFacet);
+    const chosenClasses = chosenClues.map(whoAmIClueSelectionClass);
+    const productionChosen = chosenFacets.filter((facet) => facet === "production").length;
+    const relationshipsChosen = chosenFacets.filter((facet) => facet === "relationships").length;
+    const deepBiographyChosen = chosenClasses.filter((selectionClass) => selectionClass === "deep-biography").length;
+
+    const semanticallyAvailable = remaining.filter(({ clue }) => {
+      const profile = whoAmIRevealProfile(clue);
+      const facet = whoAmIClueFacet(clue);
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      if (personalAlreadyChosen && profile.category === "personal-biography") return false;
+      if (productionChosen >= 2 && facet === "production") return false;
+      if (relationshipsChosen >= 1 && facet === "relationships") return false;
+      if (deepBiographyChosen >= 1 && selectionClass === "deep-biography") return false;
+      if (
+        requireSemanticIndependence
+        && chosen.some((entry) => (
           (entry.clue.conceptId ?? entry.clue.id) === (clue.conceptId ?? clue.id)
           || whoAmICluesShareInformation(entry.clue, clue)
         ))
-      )
-    ));
+      ) {
+        return false;
+      }
+      return true;
+    });
+
+    const sportsIdentityChosen = chosenClasses.filter((selectionClass) => selectionClass === "sports-identity").length;
+    const sportsIdentityAvailable = semanticallyAvailable.filter(({ clue }) => (
+      whoAmIClueSelectionClass(clue) === "sports-identity"
+    )).length;
+    if (sportsIdentityChosen + sportsIdentityAvailable < 7) return null;
+
+    const possibleFacets = new Set([
+      ...chosenFacets,
+      ...semanticallyAvailable.map(({ clue }) => whoAmIClueFacet(clue)),
+    ]);
+    if (possibleFacets.size < 4) return null;
 
     const exposed = new Set(chosen.flatMap((entry) => entry.clue.revealCoordinates ?? []));
     for (const windowEnd of [4, 6, 8] as const) {
