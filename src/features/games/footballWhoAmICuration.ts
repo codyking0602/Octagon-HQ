@@ -169,6 +169,7 @@ const bandOverrides = new Map<string, WhoAmIClue["band"]>([
 ]);
 
 const facetOverrides = new Map<string, WhoAmIClueFacet>([
+  ["walter-payton:identity:first-football-play-touchdown", "accomplishments"],
   ["cam-newton:identity:florida-blinn-auburn-path", "career-path"],
   ["cam-newton:identity:one-year-auburn-window", "career-path"],
   ["nfl-jim-kelly:identity:buffalo-no-huddle-identity", "style"],
