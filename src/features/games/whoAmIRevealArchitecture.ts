@@ -273,7 +273,6 @@ function footballSchedulingEarliestClue(
   profile: WhoAmIRevealProfile,
 ) {
   const { category, identifyingPower, earliestClue } = profile;
-  if ((clue.revealCoordinates?.length ?? 0) > 0) return earliestClue;
 
   const byPower = (broad: number, specific: number, signature: number) => (
     identifyingPower === "broad" ? broad : identifyingPower === "specific" ? specific : signature
@@ -289,8 +288,9 @@ function footballSchedulingEarliestClue(
     case "signature-moment":
       return Math.min(earliestClue, byPower(3, 4, 6));
     default:
-      // Once football's major identity coordinates are budgeted separately,
-      // sports-first non-coordinate clues are allowed to do the early orienting.
+      // Football's major identity coordinates are budgeted separately, so
+      // sports-first clues may orient early without the old per-category
+      // restriction accidentally blocking the one allowed early coordinate.
       return Math.min(earliestClue, byPower(1, 2, 4));
   }
 }
