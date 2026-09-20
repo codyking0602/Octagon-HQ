@@ -27,6 +27,12 @@ import {
 } from "../games/familyFeudEngine";
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import { familyFeudPrototypePack } from "./familyFeudPrototypePacks";
+import {
+  SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
+  SPORTS_FEUD_MAIN_STAGE_ASSET,
+  sportsFeudHostAsset,
+  type SportsFeudHostSport,
+} from "./sportsFeudPresentation";
 import "./FamilyFeudPrototypePage.css";
 
 type PrototypeScope = "ufc" | "football";
@@ -48,31 +54,14 @@ function feedbackCopy(outcome: FamilyFeudOutcome | null) {
   }
 }
 
-function StageLights() {
+function StagePlate({ fast = false }: { fast?: boolean }) {
   return (
-    <div className="feud-stage-lights" aria-hidden="true">
-      {Array.from({ length: 20 }, (_, index) => <i key={index} />)}
-    </div>
-  );
-}
-
-function StudioAtmosphere({ pressure = false }: { pressure?: boolean }) {
-  return (
-    <div className={pressure ? "feud-studio is-pressure" : "feud-studio"} aria-hidden="true">
-      <div className="feud-wall feud-wall--left"><i /><i /><i /></div>
-      <div className="feud-wall feud-wall--right"><i /><i /><i /></div>
-      <div className="feud-beam feud-beam--left" />
-      <div className="feud-beam feud-beam--right" />
-      <div className="feud-audience feud-audience--left">
-        {Array.from({ length: 14 }, (_, index) => <i key={index} />)}
-      </div>
-      <div className="feud-audience feud-audience--right">
-        {Array.from({ length: 14 }, (_, index) => <i key={index} />)}
-      </div>
-      <div className="feud-stage-floor" />
-      <div className="feud-podium feud-podium--left" />
-      <div className="feud-podium feud-podium--right" />
-    </div>
+    <img
+      className={fast ? "feud-stage-plate feud-stage-plate--fast" : "feud-stage-plate feud-stage-plate--main"}
+      src={fast ? SPORTS_FEUD_FAST_MONEY_STAGE_ASSET : SPORTS_FEUD_MAIN_STAGE_ASSET}
+      alt=""
+      aria-hidden="true"
+    />
   );
 }
 
@@ -104,20 +93,8 @@ function HQBackButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function SportsHost() {
-  return (
-    <div className="feud-host" aria-hidden="true">
-      <div className="feud-host__halo" />
-      <div className="feud-host__head" />
-      <div className="feud-host__body">
-        <i className="feud-host__lapel feud-host__lapel--left" />
-        <i className="feud-host__lapel feud-host__lapel--right" />
-        <i className="feud-host__tie" />
-      </div>
-      <div className="feud-host__arm" />
-      <div className="feud-host__mic" />
-    </div>
-  );
+function FastMoneyHost({ asset }: { asset: string }) {
+  return <img className="feud-fast-host-asset" src={asset} alt="" aria-hidden="true" />;
 }
 
 function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
@@ -138,6 +115,8 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const exitRoute = scope === "football" ? "/football" : "/play";
   const otherScopeRoute = scope === "football" ? "/play/sports-feud" : "/football/sports-feud";
   const hqName = scope === "football" ? "FOOTBALL HQ" : "UFC HQ";
+  const hostSport: SportsFeudHostSport = scope === "ufc" ? "ufc" : "nfl";
+  const hostAsset = useMemo(() => sportsFeudHostAsset(hostSport), [hostSport]);
   const score = familyFeudScore(pack, state);
 
   useEffect(() => {
@@ -267,7 +246,8 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const foundIds = new Set(mainBoardState.revealedEntityIds);
   const foundMainAnswers = mainBoardState.revealedEntityIds
     .map((entityId) => mainQuestion.answers.find((row) => row.entityId === entityId))
-    .filter((row): row is FamilyFeudRankedAnswer => Boolean(row));
+    .filter((row): row is FamilyFeudRankedAnswer => Boolean(row))
+    .sort((left, right) => right.points - left.points || left.entityId.localeCompare(right.entityId));
   const missedReviewAnswers = boardReview && foundMainAnswers.length < FAMILY_FEUD_BOARD_ANSWER_COUNT
     ? mainQuestion.answers
         .filter((row) => !foundIds.has(row.entityId))
@@ -302,8 +282,8 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
 
   const view = (
     <main className={"family-feud-prototype feud-scene--" + scene} data-scope={scope} data-scene={scene}>
-      <StageLights />
-      <StudioAtmosphere pressure={scene === "fast" || scene === "reveal" || scene === "result"} />
+      <StagePlate />
+      <StagePlate fast />
       <HQBackButton onClick={() => navigate(exitRoute)} />
 
       {scene === "intro" ? (
@@ -404,7 +384,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       {scene === "fast-intro" ? (
         <section className="feud-fast-intro">
           <div className="feud-fast-intro__show">
-            <SportsHost />
+            <FastMoneyHost asset={hostAsset} />
             <div>
               <span className="feud-fast-intro__kicker">YOU MADE THE FINALE</span>
               <h1>FAST MONEY</h1>
@@ -427,7 +407,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
           </header>
 
           <div className="feud-fast-showdown">
-            <SportsHost />
+            <FastMoneyHost asset={hostAsset} />
             <section className="feud-fast-question">
               <small>{hqName} · FAST MONEY</small>
               <h1>{currentFastQuestion?.prompt}</h1>
@@ -440,6 +420,21 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                 ))}
               </div>
             </section>
+          </div>
+
+          <div className="feud-fast-board-progress" aria-label="Fast Money submitted answers">
+            {Array.from({ length: 5 }, (_value, index) => {
+              const result = state.fastMoneyResults[index];
+              const matchedEntity = result?.entityId
+                ? pack.entities.find((candidate) => candidate.id === result.entityId)
+                : null;
+              const displayAnswer = matchedEntity?.displayName ?? result?.submittedText ?? "";
+              return (
+                <div className={index < state.fastMoneyIndex ? "is-filled" : index === state.fastMoneyIndex ? "is-current" : ""} key={index}>
+                  <span>{displayAnswer}</span>
+                </div>
+              );
+            })}
           </div>
 
           <form className="feud-fast-entry" onSubmit={submitFastMoney}>
@@ -519,7 +514,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             <strong>{score.hq}</strong>
             <span>/100</span>
           </div>
-          <h1>{score.hq >= 90 ? "DOMINANT BOARD" : score.hq >= 80 ? "GREAT RUN" : score.hq >= 65 ? "SOLID RUN" : "TOUGH BOARD"}</h1>
+          <h1>{score.hq >= 90 ? "DOMINANT RUN" : score.hq >= 80 ? "GREAT RUN" : score.hq >= 65 ? "SOLID RUN" : "TOUGH RUN"}</h1>
           <div className="feud-result__equation" aria-label="HQ score calculation">
             <span><b>{score.main}</b><small>MAIN</small></span>
             <i>+</i>
@@ -530,7 +525,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
           <div className="feud-result__breakdown">
             <p><span>MAIN BOARDS</span><strong>{score.main}/{FAMILY_FEUD_MAIN_RAW_MAX}</strong></p>
             <p><span>FAST MONEY</span><strong>{score.fastMoney}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong></p>
-            <p><span>STRIKE PENALTY</span><strong>0</strong></p>
           </div>
           <button className="feud-primary-button" type="button" onClick={startGame}>PLAY AGAIN</button>
           <button className="feud-secondary-button" type="button" onClick={() => navigate(exitRoute)}>EXIT TO HQ</button>
