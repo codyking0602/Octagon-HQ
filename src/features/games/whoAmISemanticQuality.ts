@@ -249,28 +249,90 @@ export function whoAmISemanticIndependentCapacity(
     }
   }
 
-  const searchOrder = Array.from({ length: playable.length }, (_value, index) => index)
-    .sort((left, right) => conflicts[left]!.size - conflicts[right]!.size || left - right);
-
-  let best = 0;
-  const chosen: number[] = [];
-  const search = (startPosition: number): boolean => {
-    if (chosen.length > best) best = chosen.length;
-    if (best >= desired) return true;
-    if (chosen.length + (searchOrder.length - startPosition) <= best) return false;
-
-    for (let position = startPosition; position < searchOrder.length; position += 1) {
-      const index = searchOrder[position]!;
-      if (chosen.some((selected) => conflicts[index]!.has(selected))) continue;
-      chosen.push(index);
-      if (search(position + 1)) return true;
-      chosen.pop();
+  const bitCount = (value: bigint) => {
+    let bits = value;
+    let count = 0;
+    while (bits !== 0n) {
+      bits &= bits - 1n;
+      count += 1;
     }
-    return false;
+    return count;
   };
 
-  search(0);
-  const result = Math.min(best, desired);
+  const componentCapacity = (component: readonly number[]) => {
+    if (component.length <= 1) return component.length;
+
+    const localIndex = new Map<number, number>(
+      component.map((globalIndex, index) => [globalIndex, index]),
+    );
+    const conflictMasks = component.map((globalIndex) => {
+      let mask = 0n;
+      for (const neighbor of conflicts[globalIndex]!) {
+        const localNeighbor = localIndex.get(neighbor);
+        if (localNeighbor == null) continue;
+        mask |= 1n << BigInt(localNeighbor);
+      }
+      return mask;
+    });
+    const memo = new Map<bigint, number>();
+
+    const solve = (mask: bigint): number => {
+      if (mask === 0n) return 0;
+      const cachedResult = memo.get(mask);
+      if (cachedResult != null) return cachedResult;
+
+      const remainingCount = bitCount(mask);
+      let pivot = -1;
+      let pivotDegree = -1;
+      for (let index = 0; index < component.length; index += 1) {
+        const bit = 1n << BigInt(index);
+        if ((mask & bit) === 0n) continue;
+        const degree = bitCount(mask & conflictMasks[index]!);
+        if (degree > pivotDegree) {
+          pivot = index;
+          pivotDegree = degree;
+        }
+      }
+
+      if (pivotDegree <= 0) {
+        memo.set(mask, remainingCount);
+        return remainingCount;
+      }
+
+      const pivotBit = 1n << BigInt(pivot);
+      const withPivot = 1 + solve(mask & ~pivotBit & ~conflictMasks[pivot]!);
+      const withoutPivot = solve(mask & ~pivotBit);
+      const result = Math.max(withPivot, withoutPivot);
+      memo.set(mask, result);
+      return result;
+    };
+
+    return solve((1n << BigInt(component.length)) - 1n);
+  };
+
+  const visited = new Set<number>();
+  let capacity = 0;
+  for (let start = 0; start < playable.length; start += 1) {
+    if (visited.has(start)) continue;
+
+    const component: number[] = [];
+    const stack = [start];
+    visited.add(start);
+    while (stack.length) {
+      const current = stack.pop()!;
+      component.push(current);
+      for (const neighbor of conflicts[current]!) {
+        if (visited.has(neighbor)) continue;
+        visited.add(neighbor);
+        stack.push(neighbor);
+      }
+    }
+
+    capacity += componentCapacity(component);
+    if (capacity >= desired) break;
+  }
+
+  const result = Math.min(capacity, desired);
   const next = cachedByTarget ?? new Map<number, number>();
   next.set(normalizedTarget, result);
   SEMANTIC_CAPACITY_CACHE.set(clues, next);
