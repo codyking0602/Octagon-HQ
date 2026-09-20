@@ -433,6 +433,7 @@ function scheduleLegacyRevealArchitecture(clues: readonly WhoAmIClue[]) {
   )).length >= 3;
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
+  const deadStates = new Set<string>();
   let explored = 0;
   const MAX_NODES = 30_000;
 
@@ -451,6 +452,13 @@ function scheduleLegacyRevealArchitecture(clues: readonly WhoAmIClue[]) {
     }
 
     const previousBand = chosen.at(-1)?.clue.band;
+    const stateKey = [
+      position,
+      previousBand ?? "none",
+      remaining.map((entry) => entry.originalIndex).sort((a, b) => a - b).join(","),
+    ].join(":");
+    if (deadStates.has(stateKey)) return null;
+
     const candidates = remaining
       .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
       .filter(({ clue }) => previousBand === undefined || BAND_RANK[clue.band] >= BAND_RANK[previousBand])
@@ -482,6 +490,7 @@ function scheduleLegacyRevealArchitecture(clues: readonly WhoAmIClue[]) {
       chosen.pop();
     }
 
+    deadStates.add(stateKey);
     return null;
   };
 
