@@ -1,4 +1,5 @@
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIRevealCoordinate } from "./whoAmIEngine";
+import { whoAmICluesShareInformation } from "./whoAmISemanticQuality";
 
 export type WhoAmIRevealCategory =
   | "role"
@@ -90,11 +91,31 @@ const BAND_RANK: Readonly<Record<WhoAmIClueBand, number>> = {
   giveaway: 3,
 };
 
+const LATE_ANCHOR_CATEGORIES = new Set<WhoAmIRevealCategory>([
+  "school",
+  "sports-biography",
+  "draft-entry",
+  "team-path",
+  "accomplishments",
+  "championships",
+  "records",
+  "style",
+  "signature-moment",
+  "jersey-number",
+  "nickname-persona",
+  "identity",
+]);
+
 function revealCoordinateBudget(position: number) {
   if (position <= 4) return 1;
   if (position <= 6) return 2;
   if (position <= 8) return 3;
   return Number.POSITIVE_INFINITY;
+}
+
+function isStrongLateAnchor(clue: WhoAmIClue) {
+  return (clue.band === "strong" || clue.band === "giveaway")
+    && LATE_ANCHOR_CATEGORIES.has(whoAmIRevealProfile(clue).category);
 }
 
 export function whoAmIRevealCoordinateWindowSatisfied(clues: readonly WhoAmIClue[]) {
@@ -323,6 +344,9 @@ function scheduleRevealArchitecture(
       if (ordered.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3) {
         return null;
       }
+      if (ordered.slice(-4).filter(isStrongLateAnchor).length < 2) {
+        return null;
+      }
       return ordered;
     }
 
@@ -340,6 +364,10 @@ function scheduleRevealArchitecture(
       .filter(({ clue }) => (
         !personalAlreadyChosen || whoAmIRevealProfile(clue).category !== "personal-biography"
       ))
+      .filter(({ clue }) => !chosen.some((entry) => (
+        (entry.clue.conceptId ?? entry.clue.id) === (clue.conceptId ?? clue.id)
+        || whoAmICluesShareInformation(entry.clue, clue)
+      )))
       .filter(({ clue }) => whoAmIRevealCoordinateWindowSatisfied([
         ...chosen.map((entry) => entry.clue),
         clue,
@@ -356,10 +384,14 @@ function scheduleRevealArchitecture(
         const coordinatePreference = position <= 4
           ? (left.clue.revealCoordinates?.length ?? 0) - (right.clue.revealCoordinates?.length ?? 0)
           : 0;
+        const lateAnchorPreference = position >= 7
+          ? Number(isStrongLateAnchor(right.clue)) - Number(isStrongLateAnchor(left.clue))
+          : 0;
         const powerPreference = position >= 7
           ? powerRank[rightProfile.identifyingPower] - powerRank[leftProfile.identifyingPower]
           : powerRank[leftProfile.identifyingPower] - powerRank[rightProfile.identifyingPower];
         return coordinatePreference
+          || lateAnchorPreference
           || preferredBandRank(position, left.clue.band) - preferredBandRank(position, right.clue.band)
           || powerPreference
           || Math.abs(left.originalIndex - (position - 1)) - Math.abs(right.originalIndex - (position - 1))
