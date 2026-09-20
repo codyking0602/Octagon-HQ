@@ -67,6 +67,14 @@ describe("Who Am I football reveal-coordinate architecture", () => {
           }
           if (!whoAmIRevealArchitectureSatisfied(board)) {
             problems.push(`${candidate.id} seed ${seed}: board violates standardized reveal architecture`);
+            if (seed === 1) {
+              const nonCoordinate = candidate.clues.filter((clue) => (clue.revealCoordinates?.length ?? 0) === 0);
+              const sportsNonCoordinate = nonCoordinate.filter((clue) => whoAmIClueSelectionClass(clue) === "sports-identity");
+              const strong = candidate.clues.filter((clue) => clue.band === "strong" || clue.band === "giveaway");
+              problems.push(
+                `${candidate.id}: pool diagnostics total=${candidate.clues.length} noncoord=${nonCoordinate.length} sports-noncoord=${sportsNonCoordinate.length} strong=${strong.length}`,
+              );
+            }
           }
 
           const profiles = board.map(whoAmIRevealProfile);
