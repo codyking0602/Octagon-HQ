@@ -62,6 +62,28 @@ describe("Who Am I standardized reveal architecture", () => {
     expect(isStrongLateAnchor(productionRecord)).toBe(false);
   });
 
+  it("uses explicit career-path and accomplishment facets instead of incidental production words", () => {
+    const undraftedPath: WhoAmIClue = {
+      id: "identity:one-college-start-undrafted",
+      text: "I made one college start before entering the NFL undrafted.",
+      band: "strong",
+      facet: "career-path",
+      revealCoordinates: [],
+    };
+    const firstPlay: WhoAmIClue = {
+      id: "identity:first-football-play-touchdown",
+      text: "I scored a touchdown on my first football play.",
+      band: "strong",
+      facet: "accomplishments",
+      revealCoordinates: [],
+    };
+
+    expect(whoAmIRevealProfile(undraftedPath).category).toBe("draft-entry");
+    expect(isStrongLateAnchor(undraftedPath)).toBe(true);
+    expect(whoAmIRevealProfile(firstPlay).category).toBe("accomplishments");
+    expect(isStrongLateAnchor(firstPlay)).toBe(true);
+  });
+
   it("lets an explicit nickname facet override incidental biography words in the clue id", () => {
     const nickname: WhoAmIClue = {
       id: "identity:tyler-rose-family-origin",
