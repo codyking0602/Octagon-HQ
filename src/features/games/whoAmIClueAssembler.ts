@@ -249,7 +249,7 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
   if (/\b(?:brothers?|sisters?|fathers?|mothers?|sons?|daughters?|family|mentor|teammates?|friends?|caregiver|relationships?)\b/.test(haystack)) {
     return "relationships";
   }
-  if (/\b(?:style|boxing|kickboxing|jiu|judo|sambo|training|technique|stance|movement|speed|power|versatility)\b|free-lance|freelance|\bstrik\w*|\bgrappl\w*|\bwrestl\w*|\bslams?\b/.test(haystack)) {
+  if (/\b(?:style|boxing|kickboxing|jiu|judo|sambo|training|technique|stance|movement|speed|power|versatility|footwork|juke|cutback|release)\b|free-lance|freelance|spin-move|swim-move|rip-move|bull-rush|pass-rush|route-running|\bstrik\w*|\bgrappl\w*|\bwrestl\w*|\bslams?\b/.test(haystack)) {
     return "style";
   }
   if (
@@ -258,7 +258,7 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
     return "accomplishments";
   }
   if (
-    /\b(?:draft|drafted|undrafted|transfer|transferred|trade|traded|holdout|retire|retired|retirement|roster|cut|waived|signed)\b|career-path|career-turning-point|career-revival|second-career|position-path|ultimate-fighter/.test(haystack)
+    /\b(?:draft|drafted|undrafted|transfer|transferred|trade|traded|holdout|retire|retired|retirement|roster|cut|waived|signed|redshirt|redshirted)\b|career-path|career-turning-point|career-revival|second-career|position-path|ultimate-fighter/.test(haystack)
   ) {
     return "career-path";
   }
@@ -274,7 +274,7 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
   // Broad context words are only a final legacy-style hint. League/source
   // prefixes such as NFL/CFB/UFC are intentionally excluded: they identify the
   // source namespace, not the clue's meaning.
-  if (/\b(?:team|promotion|camp|gym|route|move)\b/.test(haystack)) return "career-path";
+  if (/\b(?:team|promotion|camp|gym|route)\b/.test(haystack)) return "career-path";
   return "identity";
 }
 
