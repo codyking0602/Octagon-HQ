@@ -630,6 +630,11 @@ function isGenericCareerGames(clue: WhoAmIClue) {
   );
 }
 
+function isGenericCareerVolume(clue: WhoAmIClue) {
+  return /\b(?:career|across \d+ seasons?|for my career)\b.*\b\d[\d,]*(?:\.\d+)?\b/i.test(clue.text)
+    && !/\b(?:record|leader|most|first|only|ncaa|nation|nationally|all-time)\b/i.test(clue.text);
+}
+
 const SEMANTIC_CAPACITY_INPUT_CACHE = new WeakMap<readonly WhoAmIClue[], readonly WhoAmIClue[]>();
 
 function semanticCapacityInput(clues: readonly WhoAmIClue[]) {
@@ -810,6 +815,11 @@ export function assembleWhoAmIClues(
     const facetLimit = FACET_LIMITS[entry.facet];
     const facetCount = facetCounts.get(entry.facet) ?? 0;
     if (entry.facet === "relationships" && facetCount >= 1) return false;
+    // Production is a hard game-quality cap, not a preference to relax for
+    // playability. If a pool cannot build ten clues without stat soup, that is
+    // content debt for the population cleanup rather than permission to exceed it.
+    if (entry.facet === "production" && facetCount >= 2) return false;
+    if (isGenericCareerVolume(entry.clue) && selected.filter(({ clue }) => isGenericCareerVolume(clue)).length >= 2) return false;
     if (!options.relaxFacetLimit && facetLimit != null && facetCount >= facetLimit) return false;
     return true;
   };
@@ -1165,19 +1175,36 @@ export function assembleWhoAmIClues(
     && whoAmISemanticIndependentCapacity(semanticCapacityInput(clues), limit) >= limit
   ) {
     const selectedSet = new Set(selected);
-    const ordered = [
-      ...selected,
-      ...prepared
-        .filter((entry) => !selectedSet.has(entry))
-        .sort((left, right) => (
-          left.priority - right.priority
-          || right.strength - left.strength
-          || left.index - right.index
-        )),
-    ];
+    const conflictCount = new Map<PreparedClue, number>();
+    for (const entry of prepared) conflictCount.set(entry, 0);
+    for (let leftIndex = 0; leftIndex < prepared.length; leftIndex += 1) {
+      for (let rightIndex = leftIndex + 1; rightIndex < prepared.length; rightIndex += 1) {
+        const left = prepared[leftIndex]!;
+        const right = prepared[rightIndex]!;
+        if (
+          left.conceptId === right.conceptId
+          || whoAmICluesShareInformation(left.clue, right.clue)
+          || cluesEffectivelyRepeated(left.clue, right.clue)
+        ) {
+          conflictCount.set(left, (conflictCount.get(left) ?? 0) + 1);
+          conflictCount.set(right, (conflictCount.get(right) ?? 0) + 1);
+        }
+      }
+    }
+
+    const ordered = [...prepared].sort((left, right) => (
+      (conflictCount.get(left) ?? 0) - (conflictCount.get(right) ?? 0)
+      || Number(selectedSet.has(right)) - Number(selectedSet.has(left))
+      || Number(right.selectionClass === "sports-identity") - Number(left.selectionClass === "sports-identity")
+      || Number(right.clue.band === "strong" || right.clue.band === "giveaway")
+        - Number(left.clue.band === "strong" || left.clue.band === "giveaway")
+      || left.priority - right.priority
+      || right.strength - left.strength
+      || left.index - right.index
+    ));
 
     let visited = 0;
-    const maxVisited = 50_000;
+    const maxVisited = 250_000;
     let cleanBoard: PreparedClue[] | null = null;
     const chosen: PreparedClue[] = [];
 
@@ -1192,11 +1219,15 @@ export function assembleWhoAmIClues(
         const sportsCount = chosen.filter((entry) => entry.selectionClass === "sports-identity").length;
         const biographyCount = chosen.filter((entry) => entry.selectionClass === "deep-biography").length;
         const relationshipCount = chosen.filter((entry) => entry.facet === "relationships").length;
+        const productionCount = chosen.filter((entry) => entry.facet === "production").length;
+        const genericCareerVolumeCount = chosen.filter(({ clue }) => isGenericCareerVolume(clue)).length;
         if (
           lateCount >= 3
           && sportsCount >= sportsIdentityTarget
           && biographyCount <= 1
           && relationshipCount <= 1
+          && productionCount <= 2
+          && genericCareerVolumeCount <= 2
         ) {
           cleanBoard = [...chosen];
         }
@@ -1213,6 +1244,21 @@ export function assembleWhoAmIClues(
           normalize(entry.clue.text) === normalize(candidate.clue.text)
           || cluesEffectivelyRepeated(entry.clue, candidate.clue)
         ))) continue;
+        if (candidate.facet === "production" && chosen.filter((entry) => entry.facet === "production").length >= 2) continue;
+        if (isGenericCareerVolume(candidate.clue) && chosen.filter(({ clue }) => isGenericCareerVolume(clue)).length >= 2) continue;
+        if (candidate.facet === "relationships" && chosen.some((entry) => entry.facet === "relationships")) continue;
+        if (candidate.selectionClass === "deep-biography" && chosen.some((entry) => entry.selectionClass === "deep-biography")) continue;
+
+        const slotsAfterPick = limit - (chosen.length + 1);
+        const remaining = ordered.slice(index + 1);
+        const lateAfterPick = chosen.filter((entry) => entry.clue.band === "strong" || entry.clue.band === "giveaway").length
+          + Number(candidate.clue.band === "strong" || candidate.clue.band === "giveaway");
+        const sportsAfterPick = chosen.filter((entry) => entry.selectionClass === "sports-identity").length
+          + Number(candidate.selectionClass === "sports-identity");
+        const availableLate = remaining.filter((entry) => entry.clue.band === "strong" || entry.clue.band === "giveaway").length;
+        const availableSports = remaining.filter((entry) => entry.selectionClass === "sports-identity").length;
+        if (lateAfterPick + Math.min(slotsAfterPick, availableLate) < 3) continue;
+        if (sportsAfterPick + Math.min(slotsAfterPick, availableSports) < sportsIdentityTarget) continue;
 
         chosen.push(candidate);
         searchCleanBoard(index + 1);
