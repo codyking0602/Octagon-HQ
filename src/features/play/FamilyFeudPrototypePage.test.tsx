@@ -31,7 +31,7 @@ describe("Family Feud playable prototype", () => {
 
     expect(screen.getByText("Matthew Stafford")).toBeInTheDocument();
     expect(screen.getByText("#1 — 30 POINTS")).toBeInTheDocument();
-    expect(screen.getByText("30")).toBeInTheDocument();
+    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("30");
   });
 
   it("moves from two main boards into the separate Fast Money location", () => {
