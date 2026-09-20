@@ -56,7 +56,7 @@ describe("Who Am I football reveal-coordinate architecture", () => {
               problems.push(
                 `${candidate.id}: semanticCapacity=${semanticCapacity} pool=${candidate.clues.length} ${candidate.clues.map((clue) => {
                   const profile = whoAmIRevealProfile(clue);
-                  return `${clue.id}{facet=${whoAmIClueFacet(clue)}/category=${profile.category}/class=${whoAmIClueSelectionClass(clue)}/band=${clue.band}/coords=${(clue.revealCoordinates ?? []).join("+") || "none"}}`;
+                  return `${clue.id}{facet=${whoAmIClueFacet(clue)}/category=${profile.category}/class=${whoAmIClueSelectionClass(clue)}/band=${clue.band}/coords=${(clue.revealCoordinates ?? []).join("+") || "none"}}="${clue.text}"`;
                 }).join(" | ")}`,
               );
               problems.push(
