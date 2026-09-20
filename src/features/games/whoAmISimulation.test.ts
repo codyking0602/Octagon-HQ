@@ -98,7 +98,7 @@ describe("Who Am I mature whole-game simulation", () => {
         ));
         const replayTargets = whoAmIQualityCompatibleReplayTargets(candidate.clues, sequences);
 
-        for (const [sequenceIndex, sequence] of sequences.entries()) {
+        for (const sequence of sequences) {
           assertSequence(candidate, sequence);
           const relationshipClues = sequence.filter((clue) => whoAmIClueFacet(clue) === "relationships");
           expect(
@@ -157,7 +157,7 @@ describe("Who Am I mature whole-game simulation", () => {
           if (nonProductionGiveaways.length) {
             expect(
               whoAmIClueFacet(sequence.at(-1)!),
-              `${candidate.id} seed ${sequenceIndex + 1} should finish on its strongest identity anchor instead of a raw stat: ${JSON.stringify(sequence.map((clue) => ({ id: clue.id, facet: whoAmIClueFacet(clue), band: clue.band, revealCoordinates: clue.revealCoordinates })))}`,
+              `${candidate.id} should finish on its strongest identity anchor instead of a raw stat`,
             ).not.toBe("production");
           }
         }
