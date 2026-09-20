@@ -2949,8 +2949,8 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("brees-record-book", "I left Purdue having set two NCAA records, 13 Big Ten records and 19 school records.", "helpful", "production", 30),
   ]],
   ["cfb-eli-manning", [
-    cfbBatch1Clue("eli-maxwell", "I won the Maxwell Award in my final season at Ole Miss.", "strong", "accomplishments"),
-    cfbBatch1Clue("eli-cotton", "I finished my Ole Miss career by leading a 10-win team to a Cotton Bowl victory.", "strong", "accomplishments"),
+    cfbBatch1Clue("eli-maxwell", "I won the Maxwell Award in my final college season.", "strong", "accomplishments"),
+    cfbBatch1Clue("eli-cotton", "I finished my college career by leading a 10-win team to a Cotton Bowl victory.", "strong", "accomplishments"),
     cfbBatch1Clue("eli-first-pick", "I became the No. 1 overall pick in the 2004 NFL Draft.", "giveaway", "career-path", 9),
   ]],
   ["cfb-fernando-mendoza", [
@@ -3013,8 +3013,8 @@ const cfbBatch1SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch1Clue("young-rose", "On fourth-and-five with the national title on the line, I ran for the winning touchdown against USC.", "giveaway", "accomplishments", 7),
   ]],
   ["cfb-andre-ware", [
-    cfbBatch1Clue("ware-1989-production", "In my 1989 Heisman season at Houston, I threw for 4,699 yards and 46 touchdowns.", "strong", "production", 24),
-    cfbBatch1Clue("ware-records", "Houston's run-and-shoot offense helped me set 26 NCAA records during my 1989 season.", "helpful", "production", 28),
+    cfbBatch1Clue("ware-1989-production", "In my Heisman season, I threw for 4,699 yards and 46 touchdowns.", "strong", "production", 24),
+    cfbBatch1Clue("ware-records", "I set 26 NCAA records during my Heisman-winning season.", "helpful", "production", 28),
     cfbBatch1Clue("ware-smu", "During that season, I threw six touchdown passes as Houston beat SMU 95-21.", "helpful", "accomplishments", 30),
     cfbBatch1Clue("ware-seventh-pick", "Detroit selected me No. 7 overall in the 1990 NFL Draft.", "strong", "career-path", 22),
   ]],
@@ -4052,9 +4052,9 @@ const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("donald-97-retired", "Pitt later retired the No. 97 jersey I wore for the Panthers.", "strong", "identity", 16),
   ]],
   ["cfb-bruce-smith", [
-    cfbBatch3Clue("smith-outland", "I won the 1984 Outland Trophy at Virginia Tech.", "giveaway", "accomplishments", 8),
-    cfbBatch3Clue("smith-46-sacks", "I recorded 46 sacks during my Virginia Tech career.", "helpful", "production", 20),
-    cfbBatch3Clue("smith-two-aa", "I was a two-time All-American for the Hokies.", "strong", "accomplishments", 17),
+    cfbBatch3Clue("smith-outland", "I won the Outland Trophy as college football's top interior lineman.", "giveaway", "accomplishments", 8),
+    cfbBatch3Clue("smith-46-sacks", "I recorded 46 sacks during my college career.", "helpful", "production", 20),
+    cfbBatch3Clue("smith-two-aa", "I was a two-time All-American in college.", "strong", "accomplishments", 17),
     cfbBatch3Clue("smith-first-pick", "Buffalo selected me No. 1 overall in the 1985 NFL Draft.", "giveaway", "career-path", 9),
   ]],
   ["cfb-chase-young", [
@@ -4074,6 +4074,7 @@ const cfbBatch3SupplementalClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("selmon-hall", "I entered the College Football Hall of Fame in 1988.", "strong", "accomplishments", 18),
     cfbBatch3Clue("selmon-93", "I wore No. 93 on Oklahoma's defensive line.", "helpful", "identity", 20),
     cfbBatch3Clue("selmon-1975-aa", "I finished my Oklahoma career as one of the nation's most decorated linemen in 1975.", "strong", "identity", 19),
+    cfbBatch3Clue("selmon-award-double", "I won both the Outland Trophy and Lombardi Award in my final college season.", "strong", "accomplishments", 17),
   ]],
   ["cfb-ndamukong-suh", [
     cfbBatch3Clue("suh-award-sweep", "In 2009 I swept the Outland, Lombardi, Bednarik and Nagurski awards.", "giveaway", "accomplishments", 7),
@@ -4211,8 +4212,8 @@ const cfbBatch3ReplayDepthClues = new Map<string, readonly WhoAmIClue[]>([
     cfbBatch3Clue("young-unanimous-aa", "I was a unanimous first-team All-American at Ohio State in 2019.", "strong", "accomplishments", 16),
   ]],
   ["cfb-lee-roy-selmon", [
-    cfbBatch3Clue("selmon-two-national-titles", "I helped Oklahoma win national championships in both 1974 and 1975.", "helpful", "accomplishments", 19),
-    cfbBatch3Clue("selmon-two-time-aa", "I earned All-America honors in both 1974 and 1975 at Oklahoma.", "helpful", "accomplishments", 21),
+    cfbBatch3Clue("selmon-two-national-titles", "I helped my team win national championships in each of my final two college seasons.", "helpful", "accomplishments", 19),
+    cfbBatch3Clue("selmon-two-time-aa", "I earned All-America honors in each of my final two college seasons.", "helpful", "accomplishments", 21),
   ]],
   ["cfb-myles-garrett", [
     cfbBatch3Clue("garrett-career-pressure", "I finished my Texas A&M career with 32.5 sacks and 48.5 tackles for loss.", "helpful", "production", 19),
