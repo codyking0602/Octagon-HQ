@@ -149,6 +149,9 @@ function categoryFor(clue: WhoAmIClue): WhoAmIRevealCategory {
   if (/\b(?:jersey number|wore no\.|wear no\.|number \d{1,2}\b|no\. \d{1,2}\b)\b/.test(text)) {
     return "jersey-number";
   }
+  if (facet === "production") {
+    return "production";
+  }
   if (/\b(?:draft|drafted|selected no\.|overall pick|undrafted|first-round pick|first round pick)\b/.test(text)) {
     return "draft-entry";
   }
