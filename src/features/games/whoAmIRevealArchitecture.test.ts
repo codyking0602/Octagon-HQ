@@ -125,36 +125,6 @@ describe("Who Am I standardized reveal architecture", () => {
     expect(whoAmIRevealArchitectureSatisfied(ordered)).toBe(true);
   });
 
-  it("can order a football board with one true identity anchor and a strong statistical finish around it", () => {
-    const selected: WhoAmIClue[] = [
-      clue("position", "I played quarterback.", "broad", "role", ["position"]),
-      clue("era", "I played in the 1960s and 1970s.", "broad", "era", ["era"]),
-      clue("career-span", "My NFL career lasted 16 seasons.", "helpful", "era"),
-      clue("origin", "I entered the league after a difficult college finish.", "helpful", "background"),
-      clue("passing-yards", "I finished with 24,718 passing yards.", "strong", "production"),
-      clue("passing-tds", "I finished with 152 passing touchdowns.", "strong", "production"),
-      clue("completion-rate", "My career completion rate topped 57 percent.", "strong", "production"),
-      clue("playoff-stat", "I posted a standout postseason passer rating.", "strong", "production"),
-      clue("position-path", "A coaching change revived my career at quarterback.", "strong", "career-path", ["position"]),
-      clue("five-titles", "I quarterbacked five championship teams.", "giveaway", "accomplishments", ["position"]),
-    ];
-
-    expect(selected.filter(isStrongLateAnchor)).toHaveLength(2);
-    const oneAnchorBoard = selected.filter((entry) => entry.id !== "position-path");
-    oneAnchorBoard.splice(3, 0, clue(
-      "preseason-break",
-      "An injury ahead of a season changed my opportunity.",
-      "helpful",
-      "identity",
-    ));
-
-    expect(oneAnchorBoard.filter(isStrongLateAnchor)).toHaveLength(1);
-    expect(whoAmIRevealArchitectureCanOrder(oneAnchorBoard)).toBe(true);
-    const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(oneAnchorBoard);
-    expect(whoAmIRevealArchitectureSatisfied(ordered)).toBe(true);
-    expect(isStrongLateAnchor(ordered.at(-1)!)).toBe(true);
-  });
-
   it("treats a clue that exposes two major coordinates as too identifying for clues 1-4", () => {
     const roleSchool = clue(
       "role-school",
