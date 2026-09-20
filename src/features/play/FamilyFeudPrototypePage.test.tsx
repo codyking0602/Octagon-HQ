@@ -152,7 +152,9 @@ describe("Sports Feud private daily presentation", () => {
     expect(document.querySelector('img[src="/assets/sports-feud-fast-money-stage.png"]')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "START 45 SECONDS" }));
-    expect(screen.getByText("1 OF 5")).toHaveClass("feud-fast-progress");
+    const fastProgress = screen.getByText("1 OF 5");
+    expect(fastProgress).toHaveClass("feud-fast-progress");
+    expect(fastProgress.closest(".feud-fast-question")).toBeInTheDocument();
     expect(screen.getByLabelText("Fast Money answer")).toBeInTheDocument();
     expect(screen.queryByText(/\+[0-9]+ HQ POINTS/)).not.toBeInTheDocument();
     expect(document.querySelector(".feud-fast-showdown .feud-fast-host-asset")).toBeInTheDocument();
