@@ -191,7 +191,18 @@ function coordinateRescuePool(
       if (pool.length < limit + 8) add(value);
     });
 
-  return pool.slice(0, Math.min(pool.length, limit + 8));
+  const requiredSemanticCapacity = Math.min(
+    limit,
+    whoAmISemanticIndependentCapacity(eligibleClues, limit),
+  );
+  if (whoAmISemanticIndependentCapacity([...pool], limit) < requiredSemanticCapacity) {
+    for (const { value } of scored) {
+      add(value);
+      if (whoAmISemanticIndependentCapacity([...pool], limit) >= requiredSemanticCapacity) break;
+    }
+  }
+
+  return pool;
 }
 
 function orderRevealBoardWithCoordinateRescue(
