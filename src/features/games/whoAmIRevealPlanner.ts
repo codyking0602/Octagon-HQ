@@ -103,16 +103,62 @@ function eligibleRevealPool(clues: readonly WhoAmIClue[], limit: number) {
   return withoutGenericCareerGames.length >= limit ? withoutGenericCareerGames : clues;
 }
 
+function isGenericCareerVolume(clue: WhoAmIClue) {
+  return /\b(?:career|across \d+ seasons?|for my career)\b.*\b\d[\d,]*(?:\.\d+)?\b/i.test(clue.text)
+    && !/\b(?:record|leader|most|first|only|ncaa|nation|nationally)\b/i.test(clue.text);
+}
+
+function coordinateRescuePool(
+  eligibleClues: readonly WhoAmIClue[],
+  limit: number,
+  random: () => number,
+) {
+  const expanded = assembleWhoAmIClues(
+    eligibleClues,
+    Math.min(eligibleClues.length, limit + 14),
+    random,
+  );
+  const rankedExpanded = ranked(expanded, random)
+    .sort((left, right) => {
+      const classScore = (clue: WhoAmIClue) => {
+        const selectionClass = whoAmIClueSelectionClass(clue);
+        if (selectionClass === "sports-identity") return 40;
+        if (selectionClass === "identity-color") return 0;
+        return -80;
+      };
+      const qualityDifference = (
+        recognitionStrength(right.value) + classScore(right.value)
+      ) - (
+        recognitionStrength(left.value) + classScore(left.value)
+      );
+      return qualityDifference || left.variationRank - right.variationRank || left.index - right.index;
+    })
+    .map((entry) => entry.value);
+
+  const nonGeneric = rankedExpanded.filter((clue) => !isGenericCareerVolume(clue));
+  const generic = rankedExpanded.filter(isGenericCareerVolume).slice(0, 2);
+  return [...nonGeneric, ...generic];
+}
+
 function orderRevealBoardWithCoordinateRescue(
   selected: readonly WhoAmIClue[],
   shortlist: readonly WhoAmIClue[],
+  eligibleClues: readonly WhoAmIClue[],
   limit: number,
+  random: () => number,
 ) {
   const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected);
   const isFootballBoard = selected.some((clue) => clue.revealCoordinates !== undefined);
   if (!isFootballBoard || whoAmIRevealArchitectureSatisfied(ordered)) return ordered;
 
-  return selectWhoAmICluesByRevealArchitectureIfPossible(shortlist, limit) ?? ordered;
+  const shortlistRescue = selectWhoAmICluesByRevealArchitectureIfPossible(shortlist, limit);
+  if (shortlistRescue) return shortlistRescue;
+
+  const expandedRescue = selectWhoAmICluesByRevealArchitectureIfPossible(
+    coordinateRescuePool(eligibleClues, limit, random),
+    limit,
+  );
+  return expandedRescue ?? ordered;
 }
 
 type ReplaySwapOption = {
@@ -248,7 +294,9 @@ export function assembleWhoAmIRevealClues(
     return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
       shortlist,
+      eligibleClues,
       limit,
+      random,
     );
   }
 
@@ -272,7 +320,9 @@ export function assembleWhoAmIRevealClues(
     return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
       shortlist,
+      eligibleClues,
       limit,
+      random,
     );
   }
 
@@ -285,7 +335,9 @@ export function assembleWhoAmIRevealClues(
     return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
       shortlist,
+      eligibleClues,
       limit,
+      random,
     );
   }
 
@@ -301,7 +353,9 @@ export function assembleWhoAmIRevealClues(
     return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
       shortlist,
+      eligibleClues,
       limit,
+      random,
     );
   }
 
@@ -317,7 +371,9 @@ export function assembleWhoAmIRevealClues(
     return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
       shortlist,
+      eligibleClues,
       limit,
+      random,
     );
   }
 
@@ -341,9 +397,9 @@ export function assembleWhoAmIRevealClues(
     if (swap.candidateVariationRank < swap.currentVariationRank) {
       const varied = [...planned];
       varied[swap.selectedIndex] = swap.candidate;
-      return orderRevealBoardWithCoordinateRescue(varied, shortlist, limit);
+      return orderRevealBoardWithCoordinateRescue(varied, shortlist, eligibleClues, limit, random);
     }
   }
 
-  return orderRevealBoardWithCoordinateRescue(planned, shortlist, limit);
+  return orderRevealBoardWithCoordinateRescue(planned, shortlist, eligibleClues, limit, random);
 }
