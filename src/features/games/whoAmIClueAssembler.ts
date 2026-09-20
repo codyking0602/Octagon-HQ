@@ -214,6 +214,10 @@ function defaultRevealPriority(clue: WhoAmIClue, facet: WhoAmIClueFacet) {
 function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIClueFacet {
   const haystack = `${conceptId} ${tags.join(" ")}`.toLowerCase();
 
+  // This is the canonical semantic assignment for authored identity knowledge.
+  // Specific semantic concepts must win over incidental vocabulary inside the
+  // prose/concept id (for example, "one college start / undrafted" is a career
+  // path fact, not production merely because it contains "start").
   if (/\b(?:nickname|moniker)\b|called-|alter-ego/.test(haystack)) return "nickname";
   if (/\b(?:brothers?|sisters?|fathers?|mothers?|sons?|daughters?|family|mentor|teammates?|friends?|caregiver|relationships?)\b/.test(haystack)) {
     return "relationships";
@@ -221,20 +225,24 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
   if (/\b(?:style|boxing|kickboxing|jiu|judo|sambo|training|technique|stance|movement|speed|power|versatility)\b|free-lance|freelance|\bstrik\w*|\bgrappl\w*|\bwrestl\w*|\bslams?\b/.test(haystack)) {
     return "style";
   }
+  if (
+    /\b(?:champions?|championships?|titles?|records?|hall|awards?|heisman|all-american|all-pro|pro-bowls?|mvp|olympian|olympic|milestones?|breakthrough)\b|super-bowl|game-winning|last-second|final-play|first-football-play|historic-.*(?:game|play|season)/.test(haystack)
+  ) {
+    return "accomplishments";
+  }
+  if (
+    /\b(?:draft|drafted|undrafted|team|promotion|camp|gym|route|transfer|transferred|trade|traded|holdout|retire|retired|retirement|move|roster|cut|waived|signed|ufc|nfl|cfb)\b|career-path|career-turning-point|career-revival|second-career|position-path|ultimate-fighter/.test(haystack)
+  ) {
+    return "career-path";
+  }
   if (/\b(?:production|stats?|games?|starts?|tackles?|sacks?|interceptions?|receptions?|yards?|touchdowns?)\b|forced-fumbles|fumble-recoveries|pass-breakups|career-wins|coaching-record|regular-season-record/.test(haystack)) {
     return "production";
-  }
-  if (/\b(?:champions?|championships?|titles?|records?|hall|awards?|heisman|all-american|all-pro|olympian|olympic|milestones?)\b|super-bowl/.test(haystack)) {
-    return "accomplishments";
   }
   if (/\b(?:born|birth|childhood|upbringing|hometown|town|farm|migration|immigration|school|college|degree|education|university|amateur|recruit)\b|high-school|junior-college/.test(haystack)) {
     return "background";
   }
   if (/\b(?:job|work|business|acting|media|streaming|military|army|foundation|charity|restaurant|barber|bartending|mine|model|faith)\b|off-field/.test(haystack)) {
     return "off-field";
-  }
-  if (/\b(?:draft|team|promotion|camp|gym|career|route|transfer|trade|holdout|retire|retired|retirement|move|ufc|nfl|cfb)\b|career-path|ultimate-fighter/.test(haystack)) {
-    return "career-path";
   }
   return "identity";
 }
@@ -252,7 +260,7 @@ function identityBand(
   ) return "giveaway";
   if (facet === "relationships" || facet === "accomplishments" || facet === "identity") return "strong";
   if (
-    /turning[- ]point|breakthrough|comeback|all[- ]america|player of the year|\brecord\b|undefeated|retir(?:ed|ement)|suspension|\bdraft(?:ed)?\b|first[- ]round|milestone/.test(strengthSignals)
+    /turning[- ]point|breakthrough|comeback|all[- ]america|player of the year|\brecord\b|undefeated|retir(?:ed|ement)|suspension|\b(?:draft(?:ed)?|undrafted)\b|first[- ]round|milestone/.test(strengthSignals)
   ) return "strong";
   if (
     facet === "career-path"
