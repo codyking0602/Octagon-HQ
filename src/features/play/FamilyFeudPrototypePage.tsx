@@ -113,7 +113,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const timeoutQueuedRef = useRef(false);
 
   const exitRoute = scope === "football" ? "/football" : "/play";
-  const otherScopeRoute = scope === "football" ? "/play/sports-feud" : "/football/sports-feud";
   const hqName = scope === "football" ? "FOOTBALL HQ" : "UFC HQ";
   const hostSport: SportsFeudHostSport = scope === "ufc" ? "ufc" : "nfl";
   const hostAsset = useMemo(() => sportsFeudHostAsset(hostSport), [hostSport]);
@@ -253,7 +252,8 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
         .filter((row) => !foundIds.has(row.entityId))
         .slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT - foundMainAnswers.length)
     : [];
-  const mainDisplayAnswers = [...foundMainAnswers, ...missedReviewAnswers];
+  const mainDisplayAnswers = [...foundMainAnswers, ...missedReviewAnswers]
+    .sort((left, right) => right.points - left.points || left.entityId.localeCompare(right.entityId));
 
   const currentFastQuestion = state.phase === "fast-money"
     ? pack.fastMoney[state.fastMoneyIndex] ?? null
@@ -288,7 +288,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
 
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="feud-intro-title">
-          <div className="feud-intro__eyebrow">{hqName} · PRIVATE PREVIEW</div>
+          <div className="feud-intro__eyebrow">{hqName} · DAILY CHALLENGE</div>
           <Brand />
           <h1 id="feud-intro-title">Clear the board.</h1>
           <p>Find four good HQ answers before three strikes. Then finish five Fast Money prompts.</p>
@@ -297,10 +297,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             <span><b>4</b> ANSWERS EACH</span>
             <span><b>0:45</b> FAST MONEY</span>
           </div>
-          <button className="feud-primary-button" type="button" onClick={startGame}>START FEUD</button>
-          <button className="feud-scope-switch" type="button" onClick={() => navigate(otherScopeRoute)}>
-            TRY {scope === "football" ? "UFC" : "FOOTBALL"} VERSION
-          </button>
+          <button className="feud-primary-button" type="button" onClick={startGame}>PLAY SPORTS FEUD</button>
         </section>
       ) : null}
 
@@ -353,7 +350,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                   ? "BOARD CLEARED"
                   : "3 STRIKES — BOARD CLOSED"}
               </strong>
-              <span>{mainBoardPoints}/{FAMILY_FEUD_MAIN_BOARD_MAX} HQ points banked. Strikes do not subtract points.</span>
+              <span>{mainBoardPoints}/{FAMILY_FEUD_MAIN_BOARD_MAX} HQ points banked.</span>
               <button className="feud-primary-button" type="button" onClick={advanceBoard}>
                 {state.phase === "fast-money" ? "GO TO FAST MONEY" : "ROUND 2"}
               </button>
@@ -403,7 +400,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             <div className={timeRemainingMs <= 10_000 ? "feud-fast-clock is-low" : "feud-fast-clock"}>
               {formatClock(timeRemainingMs)}
             </div>
-            <span>{state.fastMoneyIndex + 1} OF 5</span>
+            <span className="feud-fast-progress">{state.fastMoneyIndex + 1} OF 5</span>
           </header>
 
           <div className="feud-fast-showdown">
@@ -481,14 +478,17 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                       <b>{row.counted ? "+" + row.points : "X"}</b>
                     </div>
                     <div className="feud-reveal-card__hq">
-                      <small>HQ BOARD</small>
+                      <small>TOP HQ ANSWERS</small>
                       <div>
-                        {row.accepted.map((accepted) => (
+                        {row.accepted.slice(0, 4).map((accepted) => (
                           <span key={accepted.name}>
                             {accepted.name} <b>{accepted.points}</b>
                           </span>
                         ))}
                       </div>
+                      {row.accepted.length > 4 ? (
+                        <p className="feud-reveal-card__more">+{row.accepted.length - 4} also accepted</p>
+                      ) : null}
                     </div>
                   </>
                 ) : null}
