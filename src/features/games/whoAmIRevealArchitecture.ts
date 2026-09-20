@@ -397,7 +397,8 @@ export function whoAmIRevealArchitectureSatisfied(clues: readonly WhoAmIClue[]) 
   // preference is selection-context dependent: thin legacy pools may need more
   // than two simply to reach ten clues, so that cap belongs in selection where
   // the full source pool is available.
-  const footballCompositionSatisfied = !isFootballBoard
+  const isCfbBoard = clues.some((clue) => clue.revealCoordinates?.includes("school"));
+  const footballCompositionSatisfied = !isCfbBoard
     || clues.filter((clue) => whoAmIClueFacet(clue) === "production").length <= 4;
 
   return clues.every((clue, index) => whoAmIClueAllowedAtRevealPosition(clue, index))
@@ -427,7 +428,12 @@ function scheduleRevealArchitecture(
   if (clues.filter(isStrongLateAnchor).length < 2) return null;
 
   const isFootballPool = clues.some((clue) => clue.revealCoordinates !== undefined);
-  const allowExtraGenericCareerVolume = clues.filter((clue) => !whoAmIClueIsGenericCareerVolume(clue)).length < targetLength;
+  const isCfbPool = clues.some((clue) => clue.revealCoordinates?.includes("school"));
+  const isNflPool = clues.some((clue) => clue.revealCoordinates?.includes("franchise"));
+  const allowExtraGenericCareerVolume = (
+    isNflPool
+    && clues.filter((clue) => !whoAmIClueIsGenericCareerVolume(clue)).length < targetLength
+  );
   const entries = clues
     .map((clue, originalIndex) => ({ clue, originalIndex }))
     .filter(({ clue }) => {
@@ -464,7 +470,7 @@ function scheduleRevealArchitecture(
       if (isFootballPool && !isStrongLateAnchor(ordered.at(-1)!)) {
         return null;
       }
-      if (isFootballPool && ordered.filter((clue) => whoAmIClueFacet(clue) === "production").length > 4) {
+      if (isCfbPool && ordered.filter((clue) => whoAmIClueFacet(clue) === "production").length > 4) {
         return null;
       }
       if (
@@ -489,7 +495,7 @@ function scheduleRevealArchitecture(
 
     const semanticallyAvailable = remaining.filter(({ clue }) => {
       if (personalAlreadyChosen && whoAmIRevealProfile(clue).category === "personal-biography") return false;
-      if (productionChosen >= 4 && whoAmIClueFacet(clue) === "production") return false;
+      if (isCfbPool && productionChosen >= 4 && whoAmIClueFacet(clue) === "production") return false;
       if (
         !allowExtraGenericCareerVolume
         && genericCareerVolumeChosen >= 2
