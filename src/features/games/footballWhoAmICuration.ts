@@ -162,6 +162,12 @@ const retainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-ahman-green", keep("identity:state-champion-sprinter", "identity:high-school-baseball-center-fielder")],
 ]);
 
+const bandOverrides = new Map<string, WhoAmIClue["band"]>([
+  ["kurt-warner:identity:one-college-start-undrafted", "strong"],
+  ["jim-brown:identity:syracuse-four-sport-profile", "strong"],
+  ["walter-payton:identity:first-football-play-touchdown", "strong"],
+]);
+
 const facetOverrides = new Map<string, WhoAmIClueFacet>([
   ["cam-newton:identity:florida-blinn-auburn-path", "career-path"],
   ["cam-newton:identity:one-year-auburn-window", "career-path"],
@@ -344,10 +350,12 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
 ]);
 
 function applyIdentityCuration(subjectId: string, clue: WhoAmIClue) {
-  const override = clueTextOverrides.get(`${subjectId}:${clue.conceptId ?? clue.id}`);
+  const key = `${subjectId}:${clue.conceptId ?? clue.id}`;
+  const override = clueTextOverrides.get(key);
   if (override) return { ...clue, ...override };
-  const facet = facetOverrides.get(`${subjectId}:${clue.conceptId ?? clue.id}`);
-  return facet ? { ...clue, facet } : clue;
+  const facet = facetOverrides.get(key);
+  const band = bandOverrides.get(key);
+  return facet || band ? { ...clue, ...(facet ? { facet } : {}), ...(band ? { band } : {}) } : clue;
 }
 
 function clueQualityScore(subject: FootballSubjectProfile, clue: WhoAmIClue) {
