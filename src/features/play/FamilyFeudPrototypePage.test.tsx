@@ -40,7 +40,7 @@ function submitMainAnswer(value: string) {
   fireEvent.submit(input.closest("form")!);
 }
 
-describe("Family Feud playable prototype", () => {
+describe("Sports Feud V2 private prototype", () => {
   beforeEach(() => {
     identityHarness.profile = {
       id: "00000000-0000-4000-8000-000000000001",
@@ -54,7 +54,7 @@ describe("Family Feud playable prototype", () => {
     document.body.classList.remove("family-feud-prototype-active");
   });
 
-  it("allows only the Cody owner profile into the prototype", () => {
+  it("allows only the CODY owner profile into the prototype", () => {
     expect(isFamilyFeudPrototypeOwner(identityHarness.profile)).toBe(true);
     expect(isFamilyFeudPrototypeOwner({
       id: "00000000-0000-4000-8000-000000000002",
@@ -80,40 +80,70 @@ describe("Family Feud playable prototype", () => {
     expect(document.body).not.toHaveClass("family-feud-prototype-active");
   });
 
-  it("plays a correct board answer through the blind text matcher", () => {
+  it("presents the four-answer HQ-opinion board inside the immersive studio", () => {
     renderFootball();
     fireEvent.click(screen.getByRole("button", { name: "START FEUD" }));
 
-    expect(screen.getByText(/most passing TDs in the 2025 NFL season/i)).toBeInTheDocument();
-    submitMainAnswer("Matthew Stafford");
-
-    expect(screen.getByText("Matthew Stafford")).toBeInTheDocument();
-    expect(screen.getByText("#1 — 30 POINTS")).toBeInTheDocument();
-    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("30");
+    expect(screen.getByText("WE ASKED FOOTBALL HQ")).toBeInTheDocument();
+    expect(screen.getByText(/most electric Cowboys players of the 2020s/i)).toBeInTheDocument();
+    expect(document.querySelectorAll(".feud-answer-slot")).toHaveLength(4);
+    expect(document.querySelector(".feud-stage-floor")).toBeInTheDocument();
+    expect(document.querySelectorAll(".feud-audience")).toHaveLength(2);
+    expect(document.querySelectorAll(".feud-podium")).toHaveLength(2);
   });
 
-  it("moves from two main boards into the separate Fast Money location", () => {
+  it("accepts a lower-value good answer and banks its editorial point value", () => {
     renderFootball();
     fireEvent.click(screen.getByRole("button", { name: "START FEUD" }));
 
-    submitMainAnswer("Patrick Mahomes");
-    submitMainAnswer("Josh Allen");
-    submitMainAnswer("Bo Nix");
+    submitMainAnswer("Amari Cooper");
 
-    expect(screen.getByText("ROUND COMPLETE")).toBeInTheDocument();
+    expect(screen.getByText("Amari Cooper")).toBeInTheDocument();
+    expect(screen.getByText("+4 HQ POINTS")).toBeInTheDocument();
+    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
+  });
+
+  it("reveals key missed HQ answers after three strikes without subtracting banked points", () => {
+    renderFootball();
+    fireEvent.click(screen.getByRole("button", { name: "START FEUD" }));
+
+    submitMainAnswer("Amari Cooper");
+    submitMainAnswer("DeMarcus Lawrence");
+    submitMainAnswer("Zack Martin");
+    submitMainAnswer("Dalton Schultz");
+
+    expect(screen.getByText("3 STRIKES — BOARD CLOSED")).toBeInTheDocument();
+    expect(screen.getByText(/4\/30 HQ points banked/i)).toBeInTheDocument();
+    expect(screen.getByText("CeeDee Lamb")).toBeInTheDocument();
+    expect(screen.getByText("Micah Parsons")).toBeInTheDocument();
+    expect(screen.getByText("Dak Prescott")).toBeInTheDocument();
+    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
+  });
+
+  it("moves through two boards into the 45-second hosted Fast Money studio", () => {
+    renderFootball();
+    fireEvent.click(screen.getByRole("button", { name: "START FEUD" }));
+
+    for (const answer of ["DeMarcus Lawrence", "Zack Martin", "Dalton Schultz"]) {
+      submitMainAnswer(answer);
+    }
+
     fireEvent.click(screen.getByRole("button", { name: "ROUND 2" }));
-    expect(screen.getByText(/most rushing yards in the 2025 NFL season/i)).toBeInTheDocument();
+    expect(screen.getByText(/QBs from the 2010s would you want down 4 late/i)).toBeInTheDocument();
 
-    submitMainAnswer("Tom Brady");
-    submitMainAnswer("Emmitt Smith");
-    submitMainAnswer("Barry Sanders");
+    for (const answer of ["Philip Rivers", "Tony Romo", "Joe Flacco"]) {
+      submitMainAnswer(answer);
+    }
 
     fireEvent.click(screen.getByRole("button", { name: "GO TO FAST MONEY" }));
     expect(screen.getByText("YOU MADE THE FINALE")).toBeInTheDocument();
-    expect(screen.getByText("0:30")).toBeInTheDocument();
+    expect(screen.getByText("0:45")).toBeInTheDocument();
+    expect(document.querySelector(".feud-host")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "START 30 SECONDS" }));
+    fireEvent.click(screen.getByRole("button", { name: "START 45 SECONDS" }));
     expect(screen.getByText("1 OF 5")).toBeInTheDocument();
     expect(screen.getByLabelText("Fast Money answer")).toBeInTheDocument();
+    expect(screen.queryByText(/\+[0-9]+ HQ POINTS/)).not.toBeInTheDocument();
+    expect(document.querySelector(".feud-fast-showdown .feud-host")).toBeInTheDocument();
   });
 });
