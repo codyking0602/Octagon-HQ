@@ -136,8 +136,71 @@ function includesAny(text: string, values: readonly string[]) {
   return values.some((value) => text.includes(value));
 }
 
-function categoryFor(clue: WhoAmIClue): WhoAmIRevealCategory {
-  const text = clueText(clue);
+function categoryForCanonicalFacet(
+  clue: WhoAmIClue,
+  text: string,
+): WhoAmIRevealCategory | null {
+  const facet = clue.facet;
+  if (!facet) return null;
+
+  switch (facet) {
+    case "nickname":
+      return "nickname-persona";
+    case "production":
+      // Explicit production metadata is authoritative. Text such as "record" or
+      // a strong/giveaway band never promotes a raw production clue into a finale
+      // identity anchor.
+      return "production";
+    case "role":
+      return "role";
+    case "era":
+      return "era";
+    case "style":
+      return "style";
+    case "relationships":
+      return "relationships";
+    case "off-field":
+      return "personal-biography";
+    case "accomplishments":
+      if (/\b(?:super bowl|national championship|championship|champion|title fight|ufc title|won the title|held the title)\b/.test(text)) {
+        return "championships";
+      }
+      if (/\b(?:record|milestone|all-time leader|career leader|single-season leader)\b/.test(text)) {
+        return "records";
+      }
+      if (/\b(?:game-winning|last-second|walk-off|iconic moment|famous moment|signature moment|miracle|historic play)\b/.test(text)) {
+        return "signature-moment";
+      }
+      return "accomplishments";
+    case "career-path":
+      if (/\b(?:draft|drafted|selected no\.|overall pick|undrafted|first-round pick|first round pick)\b/.test(text)) {
+        return "draft-entry";
+      }
+      if (/\b(?:walk-on|walk on|junior college|juco|transfer portal|transferred|position change|converted from|switched from|recruited as|two-sport|multi-sport|multisport|ball boy|ballboy)\b/.test(text)) {
+        return "sports-biography";
+      }
+      return "team-path";
+    case "background":
+      if (/\b(?:nationality|born in)\b/.test(text)) return "nationality";
+      if (/\b(?:walk-on|walk on|junior college|juco|transfer portal|transferred|position change|converted from|switched from|recruited as|two-sport|multi-sport|multisport|ball boy|ballboy)\b/.test(text)) {
+        return "sports-biography";
+      }
+      return "school";
+    case "identity":
+      if (/\b(?:jersey number|wore no\.|wear no\.|number \d{1,2}\b|no\. \d{1,2}\b)\b/.test(text)) {
+        return "jersey-number";
+      }
+      if (/\b(?:nickname|moniker|persona|alter ego|legally changed|changed (?:my|his|her) (?:name|surname)|name change|known as|called me)\b/.test(text)) {
+        return "nickname-persona";
+      }
+      if (/\b(?:game-winning|last-second|walk-off|iconic moment|famous moment|signature moment|miracle|historic play)\b/.test(text)) {
+        return "signature-moment";
+      }
+      return "identity";
+  }
+}
+
+function legacyCategoryFor(clue: WhoAmIClue, text: string): WhoAmIRevealCategory {
   const facet = whoAmIClueFacet(clue);
 
   if (
@@ -149,9 +212,7 @@ function categoryFor(clue: WhoAmIClue): WhoAmIRevealCategory {
   if (/\b(?:jersey number|wore no\.|wear no\.|number \d{1,2}\b|no\. \d{1,2}\b)\b/.test(text)) {
     return "jersey-number";
   }
-  if (facet === "production") {
-    return "production";
-  }
+  if (facet === "production") return "production";
   if (/\b(?:draft|drafted|selected no\.|overall pick|undrafted|first-round pick|first round pick)\b/.test(text)) {
     return "draft-entry";
   }
@@ -197,11 +258,15 @@ function categoryFor(clue: WhoAmIClue): WhoAmIRevealCategory {
   if (/\b(?:nationality|born in)\b/.test(text) && facet === "background") {
     return "nationality";
   }
-  if (facet === "production") return "production";
   if (facet === "role") return "role";
   if (facet === "era") return "era";
   if (facet === "background") return "school";
   return "identity";
+}
+
+function categoryFor(clue: WhoAmIClue): WhoAmIRevealCategory {
+  const text = clueText(clue);
+  return categoryForCanonicalFacet(clue, text) ?? legacyCategoryFor(clue, text);
 }
 
 function identifyingPowerFor(
