@@ -53,6 +53,23 @@ describe("Who Am I standardized reveal architecture", () => {
     expect(isStrongLateAnchor(rawProduction)).toBe(false);
   });
 
+  it("lets an explicit nickname facet override incidental biography words in the clue id", () => {
+    const nickname: WhoAmIClue = {
+      id: "identity:tyler-rose-family-origin",
+      text: "I was known as the 'Tyler Rose.'",
+      band: "giveaway",
+      facet: "nickname",
+      revealCoordinates: [],
+    };
+
+    expect(whoAmIRevealProfile(nickname)).toMatchObject({
+      category: "nickname-persona",
+      identifyingPower: "signature",
+      earliestClue: 9,
+    });
+    expect(isStrongLateAnchor(nickname)).toBe(true);
+  });
+
   it("reserves jersey numbers and nickname or name-change clues for the finish", () => {
     const jersey = clue("jersey", "I wore No. 85.", "strong", "identity");
     const nameChange = clue(
