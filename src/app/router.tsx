@@ -36,6 +36,7 @@ const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"))
 const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCasualPage"));
+const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
@@ -66,6 +67,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/20-questions", element: <Navigate to="/play/who-am-i" replace /> },
       { path: "play/who-am-i", element: <TodayChallengeGameRoute gameType="who_am_i" casual={<UfcWhoAmIPage />} /> },
       { path: "play/millionaire", element: <TodayChallengeGameRoute gameType="millionaire" casual={<MillionaireCasualPage scope="ufc" />} /> },
+      { path: "play/sports-feud", element: <FamilyFeudPrototypePage scope="ufc" /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
@@ -86,6 +88,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/20-questions", element: <Navigate to="/football/who-am-i" replace /> },
       { path: "football/who-am-i", element: <FootballWhoAmIPage /> },
       { path: "football/millionaire", element: <MillionaireCasualPage scope="football" /> },
+      { path: "football/sports-feud", element: <FamilyFeudPrototypePage scope="football" /> },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
