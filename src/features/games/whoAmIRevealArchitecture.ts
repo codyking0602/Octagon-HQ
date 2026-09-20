@@ -333,11 +333,18 @@ function identifyingPowerFor(
   return "broad";
 }
 
+const REVEAL_PROFILE_CACHE = new WeakMap<WhoAmIClue, WhoAmIRevealProfile>();
+
 export function whoAmIRevealProfile(clue: WhoAmIClue): WhoAmIRevealProfile {
+  const cached = REVEAL_PROFILE_CACHE.get(clue);
+  if (cached) return cached;
+
   const category = categoryFor(clue);
   const identifyingPower = identifyingPowerFor(clue, category);
   const [earliestClue, latestClue] = WINDOWS[category][identifyingPower];
-  return { category, identifyingPower, earliestClue, latestClue };
+  const profile = { category, identifyingPower, earliestClue, latestClue };
+  REVEAL_PROFILE_CACHE.set(clue, profile);
+  return profile;
 }
 
 function footballSchedulingEarliestClue(
