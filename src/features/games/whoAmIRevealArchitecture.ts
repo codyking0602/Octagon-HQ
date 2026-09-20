@@ -394,7 +394,7 @@ export function whoAmIRevealArchitectureSatisfied(clues: readonly WhoAmIClue[]) 
   );
 
   const footballCompositionSatisfied = !isFootballBoard || (
-    clues.filter((clue) => whoAmIClueFacet(clue) === "production").length <= 2
+    clues.filter((clue) => whoAmIClueFacet(clue) === "production").length <= 4
     && clues.filter(whoAmIClueIsGenericCareerVolume).length <= 2
   );
 
@@ -461,7 +461,7 @@ function scheduleRevealArchitecture(
       if (isFootballPool && !isStrongLateAnchor(ordered.at(-1)!)) {
         return null;
       }
-      if (isFootballPool && ordered.filter((clue) => whoAmIClueFacet(clue) === "production").length > 2) {
+      if (isFootballPool && ordered.filter((clue) => whoAmIClueFacet(clue) === "production").length > 4) {
         return null;
       }
       if (isFootballPool && ordered.filter(whoAmIClueIsGenericCareerVolume).length > 2) {
@@ -482,7 +482,7 @@ function scheduleRevealArchitecture(
 
     const semanticallyAvailable = remaining.filter(({ clue }) => {
       if (personalAlreadyChosen && whoAmIRevealProfile(clue).category === "personal-biography") return false;
-      if (productionChosen >= 2 && whoAmIClueFacet(clue) === "production") return false;
+      if (productionChosen >= 4 && whoAmIClueFacet(clue) === "production") return false;
       if (genericCareerVolumeChosen >= 2 && whoAmIClueIsGenericCareerVolume(clue)) return false;
       if (
         requireSemanticIndependence
