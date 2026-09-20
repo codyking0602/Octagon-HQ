@@ -430,10 +430,10 @@ function scheduleRevealArchitecture(
   const isFootballPool = clues.some((clue) => clue.revealCoordinates !== undefined);
   const isCfbPool = clues.some((clue) => clue.revealCoordinates?.includes("school"));
   const isNflPool = clues.some((clue) => clue.revealCoordinates?.includes("franchise"));
-  const allowExtraGenericCareerVolume = (
-    isNflPool
-    && clues.filter((clue) => !whoAmIClueIsGenericCareerVolume(clue)).length < targetLength
-  );
+  // NFL content-depth cleanup remains PR4. The scheduler may use generic
+  // career-volume facts as emergency depth for legacy NFL pools, while CFB
+  // keeps the PR3 max-two quality contract.
+  const allowExtraGenericCareerVolume = isNflPool;
   const entries = clues
     .map((clue, originalIndex) => ({ clue, originalIndex }))
     .filter(({ clue }) => {
