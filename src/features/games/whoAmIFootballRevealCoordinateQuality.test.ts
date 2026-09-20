@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getFootballWhoAmIUniverse } from "./whoAmIAuthority";
-import { whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
+import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import { WHO_AM_I_CLUE_LIMIT, whoAmIProgressiveClues } from "./whoAmIEngine";
 import {
   whoAmIRevealArchitectureSatisfied,
@@ -126,4 +126,27 @@ describe("Who Am I football reveal-coordinate architecture", () => {
       expect(problems, problems.join("\n")).toEqual([]);
     }, 150_000);
   }
+
+  it("keeps Y.A. Tittle identity-anchored through all simulation seeds", () => {
+    const candidate = getFootballWhoAmIUniverse("NFL").candidates.find((entry) => entry.id === "nfl-ya-tittle");
+    expect(candidate).toBeDefined();
+
+    const problems: string[] = [];
+    for (let seed = 1; seed <= 16; seed += 1) {
+      const board = whoAmIProgressiveClues(candidate!.clues, seededRandom(seed));
+      const nonProductionGiveaways = board.filter((clue) => (
+        clue.band === "giveaway" && whoAmIClueFacet(clue) !== "production"
+      ));
+      if (nonProductionGiveaways.length && whoAmIClueFacet(board.at(-1)!) === "production") {
+        problems.push(
+          `seed ${seed}: ${board.map((clue, index) => {
+            const profile = whoAmIRevealProfile(clue);
+            return `${index + 1}:${clue.id}{band=${clue.band}/facet=${whoAmIClueFacet(clue)}/category=${profile.category}/coords=${(clue.revealCoordinates ?? []).join("+") || "none"}}`;
+          }).join(" | ")}`,
+        );
+      }
+    }
+
+    expect(problems, problems.join("\n")).toEqual([]);
+  });
 });
