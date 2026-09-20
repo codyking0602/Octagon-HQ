@@ -41,16 +41,25 @@ describe("Who Am I standardized reveal architecture", () => {
     });
   });
 
-  it("does not treat an inferred raw production stat as a strong late identity anchor", () => {
+  it("does not treat raw production stats or production records as strong late identity anchors", () => {
     const rawProduction: WhoAmIClue = {
       id: "fact:nfl-career-passing-touchdowns",
       text: "I finished my NFL career with 152 passing touchdowns.",
       band: "strong",
       revealCoordinates: [],
     };
+    const productionRecord: WhoAmIClue = {
+      id: "identity:single-season-touchdown-record",
+      text: "I set a single-season touchdown record.",
+      band: "strong",
+      facet: "production",
+      revealCoordinates: [],
+    };
 
     expect(whoAmIRevealProfile(rawProduction).category).toBe("production");
+    expect(whoAmIRevealProfile(productionRecord).category).toBe("production");
     expect(isStrongLateAnchor(rawProduction)).toBe(false);
+    expect(isStrongLateAnchor(productionRecord)).toBe(false);
   });
 
   it("lets an explicit nickname facet override incidental biography words in the clue id", () => {
