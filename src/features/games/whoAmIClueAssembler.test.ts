@@ -142,6 +142,32 @@ describe("Who Am I Slice 13 quality regressions", () => {
     }
   });
 
+  it("classifies authored career-path and accomplishment concepts before incidental production words", () => {
+    const undraftedPath = whoAmIIdentityKnowledgeClue({
+      subjectId: "kurt-warner",
+      subjectName: "Kurt Warner",
+      subjectKind: "player",
+      league: "NFL",
+      factId: "one-college-start-undrafted",
+      conceptId: "one-college-start-undrafted",
+      value: "Kurt Warner made one college start before entering the NFL undrafted.",
+    });
+    const firstPlay = whoAmIIdentityKnowledgeClue({
+      subjectId: "walter-payton",
+      subjectName: "Walter Payton",
+      subjectKind: "player",
+      league: "NFL",
+      factId: "first-football-play-touchdown",
+      conceptId: "first-football-play-touchdown",
+      value: "Walter Payton scored a touchdown on his first football play.",
+    });
+
+    expect(undraftedPath.facet).toBe("career-path");
+    expect(undraftedPath.band).toBe("strong");
+    expect(firstPlay.facet).toBe("accomplishments");
+    expect(firstPlay.band).toBe("strong");
+  });
+
   it("treats award-bearing identity facts as strong late-round clues", () => {
     const clue = whoAmIIdentityKnowledgeClue({
       subjectId: "cfb-dez-bryant",
