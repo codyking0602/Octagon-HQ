@@ -228,10 +228,12 @@ function orderRevealBoardWithCoordinateRescue(
 
   const rescuePool = coordinateRescuePool(eligibleClues, limit, random);
 
-  // Rescue must preserve the assembler's canonical semantic-selection contract.
-  // Re-select through the assembler, then let reveal architecture order that
-  // quality-safe set. The reveal scheduler must not pick directly from the raw
-  // rescue pool, because doing so can bypass facet caps and semantic uniqueness.
+  const expandedRescue = selectWhoAmICluesByRevealArchitectureIfPossible(
+    rescuePool,
+    limit,
+  );
+  if (expandedRescue) return expandedRescue;
+
   for (const pool of [rescuePool, eligibleClues]) {
     for (let attempt = 0; attempt < 12; attempt += 1) {
       const rescueSelection = assembleWhoAmIClues(pool, limit, random);
