@@ -1,4 +1,4 @@
-import { whoAmIClueFacet } from "./whoAmIClueAssembler";
+import { whoAmIClueFacet, whoAmIClueIsGenericCareerVolume } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIRevealCoordinate } from "./whoAmIEngine";
 import { whoAmICluesShareInformation, whoAmISemanticIndependentCapacity } from "./whoAmISemanticQuality";
 
