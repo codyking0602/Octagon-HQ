@@ -378,10 +378,18 @@ export function whoAmIClueAllowedAtRevealPosition(clue: WhoAmIClue, zeroBasedInd
 export function whoAmIRevealArchitectureSatisfied(clues: readonly WhoAmIClue[]) {
   const isFootballBoard = clues.length === 10
     && clues.some((clue) => clue.revealCoordinates !== undefined);
+  const late = clues.slice(-4);
+  const footballLateQualitySatisfied = !isFootballBoard || (
+    isStrongLateAnchor(clues.at(-1)!)
+    && clues.slice(-2).every((clue) => clue.band === "strong" || clue.band === "giveaway")
+    && late.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length >= 3
+    && late.filter(isStrongLateAnchor).length >= 2
+  );
+
   return clues.every((clue, index) => whoAmIClueAllowedAtRevealPosition(clue, index))
     && clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length <= 1
     && whoAmIRevealCoordinateWindowSatisfied(clues)
-    && (!isFootballBoard || isStrongLateAnchor(clues.at(-1)!));
+    && footballLateQualitySatisfied;
 }
 
 function preferredBandRank(position: number, band: WhoAmIClueBand) {
