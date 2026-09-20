@@ -1,5 +1,5 @@
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIRevealCoordinate } from "./whoAmIEngine";
-import { whoAmICluesShareInformation } from "./whoAmISemanticQuality";
+import { whoAmICluesShareInformation, whoAmISemanticIndependentCapacity } from "./whoAmISemanticQuality";
 
 export type WhoAmIRevealCategory =
   | "role"
@@ -331,8 +331,9 @@ function scheduleRevealArchitecture(
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
   const deadStates = new Set<string>();
+  const requireSemanticIndependence = whoAmISemanticIndependentCapacity(clues, targetLength) >= targetLength;
   let explored = 0;
-  const MAX_NODES = 50_000;
+  const MAX_NODES = 250_000;
 
   const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
     explored += 1;
@@ -359,10 +360,13 @@ function scheduleRevealArchitecture(
     ));
     const semanticallyAvailable = remaining.filter(({ clue }) => (
       (!personalAlreadyChosen || whoAmIRevealProfile(clue).category !== "personal-biography")
-      && !chosen.some((entry) => (
-        (entry.clue.conceptId ?? entry.clue.id) === (clue.conceptId ?? clue.id)
-        || whoAmICluesShareInformation(entry.clue, clue)
-      ))
+      && (
+        !requireSemanticIndependence
+        || !chosen.some((entry) => (
+          (entry.clue.conceptId ?? entry.clue.id) === (clue.conceptId ?? clue.id)
+          || whoAmICluesShareInformation(entry.clue, clue)
+        ))
+      )
     ));
 
     const exposed = new Set(chosen.flatMap((entry) => entry.clue.revealCoordinates ?? []));
