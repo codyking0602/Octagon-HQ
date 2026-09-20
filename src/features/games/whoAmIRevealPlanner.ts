@@ -115,7 +115,7 @@ function coordinateRescuePool(
 ) {
   const expanded = assembleWhoAmIClues(
     eligibleClues,
-    Math.min(eligibleClues.length, limit + 14),
+    Math.min(eligibleClues.length, limit + 8),
     random,
   );
   const rankedExpanded = ranked(expanded, random)
