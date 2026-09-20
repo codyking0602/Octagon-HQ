@@ -441,12 +441,12 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             <div className={timeRemainingMs <= 10_000 ? "feud-fast-clock is-low" : "feud-fast-clock"}>
               {formatClock(timeRemainingMs)}
             </div>
-            <span className="feud-fast-progress">{state.fastMoneyIndex + 1} OF 5</span>
           </header>
 
           <div className="feud-fast-showdown">
             <FastMoneyHost asset={hostAsset} />
             <section className="feud-fast-question">
+              <span className="feud-fast-progress">{state.fastMoneyIndex + 1} OF 5</span>
               <small>{hqName} · FAST MONEY</small>
               <h1>{currentFastQuestion?.prompt}</h1>
               <div className="feud-fast-dots" aria-label="Fast Money progress">
