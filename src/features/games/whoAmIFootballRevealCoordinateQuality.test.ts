@@ -3,11 +3,13 @@ import { getFootballWhoAmIUniverse } from "./whoAmIAuthority";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import { WHO_AM_I_CLUE_LIMIT, whoAmIProgressiveClues } from "./whoAmIEngine";
 import {
+  isStrongLateAnchor,
   whoAmIRevealArchitectureSatisfied,
   whoAmIRevealProfile,
 } from "./whoAmIRevealArchitecture";
 import { whoAmIQualityCompatibleReplayTargets } from "./whoAmIRevealPlanner";
 import {
+  whoAmIClueHasHardEditorialFailure,
   whoAmICluesShareInformation,
   whoAmISemanticIndependentCapacity,
   whoAmISemanticSetKey,
@@ -40,7 +42,7 @@ describe("Who Am I football reveal-coordinate architecture", () => {
 
       for (const candidate of universe.candidates) {
         const semanticCapacity = whoAmISemanticIndependentCapacity(candidate.clues, 13);
-        const boards = Array.from({ length: 6 }, (_value, index) => (
+        const boards = Array.from({ length: 8 }, (_value, index) => (
           whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
         ));
         const replayTargets = whoAmIQualityCompatibleReplayTargets(candidate.clues, boards);
@@ -51,6 +53,23 @@ describe("Who Am I football reveal-coordinate architecture", () => {
           if (board.length !== WHO_AM_I_CLUE_LIMIT) {
             problems.push(`${candidate.id} seed ${seed}: only ${board.length} clues`);
             continue;
+          }
+
+          for (const clue of board) {
+            if (whoAmIClueHasHardEditorialFailure(clue)) {
+              problems.push(`${candidate.id} seed ${seed}: hard editorial failure in ${clue.id}`);
+            }
+            if (clue.identityKnowledge && (!clue.knowledgeSubjectId || !clue.sourceFactId)) {
+              problems.push(`${candidate.id} seed ${seed}: identity clue ${clue.id} lost canonical source metadata`);
+            }
+          }
+
+          const finale = board.at(-1)!;
+          const finaleProfile = whoAmIRevealProfile(finale);
+          if (!isStrongLateAnchor(finale) || finaleProfile.category === "production") {
+            problems.push(
+              `${candidate.id} seed ${seed}: clue 10 is not a true identity anchor — ${finale.id}{${finaleProfile.category}/${finale.band}}`,
+            );
           }
 
           const firstFour = exposedCoordinateCount(board, 4);
@@ -100,6 +119,11 @@ describe("Who Am I football reveal-coordinate architecture", () => {
             .filter((clue) => clue.band === "strong" || clue.band === "giveaway").length;
           if (strongFinish < 3) {
             problems.push(`${candidate.id} seed ${seed}: only ${strongFinish} strong clues in clues 7-10`);
+          }
+
+          const lateAnchors = board.slice(-4).filter(isStrongLateAnchor).length;
+          if (lateAnchors < 2) {
+            problems.push(`${candidate.id} seed ${seed}: only ${lateAnchors} true identity anchors in clues 7-10`);
           }
 
           if (semanticCapacity >= WHO_AM_I_CLUE_LIMIT) {
