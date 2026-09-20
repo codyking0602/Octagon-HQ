@@ -767,7 +767,13 @@ export function assembleWhoAmIClues(
 ) {
   const prepared = preparedClues(clues, random);
   const selected: PreparedClue[] = [];
-  const allowExtraGenericCareerVolume = prepared.filter(({ clue }) => !whoAmIClueIsGenericCareerVolume(clue)).length < limit;
+  const isCfbFootballPool = prepared.some(({ clue }) => clue.revealCoordinates?.includes("school"));
+  const isNflFootballPool = prepared.some(({ clue }) => clue.revealCoordinates?.includes("franchise"));
+  const allowExtraGenericCareerVolume = (
+    isNflFootballPool
+    && prepared.filter(({ clue }) => !whoAmIClueIsGenericCareerVolume(clue)).length < limit
+  );
+  const enforceProductionCap = isCfbFootballPool;
   const selectedConcepts = new Set<string>();
   const selectedFamilies = new Set<string>();
   const selectedTexts: string[] = [];
@@ -819,7 +825,7 @@ export function assembleWhoAmIClues(
     // Production is a hard game-quality cap, not a preference to relax for
     // playability. If a pool cannot build ten clues without stat soup, that is
     // content debt for the population cleanup rather than permission to exceed it.
-    if (entry.facet === "production" && facetCount >= 4) return false;
+    if (enforceProductionCap && entry.facet === "production" && facetCount >= 4) return false;
     if (
       !allowExtraGenericCareerVolume
       && whoAmIClueIsGenericCareerVolume(entry.clue)
@@ -960,7 +966,8 @@ export function assembleWhoAmIClues(
   // still contains a few pools with fewer than ten independent information lanes.
   // Keep those rounds playable until their sport cleanup replaces the debt rather
   // than returning a nine-clue game. Exact/near-copy protections remain active.
-  if (selected.length < limit) {
+  const semanticCapacity = whoAmISemanticIndependentCapacity(semanticCapacityInput(clues), limit);
+  if (selected.length < limit && semanticCapacity < limit) {
     take(
       prepared.filter((entry) => !selected.includes(entry)).sort(lateFirst),
       limit - selected.length,
@@ -1176,8 +1183,8 @@ export function assembleWhoAmIClues(
   );
 
   if (
-    hasSemanticCollision(selected)
-    && whoAmISemanticIndependentCapacity(semanticCapacityInput(clues), limit) >= limit
+    (selected.length < limit || hasSemanticCollision(selected))
+    && semanticCapacity >= limit
   ) {
     const selectedSet = new Set(selected);
     const conflictCount = new Map<PreparedClue, number>();
@@ -1232,7 +1239,7 @@ export function assembleWhoAmIClues(
           && sportsCount >= semanticSportsIdentityTarget
           && biographyCount <= 1
           && relationshipCount <= 1
-          && productionCount <= 4
+          && (!enforceProductionCap || productionCount <= 4)
           && (allowExtraGenericCareerVolume || genericCareerVolumeCount <= 2)
         ) {
           cleanBoard = [...chosen];
@@ -1250,7 +1257,11 @@ export function assembleWhoAmIClues(
           normalize(entry.clue.text) === normalize(candidate.clue.text)
           || cluesEffectivelyRepeated(entry.clue, candidate.clue)
         ))) continue;
-        if (candidate.facet === "production" && chosen.filter((entry) => entry.facet === "production").length >= 4) continue;
+        if (
+          enforceProductionCap
+          && candidate.facet === "production"
+          && chosen.filter((entry) => entry.facet === "production").length >= 4
+        ) continue;
         if (
           !allowExtraGenericCareerVolume
           && whoAmIClueIsGenericCareerVolume(candidate.clue)
