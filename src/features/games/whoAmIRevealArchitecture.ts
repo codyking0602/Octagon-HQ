@@ -313,12 +313,15 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
   )).length >= 3;
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
+  const deadStates = new Set<string>();
   let explored = 0;
-  const MAX_NODES = 30_000;
+  const MAX_NODES = 100_000;
 
   const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
     explored += 1;
     if (explored > MAX_NODES) return null;
+    const stateKey = `${position}:${remaining.map((entry) => entry.originalIndex).sort((a, b) => a - b).join(",")}`;
+    if (deadStates.has(stateKey)) return null;
     if (position > clues.length) {
       const ordered = chosen.map((entry) => entry.clue);
       if (
@@ -364,6 +367,7 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
       chosen.pop();
     }
 
+    deadStates.add(stateKey);
     return null;
   };
 
