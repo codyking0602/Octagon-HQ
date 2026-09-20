@@ -765,14 +765,26 @@ export function assembleWhoAmIClues(
   limit: number,
   random: () => number = () => 0.5,
 ) {
-  const prepared = preparedClues(clues, random);
+  const allPrepared = preparedClues(clues, random);
+  const isCfbFootballPool = allPrepared.some(({ clue }) => clue.revealCoordinates?.includes("school"));
+  const isNflFootballPool = allPrepared.some(({ clue }) => clue.revealCoordinates?.includes("franchise"));
+  const hasStandaloneSchool = allPrepared.some(({ clue }) => clue.id === "school");
+  const hasStandaloneRole = allPrepared.some(({ clue }) => clue.id === "position");
+  const isCompositeSchoolRole = (entry: PreparedClue) => /^At .+, I played /i.test(entry.clue.text.trim());
+  const withoutCompositeSchoolRole = allPrepared.filter((entry) => !isCompositeSchoolRole(entry));
+  const prepared = (
+    isCfbFootballPool
+    && hasStandaloneSchool
+    && hasStandaloneRole
+    && withoutCompositeSchoolRole.length >= limit
+  )
+    ? withoutCompositeSchoolRole
+    : allPrepared;
   const selected: PreparedClue[] = [];
-  const isCfbFootballPool = prepared.some(({ clue }) => clue.revealCoordinates?.includes("school"));
-  const isNflFootballPool = prepared.some(({ clue }) => clue.revealCoordinates?.includes("franchise"));
-  const allowExtraGenericCareerVolume = (
-    isNflFootballPool
-    && prepared.filter(({ clue }) => !whoAmIClueIsGenericCareerVolume(clue)).length < limit
-  );
+  // NFL population cleanup is intentionally deferred to PR4. Keep generic
+  // career-volume facts behind the normal facet limits, but permit them as an
+  // emergency depth fallback so legacy NFL pools still reach ten clues.
+  const allowExtraGenericCareerVolume = isNflFootballPool;
   const enforceProductionCap = isCfbFootballPool;
   const selectedConcepts = new Set<string>();
   const selectedFamilies = new Set<string>();
