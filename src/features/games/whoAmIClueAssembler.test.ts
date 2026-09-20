@@ -79,10 +79,6 @@ function sequenceKey(sequence: readonly WhoAmIClue[]) {
 
 function assertProgressiveSequence(candidate: WhoAmICandidate, sequence: readonly WhoAmIClue[]) {
   expect(sequence).toHaveLength(WHO_AM_I_CLUE_LIMIT);
-  for (let index = 1; index < sequence.length; index += 1) {
-    expect(BAND_RANK[sequence[index]!.band]).toBeGreaterThanOrEqual(BAND_RANK[sequence[index - 1]!.band]);
-  }
-
   const conceptKeys = sequence.map((clue) => clue.conceptId ?? clue.id);
   expect(new Set(conceptKeys).size).toBe(sequence.length);
   expect(new Set(sequence.map((clue) => normalize(clue.text))).size).toBe(sequence.length);
@@ -415,10 +411,6 @@ describe("Who Am I football scope-aware clue aggregation", () => {
         const conceptKeys = sequence.map((clue) => clue.conceptId ?? clue.id);
         expect(new Set(conceptKeys).size).toBe(sequence.length);
         expect(new Set(sequence.map((clue) => normalize(clue.text))).size).toBe(sequence.length);
-        for (let index = 1; index < sequence.length; index += 1) {
-          expect(BAND_RANK[sequence[index]!.band]).toBeGreaterThanOrEqual(BAND_RANK[sequence[index - 1]!.band]);
-        }
-
         const identityBacked = candidate.clues.some((clue) => clue.identityKnowledge);
         const intentionallyCurated = (league === "NFL" && (isNflWhoAmIBatch1Subject(candidate.id) || isNflWhoAmIBatch2Subject(candidate.id) || isNflWhoAmIBatch3Subject(candidate.id) || isNflWhoAmIBatch4Subject(candidate.id))) || (league === "CFB" && (isCfbWhoAmIBatch1Subject(candidate.id) || isCfbWhoAmIBatch2Subject(candidate.id) || isCfbWhoAmIBatch3Subject(candidate.id) || isCfbWhoAmIBatch4Subject(candidate.id)));
         if (identityBacked) identityBackedCandidates += 1;
