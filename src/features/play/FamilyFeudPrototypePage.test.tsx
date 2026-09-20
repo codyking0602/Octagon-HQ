@@ -40,7 +40,7 @@ function submitMainAnswer(value: string) {
   fireEvent.submit(input.closest("form")!);
 }
 
-describe("Sports Feud V2 private prototype", () => {
+describe("Sports Feud private daily presentation", () => {
   beforeEach(() => {
     identityHarness.profile = {
       id: "00000000-0000-4000-8000-000000000001",
@@ -76,13 +76,20 @@ describe("Sports Feud V2 private prototype", () => {
       canControlPicks: true,
     };
     renderFootball();
-    expect(screen.queryByRole("button", { name: "START FEUD" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "PLAY SPORTS FEUD" })).not.toBeInTheDocument();
     expect(document.body).not.toHaveClass("family-feud-prototype-active");
+  });
+
+  it("uses production Daily Challenge language without preview-only controls", () => {
+    renderFootball();
+    expect(screen.getByText("FOOTBALL HQ · DAILY CHALLENGE")).toBeInTheDocument();
+    expect(screen.queryByText(/PRIVATE PREVIEW/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/TRY UFC VERSION/i)).not.toBeInTheDocument();
   });
 
   it("presents the four-answer HQ-opinion board inside the immersive studio", () => {
     renderFootball();
-    fireEvent.click(screen.getByRole("button", { name: "START FEUD" }));
+    fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 
     expect(screen.getByText("WE ASKED FOOTBALL HQ")).toBeInTheDocument();
     expect(screen.getByText(/most electric Cowboys players of the 2020s/i)).toBeInTheDocument();
@@ -94,7 +101,7 @@ describe("Sports Feud V2 private prototype", () => {
 
   it("accepts a lower-value good answer and banks its editorial point value", () => {
     renderFootball();
-    fireEvent.click(screen.getByRole("button", { name: "START FEUD" }));
+    fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 
     submitMainAnswer("Amari Cooper");
 
@@ -105,7 +112,7 @@ describe("Sports Feud V2 private prototype", () => {
 
   it("reveals key missed HQ answers after three strikes without subtracting banked points", () => {
     renderFootball();
-    fireEvent.click(screen.getByRole("button", { name: "START FEUD" }));
+    fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 
     submitMainAnswer("Amari Cooper");
     submitMainAnswer("DeMarcus Lawrence");
@@ -117,12 +124,13 @@ describe("Sports Feud V2 private prototype", () => {
     expect(screen.getByText("CeeDee Lamb")).toBeInTheDocument();
     expect(screen.getByText("Micah Parsons")).toBeInTheDocument();
     expect(screen.getByText("Dak Prescott")).toBeInTheDocument();
+    expect(document.querySelectorAll(".feud-answer-slot.is-missed")).toHaveLength(3);
     expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
   });
 
   it("moves through two boards into the 45-second hosted Fast Money studio", () => {
     renderFootball();
-    fireEvent.click(screen.getByRole("button", { name: "START FEUD" }));
+    fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 
     for (const answer of ["DeMarcus Lawrence", "Zack Martin", "Dalton Schultz"]) {
       submitMainAnswer(answer);
@@ -144,7 +152,7 @@ describe("Sports Feud V2 private prototype", () => {
     expect(document.querySelector('img[src="/assets/sports-feud-fast-money-stage.png"]')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "START 45 SECONDS" }));
-    expect(screen.getByText("1 OF 5")).toBeInTheDocument();
+    expect(screen.getByText("1 OF 5")).toHaveClass("feud-fast-progress");
     expect(screen.getByLabelText("Fast Money answer")).toBeInTheDocument();
     expect(screen.queryByText(/\+[0-9]+ HQ POINTS/)).not.toBeInTheDocument();
     expect(document.querySelector(".feud-fast-showdown .feud-fast-host-asset")).toBeInTheDocument();
