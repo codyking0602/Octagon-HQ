@@ -4,9 +4,9 @@ export const SPORTS_FEUD_MAIN_STAGE_ASSET = "/assets/sports-feud-main-stage.png"
 export const SPORTS_FEUD_FAST_MONEY_STAGE_ASSET = "/assets/sports-feud-fast-money-stage.png";
 
 export const SPORTS_FEUD_HOSTS: Record<SportsFeudHostSport, readonly [string, string, string]> = {
-  ufc: ["/assets/1ufc.jpeg", "/assets/2ufc.jpeg", "/assets/3ufc.jpeg"],
-  nfl: ["/assets/1nfl.jpeg", "/assets/2nfl.jpeg", "/assets/3nfl.jpeg"],
-  cfb: ["/assets/1cfb.jpeg", "/assets/2cfb.jpeg", "/assets/3cfb.jpeg"],
+  ufc: ["/assets/1ufc.png", "/assets/2ufc.png", "/assets/3ufc.png"],
+  nfl: ["/assets/1nfl.png", "/assets/2nfl.png", "/assets/3nfl.png"],
+  cfb: ["/assets/1cfb.png", "/assets/2cfb.png", "/assets/3cfb.png"],
 };
 
 export function sportsFeudCentralDateKey(now = new Date()) {
