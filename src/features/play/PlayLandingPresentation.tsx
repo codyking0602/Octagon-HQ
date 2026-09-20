@@ -45,6 +45,7 @@ type PlayLandingGameLibraryProps = {
   onNavigate: (route: string) => void;
   footer?: ReactNode;
   millionaireVisible?: boolean;
+  familyFeudVisible?: boolean;
 };
 
 export function PlayLandingGameLibrary({
@@ -52,10 +53,12 @@ export function PlayLandingGameLibrary({
   onNavigate,
   footer,
   millionaireVisible = false,
+  familyFeudVisible = false,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
   const millionaireRoute = sport === "ufc" ? "/play/millionaire" : "/football/millionaire";
+  const familyFeudRoute = sport === "ufc" ? "/play/sports-feud" : "/football/sports-feud";
 
   return (
     <section className="play-landing-library" data-sport={sport} aria-labelledby={`${sport}-all-games-title`}>
@@ -65,10 +68,24 @@ export function PlayLandingGameLibrary({
           <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
           <p>Quick games and blind tests, ready whenever the debate starts.</p>
         </div>
-        <span>{games.length + (millionaireVisible ? 1 : 0)} LIVE</span>
+        <span>{games.length + (millionaireVisible ? 1 : 0) + (familyFeudVisible ? 1 : 0)} LIVE</span>
       </header>
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
+        {familyFeudVisible ? (
+          <button
+            className="play-landing-game-card is-strategic"
+            type="button"
+            onClick={() => onNavigate(familyFeudRoute)}
+          >
+            <span className="play-landing-game-card__icon" aria-hidden="true">F</span>
+            <span className="play-landing-game-card__status">OWNER PREVIEW</span>
+            <strong>Sports Feud</strong>
+            <small>Clear two answer boards, then race through five Fast Money prompts in 30 seconds.</small>
+            <em>PLAY →</em>
+          </button>
+        ) : null}
+
         {millionaireVisible ? (
           <button
             className="play-landing-game-card is-strategic"
