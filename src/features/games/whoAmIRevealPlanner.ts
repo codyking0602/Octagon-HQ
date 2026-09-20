@@ -8,10 +8,12 @@ import {
   whoAmIClueHasHardEditorialFailure,
   whoAmICluesShareInformation,
   whoAmISemanticClueKey,
+  whoAmISemanticIndependentCapacity,
 } from "./whoAmISemanticQuality";
 import {
   isStrongLateAnchor,
   orderWhoAmICluesByRevealArchitectureIfPossible,
+  selectWhoAmICluesByRevealArchitectureIfPossible,
   whoAmIRevealArchitectureSatisfied,
   whoAmIRevealProfile,
 } from "./whoAmIRevealArchitecture";
