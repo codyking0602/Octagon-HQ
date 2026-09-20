@@ -304,9 +304,12 @@ export function whoAmIClueAllowedAtRevealPosition(clue: WhoAmIClue, zeroBasedInd
 }
 
 export function whoAmIRevealArchitectureSatisfied(clues: readonly WhoAmIClue[]) {
+  const isFootballBoard = clues.length === 10
+    && clues.some((clue) => clue.revealCoordinates !== undefined);
   return clues.every((clue, index) => whoAmIClueAllowedAtRevealPosition(clue, index))
     && clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length <= 1
-    && whoAmIRevealCoordinateWindowSatisfied(clues);
+    && whoAmIRevealCoordinateWindowSatisfied(clues)
+    && (!isFootballBoard || isStrongLateAnchor(clues.at(-1)!));
 }
 
 function preferredBandRank(position: number, band: WhoAmIClueBand) {
