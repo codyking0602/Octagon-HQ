@@ -1,7 +1,29 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { afterEach, describe, expect, it } from "vitest";
-import FamilyFeudPrototypePage from "./FamilyFeudPrototypePage";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+const identityHarness = vi.hoisted(() => ({
+  profile: {
+    id: "00000000-0000-4000-8000-000000000001",
+    displayName: "CODY",
+    initials: "C",
+    canControlPicks: true,
+  } as {
+    id: string;
+    displayName: string;
+    initials: string;
+    canControlPicks?: boolean;
+  } | null,
+}));
+
+vi.mock("../identity/IdentityProvider", () => ({
+  useIdentity: () => ({
+    ready: true,
+    profile: identityHarness.profile,
+  }),
+}));
+
+import FamilyFeudPrototypePage, { isFamilyFeudPrototypeOwner } from "./FamilyFeudPrototypePage";
 
 function renderFootball() {
   return render(
@@ -18,8 +40,43 @@ function submitMainAnswer(value: string) {
 }
 
 describe("Family Feud playable prototype", () => {
+  beforeEach(() => {
+    identityHarness.profile = {
+      id: "00000000-0000-4000-8000-000000000001",
+      displayName: "CODY",
+      initials: "C",
+      canControlPicks: true,
+    };
+  });
+
   afterEach(() => {
     document.body.classList.remove("family-feud-prototype-active");
+  });
+
+  it("allows only the Cody owner profile into the prototype", () => {
+    expect(isFamilyFeudPrototypeOwner(identityHarness.profile)).toBe(true);
+    expect(isFamilyFeudPrototypeOwner({
+      id: "00000000-0000-4000-8000-000000000002",
+      displayName: "TEST",
+      initials: "T",
+      canControlPicks: true,
+    })).toBe(false);
+    expect(isFamilyFeudPrototypeOwner({
+      id: "00000000-0000-4000-8000-000000000003",
+      displayName: "CODY",
+      initials: "C",
+      canControlPicks: false,
+    })).toBe(false);
+
+    identityHarness.profile = {
+      id: "00000000-0000-4000-8000-000000000002",
+      displayName: "TEST",
+      initials: "T",
+      canControlPicks: true,
+    };
+    renderFootball();
+    expect(screen.queryByRole("button", { name: "START FEUD" })).not.toBeInTheDocument();
+    expect(document.body).not.toHaveClass("family-feud-prototype-active");
   });
 
   it("plays a correct board answer through the blind text matcher", () => {
