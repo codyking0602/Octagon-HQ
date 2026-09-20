@@ -54,10 +54,13 @@ describe("Who Am I football reveal-coordinate architecture", () => {
             problems.push(`${candidate.id} seed ${seed}: only ${board.length} clues`);
             if (seed === 1) {
               problems.push(
-                `${candidate.id}: pool=${candidate.clues.length} ${candidate.clues.map((clue) => {
+                `${candidate.id}: semanticCapacity=${semanticCapacity} pool=${candidate.clues.length} ${candidate.clues.map((clue) => {
                   const profile = whoAmIRevealProfile(clue);
                   return `${clue.id}{facet=${whoAmIClueFacet(clue)}/category=${profile.category}/class=${whoAmIClueSelectionClass(clue)}/band=${clue.band}/coords=${(clue.revealCoordinates ?? []).join("+") || "none"}}`;
                 }).join(" | ")}`,
+              );
+              problems.push(
+                `${candidate.id}: selected ${board.map((clue) => clue.id).join(" | ")}`,
               );
             }
             continue;
