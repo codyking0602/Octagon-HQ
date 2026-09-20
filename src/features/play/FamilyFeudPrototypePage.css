@@ -1996,3 +1996,206 @@ body.family-feud-prototype-active .bottom-nav {
   font-weight: 700;
   opacity: 1;
 }
+
+
+/* Sports Feud daily-polish pass: production mobile composition. */
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot {
+  position: relative;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot strong {
+  padding-left: 27%;
+  padding-right: 4%;
+  font-size: clamp(9px, 2.75vw, 16px);
+  line-height: 1.02;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed {
+  background: rgba(92, 57, 4, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(247, 196, 69, 0.5);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed strong,
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed > span {
+  color: rgba(255, 224, 154, 0.72);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.82);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed::after {
+  content: "MISSED";
+  position: absolute;
+  left: 27%;
+  bottom: 5%;
+  color: #f4c449;
+  font-size: clamp(5px, 1.25vw, 7px);
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-shadow: 0 1px 3px #000;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-review > span {
+  color: #b7c9df;
+}
+
+/* The form shell aligns to the baked tray; the real input sits inside the white field
+   rather than inheriting the full tray height on iOS keyboard resize. */
+.family-feud-prototype[data-scene="main"] .feud-answer-entry__row,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry__row {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input {
+  position: absolute;
+  left: 2.4%;
+  top: 24%;
+  width: 81.5%;
+  height: 60%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0 3.2%;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  color: #08152d;
+  background: transparent;
+  box-shadow: none;
+  font-size: 17px;
+  line-height: normal;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry__row button,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry__row button {
+  position: absolute;
+  top: 24%;
+  right: 2.2%;
+  width: 11.7%;
+  height: 60%;
+  min-height: 0;
+  padding: 0;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input::placeholder,
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input::placeholder {
+  color: rgba(71, 75, 84, 0.48);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: normal;
+  opacity: 1;
+}
+
+/* Fast Money host: large enough to feel like the studio host while clearing the input tray. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  left: -2.5%;
+  bottom: 13.2%;
+  width: 44%;
+  height: 67%;
+  object-position: left bottom;
+  transform-origin: left bottom;
+}
+
+/* Put progress into the question presentation instead of floating outside the set. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-progress {
+  position: absolute;
+  z-index: 12;
+  top: 23.25%;
+  right: 17%;
+  min-width: 50px;
+  padding: 4px 7px;
+  border: 1px solid rgba(244, 196, 73, 0.72);
+  border-radius: 999px;
+  color: #f8d46e;
+  background: rgba(1, 18, 49, 0.9);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.34);
+  font-size: clamp(7px, 1.8vw, 10px);
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-shadow: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question {
+  padding: 2.2% 5.4% 1.5%;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question small {
+  font-size: clamp(7px, 1.75vw, 10px);
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question h1 {
+  max-width: 94%;
+  margin: 0.42em 0 0.28em;
+  font-size: clamp(13px, 3.45vw, 21px);
+  line-height: 1.08;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div {
+  padding-left: 23%;
+  padding-right: 13%;
+  font-size: clamp(9px, 2.75vw, 16px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Fast Money recap: teach the board without five huge eight-answer blocks. */
+.feud-reveal-card__hq > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.feud-reveal-card__hq span {
+  width: 100%;
+  min-width: 0;
+  min-height: 25px;
+  justify-content: space-between;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feud-reveal-card__more {
+  margin: 6px 0 0;
+  color: #6f91bb;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.feud-reveal-card__prompt {
+  min-height: 44px;
+}
+
+.feud-reveal-card__you {
+  min-height: 41px;
+}
+
+.feud-reveal-card__hq {
+  padding-top: 6px;
+  padding-bottom: 7px;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+  .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+    bottom: 13.5%;
+    width: 42%;
+    height: 64%;
+  }
+
+  .family-feud-prototype[data-scene="fast"] .feud-fast-question h1 {
+    font-size: clamp(12px, 3.3vw, 19px);
+  }
+}
