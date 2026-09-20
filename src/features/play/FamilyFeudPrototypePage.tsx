@@ -8,7 +8,6 @@ import type { FormEvent } from "react";
 import { createPortal } from "react-dom";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
-import type { IdentityProfile } from "../identity/identityModel";
 import {
   FAMILY_FEUD_FAST_MONEY_TIME_MS,
   FAMILY_FEUD_STRIKES_PER_BOARD,
@@ -20,6 +19,7 @@ import {
   type FamilyFeudOutcome,
   type FamilyFeudState,
 } from "../games/familyFeudEngine";
+import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import { familyFeudPrototypePack } from "./familyFeudPrototypePacks";
 import "./FamilyFeudPrototypePage.css";
 
@@ -75,13 +75,6 @@ function HQBackButton({ onClick }: { onClick: () => void }) {
       <span aria-hidden="true">‹</span>
       HQ
     </button>
-  );
-}
-
-export function isFamilyFeudPrototypeOwner(profile: IdentityProfile | null) {
-  return Boolean(
-    profile?.canControlPicks
-    && profile.displayName.trim().toUpperCase() === "CODY"
   );
 }
 
