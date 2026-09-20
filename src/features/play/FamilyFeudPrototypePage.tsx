@@ -6,7 +6,9 @@ import {
 } from "react";
 import type { FormEvent } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useIdentity } from "../identity/IdentityProvider";
+import type { IdentityProfile } from "../identity/identityModel";
 import {
   FAMILY_FEUD_FAST_MONEY_TIME_MS,
   FAMILY_FEUD_STRIKES_PER_BOARD,
@@ -76,7 +78,14 @@ function HQBackButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-export default function FamilyFeudPrototypePage({ scope }: { scope: PrototypeScope }) {
+export function isFamilyFeudPrototypeOwner(profile: IdentityProfile | null) {
+  return Boolean(
+    profile?.canControlPicks
+    && profile.displayName.trim().toUpperCase() === "CODY"
+  );
+}
+
+function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const navigate = useNavigate();
   const pack = useMemo(() => familyFeudPrototypePack(scope), [scope]);
   const [state, setState] = useState<FamilyFeudState>(() => createFamilyFeudState());
@@ -435,4 +444,16 @@ export default function FamilyFeudPrototypePage({ scope }: { scope: PrototypeSco
   );
 
   return createPortal(view, document.body);
+}
+
+export default function FamilyFeudPrototypePage({ scope }: { scope: PrototypeScope }) {
+  const identity = useIdentity();
+  const exitRoute = scope === "football" ? "/football" : "/play";
+
+  if (!identity.ready) return null;
+  if (!isFamilyFeudPrototypeOwner(identity.profile)) {
+    return <Navigate to={exitRoute} replace />;
+  }
+
+  return <FamilyFeudPrototypeExperience scope={scope} />;
 }
