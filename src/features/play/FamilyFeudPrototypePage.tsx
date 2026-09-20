@@ -9,14 +9,20 @@ import { createPortal } from "react-dom";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
+  FAMILY_FEUD_BOARD_ANSWER_COUNT,
   FAMILY_FEUD_FAST_MONEY_TIME_MS,
+  FAMILY_FEUD_MAIN_BOARD_MAX,
+  FAMILY_FEUD_MAIN_RAW_MAX,
+  FAMILY_FEUD_FAST_MONEY_RAW_MAX,
   FAMILY_FEUD_STRIKES_PER_BOARD,
   createFamilyFeudState,
+  familyFeudMainBoardScore,
   familyFeudScore,
   submitFamilyFeudFastMoneyAnswer,
   submitFamilyFeudMainAnswer,
   timeoutFamilyFeudFastMoney,
   type FamilyFeudOutcome,
+  type FamilyFeudRankedAnswer,
   type FamilyFeudState,
 } from "../games/familyFeudEngine";
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
@@ -27,14 +33,14 @@ type PrototypeScope = "ufc" | "football";
 type PrototypeScene = "intro" | "main" | "fast-intro" | "fast" | "reveal" | "result";
 
 function formatClock(ms: number) {
-  return `0:${String(Math.ceil(ms / 1000)).padStart(2, "0")}`;
+  return "0:" + String(Math.ceil(ms / 1000)).padStart(2, "0");
 }
 
 function feedbackCopy(outcome: FamilyFeudOutcome | null) {
   if (!outcome) return "";
   switch (outcome.type) {
-    case "board-correct": return `#${outcome.slotIndex + 1} — ${outcome.points} POINTS`;
-    case "board-strike": return "STRIKE";
+    case "board-correct": return "+" + outcome.points + " HQ POINTS";
+    case "board-strike": return "STRIKE — KEEP GOING";
     case "ambiguous": return "BE MORE SPECIFIC";
     case "already-guessed": return "ALREADY GUESSED";
     case "fast-money-answer": return "LOCKED";
@@ -45,7 +51,27 @@ function feedbackCopy(outcome: FamilyFeudOutcome | null) {
 function StageLights() {
   return (
     <div className="feud-stage-lights" aria-hidden="true">
-      {Array.from({ length: 22 }, (_, index) => <i key={index} />)}
+      {Array.from({ length: 20 }, (_, index) => <i key={index} />)}
+    </div>
+  );
+}
+
+function StudioAtmosphere({ pressure = false }: { pressure?: boolean }) {
+  return (
+    <div className={pressure ? "feud-studio is-pressure" : "feud-studio"} aria-hidden="true">
+      <div className="feud-wall feud-wall--left"><i /><i /><i /></div>
+      <div className="feud-wall feud-wall--right"><i /><i /><i /></div>
+      <div className="feud-beam feud-beam--left" />
+      <div className="feud-beam feud-beam--right" />
+      <div className="feud-audience feud-audience--left">
+        {Array.from({ length: 14 }, (_, index) => <i key={index} />)}
+      </div>
+      <div className="feud-audience feud-audience--right">
+        {Array.from({ length: 14 }, (_, index) => <i key={index} />)}
+      </div>
+      <div className="feud-stage-floor" />
+      <div className="feud-podium feud-podium--left" />
+      <div className="feud-podium feud-podium--right" />
     </div>
   );
 }
@@ -61,7 +87,7 @@ function Brand({ compact = false }: { compact?: boolean }) {
 
 function StrikeRail({ strikes }: { strikes: number }) {
   return (
-    <div className="feud-strikes" aria-label={`${strikes} of ${FAMILY_FEUD_STRIKES_PER_BOARD} strikes`}>
+    <div className="feud-strikes" aria-label={strikes + " of " + FAMILY_FEUD_STRIKES_PER_BOARD + " strikes"}>
       {Array.from({ length: FAMILY_FEUD_STRIKES_PER_BOARD }, (_, index) => (
         <span className={index < strikes ? "is-on" : ""} key={index}>×</span>
       ))}
@@ -75,6 +101,22 @@ function HQBackButton({ onClick }: { onClick: () => void }) {
       <span aria-hidden="true">‹</span>
       HQ
     </button>
+  );
+}
+
+function SportsHost() {
+  return (
+    <div className="feud-host" aria-hidden="true">
+      <div className="feud-host__halo" />
+      <div className="feud-host__head" />
+      <div className="feud-host__body">
+        <i className="feud-host__lapel feud-host__lapel--left" />
+        <i className="feud-host__lapel feud-host__lapel--right" />
+        <i className="feud-host__tie" />
+      </div>
+      <div className="feud-host__arm" />
+      <div className="feud-host__mic" />
+    </div>
   );
 }
 
@@ -95,6 +137,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
 
   const exitRoute = scope === "football" ? "/football" : "/play";
   const otherScopeRoute = scope === "football" ? "/play/sports-feud" : "/football/sports-feud";
+  const hqName = scope === "football" ? "FOOTBALL HQ" : "UFC HQ";
   const score = familyFeudScore(pack, state);
 
   useEffect(() => {
@@ -143,7 +186,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
         }
         return current + 1;
       });
-    }, 620);
+    }, 430);
     return () => window.clearInterval(interval);
   }, [scene]);
 
@@ -169,7 +212,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     if (transition.outcome.type !== "ambiguous") setAnswer("");
 
     const settledBoard = transition.state.mainBoards[activeBoardIndex]!;
-    const settled = settledBoard.revealedEntityIds.length >= 6
+    const settled = settledBoard.revealedEntityIds.length >= FAMILY_FEUD_BOARD_ANSWER_COUNT
       || settledBoard.strikes >= FAMILY_FEUD_STRIKES_PER_BOARD;
     if (settled) setBoardReview(true);
   }
@@ -220,19 +263,37 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
 
   const mainQuestion = pack.mainBoards[displayBoardIndex]!;
   const mainBoardState = state.mainBoards[displayBoardIndex]!;
+  const mainBoardPoints = familyFeudMainBoardScore(pack, state, displayBoardIndex);
+  const foundIds = new Set(mainBoardState.revealedEntityIds);
+  const foundMainAnswers = mainBoardState.revealedEntityIds
+    .map((entityId) => mainQuestion.answers.find((row) => row.entityId === entityId))
+    .filter((row): row is FamilyFeudRankedAnswer => Boolean(row));
+  const missedReviewAnswers = boardReview && foundMainAnswers.length < FAMILY_FEUD_BOARD_ANSWER_COUNT
+    ? mainQuestion.answers
+        .filter((row) => !foundIds.has(row.entityId))
+        .slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT - foundMainAnswers.length)
+    : [];
+  const mainDisplayAnswers = [...foundMainAnswers, ...missedReviewAnswers];
+
   const currentFastQuestion = state.phase === "fast-money"
     ? pack.fastMoney[state.fastMoneyIndex] ?? null
     : null;
 
   const fastRevealRows = pack.fastMoney.map((question, index) => {
     const result = state.fastMoneyResults[index];
-    const entity = result?.entityId
+    const matchedEntity = result?.entityId
       ? pack.entities.find((candidate) => candidate.id === result.entityId)
       : null;
     return {
       prompt: question.prompt,
-      answer: entity?.displayName ?? result?.submittedText ?? "NO ANSWER",
+      answer: matchedEntity?.displayName ?? result?.submittedText ?? "NO ANSWER",
       points: result?.points ?? 0,
+      counted: Boolean(result && result.points > 0),
+      accepted: question.answers.map((rankedAnswer) => ({
+        name: pack.entities.find((candidate) => candidate.id === rankedAnswer.entityId)?.displayName
+          ?? rankedAnswer.entityId,
+        points: rankedAnswer.points,
+      })),
     };
   });
   const revealedFastTotal = fastRevealRows
@@ -240,73 +301,79 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     .reduce((total, row) => total + row.points, 0);
 
   const view = (
-    <main className={`family-feud-prototype feud-scene--${scene}`} data-scope={scope} data-scene={scene}>
+    <main className={"family-feud-prototype feud-scene--" + scene} data-scope={scope} data-scene={scene}>
       <StageLights />
+      <StudioAtmosphere pressure={scene === "fast" || scene === "reveal" || scene === "result"} />
       <HQBackButton onClick={() => navigate(exitRoute)} />
 
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="feud-intro-title">
-          <div className="feud-intro__eyebrow">{scope === "football" ? "FOOTBALL HQ" : "UFC HQ"} · PLAYABLE PROTOTYPE</div>
+          <div className="feud-intro__eyebrow">{hqName} · PRIVATE PREVIEW</div>
           <Brand />
-          <h1 id="feud-intro-title">Can you clear the board?</h1>
-          <p>Two boards. Three strikes each. Then 30 seconds of Fast Money.</p>
+          <h1 id="feud-intro-title">Clear the board.</h1>
+          <p>Find four good HQ answers before three strikes. Then finish five Fast Money prompts.</p>
           <div className="feud-intro__rules">
             <span><b>2</b> BOARDS</span>
-            <span><b>6</b> ANSWERS EACH</span>
-            <span><b>0:30</b> FAST MONEY</span>
+            <span><b>4</b> ANSWERS EACH</span>
+            <span><b>0:45</b> FAST MONEY</span>
           </div>
           <button className="feud-primary-button" type="button" onClick={startGame}>START FEUD</button>
           <button className="feud-scope-switch" type="button" onClick={() => navigate(otherScopeRoute)}>
             TRY {scope === "football" ? "UFC" : "FOOTBALL"} VERSION
           </button>
-          <small>Prototype content is fixed so the viewing experience can be tested before Daily integration.</small>
         </section>
       ) : null}
 
       {scene === "main" ? (
-        <section className="feud-main-stage" aria-label={`Round ${displayBoardIndex + 1}`}>
+        <section className="feud-main-stage" aria-label={"Round " + (displayBoardIndex + 1)}>
           <header className="feud-main-stage__top">
             <Brand compact />
             <StrikeRail strikes={mainBoardState.strikes} />
           </header>
 
           <section className="feud-question-card">
-            <span>ROUND {displayBoardIndex + 1}</span>
+            <span>WE ASKED {hqName}</span>
             <h1>{mainQuestion.prompt}</h1>
           </section>
 
           <section className={boardReview ? "feud-answer-board is-review" : "feud-answer-board"}>
-            {mainQuestion.answers.map((rankedAnswer, index) => {
-              const found = mainBoardState.revealedEntityIds.includes(rankedAnswer.entityId);
-              const visible = found || boardReview;
-              const entity = pack.entities.find((candidate) => candidate.id === rankedAnswer.entityId)!;
+            {Array.from({ length: FAMILY_FEUD_BOARD_ANSWER_COUNT }, (_value, index) => {
+              const rankedAnswer = mainDisplayAnswers[index] ?? null;
+              const found = Boolean(rankedAnswer && foundIds.has(rankedAnswer.entityId));
+              const matchedEntity = rankedAnswer
+                ? pack.entities.find((candidate) => candidate.id === rankedAnswer.entityId)
+                : null;
               return (
                 <div
                   className={[
                     "feud-answer-slot",
-                    visible ? "is-revealed" : "",
-                    boardReview && !found ? "is-missed" : "",
+                    rankedAnswer ? "is-revealed" : "",
+                    rankedAnswer && !found ? "is-missed" : "",
                   ].filter(Boolean).join(" ")}
-                  key={rankedAnswer.entityId}
+                  key={index}
                 >
                   <b>{index + 1}</b>
-                  <strong>{visible ? entity.displayName : ""}</strong>
-                  <span>{visible ? rankedAnswer.points : ""}</span>
+                  <strong>{matchedEntity?.displayName ?? ""}</strong>
+                  <span>{rankedAnswer?.points ?? ""}</span>
                 </div>
               );
             })}
           </section>
 
           <div className="feud-main-score">
-            <span>BOARD POINTS</span>
-            <strong>{score.main}</strong>
+            <span>ROUND {displayBoardIndex + 1} POINTS</span>
+            <strong>{mainBoardPoints}</strong>
+            <em>/ {FAMILY_FEUD_MAIN_BOARD_MAX}</em>
           </div>
 
           {boardReview ? (
             <section className="feud-round-review">
               <strong>
-                {mainBoardState.revealedEntityIds.length === 6 ? "BOARD CLEARED" : "ROUND COMPLETE"}
+                {mainBoardState.revealedEntityIds.length >= FAMILY_FEUD_BOARD_ANSWER_COUNT
+                  ? "BOARD CLEARED"
+                  : "3 STRIKES — BOARD CLOSED"}
               </strong>
+              <span>{mainBoardPoints}/{FAMILY_FEUD_MAIN_BOARD_MAX} HQ points banked. Strikes do not subtract points.</span>
               <button className="feud-primary-button" type="button" onClick={advanceBoard}>
                 {state.phase === "fast-money" ? "GO TO FAST MONEY" : "ROUND 2"}
               </button>
@@ -336,12 +403,16 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
 
       {scene === "fast-intro" ? (
         <section className="feud-fast-intro">
-          <Brand compact />
-          <span className="feud-fast-intro__kicker">YOU MADE THE FINALE</span>
-          <h1>FAST MONEY</h1>
-          <div className="feud-fast-intro__clock">0:30</div>
-          <p>Five prompts. One answer each. The clock starts when you tap below.</p>
-          <button className="feud-primary-button" type="button" onClick={startFastMoney}>START 30 SECONDS</button>
+          <div className="feud-fast-intro__show">
+            <SportsHost />
+            <div>
+              <span className="feud-fast-intro__kicker">YOU MADE THE FINALE</span>
+              <h1>FAST MONEY</h1>
+              <div className="feud-fast-intro__clock">0:45</div>
+            </div>
+          </div>
+          <p>Five prompts. One answer each. Points stay hidden until the clock stops.</p>
+          <button className="feud-primary-button" type="button" onClick={startFastMoney}>START 45 SECONDS</button>
         </section>
       ) : null}
 
@@ -355,36 +426,40 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             <span>{state.fastMoneyIndex + 1} OF 5</span>
           </header>
 
-          <section className="feud-fast-question">
-            <small>FAST MONEY</small>
-            <h1>{currentFastQuestion?.prompt}</h1>
-          </section>
+          <div className="feud-fast-showdown">
+            <SportsHost />
+            <section className="feud-fast-question">
+              <small>{hqName} · FAST MONEY</small>
+              <h1>{currentFastQuestion?.prompt}</h1>
+              <div className="feud-fast-dots" aria-label="Fast Money progress">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <i
+                    className={index < state.fastMoneyIndex ? "is-done" : index === state.fastMoneyIndex ? "is-current" : ""}
+                    key={index}
+                  />
+                ))}
+              </div>
+            </section>
+          </div>
 
           <form className="feud-fast-entry" onSubmit={submitFastMoney}>
             <div className="feud-feedback" data-kind={feedback?.type ?? "idle"}>
               {feedbackCopy(feedback) || "ONE ANSWER — KEEP MOVING"}
             </div>
-            <input
-              ref={inputRef}
-              value={answer}
-              onChange={(event) => setAnswer(event.target.value)}
-              placeholder="Type your answer"
-              autoCapitalize="words"
-              autoCorrect="off"
-              enterKeyHint="send"
-              aria-label="Fast Money answer"
-            />
-            <button type="submit">SUBMIT</button>
+            <div className="feud-fast-entry__row">
+              <input
+                ref={inputRef}
+                value={answer}
+                onChange={(event) => setAnswer(event.target.value)}
+                placeholder="Type your answer"
+                autoCapitalize="words"
+                autoCorrect="off"
+                enterKeyHint="send"
+                aria-label="Fast Money answer"
+              />
+              <button type="submit" aria-label="Submit Fast Money answer">↑</button>
+            </div>
           </form>
-
-          <div className="feud-fast-progress" aria-label="Fast Money progress">
-            {Array.from({ length: 5 }, (_, index) => (
-              <span className={index < state.fastMoneyIndex ? "is-locked" : index === state.fastMoneyIndex ? "is-current" : ""} key={index}>
-                <b>{index + 1}</b>
-                <i>{index < state.fastMoneyIndex ? "LOCKED" : ""}</i>
-              </span>
-            ))}
-          </div>
         </section>
       ) : null}
 
@@ -393,24 +468,45 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
           <header>
             <Brand compact />
             <span>FAST MONEY RESULTS</span>
+            <strong>{revealedFastTotal}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong>
           </header>
-          <section className="feud-reveal-board">
+
+          <div className="feud-reveal-cards">
             {fastRevealRows.map((row, index) => (
-              <div className={index < revealCount ? "is-revealed" : ""} key={index}>
-                <b>{index + 1}</b>
-                <strong>{index < revealCount ? row.answer : "—"}</strong>
-                <span>{index < revealCount ? row.points : ""}</span>
-              </div>
+              <article className={index < revealCount ? "feud-reveal-card is-revealed" : "feud-reveal-card"} key={index}>
+                <div className="feud-reveal-card__prompt">
+                  <b>{index + 1}</b>
+                  <span>{index < revealCount ? row.prompt : "—"}</span>
+                </div>
+                {index < revealCount ? (
+                  <>
+                    <div className={row.counted ? "feud-reveal-card__you is-counted" : "feud-reveal-card__you is-x"}>
+                      <small>YOU SAID</small>
+                      <strong>{row.answer}</strong>
+                      <b>{row.counted ? "+" + row.points : "X"}</b>
+                    </div>
+                    <div className="feud-reveal-card__hq">
+                      <small>HQ BOARD</small>
+                      <div>
+                        {row.accepted.map((accepted) => (
+                          <span key={accepted.name}>
+                            {accepted.name} <b>{accepted.points}</b>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : null}
+              </article>
             ))}
-          </section>
-          <div className="feud-reveal-total">
-            <span>TOTAL</span>
-            <strong>{revealedFastTotal}</strong>
           </div>
+
           {revealCount >= 5 ? (
-            <button className="feud-primary-button" type="button" onClick={() => setScene("result")}>VIEW HQ SCORE</button>
+            <button className="feud-primary-button feud-reveal-next" type="button" onClick={() => setScene("result")}>
+              VIEW HQ SCORE
+            </button>
           ) : (
-            <p className="feud-reveal-stage__wait">SURVEY BOARD REVEALING…</p>
+            <p className="feud-reveal-stage__wait">HQ BOARD REVEALING…</p>
           )}
         </section>
       ) : null}
@@ -424,10 +520,17 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             <span>/100</span>
           </div>
           <h1>{score.hq >= 90 ? "DOMINANT BOARD" : score.hq >= 80 ? "GREAT RUN" : score.hq >= 65 ? "SOLID RUN" : "TOUGH BOARD"}</h1>
+          <div className="feud-result__equation" aria-label="HQ score calculation">
+            <span><b>{score.main}</b><small>MAIN</small></span>
+            <i>+</i>
+            <span><b>{score.fastMoney}</b><small>FAST MONEY</small></span>
+            <i>=</i>
+            <span className="is-total"><b>{score.hq}</b><small>HQ SCORE</small></span>
+          </div>
           <div className="feud-result__breakdown">
-            <p><span>MAIN BOARDS</span><strong>{score.main}/200</strong></p>
-            <p><span>FAST MONEY</span><strong>{score.fastMoney}/200</strong></p>
-            <p><span>RAW FEUD POINTS</span><strong>{score.raw}/400</strong></p>
+            <p><span>MAIN BOARDS</span><strong>{score.main}/{FAMILY_FEUD_MAIN_RAW_MAX}</strong></p>
+            <p><span>FAST MONEY</span><strong>{score.fastMoney}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong></p>
+            <p><span>STRIKE PENALTY</span><strong>0</strong></p>
           </div>
           <button className="feud-primary-button" type="button" onClick={startGame}>PLAY AGAIN</button>
           <button className="feud-secondary-button" type="button" onClick={() => navigate(exitRoute)}>EXIT TO HQ</button>
