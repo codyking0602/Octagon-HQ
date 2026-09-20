@@ -2486,3 +2486,36 @@ body.family-feud-prototype-active .bottom-nav {
     transform: scale(1.72);
   }
 }
+
+
+/* Host-left + iPhone viewport-lock correction. */
+html.family-feud-prototype-active,
+body.family-feud-prototype-active {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+.family-feud-prototype.is-keyboard-open {
+  top: var(--feud-viewport-offset, 0px);
+  bottom: auto;
+  height: var(--feud-stage-height, 100dvh);
+  min-height: var(--feud-stage-height, 100dvh);
+  max-height: var(--feud-stage-height, 100dvh);
+}
+
+/* Keep the current approved scale; intentionally crop the host farther off the left edge. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  left: -36%;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+  .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+    left: -37%;
+  }
+}
