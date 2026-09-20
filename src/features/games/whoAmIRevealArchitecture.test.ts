@@ -173,6 +173,25 @@ describe("Who Am I standardized reveal architecture", () => {
     expect(whoAmIRevealArchitectureSatisfied(ordered)).toBe(true);
   });
 
+  it("requires two true late anchors on football boards without accepting production as the second anchor", () => {
+    const board: WhoAmIClue[] = [
+      clue("style-1", "I was a physical runner.", "broad", "style"),
+      clue("style-2", "I was difficult to tackle in space.", "broad", "style"),
+      clue("role", "I played running back.", "helpful", "role", ["position"]),
+      clue("background", "I was a multi-sport high-school athlete.", "helpful", "background"),
+      clue("production-1", "I rushed for more than 10,000 career yards.", "strong", "production"),
+      clue("production-2", "I scored more than 80 career touchdowns.", "strong", "production"),
+      clue("production-3", "I had multiple 1,000-yard seasons.", "strong", "production"),
+      clue("era", "I played in the 1990s.", "strong", "era", ["era"]),
+      clue("production-4", "I averaged more than four yards per carry.", "strong", "production"),
+      clue("draft", "I was a first-round NFL Draft pick.", "giveaway", "career-path"),
+    ].map((entry) => ({ ...entry, revealCoordinates: entry.revealCoordinates ?? [] }));
+
+    expect(isStrongLateAnchor(board[8]!)).toBe(false);
+    expect(isStrongLateAnchor(board[9]!)).toBe(true);
+    expect(whoAmIRevealArchitectureSatisfied(board)).toBe(false);
+  });
+
   it("treats a clue that exposes two major coordinates as too identifying for clues 1-4", () => {
     const roleSchool = clue(
       "role-school",
