@@ -452,70 +452,59 @@ function scheduleLegacyRevealArchitecture(clues: readonly WhoAmIClue[]) {
     clue.band === "strong" || clue.band === "giveaway"
   )).length >= 3;
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
-  const chosen: typeof entries = [];
-  const deadStates = new Set<string>();
-  let explored = 0;
-  const MAX_NODES = 30_000;
+  const ordered: typeof entries = [];
+  const powerRank = { broad: 0, specific: 1, signature: 2 } as const;
 
-  const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
-    explored += 1;
-    if (explored > MAX_NODES) return null;
-    if (position > clues.length) {
-      const ordered = chosen.map((entry) => entry.clue);
-      if (
-        preserveStrongFinalFour
-        && ordered.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3
-      ) {
+  // Legacy ordering has only two structural constraints: bands never move
+  // backward, and a clue cannot appear before its reveal window. Once bands are
+  // processed from broad to giveaway, choosing any currently eligible clue from
+  // the active band cannot make a later clue impossible because later positions
+  // only relax the earliest-position constraint. This is equivalent to the old
+  // permutation search without its combinatorial replay cost.
+  for (const band of ["broad", "helpful", "strong", "giveaway"] as const) {
+    const remaining = entries.filter((entry) => entry.clue.band === band);
+    while (remaining.length) {
+      const position = ordered.length + 1;
+      const candidates = remaining
+        .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
+        .sort((left, right) => {
+          const leftPower = whoAmIRevealProfile(left.clue).identifyingPower;
+          const rightPower = whoAmIRevealProfile(right.clue).identifyingPower;
+          const powerPreference = position >= 7
+            ? powerRank[rightPower] - powerRank[leftPower]
+            : powerRank[leftPower] - powerRank[rightPower];
+          return powerPreference
+            || Math.abs(left.originalIndex - (position - 1)) - Math.abs(right.originalIndex - (position - 1))
+            || left.originalIndex - right.originalIndex;
+        });
+
+      if (!candidates.length) {
+        UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(cacheKey);
         return null;
       }
-      return ordered;
+
+      const picked = candidates[0]!;
+      ordered.push(picked);
+      remaining.splice(remaining.indexOf(picked), 1);
     }
+  }
 
-    const previousBand = chosen.at(-1)?.clue.band;
-    const stateKey = [
-      position,
-      previousBand ?? "none",
-      remaining.map((entry) => entry.originalIndex).sort((a, b) => a - b).join(","),
-    ].join(":");
-    if (deadStates.has(stateKey)) return null;
-
-    const candidates = remaining
-      .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
-      .filter(({ clue }) => previousBand === undefined || BAND_RANK[clue.band] >= BAND_RANK[previousBand])
-      .filter(({ clue }) => (
-        !preserveStrongFinalTwo
-        || position < 9
-        || clue.band === "strong"
-        || clue.band === "giveaway"
-      ))
-      .sort((left, right) => {
-        const leftPower = whoAmIRevealProfile(left.clue).identifyingPower;
-        const rightPower = whoAmIRevealProfile(right.clue).identifyingPower;
-        const powerRank = { broad: 0, specific: 1, signature: 2 } as const;
-        const powerPreference = position >= 7
-          ? powerRank[rightPower] - powerRank[leftPower]
-          : powerRank[leftPower] - powerRank[rightPower];
-        return preferredBandRank(position, left.clue.band) - preferredBandRank(position, right.clue.band)
-          || powerPreference
-          || Math.abs(left.originalIndex - (position - 1)) - Math.abs(right.originalIndex - (position - 1))
-          || BAND_RANK[left.clue.band] - BAND_RANK[right.clue.band]
-          || left.originalIndex - right.originalIndex;
-      });
-
-    for (const candidate of candidates) {
-      chosen.push(candidate);
-      const nextRemaining = remaining.filter((entry) => entry !== candidate);
-      const result = search(position + 1, nextRemaining);
-      if (result) return result;
-      chosen.pop();
-    }
-
-    deadStates.add(stateKey);
+  const result = ordered.map((entry) => entry.clue);
+  if (
+    preserveStrongFinalTwo
+    && result.slice(-2).some((clue) => clue.band !== "strong" && clue.band !== "giveaway")
+  ) {
+    UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(cacheKey);
     return null;
-  };
+  }
+  if (
+    preserveStrongFinalFour
+    && result.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3
+  ) {
+    UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(cacheKey);
+    return null;
+  }
 
-  const result = search(1, entries);
-  if (!result) UNSCHEDULABLE_EXACT_REVEAL_ORDERS.add(cacheKey);
   return result;
 }
 
