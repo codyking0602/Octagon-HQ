@@ -329,13 +329,14 @@ function scheduleRevealArchitecture(
   targetLength = 10,
 ) {
   if (targetLength !== 10 || clues.length < targetLength) return null;
+  const isFootballPool = clues.some((clue) => clue.revealCoordinates !== undefined);
+  const requiredLateAnchors = isFootballPool ? 1 : 2;
   if (clues.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3) return null;
-  if (clues.filter(isStrongLateAnchor).length < 2) return null;
+  if (clues.filter(isStrongLateAnchor).length < requiredLateAnchors) return null;
 
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
   const deadStates = new Set<string>();
-  const isFootballPool = clues.some((clue) => clue.revealCoordinates !== undefined);
   const requireSemanticIndependence = whoAmISemanticIndependentCapacity(clues, targetLength) >= targetLength;
   let explored = 0;
   const MAX_NODES = 1_000_000;
@@ -352,7 +353,7 @@ function scheduleRevealArchitecture(
       if (ordered.slice(-4).filter((clue) => clue.band === "strong" || clue.band === "giveaway").length < 3) {
         return null;
       }
-      if (ordered.slice(-4).filter(isStrongLateAnchor).length < 2) {
+      if (ordered.slice(-4).filter(isStrongLateAnchor).length < requiredLateAnchors) {
         return null;
       }
       if (isFootballPool && !isStrongLateAnchor(ordered.at(-1)!)) {
@@ -395,7 +396,10 @@ function scheduleRevealArchitecture(
       0,
       3 - lateChosen.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length,
     );
-    const anchorLateNeeded = Math.max(0, 2 - lateChosen.filter(isStrongLateAnchor).length);
+    const anchorLateNeeded = Math.max(
+      0,
+      requiredLateAnchors - lateChosen.filter(isStrongLateAnchor).length,
+    );
     if (
       semanticallyAvailable.filter(({ clue }) => clue.band === "strong" || clue.band === "giveaway").length < strongLateNeeded
       || semanticallyAvailable.filter(({ clue }) => isStrongLateAnchor(clue)).length < anchorLateNeeded
