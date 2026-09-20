@@ -4,7 +4,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type { FormEvent } from "react";
+import type { CSSProperties, FormEvent } from "react";
 import { createPortal } from "react-dom";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -108,9 +108,11 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const [boardReview, setBoardReview] = useState(false);
   const [timeRemainingMs, setTimeRemainingMs] = useState(FAMILY_FEUD_FAST_MONEY_TIME_MS);
   const [revealCount, setRevealCount] = useState(0);
+  const [keyboardInset, setKeyboardInset] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const deadlineRef = useRef(0);
   const timeoutQueuedRef = useRef(false);
+  const baseViewportHeightRef = useRef(0);
 
   const exitRoute = scope === "football" ? "/football" : "/play";
   const hqName = scope === "football" ? "FOOTBALL HQ" : "UFC HQ";
@@ -121,6 +123,36 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   useEffect(() => {
     document.body.classList.add("family-feud-prototype-active");
     return () => document.body.classList.remove("family-feud-prototype-active");
+  }, []);
+
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    const currentHeight = () => viewport?.height ?? window.innerHeight;
+    baseViewportHeightRef.current = Math.max(window.innerHeight, currentHeight());
+
+    const updateKeyboardInset = () => {
+      const visibleHeight = currentHeight();
+      if (visibleHeight > baseViewportHeightRef.current - 48) {
+        baseViewportHeightRef.current = Math.max(baseViewportHeightRef.current, visibleHeight);
+      }
+      const offsetTop = viewport?.offsetTop ?? 0;
+      const obscured = Math.max(
+        0,
+        baseViewportHeightRef.current - visibleHeight - Math.max(0, offsetTop),
+      );
+      setKeyboardInset(obscured >= 120 ? Math.round(obscured) : 0);
+    };
+
+    updateKeyboardInset();
+    viewport?.addEventListener("resize", updateKeyboardInset);
+    viewport?.addEventListener("scroll", updateKeyboardInset);
+    window.addEventListener("resize", updateKeyboardInset);
+
+    return () => {
+      viewport?.removeEventListener("resize", updateKeyboardInset);
+      viewport?.removeEventListener("scroll", updateKeyboardInset);
+      window.removeEventListener("resize", updateKeyboardInset);
+    };
   }, []);
 
   useEffect(() => {
@@ -281,7 +313,16 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     .reduce((total, row) => total + row.points, 0);
 
   const view = (
-    <main className={"family-feud-prototype feud-scene--" + scene} data-scope={scope} data-scene={scene}>
+    <main
+      className={[
+        "family-feud-prototype",
+        "feud-scene--" + scene,
+        keyboardInset > 0 ? "is-keyboard-open" : "",
+      ].filter(Boolean).join(" ")}
+      data-scope={scope}
+      data-scene={scene}
+      style={{ "--feud-keyboard-inset": keyboardInset + "px" } as CSSProperties}
+    >
       <StagePlate />
       <StagePlate fast />
       <HQBackButton onClick={() => navigate(exitRoute)} />
