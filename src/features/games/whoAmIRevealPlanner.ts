@@ -165,7 +165,13 @@ function coordinateRescuePool(
     .slice(0, 10)
     .forEach(({ value }) => add(value));
 
-  // Preserve enough strong late anchors before filling with the next-best facts.
+  // Preserve true identity anchors before generic strong clues so raw production
+  // cannot crowd the rescue pool out of a quality late-game finish.
+  scored
+    .filter(({ value }) => isStrongLateAnchor(value))
+    .slice(0, 6)
+    .forEach(({ value }) => add(value));
+
   scored
     .filter(({ value }) => value.band === "strong" || value.band === "giveaway")
     .slice(0, 6)
