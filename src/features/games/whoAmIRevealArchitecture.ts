@@ -333,7 +333,7 @@ function scheduleRevealArchitecture(
   const deadStates = new Set<string>();
   const requireSemanticIndependence = whoAmISemanticIndependentCapacity(clues, targetLength) >= targetLength;
   let explored = 0;
-  const MAX_NODES = 250_000;
+  const MAX_NODES = 1_000_000;
 
   const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
     explored += 1;
