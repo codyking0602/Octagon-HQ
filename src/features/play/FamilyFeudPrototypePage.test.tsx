@@ -23,7 +23,8 @@ vi.mock("../identity/IdentityProvider", () => ({
   }),
 }));
 
-import FamilyFeudPrototypePage, { isFamilyFeudPrototypeOwner } from "./FamilyFeudPrototypePage";
+import FamilyFeudPrototypePage from "./FamilyFeudPrototypePage";
+import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 
 function renderFootball() {
   return render(
