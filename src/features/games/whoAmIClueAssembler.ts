@@ -231,7 +231,7 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
     return "accomplishments";
   }
   if (
-    /\b(?:draft|drafted|undrafted|team|promotion|camp|gym|route|transfer|transferred|trade|traded|holdout|retire|retired|retirement|move|roster|cut|waived|signed|ufc|nfl|cfb)\b|career-path|career-turning-point|career-revival|second-career|position-path|ultimate-fighter/.test(haystack)
+    /\b(?:draft|drafted|undrafted|transfer|transferred|trade|traded|holdout|retire|retired|retirement|roster|cut|waived|signed)\b|career-path|career-turning-point|career-revival|second-career|position-path|ultimate-fighter/.test(haystack)
   ) {
     return "career-path";
   }
@@ -244,6 +244,10 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
   if (/\b(?:job|work|business|acting|media|streaming|military|army|foundation|charity|restaurant|barber|bartending|mine|model|faith)\b|off-field/.test(haystack)) {
     return "off-field";
   }
+  // Broad context words are only a final legacy-style hint. League/source
+  // prefixes such as NFL/CFB/UFC are intentionally excluded: they identify the
+  // source namespace, not the clue's meaning.
+  if (/\b(?:team|promotion|camp|gym|route|move)\b/.test(haystack)) return "career-path";
   return "identity";
 }
 
