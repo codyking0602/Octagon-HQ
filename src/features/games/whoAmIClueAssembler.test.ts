@@ -161,11 +161,21 @@ describe("Who Am I Slice 13 quality regressions", () => {
       conceptId: "first-football-play-touchdown",
       value: "Walter Payton scored a touchdown on his first football play.",
     });
+    const namespacedProduction = whoAmIIdentityKnowledgeClue({
+      subjectId: "cfb-example",
+      subjectName: "Example Player",
+      subjectKind: "player",
+      league: "CFB",
+      factId: "pr9-cfb-example--406-yards-vs-utep",
+      conceptId: "pr9-cfb-example--406-yards-vs-utep",
+      value: "Example Player rushed for 406 yards against UTEP.",
+    });
 
     expect(undraftedPath.facet).toBe("career-path");
     expect(undraftedPath.band).toBe("strong");
     expect(firstPlay.facet).toBe("accomplishments");
     expect(firstPlay.band).toBe("strong");
+    expect(namespacedProduction.facet).toBe("production");
   });
 
   it("treats award-bearing identity facts as strong late-round clues", () => {
