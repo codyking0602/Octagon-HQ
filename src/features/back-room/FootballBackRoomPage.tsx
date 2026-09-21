@@ -6,6 +6,7 @@ import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPr
 import { isFamilyFeudPrototypeOwner } from "../play/familyFeudPrototypeAccess";
 import { isFootballWeeklyAuctionFinalPreviewOwner } from "../play/footballWeeklyAuctionFinalPreviewAccess";
 import TodayChallengeHub from "../play/TodayChallengeHub";
+import { WeeklyChampionshipRecap } from "../play/WeeklyChampionshipRecap";
 import {
   createFootballWeeklyAuctionRepository,
   type FootballWeeklyAuctionActiveState,
@@ -81,6 +82,7 @@ export default function FootballBackRoomPage() {
       ) : null}
 
       <PlayLandingHeader sport="football" />
+      <WeeklyChampionshipRecap sport="football" />
       <TodayChallengeHub sport="football" />
       <FootballWeeklyAuctionQuickAccess onOpen={() => navigate("/football/today?weekly=edit")} />
       <ChallengeCenter sport="football" />
