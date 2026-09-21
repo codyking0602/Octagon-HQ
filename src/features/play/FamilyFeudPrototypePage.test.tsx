@@ -228,6 +228,7 @@ describe("Sports Feud private daily presentation", () => {
     expect(screen.getByText("3 STRIKES — BOARD CLOSED")).toBeInTheDocument();
     expect(screen.queryByText("ALSO ACCEPTED")).not.toBeInTheDocument();
     expect(document.querySelectorAll(".feud-answer-slot.is-missed")).toHaveLength(4);
+    expect(document.querySelectorAll(".feud-answer-slot.is-round-result-reveal")).toHaveLength(4);
   });
 
   it("reveals a lower-ranked accepted pick on the live board and keeps it in board results", () => {
@@ -257,7 +258,13 @@ describe("Sports Feud private daily presentation", () => {
     }
 
     expect(screen.getByText("BOARD RESULTS")).toBeInTheDocument();
-    expect(document.querySelector(".feud-answer-board")).toHaveTextContent("Amari Cooper");
+    const board = document.querySelector(".feud-answer-board");
+    expect(board).toHaveTextContent("CeeDee Lamb");
+    expect(board).toHaveTextContent("Micah Parsons");
+    expect(board).toHaveTextContent("Dak Prescott");
+    expect(board).toHaveTextContent("Trevon Diggs");
+    expect(board).not.toHaveTextContent("Amari Cooper");
+    expect(document.querySelectorAll(".feud-answer-slot.is-round-result-reveal")).toHaveLength(4);
     expect(screen.queryByText("ALSO ACCEPTED")).not.toBeInTheDocument();
     expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
   });
