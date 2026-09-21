@@ -202,7 +202,8 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
   const focusChampionship = typeof window !== "undefined"
     && new URLSearchParams(window.location.search).get("standings") === "me";
 
-  const weeklyRecap = overview.weeklyRecap?.available ? overview.weeklyRecap : null;
+  const loadedWeeklyRecap = overview.weeklyRecap;
+  const weeklyRecap = loadedWeeklyRecap?.available ? loadedWeeklyRecap : null;
   const weeklyRecapKey = weeklyRecap ? `${sport}:${weeklyRecap.weekStart}` : null;
 
   async function acknowledgeWeeklyRecap() {

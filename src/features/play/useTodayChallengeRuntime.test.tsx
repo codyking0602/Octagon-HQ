@@ -78,6 +78,8 @@ describe("useTodayChallengeRuntime", () => {
       loadHistory: vi.fn().mockResolvedValue([]),
       loadStreak: vi.fn().mockResolvedValue({ currentStreak: 0, bestStreak: 0 }),
       loadStandings: vi.fn().mockResolvedValue(emptyStandings),
+      loadWeeklyRecap: vi.fn().mockResolvedValue({ available: false }),
+      acknowledgeWeeklyRecap: vi.fn().mockResolvedValue({ available: false }),
       loadDailyLeaderboard: vi.fn().mockResolvedValue({ unlocked: false, playerCount: 0, entries: [] }),
     };
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -114,6 +116,8 @@ describe("useTodayChallengeRuntime", () => {
       loadHistory: vi.fn().mockResolvedValue([]),
       loadStreak: vi.fn().mockResolvedValue({ currentStreak: 0, bestStreak: 0 }),
       loadStandings: vi.fn().mockResolvedValue(emptyStandings),
+      loadWeeklyRecap: vi.fn().mockResolvedValue({ available: false }),
+      acknowledgeWeeklyRecap: vi.fn().mockResolvedValue({ available: false }),
       loadDailyLeaderboard: vi.fn().mockResolvedValue({ unlocked: false, playerCount: 0, entries: [] }),
     };
     const client = new QueryClient({
@@ -163,6 +167,8 @@ describe("useTodayChallengeRuntime", () => {
       loadHistory: vi.fn(),
       loadStreak: vi.fn(),
       loadStandings: vi.fn(),
+      loadWeeklyRecap: vi.fn().mockResolvedValue({ available: false }),
+      acknowledgeWeeklyRecap: vi.fn().mockResolvedValue({ available: false }),
       loadDailyLeaderboard: vi.fn(),
     };
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
