@@ -29,6 +29,7 @@ begin
     or position('daily_challenge_weekly_recap_views' in v_get) = 0
     or position('private.daily_challenge_hit_number_distance' in v_get) = 0
     or position('football_daily_transition_adjustments' in v_get) = 0
+    or position('maintain_football_weekly_auction' in v_get) = 0
     or position('auction_week.subject_key = ''cfb-best-teams-since-2000''' in v_get) = 0 then
     raise exception 'weekly recap canonical scoring or participation contract drifted';
   end if;
