@@ -23,7 +23,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check pillow "rembg[cpu]" onnxruntime
+          python -m pip install --disable-pip-version-check pillow "rembg[cpu]" onnxruntime filetype
 
       - name: Download real fighter photography
         shell: bash
