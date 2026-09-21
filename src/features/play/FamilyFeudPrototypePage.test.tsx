@@ -42,7 +42,10 @@ function submitMainAnswer(value: string) {
 
 function settleMainReveal() {
   act(() => {
-    vi.advanceTimersByTime(1_300);
+    vi.advanceTimersByTime(650);
+  });
+  act(() => {
+    vi.advanceTimersByTime(650);
   });
 }
 
