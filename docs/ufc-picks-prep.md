@@ -22,7 +22,7 @@ For every fighter on the main card:
 
 - `public/assets/fighters/<fighter-slug>-spotlight.webp`
 
-Crop/resize/center and lightly sharpen only. Existing matching assets should be reused.
+Both asset types must be true transparent WebP cutouts with an alpha channel. Prefer an official UFC/ESPN-style transparent fighter cutout when available. If the only reliable real-photo source has a background, background removal is allowed; do not synthesize, redraw, restyle, or alter the fighter. After background removal, only crop/resize/center and lightly sharpen. Never bake a white, arena, cage, or other source background into the canonical asset. Existing matching transparent assets should be reused.
 
 ## Editorial contract
 
