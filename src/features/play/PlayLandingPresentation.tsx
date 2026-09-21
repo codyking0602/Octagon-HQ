@@ -45,6 +45,7 @@ type PlayLandingGameLibraryProps = {
   onNavigate: (route: string) => void;
   footer?: ReactNode;
   familyFeudVisible?: boolean;
+  weeklyAuctionFinalPreviewVisible?: boolean;
 };
 
 export function PlayLandingGameLibrary({
@@ -52,6 +53,7 @@ export function PlayLandingGameLibrary({
   onNavigate,
   footer,
   familyFeudVisible = false,
+  weeklyAuctionFinalPreviewVisible = false,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
@@ -65,7 +67,7 @@ export function PlayLandingGameLibrary({
           <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
           <p>Quick games and blind tests, ready whenever the debate starts.</p>
         </div>
-        <span>{games.length + (familyFeudVisible ? 1 : 0)} LIVE</span>
+        <span>{games.length + (familyFeudVisible ? 1 : 0) + (sport === "football" && weeklyAuctionFinalPreviewVisible ? 1 : 0)} LIVE</span>
       </header>
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
@@ -80,6 +82,20 @@ export function PlayLandingGameLibrary({
             <strong>Sports Feud</strong>
             <small>Clear two answer boards, then race through five Fast Money prompts in 30 seconds.</small>
             <em>PLAY →</em>
+          </button>
+        ) : null}
+
+        {sport === "football" && weeklyAuctionFinalPreviewVisible ? (
+          <button
+            className="play-landing-game-card is-strategic"
+            type="button"
+            onClick={() => onNavigate("/football/weekly-auction-final-preview")}
+          >
+            <span className="play-landing-game-card__icon" aria-hidden="true">🏆</span>
+            <span className="play-landing-game-card__status">OWNER PREVIEW</span>
+            <strong>CFB Final Results Preview</strong>
+            <small>See the exact Weekly Auction final-results experience with sanitized sample standings and grades.</small>
+            <em>PREVIEW →</em>
           </button>
         ) : null}
 
