@@ -146,6 +146,7 @@ describe("Sports Feud private daily presentation", () => {
     expect(screen.getByText(/most electric Cowboys players of the 2020s/i)).toBeInTheDocument();
     expect(document.querySelectorAll(".feud-answer-slot")).toHaveLength(4);
     expect(document.querySelectorAll(".feud-answer-slot > b")).toHaveLength(4);
+    expect(document.querySelectorAll(".feud-fast-host-asset")).toHaveLength(1);
     expect(document.querySelector('img[src="/assets/sports-feud-main-stage.png"]')).toBeInTheDocument();
     expect(document.querySelector(".feud-answer-board")).toBeInTheDocument();
     expect(document.querySelector(".feud-strikes")).toBeInTheDocument();
@@ -275,13 +276,15 @@ describe("Sports Feud private daily presentation", () => {
     const root = document.querySelector(".family-feud-prototype");
     expect(root).toHaveAttribute("data-scene", "reveal");
     expect(screen.queryByLabelText("Fast Money answer")).not.toBeInTheDocument();
-    expect(screen.getByText("Myles Garrett")).toBeInTheDocument();
+    expect(screen.getByText(/Myles Garrett/i)).toBeInTheDocument();
+    expect(document.querySelector(".feud-fast-score-reveal")).not.toBeInTheDocument();
+    expect(document.querySelector(".feud-fast-reveal-board")).toBeInTheDocument();
     expect(screen.getByLabelText("Running Fast Money total")).toHaveTextContent("0");
 
     act(() => {
       vi.advanceTimersByTime(650);
     });
-    expect(document.querySelector(".feud-fast-score-reveal__score")).toHaveClass("is-revealed");
+    expect(document.querySelector(".feud-fast-reveal-row.is-current")).toHaveClass("is-revealed");
 
     act(() => {
       vi.advanceTimersByTime(300);
@@ -292,7 +295,7 @@ describe("Sports Feud private daily presentation", () => {
       vi.advanceTimersByTime(400);
     });
     expect(screen.getByText("Tyreek Hill")).toBeInTheDocument();
-    expect(document.querySelector(".feud-fast-score-reveal__score")).not.toHaveClass("is-revealed");
+    expect(document.querySelector(".feud-fast-reveal-row.is-current")).not.toHaveClass("is-revealed");
   });
 
   it("shows the HQ accepted-answer recap only after all five Fast Money scores finish revealing", () => {
@@ -309,7 +312,7 @@ describe("Sports Feud private daily presentation", () => {
     }
 
     expect(screen.getByText("Calvin Johnson")).toBeInTheDocument();
-    expect(document.querySelector(".feud-fast-score-reveal__score")).toHaveClass("is-revealed");
+    expect(document.querySelector(".feud-fast-reveal-row.is-current")).toHaveClass("is-revealed");
     expect(screen.queryByText("HQ ANSWERS")).not.toBeInTheDocument();
 
     act(() => {
