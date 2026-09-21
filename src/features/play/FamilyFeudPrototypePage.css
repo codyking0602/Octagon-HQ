@@ -2618,3 +2618,34 @@ body.family-feud-prototype-active {
     transform: scale(1.63);
   }
 }
+
+
+/* iOS focus-retention correction.
+   Keep the native keyboard target genuinely present in the visual viewport so Safari
+   does not blur it as an effectively hidden 2px control. */
+.family-feud-prototype .feud-keyboard-capture,
+.family-feud-prototype.is-keyboard-open .feud-keyboard-capture {
+  position: fixed !important;
+  z-index: 100004 !important;
+  top: 29% !important;
+  left: 12% !important;
+  width: 76% !important;
+  height: 44px !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  transform: none !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  opacity: 0.01 !important;
+  color: transparent !important;
+  background: #fff !important;
+  caret-color: transparent !important;
+  pointer-events: auto !important;
+  font-size: 16px !important;
+  line-height: normal !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
