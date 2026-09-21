@@ -69,7 +69,7 @@ describe("WeeklyChampionshipRecap", () => {
 
   it("does not invent an auction section for UFC", async () => {
     const repo = repository();
-    (repo.load as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+    vi.mocked(repo.load).mockResolvedValueOnce({
       sport: "ufc",
       weekStart: "2026-09-14",
       weekEnd: "2026-09-20",
