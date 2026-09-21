@@ -503,3 +503,40 @@
 .today-hub[data-sport="football"] .today-hub-leaderboard__row.is-current {
   border-color: color-mix(in srgb, var(--football-accent) 65%, var(--border));
 }
+
+
+.weekly-championship-recap { position:fixed; inset:0; z-index:1400; display:grid; align-items:start; justify-items:center; padding:max(18px,env(safe-area-inset-top)) 12px max(18px,env(safe-area-inset-bottom)); overflow-y:auto; overscroll-behavior:contain; background:color-mix(in srgb,#000 78%,transparent); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px); }
+.weekly-championship-recap__card { --weekly-recap-accent:var(--ufc-red); --weekly-recap-accent-strong:var(--ufc-red-strong); position:relative; display:grid; gap:14px; width:min(100%,720px); max-height:calc(100dvh - 36px); margin-top:clamp(56px,10vh,96px); padding:20px; overflow-y:auto; border:1px solid color-mix(in srgb,var(--weekly-recap-accent) 48%,var(--border)); border-radius:var(--radius-lg); background:radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--weekly-recap-accent) 10%,transparent),transparent 42%),linear-gradient(145deg,var(--surface-raised),var(--surface)); box-shadow:0 24px 80px rgb(0 0 0 / 65%); animation:weekly-championship-recap-enter 220ms ease-out both; }
+.weekly-championship-recap[data-sport="football"] .weekly-championship-recap__card { --weekly-recap-accent:var(--football-accent); --weekly-recap-accent-strong:var(--football-accent); }
+.weekly-championship-recap__card::before { content:""; position:absolute; inset:0 0 auto; height:4px; border-radius:var(--radius-lg) var(--radius-lg) 0 0; background:var(--weekly-recap-accent); }
+.weekly-championship-recap__header { display:grid; gap:8px; text-align:center; }
+.weekly-championship-recap__header>p,.weekly-championship-recap__standings>h3,.weekly-championship-recap__bonus small { margin:0; color:var(--weekly-recap-accent-strong); font-size:.67rem; font-weight:950; letter-spacing:.13em; text-transform:uppercase; }
+.weekly-championship-recap__header h2 { margin:0; color:var(--text-primary); font-size:clamp(1.7rem,7.8vw,2.7rem); line-height:.96; letter-spacing:-.045em; text-transform:uppercase; }
+.weekly-championship-recap__winner { display:flex; align-items:center; justify-content:center; gap:13px; min-width:0; padding:5px 0 3px; }
+.weekly-championship-recap__trophy { display:grid; width:56px; height:56px; flex:0 0 auto; place-items:center; border-radius:999px; background:color-mix(in srgb,#d8aa42 13%,var(--surface)); box-shadow:inset 0 0 0 1px rgb(216 170 66 / 24%); font-size:1.8rem; }
+.weekly-championship-recap__winner>div { display:grid; gap:2px; min-width:0; text-align:left; }
+.weekly-championship-recap__winner strong { overflow:hidden; color:var(--text-primary); font-size:clamp(1.45rem,6.5vw,2.2rem); font-weight:950; line-height:1; text-overflow:ellipsis; }
+.weekly-championship-recap__winner small { color:var(--text-secondary); font-size:.78rem; }
+.weekly-championship-recap__standings { display:grid; gap:7px; padding:13px; border:1px solid var(--border); border-radius:var(--radius-md); background:color-mix(in srgb,var(--surface-raised) 75%,transparent); }
+.weekly-championship-recap__columns,.weekly-championship-recap__row { display:grid; grid-template-columns:minmax(0,1fr) 46px 70px; align-items:center; gap:8px; }
+.weekly-championship-recap__columns { padding:0 8px 3px; color:var(--text-muted); font-size:.51rem; font-weight:950; letter-spacing:.075em; text-transform:uppercase; }
+.weekly-championship-recap__columns span:not(:first-child),.weekly-championship-recap__row>strong { text-align:center; }
+.weekly-championship-recap__rows { display:grid; gap:4px; }
+.weekly-championship-recap__row { min-height:44px; padding:6px 8px; border:1px solid transparent; border-top-color:var(--border); border-radius:9px; font-size:.72rem; }
+.weekly-championship-recap__row.is-champion { border-color:color-mix(in srgb,var(--weekly-recap-accent) 62%,var(--border)); background:color-mix(in srgb,var(--weekly-recap-accent) 9%,transparent); }
+.weekly-championship-recap__row.is-current:not(.is-champion) { border-color:color-mix(in srgb,var(--weekly-recap-accent) 32%,var(--border)); }
+.weekly-championship-recap__player { display:grid; grid-template-columns:24px 28px minmax(0,1fr) auto; align-items:center; gap:7px; min-width:0; }
+.weekly-championship-recap__player>b { color:var(--weekly-recap-accent-strong); }
+.weekly-championship-recap__player>strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.weekly-championship-recap__player>em { padding:3px 6px; border:1px solid color-mix(in srgb,var(--weekly-recap-accent) 38%,transparent); border-radius:999px; color:var(--weekly-recap-accent-strong); font-size:.49rem; font-style:normal; font-weight:950; letter-spacing:.08em; }
+.weekly-championship-recap__avatar,.weekly-championship-recap__avatar img,.weekly-championship-recap__avatar>span { display:grid; width:28px; height:28px; place-items:center; border-radius:999px; }
+.weekly-championship-recap__avatar { overflow:hidden; background:var(--surface); } .weekly-championship-recap__avatar img { object-fit:cover; } .weekly-championship-recap__avatar>span { color:var(--text-secondary); font-size:.52rem; font-weight:900; }
+.weekly-championship-recap__bonus { display:grid; grid-template-columns:42px minmax(0,1fr); align-items:center; gap:11px; padding:12px; border:1px solid color-mix(in srgb,var(--weekly-recap-accent) 42%,var(--border)); border-radius:var(--radius-md); background:color-mix(in srgb,var(--weekly-recap-accent) 8%,var(--surface)); }
+.weekly-championship-recap__bonus>span { display:grid; width:42px; height:42px; place-items:center; border-radius:10px; background:color-mix(in srgb,var(--weekly-recap-accent) 12%,var(--surface-raised)); font-size:1.25rem; }
+.weekly-championship-recap__bonus>div { display:grid; gap:2px; min-width:0; } .weekly-championship-recap__bonus strong { color:var(--text-primary); font-size:1rem; } .weekly-championship-recap__bonus p { margin:0; color:var(--text-secondary); font-size:.68rem; }
+.weekly-championship-recap__error { margin:0; color:#ff9b9b; font-size:.68rem; font-weight:800; text-align:center; }
+.weekly-championship-recap__ok { min-height:48px; border:0; border-radius:var(--radius-sm); background:var(--weekly-recap-accent); color:#fff; font:inherit; font-size:.8rem; font-weight:950; letter-spacing:.1em; cursor:pointer; }
+.weekly-championship-recap[data-sport="football"] .weekly-championship-recap__ok { color:#071018; } .weekly-championship-recap__ok:disabled { cursor:wait; opacity:.68; }
+@keyframes weekly-championship-recap-enter { from { opacity:0; transform:translateY(-18px); } to { opacity:1; transform:translateY(0); } }
+@media (max-width:520px) { .weekly-championship-recap { padding-inline:8px; } .weekly-championship-recap__card { gap:11px; width:100%; margin-top:clamp(36px,7vh,62px); padding:15px; } .weekly-championship-recap__standings { padding:10px 8px; } .weekly-championship-recap__columns,.weekly-championship-recap__row { grid-template-columns:minmax(0,1fr) 38px 60px; gap:5px; } .weekly-championship-recap__row { min-height:40px; padding-inline:5px; } .weekly-championship-recap__player { grid-template-columns:21px 26px minmax(0,1fr) auto; gap:5px; } .weekly-championship-recap__avatar,.weekly-championship-recap__avatar img,.weekly-championship-recap__avatar>span { width:26px; height:26px; } }
+@media (prefers-reduced-motion:reduce) { .weekly-championship-recap__card { animation:none; } }

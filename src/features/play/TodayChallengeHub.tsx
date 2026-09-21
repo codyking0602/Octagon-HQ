@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "./DailyChallengeStandings";
+import { WeeklyChampionshipRecap } from "./WeeklyChampionshipRecap";
 import {
   dailyRankKeepComboStage,
   isDailyRankKeepCombo,
@@ -181,6 +182,9 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
   const navigate = useNavigate();
   const carouselRef = useRef<HTMLDivElement>(null);
   const [panel, setPanel] = useState<"challenge" | "leaderboard">("challenge");
+  const [weeklyRecapBusy, setWeeklyRecapBusy] = useState(false);
+  const [weeklyRecapError, setWeeklyRecapError] = useState<string | null>(null);
+  const [acknowledgedRecapKey, setAcknowledgedRecapKey] = useState<string | null>(null);
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const profileId = identity.profile?.id ?? "signed-out";
   const runtime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport });
@@ -197,6 +201,33 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
   );
   const focusChampionship = typeof window !== "undefined"
     && new URLSearchParams(window.location.search).get("standings") === "me";
+
+  const weeklyRecap = overview.weeklyRecap?.available ? overview.weeklyRecap : null;
+  const weeklyRecapKey = weeklyRecap ? `${sport}:${weeklyRecap.weekStart}` : null;
+
+  async function acknowledgeWeeklyRecap() {
+    if (!weeklyRecap || !weeklyRecapKey || weeklyRecapBusy) return;
+    setWeeklyRecapBusy(true);
+    setWeeklyRecapError(null);
+    try {
+      await overview.acknowledgeWeeklyRecap(weeklyRecap.weekStart);
+      setAcknowledgedRecapKey(weeklyRecapKey);
+    } catch (reason) {
+      setWeeklyRecapError(reason instanceof Error ? reason.message : "The weekly championship recap could not be closed.");
+    } finally {
+      setWeeklyRecapBusy(false);
+    }
+  }
+
+  const weeklyRecapOverlay = weeklyRecap && weeklyRecapKey !== acknowledgedRecapKey ? (
+    <WeeklyChampionshipRecap
+      recap={weeklyRecap}
+      sport={sport}
+      busy={weeklyRecapBusy}
+      error={weeklyRecapError}
+      onAcknowledge={() => { void acknowledgeWeeklyRecap(); }}
+    />
+  ) : null;
 
   useEffect(() => {
     if (!focusChampionship || !overview.standings) return;
@@ -240,6 +271,7 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
     if (weeklyAuctionError && previewAdapter && weeklyAuctionError.previewCentralDay) {
       return (
         <section className="today-hub" data-sport={sport} data-game={weeklyAuctionError.previewGameType ?? undefined}>
+          {weeklyRecapOverlay}
           <div className="today-hub__carousel" aria-label="Today’s Challenge">
             <button className="today-hub-card" type="button" onClick={() => navigate("/football/today")}>
               <div className="today-hub-card__topline">
@@ -308,6 +340,7 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
 
   return (
     <section className="today-hub" data-game={projection.gameType} data-sport={sport}>
+      {weeklyRecapOverlay}
       <div
         className="today-hub__carousel"
         ref={carouselRef}

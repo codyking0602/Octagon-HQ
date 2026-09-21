@@ -49,6 +49,8 @@ on:
       - "supabase/migrations/202612310099_football_daily_persisted_runtime.sql"
       - "supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql"
       - "supabase/migrations/202612310148_millionaire_daily_launch.sql"
+      - "supabase/migrations/202612310160_daily_challenge_weekly_recap.sql"
+      - "supabase/tests/daily_challenge_weekly_recap.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -224,6 +226,10 @@ jobs:
       - name: Execute Football-only weekly title reset proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/football_weekly_title_reset.sql
+
+      - name: Execute weekly Play championship recap proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/daily_challenge_weekly_recap.sql
 
       - name: Execute realistic legacy-data migration and idempotency proof
         shell: bash
@@ -407,6 +413,7 @@ jobs:
           require_remote_migration "202612310099"
           require_remote_migration "202612310122"
           require_remote_migration "202612310148"
+          require_remote_migration "202612310160"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof

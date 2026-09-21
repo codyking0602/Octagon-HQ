@@ -142,6 +142,27 @@ describe("Today’s Challenge runtime repository", () => {
     expect(rpc).toHaveBeenCalledWith("get_my_hq_daily_challenge_streak", undefined);
   });
 
+  it("loads and acknowledges the one-time sport-scoped weekly championship recap", async () => {
+    const { client } = clientWithResponses([]);
+    const rpc = vi.fn()
+      .mockResolvedValueOnce({ data: {
+        available: true, sport: "football", week_start: "2026-09-15", week_end: "2026-09-21",
+        entries: [{ rank: 1, profile_id: "11111111-1111-4111-8111-111111111111", display_name: "Cody", initials: "CK", avatar_photo_data: null, wins: 5, played: 7, average_score: 88.4, is_champion: true, is_current_user: true }],
+        auction_bonus: { profile_id: "11111111-1111-4111-8111-111111111111", display_name: "Cody", wins: 1, label: "Best CFB Teams Since 2000 Champion" },
+      }, error: null })
+      .mockResolvedValueOnce({ data: { available: false }, error: null });
+    client.rpc = rpc;
+    const repository = createTodayChallengeRepository(client as never, "football")!;
+    await expect(repository.loadWeeklyRecap()).resolves.toMatchObject({
+      available: true, sport: "football", weekStart: "2026-09-15",
+      entries: [{ displayName: "Cody", wins: 5, played: 7, averageScore: 88.4 }],
+      auctionBonus: { displayName: "Cody", wins: 1 },
+    });
+    await expect(repository.acknowledgeWeeklyRecap("2026-09-15")).resolves.toEqual({ available: false });
+    expect(rpc).toHaveBeenNthCalledWith(1, "get_my_daily_challenge_weekly_recap", { p_sport: "football" });
+    expect(rpc).toHaveBeenNthCalledWith(2, "acknowledge_my_daily_challenge_weekly_recap", { p_sport: "football", p_week_start: "2026-09-15" });
+  });
+
   it("surfaces stale cross-device revisions without inventing a fallback write", async () => {
     const response = new Response(JSON.stringify({
       code: "STALE_PROGRESS",
