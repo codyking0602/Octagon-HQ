@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { getSupabaseClient } from "../../lib/supabase";
 import {
   FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
+  FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
   FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
   footballSpotlightNextPair,
   footballSpotlightPairAt,
@@ -222,7 +223,10 @@ function SpotlightPhotoSlot({
 
 function emptyPhotoSources() {
   return Object.fromEntries(
-    FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.map((pair) => [pair.id, { cfb: "", nfl: "" }]),
+    FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.map((pair) => [pair.id, {
+      cfb: FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES[pair.id]?.cfb ?? "",
+      nfl: FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES[pair.id]?.nfl ?? "",
+    }]),
   ) as Record<string, Record<FootballSpotlightKind, string>>;
 }
 
@@ -254,7 +258,9 @@ export default function FootballHomeSpotlightPhotoControl({
     void Promise.all(requests).then((entries) => {
       if (!active) return;
       const next = emptyPhotoSources();
-      for (const [pairId, kind, source] of entries) next[pairId]![kind] = source;
+      for (const [pairId, kind, source] of entries) {
+        if (source) next[pairId]![kind] = source;
+      }
       setPhotoSources(next);
     }).catch((error) => {
       if (active) {
