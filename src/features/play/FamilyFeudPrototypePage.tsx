@@ -109,7 +109,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const [timeRemainingMs, setTimeRemainingMs] = useState(FAMILY_FEUD_FAST_MONEY_TIME_MS);
   const [revealCount, setRevealCount] = useState(0);
   const [keyboardInset, setKeyboardInset] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
   const deadlineRef = useRef(0);
   const timeoutQueuedRef = useRef(false);
   const baseViewportHeightRef = useRef(0);
@@ -167,23 +166,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     };
   }, []);
 
-  function focusAnswerInput() {
-    const input = inputRef.current;
-    if (!input) return;
-    try {
-      input.focus({ preventScroll: true });
-    } catch {
-      input.focus();
-    }
-    window.requestAnimationFrame(() => window.scrollTo(0, 0));
-  }
-
-  useEffect(() => {
-    if (scene !== "main" || boardReview) return;
-    const id = window.setTimeout(focusAnswerInput, 80);
-    return () => window.clearTimeout(id);
-  }, [scene, displayBoardIndex, boardReview]);
-
   useEffect(() => {
     if (scene !== "fast") return undefined;
     timeoutQueuedRef.current = false;
@@ -192,10 +174,8 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     const interval = window.setInterval(() => {
       setTimeRemainingMs(Math.max(0, deadlineRef.current - performance.now()));
     }, 80);
-    const focusId = window.setTimeout(focusAnswerInput, 80);
     return () => {
       window.clearInterval(interval);
-      window.clearTimeout(focusId);
     };
   }, [scene]);
 
@@ -421,25 +401,14 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
               </div>
               <div className="feud-answer-entry__row">
                 <input
-                  className="feud-keyboard-capture"
-                  ref={inputRef}
                   value={answer}
                   onChange={(event) => setAnswer(event.target.value)}
+                  placeholder="Type your answer"
                   autoCapitalize="words"
                   autoCorrect="off"
                   enterKeyHint="send"
                   aria-label="Your answer"
                 />
-                <div
-                  className={answer ? "feud-answer-display has-value" : "feud-answer-display"}
-                  onPointerDown={(event) => {
-                    event.preventDefault();
-                    focusAnswerInput();
-                  }}
-                  role="presentation"
-                >
-                  {answer || "Type your answer"}
-                </div>
                 <button
                   type="submit"
                   aria-label="Submit answer"
@@ -513,25 +482,14 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             </div>
             <div className="feud-fast-entry__row">
               <input
-                className="feud-keyboard-capture"
-                ref={inputRef}
                 value={answer}
                 onChange={(event) => setAnswer(event.target.value)}
+                placeholder="Type your answer"
                 autoCapitalize="words"
                 autoCorrect="off"
                 enterKeyHint="send"
                 aria-label="Fast Money answer"
               />
-              <div
-                className={answer ? "feud-answer-display has-value" : "feud-answer-display"}
-                onPointerDown={(event) => {
-                  event.preventDefault();
-                  focusAnswerInput();
-                }}
-                role="presentation"
-              >
-                {answer || "Type your answer"}
-              </div>
               <button
                 type="submit"
                 aria-label="Submit Fast Money answer"
