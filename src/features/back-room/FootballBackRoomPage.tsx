@@ -4,7 +4,6 @@ import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPresentation";
 import { isFamilyFeudPrototypeOwner } from "../play/familyFeudPrototypeAccess";
-import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import {
   createFootballWeeklyAuctionRepository,
@@ -19,7 +18,6 @@ type WeeklyAuctionQuickState = Pick<
 >;
 
 function FootballWeeklyAuctionQuickAccess({ onOpen }: { onOpen: () => void }) {
-  const identity = useIdentity();
   const repository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const [state, setState] = useState<WeeklyAuctionQuickState | null>(null);
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
@@ -86,9 +84,7 @@ export default function FootballBackRoomPage() {
       <ChallengeCenter sport="football" />
       <PlayLandingGameLibrary sport="football"
         onNavigate={navigate}
-        millionaireVisible={Boolean(identity.profile?.canControlPicks)}
         familyFeudVisible={isFamilyFeudPrototypeOwner(identity.profile)}
-        weeklyBuildQbPreviewVisible={isFootballWeeklyBuildQbPreviewOwner(identity.profile)}
       />
     </div>
   );
