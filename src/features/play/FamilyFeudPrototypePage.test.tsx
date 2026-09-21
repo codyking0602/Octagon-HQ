@@ -276,7 +276,7 @@ describe("Sports Feud private daily presentation", () => {
     const root = document.querySelector(".family-feud-prototype");
     expect(root).toHaveAttribute("data-scene", "reveal");
     expect(screen.queryByLabelText("Fast Money answer")).not.toBeInTheDocument();
-    expect(screen.getByText(/Myles Garrett/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Myles Garrett/i)).not.toBeInTheDocument();
     expect(document.querySelector(".feud-fast-score-reveal")).not.toBeInTheDocument();
     expect(document.querySelector(".feud-fast-reveal-board")).toBeInTheDocument();
     expect(screen.getByLabelText("Running Fast Money total")).toHaveTextContent("0");
@@ -284,6 +284,7 @@ describe("Sports Feud private daily presentation", () => {
     act(() => {
       vi.advanceTimersByTime(650);
     });
+    expect(screen.getByText(/Myles Garrett/i)).toBeInTheDocument();
     expect(document.querySelector(".feud-fast-reveal-row.is-current")).toHaveClass("is-revealed");
 
     act(() => {
