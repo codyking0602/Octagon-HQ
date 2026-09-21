@@ -15,6 +15,7 @@ describe("Daily Challenge weekly championship recap migration", () => {
     expect(migration).toContain("acknowledge_my_daily_challenge_weekly_recap");
     expect(migration).toContain("private.daily_challenge_hit_number_distance");
     expect(migration).toContain("private.football_daily_transition_adjustments");
+    expect(migration).toContain("private.maintain_football_weekly_auction(now())");
     expect(migration).toContain("auction_week.subject_key = 'cfb-best-teams-since-2000'");
     expect(migration).toContain("date '2026-09-15'");
   });
