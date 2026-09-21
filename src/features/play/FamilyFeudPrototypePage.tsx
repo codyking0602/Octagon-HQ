@@ -24,6 +24,7 @@ import {
   type FamilyFeudOutcome,
   type FamilyFeudRankedAnswer,
   type FamilyFeudState,
+  type FamilyFeudTransition,
 } from "../games/familyFeudEngine";
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import { familyFeudPrototypePack } from "./familyFeudPrototypePacks";
@@ -34,9 +35,23 @@ import {
   type SportsFeudHostSport,
 } from "./sportsFeudPresentation";
 import "./FamilyFeudPrototypePage.css";
+import "./SportsFeudRevealPass.css";
 
 type PrototypeScope = "ufc" | "football";
-type PrototypeScene = "intro" | "main" | "fast-intro" | "fast" | "reveal" | "result";
+type PrototypeScene = "intro" | "main" | "fast-intro" | "fast" | "reveal" | "fast-recap" | "result";
+type MainRevealPhase = "idle" | "suspense" | "correct" | "strike";
+type FastRevealPhase = "answer" | "score" | "complete";
+
+interface MainRevealState {
+  phase: MainRevealPhase;
+  transition: FamilyFeudTransition | null;
+}
+
+const MAIN_SUSPENSE_MS = 650;
+const MAIN_REVEAL_HOLD_MS = 520;
+const FAST_REVEAL_SUSPENSE_MS = 650;
+const FAST_REVEAL_SCORE_HOLD_MS = 650;
+const FAST_REVEAL_COMPLETE_HOLD_MS = 800;
 
 function formatClock(ms: number) {
   return "0:" + String(Math.ceil(ms / 1000)).padStart(2, "0");
@@ -107,13 +122,20 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const [displayBoardIndex, setDisplayBoardIndex] = useState(0);
   const [boardReview, setBoardReview] = useState(false);
   const [timeRemainingMs, setTimeRemainingMs] = useState(FAMILY_FEUD_FAST_MONEY_TIME_MS);
-  const [revealCount, setRevealCount] = useState(0);
+  const [mainReveal, setMainReveal] = useState<MainRevealState>({ phase: "idle", transition: null });
+  const [displayedMainPoints, setDisplayedMainPoints] = useState(0);
+  const [fastRevealIndex, setFastRevealIndex] = useState(0);
+  const [fastRevealPhase, setFastRevealPhase] = useState<FastRevealPhase>("answer");
+  const [displayedFastTotal, setDisplayedFastTotal] = useState(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [keyboardInset, setKeyboardInset] = useState(0);
   const [viewportOffsetTop, setViewportOffsetTop] = useState(0);
   const deadlineRef = useRef(0);
   const timeoutQueuedRef = useRef(false);
   const baseViewportHeightRef = useRef(0);
+  const mainInputRef = useRef<HTMLInputElement>(null);
+  const fastInputRef = useRef<HTMLInputElement>(null);
+  const shouldRestoreMainInputRef = useRef(false);
 
   const exitRoute = scope === "football" ? "/football" : "/play";
   const hqName = scope === "football" ? "FOOTBALL HQ" : "UFC HQ";
@@ -195,24 +217,125 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     timeoutQueuedRef.current = true;
     const transition = timeoutFamilyFeudFastMoney(state);
     setState(transition.state);
-    setFeedback(transition.outcome);
-    setScene("reveal");
+    beginFastReveal();
   }, [scene, state, timeRemainingMs]);
 
   useEffect(() => {
-    if (scene !== "reveal") return undefined;
-    setRevealCount(0);
-    const interval = window.setInterval(() => {
-      setRevealCount((current) => {
-        if (current >= 5) {
-          window.clearInterval(interval);
-          return current;
+    const pending = mainReveal.transition;
+    if (!pending || mainReveal.phase === "idle") return undefined;
+
+    if (mainReveal.phase === "suspense") {
+      const timer = window.setTimeout(() => {
+        setState(pending.state);
+        setMainReveal({
+          phase: pending.outcome.type === "board-correct" ? "correct" : "strike",
+          transition: pending,
+        });
+      }, MAIN_SUSPENSE_MS);
+      return () => window.clearTimeout(timer);
+    }
+
+    const timer = window.setTimeout(() => {
+      const settledBoard = pending.state.mainBoards[displayBoardIndex]!;
+      const settled = settledBoard.revealedEntityIds.length >= FAMILY_FEUD_BOARD_ANSWER_COUNT
+        || settledBoard.strikes >= FAMILY_FEUD_STRIKES_PER_BOARD;
+      setBoardReview(settled);
+      if (!settled) shouldRestoreMainInputRef.current = true;
+      setMainReveal({ phase: "idle", transition: null });
+    }, MAIN_REVEAL_HOLD_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [displayBoardIndex, mainReveal]);
+
+  useEffect(() => {
+    const target = familyFeudMainBoardScore(pack, state, displayBoardIndex);
+    setDisplayedMainPoints((current) => (current > target ? target : current));
+
+    const timer = window.setInterval(() => {
+      setDisplayedMainPoints((current) => {
+        if (current >= target) {
+          window.clearInterval(timer);
+          return target;
         }
         return current + 1;
       });
-    }, 430);
-    return () => window.clearInterval(interval);
-  }, [scene]);
+    }, 28);
+
+    return () => window.clearInterval(timer);
+  }, [displayBoardIndex, pack, state]);
+
+  useEffect(() => {
+    if (
+      scene !== "main"
+      || boardReview
+      || mainReveal.phase !== "idle"
+      || !shouldRestoreMainInputRef.current
+    ) return;
+
+    shouldRestoreMainInputRef.current = false;
+    mainInputRef.current?.focus({ preventScroll: true });
+  }, [boardReview, mainReveal.phase, scene]);
+
+  useEffect(() => {
+    if (scene !== "reveal") return undefined;
+
+    if (fastRevealPhase === "answer") {
+      const timer = window.setTimeout(() => {
+        setFastRevealPhase("score");
+      }, FAST_REVEAL_SUSPENSE_MS);
+      return () => window.clearTimeout(timer);
+    }
+
+    if (fastRevealPhase === "score") {
+      const timer = window.setTimeout(() => {
+        if (fastRevealIndex < 4) {
+          setFastRevealIndex((current) => current + 1);
+          setFastRevealPhase("answer");
+        } else {
+          setFastRevealPhase("complete");
+        }
+      }, FAST_REVEAL_SCORE_HOLD_MS);
+      return () => window.clearTimeout(timer);
+    }
+
+    const timer = window.setTimeout(() => {
+      setScene("fast-recap");
+    }, FAST_REVEAL_COMPLETE_HOLD_MS);
+    return () => window.clearTimeout(timer);
+  }, [fastRevealIndex, fastRevealPhase, scene]);
+
+  useEffect(() => {
+    if (scene !== "reveal") return undefined;
+    const scoredCount = Math.min(
+      state.fastMoneyResults.length,
+      fastRevealIndex + (fastRevealPhase === "answer" ? 0 : 1),
+    );
+    const target = state.fastMoneyResults
+      .slice(0, scoredCount)
+      .reduce((total, result) => total + result.points, 0);
+
+    const timer = window.setInterval(() => {
+      setDisplayedFastTotal((current) => {
+        if (current >= target) {
+          window.clearInterval(timer);
+          return target;
+        }
+        return current + 1;
+      });
+    }, 28);
+
+    return () => window.clearInterval(timer);
+  }, [fastRevealIndex, fastRevealPhase, scene, state.fastMoneyResults]);
+
+  function beginFastReveal() {
+    fastInputRef.current?.blur();
+    setAnswer("");
+    setFeedback(null);
+    setFastRevealIndex(0);
+    setFastRevealPhase("answer");
+    setDisplayedFastTotal(0);
+    setScene("reveal");
+  }
 
   function startGame() {
     setState(createFamilyFeudState());
@@ -221,30 +344,38 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     setAnswer("");
     setFeedback(null);
     setTimeRemainingMs(FAMILY_FEUD_FAST_MONEY_TIME_MS);
-    setRevealCount(0);
+    setMainReveal({ phase: "idle", transition: null });
+    setDisplayedMainPoints(0);
+    setFastRevealIndex(0);
+    setFastRevealPhase("answer");
+    setDisplayedFastTotal(0);
+    shouldRestoreMainInputRef.current = false;
     setScene("main");
   }
 
   function submitMain(event: FormEvent) {
     event.preventDefault();
-    if (!answer.trim() || boardReview) return;
-    const activeBoardIndex = displayBoardIndex;
+    if (!answer.trim() || boardReview || mainReveal.phase !== "idle") return;
     const transition = submitFamilyFeudMainAnswer(pack, state, answer);
-    setState(transition.state);
-    setFeedback(transition.outcome);
 
-    if (transition.outcome.type !== "ambiguous") setAnswer("");
+    if (transition.outcome.type === "ambiguous" || transition.outcome.type === "already-guessed") {
+      setFeedback(transition.outcome);
+      if (transition.outcome.type === "already-guessed") setAnswer("");
+      return;
+    }
 
-    const settledBoard = transition.state.mainBoards[activeBoardIndex]!;
-    const settled = settledBoard.revealedEntityIds.length >= FAMILY_FEUD_BOARD_ANSWER_COUNT
-      || settledBoard.strikes >= FAMILY_FEUD_STRIKES_PER_BOARD;
-    if (settled) setBoardReview(true);
+    mainInputRef.current?.blur();
+    setAnswer("");
+    setFeedback(null);
+    setMainReveal({ phase: "suspense", transition });
   }
 
   function advanceBoard() {
     setFeedback(null);
     setAnswer("");
     setBoardReview(false);
+    setMainReveal({ phase: "idle", transition: null });
+    setDisplayedMainPoints(0);
     if (state.phase === "fast-money") {
       setScene("fast-intro");
       return;
@@ -256,6 +387,9 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     timeoutQueuedRef.current = false;
     setFeedback(null);
     setAnswer("");
+    setFastRevealIndex(0);
+    setFastRevealPhase("answer");
+    setDisplayedFastTotal(0);
     setTimeRemainingMs(state.fastMoneyTimeRemainingMs);
     setScene("fast");
   }
@@ -269,15 +403,16 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       answer,
       Math.floor(timeRemainingMs),
     );
-    setState(transition.state);
-    setFeedback(transition.outcome);
 
-    if (transition.outcome.type === "ambiguous") return;
-
-    setAnswer("");
-    if (transition.state.phase === "complete") {
-      setScene("reveal");
+    if (transition.outcome.type === "ambiguous") {
+      setFeedback(transition.outcome);
+      return;
     }
+
+    setState(transition.state);
+    setFeedback(null);
+    setAnswer("");
+    if (transition.state.phase === "complete") beginFastReveal();
   }
 
   const mainQuestion = pack.mainBoards[displayBoardIndex]!;
@@ -286,15 +421,21 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const foundIds = new Set(mainBoardState.revealedEntityIds);
   const foundMainAnswers = mainBoardState.revealedEntityIds
     .map((entityId) => mainQuestion.answers.find((row) => row.entityId === entityId))
-    .filter((row): row is FamilyFeudRankedAnswer => Boolean(row))
-    .sort((left, right) => right.points - left.points || left.entityId.localeCompare(right.entityId));
+    .filter((row): row is FamilyFeudRankedAnswer => Boolean(row));
   const missedReviewAnswers = boardReview && foundMainAnswers.length < FAMILY_FEUD_BOARD_ANSWER_COUNT
     ? mainQuestion.answers
         .filter((row) => !foundIds.has(row.entityId))
         .slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT - foundMainAnswers.length)
     : [];
-  const mainDisplayAnswers = [...foundMainAnswers, ...missedReviewAnswers]
-    .sort((left, right) => right.points - left.points || left.entityId.localeCompare(right.entityId));
+  const mainDisplayAnswers = [...foundMainAnswers, ...missedReviewAnswers];
+  const reviewDisplayIds = new Set(mainDisplayAnswers.map((row) => row.entityId));
+  const alsoAcceptedAnswers = boardReview
+    ? mainQuestion.answers.filter((row) => !reviewDisplayIds.has(row.entityId))
+    : [];
+  const newlyRevealedEntityId = mainReveal.phase === "correct"
+    && mainReveal.transition?.outcome.type === "board-correct"
+      ? mainReveal.transition.outcome.entityId
+      : null;
 
   const currentFastQuestion = state.phase === "fast-money"
     ? pack.fastMoney[state.fastMoneyIndex] ?? null
@@ -317,9 +458,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       })),
     };
   });
-  const revealedFastTotal = fastRevealRows
-    .slice(0, revealCount)
-    .reduce((total, row) => total + row.points, 0);
+  const activeFastRevealRow = fastRevealRows[fastRevealIndex] ?? fastRevealRows[0]!;
 
   const view = (
     <main
@@ -330,6 +469,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       ].filter(Boolean).join(" ")}
       data-scope={scope}
       data-scene={scene}
+      data-main-reveal={mainReveal.phase}
       style={{
         "--feud-keyboard-inset": keyboardInset + "px",
         "--feud-viewport-offset": viewportOffsetTop + "px",
@@ -379,6 +519,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                     "feud-answer-slot",
                     rankedAnswer ? "is-revealed" : "",
                     rankedAnswer && !found ? "is-missed" : "",
+                    rankedAnswer?.entityId === newlyRevealedEntityId ? "is-new-reveal" : "",
                   ].filter(Boolean).join(" ")}
                   key={index}
                 >
@@ -392,29 +533,48 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
 
           <div className="feud-main-score">
             <span>ROUND {displayBoardIndex + 1} POINTS</span>
-            <strong>{mainBoardPoints}</strong>
+            <strong>{displayedMainPoints}</strong>
             <em>/ {FAMILY_FEUD_MAIN_BOARD_MAX}</em>
           </div>
 
           {boardReview ? (
             <section className="feud-round-review">
+              <small className="feud-round-review__title">BOARD RESULTS</small>
               <strong>
                 {mainBoardState.revealedEntityIds.length >= FAMILY_FEUD_BOARD_ANSWER_COUNT
                   ? "BOARD CLEARED"
                   : "3 STRIKES — BOARD CLOSED"}
               </strong>
               <span>{mainBoardPoints}/{FAMILY_FEUD_MAIN_BOARD_MAX} HQ points banked.</span>
+              {alsoAcceptedAnswers.length ? (
+                <div className="feud-also-accepted">
+                  <small>ALSO ACCEPTED</small>
+                  <div>
+                    {alsoAcceptedAnswers.map((rankedAnswer) => {
+                      const acceptedEntity = pack.entities.find((candidate) => candidate.id === rankedAnswer.entityId);
+                      return (
+                        <span key={rankedAnswer.entityId}>
+                          {acceptedEntity?.displayName ?? rankedAnswer.entityId}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
               <button className="feud-primary-button" type="button" onClick={advanceBoard}>
                 {state.phase === "fast-money" ? "GO TO FAST MONEY" : "ROUND 2"}
               </button>
             </section>
-          ) : (
+          ) : mainReveal.phase === "idle" ? (
             <form className="feud-answer-entry" onSubmit={submitMain}>
-              <div className="feud-feedback" data-kind={feedback?.type ?? "idle"}>
-                {feedbackCopy(feedback) || "TYPE AN ANSWER — SPELLING IS FORGIVEN"}
-              </div>
+              {feedback && (feedback.type === "ambiguous" || feedback.type === "already-guessed") ? (
+                <div className="feud-feedback" data-kind={feedback.type}>
+                  {feedbackCopy(feedback)}
+                </div>
+              ) : null}
               <div className="feud-answer-entry__row">
                 <input
+                  ref={mainInputRef}
                   value={answer}
                   onChange={(event) => setAnswer(event.target.value)}
                   placeholder="Type your answer"
@@ -430,7 +590,13 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                 >↑</button>
               </div>
             </form>
-          )}
+          ) : null}
+
+          {mainReveal.phase === "strike" ? (
+            <div className="feud-strike-slam" role="status" aria-label="Strike">
+              <span>×</span>
+            </div>
+          ) : null}
         </section>
       ) : null}
 
@@ -491,11 +657,14 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
           </div>
 
           <form className="feud-fast-entry" onSubmit={submitFastMoney}>
-            <div className="feud-feedback" data-kind={feedback?.type ?? "idle"}>
-              {feedbackCopy(feedback) || "ONE ANSWER — KEEP MOVING"}
-            </div>
+            {feedback?.type === "ambiguous" ? (
+              <div className="feud-feedback" data-kind={feedback.type}>
+                {feedbackCopy(feedback)}
+              </div>
+            ) : null}
             <div className="feud-fast-entry__row">
               <input
+                ref={fastInputRef}
                 value={answer}
                 onChange={(event) => setAnswer(event.target.value)}
                 placeholder="Type your answer"
@@ -515,53 +684,81 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       ) : null}
 
       {scene === "reveal" ? (
-        <section className="feud-reveal-stage">
+        <section className="feud-reveal-stage" aria-label="Fast Money results reveal">
+          <FastMoneyHost asset={hostAsset} />
           <header>
             <Brand compact />
             <span>FAST MONEY RESULTS</span>
-            <strong>{revealedFastTotal}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong>
+            <strong>{displayedFastTotal}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong>
           </header>
 
-          <div className="feud-reveal-cards">
+          <article className="feud-fast-score-reveal" key={fastRevealIndex}>
+            <small>{fastRevealIndex + 1} OF 5</small>
+            <h1>{activeFastRevealRow.prompt}</h1>
+            <div className="feud-fast-score-reveal__answer">
+              <span>YOU SAID</span>
+              <strong>{activeFastRevealRow.answer}</strong>
+            </div>
+            <div
+              className={[
+                "feud-fast-score-reveal__score",
+                fastRevealPhase !== "answer" ? "is-revealed" : "",
+                !activeFastRevealRow.counted ? "is-zero" : "",
+              ].filter(Boolean).join(" ")}
+              aria-live="polite"
+            >
+              {fastRevealPhase === "answer" ? (
+                <span>…</span>
+              ) : activeFastRevealRow.counted ? (
+                <strong>+{activeFastRevealRow.points}</strong>
+              ) : (
+                <><strong>×</strong><span>0</span></>
+              )}
+            </div>
+          </article>
+
+          <div className="feud-fast-running-total" aria-label="Running Fast Money total">
+            <span>RUNNING TOTAL</span>
+            <strong>{displayedFastTotal}</strong>
+          </div>
+        </section>
+      ) : null}
+
+      {scene === "fast-recap" ? (
+        <section className="feud-fast-recap" aria-label="Fast Money HQ answers">
+          <header>
+            <Brand compact />
+            <div>
+              <span>FAST MONEY</span>
+              <strong>HQ ANSWERS</strong>
+            </div>
+            <b>{score.fastMoney}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</b>
+          </header>
+
+          <div className="feud-fast-recap__list">
             {fastRevealRows.map((row, index) => (
-              <article className={index < revealCount ? "feud-reveal-card is-revealed" : "feud-reveal-card"} key={index}>
-                <div className="feud-reveal-card__prompt">
+              <article className="feud-fast-recap__card" key={index}>
+                <div>
                   <b>{index + 1}</b>
-                  <span>{index < revealCount ? row.prompt : "—"}</span>
+                  <span>{row.prompt}</span>
                 </div>
-                {index < revealCount ? (
-                  <>
-                    <div className={row.counted ? "feud-reveal-card__you is-counted" : "feud-reveal-card__you is-x"}>
-                      <small>YOU SAID</small>
-                      <strong>{row.answer}</strong>
-                      <b>{row.counted ? "+" + row.points : "X"}</b>
-                    </div>
-                    <div className="feud-reveal-card__hq">
-                      <small>TOP HQ ANSWERS</small>
-                      <div>
-                        {row.accepted.slice(0, 4).map((accepted) => (
-                          <span key={accepted.name}>
-                            {accepted.name} <b>{accepted.points}</b>
-                          </span>
-                        ))}
-                      </div>
-                      {row.accepted.length > 4 ? (
-                        <p className="feud-reveal-card__more">+{row.accepted.length - 4} also accepted</p>
-                      ) : null}
-                    </div>
-                  </>
-                ) : null}
+                <section>
+                  {row.accepted.slice(0, 4).map((accepted) => (
+                    <span key={accepted.name}>
+                      {accepted.name} <b>{accepted.points}</b>
+                    </span>
+                  ))}
+                  {row.accepted.length > 4 ? (
+                    <small>+{row.accepted.length - 4} also accepted</small>
+                  ) : null}
+                </section>
               </article>
             ))}
           </div>
 
-          {revealCount >= 5 ? (
-            <button className="feud-primary-button feud-reveal-next" type="button" onClick={() => setScene("result")}>
-              VIEW HQ SCORE
-            </button>
-          ) : (
-            <p className="feud-reveal-stage__wait">HQ BOARD REVEALING…</p>
-          )}
+          <button className="feud-primary-button feud-reveal-next" type="button" onClick={() => setScene("result")}>
+            VIEW HQ SCORE
+          </button>
         </section>
       ) : null}
 
