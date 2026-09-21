@@ -49,6 +49,7 @@ on:
       - "supabase/migrations/202612310099_football_daily_persisted_runtime.sql"
       - "supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql"
       - "supabase/migrations/202612310148_millionaire_daily_launch.sql"
+      - "supabase/migrations/202612310160_daily_challenge_weekly_recap.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -63,6 +64,7 @@ on:
       - "supabase/tests/future_daily_schedule.sql"
       - "supabase/tests/football_daily_persisted_runtime.sql"
       - "supabase/tests/millionaire_daily_launch.sql"
+      - "supabase/tests/daily_challenge_weekly_recap.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_seed.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_assert.sql"
   workflow_dispatch:
@@ -225,6 +227,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/football_weekly_title_reset.sql
 
+      - name: Execute weekly championship recap proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/daily_challenge_weekly_recap.sql
+
       - name: Execute realistic legacy-data migration and idempotency proof
         shell: bash
         run: |
@@ -252,6 +258,7 @@ jobs:
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310098_reset_football_weekly_titles.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310099_football_daily_persisted_runtime.sql
             psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql
+            psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/migrations/202612310160_daily_challenge_weekly_recap.sql
           done
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_assert.sql
 
@@ -407,6 +414,7 @@ jobs:
           require_remote_migration "202612310099"
           require_remote_migration "202612310122"
           require_remote_migration "202612310148"
+          require_remote_migration "202612310160"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
