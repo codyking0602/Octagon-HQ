@@ -409,7 +409,11 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                   enterKeyHint="send"
                   aria-label="Your answer"
                 />
-                <button type="submit" aria-label="Submit answer">↑</button>
+                <button
+                  type="submit"
+                  aria-label="Submit answer"
+                  onPointerDown={(event) => event.preventDefault()}
+                >↑</button>
               </div>
             </form>
           )}
@@ -486,7 +490,11 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                 enterKeyHint="send"
                 aria-label="Fast Money answer"
               />
-              <button type="submit" aria-label="Submit Fast Money answer">↑</button>
+              <button
+                type="submit"
+                aria-label="Submit Fast Money answer"
+                onPointerDown={(event) => event.preventDefault()}
+              >↑</button>
             </div>
           </form>
         </section>
