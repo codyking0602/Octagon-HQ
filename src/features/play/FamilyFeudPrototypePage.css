@@ -2679,3 +2679,15 @@ body.family-feud-prototype-active {
 .family-feud-prototype[data-scene="reveal"] > .feud-fast-host-asset {
   display: block;
 }
+
+
+/* Fast Money iOS visibility lock.
+   Safari can inherit transparent text-fill from earlier keyboard-capture experiments.
+   The live Fast Money field must always show the player's typing. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry input {
+  color: #07142d !important;
+  -webkit-text-fill-color: #07142d !important;
+  caret-color: #07142d !important;
+  opacity: 1 !important;
+}
