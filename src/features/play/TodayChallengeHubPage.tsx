@@ -5,7 +5,6 @@ import { PlayLandingGameLibrary, PlayLandingHeader } from "./PlayLandingPresenta
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import TodayChallengeHub from "./TodayChallengeHub";
 import { WeeklyChampionshipRecap } from "./WeeklyChampionshipRecap";
-import { WeeklyChampionshipRecap } from "./WeeklyChampionshipRecap";
 
 export default function TodayChallengeHubPage() {
   const navigate = useNavigate();
