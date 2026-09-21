@@ -108,7 +108,9 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const [boardReview, setBoardReview] = useState(false);
   const [timeRemainingMs, setTimeRemainingMs] = useState(FAMILY_FEUD_FAST_MONEY_TIME_MS);
   const [revealCount, setRevealCount] = useState(0);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [keyboardInset, setKeyboardInset] = useState(0);
+  const [viewportOffsetTop, setViewportOffsetTop] = useState(0);
   const deadlineRef = useRef(0);
   const timeoutQueuedRef = useRef(false);
   const baseViewportHeightRef = useRef(0);
@@ -140,18 +142,27 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     const updateKeyboardInset = () => {
       const visibleHeight = currentHeight();
       const offsetTop = Math.max(0, viewport?.offsetTop ?? 0);
-      const obscured = Math.max(
+      const keyboardHeight = Math.max(
         0,
-        baseViewportHeightRef.current - visibleHeight - offsetTop,
+        baseViewportHeightRef.current - visibleHeight,
       );
+      const isOpen = keyboardHeight >= 120;
 
-      if (obscured < 120) {
+      if (!isOpen) {
         baseViewportHeightRef.current = Math.max(window.innerHeight, visibleHeight);
+        setKeyboardOpen(false);
         setKeyboardInset(0);
+        setViewportOffsetTop(0);
         return;
       }
 
-      setKeyboardInset(Math.round(obscured));
+      const dockInset = Math.max(
+        0,
+        baseViewportHeightRef.current - visibleHeight - offsetTop,
+      );
+      setKeyboardOpen(true);
+      setKeyboardInset(Math.round(dockInset));
+      setViewportOffsetTop(Math.round(offsetTop));
     };
 
     updateKeyboardInset();
@@ -315,11 +326,14 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       className={[
         "family-feud-prototype",
         "feud-scene--" + scene,
-        keyboardInset > 0 ? "is-keyboard-open" : "",
+        keyboardOpen ? "is-keyboard-open" : "",
       ].filter(Boolean).join(" ")}
       data-scope={scope}
       data-scene={scene}
-      style={{ "--feud-keyboard-inset": keyboardInset + "px" } as CSSProperties}
+      style={{
+        "--feud-keyboard-inset": keyboardInset + "px",
+        "--feud-viewport-offset": viewportOffsetTop + "px",
+      } as CSSProperties}
     >
       <StagePlate />
       <StagePlate fast />
