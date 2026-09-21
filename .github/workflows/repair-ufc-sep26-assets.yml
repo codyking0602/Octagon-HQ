@@ -1,0 +1,207 @@
+name: Repair Sep 26 UFC fighter assets
+
+on:
+  push:
+    branches:
+      - chatgpt/ufc-sep26-assets-odds-fix
+
+permissions:
+  contents: write
+
+jobs:
+  repair-assets:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/ufc-sep26-assets-odds-fix
+          fetch-depth: 1
+
+      - name: Install image tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pillow "rembg[cpu]" onnxruntime
+
+      - name: Download official and clean real-photo sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .ufc-asset-src
+
+          fetch() {
+            local name="$1"
+            local url="$2"
+            curl --fail --location --retry 4 --retry-delay 2 \
+              --user-agent "Mozilla/5.0" \
+              --output ".ufc-asset-src/$name" "$url"
+            test -s ".ufc-asset-src/$name"
+          }
+
+          # ESPN transparent fighter headshots.
+          fetch raoni-barcelos.png 'https://a.espncdn.com/i/headshots/mma/players/full/3075570.png'
+          fetch rodolfo-vieira-espn.png 'https://a.espncdn.com/i/headshots/mma/players/full/4426250.png'
+          fetch robert-bryczek-espn.png 'https://a.espncdn.com/i/headshots/mma/players/full/4341572.png'
+          fetch brady-hiestand-espn.png 'https://a.espncdn.com/i/headshots/mma/players/full/4815974.png'
+          fetch rinya-nakamura.png 'https://a.espncdn.com/i/headshots/mma/players/full/5068624.png'
+          fetch melissa-amaya.png 'https://a.espncdn.com/i/headshots/mma/players/full/5169699.png'
+          fetch valesca-machado-espn.png 'https://a.espncdn.com/i/headshots/mma/players/full/4836549.png'
+          fetch josiah-harrell-espn.png 'https://a.espncdn.com/i/headshots/mma/players/full/5149546.png'
+          fetch elves-brener-espn.png 'https://a.espncdn.com/i/headshots/mma/players/full/5110006.png'
+
+          # Transparent full-body / torso sources already used by the product where available.
+          fetch raul-rosas-jr-full.png 'https://gidstats.com/img/fighters/0/0/1-1596.png'
+          fetch rodolfo-vieira-full.png 'https://gidstats.ru/img/fighters/460/700/1-341.png'
+          fetch robert-bryczek-full.png 'https://gidstats.ru/img/fighters/460/700/1-1085.png'
+          fetch brady-hiestand-full.png 'https://gidstats.com/img/fighters/460/700/1-472.png'
+          fetch valesca-machado-full.png 'https://gidstats.com/img/fighters/0/0/1-1232.png'
+          fetch josiah-harrell-full.png 'https://gidstats.com/img/fighters/0/0/2-1096.png'
+          fetch elves-brener-full.png 'https://gidstats.com/img/fighters/0/0/1-1357.png'
+
+          # TUF newcomers do not currently expose UFC/ESPN fighter cutouts.
+          # Keep the real photos, remove only the background, then use the same transparent asset contract.
+          fetch mehemmedeli-osmanli.jpg 'https://pbs.twimg.com/media/Gwo02kKWQAA33KY.jpg'
+          fetch ilimbek-akylbek.jpg 'https://cdn-1.aki.kg/cdn-st-0/qi0/F/en-891042.1776244308.b.jpg'
+
+      - name: Remove backgrounds only for TUF newcomers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m rembg i .ufc-asset-src/mehemmedeli-osmanli.jpg .ufc-asset-src/mehemmedeli-osmanli-cutout.png
+          python -m rembg i .ufc-asset-src/ilimbek-akylbek.jpg .ufc-asset-src/ilimbek-akylbek-cutout.png
+
+      - name: Build transparent WebP assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageFilter
+
+          root = Path('.ufc-asset-src')
+          out = Path('public/assets/fighters')
+          out.mkdir(parents=True, exist_ok=True)
+
+          thumb_sources = {
+              'raoni-barcelos': root/'raoni-barcelos.png',
+              'rodolfo-vieira': root/'rodolfo-vieira-espn.png',
+              'robert-bryczek': root/'robert-bryczek-espn.png',
+              'brady-hiestand': root/'brady-hiestand-espn.png',
+              'rinya-nakamura': root/'rinya-nakamura.png',
+              'mehemmedeli-osmanli': root/'mehemmedeli-osmanli-cutout.png',
+              'ilimbek-akylbek': root/'ilimbek-akylbek-cutout.png',
+              'melissa-amaya': root/'melissa-amaya.png',
+              'valesca-machado': root/'valesca-machado-espn.png',
+              'josiah-harrell': root/'josiah-harrell-espn.png',
+              'elves-brener': root/'elves-brener-espn.png',
+          }
+
+          spotlight_sources = {
+              'raul-rosas-jr': root/'raul-rosas-jr-full.png',
+              'raoni-barcelos': root/'raoni-barcelos.png',
+              'rodolfo-vieira': root/'rodolfo-vieira-full.png',
+              'robert-bryczek': root/'robert-bryczek-full.png',
+              'brady-hiestand': root/'brady-hiestand-full.png',
+              'rinya-nakamura': root/'rinya-nakamura.png',
+              'mehemmedeli-osmanli': root/'mehemmedeli-osmanli-cutout.png',
+              'ilimbek-akylbek': root/'ilimbek-akylbek-cutout.png',
+              'melissa-amaya': root/'melissa-amaya.png',
+              'valesca-machado': root/'valesca-machado-full.png',
+              'josiah-harrell': root/'josiah-harrell-full.png',
+              'elves-brener': root/'elves-brener-full.png',
+          }
+
+          def alpha_bbox(im):
+              rgba = im.convert('RGBA')
+              return rgba.getchannel('A').getbbox()
+
+          def load_cutout(path):
+              im = Image.open(path).convert('RGBA')
+              box = alpha_bbox(im)
+              if box:
+                  im = im.crop(box)
+              return im
+
+          def sharpen(im):
+              return im.filter(ImageFilter.UnsharpMask(radius=0.6, percent=55, threshold=2))
+
+          def fit_transparent(im, size, bottom=False):
+              w, h = size
+              scale = min(w / im.width, h / im.height)
+              nw, nh = max(1, round(im.width * scale)), max(1, round(im.height * scale))
+              im = sharpen(im.resize((nw, nh), Image.Resampling.LANCZOS))
+              canvas = Image.new('RGBA', size, (0, 0, 0, 0))
+              x = (w - nw) // 2
+              y = h - nh if bottom else (h - nh) // 2
+              canvas.alpha_composite(im, (x, y))
+              return canvas
+
+          # Preserve the approved existing Rosas thumb exactly.
+          for slug, source in thumb_sources.items():
+              im = load_cutout(source)
+              fit_transparent(im, (320, 320)).save(
+                  out/f'{slug}-thumb.webp', 'WEBP', quality=92, method=6, lossless=False
+              )
+
+          for slug, source in spotlight_sources.items():
+              im = load_cutout(source)
+              fit_transparent(im, (626, 800), bottom=True).save(
+                  out/f'{slug}-spotlight.webp', 'WEBP', quality=92, method=6, lossless=False
+              )
+
+          # Hard fail if any repaired asset lost alpha or is fully opaque.
+          expected = list(thumb_sources) + list(spotlight_sources)
+          for slug in thumb_sources:
+              path = out/f'{slug}-thumb.webp'
+              im = Image.open(path).convert('RGBA')
+              extrema = im.getchannel('A').getextrema()
+              assert extrema[0] < 255, f'{path} has no transparent pixels: {extrema}'
+          for slug in spotlight_sources:
+              path = out/f'{slug}-spotlight.webp'
+              im = Image.open(path).convert('RGBA')
+              extrema = im.getchannel('A').getextrema()
+              assert extrema[0] < 255, f'{path} has no transparent pixels: {extrema}'
+          PY
+
+      - name: Verify asset dimensions and alpha
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          repaired = [
+            'raoni-barcelos','rodolfo-vieira','robert-bryczek','brady-hiestand','rinya-nakamura',
+            'mehemmedeli-osmanli','ilimbek-akylbek','melissa-amaya','valesca-machado',
+            'josiah-harrell','elves-brener'
+          ]
+          spotlights = ['raul-rosas-jr', *repaired]
+          for slug in repaired:
+              p = Path('public/assets/fighters')/f'{slug}-thumb.webp'
+              im = Image.open(p).convert('RGBA')
+              assert im.size == (320,320)
+              assert im.getchannel('A').getextrema()[0] < 255
+              print(p, im.size, im.getchannel('A').getextrema())
+          for slug in spotlights:
+              p = Path('public/assets/fighters')/f'{slug}-spotlight.webp'
+              im = Image.open(p).convert('RGBA')
+              assert im.size == (626,800)
+              assert im.getchannel('A').getextrema()[0] < 255
+              print(p, im.size, im.getchannel('A').getextrema())
+          PY
+
+      - name: Commit repaired assets and remove one-time workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .ufc-asset-src
+          rm -f .github/workflows/repair-ufc-sep26-assets.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/fighters .github/workflows/repair-ufc-sep26-assets.yml
+          git diff --cached --stat
+          git diff --cached --quiet && exit 0
+          git commit -m "UFC Picks: repair Sep 26 transparent fighter assets"
+          git push origin HEAD:chatgpt/ufc-sep26-assets-odds-fix
