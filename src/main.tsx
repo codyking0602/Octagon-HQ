@@ -44,6 +44,7 @@ import "./styles/today-challenge-hub.css";
 import "./styles/daily-leaderboard-result-page.css";
 import "./styles/daily-challenge-standings.css";
 import "./styles/weekly-championship-recap.css";
+import "./styles/weekly-championship-recap.css";
 import "./styles/auction.css";
 import "./styles/find-leader-leaderboard.css";
 import "./styles/wavelength.css";
