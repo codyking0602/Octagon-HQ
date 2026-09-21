@@ -4,6 +4,7 @@ import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPresentation";
 import { isFamilyFeudPrototypeOwner } from "../play/familyFeudPrototypeAccess";
+import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import {
   createFootballWeeklyAuctionRepository,
@@ -87,6 +88,7 @@ export default function FootballBackRoomPage() {
         onNavigate={navigate}
         millionaireVisible={Boolean(identity.profile?.canControlPicks)}
         familyFeudVisible={isFamilyFeudPrototypeOwner(identity.profile)}
+        weeklyBuildQbPreviewVisible={isFootballWeeklyBuildQbPreviewOwner(identity.profile)}
       />
     </div>
   );
