@@ -13,9 +13,10 @@ describe("Family Feud V2 prototype packs", () => {
     for (const pack of [FOOTBALL_FAMILY_FEUD_PROTOTYPE, UFC_FAMILY_FEUD_PROTOTYPE]) {
       expect(pack.mainBoards).toHaveLength(2);
       expect(pack.fastMoney).toHaveLength(5);
-      expect(pack.mainBoards.every((board) => board.answers.length >= 8 && board.answers.length <= 12)).toBe(true);
+      expect(pack.mainBoards.every((board) => board.answers.length === 4)).toBe(true);
+      expect(pack.mainBoards.every((board) => (board.alsoAcceptedEntityIds?.length ?? 0) >= 6)).toBe(true);
       expect(pack.mainBoards.every((board) =>
-        board.answers.slice(0, 4).reduce((sum, answer) => sum + answer.points, 0) === 30
+        board.answers.reduce((sum, answer) => sum + answer.points, 0) === 30
       )).toBe(true);
     }
   });
