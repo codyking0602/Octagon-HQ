@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
+import {
+  FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
+  FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
+  type FootballSpotlightKind,
+  type FootballSpotlightPhotoSources,
+} from "./footballPlayerSpotlightSchedule";
 
-export type FootballHomeSpotlightKind = "cfb" | "nfl";
+export type FootballHomeSpotlightKind = FootballSpotlightKind;
 
 export const FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEYS = {
   cfb: "football-player-spotlight-cfb",
@@ -16,28 +22,48 @@ export const FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATHS = {
   nfl: "football/player-spotlight-nfl",
 } as const;
 
-// Compatibility exports for older callers; new code should use the keyed maps above.
+export function footballHomeSpotlightMediaKey(pairId: string, kind: FootballHomeSpotlightKind) {
+  return pairId === FOOTBALL_BASE_SPOTLIGHT_PAIR_ID
+    ? FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEYS[kind]
+    : `football-player-spotlight-${pairId}-${kind}`;
+}
+
+export function footballHomeSpotlightStoragePath(pairId: string, kind: FootballHomeSpotlightKind) {
+  return pairId === FOOTBALL_BASE_SPOTLIGHT_PAIR_ID
+    ? FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATHS[kind]
+    : `football/player-spotlight/${pairId}/${kind}`;
+}
+
+// Compatibility exports for older callers.
 export const FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEY = FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEYS.cfb;
 export const FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATH = FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATHS.cfb;
 
+const allowedMediaKeys = new Set(
+  FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.flatMap((pair) => ([
+    footballHomeSpotlightMediaKey(pair.id, "cfb"),
+    footballHomeSpotlightMediaKey(pair.id, "nfl"),
+  ])),
+);
+
 const mediaSchema = z.object({
-  content_key: z.union([
-    z.literal(FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEYS.cfb),
-    z.literal(FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEYS.nfl),
-  ]),
+  content_key: z.string().min(1),
   photo_source: z.string().min(1),
   updated_at: z.string().min(1),
 });
 
 export interface HomeFeatureMedia {
-  contentKey: (typeof FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEYS)[FootballHomeSpotlightKind];
+  contentKey: string;
   photoSource: string;
   updatedAt: string;
 }
 
 export interface HomeFeatureMediaRepository {
-  loadFootballSpotlight: (kind: FootballHomeSpotlightKind) => Promise<HomeFeatureMedia | null>;
+  loadFootballSpotlight: (
+    pairId: string,
+    kind: FootballHomeSpotlightKind,
+  ) => Promise<HomeFeatureMedia | null>;
   saveFootballSpotlightPhoto: (
+    pairId: string,
     kind: FootballHomeSpotlightKind,
     photoSource: string,
   ) => Promise<HomeFeatureMedia>;
@@ -46,6 +72,9 @@ export interface HomeFeatureMediaRepository {
 function parseMedia(value: unknown): HomeFeatureMedia | null {
   if (value == null) return null;
   const parsed = mediaSchema.parse(value);
+  if (!allowedMediaKeys.has(parsed.content_key)) {
+    throw new Error("Unsupported Football Home Spotlight media key.");
+  }
   return {
     contentKey: parsed.content_key,
     photoSource: parsed.photo_source,
@@ -58,17 +87,17 @@ export function createHomeFeatureMediaRepository(): HomeFeatureMediaRepository |
   if (!client) return null;
 
   return {
-    async loadFootballSpotlight(kind) {
+    async loadFootballSpotlight(pairId, kind) {
       const { data, error } = await client.rpc("get_home_feature_media", {
-        p_content_key: FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEYS[kind],
+        p_content_key: footballHomeSpotlightMediaKey(pairId, kind),
       });
       if (error) throw new Error(error.message);
       return parseMedia(data);
     },
 
-    async saveFootballSpotlightPhoto(kind, photoSource) {
+    async saveFootballSpotlightPhoto(pairId, kind, photoSource) {
       const { data, error } = await client.rpc("set_home_feature_media", {
-        p_content_key: FOOTBALL_HOME_SPOTLIGHT_MEDIA_KEYS[kind],
+        p_content_key: footballHomeSpotlightMediaKey(pairId, kind),
         p_photo_source: photoSource,
       });
       if (error) throw new Error(error.message);
@@ -79,34 +108,43 @@ export function createHomeFeatureMediaRepository(): HomeFeatureMediaRepository |
   };
 }
 
+function emptyFootballSpotlightPhotos(): Record<string, Record<FootballHomeSpotlightKind, string | null>> {
+  return Object.fromEntries(
+    FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.map((pair) => [pair.id, { cfb: null, nfl: null }]),
+  );
+}
+
 export function useFootballHomeSpotlightPhotos(
   suppliedRepository?: HomeFeatureMediaRepository | null,
-) {
+): FootballSpotlightPhotoSources {
   const [repository] = useState<HomeFeatureMediaRepository | null>(() => (
     suppliedRepository === undefined ? createHomeFeatureMediaRepository() : suppliedRepository
   ));
-  const [photoSources, setPhotoSources] = useState<Record<FootballHomeSpotlightKind, string | null>>({
-    cfb: null,
-    nfl: null,
-  });
+  const [photoSources, setPhotoSources] = useState<Record<string, Record<FootballHomeSpotlightKind, string | null>>>(
+    emptyFootballSpotlightPhotos,
+  );
 
   useEffect(() => {
     if (!repository) return undefined;
     let active = true;
-    void Promise.all([
-      repository.loadFootballSpotlight("cfb"),
-      repository.loadFootballSpotlight("nfl"),
-    ])
-      .then(([cfb, nfl]) => {
+    const requests = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.flatMap((pair) => ([
+      repository.loadFootballSpotlight(pair.id, "cfb").then((media) => [pair.id, "cfb", media?.photoSource ?? null] as const),
+      repository.loadFootballSpotlight(pair.id, "nfl").then((media) => [pair.id, "nfl", media?.photoSource ?? null] as const),
+    ]));
+
+    void Promise.all(requests)
+      .then((entries) => {
         if (!active) return;
-        setPhotoSources({
-          cfb: cfb?.photoSource ?? null,
-          nfl: nfl?.photoSource ?? null,
-        });
+        const next = emptyFootballSpotlightPhotos();
+        for (const [pairId, kind, photoSource] of entries) {
+          next[pairId]![kind] = photoSource;
+        }
+        setPhotoSources(next);
       })
       .catch(() => {
-        if (active) setPhotoSources({ cfb: null, nfl: null });
+        if (active) setPhotoSources(emptyFootballSpotlightPhotos());
       });
+
     return () => {
       active = false;
     };
