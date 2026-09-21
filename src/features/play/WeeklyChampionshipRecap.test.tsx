@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { WeeklyChampionshipRecap } from "./WeeklyChampionshipRecap";
 import type {
@@ -52,10 +52,13 @@ describe("WeeklyChampionshipRecap", () => {
     render(<WeeklyChampionshipRecap sport="football" repository={repo} />);
 
     expect(await screen.findByText("FOOTBALL WEEKLY CHAMPION")).toBeInTheDocument();
-    expect(screen.getByText("Shane")).toBeInTheDocument();
+    expect(screen.getAllByText("Shane")).toHaveLength(2);
     expect(screen.getByText("Week of Sep 15–21")).toBeInTheDocument();
-    expect(screen.getByText("Cody +1 win")).toBeInTheDocument();
-    expect(screen.getByText("Best CFB Teams Since 2000 Champion")).toBeInTheDocument();
+    const bonus = screen.getByText("WEEKLY AUCTION BONUS").closest("aside");
+    expect(bonus).not.toBeNull();
+    expect(within(bonus as HTMLElement).getByText("Cody")).toBeInTheDocument();
+    expect(within(bonus as HTMLElement).getByText("+1 win")).toBeInTheDocument();
+    expect(within(bonus as HTMLElement).getByText(/Best CFB Teams Since 2000/)).toBeInTheDocument();
     expect(screen.getByText("YOU")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "OK" }));
