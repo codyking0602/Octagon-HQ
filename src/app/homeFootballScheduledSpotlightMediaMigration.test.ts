@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import scheduledPairMigration from "../../supabase/migrations/202612310154_home_football_spotlight_scheduled_pair_media.sql?raw";
+import scheduledPairMigration from "../../supabase/migrations/202612310159_home_football_spotlight_scheduled_pair_media.sql?raw";
 
 describe("Football Home Spotlight scheduled pair media migration", () => {
   it("allows versioned weekly pair media while keeping writes owner-only", () => {
