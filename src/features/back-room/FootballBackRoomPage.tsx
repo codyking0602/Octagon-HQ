@@ -18,6 +18,7 @@ type WeeklyAuctionQuickState = Pick<
 >;
 
 function FootballWeeklyAuctionQuickAccess({ onOpen }: { onOpen: () => void }) {
+  const identity = useIdentity();
   const repository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const [state, setState] = useState<WeeklyAuctionQuickState | null>(null);
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
