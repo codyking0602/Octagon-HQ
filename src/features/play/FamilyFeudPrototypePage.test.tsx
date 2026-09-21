@@ -295,8 +295,15 @@ describe("Sports Feud private daily presentation", () => {
     act(() => {
       vi.advanceTimersByTime(400);
     });
-    expect(screen.getByText("Tyreek Hill")).toBeInTheDocument();
+    expect(screen.getByText(/must-watch TV/i)).toBeInTheDocument();
+    expect(screen.queryByText("Tyreek Hill")).not.toBeInTheDocument();
     expect(document.querySelector(".feud-fast-reveal-row.is-current")).not.toHaveClass("is-revealed");
+
+    act(() => {
+      vi.advanceTimersByTime(650);
+    });
+    expect(screen.getByText("Tyreek Hill")).toBeInTheDocument();
+    expect(document.querySelector(".feud-fast-reveal-row.is-current")).toHaveClass("is-revealed");
   });
 
   it("shows the HQ accepted-answer recap only after all five Fast Money scores finish revealing", () => {
