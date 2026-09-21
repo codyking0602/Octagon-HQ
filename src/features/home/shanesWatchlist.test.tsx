@@ -162,7 +162,7 @@ describe("Shane's ranked watchlist", () => {
 
     const snapshotParagraphs = Array.from(dialog.querySelectorAll(".watchlist-scouting-card__read-copy p"));
     expect(snapshotParagraphs).toHaveLength(3);
-    expect(snapshotParagraphs.map((paragraph) => paragraph.textContent).join(" ")).toBe(shanesWatchlist.fighters[1].scoutingSnapshot);
+    expect(snapshotParagraphs.map((paragraph) => paragraph.textContent).join(" ")).toBe(shanesWatchlist.fighters[0].scoutingSnapshot);
 
     expect(container.querySelector('[role="dialog"]')).toBeNull();
     expect(document.body.querySelector(".watchlist-scouting-overlay")).not.toBeNull();
@@ -175,7 +175,7 @@ describe("Shane's ranked watchlist", () => {
     expect(window.location.hash).toBe("");
   });
 
-  it("updates Bilal Hasan to #4 after his UFC Shanghai knockout win", () => {
+  it("keeps Bilal Hasan at #3 after adding Rosas", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
@@ -254,7 +254,7 @@ describe("Shane's ranked watchlist", () => {
     );
   });
 
-  it("opens a Home deep link directly into Gable's repaired scouting report", () => {
+  it("opens a Home deep link directly into Gable's post-loss scouting report", () => {
     window.history.replaceState({}, "", "/fighters-to-watch#gable-steveson");
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
