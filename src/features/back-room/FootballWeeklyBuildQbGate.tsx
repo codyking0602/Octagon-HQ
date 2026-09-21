@@ -178,9 +178,6 @@ function PlayerCard({
               aria-label={"Raise " + card.trait + " bid"}
             >+</button>
           </div>
-          <span className="football-weekly-build-qb__pass">
-            {passUsed ? "$1 minimum · free pass used" : "$0 = use your one free " + card.trait + " pass"}
-          </span>
         </>
       )}
     </article>
@@ -338,7 +335,13 @@ export function FootballWeeklyBuildQbGate({
 
       <section className="football-weekly-build-qb__board surface-card">
         <header className="football-weekly-build-qb__board-head">
-          <div><p className="eyebrow">WEEKLY AUCTION · NFL</p><h1>BUILD A QB · DAY {state.day_index}/7</h1></div>
+          <div>
+            <p className="eyebrow">WEEKLY AUCTION · NFL</p>
+            <div className="football-weekly-build-qb__title-row">
+              <h1>BUILD A QB</h1>
+              <span className="football-weekly-build-qb__day-label">DAY {state.day_index} OF 7</span>
+            </div>
+          </div>
           <div><strong>${state.bankroll}</strong><span>REMAINING</span></div>
         </header>
 
@@ -346,7 +349,10 @@ export function FootballWeeklyBuildQbGate({
 
         <div className="football-weekly-build-qb__lock-note">
           <strong>TODAY’S FOUR TRAITS</strong>
-          <span>Bids lock · results reveal at midnight CT</span>
+          <div className="football-weekly-build-qb__lock-copy">
+            <span>Bids lock · results reveal at midnight CT</span>
+            <span>$0 uses your free pass for that trait.</span>
+          </div>
         </div>
 
         <div className="football-weekly-build-qb__cards">
