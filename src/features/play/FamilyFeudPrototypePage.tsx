@@ -422,15 +422,10 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const foundMainAnswers = mainBoardState.revealedEntityIds
     .map((entityId) => mainQuestion.answers.find((row) => row.entityId === entityId))
     .filter((row): row is FamilyFeudRankedAnswer => Boolean(row));
-  const missedReviewAnswers = boardReview && foundMainAnswers.length < FAMILY_FEUD_BOARD_ANSWER_COUNT
-    ? mainQuestion.answers
-        .filter((row) => !foundIds.has(row.entityId))
-        .slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT - foundMainAnswers.length)
-    : [];
-  const mainDisplayAnswers = [...foundMainAnswers, ...missedReviewAnswers];
-  const reviewDisplayIds = new Set(mainDisplayAnswers.map((row) => row.entityId));
+  const coreBoardAnswers = mainQuestion.answers.slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT);
+  const mainDisplayAnswers = boardReview ? coreBoardAnswers : foundMainAnswers;
   const alsoAcceptedAnswers = boardReview
-    ? mainQuestion.answers.filter((row) => !reviewDisplayIds.has(row.entityId))
+    ? mainQuestion.answers.slice(FAMILY_FEUD_BOARD_ANSWER_COUNT)
     : [];
   const newlyRevealedEntityId = mainReveal.phase === "correct"
     && mainReveal.transition?.outcome.type === "board-correct"
