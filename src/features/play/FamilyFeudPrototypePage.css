@@ -1461,7 +1461,9 @@ body.family-feud-prototype-active .bottom-nav {
 
 .family-feud-prototype[data-scene="main"] .feud-back,
 .family-feud-prototype[data-scene="fast-intro"] .feud-back,
-.family-feud-prototype[data-scene="fast"] .feud-back {
+.family-feud-prototype[data-scene="fast"] .feud-back,
+.family-feud-prototype[data-scene="reveal"] .feud-back,
+.family-feud-prototype[data-scene="fast-recap"] .feud-back {
   top: 1.4%;
   left: 2.5%;
   width: 17%;
@@ -1476,7 +1478,9 @@ body.family-feud-prototype-active .bottom-nav {
 
 .family-feud-prototype[data-scene="main"] .feud-back span,
 .family-feud-prototype[data-scene="fast-intro"] .feud-back span,
-.family-feud-prototype[data-scene="fast"] .feud-back span {
+.family-feud-prototype[data-scene="fast"] .feud-back span,
+.family-feud-prototype[data-scene="reveal"] .feud-back span,
+.family-feud-prototype[data-scene="fast-recap"] .feud-back span {
   color: transparent;
 }
 
@@ -1812,6 +1816,7 @@ body.family-feud-prototype-active .bottom-nav {
 
 .feud-fast-host-asset {
   position: absolute;
+  display: none;
   z-index: 5;
   left: 1.5%;
   bottom: 12.5%;
@@ -2665,4 +2670,11 @@ body.family-feud-prototype-active {
   height: 100lvh !important;
   min-height: 100lvh !important;
   max-height: 100lvh !important;
+}
+
+
+.family-feud-prototype[data-scene="fast-intro"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="reveal"] > .feud-fast-host-asset {
+  display: block;
 }
