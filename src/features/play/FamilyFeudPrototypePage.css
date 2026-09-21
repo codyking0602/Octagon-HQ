@@ -2519,3 +2519,102 @@ body.family-feud-prototype-active {
     left: -37%;
   }
 }
+
+
+/* Keyboard capture architecture: keep Safari's real focus target away from the bottom edge. */
+.family-feud-prototype .feud-keyboard-capture,
+.family-feud-prototype.is-keyboard-open .feud-keyboard-capture {
+  position: fixed !important;
+  z-index: -1 !important;
+  top: 34% !important;
+  left: 50% !important;
+  width: 2px !important;
+  height: 2px !important;
+  min-width: 2px !important;
+  min-height: 2px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  opacity: 0.001 !important;
+  color: transparent !important;
+  background: transparent !important;
+  caret-color: transparent !important;
+  pointer-events: none !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.family-feud-prototype .feud-answer-display {
+  position: absolute;
+  left: 2.4%;
+  top: 50%;
+  width: 81.5%;
+  height: 56%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0 3.4%;
+  overflow: hidden;
+  border-radius: 8px;
+  color: rgba(71, 75, 84, 0.48);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.family-feud-prototype .feud-answer-display.has-value {
+  color: #08152d;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-display,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-answer-display {
+  position: static;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  height: 54px;
+  transform: none;
+  padding: 0 15px;
+  border-radius: 11px;
+  color: rgba(64, 70, 80, 0.5);
+  background: #fff;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: normal;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-display.has-value,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-answer-display.has-value {
+  color: #07142d;
+}
+
+/* The stage no longer follows visualViewport offset; only the dock reacts to keyboard height. */
+.family-feud-prototype.is-keyboard-open {
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100lvh !important;
+  min-height: 100lvh !important;
+  max-height: 100lvh !important;
+}
+
+/* Requested host tweak: exactly about five percent smaller, no position change. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  transform: scale(1.66);
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+  .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+    transform: scale(1.63);
+  }
+}

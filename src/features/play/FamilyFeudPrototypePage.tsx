@@ -109,8 +109,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const [timeRemainingMs, setTimeRemainingMs] = useState(FAMILY_FEUD_FAST_MONEY_TIME_MS);
   const [revealCount, setRevealCount] = useState(0);
   const [keyboardInset, setKeyboardInset] = useState(0);
-  const [viewportOffsetTop, setViewportOffsetTop] = useState(0);
-  const [stageHeight, setStageHeight] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const deadlineRef = useRef(0);
   const timeoutQueuedRef = useRef(false);
@@ -139,7 +137,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     const viewport = window.visualViewport;
     const currentHeight = () => viewport?.height ?? window.innerHeight;
     baseViewportHeightRef.current = Math.max(window.innerHeight, currentHeight());
-    setStageHeight(Math.round(baseViewportHeightRef.current));
 
     const updateKeyboardInset = () => {
       const visibleHeight = currentHeight();
@@ -148,20 +145,14 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
         0,
         baseViewportHeightRef.current - visibleHeight - offsetTop,
       );
-      const keyboardOpen = obscured >= 120;
 
-      if (!keyboardOpen) {
+      if (obscured < 120) {
         baseViewportHeightRef.current = Math.max(window.innerHeight, visibleHeight);
-        setStageHeight(Math.round(baseViewportHeightRef.current));
-        setViewportOffsetTop(0);
         setKeyboardInset(0);
         return;
       }
 
-      setStageHeight(Math.round(baseViewportHeightRef.current));
-      setViewportOffsetTop(Math.round(offsetTop));
       setKeyboardInset(Math.round(obscured));
-      window.scrollTo(0, 0);
     };
 
     updateKeyboardInset();
@@ -290,17 +281,12 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     setState(transition.state);
     setFeedback(transition.outcome);
 
-    if (transition.outcome.type === "ambiguous") {
-      window.setTimeout(focusAnswerInput, 0);
-      return;
-    }
+    if (transition.outcome.type === "ambiguous") return;
 
     setAnswer("");
     if (transition.state.phase === "complete") {
       setScene("reveal");
-      return;
     }
-    window.setTimeout(focusAnswerInput, 0);
   }
 
   const mainQuestion = pack.mainBoards[displayBoardIndex]!;
@@ -353,11 +339,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       ].filter(Boolean).join(" ")}
       data-scope={scope}
       data-scene={scene}
-      style={{
-        "--feud-keyboard-inset": keyboardInset + "px",
-        "--feud-viewport-offset": viewportOffsetTop + "px",
-        "--feud-stage-height": (stageHeight || window.innerHeight) + "px",
-      } as CSSProperties}
+      style={{ "--feud-keyboard-inset": keyboardInset + "px" } as CSSProperties}
     >
       <StagePlate />
       <StagePlate fast />
@@ -439,16 +421,30 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
               </div>
               <div className="feud-answer-entry__row">
                 <input
+                  className="feud-keyboard-capture"
                   ref={inputRef}
                   value={answer}
                   onChange={(event) => setAnswer(event.target.value)}
-                  placeholder="Type your answer"
                   autoCapitalize="words"
                   autoCorrect="off"
                   enterKeyHint="send"
                   aria-label="Your answer"
                 />
-                <button type="submit" aria-label="Submit answer">↑</button>
+                <div
+                  className={answer ? "feud-answer-display has-value" : "feud-answer-display"}
+                  onPointerDown={(event) => {
+                    event.preventDefault();
+                    focusAnswerInput();
+                  }}
+                  role="presentation"
+                >
+                  {answer || "Type your answer"}
+                </div>
+                <button
+                  type="submit"
+                  aria-label="Submit answer"
+                  onPointerDown={(event) => event.preventDefault()}
+                >↑</button>
               </div>
             </form>
           )}
@@ -517,16 +513,30 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             </div>
             <div className="feud-fast-entry__row">
               <input
+                className="feud-keyboard-capture"
                 ref={inputRef}
                 value={answer}
                 onChange={(event) => setAnswer(event.target.value)}
-                placeholder="Type your answer"
                 autoCapitalize="words"
                 autoCorrect="off"
                 enterKeyHint="send"
                 aria-label="Fast Money answer"
               />
-              <button type="submit" aria-label="Submit Fast Money answer">↑</button>
+              <div
+                className={answer ? "feud-answer-display has-value" : "feud-answer-display"}
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                  focusAnswerInput();
+                }}
+                role="presentation"
+              >
+                {answer || "Type your answer"}
+              </div>
+              <button
+                type="submit"
+                aria-label="Submit Fast Money answer"
+                onPointerDown={(event) => event.preventDefault()}
+              >↑</button>
             </div>
           </form>
         </section>
