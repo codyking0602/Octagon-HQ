@@ -56,8 +56,8 @@ describe("Harrell vs Brener odds coverage", () => {
       sportsbookTitle: "BetMGM",
       matchupIdentity: "elves brener|josiah harrell",
       prices: [
-        { fighterName: "Elves Brener", fighterIdentity: "elves brener", americanOdds: -110 },
         { fighterName: "Josiah Harrell", fighterIdentity: "josiah harrell", americanOdds: -110 },
+        { fighterName: "Elves Brener", fighterIdentity: "elves brener", americanOdds: -110 },
       ],
     });
   });
