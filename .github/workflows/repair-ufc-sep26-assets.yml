@@ -64,7 +64,7 @@ jobs:
           for source in .ufc-asset-src/raw/*; do
             base="$(basename "$source")"
             stem="${base%.*}"
-            python -m rembg i "$source" ".ufc-asset-src/cut/$stem.png"
+            rembg i "$source" ".ufc-asset-src/cut/$stem.png"
           done
 
       - name: Build transparent WebP assets
