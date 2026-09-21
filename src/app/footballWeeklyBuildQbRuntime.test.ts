@@ -107,7 +107,8 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(migration).toContain("on conflict(week_start,profile_id,trait) do nothing");
     expect(migration).toContain("Your free % pass is already used; bid at least $1");
     expect(gate).toContain("one free pass per trait");
-    expect(gate).toContain("$1 minimum · free pass used");
+    expect(gate).toContain("$0 uses your free pass for that trait.");
+    expect(gate).toContain("requires at least a $1 bid until you fill it.");
   });
 
   it("keeps the $40 completion-preserving bankroll and four required wins", () => {
