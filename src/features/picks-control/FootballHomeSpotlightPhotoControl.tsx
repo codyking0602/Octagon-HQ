@@ -1,32 +1,22 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { getSupabaseClient } from "../../lib/supabase";
 import {
-  FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATHS,
+  FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
+  FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
+  footballSpotlightNextPair,
+  footballSpotlightPairAt,
+  type FootballPlayerSpotlightPair,
+  type FootballSpotlightKind,
+} from "../home/footballPlayerSpotlightSchedule";
+import {
   HOME_FEATURE_MEDIA_BUCKET,
   createHomeFeatureMediaRepository,
-  type FootballHomeSpotlightKind,
+  footballHomeSpotlightStoragePath,
   type HomeFeatureMediaRepository,
 } from "../home/homeFeatureMedia";
 
 const MAX_INPUT_BYTES = 20 * 1024 * 1024;
 const ACCEPTED_TYPES = /^image\/(jpeg|png|webp|avif)$/i;
-
-const SLOT_COPY: Readonly<Record<FootballHomeSpotlightKind, {
-  eyebrow: string;
-  title: string;
-  description: string;
-}>> = {
-  cfb: {
-    eyebrow: "CFB HOME CONTENT",
-    title: "CFB PLAYER SPOTLIGHT PHOTO",
-    description: "Upload the college football image used for the Football HQ Player Spotlight.",
-  },
-  nfl: {
-    eyebrow: "NFL HOME CONTENT",
-    title: "NFL PLAYER SPOTLIGHT PHOTO",
-    description: "Upload the NFL image used for the Football HQ Player Spotlight.",
-  },
-};
 
 function readableError(error: unknown) {
   return error instanceof Error ? error.message : "The Home Spotlight photo could not be saved.";
@@ -110,59 +100,63 @@ export async function prepareFootballHomeSpotlightPhoto(file: File) {
 
 export async function uploadFootballHomeSpotlightPhoto(
   file: File,
-  kind: FootballHomeSpotlightKind = "cfb",
+  pairId: string = FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
+  kind: FootballSpotlightKind = "cfb",
 ) {
   const client = getSupabaseClient();
   if (!client) throw new Error("Home Spotlight media storage is not connected on this build.");
 
   const prepared = await prepareFootballHomeSpotlightPhoto(file);
   const bucket = client.storage.from(HOME_FEATURE_MEDIA_BUCKET);
-  const { error } = await bucket.upload(FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATHS[kind], prepared, {
+  const storagePath = footballHomeSpotlightStoragePath(pairId, kind);
+  const { error } = await bucket.upload(storagePath, prepared, {
     cacheControl: "0",
     contentType: prepared.type || "image/webp",
     upsert: true,
   });
   if (error) throw new Error(error.message);
 
-  const publicUrl = bucket.getPublicUrl(FOOTBALL_HOME_SPOTLIGHT_STORAGE_PATHS[kind]).data.publicUrl;
+  const publicUrl = bucket.getPublicUrl(storagePath).data.publicUrl;
   if (!publicUrl) throw new Error("Home Spotlight photo URL could not be resolved.");
 
   return `${publicUrl}?v=${Date.now()}`;
 }
 
+function activationLabel(pair: FootballPlayerSpotlightPair) {
+  const formatted = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(new Date(pair.activatesAt));
+  return `Activates ${formatted}.`;
+}
+
 function SpotlightPhotoSlot({
+  role,
+  pair,
   kind,
+  photoSource,
   repository,
   uploadPhoto,
+  onSaved,
 }: {
-  kind: FootballHomeSpotlightKind;
+  role: "CURRENT" | "NEXT";
+  pair: FootballPlayerSpotlightPair;
+  kind: FootballSpotlightKind;
+  photoSource: string;
   repository: HomeFeatureMediaRepository | null;
-  uploadPhoto: (file: File, kind: FootballHomeSpotlightKind) => Promise<string>;
+  uploadPhoto: (file: File, pairId: string, kind: FootballSpotlightKind) => Promise<string>;
+  onSaved: (pairId: string, kind: FootballSpotlightKind, photoSource: string) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [photoSource, setPhotoSource] = useState("");
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
-  const copy = SLOT_COPY[kind];
   const sportLabel = kind.toUpperCase();
-
-  useEffect(() => {
-    if (!repository) {
-      setStatus("Home Spotlight media is not connected on this build.");
-      return;
-    }
-    let active = true;
-    void repository.loadFootballSpotlight(kind)
-      .then((media) => {
-        if (active) setPhotoSource(media?.photoSource ?? "");
-      })
-      .catch((error) => {
-        if (active) setStatus(readableError(error));
-      });
-    return () => {
-      active = false;
-    };
-  }, [kind, repository]);
+  const spotlight = pair.spotlights[kind];
 
   async function choosePhoto(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -170,12 +164,12 @@ function SpotlightPhotoSlot({
     if (!file || !repository || busy) return;
 
     setBusy(true);
-    setStatus(`Preparing ${sportLabel} Home Spotlight photo…`);
+    setStatus(`Preparing ${role.toLowerCase()} ${sportLabel} Home Spotlight photo…`);
     try {
-      const uploadedPhotoSource = await uploadPhoto(file, kind);
-      const saved = await repository.saveFootballSpotlightPhoto(kind, uploadedPhotoSource);
-      setPhotoSource(saved.photoSource);
-      setStatus(`${sportLabel} Football Home Spotlight photo updated.`);
+      const uploadedPhotoSource = await uploadPhoto(file, pair.id, kind);
+      const saved = await repository.saveFootballSpotlightPhoto(pair.id, kind, uploadedPhotoSource);
+      onSaved(pair.id, kind, saved.photoSource);
+      setStatus(`${role} ${sportLabel} Football Home Spotlight photo updated.`);
     } catch (error) {
       setStatus(readableError(error));
     } finally {
@@ -186,16 +180,20 @@ function SpotlightPhotoSlot({
   return (
     <div className="surface-card picks-event-header-control">
       <div className="picks-event-header-control__copy">
-        <span>{copy.eyebrow}</span>
-        <strong>{copy.title}</strong>
-        <small>{copy.description}</small>
+        <span>{role} · {sportLabel} HOME CONTENT</span>
+        <strong>{spotlight.name.toUpperCase()}</strong>
+        <small>{spotlight.team} · {spotlight.position}{role === "NEXT" ? ` · ${activationLabel(pair)}` : ""}</small>
       </div>
 
       {photoSource ? (
         <div className="picks-event-header-control__preview">
-          <img src={photoSource} alt={`Current ${sportLabel} Football Home Player Spotlight`} />
+          <img src={photoSource} alt={`${role} ${sportLabel} Football Home Player Spotlight`} />
         </div>
-      ) : null}
+      ) : (
+        <p className="picks-control-feedback" role="status">
+          {role === "NEXT" ? "Photo not preloaded yet." : "Current photo is not available."}
+        </p>
+      )}
 
       <div className="picks-event-header-control__actions">
         <button
@@ -204,7 +202,7 @@ function SpotlightPhotoSlot({
           disabled={busy || !repository}
           onClick={() => inputRef.current?.click()}
         >
-          {busy ? "SAVING…" : `UPLOAD / REPLACE ${sportLabel} PHOTO`}
+          {busy ? "SAVING…" : `UPLOAD / REPLACE ${role} ${sportLabel} PHOTO`}
         </button>
         <input
           ref={inputRef}
@@ -213,7 +211,7 @@ function SpotlightPhotoSlot({
           accept="image/jpeg,image/png,image/webp,image/avif"
           onChange={choosePhoto}
           disabled={busy || !repository}
-          aria-label={`Upload ${sportLabel} Player Spotlight photo`}
+          aria-label={`Upload ${role} ${sportLabel} Player Spotlight photo`}
         />
       </div>
 
@@ -222,21 +220,84 @@ function SpotlightPhotoSlot({
   );
 }
 
+function emptyPhotoSources() {
+  return Object.fromEntries(
+    FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.map((pair) => [pair.id, { cfb: "", nfl: "" }]),
+  ) as Record<string, Record<FootballSpotlightKind, string>>;
+}
+
 export default function FootballHomeSpotlightPhotoControl({
   repository: suppliedRepository,
   uploadPhoto = uploadFootballHomeSpotlightPhoto,
 }: {
   repository?: HomeFeatureMediaRepository | null;
-  uploadPhoto?: (file: File, kind: FootballHomeSpotlightKind) => Promise<string>;
+  uploadPhoto?: (file: File, pairId: string, kind: FootballSpotlightKind) => Promise<string>;
 }) {
   const [repository] = useState<HomeFeatureMediaRepository | null>(() => (
     suppliedRepository === undefined ? createHomeFeatureMediaRepository() : suppliedRepository
   ));
+  const [now, setNow] = useState(() => new Date());
+  const [photoSources, setPhotoSources] = useState(emptyPhotoSources);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 1_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!repository) return undefined;
+    let active = true;
+    const requests = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.flatMap((pair) => ([
+      repository.loadFootballSpotlight(pair.id, "cfb").then((media) => [pair.id, "cfb", media?.photoSource ?? ""] as const),
+      repository.loadFootballSpotlight(pair.id, "nfl").then((media) => [pair.id, "nfl", media?.photoSource ?? ""] as const),
+    ]));
+    void Promise.all(requests).then((entries) => {
+      if (!active) return;
+      const next = emptyPhotoSources();
+      for (const [pairId, kind, source] of entries) next[pairId]![kind] = source;
+      setPhotoSources(next);
+    }).catch((error) => {
+      if (active) {
+        const message = readableError(error);
+        setPhotoSources((current) => ({ ...current, __error: { cfb: message, nfl: message } }));
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [repository]);
+
+  const currentPair = footballSpotlightPairAt(now, photoSources);
+  const nextPair = footballSpotlightNextPair(now, photoSources);
+  const visiblePairs = [
+    { role: "CURRENT" as const, pair: currentPair },
+    ...(nextPair ? [{ role: "NEXT" as const, pair: nextPair }] : []),
+  ];
+
+  function updatePhoto(pairId: string, kind: FootballSpotlightKind, photoSource: string) {
+    setPhotoSources((current) => ({
+      ...current,
+      [pairId]: {
+        ...current[pairId],
+        [kind]: photoSource,
+      },
+    }));
+  }
 
   return (
     <>
-      <SpotlightPhotoSlot kind="cfb" repository={repository} uploadPhoto={uploadPhoto} />
-      <SpotlightPhotoSlot kind="nfl" repository={repository} uploadPhoto={uploadPhoto} />
+      {visiblePairs.flatMap(({ role, pair }) => (["cfb", "nfl"] as const).map((kind) => (
+        <SpotlightPhotoSlot
+          key={`${pair.id}-${kind}`}
+          role={role}
+          pair={pair}
+          kind={kind}
+          photoSource={photoSources[pair.id]?.[kind] ?? ""}
+          repository={repository}
+          uploadPhoto={uploadPhoto}
+          onSaved={updatePhoto}
+        />
+      )))}
     </>
   );
 }
