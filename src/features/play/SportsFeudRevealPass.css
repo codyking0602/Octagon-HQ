@@ -1,0 +1,550 @@
+/* Sports Feud authentic reveal pass.
+   Keep the approved photographic plates, host placement, and keyboard dock intact.
+   This file only layers transient game-show states and post-round recaps. */
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot {
+  position: relative;
+  perspective: 520px;
+  transform-style: preserve-3d;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot:not(.is-revealed) > b {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 50%;
+  width: clamp(28px, 8.1vw, 44px);
+  aspect-ratio: 1;
+  margin: 0;
+  display: grid !important;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(255, 226, 123, 0.9);
+  border-radius: 7px;
+  color: #fff4c5;
+  background: linear-gradient(180deg, #1756a3, #092a68);
+  box-shadow:
+    inset 0 0 0 2px rgba(1, 21, 62, 0.72),
+    0 2px 8px rgba(0, 0, 0, 0.55);
+  font-size: clamp(15px, 4.6vw, 24px);
+  line-height: 1;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.72);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-revealed > b {
+  display: none !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-new-reveal {
+  transform-origin: center;
+  animation: sports-feud-board-flip 420ms cubic-bezier(0.2, 0.72, 0.22, 1);
+}
+
+@keyframes sports-feud-board-flip {
+  0% {
+    transform: perspective(520px) rotateX(88deg) scaleY(0.08);
+    filter: brightness(1.9);
+  }
+  58% {
+    transform: perspective(520px) rotateX(-8deg) scaleY(1.03);
+  }
+  100% {
+    transform: perspective(520px) rotateX(0deg) scaleY(1);
+    filter: brightness(1);
+  }
+}
+
+.family-feud-prototype[data-main-reveal="correct"] .feud-main-score strong {
+  animation: sports-feud-score-pop 360ms ease-out;
+}
+
+@keyframes sports-feud-score-pop {
+  0% { transform: scale(1); filter: brightness(1); }
+  45% { transform: scale(1.34); filter: brightness(1.7); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.feud-strike-slam {
+  position: absolute;
+  z-index: 100001;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.feud-strike-slam span {
+  display: block;
+  color: #ff173d;
+  font-family: Arial Black, Impact, sans-serif;
+  font-size: clamp(170px, 54vw, 360px);
+  font-weight: 1000;
+  line-height: 0.7;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 18px rgba(255, 0, 44, 0.95),
+    0 12px 34px rgba(0, 0, 0, 0.72);
+  transform: rotate(-7deg);
+  animation: sports-feud-strike-slam 520ms cubic-bezier(0.18, 0.78, 0.24, 1);
+}
+
+@keyframes sports-feud-strike-slam {
+  0% { opacity: 0; transform: scale(2.1) rotate(-7deg); filter: blur(4px); }
+  24% { opacity: 1; transform: scale(0.93) rotate(-7deg); filter: blur(0); }
+  66% { opacity: 1; transform: scale(1.04) rotate(-7deg); }
+  100% { opacity: 0; transform: scale(1.12) rotate(-7deg); }
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-review {
+  display: grid;
+  gap: 5px;
+  max-height: 29%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-review::-webkit-scrollbar {
+  display: none;
+}
+
+.feud-round-review__title {
+  color: #f8cb58;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: 1.4px;
+}
+
+.feud-also-accepted {
+  margin-top: 2px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(146, 186, 236, 0.2);
+}
+
+.feud-also-accepted > small {
+  display: block;
+  margin-bottom: 5px;
+  color: #9fbbda;
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: 1.2px;
+}
+
+.feud-also-accepted > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.feud-also-accepted span {
+  min-height: 22px;
+  padding: 3px 7px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(86, 154, 239, 0.34);
+  border-radius: 999px;
+  color: #d7e6f8;
+  background: rgba(5, 31, 75, 0.75);
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* Sequential Fast Money scoring uses the approved stage/host instead of the old
+   all-at-once results cards. */
+.family-feud-prototype[data-scene="reveal"] .feud-stage-plate--fast,
+.family-feud-prototype[data-scene="fast-recap"] .feud-stage-plate--fast {
+  display: block;
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-stage-plate--fast {
+  filter: brightness(0.66);
+}
+
+.family-feud-prototype[data-scene="fast-recap"] .feud-stage-plate--fast {
+  filter: brightness(0.38) blur(1px);
+}
+
+.family-feud-prototype[data-scene="reveal"],
+.family-feud-prototype[data-scene="fast-recap"] {
+  background: #01050e;
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-back,
+.family-feud-prototype[data-scene="fast-recap"] .feud-back {
+  z-index: 100004;
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-reveal-stage {
+  z-index: 2;
+  inset: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-reveal-stage > header {
+  position: absolute;
+  z-index: 9;
+  left: 28%;
+  top: 8.5%;
+  width: 64%;
+  min-height: 54px;
+  margin: 0;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(240, 192, 65, 0.52);
+  border-radius: 12px;
+  background: rgba(1, 13, 39, 0.9);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(8px);
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-reveal-stage > header .feud-brand {
+  display: none;
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-reveal-stage > header > span {
+  color: #d7e6f8;
+  font-size: clamp(8px, 2.2vw, 12px);
+  font-weight: 950;
+  letter-spacing: 0.14em;
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-reveal-stage > header > strong {
+  color: #ffd65e;
+  font-size: clamp(20px, 5.6vw, 30px);
+  font-variant-numeric: tabular-nums;
+}
+
+.feud-fast-score-reveal {
+  position: absolute;
+  z-index: 9;
+  left: 27%;
+  top: 23%;
+  width: 66%;
+  min-height: 36%;
+  padding: 14px 14px 16px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  align-content: start;
+  gap: 8px;
+  border: 2px solid rgba(239, 190, 59, 0.74);
+  border-radius: 17px;
+  color: #fff;
+  background:
+    radial-gradient(circle at top, rgba(29, 93, 182, 0.32), transparent 48%),
+    rgba(1, 15, 44, 0.94);
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.56),
+    inset 0 0 32px rgba(31, 106, 215, 0.14);
+  animation: sports-feud-fast-card-in 280ms ease-out;
+}
+
+@keyframes sports-feud-fast-card-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.feud-fast-score-reveal > small {
+  color: #f6ca58;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: 1.4px;
+}
+
+.feud-fast-score-reveal > h1 {
+  margin: 0;
+  color: #eef6ff;
+  font-size: clamp(14px, 4vw, 23px);
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.feud-fast-score-reveal__answer {
+  align-self: end;
+  min-width: 0;
+  padding: 10px 11px;
+  display: grid;
+  gap: 3px;
+  border: 1px solid rgba(100, 166, 245, 0.38);
+  border-radius: 10px;
+  background: rgba(8, 43, 94, 0.76);
+}
+
+.feud-fast-score-reveal__answer span {
+  color: #8fb2db;
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: 1.2px;
+}
+
+.feud-fast-score-reveal__answer strong {
+  overflow: hidden;
+  color: #fff;
+  font-size: clamp(17px, 5vw, 29px);
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feud-fast-score-reveal__score {
+  min-height: 68px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  perspective: 500px;
+  border: 1px solid rgba(245, 201, 83, 0.35);
+  border-radius: 11px;
+  color: #7995b9;
+  background: rgba(0, 10, 31, 0.72);
+  font-size: 32px;
+  font-variant-numeric: tabular-nums;
+}
+
+.feud-fast-score-reveal__score.is-revealed {
+  color: #ffe06c;
+  animation: sports-feud-fast-score-flip 420ms cubic-bezier(0.2, 0.72, 0.22, 1);
+}
+
+.feud-fast-score-reveal__score.is-revealed strong {
+  font-size: clamp(38px, 12vw, 68px);
+  line-height: 0.9;
+}
+
+.feud-fast-score-reveal__score.is-zero {
+  grid-auto-flow: column;
+  gap: 9px;
+  color: #ff3b57;
+}
+
+.feud-fast-score-reveal__score.is-zero strong {
+  font-size: clamp(64px, 20vw, 112px);
+}
+
+.feud-fast-score-reveal__score.is-zero span {
+  color: #ff99a7;
+  font-size: clamp(22px, 6vw, 36px);
+  font-weight: 950;
+}
+
+@keyframes sports-feud-fast-score-flip {
+  0% { transform: rotateX(88deg); filter: brightness(1.9); }
+  58% { transform: rotateX(-7deg); }
+  100% { transform: rotateX(0deg); filter: brightness(1); }
+}
+
+.feud-fast-running-total {
+  position: absolute;
+  z-index: 9;
+  right: 8%;
+  top: 64%;
+  min-width: 126px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid rgba(236, 185, 48, 0.5);
+  border-radius: 999px;
+  background: rgba(1, 14, 40, 0.9);
+}
+
+.feud-fast-running-total span {
+  color: #9eb9d9;
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: 1px;
+}
+
+.feud-fast-running-total strong {
+  color: #ffd65e;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Separate fairness/education recap after the suspense sequence. */
+.feud-fast-recap {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  padding:
+    calc(max(58px, env(safe-area-inset-top)) + 6px)
+    12px
+    calc(max(18px, env(safe-area-inset-bottom)) + 14px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.feud-fast-recap::-webkit-scrollbar {
+  display: none;
+}
+
+.feud-fast-recap > header {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  width: min(100%, 620px);
+  min-height: 62px;
+  margin: 0 auto 9px;
+  padding: 7px 10px;
+  display: grid;
+  grid-template-columns: 112px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(237, 187, 51, 0.48);
+  border-radius: 13px;
+  background: rgba(1, 11, 33, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.feud-fast-recap > header > div {
+  display: grid;
+  gap: 1px;
+  text-align: center;
+}
+
+.feud-fast-recap > header > div span {
+  color: #92add0;
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: 1.2px;
+}
+
+.feud-fast-recap > header > div strong {
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+}
+
+.feud-fast-recap > header > b {
+  color: #ffd65e;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.feud-fast-recap__list {
+  width: min(100%, 620px);
+  margin: 0 auto;
+  display: grid;
+  gap: 7px;
+}
+
+.feud-fast-recap__card {
+  overflow: hidden;
+  border: 1px solid rgba(72, 139, 225, 0.35);
+  border-radius: 12px;
+  background: rgba(1, 14, 39, 0.92);
+}
+
+.feud-fast-recap__card > div {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  border-bottom: 1px solid rgba(80, 148, 231, 0.2);
+}
+
+.feud-fast-recap__card > div > b {
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  color: #ffd65e;
+  background: rgba(7, 40, 88, 0.78);
+}
+
+.feud-fast-recap__card > div > span {
+  padding: 6px 9px;
+  color: #dceafa;
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.feud-fast-recap__card > section {
+  padding: 7px 8px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.feud-fast-recap__card > section > span {
+  min-height: 24px;
+  padding: 4px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid rgba(83, 151, 237, 0.32);
+  border-radius: 999px;
+  color: #cfe0f4;
+  background: rgba(5, 31, 73, 0.7);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.feud-fast-recap__card > section > span b {
+  color: #ffd65e;
+  font-size: 9px;
+}
+
+.feud-fast-recap__card > section > small {
+  align-self: center;
+  color: #839fbe;
+  font-size: 8px;
+  font-weight: 850;
+}
+
+.feud-fast-recap .feud-reveal-next {
+  width: min(100%, 620px);
+  margin: 11px auto 0;
+}
+
+@media (max-width: 430px) {
+  .family-feud-prototype[data-scene="main"] .feud-round-review {
+    left: 2.5%;
+    right: 2.5%;
+    max-height: 31%;
+    padding: 8px 9px;
+  }
+
+  .feud-also-accepted span {
+    min-height: 20px;
+    padding: 3px 6px;
+    font-size: 7.5px;
+  }
+
+  .family-feud-prototype[data-scene="reveal"] .feud-reveal-stage > header {
+    left: 25%;
+    width: 69%;
+  }
+
+  .feud-fast-score-reveal {
+    left: 25%;
+    width: 69%;
+    padding: 12px;
+  }
+
+  .feud-fast-score-reveal__score {
+    min-height: 62px;
+  }
+}
+
+@media (max-height: 720px) {
+  .family-feud-prototype[data-scene="main"] .feud-round-review {
+    bottom: 12.8%;
+    max-height: 33%;
+  }
+
+  .feud-fast-score-reveal {
+    top: 21%;
+    min-height: 39%;
+    gap: 6px;
+  }
+
+  .feud-fast-running-total {
+    top: 65%;
+  }
+}
