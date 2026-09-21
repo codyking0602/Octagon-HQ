@@ -1,0 +1,104 @@
+name: Repair Sep 26 UFC newcomer thumbs
+
+on:
+  push:
+    branches:
+      - chatgpt/ufc-sep26-assets-odds-fix
+
+permissions:
+  contents: write
+
+jobs:
+  repair-newcomer-thumbs:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/ufc-sep26-assets-odds-fix
+          fetch-depth: 1
+
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check pillow
+
+      - name: Tighten newcomer thumbs from canonical Spotlight photography
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageFilter
+
+          root = Path('public/assets/fighters')
+          # Locked manual face/upper-body crops from the already-correct real Spotlight
+          # photography. This replaces the generic top-55% crop that kept too much body.
+          boxes = {
+              'mehemmedeli-osmanli': (235, 375, 470, 595),
+              'ilimbek-akylbek': (175, 110, 455, 470),
+              'melissa-amaya': (210, 45, 475, 365),
+          }
+
+          for slug, box in boxes.items():
+              source = Image.open(root / f'{slug}-spotlight.webp').convert('RGBA')
+              crop = source.crop(box)
+              width = height = 320
+              pad = 4
+
+              if slug == 'mehemmedeli-osmanli':
+                  # Preserve the full hand-cut upper-body crop and fit it into the tile.
+                  scale = min((width - 2 * pad) / crop.width, (height - 2 * pad) / crop.height)
+                  resized = crop.resize(
+                      (round(crop.width * scale), round(crop.height * scale)),
+                      Image.Resampling.LANCZOS,
+                  )
+                  canvas = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+                  canvas.alpha_composite(
+                      resized,
+                      ((width - resized.width) // 2, height - pad - resized.height),
+                  )
+              else:
+                  # Tighter square cover crop for the two clean single-subject renders.
+                  scale = max((width - 2 * pad) / crop.width, (height - 2 * pad) / crop.height)
+                  resized = crop.resize(
+                      (round(crop.width * scale), round(crop.height * scale)),
+                      Image.Resampling.LANCZOS,
+                  )
+                  left = max(0, (resized.width - width) // 2)
+                  top = max(0, (resized.height - height) // 2)
+                  canvas = resized.crop((left, top, left + width, top + height))
+                  if canvas.size != (width, height):
+                      padded = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+                      padded.alpha_composite(
+                          canvas,
+                          ((width - canvas.width) // 2, height - canvas.height),
+                      )
+                      canvas = padded
+
+              canvas = canvas.filter(ImageFilter.UnsharpMask(radius=0.45, percent=35, threshold=2))
+              target = root / f'{slug}-thumb.webp'
+              canvas.save(target, 'WEBP', quality=94, method=6)
+
+              check = Image.open(target).convert('RGBA')
+              assert check.size == (320, 320), (slug, check.size)
+              extrema = check.getchannel('A').getextrema()
+              assert extrema[0] < 255, (slug, extrema)
+              bbox = check.getchannel('A').getbbox()
+              assert bbox, (slug, bbox)
+              print(slug, check.size, extrema, bbox)
+          PY
+
+      - name: Commit focused thumb repair and remove one-time workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/repair-ufc-sep26-newcomer-thumbs.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/fighters/mehemmedeli-osmanli-thumb.webp \
+                  public/assets/fighters/ilimbek-akylbek-thumb.webp \
+                  public/assets/fighters/melissa-amaya-thumb.webp \
+                  .github/workflows/repair-ufc-sep26-newcomer-thumbs.yml
+          git diff --cached --quiet && exit 0
+          git commit -m "UFC Picks: tighten Sep 26 newcomer thumbs"
+          git push origin HEAD:chatgpt/ufc-sep26-assets-odds-fix
