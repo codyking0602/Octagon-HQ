@@ -127,11 +127,11 @@ describe("fighterThumbnailPath", () => {
 });
 
 describe("Shane contender fighter-tile treatment", () => {
-  it("marks Bilal Hasan's thumbnail with the canonical #4 Shane badge", () => {
+  it("marks Bilal Hasan's thumbnail with the canonical #3 Shane badge", () => {
     render(<FighterThumbnail name="Bilal Hasan" slug="bilal-hasan" />);
 
     const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #3")).toBeInTheDocument();
     expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
   });
 
@@ -139,7 +139,15 @@ describe("Shane contender fighter-tile treatment", () => {
     render(<FighterThumbnail name="Quillan Salkilld" slug="quillan-salkilld" />);
 
     const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #2")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #1")).toBeInTheDocument();
+    expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
+  });
+
+  it("marks Raul Rosas Jr. with Shane’s #4 badge on the Picks fighter tile", () => {
+    render(<FighterThumbnail name="Raul Rosas Jr." slug="raul-rosas-jr" />);
+
+    const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
     expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
   });
 
