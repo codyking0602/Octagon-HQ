@@ -232,6 +232,27 @@ describe("Sports Feud private daily presentation", () => {
     expect(document.querySelectorAll(".feud-answer-slot.is-missed")).toHaveLength(4);
   });
 
+  it("uses the ranked top four for BOARD RESULTS even when a lower accepted answer scored", () => {
+    renderFootball();
+    fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
+
+    submitMainAndSettle("Amari Cooper");
+    for (const answer of ["DeMarcus Lawrence", "Zack Martin", "Dalton Schultz"]) {
+      submitMainAndSettle(answer);
+    }
+
+    const board = document.querySelector(".feud-answer-board");
+    expect(board).toHaveTextContent("CeeDee Lamb");
+    expect(board).toHaveTextContent("Micah Parsons");
+    expect(board).toHaveTextContent("Dak Prescott");
+    expect(board).toHaveTextContent("Trevon Diggs");
+    expect(board).not.toHaveTextContent("Amari Cooper");
+
+    const alsoAccepted = screen.getByText("ALSO ACCEPTED").closest(".feud-also-accepted");
+    expect(alsoAccepted).toHaveTextContent("Amari Cooper");
+    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
+  });
+
   it("keeps Fast Money rapid-fire with the input available between answers and points hidden", () => {
     renderFootball();
     reachFastMoney();
