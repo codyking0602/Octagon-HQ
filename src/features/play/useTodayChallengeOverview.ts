@@ -17,6 +17,11 @@ export const todayChallengeStandingsQueryKey = (
   profileId,
 ] as const;
 
+export const todayChallengeWeeklyRecapQueryKey = (
+  profileId: string,
+  sport: PlaySport = "ufc",
+) => ["daily-challenge-weekly-recap", sport, profileId] as const;
+
 export const hqDailyChallengeStreakQueryKey = (profileId: string) => [
   "hq-daily-challenge-streak",
   profileId,
@@ -60,6 +65,11 @@ export function useTodayChallengeOverview({
     queryFn: () => repository!.loadStandings(),
     enabled: ready,
   });
+  const weeklyRecap = useQuery({
+    queryKey: todayChallengeWeeklyRecapQueryKey(profileId, sport),
+    queryFn: () => repository!.loadWeeklyRecap(),
+    enabled: ready,
+  });
   const leaderboard = useQuery({
     queryKey: todayChallengeLeaderboardQueryKey(
       profileId,
@@ -83,6 +93,10 @@ export function useTodayChallengeOverview({
       bestStreak: currentEntry?.bestStreak ?? 0,
     },
     leaderboard: leaderboard.data ?? null,
+    weeklyRecap: weeklyRecap.data ?? null,
+    weeklyRecapLoading: weeklyRecap.isLoading,
+    weeklyRecapError: weeklyRecap.error ?? null,
+    acknowledgeWeeklyRecap: (weekStart: string) => repository!.acknowledgeWeeklyRecap(weekStart),
     standingsLoading: standings.isLoading,
     leaderboardLoading: leaderboard.isLoading,
     loading: standings.isLoading || leaderboard.isLoading,
@@ -90,6 +104,7 @@ export function useTodayChallengeOverview({
     refresh: async () => {
       await Promise.all([
         standings.refetch(),
+        weeklyRecap.refetch(),
         projection ? leaderboard.refetch() : Promise.resolve(),
       ]);
     },

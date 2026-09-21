@@ -116,6 +116,36 @@ const standingsSchema = z.object({
   entries: z.array(standingsEntrySchema),
 });
 
+const weeklyRecapEntrySchema = z.object({
+  rank: z.coerce.number().int().positive(),
+  profile_id: z.string().uuid(),
+  display_name: z.string(),
+  initials: z.string(),
+  avatar_photo_data: z.string().nullable().optional(),
+  wins: z.coerce.number().int().nonnegative(),
+  played: z.coerce.number().int().positive(),
+  average_score: z.coerce.number().nonnegative(),
+  is_champion: z.boolean(),
+  is_current_user: z.boolean(),
+});
+const weeklyRecapBonusSchema = z.object({
+  profile_id: z.string().uuid(),
+  display_name: z.string(),
+  wins: z.coerce.number().int().positive(),
+  label: z.string().min(1),
+});
+const weeklyRecapSchema = z.union([
+  z.object({ available: z.literal(false) }),
+  z.object({
+    available: z.literal(true),
+    sport: z.enum(["ufc", "football"]),
+    week_start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    week_end: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    entries: z.array(weeklyRecapEntrySchema).min(1),
+    auction_bonus: weeklyRecapBonusSchema.nullable(),
+  }),
+]);
+
 export interface TodayChallengeProjection {
   available: true;
   sport?: PlaySport;
@@ -207,6 +237,63 @@ export interface TodayChallengeStandings {
   currentWeekStart: string;
   currentWeekEnd: string;
   entries: TodayChallengeStandingsEntry[];
+}
+
+export interface DailyChallengeWeeklyRecapEntry {
+  rank: number;
+  profileId: string;
+  displayName: string;
+  initials: string;
+  avatarPhotoData: string | null;
+  wins: number;
+  played: number;
+  averageScore: number;
+  isChampion: boolean;
+  isCurrentUser: boolean;
+}
+
+export type DailyChallengeWeeklyRecap =
+  | { available: false }
+  | {
+      available: true;
+      sport: PlaySport;
+      weekStart: string;
+      weekEnd: string;
+      entries: DailyChallengeWeeklyRecapEntry[];
+      auctionBonus: {
+        profileId: string;
+        displayName: string;
+        wins: number;
+        label: string;
+      } | null;
+    };
+
+function weeklyRecapFromRow(row: z.infer<typeof weeklyRecapSchema>): DailyChallengeWeeklyRecap {
+  if (!row.available) return { available: false };
+  return {
+    available: true,
+    sport: row.sport,
+    weekStart: row.week_start,
+    weekEnd: row.week_end,
+    entries: row.entries.map((entry) => ({
+      rank: entry.rank,
+      profileId: entry.profile_id,
+      displayName: entry.display_name,
+      initials: entry.initials,
+      avatarPhotoData: entry.avatar_photo_data ?? null,
+      wins: entry.wins,
+      played: entry.played,
+      averageScore: entry.average_score,
+      isChampion: entry.is_champion,
+      isCurrentUser: entry.is_current_user,
+    })),
+    auctionBonus: row.auction_bonus ? {
+      profileId: row.auction_bonus.profile_id,
+      displayName: row.auction_bonus.display_name,
+      wins: row.auction_bonus.wins,
+      label: row.auction_bonus.label,
+    } : null,
+  };
 }
 
 type FunctionError = { message?: string; context?: unknown };
@@ -343,6 +430,8 @@ export interface TodayChallengeRepository {
   loadHistory(): Promise<TodayChallengeHistoryRow[]>;
   loadStreak(): Promise<TodayChallengeStreak>;
   loadStandings(): Promise<TodayChallengeStandings>;
+  loadWeeklyRecap(): Promise<DailyChallengeWeeklyRecap>;
+  acknowledgeWeeklyRecap(weekStart: string): Promise<DailyChallengeWeeklyRecap>;
   loadDailyLeaderboard(day: string, scheduleVersion: string): Promise<TodayChallengeLeaderboard>;
 }
 
@@ -436,6 +525,20 @@ export function createTodayChallengeRepository(
           isCurrentUser: entry.is_current_user,
         })),
       };
+    },
+    async loadWeeklyRecap() {
+      return weeklyRecapFromRow(weeklyRecapSchema.parse(await rpc(
+        client,
+        "get_my_daily_challenge_weekly_recap",
+        { p_sport: sport },
+      )));
+    },
+    async acknowledgeWeeklyRecap(weekStart) {
+      return weeklyRecapFromRow(weeklyRecapSchema.parse(await rpc(
+        client,
+        "acknowledge_my_daily_challenge_weekly_recap",
+        { p_sport: sport, p_week_start: weekStart },
+      )));
     },
     async loadDailyLeaderboard(day, scheduleVersion) {
       const row = leaderboardSchema.parse(await rpc(
