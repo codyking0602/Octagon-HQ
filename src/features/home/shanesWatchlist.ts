@@ -137,7 +137,7 @@ export const shanesWatchlist = {
       boardNote: "Still only 21, already ranked, and his wrestling pressure keeps translating against better competition.",
       scoutingSnapshot: "Rosas has turned the lone loss of his UFC run into five straight wins and the best victory of his career. At UFC 326 he repeatedly grounded veteran Rob Font on the way to a unanimous 30–27 sweep, moving to 6–1 in the UFC and into the bantamweight rankings. He is still only 21, and the combination of chain wrestling, back-taking pressure and rapid improvement gives him one of the clearest long-term ceilings on Shane’s board.",
       photoUrl: "/assets/fighters/raul-rosas-jr-thumb.webp",
-      videoUrl: "https://www.youtube.com/watch?v=x85kSas-uKw",
+      videoUrl: "https://youtu.be/Nf6Kb6c3uq8?si=fN5vhUPEhtkHbBto",
     },
     {
       id: "fatima-kline",
