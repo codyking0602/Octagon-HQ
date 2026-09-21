@@ -161,7 +161,7 @@ function TeamCard({
   );
 }
 
-function FinalResult({
+export function FootballWeeklyAuctionFinalResult({
   result,
   busy,
   onAcknowledge,
@@ -409,7 +409,7 @@ export function FootballWeeklyAuctionGate({
       );
     }
     return (
-      <FinalResult
+      <FootballWeeklyAuctionFinalResult
         result={state.previous_final}
         busy={busy}
         onAcknowledge={() => void onAcknowledgeFinal(state.previous_final!.week_start)}
