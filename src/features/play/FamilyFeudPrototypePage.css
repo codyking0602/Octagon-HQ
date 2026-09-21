@@ -652,7 +652,8 @@ body.family-feud-prototype-active .bottom-nav {
   text-align: center;
 }
 
-.feud-feedback[data-kind="board-correct"] { color: #84efaa; }
+.feud-feedback[data-kind="board-correct"],
+.feud-feedback[data-kind="board-also-accepted"] { color: #84efaa; }
 .feud-feedback[data-kind="board-strike"] { color: #ff7386; }
 .feud-feedback[data-kind="ambiguous"],
 .feud-feedback[data-kind="already-guessed"] { color: #ffd763; }
