@@ -548,3 +548,209 @@
     top: 65%;
   }
 }
+
+
+/* 2026-09-21 stage polish: keep the photographic stage dominant and let the
+   live UI behave like the television board rather than a floating results card. */
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot:not(.is-revealed) > b {
+  display: none !important;
+}
+
+.feud-strike-slam {
+  align-items: center;
+  justify-items: center;
+}
+
+.feud-strike-slam span {
+  width: min(72vw, 430px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: clamp(9px, 2.7vw, 17px) solid #c90d2e;
+  border-radius: clamp(10px, 3.2vw, 20px);
+  color: #d91635;
+  background:
+    linear-gradient(145deg, rgba(76, 0, 11, 0.98), rgba(21, 0, 5, 0.98));
+  box-shadow:
+    inset 0 0 0 4px rgba(255, 70, 93, 0.16),
+    0 0 0 4px rgba(33, 0, 6, 0.8),
+    0 0 44px rgba(255, 18, 58, 0.76),
+    0 18px 42px rgba(0, 0, 0, 0.76);
+  font-family: Arial Black, Impact, sans-serif;
+  font-size: clamp(250px, 75vw, 470px);
+  font-weight: 1000;
+  line-height: 0.62;
+  text-shadow:
+    -5px -5px 0 #7f061c,
+    5px 5px 0 #ff3856,
+    0 0 16px rgba(255, 32, 65, 0.85);
+  transform: none;
+  animation: sports-feud-strike-slam-tv 560ms cubic-bezier(0.16, 0.8, 0.24, 1);
+}
+
+@keyframes sports-feud-strike-slam-tv {
+  0% { opacity: 0; transform: scale(1.72); filter: blur(5px) brightness(1.8); }
+  22% { opacity: 1; transform: scale(0.9); filter: blur(0) brightness(1.15); }
+  58% { opacity: 1; transform: scale(1); }
+  82% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.05); }
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-fast-reveal-scorebar {
+  position: absolute;
+  z-index: 9;
+  left: 28%;
+  top: 8.5%;
+  width: 64%;
+  min-height: 54px;
+  margin: 0;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(240, 192, 65, 0.52);
+  border-radius: 12px;
+  background: rgba(1, 13, 39, 0.86);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(7px);
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-fast-reveal-scorebar > span {
+  color: #d7e6f8;
+  font-size: clamp(8px, 2.2vw, 12px);
+  font-weight: 950;
+  letter-spacing: 0.14em;
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-fast-reveal-scorebar > strong {
+  color: #ffd65e;
+  font-size: clamp(20px, 5.6vw, 30px);
+  font-variant-numeric: tabular-nums;
+}
+
+.feud-fast-reveal-question {
+  position: absolute;
+  z-index: 9;
+  left: 25.4%;
+  top: 23.7%;
+  width: 59.1%;
+  height: 12.9%;
+  min-height: 0;
+  padding: 1.4% 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.feud-fast-reveal-question > span {
+  color: #f6c851;
+  font-size: clamp(8px, 2.1vw, 12px);
+  font-weight: 950;
+  letter-spacing: 0.14em;
+}
+
+.feud-fast-reveal-question > h1 {
+  max-width: 96%;
+  margin: 0.45em 0 0;
+  color: #fff;
+  font-size: clamp(14px, 3.8vw, 23px);
+  line-height: 1.1;
+  text-wrap: balance;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.78);
+}
+
+.feud-fast-reveal-board {
+  position: absolute;
+  z-index: 9;
+  left: 32.35%;
+  top: 38.45%;
+  width: 43.6%;
+  height: 20.25%;
+  display: grid;
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  gap: 1.1%;
+  pointer-events: none;
+  perspective: 620px;
+}
+
+.feud-fast-reveal-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18%;
+  align-items: center;
+  overflow: hidden;
+  color: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  transform-origin: center;
+}
+
+.feud-fast-reveal-row > strong {
+  min-width: 0;
+  padding: 0 4% 0 16%;
+  overflow: hidden;
+  font-size: clamp(9px, 2.75vw, 16px);
+  font-weight: 950;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feud-fast-reveal-row > span {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-size: clamp(14px, 3.8vw, 22px);
+  font-weight: 1000;
+  font-variant-numeric: tabular-nums;
+}
+
+.feud-fast-reveal-row.is-revealed {
+  color: #fff;
+  border-color: rgba(135, 190, 255, 0.46);
+  background: linear-gradient(180deg, rgba(22, 85, 169, 0.96), rgba(4, 36, 94, 0.96));
+  box-shadow:
+    inset 0 0 0 1px rgba(195, 224, 255, 0.13),
+    0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.feud-fast-reveal-row.is-current.is-revealed {
+  animation: sports-feud-fast-row-flip 430ms cubic-bezier(0.2, 0.72, 0.22, 1);
+}
+
+.feud-fast-reveal-row.is-zero > span {
+  color: #ff3c59;
+  font-size: clamp(24px, 7vw, 42px);
+  line-height: 0.8;
+}
+
+@keyframes sports-feud-fast-row-flip {
+  0% { transform: rotateX(88deg) scaleY(0.08); filter: brightness(1.9); }
+  58% { transform: rotateX(-7deg) scaleY(1.03); }
+  100% { transform: rotateX(0deg) scaleY(1); filter: brightness(1); }
+}
+
+/* The active Fast Money plate contains its answer tray as artwork. During the
+   results reveal, cover that baked tray so no dead input control remains. */
+.family-feud-prototype[data-scene="reveal"]::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18.5%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 8%, rgba(16, 67, 139, 0.22), transparent 52%),
+    linear-gradient(180deg, rgba(1, 5, 14, 0.05), rgba(1, 5, 14, 0.93) 34%, #01050e 68%);
+}
+
+.family-feud-prototype[data-scene="reveal"] .feud-fast-running-total {
+  z-index: 10;
+}
