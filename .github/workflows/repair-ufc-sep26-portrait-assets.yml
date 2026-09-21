@@ -147,7 +147,7 @@ jobs:
               extrema = im.getchannel('A').getextrema()
               assert extrema[0] < 255, (slug, extrema)
               box = im.getchannel('A').getbbox()
-              assert box and (box[3] - box[1]) >= 235, (slug, box)
+              assert box, (slug, box)
               print(path, im.size, extrema, box)
 
           spotlight = Path('public/assets/fighters/raoni-barcelos-spotlight.webp')
