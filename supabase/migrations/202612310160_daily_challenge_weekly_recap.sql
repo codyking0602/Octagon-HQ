@@ -70,6 +70,13 @@ begin
     return null;
   end if;
 
+  -- Football's existing weekly owner finalizes the just-completed Auction.
+  -- Do that before projecting the recap so the +1 Daily win cannot race the
+  -- first Play-tab visit after Monday midnight.
+  if p_sport = 'football' then
+    perform private.maintain_football_weekly_auction(now());
+  end if;
+
   if exists (
     select 1
     from private.daily_challenge_weekly_recap_views view_row
