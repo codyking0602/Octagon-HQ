@@ -2649,3 +2649,20 @@ body.family-feud-prototype-active {
   -webkit-appearance: none !important;
   appearance: none !important;
 }
+
+
+/* iPhone visual-viewport pan compensation.
+   Safari may pan the visual viewport after a real input receives focus. Keep the
+   full Sports Feud stage visually anchored by offsetting the fixed stage by the
+   exact visualViewport.offsetTop. The answer dock continues to use its own
+   keyboard bottom inset. */
+.family-feud-prototype.is-keyboard-open {
+  top: var(--feud-viewport-offset, 0px) !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100lvh !important;
+  min-height: 100lvh !important;
+  max-height: 100lvh !important;
+}
