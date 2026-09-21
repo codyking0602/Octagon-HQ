@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import {
   FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
+  FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
   FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
   type FootballSpotlightKind,
   type FootballSpotlightPhotoSources,
@@ -110,7 +111,10 @@ export function createHomeFeatureMediaRepository(): HomeFeatureMediaRepository |
 
 function emptyFootballSpotlightPhotos(): Record<string, Record<FootballHomeSpotlightKind, string | null>> {
   return Object.fromEntries(
-    FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.map((pair) => [pair.id, { cfb: null, nfl: null }]),
+    FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.map((pair) => [pair.id, {
+      cfb: FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES[pair.id]?.cfb ?? null,
+      nfl: FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES[pair.id]?.nfl ?? null,
+    }]),
   );
 }
 
@@ -137,7 +141,7 @@ export function useFootballHomeSpotlightPhotos(
         if (!active) return;
         const next = emptyFootballSpotlightPhotos();
         for (const [pairId, kind, photoSource] of entries) {
-          next[pairId]![kind] = photoSource;
+          if (photoSource) next[pairId]![kind] = photoSource;
         }
         setPhotoSources(next);
       })
