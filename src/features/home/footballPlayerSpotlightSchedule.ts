@@ -113,6 +113,7 @@ export function footballSpotlightKindAt(now = new Date()): FootballSpotlightKind
   return hour < 15 ? "cfb" : "nfl";
 }
 
+// Weekly rollover is atomic: a future pair cannot activate until both photos are preloaded.
 export function footballSpotlightPairHasPhotos(
   pair: FootballPlayerSpotlightPair,
   photoSources: FootballSpotlightPhotoSources,
