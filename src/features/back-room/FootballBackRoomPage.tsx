@@ -83,7 +83,7 @@ export default function FootballBackRoomPage() {
       ) : null}
 
       <PlayLandingHeader sport="football" />
-      <WeeklyChampionshipRecap sport="football" />
+      {identity.status === "ready" && identity.profile?.id ? <WeeklyChampionshipRecap sport="football" /> : null}
       <TodayChallengeHub sport="football" />
       <FootballWeeklyAuctionQuickAccess onOpen={() => navigate("/football/today?weekly=edit")} />
       <ChallengeCenter sport="football" />
