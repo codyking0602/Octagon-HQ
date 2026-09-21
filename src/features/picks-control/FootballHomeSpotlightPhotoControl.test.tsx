@@ -2,6 +2,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
+  FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
   FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
   type FootballSpotlightKind,
 } from "../home/footballPlayerSpotlightSchedule";
@@ -57,6 +58,11 @@ describe("FootballHomeSpotlightPhotoControl", () => {
       .toHaveAttribute("src", currentSources.cfb);
     expect(screen.getByAltText("CURRENT NFL Football Home Player Spotlight"))
       .toHaveAttribute("src", currentSources.nfl);
+
+    expect(screen.getByAltText("NEXT CFB Football Home Player Spotlight"))
+      .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES[nextPair.id]?.cfb);
+    expect(screen.getByAltText("NEXT NFL Football Home Player Spotlight"))
+      .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES[nextPair.id]?.nfl);
 
     const trinidadFile = new File(["portrait"], "trinidad.jpg", { type: "image/jpeg" });
     await act(async () => {
