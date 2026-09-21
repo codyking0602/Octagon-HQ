@@ -8,11 +8,10 @@ const repository = readFileSync("src/features/play/footballWeeklyAuctionReposito
 const router = readFileSync("src/app/router.tsx", "utf8");
 
 describe("NFL Weekly Build a QB owner preview", () => {
-  it("shows a Cody-only preview card at the bottom of the Football game library", () => {
-    expect(footballPlay).toContain("weeklyBuildQbPreviewVisible={isFootballWeeklyBuildQbPreviewOwner(identity.profile)}");
-    expect(library).toContain("Next Week · NFL Build a QB");
-    expect(library).toContain("OWNER PREVIEW");
-    expect(library).toContain("/football/weekly-build-qb-preview");
+  it("keeps the private preview infrastructure off the Football Play library", () => {
+    expect(footballPlay).not.toContain("weeklyBuildQbPreviewVisible");
+    expect(library).not.toContain("Next Week · NFL Build a QB");
+    expect(library).not.toContain("/football/weekly-build-qb-preview");
   });
 
   it("reuses the real Weekly Build a QB board while keeping preview bidding local", () => {

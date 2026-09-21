@@ -18,7 +18,6 @@ export default function TodayChallengeHubPage() {
 
       <PlayLandingGameLibrary sport="ufc"
         onNavigate={navigate}
-        millionaireVisible={Boolean(identity.profile?.canControlPicks)}
         familyFeudVisible={isFamilyFeudPrototypeOwner(identity.profile)}
       />
     </div>
