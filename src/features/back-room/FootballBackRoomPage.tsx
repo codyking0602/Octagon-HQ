@@ -4,7 +4,6 @@ import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPresentation";
 import { isFamilyFeudPrototypeOwner } from "../play/familyFeudPrototypeAccess";
-import { isFootballWeeklyAuctionFinalPreviewOwner } from "../play/footballWeeklyAuctionFinalPreviewAccess";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { WeeklyChampionshipRecap } from "../play/WeeklyChampionshipRecap";
 import {
@@ -89,7 +88,6 @@ export default function FootballBackRoomPage() {
       <PlayLandingGameLibrary sport="football"
         onNavigate={navigate}
         familyFeudVisible={isFamilyFeudPrototypeOwner(identity.profile)}
-        weeklyAuctionFinalPreviewVisible={isFootballWeeklyAuctionFinalPreviewOwner(identity.profile)}
       />
     </div>
   );
