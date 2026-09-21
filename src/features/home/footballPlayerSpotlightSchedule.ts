@@ -98,6 +98,14 @@ export const FOOTBALL_PLAYER_SPOTLIGHT_PAIRS: readonly FootballPlayerSpotlightPa
 
 export const FOOTBALL_BASE_SPOTLIGHT_PAIR_ID = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[0].id;
 
+export const FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES: FootballSpotlightPhotoSources = {
+  [FOOTBALL_BASE_SPOTLIGHT_PAIR_ID]: {},
+  "2026-09-22-trinidad-dak": {
+    cfb: "/assets/football/player-spotlight/2026-09-22-trinidad-dak/cfb.webp",
+    nfl: "/assets/football/player-spotlight/2026-09-22-trinidad-dak/nfl.webp",
+  },
+};
+
 export function footballSpotlightKindAt(now = new Date()): FootballSpotlightKind {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "America/Chicago",
