@@ -16,6 +16,12 @@ import {
   type PickSetupRepository,
 } from "./pickSetupRepository";
 import { PicksSpotlightSetup } from "./PicksSpotlightSetup";
+import {
+  compareUfcPrepToSource,
+  prepAssetSummary,
+  preparedMainEventSpotlight,
+  type UfcPickPrep,
+} from "./ufcPrepModel";
 
 function readableError(error: unknown) {
   const message = error instanceof Error ? error.message : "Event Setup could not complete that request.";
@@ -167,6 +173,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     suppliedRepository === undefined ? createPickSetupRepository() : suppliedRepository
   ));
   const [draft, setDraft] = useState<PickSetupDraft | null>(null);
+  const [prep, setPrep] = useState<UfcPickPrep | null>(null);
   const [sourcePreview, setSourcePreview] = useState<PickSetupSourcePreview | null>(null);
   const [cardScope, setCardScope] = useState<PickSetupCardScope>("auto");
   const [sourceUrl, setSourceUrl] = useState("");
@@ -187,11 +194,16 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     if (!repository || !identity.profile) return;
     setLoading(true);
     try {
-      const nextDraft = await repository.loadDraft();
+      const [nextDraft, nextPrep] = await Promise.all([
+        repository.loadDraft(),
+        repository.loadUfcPrep ? repository.loadUfcPrep() : Promise.resolve(null),
+      ]);
       setDraft(nextDraft);
+      setPrep(nextPrep);
       setError("");
     } catch (nextError) {
       setDraft(null);
+      setPrep(null);
       setError(readableError(nextError));
     } finally {
       setLoading(false);
@@ -234,6 +246,8 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     () => sourcePreview?.event.bouts.slice().sort((left, right) => left.position - right.position) ?? [],
     [sourcePreview],
   );
+  const prepChanges = useMemo(() => compareUfcPrepToSource(prep, sourcePreview), [prep, sourcePreview]);
+  const prepSummary = useMemo(() => prepAssetSummary(prep), [prep]);
 
   async function runAction<T>(key: string, action: () => Promise<T>, reload = true) {
     setBusyAction(key);
@@ -255,9 +269,45 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     setSourcePreview(null);
   }
 
+  async function attachPreparedMainEvent(nextDraft: PickSetupDraft) {
+    const save = repository?.saveSpotlights;
+    if (!prep || !save) return;
+    const spotlight = preparedMainEventSpotlight(prep, nextDraft.bouts);
+    if (!spotlight) return;
+    const current = nextDraft.spotlights ?? [];
+    if (current.some((item) => item.boutId === spotlight.boutId)) return;
+    await save(
+      nextDraft.draftId,
+      current.filter((item) => item.boutId !== spotlight.boutId).concat(spotlight),
+    );
+  }
+
   function syncEvent() {
     if (!repository) return;
-    void runAction("sync", () => repository.syncNextEvent(cardScope, sourceUrl));
+    if (prep) {
+      void runAction("prep-preview", async () => {
+        const preview = await repository.previewSource(cardScope, sourceUrl);
+        setSourcePreview(preview);
+        setSourceUrl(preview.sourceUrl);
+      }, false);
+      return;
+    }
+    void runAction("sync", async () => {
+      await repository.syncNextEvent(cardScope, sourceUrl);
+      const nextDraft = await repository.loadDraft();
+      if (nextDraft) await attachPreparedMainEvent(nextDraft);
+    });
+  }
+
+  function stagePreparedPreview() {
+    if (!repository || !sourcePreview) return;
+    if (prepChanges.length && !window.confirm("The current UFC card differs from Monday prep. Stage the freshly verified card anyway?")) return;
+    void runAction("stage-prepared", async () => {
+      await repository.applySourcePreview(sourcePreview);
+      const nextDraft = await repository.loadDraft();
+      if (nextDraft) await attachPreparedMainEvent(nextDraft);
+      setSourcePreview(null);
+    });
   }
 
   async function checkSourceUpdates() {
@@ -274,6 +324,8 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     if (!window.confirm("Apply these reviewed source changes? This replaces the staged draft only. The live Picks card will not change until you publish.")) return;
     void runAction("apply-preview", async () => {
       await repository.applySourcePreview(sourcePreview);
+      const nextDraft = await repository.loadDraft();
+      if (nextDraft) await attachPreparedMainEvent(nextDraft);
       setSourcePreview(null);
     });
   }
@@ -414,6 +466,39 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
         </section>
       ) : null}
 
+      {identity.profile && !loading ? (
+        <section className={`surface-card picks-setup-prep is-${prep?.status ?? "missing"}`} aria-label="UFC prep status">
+          <div className="picks-setup-prep__heading">
+            <div>
+              <p className="eyebrow">UFC PREP</p>
+              <h2>{prep ? prep.eventName : "No prep package yet"}</h2>
+            </div>
+            <strong>{prep ? prep.status.replace("-", " ").toUpperCase() : "NOT PREPARED"}</strong>
+          </div>
+          {prep ? (
+            <>
+              <p>
+                {prep.eventKind === "numbered" ? "NUMBERED · MAIN + PRELIMS" : "FIGHT NIGHT · MAIN CARD"}
+                {" · "}{prep.bouts.length} fights
+              </p>
+              <div className="picks-setup-prep__stats">
+                <span><b>{prepSummary.thumbReady}/{prepSummary.thumbTotal}</b><small>THUMBS READY</small></span>
+                <span><b>{prepSummary.spotlightReady}/{prepSummary.spotlightTotal}</b><small>SPOTLIGHT IMAGES</small></span>
+                <span><b>{prep.spotlights.length}</b><small>PREVIEWS WRITTEN</small></span>
+              </div>
+              <small>Prepared {displayTime(prep.preparedAt)} · Verified {displayTime(prep.verifiedAt)}</small>
+              {prep.verificationNotes.length ? (
+                <div className="picks-setup-prep__notes">
+                  {prep.verificationNotes.map((note) => <em key={note}>{note}</em>)}
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <p>The Monday prep task has not loaded a package for the next UFC event. Staging still works with the normal UFC.com flow.</p>
+          )}
+        </section>
+      ) : null}
+
       {identity.profile && !loading && error && !draft ? (
         <section className="surface-card picks-setup-state">
           <p className="eyebrow">SETUP UNAVAILABLE</p>
@@ -422,16 +507,43 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
         </section>
       ) : null}
 
-      {identity.profile && !loading && !draft ? (
+      {identity.profile && !loading && !draft && !sourcePreview ? (
         <section className="surface-card picks-setup-sync">
           <div>
             <p className="eyebrow">NO STAGED CARD</p>
-            <h2>Stage the next UFC event.</h2>
-            <p>Auto uses the main card for Fight Nights and the full card for numbered events.</p>
+            <h2>{prep ? "Verify the prepared UFC event." : "Stage the next UFC event."}</h2>
+            <p>{prep
+              ? "We will re-check the current UFC card before staging and show anything that changed since prep."
+              : "Auto uses the main card for Fight Nights and main card plus prelims for numbered events. Early prelims are excluded."}</p>
           </div>
           <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={syncEvent}>
-            {busyAction === "sync" ? "SYNCING UFC CARD…" : "SYNC NEXT UFC EVENT"}
+            {busyAction === "prep-preview" ? "VERIFYING CURRENT CARD…" : busyAction === "sync" ? "SYNCING UFC CARD…" : prep ? "VERIFY PREP & STAGE" : "SYNC NEXT UFC EVENT"}
           </button>
+        </section>
+      ) : null}
+
+      {identity.profile && !loading && !draft && sourcePreview ? (
+        <section className={`surface-card picks-setup-preview${prepChanges.length ? " has-changes" : " is-current"}`} aria-live="polite">
+          <div>
+            <p className="eyebrow">{prepChanges.length ? "CHANGES SINCE PREP" : "PREP MATCHES CURRENT CARD"}</p>
+            <h2>{sourcePreview.event.name} · {sourcePreview.fightCount} fights</h2>
+            <small>Fresh UFC.com verification · {sourcePreview.effectiveScope === "full" ? "MAIN + PRELIMS" : "MAIN CARD"}</small>
+          </div>
+          <div className="picks-setup-preview__changes" aria-label="Freshly verified card">
+            {reviewedBouts.map((bout) => (
+              <span key={bout.boutId}>{bout.redFighterName} vs. {bout.blueFighterName}</span>
+            ))}
+          </div>
+          {prepChanges.length ? (
+            <div className="picks-setup-preview__changes" aria-label="Changes since prep">
+              {prepChanges.map((change) => <strong key={change}>{change}</strong>)}
+            </div>
+          ) : <p>No fights or fight order changed since the prepared package.</p>}
+          {sourcePreview.warnings.map((warning) => <em key={warning}>{warning}</em>)}
+          <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={stagePreparedPreview}>
+            {busyAction === "stage-prepared" ? "STAGING VERIFIED CARD…" : prepChanges.length ? "STAGE CURRENT CARD" : "STAGE VERIFIED CARD"}
+          </button>
+          <button className="pick-setup-danger" type="button" disabled={Boolean(busyAction)} onClick={() => setSourcePreview(null)}>CLOSE REVIEW</button>
         </section>
       ) : null}
 
@@ -473,6 +585,12 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
                   {sourcePreview.changes.map((change) => <strong key={change}>{change}</strong>)}
                 </div>
               ) : <p>No staged event details, fights, sections, or order changed.</p>}
+              {prepChanges.length ? (
+                <div className="picks-setup-preview__changes" aria-label="Changes since UFC prep">
+                  <strong>CHANGES SINCE UFC PREP</strong>
+                  {prepChanges.map((change) => <span key={change}>{change}</span>)}
+                </div>
+              ) : null}
               {sourcePreview.warnings.map((warning) => <em key={warning}>{warning}</em>)}
               {sourcePreview.changes.length ? (
                 <button className="primary-action" type="button" disabled={Boolean(busyAction)} onClick={applySourceUpdates}>
@@ -548,6 +666,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
                 draft={draft}
                 bouts={orderedBouts}
                 busy={Boolean(busyAction)}
+                preparedSpotlights={prep?.spotlights ?? []}
                 onBuild={buildSpotlight}
                 onSave={saveSpotlights}
               />
