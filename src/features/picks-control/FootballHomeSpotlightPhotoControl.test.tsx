@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
   FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
+  type FootballSpotlightKind,
 } from "../home/footballPlayerSpotlightSchedule";
 import type { HomeFeatureMediaRepository } from "../home/homeFeatureMedia";
 import FootballHomeSpotlightPhotoControl from "./FootballHomeSpotlightPhotoControl";
@@ -27,18 +28,18 @@ describe("FootballHomeSpotlightPhotoControl", () => {
       nfl: "https://example.com/dak.webp",
     };
     const repository: HomeFeatureMediaRepository = {
-      loadFootballSpotlight: vi.fn().mockImplementation(async (pairId, kind) => ({
+      loadFootballSpotlight: vi.fn().mockImplementation(async (pairId: string, kind: FootballSpotlightKind) => ({
         contentKey: `${pairId}-${kind}`,
         photoSource: pairId === FOOTBALL_BASE_SPOTLIGHT_PAIR_ID ? currentSources[kind] : "",
         updatedAt: "2026-09-21T00:00:00Z",
       })),
-      saveFootballSpotlightPhoto: vi.fn().mockImplementation(async (pairId, kind, photoSource) => ({
+      saveFootballSpotlightPhoto: vi.fn().mockImplementation(async (pairId: string, kind: FootballSpotlightKind, photoSource: string) => ({
         contentKey: `${pairId}-${kind}`,
         photoSource,
         updatedAt: "2026-09-21T00:01:00Z",
       })),
     };
-    const uploadPhoto = vi.fn().mockImplementation(async (_file, pairId, kind) => (
+    const uploadPhoto = vi.fn().mockImplementation(async (_file: File, pairId: string, kind: FootballSpotlightKind) => (
       pairId === nextPair.id ? nextSources[kind] : currentSources[kind]
     ));
 
