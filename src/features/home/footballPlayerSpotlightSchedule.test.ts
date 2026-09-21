@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
+  FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
   FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
   footballSpotlightKindAt,
   footballSpotlightPairAt,
@@ -29,6 +30,17 @@ describe("Football Player Spotlight weekly schedule", () => {
     expect(footballSpotlightPairAt(
       new Date("2026-09-22T05:00:00.000Z"),
       completePhotos,
+    ).id).toBe("2026-09-22-trinidad-dak");
+  });
+
+  it("uses the repo-preloaded Trinidad/Dak photos as the scheduled fallback", () => {
+    expect(FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-09-22-trinidad-dak"]).toEqual({
+      cfb: "/assets/football/player-spotlight/2026-09-22-trinidad-dak/cfb.webp",
+      nfl: "/assets/football/player-spotlight/2026-09-22-trinidad-dak/nfl.webp",
+    });
+    expect(footballSpotlightPairAt(
+      new Date("2026-09-22T05:00:00.000Z"),
+      FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
     ).id).toBe("2026-09-22-trinidad-dak");
   });
 
