@@ -37,7 +37,7 @@ create or replace function public.get_my_daily_challenge_weekly_recap(
 )
 returns jsonb
 language plpgsql
-stable
+volatile
 security definer
 set search_path = ''
 as $$
