@@ -8,6 +8,7 @@ interface PicksSpotlightSetupProps {
   bouts: PickSetupBout[];
   busy: boolean;
   mode?: "draft" | "published";
+  preparedSpotlights?: PickSetupSpotlight[];
   onBuild: (boutId: string) => Promise<PickSetupSpotlight | null>;
   onSave: (spotlights: PickSetupSpotlight[]) => void;
 }
@@ -37,6 +38,7 @@ export function PicksSpotlightSetup({
   bouts,
   busy,
   mode = "draft",
+  preparedSpotlights = [],
   onBuild,
   onSave,
 }: PicksSpotlightSetupProps) {
@@ -113,6 +115,11 @@ export function PicksSpotlightSetup({
       <div className="picks-setup-spotlight__fight-list">
         {eligibleBouts.map((bout, index) => {
           const spotlight = working.get(bout.boutId);
+          const prepared = preparedSpotlights.find((item) => (
+            item.boutId === bout.boutId
+            && item.red.fighterSlug === bout.redFighterSlug
+            && item.blue.fighterSlug === bout.blueFighterSlug
+          )) ?? null;
           const isSaved = saved.some((item) => item.boutId === bout.boutId);
           const row = urls[bout.boutId] ?? { red: "", blue: "" };
           const urlsValid = validHttpUrl(row.red) && validHttpUrl(row.blue);
@@ -128,9 +135,21 @@ export function PicksSpotlightSetup({
               </div>
 
               {!spotlight ? (
-                <button className="secondary-action" type="button" disabled={busy || Boolean(buildingBoutId)} onClick={() => void build(bout.boutId)}>
-                  {buildingBoutId === bout.boutId ? "BUILDING SPOTLIGHT…" : "ADD SPOTLIGHT"}
-                </button>
+                <div className="picks-setup-spotlight__actions">
+                  {prepared ? (
+                    <button
+                      className="primary-action"
+                      type="button"
+                      disabled={busy}
+                      onClick={() => onSave(saved.filter((item) => item.boutId !== bout.boutId).concat(prepared))}
+                    >
+                      USE PREPARED SPOTLIGHT
+                    </button>
+                  ) : null}
+                  <button className="secondary-action" type="button" disabled={busy || Boolean(buildingBoutId)} onClick={() => void build(bout.boutId)}>
+                    {buildingBoutId === bout.boutId ? "BUILDING SPOTLIGHT…" : prepared ? "REBUILD FROM UFCSTATS" : "ADD SPOTLIGHT"}
+                  </button>
+                </div>
               ) : (
                 <div className="picks-setup-spotlight__package">
                   <div className="picks-setup-spotlight__generated">
