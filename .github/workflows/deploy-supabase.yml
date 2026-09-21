@@ -412,8 +412,8 @@ jobs:
           if [ -f supabase/migrations/202612310136_home_football_spotlight_dual_media.sql ]; then
             require_remote_migration "202612310136"
           fi
-          if [ -f supabase/migrations/202612310154_home_football_spotlight_scheduled_pair_media.sql ]; then
-            require_remote_migration "202612310154"
+          if [ -f supabase/migrations/202612310159_home_football_spotlight_scheduled_pair_media.sql ]; then
+            require_remote_migration "202612310159"
           fi
           if [ -f supabase/migrations/202612310098_reset_football_weekly_titles.sql ]; then
             require_remote_migration "202612310098"
