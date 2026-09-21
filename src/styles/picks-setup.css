@@ -27,6 +27,7 @@
 
 .picks-setup-state,
 .picks-setup-sync,
+.picks-setup-prep,
 .picks-setup-scope,
 .picks-setup-hero,
 .picks-setup-preview,
@@ -43,6 +44,8 @@
 
 .picks-setup-state h2,
 .picks-setup-state p,
+.picks-setup-prep h2,
+.picks-setup-prep p,
 .picks-setup-sync h2,
 .picks-setup-sync p,
 .picks-setup-scope h2,
@@ -75,6 +78,87 @@
   width: 100%;
   text-align: center;
   text-decoration: none;
+}
+
+
+.picks-setup-prep {
+  border-color: rgba(255,255,255,.24);
+}
+
+.picks-setup-prep.is-ready {
+  border-color: rgba(255,255,255,.4);
+}
+
+.picks-setup-prep.is-review-needed,
+.picks-setup-prep.is-blocked {
+  border-color: rgba(198, 40, 40, .48);
+}
+
+.picks-setup-prep__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picks-setup-prep__heading > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.picks-setup-prep__heading > strong {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.picks-setup-prep__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.picks-setup-prep__stats span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding: 9px 8px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 9px;
+  background: rgba(0,0,0,.12);
+}
+
+.picks-setup-prep__stats b {
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.picks-setup-prep__stats small,
+.picks-setup-prep > small {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .07em;
+}
+
+.picks-setup-prep__notes {
+  display: grid;
+  gap: 6px;
+}
+
+.picks-setup-prep__notes em {
+  padding-left: 10px;
+  border-left: 2px solid var(--ufc-red);
+  color: var(--text-secondary);
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 850;
 }
 
 .picks-setup-scope {
@@ -442,6 +526,7 @@
 @media (min-width: 640px) {
   .picks-setup-state,
   .picks-setup-sync,
+  .picks-setup-prep,
   .picks-setup-scope,
   .picks-setup-hero,
   .picks-setup-preview,
