@@ -44,22 +44,17 @@ type PlayLandingGameLibraryProps = {
   sport: PlaySport;
   onNavigate: (route: string) => void;
   footer?: ReactNode;
-  millionaireVisible?: boolean;
   familyFeudVisible?: boolean;
-  weeklyBuildQbPreviewVisible?: boolean;
 };
 
 export function PlayLandingGameLibrary({
   sport,
   onNavigate,
   footer,
-  millionaireVisible = false,
   familyFeudVisible = false,
-  weeklyBuildQbPreviewVisible = false,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
-  const millionaireRoute = sport === "ufc" ? "/play/millionaire" : "/football/millionaire";
   const familyFeudRoute = sport === "ufc" ? "/play/sports-feud" : "/football/sports-feud";
 
   return (
@@ -70,7 +65,7 @@ export function PlayLandingGameLibrary({
           <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
           <p>Quick games and blind tests, ready whenever the debate starts.</p>
         </div>
-        <span>{games.length + (millionaireVisible ? 1 : 0) + (familyFeudVisible ? 1 : 0) + (sport === "football" && weeklyBuildQbPreviewVisible ? 1 : 0)} LIVE</span>
+        <span>{games.length + (familyFeudVisible ? 1 : 0)} LIVE</span>
       </header>
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
@@ -84,20 +79,6 @@ export function PlayLandingGameLibrary({
             <span className="play-landing-game-card__status">OWNER PREVIEW</span>
             <strong>Sports Feud</strong>
             <small>Clear two answer boards, then race through five Fast Money prompts in 30 seconds.</small>
-            <em>PLAY →</em>
-          </button>
-        ) : null}
-
-        {millionaireVisible ? (
-          <button
-            className="play-landing-game-card is-strategic"
-            type="button"
-            onClick={() => onNavigate(millionaireRoute)}
-          >
-            <span className="play-landing-game-card__icon" aria-hidden="true">$</span>
-            <span className="play-landing-game-card__status">PLAY NOW</span>
-            <strong>Millionaire</strong>
-            <small>Climb eight questions, protect your checkpoints, and use your lifelines on the way to $1,000,000.</small>
             <em>PLAY →</em>
           </button>
         ) : null}
@@ -123,19 +104,6 @@ export function PlayLandingGameLibrary({
           );
         })}
 
-        {sport === "football" && weeklyBuildQbPreviewVisible ? (
-          <button
-            className="play-landing-game-card is-strategic"
-            type="button"
-            onClick={() => onNavigate("/football/weekly-build-qb-preview")}
-          >
-            <span className="play-landing-game-card__icon" aria-hidden="true">QB</span>
-            <span className="play-landing-game-card__status">OWNER PREVIEW</span>
-            <strong>Next Week · NFL Build a QB</strong>
-            <small>Open the real Day 1 Weekly Auction board before launch. Nothing you do here enters the live auction.</small>
-            <em>PREVIEW →</em>
-          </button>
-        ) : null}
       </div>
       {footer}
     </section>
