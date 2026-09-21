@@ -358,4 +358,99 @@ describe("Football HQ Home summary", () => {
     expect(screen.getByAltText("Drew Mestemaker")).toHaveAttribute("src", "https://example.com/drew.webp");
     expect(screen.queryByText("Josh Allen")).not.toBeInTheDocument();
   });
+  it("switches the whole weekly pair at Tuesday midnight CT without a hard refresh", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-22T04:59:59Z"));
+    const photos = {
+      "2026-09-15-drew-josh": {
+        cfb: "https://example.com/drew.webp",
+        nfl: "https://example.com/josh.webp",
+      },
+      "2026-09-22-trinidad-dak": {
+        cfb: "https://example.com/trinidad.webp",
+        nfl: "https://example.com/dak.webp",
+      },
+    };
+
+    render(
+      <MemoryRouter>
+        <FootballHq
+          event={event}
+          selections={{}}
+          history={history}
+          summary={summary}
+          loading={false}
+          error=""
+          signedIn
+          dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
+          playerPhotoSources={photos}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("Josh Allen")).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(1_000);
+    });
+
+    expect(screen.getByText("Trinidad Chambliss")).toBeInTheDocument();
+    expect(screen.getByAltText("Trinidad Chambliss")).toHaveAttribute("src", "https://example.com/trinidad.webp");
+    expect(screen.getByText("363")).toBeInTheDocument();
+    expect(screen.getByText("68.8")).toBeInTheDocument();
+    expect(screen.getByText("CMP%")).toBeInTheDocument();
+    expect(screen.getByText("1")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://youtu.be/7KEkO4RFFLM?si=AC_QOmz-bYIBVSj9",
+    );
+  });
+
+  it("hands the Tuesday Spotlight from Trinidad to Dak at 3 PM CT", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-22T19:59:59Z"));
+    const photos = {
+      "2026-09-15-drew-josh": {
+        cfb: "https://example.com/drew.webp",
+        nfl: "https://example.com/josh.webp",
+      },
+      "2026-09-22-trinidad-dak": {
+        cfb: "https://example.com/trinidad.webp",
+        nfl: "https://example.com/dak.webp",
+      },
+    };
+
+    render(
+      <MemoryRouter>
+        <FootballHq
+          event={event}
+          selections={{}}
+          history={history}
+          summary={summary}
+          loading={false}
+          error=""
+          signedIn
+          dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
+          playerPhotoSources={photos}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("Trinidad Chambliss")).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(1_000);
+    });
+
+    expect(screen.getByText("Dak Prescott")).toBeInTheDocument();
+    expect(screen.getByAltText("Dak Prescott")).toHaveAttribute("src", "https://example.com/dak.webp");
+    expect(screen.getByText("279")).toBeInTheDocument();
+    expect(screen.getByText("143.8")).toBeInTheDocument();
+    expect(screen.getByText("83.9%")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://youtu.be/3j6ijizvXmg?si=WRmY2A38FCl_nA5B",
+    );
+  });
+
 });
