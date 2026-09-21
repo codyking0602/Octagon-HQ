@@ -53,6 +53,16 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/football/who-am-i");
   });
 
+  it("keeps closed Millionaire and Build a QB owner previews out of Play libraries", () => {
+    const navigate = vi.fn();
+    const { rerender } = render(<PlayLandingGameLibrary sport="ufc" onNavigate={navigate} />);
+    expect(screen.queryByRole("button", { name: /millionaire/i })).not.toBeInTheDocument();
+
+    rerender(<PlayLandingGameLibrary sport="football" onNavigate={navigate} />);
+    expect(screen.queryByRole("button", { name: /millionaire/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /next week.*nfl build a qb/i })).not.toBeInTheDocument();
+  });
+
   it("keeps Daily-only games out of normal Football Play while Draft Room is public", () => {
     const navigate = vi.fn();
     render(<PlayLandingGameLibrary sport="football" onNavigate={navigate} />);
