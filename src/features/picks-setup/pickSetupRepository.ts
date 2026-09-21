@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
+import type { UfcPickPrep } from "./ufcPrepModel";
+import { mapUfcPickPrep } from "./ufcPrepModel";
 import type {
   PickSetupBoutInput,
   PickSetupCardScope,
@@ -109,6 +111,7 @@ const footballWeekPreviewSchema = z.object({
 });
 
 export interface PickSetupRepository {
+  loadUfcPrep?: () => Promise<UfcPickPrep | null>;
   loadDraft: (sport?: PickSetupSport) => Promise<PickSetupDraft | null>;
   syncNextEvent: (scope: PickSetupCardScope, sourceUrl?: string) => Promise<void>;
   syncFootballGame?: (league: PickSetupFootballLeague, espnEventId: string) => Promise<void>;
@@ -253,6 +256,9 @@ export function createPickSetupRepository(): PickSetupRepository | null {
     return invoke("sync-next-football-event", body);
   }
   return {
+    async loadUfcPrep() {
+      return mapUfcPickPrep(await requireRpcSuccess(client.rpc("get_ufc_pick_prep")));
+    },
     async loadDraft(sport = "mma") {
       const request = sport === "football"
         ? client.rpc("get_pick_event_setup", { p_sport: "football" })
