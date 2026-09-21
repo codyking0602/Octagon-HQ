@@ -61,11 +61,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for source in .ufc-asset-src/raw/*; do
-            base="$(basename "$source")"
-            stem="${base%.*}"
-            rembg i "$source" ".ufc-asset-src/cut/$stem.png"
-          done
+          python - <<'PY'
+          from pathlib import Path
+          from rembg import new_session, remove
+
+          raw = Path('.ufc-asset-src/raw')
+          cut = Path('.ufc-asset-src/cut')
+          session = new_session('u2net')
+
+          for source in sorted(raw.iterdir()):
+              target = cut / f'{source.stem}.png'
+              target.write_bytes(remove(source.read_bytes(), session=session))
+              if not target.exists() or target.stat().st_size == 0:
+                  raise RuntimeError(f'Background removal failed for {source.name}')
+          PY
 
       - name: Build transparent WebP assets
         shell: bash
