@@ -216,11 +216,9 @@ describe("Sports Feud private daily presentation", () => {
     expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-main-reveal", "idle");
   });
 
-  it("exposes the remaining accepted pool only after the main board is complete", () => {
+  it("shows board results without a separate also-accepted text pool", () => {
     renderFootball();
     fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
-
-    expect(screen.queryByText("ALSO ACCEPTED")).not.toBeInTheDocument();
 
     for (const answer of ["DeMarcus Lawrence", "Zack Martin", "Dalton Schultz"]) {
       submitMainAndSettle(answer);
@@ -228,35 +226,40 @@ describe("Sports Feud private daily presentation", () => {
 
     expect(screen.getByText("BOARD RESULTS")).toBeInTheDocument();
     expect(screen.getByText("3 STRIKES — BOARD CLOSED")).toBeInTheDocument();
-    expect(screen.getByText("ALSO ACCEPTED")).toBeInTheDocument();
-    expect(screen.getByText("Tony Pollard")).toBeInTheDocument();
+    expect(screen.queryByText("ALSO ACCEPTED")).not.toBeInTheDocument();
     expect(document.querySelectorAll(".feud-answer-slot.is-missed")).toHaveLength(4);
   });
 
-  it("accepts lower curated picks without a strike or live slot and lists them after the round", () => {
+  it("reveals a lower-ranked accepted pick on the live board and keeps it in board results", () => {
     renderFootball();
     fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 
     submitMainAnswer("Amari Cooper");
-    expect(screen.getByText("ACCEPTED — NOT TOP 4")).toBeInTheDocument();
-    expect(screen.getByLabelText("Your answer")).toBeInTheDocument();
+    expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-main-reveal", "suspense");
+    expect(screen.queryByText("Amari Cooper")).not.toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(650);
+    });
+
+    expect(screen.getByText("Amari Cooper")).toBeInTheDocument();
+    expect(screen.getByText("Amari Cooper").closest(".feud-answer-slot")).toHaveClass("is-new-reveal");
+
+    act(() => {
+      vi.advanceTimersByTime(650);
+    });
+
     expect(document.querySelectorAll(".feud-strikes .is-on")).toHaveLength(0);
-    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("0");
+    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
 
     for (const answer of ["DeMarcus Lawrence", "Zack Martin", "Dalton Schultz"]) {
       submitMainAndSettle(answer);
     }
 
-    const board = document.querySelector(".feud-answer-board");
-    expect(board).toHaveTextContent("CeeDee Lamb");
-    expect(board).toHaveTextContent("Micah Parsons");
-    expect(board).toHaveTextContent("Dak Prescott");
-    expect(board).toHaveTextContent("Trevon Diggs");
-    expect(board).not.toHaveTextContent("Amari Cooper");
-
-    const alsoAccepted = screen.getByText("ALSO ACCEPTED").closest(".feud-also-accepted");
-    expect(alsoAccepted).toHaveTextContent("Amari Cooper");
-    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("0");
+    expect(screen.getByText("BOARD RESULTS")).toBeInTheDocument();
+    expect(document.querySelector(".feud-answer-board")).toHaveTextContent("Amari Cooper");
+    expect(screen.queryByText("ALSO ACCEPTED")).not.toBeInTheDocument();
+    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
   });
 
   it("keeps Fast Money rapid-fire with the input available between answers and points hidden", () => {
@@ -264,7 +267,9 @@ describe("Sports Feud private daily presentation", () => {
     reachFastMoney();
 
     const initialInput = screen.getByLabelText("Fast Money answer");
-    submitFastMoneyAnswer("Myles Garrett");
+    fireEvent.change(initialInput, { target: { value: "Myles Garrett" } });
+    expect(initialInput).toHaveValue("Myles Garrett");
+    fireEvent.submit(initialInput.closest("form")!);
 
     expect(screen.getByText("2 OF 5")).toBeInTheDocument();
     expect(screen.getByLabelText("Fast Money answer")).toBeInTheDocument();
