@@ -433,12 +433,8 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const foundMainAnswers = mainBoardState.revealedEntityIds
     .map((entityId) => mainQuestion.answers.find((row) => row.entityId === entityId))
     .filter((row): row is FamilyFeudRankedAnswer => Boolean(row));
-  const missedMainAnswers = mainQuestion.answers
-    .filter((row) => !foundIds.has(row.entityId))
-    .slice(0, Math.max(0, FAMILY_FEUD_BOARD_ANSWER_COUNT - foundMainAnswers.length));
-  const mainDisplayAnswers = boardReview
-    ? [...foundMainAnswers, ...missedMainAnswers]
-    : foundMainAnswers;
+  const roundResultAnswers = mainQuestion.answers.slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT);
+  const mainDisplayAnswers = boardReview ? roundResultAnswers : foundMainAnswers;
   const newlyRevealedEntityId = mainReveal.phase === "correct"
     && mainReveal.transition?.outcome.type === "board-correct"
       ? mainReveal.transition.outcome.entityId
@@ -527,6 +523,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                     "feud-answer-slot",
                     rankedAnswer ? "is-revealed" : "",
                     rankedAnswer && !found ? "is-missed" : "",
+                    boardReview ? "is-round-result-reveal" : "",
                     rankedAnswer?.entityId === newlyRevealedEntityId ? "is-new-reveal" : "",
                   ].filter(Boolean).join(" ")}
                   key={index}

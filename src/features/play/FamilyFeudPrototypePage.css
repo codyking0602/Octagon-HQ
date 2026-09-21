@@ -2691,3 +2691,55 @@ body.family-feud-prototype-active {
   caret-color: #07142d !important;
   opacity: 1 !important;
 }
+
+
+/* Round-result + host-layering correction.
+   Keep the approved Fast Money host placement, preview it on both main rounds,
+   and guarantee that the live typing surface sits above the host. */
+.family-feud-prototype[data-scene="main"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="reveal"] > .feud-fast-host-asset {
+  z-index: 4 !important;
+}
+
+.family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+  display: block;
+  left: -36%;
+  bottom: 10.8%;
+  width: 52%;
+  height: 75%;
+  transform: scale(1.66);
+  transform-origin: left bottom;
+  object-position: left bottom;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry {
+  z-index: 30;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry input {
+  background: #fff !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-round-result-reveal {
+  animation: sports-feud-round-result-flip 440ms cubic-bezier(0.18, 0.78, 0.24, 1);
+}
+
+@keyframes sports-feud-round-result-flip {
+  0% { transform: rotateX(82deg) scaleY(0.12); filter: brightness(1.8); }
+  62% { transform: rotateX(-5deg) scaleY(1.03); filter: brightness(1.08); }
+  100% { transform: rotateX(0deg) scaleY(1); filter: brightness(1); }
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+    left: -37%;
+    bottom: 11%;
+    width: 50%;
+    height: 72%;
+    transform: scale(1.63);
+  }
+}
