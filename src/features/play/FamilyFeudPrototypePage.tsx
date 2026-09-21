@@ -109,7 +109,17 @@ function HQBackButton({ onClick }: { onClick: () => void }) {
 }
 
 function FastMoneyHost({ asset }: { asset: string }) {
-  return <img className="feud-fast-host-asset" src={asset} alt="" aria-hidden="true" />;
+  return (
+    <img
+      className="feud-fast-host-asset"
+      src={asset}
+      alt=""
+      aria-hidden="true"
+      loading="eager"
+      decoding="sync"
+      fetchPriority="high"
+    />
+  );
 }
 
 function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
@@ -472,6 +482,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     >
       <StagePlate />
       <StagePlate fast />
+      <FastMoneyHost asset={hostAsset} />
       <HQBackButton onClick={() => navigate(exitRoute)} />
 
       {scene === "intro" ? (
@@ -598,7 +609,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       {scene === "fast-intro" ? (
         <section className="feud-fast-intro">
           <div className="feud-fast-intro__show">
-            <FastMoneyHost asset={hostAsset} />
             <div>
               <span className="feud-fast-intro__kicker">YOU MADE THE FINALE</span>
               <h1>FAST MONEY</h1>
@@ -620,7 +630,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
           </header>
 
           <div className="feud-fast-showdown">
-            <FastMoneyHost asset={hostAsset} />
             <section className="feud-fast-question">
               <span className="feud-fast-progress">{state.fastMoneyIndex + 1} OF 5</span>
               <small>{hqName} · FAST MONEY</small>
@@ -680,37 +689,38 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
 
       {scene === "reveal" ? (
         <section className="feud-reveal-stage" aria-label="Fast Money results reveal">
-          <FastMoneyHost asset={hostAsset} />
-          <header>
-            <Brand compact />
+          <header className="feud-fast-reveal-scorebar">
             <span>FAST MONEY RESULTS</span>
             <strong>{displayedFastTotal}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong>
           </header>
 
-          <article className="feud-fast-score-reveal" key={fastRevealIndex}>
-            <small>{fastRevealIndex + 1} OF 5</small>
+          <section className="feud-fast-reveal-question">
+            <span>{fastRevealIndex + 1} OF 5</span>
             <h1>{activeFastRevealRow.prompt}</h1>
-            <div className="feud-fast-score-reveal__answer">
-              <span>YOU SAID</span>
-              <strong>{activeFastRevealRow.answer}</strong>
-            </div>
-            <div
-              className={[
-                "feud-fast-score-reveal__score",
-                fastRevealPhase !== "answer" ? "is-revealed" : "",
-                !activeFastRevealRow.counted ? "is-zero" : "",
-              ].filter(Boolean).join(" ")}
-              aria-live="polite"
-            >
-              {fastRevealPhase === "answer" ? (
-                <span>…</span>
-              ) : activeFastRevealRow.counted ? (
-                <strong>+{activeFastRevealRow.points}</strong>
-              ) : (
-                <><strong>×</strong><span>0</span></>
-              )}
-            </div>
-          </article>
+          </section>
+
+          <div className="feud-fast-reveal-board" aria-label="Fast Money answer board">
+            {fastRevealRows.map((row, index) => {
+              const revealed = index < fastRevealIndex
+                || (index === fastRevealIndex && fastRevealPhase !== "answer");
+              const current = index === fastRevealIndex;
+              return (
+                <div
+                  className={[
+                    "feud-fast-reveal-row",
+                    revealed ? "is-revealed" : "",
+                    current ? "is-current" : "",
+                    revealed && !row.counted ? "is-zero" : "",
+                  ].filter(Boolean).join(" ")}
+                  aria-live={current ? "polite" : undefined}
+                  key={index}
+                >
+                  <strong>{revealed ? row.answer : ""}</strong>
+                  <span>{revealed ? (row.counted ? row.points : "×") : ""}</span>
+                </div>
+              );
+            })}
+          </div>
 
           <div className="feud-fast-running-total" aria-label="Running Fast Money total">
             <span>RUNNING TOTAL</span>
