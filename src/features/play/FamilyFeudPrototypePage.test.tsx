@@ -156,20 +156,20 @@ describe("Sports Feud private daily presentation", () => {
     renderFootball();
     fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 
-    submitMainAnswer("Amari Cooper");
+    submitMainAnswer("Dak Prescott");
 
     const root = document.querySelector(".family-feud-prototype");
     expect(root).toHaveAttribute("data-main-reveal", "suspense");
     expect(screen.queryByLabelText("Your answer")).not.toBeInTheDocument();
-    expect(screen.queryByText("Amari Cooper")).not.toBeInTheDocument();
+    expect(screen.queryByText("Dak Prescott")).not.toBeInTheDocument();
 
     act(() => {
       vi.advanceTimersByTime(650);
     });
 
     expect(root).toHaveAttribute("data-main-reveal", "correct");
-    expect(screen.getByText("Amari Cooper")).toBeInTheDocument();
-    expect(screen.getByText("Amari Cooper").closest(".feud-answer-slot")).toHaveClass("is-new-reveal");
+    expect(screen.getByText("Dak Prescott")).toBeInTheDocument();
+    expect(screen.getByText("Dak Prescott").closest(".feud-answer-slot")).toHaveClass("is-new-reveal");
     expect(screen.queryByLabelText("Your answer")).not.toBeInTheDocument();
 
     act(() => {
@@ -178,7 +178,7 @@ describe("Sports Feud private daily presentation", () => {
 
     expect(root).toHaveAttribute("data-main-reveal", "idle");
     expect(screen.getByLabelText("Your answer")).toBeInTheDocument();
-    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
+    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("7");
   });
 
   it("slams a stage-level X on a wrong answer, increments the strike rail, then restores input", () => {
@@ -233,11 +233,16 @@ describe("Sports Feud private daily presentation", () => {
     expect(document.querySelectorAll(".feud-answer-slot.is-missed")).toHaveLength(4);
   });
 
-  it("uses the ranked top four for BOARD RESULTS even when a lower accepted answer scored", () => {
+  it("accepts lower curated picks without a strike or live slot and lists them after the round", () => {
     renderFootball();
     fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 
-    submitMainAndSettle("Amari Cooper");
+    submitMainAnswer("Amari Cooper");
+    expect(screen.getByText("ACCEPTED — NOT TOP 4")).toBeInTheDocument();
+    expect(screen.getByLabelText("Your answer")).toBeInTheDocument();
+    expect(document.querySelectorAll(".feud-strikes .is-on")).toHaveLength(0);
+    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("0");
+
     for (const answer of ["DeMarcus Lawrence", "Zack Martin", "Dalton Schultz"]) {
       submitMainAndSettle(answer);
     }
@@ -251,7 +256,7 @@ describe("Sports Feud private daily presentation", () => {
 
     const alsoAccepted = screen.getByText("ALSO ACCEPTED").closest(".feud-also-accepted");
     expect(alsoAccepted).toHaveTextContent("Amari Cooper");
-    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
+    expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("0");
   });
 
   it("keeps Fast Money rapid-fire with the input available between answers and points hidden", () => {
@@ -266,6 +271,19 @@ describe("Sports Feud private daily presentation", () => {
     expect(screen.getByLabelText("Fast Money answer")).toBe(initialInput);
     expect(screen.queryByText("+8")).not.toBeInTheDocument();
     expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-scene", "fast");
+  });
+
+  it("accepts the broadened Fast Money pool and common short-name aliases", () => {
+    renderFootball();
+    reachFastMoney();
+
+    submitFastMoneyAnswer("Myles Garrett");
+    submitFastMoneyAnswer("Davante Adams");
+    submitFastMoneyAnswer("Johnny Manziel");
+    submitFastMoneyAnswer("Adrian");
+
+    expect(screen.getByText("5 OF 5")).toBeInTheDocument();
+    expect(screen.getByLabelText("Fast Money answer")).toBeInTheDocument();
   });
 
   it("reveals Fast Money answers and scores sequentially with a running total", () => {
