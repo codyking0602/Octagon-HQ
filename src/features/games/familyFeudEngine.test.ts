@@ -49,12 +49,14 @@ function question(
   candidates: readonly string[],
   answerIds: readonly string[],
   points: readonly number[],
+  alsoAcceptedEntityIds: readonly string[] = [],
 ) {
   return {
     id,
     prompt,
     candidateIds: candidates,
     answers: answerIds.map((entityId, index) => ({ entityId, points: points[index]! })),
+    ...(alsoAcceptedEntityIds.length ? { alsoAcceptedEntityIds } : {}),
   };
 }
 
@@ -62,16 +64,18 @@ const mainOne = question(
   "main-one",
   "Name four good quarterback answers.",
   passingCandidates,
-  ["stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams"],
+  ["stafford", "goff", "maye", "prescott"],
   mainPoints,
+  ["lawrence", "caleb-williams"],
 );
 
 const mainTwo = question(
   "main-two",
   "Name four good running back answers.",
   rushingCandidates,
-  ["cook", "henry", "taylor", "bijan", "achane", "saquon"],
+  ["cook", "henry", "taylor", "bijan"],
   mainPoints,
+  ["achane", "saquon"],
 );
 
 function fastQuestion(id: string, candidates: readonly string[], answerIds: readonly string[]) {
@@ -93,9 +97,10 @@ const pack: FamilyFeudPack = {
 };
 
 describe("Family Feud V2 engine contract", () => {
-  it("validates two main boards, larger accepted pools, and five Fast Money prompts", () => {
+  it("validates four-slot main boards, recap-only accepted pools, and five Fast Money prompts", () => {
     expect(() => assertFamilyFeudPack(pack)).not.toThrow();
-    expect(pack.mainBoards.every((board) => board.answers.length > 4)).toBe(true);
+    expect(pack.mainBoards.every((board) => board.answers.length === 4)).toBe(true);
+    expect(pack.mainBoards.every((board) => (board.alsoAcceptedEntityIds?.length ?? 0) > 0)).toBe(true);
     expect(() => assertFamilyFeudPack({ ...pack, mainBoards: [mainOne] })).toThrow(/two main boards/i);
   });
 
@@ -161,16 +166,25 @@ describe("Family Feud V2 engine contract", () => {
     expect(transition.state.mainBoards[0]!.strikes).toBe(2);
   });
 
-  it("clears a board after any four accepted answers, including lower-value good answers", () => {
+  it("keeps also-accepted responses off the live board and clears only the four core answers", () => {
     let state = createFamilyFeudState();
-    for (const answer of ["Caleb Williams", "Matthew Stafford", "Jared Goff", "Drake Maye"]) {
+    let transition = submitFamilyFeudMainAnswer(pack, state, "Caleb Williams");
+    expect(transition.outcome).toMatchObject({
+      type: "board-also-accepted",
+      entityId: "caleb-williams",
+    });
+    expect(transition.state.mainBoards[0]!.strikes).toBe(0);
+    expect(transition.state.mainBoards[0]!.revealedEntityIds).toEqual([]);
+
+    state = transition.state;
+    for (const answer of ["Matthew Stafford", "Jared Goff", "Drake Maye", "Dak Prescott"]) {
       state = submitFamilyFeudMainAnswer(pack, state, answer).state;
     }
     expect(state.mainBoardIndex).toBe(1);
     expect(state.mainBoards[0]!.revealedEntityIds).toEqual([
-      "caleb-williams", "stafford", "goff", "maye",
+      "stafford", "goff", "maye", "prescott",
     ]);
-    expect(familyFeudScore(pack, state).main).toBe(29);
+    expect(familyFeudScore(pack, state).main).toBe(30);
   });
 
   it("ends a main board on the third strike without subtracting banked points", () => {

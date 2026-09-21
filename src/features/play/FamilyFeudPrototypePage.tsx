@@ -62,6 +62,7 @@ function feedbackCopy(outcome: FamilyFeudOutcome | null) {
   switch (outcome.type) {
     case "board-correct": return "+" + outcome.points + " HQ POINTS";
     case "board-strike": return "STRIKE — KEEP GOING";
+    case "board-also-accepted": return "ACCEPTED — NOT TOP 4";
     case "ambiguous": return "BE MORE SPECIFIC";
     case "already-guessed": return "ALREADY GUESSED";
     case "fast-money-answer": return "LOCKED";
@@ -368,6 +369,13 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     if (!answer.trim() || boardReview || mainReveal.phase !== "idle") return;
     const transition = submitFamilyFeudMainAnswer(pack, state, answer);
 
+    if (transition.outcome.type === "board-also-accepted") {
+      setState(transition.state);
+      setFeedback(transition.outcome);
+      setAnswer("");
+      return;
+    }
+
     if (transition.outcome.type === "ambiguous" || transition.outcome.type === "already-guessed") {
       setFeedback(transition.outcome);
       if (transition.outcome.type === "already-guessed") setAnswer("");
@@ -434,8 +442,8 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     .filter((row): row is FamilyFeudRankedAnswer => Boolean(row));
   const coreBoardAnswers = mainQuestion.answers.slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT);
   const mainDisplayAnswers = boardReview ? coreBoardAnswers : foundMainAnswers;
-  const alsoAcceptedAnswers = boardReview
-    ? mainQuestion.answers.slice(FAMILY_FEUD_BOARD_ANSWER_COUNT)
+  const alsoAcceptedAnswerIds = boardReview
+    ? (mainQuestion.alsoAcceptedEntityIds ?? [])
     : [];
   const newlyRevealedEntityId = mainReveal.phase === "correct"
     && mainReveal.transition?.outcome.type === "board-correct"
@@ -552,15 +560,15 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                   : "3 STRIKES — BOARD CLOSED"}
               </strong>
               <span>{mainBoardPoints}/{FAMILY_FEUD_MAIN_BOARD_MAX} HQ points banked.</span>
-              {alsoAcceptedAnswers.length ? (
+              {alsoAcceptedAnswerIds.length ? (
                 <div className="feud-also-accepted">
                   <small>ALSO ACCEPTED</small>
                   <div>
-                    {alsoAcceptedAnswers.map((rankedAnswer) => {
-                      const acceptedEntity = pack.entities.find((candidate) => candidate.id === rankedAnswer.entityId);
+                    {alsoAcceptedAnswerIds.map((entityId) => {
+                      const acceptedEntity = pack.entities.find((candidate) => candidate.id === entityId);
                       return (
-                        <span key={rankedAnswer.entityId}>
-                          {acceptedEntity?.displayName ?? rankedAnswer.entityId}
+                        <span key={entityId}>
+                          {acceptedEntity?.displayName ?? entityId}
                         </span>
                       );
                     })}
@@ -573,7 +581,11 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             </section>
           ) : mainReveal.phase === "idle" ? (
             <form className="feud-answer-entry" onSubmit={submitMain}>
-              {feedback && (feedback.type === "ambiguous" || feedback.type === "already-guessed") ? (
+              {feedback && (
+                feedback.type === "ambiguous"
+                || feedback.type === "already-guessed"
+                || feedback.type === "board-also-accepted"
+              ) ? (
                 <div className="feud-feedback" data-kind={feedback.type}>
                   {feedbackCopy(feedback)}
                 </div>

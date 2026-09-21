@@ -18,6 +18,7 @@ export interface FamilyFeudQuestion {
   prompt: string;
   candidateIds: readonly string[];
   answers: readonly FamilyFeudRankedAnswer[];
+  alsoAcceptedEntityIds?: readonly string[];
 }
 
 export interface FamilyFeudPack {
@@ -83,6 +84,12 @@ export type FamilyFeudOutcome =
       points: number;
     }
   | { type: "board-strike"; boardIndex: number; strikes: number }
+  | {
+      type: "board-also-accepted";
+      boardIndex: number;
+      entityId: string;
+      displayName: string;
+    }
   | { type: "ambiguous"; boardIndex: number | null }
   | { type: "already-guessed"; boardIndex: number; entityId: string | null }
   | {
@@ -147,6 +154,9 @@ export function assertFamilyFeudPack(pack: FamilyFeudPack) {
     assertUnique(question.candidateIds, "Family Feud candidate ids");
     assertUnique(question.answers.map((answer) => answer.entityId), "Family Feud answer ids");
     assertDescendingPoints(question.answers, "Family Feud answer points");
+    const alsoAcceptedEntityIds = question.alsoAcceptedEntityIds ?? [];
+    assertUnique(alsoAcceptedEntityIds, "Family Feud also-accepted ids");
+    const answerIdSet = new Set(question.answers.map((answer) => answer.entityId));
 
     for (const candidateId of question.candidateIds) {
       if (!entityIdSet.has(candidateId)) {
@@ -159,6 +169,14 @@ export function assertFamilyFeudPack(pack: FamilyFeudPack) {
       }
       if (!Number.isInteger(answer.points) || answer.points <= 0) {
         throw new Error("Family Feud answer points must be positive integers.");
+      }
+    }
+    for (const entityId of alsoAcceptedEntityIds) {
+      if (!question.candidateIds.includes(entityId)) {
+        throw new Error("Family Feud also-accepted answer " + entityId + " is outside its candidate universe.");
+      }
+      if (answerIdSet.has(entityId)) {
+        throw new Error("Family Feud also-accepted answers cannot duplicate live board answers.");
       }
     }
 
@@ -459,6 +477,21 @@ export function submitFamilyFeudMainAnswer(
     };
     advanceMainPhase(state);
     return { state, outcome };
+  }
+
+  if (
+    match.status === "matched"
+    && (question.alsoAcceptedEntityIds ?? []).includes(match.entityId)
+  ) {
+    return {
+      state,
+      outcome: {
+        type: "board-also-accepted",
+        boardIndex,
+        entityId: match.entityId,
+        displayName: entityDisplayName(pack, match.entityId),
+      },
+    };
   }
 
   board.strikes = Math.min(FAMILY_FEUD_STRIKES_PER_BOARD, board.strikes + 1);
