@@ -181,9 +181,6 @@ export function assertFamilyFeudPack(pack: FamilyFeudPack) {
     }
 
     if (questionIndex < FAMILY_FEUD_MAIN_BOARD_COUNT) {
-      if (question.answers.length !== FAMILY_FEUD_BOARD_ANSWER_COUNT) {
-        throw new Error("Main Family Feud boards require exactly four live answers.");
-      }
       const bestFour = question.answers
         .slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT)
         .reduce((sum, answer) => sum + answer.points, 0);
