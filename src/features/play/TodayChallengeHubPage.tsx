@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
+import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "./PlayLandingPresentation";
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import TodayChallengeHub from "./TodayChallengeHub";
 
 export default function TodayChallengeHubPage() {
   const navigate = useNavigate();
+  const identity = useIdentity();
 
   return (
     <div className="page play-page today-challenge-hub-page">
