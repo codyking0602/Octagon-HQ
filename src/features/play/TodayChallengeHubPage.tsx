@@ -4,6 +4,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "./PlayLandingPresentation";
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import TodayChallengeHub from "./TodayChallengeHub";
+import { WeeklyChampionshipRecap } from "./WeeklyChampionshipRecap";
 
 export default function TodayChallengeHubPage() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function TodayChallengeHubPage() {
   return (
     <div className="page play-page today-challenge-hub-page">
       <PlayLandingHeader sport="ufc" />
+      <WeeklyChampionshipRecap sport="ufc" />
 
       <TodayChallengeHub />
       <ChallengeCenter />
