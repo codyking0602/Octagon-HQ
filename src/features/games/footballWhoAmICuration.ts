@@ -1,5 +1,6 @@
 import type { FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
 import { refineCfbWhoAmIContent } from "./whoAmICfbPr3Curation";
+import { refineNflWhoAmIContent } from "./whoAmINflPr4Curation";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueFacet } from "./whoAmIEngine";
 
@@ -5197,10 +5198,10 @@ export function curateFootballWhoAmIClues(
     return refineCfbWhoAmIContent(subject, curateCfbBatch4Clues(subject, rawClues));
   }
   if (subject.league !== "NFL") return [...rawClues];
-  if (batch4SubjectIds.has(subject.id)) return curateNflBatch4Clues(subject, rawClues);
-  if (batch3SubjectIds.has(subject.id)) return curateNflBatch3Clues(subject, rawClues);
-  if (batch2SubjectIds.has(subject.id)) return curateNflBatch2Clues(subject, rawClues);
-  if (!batchSubjectIds.has(subject.id)) return [...rawClues];
+  if (batch4SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch4Clues(subject, rawClues));
+  if (batch3SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch3Clues(subject, rawClues));
+  if (batch2SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch2Clues(subject, rawClues));
+  if (!batchSubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, rawClues);
 
   const retained = retainedIdentityConcepts.get(subject.id);
   let colorUsed = false;
@@ -5238,5 +5239,5 @@ export function curateFootballWhoAmIClues(
   }
 
   curated.push(...(supplementalClues.get(subject.id) ?? []));
-  return trimDeepPool(subject, curated);
+  return refineNflWhoAmIContent(subject, trimDeepPool(subject, curated));
 }
