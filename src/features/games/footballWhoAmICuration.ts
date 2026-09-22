@@ -334,6 +334,7 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["eric-dickerson", [
     { id: "curated:2105-rushing", conceptId: "curated:2105-rushing", text: "I set the NFL single-season rushing record with 2,105 yards in 1984.", band: "giveaway", facet: "accomplishments", revealPriority: 8 },
     { id: "curated:four-rushing-titles", conceptId: "curated:four-rushing-titles", text: "I won four NFL rushing titles and earned five first-team All-Pro selections.", band: "strong", facet: "accomplishments", revealPriority: 14 },
+    { id: "curated:rookie-record", conceptId: "curated:rookie-record", text: "As a rookie in 1983, I rushed for a rookie-record 1,808 yards and earned NFL Offensive Rookie of the Year honors.", band: "strong", facet: "accomplishments", revealPriority: 16 },
     { id: "curated:1983-second-overall", conceptId: "curated:1983-second-overall", text: "The Los Angeles Rams selected me No. 2 overall in the 1983 NFL Draft.", band: "strong", facet: "career-path", revealPriority: 18 },
     { id: "curated:1999-hof", conceptId: "curated:1999-hof", text: "I was inducted into the Pro Football Hall of Fame in 1999.", band: "strong", facet: "accomplishments", revealPriority: 20 },
   ]],

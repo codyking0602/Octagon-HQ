@@ -119,6 +119,15 @@ export function isStrongLateAnchor(clue: WhoAmIClue) {
     && LATE_ANCHOR_CATEGORIES.has(whoAmIRevealProfile(clue).category);
 }
 
+function isNearGiveawayAnchor(clue: WhoAmIClue) {
+  const profile = whoAmIRevealProfile(clue);
+  return clue.band === "giveaway"
+    || profile.identifyingPower === "signature"
+    || profile.category === "signature-moment"
+    || profile.category === "jersey-number"
+    || profile.category === "nickname-persona";
+}
+
 export function whoAmIRevealCoordinateWindowSatisfied(clues: readonly WhoAmIClue[]) {
   const exposed = new Set<WhoAmIRevealCoordinate>();
   for (let index = 0; index < clues.length; index += 1) {
@@ -598,6 +607,9 @@ function scheduleRevealArchitecture(
       if (isFootballPool && !isStrongLateAnchor(ordered.at(-1)!)) {
         return null;
       }
+      if (isNflPool && !ordered.slice(-2).some(isNearGiveawayAnchor)) {
+        return null;
+      }
       if (isCfbPool && ordered.filter((clue) => whoAmIClueFacet(clue) === "production").length > 4) {
         return null;
       }
@@ -672,6 +684,14 @@ function scheduleRevealArchitecture(
 
     const lateStrongCount = lateChosen.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length;
     const lateAnchorCount = lateChosen.filter(isStrongLateAnchor).length;
+    if (
+      isNflPool
+      && position >= 9
+      && !chosen.slice(8).some((entry) => isNearGiveawayAnchor(entry.clue))
+      && !semanticallyAvailable.some(({ clue }) => isNearGiveawayAnchor(clue))
+    ) {
+      return null;
+    }
     const stateKey = [
       position,
       lateStrongCount,
@@ -696,6 +716,12 @@ function scheduleRevealArchitecture(
         !isFootballPool
         || position < targetLength
         || isStrongLateAnchor(clue)
+      ))
+      .filter(({ clue }) => (
+        !isNflPool
+        || position !== targetLength
+        || chosen.slice(8).some((entry) => isNearGiveawayAnchor(entry.clue))
+        || isNearGiveawayAnchor(clue)
       ))
       .filter(({ clue }) => (
         position < 7
