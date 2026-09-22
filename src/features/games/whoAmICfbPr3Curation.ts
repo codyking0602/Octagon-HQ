@@ -151,10 +151,14 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-aaron-ross", [
     pr3Clue("aaron-ross-thorpe", "I won the 2006 Jim Thorpe Award as college football's top defensive back.", "giveaway", "accomplishments", 9),
+    pr3Clue("aaron-ross-title-team", "I was a key member of Texas's 2005 national championship team that beat USC in the Rose Bowl.", "strong", "accomplishments", 15),
   ]],
   ["cfb-brock-bowers", [
     pr3Clue("bowers-two-mackeys", "I became the first two-time winner of the John Mackey Award, taking the honor in both 2022 and 2023.", "giveaway", "accomplishments", 8),
     pr3Clue("bowers-three-all-america", "I became just the third Georgia player to earn first-team All-America recognition in three different seasons.", "strong", "accomplishments"),
+  ]],
+  ["cfb-champ-bailey", [
+    pr3Clue("bailey-1070-snaps", "In 1998 I played 1,070 snaps across defense, offense and special teams for Georgia.", "strong", "style", 15),
   ]],
   ["cfb-charles-woodson", [
     pr3Clue("woodson-ohio-state-three-way", "Against Ohio State in 1997, I returned a punt 78 yards for a touchdown, intercepted a pass in the end zone and caught a 37-yard pass that set up a touchdown.", "giveaway", "accomplishments", 8),
@@ -186,11 +190,15 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-marqise-lee", [
     pr3Clue("lee-arizona-record", "I set a Pac-12 single-game record with 345 receiving yards against Arizona in 2012.", "giveaway", "identity", 9),
   ]],
+  ["cfb-jj-watt", [
+    pr3Clue("watt-cmu-wisconsin-path", "I began my college career as a tight end at Central Michigan before transferring home to Wisconsin and walking on as a defensive end.", "strong", "career-path", 14),
+  ]],
   ["cfb-michael-huff", [
     pr3Clue("huff-title-stop", "Late in the 2005 national-title game, I stopped LenDale White on fourth-and-two to give Texas the ball for its winning drive.", "giveaway", "accomplishments", 8),
   ]],
   ["cfb-mike-evans", [
     pr3Clue("evans-bama-record", "I broke Texas A&M's long-standing single-game receiving record with 279 yards against Alabama in 2013.", "strong", "identity"),
+    pr3Clue("evans-auburn-record", "Later that season I reset the school single-game receiving record with 287 yards against Auburn and tied the school mark with four touchdown catches.", "strong", "accomplishments", 15),
   ]],
   ["cfb-minkah-fitzpatrick", [
     pr3Clue("minkah-double-awards", "In 2017 I became just the third player in NCAA history to win the Bednarik and Jim Thorpe awards in the same season.", "giveaway", "accomplishments", 8),
