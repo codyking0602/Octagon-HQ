@@ -81,7 +81,7 @@ describe("Football Player Spotlight weekly schedule", () => {
       team: "Ole Miss",
       position: "QB",
       teamColor: "#14213D",
-      highlightUrl: "https://youtu.be/7KEkO4RFFLM?si=AC_QOmz-bYIBVSj9",
+      highlightUrl: "https://youtu.be/3j6ijizvXmg?is=VJY4f509RYu8TC0p",
       stats: [
         { value: "363", label: "PYDS" },
         { value: "68.8", label: "CMP%" },
@@ -94,7 +94,7 @@ describe("Football Player Spotlight weekly schedule", () => {
       team: "Dallas Cowboys",
       position: "QB",
       teamColor: "#041E42",
-      highlightUrl: "https://youtu.be/3j6ijizvXmg?si=WRmY2A38FCl_nA5B",
+      highlightUrl: "https://youtu.be/7KEkO4RFFLM?is=0eBE2IagbqAG1SzX",
       stats: [
         { value: "279", label: "PYDS" },
         { value: "4", label: "PASS TD" },
