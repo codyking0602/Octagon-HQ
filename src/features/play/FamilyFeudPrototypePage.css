@@ -2743,3 +2743,48 @@ body.family-feud-prototype-active {
     transform: scale(1.63);
   }
 }
+
+
+/* Final host placement: no host in any Fast Money scene.
+   Keep the preloaded asset mounted, but only show it on Rounds 1 and 2.
+   Mirror the approved figure to the right-side lane and keep every live typing
+   surface above the host. */
+.family-feud-prototype > .feud-fast-host-asset {
+  display: none !important;
+}
+
+.family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+  display: block !important;
+  z-index: 4 !important;
+  left: auto !important;
+  right: -36% !important;
+  bottom: 10.8% !important;
+  width: 52% !important;
+  height: 75% !important;
+  transform: scale(1.66) !important;
+  transform-origin: right bottom !important;
+  object-position: right bottom !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry {
+  z-index: 100010 !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry input {
+  position: relative;
+  z-index: 2;
+  background: #fff !important;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+    left: auto !important;
+    right: -37% !important;
+    bottom: 11% !important;
+    width: 50% !important;
+    height: 72% !important;
+    transform: scale(1.63) !important;
+  }
+}
