@@ -90,12 +90,7 @@ function mainBoardPublicState(
   const foundIds = new Set(board.revealedEntityIds);
   const settled = boardSettled(state, boardIndex);
   const foundAnswers = board.revealedEntityIds.map((entityId) => answerById(pack, boardIndex, entityId));
-  const missedAnswers = settled && foundAnswers.length < FAMILY_FEUD_BOARD_ANSWER_COUNT
-    ? question.answers
-        .filter((answer) => !foundIds.has(answer.entityId))
-        .slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT - foundAnswers.length)
-    : [];
-  const displayAnswers = [...foundAnswers, ...missedAnswers];
+  const displayAnswers = foundAnswers;
 
   return {
     id: question.id,
