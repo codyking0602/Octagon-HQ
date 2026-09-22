@@ -15,8 +15,8 @@ describe("Validate V2 workflow", () => {
     expect(workflow).toContain(
       "SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}",
     );
-    expect(workflow.match(/ref: \$\{\{ env\.SOURCE_SHA \}\}/g)).toHaveLength(3);
-    expect(workflow.match(/checked_out_sha=\$\(git rev-parse HEAD\)/g)).toHaveLength(3);
+    expect(workflow.match(/ref: \$\{\{ env\.SOURCE_SHA \}\}/g)).toHaveLength(4);
+    expect(workflow.match(/checked_out_sha=\$\(git rev-parse HEAD\)/g)).toHaveLength(4);
     expect(workflow).toContain(
       'if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then',
     );
@@ -61,9 +61,11 @@ describe("Validate V2 workflow", () => {
     expect(workflow).toContain("if: always()");
     expect(workflow).toContain("CORE_RESULT: ${{ needs.core.result }}");
     expect(workflow).toContain("TEST_RESULT: ${{ needs.tests.result }}");
+    expect(workflow).toContain("FOOTBALL_PROVIDER_RESULT: ${{ needs.football-provider.result }}");
     expect(workflow).toContain("PHONE_RESULT: ${{ needs.phone-layouts.result }}");
     expect(workflow).toContain('test "$CORE_RESULT" = success');
     expect(workflow).toContain('test "$TEST_RESULT" = success');
+    expect(workflow).toContain('test "$FOOTBALL_PROVIDER_RESULT" = success');
     expect(workflow).toContain('test "$PHONE_RESULT" = success');
   });
 
