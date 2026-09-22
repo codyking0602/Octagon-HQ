@@ -137,6 +137,6 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name an NFL secondary star quarterbacks had to locate before throwing.",
       "Name a defensive back remembered for making quarterbacks pay.",
     ],
-    answers: ["Ed Reed", "Deion Sanders", "Rod Woodson", "Paul Krause", "Charles Woodson", "Champ Bailey", "Richard Sherman", "Darren Sharper"],
+    answers: ["Ed Reed", "Deion Sanders", "Rod Woodson", "Paul Krause", "Charles Woodson", "Champ Bailey", "Richard Sherman", "Ty Law"],
   },
 ] as const);
