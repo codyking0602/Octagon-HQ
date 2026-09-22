@@ -13,8 +13,13 @@ describe("CFB Weekly Auction final results production wiring", () => {
     expect(gate).toContain("state.previous_final");
     expect(gate).toContain("WEEKLY CHAMPION");
     expect(gate).toContain("Standings");
-    expect(gate).toContain("Your Collection");
+    expect(gate).toContain("Collections");
     expect(gate).toContain("All Grades");
+    expect(gate).toContain("collectionForProfile");
+    expect(gate).toContain("Select player collection");
+    expect(gate).toContain("entry.winner_profile_id === profileId");
+    expect(gate).toContain("right.grade - left.grade");
+    expect(gate).toContain("left.winning_bid - right.winning_bid");
   });
 
   it("removes the temporary owner preview surface", () => {
