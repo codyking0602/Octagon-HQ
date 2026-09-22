@@ -317,6 +317,43 @@ function capRelationshipClues(clues: readonly WhoAmIClue[]) {
   return clues.filter((clue) => whoAmIClueFacet(clue) !== "relationships" || clue.id === keepId);
 }
 
+function isForbiddenGenericVolume(clue: WhoAmIClue) {
+  return clue.id === "fact:nfl-career-games"
+    || clue.id === "fact:nfl-career-targets"
+    || clue.conceptId === "identity:career-games";
+}
+
+function isSafeSourceDepthClue(clue: WhoAmIClue) {
+  if (isForbiddenGenericVolume(clue)) return false;
+  if (
+    clue.id === "player-career-start"
+    || clue.id === "player-career-end"
+    || clue.id === "coach-start"
+    || clue.id === "coach-end"
+    || clue.id === "career-span"
+    || clue.id === "coach-affiliation-count"
+    || clue.id === "career-path"
+    || clue.id.startsWith("affiliation:")
+  ) return false;
+
+  if (clue.identityKnowledge) return true;
+  if (/^fact:nfl-career-/.test(clue.id)) return false;
+  return (
+    clue.id === "position"
+    || clue.id === "era"
+    || clue.id === "school"
+    || clue.id === "draft-pick"
+    || clue.id === "draft-round"
+    || clue.id === "draft-year"
+    || clue.id === "first-overall"
+    || clue.id === "first-round"
+    || clue.id === "undrafted"
+    || clue.id === "heisman"
+    || clue.id === "national-champion"
+    || /^fact:nfl-(?:ap-mvp-awards|super-bowl-titles|defensive-player-of-year-awards|first-team-all-pros)$/.test(clue.id)
+  );
+}
+
 function sourceBackedReplayCandidates(
   curatedRebanded: readonly WhoAmIClue[],
   sourceClues: readonly WhoAmIClue[],
@@ -325,16 +362,54 @@ function sourceBackedReplayCandidates(
   const candidates = [...curatedRebanded];
 
   for (const sourceClue of sourceClues) {
-    // Batch-specific curation remains authoritative for metrics and structural
-    // chronology. PR4 may only recover verified identity-knowledge facts that
-    // were omitted by an older batch's shortlist.
-    if (!sourceClue.identityKnowledge || seenIds.has(sourceClue.id)) continue;
+    if (seenIds.has(sourceClue.id) || !isSafeSourceDepthClue(sourceClue)) continue;
     const clue = rebandNflClue(sourceClue);
     if (whoAmIClueHasHardEditorialFailure(clue, "NFL")) continue;
     candidates.push(clue);
     seenIds.add(clue.id);
   }
   return candidates;
+}
+
+function canRestoreReplayClue(
+  restored: readonly WhoAmIClue[],
+  clue: WhoAmIClue,
+  requireSemanticIndependence: boolean,
+) {
+  const selectionClass = whoAmIClueSelectionClass(clue);
+  const category = whoAmIRevealProfile(clue).category;
+
+  if (selectionClass === "deep-biography" || whoAmIClueHasHardEditorialFailure(clue, "NFL")) return false;
+  if (isForbiddenGenericVolume(clue)) return false;
+  if (
+    selectionClass === "identity-color"
+    && restored.some((candidate) => whoAmIClueSelectionClass(candidate) === "identity-color")
+  ) return false;
+  if (
+    isPersonalBiography(clue)
+    && restored.some((candidate) => isPersonalBiography(candidate))
+  ) return false;
+  if (
+    whoAmIClueFacet(clue) === "relationships"
+    && restored.some((candidate) => whoAmIClueFacet(candidate) === "relationships")
+  ) return false;
+  if (
+    category === "production"
+    && restored.filter((candidate) => whoAmIRevealProfile(candidate).category === "production").length >= 2
+  ) return false;
+  if (
+    category === "jersey-number"
+    && restored.some((candidate) => whoAmIRevealProfile(candidate).category === "jersey-number")
+  ) return false;
+  if (
+    category === "nickname-persona"
+    && restored.some((candidate) => whoAmIRevealProfile(candidate).category === "nickname-persona")
+  ) return false;
+  if (
+    requireSemanticIndependence
+    && restored.some((candidate) => whoAmICluesShareInformation(candidate, clue))
+  ) return false;
+  return true;
 }
 
 function restoreReplayDepth(
@@ -348,9 +423,7 @@ function restoreReplayDepth(
   const rankedCandidates = candidates
     .filter((clue) => !retained.has(clue.id))
     .filter((clue) => whoAmIClueSelectionClass(clue) !== "deep-biography")
-    .filter((clue) => !isPersonalBiography(clue))
-    .filter((clue) => whoAmIRevealProfile(clue).category !== "jersey-number")
-    .filter((clue) => whoAmIRevealProfile(clue).category !== "nickname-persona")
+    .filter((clue) => !isForbiddenGenericVolume(clue))
     .filter((clue) => !whoAmIClueHasHardEditorialFailure(clue, "NFL"))
     .sort((left, right) => {
       const leftProduction = whoAmIRevealProfile(left).category === "production" ? 1 : 0;
@@ -359,24 +432,18 @@ function restoreReplayDepth(
         || semanticClueValue(right) - semanticClueValue(left);
     });
 
-  for (const clue of rankedCandidates) {
+  // Prefer genuinely new information. If a legacy batch is still below the
+  // 12-clue replay contract, retain an additional source-backed wording/fact
+  // rather than falling back to generic career-volume filler.
+  for (const requireSemanticIndependence of [true, false]) {
+    for (const clue of rankedCandidates) {
+      if (restored.length >= 12) break;
+      if (retained.has(clue.id)) continue;
+      if (!canRestoreReplayClue(restored, clue, requireSemanticIndependence)) continue;
+      restored.push(clue);
+      retained.add(clue.id);
+    }
     if (restored.length >= 12) break;
-    const selectionClass = whoAmIClueSelectionClass(clue);
-    if (
-      selectionClass === "identity-color"
-      && restored.some((candidate) => whoAmIClueSelectionClass(candidate) === "identity-color")
-    ) continue;
-    if (
-      whoAmIClueFacet(clue) === "relationships"
-      && restored.some((candidate) => whoAmIClueFacet(candidate) === "relationships")
-    ) continue;
-    if (
-      whoAmIRevealProfile(clue).category === "production"
-      && restored.filter((candidate) => whoAmIRevealProfile(candidate).category === "production").length >= 2
-    ) continue;
-    if (restored.some((candidate) => whoAmICluesShareInformation(candidate, clue))) continue;
-    restored.push(clue);
-    retained.add(clue.id);
   }
   return restored;
 }
@@ -410,7 +477,8 @@ export function refineNflWhoAmIContent(
   const withOrientation = ensureOrientationClues(subject, clues);
   const rebanded = withOrientation.map(rebandNflClue);
   const replayCandidates = sourceBackedReplayCandidates(rebanded, sourceClues);
-  const semanticallyDistinct = trimSemanticRepeats(rebanded);
+  const withoutForbiddenVolume = rebanded.filter((clue) => !isForbiddenGenericVolume(clue));
+  const semanticallyDistinct = trimSemanticRepeats(withoutForbiddenVolume);
   const withoutStatSoup = capGenericProduction(semanticallyDistinct);
   const withoutRepeatedSignatures = trimRepeatedLateSignatures(withoutStatSoup);
   const withoutPersonalBiography = capPersonalBiography(withoutRepeatedSignatures);

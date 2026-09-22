@@ -2464,6 +2464,18 @@ function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue)
   ) {
     return { ...clue, band: "strong", facet: "accomplishments", revealPriority: 16 };
   }
+  if (
+    subject.id === "don-shula"
+    && clue.conceptId === "identity:high-school-coach-before-nfl"
+  ) {
+    return { ...clue, band: "helpful", facet: "background", revealPriority: 18 };
+  }
+  if (
+    subject.id === "don-shula"
+    && clue.conceptId === "identity:seven-year-nfl-defensive-back"
+  ) {
+    return { ...clue, band: "helpful", facet: "role", revealPriority: 20 };
+  }
   if (subject.id === "pete-carroll" && clue.id === "era") {
     return { ...clue, text: "I was an NFL head coach in the 1990s, 2010s and 2020s." };
   }
