@@ -124,6 +124,18 @@ describe("fighterThumbnailPath", () => {
       "https://a.espncdn.com/i/headshots/mma/players/full/4312859.png",
     );
   });
+
+  it("leaves Sep. 26 newcomers blank when UFC and ESPN do not have acceptable thumbs", () => {
+    for (const slug of ["mehemmedeli-osmanli", "ilimbek-akylbek", "melissa-amaya"]) {
+      expect(fighterThumbnailPath(slug)).toBeNull();
+    }
+  });
+
+  it("uses the existing missing-thumbnail presentation for a blank UFC thumb", () => {
+    render(<FighterThumbnail name="Melissa Amaya" slug="melissa-amaya" />);
+
+    expect(screen.getByLabelText("Melissa Amaya photo unavailable")).toBeInTheDocument();
+  });
 });
 
 describe("Shane contender fighter-tile treatment", () => {
