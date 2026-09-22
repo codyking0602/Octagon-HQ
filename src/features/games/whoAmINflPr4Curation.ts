@@ -9,6 +9,14 @@ const SUPERLATIVE_SIGNAL = /\b(?:record|leader|most|fewest|first|only|single-sea
 const SIGNATURE_SIGNAL = /\b(?:super bowl mvp|nfl mvp|defensive player of the year|offensive player of the year|rookie of the year|hall of fame|record|all-time|first player|only player|game-winning|last-second|walk-off|miracle|nickname|known as|called the|wore no\.|no\. \d{1,2}\b)\b/i;
 const ACCOMPLISHMENT_SIGNAL = /\b(?:super bowl|mvp|all-pro|pro bowl|player of the year|rookie of the year|hall of fame|championship|award|record)\b/i;
 
+const NFL_PR4_POSITION_FALLBACKS = new Map<string, string>([
+  ["nfl-aaron-rodgers", "quarterback"],
+  ["nfl-bart-starr", "quarterback"],
+  ["nfl-bobby-layne", "quarterback"],
+  ["brett-favre", "quarterback"],
+  ["cam-newton", "quarterback"],
+]);
+
 function bandRank(band: WhoAmIClueBand) {
   return ({ broad: 0, helpful: 1, strong: 2, giveaway: 3 } as const)[band];
 }
@@ -56,15 +64,18 @@ function ensureOrientationClues(subject: FootballSubjectProfile, clues: readonly
         revealPriority: 10,
       });
     }
-  } else if (subject.position && !next.some((clue) => clue.id === "position" || clue.id === "pr4:position")) {
-    next.unshift({
-      id: "pr4:position",
-      conceptId: "pr4:position",
-      text: `I played ${subject.position}.`,
-      band: "broad",
-      facet: "role",
-      revealPriority: 10,
-    });
+  } else if (!next.some((clue) => clue.id === "position" || clue.id === "pr4:position")) {
+    const position = subject.position ?? NFL_PR4_POSITION_FALLBACKS.get(subject.id);
+    if (position) {
+      next.unshift({
+        id: "pr4:position",
+        conceptId: "pr4:position",
+        text: `I played ${position}.`,
+        band: "broad",
+        facet: "role",
+        revealPriority: 10,
+      });
+    }
   }
 
   if (!next.some((clue) => clue.id === "era" || clue.id === "pr4:era")) {
