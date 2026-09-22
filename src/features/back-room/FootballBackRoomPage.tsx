@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPresentation";
-import { isFamilyFeudPrototypeOwner } from "../play/familyFeudPrototypeAccess";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { WeeklyChampionshipRecap } from "../play/WeeklyChampionshipRecap";
 import {
@@ -88,10 +87,7 @@ export default function FootballBackRoomPage() {
       <TodayChallengeHub sport="football" />
       <FootballWeeklyAuctionQuickAccess onOpen={() => navigate("/football/weekly-auction")} />
       <ChallengeCenter sport="football" />
-      <PlayLandingGameLibrary sport="football"
-        onNavigate={navigate}
-        familyFeudVisible={isFamilyFeudPrototypeOwner(identity.profile)}
-      />
+      <PlayLandingGameLibrary sport="football" onNavigate={navigate} />
     </div>
   );
 }

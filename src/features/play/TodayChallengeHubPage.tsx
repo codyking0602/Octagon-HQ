@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "./PlayLandingPresentation";
-import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import TodayChallengeHub from "./TodayChallengeHub";
 import { WeeklyChampionshipRecap } from "./WeeklyChampionshipRecap";
 
@@ -18,10 +17,7 @@ export default function TodayChallengeHubPage() {
       <TodayChallengeHub />
       <ChallengeCenter />
 
-      <PlayLandingGameLibrary sport="ufc"
-        onNavigate={navigate}
-        familyFeudVisible={isFamilyFeudPrototypeOwner(identity.profile)}
-      />
+      <PlayLandingGameLibrary sport="ufc" onNavigate={navigate} />
     </div>
   );
 }
