@@ -10,6 +10,7 @@ import {
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
 import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
+import { OfficialSportsFeudDailyView } from "./OfficialSportsFeudDailyView";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -44,7 +45,7 @@ function RuntimeStatus({ error, onRefresh }: { error: unknown; onRefresh?: () =>
 }
 
 export function officialDailyGameAllowsCasualReplay(gameType: DailyGameType) {
-  return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4" && gameType !== "millionaire";
+  return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4" && gameType !== "millionaire" && gameType !== "sports_feud";
 }
 
 function OfficialResultActions({
@@ -117,6 +118,13 @@ export function OfficialTodayChallengeContent({
           onExit={showMillionaireExit
             ? () => onNavigate(projection.sport === "football" ? "/football" : "/play")
             : undefined}
+        />
+      ) : projection.gameType === "sports_feud" ? (
+        <OfficialSportsFeudDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={onAdvance}
+          onExit={() => onNavigate(projection.sport === "football" ? "/football" : "/play")}
         />
       ) : (
         <OfficialTodayChallengeView
