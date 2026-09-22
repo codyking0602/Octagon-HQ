@@ -856,13 +856,24 @@
 
 /* Compact final-results pass: keep the championship overview fast, with rosters in Collections. */
 .football-weekly-auction__final.surface-card {
-  gap: 8px;
-  padding: 12px;
+  min-height: 0;
+  height: auto;
+  gap: 4px;
+  padding: 9px;
 }
 
 .football-weekly-auction__final-header {
   display: grid;
-  gap: 2px;
+  gap: 0;
+}
+
+.football-weekly-auction__final-header p,
+.football-weekly-auction__final-header h1 {
+  margin-bottom: 2px;
+}
+
+.football-weekly-auction__final-header > span {
+  font-size: .66rem;
 }
 
 .football-weekly-auction__final-header h1 {
@@ -872,9 +883,10 @@
 .football-weekly-auction__champion,
 .football-weekly-auction__finish {
   min-height: 0;
-  margin: 2px 0;
-  padding: 9px 11px;
-  border-radius: 12px;
+  height: auto;
+  margin: 0;
+  padding: 5px 8px;
+  border-radius: 10px;
 }
 
 .football-weekly-auction__finish {
@@ -899,37 +911,47 @@
 
 .football-weekly-auction__champion {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2px 10px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0 8px;
+  align-items: center;
   text-align: left;
 }
 
-.football-weekly-auction__champion small,
-.football-weekly-auction__champion span {
-  grid-column: 1 / -1;
+.football-weekly-auction__champion small {
+  grid-column: 1;
+  font-size: .58rem;
 }
 
 .football-weekly-auction__champion strong {
+  grid-column: 2;
   margin: 0;
+  font-size: 1rem;
 }
 
 .football-weekly-auction__champion b {
-  font-size: 1.65rem;
+  grid-column: 3;
+  font-size: 1.35rem;
   line-height: 1;
+}
+
+.football-weekly-auction__champion span {
+  grid-column: 1 / -1;
+  margin-top: 1px;
+  font-size: .62rem;
 }
 
 .football-weekly-auction__tabs {
   gap: 3px;
-  margin: 3px 0 6px;
-  padding: 3px;
+  margin: 1px 0 4px;
+  padding: 2px;
   border: 1px solid rgba(255,255,255,.09);
   border-radius: 10px;
   background: rgba(4,13,20,.55);
 }
 
 .football-weekly-auction__tabs button {
-  min-height: 32px;
-  padding: 5px 4px;
+  min-height: 26px;
+  padding: 3px 4px;
   border: 0;
   border-radius: 7px;
   background: transparent;
@@ -942,17 +964,19 @@
 }
 
 .football-weekly-auction__rows {
-  margin-bottom: 5px;
+  min-height: 0;
+  height: auto;
+  margin-bottom: 4px;
 }
 
 .football-weekly-auction__rows > header,
 .football-weekly-auction__rows > div {
-  padding: 7px 9px;
+  padding: 6px 8px;
 }
 
 .football-weekly-auction__collections {
   display: grid;
-  gap: 7px;
+  gap: 5px;
 }
 
 .football-weekly-auction__player-picker {
@@ -1041,14 +1065,17 @@
 }
 
 .football-weekly-auction__new-week {
-  min-height: 44px;
-  margin-top: 1px;
+  min-height: 34px;
+  margin-top: 0;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: .7rem;
 }
 
 @media (max-width: 420px) {
   .football-weekly-auction__final.surface-card {
-    gap: 6px;
-    padding: 10px;
+    gap: 4px;
+    padding: 8px;
   }
 
   .football-weekly-auction__finish {
