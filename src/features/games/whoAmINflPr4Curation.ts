@@ -102,14 +102,16 @@ function nflOrientationReband(clue: WhoAmIClue) {
     || clue.id === "role"
     || clue.id === "pr4:position"
     || clue.id === "pr4:role"
-    || clue.id === "era"
-    || clue.id === "pr4:era"
   ) {
     return { ...clue, band: "broad" as const };
   }
+  if (clue.id === "era" || clue.id === "pr4:era") {
+    return { ...clue, band: "helpful" as const };
+  }
 
   const category = whoAmIRevealProfile(clue).category;
-  if (category === "role" || category === "era") return atMostBand(clue, "helpful");
+  if (category === "role") return { ...clue, band: "broad" as const };
+  if (category === "era") return atMostBand(clue, "helpful");
   return clue;
 }
 
