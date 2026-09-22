@@ -4,6 +4,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
 import { OfficialWhoAmIDailyView } from "../play/OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "../play/OfficialMillionaireDailyView";
+import { OfficialSportsFeudDailyView } from "../play/OfficialSportsFeudDailyView";
 import {
   createTodayChallengeRepository,
   TodayChallengeRepositoryError,
@@ -42,6 +43,7 @@ const GAME_LABELS = {
   hit_the_number: "HIT THE NUMBER",
   who_am_i: "WHO AM I?",
   millionaire: "MILLIONAIRE",
+  sports_feud: "SPORTS FEUD",
 } as const;
 
 type JsonRecord = Record<string, unknown>;
@@ -468,8 +470,10 @@ type GameProps = {
 
 export function FootballTodayChallengeResult({
   projection,
+  onExit,
 }: {
   projection: TodayChallengeProjection;
+  onExit?: () => void;
 }) {
   const advance = (_action: JsonRecord) => {};
 
@@ -490,6 +494,8 @@ export function FootballTodayChallengeResult({
       return <OfficialWhoAmIDailyView projection={projection} busy={false} onAdvance={advance} />;
     case "millionaire":
       return <OfficialMillionaireDailyView projection={projection} busy={false} onAdvance={advance} />;
+    case "sports_feud":
+      return <OfficialSportsFeudDailyView projection={projection} busy={false} onAdvance={advance} onExit={onExit} />;
   }
 }
 
@@ -743,6 +749,21 @@ export default function FootballTodayChallengePage() {
             <p className="game-action-status" role="status">{shareStatus}</p>
           </div>
         ) : null}
+      </div>
+    );
+  }
+
+  if (projection.gameType === "sports_feud") {
+    return (
+      <div className="official-daily-page">
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        <OfficialSportsFeudDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={advance}
+          onExit={() => navigate("/football")}
+        />
       </div>
     );
   }

@@ -10,6 +10,7 @@ import {
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
 import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
+import { OfficialSportsFeudDailyView } from "./OfficialSportsFeudDailyView";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -44,7 +45,7 @@ function RuntimeStatus({ error, onRefresh }: { error: unknown; onRefresh?: () =>
 }
 
 export function officialDailyGameAllowsCasualReplay(gameType: DailyGameType) {
-  return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4" && gameType !== "millionaire";
+  return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4" && gameType !== "millionaire" && gameType !== "sports_feud";
 }
 
 function OfficialResultActions({
@@ -68,12 +69,14 @@ export function OfficialTodayChallengeContent({
   onAdvance,
   onNavigate,
   showMillionaireExit = false,
+  onSportsFeudExit,
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
   onAdvance: (action: Record<string, unknown>) => void;
   onNavigate: (route: string) => void;
   showMillionaireExit?: boolean;
+  onSportsFeudExit?: () => void;
 }) {
   const adapter = todayChallengeAdapter(projection.gameType);
   const blindResumeV3 = projection.gameType === "blind_resume"
@@ -118,6 +121,15 @@ export function OfficialTodayChallengeContent({
             ? () => onNavigate(projection.sport === "football" ? "/football" : "/play")
             : undefined}
         />
+      ) : projection.gameType === "sports_feud" ? (
+        <OfficialSportsFeudDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={onAdvance}
+          onExit={onSportsFeudExit ?? (showMillionaireExit
+            ? () => onNavigate(projection.sport === "football" ? "/football" : "/play")
+            : undefined)}
+        />
       ) : (
         <OfficialTodayChallengeView
           projection={presentationProjection}
@@ -127,7 +139,7 @@ export function OfficialTodayChallengeContent({
         />
       )}
       <OfficialBlindRankCanonicalOrder projection={projection} />
-      {projection.officialAttempt && adapter ? (
+      {projection.officialAttempt && adapter && projection.gameType !== "sports_feud" ? (
         <OfficialResultActions
           casualRoute={officialDailyGameAllowsCasualReplay(projection.gameType) ? adapter.casualRoute : null}
           onNavigate={onNavigate}

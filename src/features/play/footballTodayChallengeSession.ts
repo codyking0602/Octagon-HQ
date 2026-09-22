@@ -18,8 +18,10 @@ const FOOTBALL_RESUMED_SCHEDULE_VERSION = "football-daily-v3" as const;
 const FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION = "football-daily-v5" as const;
 export const FOOTBALL_TODAY_SCHEDULE_VERSION = "football-daily-v7-hit-number-pool-cleanup" as const;
 export const FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION = "football-daily-v11-millionaire-no-double" as const;
+export const FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION = "football-daily-v12-sports-feud" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
 const FOOTBALL_MILLIONAIRE_CUTOVER_DAY = "2026-09-19";
+const FOOTBALL_SPORTS_FEUD_CUTOVER_DAY = "2026-09-23";
 const FOOTBALL_TODAY_QUESTION_REFRESH_DAY = "2026-09-13";
 const FOOTBALL_HISTORICAL_ANCHOR_DAY = "2026-08-22";
 const FOOTBALL_HISTORICAL_CYCLE: readonly OfficialDailyGameType[] = [
@@ -74,6 +76,35 @@ const FOOTBALL_MILLIONAIRE_CYCLE: readonly OfficialDailyGameType[] = [
   "millionaire",
   "find_leader",
   "wavelength",
+];
+
+const FOOTBALL_SPORTS_FEUD_CYCLE: readonly OfficialDailyGameType[] = [
+  "sports_feud",
+  "find_leader",
+  "wavelength",
+  "hit_the_number",
+  "who_am_i",
+  "millionaire",
+  "find_leader",
+  "wavelength",
+  "sports_feud",
+  "hit_the_number",
+  "who_am_i",
+  "find_leader",
+  "wavelength",
+  "millionaire",
+  "hit_the_number",
+  "sports_feud",
+  "who_am_i",
+  "find_leader",
+  "wavelength",
+  "hit_the_number",
+  "who_am_i",
+  "millionaire",
+  "sports_feud",
+  "find_leader",
+  "wavelength",
+  "millionaire",
 ];
 
 const FOOTBALL_TODAY_GAME_OVERRIDES: Readonly<Record<string, OfficialDailyGameType>> = {
@@ -157,6 +188,7 @@ function dayNumber(day: string) {
 
 export function footballTodayScheduleVersionForDay(day: string): string {
   dayNumber(day);
+  if (day >= FOOTBALL_SPORTS_FEUD_CUTOVER_DAY) return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
   if (day >= FOOTBALL_MILLIONAIRE_CUTOVER_DAY) return FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION;
   if (day >= FOOTBALL_TODAY_QUESTION_REFRESH_DAY) return FOOTBALL_TODAY_SCHEDULE_VERSION;
   if (day >= FOOTBALL_TODAY_CUTOVER_DAY) return FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION;
@@ -167,6 +199,7 @@ export function footballTodayScheduleVersionForDay(day: string): string {
 
 function footballTodaySetupScheduleVersionForDay(day: string): string {
   dayNumber(day);
+  if (day >= FOOTBALL_SPORTS_FEUD_CUTOVER_DAY) return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
   if (day >= FOOTBALL_MILLIONAIRE_CUTOVER_DAY) return FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION;
   if (day >= FOOTBALL_TODAY_QUESTION_REFRESH_DAY) return FOOTBALL_TODAY_SCHEDULE_VERSION;
   return day >= FOOTBALL_TODAY_CUTOVER_DAY
@@ -176,6 +209,11 @@ function footballTodaySetupScheduleVersionForDay(day: string): string {
 
 export function footballTodayGameForDay(day: string): OfficialDailyGameType {
   const currentDayNumber = dayNumber(day);
+  if (day >= FOOTBALL_SPORTS_FEUD_CUTOVER_DAY) {
+    const offset = currentDayNumber - dayNumber(FOOTBALL_SPORTS_FEUD_CUTOVER_DAY);
+    const index = ((offset % FOOTBALL_SPORTS_FEUD_CYCLE.length) + FOOTBALL_SPORTS_FEUD_CYCLE.length) % FOOTBALL_SPORTS_FEUD_CYCLE.length;
+    return FOOTBALL_SPORTS_FEUD_CYCLE[index]!;
+  }
   if (day >= FOOTBALL_MILLIONAIRE_CUTOVER_DAY) {
     const offset = currentDayNumber - dayNumber(FOOTBALL_MILLIONAIRE_CUTOVER_DAY);
     const index = ((offset % FOOTBALL_MILLIONAIRE_CYCLE.length) + FOOTBALL_MILLIONAIRE_CYCLE.length) % FOOTBALL_MILLIONAIRE_CYCLE.length;
@@ -312,6 +350,30 @@ function grade(
         base_score: finalSubmission.base_score,
         lifelines_used: finalSubmission.lifelines_used,
         time_remaining_ms: finalSubmission.time_remaining_ms,
+        score,
+      },
+    };
+  }
+
+  if (gameType === "sports_feud") {
+    const main = Number(finalSubmission.main_points ?? -1);
+    const fast = Number(finalSubmission.fast_money_points ?? -1);
+    const score = Number(finalSubmission.normalized_score ?? finalSubmission.native_score ?? -1);
+    if (
+      !Number.isInteger(main) || main < 0 || main > 60
+      || !Number.isInteger(fast) || fast < 0 || fast > 40
+      || !Number.isInteger(score) || score < 0 || score > 100
+      || score !== main + fast
+    ) {
+      throw new Error("Football Sports Feud score is invalid.");
+    }
+    return {
+      native: score,
+      normalized: score,
+      result: {
+        main_points: main,
+        fast_money_points: fast,
+        fast_money_time_remaining_ms: finalSubmission.fast_money_time_remaining_ms,
         score,
       },
     };

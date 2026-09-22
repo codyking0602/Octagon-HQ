@@ -90,12 +90,7 @@ function mainBoardPublicState(
   const foundIds = new Set(board.revealedEntityIds);
   const settled = boardSettled(state, boardIndex);
   const foundAnswers = board.revealedEntityIds.map((entityId) => answerById(pack, boardIndex, entityId));
-  const missedAnswers = settled && foundAnswers.length < FAMILY_FEUD_BOARD_ANSWER_COUNT
-    ? question.answers
-        .filter((answer) => !foundIds.has(answer.entityId))
-        .slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT - foundAnswers.length)
-    : [];
-  const displayAnswers = [...foundAnswers, ...missedAnswers];
+  const displayAnswers = foundAnswers;
 
   return {
     id: question.id,
@@ -105,6 +100,13 @@ function mainBoardPublicState(
     required_answers: FAMILY_FEUD_BOARD_ANSWER_COUNT,
     max_points: FAMILY_FEUD_MAIN_BOARD_MAX,
     settled,
+    answer_reveal: settled
+      ? question.answers.map((answer) => ({
+          entity: entityPresentation(pack, answer.entityId),
+          points: answer.points,
+          found: foundIds.has(answer.entityId),
+        }))
+      : null,
     slots: Array.from({ length: FAMILY_FEUD_BOARD_ANSWER_COUNT }, (_value, slotIndex) => {
       const answer = displayAnswers[slotIndex] ?? null;
       const found = Boolean(answer && foundIds.has(answer.entityId));
@@ -206,6 +208,11 @@ export function familyFeudDailyPublicState(
         ? { id: currentFastMoney.id, prompt: currentFastMoney.prompt }
         : null,
       time_remaining_ms: state.fastMoneyTimeRemainingMs,
+      submitted_answers: state.fastMoneyResults.map((result) => ({
+        submitted_answer: result.entityId
+          ? entityPresentation(pack, result.entityId).display_name
+          : result.submittedText || "NO ANSWER",
+      })),
       results: fastMoneyReveal(pack, state),
       points: complete ? score.fastMoney : null,
     },
@@ -261,6 +268,13 @@ export function buildFamilyFeudDailySetup(
       runtime_version: FAMILY_FEUD_DAILY_CONTENT_VERSION,
       sport: pack.sport,
       pack_id: pack.id,
+      presentation_domain: pack.id.includes("-cfb-")
+        ? "cfb"
+        : pack.id.includes("-nfl-")
+          ? "nfl"
+          : pack.sport === "football"
+            ? "nfl"
+            : "ufc",
       main_board_count: pack.mainBoards.length,
       answers_required_per_board: FAMILY_FEUD_BOARD_ANSWER_COUNT,
       strike_limit: FAMILY_FEUD_STRIKES_PER_BOARD,

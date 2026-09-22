@@ -1,0 +1,124 @@
+import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
+
+export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
+  {
+    category: "fighter-traits",
+    collisionGroup: "clutch",
+    prompts: [
+      "Name a UFC fighter you associate with clutch championship moments.",
+      "Name a fighter you would trust in a five-round title fight.",
+      "Name a UFC star who seemed built for the biggest stage.",
+      "Name a fighter whose legacy includes huge moments under pressure.",
+      "Name a champion you would want when everything is on the line.",
+    ],
+    answers: ["Georges St-Pierre", "Jon Jones", "Amanda Nunes", "Khabib Nurmagomedov", "Anderson Silva", "Demetrious Johnson", "Jose Aldo", "Alexander Volkanovski"],
+  },
+  {
+    category: "fighter-traits",
+    collisionGroup: "power",
+    prompts: [
+      "Name a UFC fighter known for scary power.",
+      "Name a fighter whose one-shot power changes every exchange.",
+      "Name a UFC athlete opponents cannot afford to get hit clean by.",
+      "Name a fighter you associate with explosive knockout power.",
+      "Name a fighter whose power is part of the scouting report immediately.",
+    ],
+    answers: ["Francis Ngannou", "Alex Pereira", "Derrick Lewis", "Dan Henderson", "Chuck Liddell", "Jiri Prochazka", "Justin Gaethje", "Yoel Romero"],
+  },
+  {
+    category: "fighter-traits",
+    collisionGroup: "cardio",
+    prompts: [
+      "Name a UFC fighter known for elite cardio.",
+      "Name a fighter you would trust to keep a brutal pace for five rounds.",
+      "Name a UFC athlete famous for not slowing down.",
+      "Name a fighter whose conditioning became part of the game plan.",
+      "Name a fighter you associate with relentless late-round pace.",
+    ],
+    answers: ["Max Holloway", "Merab Dvalishvili", "Colby Covington", "Georges St-Pierre", "Kamaru Usman", "Nate Diaz", "Tony Ferguson", "Demetrious Johnson"],
+  },
+  {
+    category: "fighter-traits",
+    collisionGroup: "durability",
+    prompts: [
+      "Name a UFC fighter famous for toughness or durability.",
+      "Name a fighter you remember absorbing incredible punishment.",
+      "Name a UFC athlete with a reputation for being hard to put away.",
+      "Name a fighter whose chin became part of the legend.",
+      "Name a fighter fans associate with surviving wars.",
+    ],
+    answers: ["Max Holloway", "Nate Diaz", "Justin Gaethje", "Tony Ferguson", "Dan Henderson", "Robbie Lawler", "Dustin Poirier", "Mark Hunt"],
+  },
+  {
+    category: "personality",
+    collisionGroup: "culture",
+    prompts: [
+      "Name a UFC fighter famous for trash talk.",
+      "Name a fighter who could sell a fight with a microphone.",
+      "Name a UFC personality known for talking before the cage door closes.",
+      "Name a fighter whose interviews became part of the entertainment.",
+      "Name a UFC star who knew how to create attention with words.",
+    ],
+    answers: ["Conor McGregor", "Chael Sonnen", "Nate Diaz", "Michael Bisping", "Colby Covington", "Sean Strickland", "Kevin Holland", "Derrick Lewis"],
+  },
+  {
+    category: "fighter-style",
+    collisionGroup: "pressure",
+    prompts: [
+      "Name a UFC fighter known for relentless pressure.",
+      "Name a fighter who makes opponents work every second.",
+      "Name a UFC athlete you associate with walking opponents down.",
+      "Name a fighter whose pace can make the cage feel small.",
+      "Name a pressure fighter fans recognize immediately.",
+    ],
+    answers: ["Khabib Nurmagomedov", "Merab Dvalishvili", "Max Holloway", "Justin Gaethje", "Colby Covington", "Petr Yan", "Paulo Costa", "Cain Velasquez"],
+  },
+  {
+    category: "fighter-style",
+    collisionGroup: "counter-striking",
+    prompts: [
+      "Name a UFC fighter known for counterstriking.",
+      "Name a fighter who is dangerous when opponents overreach.",
+      "Name a UFC striker you associate with making people pay for mistakes.",
+      "Name a fighter whose timing can punish aggressive opponents.",
+      "Name a counterstriker serious MMA fans recognize.",
+    ],
+    answers: ["Anderson Silva", "Conor McGregor", "Israel Adesanya", "Lyoto Machida", "Stephen Thompson", "Jose Aldo", "Valentina Shevchenko", "Petr Yan"],
+  },
+  {
+    category: "fighter-style",
+    collisionGroup: "grappling",
+    prompts: [
+      "Name a UFC fighter known for elite grappling.",
+      "Name a fighter whose ground game can dominate a matchup.",
+      "Name a UFC athlete you would hate to face in a scramble.",
+      "Name a fighter fans associate with control and submissions.",
+      "Name a grappler who turned mat skill into major UFC success.",
+    ],
+    answers: ["Khabib Nurmagomedov", "Charles Oliveira", "Islam Makhachev", "Demian Maia", "Georges St-Pierre", "BJ Penn", "Frank Mir", "Mackenzie Dern"],
+  },
+  {
+    category: "underdogs",
+    collisionGroup: "moments",
+    prompts: [
+      "Name a fighter remembered for a huge UFC upset.",
+      "Name a UFC underdog who shocked a champion or superstar.",
+      "Name a fighter whose upset win stunned MMA fans.",
+      "Name a UFC name tied to a major 'nobody saw that coming' moment.",
+      "Name a fighter who proved betting odds do not decide a fight.",
+    ],
+    answers: ["Matt Serra", "Holly Holm", "Chris Weidman", "Michael Bisping", "Julianna Pena", "Leon Edwards", "Nate Diaz", "Gabriel Gonzaga"],
+  },
+  {
+    category: "culture",
+    collisionGroup: "culture",
+    prompts: [
+      "Name a UFC fighter known for a memorable walkout.",
+      "Name a fighter whose walk to the cage feels like part of the show.",
+      "Name a UFC star with an entrance fans look forward to.",
+      "Name a fighter whose walkout helps create a big-fight atmosphere.",
+      "Name a UFC fighter whose entrance has become part of the fan experience.",
+    ],
+    answers: ["Conor McGregor", "Israel Adesanya", "Alex Pereira", "Darren Till", "Tom Aspinall", "Paddy Pimblett", "Max Holloway", "Jiri Prochazka"],
+  },
+] as const);

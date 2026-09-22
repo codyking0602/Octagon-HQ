@@ -67,6 +67,16 @@ function gameProgress(projection: TodayChallengeProjection) {
       return state.complete === true
         ? "8-QUESTION LADDER COMPLETE"
         : `Q${Number(state.current_question_index ?? 0) + 1} OF 8`;
+    case "sports_feud": {
+      if (state.complete === true) return "SPORTS FEUD COMPLETE";
+      if (state.phase === "fast-money") {
+        const fast = state.fast_money && typeof state.fast_money === "object" && !Array.isArray(state.fast_money)
+          ? state.fast_money as Record<string, unknown>
+          : {};
+        return `FAST MONEY · ${Number(fast.answered_count ?? 0)}/5`;
+      }
+      return `ROUND ${Number(state.main_board_index ?? 0) + 1} OF 2`;
+    }
   }
 }
 
@@ -108,7 +118,7 @@ function DailyAnswerDetail({
       <div className="today-hub-official-result__body official-daily-page">
         {sport === "football" ? (
           <Suspense fallback={<p className="today-hub-empty">Loading official Football result…</p>}>
-            <FootballTodayChallengeResult projection={resultProjection} />
+            <FootballTodayChallengeResult projection={resultProjection} onExit={onClose} />
           </Suspense>
         ) : (
           <OfficialTodayChallengeContent
@@ -116,6 +126,7 @@ function DailyAnswerDetail({
             busy={false}
             onAdvance={() => {}}
             onNavigate={(route) => navigate(route)}
+            onSportsFeudExit={onClose}
           />
         )}
       </div>

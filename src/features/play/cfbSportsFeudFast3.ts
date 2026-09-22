@@ -1,0 +1,124 @@
+import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
+
+export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
+  {
+    category: "coaches",
+    collisionGroup: "coaches",
+    prompts: [
+      "Name a coach who won a college football national championship.",
+      "Name a national-title-winning college football coach.",
+      "Name a coach you remember lifting a college football championship trophy.",
+      "Name a college coach whose résumé includes a national title.",
+      "Name a championship coach almost every college football fan knows.",
+    ],
+    answers: ["Nick Saban", "Kirby Smart", "Urban Meyer", "Dabo Swinney", "Pete Carroll", "Jim Harbaugh", "Mack Brown", "Bob Stoops"],
+  },
+  {
+    category: "coaches",
+    collisionGroup: "coaches",
+    prompts: [
+      "Name an offensive-minded college football coach.",
+      "Name a college coach known for creative offense.",
+      "Name a coach whose scheme became part of his reputation.",
+      "Name a college coach you associate with explosive offense.",
+      "Name a coach whose playbook changed how people talked about offense.",
+    ],
+    answers: ["Steve Spurrier", "Mike Leach", "Chip Kelly", "Lincoln Riley", "Gus Malzahn", "Lane Kiffin", "Hal Mumme", "Rich Rodriguez"],
+  },
+  {
+    category: "coaches",
+    collisionGroup: "coaches",
+    prompts: [
+      "Name a college football coach strongly associated with defense.",
+      "Name a coach whose teams were known for being hard to score on.",
+      "Name a college coach with a defensive identity.",
+      "Name a coach you would trust to build an elite college defense.",
+      "Name a coach whose best teams were famous for physical defense.",
+    ],
+    answers: ["Nick Saban", "Kirby Smart", "Jim Tressel", "Mark Dantonio", "Pat Narduzzi", "Brent Venables", "Dave Aranda", "Bud Foster"],
+  },
+  {
+    category: "rivalries",
+    collisionGroup: "rivalries",
+    prompts: [
+      "Name a famous college football rivalry.",
+      "Name a rivalry game that can split a state or region.",
+      "Name a college matchup fans circle months in advance.",
+      "Name a rivalry where bragging rights last all year.",
+      "Name a college football rivalry a casual fan might recognize.",
+    ],
+    answers: ["Ohio State-Michigan", "Alabama-Auburn", "Texas-Oklahoma", "Army-Navy", "USC-Notre Dame", "Florida-Georgia", "Florida State-Miami", "Oregon-Washington"],
+  },
+  {
+    category: "venues",
+    collisionGroup: "venues",
+    prompts: [
+      "Name a college football stadium known for being loud.",
+      "Name a stadium where a road offense can barely hear itself.",
+      "Name a college venue famous for a hostile atmosphere.",
+      "Name a stadium you would expect on a loudest-in-college-football list.",
+      "Name a home field where crowd noise feels like a real advantage.",
+    ],
+    answers: ["Tiger Stadium", "Beaver Stadium", "Neyland Stadium", "Kyle Field", "Autzen Stadium", "Ohio Stadium", "Sanford Stadium", "Memorial Stadium Clemson"],
+  },
+  {
+    category: "bowls",
+    collisionGroup: "bowls",
+    prompts: [
+      "Name a college football bowl game.",
+      "Name a bowl every college football fan has heard of.",
+      "Name a postseason bowl with a long football history.",
+      "Name a bowl you would expect to host a major matchup.",
+      "Name a bowl game that sounds like a big deal on the schedule.",
+    ],
+    answers: ["Rose Bowl", "Sugar Bowl", "Orange Bowl", "Cotton Bowl", "Fiesta Bowl", "Peach Bowl", "Citrus Bowl", "Gator Bowl"],
+  },
+  {
+    category: "traditions",
+    collisionGroup: "traditions",
+    prompts: [
+      "Name a famous college football mascot or live mascot.",
+      "Name a mascot strongly tied to a college football program.",
+      "Name a college mascot fans would recognize without the school name.",
+      "Name a mascot that adds to the Saturday atmosphere.",
+      "Name a college football mascot that feels iconic.",
+    ],
+    answers: ["Uga", "Bevo", "Mike the Tiger", "Traveler", "Ralphie", "Sooner Schooner", "Brutus Buckeye", "The Oregon Duck"],
+  },
+  {
+    category: "traditions",
+    collisionGroup: "traditions",
+    prompts: [
+      "Name a famous college football tradition.",
+      "Name a college football ritual you would want to see in person.",
+      "Name a tradition that makes a home game feel unique.",
+      "Name a Saturday tradition that fans protect fiercely.",
+      "Name a college football tradition people recognize from TV.",
+    ],
+    answers: ["Ohio State dotting the i", "Clemson running down the hill", "Virginia Tech Enter Sandman", "Wisconsin Jump Around", "Texas A&M 12th Man", "Florida State spear plant", "Notre Dame Play Like a Champion Today", "Oklahoma Sooner Schooner"],
+  },
+  {
+    category: "rivalries",
+    collisionGroup: "trophies",
+    prompts: [
+      "Name a college football rivalry trophy.",
+      "Name a trophy two college teams play for every year.",
+      "Name a rivalry trophy with a famous name.",
+      "Name a piece of hardware tied to a college rivalry.",
+      "Name a trophy that makes a rivalry game even more fun.",
+    ],
+    answers: ["Paul Bunyan Trophy", "Golden Hat", "Floyd of Rosedale", "Old Oaken Bucket", "Little Brown Jug", "Iron Skillet", "Jeweled Shillelagh", "Land Grant Trophy"],
+  },
+  {
+    category: "school-identity",
+    collisionGroup: "schools",
+    prompts: [
+      "Name a college football school whose primary look features red.",
+      "Name a major program you associate with the color red.",
+      "Name a school whose football crowd can turn a stadium red.",
+      "Name a college team with red as a signature football color.",
+      "Name a red-wearing college football program almost everyone recognizes.",
+    ],
+    answers: ["Alabama", "Ohio State", "Georgia", "Oklahoma", "USC", "Nebraska", "Wisconsin", "Arkansas"],
+  },
+] as const);

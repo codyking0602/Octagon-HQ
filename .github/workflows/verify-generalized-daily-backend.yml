@@ -17,6 +17,10 @@ on:
       - "src/features/play/whoAmIDailyRuntime.test.ts"
       - "src/features/play/millionaireDailyRuntime.ts"
       - "src/features/play/millionaireDailyRuntime.test.ts"
+      - "src/features/play/familyFeudDailyRuntime.ts"
+      - "src/features/play/familyFeudDailyRuntime.test.ts"
+      - "src/features/play/*SportsFeud*"
+      - "src/features/games/familyFeudEngine.ts"
       - "src/features/play/footballDailyPublicationMillionaire.ts"
       - "src/features/games/whoAmIEngine.ts"
       - "src/features/games/ufcWhoAmIAuthority.ts"
@@ -50,6 +54,7 @@ on:
       - "supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql"
       - "supabase/migrations/202612310148_millionaire_daily_launch.sql"
       - "supabase/migrations/202612310160_daily_challenge_weekly_recap.sql"
+      - "supabase/migrations/202612310164_sports_feud_daily_launch.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -65,6 +70,7 @@ on:
       - "supabase/tests/football_daily_persisted_runtime.sql"
       - "supabase/tests/millionaire_daily_launch.sql"
       - "supabase/tests/daily_challenge_weekly_recap.sql"
+      - "supabase/tests/sports_feud_daily_launch.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_seed.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_assert.sql"
   workflow_dispatch:
@@ -207,6 +213,10 @@ jobs:
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/millionaire_daily_launch.sql
 
+      - name: Execute Sports Feud Daily launch proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/sports_feud_daily_launch.sql
+
       - name: Execute persisted Football Daily runtime proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/football_daily_persisted_runtime.sql
@@ -279,13 +289,14 @@ jobs:
             echo "- Exact source SHA: \`$SOURCE_SHA\`"
             echo "- Fresh database migrations: passed"
             echo "- Daily runtime Edge Function local bundle and execution: passed"
-            echo "- Eight server-owned Daily game families: passed"
-            echo "- Millionaire persisted runtime, private grading, and September 19 dual-sport cutover: passed"
+            echo "- Nine server-owned Daily game families: passed"
+            echo "- Millionaire persisted runtime and September 19 cutover preserved: passed"
+            echo "- Sports Feud private grading, 1,050-question bank contract, and September 23 dual-sport cutover: passed"
             echo "- Hit the Number hidden-value, explicit-lock, and normalized scoring contract: passed"
             echo "- Blind Resume V3 staged reveal, 100-point scoring, and V2 compatibility: passed"
             echo "- Who Am I deterministic setup, Recovery Board parity, and server grading: passed"
             echo "- Calibrated Wavelength v2 publication: passed"
-            echo "- Legacy rotations plus Millionaire cutover: UFC 28-slot / Football 24-slot future schedules: passed"
+            echo "- Sports Feud cutover: UFC 30-slot / Football 26-slot future schedules with four Feud appearances each: passed"
             echo "- Progressive reveal and hidden-evidence boundaries: passed"
             echo "- Cross-device optimistic progress restoration: passed"
             echo "- Football/UFC same-day sport isolation and shared records RPCs: passed"
@@ -415,6 +426,7 @@ jobs:
           require_remote_migration "202612310122"
           require_remote_migration "202612310148"
           require_remote_migration "202612310160"
+          require_remote_migration "202612310164"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof

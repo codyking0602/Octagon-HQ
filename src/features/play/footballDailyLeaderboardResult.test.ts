@@ -11,7 +11,7 @@ describe("Football Daily leaderboard result renderer", () => {
   it("uses the Football result presentation instead of the UFC official renderer", () => {
     expect(hub).toContain("FootballTodayChallengeResult");
     expect(hub).toContain('sport === "football"');
-    expect(hub).toContain("<FootballTodayChallengeResult projection={resultProjection} />");
+    expect(hub).toContain("<FootballTodayChallengeResult projection={resultProjection} onExit={onClose} />");
     expect(hub).toContain("sport={sport}");
   });
 
@@ -25,6 +25,8 @@ describe("Football Daily leaderboard result renderer", () => {
       "keep_4_cut_4",
       "hit_the_number",
       "who_am_i",
+      "millionaire",
+      "sports_feud",
     ]) {
       expect(footballDaily).toContain(`case "${gameType}":`);
     }
