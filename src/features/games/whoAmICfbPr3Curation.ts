@@ -477,6 +477,50 @@ function trimCategoryRepetition(clues: readonly WhoAmIClue[]) {
   );
 }
 
+function cfbPoolRetentionValue(clue: WhoAmIClue) {
+  const selectionClass = whoAmIClueSelectionClass(clue);
+  const profile = whoAmIRevealProfile(clue);
+  let score = selectionClass === "sports-identity" ? 100 : selectionClass === "identity-color" ? 35 : 0;
+
+  if (
+    clue.id === "position"
+    || clue.id === "pr3:position"
+    || clue.id === "role"
+    || clue.id === "pr3:role"
+    || clue.id === "school"
+    || clue.id === "era"
+    || clue.id === "pr3:era"
+  ) score += 150;
+
+  if (
+    profile.category === "accomplishments"
+    || profile.category === "championships"
+    || profile.category === "records"
+    || profile.category === "signature-moment"
+    || profile.category === "sports-biography"
+    || profile.category === "team-path"
+  ) score += 45;
+
+  if (profile.category === "production") {
+    score += SUPERLATIVE_SIGNAL.test(clue.text) ? 20 : -20;
+  }
+  if (profile.category === "personal-biography") score -= 100;
+
+  score += bandRank(clue.band) * 12;
+  if (clue.id.startsWith("pr3:")) score += 10;
+  return score;
+}
+
+function capCfbPlayablePool(clues: readonly WhoAmIClue[], target = 16) {
+  if (clues.length <= target) return [...clues];
+
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: cfbPoolRetentionValue(clue) }))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+  const keep = new Set(ranked.slice(0, target).map(({ clue }) => clue.id));
+  return clues.filter((clue) => keep.has(clue.id));
+}
+
 function ensureConferenceFoundation(
   subject: FootballSubjectProfile,
   clues: readonly WhoAmIClue[],
@@ -548,7 +592,7 @@ export function refineCfbWhoAmIContent(
   const withoutStatSoup = capGenericProduction(rebanded);
   const withoutRepeatedSignatures = trimCategoryRepetition(withoutStatSoup);
   const withoutPersonalBiography = capPersonalBiography(withoutRepeatedSignatures);
-  if (withoutPersonalBiography.length >= 12) return withoutPersonalBiography;
+  if (withoutPersonalBiography.length >= 12) return capCfbPlayablePool(withoutPersonalBiography);
 
   // Keep the signature-category cleanup even for thin legacy pools, then restore
   // only the highest-value non-signature clues needed for replay depth.
@@ -562,5 +606,5 @@ export function refineCfbWhoAmIContent(
     restored.push(clue);
     retainedIds.add(clue.id);
   }
-  return restored.length >= 12 ? restored : withoutPersonalBiography;
+  return capCfbPlayablePool(restored.length >= 12 ? restored : withoutPersonalBiography);
 }
