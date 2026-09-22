@@ -242,6 +242,12 @@ const clueTextOverrides = new Map<string, Pick<WhoAmIClue, "text" | "band" | "fa
     facet: "accomplishments",
     revealPriority: 14,
   }],
+  ["nfl-alex-smith:identity:catastrophic-leg-injury-comeback", {
+    text: "I returned to NFL action after a 2018 compound leg fracture led to severe infection and roughly 17 surgeries.",
+    band: "giveaway",
+    facet: "career-path",
+    revealPriority: 7,
+  }],
   ["earl-campbell:identity:tyler-rose-family-origin", {
     text: "I was known as the 'Tyler Rose.'",
     band: "giveaway",
@@ -328,6 +334,16 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["eric-dickerson", [
     { id: "curated:2105-rushing", conceptId: "curated:2105-rushing", text: "I set the NFL single-season rushing record with 2,105 yards in 1984.", band: "giveaway", facet: "accomplishments", revealPriority: 8 },
     { id: "curated:four-rushing-titles", conceptId: "curated:four-rushing-titles", text: "I won four NFL rushing titles and earned five first-team All-Pro selections.", band: "strong", facet: "accomplishments", revealPriority: 14 },
+    { id: "curated:1983-second-overall", conceptId: "curated:1983-second-overall", text: "The Los Angeles Rams selected me No. 2 overall in the 1983 NFL Draft.", band: "strong", facet: "career-path", revealPriority: 18 },
+    { id: "curated:1999-hof", conceptId: "curated:1999-hof", text: "I was inducted into the Pro Football Hall of Fame in 1999.", band: "strong", facet: "accomplishments", revealPriority: 20 },
+  ]],
+  ["jim-brown", [
+    { id: "curated:brown-three-mvps", conceptId: "curated:brown-three-mvps", text: "I won three AP NFL MVP awards during my nine-season career.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:brown-eight-rushing-titles", conceptId: "curated:brown-eight-rushing-titles", text: "I led the NFL in rushing in eight of my nine seasons.", band: "strong", facet: "accomplishments", revealPriority: 14 },
+  ]],
+  ["walter-payton", [
+    { id: "curated:payton-rushing-record", conceptId: "curated:payton-rushing-record", text: "I retired as the NFL's all-time leading rusher with 16,726 yards.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:payton-1977-mvp", conceptId: "curated:payton-1977-mvp", text: "I was named the NFL's Most Valuable Player in 1977.", band: "strong", facet: "accomplishments", revealPriority: 16 },
   ]],
   ["nfl-harold-red-grange", [{ id: "curated:galloping-ghost", conceptId: "curated:galloping-ghost", text: "I was famously nicknamed the 'Galloping Ghost.'", band: "giveaway", facet: "nickname", revealPriority: 8 }]],
   ["nfl-jim-thorpe", [
@@ -548,6 +564,7 @@ const batch2TextOverrides = new Map<string, Partial<WhoAmIClue>>([
   ["nfl-dave-casper:identity:pr7-dave-casper-holy-roller-rule-change", { text: "I recovered the final fumble in the end zone on the Raiders' game-winning 1978 'Holy Roller,' a play that helped trigger a rule change.", facet: "accomplishments" }],
   ["jason-witten:identity:pr7-jason-witten-parcells-bavaro-mentor", { text: "Bill Parcells coached me early in Dallas and repeatedly used former Giants tight end Mark Bavaro as my toughness standard.", facet: "relationships" }],
   ["nfl-kellen-winslow:identity:pr7-kellen-winslow-basketball-box-out", { facet: "style" }],
+  ["nfl-kellen-winslow:identity:pr7-kellen-winslow-epic-in-miami", { band: "giveaway", facet: "accomplishments", revealPriority: 7 }],
   ["nfl-tony-gonzalez:identity:pr7-tony-gonzalez-kansas-city-contender-choice", { facet: "career-path" }],
   ["nfl-bijan-robinson:identity:signature-juke-craft", { band: "helpful", facet: "style" }],
   ["nfl-jerry-rice:identity:overlooked-by-big-programs", { band: "helpful", facet: "background" }],
