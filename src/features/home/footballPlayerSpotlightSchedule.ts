@@ -75,7 +75,7 @@ export const FOOTBALL_PLAYER_SPOTLIGHT_PAIRS: readonly FootballPlayerSpotlightPa
         result: "VS #7 LSU · W 32–24",
         measurements: "6'0\" · 210 LB",
         teamColor: "#14213D",
-        highlightUrl: "https://youtu.be/7KEkO4RFFLM?si=AC_QOmz-bYIBVSj9",
+        highlightUrl: "https://youtu.be/3j6ijizvXmg?is=VJY4f509RYu8TC0p",
       },
       nfl: {
         name: "Dak Prescott",
@@ -90,7 +90,7 @@ export const FOOTBALL_PLAYER_SPOTLIGHT_PAIRS: readonly FootballPlayerSpotlightPa
         result: "VS WASHINGTON · W 37–20",
         measurements: "6'2\" · 230 LB",
         teamColor: "#041E42",
-        highlightUrl: "https://youtu.be/3j6ijizvXmg?si=WRmY2A38FCl_nA5B",
+        highlightUrl: "https://youtu.be/7KEkO4RFFLM?is=0eBE2IagbqAG1SzX",
       },
     },
   },
