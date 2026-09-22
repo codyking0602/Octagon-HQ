@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCardChangeFindings } from "./cardChangeApproval";
+import { buildCardChangeFindings, type ApprovalMonitoringEvent } from "./cardChangeApproval";
 
 const first = {
   bout_id: "main-event-alpha-beta",
@@ -21,7 +21,7 @@ const second = {
   card_segment: "main" as const,
   segment_sequence: 1,
 };
-const canonical = {
+const canonical: ApprovalMonitoringEvent = {
   event_id: "ufc-approval",
   name: "UFC Fight Night",
   subtitle: "Alpha vs. Beta",
@@ -32,8 +32,13 @@ const canonical = {
   locks_at: "2099-08-10T00:00:00.000Z",
   bouts: [first, second],
 };
-const source = {
+const source: ApprovalMonitoringEvent & {
+  source_url: string;
+  source_event_key: string;
+  source: string;
+} = {
   ...canonical,
+  source_url: "https://www.mmamania.com/test",
   source_event_key: "events/ufc-approval",
   source: "UFC.com + MMA Mania",
 };
@@ -41,7 +46,7 @@ const source = {
 function findings(
   nextSource: typeof source,
   kind: "current" | "staged" = "current",
-  nextCanonical = canonical,
+  nextCanonical: ApprovalMonitoringEvent = canonical,
   scope: "main" | "full" = "main",
 ) {
   return buildCardChangeFindings({
