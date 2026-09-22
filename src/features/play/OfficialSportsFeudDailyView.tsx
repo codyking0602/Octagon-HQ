@@ -157,7 +157,6 @@ export function OfficialSportsFeudDailyView({
   const fastInputRef = useRef<HTMLInputElement>(null);
   const pendingKindRef = useRef<"main" | "fast" | null>(null);
   const pendingBoardIndexRef = useRef(0);
-  const pendingRevisionRef = useRef(projection.progressRevision);
   const submittedAtRef = useRef(0);
   const lastSubmittedRef = useRef("");
   const lastSeenRevisionRef = useRef(projection.progressRevision);
@@ -296,7 +295,6 @@ export function OfficialSportsFeudDailyView({
     if (scene !== "fast" || timeRemainingMs > 0 || timeoutQueuedRef.current || pendingKindRef.current) return;
     timeoutQueuedRef.current = true;
     pendingKindRef.current = "fast";
-    pendingRevisionRef.current = projection.progressRevision;
     submittedAtRef.current = performance.now();
     onAdvance({ type: "timeout" });
   }, [onAdvance, projection.progressRevision, scene, timeRemainingMs]);
@@ -324,6 +322,7 @@ export function OfficialSportsFeudDailyView({
 
   const fastState = record(displayState.fast_money);
   const fastResults = records(fastState.results);
+  const fastSubmitted = records(fastState.submitted_answers);
 
   useEffect(() => {
     if (scene !== "reveal") return undefined;
@@ -391,7 +390,6 @@ export function OfficialSportsFeudDailyView({
     lastSubmittedRef.current = value;
     pendingKindRef.current = "main";
     pendingBoardIndexRef.current = displayBoardIndex;
-    pendingRevisionRef.current = projection.progressRevision;
     submittedAtRef.current = performance.now();
     setFeedback(null);
     setAnswer("");
@@ -427,7 +425,6 @@ export function OfficialSportsFeudDailyView({
     if (!value || busy || pendingKindRef.current || scene !== "fast") return;
     lastSubmittedRef.current = value;
     pendingKindRef.current = "fast";
-    pendingRevisionRef.current = projection.progressRevision;
     submittedAtRef.current = performance.now();
     setFeedback(null);
     onAdvance({
@@ -595,7 +592,7 @@ export function OfficialSportsFeudDailyView({
           <div className="feud-fast-board-progress" aria-label="Fast Money submitted answers">
             {Array.from({ length: 5 }, (_value, index) => (
               <div className={index < Number(fastState.answered_count ?? 0) ? "is-filled" : index === Number(fastState.question_index ?? 0) ? "is-current" : ""} key={index}>
-                <span>{index < fastResults.length ? String(fastResults[index]?.submitted_answer ?? "") : ""}</span>
+                <span>{index < fastSubmitted.length ? String(fastSubmitted[index]?.submitted_answer ?? "") : ""}</span>
               </div>
             ))}
           </div>
