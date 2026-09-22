@@ -130,26 +130,26 @@ describe("Football ATS provider matching", () => {
       { espnEvent: noSpreadEspn, oddsEvents: [noSpreadOdds], league: "college-football" },
     ]);
 
-    expect(result.events).toHaveLength(1);
+    expect(result.events).toHaveLength(3);
+    expect(result.events.map((item) => item.bouts[0].spread_home)).toEqual([-3.5, null, null]);
     expect(result.unavailable).toEqual([
       { matchup: "Missouri Tigers at Kansas Jayhawks", reason: "missing-event" },
       { matchup: "Iowa Hawkeyes at Iowa State Cyclones", reason: "missing-spread" },
     ]);
     expect(footballSlateUnavailableMessage(result.unavailable, 3)).toBe(
-      "The Odds API cannot stage 2 of 3 selected games yet. Nothing was staged. Unavailable ATS: Missouri Tigers at Kansas Jayhawks; Iowa Hawkeyes at Iowa State Cyclones. Try again when the lines are posted.",
+      "The Odds API has not posted ATS for 2 of 3 selected games yet. The slate was staged with those lines pending: Missouri Tigers at Kansas Jayhawks; Iowa Hawkeyes at Iowa State Cyclones. Refresh ATS lines before publishing.",
     );
   });
 
-  it("keeps weekly staging behind ATS readiness and ESPN asset caching", () => {
+  it("stages the full weekly schedule even when ATS lines are pending", () => {
     const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
-    const readinessCheck = source.indexOf("if (normalization.unavailable.length)");
     const assetWrite = source.indexOf("cacheFootballTeamAssets(admin, normalization.events)");
     const stageWrite = source.indexOf("stageFootballEvents(admin, normalization.events)");
 
-    expect(readinessCheck).toBeGreaterThanOrEqual(0);
-    expect(assetWrite).toBeGreaterThan(readinessCheck);
+    expect(assetWrite).toBeGreaterThanOrEqual(0);
     expect(stageWrite).toBeGreaterThan(assetWrite);
-    expect(source).toContain("unavailable_game_count: normalization.unavailable.length");
-    expect(source).toContain("}, 409);");
+    expect(source).not.toContain("if (normalization.unavailable.length)");
+    expect(source).toContain("pending_odds_count: normalization.unavailable.length");
+    expect(source).toContain("pending_odds_games: normalization.unavailable");
   });
 });

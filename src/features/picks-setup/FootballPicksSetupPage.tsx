@@ -46,6 +46,18 @@ function shiftWeek(weekStart: string, amount: number) {
   return isoDate(date);
 }
 
+function stagedFootballWeekStart(draft: PickSetupDraft) {
+  const match = /^football-slate:(\d{4}-\d{2}-\d{2})$/.exec(draft.sourceEventKey);
+  return match?.[1] ?? null;
+}
+
+function stagedCollegeEventIds(draft: PickSetupDraft) {
+  return draft.bouts.flatMap((game) => {
+    const match = /^football-college-football-(\d+)$/.exec(game.boutId);
+    return match?.[1] ? [match[1]] : [];
+  });
+}
+
 function weekLabel(preview: PickSetupFootballWeekPreview) {
   const start = new Date(`${preview.weekStart}T12:00:00.000Z`);
   const end = new Date(`${preview.weekEnd}T12:00:00.000Z`);
@@ -141,6 +153,12 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
   );
   const currentSlateHasPicks = Boolean(repository?.resetCurrentFootballSlate)
     && (draft?.warnings.includes("THE CURRENT FOOTBALL SLATE ALREADY HAS PICKS") ?? false);
+  const refreshWeekStart = draft ? stagedFootballWeekStart(draft) : null;
+  const refreshCollegeIds = useMemo(() => draft ? stagedCollegeEventIds(draft) : [], [draft]);
+  const hasPendingOdds = games.some((game) => (
+    game.spreadHome === null || game.spreadHome === undefined
+    || !game.spreadSource || !game.spreadUpdatedAt
+  ));
 
   async function runAction(key: string, action: () => Promise<void>, reload = true) {
     setBusy(key);
@@ -173,6 +191,12 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
   function stageWeek() {
     if (!weekPreview || !repository?.stageFootballWeek || !stageReady) return;
     void runAction("stage-week", () => repository.stageFootballWeek!(weekPreview.weekStart, selectedCollegeIds));
+  }
+
+  function refreshStagedLines() {
+    const stage = repository?.stageFootballWeek;
+    if (!draft || !stage || !refreshWeekStart) return;
+    void runAction("refresh-lines", () => stage(refreshWeekStart, refreshCollegeIds));
   }
 
   function publishDraft() {
@@ -225,7 +249,7 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
                 <div>
                   <p className="eyebrow">AUTO-STAGE WEEK</p>
                   <h2>{weekPreview ? weekLabel(weekPreview) : "Choose week"}</h2>
-                  <p>NFL is automatic. Start with the recommended college games or browse the full FBS week; ATS lines still come only from The Odds API when you stage.</p>
+                  <p>NFL is automatic. Start with the recommended college games or browse the full FBS week. ATS still comes only from The Odds API; if a line is not posted yet, the slate stages with that line pending.</p>
                 </div>
                 <div className="football-week-builder__nav" aria-label="Football setup week">
                   <button type="button" disabled={Boolean(busy) || previewLoading} onClick={() => moveWeek(-1)}>←</button>
@@ -317,7 +341,7 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
                   </div>
                   <h3>{game.blueFighterName} <span aria-hidden="true">@</span> {game.redFighterName}</h3>
                   <p><strong>HOME ATS:</strong> {displaySpread(game.spreadHome)}</p>
-                  <p><strong>SOURCE:</strong> {game.spreadSource ?? "NOT SET"} · updated {displayTime(game.spreadUpdatedAt)}</p>
+                  <p><strong>SOURCE:</strong> {game.spreadSource ?? "WAITING FOR THE ODDS API"} · updated {displayTime(game.spreadUpdatedAt)}</p>
                 </article>
               ))}
 
@@ -328,6 +352,13 @@ export default function FootballPicksSetupPage({ repository: suppliedRepository 
               ) : null}
 
               <div className="surface-card picks-setup-state">
+                {repository?.stageFootballWeek && refreshWeekStart ? (
+                  <button className="football-week-builder__browse" type="button" disabled={Boolean(busy)} onClick={refreshStagedLines}>
+                    {busy === "refresh-lines"
+                      ? "REFRESHING ATS LINES…"
+                      : hasPendingOdds ? "REFRESH PENDING ATS LINES" : "REFRESH ATS LINES"}
+                  </button>
+                ) : null}
                 <button className="primary-action" type="button" disabled={Boolean(busy) || !draft.canPublish} onClick={publishDraft}>
                   {busy === "publish" ? "PUBLISHING…" : "PUBLISH FOOTBALL SLATE"}
                 </button>
