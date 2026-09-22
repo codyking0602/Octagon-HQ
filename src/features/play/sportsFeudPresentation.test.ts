@@ -3,6 +3,7 @@ import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_HOSTS,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
+  sportsFeudHostAppearanceIndex,
   sportsFeudHostAsset,
   sportsFeudHostNumber,
 } from "./sportsFeudPresentation";
@@ -31,16 +32,29 @@ describe("Sports Feud presentation assets", () => {
     ]);
   });
 
-  it("rotates deterministically by Central-date key", () => {
-    for (const sport of ["ufc", "nfl", "cfb"] as const) {
-      const first = sportsFeudHostNumber(sport, "2026-09-20");
-      const second = sportsFeudHostNumber(sport, "2026-09-21");
-      expect(first).toBeGreaterThanOrEqual(1);
-      expect(first).toBeLessThanOrEqual(3);
-      expect(second).toBe(first === 3 ? 1 : first + 1);
-      expect(sportsFeudHostAsset(sport, "2026-09-20")).toBe(
-        SPORTS_FEUD_HOSTS[sport][first - 1],
-      );
-    }
+  it("locks the September 23 launch hosts to UFC #1 and CFB #3", () => {
+    expect(sportsFeudHostNumber("ufc", "2026-09-23")).toBe(1);
+    expect(sportsFeudHostAsset("ufc", "2026-09-23")).toBe("/assets/1ufc.png");
+    expect(sportsFeudHostNumber("cfb", "2026-09-23")).toBe(3);
+    expect(sportsFeudHostAsset("cfb", "2026-09-23")).toBe("/assets/3cfb.png");
+  });
+
+  it("advances UFC one host per UFC Sports Feud appearance, not per calendar day", () => {
+    expect(sportsFeudHostAppearanceIndex("ufc", "2026-09-23")).toBe(0);
+    expect(sportsFeudHostNumber("ufc", "2026-09-23")).toBe(1);
+    expect(sportsFeudHostNumber("ufc", "2026-09-24")).toBe(1);
+    expect(sportsFeudHostNumber("ufc", "2026-10-02")).toBe(2);
+    expect(sportsFeudHostNumber("ufc", "2026-10-10")).toBe(3);
+    expect(sportsFeudHostNumber("ufc", "2026-10-18")).toBe(1);
+  });
+
+  it("advances CFB and NFL hosts independently on their own Football Sports Feud appearances", () => {
+    expect(sportsFeudHostNumber("cfb", "2026-09-23")).toBe(3);
+    expect(sportsFeudHostNumber("cfb", "2026-10-08")).toBe(1);
+    expect(sportsFeudHostNumber("cfb", "2026-10-19")).toBe(2);
+
+    expect(sportsFeudHostNumber("nfl", "2026-10-01")).toBe(1);
+    expect(sportsFeudHostNumber("nfl", "2026-10-15")).toBe(2);
+    expect(sportsFeudHostNumber("nfl", "2026-10-27")).toBe(3);
   });
 });
