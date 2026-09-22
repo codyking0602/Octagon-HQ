@@ -14,6 +14,7 @@ const NotificationCenterPage = lazy(() => import("../features/notifications/Noti
 const BackRoomPage = lazy(() => import("../features/back-room/BackRoomPage"));
 const FootballBackRoomPage = lazy(() => import("../features/back-room/FootballBackRoomPage"));
 const FootballTodayChallengePage = lazy(() => import("../features/back-room/FootballTodayChallengePage"));
+const FootballWeeklyAuctionCenterPage = lazy(() => import("../features/back-room/FootballWeeklyAuctionCenterPage"));
 const FootballRankFivePage = lazy(() => import("../features/back-room/FootballRankFivePage"));
 const FootballKeepCutPage = lazy(() => import("../features/back-room/FootballKeepCutPage"));
 const FootballWavelengthPage = lazy(() => import("../features/back-room/FootballWavelengthPage"));
@@ -73,6 +74,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
       { path: "football/today", element: <FootballTodayChallengePage /> },
+      { path: "football/weekly-auction", element: <FootballWeeklyAuctionCenterPage /> },
       {
         path: "football/rank-five",
         element: <DailyOnlyGameRoute dailyRoute="/football/today" casual={<FootballRankFivePage />} />,

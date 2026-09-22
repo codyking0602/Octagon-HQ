@@ -176,10 +176,12 @@ export function FootballWeeklyAuctionFinalResult({
   result,
   busy,
   onAcknowledge,
+  showNewWeekAction = true,
 }: {
   result: FootballWeeklyAuctionFinal;
   busy: boolean;
   onAcknowledge: () => void;
+  showNewWeekAction?: boolean;
 }) {
   const [tab, setTab] = useState<FinalTab>("standings");
   const me = result.my_result;
@@ -311,9 +313,11 @@ export function FootballWeeklyAuctionFinalResult({
         </div>
       ) : null}
 
-      <button className="football-weekly-auction__primary football-weekly-auction__new-week" disabled={busy} type="button" onClick={onAcknowledge}>
-        START THE NEW WEEK
-      </button>
+      {showNewWeekAction ? (
+        <button className="football-weekly-auction__primary football-weekly-auction__new-week" disabled={busy} type="button" onClick={onAcknowledge}>
+          START THE NEW WEEK
+        </button>
+      ) : null}
     </section>
   );
 }

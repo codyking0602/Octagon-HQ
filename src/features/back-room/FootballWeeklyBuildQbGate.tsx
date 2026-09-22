@@ -63,11 +63,13 @@ function TraitDefinitionsDialog({ onClose }: { onClose: () => void }) {
         onClick={(event) => event.stopPropagation()}
       >
         <header>
+          <button className="football-weekly-build-qb__sheet-back" type="button" onClick={onClose} aria-label="Back to Build a QB">
+            ← BACK
+          </button>
           <div>
             <p className="eyebrow">BUILD A QB</p>
             <h2 id="weekly-build-qb-trait-title">Trait definitions</h2>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close trait definitions">×</button>
         </header>
         <div className="football-weekly-build-qb__trait-body">
           <TraitDefinitions />
@@ -237,10 +239,12 @@ export function FootballWeeklyBuildQbFinalResult({
   result,
   busy,
   onAcknowledge,
+  showNewWeekAction = true,
 }: {
   result: FootballWeeklyBuildQbFinal;
   busy: boolean;
   onAcknowledge: () => void;
+  showNewWeekAction?: boolean;
 }) {
   const [tab, setTab] = useState<FinalTab>("standings");
   const me = result.my_result;
@@ -309,9 +313,11 @@ export function FootballWeeklyBuildQbFinalResult({
         </div>
       ) : null}
 
-      <button className="football-weekly-build-qb__primary" type="button" disabled={busy} onClick={onAcknowledge}>
-        START THE NEW WEEK
-      </button>
+      {showNewWeekAction ? (
+        <button className="football-weekly-build-qb__primary" type="button" disabled={busy} onClick={onAcknowledge}>
+          START THE NEW WEEK
+        </button>
+      ) : null}
     </section>
   );
 }
