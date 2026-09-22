@@ -296,7 +296,7 @@ declare
   v_profile_id uuid;
   v_receipt jsonb;
 begin
-  if coalesce(auth.jwt()->>'role', '') <> 'service_role'
+  if auth.role() is distinct from 'service_role'
     and not public.is_pick_control_owner(auth.uid()) then
     raise exception 'UNAUTHORIZED: pick control owner required';
   end if;
@@ -554,7 +554,7 @@ declare
   v_audit_id bigint;
   v_approved_at timestamptz;
 begin
-  if coalesce(auth.jwt()->>'role', '') <> 'service_role' then
+  if auth.role() is distinct from 'service_role' then
     raise exception 'service role required for trusted Picks automation';
   end if;
 
