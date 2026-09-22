@@ -10,6 +10,7 @@ import {
 } from "../back-room/footballWavelengthModel";
 import { advanceWhoAmIDailyRuntime } from "./whoAmIDailyRuntime";
 import { advanceMillionaireDailyRuntime } from "./millionaireDailyRuntime";
+import { advanceFamilyFeudDailyRuntime } from "./familyFeudDailyRuntime";
 import type {
   OfficialDailyAdvanceResult,
   OfficialDailyRuntimeContext,
@@ -384,6 +385,7 @@ export function advanceFootballOfficialDailyRuntime(
     case "hit_the_number": return advanceHitTheNumber(context, parsed);
     case "who_am_i": return advanceWhoAmIDailyRuntime(context, parsed);
     case "millionaire": return advanceMillionaireDailyRuntime(context, parsed);
+    case "sports_feud": return advanceFamilyFeudDailyRuntime(context, parsed);
     default: throw new Error(`Unsupported Football official daily game ${String(context.gameType)}.`);
   }
 }

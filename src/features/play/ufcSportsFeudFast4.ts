@@ -1,0 +1,124 @@
+import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
+
+export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
+  {
+    category: "rules",
+    collisionGroup: "finishes",
+    prompts: [
+      "Name a way a UFC fight can end.",
+      "Name a result that can officially stop an MMA fight.",
+      "Name a finish or decision you can see on a UFC result.",
+      "Name a way a fighter can have the bout ended in his or her favor.",
+      "Name an official UFC fight outcome.",
+    ],
+    answers: ["Knockout", "TKO", "Submission", "Unanimous decision", "Split decision", "Majority decision", "Doctor stoppage", "Disqualification"],
+  },
+  {
+    category: "techniques",
+    collisionGroup: "submissions",
+    prompts: [
+      "Name a common MMA submission.",
+      "Name a submission you might see finish a UFC fight.",
+      "Name a grappling hold MMA fans recognize.",
+      "Name a submission fighters drill constantly.",
+      "Name a tap-out technique used in the UFC.",
+    ],
+    answers: ["Rear-naked choke", "Guillotine", "Armbar", "Triangle choke", "Kimura", "Americana", "Arm-triangle choke", "Heel hook"],
+  },
+  {
+    category: "techniques",
+    collisionGroup: "strikes",
+    prompts: [
+      "Name a strike you can use in MMA.",
+      "Name a striking technique you might see in the UFC.",
+      "Name a legal attack fighters throw on the feet.",
+      "Name a basic strike MMA athletes train.",
+      "Name a strike that can hurt an opponent in the Octagon.",
+    ],
+    answers: ["Jab", "Cross", "Hook", "Uppercut", "Elbow", "Knee", "Body kick", "Head kick"],
+  },
+  {
+    category: "techniques",
+    collisionGroup: "kicks",
+    prompts: [
+      "Name a type of kick used in MMA.",
+      "Name a kicking technique you might see in the UFC.",
+      "Name a kick fighters use to attack at range.",
+      "Name a kick commentators identify during UFC fights.",
+      "Name a striking weapon that comes from the legs.",
+    ],
+    answers: ["Low kick", "Head kick", "Body kick", "Front kick", "Side kick", "Spinning back kick", "Calf kick", "Oblique kick"],
+  },
+  {
+    category: "grappling",
+    collisionGroup: "grappling",
+    prompts: [
+      "Name a wrestling or grappling term used in MMA.",
+      "Name something a fighter might do after closing distance.",
+      "Name a grappling concept commentators mention in UFC fights.",
+      "Name a position or action from the wrestling side of MMA.",
+      "Name a term associated with controlling an opponent on the mat.",
+    ],
+    answers: ["Takedown", "Double-leg", "Single-leg", "Clinch", "Back control", "Mount", "Half guard", "Ground-and-pound"],
+  },
+  {
+    category: "rules",
+    collisionGroup: "fouls",
+    prompts: [
+      "Name a foul in MMA.",
+      "Name something illegal inside the UFC Octagon.",
+      "Name an action that can draw a warning or point deduction.",
+      "Name a foul referees watch for in a UFC fight.",
+      "Name an illegal technique under the unified MMA rules.",
+    ],
+    answers: ["Eye poke", "Groin strike", "Fence grab", "Headbutt", "Biting", "Hair pulling", "Back-of-head strike", "Knee to a grounded opponent"],
+  },
+  {
+    category: "judging",
+    collisionGroup: "judging",
+    prompts: [
+      "Name something judges or fans look at when deciding who won a round.",
+      "Name a factor that can influence how an MMA round is scored.",
+      "Name something that helps a fighter make a round look convincing.",
+      "Name a performance area people debate on UFC scorecards.",
+      "Name something that can matter when comparing two close MMA rounds.",
+    ],
+    answers: ["Effective striking", "Effective grappling", "Damage", "Takedowns", "Submission attempts", "Control", "Aggression", "Cage pressure"],
+  },
+  {
+    category: "stats",
+    collisionGroup: "stats",
+    prompts: [
+      "Name a UFC fight statistic.",
+      "Name a number shown during or after an MMA fight.",
+      "Name a stat fans use to describe what happened in a bout.",
+      "Name a fight metric you might see on a UFC broadcast.",
+      "Name a statistic analysts use when breaking down a UFC fight.",
+    ],
+    answers: ["Significant strikes", "Total strikes", "Takedowns", "Takedown accuracy", "Control time", "Knockdowns", "Submission attempts", "Head strikes"],
+  },
+  {
+    category: "weight-cutting",
+    collisionGroup: "weight-cutting",
+    prompts: [
+      "Name something associated with making weight for a UFC fight.",
+      "Name a term fighters use around weigh-in week.",
+      "Name something that can happen during a difficult weight cut.",
+      "Name a concept tied to the scale before a UFC event.",
+      "Name something fans hear when a fighter is trying to hit the contracted limit.",
+    ],
+    answers: ["Water cut", "Weigh-in", "Rehydration", "Missed weight", "Catchweight", "Weight allowance", "Sauna", "Diet"],
+  },
+  {
+    category: "corner",
+    collisionGroup: "corner",
+    prompts: [
+      "Name something a fighter's corner does between rounds.",
+      "Name a job performed by a UFC corner team.",
+      "Name something coaches might do during the one-minute break.",
+      "Name a responsibility of the people in a fighter's corner.",
+      "Name something that can happen on the stool between rounds.",
+    ],
+    answers: ["Give instructions", "Apply ice", "Reduce swelling", "Stop bleeding", "Give water", "Control breathing", "Encourage the fighter", "Adjust the game plan"],
+  },
+] as const);

@@ -14,6 +14,7 @@ const NotificationCenterPage = lazy(() => import("../features/notifications/Noti
 const BackRoomPage = lazy(() => import("../features/back-room/BackRoomPage"));
 const FootballBackRoomPage = lazy(() => import("../features/back-room/FootballBackRoomPage"));
 const FootballTodayChallengePage = lazy(() => import("../features/back-room/FootballTodayChallengePage"));
+const FootballWeeklyAuctionCenterPage = lazy(() => import("../features/back-room/FootballWeeklyAuctionCenterPage"));
 const FootballRankFivePage = lazy(() => import("../features/back-room/FootballRankFivePage"));
 const FootballKeepCutPage = lazy(() => import("../features/back-room/FootballKeepCutPage"));
 const FootballWavelengthPage = lazy(() => import("../features/back-room/FootballWavelengthPage"));
@@ -21,6 +22,7 @@ const FootballBlindResumePage = lazy(() => import("../features/back-room/Footbal
 const FootballHitTheNumberPage = lazy(() => import("../features/back-room/FootballHitTheNumberPage"));
 const FootballFindLeaderPage = lazy(() => import("../features/back-room/FootballFindLeaderPage"));
 const FootballDraftRoomPage = lazy(() => import("../features/back-room/FootballDraftRoomPage"));
+const FootballWeeklyBuildQbPreviewPage = lazy(() => import("../features/back-room/FootballWeeklyBuildQbPreviewPage"));
 const TodayChallengeHubPage = lazy(() => import("../features/play/TodayChallengeHubPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
@@ -36,6 +38,7 @@ const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"))
 const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCasualPage"));
+const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
@@ -66,10 +69,12 @@ export const appRoutes: RouteObject[] = [
       { path: "play/20-questions", element: <Navigate to="/play/who-am-i" replace /> },
       { path: "play/who-am-i", element: <TodayChallengeGameRoute gameType="who_am_i" casual={<UfcWhoAmIPage />} /> },
       { path: "play/millionaire", element: <TodayChallengeGameRoute gameType="millionaire" casual={<MillionaireCasualPage scope="ufc" />} /> },
+      { path: "play/sports-feud", element: <TodayChallengeGameRoute gameType="sports_feud" casual={<FamilyFeudPrototypePage scope="ufc" />} /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
       { path: "football/today", element: <FootballTodayChallengePage /> },
+      { path: "football/weekly-auction", element: <FootballWeeklyAuctionCenterPage /> },
       {
         path: "football/rank-five",
         element: <DailyOnlyGameRoute dailyRoute="/football/today" casual={<FootballRankFivePage />} />,
@@ -83,9 +88,11 @@ export const appRoutes: RouteObject[] = [
       { path: "football/hit-the-number", element: <FootballHitTheNumberPage /> },
       { path: "football/find-leader", element: <FootballFindLeaderPage /> },
       { path: "football/draft-room", element: <FootballDraftRoomPage /> },
+      { path: "football/weekly-build-qb-preview", element: <FootballWeeklyBuildQbPreviewPage /> },
       { path: "football/20-questions", element: <Navigate to="/football/who-am-i" replace /> },
       { path: "football/who-am-i", element: <FootballWhoAmIPage /> },
       { path: "football/millionaire", element: <MillionaireCasualPage scope="football" /> },
+      { path: "football/sports-feud", element: <FamilyFeudPrototypePage scope="football" /> },
       { path: "picks", element: <PicksPage /> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },

@@ -149,7 +149,7 @@ const gamrotSalkilldSpotlight: SpotlightData = {
 
 const bilalRojasSpotlight: SpotlightData = {
   kicker: "FIGHT SPOTLIGHT · FLYWEIGHT",
-  preview: "Two unbeaten 9–0 flyweight finishers hit Shanghai with no meaningful UFC sample to lean on. Hasan arrives 18 days after a 45-second Contender Series contract win, carrying the speed, creativity, and finishing instinct that put him #5 on Shane’s board. Rojas is 9–0 with seven KO/TKO wins and comes in off a July 22 decision. The swing factor is whose finishing danger translates first: Hasan’s explosive prospect upside or Rojas’ proven knockout threat.",
+  preview: "Two unbeaten 9–0 flyweight finishers hit Shanghai with no meaningful UFC sample to lean on. Hasan arrives 18 days after a 45-second Contender Series contract win, carrying the speed, creativity, and finishing instinct that put him on Shane’s board. Rojas is 9–0 with seven KO/TKO wins and comes in off a July 22 decision. The swing factor is whose finishing danger translates first: Hasan’s explosive prospect upside or Rojas’ proven knockout threat.",
   red: {
     slug: "bilal-hasan",
     name: "Bilal Hasan",

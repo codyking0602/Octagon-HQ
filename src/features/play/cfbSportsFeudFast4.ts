@@ -1,0 +1,124 @@
+import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
+
+export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
+  {
+    category: "positions",
+    collisionGroup: "positions",
+    prompts: [
+      "Name a college football position other than quarterback.",
+      "Name a position you can play on a football field.",
+      "Name a college football position that produces stars.",
+      "Name a football position recruits specialize in.",
+      "Name a position group coaches talk about constantly.",
+    ],
+    answers: ["Running back", "Wide receiver", "Linebacker", "Cornerback", "Defensive end", "Safety", "Tight end", "Offensive tackle"],
+  },
+  {
+    category: "game-concepts",
+    collisionGroup: "scoring",
+    prompts: [
+      "Name a way to score points in college football.",
+      "Name something that can put points on the scoreboard.",
+      "Name a scoring play you can see on a Saturday.",
+      "Name a way an offense or special teams unit can score.",
+      "Name something that changes the score in a football game.",
+    ],
+    answers: ["Touchdown", "Field goal", "Extra point", "Two-point conversion", "Safety", "Pick-six", "Kick return touchdown", "Punt return touchdown"],
+  },
+  {
+    category: "game-concepts",
+    collisionGroup: "penalties",
+    prompts: [
+      "Name a common football penalty.",
+      "Name a flag college football fans complain about.",
+      "Name a penalty an offense can commit.",
+      "Name a penalty that can ruin a big play.",
+      "Name a football penalty almost every fan understands.",
+    ],
+    answers: ["Holding", "False start", "Pass interference", "Offsides", "Personal foul", "Targeting", "Delay of game", "Illegal formation"],
+  },
+  {
+    category: "stats",
+    collisionGroup: "stats",
+    prompts: [
+      "Name a quarterback statistic.",
+      "Name a number fans use to judge a quarterback.",
+      "Name a quarterback stat shown in a broadcast box score.",
+      "Name a passing stat people compare after a game.",
+      "Name a stat that can describe how a quarterback played.",
+    ],
+    answers: ["Passing yards", "Passing touchdowns", "Completion percentage", "Interceptions", "Pass attempts", "Completions", "Yards per attempt", "Passer rating"],
+  },
+  {
+    category: "stats",
+    collisionGroup: "stats",
+    prompts: [
+      "Name a defensive football statistic.",
+      "Name a stat that can make a defender stand out.",
+      "Name a defensive number shown in a box score.",
+      "Name a stat scouts notice for a college defender.",
+      "Name a defensive stat fans brag about.",
+    ],
+    answers: ["Tackles", "Sacks", "Interceptions", "Tackles for loss", "Pass breakups", "Forced fumbles", "Fumble recoveries", "Quarterback hurries"],
+  },
+  {
+    category: "strategy",
+    collisionGroup: "offense",
+    prompts: [
+      "Name an offensive concept you hear in college football.",
+      "Name a football play concept an offense might build around.",
+      "Name an offensive idea commentators mention during games.",
+      "Name a concept a coordinator might use to stress a defense.",
+      "Name an offensive term college football fans recognize.",
+    ],
+    answers: ["RPO", "Play-action", "Read option", "Screen pass", "Four verticals", "Mesh", "Zone read", "Counter"],
+  },
+  {
+    category: "strategy",
+    collisionGroup: "defense",
+    prompts: [
+      "Name a defensive coverage or concept.",
+      "Name a coverage a college defense might play.",
+      "Name a defensive call commentators mention on broadcasts.",
+      "Name a coverage a quarterback has to identify before the snap.",
+      "Name a defensive concept fans hear all the time.",
+    ],
+    answers: ["Cover 2", "Cover 3", "Man coverage", "Cover 1", "Quarters", "Zone blitz", "Cover 0", "Tampa 2"],
+  },
+  {
+    category: "recruiting",
+    collisionGroup: "recruiting",
+    prompts: [
+      "Name a term associated with college football recruiting.",
+      "Name something fans hear during recruiting season.",
+      "Name a word coaches and fans use when talking about recruits.",
+      "Name something tied to signing a college football prospect.",
+      "Name a recruiting term a serious college football fan knows.",
+    ],
+    answers: ["Five-star", "Commitment", "Signing day", "Transfer portal", "Official visit", "Recruiting class", "Decommitment", "Early enrollee"],
+  },
+  {
+    category: "postseason",
+    collisionGroup: "postseason",
+    prompts: [
+      "Name something associated with the college football postseason.",
+      "Name a word or event that tells you the regular season is over.",
+      "Name something teams chase at the end of a college season.",
+      "Name a postseason concept college football fans talk about.",
+      "Name something that can define December or January in college football.",
+    ],
+    answers: ["National championship", "College Football Playoff", "Bowl game", "Conference championship", "Playoff semifinal", "New Year's Six", "Final ranking", "Heisman Trophy"],
+  },
+  {
+    category: "fan-culture",
+    collisionGroup: "culture",
+    prompts: [
+      "Name something college football fans do on game day.",
+      "Name a Saturday habit tied to college football.",
+      "Name something you expect around a big college football game.",
+      "Name a game-day activity fans look forward to.",
+      "Name something that makes college football Saturday feel different.",
+    ],
+    answers: ["Tailgate", "Wear team colors", "Watch GameDay", "Sing the fight song", "Storm the field", "Trash talk rivals", "Cookout", "Travel to the stadium"],
+  },
+] as const);

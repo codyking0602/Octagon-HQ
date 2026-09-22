@@ -8,7 +8,9 @@ type OfficialDailyGameType =
   | "blind_rank_5"
   | "keep_4_cut_4"
   | "hit_the_number"
-  | "who_am_i";
+  | "who_am_i"
+  | "millionaire"
+  | "sports_feud";
 
 interface OfficialDailyRuntimeContext {
   gameType: OfficialDailyGameType;
@@ -123,6 +125,9 @@ function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
       break;
     case "millionaire":
       runtime = import("./football-publication-millionaire.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
+    case "sports_feud":
+      runtime = import("./football-publication-sports-feud.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
       break;
     case "blind_rank_5":
     case "keep_4_cut_4":

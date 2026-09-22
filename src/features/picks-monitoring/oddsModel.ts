@@ -7,7 +7,7 @@ import {
 export const THE_ODDS_API_PROVIDER = "the-odds-api" as const;
 export const MMA_ODDS_SPORT_KEY = "mma_mixed_martial_arts" as const;
 export const MONEYLINE_MARKET_KEY = "h2h" as const;
-export const PREFERRED_ODDS_BOOKMAKERS = ["draftkings", "fanduel"] as const;
+export const PREFERRED_ODDS_BOOKMAKERS = ["draftkings", "fanduel", "betmgm", "caesars"] as const;
 
 export type PreferredOddsBookmaker = typeof PREFERRED_ODDS_BOOKMAKERS[number];
 

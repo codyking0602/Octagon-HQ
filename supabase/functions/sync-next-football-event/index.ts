@@ -5,7 +5,7 @@ import {
   normalizeFootballFinalResult,
   normalizeFootballSlate,
 } from "./normalize.ts";
-import { buildFootballWeekPreview, footballWeekEspnDateRange, footballWeekRange } from "./week.ts";
+import { buildFootballWeekPreview, footballWeekEspnDateQueries, footballWeekRange } from "./week.ts";
 
 type Json = Record<string, any>;
 type FootballLeague = "nfl" | "college-football";
@@ -18,14 +18,37 @@ const headers = {
 };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });
 
+async function fetchEspnScoreboardDate(
+  sportPath: string,
+  group: string,
+  league: FootballLeague,
+  dateQuery: string,
+) {
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    const response = await fetch(`https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${dateQuery}&limit=200${group}`);
+    if (response.ok) {
+      const payload = await response.json();
+      return Array.isArray(payload?.events) ? payload.events as Json[] : [];
+    }
+
+    const retryable = response.status === 429 || response.status >= 500;
+    if (!retryable || attempt === 3) {
+      throw new Error(`football ESPN ${league} schedule request failed for ${dateQuery} (${response.status})`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, attempt * 250));
+  }
+  return [] as Json[];
+}
+
 async function fetchEspnWeekEvents(weekStart: string, league: FootballLeague) {
   const sportPath = league === "nfl" ? "football/nfl" : "football/college-football";
   const group = league === "college-football" ? "&groups=80" : "";
-  const dateRange = footballWeekEspnDateRange(weekStart);
-  const response = await fetch(`https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${dateRange}&limit=200${group}`);
-  if (!response.ok) throw new Error(`football ESPN ${league} schedule request failed (${response.status})`);
-  const payload = await response.json();
-  return Array.isArray(payload?.events) ? payload.events as Json[] : [];
+  const dateQueries = footballWeekEspnDateQueries(weekStart);
+  const events: Json[] = [];
+  for (const dateQuery of dateQueries) {
+    events.push(...await fetchEspnScoreboardDate(sportPath, group, league, dateQuery));
+  }
+  return events;
 }
 
 async function fetchEspnEventSummary(eventId: string, league: FootballLeague) {
@@ -194,18 +217,18 @@ Deno.serve(async (request) => {
         ...selectedCollegeEvents.map((espnEvent) => ({ espnEvent, oddsEvents: collegeOdds, league: "college-football" })),
       ];
       const normalization = normalizeFootballSlate(selectedGames);
-      if (normalization.unavailable.length) {
-        return json({
-          error: footballSlateUnavailableMessage(normalization.unavailable, selectedGames.length),
-          selected_game_count: selectedGames.length,
-          unavailable_game_count: normalization.unavailable.length,
-          unavailable_games: normalization.unavailable,
-        }, 409);
-      }
-
       await cacheFootballTeamAssets(admin, normalization.events);
       const draftId = await stageFootballEvents(admin, normalization.events);
-      return json({ draftId, staged_game_count: normalization.events.length, ...weekPreview });
+      return json({
+        draftId,
+        staged_game_count: normalization.events.length,
+        pending_odds_count: normalization.unavailable.length,
+        pending_odds_games: normalization.unavailable,
+        ...(normalization.unavailable.length
+          ? { warning: footballSlateUnavailableMessage(normalization.unavailable, selectedGames.length) }
+          : {}),
+        ...weekPreview,
+      });
     }
 
     const league = input.league === "college-football" ? "college-football" : "nfl";

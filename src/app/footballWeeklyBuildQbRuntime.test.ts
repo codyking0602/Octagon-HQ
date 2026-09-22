@@ -5,6 +5,10 @@ const migration = readFileSync(
   "supabase/migrations/202612310150_nfl_build_qb_weekly_runtime.sql",
   "utf8",
 );
+const day1JoinWindow = readFileSync(
+  "supabase/migrations/202612310161_football_weekly_auction_day1_join_window.sql",
+  "utf8",
+);
 const grading = JSON.parse(
   readFileSync("data/generated/football/nfl-build-qb-v2-trait-grades.json", "utf8"),
 ) as {
@@ -86,10 +90,17 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(migration).toContain("array['Arm','Accuracy','Processing','Mobility']");
     expect(migration).toContain("count(*) from private.football_weekly_auction_board where week_start=p_week_start)=28");
     expect(migration).toContain("having count(*)<>7");
-    expect(migration).toContain("NFL Build a QB Weekly requires exactly six locked participants");
-    expect(migration).toContain(") <> 6");
+    expect(day1JoinWindow).toContain("private.ensure_football_weekly_auction_participant");
+    expect(day1JoinWindow).toContain("p_at>=v_day1_lock_at");
+    expect(day1JoinWindow).toContain("Weekly Auction still hard-locks NFL Build a QB to six preselected participants");
     expect(migration).not.toContain("makeup");
     expect(gate).toContain("TODAY’S FOUR TRAITS");
+    expect(gate).toContain("THE FOUR TRAITS");
+    expect(gate).toContain("Trait definitions ⓘ");
+    expect(gate).toContain("Functional arm talent");
+    expect(gate).toContain("Ball placement and consistency");
+    expect(gate).toContain("Reads, anticipation, timing, decision-making");
+    expect(gate).toContain("Escaping pressure, extending plays");
   });
 
   it("uses the hidden Premium / Standard / Grinder / Chaos caliber mix", () => {
@@ -107,7 +118,8 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(migration).toContain("on conflict(week_start,profile_id,trait) do nothing");
     expect(migration).toContain("Your free % pass is already used; bid at least $1");
     expect(gate).toContain("one free pass per trait");
-    expect(gate).toContain("$1 minimum · free pass used");
+    expect(gate).toContain("$0 uses your free pass for that trait.");
+    expect(gate).toContain("requires at least a $1 bid until you fill it.");
   });
 
   it("keeps the $40 completion-preserving bankroll and four required wins", () => {
@@ -140,5 +152,24 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(styles).toContain("text-overflow: ellipsis");
     expect(styles).toContain("overflow-y: auto");
     expect(styles).toContain("env(safe-area-inset-bottom)");
+  });
+
+  it("removes intro dead space without compressing rules or trait cards", () => {
+    expect(styles).toContain(".football-weekly-build-qb__cover {\n  padding: 14px 16px;");
+    expect(styles).toContain(".football-weekly-build-qb__rules {\n  margin: 9px 0 7px;\n  padding: 14px;");
+    expect(styles).toContain(".football-weekly-build-qb__rules ul {\n  margin: 0;\n  padding-left: 18px;\n  display: grid;\n  gap: 7px;");
+    expect(styles).toContain(".football-weekly-build-qb__trait-definitions.is-compact > div {\n  padding: 7px 8px;");
+    expect(styles).toContain(".football-weekly-build-qb__cover .football-weekly-build-qb__primary {\n  min-height: 36px;");
+  });
+
+  it("uses full-height independently scrollable mobile overlays with nav-safe clearance", () => {
+    expect(gate).toContain('className="football-weekly-build-qb__trait-body"');
+    expect(styles).toContain(".football-weekly-build-qb-table__body {\n  flex: 1 1 auto;\n  min-height: 0;\n  overflow-y: auto;");
+    expect(styles).toContain(".football-weekly-build-qb__trait-body {\n  flex: 1 1 auto;\n  min-height: 0;\n  overflow-y: auto;");
+    expect(styles).toContain("top: calc(58px + var(--safe-top));");
+    expect(styles).toContain("height: calc(100dvh - 58px - var(--safe-top));");
+    expect(styles).toContain("max-height: calc(100dvh - 58px - var(--safe-top));");
+    expect(styles).toContain("padding-top: 12px;");
+    expect(styles).toContain("padding-bottom: calc(96px + env(safe-area-inset-bottom));");
   });
 });

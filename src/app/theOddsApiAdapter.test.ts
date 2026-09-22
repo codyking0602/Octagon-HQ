@@ -26,7 +26,7 @@ describe("Phase 1 The Odds API adapter", () => {
     expect(url.origin).toBe("https://api.the-odds-api.com");
     expect(url.pathname).toBe("/v4/sports/mma_mixed_martial_arts/odds");
     expect(url.searchParams.get("markets")).toBe("h2h");
-    expect(url.searchParams.get("bookmakers")).toBe("draftkings,fanduel");
+    expect(url.searchParams.get("bookmakers")).toBe("draftkings,fanduel,betmgm,caesars");
     expect(url.searchParams.get("oddsFormat")).toBe("american");
     expect(url.searchParams.get("dateFormat")).toBe("iso");
   });

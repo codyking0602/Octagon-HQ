@@ -9,55 +9,28 @@ import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../p
 import { picksSeasonStandings } from "../picks/picksSeasonStandings";
 import type { DailyChallengeChampionshipSnapshot } from "../play/dailyChallengeChampionship";
 import { WeeklyGamesStandingLink } from "./WeeklyGamesStandingLink";
+import {
+  FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
+  FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
+  footballSpotlightKindAt,
+  footballSpotlightPairAt,
+  type FootballPlayerSpotlight,
+  type FootballSpotlightKind,
+  type FootballSpotlightPhotoSources,
+} from "./footballPlayerSpotlightSchedule";
 
-export type FootballSpotlightKind = "cfb" | "nfl";
+export { footballSpotlightKindAt } from "./footballPlayerSpotlightSchedule";
+export const FOOTBALL_PLAYER_SPOTLIGHTS = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[0].spotlights;
 
-export const FOOTBALL_PLAYER_SPOTLIGHTS = {
-  cfb: {
-    name: "Drew Mestemaker",
-    team: "Oklahoma State",
-    position: "QB",
-    stats: [
-      { value: "317", label: "PYDS" },
-      { value: "109", label: "RYDS" },
-      { value: "426", label: "TOTAL YDS" },
-      { value: "3", label: "TOTAL TDS" },
-    ],
-    result: "VS #6 OREGON · W 39–31",
-    measurements: "6'3\" · 215 LB",
-    teamColor: "#FF7300",
-    highlightUrl: "https://youtu.be/Ia6UXgdSKw4?is=i2gxMRVoqonuhYtB",
-  },
-  nfl: {
-    name: "Josh Allen",
-    team: "Buffalo Bills",
-    position: "QB",
-    stats: [
-      { value: "334", label: "PYDS" },
-      { value: "2", label: "PASS TD" },
-      { value: "2", label: "RUSH TD" },
-      { value: "130.5", label: "QB RTG" },
-    ],
-    result: "AT HOUSTON · W 36–31",
-    measurements: "6'5\" · 237 LB",
-    teamColor: "#00338D",
-    highlightUrl: "https://youtu.be/ZeJwLzd2I4E?is=a_f7gk7JKUEYJPZs",
-  },
-} as const;
-
-export function footballSpotlightKindAt(now = new Date()): FootballSpotlightKind {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
-    weekday: "short",
-    hour: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(now);
-  const weekday = parts.find((part) => part.type === "weekday")?.value ?? "";
-  const hour = Number(parts.find((part) => part.type === "hour")?.value ?? 0);
-
-  if (weekday === "Sat") return "cfb";
-  if (weekday === "Sun" || weekday === "Mon") return "nfl";
-  return hour < 15 ? "cfb" : "nfl";
+function normalizedSpotlightPhotoSources(
+  sources: FootballSpotlightPhotoSources | Readonly<Partial<Record<FootballSpotlightKind, string | null>>>,
+): FootballSpotlightPhotoSources {
+  if ("cfb" in sources || "nfl" in sources) {
+    return {
+      [FOOTBALL_BASE_SPOTLIGHT_PAIR_ID]: sources as Readonly<Partial<Record<FootballSpotlightKind, string | null>>>,
+    };
+  }
+  return sources as FootballSpotlightPhotoSources;
 }
 
 const SEMANTIC_TEAM_COLORS: Readonly<Record<string, string>> = {
@@ -84,12 +57,19 @@ const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
   "Buffalo Bills:red": "#C60C30",
   "Detroit Lions:blue": "#0076B6",
   "LSU:gold": "#FDD023",
+  "Las Vegas Raiders:black": "#000000",
+  "New Orleans Saints:gold": "#D3BC8D",
   "Ole Miss:navy": "#14213D",
+  "Oregon:yellow": "#044520",
   "Texas:orange": "#BF5700",
+  "USC:gold": "#990000",
 };
 
 const HOME_LOGO_NEUTRALS = new Set(["white", "cream", "gray", "silver"]);
 const HOME_WHITE_LOGO_TEAMS = new Set(["Texas"]);
+const FOOTBALL_HQ_LOGO_OVERRIDES: Readonly<Record<string, string>> = {
+  Oregon: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/2483.png",
+};
 
 export function footballHqTeamPresentationFor(name: string) {
   const metadata = footballTeamSchoolMetadataFor(name);
@@ -128,6 +108,10 @@ function normalizeTeamIdentity(value: string) {
 }
 
 function logoForTeam(game: PickBout, team: FootballMatchupBreakdown["teams"][number]) {
+  const canonicalName = footballTeamSchoolMetadataFor(team.name)?.name ?? team.name;
+  const logoOverride = FOOTBALL_HQ_LOGO_OVERRIDES[canonicalName];
+  if (logoOverride) return logoOverride;
+
   const aliases = new Set(team.aliases.map(normalizeTeamIdentity));
   const homeSlug = normalizeTeamIdentity(game.homeTeamSlug ?? game.redFighterSlug);
   const awaySlug = normalizeTeamIdentity(game.awayTeamSlug ?? game.blueFighterSlug);
@@ -155,7 +139,7 @@ function PlayerSpotlight({
   canManagePhoto,
   onManagePhoto,
 }: {
-  spotlight: (typeof FOOTBALL_PLAYER_SPOTLIGHTS)[FootballSpotlightKind];
+  spotlight: FootballPlayerSpotlight;
   photoSource: string | null;
   canManagePhoto: boolean;
   onManagePhoto?: () => void;
@@ -340,26 +324,29 @@ export function FootballHq({
   dailyChallenge: ReactNode;
   weeklyGames?: DailyChallengeChampionshipSnapshot | null;
   weeklyGamesLoading?: boolean;
-  playerPhotoSources?: Readonly<Partial<Record<FootballSpotlightKind, string | null>>>;
+  playerPhotoSources?: FootballSpotlightPhotoSources | Readonly<Partial<Record<FootballSpotlightKind, string | null>>>;
   canManagePlayerPhoto?: boolean;
   onManagePlayerPhoto?: () => void;
 }) {
   const [spotlightNow, setSpotlightNow] = useState(() => new Date());
 
   useEffect(() => {
-    const timer = window.setInterval(() => setSpotlightNow(new Date()), 30_000);
+    const timer = window.setInterval(() => setSpotlightNow(new Date()), 1_000);
     return () => window.clearInterval(timer);
   }, []);
 
+  const normalizedPhotoSources = normalizedSpotlightPhotoSources(playerPhotoSources);
+  const activePair = footballSpotlightPairAt(spotlightNow, normalizedPhotoSources);
+  const activePairPhotos = normalizedPhotoSources[activePair.id] ?? {};
   const scheduledSpotlightKind = footballSpotlightKindAt(spotlightNow);
   const alternateSpotlightKind: FootballSpotlightKind = scheduledSpotlightKind === "cfb" ? "nfl" : "cfb";
-  const activeSpotlightKind = playerPhotoSources[scheduledSpotlightKind]
+  const activeSpotlightKind = activePairPhotos[scheduledSpotlightKind]
     ? scheduledSpotlightKind
-    : playerPhotoSources[alternateSpotlightKind]
+    : activePairPhotos[alternateSpotlightKind]
       ? alternateSpotlightKind
       : scheduledSpotlightKind;
-  const activeSpotlight = FOOTBALL_PLAYER_SPOTLIGHTS[activeSpotlightKind];
-  const activeSpotlightPhoto = playerPhotoSources[activeSpotlightKind] ?? null;
+  const activeSpotlight = activePair.spotlights[activeSpotlightKind];
+  const activeSpotlightPhoto = activePairPhotos[activeSpotlightKind] ?? null;
 
   const progress = pickProgress(event, selections);
   const progressPercent = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;

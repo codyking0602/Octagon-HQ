@@ -108,6 +108,18 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Millionaire score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
+  sports_feud: {
+    gameType: "sports_feud",
+    gameId: "sports-feud",
+    title: "Sports Feud",
+    dailyRoute: "/play/sports-feud?mode=daily",
+    casualRoute: "/play/sports-feud",
+    cta: "Clear the board",
+    instructions: "Clear two UFC answer boards before three strikes, then finish five Fast Money prompts in 45 seconds.",
+    footballInstructions: "Clear two NFL or CFB answer boards before three strikes, then finish five Fast Money prompts in 45 seconds.",
+    nativeResultLabel: "Sports Feud score",
+    nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
+  },
   who_am_i: {
     gameType: "who_am_i",
     gameId: "who-am-i",

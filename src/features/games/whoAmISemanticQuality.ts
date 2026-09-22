@@ -249,6 +249,22 @@ export function whoAmISemanticIndependentCapacity(
     }
   }
 
+  // Callers only need capacity up to a small threshold (13 in the fast
+  // full-population audit). Prove that threshold cheaply before exact search.
+  const greedyOrder = Array.from({ length: playable.length }, (_value, index) => index)
+    .sort((left, right) => conflicts[left]!.size - conflicts[right]!.size || left - right);
+  const greedyChosen: number[] = [];
+  for (const index of greedyOrder) {
+    if (greedyChosen.some((selected) => conflicts[index]!.has(selected))) continue;
+    greedyChosen.push(index);
+    if (greedyChosen.length >= desired) {
+      const next = cachedByTarget ?? new Map<number, number>();
+      next.set(normalizedTarget, desired);
+      SEMANTIC_CAPACITY_CACHE.set(clues, next);
+      return desired;
+    }
+  }
+
   const bitCount = (value: bigint) => {
     let bits = value;
     let count = 0;
@@ -259,7 +275,31 @@ export function whoAmISemanticIndependentCapacity(
     return count;
   };
 
-  const componentCapacity = (component: readonly number[]) => {
+  const components: number[][] = [];
+  const visited = new Set<number>();
+  for (let startIndex = 0; startIndex < playable.length; startIndex += 1) {
+    if (visited.has(startIndex)) continue;
+    const component: number[] = [];
+    const stack = [startIndex];
+    visited.add(startIndex);
+    while (stack.length) {
+      const current = stack.pop()!;
+      component.push(current);
+      for (const neighbor of conflicts[current]!) {
+        if (visited.has(neighbor)) continue;
+        visited.add(neighbor);
+        stack.push(neighbor);
+      }
+    }
+    components.push(component);
+  }
+
+  // Harvest cheap components first so dense legacy components are searched only
+  // when smaller components cannot already prove the requested threshold.
+  components.sort((left, right) => left.length - right.length || left[0]! - right[0]!);
+
+  const componentCapacity = (component: readonly number[], cap: number) => {
+    if (cap <= 0) return 0;
     if (component.length <= 1) return component.length;
 
     const localIndex = new Map<number, number>(
@@ -274,6 +314,7 @@ export function whoAmISemanticIndependentCapacity(
       }
       return mask;
     });
+    const capped = Math.min(cap, component.length);
     const memo = new Map<bigint, number>();
 
     const solve = (mask: bigint): number => {
@@ -282,6 +323,11 @@ export function whoAmISemanticIndependentCapacity(
       if (cachedResult != null) return cachedResult;
 
       const remainingCount = bitCount(mask);
+      if (remainingCount <= 1) {
+        memo.set(mask, remainingCount);
+        return remainingCount;
+      }
+
       let pivot = -1;
       let pivotDegree = -1;
       for (let index = 0; index < component.length; index += 1) {
@@ -295,14 +341,23 @@ export function whoAmISemanticIndependentCapacity(
       }
 
       if (pivotDegree <= 0) {
-        memo.set(mask, remainingCount);
-        return remainingCount;
+        const result = Math.min(capped, remainingCount);
+        memo.set(mask, result);
+        return result;
       }
 
       const pivotBit = 1n << BigInt(pivot);
-      const withPivot = 1 + solve(mask & ~pivotBit & ~conflictMasks[pivot]!);
+      const withPivot = Math.min(
+        capped,
+        1 + solve(mask & ~pivotBit & ~conflictMasks[pivot]!),
+      );
+      if (withPivot >= capped) {
+        memo.set(mask, capped);
+        return capped;
+      }
+
       const withoutPivot = solve(mask & ~pivotBit);
-      const result = Math.max(withPivot, withoutPivot);
+      const result = Math.min(capped, Math.max(withPivot, withoutPivot));
       memo.set(mask, result);
       return result;
     };
@@ -310,25 +365,10 @@ export function whoAmISemanticIndependentCapacity(
     return solve((1n << BigInt(component.length)) - 1n);
   };
 
-  const visited = new Set<number>();
   let capacity = 0;
-  for (let start = 0; start < playable.length; start += 1) {
-    if (visited.has(start)) continue;
-
-    const component: number[] = [];
-    const stack = [start];
-    visited.add(start);
-    while (stack.length) {
-      const current = stack.pop()!;
-      component.push(current);
-      for (const neighbor of conflicts[current]!) {
-        if (visited.has(neighbor)) continue;
-        visited.add(neighbor);
-        stack.push(neighbor);
-      }
-    }
-
-    capacity += componentCapacity(component);
+  for (const component of components) {
+    const remainingNeeded = desired - capacity;
+    capacity += componentCapacity(component, remainingNeeded);
     if (capacity >= desired) break;
   }
 

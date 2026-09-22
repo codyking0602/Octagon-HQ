@@ -1,0 +1,2919 @@
+body.family-feud-prototype-active {
+  overflow: hidden !important;
+  background: #010718;
+}
+
+body.family-feud-prototype-active .app-header,
+body.family-feud-prototype-active .bottom-nav {
+  display: none !important;
+}
+
+.family-feud-prototype,
+.family-feud-prototype * {
+  box-sizing: border-box;
+}
+
+.family-feud-prototype {
+  --feud-blue: #0b63df;
+  --feud-blue-bright: #2b92ff;
+  --feud-navy: #051638;
+  --feud-deep: #010612;
+  --feud-gold: #f4c449;
+  --feud-gold-bright: #ffe58c;
+  --feud-red: #ff4259;
+  position: fixed;
+  z-index: 100000;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  color: #f8fbff;
+  font-family: inherit;
+  background:
+    radial-gradient(circle at 50% 6%, rgba(36, 132, 255, 0.34), transparent 27%),
+    linear-gradient(180deg, #062153 0%, #03122f 46%, #010713 100%);
+  isolation: isolate;
+}
+
+.feud-stage-lights {
+  position: absolute;
+  z-index: 1;
+  top: max(10px, env(safe-area-inset-top));
+  left: 8vw;
+  right: 8vw;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.feud-stage-lights i {
+  width: clamp(4px, 1.2vw, 7px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--feud-gold-bright);
+  box-shadow: 0 0 7px var(--feud-gold), 0 0 18px rgba(255, 198, 55, 0.68);
+}
+
+.feud-studio {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.feud-studio::before {
+  content: "";
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  top: 4%;
+  height: 48%;
+  border: 1px solid rgba(96, 171, 255, 0.2);
+  border-radius: 46% 46% 16% 16%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(36, 137, 255, 0.24), transparent 65%),
+    repeating-linear-gradient(90deg, rgba(43, 146, 255, 0.08) 0 2px, transparent 2px 52px);
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.42);
+}
+
+.feud-studio.is-pressure::before {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(8, 89, 205, 0.21), transparent 64%),
+    repeating-linear-gradient(90deg, rgba(45, 116, 222, 0.06) 0 2px, transparent 2px 52px);
+}
+
+.feud-wall {
+  position: absolute;
+  top: 13%;
+  width: 22vw;
+  height: 55%;
+  border: 1px solid rgba(108, 178, 255, 0.15);
+  background:
+    linear-gradient(90deg, rgba(7, 51, 118, 0.82), rgba(3, 19, 51, 0.36)),
+    repeating-linear-gradient(180deg, transparent 0 44px, rgba(37, 127, 245, 0.22) 45px 47px);
+  box-shadow: inset 0 0 45px rgba(0, 0, 0, 0.45);
+}
+
+.feud-wall i {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--feud-gold), transparent);
+  box-shadow: 0 0 13px rgba(255, 196, 58, 0.36);
+}
+
+.feud-wall i:nth-child(1) { top: 18%; }
+.feud-wall i:nth-child(2) { top: 49%; }
+.feud-wall i:nth-child(3) { top: 80%; }
+
+.feud-wall--left {
+  left: -9vw;
+  transform: perspective(380px) rotateY(25deg);
+}
+
+.feud-wall--right {
+  right: -9vw;
+  transform: perspective(380px) rotateY(-25deg) scaleX(-1);
+}
+
+.feud-beam {
+  position: absolute;
+  top: 1%;
+  width: 22%;
+  height: 62%;
+  opacity: 0.36;
+  filter: blur(3px);
+}
+
+.feud-beam--left {
+  left: 9%;
+  transform: rotate(15deg);
+  background: linear-gradient(180deg, rgba(103, 183, 255, 0.5), transparent 80%);
+  clip-path: polygon(44% 0, 60% 0, 100% 100%, 0 100%);
+}
+
+.feud-beam--right {
+  right: 9%;
+  transform: rotate(-15deg);
+  background: linear-gradient(180deg, rgba(255, 209, 87, 0.36), transparent 80%);
+  clip-path: polygon(40% 0, 56% 0, 100% 100%, 0 100%);
+}
+
+.feud-stage-floor {
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  bottom: -20%;
+  height: 58%;
+  border-top: 2px solid rgba(244, 196, 73, 0.46);
+  border-radius: 50% 50% 0 0;
+  background:
+    repeating-radial-gradient(ellipse at 50% 0%, rgba(39, 130, 240, 0.16) 0 2px, transparent 3px 28px),
+    linear-gradient(180deg, rgba(8, 47, 112, 0.75), #01040b 66%);
+  transform: perspective(420px) rotateX(62deg);
+  box-shadow: 0 -24px 80px rgba(7, 89, 226, 0.24);
+}
+
+.feud-audience {
+  position: absolute;
+  z-index: 0;
+  bottom: 10%;
+  width: 30%;
+  height: 18%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-end;
+  justify-content: center;
+  gap: 4px 6px;
+  opacity: 0.76;
+  filter: drop-shadow(0 0 8px rgba(14, 88, 190, 0.35));
+}
+
+.feud-audience--left { left: -5%; }
+.feud-audience--right { right: -5%; }
+
+.feud-audience i {
+  position: relative;
+  width: 18px;
+  height: 27px;
+  border-radius: 45% 45% 30% 30%;
+  background: #01040b;
+}
+
+.feud-audience i::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #020611;
+}
+
+.feud-podium {
+  position: absolute;
+  bottom: 9%;
+  width: 72px;
+  height: 74px;
+  opacity: 0.62;
+  border: 1px solid rgba(244, 196, 73, 0.5);
+  border-radius: 9px 9px 4px 4px;
+  background:
+    linear-gradient(180deg, rgba(27, 101, 210, 0.96), rgba(3, 24, 64, 0.96));
+  box-shadow: inset 0 0 18px rgba(82, 163, 255, 0.25), 0 12px 30px rgba(0, 0, 0, 0.42);
+}
+
+.feud-podium--left { left: 4%; }
+.feud-podium--right { right: 4%; }
+
+.feud-back {
+  position: absolute;
+  z-index: 20;
+  top: calc(max(18px, env(safe-area-inset-top)) + 10px);
+  left: max(12px, env(safe-area-inset-left));
+  height: 37px;
+  padding: 0 12px 0 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border: 1px solid rgba(129, 191, 255, 0.48);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(1, 14, 39, 0.86);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.32);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.feud-back span {
+  margin-top: -2px;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.feud-brand {
+  position: relative;
+  width: min(76vw, 320px);
+  min-height: 118px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  border: 3px solid #ffc83c;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(22, 104, 236, 0.64), transparent 68%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(93, 180, 255, 0.31) 0 2px, transparent 3px 8px),
+    #062864;
+  box-shadow:
+    0 0 0 5px #031334,
+    0 0 0 7px rgba(255, 195, 48, 0.7),
+    0 0 30px rgba(35, 128, 255, 0.4),
+    inset 0 0 28px rgba(0, 0, 0, 0.34);
+  transform: scaleY(0.78);
+}
+
+.feud-brand span,
+.feud-brand strong {
+  position: relative;
+  z-index: 2;
+  color: #ffd45d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 900;
+  line-height: 0.82;
+  letter-spacing: -1px;
+  text-shadow:
+    0 2px 0 #6a3d00,
+    0 4px 0 #2c1800,
+    0 0 8px rgba(255, 223, 104, 0.45);
+  transform: scaleY(1.28);
+}
+
+.feud-brand span { font-size: clamp(34px, 9vw, 50px); }
+.feud-brand strong { font-size: clamp(44px, 11vw, 62px); }
+
+.feud-brand.is-compact {
+  width: 132px;
+  min-height: 57px;
+  margin: 0;
+  border-width: 2px;
+  box-shadow:
+    0 0 0 3px #031334,
+    0 0 0 4px rgba(255, 195, 48, 0.58),
+    0 0 16px rgba(35, 128, 255, 0.3);
+}
+
+.feud-brand.is-compact span { font-size: 18px; }
+.feud-brand.is-compact strong { font-size: 24px; }
+
+.feud-primary-button,
+.feud-secondary-button,
+.feud-scope-switch {
+  width: 100%;
+  min-height: 51px;
+  border-radius: 14px;
+  font-weight: 950;
+  letter-spacing: 0.5px;
+}
+
+.feud-primary-button {
+  border: 1px solid #ffe286;
+  color: #071229;
+  background: linear-gradient(180deg, #ffe47d, #f0b527);
+  box-shadow:
+    inset 0 1px 0 #fff5c4,
+    0 5px 0 #9f6808,
+    0 12px 24px rgba(0, 0, 0, 0.38);
+}
+
+.feud-primary-button:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 1px 0 #fff5c4,
+    0 2px 0 #9f6808,
+    0 7px 18px rgba(0, 0, 0, 0.38);
+}
+
+.feud-secondary-button,
+.feud-scope-switch {
+  border: 1px solid rgba(104, 175, 255, 0.46);
+  color: #eaf4ff;
+  background: rgba(3, 27, 68, 0.84);
+}
+
+.feud-intro {
+  position: absolute;
+  inset: 0;
+  padding:
+    calc(max(56px, env(safe-area-inset-top)) + 24px)
+    22px
+    calc(max(26px, env(safe-area-inset-bottom)) + 12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.feud-intro__eyebrow,
+.feud-result__eyebrow {
+  margin-bottom: 8px;
+  color: #9fd1ff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2.1px;
+}
+
+.feud-intro h1 {
+  margin: 3px 0 5px;
+  font-size: clamp(27px, 7vw, 35px);
+  line-height: 1.04;
+}
+
+.feud-intro > p {
+  max-width: 355px;
+  margin: 0 0 17px;
+  color: #c8ddf6;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.feud-intro__rules {
+  width: min(100%, 390px);
+  margin-bottom: 19px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  overflow: hidden;
+  border: 1px solid rgba(247, 196, 69, 0.52);
+  border-radius: 14px;
+  background: rgba(2, 18, 47, 0.82);
+}
+
+.feud-intro__rules span {
+  min-height: 62px;
+  padding: 8px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid rgba(247, 196, 69, 0.22);
+  color: #a9c7ec;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+}
+
+.feud-intro__rules span:last-child { border-right: 0; }
+
+.feud-intro__rules b {
+  color: #ffd15c;
+  font-size: 22px;
+}
+
+.feud-intro .feud-primary-button,
+.feud-intro .feud-scope-switch {
+  max-width: 390px;
+}
+
+.feud-intro .feud-scope-switch {
+  margin-top: 10px;
+}
+
+.feud-main-stage {
+  position: absolute;
+  inset: 0;
+  padding:
+    calc(max(53px, env(safe-area-inset-top)) + 9px)
+    12px
+    calc(max(92px, env(safe-area-inset-bottom)) + 8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.feud-main-stage__top {
+  width: min(100%, 620px);
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feud-strikes {
+  display: flex;
+  gap: 5px;
+  padding: 5px 7px;
+  border: 1px solid rgba(111, 174, 255, 0.32);
+  border-radius: 999px;
+  background: rgba(1, 12, 33, 0.74);
+}
+
+.feud-strikes span {
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(84, 140, 208, 0.42);
+  border-radius: 50%;
+  color: #37506f;
+  background: #03122d;
+  font-size: 26px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.feud-strikes span.is-on {
+  color: #fff;
+  border-color: #ff6a7d;
+  background: #9e0b20;
+  box-shadow: 0 0 15px rgba(255, 55, 79, 0.54);
+}
+
+.feud-question-card {
+  position: relative;
+  width: min(100%, 620px);
+  padding: 10px 13px 11px;
+  border: 1px solid rgba(117, 182, 255, 0.38);
+  border-radius: 13px;
+  background:
+    linear-gradient(180deg, rgba(7, 38, 91, 0.93), rgba(2, 18, 48, 0.93));
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  text-align: center;
+}
+
+.feud-question-card span {
+  color: #f8cb58;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: 1.8px;
+}
+
+.feud-question-card h1 {
+  margin: 4px 0 0;
+  font-size: clamp(16px, 4.55vw, 23px);
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.feud-answer-board {
+  position: relative;
+  width: min(100%, 620px);
+  padding: 12px;
+  display: grid;
+  gap: 7px;
+  border: 3px solid #f7c445;
+  border-radius: 18px;
+  background:
+    repeating-radial-gradient(circle at 6px 6px, rgba(255, 217, 98, 0.7) 0 2px, transparent 3px 13px),
+    linear-gradient(180deg, #071d49, #030c20);
+  box-shadow:
+    -10px 12px 0 #010715,
+    -13px 15px 0 rgba(244, 196, 73, 0.55),
+    0 22px 38px rgba(0, 0, 0, 0.52),
+    inset 0 0 28px rgba(24, 101, 221, 0.25);
+  transform: perspective(700px) rotateX(1.5deg);
+}
+
+.feud-answer-board::before,
+.feud-answer-board::after {
+  content: "";
+  position: absolute;
+  top: 11%;
+  bottom: 11%;
+  width: 8px;
+  background: linear-gradient(180deg, #f7c445, #7d5207);
+  opacity: 0.68;
+}
+
+.feud-answer-board::before { left: -11px; transform: skewY(-18deg); }
+.feud-answer-board::after { right: -8px; transform: skewY(18deg); }
+
+.feud-answer-slot {
+  min-width: 0;
+  min-height: clamp(54px, 8.2dvh, 68px);
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid #b9d7ff;
+  border-radius: 7px;
+  background:
+    linear-gradient(180deg, rgba(64, 143, 255, 0.9), rgba(9, 59, 151, 0.98));
+  box-shadow:
+    inset 0 0 0 2px rgba(4, 29, 80, 0.62),
+    inset 0 8px 16px rgba(255, 255, 255, 0.08);
+}
+
+.feud-answer-slot > b {
+  width: 31px;
+  height: 31px;
+  margin-left: 5px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #60aaff;
+  border-radius: 50%;
+  color: #fff;
+  background: #092b72;
+  font-size: 17px;
+  font-weight: 950;
+}
+
+.feud-answer-slot strong {
+  min-width: 0;
+  padding: 0 7px;
+  overflow: hidden;
+  color: transparent;
+  font-size: clamp(13px, 3.8vw, 18px);
+  font-weight: 950;
+  line-height: 1.06;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feud-answer-slot > span {
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  border-left: 1px solid rgba(190, 218, 255, 0.42);
+  color: transparent;
+  background: rgba(0, 17, 59, 0.38);
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.feud-answer-slot.is-revealed {
+  animation: feud-slot-flip 0.34s ease-out;
+  background: linear-gradient(180deg, #164582, #071f4a);
+}
+
+.feud-answer-slot.is-revealed strong,
+.feud-answer-slot.is-revealed > span {
+  color: #fff;
+}
+
+.feud-answer-slot.is-missed {
+  border-color: rgba(255, 197, 76, 0.68);
+  background: linear-gradient(180deg, #4c3a17, #191309);
+}
+
+.feud-answer-slot.is-missed strong,
+.feud-answer-slot.is-missed > span {
+  color: #ffe49a;
+}
+
+@keyframes feud-slot-flip {
+  from { transform: rotateX(82deg); filter: brightness(1.7); }
+  to { transform: rotateX(0); filter: brightness(1); }
+}
+
+.feud-main-score {
+  min-height: 40px;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 5px 13px;
+  border: 1px solid rgba(247, 196, 69, 0.65);
+  border-radius: 999px;
+  background: rgba(2, 17, 47, 0.88);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.27);
+}
+
+.feud-main-score span {
+  color: #abc7e7;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+}
+
+.feud-main-score strong {
+  color: #ffd45d;
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+}
+
+.feud-main-score em {
+  color: #8099b9;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.feud-answer-entry,
+.feud-fast-entry {
+  position: absolute;
+  z-index: 15;
+  left: 10px;
+  right: 10px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  margin: 0 auto;
+  width: min(calc(100% - 20px), 620px);
+  padding: 8px;
+  border: 1px solid #2c8bff;
+  border-radius: 16px;
+  background: rgba(2, 17, 45, 0.97);
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.62),
+    0 -8px 26px rgba(0, 0, 0, 0.36);
+}
+
+.feud-feedback {
+  min-height: 18px;
+  padding: 0 5px 5px;
+  color: #8fafd4;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1.05px;
+  text-align: center;
+}
+
+.feud-feedback[data-kind="board-correct"],
+.feud-feedback[data-kind="board-also-accepted"] { color: #84efaa; }
+.feud-feedback[data-kind="board-strike"] { color: #ff7386; }
+.feud-feedback[data-kind="ambiguous"],
+.feud-feedback[data-kind="already-guessed"] { color: #ffd763; }
+
+.feud-answer-entry__row,
+.feud-fast-entry__row {
+  display: grid;
+  grid-template-columns: 1fr 54px;
+  gap: 7px;
+}
+
+.feud-answer-entry input,
+.feud-fast-entry input {
+  min-width: 0;
+  width: 100%;
+  height: 53px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  outline: none;
+  color: #04142d;
+  background: #fff;
+  font-size: 18px;
+  font-weight: 850;
+}
+
+.feud-answer-entry input:focus,
+.feud-fast-entry input:focus {
+  box-shadow: inset 0 0 0 3px #66aefb;
+}
+
+.feud-answer-entry__row button,
+.feud-fast-entry__row button {
+  border: 1px solid #ffdf79;
+  border-radius: 11px;
+  color: #07152e;
+  background: linear-gradient(180deg, #ffdf72, #e9a816);
+  font-size: 31px;
+  font-weight: 900;
+}
+
+.feud-round-review {
+  width: min(100%, 620px);
+  margin-top: auto;
+  padding: 9px;
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(247, 196, 69, 0.52);
+  border-radius: 14px;
+  background: rgba(2, 16, 42, 0.94);
+  text-align: center;
+}
+
+.feud-round-review > strong {
+  color: #ffd45d;
+  font-size: 11px;
+  letter-spacing: 1.7px;
+}
+
+.feud-round-review > span {
+  color: #a9c3e3;
+  font-size: 10px;
+}
+
+.feud-round-review .feud-primary-button {
+  min-height: 43px;
+}
+
+.feud-scene--fast-intro,
+.feud-scene--fast,
+.feud-scene--reveal,
+.feud-scene--result {
+  background:
+    radial-gradient(circle at 50% 5%, rgba(8, 89, 219, 0.27), transparent 29%),
+    linear-gradient(180deg, #020a1b 0%, #02050d 62%, #000 100%);
+}
+
+.feud-host {
+  position: relative;
+  width: 95px;
+  height: 178px;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 11px 15px rgba(0, 0, 0, 0.5));
+}
+
+.feud-host__halo {
+  position: absolute;
+  left: -26px;
+  top: -28px;
+  width: 148px;
+  height: 198px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(55, 148, 255, 0.22), transparent 67%);
+}
+
+.feud-host__head {
+  position: absolute;
+  z-index: 3;
+  top: 16px;
+  left: 34px;
+  width: 34px;
+  height: 39px;
+  border-radius: 47% 47% 43% 43%;
+  background: linear-gradient(150deg, #c9a177, #8a6248);
+  box-shadow: inset -7px -3px 0 rgba(0, 0, 0, 0.13);
+}
+
+.feud-host__head::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 2px;
+  width: 30px;
+  height: 12px;
+  border-radius: 70% 50% 25% 25%;
+  background: #17233a;
+}
+
+.feud-host__body {
+  position: absolute;
+  z-index: 2;
+  left: 14px;
+  bottom: 7px;
+  width: 76px;
+  height: 121px;
+  border-radius: 28px 28px 12px 12px;
+  background: linear-gradient(90deg, #071329, #142c52 50%, #061126);
+  box-shadow: inset 0 0 0 1px rgba(126, 179, 238, 0.18);
+}
+
+.feud-host__body::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 25px;
+  width: 27px;
+  height: 43px;
+  clip-path: polygon(0 0, 100% 0, 72% 100%, 28% 100%);
+  background: #edf5ff;
+}
+
+.feud-host__lapel {
+  position: absolute;
+  z-index: 3;
+  top: 7px;
+  width: 24px;
+  height: 53px;
+  background: #0d2041;
+}
+
+.feud-host__lapel--left {
+  left: 12px;
+  clip-path: polygon(0 0, 100% 21%, 65% 100%, 0 53%);
+}
+
+.feud-host__lapel--right {
+  right: 12px;
+  clip-path: polygon(100% 0, 0 21%, 35% 100%, 100% 53%);
+}
+
+.feud-host__tie {
+  position: absolute;
+  z-index: 4;
+  top: 20px;
+  left: 36px;
+  width: 7px;
+  height: 38px;
+  clip-path: polygon(50% 0, 100% 17%, 68% 100%, 32% 100%, 0 17%);
+  background: #e2b339;
+}
+
+.feud-host__arm {
+  position: absolute;
+  z-index: 1;
+  right: -3px;
+  top: 77px;
+  width: 51px;
+  height: 15px;
+  border-radius: 999px;
+  background: #0d2041;
+  transform: rotate(-19deg);
+  transform-origin: left center;
+}
+
+.feud-host__mic {
+  position: absolute;
+  z-index: 4;
+  right: 1px;
+  top: 58px;
+  width: 6px;
+  height: 48px;
+  border-radius: 999px;
+  background: #26374c;
+  transform: rotate(8deg);
+}
+
+.feud-host__mic::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #607289;
+}
+
+.feud-fast-intro,
+.feud-result {
+  position: absolute;
+  inset: 0;
+  padding:
+    calc(max(69px, env(safe-area-inset-top)) + 14px)
+    20px
+    calc(max(22px, env(safe-area-inset-bottom)) + 12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.feud-fast-intro__show {
+  width: min(100%, 430px);
+  display: grid;
+  grid-template-columns: 105px 1fr;
+  align-items: center;
+  gap: 2px;
+}
+
+.feud-fast-intro__show > div:last-child {
+  text-align: left;
+}
+
+.feud-fast-intro__kicker {
+  color: #78baff;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: 1.7px;
+}
+
+.feud-fast-intro h1 {
+  margin: 2px 0 8px;
+  color: #ffd358;
+  font-size: clamp(38px, 11vw, 60px);
+  line-height: 0.95;
+  letter-spacing: -2px;
+  text-shadow: 0 0 22px rgba(255, 193, 46, 0.25);
+}
+
+.feud-fast-intro__clock {
+  width: 126px;
+  min-height: 59px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #e9b632;
+  border-radius: 999px;
+  color: #ffd458;
+  background: #061a3c;
+  box-shadow: 0 0 28px rgba(21, 123, 255, 0.34);
+  font-size: 31px;
+  font-weight: 950;
+  font-variant-numeric: tabular-nums;
+}
+
+.feud-fast-intro > p {
+  max-width: 340px;
+  margin: 10px 0 18px;
+  color: #b9cbe2;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.feud-fast-intro .feud-primary-button,
+.feud-result .feud-primary-button,
+.feud-result .feud-secondary-button {
+  max-width: 390px;
+}
+
+.feud-fast-stage {
+  position: absolute;
+  inset: 0;
+  padding:
+    calc(max(53px, env(safe-area-inset-top)) + 8px)
+    12px
+    calc(max(91px, env(safe-area-inset-bottom)) + 9px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+}
+
+.feud-fast-stage > header {
+  width: min(100%, 620px);
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 1fr 108px 1fr;
+  align-items: center;
+}
+
+.feud-fast-stage > header .feud-brand {
+  justify-self: start;
+}
+
+.feud-fast-stage > header > span {
+  justify-self: end;
+  color: #a8c6ed;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 1px;
+}
+
+.feud-fast-clock {
+  width: 102px;
+  height: 57px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #e8b631;
+  border-radius: 999px;
+  color: #ffd45c;
+  background: #020d25;
+  box-shadow: 0 0 20px rgba(17, 111, 255, 0.28);
+  font-size: 28px;
+  font-weight: 950;
+  font-variant-numeric: tabular-nums;
+}
+
+.feud-fast-clock.is-low {
+  color: #fff;
+  border-color: #ff485d;
+  background: #4e0713;
+  box-shadow: 0 0 23px rgba(255, 35, 65, 0.45);
+  animation: feud-clock-pulse 0.55s ease-in-out infinite alternate;
+}
+
+@keyframes feud-clock-pulse {
+  to { transform: scale(1.035); filter: brightness(1.16); }
+}
+
+.feud-fast-showdown {
+  width: min(100%, 620px);
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  align-items: end;
+  gap: 3px;
+}
+
+.feud-fast-showdown .feud-host {
+  width: 87px;
+  height: 164px;
+  transform: translateY(8px) scale(0.92);
+  transform-origin: bottom center;
+}
+
+.feud-fast-question {
+  min-height: 184px;
+  padding: 17px 14px;
+  display: grid;
+  align-content: center;
+  border: 2px solid #e8b632;
+  border-radius: 17px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(22, 97, 204, 0.2), transparent 66%),
+    linear-gradient(180deg, #03163a, #010a1e);
+  box-shadow:
+    -7px 9px 0 #00040c,
+    0 15px 34px rgba(0, 0, 0, 0.48);
+  text-align: center;
+}
+
+.feud-fast-question small {
+  color: #f5c64e;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: 1.7px;
+}
+
+.feud-fast-question h1 {
+  margin: 8px 0 13px;
+  font-size: clamp(17px, 5vw, 25px);
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.feud-fast-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+.feud-fast-dots i {
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(123, 176, 244, 0.48);
+  border-radius: 50%;
+  background: #061731;
+}
+
+.feud-fast-dots i.is-done {
+  background: #5de58b;
+  border-color: #8bf2aa;
+}
+
+.feud-fast-dots i.is-current {
+  background: #f3c54f;
+  border-color: #ffe68c;
+  box-shadow: 0 0 10px rgba(255, 209, 85, 0.55);
+}
+
+.feud-reveal-stage {
+  position: absolute;
+  inset: 0;
+  padding:
+    calc(max(60px, env(safe-area-inset-top)) + 7px)
+    12px
+    calc(max(20px, env(safe-area-inset-bottom)) + 12px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.feud-reveal-stage::-webkit-scrollbar { display: none; }
+
+.feud-reveal-stage > header {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  width: min(100%, 620px);
+  min-height: 60px;
+  margin: 0 auto 10px;
+  padding: 6px 8px;
+  display: grid;
+  grid-template-columns: 120px 1fr 58px;
+  align-items: center;
+  border: 1px solid rgba(82, 151, 239, 0.3);
+  border-radius: 12px;
+  background: rgba(1, 9, 27, 0.93);
+  backdrop-filter: blur(10px);
+}
+
+.feud-reveal-stage > header > span {
+  color: #a9c8ef;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: 1.4px;
+  text-align: center;
+}
+
+.feud-reveal-stage > header > strong {
+  justify-self: end;
+  color: #ffd45d;
+  font-size: 19px;
+  font-variant-numeric: tabular-nums;
+}
+
+.feud-reveal-cards {
+  width: min(100%, 620px);
+  margin: 0 auto;
+  display: grid;
+  gap: 8px;
+}
+
+.feud-reveal-card {
+  min-height: 68px;
+  overflow: hidden;
+  border: 1px solid rgba(65, 124, 201, 0.4);
+  border-radius: 12px;
+  background: rgba(2, 12, 33, 0.9);
+  opacity: 0.46;
+}
+
+.feud-reveal-card.is-revealed {
+  opacity: 1;
+  border-color: rgba(232, 182, 49, 0.6);
+  animation: feud-reveal-card 0.32s ease-out;
+}
+
+@keyframes feud-reveal-card {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feud-reveal-card__prompt {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  border-bottom: 1px solid rgba(84, 146, 224, 0.22);
+}
+
+.feud-reveal-card__prompt b {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #ffd45d;
+  background: rgba(6, 37, 84, 0.75);
+}
+
+.feud-reveal-card__prompt span {
+  padding: 7px 9px;
+  color: #d9e7f8;
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.feud-reveal-card__you {
+  min-height: 45px;
+  padding: 6px 9px;
+  display: grid;
+  grid-template-columns: 55px 1fr 34px;
+  align-items: center;
+  gap: 5px;
+  background: rgba(7, 33, 72, 0.62);
+}
+
+.feud-reveal-card__you small,
+.feud-reveal-card__hq > small {
+  color: #7e9fc7;
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: 1.1px;
+}
+
+.feud-reveal-card__you strong {
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feud-reveal-card__you > b {
+  justify-self: end;
+  color: #7ee6a1;
+  font-size: 18px;
+}
+
+.feud-reveal-card__you.is-x > b {
+  color: #ff677b;
+}
+
+.feud-reveal-card__hq {
+  padding: 7px 9px 9px;
+}
+
+.feud-reveal-card__hq > div {
+  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.feud-reveal-card__hq span {
+  min-height: 25px;
+  padding: 4px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid rgba(69, 138, 225, 0.35);
+  border-radius: 999px;
+  color: #c7d9ef;
+  background: rgba(4, 29, 70, 0.72);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.feud-reveal-card__hq span b {
+  color: #ffd45d;
+  font-size: 9px;
+}
+
+.feud-reveal-next {
+  display: block;
+  width: min(100%, 620px);
+  margin: 12px auto 0;
+}
+
+.feud-reveal-stage__wait {
+  margin: 18px 0;
+  color: #6686af;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  text-align: center;
+}
+
+.feud-result .feud-brand {
+  margin-bottom: 13px;
+}
+
+.feud-result__score {
+  display: flex;
+  align-items: baseline;
+  color: #fff;
+}
+
+.feud-result__score strong {
+  color: #ffd45d;
+  font-size: clamp(86px, 25vw, 122px);
+  line-height: 0.9;
+  letter-spacing: -6px;
+  text-shadow: 0 0 30px rgba(255, 198, 60, 0.16);
+}
+
+.feud-result__score span {
+  margin-left: 4px;
+  color: #a9bdd8;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.feud-result h1 {
+  margin: 4px 0 12px;
+  font-size: 22px;
+  letter-spacing: 0.8px;
+}
+
+.feud-result__equation {
+  width: min(100%, 390px);
+  margin-bottom: 10px;
+  padding: 9px;
+  display: grid;
+  grid-template-columns: 1fr 22px 1fr 22px 1fr;
+  align-items: center;
+  border: 1px solid rgba(232, 182, 49, 0.52);
+  border-radius: 14px;
+  background: rgba(2, 15, 39, 0.82);
+}
+
+.feud-result__equation > span {
+  min-height: 52px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  border: 1px solid rgba(86, 154, 239, 0.25);
+  border-radius: 9px;
+  background: rgba(5, 30, 71, 0.65);
+}
+
+.feud-result__equation > span.is-total {
+  border-color: rgba(244, 196, 73, 0.56);
+  background: rgba(82, 57, 7, 0.32);
+}
+
+.feud-result__equation b {
+  color: #fff;
+  font-size: 23px;
+}
+
+.feud-result__equation span.is-total b {
+  color: #ffd45d;
+}
+
+.feud-result__equation small {
+  margin-top: 1px;
+  color: #8eabc9;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.9px;
+}
+
+.feud-result__equation i {
+  color: #7591b3;
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.feud-result__breakdown {
+  width: min(100%, 390px);
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(89, 150, 225, 0.32);
+  border-radius: 12px;
+  background: rgba(2, 15, 39, 0.72);
+}
+
+.feud-result__breakdown p {
+  margin: 0;
+  min-height: 38px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(104, 166, 240, 0.15);
+}
+
+.feud-result__breakdown p:last-child { border-bottom: 0; }
+
+.feud-result__breakdown span {
+  color: #9db8da;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.9px;
+}
+
+.feud-result__breakdown strong {
+  color: #fff;
+  font-size: 13px;
+}
+
+.feud-result .feud-secondary-button {
+  margin-top: 9px;
+}
+
+@media (max-height: 700px) {
+  .feud-main-stage {
+    gap: 5px;
+    padding-top: calc(max(47px, env(safe-area-inset-top)) + 5px);
+  }
+
+  .feud-main-stage__top {
+    min-height: 50px;
+  }
+
+  .feud-main-stage__top .feud-brand {
+    width: 116px;
+    min-height: 49px;
+  }
+
+  .feud-question-card {
+    padding: 7px 10px 8px;
+  }
+
+  .feud-answer-slot {
+    min-height: 48px;
+  }
+
+  .feud-round-review {
+    padding: 6px;
+    gap: 3px;
+  }
+
+  .feud-fast-stage {
+    gap: 6px;
+    padding-top: calc(max(47px, env(safe-area-inset-top)) + 5px);
+  }
+
+  .feud-fast-showdown .feud-host {
+    height: 140px;
+    transform: translateY(7px) scale(0.78);
+  }
+
+  .feud-fast-question {
+    min-height: 145px;
+    padding: 12px;
+  }
+}
+
+@media (min-width: 760px) {
+  .feud-main-stage,
+  .feud-fast-stage {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .feud-wall {
+    width: 27vw;
+  }
+
+  .feud-audience {
+    width: 35%;
+  }
+
+  .feud-podium--left { left: 14%; }
+  .feud-podium--right { right: 14%; }
+
+  .feud-fast-showdown {
+    grid-template-columns: 125px 1fr;
+  }
+
+  .feud-fast-showdown .feud-host {
+    width: 112px;
+    height: 195px;
+    transform: translateY(8px);
+  }
+}
+
+
+/* Sports Feud photographic stage pass.
+   The uploaded plates own the physical studio. React/CSS own all live game state. */
+
+.feud-stage-plate {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-stage-plate--main,
+.family-feud-prototype[data-scene="fast-intro"] .feud-stage-plate--fast,
+.family-feud-prototype[data-scene="fast"] .feud-stage-plate--fast {
+  display: block;
+}
+
+.family-feud-prototype[data-scene="main"],
+.family-feud-prototype[data-scene="fast-intro"],
+.family-feud-prototype[data-scene="fast"] {
+  background: #01050e;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-back,
+.family-feud-prototype[data-scene="fast-intro"] .feud-back,
+.family-feud-prototype[data-scene="fast"] .feud-back,
+.family-feud-prototype[data-scene="reveal"] .feud-back,
+.family-feud-prototype[data-scene="fast-recap"] .feud-back {
+  top: 1.4%;
+  left: 2.5%;
+  width: 17%;
+  height: 5.2%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: transparent;
+  opacity: 0.01;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-back span,
+.family-feud-prototype[data-scene="fast-intro"] .feud-back span,
+.family-feud-prototype[data-scene="fast"] .feud-back span,
+.family-feud-prototype[data-scene="reveal"] .feud-back span,
+.family-feud-prototype[data-scene="fast-recap"] .feud-back span {
+  color: transparent;
+}
+
+/* MAIN BOARD — align live content with the blank four-slot stage plate. */
+.family-feud-prototype[data-scene="main"] .feud-main-stage {
+  z-index: 2;
+  inset: 0;
+  padding: 0;
+  gap: 0;
+  display: block;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-main-stage__top {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  min-height: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-main-stage__top .feud-brand {
+  display: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-strikes {
+  position: absolute;
+  top: 7.45%;
+  right: 4.6%;
+  width: 23.6%;
+  height: 5.5%;
+  padding: 0;
+  gap: 4%;
+  display: flex;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-strikes span {
+  width: 30.7%;
+  height: 100%;
+  border: 0;
+  color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-strikes span.is-on {
+  color: #fff;
+  border: 2px solid rgba(255, 103, 119, 0.94);
+  background: rgba(184, 8, 35, 0.9);
+  box-shadow:
+    0 0 0 3px rgba(255, 26, 57, 0.17),
+    0 0 22px rgba(255, 39, 70, 0.88);
+  animation: feud-photo-strike 380ms ease-out;
+}
+
+@keyframes feud-photo-strike {
+  0% { transform: scale(1.5); filter: brightness(2.1); }
+  62% { transform: scale(0.92); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.family-feud-prototype[data-scene="main"] .feud-question-card {
+  position: absolute;
+  left: 17.6%;
+  top: 16.45%;
+  width: 64.3%;
+  height: 11.7%;
+  padding: 2.1% 3.5% 1.7%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-question-card small {
+  margin-bottom: 0.2em;
+  color: #f6c958;
+  font-size: clamp(8px, 2.2vw, 13px);
+  font-weight: 950;
+  letter-spacing: 0.18em;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-question-card span {
+  color: #f4c752;
+  font-size: clamp(7px, 1.9vw, 11px);
+  letter-spacing: 0.18em;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-question-card h1 {
+  max-width: 95%;
+  margin-top: 0.35em;
+  color: #fff;
+  font-size: clamp(15px, 4vw, 24px);
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.72);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-board {
+  position: absolute;
+  left: 21.05%;
+  top: 32.15%;
+  width: 55.5%;
+  height: 13.15%;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 4.7% 2.7%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-board::before,
+.family-feud-prototype[data-scene="main"] .feud-answer-board::after {
+  content: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 21%;
+  align-items: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot > b {
+  display: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot strong {
+  padding: 0 3% 0 19%;
+  color: transparent;
+  font-size: clamp(10px, 3vw, 17px);
+  line-height: 1.03;
+  text-align: left;
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot > span {
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  border: 0;
+  color: transparent;
+  background: transparent;
+  font-size: clamp(13px, 3.6vw, 20px);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-revealed {
+  animation: feud-slot-flip 0.34s ease-out;
+  background: transparent;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-revealed strong,
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-revealed > span {
+  color: #fff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.72);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed strong,
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed > span {
+  color: #ffe29a;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-main-score {
+  position: absolute;
+  left: 50%;
+  top: 48.2%;
+  min-height: 0;
+  padding: 0.45em 1.1em;
+  transform: translateX(-50%);
+  border-color: rgba(247, 196, 69, 0.72);
+  background: rgba(0, 13, 39, 0.78);
+  backdrop-filter: blur(5px);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-review {
+  position: absolute;
+  z-index: 8;
+  left: 3%;
+  right: 3%;
+  bottom: 14.2%;
+  width: auto;
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(0, 13, 39, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry {
+  left: 3.2%;
+  right: auto;
+  bottom: 5.8%;
+  width: 93.6%;
+  height: 8.1%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry .feud-feedback,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry .feud-feedback {
+  position: absolute;
+  left: 8%;
+  right: 17%;
+  bottom: calc(100% + 6px);
+  min-height: 17px;
+  padding: 0;
+  color: #b9d4f2;
+  text-shadow: 0 2px 5px #000;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry__row,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry__row {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 12.6%;
+  gap: 2.1%;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input {
+  display: block;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0 4%;
+  border: 0;
+  border-radius: 10px;
+  color: #07152d;
+  background: transparent;
+  box-shadow: none;
+  font-size: 18px;
+  line-height: 1.15;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry__row button,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry__row button {
+  height: 100%;
+  border: 0;
+  border-radius: 12px;
+  color: transparent;
+  background: transparent;
+  box-shadow: none;
+  font-size: 0;
+}
+
+/* FAST MONEY — use the dedicated plate and layer the daily rotating host in the open left lane. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-stage {
+  z-index: 2;
+  inset: 0;
+  padding: 0;
+  gap: 0;
+  display: block;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-stage > header {
+  position: absolute;
+  z-index: 9;
+  inset: 0;
+  width: auto;
+  min-height: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-stage > header .feud-brand {
+  display: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-clock {
+  position: absolute;
+  left: 32.4%;
+  top: 17.55%;
+  width: 34.2%;
+  height: 5.8%;
+  border: 0;
+  border-radius: 0;
+  color: #ffd765;
+  background: transparent;
+  box-shadow: none;
+  font-size: clamp(30px, 8.7vw, 52px);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.82);
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-clock.is-low {
+  color: #ff6678;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-stage > header > span {
+  position: absolute;
+  top: 23.25%;
+  right: 8.5%;
+  color: #d4e5fb;
+  font-size: clamp(9px, 2.5vw, 14px);
+  text-shadow: 0 2px 5px #000;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-showdown {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  width: auto;
+  display: block;
+}
+
+.feud-fast-host-asset {
+  position: absolute;
+  display: none;
+  z-index: 5;
+  left: 1.5%;
+  bottom: 12.5%;
+  width: 33.5%;
+  height: 54%;
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.42));
+  pointer-events: none;
+  user-select: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question {
+  position: absolute;
+  z-index: 8;
+  left: 25.4%;
+  top: 24.2%;
+  width: 59.1%;
+  height: 12.4%;
+  min-height: 0;
+  padding: 1.5% 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question small {
+  color: #f6c851;
+  font-size: clamp(7px, 2vw, 11px);
+  letter-spacing: 0.15em;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question h1 {
+  margin: 0.45em 0 0.35em;
+  max-width: 95%;
+  font-size: clamp(14px, 3.8vw, 23px);
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-dots {
+  gap: 5px;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-dots i {
+  width: 7px;
+  height: 7px;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress {
+  position: absolute;
+  z-index: 7;
+  left: 32.35%;
+  top: 38.45%;
+  width: 43.6%;
+  height: 20.25%;
+  display: grid;
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  gap: 1.1%;
+  pointer-events: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div {
+  min-width: 0;
+  padding: 0 15% 0 16%;
+  display: flex;
+  align-items: center;
+  color: transparent;
+  font-size: clamp(10px, 3vw, 17px);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.72);
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div.is-filled {
+  color: #fff;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div.is-current {
+  color: #a7c9f3;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro {
+  z-index: 2;
+  inset: 0;
+  padding: 0;
+  display: block;
+  text-align: center;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro__show {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  display: block;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  left: 1.5%;
+  bottom: 12.5%;
+  width: 33.5%;
+  height: 54%;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro__show > div:last-child {
+  position: static;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro__kicker,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro h1 {
+  display: none;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro__clock {
+  position: absolute;
+  left: 32.4%;
+  top: 17.55%;
+  width: 34.2%;
+  height: 5.8%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  color: #ffd765;
+  background: transparent;
+  box-shadow: none;
+  font-size: clamp(30px, 8.7vw, 52px);
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro > p {
+  position: absolute;
+  z-index: 9;
+  left: 26%;
+  top: 25.2%;
+  width: 58%;
+  margin: 0;
+  color: #dceaff;
+  font-size: clamp(11px, 3vw, 16px);
+  line-height: 1.25;
+  text-shadow: 0 2px 6px #000;
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro > .feud-primary-button {
+  position: absolute;
+  z-index: 9;
+  left: 22%;
+  bottom: 7.15%;
+  width: 56%;
+  min-height: 48px;
+}
+
+/* Compact result language after the photographic-stage pass. */
+.family-feud-prototype .feud-result__breakdown p:last-child {
+  border-bottom: 0;
+}
+
+@media (max-height: 700px) {
+  .family-feud-prototype[data-scene="main"] .feud-main-stage,
+  .family-feud-prototype[data-scene="fast"] .feud-fast-stage {
+    padding: 0;
+    gap: 0;
+  }
+
+  .family-feud-prototype[data-scene="main"] .feud-answer-slot {
+    min-height: 0;
+  }
+
+  .family-feud-prototype[data-scene="fast"] .feud-fast-question {
+    min-height: 0;
+    padding: 1.5% 3%;
+  }
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input::placeholder,
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input::placeholder {
+  color: rgba(66, 72, 82, 0.52);
+  font-size: 18px;
+  font-weight: 700;
+  opacity: 1;
+}
+
+
+/* Sports Feud daily-polish pass: production mobile composition. */
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot {
+  position: relative;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot strong {
+  padding-left: 27%;
+  padding-right: 4%;
+  font-size: clamp(9px, 2.75vw, 16px);
+  line-height: 1.02;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed {
+  background: rgba(92, 57, 4, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(247, 196, 69, 0.5);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed strong,
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed > span {
+  color: rgba(255, 224, 154, 0.72);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.82);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-missed::after {
+  content: "MISSED";
+  position: absolute;
+  left: 27%;
+  bottom: 5%;
+  color: #f4c449;
+  font-size: clamp(5px, 1.25vw, 7px);
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-shadow: 0 1px 3px #000;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-review > span {
+  color: #b7c9df;
+}
+
+/* The form shell aligns to the baked tray; the real input sits inside the white field
+   rather than inheriting the full tray height on iOS keyboard resize. */
+.family-feud-prototype[data-scene="main"] .feud-answer-entry__row,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry__row {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input {
+  position: absolute;
+  left: 2.4%;
+  top: 24%;
+  width: 81.5%;
+  height: 60%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0 3.2%;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  color: #08152d;
+  background: transparent;
+  box-shadow: none;
+  font-size: 17px;
+  line-height: normal;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry__row button,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry__row button {
+  position: absolute;
+  top: 24%;
+  right: 2.2%;
+  width: 11.7%;
+  height: 60%;
+  min-height: 0;
+  padding: 0;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input::placeholder,
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input::placeholder {
+  color: rgba(71, 75, 84, 0.48);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: normal;
+  opacity: 1;
+}
+
+/* Fast Money host: large enough to feel like the studio host while clearing the input tray. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  left: -2.5%;
+  bottom: 13.2%;
+  width: 44%;
+  height: 67%;
+  object-position: left bottom;
+  transform-origin: left bottom;
+}
+
+/* Put progress into the question presentation instead of floating outside the set. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-progress {
+  position: absolute;
+  z-index: 12;
+  top: 23.25%;
+  right: 17%;
+  min-width: 50px;
+  padding: 4px 7px;
+  border: 1px solid rgba(244, 196, 73, 0.72);
+  border-radius: 999px;
+  color: #f8d46e;
+  background: rgba(1, 18, 49, 0.9);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.34);
+  font-size: clamp(7px, 1.8vw, 10px);
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-shadow: none;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question {
+  padding: 2.2% 5.4% 1.5%;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question small {
+  font-size: clamp(7px, 1.75vw, 10px);
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-question h1 {
+  max-width: 94%;
+  margin: 0.42em 0 0.28em;
+  font-size: clamp(13px, 3.45vw, 21px);
+  line-height: 1.08;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div {
+  padding-left: 23%;
+  padding-right: 13%;
+  font-size: clamp(9px, 2.75vw, 16px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Fast Money recap: teach the board without five huge eight-answer blocks. */
+.feud-reveal-card__hq > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.feud-reveal-card__hq span {
+  width: 100%;
+  min-width: 0;
+  min-height: 25px;
+  justify-content: space-between;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feud-reveal-card__more {
+  margin: 6px 0 0;
+  color: #6f91bb;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.feud-reveal-card__prompt {
+  min-height: 44px;
+}
+
+.feud-reveal-card__you {
+  min-height: 41px;
+}
+
+.feud-reveal-card__hq {
+  padding-top: 6px;
+  padding-bottom: 7px;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+  .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+    bottom: 13.5%;
+    width: 42%;
+    height: 64%;
+  }
+
+  .family-feud-prototype[data-scene="fast"] .feud-fast-question h1 {
+    font-size: clamp(12px, 3.3vw, 19px);
+  }
+}
+
+
+/* iPhone keyboard + host-scale correction pass. */
+
+/* Main board labels must never collide with the baked number medallions. */
+.family-feud-prototype[data-scene="main"] .feud-answer-slot strong {
+  padding-left: 35%;
+  padding-right: 4%;
+  font-size: clamp(8px, 2.2vw, 13px);
+  line-height: 1;
+}
+
+/* Fast Money submitted answers get the same protected number-circle lane. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div {
+  padding-left: 30%;
+  padding-right: 12%;
+  font-size: clamp(8px, 2.2vw, 13px);
+  line-height: 1;
+}
+
+/* Match the approved host reference: a foreground co-star, not a distant figure. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  left: -4%;
+  bottom: 12.7%;
+  width: 52%;
+  height: 75%;
+  transform: scale(1.75);
+  transform-origin: left bottom;
+  object-position: left bottom;
+}
+
+/* Keep the native iOS text line vertically centered inside the baked field. */
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input {
+  top: 50%;
+  height: 56%;
+  transform: translateY(-50%);
+  padding: 0 3.4%;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry__row button,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry__row button {
+  top: 50%;
+  height: 56%;
+  transform: translateY(-50%);
+}
+
+/* When the software keyboard opens, detach the live tray from the baked image and
+   pin a real interactive tray immediately above the visual viewport keyboard. */
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry {
+  position: fixed;
+  z-index: 100002;
+  left: 10px;
+  right: 10px;
+  bottom: calc(var(--feud-keyboard-inset, 0px) + 8px);
+  width: auto;
+  height: 76px;
+  padding: 7px;
+  border: 2px solid #e4b63b;
+  border-radius: 17px;
+  background: rgba(1, 16, 44, 0.98);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(10px);
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry__row,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry__row {
+  position: absolute;
+  inset: 7px;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry input {
+  left: 0;
+  top: 50%;
+  width: calc(100% - 66px);
+  height: 54px;
+  transform: translateY(-50%);
+  padding: 0 15px;
+  border-radius: 11px;
+  color: #07142d;
+  background: #fff;
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 750;
+  box-shadow: none;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry input::placeholder,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry input::placeholder {
+  color: rgba(64, 70, 80, 0.5);
+  font-size: 17px;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry__row button,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry__row button {
+  top: 50%;
+  right: 0;
+  width: 58px;
+  height: 54px;
+  transform: translateY(-50%);
+  border: 1px solid #ffe27b;
+  border-radius: 11px;
+  color: #07142d;
+  background: linear-gradient(180deg, #ffe070, #ecad18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  font-size: 30px;
+  font-weight: 950;
+}
+
+/* Feedback stays attached to the live keyboard tray instead of floating over the host. */
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry .feud-feedback,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry .feud-feedback {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: calc(100% + 5px);
+  color: #e0ecfb;
+  text-shadow: 0 2px 5px #000;
+}
+
+/* Before Fast Money starts, cover the baked answer-entry field so the Start CTA owns
+   the bottom presentation instead of looking like an inactive text box. */
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro::after {
+  content: "";
+  position: absolute;
+  z-index: 7;
+  left: 3.2%;
+  bottom: 5.8%;
+  width: 93.6%;
+  height: 8.1%;
+  border: 2px solid #d7a92c;
+  border-radius: 16px;
+  background: rgba(1, 16, 44, 0.97);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.38);
+}
+
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro > .feud-primary-button {
+  z-index: 10;
+  bottom: 7.1%;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+  .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+    left: -5%;
+    bottom: 13%;
+    width: 50%;
+    height: 72%;
+    transform: scale(1.72);
+  }
+}
+
+
+/* Final Sports Feud mobile alignment pass. */
+
+/* Main board: structural number gutter instead of padding guesses. */
+.family-feud-prototype[data-scene="main"] .feud-answer-slot {
+  grid-template-columns: 34% minmax(0, 1fr) 18%;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot strong {
+  grid-column: 2;
+  min-width: 0;
+  padding: 0 2%;
+  font-size: clamp(7px, 1.95vw, 11px);
+  line-height: 1;
+  text-align: left;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot > span {
+  grid-column: 3;
+}
+
+/* Fast Money board: reserve the baked 1–5 circle lane permanently. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div {
+  padding: 0;
+  font-size: inherit;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-board-progress > div > span {
+  display: block;
+  width: 62%;
+  margin-left: 31%;
+  overflow: hidden;
+  color: inherit;
+  font-size: clamp(8px, 2.15vw, 12px);
+  font-weight: 900;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Keep the approved large host, but anchor the visible figure to the far-left lane. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  left: -21%;
+  bottom: 10.8%;
+  width: 52%;
+  height: 75%;
+  transform: scale(1.75);
+  transform-origin: left bottom;
+  object-position: left bottom;
+}
+
+/* Progress belongs inside the prompt card, not outside the physical set. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-progress {
+  top: 7%;
+  right: 4%;
+  min-width: 46px;
+  padding: 3px 6px;
+  font-size: clamp(6px, 1.55vw, 9px);
+  z-index: 14;
+}
+
+/* Keyboard-open mode uses normal flex layout so iOS owns the text baseline naturally. */
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry {
+  height: 76px;
+  padding: 9px;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry__row,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry__row {
+  position: static;
+  inset: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry input {
+  position: static;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  height: 54px;
+  margin: 0;
+  padding: 0 15px;
+  transform: none;
+  border: 0;
+  border-radius: 11px;
+  color: #07142d;
+  background: #fff;
+  font-size: 17px;
+  line-height: normal;
+  font-weight: 750;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry__row button,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry__row button {
+  position: static;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 54px;
+  margin: 0;
+  padding: 0;
+  transform: none;
+}
+
+/* Fully hide the baked inactive field before Fast Money starts. */
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-intro::after {
+  background: #01102c;
+  opacity: 1;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+  .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+    left: -22%;
+    bottom: 11%;
+    width: 50%;
+    height: 72%;
+    transform: scale(1.72);
+  }
+}
+
+
+/* Host-left + iPhone viewport-lock correction. */
+html.family-feud-prototype-active,
+body.family-feud-prototype-active {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+.family-feud-prototype.is-keyboard-open {
+  top: var(--feud-viewport-offset, 0px);
+  bottom: auto;
+  height: var(--feud-stage-height, 100dvh);
+  min-height: var(--feud-stage-height, 100dvh);
+  max-height: var(--feud-stage-height, 100dvh);
+}
+
+/* Keep the current approved scale; intentionally crop the host farther off the left edge. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  left: -36%;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+  .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+    left: -37%;
+  }
+}
+
+
+/* Keyboard capture architecture: keep Safari's real focus target away from the bottom edge. */
+.family-feud-prototype .feud-keyboard-capture,
+.family-feud-prototype.is-keyboard-open .feud-keyboard-capture {
+  position: fixed !important;
+  z-index: -1 !important;
+  top: 34% !important;
+  left: 50% !important;
+  width: 2px !important;
+  height: 2px !important;
+  min-width: 2px !important;
+  min-height: 2px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  opacity: 0.001 !important;
+  color: transparent !important;
+  background: transparent !important;
+  caret-color: transparent !important;
+  pointer-events: none !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.family-feud-prototype .feud-answer-display {
+  position: absolute;
+  left: 2.4%;
+  top: 50%;
+  width: 81.5%;
+  height: 56%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0 3.4%;
+  overflow: hidden;
+  border-radius: 8px;
+  color: rgba(71, 75, 84, 0.48);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.family-feud-prototype .feud-answer-display.has-value {
+  color: #08152d;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-display,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-answer-display {
+  position: static;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  height: 54px;
+  transform: none;
+  padding: 0 15px;
+  border-radius: 11px;
+  color: rgba(64, 70, 80, 0.5);
+  background: #fff;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: normal;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-display.has-value,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-answer-display.has-value {
+  color: #07142d;
+}
+
+/* The stage no longer follows visualViewport offset; only the dock reacts to keyboard height. */
+.family-feud-prototype.is-keyboard-open {
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100lvh !important;
+  min-height: 100lvh !important;
+  max-height: 100lvh !important;
+}
+
+/* Requested host tweak: exactly about five percent smaller, no position change. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+  transform: scale(1.66);
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="fast"] .feud-fast-host-asset,
+  .family-feud-prototype[data-scene="fast-intro"] .feud-fast-host-asset {
+    transform: scale(1.63);
+  }
+}
+
+
+/* iOS focus-retention correction.
+   Keep the native keyboard target genuinely present in the visual viewport so Safari
+   does not blur it as an effectively hidden 2px control. */
+.family-feud-prototype .feud-keyboard-capture,
+.family-feud-prototype.is-keyboard-open .feud-keyboard-capture {
+  position: fixed !important;
+  z-index: 100004 !important;
+  top: 29% !important;
+  left: 12% !important;
+  width: 76% !important;
+  height: 44px !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  transform: none !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  opacity: 0.01 !important;
+  color: transparent !important;
+  background: #fff !important;
+  caret-color: transparent !important;
+  pointer-events: auto !important;
+  font-size: 16px !important;
+  line-height: normal !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+
+/* iPhone visual-viewport pan compensation.
+   Safari may pan the visual viewport after a real input receives focus. Keep the
+   full Sports Feud stage visually anchored by offsetting the fixed stage by the
+   exact visualViewport.offsetTop. The answer dock continues to use its own
+   keyboard bottom inset. */
+.family-feud-prototype.is-keyboard-open {
+  top: var(--feud-viewport-offset, 0px) !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100lvh !important;
+  min-height: 100lvh !important;
+  max-height: 100lvh !important;
+}
+
+
+.family-feud-prototype[data-scene="fast-intro"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="reveal"] > .feud-fast-host-asset {
+  display: block;
+}
+
+
+/* Fast Money iOS visibility lock.
+   Safari can inherit transparent text-fill from earlier keyboard-capture experiments.
+   The live Fast Money field must always show the player's typing. */
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry input {
+  color: #07142d !important;
+  -webkit-text-fill-color: #07142d !important;
+  caret-color: #07142d !important;
+  opacity: 1 !important;
+}
+
+
+/* Round-result + host-layering correction.
+   Keep the approved Fast Money host placement, preview it on both main rounds,
+   and guarantee that the live typing surface sits above the host. */
+.family-feud-prototype[data-scene="main"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast-intro"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="fast"] > .feud-fast-host-asset,
+.family-feud-prototype[data-scene="reveal"] > .feud-fast-host-asset {
+  z-index: 4 !important;
+}
+
+.family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+  display: block;
+  left: -36%;
+  bottom: 10.8%;
+  width: 52%;
+  height: 75%;
+  transform: scale(1.66);
+  transform-origin: left bottom;
+  object-position: left bottom;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry {
+  z-index: 30;
+}
+
+.family-feud-prototype[data-scene="fast"] .feud-fast-entry input,
+.family-feud-prototype.is-keyboard-open[data-scene="fast"] .feud-fast-entry input {
+  background: #fff !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-slot.is-round-result-reveal {
+  animation: sports-feud-round-result-flip 440ms cubic-bezier(0.18, 0.78, 0.24, 1);
+}
+
+@keyframes sports-feud-round-result-flip {
+  0% { transform: rotateX(82deg) scaleY(0.12); filter: brightness(1.8); }
+  62% { transform: rotateX(-5deg) scaleY(1.03); filter: brightness(1.08); }
+  100% { transform: rotateX(0deg) scaleY(1); filter: brightness(1); }
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+    left: -37%;
+    bottom: 11%;
+    width: 50%;
+    height: 72%;
+    transform: scale(1.63);
+  }
+}
+
+
+/* Final host placement: no host in any Fast Money scene.
+   Keep the preloaded asset mounted, but only show it on Rounds 1 and 2.
+   Mirror the approved figure to the right-side lane and keep every live typing
+   surface above the host. */
+.family-feud-prototype > .feud-fast-host-asset {
+  display: none !important;
+}
+
+.family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+  display: block !important;
+  z-index: 4 !important;
+  left: auto !important;
+  right: -36% !important;
+  bottom: 10.8% !important;
+  width: 52% !important;
+  height: 75% !important;
+  transform: scale(1.66) !important;
+  transform-origin: right bottom !important;
+  object-position: right bottom !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry {
+  z-index: 100010 !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-answer-entry input,
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry input {
+  position: relative;
+  z-index: 2;
+  background: #fff !important;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+    left: auto !important;
+    right: -37% !important;
+    bottom: 11% !important;
+    width: 50% !important;
+    height: 72% !important;
+    transform: scale(1.63) !important;
+  }
+}
+
+
+/* Corrected main-round layering + separate round answer results.
+   The host is a stage-background layer only: above the photographic plate,
+   below the entire live main-stage stacking context. */
+.family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+  z-index: 1 !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-main-stage {
+  z-index: 2 !important;
+}
+
+/* The live board always stays exactly as played. Round-end accepted-answer
+   information appears in its own panel rather than rewriting board tiles. */
+.family-feud-prototype[data-scene="main"] .feud-answer-board.is-review .feud-answer-slot {
+  animation: none !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer-reveal {
+  z-index: 40 !important;
+  left: 2.8%;
+  right: 2.8%;
+  bottom: 10.8%;
+  max-height: 35%;
+  padding: 10px 11px 11px;
+  gap: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(247, 196, 69, 0.72);
+  border-radius: 16px;
+  background: rgba(0, 13, 39, 0.97);
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.42),
+    0 -12px 30px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(10px);
+  animation: sports-feud-round-panel-in 260ms cubic-bezier(0.2, 0.8, 0.22, 1);
+}
+
+@keyframes sports-feud-round-panel-in {
+  0% { opacity: 0; transform: translateY(18px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 6px;
+  margin: 2px 0 3px;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer {
+  min-width: 0;
+  height: 24px;
+  padding: 0 6px;
+  display: grid;
+  grid-template-columns: 13px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 3px;
+  border: 1px solid rgba(84, 140, 208, 0.38);
+  border-radius: 7px;
+  color: #c7d8ed;
+  background: rgba(4, 34, 79, 0.72);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer > span {
+  color: transparent;
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer > strong {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: clamp(7px, 1.85vw, 10px);
+  line-height: 1;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer > b {
+  color: #ffd45d;
+  font-size: clamp(8px, 2vw, 11px);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer.is-found {
+  border-color: rgba(106, 225, 153, 0.58);
+  color: #fff;
+  background: rgba(10, 80, 68, 0.74);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer.is-found > span {
+  color: #8ff0b2;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer-reveal .feud-primary-button {
+  min-height: 43px;
+  margin-top: 1px;
+}
+
+/* Explicitly keep every interactive main-round surface above the host,
+   including the keyboard-open fixed tray and the round-results panel. */
+.family-feud-prototype[data-scene="main"] .feud-question-card,
+.family-feud-prototype[data-scene="main"] .feud-answer-board,
+.family-feud-prototype[data-scene="main"] .feud-main-score,
+.family-feud-prototype[data-scene="main"] .feud-strikes,
+.family-feud-prototype[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype[data-scene="main"] .feud-round-answer-reveal {
+  z-index: 20 !important;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry {
+  z-index: 100020 !important;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="main"] .feud-round-answer-reveal {
+    max-height: 37%;
+    padding: 8px 9px 9px;
+  }
+
+  .family-feud-prototype[data-scene="main"] .feud-round-answer {
+    height: 21px;
+  }
+}

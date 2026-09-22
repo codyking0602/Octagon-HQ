@@ -235,6 +235,8 @@ async function rpc(client: Client, name: string, args?: Record<string, unknown>)
 
 export interface FootballWeeklyAuctionRepository {
   load(): Promise<FootballWeeklyAuctionState>;
+  loadHistory(): Promise<FootballWeeklyFinal[]>;
+  loadBuildQbPreview(): Promise<FootballWeeklyAuctionState>;
   submit(bids: Record<number, number>): Promise<FootballWeeklyAuctionState>;
   acknowledgeFinal(weekStart: string): Promise<FootballWeeklyAuctionState>;
 }
@@ -250,6 +252,12 @@ export function createFootballWeeklyAuctionRepository(
   return {
     async load() {
       return stateSchema.parse(await rpc(client, "get_my_football_weekly_auction"));
+    },
+    async loadHistory() {
+      return z.array(finalSchema).parse(await rpc(client, "get_my_football_weekly_auction_history"));
+    },
+    async loadBuildQbPreview() {
+      return stateSchema.parse(await rpc(client, "get_my_football_weekly_build_qb_preview"));
     },
     async submit(bids) {
       const payload: Record<string, number> = {};

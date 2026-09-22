@@ -34,9 +34,9 @@ export interface NormalizedFootballEvent {
     away_team_slug: string;
     home_team_logo_url: string;
     away_team_logo_url: string;
-    spread_home: number;
-    spread_source: "the-odds-api";
-    spread_updated_at: string;
+    spread_home: number | null;
+    spread_source: "the-odds-api" | null;
+    spread_updated_at: string | null;
     card_segment: "main";
     segment_sequence: 1;
     included: true;
@@ -215,6 +215,39 @@ export function normalizeFootballEvent(espnEvent: Json, oddsEvents: Json[], leag
   };
 }
 
+function normalizeFootballPendingEvent(espnEvent: Json, league: string): NormalizedFootballEvent {
+  const context = gameContext(espnEvent);
+  const { competition, startsAt, gameSlug } = context;
+  const home = context.home.team;
+  const away = context.away.team;
+  const matchup = `${away.name} at ${home.name}`;
+  const venue = competition?.venue ?? {};
+  const address = venue.address ?? {};
+  const season = Number(espnEvent?.season?.year ?? new Date(startsAt).getUTCFullYear());
+  const kickoffAt = new Date(startsAt).toISOString();
+
+  return {
+    source: "espn+the-odds-api", source_event_key: `espn:${espnEvent.id}`,
+    source_url: String(espnEvent?.links?.[0]?.href ?? "https://www.espn.com/football/"),
+    sport: "football", league: league.toLowerCase(), event_kind: "game",
+    event_id: `${league.toLowerCase()}-${gameSlug}-${startsAt.slice(0, 10)}`,
+    name: matchup, subtitle: String(espnEvent?.shortName ?? ""),
+    venue: String(venue.fullName ?? "TBD"),
+    location: [address.city, address.state].filter(Boolean).join(", ") || "TBD",
+    starts_at: kickoffAt, locks_at: kickoffAt, season,
+    bouts: [{
+      bout_id: `football-${league.toLowerCase()}-${espnEvent.id}`, position: 1, weight_class: `${league.toUpperCase()} ATS`,
+      red_fighter_slug: slug(home.name), red_fighter_name: home.name,
+      blue_fighter_slug: slug(away.name), blue_fighter_name: away.name,
+      kickoff_at: kickoffAt,
+      home_team_slug: slug(home.name), away_team_slug: slug(away.name),
+      home_team_logo_url: home.logoUrl, away_team_logo_url: away.logoUrl,
+      spread_home: null, spread_source: null, spread_updated_at: null,
+      card_segment: "main", segment_sequence: 1, included: true,
+    }],
+  };
+}
+
 export function normalizeFootballSlate(selections: FootballSlateSelection[]) {
   const events: NormalizedFootballEvent[] = [];
   const unavailable: FootballSlateUnavailableGame[] = [];
@@ -225,6 +258,7 @@ export function normalizeFootballSlate(selections: FootballSlateSelection[]) {
     } catch (error) {
       if (!(error instanceof FootballOddsUnavailableError)) throw error;
       unavailable.push({ matchup: error.matchup, reason: error.reason });
+      events.push(normalizeFootballPendingEvent(selection.espnEvent, selection.league));
     }
   }
 
@@ -233,5 +267,5 @@ export function normalizeFootballSlate(selections: FootballSlateSelection[]) {
 
 export function footballSlateUnavailableMessage(unavailable: FootballSlateUnavailableGame[], selectedGameCount: number) {
   const matchups = unavailable.map((game) => game.matchup).join("; ");
-  return `The Odds API cannot stage ${unavailable.length} of ${selectedGameCount} selected games yet. Nothing was staged. Unavailable ATS: ${matchups}. Try again when the lines are posted.`;
+  return `The Odds API has not posted ATS for ${unavailable.length} of ${selectedGameCount} selected games yet. The slate was staged with those lines pending: ${matchups}. Refresh ATS lines before publishing.`;
 }

@@ -39,6 +39,11 @@ import {
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
 import { buildWhoAmIDailyPublication } from "./whoAmIDailyRuntime";
 import { buildMillionaireDailySetup } from "./millionaireDailyRuntime";
+import { buildFamilyFeudDailySetup } from "./familyFeudDailyRuntime";
+import {
+  buildSportsFeudPack,
+  footballSportsFeudDomainForDay,
+} from "./sportsFeudDailyBanks";
 import {
   OFFICIAL_SCORE_CONTRACT_VERSION,
   WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,
@@ -334,6 +339,11 @@ export function buildFootballOfficialDailySetup(
     case "keep_4_cut_4": return buildKeepCutSetup(day, scheduleVersion);
     case "hit_the_number": return buildHitTheNumberSetup(day, scheduleVersion);
     case "millionaire": return buildMillionaireDailySetup("football", day, scheduleVersion);
+    case "sports_feud": return buildFamilyFeudDailySetup(
+      buildSportsFeudPack(footballSportsFeudDomainForDay(day), day),
+      day,
+      scheduleVersion,
+    );
     case "who_am_i": return buildWhoAmIDailyPublication(
       createFootballWhoAmIDailyRound(
         seededLineupRandom(FOOTBALL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),

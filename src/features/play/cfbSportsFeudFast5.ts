@@ -1,0 +1,124 @@
+import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
+
+export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
+  {
+    category: "player-traits",
+    collisionGroup: "clutch",
+    prompts: [
+      "Name a college football player you associate with clutch moments.",
+      "Name a player you would trust with one final college drive.",
+      "Name a college star who seemed built for the biggest moment.",
+      "Name a player whose college legacy includes huge late-game plays.",
+      "Name a college football legend you would want with the game on the line.",
+    ],
+    answers: ["Vince Young", "Tim Tebow", "Cam Newton", "Joe Burrow", "Deshaun Watson", "Baker Mayfield", "Johnny Manziel", "Reggie Bush"],
+  },
+  {
+    category: "player-traits",
+    collisionGroup: "speed",
+    prompts: [
+      "Name a college football player known for elite speed.",
+      "Name a college star you remember simply running away from people.",
+      "Name a player whose speed jumped off the screen on Saturdays.",
+      "Name a college football player defenders hated chasing.",
+      "Name a player you would pick for a college football footrace.",
+    ],
+    answers: ["Reggie Bush", "De'Anthony Thomas", "Ted Ginn Jr.", "Jaylen Waddle", "Percy Harvin", "CJ Spiller", "Xavier Worthy", "Chris Johnson"],
+  },
+  {
+    category: "player-traits",
+    collisionGroup: "power",
+    prompts: [
+      "Name a college running back known for power.",
+      "Name a back you would least want to tackle in the fourth quarter.",
+      "Name a college running back who could run through contact.",
+      "Name a power back whose college highlights look painful for defenders.",
+      "Name a college back you associate with downhill running.",
+    ],
+    answers: ["Derrick Henry", "Bo Jackson", "Herschel Walker", "Earl Campbell", "Ron Dayne", "Jonathan Taylor", "Nick Chubb", "Leonard Fournette"],
+  },
+  {
+    category: "quarterbacks",
+    collisionGroup: "quarterbacks",
+    prompts: [
+      "Name a famous dual-threat college quarterback.",
+      "Name a college quarterback who could beat you with his legs.",
+      "Name a quarterback whose rushing ability changed the game plan.",
+      "Name a college QB you remember as a true run-pass threat.",
+      "Name a quarterback defenders had to account for as a runner.",
+    ],
+    answers: ["Cam Newton", "Lamar Jackson", "Tim Tebow", "Vince Young", "Johnny Manziel", "Michael Vick", "Pat White", "Denard Robinson"],
+  },
+  {
+    category: "quarterbacks",
+    collisionGroup: "quarterbacks",
+    prompts: [
+      "Name a college quarterback known more for passing than running.",
+      "Name a classic pocket-passing college quarterback.",
+      "Name a quarterback whose college game was built around throwing the ball.",
+      "Name a college QB you remember for command from the pocket.",
+      "Name a passer whose college highlights are mostly throws, not scrambles.",
+    ],
+    answers: ["Joe Burrow", "Matt Leinart", "Sam Bradford", "Mac Jones", "Carson Palmer", "Andrew Luck", "Philip Rivers", "Tua Tagovailoa"],
+  },
+  {
+    category: "defenders",
+    collisionGroup: "pass-rushers",
+    prompts: [
+      "Name a college pass rusher who became a national star.",
+      "Name a defender quarterbacks hated seeing off the edge.",
+      "Name a college defensive end or edge player known for getting after the quarterback.",
+      "Name a pass rusher whose college tape screamed first-round talent.",
+      "Name a college defender you associate with sacks and pressure.",
+    ],
+    answers: ["Chase Young", "Myles Garrett", "Jadeveon Clowney", "Joey Bosa", "Nick Bosa", "Will Anderson Jr.", "Aidan Hutchinson", "Von Miller"],
+  },
+  {
+    category: "special-teams",
+    collisionGroup: "returners",
+    prompts: [
+      "Name a college football player known for dangerous returns.",
+      "Name a return man who made punts or kickoffs feel exciting.",
+      "Name a college star you would avoid kicking to.",
+      "Name a player remembered for electric special-teams returns.",
+      "Name a college returner who could flip a game in seconds.",
+    ],
+    answers: ["Devin Hester", "Ted Ginn Jr.", "Reggie Bush", "Dante Hall", "Desmond Howard", "Christian McCaffrey", "De'Anthony Thomas", "Antonio Brown"],
+  },
+  {
+    category: "young-stars",
+    collisionGroup: "young-stars",
+    prompts: [
+      "Name a college football player who became a star very early in his career.",
+      "Name a player who looked ready for the spotlight almost immediately in college.",
+      "Name a college star who made a huge impact as a freshman or young player.",
+      "Name a player fans knew was special before he was an upperclassman.",
+      "Name a college player whose breakout came almost right away.",
+    ],
+    answers: ["Adrian Peterson", "Trevor Lawrence", "Caleb Williams", "Sammy Watkins", "Marcus Lattimore", "Jadeveon Clowney", "Derek Stingley Jr.", "Maurice Clarett"],
+  },
+  {
+    category: "underdogs",
+    collisionGroup: "programs",
+    prompts: [
+      "Name a college football program famous for a giant-killing upset.",
+      "Name a school that makes you think of a memorable underdog win.",
+      "Name a program that has crashed a bigger team's party.",
+      "Name a college team fans remember for an upset that shocked the country.",
+      "Name an underdog program that has had a Cinderella football moment.",
+    ],
+    answers: ["Boise State", "Appalachian State", "UCF", "TCU", "Utah", "Cincinnati", "Houston", "James Madison"],
+  },
+  {
+    category: "culture",
+    collisionGroup: "culture",
+    prompts: [
+      "Name a college football program known for great uniforms.",
+      "Name a school whose football look gets fans talking.",
+      "Name a program with an instantly recognizable uniform identity.",
+      "Name a college team whose uniform reveal can become an event.",
+      "Name a program you would put in a best-uniforms conversation.",
+    ],
+    answers: ["Oregon", "Notre Dame", "Michigan", "Penn State", "USC", "Texas", "LSU", "Miami"],
+  },
+] as const);

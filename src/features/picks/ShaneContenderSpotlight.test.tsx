@@ -109,6 +109,45 @@ const daniilSpotlight: PickEventSpotlight = {
   generatedAt: "2026-08-31T18:30:00.000Z",
 };
 
+const rosasBout: PickBout = {
+  boutId: "main-event-raul-rosas-jr-raoni-barcelos",
+  position: 1,
+  weightClass: "Bantamweight",
+  redFighterSlug: "raul-rosas-jr",
+  redFighterName: "Raul Rosas Jr.",
+  blueFighterSlug: "raoni-barcelos",
+  blueFighterName: "Raoni Barcelos",
+  redAmericanOdds: null,
+  blueAmericanOdds: null,
+  winnerFighterSlug: null,
+};
+
+const rosasSpotlight: PickEventSpotlight = {
+  boutId: rosasBout.boutId,
+  preview: "Rosas brings chain wrestling and back-taking pressure into a veteran test against Raoni Barcelos.",
+  red: {
+    fighterSlug: "raul-rosas-jr",
+    record: "6-1 UFC",
+    age: "21",
+    height: "5' 9\"",
+    reach: "67\"",
+    stance: "Switch",
+    edges: ["Chain wrestling", "Back-taking pressure", "Youth"],
+  },
+  blue: {
+    fighterSlug: "raoni-barcelos",
+    record: "22-5",
+    age: "39",
+    height: "5' 7\"",
+    reach: "67\"",
+    stance: "Orthodox",
+    edges: ["Veteran striking", "Takedown defense", "Experience"],
+  },
+  watchSpotlights: [],
+  source: "UFCStats",
+  generatedAt: "2026-09-21T15:15:00.000Z",
+};
+
 afterEach(cleanup);
 
 describe("Shane Contender Fight Spotlight treatment", () => {
@@ -123,10 +162,10 @@ describe("Shane Contender Fight Spotlight treatment", () => {
     );
 
     expect(screen.getByText("FIGHT SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #3")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
 
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #4")).toHaveLength(2);
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #3")).toHaveLength(2);
     expect(screen.getAllByText(/45-second Contender Series contract win/)).toHaveLength(2);
     expect(screen.getByText("7 KO/TKO wins in 9 fights")).toBeInTheDocument();
     expect(screen.getByText(bilal!.whyOnBoard)).toBeInTheDocument();
@@ -155,9 +194,29 @@ describe("Shane Contender Fight Spotlight treatment", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #2")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #1")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #2")).toHaveLength(2);
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #1")).toHaveLength(2);
+  });
+
+  it("gives Raul Rosas Jr. the Shane badge on the prepared Picks main event", () => {
+    const rosas = shanesWatchlist.fighters.find((fighter) => fighter.id === "raul-rosas-jr");
+    expect(rosas?.rank).toBe(4);
+
+    render(
+      <MemoryRouter>
+        <MainEventSpotlight bout={rosasBout} spotlight={rosasSpotlight} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #4")).toHaveLength(2);
+    expect(screen.getByText(rosas!.whyOnBoard)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
+      "href",
+      "/fighters-to-watch#raul-rosas-jr",
+    );
   });
 
   it("gives Daniil Donchenko the Shane treatment on this week’s configured Fight Spotlight", () => {
