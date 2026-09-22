@@ -60,13 +60,16 @@ const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
   "Las Vegas Raiders:black": "#000000",
   "New Orleans Saints:gold": "#D3BC8D",
   "Ole Miss:navy": "#14213D",
-  "Oregon:yellow": "#FEE123",
+  "Oregon:yellow": "#044520",
   "Texas:orange": "#BF5700",
-  "USC:gold": "#FFC72C",
+  "USC:gold": "#990000",
 };
 
 const HOME_LOGO_NEUTRALS = new Set(["white", "cream", "gray", "silver"]);
 const HOME_WHITE_LOGO_TEAMS = new Set(["Texas"]);
+const FOOTBALL_HQ_LOGO_OVERRIDES: Readonly<Record<string, string>> = {
+  Oregon: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/2483.png",
+};
 
 export function footballHqTeamPresentationFor(name: string) {
   const metadata = footballTeamSchoolMetadataFor(name);
@@ -105,6 +108,10 @@ function normalizeTeamIdentity(value: string) {
 }
 
 function logoForTeam(game: PickBout, team: FootballMatchupBreakdown["teams"][number]) {
+  const canonicalName = footballTeamSchoolMetadataFor(team.name)?.name ?? team.name;
+  const logoOverride = FOOTBALL_HQ_LOGO_OVERRIDES[canonicalName];
+  if (logoOverride) return logoOverride;
+
   const aliases = new Set(team.aliases.map(normalizeTeamIdentity));
   const homeSlug = normalizeTeamIdentity(game.homeTeamSlug ?? game.redFighterSlug);
   const awaySlug = normalizeTeamIdentity(game.awayTeamSlug ?? game.blueFighterSlug);
