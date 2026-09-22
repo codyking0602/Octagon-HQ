@@ -493,7 +493,7 @@ export function FootballTodayChallengeResult({
     case "millionaire":
       return <OfficialMillionaireDailyView projection={projection} busy={false} onAdvance={advance} />;
     case "sports_feud":
-      return <OfficialSportsFeudDailyView projection={projection} busy={false} onAdvance={advance} onExit={() => {}} />;
+      return <OfficialSportsFeudDailyView projection={projection} busy={false} onAdvance={advance} />;
   }
 }
 
