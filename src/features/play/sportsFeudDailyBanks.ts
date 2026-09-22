@@ -150,17 +150,23 @@ function selectMain(domain: SportsFeudBankDomain, day: string) {
   throw new Error("Sports Feud could not select two distinct main boards.");
 }
 
-function selectFast(domain: SportsFeudBankDomain, day: string) {
+function selectFast(
+  domain: SportsFeudBankDomain,
+  day: string,
+  excludedQuestions: readonly SportsFeudAuthoredQuestion[] = [],
+) {
   const source = BANKS[domain].fast;
   if (source.length !== 250) throw new Error(`${domain.toUpperCase()} Sports Feud needs 250 Fast Money prompts.`);
   const base = mod(dayNumber(day) * 11 + questionOffset(domain, "fast"), source.length);
   const selected: SportsFeudAuthoredQuestion[] = [];
   const groups = new Set<string>();
+  const excludedGroups = new Set(excludedQuestions.map((question) => question.collisionGroup ?? question.category));
+  const excludedPrompts = new Set(excludedQuestions.map((question) => question.prompt));
   let cursor = base;
   for (let scanned = 0; scanned < source.length && selected.length < 5; scanned += 1) {
     const candidate = source[cursor]!;
     const group = candidate.collisionGroup ?? candidate.category;
-    if (!groups.has(group)) {
+    if (!groups.has(group) && !excludedGroups.has(group) && !excludedPrompts.has(candidate.prompt)) {
       selected.push(candidate);
       groups.add(group);
     }
@@ -223,7 +229,7 @@ export function buildSportsFeudPack(
   const entities: FamilyFeudEntity[] = [];
   const main = selectMain(domain, day).map((question) =>
     materializeQuestion(domain, question, MAIN_POINTS, entities));
-  const fast = selectFast(domain, day).map((question) =>
+  const fast = selectFast(domain, day, main).map((question) =>
     materializeQuestion(domain, question, FAST_POINTS, entities));
   return {
     id: `${SPORTS_FEUD_BANK_VERSION}-${domain}-${day}-${main.map((q) => q.id).join("-")}`,
