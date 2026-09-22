@@ -54,20 +54,11 @@ function submitMainAndSettle(value: string) {
   settleMainReveal();
 }
 
-function settleRoundResultReveal() {
-  for (let step = 0; step < 4; step += 1) {
-    act(() => {
-      vi.advanceTimersByTime(320);
-    });
-  }
-}
-
 function reachRoundTwo() {
   fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
   for (const answer of ["DeMarcus Lawrence", "Zack Martin", "Dalton Schultz"]) {
     submitMainAndSettle(answer);
   }
-  settleRoundResultReveal();
   fireEvent.click(screen.getByRole("button", { name: "ROUND 2" }));
 }
 
@@ -76,7 +67,6 @@ function reachFastMoney() {
   for (const answer of ["Philip Rivers", "Tony Romo", "Joe Flacco"]) {
     submitMainAndSettle(answer);
   }
-  settleRoundResultReveal();
   fireEvent.click(screen.getByRole("button", { name: "GO TO FAST MONEY" }));
   fireEvent.click(screen.getByRole("button", { name: "START 45 SECONDS" }));
 }
@@ -227,7 +217,7 @@ describe("Sports Feud private daily presentation", () => {
     expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-main-reveal", "idle");
   });
 
-  it("shows board results without a separate also-accepted text pool", () => {
+  it("keeps the live board untouched and opens a separate accepted-answer panel after the round", () => {
     renderFootball();
     fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 
@@ -235,72 +225,70 @@ describe("Sports Feud private daily presentation", () => {
       submitMainAndSettle(answer);
     }
 
-    expect(screen.queryByText("BOARD RESULTS")).not.toBeInTheDocument();
     expect(document.querySelectorAll(".feud-answer-slot.is-revealed")).toHaveLength(0);
-
-    act(() => {
-      vi.advanceTimersByTime(200);
-    });
-    expect(document.querySelectorAll(".feud-answer-slot.is-revealed")).toHaveLength(1);
-
-    act(() => {
-      vi.advanceTimersByTime(300);
-    });
-    expect(document.querySelectorAll(".feud-answer-slot.is-revealed")).toHaveLength(2);
-
-    act(() => {
-      vi.advanceTimersByTime(300);
-    });
-    expect(document.querySelectorAll(".feud-answer-slot.is-revealed")).toHaveLength(3);
-
-    act(() => {
-      vi.advanceTimersByTime(300);
-    });
-    expect(document.querySelectorAll(".feud-answer-slot.is-revealed")).toHaveLength(4);
-    expect(screen.getByText("BOARD RESULTS")).toBeInTheDocument();
+    expect(document.querySelectorAll(".feud-answer-slot.is-missed")).toHaveLength(0);
+    const results = screen.getByLabelText("Round 1 accepted answers");
+    expect(results).toBeInTheDocument();
+    expect(results).toHaveTextContent("CeeDee Lamb");
+    expect(results).toHaveTextContent("Tony Pollard");
     expect(screen.getByText("3 STRIKES — BOARD CLOSED")).toBeInTheDocument();
     expect(screen.queryByText("ALSO ACCEPTED")).not.toBeInTheDocument();
-    expect(document.querySelectorAll(".feud-answer-slot.is-missed")).toHaveLength(4);
-    expect(document.querySelectorAll(".feud-answer-slot.is-round-result-reveal")).toHaveLength(1);
   });
 
-  it("reveals a lower-ranked accepted pick on the live board and keeps it in board results", () => {
+  it("keeps a lower-ranked accepted pick on the live board and shows the full bank separately", () => {
     renderFootball();
     fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 
     submitMainAnswer("Amari Cooper");
     expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-main-reveal", "suspense");
-    expect(screen.queryByText("Amari Cooper")).not.toBeInTheDocument();
 
     act(() => {
       vi.advanceTimersByTime(650);
     });
-
     expect(screen.getByText("Amari Cooper")).toBeInTheDocument();
-    expect(screen.getByText("Amari Cooper").closest(".feud-answer-slot")).toHaveClass("is-new-reveal");
 
     act(() => {
       vi.advanceTimersByTime(650);
     });
-
-    expect(document.querySelectorAll(".feud-strikes .is-on")).toHaveLength(0);
     expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
 
     for (const answer of ["DeMarcus Lawrence", "Zack Martin", "Dalton Schultz"]) {
       submitMainAndSettle(answer);
     }
-    settleRoundResultReveal();
 
-    expect(screen.getByText("BOARD RESULTS")).toBeInTheDocument();
     const board = document.querySelector(".feud-answer-board");
-    expect(board).toHaveTextContent("CeeDee Lamb");
-    expect(board).toHaveTextContent("Micah Parsons");
-    expect(board).toHaveTextContent("Dak Prescott");
-    expect(board).toHaveTextContent("Trevon Diggs");
-    expect(board).not.toHaveTextContent("Amari Cooper");
-    expect(document.querySelectorAll(".feud-answer-slot.is-round-result-reveal")).toHaveLength(1);
+    expect(board).toHaveTextContent("Amari Cooper");
+    expect(board).not.toHaveTextContent("CeeDee Lamb");
+    expect(document.querySelectorAll(".feud-answer-slot.is-missed")).toHaveLength(0);
+
+    const results = screen.getByLabelText("Round 1 accepted answers");
+    expect(results).toHaveTextContent("CeeDee Lamb");
+    expect(results).toHaveTextContent("Amari Cooper");
+    expect(results.querySelectorAll(".feud-round-answer.is-found")).toHaveLength(1);
     expect(screen.queryByText("ALSO ACCEPTED")).not.toBeInTheDocument();
     expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
+  });
+
+  it("does not replace four accepted Round 2 answers with a fake missed answer", () => {
+    renderFootball();
+    reachRoundTwo();
+
+    for (const answer of ["Tom Brady", "Aaron Rodgers", "Drew Brees", "Peyton Manning"]) {
+      submitMainAndSettle(answer);
+    }
+
+    const board = document.querySelector(".feud-answer-board");
+    expect(board).toHaveTextContent("Tom Brady");
+    expect(board).toHaveTextContent("Aaron Rodgers");
+    expect(board).toHaveTextContent("Drew Brees");
+    expect(board).toHaveTextContent("Peyton Manning");
+    expect(board).not.toHaveTextContent("Patrick Mahomes");
+    expect(document.querySelectorAll(".feud-answer-slot.is-missed")).toHaveLength(0);
+
+    const results = screen.getByLabelText("Round 2 accepted answers");
+    expect(results).toHaveTextContent("Patrick Mahomes");
+    expect(results).toHaveTextContent("Peyton Manning");
+    expect(screen.getByText("BOARD CLEARED")).toBeInTheDocument();
   });
 
   it("keeps Fast Money rapid-fire with the input available between answers and points hidden", () => {
@@ -317,7 +305,7 @@ describe("Sports Feud private daily presentation", () => {
     expect(screen.getByLabelText("Fast Money answer")).toBe(initialInput);
     expect(screen.queryByText("+8")).not.toBeInTheDocument();
     expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-scene", "fast");
-    expect(document.querySelector(".feud-fast-host-asset")).toBeInTheDocument();
+    expect(document.querySelector(".feud-fast-host-asset")).not.toBeInTheDocument();
   });
 
   it("accepts the broadened Fast Money pool and common short-name aliases", () => {
