@@ -711,6 +711,9 @@ function scheduleRevealArchitecture(
         const leftProfile = whoAmIRevealProfile(left.clue);
         const rightProfile = whoAmIRevealProfile(right.clue);
         const powerRank = { broad: 0, specific: 1, signature: 2 } as const;
+        const openingRolePreference = isNflPool && position <= 2
+          ? Number(rightProfile.category === "role") - Number(leftProfile.category === "role")
+          : 0;
         const coordinatePreference = position <= 4
           ? (left.clue.revealCoordinates?.length ?? 0) - (right.clue.revealCoordinates?.length ?? 0)
           : 0;
@@ -720,7 +723,8 @@ function scheduleRevealArchitecture(
         const powerPreference = position >= 7
           ? powerRank[rightProfile.identifyingPower] - powerRank[leftProfile.identifyingPower]
           : powerRank[leftProfile.identifyingPower] - powerRank[rightProfile.identifyingPower];
-        return coordinatePreference
+        return openingRolePreference
+          || coordinatePreference
           || lateAnchorPreference
           || preferredBandRank(position, left.clue.band) - preferredBandRank(position, right.clue.band)
           || powerPreference
