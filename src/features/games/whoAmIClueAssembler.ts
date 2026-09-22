@@ -1200,7 +1200,11 @@ export function assembleWhoAmIClues(
   ) {
     const selectedSet = new Set(selected);
     const conflictCount = new Map<PreparedClue, number>();
-    for (const entry of prepared) conflictCount.set(entry, 0);
+    const conflicts = new Map<PreparedClue, Set<PreparedClue>>();
+    for (const entry of prepared) {
+      conflictCount.set(entry, 0);
+      conflicts.set(entry, new Set());
+    }
     for (let leftIndex = 0; leftIndex < prepared.length; leftIndex += 1) {
       for (let rightIndex = leftIndex + 1; rightIndex < prepared.length; rightIndex += 1) {
         const left = prepared[leftIndex]!;
@@ -1212,6 +1216,8 @@ export function assembleWhoAmIClues(
         ) {
           conflictCount.set(left, (conflictCount.get(left) ?? 0) + 1);
           conflictCount.set(right, (conflictCount.get(right) ?? 0) + 1);
+          conflicts.get(left)!.add(right);
+          conflicts.get(right)!.add(left);
         }
       }
     }
@@ -1227,25 +1233,56 @@ export function assembleWhoAmIClues(
       || left.index - right.index
     ));
 
+    // The recovery search used to recompute semantic overlap, normalized-copy
+    // overlap, quota counts, and suffix availability at every DFS node. Those
+    // checks are invariant for a prepared board, so compile them once and keep
+    // the exact same acceptance rules while making each search step constant-time.
+    const orderedIndex = new Map(ordered.map((entry, index) => [entry, index]));
+    const conflictMasks = ordered.map((entry) => {
+      let mask = 0n;
+      for (const conflict of conflicts.get(entry) ?? []) {
+        const index = orderedIndex.get(conflict);
+        if (index == null) continue;
+        mask |= 1n << BigInt(index);
+      }
+      return mask;
+    });
+    const isLate = ordered.map((entry) => (
+      entry.clue.band === "strong" || entry.clue.band === "giveaway"
+    ));
+    const isSportsIdentity = ordered.map((entry) => entry.selectionClass === "sports-identity");
+    const isBiography = ordered.map((entry) => entry.selectionClass === "deep-biography");
+    const isRelationship = ordered.map((entry) => entry.facet === "relationships");
+    const isProduction = ordered.map((entry) => entry.facet === "production");
+    const isGenericCareerVolume = ordered.map((entry) => whoAmIClueIsGenericCareerVolume(entry.clue));
+    const suffixLate = Array.from({ length: ordered.length + 1 }, () => 0);
+    const suffixSports = Array.from({ length: ordered.length + 1 }, () => 0);
+    for (let index = ordered.length - 1; index >= 0; index -= 1) {
+      suffixLate[index] = suffixLate[index + 1]! + Number(isLate[index]);
+      suffixSports[index] = suffixSports[index + 1]! + Number(isSportsIdentity[index]);
+    }
+
     let visited = 0;
     const maxVisited = 250_000;
     const semanticSportsIdentityTarget = Math.min(7, sportsIdentityTarget);
     let cleanBoard: PreparedClue[] | null = null;
     const chosen: PreparedClue[] = [];
 
-    const searchCleanBoard = (start: number) => {
+    const searchCleanBoard = (
+      start: number,
+      chosenMask: bigint,
+      lateCount: number,
+      sportsCount: number,
+      biographyCount: number,
+      relationshipCount: number,
+      productionCount: number,
+      genericCareerVolumeCount: number,
+    ) => {
       visited += 1;
       if (visited > maxVisited || cleanBoard) return;
 
-      if (chosen.length === limit) {
-        const lateCount = chosen.filter((entry) => (
-          entry.clue.band === "strong" || entry.clue.band === "giveaway"
-        )).length;
-        const sportsCount = chosen.filter((entry) => entry.selectionClass === "sports-identity").length;
-        const biographyCount = chosen.filter((entry) => entry.selectionClass === "deep-biography").length;
-        const relationshipCount = chosen.filter((entry) => entry.facet === "relationships").length;
-        const productionCount = chosen.filter((entry) => entry.facet === "production").length;
-        const genericCareerVolumeCount = chosen.filter(({ clue }) => whoAmIClueIsGenericCareerVolume(clue)).length;
+      const slotsNeeded = limit - chosen.length;
+      if (slotsNeeded === 0) {
         if (
           lateCount >= 3
           && sportsCount >= semanticSportsIdentityTarget
@@ -1259,48 +1296,52 @@ export function assembleWhoAmIClues(
         return;
       }
 
-      if (chosen.length + (ordered.length - start) < limit) return;
+      if (ordered.length - start < slotsNeeded) return;
+      if (lateCount + Math.min(slotsNeeded, suffixLate[start]!) < 3) return;
+      if (
+        sportsCount + Math.min(slotsNeeded, suffixSports[start]!)
+        < semanticSportsIdentityTarget
+      ) return;
 
       for (let index = start; index < ordered.length; index += 1) {
-        const candidate = ordered[index]!;
-        if (chosen.some((entry) => entry.conceptId === candidate.conceptId)) continue;
-        if (chosen.some((entry) => whoAmICluesShareInformation(entry.clue, candidate.clue))) continue;
-        if (chosen.some((entry) => (
-          normalize(entry.clue.text) === normalize(candidate.clue.text)
-          || cluesEffectivelyRepeated(entry.clue, candidate.clue)
-        ))) continue;
-        if (
-          enforceProductionCap
-          && candidate.facet === "production"
-          && chosen.filter((entry) => entry.facet === "production").length >= 4
-        ) continue;
-        if (
-          !allowExtraGenericCareerVolume
-          && whoAmIClueIsGenericCareerVolume(candidate.clue)
-          && chosen.filter(({ clue }) => whoAmIClueIsGenericCareerVolume(clue)).length >= 2
-        ) continue;
-        if (candidate.facet === "relationships" && chosen.some((entry) => entry.facet === "relationships")) continue;
-        if (candidate.selectionClass === "deep-biography" && chosen.some((entry) => entry.selectionClass === "deep-biography")) continue;
+        const candidateBit = 1n << BigInt(index);
+        if ((chosenMask & conflictMasks[index]!) !== 0n) continue;
 
-        const slotsAfterPick = limit - (chosen.length + 1);
-        const remaining = ordered.slice(index + 1);
-        const lateAfterPick = chosen.filter((entry) => entry.clue.band === "strong" || entry.clue.band === "giveaway").length
-          + Number(candidate.clue.band === "strong" || candidate.clue.band === "giveaway");
-        const sportsAfterPick = chosen.filter((entry) => entry.selectionClass === "sports-identity").length
-          + Number(candidate.selectionClass === "sports-identity");
-        const availableLate = remaining.filter((entry) => entry.clue.band === "strong" || entry.clue.band === "giveaway").length;
-        const availableSports = remaining.filter((entry) => entry.selectionClass === "sports-identity").length;
-        if (lateAfterPick + Math.min(slotsAfterPick, availableLate) < 3) continue;
-        if (sportsAfterPick + Math.min(slotsAfterPick, availableSports) < semanticSportsIdentityTarget) continue;
+        const nextBiographyCount = biographyCount + Number(isBiography[index]);
+        if (nextBiographyCount > 1) continue;
+        const nextRelationshipCount = relationshipCount + Number(isRelationship[index]);
+        if (nextRelationshipCount > 1) continue;
+        const nextProductionCount = productionCount + Number(isProduction[index]);
+        if (enforceProductionCap && nextProductionCount > 4) continue;
+        const nextGenericCareerVolumeCount = genericCareerVolumeCount + Number(isGenericCareerVolume[index]);
+        if (!allowExtraGenericCareerVolume && nextGenericCareerVolumeCount > 2) continue;
 
-        chosen.push(candidate);
-        searchCleanBoard(index + 1);
+        const nextLateCount = lateCount + Number(isLate[index]);
+        const nextSportsCount = sportsCount + Number(isSportsIdentity[index]);
+        const slotsAfterPick = slotsNeeded - 1;
+        if (nextLateCount + Math.min(slotsAfterPick, suffixLate[index + 1]!) < 3) continue;
+        if (
+          nextSportsCount + Math.min(slotsAfterPick, suffixSports[index + 1]!)
+          < semanticSportsIdentityTarget
+        ) continue;
+
+        chosen.push(ordered[index]!);
+        searchCleanBoard(
+          index + 1,
+          chosenMask | candidateBit,
+          nextLateCount,
+          nextSportsCount,
+          nextBiographyCount,
+          nextRelationshipCount,
+          nextProductionCount,
+          nextGenericCareerVolumeCount,
+        );
         chosen.pop();
         if (cleanBoard) return;
       }
     };
 
-    searchCleanBoard(0);
+    searchCleanBoard(0, 0n, 0, 0, 0, 0, 0, 0);
     const recoveredBoard = cleanBoard as PreparedClue[] | null;
     if (recoveredBoard) selected.splice(0, selected.length, ...recoveredBoard);
   }
