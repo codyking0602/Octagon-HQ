@@ -55,18 +55,40 @@ function entityName(value: unknown) {
   return String(record(value).display_name ?? "");
 }
 
-function initialScene(projection: TodayChallengeProjection): Scene {
-  if (projection.officialAttempt) return "result";
-  const state = projection.publicState;
-  if (state.phase === "fast-money") {
-    return Number(record(state.fast_money).answered_count ?? 0) > 0 ? "fast" : "fast-intro";
+function boardHasProgress(board: JsonRecord) {
+  return Number(board.strikes ?? 0) > 0
+    || records(board.slots).some((slot) => slot.revealed === true);
+}
+
+function initialPresentation(projection: TodayChallengeProjection) {
+  if (projection.officialAttempt) {
+    return { scene: "result" as Scene, boardIndex: 1, boardReview: false };
   }
+
+  const state = projection.publicState;
   const boards = records(state.main_boards);
-  const progressed = Number(state.main_board_index ?? 0) > 0
-    || boards.some((board) =>
-      Number(board.strikes ?? 0) > 0
-      || records(board.slots).some((slot) => slot.revealed === true));
-  return progressed ? "main" : "intro";
+  const activeBoardIndex = Math.max(0, Math.min(1, Number(state.main_board_index ?? 0)));
+
+  if (state.phase === "fast-money") {
+    const fast = record(state.fast_money);
+    if (Number(fast.answered_count ?? 0) > 0) {
+      return { scene: "fast" as Scene, boardIndex: 1, boardReview: false };
+    }
+    if (boards[1]?.settled === true) {
+      return { scene: "main" as Scene, boardIndex: 1, boardReview: true };
+    }
+    return { scene: "fast-intro" as Scene, boardIndex: 1, boardReview: false };
+  }
+
+  const activeBoard = boards[activeBoardIndex] ?? {};
+  if (activeBoardIndex > 0 && !boardHasProgress(activeBoard) && boards[activeBoardIndex - 1]?.settled === true) {
+    return { scene: "main" as Scene, boardIndex: activeBoardIndex - 1, boardReview: true };
+  }
+  if (activeBoard.settled === true) {
+    return { scene: "main" as Scene, boardIndex: activeBoardIndex, boardReview: true };
+  }
+  const progressed = activeBoardIndex > 0 || boards.some(boardHasProgress);
+  return { scene: progressed ? "main" as Scene : "intro" as Scene, boardIndex: activeBoardIndex, boardReview: false };
 }
 
 function StagePlate({ fast = false }: { fast?: boolean }) {
@@ -137,12 +159,13 @@ export function OfficialSportsFeudDailyView({
   projection: TodayChallengeProjection;
   busy: boolean;
   onAdvance: (action: Record<string, unknown>) => void;
-  onExit: () => void;
+  onExit?: () => void;
 }) {
-  const [scene, setScene] = useState<Scene>(() => initialScene(projection));
+  const initial = initialPresentation(projection);
+  const [scene, setScene] = useState<Scene>(() => initial.scene);
   const [displayState, setDisplayState] = useState<JsonRecord>(() => projection.publicState);
-  const [displayBoardIndex, setDisplayBoardIndex] = useState(() => Number(projection.publicState.main_board_index ?? 0));
-  const [boardReview, setBoardReview] = useState(false);
+  const [displayBoardIndex, setDisplayBoardIndex] = useState(() => initial.boardIndex);
+  const [boardReview, setBoardReview] = useState(() => initial.boardReview);
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<string | null>(null);
   const [mainRevealPhase, setMainRevealPhase] = useState<MainRevealPhase>("idle");
@@ -321,8 +344,10 @@ export function OfficialSportsFeudDailyView({
   }, [fastRevealIndex, fastRevealPhase, scene]);
 
   const fastState = record(displayState.fast_money);
-  const fastResults = records(fastState.results);
-  const fastSubmitted = records(fastState.submitted_answers);
+  const fastResultsValue = fastState.results;
+  const fastSubmittedValue = fastState.submitted_answers;
+  const fastResults = useMemo(() => records(fastResultsValue), [fastResultsValue]);
+  const fastSubmitted = useMemo(() => records(fastSubmittedValue), [fastSubmittedValue]);
 
   useEffect(() => {
     if (scene !== "reveal") return undefined;
@@ -452,7 +477,7 @@ export function OfficialSportsFeudDailyView({
       <StagePlate />
       <StagePlate fast />
       {scene === "main" ? <Host asset={hostAsset} /> : null}
-      <HQBackButton onClick={onExit} />
+      {onExit ? <HQBackButton onClick={onExit} /> : null}
 
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="official-feud-intro-title">
@@ -694,7 +719,7 @@ export function OfficialSportsFeudDailyView({
             <p><span>MAIN BOARDS</span><strong>{finalMain}/{FAMILY_FEUD_MAIN_RAW_MAX}</strong></p>
             <p><span>FAST MONEY</span><strong>{finalFast}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong></p>
           </div>
-          <button className="feud-primary-button" type="button" onClick={onExit}>CONTINUE</button>
+          {onExit ? <button className="feud-primary-button" type="button" onClick={onExit}>CONTINUE</button> : null}
         </section>
       ) : null}
     </main>
