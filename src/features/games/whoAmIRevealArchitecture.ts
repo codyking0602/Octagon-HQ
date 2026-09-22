@@ -714,6 +714,25 @@ function scheduleRevealArchitecture(
         const openingRolePreference = isNflPool && position <= 2
           ? Number(rightProfile.category === "role") - Number(leftProfile.category === "role")
           : 0;
+        const leftOpeningFoundation = (
+          leftProfile.category === "era"
+          || leftProfile.category === "school"
+          || leftProfile.category === "sports-biography"
+          || leftProfile.category === "draft-entry"
+          || leftProfile.category === "team-path"
+          || leftProfile.category === "style"
+        );
+        const rightOpeningFoundation = (
+          rightProfile.category === "era"
+          || rightProfile.category === "school"
+          || rightProfile.category === "sports-biography"
+          || rightProfile.category === "draft-entry"
+          || rightProfile.category === "team-path"
+          || rightProfile.category === "style"
+        );
+        const openingFoundationPreference = isNflPool && position >= 2 && position <= 4
+          ? Number(rightOpeningFoundation) - Number(leftOpeningFoundation)
+          : 0;
         const coordinatePreference = position <= 4
           ? (left.clue.revealCoordinates?.length ?? 0) - (right.clue.revealCoordinates?.length ?? 0)
           : 0;
@@ -724,6 +743,7 @@ function scheduleRevealArchitecture(
           ? powerRank[rightProfile.identifyingPower] - powerRank[leftProfile.identifyingPower]
           : powerRank[leftProfile.identifyingPower] - powerRank[rightProfile.identifyingPower];
         return openingRolePreference
+          || openingFoundationPreference
           || coordinatePreference
           || lateAnchorPreference
           || preferredBandRank(position, left.clue.band) - preferredBandRank(position, right.clue.band)
