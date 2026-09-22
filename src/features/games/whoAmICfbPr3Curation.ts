@@ -595,12 +595,22 @@ export function refineCfbWhoAmIContent(
     ...clues,
     ...(CFB_PR3_SUPPLEMENTAL.get(subject.id) ?? []),
   ];
-  const subjectAdjusted = (subject.id === "cfb-ernie-davis" || subject.id === "cfb-lamichael-james")
+  const subjectAdjusted = (
+    subject.id === "cfb-ernie-davis"
+    || subject.id === "cfb-lamichael-james"
+    || subject.id === "cfb-jalen-ramsey"
+  )
     ? withSupplemental.map((clue) => {
       if (subject.id === "cfb-ernie-davis" && clue.text.includes("while wearing the program's famous No. 44")) {
         return { ...clue, text: clue.text.replace(" while wearing the program's famous No. 44", "") };
       }
       if (subject.id === "cfb-lamichael-james" && whoAmIRevealProfile(clue).category === "jersey-number") {
+        return null;
+      }
+      if (
+        subject.id === "cfb-jalen-ramsey"
+        && (clue.conceptId ?? clue.id).includes("first-freshman-corner-start-since-deion")
+      ) {
         return null;
       }
       return clue;
