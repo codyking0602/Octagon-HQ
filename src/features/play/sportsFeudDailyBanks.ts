@@ -29,7 +29,7 @@ import type {
 } from "./sportsFeudBankTypes";
 
 export const SPORTS_FEUD_BANK_VERSION = "sports-feud-bank-v1" as const;
-export const FOOTBALL_SPORTS_FEUD_LAUNCH_DAY = "2026-09-22" as const;
+export const FOOTBALL_SPORTS_FEUD_LAUNCH_DAY = "2026-09-23" as const;
 export const FOOTBALL_SPORTS_FEUD_CYCLE_LENGTH = 26;
 export const FOOTBALL_SPORTS_FEUD_SLOTS = [0, 8, 15, 22] as const;
 

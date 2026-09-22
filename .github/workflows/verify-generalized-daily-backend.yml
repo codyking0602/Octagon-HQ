@@ -54,7 +54,7 @@ on:
       - "supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql"
       - "supabase/migrations/202612310148_millionaire_daily_launch.sql"
       - "supabase/migrations/202612310160_daily_challenge_weekly_recap.sql"
-      - "supabase/migrations/202612310161_sports_feud_daily_launch.sql"
+      - "supabase/migrations/202612310164_sports_feud_daily_launch.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -291,7 +291,7 @@ jobs:
             echo "- Daily runtime Edge Function local bundle and execution: passed"
             echo "- Nine server-owned Daily game families: passed"
             echo "- Millionaire persisted runtime and September 19 cutover preserved: passed"
-            echo "- Sports Feud private grading, 1,050-question bank contract, and September 22 dual-sport cutover: passed"
+            echo "- Sports Feud private grading, 1,050-question bank contract, and September 23 dual-sport cutover: passed"
             echo "- Hit the Number hidden-value, explicit-lock, and normalized scoring contract: passed"
             echo "- Blind Resume V3 staged reveal, 100-point scoring, and V2 compatibility: passed"
             echo "- Who Am I deterministic setup, Recovery Board parity, and server grading: passed"
@@ -426,7 +426,7 @@ jobs:
           require_remote_migration "202612310122"
           require_remote_migration "202612310148"
           require_remote_migration "202612310160"
-          require_remote_migration "202612310161"
+          require_remote_migration "202612310164"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof

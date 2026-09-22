@@ -87,7 +87,7 @@ describe("Sports Feud authored Daily banks", () => {
 
   it("builds valid two-board plus five-prompt packs across six months", () => {
     for (let offset = 0; offset < 180; offset += 1) {
-      const day = addDays("2026-09-22", offset);
+      const day = addDays("2026-09-23", offset);
       expect(() => assertFamilyFeudPack(buildSportsFeudPack("ufc", day))).not.toThrow();
       expect(() => assertFamilyFeudPack(buildSportsFeudPack("cfb", day))).not.toThrow();
       expect(() => assertFamilyFeudPack(buildSportsFeudPack("nfl", day))).not.toThrow();
@@ -95,11 +95,11 @@ describe("Sports Feud authored Daily banks", () => {
   });
 
   it("alternates Football Sports Feud appearances between CFB and NFL", () => {
-    expect(footballSportsFeudDomainForDay("2026-09-22")).toBe("cfb");
-    expect(footballSportsFeudDomainForDay("2026-09-30")).toBe("nfl");
-    expect(footballSportsFeudDomainForDay("2026-10-07")).toBe("cfb");
-    expect(footballSportsFeudDomainForDay("2026-10-14")).toBe("nfl");
-    expect(footballSportsFeudDomainForDay("2026-10-18")).toBe("cfb");
+    expect(footballSportsFeudDomainForDay("2026-09-23")).toBe("cfb");
+    expect(footballSportsFeudDomainForDay("2026-10-01")).toBe("nfl");
+    expect(footballSportsFeudDomainForDay("2026-10-08")).toBe("cfb");
+    expect(footballSportsFeudDomainForDay("2026-10-15")).toBe("nfl");
+    expect(footballSportsFeudDomainForDay("2026-10-19")).toBe("cfb");
   });
 
   it("never mixes question identities across the three source banks", () => {

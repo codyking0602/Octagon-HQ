@@ -61,7 +61,7 @@ const bundles = [
     entry: resolve(repoRoot, "src/features/play/footballDailyPublicationSportsFeud.ts"),
     fileName: "football-publication-sports-feud.generated.mjs",
     requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-22", gameType: "sports_feud" },
+    smoke: { day: "2026-09-23", gameType: "sports_feud" },
   },
   {
     label: "Football Daily comparison publication runtime",

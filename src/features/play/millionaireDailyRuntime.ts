@@ -63,7 +63,7 @@ function balanceRun(run: MillionaireRun, runIndex: number): MillionaireRun {
   }) as unknown as MillionaireRun;
 }
 
-const SPORTS_FEUD_DAILY_CUTOVER = "2026-09-22";
+const SPORTS_FEUD_DAILY_CUTOVER = "2026-09-23";
 const PRE_SPORTS_FEUD_MILLIONAIRE_APPEARANCES = 1;
 
 const FOOTBALL_MILLIONAIRE_LEGACY_CYCLE_LENGTH = 22;

@@ -1,4 +1,4 @@
--- Launch Sports Feud as an official UFC + Football Daily on September 22, 2026.
+-- Launch Sports Feud as an official UFC + Football Daily on September 23, 2026.
 -- Historical schedules/results remain immutable.
 --
 -- New mixes:
@@ -169,7 +169,7 @@ $standings$;
 
 do $schedule$
 declare
-  v_cutover constant date := date '2026-09-22';
+  v_cutover constant date := date '2026-09-23';
   v_ufc_version constant text := 'play-rotation-v10-sports-feud';
   v_football_version constant text := 'football-daily-v12-sports-feud';
   v_ufc_cycle constant text[] := array[
@@ -193,7 +193,7 @@ begin
       is distinct from 'play-rotation-v9-millionaire-no-double'
     or private.daily_challenge_schedule_for_day(v_cutover - 1, 'football')
       is distinct from 'football-daily-v11-millionaire-no-double' then
-    raise exception 'September 21 Daily schedule identity changed before Sports Feud launch';
+    raise exception 'September 22 Daily schedule identity changed before Sports Feud launch';
   end if;
 
   if exists (
@@ -249,7 +249,7 @@ begin
     or private.daily_challenge_expected_game(v_ufc_version, v_cutover) is distinct from 'sports_feud'
     or private.daily_challenge_schedule_for_day(v_cutover, 'football') is distinct from v_football_version
     or private.daily_challenge_expected_game(v_football_version, v_cutover) is distinct from 'sports_feud' then
-    raise exception 'September 22 Sports Feud schedules did not become canonical';
+    raise exception 'September 23 Sports Feud schedules did not become canonical';
   end if;
 end
 $schedule$;

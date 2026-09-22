@@ -15,8 +15,8 @@ begin
   where version = 'football-daily-v12-sports-feud';
 
   if v_ufc.sport <> 'ufc'
-    or v_ufc.starts_on <> date '2026-09-22'
-    or v_ufc.anchor_day <> date '2026-09-22'
+    or v_ufc.starts_on <> date '2026-09-23'
+    or v_ufc.anchor_day <> date '2026-09-23'
     or array_length(v_ufc.game_cycle, 1) <> 30
     or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'find_leader') <> 5
     or (select count(*) from unnest(v_ufc.game_cycle) game where game = 'wavelength') <> 5
@@ -29,8 +29,8 @@ begin
   end if;
 
   if v_football.sport <> 'football'
-    or v_football.starts_on <> date '2026-09-22'
-    or v_football.anchor_day <> date '2026-09-22'
+    or v_football.starts_on <> date '2026-09-23'
+    or v_football.anchor_day <> date '2026-09-23'
     or array_length(v_football.game_cycle, 1) <> 26
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'find_leader') <> 5
     or (select count(*) from unnest(v_football.game_cycle) game where game = 'wavelength') <> 5
@@ -43,17 +43,17 @@ begin
     raise exception 'Football Sports Feud launch schedule is invalid: %', row_to_json(v_football);
   end if;
 
-  if private.daily_challenge_schedule_for_day(date '2026-09-21', 'ufc')
+  if private.daily_challenge_schedule_for_day(date '2026-09-22', 'ufc')
       <> 'play-rotation-v9-millionaire-no-double'
-    or private.daily_challenge_schedule_for_day(date '2026-09-21', 'football')
-      <> 'football-daily-v11-millionaire-no-double'
-    or private.daily_challenge_schedule_for_day(date '2026-09-22', 'ufc')
-      <> v_ufc.version
     or private.daily_challenge_schedule_for_day(date '2026-09-22', 'football')
+      <> 'football-daily-v11-millionaire-no-double'
+    or private.daily_challenge_schedule_for_day(date '2026-09-23', 'ufc')
+      <> v_ufc.version
+    or private.daily_challenge_schedule_for_day(date '2026-09-23', 'football')
       <> v_football.version
-    or private.daily_challenge_expected_game(v_ufc.version, date '2026-09-22')
+    or private.daily_challenge_expected_game(v_ufc.version, date '2026-09-23')
       <> 'sports_feud'
-    or private.daily_challenge_expected_game(v_football.version, date '2026-09-22')
+    or private.daily_challenge_expected_game(v_football.version, date '2026-09-23')
       <> 'sports_feud' then
     raise exception 'Sports Feud cutover mapping is invalid';
   end if;

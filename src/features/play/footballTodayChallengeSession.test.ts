@@ -44,7 +44,7 @@ function isoDay(offset: number) {
 }
 
 function setupScheduleVersion(day: string) {
-  if (day >= "2026-09-22") return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
+  if (day >= "2026-09-23") return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
   if (day >= "2026-09-19") return FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION;
   if (day >= "2026-09-13") return FOOTBALL_TODAY_SCHEDULE_VERSION;
   return day >= "2026-09-12" ? "football-daily-v5" : "football-daily-v1";
@@ -76,7 +76,7 @@ function blindResumeActions(day: string, revealStage: 1 | 2 | 3, correct: boolea
 }
 
 describe("Football Today’s Challenge session", () => {
-  it("preserves historical Football days and starts the 26-slot Sports Feud rotation on September 22", () => {
+  it("preserves historical Football days and starts the 26-slot Sports Feud rotation on September 23", () => {
     expect([
       footballTodayGameForDay("2026-08-22"),
       footballTodayGameForDay("2026-08-23"),
@@ -104,12 +104,14 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-09-19")).toBe(FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION);
     expect(footballTodayGameForDay("2026-09-19")).toBe("millionaire");
 
-    expect(footballTodayScheduleVersionForDay("2026-09-22")).toBe(FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION);
+    expect(footballTodayScheduleVersionForDay("2026-09-22")).toBe(FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION);
+    expect(footballTodayGameForDay("2026-09-22")).toBe("hit_the_number");
+    expect(footballTodayScheduleVersionForDay("2026-09-23")).toBe(FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION);
     expect(FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION).toBe("football-daily-v12-sports-feud");
-    expect(footballTodayGameForDay("2026-09-22")).toBe("sports_feud");
+    expect(footballTodayGameForDay("2026-09-23")).toBe("sports_feud");
 
     const future = Array.from({ length: 26 }, (_unused, offset) => {
-      const day = new Date(Date.UTC(2026, 8, 22 + offset)).toISOString().slice(0, 10);
+      const day = new Date(Date.UTC(2026, 8, 23 + offset)).toISOString().slice(0, 10);
       return footballTodayGameForDay(day);
     });
     expect(future.filter((game) => game === "find_leader")).toHaveLength(5);
