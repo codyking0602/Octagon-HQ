@@ -119,7 +119,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
       "Name a coach who made opposing defensive coordinators lose sleep.",
       "Name an offensive-minded college coach whose scheme became part of his identity.",
     ],
-    answers: ["Steve Spurrier", "Mike Leach", "Chip Kelly", "Lincoln Riley", "Hal Mumme", "Gus Malzahn", "Rich Rodriguez", "Art Briles"],
+    answers: ["Steve Spurrier", "Mike Leach", "Chip Kelly", "Lincoln Riley", "Hal Mumme", "Gus Malzahn", "Rich Rodriguez", "Dana Holgorsen"],
   },
   {
     category: "rivalries",
