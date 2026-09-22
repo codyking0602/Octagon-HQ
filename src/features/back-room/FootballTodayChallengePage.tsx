@@ -470,8 +470,10 @@ type GameProps = {
 
 export function FootballTodayChallengeResult({
   projection,
+  onExit,
 }: {
   projection: TodayChallengeProjection;
+  onExit?: () => void;
 }) {
   const advance = (_action: JsonRecord) => {};
 
@@ -493,7 +495,7 @@ export function FootballTodayChallengeResult({
     case "millionaire":
       return <OfficialMillionaireDailyView projection={projection} busy={false} onAdvance={advance} />;
     case "sports_feud":
-      return <OfficialSportsFeudDailyView projection={projection} busy={false} onAdvance={advance} />;
+      return <OfficialSportsFeudDailyView projection={projection} busy={false} onAdvance={advance} onExit={onExit} />;
   }
 }
 
