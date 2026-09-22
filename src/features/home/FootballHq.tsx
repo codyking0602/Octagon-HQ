@@ -57,8 +57,12 @@ const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
   "Buffalo Bills:red": "#C60C30",
   "Detroit Lions:blue": "#0076B6",
   "LSU:gold": "#FDD023",
+  "Las Vegas Raiders:black": "#000000",
+  "New Orleans Saints:gold": "#D3BC8D",
   "Ole Miss:navy": "#14213D",
+  "Oregon:yellow": "#FEE123",
   "Texas:orange": "#BF5700",
+  "USC:gold": "#FFC72C",
 };
 
 const HOME_LOGO_NEUTRALS = new Set(["white", "cream", "gray", "silver"]);
