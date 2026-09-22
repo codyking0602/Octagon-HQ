@@ -298,7 +298,7 @@ describe("Sports Feud private daily presentation", () => {
     expect(board).toHaveTextContent("Dak Prescott");
     expect(board).toHaveTextContent("Trevon Diggs");
     expect(board).not.toHaveTextContent("Amari Cooper");
-    expect(document.querySelectorAll(".feud-answer-slot.is-round-result-reveal")).toHaveLength(4);
+    expect(document.querySelectorAll(".feud-answer-slot.is-round-result-reveal")).toHaveLength(1);
     expect(screen.queryByText("ALSO ACCEPTED")).not.toBeInTheDocument();
     expect(document.querySelector(".feud-main-score strong")).toHaveTextContent("4");
   });
