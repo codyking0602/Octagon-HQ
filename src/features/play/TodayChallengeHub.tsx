@@ -118,7 +118,7 @@ function DailyAnswerDetail({
       <div className="today-hub-official-result__body official-daily-page">
         {sport === "football" ? (
           <Suspense fallback={<p className="today-hub-empty">Loading official Football result…</p>}>
-            <FootballTodayChallengeResult projection={resultProjection} />
+            <FootballTodayChallengeResult projection={resultProjection} onExit={onClose} />
           </Suspense>
         ) : (
           <OfficialTodayChallengeContent
@@ -126,6 +126,7 @@ function DailyAnswerDetail({
             busy={false}
             onAdvance={() => {}}
             onNavigate={(route) => navigate(route)}
+            onSportsFeudExit={onClose}
           />
         )}
       </div>
