@@ -45,25 +45,27 @@ const requestedLeagues = new Set(
 );
 
 describe("Who Am I fast targeted editorial gate", () => {
-  it("validates only requested subjects without running the 500-subject simulation shards", () => {
-    const universes = [
-      getUfcWhoAmIUniverse(),
-      getFootballWhoAmIUniverse("NFL"),
-      getFootballWhoAmIUniverse("CFB"),
-    ].filter((universe) => requestedLeagues.size === 0 || requestedLeagues.has(universe.league));
+  const universes = [
+    getUfcWhoAmIUniverse(),
+    getFootballWhoAmIUniverse("NFL"),
+    getFootballWhoAmIUniverse("CFB"),
+  ].filter((universe) => requestedLeagues.size === 0 || requestedLeagues.has(universe.league));
 
-    const allCandidates = universes.flatMap((universe) => (
-      universe.candidates.map((candidate) => ({ universe, candidate }))
+  const allCandidates = universes.flatMap((universe) => (
+    universe.candidates.map((candidate) => ({ universe, candidate }))
+  ));
+  const selected = targets.includes("all")
+    ? allCandidates
+    : allCandidates.filter(({ candidate }) => (
+      targets.includes(candidate.id) || targets.includes(candidate.name)
     ));
-    const selected = targets.includes("all")
-      ? allCandidates
-      : allCandidates.filter(({ candidate }) => (
-        targets.includes(candidate.id) || targets.includes(candidate.name)
-      ));
 
+  it("matches at least one requested subject", () => {
     expect(selected.length, `No Who Am I subjects matched: ${targets.join(", ")}`).toBeGreaterThan(0);
+  });
 
-    for (const { universe, candidate } of selected) {
+  for (const { universe, candidate } of selected) {
+    it(`${universe.league} :: ${candidate.id}`, () => {
       const semanticCapacity = whoAmISemanticIndependentCapacity(candidate.clues, 13);
       const sequences = Array.from({ length: 8 }, (_value, index) => (
         whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
@@ -110,6 +112,6 @@ describe("Who Am I fast targeted editorial gate", () => {
           `${candidate.id} replay must rotate actual information, not alternate wording or order`,
         ).toBeGreaterThan(1);
       }
-    }
-  }, 150_000);
+    }, 10_000);
+  }
 });
