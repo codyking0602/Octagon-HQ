@@ -87,12 +87,22 @@ describe("Who Am I fast full-population editorial gate", () => {
     expect(violations).toEqual([]);
   });
 
-  it("never resurfaces the false Caleb Williams projection clues", () => {
-    const caleb = getFootballWhoAmIUniverse("CFB").candidates.find((candidate) => candidate.id === "cfb-caleb-williams");
+  it("uses an explicitly season-owned Caleb Williams peak anchor", () => {
+    const cfbUniverse = getFootballWhoAmIUniverse("CFB");
+    const caleb = cfbUniverse.candidates.find((candidate) => candidate.id === "cfb-caleb-williams");
     expect(caleb).toBeDefined();
     const text = caleb!.clues.map((clue) => clue.text).join(" | ");
+    expect(text).toContain("In 2022 I set USC single-season records with 4,537 passing yards and 42 touchdown passes.");
     expect(text).not.toContain("27 passing touchdowns");
     expect(text).not.toContain("617 rushing yards");
+    expect(text).not.toContain("single-season high");
+
+    const genericPeakMetricClues = cfbUniverse.candidates.flatMap((candidate) => (
+      candidate.clues
+        .filter((clue) => clue.id.startsWith("fact:cfb-best-season-"))
+        .map((clue) => `${candidate.id}:${clue.id}:${clue.text}`)
+    ));
+    expect(genericPeakMetricClues).toEqual([]);
   });
 
   // Keep each subject isolated as its own test case. The assertions and all-subject

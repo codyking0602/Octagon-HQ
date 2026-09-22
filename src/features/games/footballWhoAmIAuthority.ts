@@ -45,7 +45,6 @@ const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>(
     .filter((metricId) => (
       metricId.startsWith("nfl-career-")
       || metricId.startsWith("cfb-career-")
-      || metricId.startsWith("cfb-best-season-")
       || metricId === "cfb-all-america-selections"
       || metricId === "cfb-first-team-all-conference-selections"
       || metricId === "cfb-nfl-draft-overall-pick"
@@ -326,18 +325,18 @@ function footballMetricText(metricId: FootballFactMetricId, value: unknown, labe
     case "cfb-career-pass-breakups": return `I finished my college career with ${clueFormatted} pass breakups.`;
     case "cfb-career-forced-fumbles": return `I finished my college career with ${clueFormatted} forced fumbles.`;
     case "cfb-career-fumble-recoveries": return `I finished my college career with ${clueFormatted} fumble recoveries.`;
-    case "cfb-best-season-passing-yards": return `My single-season high was ${clueFormatted} passing yards.`;
-    case "cfb-best-season-passing-touchdowns": return `My single-season high was ${clueFormatted} passing touchdowns.`;
-    case "cfb-best-season-interceptions": return `My single-season high was ${clueFormatted} interceptions thrown.`;
-    case "cfb-best-season-passer-rating": return `My single-season high passer rating was ${clueFormatted}.`;
-    case "cfb-best-season-rushing-yards": return `My single-season high was ${clueFormatted} rushing yards.`;
-    case "cfb-best-season-rushing-touchdowns": return `My single-season high was ${clueFormatted} rushing touchdowns.`;
-    case "cfb-best-season-receptions": return `My single-season high was ${clueFormatted} receptions.`;
-    case "cfb-best-season-receiving-yards": return `My single-season high was ${clueFormatted} receiving yards.`;
-    case "cfb-best-season-receiving-touchdowns": return `My single-season high was ${clueFormatted} receiving touchdowns.`;
-    case "cfb-best-season-sacks": return `My single-season high was ${clueFormatted} sacks.`;
-    case "cfb-best-season-tackles-for-loss": return `My single-season high was ${clueFormatted} tackles for loss.`;
-    case "cfb-best-season-defensive-interceptions": return `My single-season high was ${clueFormatted} defensive interceptions.`;
+    case "cfb-best-season-passing-yards": return `My best college season produced ${clueFormatted} passing yards.`;
+    case "cfb-best-season-passing-touchdowns": return `My best college season produced ${clueFormatted} passing touchdowns.`;
+    case "cfb-best-season-interceptions": return `My best college season included ${clueFormatted} interceptions thrown.`;
+    case "cfb-best-season-passer-rating": return `My best college season included a ${clueFormatted} passer rating.`;
+    case "cfb-best-season-rushing-yards": return `My best college season produced ${clueFormatted} rushing yards.`;
+    case "cfb-best-season-rushing-touchdowns": return `My best college season produced ${clueFormatted} rushing touchdowns.`;
+    case "cfb-best-season-receptions": return `My best college season included ${clueFormatted} receptions.`;
+    case "cfb-best-season-receiving-yards": return `My best college season produced ${clueFormatted} receiving yards.`;
+    case "cfb-best-season-receiving-touchdowns": return `My best college season produced ${clueFormatted} receiving touchdowns.`;
+    case "cfb-best-season-sacks": return `My best college season included ${clueFormatted} sacks.`;
+    case "cfb-best-season-tackles-for-loss": return `My best college season included ${clueFormatted} tackles for loss.`;
+    case "cfb-best-season-defensive-interceptions": return `My best college season included ${clueFormatted} defensive interceptions.`;
     case "cfb-heisman-awards": return numericValue === 1 ? "I won the Heisman Trophy." : `I won the Heisman Trophy ${formatted} times.`;
     case "nfl-career-starts": return `I made ${clueFormatted} career NFL starts.`;
     case "nfl-career-pro-bowl-selections": return numericValue === 1 ? "I was selected to one Pro Bowl." : `I was selected to ${clueFormatted} Pro Bowls.`;
@@ -456,7 +455,9 @@ export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfi
   // The normalized cfbfastR factual-universe projection can split one player's
   // season across multiple team-labelled rows. Those aggregates remain useful
   // for data-audit work, but they are not authoritative enough for Who Am I.
-  // Reviewed/source-bound CFB production facts remain eligible.
+  // Reviewed/source-bound CFB career facts remain eligible. Generic best-season
+  // metrics are not Who Am I clues: peak-season clues must be explicitly authored
+  // against one named, reviewed season so every value belongs to the same year.
   if (
     subject.league === "CFB"
     && subject.kind === "player-career"
