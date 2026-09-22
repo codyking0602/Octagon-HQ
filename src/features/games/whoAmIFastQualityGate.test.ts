@@ -44,7 +44,7 @@ const requestedLeagues = new Set(
     .filter(Boolean),
 );
 
-describe("Who Am I fast targeted editorial gate", () => {
+describe("Who Am I fast full-population editorial gate", () => {
   const universes = [
     getUfcWhoAmIUniverse(),
     getFootballWhoAmIUniverse("NFL"),
@@ -64,6 +64,9 @@ describe("Who Am I fast targeted editorial gate", () => {
     expect(selected.length, `No Who Am I subjects matched: ${targets.join(", ")}`).toBeGreaterThan(0);
   });
 
+  // Keep each subject isolated as its own test case. The assertions and all-subject
+  // coverage are unchanged, while Vitest can release per-subject assertion state
+  // instead of retaining one monolithic 500-subject test until the job timeout.
   for (const { universe, candidate } of selected) {
     it(`${universe.league} :: ${candidate.id}`, () => {
       const semanticCapacity = whoAmISemanticIndependentCapacity(candidate.clues, 13);
