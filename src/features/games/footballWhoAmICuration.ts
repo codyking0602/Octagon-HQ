@@ -2,6 +2,7 @@ import type { FootballSubjectProfile } from "../back-room/footballSubjectRegistr
 import { refineCfbWhoAmIContent } from "./whoAmICfbPr3Curation";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueFacet } from "./whoAmIEngine";
+import { whoAmIRevealProfile } from "./whoAmIRevealArchitecture";
 
 /**
  * NFL Who Am I calibration batch 1 (launch-order subjects 1-50).
@@ -357,7 +358,13 @@ function clueQualityScore(subject: FootballSubjectProfile, clue: WhoAmIClue) {
 
   if (clue.identityKnowledge) {
     score += 24;
-    if (whoAmIClueSelectionClass(clue) === "identity-color") score -= 14;
+    const selectionClass = whoAmIClueSelectionClass(clue);
+    if (selectionClass === "identity-color") score -= 14;
+    if (
+      subject.league === "CFB"
+      && selectionClass !== "deep-biography"
+      && CFB_PR3_SPORTS_PATH_TEXT.test(clue.text)
+    ) score += 42;
   }
   if (id === "position" || id === "era") score += 35;
   if (id === "school" || id === "draft-pick" || id === "draft-round" || id === "heisman" || id === "national-champion") score += 35;
@@ -3159,11 +3166,166 @@ function shouldSuppressCfbBatch1Clue(subject: FootballSubjectProfile, clue: WhoA
   return false;
 }
 
+const CFB_PR3_WEAK_VOLUME_CLUE_IDS: ReadonlySet<string> = new Set([
+  "fact:cfb-career-games",
+  "fact:cfb-career-starts",
+  "fact:cfb-career-targets",
+  "fact:cfb-career-passing-completions",
+  "fact:cfb-career-passing-attempts",
+  "fact:cfb-career-rushing-attempts",
+  "fact:cfb-career-rushing-yards-per-attempt",
+] as const);
+
+const CFB_PR3_EXACT_CHRONOLOGY_IDS = new Set([
+  "career-span",
+  "coach-start",
+  "coach-end",
+  "player-career-start",
+  "player-career-end",
+]);
+
+const CFB_PR3_SPORTS_PATH_TEXT = /\b(?:high[- ]school|prep|recruit(?:ed|ing|ment)?|prospect|walk[- ]on|redshirt|junior college|juco|position change|position switch|depth chart|scholarship offer|multi-sport|two-sport|three-sport|four-sport|lettered)\b/i;
+
+function cfbPr3EraClue(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]): WhoAmIClue | null {
+  const canonicalSeasons = [subject.startSeason, subject.endSeason].filter((value): value is number => value != null);
+  const draftSeason = subject.kind === "player-career" && subject.draftYear != null ? subject.draftYear - 1 : null;
+  const sourceYears = clues.flatMap((clue) => (
+    [...clue.text.matchAll(/\b(?:19|20)\d{2}\b/g)].map((match) => Number(match[0]))
+  )).filter((year) => year >= 1900 && year <= 2026);
+  const seasons = canonicalSeasons.length
+    ? canonicalSeasons
+    : draftSeason != null
+      ? [draftSeason]
+      : sourceYears.sort((left, right) => left - right);
+  if (seasons.length === 0) return null;
+
+  const representative = seasons[Math.floor((seasons.length - 1) / 2)]!;
+  const decade = Math.floor(representative / 10) * 10;
+  return {
+    id: "pr3-era",
+    conceptId: "pr3-era",
+    text: subject.kind === "coach"
+      ? `I was active as a college head coach in the ${decade}s.`
+      : `I played college football in the ${decade}s.`,
+    band: "broad",
+    facet: "era",
+    revealPriority: 35,
+  };
+}
+
+function finalizeCfbPr3Content(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
+  let personalBiographyUsed = false;
+  const withoutChronology = clues.filter((clue) => (
+    !CFB_PR3_WEAK_VOLUME_CLUE_IDS.has(clue.id)
+    && !CFB_PR3_EXACT_CHRONOLOGY_IDS.has(clue.id)
+  ));
+  const withEra = withoutChronology.some((clue) => clue.id === "era" || clue.id === "pr3-era")
+    ? withoutChronology
+    : (() => {
+      const era = cfbPr3EraClue(subject, withoutChronology);
+      return era ? [era, ...withoutChronology] : withoutChronology;
+    })();
+
+  const curated = withEra
+    .map((clue): WhoAmIClue => {
+      const structuralClue: WhoAmIClue = clue.id === "position" || clue.id === "role"
+        ? { ...clue, band: "broad", facet: "role" }
+        : clue.id === "era" || clue.id === "pr3-era"
+          ? { ...clue, band: "broad", facet: "era" }
+          : clue.id === "school"
+            ? { ...clue, facet: "background" }
+            : clue.id.startsWith("fact:")
+              ? { ...clue, facet: "production" }
+              : clue;
+      const categorizedClue = (
+        structuralClue.identityKnowledge
+        && structuralClue.facet === "identity"
+        && CFB_PR3_SPORTS_PATH_TEXT.test(structuralClue.text)
+      )
+        ? { ...structuralClue, facet: "career-path" as const }
+        : structuralClue;
+      const profile = whoAmIRevealProfile(categorizedClue);
+
+      if (profile.category === "nickname-persona" || profile.category === "jersey-number") {
+        return categorizedClue.band === "giveaway" ? categorizedClue : { ...categorizedClue, band: "giveaway" };
+      }
+      if (
+        profile.category === "school"
+        && profile.identifyingPower === "signature"
+        && (categorizedClue.band === "broad" || categorizedClue.band === "helpful")
+      ) {
+        return { ...categorizedClue, band: "strong" };
+      }
+      if (categorizedClue.band === "broad" && profile.earliestClue > 2) {
+        return { ...categorizedClue, band: "helpful" };
+      }
+      if (categorizedClue.band === "helpful" && profile.earliestClue > 4) {
+        return { ...categorizedClue, band: "strong" };
+      }
+      return categorizedClue;
+    })
+    .filter((clue) => {
+      if (whoAmIRevealProfile(clue).category !== "personal-biography") return true;
+      if (personalBiographyUsed) return false;
+      personalBiographyUsed = true;
+      return true;
+    });
+
+  const categoryRank: Readonly<Record<string, number>> = {
+    "team-path": 0,
+    school: 1,
+    "sports-biography": 2,
+    production: 3,
+    accomplishments: 4,
+    style: 5,
+    identity: 6,
+  };
+  const candidates = curated
+    .map((clue, index) => {
+      const asHelpful: WhoAmIClue = { ...clue, band: "helpful" };
+      return {
+        clue,
+        index,
+        profile: whoAmIRevealProfile(asHelpful),
+        quality: clueQualityScore(subject, clue),
+      };
+    })
+    .filter(({ clue, profile }) => (
+      (clue.band === "helpful" || clue.band === "strong")
+      && profile.earliestClue <= 4
+      && profile.category !== "personal-biography"
+      && profile.category !== "relationships"
+      && !(profile.category === "school" && profile.identifyingPower === "signature")
+      && profile.category !== "jersey-number"
+      && profile.category !== "nickname-persona"
+    ));
+
+  const byFoundationQuality = (left: (typeof candidates)[number], right: (typeof candidates)[number]) => (
+    (left.profile.identifyingPower === "broad" ? 0 : 1) - (right.profile.identifyingPower === "broad" ? 0 : 1)
+    || (categoryRank[left.profile.category] ?? 9) - (categoryRank[right.profile.category] ?? 9)
+    || right.quality - left.quality
+    || left.index - right.index
+  );
+  const first = candidates
+    .filter(({ profile }) => profile.earliestClue <= 3)
+    .sort(byFoundationQuality)[0];
+  const second = candidates
+    .filter(({ index, profile }) => index !== first?.index && profile.earliestClue <= 4)
+    .sort(byFoundationQuality)[0];
+  const foundationIndexes = new Set([first?.index, second?.index].filter((value): value is number => value != null));
+
+  return curated.map((clue, index): WhoAmIClue => {
+    if (foundationIndexes.has(index)) return clue.band === "helpful" ? clue : { ...clue, band: "helpful" };
+    if (clue.band === "helpful") return { ...clue, band: "strong" };
+    return clue;
+  });
+}
+
 function trimCfbBatch1Pool(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
   const target = 16;
   if (clues.length <= target) return [...clues];
 
-  const requiredIds = new Set(["position", "school"]);
+  const requiredIds = new Set(["position", "era", "school", "conference"]);
   const required = clues.filter((clue) => requiredIds.has(clue.id));
   const requiredIdSet = new Set(required.map((clue) => clue.id));
   const ranked = clues
@@ -3201,7 +3363,7 @@ function curateCfbBatch1Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(cfbBatch1SupplementalClues.get(subject.id) ?? []));
-  return trimCfbBatch1Pool(subject, curated);
+  return finalizeCfbPr3Content(subject, trimCfbBatch1Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch1Subject(subjectId: string) {
@@ -3691,7 +3853,7 @@ function trimCfbBatch2Pool(subject: FootballSubjectProfile, clues: readonly WhoA
   const target = 16;
   if (clues.length <= target) return [...clues];
 
-  const requiredIds = new Set(["position", "school"]);
+  const requiredIds = new Set(["position", "era", "school", "conference"]);
   const required = clues.filter((clue) => requiredIds.has(clue.id));
   const requiredIdSet = new Set(required.map((clue) => clue.id));
   const ranked = clues
@@ -3742,7 +3904,7 @@ function curateCfbBatch2Clues(subject: FootballSubjectProfile, rawClues: readonl
   }
 
   curated.push(...(cfbBatch2SupplementalClues.get(subject.id) ?? []));
-  return trimCfbBatch2Pool(subject, curated);
+  return finalizeCfbPr3Content(subject, trimCfbBatch2Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch2Subject(subjectId: string) {
@@ -4394,7 +4556,7 @@ function trimCfbBatch3Pool(subject: FootballSubjectProfile, clues: readonly WhoA
   const target = 16;
   if (clues.length <= target) return [...clues];
 
-  const requiredIds = new Set(["position", "school"]);
+  const requiredIds = new Set(["position", "era", "school", "conference"]);
   const required = clues.filter((clue) => requiredIds.has(clue.id));
   const requiredIdSet = new Set(required.map((clue) => clue.id));
   const ranked = clues
@@ -4447,8 +4609,8 @@ function curateCfbBatch3Clues(subject: FootballSubjectProfile, rawClues: readonl
   curated.push(...(cfbBatch3SupplementalClues.get(subject.id) ?? []));
   curated.push(...(cfbBatch3ReplayDepthClues.get(subject.id) ?? []));
   const forcedPool = cfbBatch3ForcedPoolIds.get(subject.id);
-  if (forcedPool) return curated.filter((clue) => forcedPool.has(clue.id));
-  return trimCfbBatch3Pool(subject, curated);
+  if (forcedPool) return finalizeCfbPr3Content(subject, curated.filter((clue) => forcedPool.has(clue.id)));
+  return finalizeCfbPr3Content(subject, trimCfbBatch3Pool(subject, curated));
 }
 
 export function isCfbWhoAmIBatch3Subject(subjectId: string) {
@@ -4935,9 +5097,16 @@ function trimCfbBatch4Pool(subject: FootballSubjectProfile, clues: readonly WhoA
   const target = 16;
   if (clues.length <= target) return [...clues];
 
-  const requiredIds = new Set(subject.kind === "coach" ? [] : [
-    "position",
+  const requiredIds = new Set(subject.kind === "coach" ? [
+    "role",
+    "era",
     "school",
+    "conference",
+  ] : [
+    "position",
+    "era",
+    "school",
+    "conference",
     ...(subject.id === "cfb-travis-hunter" ? ["curated-cfb4:hunter-jackson-state-colorado"] : []),
   ]);
   const required = clues.filter((clue) => requiredIds.has(clue.id));
@@ -5056,7 +5225,7 @@ function curateCfbBatch4Clues(subject: FootballSubjectProfile, rawClues: readonl
     ...(cfbBatch4SupplementalClues.get(subject.id) ?? [])
       .filter((clue) => !shouldSuppressCfbBatch4Clue(subject, clue)),
   );
-  return rebalanceCfbBatch4ReplayBands(subject, trimCfbBatch4Pool(subject, curated));
+  return finalizeCfbPr3Content(subject, rebalanceCfbBatch4ReplayBands(subject, trimCfbBatch4Pool(subject, curated)));
 }
 
 export function isCfbWhoAmIBatch4Subject(subjectId: string) {
