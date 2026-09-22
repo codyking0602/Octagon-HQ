@@ -237,10 +237,12 @@ export function FootballWeeklyBuildQbFinalResult({
   result,
   busy,
   onAcknowledge,
+  showNewWeekAction = true,
 }: {
   result: FootballWeeklyBuildQbFinal;
   busy: boolean;
   onAcknowledge: () => void;
+  showNewWeekAction?: boolean;
 }) {
   const [tab, setTab] = useState<FinalTab>("standings");
   const me = result.my_result;
@@ -309,9 +311,11 @@ export function FootballWeeklyBuildQbFinalResult({
         </div>
       ) : null}
 
-      <button className="football-weekly-build-qb__primary" type="button" disabled={busy} onClick={onAcknowledge}>
-        START THE NEW WEEK
-      </button>
+      {showNewWeekAction ? (
+        <button className="football-weekly-build-qb__primary" type="button" disabled={busy} onClick={onAcknowledge}>
+          START THE NEW WEEK
+        </button>
+      ) : null}
     </section>
   );
 }
