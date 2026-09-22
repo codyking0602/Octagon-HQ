@@ -479,7 +479,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     >
       <StagePlate />
       <StagePlate fast />
-      <FastMoneyHost asset={hostAsset} />
+      {scene === "main" ? <FastMoneyHost asset={hostAsset} /> : null}
       <HQBackButton onClick={() => navigate(exitRoute)} />
 
       {scene === "intro" ? (
