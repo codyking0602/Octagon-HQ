@@ -227,9 +227,10 @@ export function buildSportsFeudPack(
   day: string,
 ): FamilyFeudPack {
   const entities: FamilyFeudEntity[] = [];
-  const main = selectMain(domain, day).map((question) =>
+  const authoredMain = selectMain(domain, day);
+  const main = authoredMain.map((question) =>
     materializeQuestion(domain, question, MAIN_POINTS, entities));
-  const fast = selectFast(domain, day, main).map((question) =>
+  const fast = selectFast(domain, day, authoredMain).map((question) =>
     materializeQuestion(domain, question, FAST_POINTS, entities));
   return {
     id: `${SPORTS_FEUD_BANK_VERSION}-${domain}-${day}-${main.map((q) => q.id).join("-")}`,
