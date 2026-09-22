@@ -90,6 +90,12 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(migration).toContain(") <> 6");
     expect(migration).not.toContain("makeup");
     expect(gate).toContain("TODAY’S FOUR TRAITS");
+    expect(gate).toContain("THE FOUR TRAITS");
+    expect(gate).toContain("Trait definitions ⓘ");
+    expect(gate).toContain("Functional arm talent");
+    expect(gate).toContain("Ball placement and consistency");
+    expect(gate).toContain("Reads, anticipation, timing, decision-making");
+    expect(gate).toContain("Escaping pressure, extending plays");
   });
 
   it("uses the hidden Premium / Standard / Grinder / Chaos caliber mix", () => {
