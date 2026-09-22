@@ -95,7 +95,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
       "Name a player fans knew was special before he was an upperclassman.",
       "Name a college player whose breakout came almost right away.",
     ],
-    answers: ["Adrian Peterson", "Trevor Lawrence", "Caleb Williams", "Sammy Watkins", "Marcus Lattimore", "Jadaveon Clowney", "Derek Stingley Jr.", "Maurice Clarett"],
+    answers: ["Adrian Peterson", "Trevor Lawrence", "Caleb Williams", "Sammy Watkins", "Marcus Lattimore", "Jadeveon Clowney", "Derek Stingley Jr.", "Maurice Clarett"],
   },
   {
     category: "underdogs",
