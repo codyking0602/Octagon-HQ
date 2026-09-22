@@ -5239,5 +5239,8 @@ export function curateFootballWhoAmIClues(
   }
 
   curated.push(...(supplementalClues.get(subject.id) ?? []));
-  return refineNflWhoAmIContent(subject, trimDeepPool(subject, curated));
+  // PR4 owns the final NFL editorial/depth pass. Give it the full curated
+  // batch-1 source pool so it can replace generic stat volume with useful
+  // identity/foundation facts instead of inheriting a pre-trimmed thin pool.
+  return refineNflWhoAmIContent(subject, curated);
 }
