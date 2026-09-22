@@ -168,6 +168,36 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+  football-provider:
+    name: Football ESPN schedule provider
+    if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Check out exact validation source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        run: |
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify live ESPN Football schedule contract
+        run: node scripts/verify-football-espn-schedule-live.mjs
+
   phone-layouts:
     name: Today's Challenge phone layouts
     if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
@@ -235,6 +265,7 @@ jobs:
     needs:
       - core
       - tests
+      - football-provider
       - phone-layouts
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -243,10 +274,12 @@ jobs:
         env:
           CORE_RESULT: ${{ needs.core.result }}
           TEST_RESULT: ${{ needs.tests.result }}
+          FOOTBALL_PROVIDER_RESULT: ${{ needs.football-provider.result }}
           PHONE_RESULT: ${{ needs.phone-layouts.result }}
         run: |
-          printf 'core=%s\ntests=%s\nphone-layouts=%s\n' "$CORE_RESULT" "$TEST_RESULT" "$PHONE_RESULT"
+          printf 'core=%s\ntests=%s\nfootball-provider=%s\nphone-layouts=%s\n' "$CORE_RESULT" "$TEST_RESULT" "$FOOTBALL_PROVIDER_RESULT" "$PHONE_RESULT"
           test "$CORE_RESULT" = success
           test "$TEST_RESULT" = success
+          test "$FOOTBALL_PROVIDER_RESULT" = success
           test "$PHONE_RESULT" = success
-          echo "Exact head $SOURCE_SHA passed typecheck, the complete sharded test suite, the production build, and phone-layout verification."
+          echo "Exact head $SOURCE_SHA passed typecheck, the complete sharded test suite, the production build, live ESPN Football schedule verification, and phone-layout verification."
