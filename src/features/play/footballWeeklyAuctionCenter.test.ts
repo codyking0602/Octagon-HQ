@@ -49,6 +49,6 @@ describe("Football Weekly Auction Center and archive", () => {
     expect(buildQbTable).toContain('aria-label="Back to Build a QB"');
     expect(buildQbTable).toContain("← BACK");
     expect(buildQbStyles).toContain(".football-weekly-build-qb__sheet-back");
-    expect(buildQbStyles).toContain("height: 100dvh;");
+    expect(buildQbStyles).toContain("height: calc(100dvh - 58px - var(--safe-top));");
   });
 });
