@@ -1,0 +1,124 @@
+import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
+
+export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
+  {
+    category: "divisions",
+    collisionGroup: "divisions",
+    prompts: [
+      "Name a UFC weight class.",
+      "Name a division you can see on a UFC card.",
+      "Name a UFC division with famous champions.",
+      "Name a weight class MMA fans debate constantly.",
+      "Name a division a UFC fighter can compete in.",
+    ],
+    answers: ["Lightweight", "Welterweight", "Middleweight", "Featherweight", "Bantamweight", "Heavyweight", "Light heavyweight", "Flyweight"],
+  },
+  {
+    category: "champions",
+    collisionGroup: "lightweights",
+    prompts: [
+      "Name a UFC lightweight champion from any era.",
+      "Name a fighter who has held the UFC lightweight title.",
+      "Name a former or current UFC 155-pound champion.",
+      "Name a lightweight whose résumé includes UFC gold.",
+      "Name a champion strongly associated with the UFC lightweight division.",
+    ],
+    answers: ["Khabib Nurmagomedov", "Charles Oliveira", "BJ Penn", "Islam Makhachev", "Frankie Edgar", "Benson Henderson", "Eddie Alvarez", "Rafael dos Anjos"],
+  },
+  {
+    category: "champions",
+    collisionGroup: "welterweights",
+    prompts: [
+      "Name a UFC welterweight champion from any era.",
+      "Name a fighter who has held the UFC welterweight title.",
+      "Name a former or current UFC 170-pound champion.",
+      "Name a welterweight whose résumé includes UFC gold.",
+      "Name a champion strongly associated with the UFC welterweight division.",
+    ],
+    answers: ["Georges St-Pierre", "Matt Hughes", "Kamaru Usman", "Tyron Woodley", "Leon Edwards", "Robbie Lawler", "Johny Hendricks", "Carlos Newton"],
+  },
+  {
+    category: "champions",
+    collisionGroup: "middleweights",
+    prompts: [
+      "Name a UFC middleweight champion from any era.",
+      "Name a fighter who has held the UFC middleweight title.",
+      "Name a former or current UFC 185-pound champion.",
+      "Name a middleweight whose résumé includes UFC gold.",
+      "Name a champion strongly associated with the UFC middleweight division.",
+    ],
+    answers: ["Anderson Silva", "Israel Adesanya", "Chris Weidman", "Michael Bisping", "Robert Whittaker", "Alex Pereira", "Luke Rockhold", "Sean Strickland"],
+  },
+  {
+    category: "champions",
+    collisionGroup: "heavyweights",
+    prompts: [
+      "Name a UFC heavyweight champion from any era.",
+      "Name a fighter who has held the UFC heavyweight title.",
+      "Name a former or current UFC heavyweight champion.",
+      "Name a heavyweight whose résumé includes UFC gold.",
+      "Name a champion strongly associated with the UFC heavyweight division.",
+    ],
+    answers: ["Stipe Miocic", "Cain Velasquez", "Francis Ngannou", "Daniel Cormier", "Randy Couture", "Junior dos Santos", "Brock Lesnar", "Fabricio Werdum"],
+  },
+  {
+    category: "champions",
+    collisionGroup: "multi-division",
+    prompts: [
+      "Name a UFC fighter who won titles in two weight classes.",
+      "Name a fighter with UFC championships in two divisions.",
+      "Name a UFC champion who proved capable of winning gold at multiple weights.",
+      "Name a fighter whose UFC résumé includes titles in two weight classes.",
+      "Name a multi-division UFC champion.",
+    ],
+    answers: ["Conor McGregor", "Daniel Cormier", "Amanda Nunes", "Henry Cejudo", "BJ Penn", "Randy Couture", "Jon Jones", "Alex Pereira"],
+  },
+  {
+    category: "fighters",
+    collisionGroup: "knockouts",
+    prompts: [
+      "Name a UFC fighter known for knockout power.",
+      "Name a fighter whose punches can end a fight instantly.",
+      "Name a UFC star fans associate with big knockouts.",
+      "Name a fighter you would never want to trade shots with.",
+      "Name a UFC knockout artist almost every MMA fan knows.",
+    ],
+    answers: ["Francis Ngannou", "Alex Pereira", "Derrick Lewis", "Chuck Liddell", "Dan Henderson", "Wanderlei Silva", "Jiri Prochazka", "Justin Gaethje"],
+  },
+  {
+    category: "fighters",
+    collisionGroup: "submissions",
+    prompts: [
+      "Name a UFC fighter known for submissions.",
+      "Name a fighter whose ground game can end a fight quickly.",
+      "Name a UFC star fans associate with dangerous submissions.",
+      "Name a fighter you would hate to grapple with.",
+      "Name a submission specialist serious MMA fans know.",
+    ],
+    answers: ["Charles Oliveira", "Demian Maia", "Frank Mir", "BJ Penn", "Nate Diaz", "Mackenzie Dern", "Rodolfo Vieira", "Tony Ferguson"],
+  },
+  {
+    category: "fighters",
+    collisionGroup: "wrestling",
+    prompts: [
+      "Name a UFC fighter known for wrestling.",
+      "Name a fighter whose takedowns became part of his identity.",
+      "Name a UFC star associated with relentless grappling pressure.",
+      "Name a fighter opponents hated having on top of them.",
+      "Name a wrestler who turned elite grappling into UFC success.",
+    ],
+    answers: ["Khabib Nurmagomedov", "Georges St-Pierre", "Daniel Cormier", "Kamaru Usman", "Islam Makhachev", "Henry Cejudo", "Merab Dvalishvili", "Chael Sonnen"],
+  },
+  {
+    category: "fighters",
+    collisionGroup: "striking",
+    prompts: [
+      "Name a UFC fighter known for elite striking.",
+      "Name a fighter whose stand-up skill became part of his reputation.",
+      "Name a UFC star you would pick for a striking showcase.",
+      "Name a fighter opponents had to respect at kickboxing range.",
+      "Name a striker whose UFC style looked especially polished.",
+    ],
+    answers: ["Anderson Silva", "Israel Adesanya", "Alex Pereira", "Max Holloway", "Jose Aldo", "Conor McGregor", "Stephen Thompson", "Joanna Jedrzejczyk"],
+  },
+] as const);
