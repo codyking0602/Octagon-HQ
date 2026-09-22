@@ -48,6 +48,35 @@ describe("Who Am I semantic quality model", () => {
     expect(whoAmICluesShareInformation(research, curated)).toBe(true);
   });
 
+  it("does not mistake award-named subjects for award claims from clue IDs", () => {
+    const fredSuperBowl = clue(
+      "curated2:biletnikoff-sb11",
+      "I was named MVP of Super Bowl XI after Oakland's first championship.",
+    );
+    const fredHall = clue(
+      "curated2:biletnikoff-hof",
+      "I was inducted into the Pro Football Hall of Fame in 1988.",
+    );
+    const chuckSchool = clue(
+      "curated3:bednarik-penn",
+      "I played college football at Penn.",
+    );
+    const chuckDraft = clue(
+      "curated3:bednarik-first",
+      "Philadelphia selected me first overall in the 1949 NFL Draft.",
+    );
+    const actualAward = clue(
+      "award-copy",
+      "I won the Bednarik Award as the nation's top defensive player.",
+    );
+
+    expect(whoAmIClueInformationKeys(fredSuperBowl)).not.toContain("award:biletnikoff");
+    expect(whoAmICluesShareInformation(fredSuperBowl, fredHall)).toBe(false);
+    expect(whoAmIClueInformationKeys(chuckSchool)).not.toContain("award:bednarik");
+    expect(whoAmICluesShareInformation(chuckSchool, chuckDraft)).toBe(false);
+    expect(whoAmIClueInformationKeys(actualAward)).toContain("award:bednarik");
+  });
+
   it("supports explicit semantic claims for facts that copy heuristics cannot infer safely", () => {
     const canonical = clue("fact-one", "I produced a signature season.", ["season:signature:2003"]);
     const research = clue("research-two", "My 2003 season became my defining college year.", ["season:signature:2003"]);

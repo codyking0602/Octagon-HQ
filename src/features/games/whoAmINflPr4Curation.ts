@@ -35,7 +35,7 @@ function annotateNflMetadata(clue: WhoAmIClue): WhoAmIClue {
   ) {
     return { ...clue, facet: "era" };
   }
-  if (clue.id === "school") return { ...clue, facet: "background" };
+  if (clue.id === "school" || clue.id === "pr4:school") return { ...clue, facet: "background" };
   if (clue.id === "career-path" || clue.id.startsWith("affiliation:")) {
     return { ...clue, facet: "career-path" };
   }
@@ -85,6 +85,26 @@ function ensureOrientationClues(subject: FootballSubjectProfile, clues: readonly
       });
     }
   }
+
+  if (
+    subject.kind !== "coach"
+    && subject.school
+    && !next.some((clue) => (
+      clue.id === "school"
+      || clue.id === "pr4:school"
+      || clue.text.toLowerCase().includes(subject.school!.toLowerCase())
+    ))
+  ) {
+    next.push({
+      id: "pr4:school",
+      conceptId: `pr4:school:${subject.school.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+      text: `I played college football at ${subject.school}.`,
+      band: "helpful",
+      facet: "background",
+      revealPriority: 12,
+    });
+  }
+
   return next;
 }
 
@@ -218,19 +238,25 @@ function capGenericProduction(clues: readonly WhoAmIClue[]) {
     .sort((left, right) => right.score - left.score || left.index - right.index);
 
   if (production.length <= 2) return [...clues];
-  const nonProductionCount = clues.length - production.length;
-  const keepCount = Math.min(production.length, Math.max(2, 10 - nonProductionCount));
-  const keep = new Set(production.slice(0, keepCount).map(({ clue }) => clue.id));
+  const keep = new Set(production.slice(0, 2).map(({ clue }) => clue.id));
   return clues.filter((clue) => whoAmIRevealProfile(clue).category !== "production" || keep.has(clue.id));
 }
 
 function semanticClueValue(clue: WhoAmIClue) {
   const profile = whoAmIRevealProfile(clue);
   let score = bandRank(clue.band) * 30;
+  if (profile.category === "role") score += 220;
+  if (profile.category === "era") score += 180;
+  if (
+    profile.category === "school"
+    || profile.category === "sports-biography"
+    || profile.category === "draft-entry"
+    || profile.category === "style"
+  ) score += 110;
   if (whoAmIClueSelectionClass(clue) === "sports-identity") score += 40;
   if (profile.identifyingPower === "signature") score += 35;
   if (profile.category === "signature-moment" || profile.category === "records") score += 25;
-  if (profile.category === "production") score -= 25;
+  if (profile.category === "production") score -= 55;
   if (isPersonalBiography(clue)) score -= 30;
   score -= clue.revealPriority ?? 50;
   return score;
@@ -247,7 +273,7 @@ function trimSemanticRepeats(clues: readonly WhoAmIClue[]) {
     selected.push(clue);
   }
 
-  if (selected.length < 12) return [...clues];
+  if (selected.length < 10) return [...clues];
   const selectedIds = new Set(selected.map((clue) => clue.id));
   return clues.filter((clue) => selectedIds.has(clue.id));
 }
@@ -335,5 +361,5 @@ export function refineNflWhoAmIContent(
   const withoutStatSoup = capGenericProduction(semanticallyDistinct);
   const withoutRepeatedSignatures = trimRepeatedLateSignatures(withoutStatSoup);
   const withoutPersonalBiography = capPersonalBiography(withoutRepeatedSignatures);
-  return restoreReplayDepth(withoutPersonalBiography, semanticallyDistinct);
+  return restoreReplayDepth(withoutPersonalBiography, rebanded);
 }
