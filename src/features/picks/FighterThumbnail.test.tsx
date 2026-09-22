@@ -124,6 +124,26 @@ describe("fighterThumbnailPath", () => {
       "https://a.espncdn.com/i/headshots/mma/players/full/4312859.png",
     );
   });
+
+  it("leaves Sep. 26 fighters blank when their prior thumbs were not UFC/ESPN sourced", () => {
+    const slugs = [
+      "raoni-barcelos",
+      "rodolfo-vieira",
+      "robert-bryczek",
+      "brady-hiestand",
+      "rinya-nakamura",
+      "mehemmedeli-osmanli",
+      "ilimbek-akylbek",
+      "melissa-amaya",
+      "valesca-machado",
+      "josiah-harrell",
+      "elves-brener",
+    ];
+
+    for (const slug of slugs) {
+      expect(fighterThumbnailPath(slug)).toBeNull();
+    }
+  });
 });
 
 describe("Shane contender fighter-tile treatment", () => {
