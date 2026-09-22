@@ -40,7 +40,6 @@ describe("Football weekly owner discovery", () => {
       "20260908", "20260909", "20260910", "20260911",
       "20260912", "20260913", "20260914", "20260915",
     ]);
-    expect(footballWeekEspnDateQueries("2026-09-08").every((query) => /^\d{8}$/.test(query))).toBe(true);
 
     const preview = buildFootballWeekPreview("2026-09-08", [
       event("501", "2026-09-15T00:15:00.000Z", null, null),
