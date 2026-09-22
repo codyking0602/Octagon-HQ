@@ -64,11 +64,18 @@ describe("Who Am I fast targeted editorial gate", () => {
     expect(selected.length, `No Who Am I subjects matched: ${targets.join(", ")}`).toBeGreaterThan(0);
 
     for (const { universe, candidate } of selected) {
+      if (universe.league === "UFC") console.log(`[whoami-fast] ${candidate.id} capacity:start`);
       const semanticCapacity = whoAmISemanticIndependentCapacity(candidate.clues, 13);
-      const sequences = Array.from({ length: 8 }, (_value, index) => (
-        whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1))
-      ));
+      if (universe.league === "UFC") console.log(`[whoami-fast] ${candidate.id} capacity:done`);
+      const sequences = Array.from({ length: 8 }, (_value, index) => {
+        if (universe.league === "UFC") console.log(`[whoami-fast] ${candidate.id} sequence:${index + 1}:start`);
+        const sequence = whoAmIProgressiveClues(candidate.clues, seededRandom(index + 1));
+        if (universe.league === "UFC") console.log(`[whoami-fast] ${candidate.id} sequence:${index + 1}:done`);
+        return sequence;
+      });
+      if (universe.league === "UFC") console.log(`[whoami-fast] ${candidate.id} replay:start`);
       const replayTargets = whoAmIQualityCompatibleReplayTargets(candidate.clues, sequences);
+      if (universe.league === "UFC") console.log(`[whoami-fast] ${candidate.id} replay:done`);
 
       for (const sequence of sequences) {
         expect(sequence, `${candidate.id} must still produce a complete board`).toHaveLength(WHO_AM_I_CLUE_LIMIT);
