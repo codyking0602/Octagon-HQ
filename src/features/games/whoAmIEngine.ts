@@ -2,6 +2,7 @@ import { assembleWhoAmIRevealClues } from "./whoAmIRevealPlanner";
 
 export type WhoAmISport = "ufc" | "football";
 export type WhoAmILeague = "UFC" | "NFL" | "CFB";
+export type WhoAmIIdentityCoordinate = "role" | "era" | "school" | "team";
 export type WhoAmISubjectKind = "fighter" | "player" | "coach";
 export type WhoAmIClueBand = "broad" | "helpful" | "strong" | "giveaway";
 export type WhoAmIClueFacet =
@@ -37,6 +38,8 @@ export interface WhoAmIClue {
    * The assembler treats overlapping information keys as mutually exclusive.
    */
   informationKeys?: readonly string[];
+  /** Major identity coordinates explicitly exposed by this clue when known. */
+  identityCoordinates?: readonly WhoAmIIdentityCoordinate[];
   facet?: WhoAmIClueFacet;
   revealPriority?: number;
   identityKnowledge?: boolean;
@@ -76,8 +79,9 @@ export const WHO_AM_I_MODERN_ERA_SHARE = 0.75;
 export function whoAmIProgressiveClues(
   clues: readonly WhoAmIClue[],
   random: () => number = Math.random,
+  league?: WhoAmILeague,
 ) {
-  return assembleWhoAmIRevealClues(clues, WHO_AM_I_CLUE_LIMIT, random);
+  return assembleWhoAmIRevealClues(clues, WHO_AM_I_CLUE_LIMIT, random, league);
 }
 
 function shuffled<T>(values: readonly T[], random: () => number) {
@@ -112,12 +116,12 @@ export function createWhoAmIRound(
   excludedSubjectIds: ReadonlySet<string> = new Set(),
 ): WhoAmIRound {
   const eligible = universe.candidates.filter((candidate) => (
-    whoAmIProgressiveClues(candidate.clues, () => 0.5).length >= WHO_AM_I_CLUE_LIMIT
+    whoAmIProgressiveClues(candidate.clues, () => 0.5, universe.league).length >= WHO_AM_I_CLUE_LIMIT
   ));
   if (!eligible.length) throw new Error(`Who Am I has no eligible ${universe.league} subjects with ${WHO_AM_I_CLUE_LIMIT} clues.`);
   const fresh = eligible.filter((candidate) => !excludedSubjectIds.has(candidate.id));
   const hidden = chooseEligibleCandidate(fresh.length ? fresh : eligible, random);
-  const clues = whoAmIProgressiveClues(hidden.clues, random);
+  const clues = whoAmIProgressiveClues(hidden.clues, random, universe.league);
   if (clues.length !== WHO_AM_I_CLUE_LIMIT) throw new Error(`Who Am I generated ${clues.length} clues; expected ${WHO_AM_I_CLUE_LIMIT}.`);
   return {
     sport: universe.sport,

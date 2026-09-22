@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import type { WhoAmIClue } from "./whoAmIEngine";
 import {
   orderWhoAmICluesByRevealArchitectureIfPossible,
+  whoAmIMajorIdentityCoordinates,
   whoAmIRevealArchitectureCanOrder,
   whoAmIRevealArchitectureSatisfied,
+  whoAmIRevealCoordinateProgressionSatisfied,
   whoAmIRevealProfile,
 } from "./whoAmIRevealArchitecture";
 
@@ -66,7 +68,7 @@ describe("Who Am I standardized reveal architecture", () => {
     expect(whoAmIRevealProfile(juco)).toMatchObject({
       category: "sports-biography",
       identifyingPower: "signature",
-      earliestClue: 6,
+      earliestClue: 4,
     });
     expect(whoAmIRevealProfile(upbringing)).toMatchObject({
       category: "personal-biography",
@@ -88,18 +90,38 @@ describe("Who Am I standardized reveal architecture", () => {
       clue("jersey", "I wore No. 85.", "giveaway", "identity"),
     ];
 
-    expect(whoAmIRevealArchitectureCanOrder(selected)).toBe(true);
-    const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected);
+    expect(whoAmIRevealArchitectureCanOrder(selected, "NFL")).toBe(true);
+    const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected, "NFL");
 
     expect(ordered.map((entry) => entry.id).sort()).toEqual(selected.map((entry) => entry.id).sort());
     expect(ordered.findIndex((entry) => entry.id === "name-change")).toBeGreaterThanOrEqual(8);
     expect(ordered.findIndex((entry) => entry.id === "jersey")).toBeGreaterThanOrEqual(7);
     expect(ordered.slice(-2).every((entry) => entry.band === "strong" || entry.band === "giveaway")).toBe(true);
-    for (let index = 1; index < ordered.length; index += 1) {
-      const rank = { broad: 0, helpful: 1, strong: 2, giveaway: 3 } as const;
-      expect(rank[ordered[index]!.band]).toBeGreaterThanOrEqual(rank[ordered[index - 1]!.band]);
-    }
-    expect(whoAmIRevealArchitectureSatisfied(ordered)).toBe(true);
+    expect(whoAmIRevealCoordinateProgressionSatisfied(ordered, "NFL")).toBe(true);
+    expect(new Set(ordered.slice(0, 4).flatMap((entry) => whoAmIMajorIdentityCoordinates(entry, "NFL"))).size).toBeLessThanOrEqual(1);
+    expect(new Set(ordered.slice(0, 6).flatMap((entry) => whoAmIMajorIdentityCoordinates(entry, "NFL"))).size).toBeLessThanOrEqual(2);
+    expect(whoAmIRevealArchitectureSatisfied(ordered, "NFL")).toBe(true);
+  });
+
+  it("limits football boards to one identity coordinate through clue 4, two through clue 6, and three from clue 7", () => {
+    const selected: WhoAmIClue[] = [
+      { ...clue("role", "I played quarterback.", "broad", "role"), identityCoordinates: ["role"] },
+      { ...clue("era", "I was active in the 2010s.", "broad", "era"), identityCoordinates: ["era"] },
+      clue("style", "I was a dangerous runner outside structure.", "helpful", "style"),
+      clue("draft", "I was a first-round NFL Draft pick.", "helpful", "career-path"),
+      clue("award", "I earned major national player-of-the-year recognition.", "strong", "accomplishments"),
+      { ...clue("team", "I played for the New England Patriots.", "strong", "career-path"), identityCoordinates: ["team"] },
+      clue("playoff", "I delivered multiple memorable postseason performances.", "strong", "accomplishments"),
+      clue("record", "I set a major league record during my career.", "strong", "accomplishments"),
+      clue("signature", "I was central to an iconic championship moment.", "giveaway", "accomplishments"),
+      clue("jersey", "I wore No. 12.", "giveaway", "identity"),
+    ];
+
+    const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected, "NFL");
+    expect(whoAmIRevealCoordinateProgressionSatisfied(ordered, "NFL")).toBe(true);
+    expect(new Set(ordered.slice(0, 4).flatMap((entry) => whoAmIMajorIdentityCoordinates(entry, "NFL"))).size).toBeLessThanOrEqual(1);
+    expect(new Set(ordered.slice(0, 6).flatMap((entry) => whoAmIMajorIdentityCoordinates(entry, "NFL"))).size).toBeLessThanOrEqual(2);
+    expect(new Set(ordered.slice(0, 8).flatMap((entry) => whoAmIMajorIdentityCoordinates(entry, "NFL"))).size).toBeLessThanOrEqual(3);
   });
 
   it("leaves a thin board unchanged instead of rewriting its facts or replay behavior", () => {

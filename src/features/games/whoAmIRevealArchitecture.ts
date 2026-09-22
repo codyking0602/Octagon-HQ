@@ -1,4 +1,10 @@
-import type { WhoAmIClue, WhoAmIClueBand } from "./whoAmIEngine";
+import type {
+  WhoAmIClue,
+  WhoAmIClueBand,
+  WhoAmIIdentityCoordinate,
+  WhoAmILeague,
+} from "./whoAmIEngine";
+import { whoAmICluesShareInformation } from "./whoAmISemanticQuality";
 
 export type WhoAmIRevealCategory =
   | "role"
@@ -64,23 +70,23 @@ const WINDOWS: Readonly<Record<
   role: { broad: [1, 4], specific: [3, 6], signature: [5, 8] },
   era: { broad: [1, 4], specific: [3, 6], signature: [5, 8] },
   school: { broad: [3, 6], specific: [4, 8], signature: [6, 10] },
-  "sports-biography": { broad: [3, 6], specific: [4, 8], signature: [6, 10] },
-  "draft-entry": { broad: [3, 6], specific: [5, 8], signature: [6, 10] },
-  "team-path": { broad: [3, 6], specific: [5, 8], signature: [7, 10] },
-  production: { broad: [4, 8], specific: [5, 9], signature: [6, 10] },
-  accomplishments: { broad: [4, 8], specific: [5, 9], signature: [6, 10] },
-  championships: { broad: [5, 8], specific: [5, 9], signature: [6, 10] },
-  records: { broad: [6, 9], specific: [6, 10], signature: [7, 10] },
-  style: { broad: [2, 6], specific: [5, 9], signature: [6, 10] },
+  "sports-biography": { broad: [1, 6], specific: [2, 8], signature: [4, 10] },
+  "draft-entry": { broad: [1, 6], specific: [2, 8], signature: [4, 10] },
+  "team-path": { broad: [1, 6], specific: [2, 8], signature: [5, 10] },
+  production: { broad: [2, 8], specific: [3, 9], signature: [5, 10] },
+  accomplishments: { broad: [1, 8], specific: [2, 9], signature: [5, 10] },
+  championships: { broad: [2, 8], specific: [3, 9], signature: [5, 10] },
+  records: { broad: [2, 9], specific: [3, 10], signature: [5, 10] },
+  style: { broad: [1, 6], specific: [2, 9], signature: [5, 10] },
   relationships: { broad: [5, 8], specific: [7, 10], signature: [8, 10] },
-  "signature-moment": { broad: [7, 10], specific: [8, 10], signature: [9, 10] },
+  "signature-moment": { broad: [3, 10], specific: [5, 10], signature: [8, 10] },
   "jersey-number": { broad: [8, 10], specific: [8, 10], signature: [8, 10] },
   "nickname-persona": { broad: [9, 10], specific: [9, 10], signature: [9, 10] },
   "personal-biography": { broad: [8, 10], specific: [8, 10], signature: [9, 10] },
   nationality: { broad: [2, 5], specific: [4, 7], signature: [6, 9] },
   "ufc-division": { broad: [1, 4], specific: [3, 6], signature: [5, 8] },
   "ufc-gym": { broad: [4, 7], specific: [5, 8], signature: [7, 10] },
-  identity: { broad: [3, 7], specific: [5, 9], signature: [7, 10] },
+  identity: { broad: [2, 7], specific: [4, 9], signature: [7, 10] },
 };
 
 const BAND_RANK: Readonly<Record<WhoAmIClueBand, number>> = {
@@ -160,6 +166,69 @@ function categoryFor(clue: WhoAmIClue): WhoAmIRevealCategory {
   return "identity";
 }
 
+export function whoAmIMajorIdentityCoordinates(
+  clue: WhoAmIClue,
+  league?: WhoAmILeague,
+): readonly WhoAmIIdentityCoordinate[] {
+  if (league !== "CFB" && league !== "NFL") return [];
+
+  // Football authority annotates every generated clue with subject-aware coordinate
+  // exposure. Unit/legacy clues without annotations fall back to the reveal category.
+  if (clue.identityCoordinates) {
+    return clue.identityCoordinates.filter((coordinate) => (
+      coordinate === "role"
+      || coordinate === "era"
+      || (league === "CFB" && coordinate === "school")
+      || (league === "NFL" && coordinate === "team")
+    ));
+  }
+
+  const category = categoryFor(clue);
+  const coordinates = new Set<WhoAmIIdentityCoordinate>();
+  if (category === "role") coordinates.add("role");
+  if (category === "era") coordinates.add("era");
+  if (league === "CFB" && category === "school") coordinates.add("school");
+  if (league === "NFL" && category === "team-path") coordinates.add("team");
+  return [...coordinates];
+}
+
+function coordinateBudgetForPosition(position: number) {
+  if (position <= 4) return 1;
+  if (position <= 6) return 2;
+  return 3;
+}
+
+function coordinateBudgetAllows(
+  chosen: readonly WhoAmIClue[],
+  candidate: WhoAmIClue,
+  position: number,
+  league?: WhoAmILeague,
+) {
+  if (league !== "CFB" && league !== "NFL") return true;
+  const coordinates = new Set<WhoAmIIdentityCoordinate>();
+  for (const clue of [...chosen, candidate]) {
+    for (const coordinate of whoAmIMajorIdentityCoordinates(clue, league)) {
+      coordinates.add(coordinate);
+    }
+  }
+  return coordinates.size <= coordinateBudgetForPosition(position);
+}
+
+export function whoAmIRevealCoordinateProgressionSatisfied(
+  clues: readonly WhoAmIClue[],
+  league?: WhoAmILeague,
+) {
+  if (league !== "CFB" && league !== "NFL") return true;
+  const coordinates = new Set<WhoAmIIdentityCoordinate>();
+  for (let index = 0; index < clues.length; index += 1) {
+    for (const coordinate of whoAmIMajorIdentityCoordinates(clues[index]!, league)) {
+      coordinates.add(coordinate);
+    }
+    if (coordinates.size > coordinateBudgetForPosition(index + 1)) return false;
+  }
+  return true;
+}
+
 function identifyingPowerFor(
   clue: WhoAmIClue,
   category: WhoAmIRevealCategory,
@@ -235,9 +304,13 @@ export function whoAmIClueAllowedAtRevealPosition(clue: WhoAmIClue, zeroBasedInd
   return zeroBasedIndex + 1 >= whoAmIRevealProfile(clue).earliestClue;
 }
 
-export function whoAmIRevealArchitectureSatisfied(clues: readonly WhoAmIClue[]) {
+export function whoAmIRevealArchitectureSatisfied(
+  clues: readonly WhoAmIClue[],
+  league?: WhoAmILeague,
+) {
   return clues.every((clue, index) => whoAmIClueAllowedAtRevealPosition(clue, index))
-    && clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length <= 1;
+    && clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length <= 1
+    && whoAmIRevealCoordinateProgressionSatisfied(clues, league);
 }
 
 function preferredBandRank(position: number, band: WhoAmIClueBand) {
@@ -251,27 +324,33 @@ function preferredBandRank(position: number, band: WhoAmIClueBand) {
   return preferred.indexOf(band);
 }
 
-function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
-  if (clues.length !== 10) return null;
-  if (clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length > 1) {
+function scheduleRevealArchitecture(
+  clues: readonly WhoAmIClue[],
+  league?: WhoAmILeague,
+  targetLength = clues.length,
+) {
+  if (targetLength !== 10 || clues.length < targetLength) return null;
+  if (
+    clues.length === targetLength
+    && clues.filter((clue) => whoAmIRevealProfile(clue).category === "personal-biography").length > 1
+  ) {
     return null;
   }
 
-  const preserveStrongFinalTwo = clues.slice(-2).every((clue) => (
+  const strongAvailable = clues.filter((clue) => (
     clue.band === "strong" || clue.band === "giveaway"
-  ));
-  const preserveStrongFinalFour = clues.slice(-4).filter((clue) => (
-    clue.band === "strong" || clue.band === "giveaway"
-  )).length >= 3;
+  )).length;
+  const preserveStrongFinalTwo = strongAvailable >= 2;
+  const preserveStrongFinalFour = strongAvailable >= 3;
   const entries = clues.map((clue, originalIndex) => ({ clue, originalIndex }));
   const chosen: typeof entries = [];
   let explored = 0;
-  const MAX_NODES = 30_000;
+  const MAX_NODES = clues.length > targetLength ? 25_000 : 5_000;
 
   const search = (position: number, remaining: typeof entries): WhoAmIClue[] | null => {
     explored += 1;
     if (explored > MAX_NODES) return null;
-    if (position > clues.length) {
+    if (position > targetLength) {
       const ordered = chosen.map((entry) => entry.clue);
       if (
         preserveStrongFinalFour
@@ -282,10 +361,17 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
       return ordered;
     }
 
-    const previousBand = chosen.at(-1)?.clue.band;
     const candidates = remaining
       .filter(({ clue }) => whoAmIClueAllowedAtRevealPosition(clue, position - 1))
-      .filter(({ clue }) => previousBand === undefined || BAND_RANK[clue.band] >= BAND_RANK[previousBand])
+      .filter(({ clue }) => coordinateBudgetAllows(chosen.map((entry) => entry.clue), clue, position, league))
+      .filter(({ clue }) => (
+        whoAmIRevealProfile(clue).category !== "personal-biography"
+        || chosen.every((entry) => whoAmIRevealProfile(entry.clue).category !== "personal-biography")
+      ))
+      .filter(({ clue }) => chosen.every((entry) => (
+        (entry.clue.conceptId ?? entry.clue.id) !== (clue.conceptId ?? clue.id)
+        && !whoAmICluesShareInformation(entry.clue, clue)
+      )))
       .filter(({ clue }) => (
         !preserveStrongFinalTwo
         || position < 9
@@ -320,8 +406,18 @@ function scheduleRevealArchitecture(clues: readonly WhoAmIClue[]) {
   return search(1, entries);
 }
 
-export function whoAmIRevealArchitectureCanOrder(clues: readonly WhoAmIClue[]) {
-  return whoAmIRevealArchitectureSatisfied(clues) || scheduleRevealArchitecture(clues) !== null;
+export function whoAmIRevealArchitectureCanOrder(
+  clues: readonly WhoAmIClue[],
+  league?: WhoAmILeague,
+) {
+  return whoAmIRevealArchitectureSatisfied(clues, league) || scheduleRevealArchitecture(clues, league) !== null;
+}
+
+export function selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(
+  clues: readonly WhoAmIClue[],
+  league?: WhoAmILeague,
+) {
+  return scheduleRevealArchitecture(clues, league, 10);
 }
 
 /**
@@ -329,7 +425,10 @@ export function whoAmIRevealArchitectureCanOrder(clues: readonly WhoAmIClue[]) {
  * changes replay selection. Thin source pools that cannot satisfy the reveal
  * rules remain unchanged for the league cleanup PRs.
  */
-export function orderWhoAmICluesByRevealArchitectureIfPossible(clues: readonly WhoAmIClue[]) {
-  if (whoAmIRevealArchitectureSatisfied(clues)) return [...clues];
-  return scheduleRevealArchitecture(clues) ?? [...clues];
+export function orderWhoAmICluesByRevealArchitectureIfPossible(
+  clues: readonly WhoAmIClue[],
+  league?: WhoAmILeague,
+) {
+  if (whoAmIRevealArchitectureSatisfied(clues, league)) return [...clues];
+  return scheduleRevealArchitecture(clues, league) ?? [...clues];
 }

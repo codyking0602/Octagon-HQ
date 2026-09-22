@@ -3,13 +3,17 @@ import {
   whoAmIClueFacet,
   whoAmIClueSelectionClass,
 } from "./whoAmIClueAssembler";
-import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet } from "./whoAmIEngine";
+import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet, WhoAmILeague } from "./whoAmIEngine";
 import {
   whoAmIClueHasHardEditorialFailure,
   whoAmICluesShareInformation,
   whoAmISemanticClueKey,
 } from "./whoAmISemanticQuality";
-import { orderWhoAmICluesByRevealArchitectureIfPossible } from "./whoAmIRevealArchitecture";
+import {
+  orderWhoAmICluesByRevealArchitectureIfPossible,
+  selectAndOrderWhoAmICluesByRevealArchitectureIfPossible,
+  whoAmIRevealArchitectureSatisfied,
+} from "./whoAmIRevealArchitecture";
 
 const REVEAL_SHORTLIST_EXTRA = 4;
 
@@ -204,6 +208,7 @@ export function assembleWhoAmIRevealClues(
   clues: readonly WhoAmIClue[],
   limit: number,
   random: () => number = () => 0.5,
+  league?: WhoAmILeague,
 ) {
   const eligibleClues = eligibleRevealPool(clues, limit);
   if (limit !== 10) return assembleWhoAmIClues(eligibleClues, limit, random);
@@ -213,6 +218,28 @@ export function assembleWhoAmIRevealClues(
     Math.min(eligibleClues.length, limit + REVEAL_SHORTLIST_EXTRA),
     random,
   );
+  const extendedArchitectureShortlist = league === "CFB" || league === "NFL"
+    ? assembleWhoAmIClues(
+        eligibleClues,
+        Math.min(eligibleClues.length, limit + REVEAL_SHORTLIST_EXTRA * 2),
+        random,
+      )
+    : shortlist;
+
+  const applyRevealArchitecture = (selected: readonly WhoAmIClue[]) => {
+    const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected, league);
+    if (
+      league !== "CFB"
+      && league !== "NFL"
+      || whoAmIRevealArchitectureSatisfied(ordered, league)
+    ) {
+      return ordered;
+    }
+
+    return selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(shortlist, league)
+      ?? selectAndOrderWhoAmICluesByRevealArchitectureIfPossible(extendedArchitectureShortlist, league)
+      ?? ordered;
+  };
 
   const broad = shortlist.filter((clue) => clue.band === "broad").slice(0, REVEAL_TARGETS.broad);
   const helpful = ranked(shortlist.filter((clue) => clue.band === "helpful"), random)
@@ -229,7 +256,7 @@ export function assembleWhoAmIRevealClues(
     || strongCount < REVEAL_TARGETS.strong
     || latePool.length < REVEAL_TARGETS.strong + REVEAL_TARGETS.final
   ) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
     );
   }
@@ -251,7 +278,7 @@ export function assembleWhoAmIRevealClues(
   }
 
   if (final.length < REVEAL_TARGETS.final) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
     );
   }
@@ -262,7 +289,7 @@ export function assembleWhoAmIRevealClues(
     .slice(0, REVEAL_TARGETS.strong);
 
   if (coreStrong.length < REVEAL_TARGETS.strong) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
     );
   }
@@ -276,7 +303,7 @@ export function assembleWhoAmIRevealClues(
     ))
   ));
   if (repeatsSemanticInformation) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
     );
   }
@@ -290,7 +317,7 @@ export function assembleWhoAmIRevealClues(
     || new Set(facets).size < 4
     || facets.filter((facet) => facet === "relationships").length > 1
   ) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return applyRevealArchitecture(
       assembleWhoAmIClues(eligibleClues, limit, random),
     );
   }
@@ -315,9 +342,9 @@ export function assembleWhoAmIRevealClues(
     if (swap.candidateVariationRank < swap.currentVariationRank) {
       const varied = [...planned];
       varied[swap.selectedIndex] = swap.candidate;
-      return orderWhoAmICluesByRevealArchitectureIfPossible(varied);
+      return applyRevealArchitecture(varied);
     }
   }
 
-  return orderWhoAmICluesByRevealArchitectureIfPossible(planned);
+  return applyRevealArchitecture(planned);
 }
