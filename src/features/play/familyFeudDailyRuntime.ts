@@ -272,7 +272,9 @@ export function buildFamilyFeudDailySetup(
         ? "cfb"
         : pack.id.includes("-nfl-")
           ? "nfl"
-          : "ufc",
+          : pack.sport === "football"
+            ? "nfl"
+            : "ufc",
       main_board_count: pack.mainBoards.length,
       answers_required_per_board: FAMILY_FEUD_BOARD_ANSWER_COUNT,
       strike_limit: FAMILY_FEUD_STRIKES_PER_BOARD,
