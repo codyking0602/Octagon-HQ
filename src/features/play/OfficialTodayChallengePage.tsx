@@ -135,7 +135,7 @@ export function OfficialTodayChallengeContent({
         />
       )}
       <OfficialBlindRankCanonicalOrder projection={projection} />
-      {projection.officialAttempt && adapter ? (
+      {projection.officialAttempt && adapter && projection.gameType !== "sports_feud" ? (
         <OfficialResultActions
           casualRoute={officialDailyGameAllowsCasualReplay(projection.gameType) ? adapter.casualRoute : null}
           onNavigate={onNavigate}
