@@ -153,4 +153,21 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(styles).toContain("overflow-y: auto");
     expect(styles).toContain("env(safe-area-inset-bottom)");
   });
+
+  it("removes intro dead space without compressing rules or trait cards", () => {
+    expect(styles).toContain(".football-weekly-build-qb__cover {\n  padding: 14px 16px;");
+    expect(styles).toContain(".football-weekly-build-qb__rules {\n  margin: 9px 0 7px;\n  padding: 14px;");
+    expect(styles).toContain(".football-weekly-build-qb__rules ul {\n  margin: 0;\n  padding-left: 18px;\n  display: grid;\n  gap: 7px;");
+    expect(styles).toContain(".football-weekly-build-qb__trait-definitions.is-compact > div {\n  padding: 7px 8px;");
+    expect(styles).toContain(".football-weekly-build-qb__cover .football-weekly-build-qb__primary {\n  min-height: 36px;");
+  });
+
+  it("uses full-height independently scrollable mobile overlays with nav-safe clearance", () => {
+    expect(gate).toContain('className="football-weekly-build-qb__trait-body"');
+    expect(styles).toContain(".football-weekly-build-qb-table__body {\n  flex: 1 1 auto;\n  min-height: 0;\n  overflow-y: auto;");
+    expect(styles).toContain(".football-weekly-build-qb__trait-body {\n  flex: 1 1 auto;\n  min-height: 0;\n  overflow-y: auto;");
+    expect(styles).toContain("height: 100dvh;\n    max-height: 100dvh;");
+    expect(styles).toContain("padding-top: calc(12px + env(safe-area-inset-top));");
+    expect(styles).toContain("padding-bottom: calc(96px + env(safe-area-inset-bottom));");
+  });
 });
