@@ -250,7 +250,7 @@ export function whoAmISemanticIndependentCapacity(
   }
 
   // Callers only need capacity up to a small threshold (13 in the fast
-  // full-population audit). Prove that threshold cheaply before exact search.
+  // full-population audit). Prove that threshold with a bounded witness before exact search.
   const greedyOrder = Array.from({ length: playable.length }, (_value, index) => index)
     .sort((left, right) => conflicts[left]!.size - conflicts[right]!.size || left - right);
   const greedyChosen: number[] = [];
