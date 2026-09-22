@@ -14,7 +14,9 @@ UFC Prep is a pre-staging package for the next UFC Picks event. It does **not** 
 
 Real fighter photography only. Do not generate UFC fighter images.
 
-For every fighter included in Picks:
+Canonical fighter thumbnails may come **only from UFC or ESPN imagery**. If neither UFC nor ESPN has an acceptable thumbnail yet, do not create or substitute a thumb asset; let the existing missing-thumbnail presentation render instead. Never derive a thumbnail from a Spotlight image, third-party photo, random cutout, poster, social image, Getty-style image, or generated/recreated fighter art. A blank/missing thumb is preferable to questionable provenance.
+
+When an acceptable UFC/ESPN thumbnail is available:
 
 - `public/assets/fighters/<fighter-slug>-thumb.webp`
 
@@ -22,7 +24,7 @@ For every fighter on the main card:
 
 - `public/assets/fighters/<fighter-slug>-spotlight.webp`
 
-Both asset types must be true transparent WebP cutouts with an alpha channel. **Thumbs are tight, face-dominant head-and-shoulders/bust portraits in the established ESPN-style treatment; never shrink a full-body fighter render into the thumb tile.** Spotlights may use the larger three-quarter/full fighter presentation. Prefer an official UFC/ESPN-style transparent fighter cutout when available. If the only reliable real-photo source has a background, background removal is allowed; do not synthesize, redraw, restyle, or alter the fighter. After background removal, only crop/resize/center and lightly sharpen. Never bake a white, arena, cage, or other source background into the canonical asset. Existing matching transparent assets should be reused.
+Any checked-in thumb and every checked-in Spotlight asset must be a true transparent WebP cutout with an alpha channel. **Thumbs are tight, face-dominant head-and-shoulders/bust portraits in the established ESPN-style treatment; never shrink a full-body fighter render into the thumb tile.** Spotlights may use the larger three-quarter/full fighter presentation. Spotlight imagery remains real fighter photography only; do not synthesize, redraw, restyle, or alter the fighter. If a Spotlight source has a background, background removal is allowed. After background removal, only crop/resize/center and lightly sharpen. Never bake a white, arena, cage, or other source background into the canonical asset. Existing matching transparent assets should be reused.
 
 ## Editorial contract
 
