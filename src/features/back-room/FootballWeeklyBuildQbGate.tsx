@@ -63,11 +63,13 @@ function TraitDefinitionsDialog({ onClose }: { onClose: () => void }) {
         onClick={(event) => event.stopPropagation()}
       >
         <header>
+          <button className="football-weekly-build-qb__sheet-back" type="button" onClick={onClose} aria-label="Back to Build a QB">
+            ← BACK
+          </button>
           <div>
             <p className="eyebrow">BUILD A QB</p>
             <h2 id="weekly-build-qb-trait-title">Trait definitions</h2>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close trait definitions">×</button>
         </header>
         <div className="football-weekly-build-qb__trait-body">
           <TraitDefinitions />
