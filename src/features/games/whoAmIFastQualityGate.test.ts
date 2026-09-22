@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { getFootballSubject } from "../back-room/footballSubjectRegistry";
 import { getFootballWhoAmIUniverse, getUfcWhoAmIUniverse } from "./whoAmIAuthority";
+import {
+  footballWhoAmIApplicableMetricFacts,
+  footballWhoAmIMetricFactIsPlayable,
+} from "./footballWhoAmIAuthority";
 import { WHO_AM_I_CLUE_LIMIT, whoAmIProgressiveClues } from "./whoAmIEngine";
 import {
   whoAmIClueEditorialIssues,
@@ -62,6 +67,32 @@ describe("Who Am I fast full-population editorial gate", () => {
 
   it("matches at least one requested subject", () => {
     expect(selected.length, `No Who Am I subjects matched: ${targets.join(", ")}`).toBeGreaterThan(0);
+  });
+
+  it("never makes cfbfastR projected CFB production playable", () => {
+    const cfbUniverse = getFootballWhoAmIUniverse("CFB");
+    const violations = cfbUniverse.candidates.flatMap((candidate) => {
+      const subject = getFootballSubject(candidate.id);
+      if (!subject) return [`${candidate.id}:missing-subject`];
+
+      return footballWhoAmIApplicableMetricFacts(subject)
+        .filter(({ fact }) => (
+          (fact.metricId.startsWith("cfb-career-") || fact.metricId.startsWith("cfb-best-season-"))
+          && fact.evidence.sourceIds.includes("cfbfast-r-factual-universe")
+          && footballWhoAmIMetricFactIsPlayable(subject, fact)
+        ))
+        .map(({ fact }) => `${candidate.id}:${fact.metricId}:${fact.value}`);
+    });
+
+    expect(violations).toEqual([]);
+  });
+
+  it("never resurfaces the false Caleb Williams projection clues", () => {
+    const caleb = getFootballWhoAmIUniverse("CFB").candidates.find((candidate) => candidate.id === "cfb-caleb-williams");
+    expect(caleb).toBeDefined();
+    const text = caleb!.clues.map((clue) => clue.text).join(" | ");
+    expect(text).not.toContain("27 passing touchdowns");
+    expect(text).not.toContain("617 rushing yards");
   });
 
   // Keep each subject isolated as its own test case. The assertions and all-subject
