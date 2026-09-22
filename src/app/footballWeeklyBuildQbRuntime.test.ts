@@ -166,8 +166,10 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(gate).toContain('className="football-weekly-build-qb__trait-body"');
     expect(styles).toContain(".football-weekly-build-qb-table__body {\n  flex: 1 1 auto;\n  min-height: 0;\n  overflow-y: auto;");
     expect(styles).toContain(".football-weekly-build-qb__trait-body {\n  flex: 1 1 auto;\n  min-height: 0;\n  overflow-y: auto;");
-    expect(styles).toContain("height: 100dvh;\n    max-height: 100dvh;");
-    expect(styles).toContain("padding-top: calc(12px + env(safe-area-inset-top));");
+    expect(styles).toContain("top: calc(58px + var(--safe-top));");
+    expect(styles).toContain("height: calc(100dvh - 58px - var(--safe-top));");
+    expect(styles).toContain("max-height: calc(100dvh - 58px - var(--safe-top));");
+    expect(styles).toContain("padding-top: 12px;");
     expect(styles).toContain("padding-bottom: calc(96px + env(safe-area-inset-bottom));");
   });
 });
