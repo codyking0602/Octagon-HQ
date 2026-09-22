@@ -35,8 +35,12 @@ describe("Football weekly owner discovery", () => {
     expect(() => footballWeekRange("2026-09-09")).toThrow(/Tuesday/);
   });
 
-  it("fetches the canonical week plus one spillover ESPN UTC day without an eight-day range", () => {
-    expect(footballWeekEspnDateQueries("2026-09-08")).toEqual(["20260908-20260914", "20260915"]);
+  it("fetches the canonical week plus one spillover ESPN UTC day as supported single-date requests", () => {
+    expect(footballWeekEspnDateQueries("2026-09-08")).toEqual([
+      "20260908", "20260909", "20260910", "20260911",
+      "20260912", "20260913", "20260914", "20260915",
+    ]);
+    expect(footballWeekEspnDateQueries("2026-09-08").every((query) => /^\\d{8}$/.test(query))).toBe(true);
 
     const preview = buildFootballWeekPreview("2026-09-08", [
       event("501", "2026-09-15T00:15:00.000Z", null, null),
@@ -50,8 +54,10 @@ describe("Football weekly owner discovery", () => {
     const source = readFileSync("supabase/functions/sync-next-football-event/index.ts", "utf8");
 
     expect(source).toContain("const dateQueries = footballWeekEspnDateQueries(weekStart);");
-    expect(source).toContain("dateQueries.map(async (dateQuery)");
+    expect(source).toContain("for (const dateQuery of dateQueries)");
+    expect(source).not.toContain("dateQueries.map(async");
     expect(source).toContain("https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${dateQuery}&limit=200${group}");
+    expect(source).toContain("schedule request failed for ${dateQuery}");
     expect(source).not.toContain("footballWeekEspnDateRange");
     expect(source).toContain("https://site.web.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${eventId}");
     expect(source).not.toContain("https://site.api.espn.com/");
