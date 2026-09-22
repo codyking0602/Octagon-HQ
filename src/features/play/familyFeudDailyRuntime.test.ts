@@ -130,7 +130,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
     expect(result.publicState.main_points).toBe(4);
   });
 
-  it("reveals the highest-value missed HQ answers after the third strike", () => {
+  it("keeps the live board exactly as played and publishes a separate settled answer reveal", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     let submission: Record<string, unknown> = {};
 
@@ -151,16 +151,21 @@ describe("Family Feud V2 Daily persistence contract", () => {
     const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
     const firstBoard = boards[0]!;
     const slots = firstBoard.slots as Array<Record<string, unknown>>;
+    const answerReveal = firstBoard.answer_reveal as Array<Record<string, unknown>>;
     expect(firstBoard).toMatchObject({ strikes: 3, settled: true });
     expect(slots).toHaveLength(4);
-    expect(slots.map((slot) => (slot.entity as Record<string, unknown>).display_name)).toEqual([
-      "Foxtrot Six",
+    expect((slots[0]!.entity as Record<string, unknown>).display_name).toBe("Foxtrot Six");
+    expect(slots[0]).toMatchObject({ points: 4, found: true, revealed: true });
+    expect(slots.slice(1).every((slot) => slot.entity === null && slot.points === null)).toBe(true);
+    expect(answerReveal.map((row) => (row.entity as Record<string, unknown>).display_name)).toEqual([
       "Alpha One",
       "Bravo Two",
       "Charlie Three",
+      "Delta Four",
+      "Echo Five",
+      "Foxtrot Six",
     ]);
-    expect(slots.map((slot) => slot.points)).toEqual([4, 10, 8, 7]);
-    expect(slots.map((slot) => slot.found)).toEqual([true, false, false, false]);
+    expect(answerReveal.map((row) => row.found)).toEqual([false, false, false, false, false, true]);
   });
 
   it("moves through both boards into a hidden 45-second Fast Money round", () => {
@@ -192,6 +197,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
     expect(result.publicState.fast_money).toMatchObject({
       answered_count: 1,
       question_index: 1,
+      submitted_answers: [{ submitted_answer: "Alpha One" }],
       results: [],
       points: null,
     });
