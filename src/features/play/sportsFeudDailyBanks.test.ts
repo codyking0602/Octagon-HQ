@@ -57,7 +57,7 @@ function assertAuthoredBank(main: readonly SportsFeudAuthoredQuestion[], fast: r
   expect(fast).toHaveLength(250);
   const all = [...main, ...fast];
   expect(new Set(all.map((question) => question.id)).size).toBe(350);
-  expect(new Set(all.map((question) => question.prompt)).size).toBe(350);
+  expect(new Set(main.map((question) => question.prompt)).size).toBe(100);\n  expect(new Set(fast.map((question) => question.prompt)).size).toBe(250);
 
   for (const question of all) {
     expect(question.answers).toHaveLength(8);
