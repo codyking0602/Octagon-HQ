@@ -534,7 +534,8 @@ function scheduleRevealArchitecture(
   }
 
   const isCfbPool = clues.some((clue) => clue.revealCoordinates?.includes("school"));
-  const isNflPool = clues.some((clue) => clue.revealCoordinates?.includes("franchise"));
+  const isNflPool = clues.some((clue) => clue.revealCoordinates?.includes("franchise"))
+    || clues.some((clue) => clue.id === "pr4:role");
 
   // A ten-clue board cannot repair set-level composition by reordering. Reject
   // impossible selected boards before entering the permutation search so the
