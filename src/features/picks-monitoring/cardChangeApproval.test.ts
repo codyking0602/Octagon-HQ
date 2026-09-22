@@ -110,6 +110,54 @@ describe("monitoring card-change approval proposals", () => {
     });
   });
 
+  it("creates one exact proposal when UFC moves fights between main card and prelims", () => {
+    const mainBout = {
+      ...first,
+      bout_id: "main-alpha-beta",
+      card_segment: "main" as const,
+      segment_sequence: 1,
+    };
+    const prelimBout = {
+      ...second,
+      bout_id: "prelim-gamma-delta",
+      card_segment: "prelim" as const,
+      segment_sequence: 1,
+    };
+    const segmentedCanonical = { ...canonical, bouts: [mainBout, prelimBout] };
+    const result = findings(
+      {
+        ...source,
+        bouts: [
+          { ...mainBout, bout_id: "prelim-alpha-beta", card_segment: "prelim", segment_sequence: 1 },
+          { ...prelimBout, bout_id: "main-gamma-delta", card_segment: "main", segment_sequence: 1 },
+        ],
+      },
+      "current",
+      segmentedCanonical,
+      "full",
+    );
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      summary: "Apply the detected main/prelim placement.",
+      source_details: {
+        change_field: "card_segments",
+        approval_proposal: {
+          action: "sync_card_segments",
+          event_id: canonical.event_id,
+          expected_segments: [
+            { bout_id: "main-alpha-beta", card_segment: "main", segment_sequence: 1 },
+            { bout_id: "prelim-gamma-delta", card_segment: "prelim", segment_sequence: 1 },
+          ],
+          proposed_segments: [
+            { bout_id: "main-alpha-beta", card_segment: "prelim", segment_sequence: 1 },
+            { bout_id: "prelim-gamma-delta", card_segment: "main", segment_sequence: 1 },
+          ],
+        },
+      },
+    });
+  });
+
   it("creates one canonical proposal for a single detected main-card addition", () => {
     const added = {
       bout_id: "main-epsilon-zeta",
