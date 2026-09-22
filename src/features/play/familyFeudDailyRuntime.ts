@@ -105,6 +105,13 @@ function mainBoardPublicState(
     required_answers: FAMILY_FEUD_BOARD_ANSWER_COUNT,
     max_points: FAMILY_FEUD_MAIN_BOARD_MAX,
     settled,
+    answer_reveal: settled
+      ? question.answers.map((answer) => ({
+          entity: entityPresentation(pack, answer.entityId),
+          points: answer.points,
+          found: foundIds.has(answer.entityId),
+        }))
+      : null,
     slots: Array.from({ length: FAMILY_FEUD_BOARD_ANSWER_COUNT }, (_value, slotIndex) => {
       const answer = displayAnswers[slotIndex] ?? null;
       const found = Boolean(answer && foundIds.has(answer.entityId));
