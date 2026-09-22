@@ -190,6 +190,30 @@ export function monitoringDecisionPresentation(
     };
   }
 
+  if (proposal.action === "sync_card_segments") {
+    const segmentValue = (items: typeof proposal.expected_segments | typeof proposal.proposed_segments) =>
+      items.map((item) => `${item.bout_id}: ${item.card_segment ?? "unset"} ${item.segment_sequence ?? "?"}`).join(" → ");
+
+    return {
+      action: proposal.action,
+      fieldLabel: "CARD PLACEMENT",
+      subject: "Current UFC event",
+      currentValue: segmentValue(proposal.expected_segments),
+      proposedValue: segmentValue(proposal.proposed_segments),
+      consequence: "Applies the exact UFC-source main-card and prelim placement while keeping each submitted pick attached to its fight.",
+      playerResult: "Existing fighter selections stay valid. No repick is required unless a separate matchup change also occurs.",
+      auditReason: "Owner confirmed the UFC-source main-card and prelim placement.",
+      requiresAcknowledgment: false,
+      impacts: impacts({
+        "PLAYER PICKS": ["VALID", false],
+        "FIGHT ORDER": ["CARD PLACEMENT CHANGES", true],
+        DEADLINE: ["UNCHANGED", false],
+        ODDS: ["AUTOMATIC", false],
+        "CARD MEMBERSHIP": ["UNCHANGED", false],
+      }),
+    };
+  }
+
   return {
     action: proposal.action,
     fieldLabel: "FIGHT ORDER",

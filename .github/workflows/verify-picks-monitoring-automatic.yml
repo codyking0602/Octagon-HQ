@@ -9,9 +9,11 @@ on:
       - "src/app/liveNotificationFlow.contract.test.ts"
       - "src/app/automaticMonitoringDeployment.test.ts"
       - "src/app/automaticMonitoringLifecycle.test.ts"
+      - "src/app/trustedAutomaticPickCardChanges.test.ts"
       - "src/features/picks-monitoring/**"
       - "supabase/functions/run-pick-monitoring/**"
       - "supabase/migrations/202609120001_repair_pick_monitoring_source_context.sql"
+      - "supabase/migrations/202612310165_ufc_picks_trusted_auto_card_sync.sql"
       - "supabase/tests/pick_monitoring_automatic_lifecycle.sql"
   workflow_dispatch:
 
@@ -57,8 +59,13 @@ jobs:
           npm test -- \
             src/app/automaticMonitoringDeployment.test.ts \
             src/app/automaticMonitoringLifecycle.test.ts \
+            src/app/trustedAutomaticPickCardChanges.test.ts \
+            src/features/picks-monitoring/cardChangeApproval.test.ts \
             src/features/picks-monitoring/scheduledMonitoring.test.ts \
             src/features/picks-monitoring/manualMonitoringRunner.test.ts
+
+      - name: Typecheck exact source
+        run: npm run typecheck
 
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1

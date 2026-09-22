@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCardChangeFindings } from "./cardChangeApproval";
+import { buildCardChangeFindings, type ApprovalMonitoringEvent } from "./cardChangeApproval";
 
 const first = {
   bout_id: "main-event-alpha-beta",
@@ -8,6 +8,8 @@ const first = {
   blue_fighter_slug: "beta",
   blue_fighter_name: "Beta",
   weight_class: "Lightweight",
+  card_segment: "main" as const,
+  segment_sequence: 2,
 };
 const second = {
   bout_id: "main-gamma-delta",
@@ -16,8 +18,10 @@ const second = {
   blue_fighter_slug: "delta",
   blue_fighter_name: "Delta",
   weight_class: "Welterweight",
+  card_segment: "main" as const,
+  segment_sequence: 1,
 };
-const canonical = {
+const canonical: ApprovalMonitoringEvent = {
   event_id: "ufc-approval",
   name: "UFC Fight Night",
   subtitle: "Alpha vs. Beta",
@@ -28,8 +32,13 @@ const canonical = {
   locks_at: "2099-08-10T00:00:00.000Z",
   bouts: [first, second],
 };
-const source = {
+const source: ApprovalMonitoringEvent & {
+  source_url: string;
+  source_event_key: string;
+  source: string;
+} = {
   ...canonical,
+  source_url: "https://www.mmamania.com/test",
   source_event_key: "events/ufc-approval",
   source: "UFC.com + MMA Mania",
 };
@@ -37,7 +46,7 @@ const source = {
 function findings(
   nextSource: typeof source,
   kind: "current" | "staged" = "current",
-  nextCanonical = canonical,
+  nextCanonical: ApprovalMonitoringEvent = canonical,
   scope: "main" | "full" = "main",
 ) {
   return buildCardChangeFindings({
@@ -107,6 +116,54 @@ describe("monitoring card-change approval proposals", () => {
       action: "adjust_event_lock",
       expected_locks_at: canonical.locks_at,
       proposed_locks_at: "2099-08-10T00:30:00.000Z",
+    });
+  });
+
+  it("creates one exact proposal when UFC moves fights between main card and prelims", () => {
+    const mainBout = {
+      ...first,
+      bout_id: "main-alpha-beta",
+      card_segment: "main" as const,
+      segment_sequence: 1,
+    };
+    const prelimBout = {
+      ...second,
+      bout_id: "prelim-gamma-delta",
+      card_segment: "prelim" as const,
+      segment_sequence: 1,
+    };
+    const segmentedCanonical = { ...canonical, bouts: [mainBout, prelimBout] };
+    const result = findings(
+      {
+        ...source,
+        bouts: [
+          { ...mainBout, bout_id: "prelim-alpha-beta", card_segment: "prelim", segment_sequence: 1 },
+          { ...prelimBout, bout_id: "main-gamma-delta", card_segment: "main", segment_sequence: 1 },
+        ],
+      },
+      "current",
+      segmentedCanonical,
+      "full",
+    );
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      summary: "Apply the detected main/prelim placement.",
+      source_details: {
+        change_field: "card_segments",
+        approval_proposal: {
+          action: "sync_card_segments",
+          event_id: canonical.event_id,
+          expected_segments: [
+            { bout_id: "main-alpha-beta", card_segment: "main", segment_sequence: 1 },
+            { bout_id: "prelim-gamma-delta", card_segment: "prelim", segment_sequence: 1 },
+          ],
+          proposed_segments: [
+            { bout_id: "main-alpha-beta", card_segment: "prelim", segment_sequence: 1 },
+            { bout_id: "prelim-gamma-delta", card_segment: "main", segment_sequence: 1 },
+          ],
+        },
+      },
     });
   });
 
