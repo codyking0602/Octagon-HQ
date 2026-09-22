@@ -1,0 +1,124 @@
+import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
+
+export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
+  {
+    category: "coaches",
+    collisionGroup: "coaches",
+    prompts: [
+      "Name a coach who won a Super Bowl.",
+      "Name a Super Bowl-winning NFL head coach.",
+      "Name a coach you remember lifting the Lombardi Trophy.",
+      "Name an NFL coach whose résumé includes a Super Bowl title.",
+      "Name a championship coach almost every NFL fan knows.",
+    ],
+    answers: ["Bill Belichick", "Andy Reid", "Bill Walsh", "Chuck Noll", "Joe Gibbs", "Tom Landry", "Don Shula", "Bill Parcells"],
+  },
+  {
+    category: "coaches",
+    collisionGroup: "coaches",
+    prompts: [
+      "Name an NFL coach known for offense.",
+      "Name a coach whose offensive system became part of his reputation.",
+      "Name an NFL coach you associate with creative play design.",
+      "Name an offensive-minded coach fans recognize quickly.",
+      "Name a coach whose teams are remembered for moving the ball.",
+    ],
+    answers: ["Andy Reid", "Bill Walsh", "Sean McVay", "Mike Shanahan", "Kyle Shanahan", "Mike Holmgren", "Don Coryell", "Sean Payton"],
+  },
+  {
+    category: "coaches",
+    collisionGroup: "coaches",
+    prompts: [
+      "Name an NFL coach strongly associated with defense.",
+      "Name a coach whose teams were known for being hard to score on.",
+      "Name an NFL coach with a defensive identity.",
+      "Name a coach you would trust to build a tough defense.",
+      "Name a coach whose best teams were famous for physical defense.",
+    ],
+    answers: ["Bill Belichick", "Mike Tomlin", "Bill Parcells", "Tony Dungy", "Pete Carroll", "Mike Ditka", "Buddy Ryan", "Dick LeBeau"],
+  },
+  {
+    category: "rivalries",
+    collisionGroup: "rivalries",
+    prompts: [
+      "Name a famous NFL rivalry.",
+      "Name a divisional matchup with real bad blood.",
+      "Name an NFL game fans circle twice every season.",
+      "Name a rivalry where the records do not matter much.",
+      "Name an NFL rivalry a casual fan might recognize.",
+    ],
+    answers: ["Packers-Bears", "Cowboys-Eagles", "Steelers-Ravens", "49ers-Cowboys", "Raiders-Chiefs", "Giants-Eagles", "Packers-Vikings", "Jets-Patriots"],
+  },
+  {
+    category: "venues",
+    collisionGroup: "venues",
+    prompts: [
+      "Name an NFL stadium known for being loud.",
+      "Name a stadium where a road quarterback can struggle to communicate.",
+      "Name an NFL venue famous for a hostile atmosphere.",
+      "Name a stadium you would expect on a loudest-in-the-NFL list.",
+      "Name a home field where crowd noise feels like a real advantage.",
+    ],
+    answers: ["Arrowhead Stadium", "Lumen Field", "Lambeau Field", "Highmark Stadium", "Superdome", "Lincoln Financial Field", "M&T Bank Stadium", "U.S. Bank Stadium"],
+  },
+  {
+    category: "history",
+    collisionGroup: "super-bowls",
+    prompts: [
+      "Name a famous Super Bowl matchup.",
+      "Name a Super Bowl pairing fans still remember.",
+      "Name a championship game that produced an iconic NFL moment.",
+      "Name a Super Bowl you would expect in an NFL history montage.",
+      "Name a Super Bowl matchup that became bigger than the final score.",
+    ],
+    answers: ["Giants-Patriots", "49ers-Bengals", "Cowboys-Bills", "Steelers-Cowboys", "Patriots-Seahawks", "Chiefs-49ers", "Rams-Titans", "Eagles-Patriots"],
+  },
+  {
+    category: "awards",
+    collisionGroup: "awards",
+    prompts: [
+      "Name a major NFL award.",
+      "Name an NFL honor players dream about winning.",
+      "Name an award fans debate during the season.",
+      "Name an NFL award that can boost a player's legacy.",
+      "Name an individual honor announced around the end of an NFL season.",
+    ],
+    answers: ["NFL MVP", "Super Bowl MVP", "Defensive Player of the Year", "Offensive Player of the Year", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "Walter Payton Man of the Year"],
+  },
+  {
+    category: "players",
+    collisionGroup: "tight-ends",
+    prompts: [
+      "Name a famous NFL tight end.",
+      "Name a tight end whose career belongs in a legends conversation.",
+      "Name an NFL tight end who became a major receiving weapon.",
+      "Name a tight end almost every football fan recognizes.",
+      "Name a tight end whose highlights changed expectations for the position.",
+    ],
+    answers: ["Tony Gonzalez", "Rob Gronkowski", "Travis Kelce", "Antonio Gates", "Jason Witten", "Shannon Sharpe", "Kellen Winslow", "George Kittle"],
+  },
+  {
+    category: "players",
+    collisionGroup: "kickers",
+    prompts: [
+      "Name a famous NFL kicker.",
+      "Name a kicker you would trust with a game-winning field goal.",
+      "Name an NFL kicker fans recognize by name.",
+      "Name a kicker whose career included huge pressure kicks.",
+      "Name a kicker who became unusually famous for his position.",
+    ],
+    answers: ["Justin Tucker", "Adam Vinatieri", "Morten Andersen", "Sebastian Janikowski", "Jason Elam", "Gary Anderson", "Stephen Gostkowski", "Robbie Gould"],
+  },
+  {
+    category: "players",
+    collisionGroup: "returners",
+    prompts: [
+      "Name a famous NFL return specialist.",
+      "Name a player you would hate to kick or punt to.",
+      "Name an NFL player known for dangerous returns.",
+      "Name a returner who could flip field position in seconds.",
+      "Name a player whose special-teams highlights became part of his fame.",
+    ],
+    answers: ["Devin Hester", "Dante Hall", "Brian Mitchell", "Josh Cribbs", "Cordarrelle Patterson", "Deion Sanders", "Tyreek Hill", "Desmond Howard"],
+  },
+] as const);
