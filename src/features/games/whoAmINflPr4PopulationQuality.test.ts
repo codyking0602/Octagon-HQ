@@ -50,7 +50,7 @@ describe("Who Am I PR4 NFL population quality", () => {
         const selectionClasses = board.map(whoAmIClueSelectionClass);
 
         if (!profiles.slice(0, 2).some(({ category }) => category === "role" || category === "era")) {
-          problems.push(`${candidate.id} seed ${seed}: clues 1-2 lack role/era orientation`);
+          problems.push(`${candidate.id} seed ${seed}: clues 1-2 lack role/era orientation; board=[${board.map((clue) => `${clue.id}:${whoAmIRevealProfile(clue).category}:${clue.band}:${(clue.revealCoordinates ?? []).join("+") || "-"}`).join(" | ")}]; pool=[${candidate.clues.map((clue) => `${clue.id}:${whoAmIRevealProfile(clue).category}:${clue.band}:${(clue.revealCoordinates ?? []).join("+") || "-"}`).join(" | ")}]`);
         }
 
         if (selectionClasses.filter((selectionClass) => selectionClass === "sports-identity").length < 7) {
@@ -90,7 +90,7 @@ describe("Who Am I PR4 NFL population quality", () => {
           || category === "style"
         )).length;
         if (firstFourFoundation < 2) {
-          problems.push(`${candidate.id} seed ${seed}: first four lack enough orientation/foundation clues`);
+          problems.push(`${candidate.id} seed ${seed}: first four lack enough orientation/foundation clues; first4=[${board.slice(0, 4).map((clue) => `${clue.id}:${whoAmIRevealProfile(clue).category}:${clue.band}:${(clue.revealCoordinates ?? []).join("+") || "-"}`).join(" | ")}]`);
         }
 
         for (let index = 0; index < profiles.length; index += 1) {
