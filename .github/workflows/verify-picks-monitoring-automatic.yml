@@ -64,6 +64,9 @@ jobs:
             src/features/picks-monitoring/scheduledMonitoring.test.ts \
             src/features/picks-monitoring/manualMonitoringRunner.test.ts
 
+      - name: Typecheck exact source
+        run: npm run typecheck
+
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1
         with:
