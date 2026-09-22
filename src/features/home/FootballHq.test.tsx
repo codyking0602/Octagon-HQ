@@ -413,7 +413,7 @@ describe("Football HQ Home summary", () => {
     expect(screen.getByText("1")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
-      "https://youtu.be/7KEkO4RFFLM?si=AC_QOmz-bYIBVSj9",
+      "https://youtu.be/3j6ijizvXmg?is=VJY4f509RYu8TC0p",
     );
   });
 
@@ -460,7 +460,7 @@ describe("Football HQ Home summary", () => {
     expect(screen.getByText("83.9%")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
-      "https://youtu.be/3j6ijizvXmg?si=WRmY2A38FCl_nA5B",
+      "https://youtu.be/7KEkO4RFFLM?is=0eBE2IagbqAG1SzX",
     );
   });
 
