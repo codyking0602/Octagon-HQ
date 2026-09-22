@@ -49,8 +49,6 @@ interface MainRevealState {
 
 const MAIN_SUSPENSE_MS = 650;
 const MAIN_REVEAL_HOLD_MS = 520;
-const ROUND_RESULT_FIRST_REVEAL_MS = 180;
-const ROUND_RESULT_REVEAL_STEP_MS = 280;
 const FAST_REVEAL_SUSPENSE_MS = 650;
 const FAST_REVEAL_SCORE_HOLD_MS = 650;
 const FAST_REVEAL_COMPLETE_HOLD_MS = 800;
@@ -134,7 +132,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const [feedback, setFeedback] = useState<FamilyFeudOutcome | null>(null);
   const [displayBoardIndex, setDisplayBoardIndex] = useState(0);
   const [boardReview, setBoardReview] = useState(false);
-  const [roundRevealCount, setRoundRevealCount] = useState(FAMILY_FEUD_BOARD_ANSWER_COUNT);
   const [timeRemainingMs, setTimeRemainingMs] = useState(FAMILY_FEUD_FAST_MONEY_TIME_MS);
   const [mainReveal, setMainReveal] = useState<MainRevealState>({ phase: "idle", transition: null });
   const [displayedMainPoints, setDisplayedMainPoints] = useState(0);
@@ -253,30 +250,13 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       const settledBoard = pending.state.mainBoards[displayBoardIndex]!;
       const settled = settledBoard.revealedEntityIds.length >= FAMILY_FEUD_BOARD_ANSWER_COUNT
         || settledBoard.strikes >= FAMILY_FEUD_STRIKES_PER_BOARD;
-      if (settled) {
-        setBoardReview(true);
-        setRoundRevealCount(0);
-      } else {
-        shouldRestoreMainInputRef.current = true;
-      }
+      setBoardReview(settled);
+      if (!settled) shouldRestoreMainInputRef.current = true;
       setMainReveal({ phase: "idle", transition: null });
     }, MAIN_REVEAL_HOLD_MS);
 
     return () => window.clearTimeout(timer);
   }, [displayBoardIndex, mainReveal]);
-
-  useEffect(() => {
-    if (!boardReview || roundRevealCount >= FAMILY_FEUD_BOARD_ANSWER_COUNT) return undefined;
-
-    const delay = roundRevealCount === 0
-      ? ROUND_RESULT_FIRST_REVEAL_MS
-      : ROUND_RESULT_REVEAL_STEP_MS;
-    const timer = window.setTimeout(() => {
-      setRoundRevealCount((current) => Math.min(FAMILY_FEUD_BOARD_ANSWER_COUNT, current + 1));
-    }, delay);
-
-    return () => window.clearTimeout(timer);
-  }, [boardReview, roundRevealCount]);
 
   useEffect(() => {
     const target = familyFeudMainBoardScore(pack, state, displayBoardIndex);
@@ -372,7 +352,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     setState(createFamilyFeudState());
     setDisplayBoardIndex(0);
     setBoardReview(false);
-    setRoundRevealCount(FAMILY_FEUD_BOARD_ANSWER_COUNT);
     setAnswer("");
     setFeedback(null);
     setTimeRemainingMs(FAMILY_FEUD_FAST_MONEY_TIME_MS);
@@ -406,7 +385,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
     setFeedback(null);
     setAnswer("");
     setBoardReview(false);
-    setRoundRevealCount(FAMILY_FEUD_BOARD_ANSWER_COUNT);
     setMainReveal({ phase: "idle", transition: null });
     setDisplayedMainPoints(0);
     if (state.phase === "fast-money") {
@@ -455,10 +433,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   const foundMainAnswers = mainBoardState.revealedEntityIds
     .map((entityId) => mainQuestion.answers.find((row) => row.entityId === entityId))
     .filter((row): row is FamilyFeudRankedAnswer => Boolean(row));
-  const roundResultAnswers = mainQuestion.answers.slice(0, FAMILY_FEUD_BOARD_ANSWER_COUNT);
-  const mainDisplayAnswers = boardReview
-    ? roundResultAnswers.slice(0, roundRevealCount)
-    : foundMainAnswers;
+  const mainDisplayAnswers = foundMainAnswers;
   const newlyRevealedEntityId = mainReveal.phase === "correct"
     && mainReveal.transition?.outcome.type === "board-correct"
       ? mainReveal.transition.outcome.entityId
@@ -546,8 +521,6 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
                   className={[
                     "feud-answer-slot",
                     rankedAnswer ? "is-revealed" : "",
-                    rankedAnswer && !found ? "is-missed" : "",
-                    boardReview && index === roundRevealCount - 1 ? "is-round-result-reveal" : "",
                     rankedAnswer?.entityId === newlyRevealedEntityId ? "is-new-reveal" : "",
                   ].filter(Boolean).join(" ")}
                   key={index}
@@ -567,20 +540,34 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
           </div>
 
           {boardReview ? (
-            roundRevealCount >= FAMILY_FEUD_BOARD_ANSWER_COUNT ? (
-              <section className="feud-round-review">
-                <small className="feud-round-review__title">BOARD RESULTS</small>
-                <strong>
-                  {mainBoardState.revealedEntityIds.length >= FAMILY_FEUD_BOARD_ANSWER_COUNT
-                    ? "BOARD CLEARED"
-                    : "3 STRIKES — BOARD CLOSED"}
-                </strong>
-                <span>{mainBoardPoints}/{FAMILY_FEUD_MAIN_BOARD_MAX} HQ points banked.</span>
-                <button className="feud-primary-button" type="button" onClick={advanceBoard}>
-                  {state.phase === "fast-money" ? "GO TO FAST MONEY" : "ROUND 2"}
-                </button>
-              </section>
-            ) : null
+            <section className="feud-round-review feud-round-answer-reveal" aria-label={"Round " + (displayBoardIndex + 1) + " accepted answers"}>
+              <small className="feud-round-review__title">ROUND {displayBoardIndex + 1} ANSWERS</small>
+              <strong>
+                {mainBoardState.revealedEntityIds.length >= FAMILY_FEUD_BOARD_ANSWER_COUNT
+                  ? "BOARD CLEARED"
+                  : "3 STRIKES — BOARD CLOSED"}
+              </strong>
+              <span>{mainBoardPoints}/{FAMILY_FEUD_MAIN_BOARD_MAX} HQ points banked.</span>
+              <div className="feud-round-answer-grid">
+                {mainQuestion.answers.map((rankedAnswer) => {
+                  const entity = pack.entities.find((candidate) => candidate.id === rankedAnswer.entityId);
+                  const found = foundIds.has(rankedAnswer.entityId);
+                  return (
+                    <div
+                      className={found ? "feud-round-answer is-found" : "feud-round-answer"}
+                      key={rankedAnswer.entityId}
+                    >
+                      <span>{found ? "✓" : ""}</span>
+                      <strong>{entity?.displayName ?? rankedAnswer.entityId}</strong>
+                      <b>{rankedAnswer.points}</b>
+                    </div>
+                  );
+                })}
+              </div>
+              <button className="feud-primary-button" type="button" onClick={advanceBoard}>
+                {state.phase === "fast-money" ? "GO TO FAST MONEY" : "ROUND 2"}
+              </button>
+            </section>
           ) : mainReveal.phase === "idle" ? (
             <form className="feud-answer-entry" onSubmit={submitMain}>
               {feedback && (
