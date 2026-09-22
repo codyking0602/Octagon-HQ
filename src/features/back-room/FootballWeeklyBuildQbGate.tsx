@@ -69,7 +69,9 @@ function TraitDefinitionsDialog({ onClose }: { onClose: () => void }) {
           </div>
           <button type="button" onClick={onClose} aria-label="Close trait definitions">×</button>
         </header>
-        <TraitDefinitions />
+        <div className="football-weekly-build-qb__trait-body">
+          <TraitDefinitions />
+        </div>
       </section>
     </div>
   );
