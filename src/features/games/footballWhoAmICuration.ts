@@ -271,8 +271,14 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:three-straight-mvps", conceptId: "curated:three-straight-mvps", text: "I won the AP NFL MVP award three straight seasons from 1995 through 1997.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
     { id: "curated:green-bay-ironman", conceptId: "curated:green-bay-ironman", text: "I became Green Bay's defining quarterback while building an NFL-record streak of 297 consecutive regular-season starts.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
   ]],
-  ["cam-newton", [{ id: "curated:2015-mvp", conceptId: "curated:2015-mvp", text: "I was the 2015 AP NFL MVP after leading Carolina to a 15-1 regular season.", band: "giveaway", facet: "accomplishments", revealPriority: 12 }]],
-  ["drew-brees", [{ id: "curated:super-bowl-xliv-mvp", conceptId: "curated:super-bowl-xliv-mvp", text: "I was Super Bowl XLIV MVP after leading New Orleans to the first championship in franchise history.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["cam-newton", [
+    { id: "curated:2015-mvp", conceptId: "curated:2015-mvp", text: "I was the 2015 AP NFL MVP after leading Carolina to a 15-1 regular season.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
+    { id: "curated:2015-45-total-td", conceptId: "curated:2015-45-total-td", text: "In 2015 I led the NFL with 45 total touchdowns, throwing 35 and rushing for 10.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+  ]],
+  ["drew-brees", [
+    { id: "curated:super-bowl-xliv-mvp", conceptId: "curated:super-bowl-xliv-mvp", text: "I was Super Bowl XLIV MVP after leading New Orleans to the first championship in franchise history.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:two-opoy", conceptId: "curated:two-opoy", text: "I was AP NFL Offensive Player of the Year twice, in 2008 and 2011.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+  ]],
   ["nfl-fran-tarkenton", [
     { id: "curated:1975-mvp", conceptId: "curated:1975-mvp", text: "I was named the NFL's Most Valuable Player in 1975.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
     { id: "curated:retirement-record-book", conceptId: "curated:retirement-record-book", text: "When I retired, I ranked first in NFL history in career completions, passing yards and touchdown passes.", band: "strong", facet: "accomplishments", revealPriority: 18 },
@@ -314,13 +320,55 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:thirteen-second-drive", conceptId: "curated:thirteen-second-drive", text: "With 13 seconds left against Buffalo in the 2021 divisional round, I completed two passes to set up the tying field goal before winning in overtime.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
     { id: "curated:youngest-mvp-and-super-bowl", conceptId: "curated:youngest-mvp-and-super-bowl", text: "At 24, I became the youngest player to win both an NFL MVP award and a Super Bowl title.", band: "strong", facet: "accomplishments", revealPriority: 18 },
   ]],
-  ["steve-young", [{ id: "curated:montana-to-super-bowl-mvp", conceptId: "curated:montana-to-super-bowl-mvp", text: "I succeeded Joe Montana in San Francisco and later threw six touchdown passes as Super Bowl XXIX MVP.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["steve-young", [
+    { id: "curated:montana-to-super-bowl-mvp", conceptId: "curated:montana-to-super-bowl-mvp", text: "I succeeded Joe Montana in San Francisco and later threw six touchdown passes as Super Bowl XXIX MVP.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:six-passer-rating-titles", conceptId: "curated:six-passer-rating-titles", text: "I led the NFL in passer rating six times, including five of my first seven seasons as San Francisco's primary starter.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+    { id: "curated:two-league-mvps", conceptId: "curated:two-league-mvps", text: "I won two NFL Most Valuable Player awards.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
   ["nfl-terry-bradshaw", [
     { id: "curated:four-super-bowls", conceptId: "curated:four-super-bowls", text: "I quarterbacked Pittsburgh to four Super Bowl championships in six seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
     { id: "curated:1978-mvp", conceptId: "curated:1978-mvp", text: "I was the NFL's Most Valuable Player in 1978.", band: "strong", facet: "accomplishments", revealPriority: 16 },
   ]],
-  ["tom-brady", [{ id: "curated:seven-super-bowls", conceptId: "curated:seven-super-bowls", text: "I won seven Super Bowl championships as a starting quarterback.", band: "giveaway", facet: "accomplishments", revealPriority: 8 }]],
-  ["troy-aikman", [{ id: "curated:three-super-bowls", conceptId: "curated:three-super-bowls", text: "I quarterbacked Dallas to three Super Bowl championships in four seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["tom-brady", [
+    { id: "curated:seven-super-bowls", conceptId: "curated:seven-super-bowls", text: "I won seven Super Bowl championships as a starting quarterback.", band: "giveaway", facet: "accomplishments", revealPriority: 8 },
+    { id: "curated:three-ap-mvps", conceptId: "curated:three-ap-mvps", text: "I won three AP NFL MVP awards.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
+  ["troy-aikman", [
+    { id: "curated:three-super-bowls", conceptId: "curated:three-super-bowls", text: "I quarterbacked Dallas to three Super Bowl championships in four seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:sb27-mvp", conceptId: "curated:sb27-mvp", text: "I was Super Bowl XXVII MVP after throwing four touchdown passes in Dallas's win over Buffalo.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:six-pro-bowls", conceptId: "curated:six-pro-bowls", text: "I was selected to six Pro Bowls.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+  ]],
+  ["joe-namath", [
+    { id: "curated:namath-4000", conceptId: "curated:namath-4000", text: "In 1967 I became the first professional quarterback to throw for more than 4,000 yards in a season.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+  ]],
+  ["nfl-sid-luckman", [
+    { id: "curated:luckman-seven-td", conceptId: "curated:luckman-seven-td", text: "In 1943 I tied the NFL record by throwing seven touchdown passes in a game against the Giants.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+  ]],
+  ["nfl-alex-smith", [
+    { id: "curated:smith-comeback-2020", conceptId: "curated:smith-comeback-2020", text: "I was named the 2020 AP NFL Comeback Player of the Year after returning from my severe leg injury.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:smith-three-pro-bowls", conceptId: "curated:smith-three-pro-bowls", text: "I earned three Pro Bowl selections during my five seasons with Kansas City.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+  ]],
+  ["earl-campbell", [
+    { id: "curated:campbell-three-rushing-titles", conceptId: "curated:campbell-three-rushing-titles", text: "I led the NFL in rushing in each of my first three seasons.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+    { id: "curated:campbell-back-to-back-mvp", conceptId: "curated:campbell-back-to-back-mvp", text: "I earned NFL MVP honors in both 1979 and 1980.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+  ]],
+  ["emmitt-smith", [
+    { id: "curated:smith-rushing-record", conceptId: "curated:smith-rushing-record", text: "I retired as the NFL's all-time rushing leader with 18,355 yards.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+  ]],
+  ["gale-sayers", [
+    { id: "curated:sayers-six-td", conceptId: "curated:sayers-six-td", text: "As a rookie I scored six touchdowns in one game against San Francisco.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:sayers-comeback", conceptId: "curated:sayers-comeback", text: "After major knee surgery, I returned in 1969 to win the NFL rushing title and Comeback Player of the Year honors.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
+  ["marshall-faulk", [
+    { id: "curated:faulk-1000-1000", conceptId: "curated:faulk-1000-1000", text: "In my first season with St. Louis, I became the second player in NFL history to top 1,000 yards both rushing and receiving.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:faulk-2000-mvp", conceptId: "curated:faulk-2000-mvp", text: "I was named NFL Most Valuable Player in 2000 after setting a then-record with 26 total touchdowns.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+  ]],
+  ["nfl-reggie-bush", [
+    { id: "curated:bush-sb44", conceptId: "curated:bush-sb44", text: "I was part of New Orleans's Super Bowl XLIV championship team.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
+  ["tony-dorsett", [
+    { id: "curated:dorsett-rookie-title", conceptId: "curated:dorsett-rookie-title", text: "As a rookie in 1977, I won NFL Offensive Rookie of the Year and helped Dallas win Super Bowl XII.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+  ]],
   ["andrew-luck", [
     { id: "curated:stanford", conceptId: "curated:stanford", text: "I played college football at Stanford.", band: "helpful", facet: "background", revealPriority: 20 },
     { id: "curated:first-overall-2012", conceptId: "curated:first-overall-2012", text: "Indianapolis selected me No. 1 overall in the 2012 NFL Draft.", band: "giveaway", facet: "career-path", revealPriority: 12 },
@@ -337,10 +385,12 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:rookie-record", conceptId: "curated:rookie-record", text: "As a rookie in 1983, I rushed for a rookie-record 1,808 yards and earned NFL Offensive Rookie of the Year honors.", band: "strong", facet: "accomplishments", revealPriority: 16 },
     { id: "curated:1983-second-overall", conceptId: "curated:1983-second-overall", text: "The Los Angeles Rams selected me No. 2 overall in the 1983 NFL Draft.", band: "strong", facet: "career-path", revealPriority: 18 },
     { id: "curated:1999-hof", conceptId: "curated:1999-hof", text: "I was inducted into the Pro Football Hall of Fame in 1999.", band: "strong", facet: "accomplishments", revealPriority: 20 },
+    { id: "curated:six-pro-bowls", conceptId: "curated:six-pro-bowls", text: "I was selected to six Pro Bowls during my NFL career.", band: "strong", facet: "accomplishments", revealPriority: 22 },
   ]],
   ["jim-brown", [
     { id: "curated:brown-three-mvps", conceptId: "curated:brown-three-mvps", text: "I won three AP NFL MVP awards during my nine-season career.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
     { id: "curated:brown-eight-rushing-titles", conceptId: "curated:brown-eight-rushing-titles", text: "I led the NFL in rushing in eight of my nine seasons.", band: "strong", facet: "accomplishments", revealPriority: 14 },
+    { id: "curated:brown-never-missed", conceptId: "curated:brown-never-missed", text: "I never missed a game during my nine NFL seasons.", band: "strong", facet: "accomplishments", revealPriority: 20 },
   ]],
   ["walter-payton", [
     { id: "curated:payton-rushing-record", conceptId: "curated:payton-rushing-record", text: "I retired as the NFL's all-time leading rusher with 16,726 yards.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
@@ -361,6 +411,7 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["nfl-ahman-green", [
     { id: "curated:packers-rushing-leader", conceptId: "curated:packers-rushing-leader", text: "I finished as the Packers' all-time leading rusher with 8,322 yards.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
     { id: "curated:2003-packers-record", conceptId: "curated:2003-packers-record", text: "I set Green Bay's single-season rushing record with 1,883 yards in 2003.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+    { id: "curated:green-four-pro-bowls", conceptId: "curated:green-four-pro-bowls", text: "I made four straight Pro Bowls with Green Bay from 2001 through 2004.", band: "strong", facet: "accomplishments", revealPriority: 18 },
   ]],
 ]);
 
@@ -2466,13 +2517,13 @@ function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue)
   }
   if (
     subject.id === "don-shula"
-    && clue.conceptId === "identity:high-school-coach-before-nfl"
+    && clue.conceptId === "identity:coached-before-playing-pro"
   ) {
     return { ...clue, band: "helpful", facet: "background", revealPriority: 18 };
   }
   if (
     subject.id === "don-shula"
-    && clue.conceptId === "identity:seven-year-nfl-defensive-back"
+    && clue.conceptId === "identity:pro-playing-career"
   ) {
     return { ...clue, band: "helpful", facet: "role", revealPriority: 20 };
   }
