@@ -5,6 +5,10 @@ const migration = readFileSync(
   "supabase/migrations/202612310150_nfl_build_qb_weekly_runtime.sql",
   "utf8",
 );
+const day1JoinWindow = readFileSync(
+  "supabase/migrations/202612310161_football_weekly_auction_day1_join_window.sql",
+  "utf8",
+);
 const grading = JSON.parse(
   readFileSync("data/generated/football/nfl-build-qb-v2-trait-grades.json", "utf8"),
 ) as {
@@ -86,8 +90,9 @@ describe("NFL Build a QB Weekly runtime contract", () => {
     expect(migration).toContain("array['Arm','Accuracy','Processing','Mobility']");
     expect(migration).toContain("count(*) from private.football_weekly_auction_board where week_start=p_week_start)=28");
     expect(migration).toContain("having count(*)<>7");
-    expect(migration).toContain("NFL Build a QB Weekly requires exactly six locked participants");
-    expect(migration).toContain(") <> 6");
+    expect(day1JoinWindow).toContain("private.ensure_football_weekly_auction_participant");
+    expect(day1JoinWindow).toContain("p_at>=v_day1_lock_at");
+    expect(day1JoinWindow).toContain("Weekly Auction still hard-locks NFL Build a QB to six preselected participants");
     expect(migration).not.toContain("makeup");
     expect(gate).toContain("TODAY’S FOUR TRAITS");
     expect(gate).toContain("THE FOUR TRAITS");
