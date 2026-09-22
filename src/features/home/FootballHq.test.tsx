@@ -10,16 +10,16 @@ afterEach(() => {
 });
 
 const event: PickEvent = {
-  eventId: "football-picks-2026-09-15",
+  eventId: "football-picks-2026-09-22",
   sport: "football",
   league: "mixed",
   eventKind: "slate",
-  name: "Football Picks · Week of Sep 15",
+  name: "Football Picks · Week of Sep 22",
   subtitle: "College + NFL",
   venue: "Multiple venues",
   location: "Nationwide",
-  startsAt: "2026-09-18T00:15:00Z",
-  locksAt: "2026-09-18T00:15:00Z",
+  startsAt: "2026-09-26T23:30:00Z",
+  locksAt: "2026-09-26T23:30:00Z",
   season: 2026,
   status: "upcoming",
   bouts: [
@@ -42,40 +42,40 @@ const event: PickEvent = {
       locksAt: "2026-09-12T16:00:00Z",
     },
     {
-      boutId: "football-college-football-401856688",
+      boutId: "football-college-football-oregon-usc",
       position: 9,
       weightClass: "COLLEGE-FOOTBALL ATS",
-      redFighterSlug: "ole-miss-rebels",
-      redFighterName: "Ole Miss Rebels",
-      blueFighterSlug: "lsu-tigers",
-      blueFighterName: "LSU Tigers",
-      homeTeamSlug: "ole-miss-rebels",
-      awayTeamSlug: "lsu-tigers",
-      homeTeamLogoUrl: "https://example.com/ole-miss.png",
-      awayTeamLogoUrl: "https://example.com/lsu.png",
+      redFighterSlug: "usc-trojans",
+      redFighterName: "USC Trojans",
+      blueFighterSlug: "oregon-ducks",
+      blueFighterName: "Oregon Ducks",
+      homeTeamSlug: "usc-trojans",
+      awayTeamSlug: "oregon-ducks",
+      homeTeamLogoUrl: "https://example.com/usc.png",
+      awayTeamLogoUrl: "https://example.com/oregon.png",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       includedInPicks: true,
-      locksAt: "2026-09-19T23:30:00Z",
+      locksAt: "2026-09-26T23:30:00Z",
     },
     {
-      boutId: "football-nfl-401872932",
+      boutId: "football-nfl-raiders-saints",
       position: 23,
       weightClass: "NFL ATS",
-      redFighterSlug: "buffalo-bills",
-      redFighterName: "Buffalo Bills",
-      blueFighterSlug: "detroit-lions",
-      blueFighterName: "Detroit Lions",
-      homeTeamSlug: "buffalo-bills",
-      awayTeamSlug: "detroit-lions",
-      homeTeamLogoUrl: "https://example.com/bills.png",
-      awayTeamLogoUrl: "https://example.com/lions.png",
+      redFighterSlug: "new-orleans-saints",
+      redFighterName: "New Orleans Saints",
+      blueFighterSlug: "las-vegas-raiders",
+      blueFighterName: "Las Vegas Raiders",
+      homeTeamSlug: "new-orleans-saints",
+      awayTeamSlug: "las-vegas-raiders",
+      homeTeamLogoUrl: "https://example.com/saints.png",
+      awayTeamLogoUrl: "https://example.com/raiders.png",
       redAmericanOdds: null,
       blueAmericanOdds: null,
       winnerFighterSlug: null,
       includedInPicks: true,
-      locksAt: "2026-09-18T00:15:00Z",
+      locksAt: "2026-09-27T20:25:00Z",
     },
   ],
 };
@@ -142,6 +142,10 @@ describe("Football HQ team logo presentation", () => {
     expect(footballHqTeamPresentationFor("Buffalo Bills")).toEqual({ color: "#C60C30", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("Detroit Lions")).toEqual({ color: "#0076B6", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("Texas")).toEqual({ color: "#BF5700", logoTreatment: "white" });
+    expect(footballHqTeamPresentationFor("Oregon")).toEqual({ color: "#FEE123", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("USC")).toEqual({ color: "#FFC72C", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Las Vegas Raiders")).toEqual({ color: "#000000", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("New Orleans Saints")).toEqual({ color: "#D3BC8D", logoTreatment: "full-color" });
   });
 });
 
@@ -198,22 +202,22 @@ describe("Football HQ Home summary", () => {
     );
     expect(within(hq).queryByRole("link", { name: /VIEW PLAYER/i })).not.toBeInTheDocument();
 
-    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for LSU vs. Ole Miss" }))
-      .toHaveAttribute("href", "/football/picks?matchup=2026-lsu-ole-miss");
-    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Bills vs. Lions" }))
-      .toHaveAttribute("href", "/football/picks?matchup=2026-bills-lions");
-    expect(within(hq).getByText("Sat, Sep 19, 6:30 PM CT")).toBeInTheDocument();
-    expect(within(hq).getByText("Thu, Sep 17, 7:15 PM CT")).toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Oregon vs. USC" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-oregon-usc");
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Raiders vs. Saints" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-raiders-saints");
+    expect(within(hq).getByText("Sat, Sep 26, 6:30 PM CT")).toBeInTheDocument();
+    expect(within(hq).getByText("Sun, Sep 27, 3:25 PM CT")).toBeInTheDocument();
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).getByText("LSU Tigers")).toBeInTheDocument();
-    expect(within(hq).getByText("Ole Miss Rebels")).toBeInTheDocument();
+    expect(within(hq).getByText("Oregon Ducks")).toBeInTheDocument();
+    expect(within(hq).getByText("USC Trojans")).toBeInTheDocument();
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).getByText("Buffalo Bills")).toBeInTheDocument();
-    expect(within(hq).getByText("Detroit Lions")).toBeInTheDocument();
-    expect(within(hq).queryByText("Vaught-Hemingway Stadium · Oxford")).not.toBeInTheDocument();
-    expect(within(hq).queryByText("Highmark Stadium · Orchard Park")).not.toBeInTheDocument();
+    expect(within(hq).getByText("Las Vegas Raiders")).toBeInTheDocument();
+    expect(within(hq).getByText("New Orleans Saints")).toBeInTheDocument();
+    expect(within(hq).queryByText("L.A. Memorial Coliseum · Los Angeles")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("Caesars Superdome · New Orleans")).not.toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
     expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toHaveAttribute("href", "/football/picks");
   });
