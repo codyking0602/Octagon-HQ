@@ -53,9 +53,9 @@ export function footballWeekRange(weekStart: string) {
   return { weekStart: dates[0], weekEnd: dates[6], dates };
 }
 
-export function footballWeekEspnDateRange(weekStart: string) {
+export function footballWeekEspnDateQueries(weekStart: string) {
   const range = footballWeekRange(weekStart);
-  return `${range.weekStart.replaceAll("-", "")}-${addIsoDays(weekStart, 7).replaceAll("-", "")}`;
+  return [...range.dates, addIsoDays(weekStart, 7)].map((date) => date.replaceAll("-", ""));
 }
 
 function localDateInFootballZone(value: unknown) {
