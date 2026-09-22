@@ -246,6 +246,11 @@ function capGenericProduction(clues: readonly WhoAmIClue[]) {
 function semanticClueValue(clue: WhoAmIClue) {
   const profile = whoAmIRevealProfile(clue);
   let score = bandRank(clue.band) * 30;
+  // Orientation is structural, not expendable editorial color. If a stronger
+  // clue happens to share some of the same words/information, keep the canonical
+  // role/era clue and let the duplicate lose the semantic-dedupe contest.
+  if (profile.category === "role") score += 250;
+  if (profile.category === "era") score += 225;
   if (whoAmIClueSelectionClass(clue) === "sports-identity") score += 40;
   if (profile.identifyingPower === "signature") score += 35;
   if (profile.category === "signature-moment" || profile.category === "records") score += 25;
