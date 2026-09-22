@@ -1,0 +1,124 @@
+import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
+
+export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
+  {
+    category: "player-traits",
+    collisionGroup: "clutch",
+    prompts: [
+      "Name an NFL quarterback you associate with clutch moments.",
+      "Name a quarterback you would trust with one final drive.",
+      "Name an NFL QB who seemed built for the biggest moment.",
+      "Name a quarterback whose legacy includes huge late-game wins.",
+      "Name an NFL legend you would want with the game on the line.",
+    ],
+    answers: ["Tom Brady", "Joe Montana", "Patrick Mahomes", "John Elway", "Peyton Manning", "Aaron Rodgers", "Ben Roethlisberger", "Eli Manning"],
+  },
+  {
+    category: "player-traits",
+    collisionGroup: "speed",
+    prompts: [
+      "Name an NFL player known for elite speed.",
+      "Name a player you remember simply running away from defenders.",
+      "Name an NFL star whose speed jumped off the screen.",
+      "Name a football player defenders hated chasing in space.",
+      "Name a player you would pick for an NFL footrace.",
+    ],
+    answers: ["Tyreek Hill", "Deion Sanders", "Chris Johnson", "Randy Moss", "Bo Jackson", "Derrick Henry", "Devin Hester", "DeSean Jackson"],
+  },
+  {
+    category: "player-traits",
+    collisionGroup: "power",
+    prompts: [
+      "Name an NFL running back known for power.",
+      "Name a back you would least want to tackle late in a game.",
+      "Name an NFL running back who could run through contact.",
+      "Name a power back whose highlights look painful for defenders.",
+      "Name an NFL back you associate with downhill running.",
+    ],
+    answers: ["Derrick Henry", "Marshawn Lynch", "Earl Campbell", "Jerome Bettis", "Adrian Peterson", "Christian Okoye", "Mike Alstott", "Nick Chubb"],
+  },
+  {
+    category: "quarterbacks",
+    collisionGroup: "quarterbacks",
+    prompts: [
+      "Name a famous dual-threat NFL quarterback.",
+      "Name an NFL quarterback who could beat you with his legs.",
+      "Name a quarterback whose rushing ability changed the defensive game plan.",
+      "Name an NFL QB you remember as a true run-pass threat.",
+      "Name a quarterback defenders had to account for as a runner.",
+    ],
+    answers: ["Michael Vick", "Lamar Jackson", "Cam Newton", "Steve Young", "Randall Cunningham", "Josh Allen", "Jalen Hurts", "Russell Wilson"],
+  },
+  {
+    category: "quarterbacks",
+    collisionGroup: "quarterbacks",
+    prompts: [
+      "Name a classic pocket-passing NFL quarterback.",
+      "Name a quarterback whose game was built around throwing from the pocket.",
+      "Name an NFL QB remembered for command and accuracy more than rushing.",
+      "Name a passer whose highlights are mostly throws, not scrambles.",
+      "Name a quarterback you picture diagnosing a defense from the pocket.",
+    ],
+    answers: ["Peyton Manning", "Tom Brady", "Dan Marino", "Drew Brees", "Joe Montana", "Philip Rivers", "Matt Ryan", "Kurt Warner"],
+  },
+  {
+    category: "defenders",
+    collisionGroup: "pass-rushers",
+    prompts: [
+      "Name an NFL pass rusher who became a superstar.",
+      "Name a defender quarterbacks hated seeing off the edge.",
+      "Name an NFL player known for sacks and pressure.",
+      "Name a pass rusher whose reputation could wreck a protection plan.",
+      "Name a defender you associate with living in the backfield.",
+    ],
+    answers: ["Reggie White", "Bruce Smith", "Lawrence Taylor", "JJ Watt", "Von Miller", "Michael Strahan", "TJ Watt", "Myles Garrett"],
+  },
+  {
+    category: "defenders",
+    collisionGroup: "corners",
+    prompts: [
+      "Name an NFL cornerback known for shutting receivers down.",
+      "Name a corner quarterbacks sometimes preferred not to test.",
+      "Name an NFL defensive back famous for coverage ability.",
+      "Name a corner you would put on an elite receiver in a big game.",
+      "Name a defensive back whose reputation changed passing-game plans.",
+    ],
+    answers: ["Deion Sanders", "Darrelle Revis", "Champ Bailey", "Richard Sherman", "Charles Woodson", "Rod Woodson", "Patrick Peterson", "Jalen Ramsey"],
+  },
+  {
+    category: "young-stars",
+    collisionGroup: "rookies",
+    prompts: [
+      "Name an NFL player who made a huge impact as a rookie.",
+      "Name a player who looked ready for the league almost immediately.",
+      "Name an NFL star whose rookie season created major hype.",
+      "Name a player fans knew was special during year one.",
+      "Name an NFL player whose career started with a bang.",
+    ],
+    answers: ["Randy Moss", "Cam Newton", "Saquon Barkley", "Ezekiel Elliott", "Adrian Peterson", "Justin Jefferson", "CJ Stroud", "Micah Parsons"],
+  },
+  {
+    category: "underdogs",
+    collisionGroup: "teams",
+    prompts: [
+      "Name an NFL team remembered for an underdog playoff run.",
+      "Name a franchise that has shocked a favorite in the postseason.",
+      "Name a team fans remember for a surprising January run.",
+      "Name an NFL club that has played the Cinderella role.",
+      "Name a team that proved a low seed can still make serious noise.",
+    ],
+    answers: ["New York Giants", "Pittsburgh Steelers", "Green Bay Packers", "Arizona Cardinals", "Tennessee Titans", "Jacksonville Jaguars", "Cincinnati Bengals", "Carolina Panthers"],
+  },
+  {
+    category: "culture",
+    collisionGroup: "culture",
+    prompts: [
+      "Name an NFL team known for a classic uniform.",
+      "Name a franchise whose football look is instantly recognizable.",
+      "Name an NFL team with an iconic helmet or color scheme.",
+      "Name a team you would include in a best-uniforms conversation.",
+      "Name a franchise whose visual identity has aged well.",
+    ],
+    answers: ["Green Bay Packers", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Chicago Bears", "Miami Dolphins", "Kansas City Chiefs"],
+  },
+] as const);
