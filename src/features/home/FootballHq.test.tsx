@@ -142,8 +142,8 @@ describe("Football HQ team logo presentation", () => {
     expect(footballHqTeamPresentationFor("Buffalo Bills")).toEqual({ color: "#C60C30", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("Detroit Lions")).toEqual({ color: "#0076B6", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("Texas")).toEqual({ color: "#BF5700", logoTreatment: "white" });
-    expect(footballHqTeamPresentationFor("Oregon")).toEqual({ color: "#FEE123", logoTreatment: "full-color" });
-    expect(footballHqTeamPresentationFor("USC")).toEqual({ color: "#FFC72C", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Oregon")).toEqual({ color: "#044520", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("USC")).toEqual({ color: "#990000", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("Las Vegas Raiders")).toEqual({ color: "#000000", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("New Orleans Saints")).toEqual({ color: "#D3BC8D", logoTreatment: "full-color" });
   });
@@ -213,6 +213,13 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByText("Oregon Ducks")).toBeInTheDocument();
     expect(within(hq).getByText("USC Trojans")).toBeInTheDocument();
+    const collegeGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Oregon vs. USC" });
+    const collegeTeams = collegeGame.querySelectorAll(".football-hq-game-row__teams > div");
+    expect(collegeTeams[0]).toHaveStyle("--team-color: #044520");
+    expect(collegeTeams[1]).toHaveStyle("--team-color: #990000");
+    const collegeLogos = collegeGame.querySelectorAll("img");
+    expect(collegeLogos[0]).toHaveAttribute("src", "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/2483.png");
+    expect(collegeLogos[1]).toHaveAttribute("src", "https://example.com/usc.png");
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByText("Las Vegas Raiders")).toBeInTheDocument();
     expect(within(hq).getByText("New Orleans Saints")).toBeInTheDocument();
