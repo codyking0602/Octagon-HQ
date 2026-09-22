@@ -208,6 +208,11 @@ export function familyFeudDailyPublicState(
         ? { id: currentFastMoney.id, prompt: currentFastMoney.prompt }
         : null,
       time_remaining_ms: state.fastMoneyTimeRemainingMs,
+      submitted_answers: state.fastMoneyResults.map((result) => ({
+        submitted_answer: result.entityId
+          ? entityPresentation(pack, result.entityId).display_name
+          : result.submittedText || "NO ANSWER",
+      })),
       results: fastMoneyReveal(pack, state),
       points: complete ? score.fastMoney : null,
     },
