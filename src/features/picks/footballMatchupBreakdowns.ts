@@ -467,7 +467,7 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
         body: "Buffalo has disruptive front-line pieces, but Gibbs plus Detroit's receiving depth can stress the Bills horizontally and vertically. The matchup tilts toward Detroit if Goff consistently gets clean early-down looks.",
       },
     ],
-  },,
+  },
   {
     id: "2026-oregon-usc",
     title: "Oregon vs. USC",
