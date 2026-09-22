@@ -193,7 +193,7 @@ export interface TodayChallengeStandingsEntry {
     hitTheNumber: number | null;
     whoAmI: number | null;
     millionaire: number | null;
-    sportsFeud: number | null;
+    sportsFeud?: number | null;
   };
   isCurrentUser: boolean;
   weeklyRank: number;
