@@ -5219,10 +5219,10 @@ export function curateFootballWhoAmIClues(
     return refineCfbWhoAmIContent(subject, curateCfbBatch4Clues(subject, rawClues));
   }
   if (subject.league !== "NFL") return [...rawClues];
-  if (batch4SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch4Clues(subject, rawClues));
-  if (batch3SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch3Clues(subject, rawClues));
-  if (batch2SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch2Clues(subject, rawClues));
-  if (!batchSubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, rawClues);
+  if (batch4SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch4Clues(subject, rawClues), rawClues);
+  if (batch3SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch3Clues(subject, rawClues), rawClues);
+  if (batch2SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch2Clues(subject, rawClues), rawClues);
+  if (!batchSubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, rawClues, rawClues);
 
   const retained = retainedIdentityConcepts.get(subject.id);
   let colorUsed = false;
@@ -5263,5 +5263,5 @@ export function curateFootballWhoAmIClues(
   // PR4 owns the final NFL editorial/depth pass. Give it the full curated
   // batch-1 source pool so it can replace generic stat volume with useful
   // identity/foundation facts instead of inheriting a pre-trimmed thin pool.
-  return refineNflWhoAmIContent(subject, curated);
+  return refineNflWhoAmIContent(subject, curated, rawClues);
 }

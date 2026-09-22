@@ -2,7 +2,7 @@ import type { FootballSubjectProfile } from "../back-room/footballSubjectRegistr
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand } from "./whoAmIEngine";
 import { whoAmIRevealProfile } from "./whoAmIRevealArchitecture";
-import { whoAmICluesShareInformation } from "./whoAmISemanticQuality";
+import { whoAmIClueHasHardEditorialFailure, whoAmICluesShareInformation } from "./whoAmISemanticQuality";
 
 const GENERIC_VOLUME = /\b(?:career|across \d+ seasons?|in \d+ games?|for my career)\b.*\b\d[\d,]*(?:\.\d+)?\b/i;
 const SUPERLATIVE_SIGNAL = /\b(?:record|leader|most|fewest|first|only|single-season|single game|nfl record|league record|all-time)\b/i;
@@ -306,29 +306,70 @@ function rebandNflClue(clue: WhoAmIClue) {
   return next;
 }
 
+function capRelationshipClues(clues: readonly WhoAmIClue[]) {
+  const relationships = clues
+    .map((clue, index) => ({ clue, index, score: semanticClueValue(clue) }))
+    .filter(({ clue }) => whoAmIClueFacet(clue) === "relationships")
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+  if (relationships.length <= 1) return [...clues];
+
+  const keepId = relationships[0]!.clue.id;
+  return clues.filter((clue) => whoAmIClueFacet(clue) !== "relationships" || clue.id === keepId);
+}
+
+function sourceBackedReplayCandidates(
+  curatedRebanded: readonly WhoAmIClue[],
+  sourceClues: readonly WhoAmIClue[],
+) {
+  const seenIds = new Set(curatedRebanded.map((clue) => clue.id));
+  const candidates = [...curatedRebanded];
+
+  for (const sourceClue of sourceClues) {
+    // Batch-specific curation remains authoritative for metrics and structural
+    // chronology. PR4 may only recover verified identity-knowledge facts that
+    // were omitted by an older batch's shortlist.
+    if (!sourceClue.identityKnowledge || seenIds.has(sourceClue.id)) continue;
+    const clue = rebandNflClue(sourceClue);
+    if (whoAmIClueHasHardEditorialFailure(clue, "NFL")) continue;
+    candidates.push(clue);
+    seenIds.add(clue.id);
+  }
+  return candidates;
+}
+
 function restoreReplayDepth(
   cleaned: readonly WhoAmIClue[],
-  rebanded: readonly WhoAmIClue[],
+  candidates: readonly WhoAmIClue[],
 ) {
   if (cleaned.length >= 12) return [...cleaned];
   const retained = new Set(cleaned.map((clue) => clue.id));
   const restored = [...cleaned];
 
-  const candidates = rebanded
+  const rankedCandidates = candidates
     .filter((clue) => !retained.has(clue.id))
+    .filter((clue) => whoAmIClueSelectionClass(clue) !== "deep-biography")
     .filter((clue) => !isPersonalBiography(clue))
     .filter((clue) => whoAmIRevealProfile(clue).category !== "jersey-number")
     .filter((clue) => whoAmIRevealProfile(clue).category !== "nickname-persona")
+    .filter((clue) => !whoAmIClueHasHardEditorialFailure(clue, "NFL"))
     .sort((left, right) => {
       const leftProduction = whoAmIRevealProfile(left).category === "production" ? 1 : 0;
       const rightProduction = whoAmIRevealProfile(right).category === "production" ? 1 : 0;
       return leftProduction - rightProduction
-        || bandRank(right.band) - bandRank(left.band)
-        || (left.revealPriority ?? 50) - (right.revealPriority ?? 50);
+        || semanticClueValue(right) - semanticClueValue(left);
     });
 
-  for (const clue of candidates) {
+  for (const clue of rankedCandidates) {
     if (restored.length >= 12) break;
+    const selectionClass = whoAmIClueSelectionClass(clue);
+    if (
+      selectionClass === "identity-color"
+      && restored.some((candidate) => whoAmIClueSelectionClass(candidate) === "identity-color")
+    ) continue;
+    if (
+      whoAmIClueFacet(clue) === "relationships"
+      && restored.some((candidate) => whoAmIClueFacet(candidate) === "relationships")
+    ) continue;
     if (
       whoAmIRevealProfile(clue).category === "production"
       && restored.filter((candidate) => whoAmIRevealProfile(candidate).category === "production").length >= 2
@@ -338,6 +379,16 @@ function restoreReplayDepth(
     retained.add(clue.id);
   }
   return restored;
+}
+
+function capNflPlayablePool(clues: readonly WhoAmIClue[], target = 16) {
+  if (clues.length <= target) return [...clues];
+
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: semanticClueValue(clue) }))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+  const selected = new Set(ranked.slice(0, target).map(({ clue }) => clue.id));
+  return clues.filter((clue) => selected.has(clue.id));
 }
 
 /**
@@ -352,14 +403,18 @@ function restoreReplayDepth(
 export function refineNflWhoAmIContent(
   subject: FootballSubjectProfile,
   clues: readonly WhoAmIClue[],
+  sourceClues: readonly WhoAmIClue[] = clues,
 ): WhoAmIClue[] {
   if (subject.league !== "NFL") return [...clues];
 
   const withOrientation = ensureOrientationClues(subject, clues);
   const rebanded = withOrientation.map(rebandNflClue);
+  const replayCandidates = sourceBackedReplayCandidates(rebanded, sourceClues);
   const semanticallyDistinct = trimSemanticRepeats(rebanded);
   const withoutStatSoup = capGenericProduction(semanticallyDistinct);
   const withoutRepeatedSignatures = trimRepeatedLateSignatures(withoutStatSoup);
   const withoutPersonalBiography = capPersonalBiography(withoutRepeatedSignatures);
-  return restoreReplayDepth(withoutPersonalBiography, rebanded);
+  const withoutRepeatedRelationships = capRelationshipClues(withoutPersonalBiography);
+  const replayable = restoreReplayDepth(withoutRepeatedRelationships, replayCandidates);
+  return capNflPlayablePool(replayable);
 }
