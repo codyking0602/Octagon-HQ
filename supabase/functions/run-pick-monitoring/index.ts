@@ -448,11 +448,39 @@ Deno.serve(async (request) => {
       response: safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence and eligible odds could not be recorded atomically."),
     });
   }
+
+  let trustedAutoApply: unknown = null;
+  const sourcePreview = asRecord(previewBody.event_preview);
+  const sourceWarnings = Array.isArray(sourcePreview?.warnings)
+    ? sourcePreview.warnings.filter((warning): warning is string => typeof warning === "string" && Boolean(warning.trim()))
+    : [];
+  const trustedOfficialCard = scheduled
+    && sourcePreview?.source === "UFC.com event + card"
+    && typeof sourcePreview?.source_url === "string"
+    && /^https:\/\/www\.ufc\.com\/event\/[a-z0-9-]+$/i.test(sourcePreview.source_url)
+    && sourceWarnings.length === 0;
+
+  if (trustedOfficialCard) {
+    const autoApplied = await admin.rpc("auto_apply_trusted_pick_monitoring_changes", {
+      p_run_id: recorded.data,
+    });
+    trustedAutoApply = autoApplied.error
+      ? { status: "failed", error: autoApplied.error.message }
+      : autoApplied.data;
+  } else if (scheduled) {
+    trustedAutoApply = {
+      status: "not_eligible",
+      reason: sourceWarnings.length ? "source_warnings" : "untrusted_source",
+      warnings: sourceWarnings,
+    };
+  }
+
   return json({
     ...monitoringSummary(String(recorded.data), payload),
     trigger_kind: payload.trigger_kind,
     provider_called: true,
     notification_dispatch: notificationDispatch,
     live_state_sync: liveStateSync,
+    trusted_auto_apply: trustedAutoApply,
   });
 });
