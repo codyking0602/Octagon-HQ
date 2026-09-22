@@ -59,7 +59,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
       "Name a fighter whose career included Jackson Wink.",
       "Name an MMA star associated with Greg Jackson's team.",
     ],
-    answers: ["Jon Jones", "Holly Holm", "Carlos Condit", "Rashad Evans", "Donald Cerrone", "Diego Sanchez", "Michelle Waterson-Gomez", "Cub Swanson"],
+    answers: ["Jon Jones", "Holly Holm", "Carlos Condit", "Rashad Evans", "Donald Cerrone", "Diego Sanchez", "Michelle Waterson-Gomez", "Andrei Arlovski"],
   },
   {
     category: "national-identity",
