@@ -2,6 +2,7 @@ import { assembleWhoAmIRevealClues } from "./whoAmIRevealPlanner";
 
 export type WhoAmISport = "ufc" | "football";
 export type WhoAmILeague = "UFC" | "NFL" | "CFB";
+export type WhoAmIRevealCoordinate = "school" | "franchise" | "position" | "era";
 export type WhoAmISubjectKind = "fighter" | "player" | "coach";
 export type WhoAmIClueBand = "broad" | "helpful" | "strong" | "giveaway";
 export type WhoAmIClueFacet =
@@ -37,6 +38,8 @@ export interface WhoAmIClue {
    * The assembler treats overlapping information keys as mutually exclusive.
    */
   informationKeys?: readonly string[];
+  /** Major football identity coordinates exposed by this clue. */
+  revealCoordinates?: readonly WhoAmIRevealCoordinate[];
   facet?: WhoAmIClueFacet;
   revealPriority?: number;
   identityKnowledge?: boolean;

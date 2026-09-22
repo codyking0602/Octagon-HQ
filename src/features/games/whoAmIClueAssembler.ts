@@ -127,7 +127,16 @@ export function whoAmIClueFacet(clue: WhoAmIClue): WhoAmIClueFacet {
 
 export type WhoAmIClueSelectionClass = "sports-identity" | "identity-color" | "deep-biography";
 
+const CLUE_SELECTION_CLASS_CACHE = new WeakMap<WhoAmIClue, WhoAmIClueSelectionClass>();
+
 export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionClass {
+  const cached = CLUE_SELECTION_CLASS_CACHE.get(clue);
+  if (cached) return cached;
+
+  const remember = (value: WhoAmIClueSelectionClass) => {
+    CLUE_SELECTION_CLASS_CACHE.set(clue, value);
+    return value;
+  };
   const facet = whoAmIClueFacet(clue);
   const haystack = `${clue.conceptId ?? clue.id} ${clue.text}`.toLowerCase();
   const signatureIdentity = /\b(?:nickname|moniker|signature|celebration|persona|known for|called me|called the)\b/.test(haystack);
@@ -145,7 +154,7 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
   // generic sports vocabulary. Family facts are different: an actual football/MMA
   // relationship (for example, a famous sibling matchup or shared college path) is
   // sports identity, while a purely personal family story stays biography.
-  if (deepLifeBiography && personalFacet && !competitiveRelationship && !signatureIdentity) return "deep-biography";
+  if (deepLifeBiography && personalFacet && !competitiveRelationship && !signatureIdentity) return remember("deep-biography");
   if (
     familyBiography
     && personalFacet
@@ -155,9 +164,9 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
     && !sportsRelationship
     && !sportsBackground
     && !sportsIdentity
-  ) return "deep-biography";
-  if (signatureIdentity || sportsRelationship || strongSportsAnchor || sportsCareerEvent) return "sports-identity";
-  if (!clue.identityKnowledge) return "sports-identity";
+  ) return remember("deep-biography");
+  if (signatureIdentity || sportsRelationship || strongSportsAnchor || sportsCareerEvent) return remember("sports-identity");
+  if (!clue.identityKnowledge) return remember("sports-identity");
 
   if (
     facet === "role"
@@ -167,10 +176,10 @@ export function whoAmIClueSelectionClass(clue: WhoAmIClue): WhoAmIClueSelectionC
     || facet === "accomplishments"
     || facet === "nickname"
     || facet === "production"
-  ) return "sports-identity";
-  if (facet === "background" && sportsBackground) return "sports-identity";
-  if (facet === "identity" && sportsIdentity) return "sports-identity";
-  return "identity-color";
+  ) return remember("sports-identity");
+  if (facet === "background" && sportsBackground) return remember("sports-identity");
+  if (facet === "identity" && sportsIdentity) return remember("sports-identity");
+  return remember("identity-color");
 }
 
 function defaultRevealPriority(clue: WhoAmIClue, facet: WhoAmIClueFacet) {
@@ -212,20 +221,49 @@ function defaultRevealPriority(clue: WhoAmIClue, facet: WhoAmIClueFacet) {
 }
 
 function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIClueFacet {
-  const haystack = `${conceptId} ${tags.join(" ")}`.toLowerCase();
+  const normalizedTags = new Set(tags.map((tag) => tag.toLowerCase()));
+  const hasTag = (...values: readonly string[]) => values.some((value) => normalizedTags.has(value));
 
+  // Authored semantic tags are the highest-authority contract. Do not feed them
+  // back through a bag-of-words classifier: a production tag stays production,
+  // while a deliberate award/record tag can identify a separate accomplishment.
+  if (hasTag("nickname", "moniker", "persona", "alter-ego")) return "nickname";
+  if (hasTag("award", "awards", "championship", "championships", "title", "titles", "record", "records", "hall-of-fame", "heisman", "all-american", "all-pro", "milestone", "iconic-moment")) {
+    return "accomplishments";
+  }
+  if (hasTag("career-path", "career-start", "career-turning-point", "transition", "draft", "transfer", "trade", "franchise", "playing-career", "coaching-path", "position-path")) {
+    return "career-path";
+  }
+  if (hasTag("production", "stat", "stats", "statistics")) return "production";
+  if (hasTag("relationship", "relationships", "teammate", "teammates", "mentor")) return "relationships";
+  if (hasTag("style", "technique", "training", "boxing", "kickboxing", "wrestling", "grappling", "striking")) return "style";
+  if (hasTag("off-field")) return "off-field";
+  if (hasTag("background")) return "background";
+
+  const haystack = conceptId.toLowerCase();
+
+  // Specific semantic concepts must win over incidental vocabulary inside the
+  // concept id (for example, "one college start / undrafted" is a career-path
+  // fact, not production merely because it contains "start").
   if (/\b(?:nickname|moniker)\b|called-|alter-ego/.test(haystack)) return "nickname";
   if (/\b(?:brothers?|sisters?|fathers?|mothers?|sons?|daughters?|family|mentor|teammates?|friends?|caregiver|relationships?)\b/.test(haystack)) {
     return "relationships";
   }
-  if (/\b(?:style|boxing|kickboxing|jiu|judo|sambo|training|technique|stance|movement|speed|power|versatility)\b|free-lance|freelance|\bstrik\w*|\bgrappl\w*|\bwrestl\w*|\bslams?\b/.test(haystack)) {
+  if (/\b(?:style|boxing|kickboxing|jiu|judo|sambo|training|technique|stance|movement|speed|power|versatility|footwork|juke|cutback|release)\b|free-lance|freelance|spin-move|swim-move|rip-move|bull-rush|pass-rush|route-running|\bstrik\w*|\bgrappl\w*|\bwrestl\w*|\bslams?\b/.test(haystack)) {
     return "style";
+  }
+  if (
+    /\b(?:champions?|championships?|titles?|records?|hall|awards?|heisman|all-american|all-pro|pro-bowls?|mvp|olympian|olympic|milestones?|breakthrough)\b|super-bowl|game-winning|last-second|final-play|first-football-play|historic-.*(?:game|play|season)/.test(haystack)
+  ) {
+    return "accomplishments";
+  }
+  if (
+    /\b(?:draft|drafted|undrafted|transfer|transferred|trade|traded|holdout|retire|retired|retirement|roster|cut|waived|signed|redshirt|redshirted)\b|career-path|career-turning-point|career-revival|second-career|position-path|ultimate-fighter/.test(haystack)
+  ) {
+    return "career-path";
   }
   if (/\b(?:production|stats?|games?|starts?|tackles?|sacks?|interceptions?|receptions?|yards?|touchdowns?)\b|forced-fumbles|fumble-recoveries|pass-breakups|career-wins|coaching-record|regular-season-record/.test(haystack)) {
     return "production";
-  }
-  if (/\b(?:champions?|championships?|titles?|records?|hall|awards?|heisman|all-american|all-pro|olympian|olympic|milestones?)\b|super-bowl/.test(haystack)) {
-    return "accomplishments";
   }
   if (/\b(?:born|birth|childhood|upbringing|hometown|town|farm|migration|immigration|school|college|degree|education|university|amateur|recruit)\b|high-school|junior-college/.test(haystack)) {
     return "background";
@@ -233,9 +271,10 @@ function identityFacet(conceptId: string, tags: readonly string[] = []): WhoAmIC
   if (/\b(?:job|work|business|acting|media|streaming|military|army|foundation|charity|restaurant|barber|bartending|mine|model|faith)\b|off-field/.test(haystack)) {
     return "off-field";
   }
-  if (/\b(?:draft|team|promotion|camp|gym|career|route|transfer|trade|holdout|retire|retired|retirement|move|ufc|nfl|cfb)\b|career-path|ultimate-fighter/.test(haystack)) {
-    return "career-path";
-  }
+  // Broad context words are only a final legacy-style hint. League/source
+  // prefixes such as NFL/CFB/UFC are intentionally excluded: they identify the
+  // source namespace, not the clue's meaning.
+  if (/\b(?:team|promotion|camp|gym|route)\b/.test(haystack)) return "career-path";
   return "identity";
 }
 
@@ -252,7 +291,7 @@ function identityBand(
   ) return "giveaway";
   if (facet === "relationships" || facet === "accomplishments" || facet === "identity") return "strong";
   if (
-    /turning[- ]point|breakthrough|comeback|all[- ]america|player of the year|\brecord\b|undefeated|retir(?:ed|ement)|suspension|\bdraft(?:ed)?\b|first[- ]round|milestone/.test(strengthSignals)
+    /turning[- ]point|breakthrough|comeback|all[- ]america|player of the year|\brecord\b|undefeated|retir(?:ed|ement)|suspension|\b(?:draft(?:ed)?|undrafted)\b|first[- ]round|milestone/.test(strengthSignals)
   ) return "strong";
   if (
     facet === "career-path"
@@ -591,6 +630,11 @@ function isGenericCareerGames(clue: WhoAmIClue) {
   );
 }
 
+export function whoAmIClueIsGenericCareerVolume(clue: WhoAmIClue) {
+  return /\b(?:career|across \d+ seasons?|for my career)\b.*\b\d[\d,]*(?:\.\d+)?\b/i.test(clue.text)
+    && !/\b(?:record|leader|most|first|only|ncaa|nation|nationally|all-time)\b/i.test(clue.text);
+}
+
 const SEMANTIC_CAPACITY_INPUT_CACHE = new WeakMap<readonly WhoAmIClue[], readonly WhoAmIClue[]>();
 
 function semanticCapacityInput(clues: readonly WhoAmIClue[]) {
@@ -721,8 +765,27 @@ export function assembleWhoAmIClues(
   limit: number,
   random: () => number = () => 0.5,
 ) {
-  const prepared = preparedClues(clues, random);
+  const allPrepared = preparedClues(clues, random);
+  const isCfbFootballPool = allPrepared.some(({ clue }) => clue.revealCoordinates?.includes("school"));
+  const isNflFootballPool = allPrepared.some(({ clue }) => clue.revealCoordinates?.includes("franchise"));
+  const hasStandaloneSchool = allPrepared.some(({ clue }) => clue.id === "school");
+  const hasStandaloneRole = allPrepared.some(({ clue }) => clue.id === "position");
+  const isCompositeSchoolRole = (entry: PreparedClue) => /^At .+, I played /i.test(entry.clue.text.trim());
+  const withoutCompositeSchoolRole = allPrepared.filter((entry) => !isCompositeSchoolRole(entry));
+  const prepared = (
+    isCfbFootballPool
+    && hasStandaloneSchool
+    && hasStandaloneRole
+    && withoutCompositeSchoolRole.length >= limit
+  )
+    ? withoutCompositeSchoolRole
+    : allPrepared;
   const selected: PreparedClue[] = [];
+  // NFL population cleanup is intentionally deferred to PR4. Keep generic
+  // career-volume facts behind the normal facet limits, but permit them as an
+  // emergency depth fallback so legacy NFL pools still reach ten clues.
+  const allowExtraGenericCareerVolume = isNflFootballPool;
+  const enforceProductionCap = isCfbFootballPool;
   const selectedConcepts = new Set<string>();
   const selectedFamilies = new Set<string>();
   const selectedTexts: string[] = [];
@@ -771,6 +834,15 @@ export function assembleWhoAmIClues(
     const facetLimit = FACET_LIMITS[entry.facet];
     const facetCount = facetCounts.get(entry.facet) ?? 0;
     if (entry.facet === "relationships" && facetCount >= 1) return false;
+    // Production is a hard game-quality cap, not a preference to relax for
+    // playability. If a pool cannot build ten clues without stat soup, that is
+    // content debt for the population cleanup rather than permission to exceed it.
+    if (enforceProductionCap && entry.facet === "production" && facetCount >= 4) return false;
+    if (
+      !allowExtraGenericCareerVolume
+      && whoAmIClueIsGenericCareerVolume(entry.clue)
+      && selected.filter(({ clue }) => whoAmIClueIsGenericCareerVolume(clue)).length >= 2
+    ) return false;
     if (!options.relaxFacetLimit && facetLimit != null && facetCount >= facetLimit) return false;
     return true;
   };
@@ -906,7 +978,8 @@ export function assembleWhoAmIClues(
   // still contains a few pools with fewer than ten independent information lanes.
   // Keep those rounds playable until their sport cleanup replaces the debt rather
   // than returning a nine-clue game. Exact/near-copy protections remain active.
-  if (selected.length < limit) {
+  const semanticCapacity = whoAmISemanticIndependentCapacity(semanticCapacityInput(clues), limit);
+  if (selected.length < limit && semanticCapacity < limit) {
     take(
       prepared.filter((entry) => !selected.includes(entry)).sort(lateFirst),
       limit - selected.length,
@@ -1122,67 +1195,153 @@ export function assembleWhoAmIClues(
   );
 
   if (
-    hasSemanticCollision(selected)
-    && whoAmISemanticIndependentCapacity(semanticCapacityInput(clues), limit) >= limit
+    (selected.length < limit || hasSemanticCollision(selected))
+    && semanticCapacity >= limit
   ) {
     const selectedSet = new Set(selected);
-    const ordered = [
-      ...selected,
-      ...prepared
-        .filter((entry) => !selectedSet.has(entry))
-        .sort((left, right) => (
-          left.priority - right.priority
-          || right.strength - left.strength
-          || left.index - right.index
-        )),
-    ];
+    const conflictCount = new Map<PreparedClue, number>();
+    const conflicts = new Map<PreparedClue, Set<PreparedClue>>();
+    for (const entry of prepared) {
+      conflictCount.set(entry, 0);
+      conflicts.set(entry, new Set());
+    }
+    for (let leftIndex = 0; leftIndex < prepared.length; leftIndex += 1) {
+      for (let rightIndex = leftIndex + 1; rightIndex < prepared.length; rightIndex += 1) {
+        const left = prepared[leftIndex]!;
+        const right = prepared[rightIndex]!;
+        if (
+          left.conceptId === right.conceptId
+          || whoAmICluesShareInformation(left.clue, right.clue)
+          || cluesEffectivelyRepeated(left.clue, right.clue)
+        ) {
+          conflictCount.set(left, (conflictCount.get(left) ?? 0) + 1);
+          conflictCount.set(right, (conflictCount.get(right) ?? 0) + 1);
+          conflicts.get(left)!.add(right);
+          conflicts.get(right)!.add(left);
+        }
+      }
+    }
+
+    const ordered = [...prepared].sort((left, right) => (
+      (conflictCount.get(left) ?? 0) - (conflictCount.get(right) ?? 0)
+      || Number(selectedSet.has(right)) - Number(selectedSet.has(left))
+      || Number(right.selectionClass === "sports-identity") - Number(left.selectionClass === "sports-identity")
+      || Number(right.clue.band === "strong" || right.clue.band === "giveaway")
+        - Number(left.clue.band === "strong" || left.clue.band === "giveaway")
+      || left.priority - right.priority
+      || right.strength - left.strength
+      || left.index - right.index
+    ));
+
+    // The recovery search used to recompute semantic overlap, normalized-copy
+    // overlap, quota counts, and suffix availability at every DFS node. Those
+    // checks are invariant for a prepared board, so compile them once and keep
+    // the exact same acceptance rules while making each search step constant-time.
+    const orderedIndex = new Map(ordered.map((entry, index) => [entry, index]));
+    const conflictMasks = ordered.map((entry) => {
+      let mask = 0n;
+      for (const conflict of conflicts.get(entry) ?? []) {
+        const index = orderedIndex.get(conflict);
+        if (index == null) continue;
+        mask |= 1n << BigInt(index);
+      }
+      return mask;
+    });
+    const isLate = ordered.map((entry) => (
+      entry.clue.band === "strong" || entry.clue.band === "giveaway"
+    ));
+    const isSportsIdentity = ordered.map((entry) => entry.selectionClass === "sports-identity");
+    const isBiography = ordered.map((entry) => entry.selectionClass === "deep-biography");
+    const isRelationship = ordered.map((entry) => entry.facet === "relationships");
+    const isProduction = ordered.map((entry) => entry.facet === "production");
+    const isGenericCareerVolume = ordered.map((entry) => whoAmIClueIsGenericCareerVolume(entry.clue));
+    const suffixLate = Array.from({ length: ordered.length + 1 }, () => 0);
+    const suffixSports = Array.from({ length: ordered.length + 1 }, () => 0);
+    for (let index = ordered.length - 1; index >= 0; index -= 1) {
+      suffixLate[index] = suffixLate[index + 1]! + Number(isLate[index]);
+      suffixSports[index] = suffixSports[index + 1]! + Number(isSportsIdentity[index]);
+    }
 
     let visited = 0;
-    const maxVisited = 50_000;
+    const maxVisited = 250_000;
+    const semanticSportsIdentityTarget = Math.min(7, sportsIdentityTarget);
     let cleanBoard: PreparedClue[] | null = null;
     const chosen: PreparedClue[] = [];
 
-    const searchCleanBoard = (start: number) => {
+    const searchCleanBoard = (
+      start: number,
+      chosenMask: bigint,
+      lateCount: number,
+      sportsCount: number,
+      biographyCount: number,
+      relationshipCount: number,
+      productionCount: number,
+      genericCareerVolumeCount: number,
+    ) => {
       visited += 1;
       if (visited > maxVisited || cleanBoard) return;
 
-      if (chosen.length === limit) {
-        const lateCount = chosen.filter((entry) => (
-          entry.clue.band === "strong" || entry.clue.band === "giveaway"
-        )).length;
-        const sportsCount = chosen.filter((entry) => entry.selectionClass === "sports-identity").length;
-        const biographyCount = chosen.filter((entry) => entry.selectionClass === "deep-biography").length;
-        const relationshipCount = chosen.filter((entry) => entry.facet === "relationships").length;
+      const slotsNeeded = limit - chosen.length;
+      if (slotsNeeded === 0) {
         if (
           lateCount >= 3
-          && sportsCount >= sportsIdentityTarget
+          && sportsCount >= semanticSportsIdentityTarget
           && biographyCount <= 1
           && relationshipCount <= 1
+          && (!enforceProductionCap || productionCount <= 4)
+          && (allowExtraGenericCareerVolume || genericCareerVolumeCount <= 2)
         ) {
           cleanBoard = [...chosen];
         }
         return;
       }
 
-      if (chosen.length + (ordered.length - start) < limit) return;
+      if (ordered.length - start < slotsNeeded) return;
+      if (lateCount + Math.min(slotsNeeded, suffixLate[start]!) < 3) return;
+      if (
+        sportsCount + Math.min(slotsNeeded, suffixSports[start]!)
+        < semanticSportsIdentityTarget
+      ) return;
 
       for (let index = start; index < ordered.length; index += 1) {
-        const candidate = ordered[index]!;
-        if (chosen.some((entry) => entry.conceptId === candidate.conceptId)) continue;
-        if (chosen.some((entry) => whoAmICluesShareInformation(entry.clue, candidate.clue))) continue;
-        if (chosen.some((entry) => (
-          normalize(entry.clue.text) === normalize(candidate.clue.text)
-          || cluesEffectivelyRepeated(entry.clue, candidate.clue)
-        ))) continue;
+        const candidateBit = 1n << BigInt(index);
+        if ((chosenMask & conflictMasks[index]!) !== 0n) continue;
 
-        chosen.push(candidate);
-        searchCleanBoard(index + 1);
+        const nextBiographyCount = biographyCount + Number(isBiography[index]);
+        if (nextBiographyCount > 1) continue;
+        const nextRelationshipCount = relationshipCount + Number(isRelationship[index]);
+        if (nextRelationshipCount > 1) continue;
+        const nextProductionCount = productionCount + Number(isProduction[index]);
+        if (enforceProductionCap && nextProductionCount > 4) continue;
+        const nextGenericCareerVolumeCount = genericCareerVolumeCount + Number(isGenericCareerVolume[index]);
+        if (!allowExtraGenericCareerVolume && nextGenericCareerVolumeCount > 2) continue;
+
+        const nextLateCount = lateCount + Number(isLate[index]);
+        const nextSportsCount = sportsCount + Number(isSportsIdentity[index]);
+        const slotsAfterPick = slotsNeeded - 1;
+        if (nextLateCount + Math.min(slotsAfterPick, suffixLate[index + 1]!) < 3) continue;
+        if (
+          nextSportsCount + Math.min(slotsAfterPick, suffixSports[index + 1]!)
+          < semanticSportsIdentityTarget
+        ) continue;
+
+        chosen.push(ordered[index]!);
+        searchCleanBoard(
+          index + 1,
+          chosenMask | candidateBit,
+          nextLateCount,
+          nextSportsCount,
+          nextBiographyCount,
+          nextRelationshipCount,
+          nextProductionCount,
+          nextGenericCareerVolumeCount,
+        );
         chosen.pop();
         if (cleanBoard) return;
       }
     };
 
-    searchCleanBoard(0);
+    searchCleanBoard(0, 0n, 0, 0, 0, 0, 0, 0);
     const recoveredBoard = cleanBoard as PreparedClue[] | null;
     if (recoveredBoard) selected.splice(0, selected.length, ...recoveredBoard);
   }

@@ -61,6 +61,9 @@ function pr3Clue(
 }
 
 const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
+  ["cfb-eric-weddle", [
+    pr3Clue("weddle-two-mwc-dpoy", "I was the Mountain West Defensive Player of the Year in both 2005 and 2006.", "strong", "accomplishments", 14),
+  ]],
   ["cfb-joe-burrow", [
     pr3Clue("burrow-2019-sec-title", "I led LSU to the 2019 SEC championship before the Tigers completed a 15-0 national-title season.", "strong", "accomplishments", 14),
     pr3Clue("burrow-peach-bowl", "I threw seven touchdown passes in the first half of LSU's 2019 Peach Bowl semifinal win over Oklahoma.", "strong", "accomplishments", 15),
@@ -148,10 +151,14 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-aaron-ross", [
     pr3Clue("aaron-ross-thorpe", "I won the 2006 Jim Thorpe Award as college football's top defensive back.", "giveaway", "accomplishments", 9),
+    pr3Clue("aaron-ross-title-team", "I was a key member of Texas's 2005 national championship team that beat USC in the Rose Bowl.", "strong", "accomplishments", 15),
   ]],
   ["cfb-brock-bowers", [
     pr3Clue("bowers-two-mackeys", "I became the first two-time winner of the John Mackey Award, taking the honor in both 2022 and 2023.", "giveaway", "accomplishments", 8),
     pr3Clue("bowers-three-all-america", "I became just the third Georgia player to earn first-team All-America recognition in three different seasons.", "strong", "accomplishments"),
+  ]],
+  ["cfb-champ-bailey", [
+    pr3Clue("bailey-1070-snaps", "In 1998 I played 1,070 snaps across defense, offense and special teams for Georgia.", "strong", "style", 15),
   ]],
   ["cfb-charles-woodson", [
     pr3Clue("woodson-ohio-state-three-way", "Against Ohio State in 1997, I returned a punt 78 yards for a touchdown, intercepted a pass in the end zone and caught a 37-yard pass that set up a touchdown.", "giveaway", "accomplishments", 8),
@@ -183,11 +190,15 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-marqise-lee", [
     pr3Clue("lee-arizona-record", "I set a Pac-12 single-game record with 345 receiving yards against Arizona in 2012.", "giveaway", "identity", 9),
   ]],
+  ["cfb-jj-watt", [
+    pr3Clue("watt-cmu-wisconsin-path", "I began my college career as a tight end at Central Michigan before transferring home to Wisconsin and walking on as a defensive end.", "strong", "career-path", 14),
+  ]],
   ["cfb-michael-huff", [
     pr3Clue("huff-title-stop", "Late in the 2005 national-title game, I stopped LenDale White on fourth-and-two to give Texas the ball for its winning drive.", "giveaway", "accomplishments", 8),
   ]],
   ["cfb-mike-evans", [
     pr3Clue("evans-bama-record", "I broke Texas A&M's long-standing single-game receiving record with 279 yards against Alabama in 2013.", "strong", "identity"),
+    pr3Clue("evans-auburn-record", "Later that season I reset the school single-game receiving record with 287 yards against Auburn and tied the school mark with four touchdown catches.", "strong", "accomplishments", 15),
   ]],
   ["cfb-minkah-fitzpatrick", [
     pr3Clue("minkah-double-awards", "In 2017 I became just the third player in NCAA history to win the Bednarik and Jim Thorpe awards in the same season.", "giveaway", "accomplishments", 8),
@@ -466,6 +477,50 @@ function trimCategoryRepetition(clues: readonly WhoAmIClue[]) {
   );
 }
 
+function cfbPoolRetentionValue(clue: WhoAmIClue) {
+  const selectionClass = whoAmIClueSelectionClass(clue);
+  const profile = whoAmIRevealProfile(clue);
+  let score = selectionClass === "sports-identity" ? 100 : selectionClass === "identity-color" ? 35 : 0;
+
+  if (
+    clue.id === "position"
+    || clue.id === "pr3:position"
+    || clue.id === "role"
+    || clue.id === "pr3:role"
+    || clue.id === "school"
+    || clue.id === "era"
+    || clue.id === "pr3:era"
+  ) score += 150;
+
+  if (
+    profile.category === "accomplishments"
+    || profile.category === "championships"
+    || profile.category === "records"
+    || profile.category === "signature-moment"
+    || profile.category === "sports-biography"
+    || profile.category === "team-path"
+  ) score += 45;
+
+  if (profile.category === "production") {
+    score += SUPERLATIVE_SIGNAL.test(clue.text) ? 20 : -20;
+  }
+  if (profile.category === "personal-biography") score -= 100;
+
+  score += bandRank(clue.band) * 12;
+  if (clue.id.startsWith("pr3:")) score += 10;
+  return score;
+}
+
+function capCfbPlayablePool(clues: readonly WhoAmIClue[], target = 16) {
+  if (clues.length <= target) return [...clues];
+
+  const ranked = clues
+    .map((clue, index) => ({ clue, index, score: cfbPoolRetentionValue(clue) }))
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+  const keep = new Set(ranked.slice(0, target).map(({ clue }) => clue.id));
+  return clues.filter((clue) => keep.has(clue.id));
+}
+
 function ensureConferenceFoundation(
   subject: FootballSubjectProfile,
   clues: readonly WhoAmIClue[],
@@ -537,7 +592,7 @@ export function refineCfbWhoAmIContent(
   const withoutStatSoup = capGenericProduction(rebanded);
   const withoutRepeatedSignatures = trimCategoryRepetition(withoutStatSoup);
   const withoutPersonalBiography = capPersonalBiography(withoutRepeatedSignatures);
-  if (withoutPersonalBiography.length >= 12) return withoutPersonalBiography;
+  if (withoutPersonalBiography.length >= 12) return capCfbPlayablePool(withoutPersonalBiography);
 
   // Keep the signature-category cleanup even for thin legacy pools, then restore
   // only the highest-value non-signature clues needed for replay depth.
@@ -551,5 +606,5 @@ export function refineCfbWhoAmIContent(
     restored.push(clue);
     retainedIds.add(clue.id);
   }
-  return restored.length >= 12 ? restored : withoutPersonalBiography;
+  return capCfbPlayablePool(restored.length >= 12 ? restored : withoutPersonalBiography);
 }

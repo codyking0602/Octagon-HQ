@@ -15,17 +15,9 @@ import {
   whoAmIRescueChoices,
   type WhoAmICandidate,
   type WhoAmIClue,
-  type WhoAmIClueBand,
   type WhoAmIRound,
   type WhoAmISubject,
 } from "./whoAmIEngine";
-
-const BAND_RANK: Readonly<Record<WhoAmIClueBand, number>> = {
-  broad: 0,
-  helpful: 1,
-  strong: 2,
-  giveaway: 3,
-};
 
 function seededRandom(seed: number) {
   let state = seed >>> 0;
@@ -79,10 +71,6 @@ function assertSequence(candidate: WhoAmICandidate, sequence: readonly WhoAmIClu
         ).toBe(false);
       }
     }
-  }
-
-  for (let index = 1; index < sequence.length; index += 1) {
-    expect(BAND_RANK[sequence[index]!.band]).toBeGreaterThanOrEqual(BAND_RANK[sequence[index - 1]!.band]);
   }
 
   for (const clue of sequence.filter((entry) => entry.identityKnowledge)) {

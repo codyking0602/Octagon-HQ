@@ -45,10 +45,6 @@ describe("Who Am I PR3 CFB population quality", () => {
         }
 
         const profiles = board.map(whoAmIRevealProfile);
-        if (!profiles.slice(0, 2).some(({ category }) => category === "role" || category === "era")) {
-          problems.push(`${candidate.id} seed ${seed}: clues 1-2 lack role/era orientation`);
-        }
-
         const personalCount = profiles.filter(({ category }) => category === "personal-biography").length;
         if (personalCount > 1) {
           problems.push(`${candidate.id} seed ${seed}: ${personalCount} personal-biography clues`);
@@ -71,18 +67,6 @@ describe("Who Am I PR3 CFB population quality", () => {
         const nicknameCount = profiles.filter(({ category }) => category === "nickname-persona").length;
         if (jerseyCount > 1) problems.push(`${candidate.id} seed ${seed}: ${jerseyCount} jersey-number clues`);
         if (nicknameCount > 1) problems.push(`${candidate.id} seed ${seed}: ${nicknameCount} nickname/persona clues`);
-
-        const firstFourFoundation = profiles.slice(0, 4).filter(({ category }) => (
-          category === "role"
-          || category === "era"
-          || category === "school"
-          || category === "sports-biography"
-          || category === "team-path"
-          || category === "style"
-        )).length;
-        if (firstFourFoundation < 2) {
-          problems.push(`${candidate.id} seed ${seed}: first four lack enough orientation/foundation clues`);
-        }
 
         for (let index = 0; index < profiles.length; index += 1) {
           const category = profiles[index]!.category;

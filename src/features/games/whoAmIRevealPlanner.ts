@@ -1,6 +1,7 @@
 import {
   assembleWhoAmIClues,
   whoAmIClueFacet,
+  whoAmIClueIsGenericCareerVolume,
   whoAmIClueSelectionClass,
 } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueBand, WhoAmIClueFacet } from "./whoAmIEngine";
@@ -8,8 +9,15 @@ import {
   whoAmIClueHasHardEditorialFailure,
   whoAmICluesShareInformation,
   whoAmISemanticClueKey,
+  whoAmISemanticIndependentCapacity,
 } from "./whoAmISemanticQuality";
-import { orderWhoAmICluesByRevealArchitectureIfPossible } from "./whoAmIRevealArchitecture";
+import {
+  isStrongLateAnchor,
+  orderWhoAmICluesByRevealArchitectureIfPossible,
+  selectWhoAmICluesByRevealArchitectureIfPossible,
+  whoAmIRevealArchitectureSatisfied,
+  whoAmIRevealProfile,
+} from "./whoAmIRevealArchitecture";
 
 const REVEAL_SHORTLIST_EXTRA = 4;
 
@@ -97,6 +105,141 @@ function eligibleRevealPool(clues: readonly WhoAmIClue[], limit: number) {
   if (clues.length <= 12) return clues;
   const withoutGenericCareerGames = clues.filter((clue) => !isGenericCareerGames(clue));
   return withoutGenericCareerGames.length >= limit ? withoutGenericCareerGames : clues;
+}
+
+function coordinateRescuePool(
+  eligibleClues: readonly WhoAmIClue[],
+  limit: number,
+  random: () => number,
+) {
+  const scored = ranked(
+    eligibleClues
+      .filter((clue) => !isGenericCareerGames(clue))
+      .filter((clue) => !whoAmIClueHasHardEditorialFailure(clue)),
+    random,
+  ).sort((left, right) => {
+    const score = (clue: WhoAmIClue) => {
+      const selectionClass = whoAmIClueSelectionClass(clue);
+      const profile = whoAmIRevealProfile(clue);
+      let value = recognitionStrength(clue);
+      if (selectionClass === "sports-identity") value += 50;
+      else if (selectionClass === "identity-color") value += 5;
+      else value -= 100;
+      if ((clue.revealCoordinates?.length ?? 0) === 0) value += 70;
+      if (
+        clue.band === "strong"
+        || clue.band === "giveaway"
+      ) value += 15;
+      if (
+        profile.category === "accomplishments"
+        || profile.category === "championships"
+        || profile.category === "records"
+        || profile.category === "signature-moment"
+        || profile.category === "style"
+      ) value += 20;
+      if (profile.category === "personal-biography") value -= 70;
+      if (whoAmIClueIsGenericCareerVolume(clue)) value -= 90;
+      return value;
+    };
+    return score(right.value) - score(left.value)
+      || left.variationRank - right.variationRank
+      || left.index - right.index;
+  });
+
+  const pool: WhoAmIClue[] = [];
+  const add = (clue: WhoAmIClue) => {
+    if (!pool.includes(clue)) pool.push(clue);
+  };
+
+  // Early windows need real football information that does not spend another
+  // identity coordinate. Seed the rescue pool with those facts first.
+  scored
+    .filter(({ value }) => (
+      (value.revealCoordinates?.length ?? 0) === 0
+      && whoAmIClueSelectionClass(value) === "sports-identity"
+      && !whoAmIClueIsGenericCareerVolume(value)
+    ))
+    .slice(0, 10)
+    .forEach(({ value }) => add(value));
+
+  // Preserve true identity anchors before generic strong clues so raw production
+  // cannot crowd the rescue pool out of a quality late-game finish.
+  scored
+    .filter(({ value }) => isStrongLateAnchor(value))
+    .slice(0, 6)
+    .forEach(({ value }) => add(value));
+
+  scored
+    .filter(({ value }) => value.band === "strong" || value.band === "giveaway")
+    .slice(0, 6)
+    .forEach(({ value }) => add(value));
+
+  scored
+    .filter(({ value }) => !whoAmIClueIsGenericCareerVolume(value))
+    .forEach(({ value }) => {
+      if (pool.length < limit + 8) add(value);
+    });
+
+  scored
+    .filter(({ value }) => whoAmIClueIsGenericCareerVolume(value))
+    .slice(0, 2)
+    .forEach(({ value }) => {
+      if (pool.length < limit + 8) add(value);
+    });
+
+  const requiredSemanticCapacity = Math.min(
+    limit,
+    whoAmISemanticIndependentCapacity(eligibleClues, limit),
+  );
+  if (whoAmISemanticIndependentCapacity([...pool], limit) < requiredSemanticCapacity) {
+    for (const { value } of scored) {
+      add(value);
+      if (whoAmISemanticIndependentCapacity([...pool], limit) >= requiredSemanticCapacity) break;
+    }
+  }
+
+  return pool;
+}
+
+function orderRevealBoardWithCoordinateRescue(
+  selected: readonly WhoAmIClue[],
+  shortlist: readonly WhoAmIClue[],
+  eligibleClues: readonly WhoAmIClue[],
+  limit: number,
+  random: () => number,
+) {
+  const ordered = orderWhoAmICluesByRevealArchitectureIfPossible(selected);
+  const isFootballBoard = selected.some((clue) => clue.revealCoordinates !== undefined);
+  if (!isFootballBoard || whoAmIRevealArchitectureSatisfied(ordered)) return ordered;
+
+  // If the selected board is already otherwise valid but its strongest identity
+  // anchor sits immediately before a raw stat, keep the same facts and swap the
+  // anchor into clue 10 before expanding the selection pool.
+  for (let index = ordered.length - 2; index >= 6; index -= 1) {
+    if (!isStrongLateAnchor(ordered[index]!)) continue;
+    const swapped = [...ordered];
+    [swapped[index], swapped[swapped.length - 1]] = [swapped[swapped.length - 1]!, swapped[index]!];
+    if (whoAmIRevealArchitectureSatisfied(swapped)) return swapped;
+  }
+
+  const rescuePool = coordinateRescuePool(eligibleClues, limit, random);
+
+  const expandedRescue = selectWhoAmICluesByRevealArchitectureIfPossible(
+    rescuePool,
+    limit,
+  );
+  if (expandedRescue) return expandedRescue;
+
+  for (const pool of [rescuePool, eligibleClues]) {
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      const rescueSelection = assembleWhoAmIClues(pool, limit, random);
+      if (rescueSelection.length !== limit) continue;
+      const rescued = orderWhoAmICluesByRevealArchitectureIfPossible(rescueSelection);
+      if (whoAmIRevealArchitectureSatisfied(rescued)) return rescued;
+    }
+  }
+
+  return ordered;
 }
 
 type ReplaySwapOption = {
@@ -229,8 +372,12 @@ export function assembleWhoAmIRevealClues(
     || strongCount < REVEAL_TARGETS.strong
     || latePool.length < REVEAL_TARGETS.strong + REVEAL_TARGETS.final
   ) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      shortlist,
+      eligibleClues,
+      limit,
+      random,
     );
   }
 
@@ -251,8 +398,12 @@ export function assembleWhoAmIRevealClues(
   }
 
   if (final.length < REVEAL_TARGETS.final) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      shortlist,
+      eligibleClues,
+      limit,
+      random,
     );
   }
 
@@ -262,8 +413,12 @@ export function assembleWhoAmIRevealClues(
     .slice(0, REVEAL_TARGETS.strong);
 
   if (coreStrong.length < REVEAL_TARGETS.strong) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      shortlist,
+      eligibleClues,
+      limit,
+      random,
     );
   }
 
@@ -276,8 +431,12 @@ export function assembleWhoAmIRevealClues(
     ))
   ));
   if (repeatsSemanticInformation) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      shortlist,
+      eligibleClues,
+      limit,
+      random,
     );
   }
 
@@ -290,8 +449,12 @@ export function assembleWhoAmIRevealClues(
     || new Set(facets).size < 4
     || facets.filter((facet) => facet === "relationships").length > 1
   ) {
-    return orderWhoAmICluesByRevealArchitectureIfPossible(
+    return orderRevealBoardWithCoordinateRescue(
       assembleWhoAmIClues(eligibleClues, limit, random),
+      shortlist,
+      eligibleClues,
+      limit,
+      random,
     );
   }
 
@@ -315,9 +478,9 @@ export function assembleWhoAmIRevealClues(
     if (swap.candidateVariationRank < swap.currentVariationRank) {
       const varied = [...planned];
       varied[swap.selectedIndex] = swap.candidate;
-      return orderWhoAmICluesByRevealArchitectureIfPossible(varied);
+      return orderRevealBoardWithCoordinateRescue(varied, shortlist, eligibleClues, limit, random);
     }
   }
 
-  return orderWhoAmICluesByRevealArchitectureIfPossible(planned);
+  return orderRevealBoardWithCoordinateRescue(planned, shortlist, eligibleClues, limit, random);
 }

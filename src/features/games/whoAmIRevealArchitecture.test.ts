@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { WhoAmIClue } from "./whoAmIEngine";
 import {
+  isStrongLateAnchor,
   orderWhoAmICluesByRevealArchitectureIfPossible,
   whoAmIRevealArchitectureCanOrder,
   whoAmIRevealArchitectureSatisfied,
@@ -12,8 +13,15 @@ function clue(
   text: string,
   band: WhoAmIClue["band"],
   facet: NonNullable<WhoAmIClue["facet"]>,
+  revealCoordinates: NonNullable<WhoAmIClue["revealCoordinates"]> = [],
 ): WhoAmIClue {
-  return { id, text, band, facet };
+  return {
+    id,
+    text,
+    band,
+    facet,
+    ...(revealCoordinates.length ? { revealCoordinates } : {}),
+  };
 }
 
 describe("Who Am I standardized reveal architecture", () => {
@@ -31,6 +39,66 @@ describe("Who Am I standardized reveal architecture", () => {
       identifyingPower: "signature",
       earliestClue: 6,
     });
+  });
+
+  it("does not treat raw production stats or production records as strong late identity anchors", () => {
+    const rawProduction: WhoAmIClue = {
+      id: "fact:nfl-career-passing-touchdowns",
+      text: "I finished my NFL career with 152 passing touchdowns.",
+      band: "strong",
+      revealCoordinates: [],
+    };
+    const productionRecord: WhoAmIClue = {
+      id: "identity:single-season-touchdown-record",
+      text: "I set a single-season touchdown record.",
+      band: "strong",
+      facet: "production",
+      revealCoordinates: [],
+    };
+
+    expect(whoAmIRevealProfile(rawProduction).category).toBe("production");
+    expect(whoAmIRevealProfile(productionRecord).category).toBe("production");
+    expect(isStrongLateAnchor(rawProduction)).toBe(false);
+    expect(isStrongLateAnchor(productionRecord)).toBe(false);
+  });
+
+  it("uses explicit career-path and accomplishment facets instead of incidental production words", () => {
+    const undraftedPath: WhoAmIClue = {
+      id: "identity:one-college-start-undrafted",
+      text: "I made one college start before entering the NFL undrafted.",
+      band: "strong",
+      facet: "career-path",
+      revealCoordinates: [],
+    };
+    const firstPlay: WhoAmIClue = {
+      id: "identity:first-football-play-touchdown",
+      text: "I scored a touchdown on my first football play.",
+      band: "strong",
+      facet: "accomplishments",
+      revealCoordinates: [],
+    };
+
+    expect(whoAmIRevealProfile(undraftedPath).category).toBe("draft-entry");
+    expect(isStrongLateAnchor(undraftedPath)).toBe(true);
+    expect(whoAmIRevealProfile(firstPlay).category).toBe("accomplishments");
+    expect(isStrongLateAnchor(firstPlay)).toBe(true);
+  });
+
+  it("lets an explicit nickname facet override incidental biography words in the clue id", () => {
+    const nickname: WhoAmIClue = {
+      id: "identity:tyler-rose-family-origin",
+      text: "I was known as the 'Tyler Rose.'",
+      band: "giveaway",
+      facet: "nickname",
+      revealCoordinates: [],
+    };
+
+    expect(whoAmIRevealProfile(nickname)).toMatchObject({
+      category: "nickname-persona",
+      identifyingPower: "signature",
+      earliestClue: 9,
+    });
+    expect(isStrongLateAnchor(nickname)).toBe(true);
   });
 
   it("reserves jersey numbers and nickname or name-change clues for the finish", () => {
@@ -76,9 +144,9 @@ describe("Who Am I standardized reveal architecture", () => {
 
   it("reorders within the existing band ladder without changing its clue set", () => {
     const selected: WhoAmIClue[] = [
-      clue("role", "I played wide receiver.", "broad", "role"),
-      clue("era", "I played in the 2000s and 2010s.", "broad", "era"),
-      clue("school", "I played college football at Alabama.", "helpful", "background"),
+      clue("role", "I played wide receiver.", "broad", "role", ["position"]),
+      clue("era", "I played in the 2000s and 2010s.", "broad", "era", ["era"]),
+      clue("school", "I played college football at Alabama.", "helpful", "background", ["school"]),
       clue("style-helpful", "I was known for precise route running.", "helpful", "style"),
       clue("name-change", "I legally changed my surname to Ochocinco.", "strong", "nickname"),
       clue("production", "I finished with more than 700 receptions.", "strong", "production"),
@@ -95,10 +163,57 @@ describe("Who Am I standardized reveal architecture", () => {
     expect(ordered.findIndex((entry) => entry.id === "name-change")).toBeGreaterThanOrEqual(8);
     expect(ordered.findIndex((entry) => entry.id === "jersey")).toBeGreaterThanOrEqual(7);
     expect(ordered.slice(-2).every((entry) => entry.band === "strong" || entry.band === "giveaway")).toBe(true);
-    for (let index = 1; index < ordered.length; index += 1) {
-      const rank = { broad: 0, helpful: 1, strong: 2, giveaway: 3 } as const;
-      expect(rank[ordered[index]!.band]).toBeGreaterThanOrEqual(rank[ordered[index - 1]!.band]);
-    }
+
+    const coordinateCount = (count: number) => new Set(
+      ordered.slice(0, count).flatMap((entry) => entry.revealCoordinates ?? []),
+    ).size;
+    expect(coordinateCount(4)).toBeLessThanOrEqual(1);
+    expect(coordinateCount(6)).toBeLessThanOrEqual(2);
+    expect(coordinateCount(8)).toBeLessThanOrEqual(3);
+    expect(whoAmIRevealArchitectureSatisfied(ordered)).toBe(true);
+  });
+
+  it("requires two true late anchors on football boards without accepting production as the second anchor", () => {
+    const board: WhoAmIClue[] = [
+      clue("style-1", "I was a physical runner.", "broad", "style"),
+      clue("style-2", "I was difficult to tackle in space.", "broad", "style"),
+      clue("role", "I played running back.", "helpful", "role", ["position"]),
+      clue("background", "I was a multi-sport high-school athlete.", "helpful", "background"),
+      clue("production-1", "I rushed for more than 10,000 career yards.", "strong", "production"),
+      clue("production-2", "I scored more than 80 career touchdowns.", "strong", "production"),
+      clue("production-3", "I had multiple 1,000-yard seasons.", "strong", "production"),
+      clue("era", "I played in the 1990s.", "strong", "era", ["era"]),
+      clue("production-4", "I averaged more than four yards per carry.", "strong", "production"),
+      clue("draft", "I was a first-round NFL Draft pick.", "giveaway", "career-path"),
+    ].map((entry) => ({ ...entry, revealCoordinates: entry.revealCoordinates ?? [] }));
+
+    expect(isStrongLateAnchor(board[8]!)).toBe(false);
+    expect(isStrongLateAnchor(board[9]!)).toBe(true);
+    expect(whoAmIRevealArchitectureSatisfied(board)).toBe(false);
+  });
+
+  it("treats a clue that exposes two major coordinates as too identifying for clues 1-4", () => {
+    const roleSchool = clue(
+      "role-school",
+      "At Clemson, I played quarterback.",
+      "helpful",
+      "identity",
+      ["school", "position"],
+    );
+    const fillers: WhoAmIClue[] = [
+      clue("style", "I was a dangerous runner in space.", "broad", "style"),
+      clue("award", "I earned conference player-of-the-year honors.", "helpful", "accomplishments"),
+      clue("draft", "I was a first-round NFL draft pick.", "strong", "career-path"),
+      clue("title", "I won a national championship.", "strong", "accomplishments"),
+      clue("record", "I set a school record in a postseason game.", "strong", "accomplishments"),
+      clue("moment", "I delivered a late game-winning drive.", "strong", "accomplishments"),
+      clue("era", "I played in the 2010s.", "broad", "era", ["era"]),
+      clue("jersey", "I wore No. 4.", "giveaway", "identity"),
+      clue("nickname", "I had a widely known nickname.", "giveaway", "nickname"),
+    ];
+
+    const ordered = orderWhoAmICluesByRevealArchitectureIfPossible([roleSchool, ...fillers]);
+    expect(ordered.findIndex((entry) => entry.id === "role-school")).toBeGreaterThanOrEqual(4);
     expect(whoAmIRevealArchitectureSatisfied(ordered)).toBe(true);
   });
 

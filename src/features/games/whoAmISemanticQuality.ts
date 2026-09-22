@@ -249,28 +249,130 @@ export function whoAmISemanticIndependentCapacity(
     }
   }
 
-  const searchOrder = Array.from({ length: playable.length }, (_value, index) => index)
+  // Callers only need capacity up to a small threshold (13 in the fast
+  // full-population audit). Prove that threshold with a bounded witness before exact search.
+  const greedyOrder = Array.from({ length: playable.length }, (_value, index) => index)
     .sort((left, right) => conflicts[left]!.size - conflicts[right]!.size || left - right);
-
-  let best = 0;
-  const chosen: number[] = [];
-  const search = (startPosition: number): boolean => {
-    if (chosen.length > best) best = chosen.length;
-    if (best >= desired) return true;
-    if (chosen.length + (searchOrder.length - startPosition) <= best) return false;
-
-    for (let position = startPosition; position < searchOrder.length; position += 1) {
-      const index = searchOrder[position]!;
-      if (chosen.some((selected) => conflicts[index]!.has(selected))) continue;
-      chosen.push(index);
-      if (search(position + 1)) return true;
-      chosen.pop();
+  const greedyChosen: number[] = [];
+  for (const index of greedyOrder) {
+    if (greedyChosen.some((selected) => conflicts[index]!.has(selected))) continue;
+    greedyChosen.push(index);
+    if (greedyChosen.length >= desired) {
+      const next = cachedByTarget ?? new Map<number, number>();
+      next.set(normalizedTarget, desired);
+      SEMANTIC_CAPACITY_CACHE.set(clues, next);
+      return desired;
     }
-    return false;
+  }
+
+  const bitCount = (value: bigint) => {
+    let bits = value;
+    let count = 0;
+    while (bits !== 0n) {
+      bits &= bits - 1n;
+      count += 1;
+    }
+    return count;
   };
 
-  search(0);
-  const result = Math.min(best, desired);
+  const components: number[][] = [];
+  const visited = new Set<number>();
+  for (let startIndex = 0; startIndex < playable.length; startIndex += 1) {
+    if (visited.has(startIndex)) continue;
+    const component: number[] = [];
+    const stack = [startIndex];
+    visited.add(startIndex);
+    while (stack.length) {
+      const current = stack.pop()!;
+      component.push(current);
+      for (const neighbor of conflicts[current]!) {
+        if (visited.has(neighbor)) continue;
+        visited.add(neighbor);
+        stack.push(neighbor);
+      }
+    }
+    components.push(component);
+  }
+
+  // Harvest cheap components first so dense legacy components are searched only
+  // when smaller components cannot already prove the requested threshold.
+  components.sort((left, right) => left.length - right.length || left[0]! - right[0]!);
+
+  const componentCapacity = (component: readonly number[], cap: number) => {
+    if (cap <= 0) return 0;
+    if (component.length <= 1) return component.length;
+
+    const localIndex = new Map<number, number>(
+      component.map((globalIndex, index) => [globalIndex, index]),
+    );
+    const conflictMasks = component.map((globalIndex) => {
+      let mask = 0n;
+      for (const neighbor of conflicts[globalIndex]!) {
+        const localNeighbor = localIndex.get(neighbor);
+        if (localNeighbor == null) continue;
+        mask |= 1n << BigInt(localNeighbor);
+      }
+      return mask;
+    });
+    const capped = Math.min(cap, component.length);
+    const memo = new Map<bigint, number>();
+
+    const solve = (mask: bigint): number => {
+      if (mask === 0n) return 0;
+      const cachedResult = memo.get(mask);
+      if (cachedResult != null) return cachedResult;
+
+      const remainingCount = bitCount(mask);
+      if (remainingCount <= 1) {
+        memo.set(mask, remainingCount);
+        return remainingCount;
+      }
+
+      let pivot = -1;
+      let pivotDegree = -1;
+      for (let index = 0; index < component.length; index += 1) {
+        const bit = 1n << BigInt(index);
+        if ((mask & bit) === 0n) continue;
+        const degree = bitCount(mask & conflictMasks[index]!);
+        if (degree > pivotDegree) {
+          pivot = index;
+          pivotDegree = degree;
+        }
+      }
+
+      if (pivotDegree <= 0) {
+        const result = Math.min(capped, remainingCount);
+        memo.set(mask, result);
+        return result;
+      }
+
+      const pivotBit = 1n << BigInt(pivot);
+      const withPivot = Math.min(
+        capped,
+        1 + solve(mask & ~pivotBit & ~conflictMasks[pivot]!),
+      );
+      if (withPivot >= capped) {
+        memo.set(mask, capped);
+        return capped;
+      }
+
+      const withoutPivot = solve(mask & ~pivotBit);
+      const result = Math.min(capped, Math.max(withPivot, withoutPivot));
+      memo.set(mask, result);
+      return result;
+    };
+
+    return solve((1n << BigInt(component.length)) - 1n);
+  };
+
+  let capacity = 0;
+  for (const component of components) {
+    const remainingNeeded = desired - capacity;
+    capacity += componentCapacity(component, remainingNeeded);
+    if (capacity >= desired) break;
+  }
+
+  const result = Math.min(capacity, desired);
   const next = cachedByTarget ?? new Map<number, number>();
   next.set(normalizedTarget, result);
   SEMANTIC_CAPACITY_CACHE.set(clues, next);

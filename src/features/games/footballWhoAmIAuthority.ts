@@ -34,6 +34,7 @@ import {
   type WhoAmIEraBand,
   type WhoAmIRound,
   type WhoAmIUniverse,
+  type WhoAmIRevealCoordinate,
 } from "./whoAmIEngine";
 
 const metricLabelById = new Map(footballFactMetricDefinitions.map((metric) => [metric.id, metric.label]));
@@ -670,20 +671,172 @@ function footballIdentityClues(subject: FootballSubjectProfile): WhoAmIClue[] {
   return clues;
 }
 
+const NFL_FRANCHISE_HISTORICAL_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  ARI: ["cardinals", "chicago cardinals", "st louis cardinals", "phoenix cardinals"],
+  BAL: ["ravens"],
+  BUF: ["bills"],
+  CAR: ["panthers"],
+  CHI: ["bears"],
+  CIN: ["bengals"],
+  CLE: ["browns"],
+  DAL: ["cowboys"],
+  DEN: ["broncos"],
+  DET: ["lions"],
+  GB: ["packers"],
+  HOU: ["texans"],
+  IND: ["colts", "baltimore colts"],
+  JAX: ["jaguars"],
+  KC: ["chiefs"],
+  LAC: ["chargers", "san diego chargers"],
+  LAR: ["rams", "st louis rams"],
+  LV: ["raiders", "oakland raiders", "los angeles raiders"],
+  MIA: ["dolphins"],
+  MIN: ["vikings"],
+  NE: ["patriots", "boston patriots"],
+  NO: ["saints"],
+  NYG: ["giants"],
+  NYJ: ["jets"],
+  PHI: ["eagles"],
+  PIT: ["steelers"],
+  SEA: ["seahawks"],
+  SF: ["49ers", "forty niners"],
+  TB: ["buccaneers", "bucs"],
+  TEN: ["titans", "oilers", "houston oilers", "tennessee oilers"],
+  WAS: ["commanders", "redskins", "washington football team"],
+};
+
+const FOOTBALL_POSITION_REVEAL_TERMS: Readonly<Record<string, readonly string[]>> = {
+  QB: ["qb", "quarterback", "quarterbacked"],
+  RB: ["rb", "running back", "halfback", "tailback"],
+  WR: ["wr", "wide receiver", "receiver"],
+  TE: ["te", "tight end"],
+  OL: ["ol", "offensive line", "offensive lineman", "offensive tackle", "offensive guard", "center"],
+  DL: ["dl", "defensive line", "defensive lineman", "defensive end", "defensive tackle", "edge rusher"],
+  LB: ["lb", "linebacker"],
+  DB: ["db", "defensive back", "cornerback", "safety"],
+  K: ["kicker"],
+  P: ["punter"],
+};
+
+function normalizedRevealText(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function containsRevealPhrase(text: string, phrase: string) {
+  const normalizedPhrase = normalizedRevealText(phrase);
+  return Boolean(normalizedPhrase) && ` ${text} `.includes(` ${normalizedPhrase} `);
+}
+
+function footballRevealAffiliations(subject: FootballSubjectProfile) {
+  const coachHistory = subject.kind === "coach" ? footballCoachCareerAffiliationHistoryFor(subject) : null;
+  const raw = coachHistory?.affiliations?.length
+    ? coachHistory.affiliations
+    : subject.league === "CFB"
+      ? footballWhoAmICfbSchools(subject)
+      : [...(subject.franchises ?? [])];
+  return [...new Set(raw.map((affiliation) => displayAffiliation(subject.league, affiliation)))];
+}
+
+function footballAffiliationRevealAliases(subject: FootballSubjectProfile) {
+  const aliases = new Set<string>();
+  const rawAffiliations = subject.kind === "coach"
+    ? (footballCoachCareerAffiliationHistoryFor(subject)?.affiliations ?? [])
+    : subject.league === "NFL"
+      ? [...(subject.franchises ?? [])]
+      : footballWhoAmICfbSchools(subject);
+
+  for (const raw of rawAffiliations) {
+    const display = displayAffiliation(subject.league, raw);
+    aliases.add(display);
+    aliases.add(raw);
+    if (subject.league === "CFB") {
+      aliases.add(display.replace(/\s+\([^)]+\)$/, ""));
+    } else {
+      const nickname = display.trim().split(/\s+/).at(-1);
+      if (nickname) aliases.add(nickname);
+      for (const historical of NFL_FRANCHISE_HISTORICAL_ALIASES[raw] ?? []) aliases.add(historical);
+    }
+  }
+
+  for (const display of footballRevealAffiliations(subject)) {
+    aliases.add(display);
+    if (subject.league === "CFB") aliases.add(display.replace(/\s+\([^)]+\)$/, ""));
+    else {
+      const nickname = display.trim().split(/\s+/).at(-1);
+      if (nickname) aliases.add(nickname);
+    }
+  }
+
+  return [...aliases].map(normalizedRevealText).filter(Boolean);
+}
+
+function footballWhoAmIRevealCoordinates(
+  subject: FootballSubjectProfile,
+  clueValue: WhoAmIClue,
+): readonly WhoAmIRevealCoordinate[] {
+  const coordinates = new Set<WhoAmIRevealCoordinate>();
+  const text = normalizedRevealText(clueValue.text);
+
+  const positionTerms = subject.kind === "coach"
+    ? ["head coach"]
+    : subject.position
+      ? FOOTBALL_POSITION_REVEAL_TERMS[subject.position] ?? []
+      : [];
+  if (clueValue.id === "position" || positionTerms.some((term) => containsRevealPhrase(text, term))) {
+    coordinates.add("position");
+  }
+
+  if (
+    clueValue.facet === "era"
+    || clueValue.id === "era"
+    || clueValue.id.endsWith(":era")
+    || clueValue.id === "player-career-start"
+    || clueValue.id === "player-career-end"
+    || clueValue.id === "coach-start"
+    || clueValue.id === "coach-end"
+  ) {
+    coordinates.add("era");
+  }
+
+  const exposesAffiliation = footballAffiliationRevealAliases(subject)
+    .some((affiliation) => containsRevealPhrase(text, affiliation));
+  if (exposesAffiliation) {
+    coordinates.add(subject.league === "CFB" ? "school" : "franchise");
+  }
+
+  return [...coordinates];
+}
+
+function withFootballWhoAmIRevealCoordinates(
+  subject: FootballSubjectProfile,
+  clueValue: WhoAmIClue,
+): WhoAmIClue {
+  return {
+    ...clueValue,
+    revealCoordinates: footballWhoAmIRevealCoordinates(subject, clueValue),
+  };
+}
+
 function footballCandidate(subject: FootballSubjectProfile): WhoAmICandidate {
   const kind = subject.kind === "coach" ? "coach" : "player";
+  const curatedClues = curateFootballWhoAmIClues(subject, distinctClues([
+    ...footballIdentityClues(subject),
+    ...footballMetricClues(subject),
+    ...footballRecognitionClues(subject),
+    ...footballPersonIdentityClues(subject),
+  ]));
   return {
     id: subject.id,
     name: subject.name,
     kind,
     eraBand: footballEraBand(subject),
     rescueGroup: kind === "coach" ? `${subject.league}:coach` : `${subject.league}:${subject.position ?? "player"}`,
-    clues: curateFootballWhoAmIClues(subject, distinctClues([
-      ...footballIdentityClues(subject),
-      ...footballMetricClues(subject),
-      ...footballRecognitionClues(subject),
-      ...footballPersonIdentityClues(subject),
-    ])),
+    clues: curatedClues.map((clueValue) => withFootballWhoAmIRevealCoordinates(subject, clueValue)),
   };
 }
 
