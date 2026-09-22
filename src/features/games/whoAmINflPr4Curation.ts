@@ -45,25 +45,17 @@ function annotateNflMetadata(clue: WhoAmIClue): WhoAmIClue {
 
 function ensureOrientationClues(subject: FootballSubjectProfile, clues: readonly WhoAmIClue[]) {
   const next = [...clues];
-  if (subject.kind === "coach") {
-    if (!next.some((clue) => clue.id === "role" || clue.id === "pr4:role")) {
-      next.unshift({
-        id: "pr4:role",
-        conceptId: "pr4:role",
-        text: "I am an NFL head coach.",
-        band: "broad",
-        facet: "role",
-        revealPriority: 10,
-      });
-    }
-  } else if (subject.position && !next.some((clue) => clue.id === "position" || clue.id === "pr4:position")) {
+
+  if (!next.some((clue) => clue.id === "pr4:role")) {
     next.unshift({
-      id: "pr4:position",
-      conceptId: "pr4:position",
-      text: `I played ${subject.position}.`,
+      id: "pr4:role",
+      conceptId: "pr4:generic-role",
+      text: subject.kind === "coach"
+        ? "I coached in the NFL."
+        : "I played in the NFL.",
       band: "broad",
       facet: "role",
-      revealPriority: 10,
+      revealPriority: 0,
     });
   }
 
@@ -76,7 +68,7 @@ function ensureOrientationClues(subject: FootballSubjectProfile, clues: readonly
         text: subject.kind === "coach"
           ? `My NFL head-coaching career came in the ${decades[0]}s.`
           : `My NFL career came in the ${decades[0]}s.`,
-        band: "broad",
+        band: "helpful",
         facet: "era",
         revealPriority: 20,
       });
@@ -87,7 +79,7 @@ function ensureOrientationClues(subject: FootballSubjectProfile, clues: readonly
         text: subject.kind === "coach"
           ? `My NFL head-coaching career spanned the ${decades[0]}s and ${decades[decades.length - 1]}s.`
           : `My NFL career spanned the ${decades[0]}s and ${decades[decades.length - 1]}s.`,
-        band: "broad",
+        band: "helpful",
         facet: "era",
         revealPriority: 20,
       });
@@ -97,21 +89,21 @@ function ensureOrientationClues(subject: FootballSubjectProfile, clues: readonly
 }
 
 function nflOrientationReband(clue: WhoAmIClue) {
+  if (clue.id === "pr4:role") {
+    return { ...clue, band: "broad" as const, revealPriority: 0 };
+  }
   if (
     clue.id === "position"
     || clue.id === "role"
     || clue.id === "pr4:position"
-    || clue.id === "pr4:role"
+    || clue.id === "era"
+    || clue.id === "pr4:era"
   ) {
-    return { ...clue, band: "broad" as const };
-  }
-  if (clue.id === "era" || clue.id === "pr4:era") {
     return { ...clue, band: "helpful" as const };
   }
 
   const category = whoAmIRevealProfile(clue).category;
-  if (category === "role") return { ...clue, band: "broad" as const };
-  if (category === "era") return atMostBand(clue, "helpful");
+  if (category === "role" || category === "era") return atMostBand(clue, "helpful");
   return clue;
 }
 
