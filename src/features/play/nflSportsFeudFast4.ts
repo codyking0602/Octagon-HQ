@@ -1,0 +1,124 @@
+import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
+
+export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
+  {
+    category: "positions",
+    collisionGroup: "positions",
+    prompts: [
+      "Name an NFL position other than quarterback.",
+      "Name a position you can play in the NFL.",
+      "Name a football position that produces stars.",
+      "Name a position group coaches talk about constantly.",
+      "Name a position that can change a game with one play.",
+    ],
+    answers: ["Running back", "Wide receiver", "Linebacker", "Cornerback", "Defensive end", "Safety", "Tight end", "Offensive tackle"],
+  },
+  {
+    category: "game-concepts",
+    collisionGroup: "scoring",
+    prompts: [
+      "Name a way to score points in an NFL game.",
+      "Name something that can put points on the scoreboard.",
+      "Name a scoring play you can see on a Sunday.",
+      "Name a way an offense, defense, or special teams unit can score.",
+      "Name something that changes the score in a football game.",
+    ],
+    answers: ["Touchdown", "Field goal", "Extra point", "Two-point conversion", "Safety", "Pick-six", "Kick return touchdown", "Punt return touchdown"],
+  },
+  {
+    category: "game-concepts",
+    collisionGroup: "penalties",
+    prompts: [
+      "Name a common NFL penalty.",
+      "Name a flag NFL fans complain about.",
+      "Name a penalty an offense can commit.",
+      "Name a penalty that can erase a big play.",
+      "Name a football penalty almost every fan understands.",
+    ],
+    answers: ["Holding", "False start", "Pass interference", "Offsides", "Personal foul", "Roughing the passer", "Delay of game", "Illegal formation"],
+  },
+  {
+    category: "stats",
+    collisionGroup: "stats",
+    prompts: [
+      "Name a quarterback statistic.",
+      "Name a number fans use to judge an NFL quarterback.",
+      "Name a quarterback stat shown in a broadcast box score.",
+      "Name a passing stat people compare after a game.",
+      "Name a stat that can describe how a quarterback played.",
+    ],
+    answers: ["Passing yards", "Passing touchdowns", "Completion percentage", "Interceptions", "Pass attempts", "Completions", "Yards per attempt", "Passer rating"],
+  },
+  {
+    category: "stats",
+    collisionGroup: "stats",
+    prompts: [
+      "Name an NFL defensive statistic.",
+      "Name a stat that can make a defender stand out.",
+      "Name a defensive number shown in a box score.",
+      "Name a stat fans use to praise a great defender.",
+      "Name a defensive stat that can earn Pro Bowl attention.",
+    ],
+    answers: ["Tackles", "Sacks", "Interceptions", "Tackles for loss", "Pass breakups", "Forced fumbles", "Fumble recoveries", "Quarterback hits"],
+  },
+  {
+    category: "strategy",
+    collisionGroup: "offense",
+    prompts: [
+      "Name an offensive concept you hear in the NFL.",
+      "Name a football play concept an offense might build around.",
+      "Name an offensive idea commentators mention during games.",
+      "Name a concept a coordinator might use to stress a defense.",
+      "Name an offensive term NFL fans recognize.",
+    ],
+    answers: ["Play-action", "RPO", "Screen pass", "Four verticals", "Mesh", "Zone run", "Counter", "Bootleg"],
+  },
+  {
+    category: "strategy",
+    collisionGroup: "defense",
+    prompts: [
+      "Name a defensive coverage or concept.",
+      "Name a coverage an NFL defense might play.",
+      "Name a defensive call commentators mention on broadcasts.",
+      "Name a coverage a quarterback has to identify before the snap.",
+      "Name a defensive concept NFL fans hear all the time.",
+    ],
+    answers: ["Cover 2", "Cover 3", "Man coverage", "Cover 1", "Quarters", "Zone blitz", "Cover 0", "Tampa 2"],
+  },
+  {
+    category: "special-teams",
+    collisionGroup: "special-teams",
+    prompts: [
+      "Name something a special teams unit does.",
+      "Name a play that belongs to special teams.",
+      "Name something that can happen on fourth down without the offense staying out.",
+      "Name a special-teams job fans notice during a game.",
+      "Name a play involving the kicking game.",
+    ],
+    answers: ["Field goal", "Punt", "Kickoff", "Extra point", "Punt return", "Kick return", "Onside kick", "Fake punt"],
+  },
+  {
+    category: "draft",
+    collisionGroup: "draft",
+    prompts: [
+      "Name a term associated with the NFL Draft.",
+      "Name something fans hear constantly during draft season.",
+      "Name a phrase tied to evaluating or selecting NFL prospects.",
+      "Name something that can happen during the NFL Draft.",
+      "Name a draft term almost every NFL fan knows.",
+    ],
+    answers: ["First-round pick", "Mock draft", "Trade up", "Trade down", "Best player available", "Combine", "Pro day", "Draft steal"],
+  },
+  {
+    category: "postseason",
+    collisionGroup: "postseason",
+    prompts: [
+      "Name something associated with the NFL playoffs.",
+      "Name a postseason term NFL fans use every January.",
+      "Name something a team has to survive on the road to the Super Bowl.",
+      "Name a playoff concept that matters once the regular season ends.",
+      "Name something that can define January football.",
+    ],
+    answers: ["Wild Card", "Divisional Round", "Conference Championship", "Super Bowl", "First-round bye", "Home-field advantage", "Overtime", "Game-winning drive"],
+  },
+] as const);
