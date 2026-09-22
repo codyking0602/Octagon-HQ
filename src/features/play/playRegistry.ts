@@ -14,6 +14,7 @@ export type PlayGameId =
   | "20-questions"
   | "who-am-i"
   | "millionaire"
+  | "sports-feud"
   | "draft-room";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
@@ -48,6 +49,7 @@ export type PlayCompletionState =
   | "identity-guessed-or-question-limit"
   | "identity-guessed-or-clue-limit"
   | "millionaire-settled"
+  | "sports-feud-settled"
   | "draft-room-complete";
 
 export interface PlayGameLineupDefinition {
@@ -105,6 +107,30 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily-and-casual",
       difficultyModel: "Eight calibrated questions from Q1 through Q8 with checkpoints, lifelines, and a Q8 risk decision.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "sports-feud",
+    route: "/play/sports-feud",
+    icon: "SF",
+    title: "Sports Feud",
+    description: "Clear two UFC answer boards, then race through five Fast Money prompts.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily", "curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 7,
+      completionState: "sports-feud-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Two editorial four-hit boards plus five hidden-score Fast Money prompts from the isolated UFC Sports Feud bank.",
     },
   },
   {
@@ -337,6 +363,30 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily-and-casual",
       difficultyModel: "One canonical NFL or CFB eight-question ladder per Football Daily date with checkpoints, lifelines, and a Q8 risk decision.",
+    },
+  },
+  {
+    sport: "football",
+    id: "sports-feud",
+    route: "/football/sports-feud",
+    icon: "SF",
+    title: "Sports Feud",
+    description: "Clear two NFL or college football answer boards, then race through five Fast Money prompts.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily", "curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 7,
+      completionState: "sports-feud-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Two editorial four-hit boards plus five hidden-score Fast Money prompts from a date-locked NFL or CFB bank.",
     },
   },
   {
