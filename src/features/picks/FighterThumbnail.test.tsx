@@ -64,6 +64,16 @@ describe("fighterThumbnailPath", () => {
     }
   });
 
+  it("leaves the three unapproved Sep 26 thumbnails blank", () => {
+    for (const slug of [
+      "mehemmedeli-osmanli",
+      "ilimbek-akylbek",
+      "melissa-amaya",
+    ]) {
+      expect(fighterThumbnailPath(slug)).toBeNull();
+    }
+  });
+
   it("resolves the missing UFC Paris portraits from the canonical thumbnail owner", () => {
     const slugs = [
       "salahdine-parnasse",
