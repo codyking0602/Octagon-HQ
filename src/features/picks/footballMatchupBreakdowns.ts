@@ -467,7 +467,147 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
         body: "Buffalo has disruptive front-line pieces, but Gibbs plus Detroit's receiving depth can stress the Bills horizontally and vertically. The matchup tilts toward Detroit if Goff consistently gets clean early-down looks.",
       },
     ],
+  },,
+  {
+    id: "2026-oregon-usc",
+    title: "Oregon vs. USC",
+    venue: "L.A. Memorial Coliseum · Los Angeles",
+    teams: [
+      { name: "Oregon", aliases: ["oregon", "oregon-ducks", "ducks"] },
+      { name: "USC", aliases: ["usc", "usc-trojans", "southern-california", "southern-california-trojans", "trojans"] },
+    ],
+    setup: [
+      "No. 20 Oregon heads to Los Angeles for its Big Ten opener against No. 12 USC, which is already 4–0 and 1–0 in conference play. The Ducks are 2–1 after rebounding from a road loss at Oklahoma State with an 84–0 win over Portland State, while USC comes home after surviving Rutgers 42–35. Oregon has won the last four meetings, including 42–27 last season, so this is also USC's chance to flip a series that has leaned green lately.",
+      "The matchup is built around two quarterbacks playing efficient football. Jayden Maiava leads the nation with 1,173 passing yards and 12 touchdowns through four games, while Dante Moore has thrown for 849 yards and nine scores without an interception. USC is averaging 43.0 points per game; Oregon is at 49.7. The deciding question is which defense can create enough negative plays to knock either offense off schedule without giving up explosives behind the pressure.",
+    ],
+    keyMatchups: [
+      {
+        title: "Dante Moore + Oregon's receivers vs. USC's secondary",
+        body: "Moore has completed 68.5% of his passes with nine touchdowns and no interceptions, and Oregon has multiple vertical answers in Evan Stewart and Dakorien Moore. USC created two interceptions at Rutgers, but it also allowed five plays of at least 20 yards. The Trojans need to disguise coverage and make Moore hold the ball without giving Oregon clean one-on-one shots downfield.",
+        edge: "Oregon — slight",
+      },
+      {
+        title: "USC's run game vs. Oregon's front",
+        body: "King Miller has 338 rushing yards and has topped 100 in consecutive games, while USC's backs averaged 6.7 yards per carry at Rutgers without a negative rush. Oregon is allowing only 110.7 rushing yards per game and 3.6 yards per carry. If the Ducks can win early downs with the front, they can take away the balance that keeps Maiava out of obvious passing situations.",
+        edge: "Even",
+      },
+      {
+        title: "Jayden Maiava vs. Oregon's coverage and pressure",
+        body: "Maiava is completing 75.7% of his throws with 12 touchdowns and only one interception, and USC has enough receiving depth to attack every level. Oregon counters with five interceptions through three games and has held opposing quarterbacks to a 53.3% completion rate. The Ducks have only four sacks, so they may need coverage to buy the front enough time to affect Maiava.",
+        edge: "USC — slight",
+      },
+    ],
+    pathsToWin: [
+      {
+        team: "Oregon",
+        body: "Keep Moore clean enough to attack USC's safeties, use Stewart and Dakorien Moore to force the field open and avoid the penalties that have already cost Oregon more than 70 yards per game. Defensively, stop Miller before USC can live in play action and make Maiava drive the field against tighter passing windows.",
+      },
+      {
+        team: "USC",
+        body: "Stay balanced and make Oregon defend every blade of grass. Miller's run game can keep the Ducks from turning the game into a pure pass-rush contest, while Maiava's efficiency gives USC answers when Oregon plays coverage. Defensively, the Trojans need takeaways or early-down disruption so Moore cannot repeatedly operate from clean second-and-manageable situations.",
+      },
+    ],
+    playersToWatch: [
+      {
+        team: "Oregon",
+        players: [
+          { name: "Dante Moore", position: "QB", body: "He enters conference play with 849 passing yards, nine touchdowns and no interceptions. USC's best chance is forcing him to hold the ball and win after the first read is taken away." },
+          { name: "Evan Stewart", position: "WR", body: "Oregon's leading receiver has 15 catches for 222 yards and two touchdowns. His ability to win vertically makes USC pay for leaning extra help toward the box." },
+          { name: "Jett Washington", position: "DB", body: "He leads Oregon with two interceptions and becomes especially important against a USC passing game that has spread production across multiple receivers." },
+        ],
+      },
+      {
+        team: "USC",
+        players: [
+          { name: "Jayden Maiava", position: "QB", body: "Through four games he has 1,173 passing yards, 12 touchdowns and one interception while completing 75.7% of his passes. Oregon has not yet faced a passing game this efficient." },
+          { name: "King Miller", position: "RB", body: "USC's leading rusher has 338 yards and three touchdowns, including back-to-back 100-yard games. His success determines whether Oregon can sell out to pressure Maiava." },
+          { name: "Christian Pierce", position: "S", body: "He had 11 tackles, an interception and two pass breakups at Rutgers. USC needs that same range and tackling against Oregon's deep, spread-out receiving group." },
+        ],
+      },
+    ],
+    unitEdges: [
+      {
+        title: "OREGON OFFENSE vs. USC DEFENSE",
+        edge: "OREGON — SLIGHT",
+        body: "USC has created timely takeaways, but Oregon's combination of Moore's ball security, multiple receiving threats and a functional run game gives the Ducks several ways to punish aggressive coverage.",
+      },
+      {
+        title: "USC OFFENSE vs. OREGON DEFENSE",
+        edge: "USC — SLIGHT",
+        body: "Oregon's coverage numbers are strong, but Maiava's efficiency plus Miller's recent production makes USC difficult to push into one-dimensional football. The Ducks need their four-man rush to affect the pocket more consistently than it has through three games.",
+      },
+    ],
   },
+  {
+    id: "2026-raiders-saints",
+    title: "Raiders vs. Saints",
+    venue: "Caesars Superdome · New Orleans",
+    teams: [
+      { name: "Las Vegas Raiders", aliases: ["las-vegas-raiders", "las-vegas", "raiders", "lv-raiders", "lv"] },
+      { name: "New Orleans Saints", aliases: ["new-orleans-saints", "new-orleans", "saints", "no-saints", "no"] },
+    ],
+    setup: [
+      "Las Vegas brings a 2–0 record into New Orleans for the Saints' home opener, while New Orleans is 1–1 after rallying from a 14–3 deficit to beat Baltimore 24–17. There is also a coaching connection: Raiders head coach Klint Kubiak returns to the Superdome after serving as the Saints' offensive coordinator in 2024, the same season Las Vegas came to New Orleans and won 25–10.",
+      "The early-season identities are already clear. Kirk Cousins has thrown six touchdown passes in two games and the Raiders are getting explosive production from Tre Tucker, while Tyler Shough has thrown for 662 yards through two games and just led a fourth-quarter comeback in Baltimore. Las Vegas wants the game controlled by its efficient passing attack and defense; New Orleans wants Shough, Chris Olave and Juwan Johnson creating enough chain-moving plays to keep the Raiders from dictating tempo.",
+    ],
+    keyMatchups: [
+      {
+        title: "Kirk Cousins + Tre Tucker vs. the Saints' secondary",
+        body: "Cousins corrected the biggest Week 1 concern by attacking deeper against the Chargers, going 8-of-12 for 181 yards and three touchdowns on throws of 10-plus air yards. Tucker was the main beneficiary with five catches for 119 yards. New Orleans has to limit those explosives without giving Cousins easy underneath answers when it backs the safeties off.",
+        edge: "Raiders — slight",
+      },
+      {
+        title: "Ashton Jeanty vs. the Saints' front seven",
+        body: "Jeanty has 150 rushing yards through two games but was held to 48 yards on 21 carries by the Chargers. New Orleans just tightened up against Baltimore and allowed only 40 rushing yards in the second half, with Pete Werner and the front playing faster as the game went on. The Saints can make Las Vegas much easier to defend if they keep the Raiders behind schedule on the ground.",
+        edge: "Saints — slight",
+      },
+      {
+        title: "Tyler Shough + Chris Olave vs. Las Vegas' pass defense",
+        body: "Shough completed 27-of-34 for 252 yards and a touchdown in Baltimore, with Olave catching eight passes for 86 yards and the game-tying score. Las Vegas has opened 2–0 with a defense that is already producing top-10 results in multiple categories. New Orleans needs protection to hold up long enough for Olave and Juwan Johnson to work beyond the first window.",
+        edge: "Even",
+      },
+    ],
+    pathsToWin: [
+      {
+        team: "Las Vegas Raiders",
+        body: "Let Cousins keep playing on time, use Tucker's speed to stretch the Saints vertically and make New Orleans defend the full route tree before leaning harder on Jeanty. Defensively, pressure Shough without opening easy scramble lanes and force the Saints to prove they can finish long drives rather than living on fourth-quarter explosives.",
+      },
+      {
+        team: "New Orleans Saints",
+        body: "Win early downs on defense so Cousins cannot live in favorable play-action situations, then make Las Vegas earn every explosive through tighter coverage. Offensively, keep Shough in rhythm with Olave and Johnson, use the backs as outlets against pressure and avoid falling into another early two-score hole.",
+      },
+    ],
+    playersToWatch: [
+      {
+        team: "Las Vegas Raiders",
+        players: [
+          { name: "Kirk Cousins", position: "QB", body: "He has 413 passing yards and six touchdowns through two games, including three scores in each win. New Orleans has to disrupt his timing before the route concepts fully develop." },
+          { name: "Tre Tucker", position: "WR", body: "Seven catches for 146 yards through two games, including 119 yards against the Chargers. His speed is the Raiders' cleanest way to punish a Saints defense that gets too aggressive underneath." },
+          { name: "Maxx Crosby", position: "DE", body: "The centerpiece of the Raiders' front remains the player New Orleans must account for on every passing down. His ability to create pressure without extra rushers lets Las Vegas keep more bodies in coverage." },
+        ],
+      },
+      {
+        team: "New Orleans Saints",
+        players: [
+          { name: "Tyler Shough", position: "QB", body: "He has 662 passing yards through two games and completed 79.4% of his throws in the comeback win over Baltimore. This matchup tests whether that production can hold up against a defense playing with an early-season edge." },
+          { name: "Chris Olave", position: "WR", body: "Eight catches for 86 yards and a touchdown in Week 2 showed how central he is to the Saints' passing game. New Orleans needs him creating separation before the Raiders' rush can arrive." },
+          { name: "Pete Werner", position: "LB", body: "He led New Orleans with 11 tackles and a sack in Baltimore. His range is critical against Jeanty underneath and against the play-action concepts Kubiak uses to stress linebackers." },
+        ],
+      },
+    ],
+    unitEdges: [
+      {
+        title: "RAIDERS OFFENSE vs. SAINTS DEFENSE",
+        edge: "RAIDERS — SLIGHT",
+        body: "New Orleans showed it can tighten up after halftime, but Cousins' efficiency and Tucker's explosive start give Las Vegas a passing-game answer even when Jeanty is not controlling the ground game.",
+      },
+      {
+        title: "SAINTS OFFENSE vs. RAIDERS DEFENSE",
+        edge: "EVEN",
+        body: "Shough and Olave have already shown enough production to move the ball against quality competition, but Las Vegas' defensive start makes this a much tougher protection and decision-making test than the raw passing totals suggest.",
+      },
+    ],
+  }
 ];
 
 function normalizeTeamToken(value: string) {
