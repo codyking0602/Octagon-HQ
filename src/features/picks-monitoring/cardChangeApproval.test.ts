@@ -8,6 +8,8 @@ const first = {
   blue_fighter_slug: "beta",
   blue_fighter_name: "Beta",
   weight_class: "Lightweight",
+  card_segment: "main" as const,
+  segment_sequence: 2,
 };
 const second = {
   bout_id: "main-gamma-delta",
@@ -16,6 +18,8 @@ const second = {
   blue_fighter_slug: "delta",
   blue_fighter_name: "Delta",
   weight_class: "Welterweight",
+  card_segment: "main" as const,
+  segment_sequence: 1,
 };
 const canonical = {
   event_id: "ufc-approval",
