@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 const center = readFileSync("src/features/back-room/FootballWeeklyAuctionCenterPage.tsx", "utf8");
 const repository = readFileSync("src/features/play/footballWeeklyAuctionRepository.ts", "utf8");
 const migration = readFileSync(
-  "supabase/migrations/202612310162_football_weekly_auction_history.sql",
+  "supabase/migrations/202612310163_football_weekly_auction_history.sql",
   "utf8",
 );
 const cfbGate = readFileSync("src/features/back-room/FootballWeeklyAuctionGate.tsx", "utf8");
