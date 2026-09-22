@@ -147,6 +147,32 @@ describe("Football weekly slate owner setup", () => {
     expect(screen.getAllByText(/the-odds-api/)).toHaveLength(2);
   });
 
+  it("stages pending ATS lines, blocks publish, and refreshes the same weekly slate in place", async () => {
+    const pendingDraft: PickSetupDraft = {
+      ...footballDraft,
+      canPublish: false,
+      warnings: ["FOOTBALL GAME DATA NEEDS REVIEW"],
+      bouts: footballDraft.bouts.map((game, index) => index === 0 ? {
+        ...game,
+        spreadHome: null,
+        spreadSource: null,
+        spreadUpdatedAt: null,
+      } : game),
+    };
+    const loadDraft = vi.fn().mockResolvedValueOnce(pendingDraft).mockResolvedValue(footballDraft);
+    const repo = repository(loadDraft);
+    renderPage(repo);
+
+    expect(await screen.findByText("NO LINE")).toBeInTheDocument();
+    expect(screen.getByText(/WAITING FOR THE ODDS API/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "PUBLISH FOOTBALL SLATE" })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("button", { name: "REFRESH PENDING ATS LINES" }));
+    await waitFor(() => expect(repo.stageFootballWeek).toHaveBeenCalledWith("2099-09-08", ["402"]));
+    await waitFor(() => expect(loadDraft).toHaveBeenCalledTimes(2));
+    expect(screen.getByRole("button", { name: "PUBLISH FOOTBALL SLATE" })).toBeEnabled();
+  });
+
   it("publishes through the existing canonical draft publication method", async () => {
     const repo = repository();
     renderPage(repo);
