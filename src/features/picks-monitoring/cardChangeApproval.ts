@@ -63,6 +63,20 @@ export type CardChangeApprovalProposal =
       event_id: string;
       expected_bout_ids: string[];
       proposed_bout_ids: string[];
+    }
+  | {
+      action: "sync_card_segments";
+      event_id: string;
+      expected_segments: Array<{
+        bout_id: string;
+        card_segment: "prelim" | "main" | null;
+        segment_sequence: number | null;
+      }>;
+      proposed_segments: Array<{
+        bout_id: string;
+        card_segment: "prelim" | "main";
+        segment_sequence: number;
+      }>;
     };
 
 export interface ApprovalMonitoringBout {
@@ -94,7 +108,7 @@ interface ApprovalSourceEvent extends ApprovalMonitoringEvent {
   source_url: string;
 }
 
-type ChangeField = "venue" | "location" | "weight_class" | "locks_at" | "fight_order" | "fighters" | "included_in_picks" | "other";
+type ChangeField = "venue" | "location" | "weight_class" | "locks_at" | "fight_order" | "card_segments" | "fighters" | "included_in_picks" | "other";
 
 function stableKey(...values: unknown[]) {
   return values
@@ -355,6 +369,65 @@ export function buildCardChangeFindings(input: {
         },
       }));
     }
+  }
+
+  const exactSegmentSet = unmatchedCurrent.length === 0 && unmatchedSource.length === 0
+    && canonicalBouts.length === sourceBouts.length;
+  const expectedSegments = canonicalBouts.map((bout) => ({
+    bout_id: bout.bout_id,
+    card_segment: bout.card_segment === "main" || bout.card_segment === "prelim"
+      ? bout.card_segment
+      : null,
+    segment_sequence: Number.isInteger(bout.segment_sequence) && (bout.segment_sequence ?? 0) > 0
+      ? bout.segment_sequence!
+      : null,
+  }));
+  const proposedSegments = exactSegmentSet
+    ? sourceBouts.map((sourceBout) => {
+        const currentBout = currentByMatchup.get(matchup(sourceBout))!;
+        return {
+          bout_id: currentBout.bout_id,
+          card_segment: sourceBout.card_segment,
+          segment_sequence: sourceBout.segment_sequence,
+        };
+      })
+    : [];
+  const validProposedSegments = exactSegmentSet
+    && proposedSegments.every((item) => (
+      (item.card_segment === "main" || item.card_segment === "prelim")
+      && Number.isInteger(item.segment_sequence)
+      && (item.segment_sequence ?? 0) > 0
+    ));
+  const expectedSegmentMap = new Map(expectedSegments.map((item) => [item.bout_id, item]));
+  const cardSegmentsChanged = validProposedSegments && proposedSegments.some((item) => {
+    const expected = expectedSegmentMap.get(item.bout_id);
+    return expected?.card_segment !== item.card_segment
+      || expected?.segment_sequence !== item.segment_sequence;
+  });
+  if (cardSegmentsChanged) {
+    changes
+      .filter((change) => change.summary.startsWith("Moved "))
+      .forEach((change) => handledSummaries.add(change.summary));
+    result.push(finding({
+      identity: input.identity,
+      kind: input.kind,
+      detectedAt: input.detectedAt,
+      summary: "Apply the detected main/prelim placement.",
+      subjectKey: "event:card_segments",
+      field: "card_segments",
+      beforeValue: expectedSegments,
+      afterValue: proposedSegments,
+      proposal: {
+        action: "sync_card_segments",
+        event_id: input.eventId,
+        expected_segments: expectedSegments,
+        proposed_segments: proposedSegments.map((item) => ({
+          bout_id: item.bout_id,
+          card_segment: item.card_segment as "prelim" | "main",
+          segment_sequence: item.segment_sequence as number,
+        })),
+      },
+    }));
   }
 
   const expectedOrder = canonicalBouts.map((bout) => bout.bout_id);
