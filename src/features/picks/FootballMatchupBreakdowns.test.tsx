@@ -48,6 +48,15 @@ describe("FootballMatchupBreakdowns", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("opens Oregon-USC from the exact Home deep link", async () => {
+    window.history.replaceState({}, "", "/football/picks?matchup=2026-oregon-usc");
+    render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
+
+    expect(await screen.findByRole("dialog")).toHaveTextContent("Oregon vs. USC");
+    expect(screen.getByText("OREGON OFFENSE vs. USC DEFENSE")).toBeInTheDocument();
+    expect(screen.getByText("USC OFFENSE vs. OREGON DEFENSE")).toBeInTheDocument();
+  });
+
   it("portals the open breakdown above the Picks stacking context and locks background scrolling", () => {
     render(
       <div data-testid="picks-tools">
