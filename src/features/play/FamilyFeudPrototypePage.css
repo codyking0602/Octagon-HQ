@@ -2788,3 +2788,132 @@ body.family-feud-prototype-active {
     transform: scale(1.63) !important;
   }
 }
+
+
+/* Corrected main-round layering + separate round answer results.
+   The host is a stage-background layer only: above the photographic plate,
+   below the entire live main-stage stacking context. */
+.family-feud-prototype[data-scene="main"] > .feud-fast-host-asset {
+  z-index: 1 !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-main-stage {
+  z-index: 2 !important;
+}
+
+/* The live board always stays exactly as played. Round-end accepted-answer
+   information appears in its own panel rather than rewriting board tiles. */
+.family-feud-prototype[data-scene="main"] .feud-answer-board.is-review .feud-answer-slot {
+  animation: none !important;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer-reveal {
+  z-index: 40 !important;
+  left: 2.8%;
+  right: 2.8%;
+  bottom: 10.8%;
+  max-height: 35%;
+  padding: 10px 11px 11px;
+  gap: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(247, 196, 69, 0.72);
+  border-radius: 16px;
+  background: rgba(0, 13, 39, 0.97);
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.42),
+    0 -12px 30px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(10px);
+  animation: sports-feud-round-panel-in 260ms cubic-bezier(0.2, 0.8, 0.22, 1);
+}
+
+@keyframes sports-feud-round-panel-in {
+  0% { opacity: 0; transform: translateY(18px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 6px;
+  margin: 2px 0 3px;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer {
+  min-width: 0;
+  height: 24px;
+  padding: 0 6px;
+  display: grid;
+  grid-template-columns: 13px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 3px;
+  border: 1px solid rgba(84, 140, 208, 0.38);
+  border-radius: 7px;
+  color: #c7d8ed;
+  background: rgba(4, 34, 79, 0.72);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer > span {
+  color: transparent;
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer > strong {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: clamp(7px, 1.85vw, 10px);
+  line-height: 1;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer > b {
+  color: #ffd45d;
+  font-size: clamp(8px, 2vw, 11px);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer.is-found {
+  border-color: rgba(106, 225, 153, 0.58);
+  color: #fff;
+  background: rgba(10, 80, 68, 0.74);
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer.is-found > span {
+  color: #8ff0b2;
+}
+
+.family-feud-prototype[data-scene="main"] .feud-round-answer-reveal .feud-primary-button {
+  min-height: 43px;
+  margin-top: 1px;
+}
+
+/* Explicitly keep every interactive main-round surface above the host,
+   including the keyboard-open fixed tray and the round-results panel. */
+.family-feud-prototype[data-scene="main"] .feud-question-card,
+.family-feud-prototype[data-scene="main"] .feud-answer-board,
+.family-feud-prototype[data-scene="main"] .feud-main-score,
+.family-feud-prototype[data-scene="main"] .feud-strikes,
+.family-feud-prototype[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry,
+.family-feud-prototype[data-scene="main"] .feud-round-answer-reveal {
+  z-index: 20 !important;
+}
+
+.family-feud-prototype.is-keyboard-open[data-scene="main"] .feud-answer-entry {
+  z-index: 100020 !important;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="main"] .feud-round-answer-reveal {
+    max-height: 37%;
+    padding: 8px 9px 9px;
+  }
+
+  .family-feud-prototype[data-scene="main"] .feud-round-answer {
+    height: 21px;
+  }
+}
