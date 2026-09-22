@@ -23,7 +23,7 @@ import {
 } from "./footballWeeklyAuctionPresentation";
 
 type BidMap = FootballWeeklyAuctionBidMap;
-type FinalTab = "standings" | "collection" | "grades";
+type FinalTab = "standings" | "collections" | "grades";
 
 function TeamMark({ identity, school }: { identity: FootballWeeklyAuctionTeamIdentity; school: string }) {
   const [logoFailed, setLogoFailed] = useState(false);
@@ -161,17 +161,36 @@ function TeamCard({
   );
 }
 
+function collectionForProfile(result: FootballWeeklyAuctionFinal, profileId: string) {
+  return result.all_teams
+    .filter((entry) => entry.winner_profile_id === profileId)
+    .sort((left, right) => (
+      right.grade - left.grade
+      || left.winning_bid - right.winning_bid
+      || left.season_reference.localeCompare(right.season_reference)
+    ))
+    .map((entry, index) => ({ ...entry, counts: index < 3 }));
+}
+
 export function FootballWeeklyAuctionFinalResult({
   result,
   busy,
   onAcknowledge,
+  showNewWeekAction = true,
 }: {
   result: FootballWeeklyAuctionFinal;
   busy: boolean;
   onAcknowledge: () => void;
+  showNewWeekAction?: boolean;
 }) {
   const [tab, setTab] = useState<FinalTab>("standings");
   const me = result.my_result;
+  const currentStanding = result.standings.find((entry) => entry.is_current_user) ?? result.standings[0] ?? null;
+  const [selectedProfileId, setSelectedProfileId] = useState(currentStanding?.profile_id ?? "");
+  const selectedStanding = result.standings.find((entry) => entry.profile_id === selectedProfileId) ?? currentStanding;
+  const selectedCollection = selectedStanding
+    ? collectionForProfile(result, selectedStanding.profile_id)
+    : [];
 
   return (
     <section className="football-weekly-auction__final surface-card">
@@ -198,7 +217,7 @@ export function FootballWeeklyAuctionFinalResult({
 
       <nav className="football-weekly-auction__tabs" aria-label="Weekly Auction final views">
         <button className={tab === "standings" ? "is-active" : ""} type="button" onClick={() => setTab("standings")}>Standings</button>
-        <button className={tab === "collection" ? "is-active" : ""} type="button" onClick={() => setTab("collection")}>Your Collection</button>
+        <button className={tab === "collections" ? "is-active" : ""} type="button" onClick={() => setTab("collections")}>Collections</button>
         <button className={tab === "grades" ? "is-active" : ""} type="button" onClick={() => setTab("grades")}>All Grades</button>
       </nav>
 
@@ -214,24 +233,63 @@ export function FootballWeeklyAuctionFinalResult({
         </div>
       ) : null}
 
-      {tab === "collection" ? (
-        <div className="football-weekly-auction__rows">
-          <header><span>TEAM</span><span>PAID</span><span>GRADE</span></header>
-          {result.collection.map((entry) => {
-            const identity = footballWeeklyAuctionTeamIdentity(entry.season_reference, entry.school, entry.season_year);
-            return (
-              <div
-                className={"football-weekly-auction__result-team" + (entry.counts ? " is-counting" : "")}
-                key={entry.season_reference}
-                style={footballWeeklyAuctionTeamStyle(identity)}
+      {tab === "collections" ? (
+        <div className="football-weekly-auction__collections">
+          <div className="football-weekly-auction__player-picker" aria-label="Select player collection">
+            {result.standings.map((entry) => (
+              <button
+                className={selectedStanding?.profile_id === entry.profile_id ? "is-active" : ""}
+                type="button"
+                key={entry.profile_id}
+                onClick={() => setSelectedProfileId(entry.profile_id)}
               >
-                <strong>{entry.display_label}{entry.counts ? <small>COUNTS</small> : null}</strong>
-                <span>{"$"}{entry.winning_bid}</span>
-                <b>{entry.grade.toFixed(1)}</b>
+                <strong>{entry.display_name}</strong>
+                <span>{entry.final_score == null ? "—" : entry.final_score.toFixed(1)}</span>
+              </button>
+            ))}
+          </div>
+
+          {selectedStanding ? (
+            <>
+              <div className="football-weekly-auction__collection-summary">
+                <div>
+                  <small>COLLECTION</small>
+                  <strong>{selectedStanding.display_name}</strong>
+                </div>
+                <span>
+                  {selectedStanding.owned_count} team{selectedStanding.owned_count === 1 ? "" : "s"} · {selectedStanding.final_score == null ? "No final average" : selectedStanding.final_score.toFixed(1) + " best-3"}
+                </span>
               </div>
-            );
-          })}
-          <footer><span>BEST 3 AVERAGE</span><strong>{me.final_score?.toFixed(1) ?? "—"}</strong></footer>
+
+              <div className="football-weekly-auction__rows">
+                <header><span>TEAM</span><span>PAID</span><span>GRADE</span></header>
+                {selectedCollection.length ? selectedCollection.map((entry) => {
+                  const identity = footballWeeklyAuctionTeamIdentity(entry.season_reference, entry.school, entry.season_year);
+                  return (
+                    <div
+                      className={"football-weekly-auction__result-team" + (entry.counts ? " is-counting" : "")}
+                      key={entry.season_reference}
+                      style={footballWeeklyAuctionTeamStyle(identity)}
+                    >
+                      <strong>{entry.display_label}{entry.counts ? <small>COUNTS</small> : null}</strong>
+                      <span>{"$"}{entry.winning_bid}</span>
+                      <b>{entry.grade.toFixed(1)}</b>
+                    </div>
+                  );
+                }) : (
+                  <div className="football-weekly-auction__collection-empty">
+                    <strong>No teams won</strong>
+                    <span>—</span>
+                    <b>—</b>
+                  </div>
+                )}
+                <footer>
+                  <span>BEST 3 AVERAGE</span>
+                  <strong>{selectedStanding.final_score?.toFixed(1) ?? "—"}</strong>
+                </footer>
+              </div>
+            </>
+          ) : null}
         </div>
       ) : null}
 
@@ -255,9 +313,11 @@ export function FootballWeeklyAuctionFinalResult({
         </div>
       ) : null}
 
-      <button className="football-weekly-auction__primary" disabled={busy} type="button" onClick={onAcknowledge}>
-        START THE NEW WEEK
-      </button>
+      {showNewWeekAction ? (
+        <button className="football-weekly-auction__primary football-weekly-auction__new-week" disabled={busy} type="button" onClick={onAcknowledge}>
+          START THE NEW WEEK
+        </button>
+      ) : null}
     </section>
   );
 }

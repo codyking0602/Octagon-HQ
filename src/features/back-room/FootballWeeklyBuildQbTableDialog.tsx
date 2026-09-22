@@ -108,12 +108,14 @@ export function FootballWeeklyBuildQbTableDialog({ onClose }: { onClose: () => v
         onMouseDown={(event) => event.stopPropagation()}
       >
         <header>
+          <button className="football-weekly-build-qb__sheet-back" type="button" onClick={onClose} aria-label="Back to Build a QB">
+            ← BACK
+          </button>
           <div>
             <p className="eyebrow">WEEKLY AUCTION · BUILD A QB</p>
             <h2>AUCTION TABLE</h2>
             <span>Resolved traits + bankrolls. Today’s bids stay sealed.</span>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close Auction Table">×</button>
         </header>
         <div className="football-weekly-build-qb-table__body">
           {loading ? <p>Loading table…</p> : null}

@@ -12,6 +12,7 @@ const dynamicBankroll = readFileSync("supabase/migrations/202612310137_football_
 const fullPoolRepair = readFileSync("supabase/migrations/202612310138_football_weekly_auction_full_233_pool.sql", "utf8");
 const auctionTableMigration = readFileSync("supabase/migrations/202612310142_football_weekly_auction_table.sql", "utf8");
 const fieldLockMigration = readFileSync("supabase/migrations/202612310145_football_weekly_auction_field_lock.sql", "utf8");
+const day1JoinWindowMigration = readFileSync("supabase/migrations/202612310161_football_weekly_auction_day1_join_window.sql", "utf8");
 const transitionMigration = readFileSync("supabase/migrations/202612310132_football_troy_transition_carry.sql", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
@@ -138,14 +139,15 @@ describe("Football Weekly Auction live contract", () => {
     expect(gate).toContain("View all bids");
   });
 
-  it("locks the competitor field at Tuesday midnight and defers midweek joins", () => {
+  it("keeps the competitor field open through Day 1 and freezes it at the first board lock", () => {
     expect(fieldLockMigration).toContain("private.football_weekly_auction_participants");
-    expect(fieldLockMigration).toContain("field_locked_at");
-    expect(fieldLockMigration).toContain("profile.created_at >= v_previous_lock_at");
-    expect(fieldLockMigration).toContain("profile.created_at < v_lock_at");
-    expect(fieldLockMigration).toContain("Weekly Auction field is locked for this week");
-    expect(fieldLockMigration).toContain("'eligible_week_start', v_week_start + 7");
-    expect(fieldLockMigration).toContain("from private.football_weekly_auction_participants");
+    expect(day1JoinWindowMigration).toContain("private.ensure_football_weekly_auction_participant");
+    expect(day1JoinWindowMigration).toContain("'day_1_join'");
+    expect(day1JoinWindowMigration).toContain("p_at < v_day1_lock_at");
+    expect(day1JoinWindowMigration).toContain("p_at>=v_day1_lock_at");
+    expect(day1JoinWindowMigration).toContain("set field_locked_at=coalesce(week.field_locked_at,v_day1_lock_at)");
+    expect(day1JoinWindowMigration).toContain("'eligible_week_start',v_week_start+7");
+    expect(day1JoinWindowMigration).not.toContain("profile.created_at >= v_previous_lock_at");
   });
 
   it("gates every official Football Daily runtime request behind today's submission", () => {

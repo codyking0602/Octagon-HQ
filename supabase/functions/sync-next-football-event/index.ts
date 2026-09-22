@@ -217,18 +217,18 @@ Deno.serve(async (request) => {
         ...selectedCollegeEvents.map((espnEvent) => ({ espnEvent, oddsEvents: collegeOdds, league: "college-football" })),
       ];
       const normalization = normalizeFootballSlate(selectedGames);
-      if (normalization.unavailable.length) {
-        return json({
-          error: footballSlateUnavailableMessage(normalization.unavailable, selectedGames.length),
-          selected_game_count: selectedGames.length,
-          unavailable_game_count: normalization.unavailable.length,
-          unavailable_games: normalization.unavailable,
-        }, 409);
-      }
-
       await cacheFootballTeamAssets(admin, normalization.events);
       const draftId = await stageFootballEvents(admin, normalization.events);
-      return json({ draftId, staged_game_count: normalization.events.length, ...weekPreview });
+      return json({
+        draftId,
+        staged_game_count: normalization.events.length,
+        pending_odds_count: normalization.unavailable.length,
+        pending_odds_games: normalization.unavailable,
+        ...(normalization.unavailable.length
+          ? { warning: footballSlateUnavailableMessage(normalization.unavailable, selectedGames.length) }
+          : {}),
+        ...weekPreview,
+      });
     }
 
     const league = input.league === "college-football" ? "college-football" : "nfl";

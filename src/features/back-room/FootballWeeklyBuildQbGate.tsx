@@ -18,6 +18,13 @@ type FinalTab = "standings" | "build" | "grades";
 
 const TRAITS: readonly FootballWeeklyBuildQbTrait[] = ["Arm", "Accuracy", "Processing", "Mobility"];
 
+const TRAIT_DEFINITIONS: Readonly<Record<FootballWeeklyBuildQbTrait, string>> = {
+  Arm: "Functional arm talent: velocity, range, off-platform throws, and access to difficult throws.",
+  Accuracy: "Ball placement and consistency across short, intermediate, and deep throws.",
+  Processing: "Reads, anticipation, timing, decision-making, and handling defensive pressure and complexity.",
+  Mobility: "Escaping pressure, extending plays, movement skill, and creating value as a runner.",
+};
+
 function TeamMark({ teamCode }: { teamCode: string }) {
   const identity = buildQbTeamVisualIdentity(teamCode);
   const [failed, setFailed] = useState(false);
@@ -29,6 +36,46 @@ function TeamMark({ teamCode }: { teamCode: string }) {
         <span>{teamCode}</span>
       )}
     </span>
+  );
+}
+
+function TraitDefinitions({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={compact ? "football-weekly-build-qb__trait-definitions is-compact" : "football-weekly-build-qb__trait-definitions"}>
+      {TRAITS.map((trait) => (
+        <div key={trait}>
+          <strong>{trait}</strong>
+          <span>{TRAIT_DEFINITIONS[trait]}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TraitDefinitionsDialog({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="football-weekly-build-qb__trait-backdrop" role="presentation" onClick={onClose}>
+      <section
+        className="football-weekly-build-qb__trait-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="weekly-build-qb-trait-title"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header>
+          <button className="football-weekly-build-qb__sheet-back" type="button" onClick={onClose} aria-label="Back to Build a QB">
+            ← BACK
+          </button>
+          <div>
+            <p className="eyebrow">BUILD A QB</p>
+            <h2 id="weekly-build-qb-trait-title">Trait definitions</h2>
+          </div>
+        </header>
+        <div className="football-weekly-build-qb__trait-body">
+          <TraitDefinitions />
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -47,6 +94,10 @@ function RulesCover({ onStart }: { onStart: () => void }) {
           <li>Highest bid wins. Losing bids cost nothing. Ties favor fewer traits won, then less money spent.</li>
           <li>Your four hidden trait grades are averaged for the final score.</li>
         </ul>
+        <div className="football-weekly-build-qb__rules-traits">
+          <small>THE FOUR TRAITS</small>
+          <TraitDefinitions compact />
+        </div>
       </div>
       <button className="football-weekly-build-qb__primary" type="button" onClick={onStart}>
         START TODAY’S AUCTION
@@ -188,10 +239,12 @@ export function FootballWeeklyBuildQbFinalResult({
   result,
   busy,
   onAcknowledge,
+  showNewWeekAction = true,
 }: {
   result: FootballWeeklyBuildQbFinal;
   busy: boolean;
   onAcknowledge: () => void;
+  showNewWeekAction?: boolean;
 }) {
   const [tab, setTab] = useState<FinalTab>("standings");
   const me = result.my_result;
@@ -260,9 +313,11 @@ export function FootballWeeklyBuildQbFinalResult({
         </div>
       ) : null}
 
-      <button className="football-weekly-build-qb__primary" type="button" disabled={busy} onClick={onAcknowledge}>
-        START THE NEW WEEK
-      </button>
+      {showNewWeekAction ? (
+        <button className="football-weekly-build-qb__primary" type="button" disabled={busy} onClick={onAcknowledge}>
+          START THE NEW WEEK
+        </button>
+      ) : null}
     </section>
   );
 }
@@ -285,6 +340,7 @@ export function FootballWeeklyBuildQbGate({
   const [introDismissed, setIntroDismissed] = useState(false);
   const [editing, setEditing] = useState(!state.submitted_today);
   const [auctionTableOpen, setAuctionTableOpen] = useState(false);
+  const [traitDefinitionsOpen, setTraitDefinitionsOpen] = useState(false);
   const wonTraits = useMemo(() => new Set(state.collection.map((item) => item.trait)), [state.collection]);
   const initialBids = useMemo<BidMap>(() => ({
     1: state.bids["1"] ?? 0,
@@ -322,6 +378,7 @@ export function FootballWeeklyBuildQbGate({
   return (
     <div className="football-weekly-build-qb">
       {auctionTableOpen ? <FootballWeeklyBuildQbTableDialog onClose={() => setAuctionTableOpen(false)} /> : null}
+      {traitDefinitionsOpen ? <TraitDefinitionsDialog onClose={() => setTraitDefinitionsOpen(false)} /> : null}
 
       <div className="football-weekly-build-qb__status">
         <button type="button" onClick={() => setAuctionTableOpen(true)} aria-haspopup="dialog">
@@ -348,7 +405,12 @@ export function FootballWeeklyBuildQbGate({
         <TraitSlots state={state} />
 
         <div className="football-weekly-build-qb__lock-note">
-          <strong>TODAY’S FOUR TRAITS</strong>
+          <div className="football-weekly-build-qb__lock-title">
+            <strong>TODAY’S FOUR TRAITS</strong>
+            <button type="button" onClick={() => setTraitDefinitionsOpen(true)} aria-haspopup="dialog">
+              Trait definitions ⓘ
+            </button>
+          </div>
           <div className="football-weekly-build-qb__lock-copy">
             <span>Bids lock · results reveal at midnight CT</span>
             <span>$0 uses your free pass for that trait.</span>
