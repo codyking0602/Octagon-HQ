@@ -57,7 +57,7 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
           { id: "ufc-khabib-nurmagomedov-a-6", text: "A 2014 decision win over Rafael dos Anjos became one of the important victories in my climb at lightweight.", band: "strong", verification: "verified", sourceIds: ["profile", "hof"] },
           { id: "ufc-khabib-nurmagomedov-a-7", text: "I won a vacant UFC lightweight championship by going five rounds with Al Iaquinta.", band: "strong", verification: "verified", sourceIds: ["hof", "profile"] },
           { id: "ufc-khabib-nurmagomedov-a-8", text: "I defended that championship by submitting Dustin Poirier in the third round in Abu Dhabi.", band: "strong", verification: "verified", sourceIds: ["hof", "profile"] },
-          { id: "ufc-khabib-nurmagomedov-a-9", text: "My final fight was a second-round submission of Justin Gaethje in a title unification bout.", band: "giveaway", verification: "verified", sourceIds: ["hof", "profile"] },
+          { id: "ufc-khabib-nurmagomedov-a-9", text: "I closed my professional career with a second-round submission of Justin Gaethje in a title unification bout.", band: "giveaway", verification: "verified", sourceIds: ["hof", "profile"] },
           { id: "ufc-khabib-nurmagomedov-a-10", text: "I retired as the reigning lightweight champion with a perfect 29-0 professional record.", band: "giveaway", verification: "verified", sourceIds: ["hof", "retired"] }
         ]
       },
