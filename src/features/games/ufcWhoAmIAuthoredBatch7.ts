@@ -690,11 +690,12 @@ export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frank-shamrock-a-3",
-            "text": "After leaving one famous fight-team orbit, I moved to San Jose and helped form American Kickboxing Academy.",
+            "text": "I had already spent several years fighting professionally before entering the UFC in 1997.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "identity3"
+              "identity2",
+              "ledger"
             ]
           },
           {
@@ -808,11 +809,11 @@ export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frank-shamrock-b-5",
-            "text": "That first UFC opponent was Olympic gold medalist Kevin Jackson.",
+            "text": "After leaving one famous fight-team orbit, I moved to San Jose and helped form American Kickboxing Academy.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "lineage"
+              "identity3"
             ]
           },
           {
