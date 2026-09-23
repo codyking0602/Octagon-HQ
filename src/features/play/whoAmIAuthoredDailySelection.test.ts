@@ -65,12 +65,23 @@ describe("Who Am I authored Daily selection", () => {
     expect(possiblePicks).toContain("subject-8");
   });
 
-  it("alternates authored scripts from the last published script", () => {
-    const history = [historyEntry("subject-1", 0, "A")];
+  it("alternates authored scripts from the last published script once the identity is cooldown-eligible", () => {
     const one = candidates.filter((candidate) => candidate.subjectId === "subject-1");
+    const cooldownFill = Array.from(
+      { length: WHO_AM_I_AUTHORED_RECENCY_COOLDOWN },
+      (_value, index) => historyEntry(`other-${index + 1}`, index + 1, null),
+    );
+    const history = [historyEntry("subject-1", 0, "A"), ...cooldownFill];
     expect(selectWhoAmIAuthoredIdentity(one, history, ["script-b"]).scriptId).toBe("B");
 
-    const nextHistory = [historyEntry("subject-1", 0, "A"), historyEntry("subject-1", 1, "B")];
+    const nextHistory = [
+      historyEntry("subject-1", 0, "A"),
+      historyEntry("subject-1", 1, "B"),
+      ...Array.from(
+        { length: WHO_AM_I_AUTHORED_RECENCY_COOLDOWN },
+        (_value, index) => historyEntry(`later-${index + 1}`, index + 2, null),
+      ),
+    ];
     expect(selectWhoAmIAuthoredIdentity(one, nextHistory, ["script-a"]).scriptId).toBe("A");
   });
 
