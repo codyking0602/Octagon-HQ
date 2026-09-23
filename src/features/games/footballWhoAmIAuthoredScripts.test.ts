@@ -16,6 +16,8 @@ const REVIEWED_IDENTITIES = new Set([
   "NFL:Myles Garrett",
   "CFB:Trevor Lawrence",
   "CFB:Jalen Hurts",
+  "NFL:Andy Reid",
+  "CFB:Nick Saban",
 ]);
 
 const EXPECTED_BANDS = [
@@ -32,8 +34,8 @@ const EXPECTED_BANDS = [
 ] as const;
 
 describe("Football Who Am I authored scripts", () => {
-  it("starts the authored migration with 21 completed identities", () => {
-    expect(footballWhoAmIAuthoredIdentities).toHaveLength(21);
+  it("starts the authored migration with 23 completed identities", () => {
+    expect(footballWhoAmIAuthoredIdentities).toHaveLength(23);
   });
 
   it("keeps league/name and canonical stage ownership unique", () => {
@@ -86,6 +88,6 @@ describe("Football Who Am I authored scripts", () => {
       const key = `${identity.league}:${identity.name}`;
       expect(identity.earlyRotation).toBe(REVIEWED_IDENTITIES.has(key) ? "deprioritized" : "normal");
     }
-    expect([...REVIEWED_IDENTITIES]).toHaveLength(11);
+    expect([...REVIEWED_IDENTITIES]).toHaveLength(13);
   });
 });
