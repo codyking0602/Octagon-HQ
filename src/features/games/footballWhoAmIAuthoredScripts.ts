@@ -8286,7 +8286,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-tua-tagovailoa-a-3",
-            "text": "I entered the national championship game at halftime with my team trailing 13-0.",
+            "text": "As a sophomore starter, I set school single-season records with 3,966 passing yards and 43 passing touchdowns.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8296,7 +8296,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-tua-tagovailoa-a-4",
-            "text": "From that point through overtime, I completed 14 passes for 166 yards and three touchdowns and added 27 rushing yards.",
+            "text": "That season I won both the Maxwell Award and Walter Camp Player of the Year and was named my conference's Offensive Player of the Year.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8316,7 +8316,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-tua-tagovailoa-a-6",
-            "text": "As a sophomore starter, I set Alabama single-season records with 3,966 passing yards and 43 passing touchdowns.",
+            "text": "I entered the national championship game at halftime with my team trailing 13-0.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8325,7 +8325,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-tua-tagovailoa-a-7",
-            "text": "That season I won both the Maxwell Award and Walter Camp Player of the Year and was named SEC Offensive Player of the Year.",
+            "text": "From that point through overtime, I completed 14 passes for 166 yards and three touchdowns and added 27 rushing yards.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8988,7 +8988,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-robert-griffin-iii-b-1",
-            "text": "One of the college coaches who insisted on keeping me at quarterback was Art Briles.",
+            "text": "Not every program recruiting me out of high school envisioned keeping me at quarterback.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -9090,7 +9090,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       "fsu": "https://seminoles.com/sports/football/roster/jameis-winston/3109",
       "heisman": "https://www.heisman.com/heisman-winners/jameis-winston/",
       "jersey": "https://seminoles.com/news/2023/11/16/football-florida-state-to-honor-jameis-winston-with-jersey-retirement",
-      "baseball": "https://seminoles.com/sports/baseball/roster/amara-kamara/4815"
+      "hall": "https://seminoles.com/honors/florida-state-athletics-hall-of-fame/jameis-winston/395"
     },
     "scripts": {
       "A": {
@@ -9198,17 +9198,17 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "baseball",
+              "hall",
               "fsu"
             ]
           },
           {
             "id": "cfb-jameis-winston-b-2",
-            "text": "During my second baseball season, I served as a closer and posted a 1.08 ERA with seven saves.",
+            "text": "Across two college baseball seasons, I posted a 1.94 ERA and recorded nine saves.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "baseball"
+              "hall"
             ]
           },
           {
