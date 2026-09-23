@@ -173,6 +173,15 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       "Name a responsibility of the people in a fighter's corner.",
       "Name something that can happen on the stool between rounds.",
     ],
-    answers: ["Give instructions", "Apply ice", "Reduce swelling", "Stop bleeding", "Give water", "Control breathing", "Encourage the fighter", "Adjust the game plan"],
+    answers: [
+      { name: "Give instructions", aliases: ["Instructions", "Coaching", "Coach"] },
+      { name: "Apply ice", aliases: ["Ice", "Ice the fighter"] },
+      { name: "Reduce swelling", aliases: ["Swelling", "Reduce swelling"] },
+      { name: "Stop bleeding", aliases: ["Bleeding", "Cut", "Cuts", "Stop the cut"] },
+      { name: "Give water", aliases: ["Water", "Hydrate", "Hydration"] },
+      { name: "Control breathing", aliases: ["Breathing", "Breathe"] },
+      { name: "Encourage the fighter", aliases: ["Encourage", "Motivate", "Motivation"] },
+      { name: "Adjust the game plan", aliases: ["Game plan", "Gameplan", "Adjust strategy"] },
+    ],
   },
 ] as const);
