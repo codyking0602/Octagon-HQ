@@ -34,6 +34,16 @@ const BRITTLE_PATTERNS = [
   /still the record/i,
 ];
 
+const EDITORIAL_FAILURE_PATTERNS = [
+  /most recognizable UFC matchup/i,
+  /defining UFC result/i,
+  /\\bI'\\b/,
+  /my first UFC title opportunity came after 1 earlier UFC appearances/i,
+  /UFC gold at Ultimate Fighter/i,
+  /championship victory at Ultimate Fighter/i,
+  /appearances at both .*Ultimate Fighter .* Tournament/i,
+];
+
 const EARLY_IDENTITY_SHORTCUTS = [
   /\bWaianae\b/i,
   /\bDagestan\b/i,
@@ -42,6 +52,8 @@ const EARLY_IDENTITY_SHORTCUTS = [
   /\bManaus\b/i,
   /\bAmerican Kickboxing Academy\b/i,
   /\bChute Boxe\b/i,
+  /\bB\.A\. Baracus\b/i,
+  /\bOlympic (?:gold|silver|bronze|medal)\b/i,
 ];
 
 describe("UFC Who Am I authored launch pool", () => {
@@ -78,6 +90,7 @@ describe("UFC Who Am I authored launch pool", () => {
           expect(clue.text.toLowerCase()).not.toContain(identity.name.toLowerCase());
           expect(GENERIC_PATTERNS.some((pattern) => pattern.test(clue.text))).toBe(false);
           expect(BRITTLE_PATTERNS.some((pattern) => pattern.test(clue.text))).toBe(false);
+          expect(EDITORIAL_FAILURE_PATTERNS.some((pattern) => pattern.test(clue.text))).toBe(false);
           expect(globalClueIds.has(clue.id)).toBe(false);
           globalClueIds.add(clue.id);
         }
