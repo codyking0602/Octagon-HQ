@@ -6,6 +6,7 @@ import {
   advanceFootballOfficialDailyRuntime,
   buildFootballOfficialDailySetup,
 } from "./footballTodayChallengeRuntime";
+import { buildFootballDailyPersistenceSetup as buildFootballWhoAmIPersistenceSetup } from "./footballDailyPublicationWhoAmI";
 import type {
   OfficialDailyGameType,
   OfficialDailyRuntimeContext,
@@ -435,6 +436,26 @@ function publicAttempt(graded: ReturnType<typeof grade>) {
   };
 }
 
+function buildSessionPublication(
+  gameType: OfficialDailyGameType,
+  day: string,
+  scheduleVersion: string,
+): OfficialDailySetupPublication {
+  if (gameType === "who_am_i") {
+    const persisted = buildFootballWhoAmIPersistenceSetup(day, scheduleVersion, gameType);
+    return {
+      setupKey: persisted.setupKey,
+      contentVersion: persisted.contentVersion,
+      scoringVersion: persisted.scoringVersion,
+      publicSetup: persisted.publicSetup,
+      revealSetup: persisted.revealSetup,
+      privateSetupEvidence: persisted.privateSetupEvidence,
+      privateGradingEvidence: persisted.privateGradingEvidence,
+    };
+  }
+  return buildFootballOfficialDailySetup(gameType, day, scheduleVersion);
+}
+
 function buildSingle(
   day: string,
   scheduleVersion: string,
@@ -442,7 +463,7 @@ function buildSingle(
   gameType: OfficialDailyGameType,
   actions: readonly JsonRecord[],
 ): FootballTodayProjection {
-  const publication = buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion);
+  const publication = buildSessionPublication(gameType, day, setupScheduleVersion);
   const run = replay(gameType, publication, actions);
   const graded = run.complete && run.finalSubmission ? grade(gameType, run.context, run.finalSubmission) : null;
   return {
@@ -550,7 +571,7 @@ export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPe
     return {
       gameType,
       scheduleVersion,
-      ...buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion),
+      ...buildSessionPublication(gameType, day, setupScheduleVersion),
     };
   }
 
@@ -597,7 +618,7 @@ export function buildFootballTodayRuntimeSnapshot(
   const gameType = footballTodayGameForDay(day);
   const setupScheduleVersion = footballTodaySetupScheduleVersionForDay(day);
   if (gameType !== "keep_4_cut_4") {
-    const publication = buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion);
+    const publication = buildSessionPublication(gameType, day, setupScheduleVersion);
     const run = replay(gameType, publication, actionHistory);
     return {
       projection,
