@@ -5237,21 +5237,21 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-nick-saban-a-3",
-            "text": "At my next college stop, I won an SEC championship in my second season.",
+            "text": "At my next college stop, I inherited a program coming off two straight losing seasons and won eight games in year one.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": ["bama"]
           },
           {
             "id": "cfb-nick-saban-a-4",
-            "text": "Two years later, that team went 13-1 and won a national championship.",
+            "text": "My second season there reached 10 wins and a conference championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": ["bama", "lsu"]
           },
           {
             "id": "cfb-nick-saban-a-5",
-            "text": "After a two-season stint as an NFL head coach, I returned to the SEC.",
+            "text": "Two years later, I went 13-1 and won my first national championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": ["bama"]
@@ -5298,35 +5298,35 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-nick-saban-b-1",
-            "text": "I spent four seasons as an NFL defensive coordinator under Bill Belichick before returning to college head coaching.",
+            "text": "Before my long-term head-coaching success, I worked as a defensive coordinator in both college football and the NFL.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": ["bama"]
           },
           {
             "id": "cfb-nick-saban-b-2",
-            "text": "During that NFL stint, the defense I coordinated improved to allowing the fewest points in the league in 1994.",
+            "text": "One of my NFL defenses eventually allowed the fewest points in the league.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": ["bama"]
           },
           {
             "id": "cfb-nick-saban-b-3",
-            "text": "My first college head-coaching job had already produced a 9-2 season and a MAC co-championship.",
+            "text": "That NFL staff was led by Bill Belichick, and I spent four seasons as his defensive coordinator.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": ["bama"]
           },
           {
             "id": "cfb-nick-saban-b-4",
-            "text": "At LSU, I won the program's first outright SEC championship since 1986.",
+            "text": "My first college head-coaching season had ended 9-2 with a MAC co-championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": ["bama"]
           },
           {
             "id": "cfb-nick-saban-b-5",
-            "text": "My 2003 LSU defense led the nation in both scoring defense and total defense while winning a national title.",
+            "text": "At LSU, I won the program's first outright SEC championship since 1986 and later a national title.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": ["bama", "lsu"]
