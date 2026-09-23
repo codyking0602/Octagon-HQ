@@ -33,34 +33,34 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-a-2",
-            "text": "My UFC debut ended with a win by stoppage.",
+            "text": "Before fighting full time, I worked as a wrestling coach at my alma mater.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-michael-chandler-a-3",
-            "text": "I spent most of my UFC career at Lightweight.",
+            "text": "I had already been a professional mixed martial artist for more than a decade before making my UFC debut.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-michael-chandler-a-4",
-            "text": "I reached my first UFC title opportunity in 2021.",
+            "text": "When I signed with the UFC in 2020, I was brought in as the backup for a lightweight title fight at UFC 254.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-michael-chandler-a-5",
-            "text": "I lost to Mauricio Ruffy by stoppage in 2026.",
+            "text": "My UFC debut ended with a first-round knockout of Dan Hooker.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -70,7 +70,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-a-6",
-            "text": "I lost to Paddy Pimblett by stoppage in 2025.",
+            "text": "My second UFC appearance was a fight with Charles Oliveira for the vacant lightweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -80,7 +80,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-a-7",
-            "text": "I lost to Justin Gaethje by decision in 2021.",
+            "text": "I later went three rounds with Justin Gaethje in a Madison Square Garden fight.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -90,7 +90,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-a-8",
-            "text": "I lost to Charles Oliveira by decision in 2024.",
+            "text": "I knocked out Tony Ferguson with a front kick in the second round at UFC 274.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -100,20 +100,21 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-a-9",
-            "text": "I challenged for UFC gold at Lightweight.",
+            "text": "I coached a season of The Ultimate Fighter opposite Conor McGregor.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-michael-chandler-a-10",
-            "text": "Before fighting full time, I worked as a wrestling coach at Missouri.",
+            "text": "Known as “Iron,” I arrived in the UFC after a championship run that had already made me a major name outside the promotion.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity4"
+              "identity1",
+              "profile"
             ]
           }
         ]
@@ -123,53 +124,53 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-michael-chandler-b-1",
-            "text": "I earned a bachelor's degree from the University of Missouri in personal financial management services and real estate.",
+            "text": "I earned a college degree in personal financial management services and real estate.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity3"
+              "identity2"
             ]
           },
           {
             "id": "ufc-michael-chandler-b-2",
-            "text": "I won 1 of my first three UFC appearances.",
-            "band": "broad",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-michael-chandler-b-3",
             "text": "Before college wrestling, I was also a multi-year high-school football player.",
-            "band": "helpful",
+            "band": "broad",
             "verification": "verified",
             "sourceIds": [
               "identity5"
             ]
           },
           {
-            "id": "ufc-michael-chandler-b-4",
-            "text": "My first UFC title opportunity came after one earlier UFC appearance.",
+            "id": "ufc-michael-chandler-b-3",
+            "text": "Two older college teammates who later became major MMA names helped influence my decision to try the sport after wrestling.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2",
+              "identity3"
             ]
           },
           {
-            "id": "ufc-michael-chandler-b-5",
-            "text": "I beat Dan Hooker by stoppage in 2021.",
+            "id": "ufc-michael-chandler-b-4",
+            "text": "Before joining the UFC, my résumé already included wins over Eddie Alvarez and Benson Henderson.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
               "profile"
             ]
           },
           {
+            "id": "ufc-michael-chandler-b-5",
+            "text": "I came to the UFC as a three-time lightweight world champion from another major promotion.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "identity1"
+            ]
+          },
+          {
             "id": "ufc-michael-chandler-b-6",
-            "text": "I lost to Dustin Poirier by submission in 2022.",
+            "text": "I announced my UFC arrival by stopping Dan Hooker in the first round.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -179,7 +180,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-b-7",
-            "text": "I beat Tony Ferguson by stoppage in 2022.",
+            "text": "One fight later, I challenged Charles Oliveira for the vacant UFC lightweight title.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -189,7 +190,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-b-8",
-            "text": "I lost to Charles Oliveira by stoppage in 2021.",
+            "text": "My UFC run has included fights with Justin Gaethje, Dustin Poirier and Tony Ferguson.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -199,20 +200,20 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-b-9",
-            "text": "One of my UFC title opportunities came at Lightweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-michael-chandler-b-10",
-            "text": "I also shared the Octagon with Charles Oliveira in 2024.",
+            "text": "I faced Oliveira a second time in 2024, going five rounds in the rematch.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-michael-chandler-b-10",
+            "text": "My “Iron” nickname and a season coaching The Ultimate Fighter opposite Conor McGregor became two recognizable parts of my UFC identity.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
               "profile"
             ]
           }
