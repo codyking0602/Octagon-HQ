@@ -1,4 +1,4 @@
-import { queryFootballSubjects, type FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
+import type { FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
 import { getFootballWhoAmILaunchPool } from "./footballWhoAmIAuthority";
 
 export type FootballWhoAmIAuthoredTargetLeague = "NFL" | "CFB";
@@ -75,42 +75,52 @@ const CFB_CROSSOVER_KEEP = [
   "LaDainian Tomlinson",
 ] as const;
 
+export interface FootballWhoAmIAuthoredTargetIdentity {
+  league: FootballWhoAmIAuthoredTargetLeague;
+  subjectId: string;
+  name: string;
+  kind: "player" | "coach";
+}
+
 export const FOOTBALL_WHO_AM_I_AUTHORED_APPROVED_ADDITIONS = {
   NFL: [
-    "Justin Jefferson",
-    "Derrick Henry",
-    "Saquon Barkley",
-    "Myles Garrett",
-    "T.J. Watt",
-    "Joe Burrow",
-    "Micah Parsons",
-    "Tyreek Hill",
-    "Patrick Surtain II",
-    "Ja'Marr Chase",
-    "George Kittle",
-    "Maxx Crosby",
-    "Amon-Ra St. Brown",
-    "Jayden Daniels",
-    "Jahmyr Gibbs",
+    { subjectId: "justin-jefferson", name: "Justin Jefferson" },
+    { subjectId: "derrick-henry", name: "Derrick Henry" },
+    { subjectId: "saquon-barkley", name: "Saquon Barkley" },
+    { subjectId: "myles-garrett", name: "Myles Garrett" },
+    { subjectId: "tj-watt", name: "T.J. Watt" },
+    { subjectId: "joe-burrow", name: "Joe Burrow" },
+    { subjectId: "micah-parsons", name: "Micah Parsons" },
+    { subjectId: "tyreek-hill", name: "Tyreek Hill" },
+    { subjectId: "patrick-surtain-ii", name: "Patrick Surtain II" },
+    { subjectId: "jamarr-chase", name: "Ja'Marr Chase" },
+    { subjectId: "george-kittle", name: "George Kittle" },
+    { subjectId: "maxx-crosby", name: "Maxx Crosby" },
+    { subjectId: "amon-ra-st-brown", name: "Amon-Ra St. Brown" },
+    { subjectId: "jayden-daniels", name: "Jayden Daniels" },
+    { subjectId: "jahmyr-gibbs", name: "Jahmyr Gibbs" },
   ],
   CFB: [
-    "Michael Vick",
-    "Trevor Lawrence",
-    "Jalen Hurts",
-    "Tua Tagovailoa",
-    "Kyler Murray",
-    "Marcus Mariota",
-    "Robert Griffin III",
-    "Jameis Winston",
-    "Sam Bradford",
-    "Mark Ingram",
-    "Justin Fields",
-    "Jayden Daniels",
-    "Stetson Bennett",
-    "Bo Nix",
-    "Kellen Moore",
+    { subjectId: "cfb-michael-vick", name: "Michael Vick" },
+    { subjectId: "cfb-trevor-lawrence", name: "Trevor Lawrence" },
+    { subjectId: "cfb-jalen-hurts", name: "Jalen Hurts" },
+    { subjectId: "cfb-tua-tagovailoa", name: "Tua Tagovailoa" },
+    { subjectId: "cfb-kyler-murray", name: "Kyler Murray" },
+    { subjectId: "cfb-marcus-mariota", name: "Marcus Mariota" },
+    { subjectId: "cfb-robert-griffin-iii", name: "Robert Griffin III" },
+    { subjectId: "cfb-jameis-winston", name: "Jameis Winston" },
+    { subjectId: "cfb-sam-bradford", name: "Sam Bradford" },
+    { subjectId: "cfb-mark-ingram", name: "Mark Ingram" },
+    { subjectId: "cfb-justin-fields", name: "Justin Fields" },
+    { subjectId: "cfb-jayden-daniels", name: "Jayden Daniels" },
+    { subjectId: "cfb-stetson-bennett", name: "Stetson Bennett" },
+    { subjectId: "cfb-bo-nix", name: "Bo Nix" },
+    { subjectId: "cfb-kellen-moore", name: "Kellen Moore" },
   ],
-} as const satisfies Record<FootballWhoAmIAuthoredTargetLeague, readonly string[]>;
+} as const satisfies Record<
+  FootballWhoAmIAuthoredTargetLeague,
+  readonly { subjectId: string; name: string }[]
+>;
 
 export const FOOTBALL_WHO_AM_I_AUTHORED_EXPLICIT_OUT = {
   NFL: [] as const,
@@ -150,21 +160,6 @@ function keepAuditedBasePlayer(
   return true;
 }
 
-function canonicalApprovedAddition(
-  league: FootballWhoAmIAuthoredTargetLeague,
-  name: string,
-) {
-  const wanted = normalizedName(name);
-  const matches = queryFootballSubjects({ league, kind: "player-career" })
-    .filter((subject) => normalizedName(subject.name) === wanted);
-  if (matches.length !== 1) {
-    throw new Error(
-      `Approved ${league} Who Am I addition ${name} must resolve to exactly one canonical player; found ${matches.length}.`,
-    );
-  }
-  return matches[0]!;
-}
-
 /**
  * Product-owned reconstruction of Cody's final Football Who Am I roster audit.
  *
@@ -178,23 +173,43 @@ function canonicalApprovedAddition(
  * Callers should freeze this result into authored coverage rather than restoring
  * the obsolete 180-player / 200-identity target.
  */
+function targetIdentity(
+  league: FootballWhoAmIAuthoredTargetLeague,
+  subject: FootballSubjectProfile,
+): FootballWhoAmIAuthoredTargetIdentity {
+  return {
+    league,
+    subjectId: subject.id,
+    name: subject.name,
+    kind: subject.kind === "coach" ? "coach" : "player",
+  };
+}
+
 export function footballWhoAmIAuthoredTargetRoster(
   league: FootballWhoAmIAuthoredTargetLeague,
 ) {
   const legacy = getFootballWhoAmILaunchPool(league);
-  const retainedPlayers = legacy.players.filter((subject) => keepAuditedBasePlayer(league, subject));
+  const retainedPlayers = legacy.players
+    .filter((subject) => keepAuditedBasePlayer(league, subject))
+    .map((subject) => targetIdentity(league, subject));
   const additions = FOOTBALL_WHO_AM_I_AUTHORED_APPROVED_ADDITIONS[league]
-    .map((name) => canonicalApprovedAddition(league, name));
+    .map((entry): FootballWhoAmIAuthoredTargetIdentity => ({
+      league,
+      subjectId: entry.subjectId,
+      name: entry.name,
+      kind: "player",
+    }));
 
   const playersById = new Map(
-    [...retainedPlayers, ...additions].map((subject) => [subject.id, subject] as const),
+    [...retainedPlayers, ...additions].map((subject) => [subject.subjectId, subject] as const),
   );
   const players = [...playersById.values()];
+  const coaches = legacy.coaches.map((subject) => targetIdentity(league, subject));
 
   return {
     league,
     players,
-    coaches: [...legacy.coaches],
-    subjects: [...players, ...legacy.coaches],
+    coaches,
+    subjects: [...players, ...coaches],
   } as const;
 }
