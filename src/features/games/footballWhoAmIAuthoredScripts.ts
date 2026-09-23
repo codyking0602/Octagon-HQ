@@ -7874,6 +7874,1365 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       }
     }
   },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-mike-tomlin",
+    "name": "Mike Tomlin",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "steelers": "https://www.steelers.com/news/statement-from-steelers-president-art-rooney-ii-x1216",
+      "path": "https://www.steelers.com/news/labriola-on-tomlin-coach-of-the-year",
+      "hire": "https://www.steelers.com/news/tbt-tomlin-arrives-in-pittsburgh"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-mike-tomlin-a-1",
+            "text": "I became an NFL head coach in my mid-30s.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-a-2",
+            "text": "I took over a franchise that had employed only two head coaches in the previous 38 seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-a-3",
+            "text": "I reached the playoffs in four of my first five seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-a-4",
+            "text": "In my second season, I led my team to a championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-a-5",
+            "text": "I later returned to the Super Bowl two seasons after that first title.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-a-6",
+            "text": "Across my tenure, my teams won eight division championships.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-a-7",
+            "text": "My teams reached the postseason 13 times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-a-8",
+            "text": "I never had a losing season in 19 years as a head coach.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-a-9",
+            "text": "My championship came in Super Bowl XLIII.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-a-10",
+            "text": "I am the longtime Pittsburgh head coach who succeeded Bill Cowher.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-mike-tomlin-b-1",
+            "text": "My first NFL job came in 2001 coaching the secondary in Tampa Bay.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-b-2",
+            "text": "I learned that defense under Tony Dungy and Monte Kiffin.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-b-3",
+            "text": "I later became Minnesota's defensive coordinator for one season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-b-4",
+            "text": "When I got my first head-coaching job, I inherited a defense built around a different front than the one I had coordinated.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-b-5",
+            "text": "Rather than replace it, I kept Dick LeBeau and the existing defensive system.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-b-6",
+            "text": "My first draft as a head coach included linebackers Lawrence Timmons and LaMarr Woodley with the top two picks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-b-7",
+            "text": "I won a Super Bowl in only my second season as a head coach.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-b-8",
+            "text": "I eventually spent 19 seasons leading the same franchise.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-b-9",
+            "text": "Every one of those 19 seasons finished .500 or better.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-mike-tomlin-b-10",
+            "text": "I am the former Vikings defensive coordinator who became Pittsburgh's Super Bowl-winning head coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "steelers",
+              "path",
+              "hire"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-sean-payton",
+    "name": "Sean Payton",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "broncos": "https://www.denverbroncos.com/team/coaches-roster/sean-payton"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-sean-payton-a-1",
+            "text": "My first NFL head-coaching job began in 2006.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-a-2",
+            "text": "In my first season, I took that team to a division title and a conference championship game.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-a-3",
+            "text": "I was named AP Coach of the Year after that debut season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-a-4",
+            "text": "Three years later, my team opened the season with 13 consecutive wins.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-a-5",
+            "text": "That season ended with the first world championship in franchise history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-a-6",
+            "text": "My teams later won four consecutive division titles from 2017 through 2020.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-a-7",
+            "text": "I became the winningest head coach in that franchise's history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-a-8",
+            "text": "After leaving that job, I returned to coaching with a team in the other conference.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-a-9",
+            "text": "My Super Bowl win came in XLIV with New Orleans.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-a-10",
+            "text": "I am the offensive-minded head coach most closely associated with Drew Brees and the Saints.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-sean-payton-b-1",
+            "text": "I was an All-American quarterback at Eastern Illinois.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-b-2",
+            "text": "I played professionally in 1987 before beginning my coaching career the next year.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-b-3",
+            "text": "My college coaching stops included San Diego State, Indiana State, Miami of Ohio and Illinois.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-b-4",
+            "text": "My first NFL job was coaching quarterbacks in Philadelphia.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-b-5",
+            "text": "I later coached quarterbacks and coordinated the offense for the New York Giants.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-b-6",
+            "text": "I spent three seasons with Dallas as assistant head coach and quarterbacks coach under Bill Parcells.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-b-7",
+            "text": "My first head-coaching opportunity came in New Orleans in 2006.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-b-8",
+            "text": "I built one of the league's most prolific passing attacks around Drew Brees.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-b-9",
+            "text": "After winning Super Bowl XLIV there, I later became head coach in Denver.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-sean-payton-b-10",
+            "text": "I am the coach whose NFL path ran through the Eagles, Giants and Cowboys before leading the Saints and Broncos.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-john-harbaugh",
+    "name": "John Harbaugh",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "bio": "https://www.baltimoreravens.com/news/john-harbaugh-bio-7748188",
+      "museum": "https://www.baltimoreravens.com/team/history/mobile-museum/the-harbaugh-effect",
+      "guide": "https://comms.baltimoreravens.com/press/Media_Guide/FRONT_OFFICE.pdf"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-john-harbaugh-a-1",
+            "text": "I became an NFL head coach in 2008 without previously serving as an NFL offensive or defensive coordinator.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-2",
+            "text": "I reached the playoffs in each of my first five seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-3",
+            "text": "In my fifth season, my team won a championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-4",
+            "text": "That postseason included a road double-overtime victory over the AFC's top seed.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-5",
+            "text": "My team then won the conference championship on the road.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-6",
+            "text": "The championship game matched me against a team coached by my younger brother.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-7",
+            "text": "I later won the NFL Coach of the Year award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-8",
+            "text": "I led my franchise to a dozen playoff berths in my first 17 seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-9",
+            "text": "My championship came in Super Bowl XLVII.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-10",
+            "text": "I am the longtime Baltimore head coach who faced Jim Harbaugh in the Super Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-john-harbaugh-b-1",
+            "text": "I played defensive back at Miami of Ohio.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-b-2",
+            "text": "My coaching career began at Western Michigan in 1984.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-b-3",
+            "text": "Before reaching the NFL, I also coached at Pittsburgh, Morehead State, Cincinnati and Indiana.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-b-4",
+            "text": "Philadelphia hired me in 1998.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-b-5",
+            "text": "I spent nine seasons there coordinating special teams.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-b-6",
+            "text": "I moved to coaching the Eagles' secondary in 2007.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-b-7",
+            "text": "Baltimore hired me as head coach the next year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-b-8",
+            "text": "My first five Baltimore teams all reached the postseason.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-b-9",
+            "text": "That fifth season ended with a Super Bowl victory.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-b-10",
+            "text": "I am the former Eagles special teams coach who became the Ravens' championship head coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "museum",
+              "guide"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-sean-mcvay",
+    "name": "Sean McVay",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "rams": "https://www.therams.com/team/coaches-roster/sean-mcvay"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-sean-mcvay-a-1",
+            "text": "I became an NFL head coach at age 30.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-a-2",
+            "text": "In my first season, I turned a four-win team into an 11-win division champion.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-a-3",
+            "text": "I was named AP Coach of the Year after that debut season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-a-4",
+            "text": "In my second season, I reached the Super Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-a-5",
+            "text": "Within my first five seasons, I reached the Super Bowl a second time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-a-6",
+            "text": "That second appearance ended with a championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-a-7",
+            "text": "I became the youngest head coach in NFL history to win a Super Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-a-8",
+            "text": "My first nine seasons produced seven playoff berths.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-a-9",
+            "text": "My championship came in Super Bowl LVI.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-a-10",
+            "text": "I am the Rams head coach who won a Super Bowl at the franchise's home stadium in Los Angeles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-sean-mcvay-b-1",
+            "text": "I began my NFL coaching career in my early 20s.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-b-2",
+            "text": "Before becoming a head coach, I worked primarily on the offensive side of the ball.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-b-3",
+            "text": "I eventually became an offensive coordinator in Washington.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-b-4",
+            "text": "My work there helped launch me into a head-coaching job before I turned 31.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-b-5",
+            "text": "I immediately built one of the league's highest-scoring offenses.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-b-6",
+            "text": "My first Rams team won the NFC West after the franchise had gone more than a decade without a winning season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-b-7",
+            "text": "I reached Super Bowl LIII in my second season as a head coach.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-b-8",
+            "text": "Three seasons later, I returned to the Super Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-b-9",
+            "text": "That time, I won Super Bowl LVI at age 36.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          },
+          {
+            "id": "nfl-sean-mcvay-b-10",
+            "text": "I am the former Washington offensive coordinator who became the youngest Super Bowl-winning head coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "rams"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-tom-coughlin",
+    "name": "Tom Coughlin",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "giants": "https://www.giants.com/news/tom-coughlin",
+      "hof": "https://www.giants.com/news/tom-coughlin-among-12-coaches-to-advance-in-hall-of-fame-class-of-2026-selection-process",
+      "staff": "https://www.giants.com/news/super-coaching-staff"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-tom-coughlin-a-1",
+            "text": "I spent 20 seasons as an NFL head coach across two franchises.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-a-2",
+            "text": "My first NFL head-coaching job came with an expansion team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-a-3",
+            "text": "I took that franchise to two conference championship games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-a-4",
+            "text": "At my second NFL head-coaching stop, I won three division titles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-a-5",
+            "text": "I also reached the playoffs five times there.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-a-6",
+            "text": "My teams won two Super Bowls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-a-7",
+            "text": "Both of those championships came against the same opposing franchise.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-a-8",
+            "text": "The first ended an opponent's bid for a 19-0 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-a-9",
+            "text": "My Super Bowl wins came in XLII and XLVI.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-a-10",
+            "text": "I am the Giants coach who twice defeated Bill Belichick's Patriots for the championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-tom-coughlin-b-1",
+            "text": "Before my first NFL head-coaching job, I served as the Giants' wide receivers coach.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-b-2",
+            "text": "That assistant stint ended with a victory in Super Bowl XXV.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-b-3",
+            "text": "I left the NFL staff to become the head coach at Boston College.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-b-4",
+            "text": "I later became the first head coach in Jacksonville Jaguars history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-b-5",
+            "text": "That expansion franchise reached the conference championship game in only its second season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-b-6",
+            "text": "I eventually returned to the Giants as head coach in 2004.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-b-7",
+            "text": "My Giants teams won 102 regular-season games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-b-8",
+            "text": "I tied Bill Parcells for the most postseason wins by a Giants head coach.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-b-9",
+            "text": "My two championships there were Super Bowls XLII and XLVI.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          },
+          {
+            "id": "nfl-tom-coughlin-b-10",
+            "text": "I am the former Boston College and Jaguars head coach who later won two Super Bowls with the Giants.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "giants",
+              "hof",
+              "staff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-dan-campbell",
+    "name": "Dan Campbell",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "lions": "https://www.detroitlions.com/team/coaches-roster/dan-campbell",
+      "hire": "https://www.detroitlions.com/news/lions-agree-to-terms-with-dan-campbell-to-become-team-s-new-head-coach"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-dan-campbell-a-1",
+            "text": "My first full-time NFL head-coaching job began in 2021.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-a-2",
+            "text": "My first season there ended with only three wins.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-a-3",
+            "text": "The next year, my team improved to 9-8.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-a-4",
+            "text": "In my third season, I led the franchise to its first division title in 30 years.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-a-5",
+            "text": "That same postseason produced the franchise's first playoff win since the 1991 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-a-6",
+            "text": "My team then won a second playoff game and reached the conference championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-a-7",
+            "text": "The following regular season, we set a franchise record with 15 wins.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-a-8",
+            "text": "That season also brought the franchise its first No. 1 conference seed.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-a-9",
+            "text": "I am the head coach who brought consecutive division titles back to Detroit.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-a-10",
+            "text": "I am the former Lions player who returned to lead the franchise's modern resurgence.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-dan-campbell-b-1",
+            "text": "Before coaching, I spent 11 seasons playing tight end in the NFL.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-b-2",
+            "text": "I played for the Giants, Cowboys, Lions and Saints.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-b-3",
+            "text": "I began coaching as an intern with Miami in 2010.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-b-4",
+            "text": "I rose to become Miami's tight ends coach and later its interim head coach.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-b-5",
+            "text": "In that interim role, I took over a 1-3 team and won my first two games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-b-6",
+            "text": "I then spent five seasons as New Orleans' assistant head coach and tight ends coach.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-b-7",
+            "text": "That Saints staff won four division titles during my tenure.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-b-8",
+            "text": "Detroit hired me as head coach in 2021.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-b-9",
+            "text": "I later led the Lions to their first playoff victory in more than three decades.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-dan-campbell-b-10",
+            "text": "I am the former NFL tight end and Saints assistant who became Detroit's head coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "hire"
+            ]
+          }
+        ]
+      }
+    }
+  },
 
   {
     "league": "CFB",
