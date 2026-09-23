@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { footballWhoAmIAuthoredTargetRoster } from "./footballWhoAmIAuthoredTargetRoster";
 import {
   footballWhoAmIAuthoredIdentities,
   getFootballWhoAmIAuthoredIdentity,
@@ -34,8 +35,8 @@ const EXPECTED_BANDS = [
 ] as const;
 
 describe("Football Who Am I authored scripts", () => {
-  it("starts the authored migration with 23 completed identities", () => {
-    expect(footballWhoAmIAuthoredIdentities).toHaveLength(23);
+  it("extends the authored migration to 31 completed identities", () => {
+    expect(footballWhoAmIAuthoredIdentities).toHaveLength(31);
   });
 
   it("keeps league/name and canonical stage ownership unique", () => {
@@ -80,6 +81,28 @@ describe("Football Who Am I authored scripts", () => {
         identity.scripts.B!.clues.some((right) => right.text === left.text)
       );
       expect(exactOverlap).toHaveLength(0);
+    }
+  });
+
+
+  it("binds NFL player batch 1 to the frozen target roster without exposing it as reviewed", () => {
+    const expected = new Map([
+      ["Cam Newton", "cam-newton"],
+      ["Peyton Manning", "peyton-manning"],
+      ["Jerry Rice", "nfl-jerry-rice"],
+      ["Randy Moss", "nfl-randy-moss"],
+      ["Barry Sanders", "barry-sanders"],
+      ["Deion Sanders", "deion-sanders"],
+      ["Lawrence Taylor", "lawrence-taylor"],
+      ["Aaron Donald", "nfl-aaron-donald"],
+    ]);
+    const frozen = footballWhoAmIAuthoredTargetRoster("NFL").players;
+
+    for (const [name, subjectId] of expected) {
+      expect(frozen).toContainEqual({ league: "NFL", subjectId, name, kind: "player" });
+      const authored = getFootballWhoAmIAuthoredIdentity("NFL", name);
+      expect(authored?.subjectId).toBe(subjectId);
+      expect(authored?.earlyRotation).toBe("normal");
     }
   });
 
