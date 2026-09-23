@@ -74,7 +74,7 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
       B: {
         id: "B",
         clues: [
-          { id: "ufc-alex-pereira-b-1", text: "My younger sister also became a professional combat-sports athlete.", band: "broad", verification: "verified", sourceIds: ["sister"] },
+          { id: "ufc-alex-pereira-b-1", text: "I built a high-level career in another combat sport before my UFC rise.", band: "broad", verification: "verified", sourceIds: ["profile", "career"] },
           { id: "ufc-alex-pereira-b-2", text: "I entered the UFC with far more high-level striking experience than MMA experience.", band: "broad", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-alex-pereira-b-3", text: "My first UFC light heavyweight bout was a split-decision win over a former champion.", band: "helpful", verification: "verified", sourceIds: ["career", "moving"] },
           { id: "ufc-alex-pereira-b-4", text: "My first UFC light heavyweight title opportunity came only months after I moved up a division.", band: "helpful", verification: "verified", sourceIds: ["career", "moving"] },
@@ -109,7 +109,7 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
         clues: [
           { id: "ufc-conor-mcgregor-a-1", text: "I played football as a boy before boxing became the combat sport that first captured my attention.", band: "broad", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-conor-mcgregor-a-2", text: "Before committing fully to fighting, I spent time working in a trade apprenticeship.", band: "broad", verification: "verified", sourceIds: ["about"] },
-          { id: "ufc-conor-mcgregor-a-3", text: "My UFC debut in 2013 ended with a first-round stoppage of Marcus Brimage.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
+          { id: "ufc-conor-mcgregor-a-3", text: "My UFC debut in 2013 ended with a first-round stoppage.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-conor-mcgregor-a-4", text: "Three UFC fights into my run, I was already headlining a card in my home country.", band: "helpful", verification: "verified", sourceIds: ["profile", "walkouts"] },
           { id: "ufc-conor-mcgregor-a-5", text: "I knocked out Dustin Poirier in the first round at UFC 178.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-conor-mcgregor-a-6", text: "I won an interim featherweight championship by stopping Chad Mendes at UFC 189.", band: "strong", verification: "verified", sourceIds: ["profile", "double"] },
@@ -122,7 +122,7 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
       B: {
         id: "B",
         clues: [
-          { id: "ufc-conor-mcgregor-b-1", text: "My relationship with coach John Kavanagh became a major turning point when I was pushed to commit seriously to training.", band: "broad", verification: "verified", sourceIds: ["making"] },
+          { id: "ufc-conor-mcgregor-b-1", text: "A long-term coaching relationship became a major turning point when I was pushed to commit seriously to training.", band: "broad", verification: "verified", sourceIds: ["making"] },
           { id: "ufc-conor-mcgregor-b-2", text: "Outside fighting, I later built major business ventures around my public persona.", band: "broad", verification: "verified", sourceIds: ["about"] },
           { id: "ufc-conor-mcgregor-b-3", text: "My fame eventually carried me into a major crossover bout outside mixed martial arts.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-conor-mcgregor-b-4", text: "One of my early UFC setbacks led to an immediate rematch that went the full five rounds.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
@@ -171,7 +171,7 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
         clues: [
           { id: "ufc-demetrious-johnson-b-1", text: "Video games became a major hobby for me long before I later became a serious streamer.", band: "broad", verification: "verified", sourceIds: ["gamer"] },
           { id: "ufc-demetrious-johnson-b-2", text: "I won my first nine amateur MMA fights before making my professional debut in 2009.", band: "broad", verification: "verified", sourceIds: ["hof"] },
-          { id: "ufc-demetrious-johnson-b-3", text: "My first WEC appearance ended in a decision loss to Brad Pickett.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
+          { id: "ufc-demetrious-johnson-b-3", text: "My first WEC appearance ended in a decision loss.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-demetrious-johnson-b-4", text: "One of my championship rematches ended with a first-round knockout.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-demetrious-johnson-b-5", text: "I stopped Olympic gold medalist Henry Cejudo in the first round during my title reign.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-demetrious-johnson-b-6", text: "I submitted Kyoji Horiguchi in the final second of the fifth round of a title fight.", band: "strong", verification: "verified", sourceIds: ["hof"] },
@@ -201,7 +201,7 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
         clues: [
           { id: "ufc-anderson-silva-a-1", text: "I was raised largely by an aunt and uncle after being separated from my parents at a young age.", band: "broad", verification: "verified", sourceIds: ["origin"] },
           { id: "ufc-anderson-silva-a-2", text: "As a child I wanted to play soccer, but organized training was difficult for my family to afford.", band: "broad", verification: "verified", sourceIds: ["origin"] },
-          { id: "ufc-anderson-silva-a-3", text: "Watching Royce Gracie at UFC 1 helped turn competing in the UFC into a dream of mine.", band: "helpful", verification: "verified", sourceIds: ["spiderquotes"] },
+          { id: "ufc-anderson-silva-a-3", text: "Watching the earliest UFC events helped turn competing in the promotion into a dream of mine.", band: "helpful", verification: "verified", sourceIds: ["spiderquotes"] },
           { id: "ufc-anderson-silva-a-4", text: "I opened my UFC run with a first-round knockout and reached a title fight almost immediately.", band: "helpful", verification: "verified", sourceIds: ["hof", "greatness"] },
           { id: "ufc-anderson-silva-a-5", text: "I won the middleweight championship in only my second UFC appearance.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-anderson-silva-a-6", text: "My reign eventually reached ten successful UFC middleweight title defenses.", band: "strong", verification: "verified", sourceIds: ["hof", "greatness", "defenses"] },
@@ -216,8 +216,8 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
         clues: [
           { id: "ufc-anderson-silva-b-1", text: "I became a dedicated Spider-Man comic collector and said I related to a superhero who still had ordinary bills to pay.", band: "broad", verification: "verified", sourceIds: ["soundbytes"] },
           { id: "ufc-anderson-silva-b-2", text: "Away from competition, I described myself as a practical joker who enjoyed making people laugh.", band: "broad", verification: "verified", sourceIds: ["soundbytes"] },
-          { id: "ufc-anderson-silva-b-3", text: "My championship run lasted nearly seven years at the top of the middleweight division.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
-          { id: "ufc-anderson-silva-b-4", text: "During that era I also took several light heavyweight fights without giving up my middleweight crown.", band: "helpful", verification: "verified", sourceIds: ["greatness"] },
+          { id: "ufc-anderson-silva-b-3", text: "I won each of my first three UFC appearances by stoppage.", band: "helpful", verification: "verified", sourceIds: ["hof", "profile"] },
+          { id: "ufc-anderson-silva-b-4", text: "During my title years, I also accepted non-title fights in another division.", band: "helpful", verification: "verified", sourceIds: ["greatness"] },
           { id: "ufc-anderson-silva-b-5", text: "My striking performances made opponents such as Forrest Griffin part of some of the sport’s most replayed highlights.", band: "helpful", verification: "verified", sourceIds: ["greatness"] },
           { id: "ufc-anderson-silva-b-6", text: "I stopped Sonnen in the second round of our rematch after submitting him in our first fight.", band: "strong", verification: "verified", sourceIds: ["defenses"] },
           { id: "ufc-anderson-silva-b-7", text: "Chris Weidman ended my championship reign with a second-round knockout.", band: "strong", verification: "verified", sourceIds: ["hof"] },
