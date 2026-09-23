@@ -79,6 +79,7 @@ export const WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION = WAVELENGTH_OFFICIAL_SCO
 export const WAVELENGTH_DAILY_HISTORY_VERSION = "wavelength-daily-history-v1";
 export const BLIND_RESUME_V3_CONTENT_VERSION = "blind-resume-v3";
 export const BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION = "play-official-score-v3";
+// Preserve historical single-round materializations before the authored two-fighter launch.
 export const UFC_AUTHORED_WHO_AM_I_CUTOVER_DAY = "2026-09-24";
 
 export interface OfficialDailySetupPublication {
