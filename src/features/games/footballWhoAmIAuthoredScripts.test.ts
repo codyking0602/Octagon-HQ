@@ -39,6 +39,23 @@ describe("Football Who Am I authored scripts", () => {
     expect(footballWhoAmIAuthoredIdentities).toHaveLength(31);
   });
 
+  it("includes the first unreviewed NFL player batch without changing exposure priority", () => {
+    for (const name of [
+      "Cam Newton",
+      "Peyton Manning",
+      "Jerry Rice",
+      "Randy Moss",
+      "Barry Sanders",
+      "Deion Sanders",
+      "Aaron Donald",
+      "Lawrence Taylor",
+    ]) {
+      const identity = getFootballWhoAmIAuthoredIdentity("NFL", name);
+      expect(identity).toBeDefined();
+      expect(identity!.earlyRotation).toBe("normal");
+    }
+  });
+
   it("keeps league/name and canonical stage ownership unique", () => {
     const keys = footballWhoAmIAuthoredIdentities.map((identity) => `${identity.league}:${identity.name}`);
     const subjectKeys = footballWhoAmIAuthoredIdentities.map((identity) => `${identity.league}:${identity.subjectId}`);
