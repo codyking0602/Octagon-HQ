@@ -152,7 +152,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-b-4",
-            "text": "Before joining the UFC, my résumé already included wins over Eddie Alvarez and Benson Henderson.",
+            "text": "Before joining the UFC, my résumé already included championships and major wins in another promotion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
