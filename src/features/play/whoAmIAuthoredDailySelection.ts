@@ -74,7 +74,7 @@ function weightedPick<TScriptId extends string>(
         );
     const earlyWeight = candidate.earlyRotation === "deprioritized"
       && authoredAppearances < WHO_AM_I_AUTHORED_EARLY_ROTATION_WINDOW
-      ? 0.08
+      ? 0.01
       : 1;
     return { candidate, weight: recencyWeight * earlyWeight };
   });
