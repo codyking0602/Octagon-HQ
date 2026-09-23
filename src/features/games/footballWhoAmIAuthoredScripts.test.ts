@@ -89,7 +89,7 @@ describe("Football Who Am I authored scripts", () => {
     const targetByName = new Map(
       Object.values(FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES)
         .flat()
-        .map((identity) => [`${identity.league}:${identity.name}`, identity] as const),
+        .map((identity) => [`${identity.league}:${identity.name}` as string, identity] as const),
     );
 
     for (const identity of footballWhoAmIAuthoredIdentities) {
