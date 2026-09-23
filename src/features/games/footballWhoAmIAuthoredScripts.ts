@@ -14273,7 +14273,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
 
   {
     "league": "CFB",
-    "subjectId": "cfb-nick-saban",
+    "subjectId": "nick-saban-cfb",
     "name": "Nick Saban",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "deprioritized",
