@@ -505,7 +505,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nick-diaz-a-6",
-            "text": "Years later I returned to the UFC and beat B.J. Penn in a five-round main event.",
+            "text": "Years later I returned to the UFC and beat B.J. Penn by decision in a three-round main event.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
