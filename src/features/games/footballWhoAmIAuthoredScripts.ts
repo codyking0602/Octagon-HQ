@@ -36110,7 +36110,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-roquan-smith-b-5",
-            "text": "My junior year featured at least 10 tackles in seven different games.",
+            "text": "I was named the Rose Bowl's defensive MVP after recording 11 tackles against Oklahoma.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
