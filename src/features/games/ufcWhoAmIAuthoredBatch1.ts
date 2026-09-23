@@ -670,7 +670,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-aljamain-sterling-a-1",
-            "text": "I became a two-time NCAA Division III All-American wrestler at SUNY Cortland.",
+            "text": "I became a two-time NCAA Division III All-American wrestler before beginning my professional fighting career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -679,25 +679,26 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-a-2",
-            "text": "My UFC debut ended with a win by decision.",
+            "text": "I turned professional in mixed martial arts in 2011 after my college wrestling career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-aljamain-sterling-a-3",
-            "text": "My UFC career included appearances at both Bantamweight and Featherweight.",
+            "text": "My UFC debut came in 2014 and went the full three rounds.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-aljamain-sterling-a-4",
-            "text": "I reached my first UFC title opportunity in 2021.",
+            "text": "After an uneven stretch in the middle of my UFC run, I put together five straight wins to reach the title picture.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -706,7 +707,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-a-5",
-            "text": "I beat Cody Gibson by decision in 2014.",
+            "text": "One of those wins ended with a rare kneebar submission of Cody Stamann late in the third round.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -716,7 +717,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-a-6",
-            "text": "I beat Manny Gamburyan by decision in 2015.",
+            "text": "I submitted Cory Sandhagen in the first round to secure my first UFC title opportunity.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -726,7 +727,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-a-7",
-            "text": "I beat Johnny Eduardo by submission in 2015.",
+            "text": "My first UFC championship fight ended when Petr Yan was disqualified for an illegal knee.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -736,7 +737,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-a-8",
-            "text": "I beat Cody Stamann by submission in 2018.",
+            "text": "I retained the belt in a split-decision rematch with Yan before adding two more successful defenses.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -746,20 +747,21 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-a-9",
-            "text": "I won UFC gold at Bantamweight.",
+            "text": "I set the UFC bantamweight record with three consecutive successful title defenses.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-aljamain-sterling-a-10",
-            "text": "After initially studying accounting at SUNY Morrisville, I transferred to SUNY Cortland and earned a bachelor's degree in physical education.",
+            "text": "My nickname, “Funk Master,” grew out of the scrambling style I developed as a wrestler.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity3"
+              "identity1",
+              "profile"
             ]
           }
         ]
@@ -769,7 +771,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-aljamain-sterling-b-1",
-            "text": "Before fighting full time, I sold shoes at Saks Fifth Avenue and later cut hair at school to help make money.",
+            "text": "Before fighting full time, I sold shoes at Saks Fifth Avenue and cut hair at school to help make money.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -778,25 +780,25 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "I first studied accounting before transferring schools and earning a degree in physical education.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-aljamain-sterling-b-3",
-            "text": "One stretch of my UFC career reached 9 consecutive victories.",
+            "text": "I earned a Brazilian jiu-jitsu black belt under former UFC champion Matt Serra.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-aljamain-sterling-b-4",
-            "text": "My first UFC title opportunity came after 15 earlier UFC appearances.",
+            "text": "I won my first four UFC appearances before suffering my first loss inside the promotion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -805,7 +807,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-b-5",
-            "text": "I beat Hugo Viana by stoppage in 2014.",
+            "text": "A contender run later included decision wins over Jimmie Rivera and Pedro Munhoz.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -815,7 +817,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-b-6",
-            "text": "I beat Augusto Mendes by decision in 2017.",
+            "text": "I needed less than 90 seconds to submit Cory Sandhagen in 2020.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -825,7 +827,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-b-7",
-            "text": "I beat Brett Johns by decision in 2018.",
+            "text": "I became the first fighter to win a UFC championship because of an opponent’s disqualification.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -835,7 +837,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-b-8",
-            "text": "I lost to Bryan Caraway by decision in 2016.",
+            "text": "After losing my bantamweight title, I moved up a division and beat Calvin Kattar in my first fight there.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -845,16 +847,17 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-b-9",
-            "text": "My UFC career includes a championship victory at Bantamweight.",
+            "text": "My featherweight run later added five-round decision wins over Brian Ortega and Youssef Zalal.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-aljamain-sterling-b-10",
-            "text": "I also shared the Octagon with Petr Yan in 2021.",
+            "text": "My bantamweight title reign included consecutive championship wins over Petr Yan, T.J. Dillashaw and Henry Cejudo.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
