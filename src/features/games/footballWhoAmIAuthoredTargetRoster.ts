@@ -89,49 +89,6 @@ export const FOOTBALL_WHO_AM_I_AUDITED_CUT_NAMES = {
     "Jonathan Ogden",
     "Kevin Mawae",
     "Orlando Pace"
-,
-    {
-      "league": "NFL",
-      "subjectId": "nfl-mike-tomlin",
-      "name": "Mike Tomlin",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
-      "subjectId": "nfl-sean-payton",
-      "name": "Sean Payton",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
-      "subjectId": "nfl-john-harbaugh",
-      "name": "John Harbaugh",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
-      "subjectId": "nfl-sean-mcvay",
-      "name": "Sean McVay",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
-      "subjectId": "nfl-mike-shanahan",
-      "name": "Mike Shanahan",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
-      "subjectId": "nfl-tom-coughlin",
-      "name": "Tom Coughlin",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
-      "subjectId": "nfl-tony-dungy",
-      "name": "Tony Dungy",
-      "kind": "coach"
-    }
   ],
   "CFB": [
     "Davey O'Brien",
@@ -1132,6 +1089,48 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
       "name": "Bill Cowher",
       "kind": "coach"
     },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-mike-tomlin",
+      "name": "Mike Tomlin",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-sean-payton",
+      "name": "Sean Payton",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-john-harbaugh",
+      "name": "John Harbaugh",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-sean-mcvay",
+      "name": "Sean McVay",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-mike-shanahan",
+      "name": "Mike Shanahan",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-tom-coughlin",
+      "name": "Tom Coughlin",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-tony-dungy",
+      "name": "Tony Dungy",
+      "kind": "coach"
+    }
   ],
   "CFB": [
     {
@@ -2255,8 +2254,7 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
       "subjectId": "gary-patterson-cfb",
       "name": "Gary Patterson",
       "kind": "coach"
-    }
-,
+    },
     {
       "league": "CFB",
       "subjectId": "cfb-lou-holtz",
