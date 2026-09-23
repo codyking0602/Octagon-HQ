@@ -19,8 +19,8 @@ function normalizedName(value: string) {
 describe("Football Who Am I authored target roster", () => {
   it("freezes the approved post-audit counts instead of restoring 200/200", () => {
     expect(footballWhoAmIAuthoredTargetRoster("NFL").players).toHaveLength(120);
-    expect(footballWhoAmIAuthoredTargetRoster("NFL").coaches).toHaveLength(19);
-    expect(footballWhoAmIAuthoredTargetRoster("NFL").subjects).toHaveLength(139);
+    expect(footballWhoAmIAuthoredTargetRoster("NFL").coaches).toHaveLength(20);
+    expect(footballWhoAmIAuthoredTargetRoster("NFL").subjects).toHaveLength(140);
     expect(footballWhoAmIAuthoredTargetRoster("CFB").players).toHaveLength(168);
     expect(footballWhoAmIAuthoredTargetRoster("CFB").coaches).toHaveLength(25);
     expect(footballWhoAmIAuthoredTargetRoster("CFB").subjects).toHaveLength(193);
