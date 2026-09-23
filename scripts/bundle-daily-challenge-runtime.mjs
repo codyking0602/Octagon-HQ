@@ -19,7 +19,7 @@ const bundles = [
     entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWhoAmI.ts"),
     fileName: "football-publication-who-am-i.generated.mjs",
     requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-14", gameType: "who_am_i" },
+    smoke: { day: "2026-09-27", gameType: "who_am_i" },
   },
   {
     label: "Football Daily Wavelength publication runtime",

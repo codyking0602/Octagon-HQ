@@ -8,7 +8,7 @@ import {
   nextFootballWavelengthClue,
   type FootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
-import { advanceWhoAmIDailyRuntime } from "./whoAmIDailyRuntime";
+import { advanceCanonicalWhoAmIDailyRuntime } from "./whoAmITwoRoundDailyRuntime";
 import { advanceMillionaireDailyRuntime } from "./millionaireDailyRuntime";
 import { advanceFamilyFeudDailyRuntime } from "./familyFeudDailyRuntime";
 import type {
@@ -383,7 +383,7 @@ export function advanceFootballOfficialDailyRuntime(
     case "blind_rank_5": return advanceBlindRank(context, parsed);
     case "keep_4_cut_4": return advanceKeepCut(context, parsed);
     case "hit_the_number": return advanceHitTheNumber(context, parsed);
-    case "who_am_i": return advanceWhoAmIDailyRuntime(context, parsed);
+    case "who_am_i": return advanceCanonicalWhoAmIDailyRuntime(context, parsed);
     case "millionaire": return advanceMillionaireDailyRuntime(context, parsed);
     case "sports_feud": return advanceFamilyFeudDailyRuntime(context, parsed);
     default: throw new Error(`Unsupported Football official daily game ${String(context.gameType)}.`);

@@ -6,6 +6,7 @@ import {
   advanceFootballOfficialDailyRuntime,
   buildFootballOfficialDailySetup,
 } from "./footballTodayChallengeRuntime";
+import { buildFootballDailyPersistenceSetup as buildFootballWhoAmIPersistenceSetup } from "./footballDailyPublicationWhoAmI";
 import type {
   OfficialDailyGameType,
   OfficialDailyRuntimeContext,
@@ -321,6 +322,22 @@ function grade(
   if (gameType === "who_am_i") {
     const score = Number(context.publicState.score ?? 0);
     if (!Number.isInteger(score) || score < 0 || score > 100) throw new Error("Football Who Am I score is invalid.");
+
+    if (context.privateGradingEvidence.format_version === "who-am-i-two-round-v1") {
+      const rounds = recordArray(context.publicState.completed_rounds, "Football Who Am I completed rounds");
+      if (rounds.length !== 2) throw new Error("Football Who Am I must finish exactly two identity rounds.");
+      const componentScores = rounds.map((round) => Number(round.score ?? -1));
+      if (componentScores.some((value) => !Number.isInteger(value) || value < 0 || value > 100)
+        || score !== Math.round((componentScores[0]! + componentScores[1]!) / 2)) {
+        throw new Error("Football Who Am I aggregate score does not match its two rounds.");
+      }
+      return {
+        native: score,
+        normalized: score,
+        result: { score, rounds },
+      };
+    }
+
     const outcome = String(finalSubmission.outcome ?? "");
     const revealedCount = Number(finalSubmission.revealed_count ?? 0);
     return {
@@ -419,6 +436,26 @@ function publicAttempt(graded: ReturnType<typeof grade>) {
   };
 }
 
+function buildSessionPublication(
+  gameType: OfficialDailyGameType,
+  day: string,
+  scheduleVersion: string,
+): OfficialDailySetupPublication {
+  if (gameType === "who_am_i") {
+    const persisted = buildFootballWhoAmIPersistenceSetup(day, scheduleVersion, gameType);
+    return {
+      setupKey: persisted.setupKey,
+      contentVersion: persisted.contentVersion,
+      scoringVersion: persisted.scoringVersion as OfficialDailySetupPublication["scoringVersion"],
+      publicSetup: persisted.publicSetup,
+      revealSetup: persisted.revealSetup,
+      privateSetupEvidence: persisted.privateSetupEvidence,
+      privateGradingEvidence: persisted.privateGradingEvidence,
+    };
+  }
+  return buildFootballOfficialDailySetup(gameType, day, scheduleVersion);
+}
+
 function buildSingle(
   day: string,
   scheduleVersion: string,
@@ -426,7 +463,7 @@ function buildSingle(
   gameType: OfficialDailyGameType,
   actions: readonly JsonRecord[],
 ): FootballTodayProjection {
-  const publication = buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion);
+  const publication = buildSessionPublication(gameType, day, setupScheduleVersion);
   const run = replay(gameType, publication, actions);
   const graded = run.complete && run.finalSubmission ? grade(gameType, run.context, run.finalSubmission) : null;
   return {
@@ -534,7 +571,7 @@ export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPe
     return {
       gameType,
       scheduleVersion,
-      ...buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion),
+      ...buildSessionPublication(gameType, day, setupScheduleVersion),
     };
   }
 
@@ -581,7 +618,7 @@ export function buildFootballTodayRuntimeSnapshot(
   const gameType = footballTodayGameForDay(day);
   const setupScheduleVersion = footballTodaySetupScheduleVersionForDay(day);
   if (gameType !== "keep_4_cut_4") {
-    const publication = buildFootballOfficialDailySetup(gameType, day, setupScheduleVersion);
+    const publication = buildSessionPublication(gameType, day, setupScheduleVersion);
     const run = replay(gameType, publication, actionHistory);
     return {
       projection,

@@ -48,6 +48,7 @@ export interface WhoAmIPresentationProps {
   resultLabel: string;
   resultName: string;
   finalScore: number;
+  finalScoreLabel?: string;
   busy?: boolean;
   daily?: boolean;
   dailyContext?: string;
@@ -99,6 +100,7 @@ export default function WhoAmIPresentation({
   resultLabel,
   resultName,
   finalScore,
+  finalScoreLabel,
   busy = false,
   daily = false,
   dailyContext,
@@ -352,7 +354,7 @@ export default function WhoAmIPresentation({
                 : "Both recovery picks missed."}</p>
             <div className="twenty-questions-result__score-block">
               <div className="twenty-questions-result__score">{finalScore}</div>
-              <small>{daily ? "OFFICIAL SCORE" : "FINAL SCORE"}</small>
+              <small>{finalScoreLabel ?? (daily ? "OFFICIAL SCORE" : "FINAL SCORE")}</small>
             </div>
             <div className="twenty-questions-result__stats">
               <span><strong>{revealedCount}</strong> clues used</span>

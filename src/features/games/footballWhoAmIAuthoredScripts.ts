@@ -20,6 +20,7 @@ export interface FootballWhoAmIAuthoredScript {
 
 export interface FootballWhoAmIAuthoredIdentity {
   league: FootballWhoAmIAuthoredLeague;
+  subjectId: string;
   name: string;
   stageFocus: FootballWhoAmIAuthoredStageFocus;
   earlyRotation: FootballWhoAmIAuthoredEarlyRotation;
@@ -44,6 +45,7 @@ export interface FootballWhoAmIAuthoredIdentity {
 export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredIdentity[] = [
   {
     "league": "NFL",
+    "subjectId": "patrick-mahomes",
     "name": "Patrick Mahomes",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -287,6 +289,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "josh-allen",
     "name": "Josh Allen",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -530,6 +533,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "lamar-jackson",
     "name": "Lamar Jackson",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -773,6 +777,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "joe-burrow",
     "name": "Joe Burrow",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -1016,6 +1021,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "CFB",
+    "subjectId": "cfb-tim-tebow",
     "name": "Tim Tebow",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "deprioritized",
@@ -1238,6 +1244,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "CFB",
+    "subjectId": "cfb-cam-newton",
     "name": "Cam Newton",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "deprioritized",
@@ -1481,6 +1488,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "derrick-henry",
     "name": "Derrick Henry",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -1724,6 +1732,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "justin-jefferson",
     "name": "Justin Jefferson",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -1967,6 +1976,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "myles-garrett",
     "name": "Myles Garrett",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -2210,6 +2220,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "CFB",
+    "subjectId": "cfb-trevor-lawrence",
     "name": "Trevor Lawrence",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "deprioritized",
@@ -2432,6 +2443,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "CFB",
+    "subjectId": "cfb-jalen-hurts",
     "name": "Jalen Hurts",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "deprioritized",
@@ -2675,6 +2687,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "tom-brady",
     "name": "Tom Brady",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
@@ -2918,6 +2931,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "aaron-rodgers",
     "name": "Aaron Rodgers",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
@@ -3161,6 +3175,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "adrian-peterson",
     "name": "Adrian Peterson",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
@@ -3404,6 +3419,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "calvin-johnson",
     "name": "Calvin Johnson",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
@@ -3647,6 +3663,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
+    "subjectId": "troy-polamalu",
     "name": "Troy Polamalu",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
@@ -3869,6 +3886,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "CFB",
+    "subjectId": "cfb-reggie-bush",
     "name": "Reggie Bush",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "normal",
@@ -4112,6 +4130,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "CFB",
+    "subjectId": "cfb-vince-young",
     "name": "Vince Young",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "normal",
@@ -4334,6 +4353,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "CFB",
+    "subjectId": "cfb-johnny-manziel",
     "name": "Johnny Manziel",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "normal",
@@ -4556,6 +4576,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "CFB",
+    "subjectId": "cfb-derrick-henry",
     "name": "Derrick Henry",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "normal",
@@ -4799,6 +4820,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "CFB",
+    "subjectId": "cfb-travis-hunter",
     "name": "Travis Hunter",
     "stageFocus": "CFB-career-forward",
     "earlyRotation": "normal",

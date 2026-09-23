@@ -24,10 +24,8 @@ import {
   keepCutTier,
 } from "./keepCutEngine";
 import { seededLineupRandom } from "./lineupModel";
-import {
-  advanceWhoAmIDailyRuntime,
-  buildWhoAmIDailyPublication,
-} from "./whoAmIDailyRuntime";
+import { buildWhoAmIDailyPublication } from "./whoAmIDailyRuntime";
+import { advanceCanonicalWhoAmIDailyRuntime } from "./whoAmITwoRoundDailyRuntime";
 import {
   blindRankRating,
   getPlayFighter,
@@ -903,7 +901,7 @@ export function advanceOfficialDailyRuntime(
     case "blind_rank_5": return advanceBlindRank(context, parsedAction);
     case "keep_4_cut_4": return advanceKeepCut(context, parsedAction);
     case "hit_the_number": return advanceOfficialHitTheNumberDailyRuntime(context, parsedAction);
-    case "who_am_i": return advanceWhoAmIDailyRuntime(context, parsedAction);
+    case "who_am_i": return advanceCanonicalWhoAmIDailyRuntime(context, parsedAction);
     case "millionaire": return advanceMillionaireDailyRuntime(context, parsedAction);
     case "sports_feud": return advanceFamilyFeudDailyRuntime(context, parsedAction);
     default: throw new Error(`Unsupported official daily game ${String(context.gameType)}.`);
