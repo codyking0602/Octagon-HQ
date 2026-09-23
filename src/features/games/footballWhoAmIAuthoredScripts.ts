@@ -47,7 +47,7 @@ export interface FootballWhoAmIAuthoredIdentity {
 export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredIdentity[] = [
   {
     "league": "NFL",
-    "subjectId": "patrick-mahomes",
+    "subjectId": "nfl-patrick-mahomes",
     "name": "Patrick Mahomes",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -291,7 +291,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
-    "subjectId": "josh-allen",
+    "subjectId": "nfl-josh-allen",
     "name": "Josh Allen",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -535,7 +535,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
-    "subjectId": "lamar-jackson",
+    "subjectId": "nfl-lamar-jackson",
     "name": "Lamar Jackson",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "deprioritized",
@@ -2933,7 +2933,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
-    "subjectId": "aaron-rodgers",
+    "subjectId": "nfl-aaron-rodgers",
     "name": "Aaron Rodgers",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
@@ -3421,7 +3421,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
-    "subjectId": "calvin-johnson",
+    "subjectId": "nfl-calvin-johnson",
     "name": "Calvin Johnson",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
@@ -3665,7 +3665,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
   },
   {
     "league": "NFL",
-    "subjectId": "troy-polamalu",
+    "subjectId": "nfl-troy-polamalu",
     "name": "Troy Polamalu",
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
