@@ -24792,6 +24792,429 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "micah-parsons",
+    "name": "Micah Parsons",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "draft": "https://www.nfl.com/news/cowboys-select-penn-state-lb-micah-parsons-at-no-12",
+      "rookie": "https://www.nfl.com/news/cowboys-lb-micah-parsons-named-2021-ap-nfl-defensive-rookie-of-the-year",
+      "trade": "https://www.nfl.com/news/micah-parsons-packers-cowboys-trade"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "micah-parsons-a-1",
+            "text": "I entered the NFL after opting out of my final college football season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "micah-parsons-a-2",
+            "text": "My original drafting team moved down from pick 10 to pick 12 before selecting me.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "micah-parsons-a-3",
+            "text": "At Penn State, I became the first sophomore to win Big Ten Linebacker of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "micah-parsons-a-4",
+            "text": "Dallas selected me 12th overall in the 2021 NFL Draft.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "micah-parsons-a-5",
+            "text": "As a rookie, I was used both off the ball and as a pass rusher.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "micah-parsons-a-6",
+            "text": "I finished that rookie season with 84 tackles and 13 sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "micah-parsons-a-7",
+            "text": "I won AP Defensive Rookie of the Year unanimously with all 50 votes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "micah-parsons-a-8",
+            "text": "I also earned first-team All-Pro and Pro Bowl honors as a rookie.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "micah-parsons-a-9",
+            "text": "I made the Pro Bowl in each of my first four NFL seasons and totaled 52.5 sacks in that span.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "micah-parsons-a-10",
+            "text": "After those four Dallas seasons, I was traded to Green Bay in a 2025 blockbuster.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "micah-parsons-b-1",
+            "text": "I began my career as a first-round linebacker whose pass-rush ability quickly became a defining trait.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "rookie"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-2",
+            "text": "My first NFL season produced three forced fumbles along with 13 sacks.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-3",
+            "text": "I was a two-time first-team All-Pro during my first four professional seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-4",
+            "text": "I finished in the top three of Defensive Player of the Year voting three times during those four seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-5",
+            "text": "I recorded at least 12 sacks in each of my first four NFL seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-6",
+            "text": "My four-year Dallas total reached 52.5 sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-7",
+            "text": "Only three defenders had ever made the Pro Bowl in each of their first four seasons when I did it.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-8",
+            "text": "Dallas traded me for Kenny Clark plus first-round picks in 2026 and 2027.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-9",
+            "text": "I signed a four-year, $188 million contract with Green Bay as part of that move.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-10",
+            "text": "I was the 2021 No. 12 pick and unanimous rookie defender of the year who became the centerpiece of the 2025 Dallas-Green Bay trade.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "rookie",
+              "trade"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "tyreek-hill",
+    "name": "Tyreek Hill",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "draft": "https://www.chiefs.com/news/2016-nfl-draft-round-five-17064577",
+      "proBowl": "https://www.chiefs.com/news/four-chiefs-players-named-to-the-2017-pro-bowl-roster-18312332",
+      "rookie": "https://www.chiefs.com/news/chiefs-vs-steelers-five-things-to-watch-18441503",
+      "versatile": "https://www.chiefs.com/news/top-five-moments-from-tyreek-hill-s-2016-pro-bowl-season-18323132",
+      "milestones": "https://www.chiefs.com/news/here-s-a-look-at-the-chiefs-records-and-milestones-from-the-2019-regular-season",
+      "superBowl": "https://www.chiefs.com/news/chiefs-rally-to-win-super-bowl-liv-31-20-and-secure-world-championship",
+      "tb": "https://www.chiefs.com/news/chiefs-defeat-buccaneers-27-24-in-career-game-for-tyreek-hill",
+      "trade": "https://www.nfl.com/news/chiefs-trading-wr-tyreek-hill-to-dolphins-for-multiple-draft-picks",
+      "miami": "https://www.nfl.com/news/tyreek-hill-dolphins-agree-to-new-deal-worth-90-million-over-next-three-years"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "tyreek-hill-a-1",
+            "text": "I entered the NFL as a fifth-round pick, 165th overall, in 2016.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "proBowl"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-2",
+            "text": "I came into the league from West Alabama with a background that included elite track speed.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "proBowl"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-3",
+            "text": "As a rookie, I immediately became a major factor as a return specialist.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "proBowl"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-4",
+            "text": "I finished that rookie season with 12 total touchdowns, tying a franchise rookie record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-5",
+            "text": "I also led the NFL in punt-return average as a rookie.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "versatile"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-6",
+            "text": "I became the first player in the Super Bowl era with a kick-return, punt-return, rushing and receiving touchdown in the same season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "versatile"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-7",
+            "text": "I was a unanimous first-team All-Pro as a punt returner after that rookie year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-8",
+            "text": "I caught nine passes for 105 yards in Kansas City's Super Bowl LIV victory.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "superBowl"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-9",
+            "text": "Kansas City eventually traded me to Miami in 2022 for five draft picks, including a first-rounder.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-10",
+            "text": "The fifth-round return specialist from West Alabama became a Super Bowl champion in Kansas City before a blockbuster move to Miami.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "superBowl",
+              "trade"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "tyreek-hill-b-1",
+            "text": "My early NFL role mixed receiving, rushing and return-game work rather than fitting one narrow job description.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "proBowl",
+              "versatile"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-2",
+            "text": "In my rookie season, I scored touchdowns as a receiver, runner, punt returner and kickoff returner.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "versatile"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-3",
+            "text": "I earned Pro Bowl selections in each of my first four NFL seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "milestones"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-4",
+            "text": "After four seasons, my 4,115 receiving yards were the most through four seasons in Chiefs history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "milestones"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-5",
+            "text": "In a 2020 win at Tampa Bay, I caught 13 passes for 269 yards and three touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tb"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-6",
+            "text": "My 2022 trade sent a first-, second- and fourth-round pick that year plus two future picks to my former team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-7",
+            "text": "I caught 119 passes in each of my first two seasons with Miami.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-8",
+            "text": "In 2023, I set a career high with 1,799 receiving yards and scored 13 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-9",
+            "text": "Both of my first two Miami seasons produced more than 1,700 receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-10",
+            "text": "I am the former Chiefs return ace and receiver who was traded to the Dolphins for five draft picks in 2022.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "proBowl",
+              "trade"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
