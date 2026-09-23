@@ -202,7 +202,7 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
         clues: [
           { id: "ufc-max-holloway-b-1", text: "Before fighting became my profession, I worked as a handyman.", band: "broad", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-max-holloway-b-2", text: "My first three UFC appearances included one win and two losses.", band: "broad", verification: "verified", sourceIds: ["career", "profile"] },
-          { id: "ufc-max-holloway-b-3", text: "I received the UFC Forrest Griffin Community Award in 2022.", band: "helpful", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-max-holloway-b-3", text: "I received the UFC's annual community service award in 2022.", band: "helpful", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-b-4", text: "I moved up a division for an interim title opportunity in 2019.", band: "helpful", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-b-5", text: "I lost the featherweight championship to Alexander Volkanovski by decision later that year.", band: "helpful", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-b-6", text: "An immediate rematch with Volkanovski ended in a split-decision loss.", band: "strong", verification: "verified", sourceIds: ["career"] },
