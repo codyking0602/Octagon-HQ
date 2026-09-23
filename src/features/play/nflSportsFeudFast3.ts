@@ -92,7 +92,16 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       "Name an NFL award that can boost a player's legacy.",
       "Name an individual honor announced around the end of an NFL season.",
     ],
-    answers: ["NFL MVP", "Super Bowl MVP", "Defensive Player of the Year", "Offensive Player of the Year", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "Walter Payton Man of the Year"],
+    answers: [
+      { name: "NFL MVP", aliases: ["MVP"] },
+      { name: "Super Bowl MVP", aliases: ["SB MVP", "Super Bowl Most Valuable Player"] },
+      { name: "Defensive Player of the Year", aliases: ["DPOY", "Defensive POY"] },
+      { name: "Offensive Player of the Year", aliases: ["OPOY", "Offensive POY"] },
+      { name: "Offensive Rookie of the Year", aliases: ["OROY", "Offensive ROY"] },
+      { name: "Defensive Rookie of the Year", aliases: ["DROY", "Defensive ROY"] },
+      { name: "Comeback Player of the Year", aliases: ["CPOY", "Comeback POY"] },
+      { name: "Walter Payton Man of the Year", aliases: ["Walter Payton", "Man of the Year", "WPMOY"] },
+    ],
   },
   {
     category: "players",
