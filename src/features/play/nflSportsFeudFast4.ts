@@ -71,7 +71,16 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
       "Name a concept a coordinator might use to stress a defense.",
       "Name an offensive term NFL fans recognize.",
     ],
-    answers: ["Play-action", "RPO", "Screen pass", "Four verticals", "Mesh", "Zone run", "Counter", "Bootleg"],
+    answers: [
+      { name: "Play-action", aliases: ["Play action", "PA"] },
+      { name: "RPO", aliases: ["Run-pass option", "Run pass option"] },
+      { name: "Screen pass", aliases: ["Screen"] },
+      { name: "Four verticals", aliases: ["Four verts", "4 verts", "Verts"] },
+      { name: "Mesh", aliases: ["Mesh concept"] },
+      { name: "Zone run", aliases: ["Zone", "Inside zone", "Outside zone"] },
+      { name: "Counter", aliases: ["Counter run"] },
+      { name: "Bootleg", aliases: ["Boot"] },
+    ],
   },
   {
     category: "strategy",
