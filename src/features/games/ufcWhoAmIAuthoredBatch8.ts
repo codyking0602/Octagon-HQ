@@ -1,10 +1,10 @@
 import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
 
- /**
-  * Static authored UFC Who Am I batch 8.
-  * Source-backed at authoring time; runtime serves these clue strings verbatim.
-  */
- export const ufcWhoAmIAuthoredBatch8: readonly UfcWhoAmIAuthoredIdentity[] = [
+/**
+ * Static authored UFC Who Am I batch 8.
+ * Source-backed at authoring time; runtime serves these clue strings verbatim.
+ */
+export const ufcWhoAmIAuthoredBatch8: readonly UfcWhoAmIAuthoredIdentity[] = [
   {
     "subjectId": "ufc:joanna-jedrzejczyk",
     "name": "Joanna Jedrzejczyk",
@@ -208,7 +208,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-joanna-jedrzejczyk-b-10",
-            "text": "One of my most recognizable UFC matchups came against Valentina Shevchenko.",
+            "text": "I also shared the Octagon with Valentina Shevchenko.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -423,7 +423,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-jessica-andrade-b-10",
-            "text": "One of my most recognizable UFC matchups came against Valentina Shevchenko.",
+            "text": "I also shared the Octagon with Valentina Shevchenko.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -639,7 +639,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-alexa-grasso-b-10",
-            "text": "One of my most recognizable UFC matchups came against Valentina Shevchenko.",
+            "text": "I also shared the Octagon with Valentina Shevchenko.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -855,7 +855,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-julianna-pena-b-10",
-            "text": "One of my most recognizable UFC matchups came against Amanda Nunes.",
+            "text": "I also shared the Octagon with Amanda Nunes.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1071,7 +1071,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-rafael-dos-anjos-b-10",
-            "text": "One of my most recognizable UFC matchups came against Eddie Alvarez.",
+            "text": "I also shared the Octagon with Eddie Alvarez.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1500,7 +1500,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-stephen-thompson-b-10",
-            "text": "One of my most recognizable UFC matchups came against Tyron Woodley.",
+            "text": "I also shared the Octagon with Tyron Woodley.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1716,7 +1716,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-derrick-lewis-b-10",
-            "text": "One of my most recognizable UFC matchups came against Ciryl Gane.",
+            "text": "I also shared the Octagon with Ciryl Gane.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1932,7 +1932,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-paulo-costa-b-10",
-            "text": "One of my most recognizable UFC matchups came against Robert Whittaker.",
+            "text": "I also shared the Octagon with Robert Whittaker.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2148,7 +2148,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-tai-tuivasa-b-10",
-            "text": "One of my most recognizable UFC matchups came against Cyril Asker.",
+            "text": "I also shared the Octagon with Cyril Asker.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2364,7 +2364,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-diego-lopes-b-10",
-            "text": "One of my most recognizable UFC matchups came against Alexander Volkanovski.",
+            "text": "I also shared the Octagon with Alexander Volkanovski.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2377,4 +2377,3 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
     }
   }
 ];
- 
