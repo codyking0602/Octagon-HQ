@@ -5297,7 +5297,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lamar-jackson-a-4",
-            "text": "I finished that regular season with 1,538 rushing yards, the most ever by a Heisman-winning quarterback.",
+            "text": "I finished that regular season with 1,538 rushing yards, setting an ACC record for a quarterback.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5688,7 +5688,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-adrian-peterson-a-1",
-            "text": "I was a true freshman running back who immediately became a featured runner on a national-title contender.",
+            "text": "I was a true freshman running back who immediately became my team's featured runner.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5919,7 +5919,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-barry-sanders-a-3",
-            "text": "When the starting job opened the next year, I produced four games with at least 300 rushing yards.",
+            "text": "I did not become my team's full-time starting tailback until my junior season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5928,7 +5928,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-barry-sanders-a-4",
-            "text": "I rushed for 2,628 yards in that season.",
+            "text": "That junior year included four games with at least 300 rushing yards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5938,7 +5938,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-barry-sanders-a-5",
-            "text": "I averaged 238.9 rushing yards per game and scored 37 rushing touchdowns in the 11-game regular season.",
+            "text": "I finished that regular season averaging 238.9 rushing yards per game.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5948,7 +5948,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-barry-sanders-a-6",
-            "text": "That season produced 34 NCAA records.",
+            "text": "I rushed for 2,628 yards and 37 touchdowns in that 11-game regular season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5958,7 +5958,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-barry-sanders-a-7",
-            "text": "I won the Heisman while sweeping all six voting regions.",
+            "text": "That season produced 34 NCAA records.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5967,7 +5967,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-barry-sanders-a-8",
-            "text": "I accepted the trophy by satellite from Tokyo before playing Texas Tech there later that day.",
+            "text": "I won the Heisman while sweeping all six voting regions.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5977,7 +5977,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-barry-sanders-a-9",
-            "text": "Oklahoma State later retired my No. 21 jersey.",
+            "text": "I accepted the Heisman Trophy by satellite from Tokyo before playing Texas Tech there later that day.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -5986,7 +5986,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-barry-sanders-a-10",
-            "text": "I became Oklahoma State's first Heisman Trophy winner in 1988.",
+            "text": "Wearing No. 21, I became Oklahoma State's first Heisman Trophy winner in 1988.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6054,7 +6054,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-barry-sanders-b-7",
-            "text": "I had accepted the Heisman Trophy by satellite only hours before that Texas Tech performance.",
+            "text": "I also won the Maxwell Award and Walter Camp Player of the Year during that historic season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
