@@ -34027,7 +34027,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-colt-brennan-a-10",
-            "text": "I was the quarterback who led the 2007 Warriors to a 12-0 regular season before facing Georgia in the Sugar Bowl.",
+            "text": "I was the quarterback who led the 2007 Warriors to a 12-0 regular season and the Sugar Bowl.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
