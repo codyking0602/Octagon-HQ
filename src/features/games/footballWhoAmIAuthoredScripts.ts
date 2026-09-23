@@ -12869,6 +12869,1260 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       }
     }
   },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-lou-holtz",
+    "name": "Lou Holtz",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/hof_search.aspx?hof=2228"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-lou-holtz-a-1",
+            "text": "I was a college head coach at six different programs.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-2",
+            "text": "I became the only coach in NCAA history to lead six different programs to bowl games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-3",
+            "text": "At one stop, I produced six straight bowl appearances and four top-10 finishes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-4",
+            "text": "At another, I inherited an 0-11 team and produced one of the biggest one-year turnarounds in the country.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-5",
+            "text": "My teams won conference championships at multiple schools.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-6",
+            "text": "My best-known tenure produced 100 victories.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-7",
+            "text": "That program won a national championship under me.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-8",
+            "text": "I also coached a Heisman Trophy winner there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-9",
+            "text": "My national championship season was 1988.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-10",
+            "text": "I am the Hall of Fame coach best known for leading Notre Dame to an undefeated national title.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-lou-holtz-b-1",
+            "text": "My head-coaching career began at William & Mary in 1969.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-2",
+            "text": "I later coached North Carolina State, Arkansas and Minnesota before reaching my signature job.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-3",
+            "text": "My Arkansas teams went to six consecutive bowl games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-4",
+            "text": "I took over Notre Dame in 1986.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-5",
+            "text": "Two seasons later, that team won the national championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-6",
+            "text": "After leaving Notre Dame, I spent two seasons away from coaching.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-7",
+            "text": "I returned to the sideline at South Carolina in 1999.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-8",
+            "text": "My second Gamecocks team improved from 0-11 to 8-4 and won the Outback Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-9",
+            "text": "I finished my college head-coaching career with 249 victories.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-10",
+            "text": "I am the coach whose stops included six bowl programs and a 1988 national championship at Notre Dame.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-mack-brown",
+    "name": "Mack Brown",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/honors/college-football-hall-of-fame/mack-brown/2431",
+      "unc": "https://goheels.com/sports/football/roster/coaches/mack-brown/4438"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-mack-brown-a-1",
+            "text": "I was a head coach for more than three decades across four programs.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-a-2",
+            "text": "At one early stop, I helped end a long bowl drought.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-a-3",
+            "text": "At another, I rebuilt a program from consecutive 1-10 seasons into a regular top-25 team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-a-4",
+            "text": "My signature tenure included nine consecutive seasons with at least 10 wins.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-a-5",
+            "text": "I won two conference championships during that run.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-a-6",
+            "text": "My team played for a national championship twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-a-7",
+            "text": "I won the first of those national-title games in a classic Rose Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-a-8",
+            "text": "That victory delivered the program's first national championship in 35 years.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-a-9",
+            "text": "My championship team completed the 2005 season undefeated.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-a-10",
+            "text": "I am the Hall of Fame coach who led Texas and Vince Young to the 2005 national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-mack-brown-b-1",
+            "text": "I played running back at Vanderbilt and Florida State before entering coaching.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-b-2",
+            "text": "My assistant-coaching path included Southern Miss, Memphis, Iowa State and LSU.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-b-3",
+            "text": "My first head-coaching job came at Appalachian State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-b-4",
+            "text": "I later coached Tulane before beginning the first of two tenures at North Carolina.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-b-5",
+            "text": "After building the Tar Heels into a top-five team, I left for Texas.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-b-6",
+            "text": "I won 158 games during 16 seasons with the Longhorns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-b-7",
+            "text": "My 2005 Texas team defeated USC for the national championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-b-8",
+            "text": "After time away from coaching, I returned to North Carolina in 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-b-9",
+            "text": "Across 36 head-coaching seasons, I won 288 games.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          },
+          {
+            "id": "cfb-mack-brown-b-10",
+            "text": "I am the coach whose long career included two North Carolina tenures and a national championship at Texas.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "unc"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jim-harbaugh",
+    "name": "Jim Harbaugh",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "michigan": "https://mgoblue.com/sports/football/roster/coaches/jim-harbaugh/5905",
+      "title": "https://mgoblue.com/news/2024/1/8/football-mission-accomplished-u-m-takes-down-no-2-washington-to-capture-cfp-national-championship"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jim-harbaugh-a-1",
+            "text": "I returned to college coaching at my alma mater after spending several seasons as an NFL head coach.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-a-2",
+            "text": "My early teams there regularly reached double-digit wins but had to wait for a conference championship breakthrough.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-a-3",
+            "text": "That breakthrough came with a 12-win season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-a-4",
+            "text": "My program then won the conference championship three years in a row.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-a-5",
+            "text": "Each of those three teams reached the College Football Playoff.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-a-6",
+            "text": "My final team completed an undefeated regular season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-a-7",
+            "text": "It won a playoff semifinal in overtime.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-a-8",
+            "text": "The season ended with a 34-13 victory in the national championship game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-a-9",
+            "text": "That 15-0 season delivered the program's first national championship since 1997.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-a-10",
+            "text": "I am the former Michigan quarterback who returned to coach the Wolverines to the 2023 national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jim-harbaugh-b-1",
+            "text": "I played quarterback at the school I later coached.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-b-2",
+            "text": "My head-coaching career began outside the major-conference level before moving to Stanford.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-b-3",
+            "text": "At Stanford, I transformed a struggling program into an Orange Bowl winner.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-b-4",
+            "text": "I then spent four seasons as an NFL head coach and reached a Super Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-b-5",
+            "text": "I returned to college football in 2015.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-b-6",
+            "text": "My Michigan teams eventually broke through with three consecutive Big Ten championships.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-b-7",
+            "text": "They reached the playoff in each of those three seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-b-8",
+            "text": "My last Michigan team finished 15-0.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-b-9",
+            "text": "That team beat Washington for the national championship in Houston.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-jim-harbaugh-b-10",
+            "text": "I am the coach who led Stanford, the San Francisco 49ers and then Michigan before winning the Wolverines' 2023 national title.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-ryan-day",
+    "name": "Ryan Day",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "osu": "https://ohiostatebuckeyes.com/sports/football/roster/coaches/ryan-day/1498"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-ryan-day-a-1",
+            "text": "My first full season as a college head coach ended with a conference championship and a playoff berth.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-a-2",
+            "text": "My next team also won the conference and reached the national championship game.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-a-3",
+            "text": "Over my first several seasons, my teams remained among the nation's most consistent playoff contenders.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-a-4",
+            "text": "My program entered the first 12-team College Football Playoff without a conference championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-a-5",
+            "text": "We then won four playoff games in 31 days.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-a-6",
+            "text": "That run included victories over Tennessee, Oregon, Texas and Notre Dame.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-a-7",
+            "text": "My team became the first FBS team to defeat five top-five opponents in one season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-a-8",
+            "text": "The run ended with the program's ninth national championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-a-9",
+            "text": "That championship came after the 2024 regular season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-a-10",
+            "text": "I am the Ohio State coach who won the first 12-team College Football Playoff national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-ryan-day-b-1",
+            "text": "I played quarterback in college before beginning a coaching career focused heavily on offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-b-2",
+            "text": "My assistant path included college stops and NFL quarterback-coaching jobs.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-b-3",
+            "text": "I joined Ohio State's staff as co-offensive coordinator and quarterbacks coach.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-b-4",
+            "text": "I later served as interim head coach for three games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-b-5",
+            "text": "I became the full-time head coach after Urban Meyer retired.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-b-6",
+            "text": "My first full team went 13-1 and won the Big Ten.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-b-7",
+            "text": "I returned to the national championship game the following season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-b-8",
+            "text": "Several years later, my team entered the expanded playoff and won four straight postseason games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-b-9",
+            "text": "That run ended with a national-title victory over Notre Dame.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-ryan-day-b-10",
+            "text": "I am the former Ohio State offensive coordinator who succeeded Urban Meyer and won the 2024 national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jim-tressel",
+    "name": "Jim Tressel",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/hof_search.aspx?hof=2373"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jim-tressel-a-1",
+            "text": "I won national championships at two different levels of Division I college football.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-a-2",
+            "text": "At my first head-coaching stop, my teams reached the postseason ten times in 15 seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-a-3",
+            "text": "I won four national championships there.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-a-4",
+            "text": "I then took over a major-conference powerhouse.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-a-5",
+            "text": "In my second season there, I won another national championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-a-6",
+            "text": "My teams later returned to the national championship game in consecutive seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-a-7",
+            "text": "I won at least a share of six conference titles at that second school.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-a-8",
+            "text": "I coached a Heisman Trophy-winning quarterback there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-a-9",
+            "text": "I finished my head-coaching career with a 229-79-2 record.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-a-10",
+            "text": "I am the Ohio coach who won four FCS titles at Youngstown State and the 2002 BCS championship at Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jim-tressel-b-1",
+            "text": "I played quarterback in college for a team coached by my father.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-b-2",
+            "text": "My first head-coaching job came at Youngstown State in 1986.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-b-3",
+            "text": "I spent 15 seasons there.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-b-4",
+            "text": "My teams won four FCS national championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-b-5",
+            "text": "Ohio State hired me as head coach in 2001.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-b-6",
+            "text": "One year later, the Buckeyes completed an undefeated national championship season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-b-7",
+            "text": "My Ohio State teams finished in the national top five seven times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-b-8",
+            "text": "I also coached 2006 Heisman Trophy winner Troy Smith.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-b-9",
+            "text": "Across both schools, I won five national championships.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-jim-tressel-b-10",
+            "text": "I am the College Football Hall of Fame coach whose championship résumé spans Youngstown State and Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-lincoln-riley",
+    "name": "Lincoln Riley",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "usc": "https://usctrojans.com/staff-directory/Lincoln-Riley/5835"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-lincoln-riley-a-1",
+            "text": "I became an FBS head coach in my early 30s after being promoted from offensive coordinator.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-a-2",
+            "text": "I won an outright conference championship in each of my first four seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-a-3",
+            "text": "My teams reached the College Football Playoff three times during that span.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-a-4",
+            "text": "I won 55 games in five seasons at my first head-coaching stop.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-a-5",
+            "text": "My offenses repeatedly produced Heisman Trophy contenders and top NFL draft picks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-a-6",
+            "text": "I have coached three Heisman Trophy-winning quarterbacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-a-7",
+            "text": "Three quarterbacks I coached were selected first overall in the NFL Draft.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-a-8",
+            "text": "After five seasons at my first head-coaching stop, I moved to USC.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-a-9",
+            "text": "My four consecutive conference championships came at Oklahoma.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-a-10",
+            "text": "I am the offensive coach who developed Baker Mayfield, Kyler Murray and Caleb Williams into Heisman winners.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-lincoln-riley-b-1",
+            "text": "I was a walk-on quarterback at Texas Tech before moving almost immediately into coaching.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-b-2",
+            "text": "I started as a student assistant under Mike Leach.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-b-3",
+            "text": "I later coached wide receivers and called plays in an Alamo Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-b-4",
+            "text": "After leaving Texas Tech, my rise continued through offensive-coordinator roles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-b-5",
+            "text": "I eventually became Oklahoma's offensive coordinator and quarterbacks coach.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-b-6",
+            "text": "When Bob Stoops retired, I was promoted to head coach.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-b-7",
+            "text": "I won the Big 12 in each of my first four seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-b-8",
+            "text": "My Oklahoma teams reached three College Football Playoffs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-b-9",
+            "text": "USC hired me after the 2021 season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-lincoln-riley-b-10",
+            "text": "I am the coach whose Air Raid roots at Texas Tech led to head-coaching jobs at Oklahoma and USC.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          }
+        ]
+      }
+    }
+  },
 
   {
     "league": "CFB",
