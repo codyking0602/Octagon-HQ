@@ -22737,6 +22737,1031 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-brady-quinn",
+    "name": "Brady Quinn",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nd": "https://fightingirish.com/news/2006/12/10/brady-quinn-finishes-third-in-heisman-trophy-balloting",
+      "records": "https://fightingirish.com/news/2006/11/21/brady-quinn-named-finalist-for-maxwell-and-o-brien-awards",
+      "legacy": "https://fightingirish.com/news/2018/08/07/ot-dish-archive-jan-10-html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-brady-quinn-a-1",
+            "text": "I became a long-term starter at quarterback and finished my college career with more than 11,000 passing yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "legacy"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-a-2",
+            "text": "I produced consecutive seasons with more than 3,000 passing yards late in my college career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nd",
+              "legacy"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-a-3",
+            "text": "As a junior, I threw for 3,919 yards and 32 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "legacy"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-a-4",
+            "text": "The next season, I threw 35 touchdown passes during the regular season while being intercepted only five times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-a-5",
+            "text": "At one point in that senior season, I went 223 consecutive pass attempts without an interception.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-a-6",
+            "text": "I won the Maxwell Award as the nation's outstanding player in my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nd",
+              "legacy"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-a-7",
+            "text": "I also won the Johnny Unitas Golden Arm Award as the nation's top senior quarterback.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "legacy"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-a-8",
+            "text": "I finished fourth in the Heisman voting as a junior and third as a senior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "legacy",
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-a-9",
+            "text": "I left Notre Dame as its career leader in passing yards, completions and touchdown passes.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "legacy"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-a-10",
+            "text": "My Notre Dame career from 2003 through 2006 ended with 11,762 passing yards and 95 touchdown passes.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "legacy"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-brady-quinn-b-1",
+            "text": "My college career included five games with at least 400 passing yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-b-2",
+            "text": "I was the first quarterback in my program's history to post multiple 400-yard passing games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-b-3",
+            "text": "One of those performances was a 487-yard game against Michigan State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-b-4",
+            "text": "I also became the first quarterback at my school to throw for more than 300 yards in three consecutive games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-b-5",
+            "text": "By the start of my senior season, I already owned every major school passing record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-b-6",
+            "text": "I won the Sammy Baugh Award after my 3,919-yard junior season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "legacy"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-b-7",
+            "text": "I helped my team reach BCS bowls in each of my final two seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-b-8",
+            "text": "I finished my senior regular season with a 10-2 record and a second straight BCS invitation.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-b-9",
+            "text": "I was the Notre Dame quarterback who won the 2006 Maxwell Award and finished third in that year's Heisman voting.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-brady-quinn-b-10",
+            "text": "I set 36 Notre Dame records and finished with 95 career touchdown passes.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "legacy",
+              "nd"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-carson-palmer",
+    "name": "Carson Palmer",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "usc": "https://usctrojans.com/honors/usc-athletics-hall-of-fame/carson-palmer/122"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-carson-palmer-a-1",
+            "text": "I was a four-year starting quarterback whose college career ended with more than 11,000 passing yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-a-2",
+            "text": "By the end of my career, I had set or tied 33 school and conference records for passing and total offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-a-3",
+            "text": "In my senior season, I completed 309 passes for 3,942 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-a-4",
+            "text": "That same season, I threw 33 touchdown passes and posted seven 300-yard games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-a-5",
+            "text": "I was named my conference's co-Offensive Player of the Year as a senior.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-a-6",
+            "text": "I won the Johnny Unitas Golden Arm Award as the nation's top senior quarterback.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-a-7",
+            "text": "I became the first quarterback from my school to win the Heisman Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-a-8",
+            "text": "That Heisman ended a 21-year drought for my program.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-a-9",
+            "text": "I left USC as the Pac-10 career leader in both total offense and passing yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-a-10",
+            "text": "After winning the 2002 Heisman at USC, I was selected first overall in the 2003 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-carson-palmer-b-1",
+            "text": "I played enough college football to finish with 11,621 yards of total offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-b-2",
+            "text": "My career passing total reached 11,818 yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-b-3",
+            "text": "As a senior, I completed 63.2 percent of my passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-b-4",
+            "text": "I threw for at least 300 yards in three consecutive games during that final season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-b-5",
+            "text": "I became my program's first first-team All-America quarterback since 1988.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-b-6",
+            "text": "The Sporting News and CNN/SI both recognized me as a national player of the year in 2002.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-b-7",
+            "text": "My senior season made me the first Heisman winner from the West Coast since 1981.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-b-8",
+            "text": "I later entered the College Football Hall of Fame with a résumé built at Southern California.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-b-9",
+            "text": "I was USC's fifth Heisman Trophy winner and its first quarterback to claim the award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-carson-palmer-b-10",
+            "text": "Cincinnati used the No. 1 overall pick in 2003 on the USC quarterback who had just won the Heisman.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-charlie-ward",
+    "name": "Charlie Ward",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "fsu": "https://seminoles.com/honors/florida-state-athletics-hall-of-fame/charlie-ward/104"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-charlie-ward-a-1",
+            "text": "I was a two-sport college athlete who played quarterback and also spent multiple seasons on the basketball team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-a-2",
+            "text": "On the basketball court, I played on three NCAA Tournament teams.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-a-3",
+            "text": "As a senior quarterback, I completed 69.5 percent of my passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-a-4",
+            "text": "That season, I threw for 3,032 yards with 27 touchdowns and only four interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-a-5",
+            "text": "I won both the Davey O'Brien Award and the Johnny Unitas Golden Arm Award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-a-6",
+            "text": "I also won the Walter Camp Player of the Year award during that senior season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-a-7",
+            "text": "I became my school's first Heisman Trophy winner.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-a-8",
+            "text": "My final football season ended with a national championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-a-9",
+            "text": "I quarterbacked Florida State's 1993 national championship team.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-a-10",
+            "text": "After winning Florida State's first Heisman, I chose professional basketball and became an NBA point guard instead of playing in the NFL.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-charlie-ward-b-1",
+            "text": "I was a Georgia native whose college athletic career was split between football and basketball.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-b-2",
+            "text": "I hit a game-winning shot in a conference basketball tournament championship game early in my college career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-b-3",
+            "text": "I later helped my basketball team reach the Sweet 16 and then come one win from the Final Four.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-b-4",
+            "text": "At the time of my school Hall of Fame induction, I still held program basketball records for steals in a game and in a career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-b-5",
+            "text": "In football, I finished my senior season with 27 touchdown passes against only four interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-b-6",
+            "text": "I became only the second football player ever to win the Sullivan Award as the nation's top amateur athlete.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-b-7",
+            "text": "I won essentially every major quarterback and player-of-the-year honor available to me as a senior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-b-8",
+            "text": "My 1993 season delivered both a Heisman Trophy and a national title to Florida State.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-b-9",
+            "text": "I later started at point guard for the New York Knicks and played in the 1999 NBA Finals.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-charlie-ward-b-10",
+            "text": "I am the Florida State quarterback-basketball standout who won the 1993 Heisman and then built an NBA career.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-dak-prescott",
+    "name": "Dak Prescott",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "msu": "https://hailstate.com/sports/football/roster/dak-prescott/2911",
+      "records": "https://hailstate.com/news/2016/1/5/210617290"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-dak-prescott-a-1",
+            "text": "I was a dual-threat quarterback who finished college with more than 11,000 yards of total offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-a-2",
+            "text": "I won a bowl MVP award before my two most productive seasons as a starter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-a-3",
+            "text": "In one season, I rushed for a school-record 986 yards by a quarterback.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-a-4",
+            "text": "That same season, I produced 4,435 yards of total offense and was responsible for 41 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-a-5",
+            "text": "I finished eighth in the Heisman Trophy voting that year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-a-6",
+            "text": "I earned first-team All-SEC honors in each of my final two seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-a-7",
+            "text": "I won the Conerly Trophy as Mississippi's top college player in back-to-back seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-a-8",
+            "text": "I finished my career with 11,897 yards of total offense and 114 touchdowns responsible for.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-a-9",
+            "text": "I wore No. 15 while setting 38 school records at Mississippi State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-a-10",
+            "text": "I left Mississippi State with 9,376 passing yards and 2,521 rushing yards by a quarterback.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-dak-prescott-b-1",
+            "text": "My final college season was my most accurate, as I completed 66.2 percent of my passes.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "msu",
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-b-2",
+            "text": "I threw for 3,793 yards and 29 touchdowns that season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "msu",
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-b-3",
+            "text": "In one late-season road game, I set a school record with 508 passing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msu",
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-b-4",
+            "text": "That same game, I was responsible for seven touchdowns, another school record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msu",
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-b-5",
+            "text": "I also set a school record by going 239 consecutive pass attempts without an interception in that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-b-6",
+            "text": "I won the Senior CLASS Award in my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-b-7",
+            "text": "I ended that season as the MVP of the Belk Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-b-8",
+            "text": "My career totals included 70 passing touchdowns plus the third-most quarterback rushing yards in SEC history at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-b-9",
+            "text": "I was the Mississippi State quarterback whose school record book listed 15 career, 15 single-season and eight single-game records.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          },
+          {
+            "id": "cfb-dak-prescott-b-10",
+            "text": "The No. 15 quarterback from Mississippi State finished with 38 school records and two Conerly Trophies.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "msu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-darren-mcfadden",
+    "name": "Darren McFadden",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "ark": "https://arkansasrazorbacks.com/darren_mcfadden_1152805/",
+      "hof": "https://footballfoundation.org/honors/nff-college-football-hall-of-fame/darren-mcfadden/2439",
+      "lsu": "https://arkansasrazorbacks.com/stats/football/2007/ar12.htm"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-darren-mcfadden-a-1",
+            "text": "I rushed for more than 1,000 yards in each of my three college seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-a-2",
+            "text": "My rushing totals climbed from 1,113 yards as a freshman to 1,647 as a sophomore.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ark",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-a-3",
+            "text": "I finished my junior season with 1,830 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-a-4",
+            "text": "I earned my conference's Offensive Player of the Year honor in back-to-back seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-a-5",
+            "text": "I was a first-team All-American in each of those final two seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-a-6",
+            "text": "I became only the second player ever to win the Doak Walker Award twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-a-7",
+            "text": "I finished second in the Heisman Trophy voting in consecutive years.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-a-8",
+            "text": "I won the Walter Camp Player of the Year award in 2007.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-a-9",
+            "text": "I left Arkansas as the Razorbacks' all-time leading rusher.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-a-10",
+            "text": "I was Arkansas' No. 5 running back known as Run DMC, a two-time Doak Walker winner and two-time Heisman runner-up.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-darren-mcfadden-b-1",
+            "text": "Although I was a running back, my college offense also used me as a passer from a direct-snap package.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ark"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-b-2",
+            "text": "As a sophomore, I completed seven of nine passes for three touchdowns from that package.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ark"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-b-3",
+            "text": "That season also included a 92-yard kickoff return for a touchdown.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ark"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-b-4",
+            "text": "Against LSU as a sophomore, I rushed for 182 yards while also completing both of my pass attempts.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ark"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-b-5",
+            "text": "A year later against the nation's No. 1-ranked team, I ran for 206 yards and three touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-b-6",
+            "text": "In that same upset of No. 1 LSU, I also threw a touchdown pass.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-b-7",
+            "text": "My college career ended with 4,590 rushing yards and 41 rushing touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-b-8",
+            "text": "I was inducted into the College Football Hall of Fame after starring at Arkansas from 2005 through 2007.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-b-9",
+            "text": "The Razorbacks used my passing ability in the Wildcat-style package while I was also becoming their career rushing leader.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ark",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-darren-mcfadden-b-10",
+            "text": "I am the Arkansas running back who finished second for the Heisman twice and won consecutive Doak Walker Awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
