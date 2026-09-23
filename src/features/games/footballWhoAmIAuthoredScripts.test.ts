@@ -35,8 +35,8 @@ const EXPECTED_BANDS = [
 ] as const;
 
 describe("Football Who Am I authored scripts", () => {
-  it("tracks the authored migration with 66 completed identities", () => {
-    expect(footballWhoAmIAuthoredIdentities).toHaveLength(66);
+  it("tracks the authored migration with 106 completed identities", () => {
+    expect(footballWhoAmIAuthoredIdentities).toHaveLength(106);
   });
 
   it("keeps league/name and canonical stage ownership unique", () => {
@@ -84,6 +84,20 @@ describe("Football Who Am I authored scripts", () => {
     }
   });
 
+
+  it("keeps every authored identity bound to the exact frozen target identity", () => {
+    const targetByName = new Map(
+      Object.values(FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES)
+        .flat()
+        .map((identity) => [`${identity.league}:${identity.name}`, identity] as const),
+    );
+
+    for (const identity of footballWhoAmIAuthoredIdentities) {
+      const target = targetByName.get(`${identity.league}:${identity.name}`);
+      expect(target).toBeDefined();
+      expect(identity.subjectId).toBe(target!.subjectId);
+    }
+  });
 
   it("covers every frozen Football coach with the exact target subject id", () => {
     const targetCoaches = Object.values(FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES)
