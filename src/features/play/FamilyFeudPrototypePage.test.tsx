@@ -68,7 +68,7 @@ function reachFastMoney() {
     submitMainAndSettle(answer);
   }
   fireEvent.click(screen.getByRole("button", { name: "GO TO FAST MONEY" }));
-  fireEvent.click(screen.getByRole("button", { name: "START 45 SECONDS" }));
+  fireEvent.click(screen.getByRole("button", { name: "START 50 SECONDS" }));
 }
 
 function submitFastMoneyAnswer(value: string) {
