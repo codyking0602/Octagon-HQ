@@ -45051,7 +45051,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       "chiefs-offense": "https://www.chiefs.com/news/by-the-numbers-chiefs-offense-in-2017-20359649",
       "sf-2012": "https://www.49ers.com/news/49ers-sign-qb-smith-to-3-year-deal-7080194",
       "washington-recovery": "https://www.commanders.com/news/espn-documentary-alex-smith-how-to-watch-redskins-project-11",
-      "nfl-stats": "https://www.nfl.com/players/alex-smith/stats/career"
+      "nfl-stats": "https://www.nfl.com/players/alex-smith/stats/career",
+      "nfl-development": "https://www.nfl.com/news/changing-coaches-makes-developing-nfl-talent-more-difficult-0ap3000000449402"
     },
     "scripts": {
       "A": {
@@ -45158,16 +45159,16 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-alex-smith-b-1",
-            "text": "I entered the league from Utah as the No. 1 overall pick in the 2005 NFL Draft.",
+            "text": "My early NFL career included repeated changes in offensive coordinators and systems before I found stability.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "nfl-retire"
+              "nfl-development"
             ]
           },
           {
             "id": "nfl-alex-smith-b-2",
-            "text": "My first NFL home was San Francisco, where my career eventually stabilized after several difficult early seasons.",
+            "text": "I spent the first phase of my NFL career with one NFC franchise before later becoming an AFC starter.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45371,7 +45372,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-oj-simpson-b-1",
-            "text": "I was the first overall pick in the 1969 NFL Draft after winning the Heisman Trophy at USC.",
+            "text": "I entered the league as a highly decorated college running back and a first-round draft choice.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45380,11 +45381,11 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-oj-simpson-b-2",
-            "text": "I led Buffalo in rushing in each of my nine seasons with the franchise.",
+            "text": "My NFL career did not truly take off until a new head coach arrived several seasons in.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "bills-wall"
+              "hof"
             ]
           },
           {
@@ -45492,7 +45493,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bijan-robinson-a-2",
-            "text": "As a rookie I set a franchise record with 1,463 yards from scrimmage.",
+            "text": "As a rookie I set a Falcons rookie record with 1,463 yards from scrimmage.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45710,7 +45711,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-amari-cooper-a-2",
-            "text": "As a rookie I became the first Raiders player at my position to reach 1,000 receiving yards.",
+            "text": "As a rookie I became the first Raiders rookie ever to reach 1,000 receiving yards.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45802,7 +45803,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-amari-cooper-b-1",
-            "text": "My first NFL team used the fourth overall pick of the 2015 draft on me.",
+            "text": "I entered the league as a first-round receiver and immediately surpassed 1,000 receiving yards as a rookie.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45812,7 +45813,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-amari-cooper-b-2",
-            "text": "I was the highest-selected wide receiver in that draft.",
+            "text": "I earned Pro Bowl selections in each of my first two NFL seasons.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45907,6 +45908,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       "ravens-rookie": "https://www.baltimoreravens.com/news/seamless-leader-7746077",
       "ravens-trade": "https://www.baltimoreravens.com/news/press-release-ravens-agree-to-trade-for-wr-boldin-7744751",
       "nfl-stats": "https://www.nfl.com/players/anquan-boldin/stats/career",
+      "nfl-milestones": "https://nflmediaarchive.nfl.net/nflmedia/News/2003News/Milestones2003.htm",
       "nfl-wpmoy": "https://www.nfl.com/news/anquan-boldin-named-walter-payton-man-of-the-year-0ap3000000633375"
     },
     "scripts": {
@@ -45934,11 +45936,11 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-anquan-boldin-a-3",
-            "text": "That 217-yard debut set an NFL rookie single-game receiving record at the time.",
+            "text": "That 217-yard debut set NFL records for catches and receiving yards in a player\'s first game.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ravens-rookie"
+              "nfl-milestones"
             ]
           },
           {
@@ -46226,7 +46228,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "mike-ditka-b-1",
-            "text": "I was a consensus All-American at Pittsburgh before entering the professional ranks.",
+            "text": "I was a consensus All-American in college before becoming a first-round NFL pick.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46235,12 +46237,11 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "mike-ditka-b-2",
-            "text": "Two leagues drafted me in 1961, and I chose the NFL after Chicago selected me fifth overall.",
+            "text": "My rookie season came at a time when tight ends were only beginning to emerge as major receiving threats.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "draft",
-              "hof"
+              "hof-te"
             ]
           },
           {
@@ -46333,7 +46334,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       "nfl-retire": "https://www.nfl.com/news/ravens-marshal-yanda-to-retire-after-13-seasons-0ap3000001105696",
       "ravens-draft": "https://www.baltimoreravens.com/team/history/all-time-drafts",
       "ravens-story": "https://www.baltimoreravens.com/news/marshal-yanda-decides-to-retire-after-13-seasons-eight-pro-bowls",
-      "ravens-alltime": "https://www.baltimoreravens.com/news/revealing-the-ravens-all-time-25-team"
+      "ravens-alltime": "https://www.baltimoreravens.com/news/revealing-the-ravens-all-time-25-team",
+      "ravens-rookie-position": "https://www.baltimoreravens.com/news/the-competition-guards-and-centers-7747991"
     },
     "scripts": {
       "A": {
@@ -46450,11 +46452,11 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-marshal-yanda-b-2",
-            "text": "Baltimore drafted me in the third round in 2007 as a guard/tackle prospect.",
+            "text": "As a rookie, I started 12 games at right tackle before later moving inside to guard.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ravens-draft"
+              "ravens-rookie-position"
             ]
           },
           {
@@ -46872,11 +46874,11 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-chandler-jones-b-2",
-            "text": "New England traded up from No. 27 to No. 21 to select me in 2012.",
+            "text": "I recorded at least five sacks in each of my first two NFL seasons.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "pats-draft"
+              "pats-memories"
             ]
           },
           {
@@ -47075,7 +47077,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-aqib-talib-b-1",
-            "text": "I entered the league from Kansas after making 13 interceptions in three college seasons.",
+            "text": "I built a college reputation as a ball-hawking defensive back before entering the NFL.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -47084,11 +47086,10 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aqib-talib-b-2",
-            "text": "The Buccaneers made me the 20th overall selection and their first first-round cornerback in years.",
+            "text": "Across three college seasons, I intercepted 13 passes before turning pro.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "bucs-draft",
               "bucs-corner"
             ]
           },
@@ -47287,7 +47288,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "george-kittle-b-1",
-            "text": "San Francisco drafted me out of Iowa in the fifth round with the 146th overall pick in 2017.",
+            "text": "I entered the NFL as a fifth-round tight end rather than a highly drafted prospect.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
