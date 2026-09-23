@@ -59,7 +59,16 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       "Name a stadium you would expect on a loudest-in-the-NFL list.",
       "Name a home field where crowd noise feels like a real advantage.",
     ],
-    answers: ["Arrowhead Stadium", "Lumen Field", "Lambeau Field", "Highmark Stadium", "Superdome", "Lincoln Financial Field", "M&T Bank Stadium", "U.S. Bank Stadium"],
+    answers: [
+      { name: "Arrowhead Stadium", aliases: ["Arrowhead", "Chiefs", "Kansas City"] },
+      { name: "Lumen Field", aliases: ["Lumen", "Seahawks", "Seattle"] },
+      { name: "Lambeau Field", aliases: ["Lambeau", "Packers", "Green Bay"] },
+      { name: "Highmark Stadium", aliases: ["Highmark", "Bills", "Buffalo"] },
+      { name: "Superdome", aliases: ["Saints", "New Orleans", "Caesars Superdome"] },
+      { name: "Lincoln Financial Field", aliases: ["The Linc", "Linc", "Eagles", "Philadelphia"] },
+      { name: "M&T Bank Stadium", aliases: ["M and T", "Ravens", "Baltimore"] },
+      { name: "U.S. Bank Stadium", aliases: ["US Bank", "Vikings", "Minnesota"] },
+    ],
   },
   {
     category: "history",
