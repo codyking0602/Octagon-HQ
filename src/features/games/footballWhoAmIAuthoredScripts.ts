@@ -58921,7 +58921,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-devin-hester-a-10",
-            "text": "I entered the Pro Football Hall of Fame in the Class of 2024 as the defining return specialist of my era.",
+            "text": "I entered the Pro Football Hall of Fame in the Class of 2024 as its first return specialist.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -59626,11 +59626,12 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "zach-ertz-b-10",
-            "text": "The Super Bowl LII touchdown and the 116-catch season are the two strongest anchors of my NFL identity.",
+            "text": "My résumé pairs the go-ahead touchdown in Super Bowl LII with a 116-catch season at tight end.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "eagles2026"
+              "eagles2026",
+              "guide"
             ]
           }
         ]
@@ -59688,7 +59689,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-steve-hutchinson-a-5",
-            "text": "I earned the first of six first-team All-Pro selections in 2003.",
+            "text": "I earned the first of six All-Pro selections in 2003.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -59724,7 +59725,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-steve-hutchinson-a-9",
-            "text": "I made seven straight Pro Bowls and six first-team All-Pro teams.",
+            "text": "I made seven straight Pro Bowls and was named All-Pro six times.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -59848,7 +59849,10 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "sources": {
       "cowboys": "https://www.dallascowboys.com/news/tyron-smith-zack-martin-headed-to-cowboys-ring-of-honor-dual-induction-into-hall-of-fame",
       "decade": "https://www.nfl.com/news/nfl-2010s-all-decade-team-tom-brady-j-j-watt-earn-spots-0ap3000001091563",
-      "stats": "https://www.nfl.com/players/tyron-smith/stats/career"
+      "stats": "https://www.nfl.com/players/tyron-smith/stats/career",
+      "guide": "https://static.www.nfl.com/league/apps/league-site/media-guides/2022/DAL.pdf",
+      "contract": "https://www.dallascowboys.com/news/cowboys-sign-tyron-smith-to-eight-year-contract-extension-351111",
+      "allpro2014": "https://www.nfl.com/news/2014-all-pro-teams-analysis-of-the-full-rosters-0ap3000000452986"
     },
     "scripts": {
       "A": {
@@ -59970,61 +59974,61 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tyron-smith-b-3",
-            "text": "I began my NFL career young enough to become the league's youngest starter that season.",
+            "text": "I started all 16 games at right tackle as a rookie.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "cowboys"
+              "guide"
             ]
           },
           {
             "id": "nfl-tyron-smith-b-4",
-            "text": "My combination of size, athleticism and footwork made me a long-term fixture on Dallas' line.",
+            "text": "In my second NFL season, I moved to left tackle to protect the blind side.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "decade"
+              "guide"
             ]
           },
           {
             "id": "nfl-tyron-smith-b-5",
-            "text": "I was one of only two tackles named to the NFL's 2010s All-Decade Team.",
+            "text": "My first Pro Bowl selection came in 2013 after settling in at left tackle.",
             "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-6",
+            "text": "In 2014, Dallas gave me an eight-year extension worth roughly $97.6 million.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "contract"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-7",
+            "text": "That 2014 season ended with first-team All-Pro honors at tackle.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro2014"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-8",
+            "text": "I was later named to the NFL's 2010s All-Decade Team.",
+            "band": "strong",
             "verification": "verified",
             "sourceIds": [
               "decade"
             ]
           },
           {
-            "id": "nfl-tyron-smith-b-6",
-            "text": "After my retirement, Jerry Jones said there was no question I belonged in the Cowboys Ring of Honor.",
-            "band": "strong",
-            "verification": "verified",
-            "sourceIds": [
-              "cowboys"
-            ]
-          },
-          {
-            "id": "nfl-tyron-smith-b-7",
-            "text": "All eight of my Pro Bowl selections came during my time in Dallas.",
-            "band": "strong",
-            "verification": "verified",
-            "sourceIds": [
-              "cowboys"
-            ]
-          },
-          {
-            "id": "nfl-tyron-smith-b-8",
-            "text": "All five of my All-Pro honors also came as a Cowboy.",
-            "band": "strong",
-            "verification": "verified",
-            "sourceIds": [
-              "cowboys"
-            ]
-          },
-          {
             "id": "nfl-tyron-smith-b-9",
-            "text": "After leaving Dallas, I played my final season with the New York Jets before retiring.",
+            "text": "After 13 seasons in Dallas, I spent my final NFL season with the New York Jets.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
