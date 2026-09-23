@@ -5423,7 +5423,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-don-shula-a-1",
-            "text": "I spent 33 seasons as an NFL head coach.",
+            "text": "I became an NFL head coach in my early 30s and remained one for more than three decades.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5432,7 +5432,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-don-shula-a-2",
-            "text": "My first head-coaching stop produced seven straight winning seasons.",
+            "text": "My first head-coaching stop lasted seven seasons and never finished below .500.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6038,7 +6038,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-madden-a-2",
-            "text": "Two seasons later, at age 32, I became the youngest head coach in the AFL.",
+            "text": "Two seasons later, I was promoted to head coach while still in my early 30s.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6047,7 +6047,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-madden-a-3",
-            "text": "My first team went 12-1-1 and won its division.",
+            "text": "My first team immediately won its division.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6074,7 +6074,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-madden-a-6",
-            "text": "Five of those division titles came consecutively from 1972 through 1976.",
+            "text": "My teams won five consecutive division titles during the 1970s.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6231,7 +6231,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-tom-landry-a-1",
-            "text": "I became the first head coach of an expansion franchise in 1960.",
+            "text": "My first head-coaching job was with an expansion franchise.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6240,7 +6240,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-landry-a-2",
-            "text": "My first winning season did not arrive until my seventh year.",
+            "text": "The rebuild took time; my first winning season did not arrive until several years into the job.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6249,7 +6249,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-landry-a-3",
-            "text": "Once the breakthrough came, my teams posted 20 consecutive winning seasons.",
+            "text": "Once the breakthrough came, my teams became a long-running postseason contender.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6258,7 +6258,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-landry-a-4",
-            "text": "I won 13 division championships during one long tenure.",
+            "text": "I spent nearly three decades leading the same franchise.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6267,7 +6267,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-landry-a-5",
-            "text": "My teams also captured five conference titles.",
+            "text": "I eventually won 13 division championships with that franchise.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6276,7 +6276,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-landry-a-6",
-            "text": "I coached in five Super Bowls and won two of them.",
+            "text": "My teams captured five conference championships.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6285,7 +6285,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-landry-a-7",
-            "text": "I remained with the same franchise for 29 seasons.",
+            "text": "I coached in five Super Bowls and won two of them.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6294,7 +6294,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-landry-a-8",
-            "text": "My career ended with 270 victories counting the playoffs.",
+            "text": "My teams posted 20 consecutive winning seasons during the heart of my tenure.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6303,7 +6303,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-landry-a-9",
-            "text": "My Super Bowl wins came in VI and XII.",
+            "text": "I finished with 270 victories counting the playoffs.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6312,7 +6312,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-landry-a-10",
-            "text": "I am the original head coach of the Dallas Cowboys.",
+            "text": "My Super Bowl wins came in VI and XII for the Dallas Cowboys.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
