@@ -1596,7 +1596,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-cris-cyborg-a-5",
-            "text": "I stopped Leslie Smith and Lina Lansberg in those first two UFC fights.",
+            "text": "I stopped Leslie Smith and Lina Lansberg in my first two appearances in the promotion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1902,7 +1902,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kayla-harrison-b-4",
-            "text": "I won each of my first three UFC fights.",
+            "text": "I won each of my first three appearances in the promotion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
