@@ -25,7 +25,12 @@ import {
 } from "./keepCutEngine";
 import { seededLineupRandom } from "./lineupModel";
 import { buildWhoAmIDailyPublication } from "./whoAmIDailyRuntime";
-import { advanceCanonicalWhoAmIDailyRuntime } from "./whoAmITwoRoundDailyRuntime";
+import { createUfcWhoAmIAuthoredDailyRounds } from "./ufcWhoAmIAuthoredDaily";
+import { parseWhoAmIAuthoredPublicationHistory } from "./whoAmIAuthoredDailySelection";
+import {
+  advanceCanonicalWhoAmIDailyRuntime,
+  buildTwoRoundWhoAmIDailyPublication,
+} from "./whoAmITwoRoundDailyRuntime";
 import {
   blindRankRating,
   getPlayFighter,
@@ -74,6 +79,7 @@ export const WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION = WAVELENGTH_OFFICIAL_SCO
 export const WAVELENGTH_DAILY_HISTORY_VERSION = "wavelength-daily-history-v1";
 export const BLIND_RESUME_V3_CONTENT_VERSION = "blind-resume-v3";
 export const BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION = "play-official-score-v3";
+export const UFC_AUTHORED_WHO_AM_I_CUTOVER_DAY = "2026-09-24";
 
 export interface OfficialDailySetupPublication {
   setupKey: string;
@@ -557,6 +563,7 @@ export function buildOfficialDailySetup(
   gameType: OfficialDailyGameType,
   day: string,
   scheduleVersion: string,
+  publicationHistory?: unknown,
 ): OfficialDailySetupPublication {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error("Official daily day must use YYYY-MM-DD.");
   if (!scheduleVersion.trim()) throw new Error("Official daily schedule version is required.");
@@ -579,16 +586,30 @@ export function buildOfficialDailySetup(
       day,
       scheduleVersion,
     );
-    case "who_am_i": return buildWhoAmIDailyPublication(
-      createUfcWhoAmIRound(
-        seededLineupRandom(OFFICIAL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
-        new Set(),
-      ),
-      day,
-      scheduleVersion,
-      OFFICIAL_DAILY_RUNTIME_VERSION,
-      OFFICIAL_DAILY_SCORING_VERSION,
-    );
+    case "who_am_i": {
+      if (day >= UFC_AUTHORED_WHO_AM_I_CUTOVER_DAY) {
+        return buildTwoRoundWhoAmIDailyPublication(
+          createUfcWhoAmIAuthoredDailyRounds(
+            day,
+            parseWhoAmIAuthoredPublicationHistory(publicationHistory),
+          ),
+          day,
+          scheduleVersion,
+          OFFICIAL_DAILY_RUNTIME_VERSION,
+          OFFICIAL_DAILY_SCORING_VERSION,
+        );
+      }
+      return buildWhoAmIDailyPublication(
+        createUfcWhoAmIRound(
+          seededLineupRandom(OFFICIAL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
+          new Set(),
+        ),
+        day,
+        scheduleVersion,
+        OFFICIAL_DAILY_RUNTIME_VERSION,
+        OFFICIAL_DAILY_SCORING_VERSION,
+      );
+    }
     default: throw new Error(`Unsupported official daily game ${String(gameType)}.`);
   }
 }
