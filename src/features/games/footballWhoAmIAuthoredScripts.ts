@@ -22737,6 +22737,419 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-jim-kelly",
+    "name": "Jim Kelly",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/jim-kelly",
+      "college": "https://www.profootballhof.com/news/college-days-jim-kelly"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-jim-kelly-a-1",
+            "text": "I was a first-round quarterback in the 1983 draft, but I did not enter the NFL right away.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-a-2",
+            "text": "Instead, I spent two seasons with the Houston Gamblers in the USFL.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-a-3",
+            "text": "Across those two USFL seasons, I threw for 9,842 yards and 83 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-a-4",
+            "text": "When that league folded, I joined the NFL team that had drafted me before the 1986 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-a-5",
+            "text": "My quick decisions became a perfect fit for a no-huddle attack known as the K-Gun.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-a-6",
+            "text": "In 1990, I led the NFL with a 101.2 passer rating.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-a-7",
+            "text": "I reached the playoffs eight times in my 11 NFL seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-a-8",
+            "text": "In 1992, I threw for a career-high 403 yards in a 34-31 win over San Francisco.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-a-9",
+            "text": "I quarterbacked Buffalo to four consecutive AFC championships.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-a-10",
+            "text": "Thurman Thomas and Andre Reed were key teammates in the Buffalo offense I led during that four-Super-Bowl run.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-jim-kelly-b-1",
+            "text": "In college, I helped Miami reach its first bowl game since 1967 and win the Peach Bowl.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-b-2",
+            "text": "I entered my senior college season as a serious Heisman Trophy candidate.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-b-3",
+            "text": "Three games into that season, a complete separation of my throwing shoulder required surgical reconstruction.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-b-4",
+            "text": "I recovered in time to work out for NFL scouts by late March 1983.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-b-5",
+            "text": "After being drafted in the first round by Buffalo, I chose the USFL before eventually joining the Bills.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-b-6",
+            "text": "My NFL career lasted 11 seasons with the same franchise.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-b-7",
+            "text": "I finished my pro career with more than 35,000 passing yards and more than 230 touchdown passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-b-8",
+            "text": "I led the NFL in passer rating in 1990 and the AFC in that category in 1991.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-b-9",
+            "text": "Buffalo made the playoffs in eight of my 11 NFL seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-jim-kelly-b-10",
+            "text": "I was the quarterback for the only NFL team ever to win four consecutive conference championships.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "kurt-warner",
+    "name": "Kurt Warner",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/kurt-warner",
+      "rise": "https://www.profootballhof.com/news/moments-in-nfl-history-kurt-warner-rewrites-his-story"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "kurt-warner-a-1",
+            "text": "Before my NFL breakout, I spent time in both the Arena Football League and NFL Europe.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "rise"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-2",
+            "text": "I signed with St. Louis as a free agent in 1998 and saw only brief action that season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-3",
+            "text": "A preseason knee injury to the team's prized free-agent quarterback suddenly made me the starter in 1999.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-4",
+            "text": "I entered that opportunity with only 11 career NFL pass attempts.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rise"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-5",
+            "text": "That season I threw 41 touchdown passes and led a 13-3 team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "rise"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-6",
+            "text": "I won NFL MVP in my first full season as a starter.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "rise"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-7",
+            "text": "I threw for a then-Super-Bowl-record 414 yards in the championship game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-8",
+            "text": "I won Super Bowl XXXIV MVP after delivering the franchise's first Super Bowl title.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "rise"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-9",
+            "text": "Two seasons later, I won another NFL MVP after throwing for a league-leading 4,830 yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-10",
+            "text": "I was the Rams quarterback who won league MVP in both 1999 and 2001 and Super Bowl XXXIV MVP.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "kurt-warner-b-1",
+            "text": "My NFL career eventually included starting opportunities with the Rams, Giants and Cardinals.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-b-2",
+            "text": "I joined Arizona in 2005 after spending the previous season with the Giants.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-b-3",
+            "text": "In 2008, I led Arizona to its first division title since 1975.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-b-4",
+            "text": "That postseason ended with the franchise's first Super Bowl appearance.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-b-5",
+            "text": "In the NFC title game, I threw for 279 yards and four touchdowns against Philadelphia.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-b-6",
+            "text": "I threw for 377 yards and three touchdowns in Super Bowl XLIII, though Arizona lost narrowly.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-b-7",
+            "text": "I became the first quarterback to throw for at least 300 yards in three Super Bowls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-b-8",
+            "text": "My career totals included 32,344 passing yards and 208 touchdown passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-b-9",
+            "text": "I made four Pro Bowls and entered the Hall of Fame with the Class of 2017.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-b-10",
+            "text": "I am the quarterback who took both St. Louis and Arizona to Super Bowls, winning the title and game MVP with the Rams.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
