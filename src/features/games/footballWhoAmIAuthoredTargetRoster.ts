@@ -185,6 +185,19 @@ function targetIdentity(
   };
 }
 
+export function footballWhoAmIAuthoredTargetAudit(
+  league: FootballWhoAmIAuthoredTargetLeague,
+) {
+  const legacy = getFootballWhoAmILaunchPool(league);
+  return legacy.players.map((subject) => ({
+    subjectId: subject.id,
+    name: subject.name,
+    startSeason: subject.startSeason ?? null,
+    endSeason: subject.endSeason ?? null,
+    retained: keepAuditedBasePlayer(league, subject),
+  }));
+}
+
 export function footballWhoAmIAuthoredTargetRoster(
   league: FootballWhoAmIAuthoredTargetLeague,
 ) {
