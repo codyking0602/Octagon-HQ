@@ -98,7 +98,16 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       "Name a foul referees watch for in a UFC fight.",
       "Name an illegal technique under the unified MMA rules.",
     ],
-    answers: ["Eye poke", "Groin strike", "Fence grab", "Headbutt", "Biting", "Hair pulling", "Back-of-head strike", "Knee to a grounded opponent"],
+    answers: [
+      { name: "Eye poke", aliases: ["Eye poking", "Poke the eye"] },
+      { name: "Groin strike", aliases: ["Low blow", "Groin shot"] },
+      { name: "Fence grab", aliases: ["Grab the fence", "Cage grab"] },
+      { name: "Headbutt", aliases: ["Head butt"] },
+      { name: "Biting", aliases: ["Bite"] },
+      { name: "Hair pulling", aliases: ["Pull hair", "Hair pull"] },
+      { name: "Back-of-head strike", aliases: ["Back of head", "Hit back of head", "Rabbit punch"] },
+      { name: "Knee to a grounded opponent", aliases: ["Illegal knee", "Grounded knee", "Knee grounded opponent"] },
+    ],
   },
   {
     category: "judging",
