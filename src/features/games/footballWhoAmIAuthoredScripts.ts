@@ -6656,7 +6656,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-3",
-            "text": "Beginning the next year, my teams produced 19 consecutive winning seasons.",
+            "text": "Over the next two decades, that franchise became one of the league's most consistent contenders.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6666,7 +6666,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-4",
-            "text": "I eventually won 17 division titles with that franchise.",
+            "text": "My second head-coaching tenure ultimately lasted 24 seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6676,7 +6676,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-5",
-            "text": "My teams also won 11 consecutive division championships from 2009 through 2019.",
+            "text": "Beginning in my second season there, my teams produced 19 consecutive winning seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6686,7 +6686,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-6",
-            "text": "I reached nine Super Bowls as a head coach with the same franchise.",
+            "text": "I eventually won 17 division titles, including 11 consecutive division championships.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6696,7 +6696,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-7",
-            "text": "I won six of those Super Bowls, the most by a head coach in NFL history.",
+            "text": "My teams won nine conference championships during that run.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6706,7 +6706,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-8",
-            "text": "I finished my tenure there with 30 postseason victories for that franchise.",
+            "text": "I won six Super Bowls, the most by a head coach in NFL history.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6716,7 +6716,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-9",
-            "text": "My six titles came in Super Bowls XXXVI, XXXVIII, XXXIX, XLIX, LI and LIII.",
+            "text": "I finished my tenure there with 30 postseason victories for that franchise.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6726,7 +6726,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-10",
-            "text": "I am the longtime New England head coach whose championship run was built around Tom Brady.",
+            "text": "My six titles came in Super Bowls XXXVI, XXXVIII, XXXIX, XLIX, LI and LIII with New England.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6741,7 +6741,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-bill-belichick-b-1",
-            "text": "I entered the NFL coaching ranks in 1975 as a special assistant with Baltimore.",
+            "text": "I entered the NFL coaching ranks in the mid-1970s as a special assistant.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6751,7 +6751,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-2",
-            "text": "My early stops also included Detroit and Denver before I joined the New York Giants.",
+            "text": "I worked for three NFL franchises before settling into a long assistant run with a fourth.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6761,7 +6761,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-3",
-            "text": "With the Giants, I worked my way from defensive assistant and special teams roles into coordinating the defense.",
+            "text": "That fourth stop began in 1979, and I worked my way from defensive and special-teams roles into greater responsibility.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6771,7 +6771,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-4",
-            "text": "I served as the Giants' defensive coordinator during championship seasons in 1986 and 1990.",
+            "text": "I eventually became the Giants' defensive coordinator.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6781,7 +6781,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-5",
-            "text": "My first head-coaching job came with Cleveland, where I spent five seasons.",
+            "text": "As a coordinator, I helped the Giants win championships in the 1986 and 1990 seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6791,7 +6791,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-6",
-            "text": "After Cleveland, I reunited with Bill Parcells and later worked with the Jets.",
+            "text": "My first head-coaching job came with Cleveland, where I spent five seasons.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6801,7 +6801,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-7",
-            "text": "I returned to head coaching in 2000 with a franchise that had never won a Super Bowl.",
+            "text": "After Cleveland, I reunited with Bill Parcells and later worked with the Jets.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6811,7 +6811,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-8",
-            "text": "That franchise went on to win six Super Bowls and nine conference championships during my tenure.",
+            "text": "I returned to head coaching in 2000 and went on to win six Super Bowls and nine conference championships.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6821,7 +6821,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-9",
-            "text": "I finished that run with 333 total career victories and an NFL-record 31 postseason wins.",
+            "text": "I finished my New England tenure with 333 total career victories and an NFL-record 31 postseason wins.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6974,7 +6974,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-parcells-b-2",
-            "text": "Detroit selected me in the seventh round of the 1964 NFL Draft.",
+            "text": "I was selected in an NFL Draft but chose coaching instead of pursuing a pro playing career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6984,7 +6984,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-parcells-b-3",
-            "text": "Instead of pursuing a pro playing career, I went directly into coaching.",
+            "text": "I immediately chose coaching rather than pursuing a professional playing career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6994,7 +6994,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-parcells-b-4",
-            "text": "My college coaching path eventually led to the NFL before I became a head coach.",
+            "text": "Nearly two decades passed between that draft and my first NFL head-coaching season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7194,7 +7194,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-3",
-            "text": "My first head-coaching opportunity came in Green Bay in 1959.",
+            "text": "My first NFL head-coaching opportunity also gave me control of the team's football operation.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7203,7 +7203,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-4",
-            "text": "That franchise had been one of the league's weakest teams before my arrival.",
+            "text": "I inherited one of the league's weakest teams at that first stop.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7212,7 +7212,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-5",
-            "text": "By my second season, I had already taken the team to the NFL Championship Game.",
+            "text": "By my second season there, I had already reached the NFL Championship Game.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7221,7 +7221,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-6",
-            "text": "I then won league titles in 1961, 1962 and 1965.",
+            "text": "I then won three league titles before the Super Bowl era began.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7230,7 +7230,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-7",
-            "text": "My final two Green Bay teams finished as champions in Super Bowls I and II.",
+            "text": "My final two teams at that stop won Super Bowls I and II.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7239,7 +7239,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-8",
-            "text": "After a year away from coaching, I took over Washington in 1969 and produced a winning season.",
+            "text": "After a year away from coaching, I took over Washington and produced a winning season in 1969.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7494,7 +7494,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-2",
-            "text": "My team posted five straight 10-win seasons from 2012 through 2016.",
+            "text": "That 14-season run eventually became the winningest head-coaching tenure in franchise history.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7503,7 +7503,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-3",
-            "text": "Across 14 seasons at that stop, I reached the playoffs ten times.",
+            "text": "My teams reached the playoffs in ten of those 14 seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7512,7 +7512,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-4",
-            "text": "I won five division titles there.",
+            "text": "At their peak, my teams posted five straight 10-win seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7521,7 +7521,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-5",
-            "text": "My teams reached back-to-back Super Bowls.",
+            "text": "I won five division titles there.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7530,7 +7530,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-6",
-            "text": "The first of those trips ended with a championship.",
+            "text": "My teams reached back-to-back Super Bowls.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7539,7 +7539,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-7",
-            "text": "My defense led the NFL in scoring defense four consecutive seasons from 2012 through 2015.",
+            "text": "The first of those Super Bowl trips ended with a championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7548,7 +7548,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-8",
-            "text": "I won two conference championships with that franchise.",
+            "text": "My defense led the NFL in scoring defense four consecutive seasons from 2012 through 2015.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7557,7 +7557,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-9",
-            "text": "My Super Bowl title came in XLVIII with Seattle.",
+            "text": "I won two conference championships with Seattle.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -7566,7 +7566,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-10",
-            "text": "I am the coach who returned from USC to build the Seahawks' Legion of Boom era.",
+            "text": "I am the former USC coach who won Super Bowl XLVIII with Seattle during the Legion of Boom era.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -7598,7 +7598,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-b-3",
-            "text": "At that college stop, I won seven consecutive conference titles.",
+            "text": "At that college stop, my teams reached a bowl game in every season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7607,7 +7607,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-b-4",
-            "text": "I also won two national championships there.",
+            "text": "I won seven consecutive conference titles there.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7616,7 +7616,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-b-5",
-            "text": "My record across those nine college seasons was 97-19.",
+            "text": "I went 97-19 there and won two national championships.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7791,7 +7791,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-shanahan-b-2",
-            "text": "Those assistant stretches came during the 1980s and early 1990s.",
+            "text": "I also had an NFL head-coaching stint elsewhere between those two assistant runs.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7800,7 +7800,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-shanahan-b-3",
-            "text": "I later returned as head coach in 1995.",
+            "text": "I later returned to my best-known franchise as head coach in the mid-1990s.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7809,7 +7809,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-shanahan-b-4",
-            "text": "My first four seasons there included two Super Bowl championships.",
+            "text": "Within my first four seasons as head coach there, I had won two Super Bowls.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9413,7 +9413,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "bear-bryant",
@@ -9615,7 +9615,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "bobby-bowden-cfb",
@@ -9838,7 +9838,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "steve-spurrier-cfb",
@@ -10061,7 +10061,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "urban-meyer-cfb",
@@ -10284,7 +10284,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "woody-hayes",
@@ -10486,7 +10486,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "dabo-swinney-cfb",
@@ -10688,7 +10688,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "kirby-smart-cfb",
@@ -10890,7 +10890,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "pete-carroll-cfb",
@@ -11092,7 +11092,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "bob-stoops-cfb",
@@ -11294,7 +11294,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "cfb-jim-tressel",
@@ -11517,7 +11517,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "cfb-mack-brown",
@@ -11740,7 +11740,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "bill-snyder-cfb",
@@ -11942,7 +11942,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "chris-petersen-cfb",
@@ -12165,7 +12165,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "frank-beamer-cfb",
@@ -12367,7 +12367,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "gary-patterson-cfb",
@@ -12569,7 +12569,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "cfb-lou-holtz",
@@ -12771,7 +12771,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "brian-kelly-cfb",
@@ -12973,7 +12973,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "chip-kelly",
@@ -12990,7 +12990,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-chip-kelly-a-1",
-            "text": "I took over a program after first serving as its offensive coordinator.",
+            "text": "I took over a college program after first serving as its offensive coordinator.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13000,7 +13000,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chip-kelly-a-2",
-            "text": "My first season as a college head coach ended with a conference championship and a major-bowl berth.",
+            "text": "My teams immediately became annual conference-title contenders.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13105,7 +13105,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chip-kelly-b-2",
-            "text": "I arrived at Oregon in 2007 as offensive coordinator.",
+            "text": "I arrived at a major West Coast program as offensive coordinator in 2007.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13115,7 +13115,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chip-kelly-b-3",
-            "text": "My system quickly turned the Ducks into one of the nation's most productive offenses.",
+            "text": "My system quickly turned that team into one of the nation's most productive offenses.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -13125,7 +13125,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chip-kelly-b-4",
-            "text": "I was promoted to head coach in 2009.",
+            "text": "I was promoted to head coach two years later.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -13135,7 +13135,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chip-kelly-b-5",
-            "text": "My first Oregon team reached the Rose Bowl.",
+            "text": "My first team as head coach reached the Rose Bowl.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -13155,7 +13155,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chip-kelly-b-7",
-            "text": "My Ducks returned to the Rose Bowl the following season.",
+            "text": "My teams returned to the Rose Bowl the following season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -13196,7 +13196,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "dan-lanning",
@@ -13212,7 +13212,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-dan-lanning-a-1",
-            "text": "My first college head-coaching job began in 2022.",
+            "text": "My first college head-coaching job came after I had coordinated a national-championship defense.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13221,7 +13221,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-dan-lanning-a-2",
-            "text": "I won 10 games in my debut season.",
+            "text": "I reached double-digit wins in each of my first two seasons as a head coach.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13230,7 +13230,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-dan-lanning-a-3",
-            "text": "My second team improved to 12 wins and reached a conference championship game.",
+            "text": "My second team reached a conference championship game and won the Fiesta Bowl.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -13239,15 +13239,6 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-dan-lanning-a-4",
-            "text": "That season ended with a Fiesta Bowl victory.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "oregon"
-            ]
-          },
-          {
-            "id": "cfb-dan-lanning-a-5",
             "text": "In my third season, my program changed conferences.",
             "band": "helpful",
             "verification": "verified",
@@ -13256,16 +13247,16 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
-            "id": "cfb-dan-lanning-a-6",
+            "id": "cfb-dan-lanning-a-5",
             "text": "We went undefeated through the regular season in our first year in the new league.",
-            "band": "strong",
+            "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "oregon"
             ]
           },
           {
-            "id": "cfb-dan-lanning-a-7",
+            "id": "cfb-dan-lanning-a-6",
             "text": "We won that conference championship immediately.",
             "band": "strong",
             "verification": "verified",
@@ -13274,7 +13265,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
-            "id": "cfb-dan-lanning-a-8",
+            "id": "cfb-dan-lanning-a-7",
             "text": "That team earned the No. 1 seed in the first 12-team College Football Playoff.",
             "band": "strong",
             "verification": "verified",
@@ -13283,8 +13274,17 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
+            "id": "cfb-dan-lanning-a-8",
+            "text": "I became one of only two coaches in program history to post back-to-back 12-win seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
             "id": "cfb-dan-lanning-a-9",
-            "text": "I became one of only two Oregon coaches to post back-to-back 12-win seasons.",
+            "text": "I led Oregon to the Big Ten title in the Ducks' first season in the conference.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -13293,7 +13293,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-dan-lanning-a-10",
-            "text": "I am the Oregon head coach who won the Big Ten in the Ducks' first season in the conference.",
+            "text": "I am the former Georgia defensive coordinator who became Oregon's conference-championship head coach.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -13398,7 +13398,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "ed-orgeron",
@@ -13425,7 +13425,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-ed-orgeron-a-2",
-            "text": "I once went 6-2 as an interim head coach in the Pac-12.",
+            "text": "One of my interim head-coaching opportunities came at a major West Coast program.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13435,7 +13435,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-ed-orgeron-a-3",
-            "text": "I later took over another program on an interim basis and also went 6-2.",
+            "text": "I later went 6-2 in another interim role in the SEC.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -13445,7 +13445,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-ed-orgeron-a-4",
-            "text": "That second opportunity became a full-time head-coaching job.",
+            "text": "That second interim opportunity became a full-time head-coaching job.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -13485,7 +13485,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-ed-orgeron-a-8",
-            "text": "The year ended with victories over Oklahoma and Clemson in the College Football Playoff.",
+            "text": "The year ended with playoff victories over Oklahoma and Clemson.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -13610,7 +13610,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-ed-orgeron-b-10",
-            "text": "I am the coach whose gravelly voice and Louisiana roots became part of LSU's 2019 title run.",
+            "text": "I am the longtime defensive-line coach and recruiter who led LSU to the 2019 national championship.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -13621,7 +13621,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "cfb-jim-harbaugh",
@@ -13638,7 +13638,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-jim-harbaugh-a-1",
-            "text": "I returned to college football as a head coach at my alma mater after four seasons in the NFL.",
+            "text": "My college head-coaching career included a long second act after an NFL head-coaching stint.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13648,7 +13648,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jim-harbaugh-a-2",
-            "text": "My program reached double-digit wins in each of my first two seasons back in college.",
+            "text": "My first two teams in that return to college each won 10 games.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13658,7 +13658,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jim-harbaugh-a-3",
-            "text": "After several years of close calls, my team broke through for a conference championship in 2021.",
+            "text": "Several years later, my program broke through for a conference championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -13743,7 +13743,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-jim-harbaugh-b-1",
-            "text": "I was an All-America quarterback and Heisman finalist at the school I later coached.",
+            "text": "I was a decorated college quarterback before a long NFL playing career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13753,7 +13753,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jim-harbaugh-b-2",
-            "text": "I then spent 15 seasons playing quarterback in the NFL.",
+            "text": "I spent 15 seasons playing quarterback in the NFL.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13844,7 +13844,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "cfb-ryan-day",
@@ -13860,7 +13860,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-ryan-day-a-1",
-            "text": "My first full season as a college head coach began with 13 consecutive wins.",
+            "text": "My first full season as a college head coach ended with an undefeated regular season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13869,7 +13869,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-ryan-day-a-2",
-            "text": "That debut team won a conference championship and reached the College Football Playoff.",
+            "text": "That debut team won its conference and reached the College Football Playoff.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13955,7 +13955,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-ryan-day-b-1",
-            "text": "I played quarterback at New Hampshire before beginning my coaching career.",
+            "text": "I played quarterback in college before beginning my coaching career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -13964,7 +13964,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-ryan-day-b-2",
-            "text": "My early coaching stops included New Hampshire, Boston College, Temple and Florida.",
+            "text": "My early coaching stops included multiple programs in the Northeast.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -14046,7 +14046,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
+  },,
   {
     "league": "CFB",
     "subjectId": "cfb-lincoln-riley",
@@ -14062,7 +14062,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-lincoln-riley-a-1",
-            "text": "My first college head-coaching job came when I was 33 years old.",
+            "text": "My first college head-coaching job came while I was still in my early 30s.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -14071,7 +14071,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lincoln-riley-a-2",
-            "text": "I won a conference championship in each of my first four seasons.",
+            "text": "I won double-digit games in each of my first four seasons.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -14080,7 +14080,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lincoln-riley-a-3",
-            "text": "My first three teams reached the College Football Playoff.",
+            "text": "I won a conference championship in each of those four seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -14089,7 +14089,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lincoln-riley-a-4",
-            "text": "I went 55-10 in five seasons at that first head-coaching stop.",
+            "text": "My first three teams reached the College Football Playoff.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -14098,7 +14098,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lincoln-riley-a-5",
-            "text": "I then took over another traditional power coming off a four-win season.",
+            "text": "I went 55-10 in five seasons at that first head-coaching stop.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -14107,7 +14107,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lincoln-riley-a-6",
-            "text": "My first team there improved to 11 wins.",
+            "text": "I then took over another traditional power coming off a four-win season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -14157,7 +14157,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-lincoln-riley-b-1",
-            "text": "I briefly walked on at quarterback in college before moving almost immediately into coaching.",
+            "text": "I briefly played college quarterback before moving almost immediately into coaching.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -14166,7 +14166,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lincoln-riley-b-2",
-            "text": "I began as a student assistant under Mike Leach at Texas Tech.",
+            "text": "I began as a student assistant at the same school where I had briefly played.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -14248,8 +14248,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },
-
+  },,
   {
     "league": "CFB",
     "subjectId": "nick-saban-cfb",
