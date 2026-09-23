@@ -37,7 +37,7 @@ function mainState() {
       submitted_answers: [],
       results: [],
       points: null,
-      time_remaining_ms: 45_000,
+      time_remaining_ms: 50_000,
     },
   };
 }
