@@ -141,7 +141,7 @@ describe("Sports Feud authored Daily banks", () => {
     expect(hallOfFame.prompt.toLowerCase()).toContain("career");
 
     expect(CFB_FAST.some((question) =>
-      question.prompts?.includes?.("Name a tradition that makes a home game feel unique.")
+      question.prompt === "Name a tradition that makes a home game feel unique."
     )).toBe(false);
 
     const award = cfbQuestion("cfb-fast3-08-3");
