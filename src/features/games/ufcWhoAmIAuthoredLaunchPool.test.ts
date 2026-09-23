@@ -81,7 +81,7 @@ const CALIBRATED_GENERATED_IDS = new Set([
   "ufc:cain-velasquez",
   "ufc:junior-dos-santos",
   "ufc:tyron-woodley",
-  "ufc:alexandre-pantoja",
+  "ufc:alex-pantoja",
   "ufc:ilia-topuria",
   "ufc:robert-whittaker",
   "ufc:chris-weidman",
