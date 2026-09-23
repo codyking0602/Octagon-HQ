@@ -321,6 +321,22 @@ function grade(
   if (gameType === "who_am_i") {
     const score = Number(context.publicState.score ?? 0);
     if (!Number.isInteger(score) || score < 0 || score > 100) throw new Error("Football Who Am I score is invalid.");
+
+    if (context.privateGradingEvidence.format_version === "who-am-i-two-round-v1") {
+      const rounds = recordArray(context.publicState.completed_rounds, "Football Who Am I completed rounds");
+      if (rounds.length !== 2) throw new Error("Football Who Am I must finish exactly two identity rounds.");
+      const componentScores = rounds.map((round) => Number(round.score ?? -1));
+      if (componentScores.some((value) => !Number.isInteger(value) || value < 0 || value > 100)
+        || score !== Math.round((componentScores[0]! + componentScores[1]!) / 2)) {
+        throw new Error("Football Who Am I aggregate score does not match its two rounds.");
+      }
+      return {
+        native: score,
+        normalized: score,
+        result: { score, rounds },
+      };
+    }
+
     const outcome = String(finalSubmission.outcome ?? "");
     const revealedCount = Number(finalSubmission.revealed_count ?? 0);
     return {
