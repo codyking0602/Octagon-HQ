@@ -59847,7 +59847,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-devin-mccourty-b-2",
-            "text": "The Patriots drafted me in the first round in 2010, well before my twin was selected later that weekend.",
+            "text": "I joined the Patriots as a 2010 first-rounder one year after my twin brother had entered the NFL.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
