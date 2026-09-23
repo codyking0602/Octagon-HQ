@@ -45460,7 +45460,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-ashton-jeanty-a-1",
-            "text": "I started all 17 games as a rookie running back.",
+            "text": "I became a full-time starter in the backfield during my rookie season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45469,7 +45469,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ashton-jeanty-a-2",
-            "text": "My first NFL season included five rushing touchdowns and five receiving touchdowns.",
+            "text": "I contributed as both a runner and receiver throughout my first NFL season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45557,7 +45557,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-ashton-jeanty-b-1",
-            "text": "I scored a rushing touchdown in my first NFL game.",
+            "text": "I found the end zone in my first NFL game.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45566,7 +45566,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ashton-jeanty-b-2",
-            "text": "I became the sixth running back in my franchise's history to score on the ground in his NFL debut.",
+            "text": "I became an immediate part of the offense in both the running and passing games.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45664,7 +45664,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-a-j-brown-a-1",
-            "text": "I entered the NFL as a second-round wide receiver in 2019.",
+            "text": "I entered the NFL as a Day 2 wide receiver and became an immediate big-play threat.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45673,7 +45673,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-a-j-brown-a-2",
-            "text": "My first two NFL seasons each ended with more than 1,000 receiving yards.",
+            "text": "I crossed 1,000 receiving yards early in my career and did it again the following season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45759,7 +45759,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-a-j-brown-b-1",
-            "text": "As a rookie, I turned 52 catches into 1,051 yards and eight touchdowns.",
+            "text": "I topped 1,000 receiving yards during my rookie season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45768,7 +45768,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-a-j-brown-b-2",
-            "text": "My second season produced 1,075 receiving yards and 11 touchdowns.",
+            "text": "I followed that with another 1,000-yard season and reached double-digit receiving touchdowns.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45866,7 +45866,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-andre-johnson-a-1",
-            "text": "I was a first-round wide receiver in 2003 and played 14 NFL seasons.",
+            "text": "I entered the NFL as a first-round wide receiver and played for well over a decade.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45875,7 +45875,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-andre-johnson-a-2",
-            "text": "I finished my career with more than 1,000 receptions.",
+            "text": "Most of my career came with one franchise before two brief late-career stops elsewhere.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46068,7 +46068,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "antonio-gates-a-1",
-            "text": "I entered the NFL as an undrafted offensive player in 2003.",
+            "text": "I entered the NFL undrafted and went on to play more than 200 regular-season games.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46077,7 +46077,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "antonio-gates-a-2",
-            "text": "My route to professional football came through an unconventional college background.",
+            "text": "My path to professional football did not follow the usual college-football pipeline.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46270,7 +46270,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-jason-kelce-a-1",
-            "text": "I spent my entire 13-year NFL career with one franchise.",
+            "text": "I spent more than a decade as the starting center for a single NFL franchise.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46279,7 +46279,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jason-kelce-a-2",
-            "text": "I was a Day 3 draft pick who won a starting job as a rookie during the 2011 work stoppage.",
+            "text": "I entered the league as a late-round pick and earned a starting role immediately as a rookie.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46365,7 +46365,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-jason-kelce-b-1",
-            "text": "I began college as a walk-on linebacker before eventually becoming an NFL center.",
+            "text": "I began college as a walk-on on the defensive side of the ball.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46374,7 +46374,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jason-kelce-b-2",
-            "text": "I entered the league undersized for my position and weighed 280 pounds at the Combine.",
+            "text": "I reached the NFL as an undersized interior lineman whose movement skills stood out.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46392,7 +46392,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jason-kelce-b-4",
-            "text": "My career eventually included seven Pro Bowl selections.",
+            "text": "My Combine agility testing graded 94 out of 100.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -46401,7 +46401,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jason-kelce-b-5",
-            "text": "I was named All-Pro six times.",
+            "text": "I was my team's Walter Payton NFL Man of the Year nominee in 2021.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -46410,7 +46410,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jason-kelce-b-6",
-            "text": "My durability streak reached 156 consecutive regular-season starts.",
+            "text": "I remained effective across multiple coaches and offensive schemes over a 13-season career.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -46419,7 +46419,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jason-kelce-b-7",
-            "text": "I was the center on Philadelphia's first Super Bowl championship team.",
+            "text": "After winning a championship, my Super Bowl parade speech became a signature city moment.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -46466,7 +46466,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "sources": {
       "miami": "https://www.miamidolphins.com/news/roster-moves-campbell-sexton",
       "allpro": "https://www.jaguars.com/news/campbell-ramsey-first-team-ap-all-pro-20203195",
-      "man": "https://www.jaguars.com/news/calais-campbell-wins-walter-payton-nfl-man-of-the-year-award-presented-by-nation"
+      "man": "https://www.jaguars.com/news/calais-campbell-wins-walter-payton-nfl-man-of-the-year-award-presented-by-nation",
+      "cardinals": "https://www.azcardinals.com/team/players-roster/calais-campbell/"
     },
     "scripts": {
       "A": {
@@ -46474,7 +46475,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-calais-campbell-a-1",
-            "text": "I entered the NFL as a second-round pick in 2008 and built a career across several franchises.",
+            "text": "I entered the NFL as a second-round defensive lineman and built a career that lasted well beyond a decade.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46483,7 +46484,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-calais-campbell-a-2",
-            "text": "I spent nine seasons with my original team before changing franchises.",
+            "text": "I spent most of my first decade with one franchise before becoming a veteran contributor elsewhere.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46569,7 +46570,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-calais-campbell-b-1",
-            "text": "I played more than 240 regular-season games before my 17th NFL season.",
+            "text": "I was still an active defensive lineman deep into my 30s.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46578,84 +46579,83 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-calais-campbell-b-2",
-            "text": "My first nine seasons all came with the same NFC West franchise.",
+            "text": "I returned to the franchise that drafted me after eight seasons away.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "miami"
+              "cardinals"
             ]
           },
           {
             "id": "nfl-calais-campbell-b-3",
-            "text": "I then spent three seasons each with Jacksonville and Baltimore.",
+            "text": "By 2024, I had been selected as a team captain five times with three different teams.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "miami"
+              "cardinals"
             ]
           },
           {
             "id": "nfl-calais-campbell-b-4",
-            "text": "During my Jacksonville debut season, I immediately set a personal best in sacks.",
+            "text": "I was selected to the NFL's All-Decade Team of the 2010s.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "allpro"
+              "cardinals"
             ]
           },
           {
             "id": "nfl-calais-campbell-b-5",
-            "text": "My six Pro Bowl selections included four straight from 2017 through 2020.",
+            "text": "I won the Art Rooney Sportsmanship Award in 2022.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "miami"
+              "cardinals"
             ]
           },
           {
             "id": "nfl-calais-campbell-b-6",
-            "text": "I earned first-team AP All-Pro recognition during the Jaguars' 2017 breakthrough.",
+            "text": "I won the NFLPA Alan Page Community Award in 2023.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "allpro"
+              "cardinals"
             ]
           },
           {
             "id": "nfl-calais-campbell-b-7",
-            "text": "My league-wide community honor came while I was a Jacksonville defensive lineman in 2019.",
+            "text": "I was named the Walter Payton NFL Man of the Year for the 2019 season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "man"
+              "cardinals"
             ]
           },
           {
             "id": "nfl-calais-campbell-b-8",
-            "text": "Entering 2024, my career totals included 17 forced fumbles and 58 passes defensed.",
+            "text": "My career also included first-team All-Pro honors and six Pro Bowl selections.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "miami"
+              "cardinals"
             ]
           },
           {
             "id": "nfl-calais-campbell-b-9",
-            "text": "I was the 50th overall pick after playing college football for Miami.",
+            "text": "Arizona drafted me 50th overall out of Miami and later brought me back in 2025.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "miami"
+              "cardinals"
             ]
           },
           {
             "id": "nfl-calais-campbell-b-10",
-            "text": "After nine years in Arizona, my move to Jacksonville produced an AFC-leading 14.5-sack season.",
+            "text": "Between my Arizona stints, I played for Jacksonville, Baltimore, Atlanta and Miami.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "miami",
-              "allpro"
+              "cardinals"
             ]
           }
         ]
@@ -46888,7 +46888,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "patrick-surtain-ii-a-2",
-            "text": "As a rookie, I recorded four interceptions and 14 passes defensed.",
+            "text": "I made an immediate impact on the ball as a rookie, recording multiple interceptions and double-digit passes defensed.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46974,7 +46974,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "patrick-surtain-ii-b-1",
-            "text": "I started 15 games during my rookie season at cornerback.",
+            "text": "I became a near-every-down cornerback early in my career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -46983,7 +46983,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "patrick-surtain-ii-b-2",
-            "text": "Through my first five seasons, I ranked first among Broncos cornerbacks in tackles over that span.",
+            "text": "I ranked among my franchise's most productive young cornerbacks across my first five seasons.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -47074,7 +47074,9 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "earlyRotation": "normal",
     "sources": {
       "commanders": "https://www.commanders.com/news/jayden-daniels-voted-pfwa-2024-rookie-of-the-year-and-offensive-rookie-of-the-year",
-      "nfl": "https://www.nfl.com/news/commanders-qb-jayden-daniels-named-2024-ap-nfl-offensive-rookie-of-the-year"
+      "nfl": "https://www.nfl.com/news/commanders-qb-jayden-daniels-named-2024-ap-nfl-offensive-rookie-of-the-year",
+      "jd5": "https://www.commanders.com/jd5",
+      "draft": "https://www.commanders.com/news/commanders-draft-jayden-daniels-with-no-2-overall-pick"
     },
     "scripts": {
       "A": {
@@ -47082,7 +47084,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "jayden-daniels-a-1",
-            "text": "I started all 17 games as a rookie quarterback.",
+            "text": "I took over as an NFL starting quarterback immediately as a rookie.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -47091,7 +47093,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "jayden-daniels-a-2",
-            "text": "My team won 12 games during my first NFL regular season.",
+            "text": "My first season ended with a double-digit-win record for my team.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -47179,95 +47181,92 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "jayden-daniels-b-1",
-            "text": "I posted a 100.1 passer rating during my first NFL season.",
+            "text": "I entered the NFL after five seasons as a college starter across two programs.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "commanders",
-              "nfl"
+              "draft"
             ]
           },
           {
             "id": "jayden-daniels-b-2",
-            "text": "My rookie touchdown totals were 25 through the air and six on the ground.",
+            "text": "I brought both high-end passing production and major rushing production to the draft.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "commanders",
-              "nfl"
+              "draft"
             ]
           },
           {
             "id": "jayden-daniels-b-3",
-            "text": "I became just the fifth rookie in NFL history to account for at least 30 total touchdowns.",
+            "text": "My final college season ended with the Heisman Trophy before I became a top-two NFL draft pick.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "nfl"
+              "draft"
             ]
           },
           {
             "id": "jayden-daniels-b-4",
-            "text": "I joined a very short list of rookie quarterbacks to win 12 regular-season games.",
+            "text": "Within my first five NFL games, I reached a passing-and-rushing yardage combination no player had done before.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "nfl"
+              "jd5"
             ]
           },
           {
             "id": "jayden-daniels-b-5",
-            "text": "I earned PFWA Rookie of the Year and Offensive Rookie of the Year honors.",
+            "text": "I set a rookie record with 12 fourth-quarter or overtime touchdown passes.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "commanders"
+              "jd5"
             ]
           },
           {
             "id": "jayden-daniels-b-6",
-            "text": "My first five games produced a combination of passing and rushing yardage no NFL player had previously reached.",
+            "text": "Five of those late touchdown passes came in the final 30 seconds or overtime, the most by any player since 1970.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "commanders"
+              "jd5"
             ]
           },
           {
             "id": "jayden-daniels-b-7",
-            "text": "I broke the rookie quarterback rushing record while also topping 3,500 passing yards.",
+            "text": "I led Washington to its first playoff win in nearly two decades.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "nfl"
+              "jd5"
             ]
           },
           {
             "id": "jayden-daniels-b-8",
-            "text": "A road playoff win over Detroit helped push my team to within one victory of the Super Bowl.",
+            "text": "My first postseason ended with rookie records for passing yards, passing touchdowns and rushing yards.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "nfl"
+              "jd5"
             ]
           },
           {
             "id": "jayden-daniels-b-9",
-            "text": "I was the No. 2 overall pick in 2024 and immediately started every game for Washington.",
+            "text": "My playoff run included wins over Tampa Bay and Detroit before an NFC Championship Game appearance.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "commanders"
+              "jd5"
             ]
           },
           {
             "id": "jayden-daniels-b-10",
-            "text": "The LSU product finished his first season as Washington's AP Offensive Rookie of the Year quarterback.",
+            "text": "Washington selected me second overall out of LSU after I won the Heisman Trophy.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "commanders",
-              "nfl"
+              "draft"
             ]
           }
         ]
