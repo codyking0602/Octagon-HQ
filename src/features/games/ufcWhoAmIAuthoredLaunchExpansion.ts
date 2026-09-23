@@ -99,14 +99,16 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
       ufc205: "https://www.ufc.com/news/ufc-205-final-results-and-news-nyc",
       walkouts: "https://www.ufc.com/news/elite-8-conor-mcgregors-greatest-ufc-walkouts-ufc-329",
       decade: "https://www.ufc.com/news/fighter-decade-resume-conor-mcgregor-champ-champ-ufc-fight-pass",
-      making: "https://us.ufcespanol.com/news/flashback-making-mcgregor"
+      making: "https://us.ufcespanol.com/news/flashback-making-mcgregor",
+      about: "https://shop.conormcgregor.com/pages/about-conor",
+      nickname: "https://www.mmafighting.com/ufc/495077/conor-mcgregor-explains-backstory-behind-notorious-nickname"
     },
     scripts: {
       A: {
         id: "A",
         clues: [
           { id: "ufc-conor-mcgregor-a-1", text: "I played football as a boy before boxing became the combat sport that first captured my attention.", band: "broad", verification: "verified", sourceIds: ["profile"] },
-          { id: "ufc-conor-mcgregor-a-2", text: "Before committing fully to fighting, I spent time working as a plumber’s apprentice in Dublin.", band: "broad", verification: "verified", sourceIds: ["making"] },
+          { id: "ufc-conor-mcgregor-a-2", text: "Before committing fully to fighting, I spent time working as a plumber’s apprentice in Dublin.", band: "broad", verification: "verified", sourceIds: ["about"] },
           { id: "ufc-conor-mcgregor-a-3", text: "My UFC debut in 2013 ended with a first-round stoppage of Marcus Brimage.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-conor-mcgregor-a-4", text: "Three UFC fights into my run, I returned home to headline in Dublin and stopped Diego Brandao in the first round.", band: "helpful", verification: "verified", sourceIds: ["profile", "walkouts"] },
           { id: "ufc-conor-mcgregor-a-5", text: "I knocked out Dustin Poirier in the first round at UFC 178.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
@@ -121,7 +123,7 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
         id: "B",
         clues: [
           { id: "ufc-conor-mcgregor-b-1", text: "My relationship with coach John Kavanagh became a major turning point when I was pushed to commit seriously to training.", band: "broad", verification: "verified", sourceIds: ["making"] },
-          { id: "ufc-conor-mcgregor-b-2", text: "Outside fighting, I later became associated with an Irish whiskey brand I helped launch.", band: "broad", verification: "verified", sourceIds: ["profile"] },
+          { id: "ufc-conor-mcgregor-b-2", text: "Outside fighting, I later became associated with an Irish whiskey brand I helped launch.", band: "broad", verification: "verified", sourceIds: ["about"] },
           { id: "ufc-conor-mcgregor-b-3", text: "I crossed over into boxing for a 2017 bout with Floyd Mayweather.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-conor-mcgregor-b-4", text: "I avenged my first UFC loss by winning a five-round majority decision in a rematch with Nate Diaz.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-conor-mcgregor-b-5", text: "After a long MMA layoff, I returned in 2020 and stopped Donald Cerrone in 40 seconds.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
@@ -129,7 +131,7 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
           { id: "ufc-conor-mcgregor-b-7", text: "Our trilogy fight ended after the first round because of a doctor stoppage following a leg injury.", band: "strong", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-conor-mcgregor-b-8", text: "I challenged Khabib Nurmagomedov for the lightweight title at UFC 229 and was submitted in the fourth round.", band: "strong", verification: "verified", sourceIds: ["profile", "walkouts"] },
           { id: "ufc-conor-mcgregor-b-9", text: "I returned to the UFC again in 2026 for a bout with Max Holloway.", band: "giveaway", verification: "verified", sourceIds: ["profile", "walkouts"] },
-          { id: "ufc-conor-mcgregor-b-10", text: "My “Notorious” persona, Irish walkouts, and crossover fame became as recognizable as my left hand.", band: "giveaway", verification: "verified", sourceIds: ["walkouts", "decade"] }
+          { id: "ufc-conor-mcgregor-b-10", text: "My “Notorious” nickname became part of a public persona tied to my Irish identity and crossover fame.", band: "giveaway", verification: "verified", sourceIds: ["nickname", "walkouts", "decade"] }
         ]
       }
     }
@@ -142,28 +144,32 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
       hof: "https://www.ufc.com/news/demetrious-johnson-named-ufc-hall-fame-class-2026",
       fights: "https://www.ufc.com/news/10-fantastic-flyweight-title-fights-ufc-296-alexandre-pantoja",
       cejudo: "https://www.ufc.com/news/history-making-cejudo-takes-belt-dj?language_content_entity=en",
-      research: "https://www.ufc.com/athlete/demetrious-johnson"
+      origin: "https://www.onefc.com/features/the-untold-origins-of-demetrious-mighty-mouse-johnson/",
+      pregame: "https://www.ufc.com/news/demetrious-johnson-talks-kyoji-horiguchi-americas-pregame",
+      hardwork: "https://www.ufc.com/news/demetrious-johnson-hard-work-pays",
+      nickname: "https://www.seattlemet.com/news-and-city-life/2013/07/demetrious-johnson-isnt-as-little-as-he-looks-july-2013",
+      gamer: "https://www.gameinformer.com/b/features/archive/2017/10/08/ufc-flyweight-champ-demetrious-johnson-talks-streaming-and.aspx"
     },
     scripts: {
       A: {
         id: "A",
         clues: [
-          { id: "ufc-demetrious-johnson-a-1", text: "I first tried wrestling at 13 and was drawn to the sport’s individual accountability.", band: "broad", verification: "verified", sourceIds: ["research"] },
-          { id: "ufc-demetrious-johnson-a-2", text: "Before fighting full time, I worked an early shift at a Tacoma-area recycling warehouse.", band: "broad", verification: "verified", sourceIds: ["research"] },
-          { id: "ufc-demetrious-johnson-a-3", text: "Coach Matt Hume became a long-term mentor after I linked up with AMC Pankration in 2005.", band: "helpful", verification: "verified", sourceIds: ["research"] },
+          { id: "ufc-demetrious-johnson-a-1", text: "I first tried wrestling at 13 and was drawn to the sport’s individual accountability.", band: "broad", verification: "verified", sourceIds: ["origin"] },
+          { id: "ufc-demetrious-johnson-a-2", text: "Before fighting full time, I worked an early shift at a Tacoma-area recycling warehouse.", band: "broad", verification: "verified", sourceIds: ["pregame"] },
+          { id: "ufc-demetrious-johnson-a-3", text: "Coach Matt Hume became a long-term mentor after I linked up with AMC Pankration in 2005.", band: "helpful", verification: "verified", sourceIds: ["hardwork"] },
           { id: "ufc-demetrious-johnson-a-4", text: "I first fought for UFC gold at bantamweight and lost a five-round decision to Dominick Cruz.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-demetrious-johnson-a-5", text: "After a draw and then a rematch win over Ian McCall, I advanced to the UFC flyweight tournament final.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-demetrious-johnson-a-6", text: "I beat Joseph Benavidez at UFC 152 to become the inaugural UFC flyweight champion.", band: "strong", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-demetrious-johnson-a-7", text: "My title reign eventually reached 11 consecutive successful defenses.", band: "strong", verification: "verified", sourceIds: ["hof", "cejudo"] },
           { id: "ufc-demetrious-johnson-a-8", text: "My eleventh defense ended with a mid-air transition into an armbar against Ray Borg.", band: "strong", verification: "verified", sourceIds: ["fights"] },
           { id: "ufc-demetrious-johnson-a-9", text: "That submission became widely known as the “Mighty Wiz-bar.”", band: "giveaway", verification: "verified", sourceIds: ["fights"] },
-          { id: "ufc-demetrious-johnson-a-10", text: "My nickname “Mighty Mouse” came from being the smallest athlete in the gym while still willing to spar with anyone.", band: "giveaway", verification: "verified", sourceIds: ["research"] }
+          { id: "ufc-demetrious-johnson-a-10", text: "My nickname “Mighty Mouse” came from being the smallest athlete in the gym while still willing to spar with anyone.", band: "giveaway", verification: "verified", sourceIds: ["nickname"] }
         ]
       },
       B: {
         id: "B",
         clues: [
-          { id: "ufc-demetrious-johnson-b-1", text: "Video games became a major hobby for me long before I later became a serious streamer.", band: "broad", verification: "verified", sourceIds: ["research"] },
+          { id: "ufc-demetrious-johnson-b-1", text: "Video games became a major hobby for me long before I later became a serious streamer.", band: "broad", verification: "verified", sourceIds: ["gamer"] },
           { id: "ufc-demetrious-johnson-b-2", text: "I won my first nine amateur MMA fights before making my professional debut in 2009.", band: "broad", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-demetrious-johnson-b-3", text: "My first WEC appearance ended in a decision loss to Brad Pickett.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-demetrious-johnson-b-4", text: "I later knocked out Joseph Benavidez in the first round of a championship rematch.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
@@ -185,15 +191,17 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
       hof: "https://www.ufc.com/news/anderson-silva-named-ufc-hall-fame-class-2023-middleweight-brazil",
       greatness: "https://www.ufc.com/news/greatness-anderson-silva-ufc-hall-fame-class-2023",
       defenses: "https://www.ufc.com/news/looking-back-anderson-silvas-ten-title-defenses",
-      research: "https://www.ufc.com/athlete/anderson-silva"
+      origin: "https://www.ufc.com/news/comeback-anderson-silva-never-really-left",
+      soundbytes: "https://www.ufc.com/news/say-it-again-anderson-silvas-greatest-soundbytes",
+      spiderquotes: "https://www.ufc.com/news/spider-says-silvas-quotes"
     },
     scripts: {
       A: {
         id: "A",
         clues: [
-          { id: "ufc-anderson-silva-a-1", text: "I was raised largely by an aunt and uncle after being separated from my parents at a young age.", band: "broad", verification: "verified", sourceIds: ["research"] },
-          { id: "ufc-anderson-silva-a-2", text: "As a child I wanted to play soccer, but organized training was difficult for my family to afford.", band: "broad", verification: "verified", sourceIds: ["research"] },
-          { id: "ufc-anderson-silva-a-3", text: "Watching Royce Gracie at UFC 1 helped turn competing in the UFC into a dream of mine.", band: "helpful", verification: "verified", sourceIds: ["research"] },
+          { id: "ufc-anderson-silva-a-1", text: "I was raised largely by an aunt and uncle after being separated from my parents at a young age.", band: "broad", verification: "verified", sourceIds: ["origin"] },
+          { id: "ufc-anderson-silva-a-2", text: "As a child I wanted to play soccer, but organized training was difficult for my family to afford.", band: "broad", verification: "verified", sourceIds: ["origin"] },
+          { id: "ufc-anderson-silva-a-3", text: "Watching Royce Gracie at UFC 1 helped turn competing in the UFC into a dream of mine.", band: "helpful", verification: "verified", sourceIds: ["spiderquotes"] },
           { id: "ufc-anderson-silva-a-4", text: "I opened my UFC run with a first-round knockout and reached a title fight almost immediately.", band: "helpful", verification: "verified", sourceIds: ["hof", "greatness"] },
           { id: "ufc-anderson-silva-a-5", text: "I won the middleweight championship in only my second UFC appearance.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-anderson-silva-a-6", text: "My reign eventually reached ten successful UFC middleweight title defenses.", band: "strong", verification: "verified", sourceIds: ["hof", "greatness", "defenses"] },
@@ -206,8 +214,8 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
       B: {
         id: "B",
         clues: [
-          { id: "ufc-anderson-silva-b-1", text: "I became a dedicated Spider-Man comic collector and said I related to a superhero who still had ordinary bills to pay.", band: "broad", verification: "verified", sourceIds: ["research"] },
-          { id: "ufc-anderson-silva-b-2", text: "Away from competition, I described myself as a practical joker who enjoyed making people laugh.", band: "broad", verification: "verified", sourceIds: ["research"] },
+          { id: "ufc-anderson-silva-b-1", text: "I became a dedicated Spider-Man comic collector and said I related to a superhero who still had ordinary bills to pay.", band: "broad", verification: "verified", sourceIds: ["soundbytes"] },
+          { id: "ufc-anderson-silva-b-2", text: "Away from competition, I described myself as a practical joker who enjoyed making people laugh.", band: "broad", verification: "verified", sourceIds: ["soundbytes"] },
           { id: "ufc-anderson-silva-b-3", text: "My championship run lasted nearly seven years at the top of the middleweight division.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-anderson-silva-b-4", text: "During that era I also took several light heavyweight fights without giving up my middleweight crown.", band: "helpful", verification: "verified", sourceIds: ["greatness"] },
           { id: "ufc-anderson-silva-b-5", text: "My striking performances made opponents such as Forrest Griffin part of some of the sport’s most replayed highlights.", band: "helpful", verification: "verified", sourceIds: ["greatness"] },
