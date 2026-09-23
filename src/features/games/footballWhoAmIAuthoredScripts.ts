@@ -23560,6 +23560,413 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "marcus-allen",
+    "name": "Marcus Allen",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/marcus-allen",
+      "heisman": "https://www.heisman.com/heisman-winners/marcus-allen/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "marcus-allen-a-1",
+            "text": "I was the 10th player selected in the 1982 NFL Draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "heisman"
+            ]
+          },
+          {
+            "id": "marcus-allen-a-2",
+            "text": "I began my pro career by winning NFL Rookie of the Year.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-a-3",
+            "text": "I led my first franchise in rushing for seven consecutive seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-a-4",
+            "text": "In Super Bowl XVIII, I ran for 191 yards and two touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-a-5",
+            "text": "One of those touchdowns was a then-Super-Bowl-record 74-yard run.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-a-6",
+            "text": "That performance earned me Super Bowl XVIII MVP.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-a-7",
+            "text": "In 1985, I led the league with 1,759 rushing yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-a-8",
+            "text": "I won NFL MVP that same 1985 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-a-9",
+            "text": "I became the first player in NFL history with 10,000 rushing yards and 5,000 receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-a-10",
+            "text": "Before my pro career, I won the 1981 Heisman Trophy at USC.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "marcus-allen-b-1",
+            "text": "I played 16 NFL seasons with only two franchises.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-b-2",
+            "text": "My career totals included 12,243 rushing yards and 5,411 receiving yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-b-3",
+            "text": "I also completed six touchdown passes during my pro career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-b-4",
+            "text": "After 11 seasons with one franchise, I spent my final five seasons with an AFC West rival.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-b-5",
+            "text": "I led Kansas City in rushing four consecutive seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-b-6",
+            "text": "I made six Pro Bowls, with the last coming as a Chief in 1994.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-b-7",
+            "text": "I retired with 145 total touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-b-8",
+            "text": "My 2,314 rushing-plus-receiving yards in 1985 stood as a single-season record when I retired.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-b-9",
+            "text": "I starred for the Raiders before finishing my career with the Chiefs.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "marcus-allen-b-10",
+            "text": "My résumé includes a Heisman Trophy, an NFL MVP and a Super Bowl XVIII MVP.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-terrell-owens",
+    "name": "Terrell Owens",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/terrell-owens"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-terrell-owens-a-1",
+            "text": "I came from Tennessee-Chattanooga and was drafted in the third round in 1996.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-a-2",
+            "text": "I developed beside Jerry Rice for most of my first eight NFL seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-a-3",
+            "text": "I led San Francisco in receptions five times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-a-4",
+            "text": "In 2000, I set a career high with 1,451 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-a-5",
+            "text": "In 2002, I set another career high with 100 catches.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-a-6",
+            "text": "I once caught 20 passes in a single game, then an NFL record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-a-7",
+            "text": "From 2000 through 2002, I totaled 290 catches, 4,163 yards and 42 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-a-8",
+            "text": "I earned five All-Pro selections and six Pro Bowl selections.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-a-9",
+            "text": "I finished with 15,934 receiving yards and 153 touchdown catches.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-a-10",
+            "text": "I made the NFL's 2000s All-Decade Team after starring first in San Francisco and later in Philadelphia and Dallas.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-terrell-owens-b-1",
+            "text": "I played 16 NFL seasons and reached 60 receptions in all but three of them.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-b-2",
+            "text": "I recorded nine 1,000-yard receiving seasons across an 11-year span.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-b-3",
+            "text": "I had eight seasons with double-digit touchdown catches.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-b-4",
+            "text": "My 2004 season in Philadelphia produced 1,200 yards and 14 touchdowns in 14 games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-b-5",
+            "text": "After a serious late-season injury, I returned for that season's Super Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-b-6",
+            "text": "In Super Bowl XXXIX, I caught nine passes for 122 yards in a narrow loss.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-b-7",
+            "text": "In 2007 with Dallas, I posted 1,355 receiving yards and 15 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-b-8",
+            "text": "My final two NFL seasons were one-year stops in Buffalo and Cincinnati.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-b-9",
+            "text": "My 1,078 career receptions produced 15,934 receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-terrell-owens-b-10",
+            "text": "I am the Hall of Fame receiver whose prime career path ran from the 49ers to the Eagles to the Cowboys.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
