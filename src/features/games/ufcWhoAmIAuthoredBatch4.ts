@@ -24,43 +24,45 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-junior-dos-santos-a-1",
-            "text": "I joined the UFC in 2008 after beginning my professional career elsewhere.",
+            "text": "I grew up in a working-class family and took ordinary jobs to support myself before fighting paid the bills.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1",
+              "identity2"
             ]
           },
           {
             "id": "ufc-junior-dos-santos-a-2",
-            "text": "My UFC debut ended with a win by stoppage.",
+            "text": "My first martial art was capoeira rather than boxing or wrestling.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-junior-dos-santos-a-3",
-            "text": "I spent most of my UFC career at Heavyweight.",
+            "text": "Brazilian jiu-jitsu training became the bridge that convinced people around me I could pursue MMA seriously.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-junior-dos-santos-a-4",
-            "text": "I reached my first UFC title opportunity in 2011.",
+            "text": "I entered the UFC in 2008 and began my run with a string of heavyweight victories.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-junior-dos-santos-a-5",
-            "text": "I beat Stefan Struve by stoppage in 2009.",
+            "text": "I knocked out Fabricio Werdum in the first round of my UFC debut.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -70,7 +72,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-a-6",
-            "text": "I beat Blagoy Ivanov by decision in 2018.",
+            "text": "Wins over Roy Nelson and Shane Carwin carried me into my first heavyweight title opportunity.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -80,7 +82,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-a-7",
-            "text": "I lost to Jairzinho Rozenstruik by stoppage in 2020.",
+            "text": "I knocked out Cain Velasquez in just over a minute to win the UFC heavyweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -90,7 +92,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-a-8",
-            "text": "I beat Mirko Cro Cop in 2009.",
+            "text": "Velasquez took the belt back in a five-round rematch, and we eventually completed a trilogy.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -100,21 +102,21 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-a-9",
-            "text": "I won UFC gold at Heavyweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-junior-dos-santos-a-10",
-            "text": "My UFC résumé includes a matchup against Cain Velasquez in 2011.",
+            "text": "I later challenged Stipe Miocic for the heavyweight title after having beaten him in an earlier five-round fight.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
               "profile"
+            ]
+          },
+          {
+            "id": "ufc-junior-dos-santos-a-10",
+            "text": "My nickname “Cigano” came from a long-haired look that reminded people of a gypsy character from a Brazilian soap opera.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity5"
             ]
           }
         ]
@@ -124,43 +126,45 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-junior-dos-santos-b-1",
-            "text": "My UFC career began in 2008.",
+            "text": "When I moved away from home as a young man, I supported myself with jobs such as washing dishes and selling ice cream.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-junior-dos-santos-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "My combat-sports path started with capoeira before expanding into jiu-jitsu and boxing.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3",
+              "identity4"
             ]
           },
           {
             "id": "ufc-junior-dos-santos-b-3",
-            "text": "One stretch of my UFC career reached 9 consecutive victories.",
+            "text": "I reached the UFC after only a few years as a professional mixed martial artist.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-junior-dos-santos-b-4",
-            "text": "My first UFC title opportunity came after 7 earlier UFC appearances.",
+            "text": "My first several UFC appearances established me as a fast-rising heavyweight striker.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-junior-dos-santos-b-5",
-            "text": "I beat Gilbert Yvel by stoppage in 2010.",
+            "text": "A debut knockout of Fabricio Werdum immediately announced me as a contender.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -170,7 +174,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-b-6",
-            "text": "I beat Tai Tuivasa by stoppage in 2018.",
+            "text": "I later beat Mirko Cro Cop, Roy Nelson and Shane Carwin during an unbeaten UFC climb.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -180,7 +184,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-b-7",
-            "text": "I lost to Ciryl Gane by stoppage in 2020.",
+            "text": "A first-round knockout of Cain Velasquez made me UFC heavyweight champion.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -190,7 +194,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-b-8",
-            "text": "I beat Gabriel Gonzaga by stoppage in 2010.",
+            "text": "My championship story became closely linked to Velasquez through three fights.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -200,21 +204,21 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-b-9",
-            "text": "My UFC career includes a championship victory at Heavyweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-junior-dos-santos-b-10",
-            "text": "I also shared the Octagon with Stipe Miocic in 2017.",
+            "text": "I also had two UFC meetings with Stipe Miocic, including a later championship challenge.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
               "profile"
+            ]
+          },
+          {
+            "id": "ufc-junior-dos-santos-b-10",
+            "text": "The “Cigano” nickname stuck from my appearance even though I initially disliked the comparison that created it.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity5"
             ]
           }
         ]
@@ -240,7 +244,16 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-tyron-woodley-a-1",
-            "text": "I earned a business degree at the University of Missouri and later pursued graduate work in public administration with a nonprofit focus.",
+            "text": "My athletic foundation was elite wrestling, including two NCAA Division I All-American seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "identity2"
+            ]
+          },
+          {
+            "id": "ufc-tyron-woodley-a-2",
+            "text": "I earned a business degree and later pursued graduate work in public administration.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -248,35 +261,26 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
             ]
           },
           {
-            "id": "ufc-tyron-woodley-a-2",
-            "text": "My UFC debut ended with a win by stoppage.",
-            "band": "broad",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
             "id": "ufc-tyron-woodley-a-3",
-            "text": "I spent most of my UFC career at Welterweight.",
+            "text": "Before fighting full time, I worked as a college wrestling coach.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-tyron-woodley-a-4",
-            "text": "I reached my first UFC title opportunity in 2016.",
+            "text": "I reached the UFC in 2013 after building much of my early professional résumé elsewhere.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-tyron-woodley-a-5",
-            "text": "I beat Jay Hieron by stoppage in 2013.",
+            "text": "I knocked out Josh Koscheck in the first round during my climb at welterweight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -286,7 +290,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tyron-woodley-a-6",
-            "text": "I beat Dong Hyun Kim by stoppage in 2014.",
+            "text": "A first-round knockout of Dong Hyun Kim helped keep me near the top of the division.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -296,7 +300,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tyron-woodley-a-7",
-            "text": "I lost to Rory MacDonald by decision in 2014.",
+            "text": "I stopped Robbie Lawler in the first round to win the UFC welterweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -306,7 +310,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tyron-woodley-a-8",
-            "text": "I lost to Colby Covington by stoppage in 2020.",
+            "text": "My first two title defenses came in back-to-back fights with Stephen Thompson, first a draw and then a decision win.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -316,16 +320,17 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tyron-woodley-a-9",
-            "text": "I won UFC gold at Welterweight.",
+            "text": "I later defended the belt against Demian Maia and Darren Till before losing it to Kamaru Usman.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-tyron-woodley-a-10",
-            "text": "I built an acting résumé alongside fighting, including an appearance in Straight Outta Compton and other film and television roles.",
+            "text": "Alongside fighting, I built an acting résumé that included an appearance in Straight Outta Compton.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -339,43 +344,43 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-tyron-woodley-b-1",
-            "text": "My UFC career began in 2013.",
+            "text": "I grew up in a large household and have spoken about experiencing an eviction while I was young.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-tyron-woodley-b-2",
-            "text": "I won 2 of my first three UFC appearances.",
+            "text": "Wrestling carried me from an undefeated high-school state-title season to Big 12 and NCAA success.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-tyron-woodley-b-3",
-            "text": "One stretch of my UFC career reached 3 consecutive victories.",
+            "text": "My education included both business and public-administration studies.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-tyron-woodley-b-4",
-            "text": "My first UFC title opportunity came after 7 earlier UFC appearances.",
+            "text": "I arrived in the UFC after already fighting at a high level in another major promotion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-tyron-woodley-b-5",
-            "text": "I beat Josh Koscheck by stoppage in 2013.",
+            "text": "My UFC debut lasted less than a minute before I stopped Jay Hieron.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -385,7 +390,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tyron-woodley-b-6",
-            "text": "I lost to Jake Shields by decision in 2013.",
+            "text": "A knockout of Robbie Lawler made me welterweight champion in 2016.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -395,7 +400,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tyron-woodley-b-7",
-            "text": "I lost to Gilbert Burns by decision in 2020.",
+            "text": "The first defense of my title ended in a majority draw with Stephen Thompson.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -405,7 +410,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tyron-woodley-b-8",
-            "text": "I lost to Vicente Luque by submission in 2021.",
+            "text": "I beat Thompson in the rematch and later defended successfully against Demian Maia and Darren Till.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -415,20 +420,22 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tyron-woodley-b-9",
-            "text": "My UFC career includes a championship victory at Welterweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-tyron-woodley-b-10",
-            "text": "I also shared the Octagon with Robbie Lawler in 2016.",
+            "text": "Kamaru Usman ended my championship reign with a five-round decision.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-tyron-woodley-b-10",
+            "text": "My career combined NCAA-level wrestling, UFC championship success and work in film and television.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity2",
+              "identity5",
               "profile"
             ]
           }
@@ -455,43 +462,44 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-alex-pantoja-a-1",
-            "text": "I joined the UFC in 2017 after beginning my professional career elsewhere.",
+            "text": "Before MMA paid the bills, I worked jobs that included waiting tables, masonry and helping with boat rides.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-alex-pantoja-a-2",
-            "text": "My UFC debut ended with a win by decision.",
+            "text": "I competed in both Brazilian jiu-jitsu and Muay Thai before choosing MMA as my professional path.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-alex-pantoja-a-3",
-            "text": "I spent most of my UFC career at Flyweight.",
+            "text": "My route into the UFC included a season of The Ultimate Fighter built around flyweight contenders.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-alex-pantoja-a-4",
-            "text": "I reached my first UFC title opportunity in 2023.",
+            "text": "I entered the UFC in 2017 and spent years working through a crowded flyweight division.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-alex-pantoja-a-5",
-            "text": "I beat Eric Shelton by decision in 2017.",
+            "text": "A decision win over Brandon Moreno in 2018 became an important early result in a rivalry that would continue later.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -501,7 +509,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alex-pantoja-a-6",
-            "text": "I beat Ulka Sasaki by submission in 2018.",
+            "text": "I submitted Brandon Royval in the second round during my climb toward a title shot.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -511,7 +519,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alex-pantoja-a-7",
-            "text": "I beat Manel Kape by decision in 2021.",
+            "text": "I beat Moreno by split decision in 2023 to win the UFC flyweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -521,7 +529,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alex-pantoja-a-8",
-            "text": "I beat Wilson Reis by stoppage in 2019.",
+            "text": "My first defense was a five-round decision over Royval in a rematch.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -531,20 +539,21 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alex-pantoja-a-9",
-            "text": "I won UFC gold at Flyweight.",
+            "text": "I then defended the title in another five-round fight against Steve Erceg.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-alex-pantoja-a-10",
-            "text": "I grew up in Copacabana in modest circumstances and has described fighting from a young age as a possible route to a better life.",
+            "text": "Known as “The Cannibal,” I built my championship run around relentless grappling, pressure and durability.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity1"
+              "profile"
             ]
           }
         ]
@@ -554,43 +563,44 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-alex-pantoja-b-1",
-            "text": "My UFC career began in 2017.",
+            "text": "I grew up in modest circumstances and saw fighting as a possible route to a better life.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-alex-pantoja-b-2",
-            "text": "I won 2 of my first three UFC appearances.",
+            "text": "Before fighting became financially stable, I worked a long list of ordinary jobs to support myself.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-alex-pantoja-b-3",
-            "text": "One stretch of my UFC career reached 8 consecutive victories.",
+            "text": "There was a period of my UFC career when I drove for Uber while dealing with an ACL injury and family expenses.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-alex-pantoja-b-4",
-            "text": "My first UFC title opportunity came after 12 earlier UFC appearances.",
+            "text": "I had to navigate setbacks and long gaps between major opportunities before reaching a title fight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-alex-pantoja-b-5",
-            "text": "I beat Neil Seery by submission in 2017.",
+            "text": "My UFC history with Brandon Moreno began with a decision win years before either of us fought for the belt against the other.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -600,7 +610,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alex-pantoja-b-6",
-            "text": "I beat Matt Schnell by stoppage in 2019.",
+            "text": "A submission of Brandon Royval helped push me toward the top of the flyweight rankings.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -610,7 +620,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alex-pantoja-b-7",
-            "text": "I lost to Dustin Ortiz by decision in 2018.",
+            "text": "I took the championship from Moreno in a five-round split decision at UFC 290.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -620,7 +630,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alex-pantoja-b-8",
-            "text": "I lost to Askar Askarov by decision in 2020.",
+            "text": "I defended the belt against Royval and Steve Erceg in consecutive five-round fights.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -630,20 +640,19 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alex-pantoja-b-9",
-            "text": "My UFC career includes a championship victory at Flyweight.",
+            "text": "Around my first Royval fight, I spoke openly about wanting fighting success to improve my family’s situation.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-alex-pantoja-b-10",
-            "text": "I also shared the Octagon with Brandon Royval in 2023.",
+            "text": "The nickname “The Cannibal” became attached to the aggressive grappling style that carried me to UFC flyweight gold.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
               "profile"
             ]
           }
@@ -670,43 +679,44 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-ilia-topuria-a-1",
-            "text": "I joined the UFC in 2020 after beginning my professional career elsewhere.",
+            "text": "I began learning Brazilian jiu-jitsu when I was very young, long before MMA became a career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-ilia-topuria-a-2",
-            "text": "My UFC debut ended with a win by decision.",
+            "text": "Before fighting paid the bills, I worked as a cashier at a clothing retailer.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-ilia-topuria-a-3",
-            "text": "My UFC career included appearances at both Featherweight and Lightweight.",
+            "text": "My pre-UFC grappling résumé included a runner-up finish in a European jiu-jitsu competition.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-ilia-topuria-a-4",
-            "text": "I reached my first UFC title opportunity in 2024.",
+            "text": "I entered the UFC unbeaten and kept that professional record intact through my early appearances.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-ilia-topuria-a-5",
-            "text": "I beat Youssef Zalal by decision in 2020.",
+            "text": "I knocked out Ryan Hall in the first round in 2021.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -716,7 +726,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-a-6",
-            "text": "I beat Ryan Hall by stoppage in 2021.",
+            "text": "A submission of Bryce Mitchell and a five-round win over Josh Emmett moved me into title contention.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -726,7 +736,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-a-7",
-            "text": "I beat Bryce Mitchell by submission in 2022.",
+            "text": "I knocked out Alexander Volkanovski in the second round to win the UFC featherweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -736,7 +746,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-a-8",
-            "text": "I beat Charles Oliveira by stoppage in 2025.",
+            "text": "In my first title defense, I became the first fighter to knock out Max Holloway.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -746,20 +756,21 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-a-9",
-            "text": "I won UFC championships in more than one weight class.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-ilia-topuria-a-10",
-            "text": "My UFC résumé includes a matchup against Alexander Volkanovski in 2024.",
+            "text": "My unbeaten UFC rise included stoppage wins by both knockout and submission before I ever fought for gold.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-ilia-topuria-a-10",
+            "text": "My public identity bridges Georgia and Spain, and the nickname “El Matador” became closely tied to my championship rise.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity5",
               "profile"
             ]
           }
@@ -770,43 +781,45 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-ilia-topuria-b-1",
-            "text": "My UFC career began in 2020.",
+            "text": "Grappling rather than striking was the first major foundation of my combat-sports development.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1",
+              "identity4"
             ]
           },
           {
             "id": "ufc-ilia-topuria-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "I had a regular retail job before professional fighting became financially sustainable.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-ilia-topuria-b-3",
-            "text": "One stretch of my UFC career reached 9 consecutive victories.",
+            "text": "My pre-UFC résumé included winning the Arnold Fighter tournament.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-ilia-topuria-b-4",
-            "text": "My first UFC title opportunity came after 6 earlier UFC appearances.",
+            "text": "Once I reached the UFC, I stayed unbeaten while gradually moving from prospect to main-event contender.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-ilia-topuria-b-5",
-            "text": "I beat Damon Jackson by stoppage in 2020.",
+            "text": "I stopped Jai Herbert with a knockout after surviving serious trouble earlier in the fight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -816,7 +829,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-b-6",
-            "text": "I beat Jai Herbert by stoppage in 2022.",
+            "text": "I then submitted Bryce Mitchell and dominated Josh Emmett over five rounds.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -826,7 +839,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-b-7",
-            "text": "I beat Josh Emmett by decision in 2023.",
+            "text": "A second-round knockout of Alexander Volkanovski made me featherweight champion.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -836,7 +849,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-b-8",
-            "text": "I lost to Justin Gaethje in 2026.",
+            "text": "I defended the title by knocking out Max Holloway, something no previous opponent had done.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -846,20 +859,19 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-b-9",
-            "text": "My UFC résumé includes championship victories in two weight classes.",
+            "text": "My career story became closely associated with both Georgia and Spain as I rose to UFC gold.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-ilia-topuria-b-10",
-            "text": "I also shared the Octagon with Max Holloway in 2024.",
+            "text": "The nickname “El Matador” became one of the clearest identifiers of my unbeaten championship run.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
               "profile"
             ]
           }
@@ -886,43 +898,44 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-robert-whittaker-a-1",
-            "text": "I joined the UFC in 2012 after beginning my professional career elsewhere.",
+            "text": "Before fighting became my full-time profession, I worked as an apprentice electrician.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-robert-whittaker-a-2",
-            "text": "My UFC debut ended with a win by decision.",
+            "text": "My martial-arts background eventually included black belts in Brazilian jiu-jitsu, hapkido and karate.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-robert-whittaker-a-3",
-            "text": "My UFC career included appearances at both Middleweight and Welterweight.",
+            "text": "I entered the UFC by winning a season of The Ultimate Fighter built around fighters from Australia and the United Kingdom.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-robert-whittaker-a-4",
-            "text": "I reached my first UFC title opportunity in 2017.",
+            "text": "I began in the UFC at welterweight before a move up changed the trajectory of my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-robert-whittaker-a-5",
-            "text": "I lost to Court McGee by decision in 2013.",
+            "text": "At middleweight, wins over Uriah Hall and Derek Brunson helped launch a long winning streak.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -932,7 +945,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-a-6",
-            "text": "I beat Colton Smith by stoppage in 2013.",
+            "text": "I stopped Ronaldo Souza and then beat Yoel Romero to win an interim UFC middleweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -942,7 +955,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-a-7",
-            "text": "I beat Clint Hester by stoppage in 2014.",
+            "text": "I later became the undisputed champion and beat Romero again in a five-round rematch.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -952,7 +965,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-a-8",
-            "text": "I beat Ikram Aliskerov by stoppage in 2024.",
+            "text": "Israel Adesanya ended my title reign by second-round knockout in 2019.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -962,20 +975,20 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-a-9",
-            "text": "I won UFC gold at Middleweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-robert-whittaker-a-10",
-            "text": "My UFC résumé includes a matchup against Israel Adesanya in 2019.",
+            "text": "I rebuilt with wins over Darren Till, Jared Cannonier and Kelvin Gastelum before earning a rematch with Adesanya.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-robert-whittaker-a-10",
+            "text": "Known as “The Reaper,” I became one of the defining middleweights of the era between the Silva and Adesanya title runs.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
               "profile"
             ]
           }
@@ -986,43 +999,44 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-robert-whittaker-b-1",
-            "text": "My UFC career began in 2012.",
+            "text": "I have consistently described providing for my family as the main reason I compete.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-robert-whittaker-b-2",
-            "text": "I won 2 of my first three UFC appearances.",
+            "text": "Reading and video games are among the hobbies I have repeatedly listed away from training.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-robert-whittaker-b-3",
-            "text": "One stretch of my UFC career reached 9 consecutive victories.",
+            "text": "The challenge of testing myself competitively was a major reason I committed to fighting as a career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-robert-whittaker-b-4",
-            "text": "My first UFC title opportunity came after 11 earlier UFC appearances.",
+            "text": "My UFC career changed significantly after I left welterweight and moved to middleweight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-robert-whittaker-b-5",
-            "text": "I beat Brad Scott by decision in 2012.",
+            "text": "A long middleweight winning streak eventually included a knockout of Derek Brunson and a stoppage of Ronaldo Souza.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1032,7 +1046,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-b-6",
-            "text": "I beat Mike Rhodes by decision in 2014.",
+            "text": "I beat Yoel Romero over five rounds to win interim championship gold.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1042,7 +1056,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-b-7",
-            "text": "I beat Rafael Natal by decision in 2016.",
+            "text": "I later entered a second five-round fight with Romero after being elevated to undisputed champion.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1052,7 +1066,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-b-8",
-            "text": "I beat Brad Tavares by stoppage in 2015.",
+            "text": "My title reign ended against Israel Adesanya in front of a massive crowd in Melbourne.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1062,20 +1076,20 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-b-9",
-            "text": "My UFC career includes a championship victory at Middleweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-robert-whittaker-b-10",
-            "text": "I also shared the Octagon with Israel Adesanya in 2022.",
+            "text": "I later earned another championship fight with Adesanya after rebuilding through three straight wins.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-robert-whittaker-b-10",
+            "text": "The nickname “The Reaper” became attached to a career that included an Ultimate Fighter win and UFC middleweight championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
               "profile"
             ]
           }
@@ -1102,7 +1116,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-chris-weidman-a-1",
-            "text": "I earned a bachelor's degree in psychology and later a master's degree in physical education at Hofstra.",
+            "text": "I earned a bachelor’s degree in psychology and later a master’s degree in physical education.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1111,34 +1125,34 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-a-2",
-            "text": "My UFC debut ended with a win by decision.",
+            "text": "After college wrestling, I stayed at my university as an assistant coach while attending graduate school.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-chris-weidman-a-3",
-            "text": "My UFC career included appearances at both Middleweight and Light Heavyweight.",
+            "text": "I became absorbed in Brazilian jiu-jitsu after first helping local MMA fighters with their wrestling.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-chris-weidman-a-4",
-            "text": "I reached my first UFC title opportunity in 2013.",
+            "text": "I entered the UFC in 2011 after choosing to wait for that opportunity rather than sign quickly elsewhere.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-chris-weidman-a-5",
-            "text": "I lost to Brad Tavares by decision in 2023.",
+            "text": "A knockout of Mark Muñoz put me into the middleweight championship picture.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1148,7 +1162,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-a-6",
-            "text": "I beat Alessio Sakara by decision in 2011.",
+            "text": "I knocked out Anderson Silva in the second round to win the UFC middleweight title.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1158,7 +1172,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-a-7",
-            "text": "I beat Tom Lawlor by submission in 2011.",
+            "text": "In the rematch, I retained the belt when Silva suffered a leg injury after I checked a kick.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1168,7 +1182,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-a-8",
-            "text": "I lost to Uriah Hall in 2021.",
+            "text": "I then defended successfully against Lyoto Machida and Vitor Belfort.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1178,20 +1192,20 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-a-9",
-            "text": "I won UFC gold at Middleweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-chris-weidman-a-10",
-            "text": "My UFC résumé includes a matchup against Anderson Silva in 2013.",
+            "text": "Luke Rockhold ended my championship reign with a fourth-round stoppage.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-chris-weidman-a-10",
+            "text": "Known as “The All-American,” I became the fighter who ended Silva’s record-setting UFC title reign.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
               "profile"
             ]
           }
@@ -1202,43 +1216,44 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-chris-weidman-b-1",
-            "text": "My UFC career began in 2011.",
+            "text": "Early in my grappling transition, I entered a major tournament and submitted all 13 opponents while winning both my weight class and the absolute division.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-chris-weidman-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "I balanced graduate school and wrestling coaching while trying to build a path toward professional MMA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-chris-weidman-b-3",
-            "text": "One stretch of my UFC career reached 9 consecutive victories.",
+            "text": "As a young husband and father living in a basement apartment, I turned down quicker-paying opportunities because I wanted the UFC.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-chris-weidman-b-4",
-            "text": "My first UFC title opportunity came after 5 earlier UFC appearances.",
+            "text": "My UFC start stayed unbeaten through several appearances as my wrestling and jiu-jitsu translated quickly.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-chris-weidman-b-5",
-            "text": "I lost to Eryk Anders by stoppage in 2024.",
+            "text": "A second-round knockout of Mark Muñoz made me the leading challenger at middleweight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1248,7 +1263,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-b-6",
-            "text": "I beat Jesse Bongfeldt by submission in 2011.",
+            "text": "I ended Anderson Silva’s long championship reign with a knockout at UFC 162.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1258,7 +1273,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-b-7",
-            "text": "I beat Bruno Silva by decision in 2024.",
+            "text": "Our rematch ended when Silva broke his leg on a checked kick.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1268,7 +1283,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-b-8",
-            "text": "I beat Omari Akhmedov by decision in 2020.",
+            "text": "I later defended the championship over Lyoto Machida and Vitor Belfort.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1278,20 +1293,20 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-b-9",
-            "text": "My UFC career includes a championship victory at Middleweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-chris-weidman-b-10",
-            "text": "I also shared the Octagon with Anderson Silva in 2013.",
+            "text": "My first professional loss came when Luke Rockhold stopped me in a title fight.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-chris-weidman-b-10",
+            "text": "The “All-American” nickname fit a résumé that combined elite college wrestling with the UFC middleweight championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
               "profile"
             ]
           }
