@@ -86,16 +86,16 @@ describe("Football Who Am I authored scripts", () => {
 
 
   it("keeps every authored identity bound to the exact frozen target identity", () => {
-    const targetByName = new Map(
+    const targetSubjectIdByName = new Map<string, string>(
       Object.values(FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES)
         .flat()
-        .map((identity) => [`${identity.league}:${identity.name}`, identity] as const),
+        .map((identity) => [`${identity.league}:${identity.name}`, identity.subjectId]),
     );
 
     for (const identity of footballWhoAmIAuthoredIdentities) {
-      const target = targetByName.get(`${identity.league}:${identity.name}`);
-      expect(target).toBeDefined();
-      expect(identity.subjectId).toBe(target!.subjectId);
+      const targetSubjectId = targetSubjectIdByName.get(`${identity.league}:${identity.name}`);
+      expect(targetSubjectId).toBeDefined();
+      expect(identity.subjectId).toBe(targetSubjectId);
     }
   });
 
