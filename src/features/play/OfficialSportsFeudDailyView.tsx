@@ -297,7 +297,7 @@ export function OfficialSportsFeudDailyView({
         setDisplayedFastTotal(0);
         setScene("reveal");
       } else {
-        // Fast Money is a single 45-second typing session. Keep the same native
+        // Fast Money is a single 50-second typing session. Keep the same native
         // input focused between server-owned answers so iOS never folds the
         // keyboard between prompts.
         fastInputRef.current?.focus({ preventScroll: true });
@@ -494,7 +494,7 @@ export function OfficialSportsFeudDailyView({
           <div className="feud-intro__rules">
             <span><b>2</b> BOARDS</span>
             <span><b>4</b> ANSWERS EACH</span>
-            <span><b>0:45</b> FAST MONEY</span>
+            <span><b>0:50</b> FAST MONEY</span>
           </div>
           <button className="feud-primary-button" type="button" onClick={startGame}>PLAY SPORTS FEUD</button>
         </section>
@@ -586,11 +586,11 @@ export function OfficialSportsFeudDailyView({
             <div>
               <span className="feud-fast-intro__kicker">YOU MADE THE FINALE</span>
               <h1>FAST MONEY</h1>
-              <div className="feud-fast-intro__clock">0:45</div>
+              <div className="feud-fast-intro__clock">0:50</div>
             </div>
           </div>
           <p>Five prompts. One answer each. Points stay hidden until the clock stops.</p>
-          <button className="feud-primary-button" type="button" onClick={startFastMoney}>START 45 SECONDS</button>
+          <button className="feud-primary-button" type="button" onClick={startFastMoney}>START 50 SECONDS</button>
         </section>
       ) : null}
 

@@ -491,7 +491,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
           <div className="feud-intro__rules">
             <span><b>2</b> BOARDS</span>
             <span><b>4</b> ANSWERS EACH</span>
-            <span><b>0:45</b> FAST MONEY</span>
+            <span><b>0:50</b> FAST MONEY</span>
           </div>
           <button className="feud-primary-button" type="button" onClick={startGame}>PLAY SPORTS FEUD</button>
         </section>
@@ -612,11 +612,11 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
             <div>
               <span className="feud-fast-intro__kicker">YOU MADE THE FINALE</span>
               <h1>FAST MONEY</h1>
-              <div className="feud-fast-intro__clock">0:45</div>
+              <div className="feud-fast-intro__clock">0:50</div>
             </div>
           </div>
           <p>Five prompts. One answer each. Points stay hidden until the clock stops.</p>
-          <button className="feud-primary-button" type="button" onClick={startFastMoney}>START 45 SECONDS</button>
+          <button className="feud-primary-button" type="button" onClick={startFastMoney}>START 50 SECONDS</button>
         </section>
       ) : null}
 

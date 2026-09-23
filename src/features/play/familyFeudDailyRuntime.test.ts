@@ -96,7 +96,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
       answers_required_per_board: 4,
       main_board_max_points: 30,
       main_max_points: 60,
-      fast_money_time_ms: 45_000,
+      fast_money_time_ms: 50_000,
       fast_money_max_points: 40,
       hq_score_max: 100,
     });
@@ -168,7 +168,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
     expect(answerReveal.map((row) => row.found)).toEqual([false, false, false, false, false, true]);
   });
 
-  it("moves through both boards into a hidden 45-second Fast Money round", () => {
+  it("moves through both boards into a hidden 50-second Fast Money round", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const { result } = strikeOutBothBoards(publication);
 
@@ -177,7 +177,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
       answered_count: 0,
       question_index: 0,
       current_question: { id: "fast-1", prompt: "Fast one" },
-      time_remaining_ms: 45_000,
+      time_remaining_ms: 50_000,
       results: [],
       points: null,
     });
@@ -253,7 +253,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
       ],
       fastMoneyIndex: 0,
       fastMoneyResults: [],
-      fastMoneyTimeRemainingMs: 45_000,
+      fastMoneyTimeRemainingMs: 50_000,
     };
 
     const result = advanceFamilyFeudDailyRuntime(

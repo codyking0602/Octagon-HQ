@@ -198,9 +198,9 @@ describe("Family Feud V2 engine contract", () => {
     expect(familyFeudScore(pack, state).main).toBe(10);
   });
 
-  it("uses a 45-second Fast Money clock and keeps ambiguity on the same prompt", () => {
+  it("uses a 50-second Fast Money clock and keeps ambiguity on the same prompt", () => {
     let state: FamilyFeudState = { ...createFamilyFeudState(), phase: "fast-money" };
-    expect(FAMILY_FEUD_FAST_MONEY_TIME_MS).toBe(45_000);
+    expect(FAMILY_FEUD_FAST_MONEY_TIME_MS).toBe(50_000);
 
     const transition = submitFamilyFeudFastMoneyAnswer(pack, state, "Williams", 36_000);
     expect(transition.outcome.type).toBe("ambiguous");
