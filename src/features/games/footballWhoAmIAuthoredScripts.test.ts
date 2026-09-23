@@ -44,7 +44,7 @@ describe("Football Who Am I authored scripts", () => {
     expect(new Set(keys).size).toBe(keys.length);
     expect(new Set(subjectKeys).size).toBe(subjectKeys.length);
     for (const identity of footballWhoAmIAuthoredIdentities) {
-      expect(identity.subjectId).toMatch(identity.league === "CFB" ? /^cfb-[a-z0-9-]+$/ : /^[a-z0-9-]+$/);
+      expect(identity.subjectId).toMatch(/^[a-z0-9-]+$/);
       expect(getFootballWhoAmIAuthoredIdentity(identity.league, identity.name)).toBe(identity);
     }
   });
