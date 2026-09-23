@@ -24,11 +24,11 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-quinton-jackson-a-1",
-            "text": "I crossed into mainstream acting by playing B.A. Baracus in the 2010 film The A-Team.",
+            "text": "I competed in major MMA promotions before joining the UFC in 2007.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity5"
+              "profile"
             ]
           },
           {
@@ -151,7 +151,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-quinton-jackson-b-4",
-            "text": "My first UFC title opportunity came after 1 earlier UFC appearances.",
+            "text": "My first UFC title opportunity came after one earlier UFC appearance.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -209,7 +209,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-quinton-jackson-b-10",
-            "text": "One of my most recognizable UFC matchups came against Jon Jones in 2011.",
+            "text": "I also shared the Octagon with Jon Jones in 2011.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -424,7 +424,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-brock-lesnar-b-10",
-            "text": "One of my most recognizable UFC matchups came against Cain Velasquez in 2010.",
+            "text": "I also shared the Octagon with Cain Velasquez in 2010.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -640,7 +640,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-paddy-pimblett-b-10",
-            "text": "One of my most recognizable UFC matchups came against Benoit Saint Denis in 2026.",
+            "text": "I also shared the Octagon with Benoit Saint Denis in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -856,7 +856,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-zhang-weili-b-10",
-            "text": "One of my most recognizable UFC matchups came against Jessica Andrade in 2019.",
+            "text": "I also shared the Octagon with Jessica Andrade in 2019.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1013,7 +1013,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ronda-rousey-b-4",
-            "text": "My first UFC title opportunity came after 0 earlier UFC appearances.",
+            "text": "My first UFC title opportunity came in my UFC debut.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1071,7 +1071,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ronda-rousey-b-10",
-            "text": "One of my most recognizable UFC matchups came against Amanda Nunes in 2016.",
+            "text": "I also shared the Octagon with Amanda Nunes in 2016.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1228,7 +1228,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-carla-esparza-b-4",
-            "text": "My first UFC title opportunity came after 0 earlier UFC appearances.",
+            "text": "My first UFC title opportunity came in my UFC debut.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1286,7 +1286,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-carla-esparza-b-10",
-            "text": "One of my most recognizable UFC matchups came against Zhang Weili in 2022.",
+            "text": "I also shared the Octagon with Zhang Weili in 2022.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1502,7 +1502,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-mackenzie-dern-b-10",
-            "text": "One of my most recognizable UFC matchups came against Jessica Andrade in 2023.",
+            "text": "I also shared the Octagon with Jessica Andrade in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1718,7 +1718,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-b-10",
-            "text": "One of my most recognizable UFC matchups came against Amanda Nunes in 2019.",
+            "text": "I also shared the Octagon with Amanda Nunes in 2019.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1767,7 +1767,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-a-3",
-            "text": "My UFC career included appearances at both Lightweight and Ultimate Fighter 5 Lightweight Tournament.",
+            "text": "My UFC career included appearances at both Lightweight and Welterweight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1825,7 +1825,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-a-9",
-            "text": "I won UFC gold at Ultimate Fighter 5 Lightweight Tournament.",
+            "text": "I challenged for UFC gold at Lightweight.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1875,7 +1875,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-b-4",
-            "text": "My first UFC title opportunity came after 0 earlier UFC appearances.",
+            "text": "My first undisputed UFC title opportunity came in 2012.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1924,7 +1924,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-b-9",
-            "text": "My UFC career includes a championship victory at Ultimate Fighter 5 Lightweight Tournament.",
+            "text": "One of my UFC title opportunities came at Lightweight.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1933,7 +1933,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-b-10",
-            "text": "One of my most recognizable UFC matchups came against Manvel Gamburyan in 2007.",
+            "text": "I fought Conor McGregor twice in 2016, splitting the two fights.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2148,7 +2148,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-b-10",
-            "text": "One of my most recognizable UFC matchups came against Kamaru Usman in 2021.",
+            "text": "I also shared the Octagon with Kamaru Usman in 2021.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2197,7 +2197,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-a-3",
-            "text": "My UFC career included appearances at both Featherweight and Ultimate Fighter Latin America Featherweight Tournament.",
+            "text": "I spent my UFC career primarily at Featherweight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2206,7 +2206,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-a-4",
-            "text": "I reached my first UFC title opportunity in 2014.",
+            "text": "I reached my first UFC title opportunity in 2023.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2255,7 +2255,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-a-9",
-            "text": "I won UFC championships in more than one weight class.",
+            "text": "I won interim UFC featherweight gold.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2264,11 +2264,12 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-a-10",
-            "text": "I later left Parral, Mexico for Chicago to train with coaches including Izzy Martinez and Mike Valle, using the move to immerse himself in higher-level preparation away from distractions.",
+            "text": "I won the interim featherweight title by submitting Josh Emmett in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity3"
+              "ledger",
+              "profile"
             ]
           }
         ]
@@ -2305,7 +2306,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-b-4",
-            "text": "My first UFC title opportunity came after 0 earlier UFC appearances.",
+            "text": "My first UFC title opportunity came in 2023.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2354,7 +2355,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-b-9",
-            "text": "My UFC résumé includes championship victories in two weight classes.",
+            "text": "My UFC résumé includes an interim featherweight championship.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2363,7 +2364,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-b-10",
-            "text": "One of my most recognizable UFC matchups came against Leonardo Morales in 2014.",
+            "text": "I challenged Alexander Volkanovski for the undisputed featherweight title in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
