@@ -112,6 +112,16 @@ const CALIBRATED_GENERATED_IDS = new Set([
   "ufc:benson-henderson",
   "ufc:bj-penn",
   "ufc:glover-teixeira",
+  "ufc:leon-edwards",
+  "ufc:fabricio-werdum",
+  "ufc:tony-ferguson",
+  "ufc:deiveson-figueiredo",
+  "ufc:vitor-belfort",
+  "ufc:tom-aspinall",
+  "ufc:royce-gracie",
+  "ufc:anthony-pettis",
+  "ufc:shogun-rua",
+  "ufc:dan-henderson",
 ]);
 
 const MASS_TEMPLATE_PATTERNS = [
