@@ -754,7 +754,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-marlon-vera-a-10",
-            "text": "A defining UFC result in my career came against Sean O'Malley in 2024.",
+            "text": "My UFC résumé includes a matchup against Sean O'Malley in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1176,7 +1176,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dan-hooker-a-9",
-            "text": "I became a ranked UFC contender in the Lightweight division.",
+            "text": "I built much of my UFC résumé in the Lightweight division.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1615,7 +1615,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-matt-hughes-a-10",
-            "text": "A defining UFC result in my career came against Georges St-Pierre in 2004.",
+            "text": "My UFC résumé includes a matchup against Georges St-Pierre in 2004.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
