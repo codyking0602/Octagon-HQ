@@ -1249,7 +1249,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-b-4",
-            "text": "At light heavyweight, I beat Dan Henderson before receiving my first UFC title opportunity.",
+            "text": "After dropping to light heavyweight, I quickly moved into championship contention.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
