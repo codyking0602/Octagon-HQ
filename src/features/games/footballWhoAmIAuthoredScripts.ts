@@ -58007,6 +58007,2249 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-chris-johnson",
+    "name": "Chris Johnson",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "titans2009": "https://www.tennesseetitans.com/news/chris-johnson-named-ap-offensive-player-of-the-year-1021713",
+      "titansretire": "https://www.tennesseetitans.com/news/former-titans-rb-chris-johnson-officially-retires-from-the-nfl",
+      "titansdraft": "https://www.tennesseetitans.com/news/titans-agree-to-terms-with-first-round-pick-johnson-442411",
+      "nflcj2k": "https://www.nfl.com/photos/mind-blowing-stats-for-the-tennessee-titans-0ap3000000498228"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-chris-johnson-a-1",
+            "text": "I entered the league as a first-round running back and topped 1,200 rushing yards as a rookie.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "titansretire"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-a-2",
+            "text": "I reached the Pro Bowl in each of my first three NFL seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "titansretire"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-a-3",
+            "text": "My second pro season included 358 carries and 14 rushing touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "titans2009"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-a-4",
+            "text": "That same season I added 50 receptions for 503 yards and two more scores.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "titans2009"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-a-5",
+            "text": "I finished that year with 16 total touchdowns and more than 2,500 yards from scrimmage.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "titans2009"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-a-6",
+            "text": "My 2,509 scrimmage yards set an NFL single-season record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "titans2009"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-a-7",
+            "text": "I became the sixth player in league history to rush for 2,000 yards in a season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "titansretire"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-a-8",
+            "text": "My 2,006 rushing yards also broke the franchise single-season mark previously held by Earl Campbell.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "titans2009"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-a-9",
+            "text": "I was the Associated Press Offensive Player of the Year for the 2009 season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "titans2009"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-a-10",
+            "text": "The 2,006-yard season turned my speed-based identity into the nickname 'CJ2K'.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nflcj2k"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-chris-johnson-b-1",
+            "text": "At the 2008 scouting combine, I ran the fastest 40-yard dash of the event at 4.24 seconds.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "titansdraft"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-b-2",
+            "text": "I arrived from East Carolina, where I had also been a major kickoff-return threat.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "titansdraft"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-b-3",
+            "text": "Tennessee used the 24th overall pick of the 2008 draft on me.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "titansdraft"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-b-4",
+            "text": "As a rookie I rushed for 1,228 yards and scored 10 total touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "titansdraft"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-b-5",
+            "text": "I posted six straight 1,000-yard rushing seasons to begin my career with Tennessee.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "titansretire"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-b-6",
+            "text": "During my peak year I produced 11 straight 100-yard rushing games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "titansretire"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-b-7",
+            "text": "I left Tennessee after six seasons with 7,965 rushing yards for the franchise.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "titansretire"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-b-8",
+            "text": "I later played for the New York Jets and Arizona Cardinals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "titansretire"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-b-9",
+            "text": "I finished my NFL career with 9,651 rushing yards and 64 total touchdowns from scrimmage.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "titansretire"
+            ]
+          },
+          {
+            "id": "nfl-chris-johnson-b-10",
+            "text": "My signature season combined 2,006 rushing yards with a record 2,509 yards from scrimmage.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "titansretire"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-brandon-marshall",
+    "name": "Brandon Marshall",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nflstats": "https://www.nfl.com/players/brandon-marshall/stats/career",
+      "record": "https://www.nfl.com/videos/this-day-in-history-denver-broncos-wide-receiver-brandon-marshall-s-21-re-291579",
+      "bears": "https://www.chicagobears.com/photos/top-10-bears-players-of-the-2010s",
+      "jets": "https://www.newyorkjets.com/team/stats/2015/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-brandon-marshall-a-1",
+            "text": "I became a high-volume NFL receiver, reaching 100 catches in six different seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-a-2",
+            "text": "My first 100-catch season came in Denver, when I caught 102 passes for 1,325 yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-a-3",
+            "text": "I followed that with 104 catches the next year and 101 more the season after that.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-a-4",
+            "text": "I later produced back-to-back 1,000-yard seasons after moving to Miami.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-a-5",
+            "text": "My first season in Chicago brought 118 catches and 1,508 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-a-6",
+            "text": "Those 118 catches and 1,508 yards both set Bears single-season franchise records.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-a-7",
+            "text": "I returned to 100 catches in my second Chicago season and scored 12 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-a-8",
+            "text": "With the Jets in 2015, I posted 109 receptions, 1,502 yards and 14 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "jets"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-a-9",
+            "text": "I once set the NFL single-game record by catching 21 passes against Indianapolis.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "record"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-a-10",
+            "text": "I finished with 970 career catches for 12,351 yards and 83 receiving touchdowns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-brandon-marshall-b-1",
+            "text": "I recorded 1,000-yard receiving seasons for four different franchises.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-b-2",
+            "text": "Seven straight seasons from 2007 through 2013 ended with at least 1,000 receiving yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-b-3",
+            "text": "Three of my first four 100-catch seasons came with Denver.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-b-4",
+            "text": "After Denver, my NFL path took me through Miami, Chicago and both New York franchises.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-b-5",
+            "text": "I also finished my playing career with a stint in Seattle.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-b-6",
+            "text": "My 2012 Chicago season produced 11 touchdowns in addition to the franchise marks in catches and yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-b-7",
+            "text": "The next year I became the first Bears receiver to post multiple 100-catch seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-b-8",
+            "text": "My 2015 Jets season was the eighth 1,000-yard campaign of my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-b-9",
+            "text": "The most extreme volume game of my career was a 21-catch, 200-yard performance in 2009.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "record"
+            ]
+          },
+          {
+            "id": "nfl-brandon-marshall-b-10",
+            "text": "Across 13 NFL seasons, I accumulated 12,351 receiving yards while starring for several teams.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nflstats"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-chad-johnson",
+    "name": "Chad Johnson",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "roh": "https://www.bengals.com/team/ring-of-honor/chadjohnson",
+      "hofnom": "https://www.bengals.com/news/six-bengals-among-nominees-for-the-pro-football-hall-of-fame",
+      "stats": "https://www.nfl.com/players/chad-johnson/stats/career"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-chad-johnson-a-1",
+            "text": "I spent ten seasons as the featured wide receiver for Cincinnati.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "roh"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-a-2",
+            "text": "I earned six Pro Bowl selections during my run with the Bengals.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hofnom"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-a-3",
+            "text": "I posted at least 1,000 receiving yards in seven different seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-a-4",
+            "text": "From 2003 through 2006, I led my conference in receiving yards four straight times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "roh"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-a-5",
+            "text": "My Cincinnati career ended with 751 receptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hofnom"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-a-6",
+            "text": "I also left as the franchise leader with 10,783 receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hofnom"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-a-7",
+            "text": "My 66 receiving touchdowns were another Bengals career record when I finished there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hofnom"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-a-8",
+            "text": "I was known as much for elaborate touchdown celebrations as for separating from defensive backs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "roh"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-a-9",
+            "text": "The number 85 became inseparable from my football persona, including a legal surname change built around it.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roh"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-a-10",
+            "text": "Cincinnati placed me in its Ring of Honor in 2023.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roh"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-chad-johnson-b-1",
+            "text": "I entered the NFL in 2001 and developed into one of the defining receivers of the AFC North era.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-b-2",
+            "text": "My first 1,000-yard season came in my second year in the league.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-b-3",
+            "text": "I topped 1,300 receiving yards four times in a five-season span from 2003 through 2007.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-b-4",
+            "text": "My single-season high was 1,440 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-b-5",
+            "text": "I paired that peak yardage season with 93 catches and eight touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-b-6",
+            "text": "After a down 2008 season, I rebounded with another 1,000-yard campaign and a Pro Bowl season in 2009.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-b-7",
+            "text": "I finished my Cincinnati tenure as the club's all-time leading receiver in catches, yards and receiving touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hofnom"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-b-8",
+            "text": "I spent my final NFL season with New England after a decade in Cincinnati.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-b-9",
+            "text": "Fans also knew me by the football name 'Ochocinco' during part of my playing career.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roh"
+            ]
+          },
+          {
+            "id": "nfl-chad-johnson-b-10",
+            "text": "My signature Bengals identity combined No. 85, six Pro Bowls and 10,783 receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hofnom"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-desean-jackson",
+    "name": "DeSean Jackson",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "eagles": "https://www.philadelphiaeagles.com/news/desean-jackson-to-retire-as-a-philadelphia-eagle"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-desean-jackson-a-1",
+            "text": "I built a 15-year NFL career around game-breaking speed as both a receiver and returner.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-a-2",
+            "text": "Philadelphia selected me in the second round with the 49th overall pick in 2008.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-a-3",
+            "text": "I earned three Pro Bowl selections during my time with the Eagles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-a-4",
+            "text": "In one season I tied an NFL record with eight touchdowns of at least 50 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-a-5",
+            "text": "That same season, my average touchdown covered more than 52 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-a-6",
+            "text": "I became the first player ever to earn Pro Bowl honors at two positions in the same season: wide receiver and returner.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-a-7",
+            "text": "My best receiving season produced 82 catches for 1,332 yards and nine touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-a-8",
+            "text": "I finished my Eagles career with 6,512 receiving yards, third in franchise history at the time of retirement.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-a-9",
+            "text": "I delivered the first walk-off punt-return touchdown in NFL history to finish a comeback against the Giants.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-a-10",
+            "text": "That 65-yard return as time expired became known as the 'Miracle at the New Meadowlands'.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-desean-jackson-b-1",
+            "text": "I played college football at California and was a first-team All-American as a junior.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-b-2",
+            "text": "I scored my first NFL punt-return touchdown during my rookie season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-b-3",
+            "text": "As a rookie, I also caught a touchdown in the NFC Championship Game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-b-4",
+            "text": "I produced at least 900 receiving yards in each of my first four NFL seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-b-5",
+            "text": "Across my first three seasons, I scored touchdowns by reception, rushing attempt and punt return.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-b-6",
+            "text": "I later returned to Philadelphia after several seasons away and immediately posted 154 yards with two touchdowns in my first game back.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-b-7",
+            "text": "During eight Eagles seasons, I became the franchise's co-leader with four punt-return touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-b-8",
+            "text": "My 2009 season made me both a Pro Bowl wide receiver and a Pro Bowl return specialist.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-b-9",
+            "text": "On a 2010 Monday night in Washington, I scored on an 88-yard pass on the game's opening play.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          },
+          {
+            "id": "nfl-desean-jackson-b-10",
+            "text": "My most famous finish came when I fielded a punt off the turf and ran 65 yards to beat the Giants with no time left.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-devin-hester",
+    "name": "Devin Hester",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "bears": "https://www.chicagobears.com/news/devin-hester-returns-to-soldier-field-for-hall-of-fame-ring-ceremony",
+      "hof": "https://www.profootballhof.com/news/moments-in-nfl-history-devin-hester-inks-rookie-deal-embarks-on-hall-of-fame-career"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-devin-hester-a-1",
+            "text": "I became an NFL star primarily because of what I could do after fielding kicks and punts.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-a-2",
+            "text": "Chicago selected me in the second round of the 2006 draft out of Miami.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-a-3",
+            "text": "As a rookie I set a league record with five kick-return touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-a-4",
+            "text": "That rookie season also brought first-team All-Pro honors.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-a-5",
+            "text": "I followed it by scoring six return touchdowns in my second season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-a-6",
+            "text": "I finished with an NFL-record 14 punt-return touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-a-7",
+            "text": "My 19 kick-return touchdowns also stand as an NFL record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-a-8",
+            "text": "Counting every type of return, I scored a league-record 20 return touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-a-9",
+            "text": "I became the first player to return the opening kickoff of a Super Bowl for a touchdown.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-a-10",
+            "text": "I entered the Pro Football Hall of Fame in the Class of 2024 as the defining return specialist of my era.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-devin-hester-b-1",
+            "text": "I entered the league from the University of Miami and initially carried a defensive-back label.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-b-2",
+            "text": "My first NFL season immediately changed how opponents approached special teams.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-b-3",
+            "text": "I returned a missed field goal 108 yards for a touchdown during my Chicago career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-b-4",
+            "text": "I played eight of my 11 NFL seasons with Chicago.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-b-5",
+            "text": "I also scored 16 receiving touchdowns during my NFL career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-b-6",
+            "text": "I was named to the NFL's All-Decade Team for the 2000s.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-b-7",
+            "text": "My rookie year ended on the sport's biggest stage against Indianapolis.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-b-8",
+            "text": "I opened Super Bowl XLI with a 92-yard kickoff return for a touchdown.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-b-9",
+            "text": "The records most associated with me are 14 punt-return scores and 20 total return touchdowns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          },
+          {
+            "id": "nfl-devin-hester-b-10",
+            "text": "My Hall of Fame identity is tied to turning the return specialist role itself into a Canton-worthy career.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bears"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-dez-bryant",
+    "name": "Dez Bryant",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "cowboys": "https://www.dallascowboys.com/news/revisiting-dez-s-one-of-a-kind-cowboy-legacy",
+      "stats": "https://www.nfl.com/players/dez-bryant/stats/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-dez-bryant-a-1",
+            "text": "Dallas selected me 24th overall in the 2010 NFL Draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-a-2",
+            "text": "I spent eight seasons as one of the Cowboys' primary receiving weapons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-a-3",
+            "text": "From 2012 through 2014, I posted three straight seasons with at least 1,200 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-a-4",
+            "text": "Those same three seasons produced 12, 13 and 16 receiving touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-a-5",
+            "text": "My peak 2014 season ended with 88 catches for 1,320 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-a-6",
+            "text": "I led the NFL with 16 receiving touchdowns that year and earned first-team All-Pro honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-a-7",
+            "text": "I finished my Dallas tenure with 531 catches and 7,459 receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-a-8",
+            "text": "My 73 touchdown catches for the Cowboys became a franchise record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-a-9",
+            "text": "A disputed fourth-down catch at Green Bay in the 2014 playoffs became one of the era's most famous replay controversies.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-a-10",
+            "text": "I carried the Cowboys' No. 88 tradition and celebrated scores by throwing up the 'X'.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-dez-bryant-b-1",
+            "text": "My rookie season included two punt-return touchdowns in addition to six receiving scores.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-b-2",
+            "text": "By my third season, I had broken out for 92 catches, 1,382 yards and 12 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-b-3",
+            "text": "I followed that with 93 catches and 13 scores in 2013.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-b-4",
+            "text": "Over a three-year peak, I totaled 41 receiving touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-b-5",
+            "text": "My longest regular-season reception was an 85-yard gain during the 2012 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-b-6",
+            "text": "In 2014, I helped Dallas win the NFC East before the season ended at Lambeau Field.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-b-7",
+            "text": "The franchise later passed my familiar jersey number to another first-round receiver, CeeDee Lamb.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-b-8",
+            "text": "After leaving Dallas, I eventually returned to an NFL active roster with Baltimore in 2020.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-b-9",
+            "text": "My Cowboys career made high-point catches and the 'X' celebration part of my signature.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-dez-bryant-b-10",
+            "text": "The No. 88 receiver with 73 Dallas touchdown catches is the identity this ladder is pointing toward.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-drew-pearson",
+    "name": "Drew Pearson",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/drew-pearson",
+      "cowboys88": "https://www.dallascowboys.com/news/revisiting-dez-s-one-of-a-kind-cowboy-legacy"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-drew-pearson-a-1",
+            "text": "I entered the NFL undrafted and initially made the Dallas roster because I could help on special teams.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-a-2",
+            "text": "An injury to a teammate opened six starts for me during my rookie season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-a-3",
+            "text": "In my second year, I led Dallas with 62 catches for 1,087 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-a-4",
+            "text": "That began four straight seasons leading the Cowboys in both receptions and receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-a-5",
+            "text": "I led the entire NFL with 870 receiving yards in the 1977 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-a-6",
+            "text": "That season ended with Dallas winning Super Bowl XII.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-a-7",
+            "text": "I was an All-Pro three times and a three-time Pro Bowl selection.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-a-8",
+            "text": "I retired as the Cowboys' career leader with 489 catches and 7,822 receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-a-9",
+            "text": "A 50-yard playoff touchdown from Roger Staubach against Minnesota helped popularize the phrase 'Hail Mary'.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-a-10",
+            "text": "I became a Pro Football Hall of Famer in the Class of 2021.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-drew-pearson-b-1",
+            "text": "I played college football at Tulsa before signing with Dallas as a free agent in 1973.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-b-2",
+            "text": "I caught two postseason touchdowns as a rookie in a win over the Los Angeles Rams.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-b-3",
+            "text": "I appeared in three Super Bowls during my Cowboys career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-b-4",
+            "text": "Across 22 postseason games, I caught 68 passes for 1,131 yards and eight touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-b-5",
+            "text": "NFL Films included three of my game-deciding plays among its Top 75 plays in league history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-b-6",
+            "text": "I also threw five completed passes for 192 yards and three touchdowns during my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-b-7",
+            "text": "I was selected to the NFL's All-Decade Team of the 1970s.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-b-8",
+            "text": "Dallas placed me in its Ring of Honor in 2011.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-b-9",
+            "text": "I delivered the famous 1975 divisional-playoff catch that beat Minnesota in the final seconds.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-drew-pearson-b-10",
+            "text": "The original Cowboys star associated with the No. 88 receiver legacy eventually reached Canton in 2021.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "cowboys88"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "zach-ertz",
+    "name": "Zach Ertz",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "eagles2026": "https://www.philadelphiaeagles.com/news/eagles-sign-zach-ertz-super-bowl-lii-champion-three-time-pro-bowl-tight-end",
+      "guide": "https://static.www.nfl.com/image/upload/v1596738869/league/daclxqn5ydywqqyy1suk.pdf"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "zach-ertz-a-1",
+            "text": "Philadelphia selected me in the second round of the 2013 draft after my college career at Stanford.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "zach-ertz-a-2",
+            "text": "I developed into a three-time Pro Bowl tight end for the Eagles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "zach-ertz-a-3",
+            "text": "By the end of my first seven NFL seasons, I had more receptions than any tight end ever had over that span.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "zach-ertz-a-4",
+            "text": "In 2018, I caught 116 passes for 1,163 yards and eight touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "zach-ertz-a-5",
+            "text": "Those 116 catches set an NFL single-season record for a tight end at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "zach-ertz-a-6",
+            "text": "The same total also became the Eagles' single-season receptions record regardless of position.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          },
+          {
+            "id": "zach-ertz-a-7",
+            "text": "I rose to second on Philadelphia's career receptions list behind only Harold Carmichael.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          },
+          {
+            "id": "zach-ertz-a-8",
+            "text": "My first Eagles stint produced 579 regular-season receptions, 6,267 yards and 38 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          },
+          {
+            "id": "zach-ertz-a-9",
+            "text": "I caught the go-ahead 11-yard touchdown in the fourth quarter of Super Bowl LII.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          },
+          {
+            "id": "zach-ertz-a-10",
+            "text": "In 2026 I returned to Philadelphia and again wore No. 86.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "zach-ertz-b-1",
+            "text": "I wore No. 86 as an Eagles tight end after arriving as the 35th overall pick.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "zach-ertz-b-2",
+            "text": "My early NFL seasons showed steady growth from 36 rookie catches to 58, then 75 and 78.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "zach-ertz-b-3",
+            "text": "I reached the Pro Bowl in three consecutive seasons from 2017 through 2019.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "zach-ertz-b-4",
+            "text": "My 2017 season ended with Philadelphia's first Super Bowl championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          },
+          {
+            "id": "zach-ertz-b-5",
+            "text": "The defining play of that title run was my fourth-quarter catch and dive into the end zone against New England.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          },
+          {
+            "id": "zach-ertz-b-6",
+            "text": "A year later I shattered the league's tight-end receptions record with 116 catches.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "zach-ertz-b-7",
+            "text": "I remained with Philadelphia through six games of the 2021 season before being traded to Arizona.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          },
+          {
+            "id": "zach-ertz-b-8",
+            "text": "My post-Eagles stops with Arizona and Washington produced another 246 catches before my return.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          },
+          {
+            "id": "zach-ertz-b-9",
+            "text": "Five years after leaving, I rejoined the franchise where I had become one of its most decorated tight ends.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          },
+          {
+            "id": "zach-ertz-b-10",
+            "text": "The Super Bowl LII touchdown and the 116-catch season are the two strongest anchors of my NFL identity.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "eagles2026"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-steve-hutchinson",
+    "name": "Steve Hutchinson",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/steve-hutchinson"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-steve-hutchinson-a-1",
+            "text": "I played guard for 12 NFL seasons and appeared in 169 regular-season games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-a-2",
+            "text": "Seattle selected me 17th overall in the 2001 draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-a-3",
+            "text": "I started all 16 games as a rookie and earned All-Rookie honors.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-a-4",
+            "text": "After a broken leg ended most of my second season, I returned to start 123 consecutive games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-a-5",
+            "text": "I earned the first of six first-team All-Pro selections in 2003.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-a-6",
+            "text": "I helped Seattle reach its first Super Bowl after the 2005 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-a-7",
+            "text": "That year I blocked for league MVP Shaun Alexander during a 1,880-yard rushing season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-a-8",
+            "text": "I later helped Adrian Peterson win the 2008 rushing title with 1,760 yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-a-9",
+            "text": "I made seven straight Pro Bowls and six first-team All-Pro teams.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-a-10",
+            "text": "I was inducted into the Pro Football Hall of Fame as a guard in the Class of 2020.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-steve-hutchinson-b-1",
+            "text": "I came out of Michigan as a first-round offensive lineman.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-b-2",
+            "text": "My NFL career began with five seasons in Seattle.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-b-3",
+            "text": "I signed with Minnesota as a transition-tag free agent in 2006.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-b-4",
+            "text": "In my first Vikings season, I was named NFL Alumni Offensive Lineman of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-b-5",
+            "text": "I won that same honor again in 2009.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-b-6",
+            "text": "Minnesota won back-to-back division titles in 2008 and 2009 with me at left guard.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-b-7",
+            "text": "I started in the 2009 NFC Championship Game for the Vikings.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-b-8",
+            "text": "My final NFL season came with Tennessee in 2012.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-b-9",
+            "text": "I was selected to the NFL's All-Decade Team of the 2000s.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-steve-hutchinson-b-10",
+            "text": "My Hall of Fame résumé links Seattle's Shaun Alexander peak and Minnesota's Adrian Peterson peak from the same left-guard spot.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-tyron-smith",
+    "name": "Tyron Smith",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "cowboys": "https://www.dallascowboys.com/news/tyron-smith-zack-martin-headed-to-cowboys-ring-of-honor-dual-induction-into-hall-of-fame",
+      "decade": "https://www.nfl.com/news/nfl-2010s-all-decade-team-tom-brady-j-j-watt-earn-spots-0ap3000001091563",
+      "stats": "https://www.nfl.com/players/tyron-smith/stats/career"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-tyron-smith-a-1",
+            "text": "Dallas used a top-10 draft pick on me in 2011 to anchor its offensive line.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-a-2",
+            "text": "I became the youngest starter in the NFL during my rookie season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-a-3",
+            "text": "Over my Cowboys career, I earned eight Pro Bowl selections.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-a-4",
+            "text": "I also collected five All-Pro honors while playing for Dallas.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-a-5",
+            "text": "For most of my prime, I protected the quarterback's blind side at left tackle.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "decade"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-a-6",
+            "text": "I was chosen to the NFL's All-Decade Team for the 2010s.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-a-7",
+            "text": "I spent 13 seasons with Dallas before finishing my playing career with the Jets.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-a-8",
+            "text": "My Dallas tenure made me one of the signature tackles of the franchise's modern offensive line.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-a-9",
+            "text": "I was the ninth overall pick in 2011 and became a perennial Pro Bowl tackle for the Cowboys.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-a-10",
+            "text": "I retired after a 14-year career with eight Pro Bowls and the 2010s All-Decade honor.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-tyron-smith-b-1",
+            "text": "I entered the league out of USC as a first-round offensive tackle.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-2",
+            "text": "The Cowboys made me the ninth player selected in the 2011 draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-3",
+            "text": "I began my NFL career young enough to become the league's youngest starter that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-4",
+            "text": "My combination of size, athleticism and footwork made me a long-term fixture on Dallas' line.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "decade"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-5",
+            "text": "I was one of only two tackles named to the NFL's 2010s All-Decade Team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "decade"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-6",
+            "text": "After my retirement, Jerry Jones said there was no question I belonged in the Cowboys Ring of Honor.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-7",
+            "text": "All eight of my Pro Bowl selections came during my time in Dallas.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-8",
+            "text": "All five of my All-Pro honors also came as a Cowboy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-9",
+            "text": "After leaving Dallas, I played my final season with the New York Jets before retiring.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "stats",
+              "cowboys"
+            ]
+          },
+          {
+            "id": "nfl-tyron-smith-b-10",
+            "text": "The long-time Cowboys left tackle taken ninth overall in 2011 is the player this script identifies.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-carlos-dunlap",
+    "name": "Carlos Dunlap",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "bengals": "https://www.bengals.com/team/ring-of-honor/carlos-dunlap",
+      "trade": "https://www.bengals.com/news/bengals-acquire-b-j-finney-and-draft-pick-for-carlos-dunlap-in-trade-with-seattl",
+      "chiefs": "https://www.chiefs.com/news/carlos-dunlap-relishes-the-opportunity-to-make-his-training-camp-goals-a-realit",
+      "nominees": "https://www.bengals.com/team/ring-of-honor/nominees"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-carlos-dunlap-a-1",
+            "text": "I entered the NFL as a second-round defensive end and became a long-term edge rusher in Cincinnati.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-a-2",
+            "text": "The Bengals selected me 54th overall in the 2010 draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-a-3",
+            "text": "I set a franchise rookie record with nine sacks in my first season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-a-4",
+            "text": "I later posted a career-high 13.5 sacks in 2015.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-a-5",
+            "text": "That season began a run of back-to-back Pro Bowl selections.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-a-6",
+            "text": "I recorded at least seven sacks in seven consecutive seasons from 2013 through 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nominees"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-a-7",
+            "text": "I finished my Bengals tenure with 82.5 sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-a-8",
+            "text": "Cincinnati traded me to Seattle during the 2020 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-a-9",
+            "text": "Late in my career with Kansas City, I recorded the 100th sack of my NFL career.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "chiefs"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-a-10",
+            "text": "That same Chiefs season finally gave me my first playoff win and a trip to Super Bowl LVII.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "chiefs"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-carlos-dunlap-b-1",
+            "text": "I played 11 seasons in Cincinnati and started 115 games for the Bengals.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-b-2",
+            "text": "My pass-rush production helped Cincinnati reach the playoffs in five consecutive seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-b-3",
+            "text": "During the 2010s, only one NFL defensive lineman had more passes defensed than I did.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-b-4",
+            "text": "My 60 passes defensed in that decade showed that my edge impact went beyond sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-b-5",
+            "text": "I forced 20 fumbles during the 2010s.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nominees"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-b-6",
+            "text": "I was twice the Bengals' nominee for the Walter Payton NFL Man of the Year Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-b-7",
+            "text": "After Cincinnati, my career continued with Seattle and then Kansas City.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-b-8",
+            "text": "I entered my 13th NFL season still chasing three goals: 100 sacks, a playoff win and a Super Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "chiefs"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-b-9",
+            "text": "I hit exactly 100 career sacks during the Chiefs' 2022 regular season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "chiefs"
+            ]
+          },
+          {
+            "id": "nfl-carlos-dunlap-b-10",
+            "text": "My longest NFL chapter was Cincinnati, and late in my career I finally reached a Super Bowl with Kansas City.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bengals",
+              "chiefs"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
