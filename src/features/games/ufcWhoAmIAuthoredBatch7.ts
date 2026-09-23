@@ -1174,7 +1174,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-vitor-belfort-a-10",
-            "text": "A defining UFC result in my career came against Jon Jones.",
+            "text": "My UFC résumé includes a matchup against Jon Jones.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1390,7 +1390,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-tom-aspinall-a-10",
-            "text": "A defining UFC result in my career came against Ciryl Gane.",
+            "text": "My UFC résumé includes a matchup against Ciryl Gane.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1606,7 +1606,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-royce-gracie-a-10",
-            "text": "A defining UFC result in my career came against Ken Shamrock.",
+            "text": "My UFC résumé includes a matchup against Ken Shamrock.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2037,7 +2037,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-shogun-rua-a-10",
-            "text": "A defining UFC result in my career came against Jon Jones.",
+            "text": "My UFC résumé includes a matchup against Jon Jones.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
