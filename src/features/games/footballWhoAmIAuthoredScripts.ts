@@ -11980,7 +11980,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-chris-petersen-a-1",
-            "text": "My first head-coaching job produced an undefeated season in year one.",
+            "text": "My first head-coaching job came after I had already spent years on that program's staff.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -11990,7 +11990,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chris-petersen-a-2",
-            "text": "That debut season ended with a major bowl victory over a traditional power.",
+            "text": "My debut team completed an undefeated season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -12085,7 +12085,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-chris-petersen-b-1",
-            "text": "I played quarterback at UC Davis before beginning my coaching career.",
+            "text": "I played quarterback in college before beginning my coaching career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -12095,7 +12095,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chris-petersen-b-2",
-            "text": "My early coaching path included stops at Pittsburgh State, UC Davis, Oregon and Portland State.",
+            "text": "My early coaching path included several college stops on the West Coast and beyond.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -12606,7 +12606,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-lou-holtz-a-1",
-            "text": "I became the only coach in NCAA history to lead six different programs to bowl games.",
+            "text": "My college head-coaching career spanned multiple decades and several different programs.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -12615,7 +12615,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lou-holtz-a-2",
-            "text": "My head-coaching career included stops in several different regions and conferences.",
+            "text": "I repeatedly took over programs that needed major turnarounds.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -12624,7 +12624,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lou-holtz-a-3",
-            "text": "At one stop, my first season ended with a major bowl upset of a top-three opponent.",
+            "text": "At one stop, my first season ended with a major-bowl upset of a top-three opponent.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -12669,7 +12669,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lou-holtz-a-8",
-            "text": "That team improved by eight wins in my second season.",
+            "text": "I became the only coach in NCAA history to lead six different programs to bowl games.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -12710,7 +12710,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-lou-holtz-b-2",
-            "text": "I later coached North Carolina State, Arkansas and Minnesota before reaching my best-known stop.",
+            "text": "I later led several programs before reaching the stop most associated with my career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
