@@ -22737,6 +22737,1038 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-colt-mccoy",
+    "name": "Colt McCoy",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "texas": "https://texaslonghorns.com/sports/general/roster/colt-mccoy/5057",
+      "honor": "https://texaslonghorns.com/honors/hall-of-honor/colt-mccoy/971"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-colt-mccoy-a-1",
+            "text": "I became a four-year starting quarterback and won at least 10 games in every one of those seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-a-2",
+            "text": "I finished my college career with more than 14,800 yards of total offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-a-3",
+            "text": "I completed 70.3 percent of my career passes while throwing 112 touchdown passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-a-4",
+            "text": "I also rushed for 1,571 yards and 20 touchdowns during my college career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-a-5",
+            "text": "As a junior, I set an NCAA single-season record by completing 76.7 percent of my passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-a-6",
+            "text": "I won the Walter Camp Player of the Year award in back-to-back seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-a-7",
+            "text": "As a senior, I won the Maxwell, Davey O'Brien and Johnny Unitas Golden Arm awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-a-8",
+            "text": "I finished my career with 45 victories as a starting quarterback, then the most in NCAA history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas",
+              "honor"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-a-9",
+            "text": "Texas later retired the No. 12 jersey I wore in Austin.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas",
+              "honor"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-a-10",
+            "text": "I led the Longhorns to consecutive 12-win seasons, including a 13-1 senior year that ended in the national championship game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "honor"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-colt-mccoy-b-1",
+            "text": "I spent my redshirt season as a backup on a national championship team before taking over the starting job the next year.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas",
+              "honor"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-b-2",
+            "text": "As a redshirt freshman, I became the first Texas freshman quarterback to win 10 games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-b-3",
+            "text": "That freshman season, I threw 29 touchdown passes, tying the NCAA freshman record at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-b-4",
+            "text": "I earned Offensive MVP honors in the Holiday Bowl after my sophomore season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-b-5",
+            "text": "As a junior, I threw for 3,859 yards and 34 touchdowns while also leading my team with 561 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-b-6",
+            "text": "I finished second in the Heisman Trophy voting during that junior season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-b-7",
+            "text": "I followed that season by earning Offensive MVP honors in a Fiesta Bowl victory.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-b-8",
+            "text": "As a senior, I was named Big 12 Offensive Player of the Year and helped win the conference championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-b-9",
+            "text": "I was Texas' No. 12 quarterback and the program's first four-time team MVP.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-colt-mccoy-b-10",
+            "text": "After setting 47 school records in Austin, I was selected 85th overall by Cleveland in the 2010 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-deshaun-watson",
+    "name": "Deshaun Watson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "clemson": "https://clemsontigers.com/sports/football/roster/player/deshaun-watson",
+      "legacy": "https://clemsontigers.com/news/2017/02/02/deshaun-watsons-legacy"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-deshaun-watson-a-1",
+            "text": "I became a three-year college quarterback and finished 32-3 as a starter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-a-2",
+            "text": "My final two seasons as a starter produced 28 victories and consecutive College Football Playoff appearances.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-a-3",
+            "text": "I became the first FBS player to pass for more than 4,000 yards and rush for more than 1,000 in the same season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-a-4",
+            "text": "That breakthrough season ended with conference Player of the Year and Offensive Player of the Year honors.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-a-5",
+            "text": "I finished college with 10,163 passing yards and 90 touchdown passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-a-6",
+            "text": "I won both the Davey O'Brien Award and the Manning Award in consecutive seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-a-7",
+            "text": "I was a Heisman Trophy finalist twice, finishing third one year and second the next.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-a-8",
+            "text": "In one game, I set an ACC record with 580 passing yards and completed 52 passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-a-9",
+            "text": "I wore No. 4 at Clemson after a former star allowed the retired number to be brought back for me.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-a-10",
+            "text": "My final college game ended with a 35-31 national championship win over Alabama and a title-winning touchdown pass with one second left.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson",
+              "legacy"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-deshaun-watson-b-1",
+            "text": "I reached the College Football Playoff in each of my final two college seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-b-2",
+            "text": "I was named my team's MVP in back-to-back years.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-b-3",
+            "text": "I earned ACC Championship Game MVP honors in consecutive seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-b-4",
+            "text": "In my first playoff run, I was named the Orange Bowl's Offensive MVP.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-b-5",
+            "text": "I produced 478 yards of total offense in a national championship game even though my team lost.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson",
+              "legacy"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-b-6",
+            "text": "The next season, I set school records with 4,593 passing yards and 41 touchdown passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-b-7",
+            "text": "I accounted for five touchdowns in a second straight conference championship-game victory.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-b-8",
+            "text": "I was named Fiesta Bowl Offensive MVP after helping shut out Ohio State in a playoff semifinal.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-b-9",
+            "text": "In the national championship rematch, I produced 463 yards of total offense and four total touchdowns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-deshaun-watson-b-10",
+            "text": "I rallied Clemson from a 14-0 deficit and found Hunter Renfrow for the championship-winning score against Alabama.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson",
+              "legacy"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-drew-brees",
+    "name": "Drew Brees",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "purdue": "https://purduesports.com/news/2025/11/5/drew-brees-earns-ncaa-silver-anniversary-award",
+      "timeline": "https://purduesports.com/purdue-football-timeline",
+      "numbers": "https://purduesports.com/drewbrees-drewbrees-numbers-html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-drew-brees-a-1",
+            "text": "I arrived at college lightly recruited and spent my first season as the backup quarterback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-a-2",
+            "text": "I became the starter the next year and held the job for three seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue",
+              "timeline"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-a-3",
+            "text": "I finished my college career with 11,792 passing yards and 90 touchdown passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue",
+              "timeline"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-a-4",
+            "text": "I was named my conference's Offensive Player of the Year twice.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-a-5",
+            "text": "I also became a two-time Heisman Trophy finalist.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-a-6",
+            "text": "As a senior, I won the Maxwell Award as the nation's outstanding player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-a-7",
+            "text": "That same year, I was named the Academic All-American of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-a-8",
+            "text": "I led my team to its first Big Ten championship since 1967 and a Rose Bowl appearance.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue",
+              "timeline"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-a-9",
+            "text": "I wore No. 15 for Purdue while rewriting numerous school and conference passing records.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "numbers",
+              "purdue"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-a-10",
+            "text": "A late 64-yard touchdown pass against Ohio State helped clinch the conference-title run that sent the Boilermakers to the Rose Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "timeline"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-drew-brees-b-1",
+            "text": "My first season as a full-time starter produced one of the busiest passing years in conference history.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-b-2",
+            "text": "That season, I set school and conference marks with 569 attempts, 361 completions, 3,983 yards and 39 touchdown passes.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-b-3",
+            "text": "I threw six touchdown passes in a game twice during that breakout season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "numbers"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-b-4",
+            "text": "One of those games included a then-school-record 522 passing yards against Minnesota.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "numbers"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-b-5",
+            "text": "Against Wisconsin that year, I attempted 83 passes and completed 55, reaching NCAA-record territory in both categories.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "numbers"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-b-6",
+            "text": "I closed that season by leading a late game-winning touchdown drive against No. 4 Kansas State in the Alamo Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "timeline"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-b-7",
+            "text": "As a senior, I led the nation in total offense at 358.1 yards per game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-b-8",
+            "text": "That final season included wins over both Michigan and Ohio State, only the second time Purdue had beaten both in the same year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "timeline"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-b-9",
+            "text": "My senior class won the Big Ten and took Purdue to only its second Rose Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "timeline"
+            ]
+          },
+          {
+            "id": "cfb-drew-brees-b-10",
+            "text": "I left West Lafayette holding two NCAA records, 13 Big Ten records and 19 Purdue records.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "purdue"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-eli-manning",
+    "name": "Eli Manning",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "olemiss": "https://olemisssports.com/news/2024/8/3/football-ole-miss-greats-eli-manning-savante-stringfellow-inducted-into-mississippi-sports-hall-of-fame",
+      "cotton": "https://olemisssports.com/news/2022/12/31/football-eli-manning-to-be-inducted-into-cotton-bowl-classic-hall-of-fame",
+      "retire": "https://olemisssports.com/news/2020/6/22/football-to-retire-eli-mannings-jersey-number"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-eli-manning-a-1",
+            "text": "I was a four-year letterwinner at quarterback from 2000 through 2003.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "olemiss"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-a-2",
+            "text": "During my college career, I set or tied 47 school records covering games, seasons and career totals.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "olemiss"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-a-3",
+            "text": "I finished with 10,119 passing yards and 81 touchdown passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "olemiss"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-a-4",
+            "text": "I also set school career records with 829 completions and 1,363 passing attempts.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-a-5",
+            "text": "I threw a touchdown pass in a school-record 16 consecutive games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-a-6",
+            "text": "As a senior, I won the Maxwell Award as the nation's best all-around player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "olemiss"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-a-7",
+            "text": "I finished third in the Heisman Trophy voting that same season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "olemiss"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-a-8",
+            "text": "My career interception rate of 2.57 percent became a school record for ball security.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-a-9",
+            "text": "Ole Miss later retired the No. 10 jersey I wore in Oxford.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-a-10",
+            "text": "I became the highest draft pick in program history when I was selected first overall in 2004.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "olemiss"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-eli-manning-b-1",
+            "text": "I once produced a school-record streak of 11 straight 200-yard passing games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-b-2",
+            "text": "Within that stretch, I also put together seven consecutive games with at least 250 passing yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-b-3",
+            "text": "My 60.8 percent career completion rate tied the school record when I finished.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-b-4",
+            "text": "I left college with a career passer-efficiency rating of 137.7.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-b-5",
+            "text": "My final bowl assignment gave my program a chance at its first major-bowl victory in 34 years.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-b-6",
+            "text": "In that Cotton Bowl, I threw two first-half touchdown passes and later scored on a quarterback sneak.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-b-7",
+            "text": "With the lead cut to three late, I directed a 65-yard drive that consumed the final 4:38 of a 31-28 victory.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-b-8",
+            "text": "My father had also starred at Ole Miss before becoming the second overall pick in the NFL Draft.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "olemiss",
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-b-9",
+            "text": "I was the Rebels quarterback whose No. 10 eventually became only the third retired jersey number in school history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eli-manning-b-10",
+            "text": "My Oxford career ended with a Maxwell Award, a top-three Heisman finish and the No. 1 selection in the NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "olemiss"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-bijan-robinson",
+    "name": "Bijan Robinson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "texas": "https://texaslonghorns.com/sports/football/roster/bijan-robinson/11507",
+      "draft": "https://texaslonghorns.com/news/2023/4/27/football-bijan-robinson-selected-in-first-round-of-nfl-draft-by-atlanta-falcons",
+      "declare": "https://texaslonghorns.com/news/2022/12/19/football-bijan-robinson-declares-for-nfl-draft"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-bijan-robinson-a-1",
+            "text": "I played three college seasons at running back, appearing in 31 games and starting 28.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-a-2",
+            "text": "I recorded 18 career 100-yard rushing games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-a-3",
+            "text": "I finished with 3,410 rushing yards, fourth-most in school history at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-a-4",
+            "text": "My 33 rushing touchdowns ranked third in program history when my college career ended.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-a-5",
+            "text": "I scored 41 total touchdowns, with eight of them coming as a receiver.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-a-6",
+            "text": "As a junior, I won the Doak Walker Award as the nation's top running back.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-a-7",
+            "text": "I became the fourth running back in Texas history to earn unanimous All-America honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas",
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-a-8",
+            "text": "I finished ninth in the Heisman Trophy voting during my final season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-a-9",
+            "text": "Late in that season, I rushed for 243 yards and four touchdowns in a win at Kansas.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-a-10",
+            "text": "I was Texas' No. 5 running back who left after three seasons and became a first-round pick of Atlanta.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas",
+              "draft"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-bijan-robinson-b-1",
+            "text": "I was unusually productive as a receiver for a college running back, finishing with 60 catches and 805 receiving yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-b-2",
+            "text": "My eight career receiving touchdowns became a school record for a running back.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-b-3",
+            "text": "At one point in my final season, I posted seven straight 100-yard rushing games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-b-4",
+            "text": "Before my final year, I had already earned first-team all-conference honors as a sophomore.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-b-5",
+            "text": "As a junior, I rushed for 1,580 yards and 18 touchdowns while adding 314 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-b-6",
+            "text": "Early that season, I ran for 183 yards and three touchdowns against UTSA.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-b-7",
+            "text": "I later rushed for 209 yards at Kansas State for my second career 200-yard game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-b-8",
+            "text": "I finished the regular season with 179 rushing yards and two touchdowns against Baylor.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-b-9",
+            "text": "I came to Austin from Tucson, Arizona, and wore No. 5 for the Longhorns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-bijan-robinson-b-10",
+            "text": "My final college résumé paired the Doak Walker Award with unanimous All-America honors before I entered the NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas",
+              "declare"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
