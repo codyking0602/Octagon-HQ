@@ -35228,7 +35228,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jeremy-shockey-a-8",
-            "text": "My final season ended with a national championship and an undefeated record.",
+            "text": "My final season ended with a national championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -35332,7 +35332,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jeremy-shockey-b-9",
-            "text": "I became the starting tight end for Miami's undefeated 2001 national championship team.",
+            "text": "I became the starting tight end for Miami's 2001 national championship team.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -35654,7 +35654,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-julius-peppers-a-10",
-            "text": "After three playing seasons for the Tar Heels, I entered the NFL Draft and was selected second overall.",
+            "text": "After three playing seasons for the Tar Heels, I gave up my final year of eligibility for the 2002 NFL Draft.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -35749,7 +35749,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-julius-peppers-b-10",
-            "text": "I won the 2001 Lombardi and Bednarik awards as a Tar Heel before becoming the No. 2 NFL Draft pick.",
+            "text": "My 2001 Tar Heel season ended with both the Lombardi and Bednarik awards and a top-10 Heisman finish.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -35916,7 +35916,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-aidan-hutchinson-b-6",
-            "text": "Against Ohio State, I added a school-record 15 quarterback pressures to my three sacks.",
+            "text": "Against Ohio State, I recorded 15 quarterback pressures along with three sacks.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -36155,7 +36155,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-roquan-smith-b-10",
-            "text": "I left Athens after winning the 2017 Butkus Award and earning first-team All-SEC honors.",
+            "text": "My 2017 Georgia résumé ended with the Butkus Award and first-team All-SEC honors.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -36852,7 +36852,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-earl-thomas-a-8",
-            "text": "My two seasons as a starter ended with a combined 25-2 team record.",
+            "text": "Across my college career, I made 149 tackles and intercepted 10 passes.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
