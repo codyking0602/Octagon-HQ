@@ -85,7 +85,7 @@ export default function UfcWhoAmIPage() {
       onAllGames={() => navigate("/play")}
       onComplete={recordChallengeResult}
       createRound={(excludedSubjectIdsByLeague) => (
-        createUfcWhoAmIRound(Math.random, excludedSubjectIdsByLeague.UFC)
+        createUfcWhoAmIAuthoredCasualRound(Math.random, excludedSubjectIdsByLeague.UFC)
       )}
     />
   );
