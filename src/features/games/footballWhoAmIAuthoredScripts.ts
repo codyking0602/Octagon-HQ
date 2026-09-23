@@ -1,6 +1,7 @@
 import type { WhoAmIClueBand } from "./whoAmIEngine";
 
 export type FootballWhoAmIAuthoredLeague = "NFL" | "CFB";
+export type FootballWhoAmIAuthoredScriptId = "A" | "B" | "C";
 export type FootballWhoAmIAuthoredStageFocus = "NFL-career-forward" | "CFB-career-forward";
 export type FootballWhoAmIAuthoredEarlyRotation = "normal" | "deprioritized";
 
@@ -13,7 +14,7 @@ export interface FootballWhoAmIAuthoredClue {
 }
 
 export interface FootballWhoAmIAuthoredScript {
-  id: "A" | "B";
+  id: FootballWhoAmIAuthoredScriptId;
   clues: readonly FootballWhoAmIAuthoredClue[];
 }
 
@@ -27,7 +28,7 @@ export interface FootballWhoAmIAuthoredIdentity {
    * the QA gate requires those ids to resolve here.
    */
   sources: Readonly<Record<string, string>>;
-  scripts: Readonly<Record<"A" | "B", FootballWhoAmIAuthoredScript>>;
+  scripts: Readonly<Partial<Record<FootballWhoAmIAuthoredScriptId, FootballWhoAmIAuthoredScript>>>;
 }
 
 /**
@@ -5034,7 +5035,7 @@ export function getFootballWhoAmIAuthoredIdentity(
 export function footballWhoAmIAuthoredScript(
   league: FootballWhoAmIAuthoredLeague,
   name: string,
-  scriptId: "A" | "B",
+  scriptId: FootballWhoAmIAuthoredScriptId,
 ) {
   return getFootballWhoAmIAuthoredIdentity(league, name)?.scripts[scriptId] ?? null;
 }
