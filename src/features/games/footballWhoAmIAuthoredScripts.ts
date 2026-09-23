@@ -33929,6 +33929,1029 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-danny-wuerffel",
+    "name": "Danny Wuerffel",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/danny-wuerffel/",
+      "florida": "https://floridagators.com/sports/2015/12/10/_overview_season_footb96",
+      "roster": "https://floridagators.com/sports/football/roster/danny-wuerffel/7606"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-danny-wuerffel-a-1",
+            "text": "I played quarterback in one of college football's most prolific passing offenses of the 1990s.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-a-2",
+            "text": "Before college, I was a valedictorian who also led my high school football team to a state championship.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-a-3",
+            "text": "My college program won four consecutive conference championships during my playing career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-a-4",
+            "text": "As a senior, I directed an offense that led the nation in scoring at 46.6 points per game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-a-5",
+            "text": "That senior season ended with my team 12-1 and ranked No. 1 in both major polls.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-a-6",
+            "text": "I won the Heisman Trophy in my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-a-7",
+            "text": "I was a consensus first-team All-American during that championship season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-a-8",
+            "text": "My final college game was a 52-20 Sugar Bowl victory over previously No. 1 Florida State for the national title.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-a-9",
+            "text": "I became the second Heisman Trophy winner in Florida history, following the man who was then my head coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-a-10",
+            "text": "I was the No. 7 Florida quarterback who paired the 1996 Heisman Trophy with the program's first national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roster",
+              "florida",
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-danny-wuerffel-b-1",
+            "text": "I grew up in an Air Force family and spent part of my childhood living in Spain.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-b-2",
+            "text": "I starred at Fort Walton Beach High School in Florida before staying in-state for college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-b-3",
+            "text": "My teams repeatedly reached the conference championship stage during a dominant mid-1990s run.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-b-4",
+            "text": "As a senior, my team went a perfect 8-0 in conference play.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-b-5",
+            "text": "That regular season produced a fourth straight conference title for my program.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-b-6",
+            "text": "I capped the year by receiving college football's most famous individual trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-b-7",
+            "text": "My championship team faced the nation's toughest-rated schedule and still finished 12-1.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-b-8",
+            "text": "The title-clinching bowl was a rematch with an in-state rival that had beaten us in the regular-season finale.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-b-9",
+            "text": "My head coach had himself won the Heisman as a quarterback at the same school decades earlier.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-danny-wuerffel-b-10",
+            "text": "I finished the 1996 season as Florida's Heisman-winning quarterback and national champion.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "florida",
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-sam-bradford",
+    "name": "Sam Bradford",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "ou": "https://soonersports.com/news/2008/12/13/208391231",
+      "heisman": "https://www.heisman.com/heisman-winners/sam-bradford/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-sam-bradford-a-1",
+            "text": "I redshirted my first year in college before taking over a major-program offense as a freshman starter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-a-2",
+            "text": "In my first season as the starter, I threw for more than 3,100 yards and 36 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-a-3",
+            "text": "My second year as a starter became one of the most efficient passing seasons in college football history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-a-4",
+            "text": "I completed 302 passes for 4,464 yards and 48 touchdowns that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-a-5",
+            "text": "I accounted for 53 total touchdowns when my rushing scores were included.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ou",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-a-6",
+            "text": "I won both the Davey O'Brien Award and the Sammy Baugh Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-a-7",
+            "text": "I became the fifth Heisman Trophy winner from my university and only the second sophomore ever to win it.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ou",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-a-8",
+            "text": "I led my team to a conference championship and the No. 1 spot in the final BCS standings.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-a-9",
+            "text": "A 468-yard passing game against Kansas set a school single-game record at the time.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-a-10",
+            "text": "I was the Oklahoma quarterback who won the 2008 Heisman before leading the Sooners into the BCS Championship Game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ou",
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-sam-bradford-b-1",
+            "text": "I grew up in Oklahoma City and competed in football, basketball and golf before college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-b-2",
+            "text": "I was not considered one of the nation's most heavily recruited quarterbacks coming out of high school.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-b-3",
+            "text": "Once I won the college starting job, I immediately became a record-setting passer.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-b-4",
+            "text": "Across my first two seasons as the starter, I threw for 7,585 yards and 84 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-b-5",
+            "text": "My offense repeated as conference champion during my Heisman season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-b-6",
+            "text": "In a late-season showdown with No. 2 Texas Tech, my team won 65-21 while I threw for 304 yards and four touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-b-7",
+            "text": "I led the nation with a 186.28 passing-efficiency rating in my award-winning season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-b-8",
+            "text": "My 48 touchdown passes in that season set a school record, while my 84 career scoring throws already topped the program list.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-b-9",
+            "text": "The Heisman came while I was a redshirt sophomore, one year after another sophomore had become the first to win the award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-sam-bradford-b-10",
+            "text": "I was the Oklahoma City product who quarterbacked the Sooners to the 2008 Big 12 title and then won the Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ou"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-cedric-benson",
+    "name": "Cedric Benson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "texas": "https://texaslonghorns.com/honors/hall-of-honor/cedric-benson/848"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-cedric-benson-a-1",
+            "text": "I was a four-year workhorse running back in the early 2000s.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-a-2",
+            "text": "I rushed for at least 1,000 yards in every one of my college seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-a-3",
+            "text": "As a freshman, I ran for 1,053 yards and 12 touchdowns and earned freshman All-America honors.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-a-4",
+            "text": "My junior season produced 1,360 rushing yards and a career-high 21 rushing touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-a-5",
+            "text": "I closed my career with 1,834 rushing yards and 19 touchdowns as a senior.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-a-6",
+            "text": "That senior year brought me the Doak Walker Award as the nation's top running back.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-a-7",
+            "text": "I finished college with 5,540 rushing yards, second in school history only to Ricky Williams.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-a-8",
+            "text": "I became the only Longhorn to post four consecutive 1,000-yard rushing seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-a-9",
+            "text": "My final college team went 11-1 and beat Michigan 38-37 in the Rose Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-a-10",
+            "text": "I was the Texas running back whose senior season ended with the Doak Walker Award before Chicago selected me third overall.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-cedric-benson-b-1",
+            "text": "I built my college resume through consistency rather than a single breakout season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-b-2",
+            "text": "I was twice selected as my team's offensive most valuable player.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-b-3",
+            "text": "I earned first-team all-conference recognition twice.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-b-4",
+            "text": "I recorded 25 career 100-yard rushing games, the second-most in school history at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-b-5",
+            "text": "I scored 64 rushing touchdowns and 67 total touchdowns in college.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-b-6",
+            "text": "My 1,112 rushing attempts established a school career record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-b-7",
+            "text": "As a senior I was also named ABC Sports' National Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-b-8",
+            "text": "That senior team finished No. 4 nationally after winning a one-point Rose Bowl thriller.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-b-9",
+            "text": "The nation's top-running-back award came after I rushed for 1,834 yards in my final season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-cedric-benson-b-10",
+            "text": "I am the Longhorn back who joined Ricky Williams at the top of Texas' career rushing lists after four straight 1,000-yard seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-dalvin-cook",
+    "name": "Dalvin Cook",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "fsu": "https://seminoles.com/sports/football/roster/dalvin-cook/4447"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-dalvin-cook-a-1",
+            "text": "I became a 1,000-yard rusher as a freshman and stayed highly productive through a three-year college career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-a-2",
+            "text": "My freshman rushing total of 1,008 yards set a school record for a first-year player.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-a-3",
+            "text": "I was named MVP of my conference championship game after rushing for 177 yards as a freshman.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-a-4",
+            "text": "As a sophomore, I raised the school single-season rushing record to 1,691 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-a-5",
+            "text": "My junior regular season included 1,765 rushing yards, 488 receiving yards and 20 total touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-a-6",
+            "text": "I earned unanimous All-America recognition in my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-a-7",
+            "text": "I ended that year as the Orange Bowl MVP after a win over Michigan.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-a-8",
+            "text": "During my junior season, I passed Warrick Dunn to become my school's career rushing leader.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-a-9",
+            "text": "I finished with 21 career 100-yard rushing games in only three seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-a-10",
+            "text": "I was the No. 4 Florida State running back who left Tallahassee as the program's career rushing leader.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-dalvin-cook-b-1",
+            "text": "I arrived in college from Miami Central High School after a decorated prep career in Florida.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-b-2",
+            "text": "Big plays against in-state opponents became a recurring part of my college resume.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-b-3",
+            "text": "As a sophomore I rushed for 222 yards against Miami.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-b-4",
+            "text": "Later that season, I ran for 183 yards against Florida.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-b-5",
+            "text": "My junior year opened with a 267-yard rushing performance against South Florida.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-b-6",
+            "text": "Against North Carolina, I became the first running back in school history to post 100 rushing and 100 receiving yards in the same game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-b-7",
+            "text": "I scored four rushing touchdowns in a game against No. 3 Clemson.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-b-8",
+            "text": "In the Orange Bowl, I ran for 145 yards and broke a 71-yard run on third-and-22 against Michigan.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-b-9",
+            "text": "My freshman conference-title performance helped secure the program's third straight league championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-dalvin-cook-b-10",
+            "text": "I am the Seminoles runner whose three-year career combined rivalry-game explosions, an Orange Bowl MVP and the school rushing record.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-desmond-howard",
+    "name": "Desmond Howard",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/desmond-howard/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-desmond-howard-a-1",
+            "text": "I arrived at college as a running back but switched to wide receiver just days into my first training camp.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-a-2",
+            "text": "I redshirted before gradually becoming a major part of the offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-a-3",
+            "text": "In 1990, I caught 63 passes for 1,025 yards and 11 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-a-4",
+            "text": "The next season, my team went 10-1 in the regular season and won the Big Ten championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-a-5",
+            "text": "I caught 61 passes for 960 yards and 19 touchdowns during that title season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-a-6",
+            "text": "I became the first receiver in Big Ten history to lead the conference in scoring.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-a-7",
+            "text": "I won both the Maxwell Award and Walter Camp Player of the Year Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-a-8",
+            "text": "I captured the Heisman Trophy by what was then the second-largest voting margin in the award's history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-a-9",
+            "text": "I became Michigan's second Heisman winner and its first since 1940.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-a-10",
+            "text": "I was the Michigan receiver who became only the third wide receiver to win the Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-desmond-howard-b-1",
+            "text": "In high school, I starred in football, basketball and track and made plays on both offense and defense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-b-2",
+            "text": "My college value extended beyond receiving to rushing and both major return roles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-b-3",
+            "text": "I scored a kickoff-return touchdown during my breakout 1990 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-b-4",
+            "text": "During my Heisman season, I added 165 rushing yards and two rushing touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-b-5",
+            "text": "I also averaged 15.3 yards per punt return and took one back for a touchdown that year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-b-6",
+            "text": "On kickoffs that season, I averaged 31 yards per return and scored another touchdown.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-b-7",
+            "text": "My 1991 campaign set or tied five NCAA records and 12 school single-season records.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-b-8",
+            "text": "I scored 138 points in 1991 despite playing wide receiver rather than running back or quarterback.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-b-9",
+            "text": "I gave up my final year of eligibility and was selected fourth overall in the NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-desmond-howard-b-10",
+            "text": "I am the Wolverines playmaker whose all-purpose 1991 season ended with the Heisman, Maxwell and Walter Camp awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
