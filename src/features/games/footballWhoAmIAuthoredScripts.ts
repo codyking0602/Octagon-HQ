@@ -9413,7 +9413,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "bear-bryant",
@@ -9615,7 +9615,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "bobby-bowden-cfb",
@@ -9838,7 +9838,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "steve-spurrier-cfb",
@@ -10061,7 +10061,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "urban-meyer-cfb",
@@ -10284,7 +10284,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "woody-hayes",
@@ -10486,7 +10486,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "dabo-swinney-cfb",
@@ -10688,7 +10688,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "kirby-smart-cfb",
@@ -10890,7 +10890,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "pete-carroll-cfb",
@@ -11092,7 +11092,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "bob-stoops-cfb",
@@ -11294,7 +11294,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "cfb-jim-tressel",
@@ -11517,7 +11517,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "cfb-mack-brown",
@@ -11740,7 +11740,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "bill-snyder-cfb",
@@ -11942,7 +11942,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "chris-petersen-cfb",
@@ -12165,7 +12165,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "frank-beamer-cfb",
@@ -12367,7 +12367,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "gary-patterson-cfb",
@@ -12569,7 +12569,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "cfb-lou-holtz",
@@ -12771,7 +12771,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "brian-kelly-cfb",
@@ -12973,7 +12973,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "chip-kelly",
@@ -13196,7 +13196,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "dan-lanning",
@@ -13398,7 +13398,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "ed-orgeron",
@@ -13621,7 +13621,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "cfb-jim-harbaugh",
@@ -13844,7 +13844,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "cfb-ryan-day",
@@ -14046,7 +14046,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "cfb-lincoln-riley",
@@ -14248,7 +14248,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
-  },,
+  },
   {
     "league": "CFB",
     "subjectId": "nick-saban-cfb",
