@@ -144,6 +144,59 @@ describe("Sports Feud authored Daily banks", () => {
     }
   });
 
+  it("locks the audited quick-answer treatment across CFB, NFL, and UFC", () => {
+    const question = (bank: readonly SportsFeudAuthoredQuestion[], id: string) => {
+      const row = bank.find((item) => item.id === id);
+      expect(row).toBeDefined();
+      return row!;
+    };
+    const aliases = (
+      bank: readonly SportsFeudAuthoredQuestion[],
+      id: string,
+      answerName: string,
+    ) => {
+      const answer = question(bank, id).answers.find((item) => item.name === answerName);
+      expect(answer).toBeDefined();
+      return answer?.aliases ?? [];
+    };
+
+    expect(question(CFB_FAST, "cfb-fast4-09-1").prompt)
+      .toBe("Name a stage or game type in the college football postseason.");
+    expect(aliases(CFB_FAST, "cfb-fast4-06-1", "Four verticals")).toContain("Four verts");
+    expect(aliases(CFB_FAST, "cfb-fast4-08-1", "Transfer portal")).toContain("Portal");
+    expect(aliases(CFB_FAST, "cfb-fast4-10-1", "Wear team colors")).toContain("Team colors");
+
+    expect(aliases(NFL_FAST, "nfl-fast3-07-1", "Defensive Player of the Year")).toContain("DPOY");
+    expect(question(NFL_FAST, "nfl-fast4-07-1").answers.map((answer) => answer.name)).toContain("Blitz");
+    expect(aliases(NFL_FAST, "nfl-fast4-09-1", "Best player available")).toContain("BPA");
+    expect(question(NFL_FAST, "nfl-fast4-10-1").answers.map((answer) => answer.name)).toEqual([
+      "AFC East",
+      "AFC North",
+      "AFC South",
+      "AFC West",
+      "NFC East",
+      "NFC North",
+      "NFC South",
+      "NFC West",
+    ]);
+
+    expect(question(UFC_FAST, "ufc-fast4-01-1").answers.map((answer) => answer.name)).toEqual([
+      "Knockout",
+      "TKO",
+      "Submission",
+      "Decision",
+      "Doctor stoppage",
+      "Disqualification",
+      "No contest",
+      "Corner stoppage",
+    ]);
+    expect(aliases(UFC_FAST, "ufc-fast4-02-1", "Rear-naked choke")).toContain("RNC");
+    expect(aliases(UFC_FAST, "ufc-fast4-05-1", "Ground-and-pound")).toContain("GNP");
+    expect(aliases(UFC_FAST, "ufc-fast4-06-1", "Knee to a grounded opponent")).toContain("Illegal knee");
+    expect(aliases(UFC_FAST, "ufc-fast4-07-1", "Effective striking")).toContain("Significant strikes");
+    expect(aliases(UFC_FAST, "ufc-fast4-10-1", "Give instructions")).toContain("Coaching");
+  });
+
   it("keeps Fast Money prompts precise while accepting natural shorthand", () => {
     const ufc = buildSportsFeudPack("ufc", "2026-09-23");
     const football = buildSportsFeudPack("cfb", "2026-09-23");
