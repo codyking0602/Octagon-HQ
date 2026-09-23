@@ -124,3 +124,36 @@ export function appendWhoAmIAuthoredHistory(
 ) {
   return [...history, entry];
 }
+
+
+export function parseWhoAmIAuthoredPublicationHistory(
+  value: unknown,
+): WhoAmIAuthoredPublicationHistoryEntry[] {
+  if (value == null) return [];
+  if (!Array.isArray(value)) throw new Error("Who Am I publication history must be an array.");
+  return value.map((item) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) {
+      throw new Error("Who Am I publication history contains an invalid entry.");
+    }
+    const row = item as Record<string, unknown>;
+    const day = String(row.day ?? "");
+    const subjectId = String(row.subject_id ?? row.subjectId ?? "");
+    const league = String(row.league ?? "");
+    const script = row.script_id ?? row.scriptId;
+    const roundIndex = Number(row.round_index ?? row.roundIndex ?? 0);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day)
+      || !subjectId
+      || !["UFC", "NFL", "CFB"].includes(league)
+      || !Number.isInteger(roundIndex)
+      || roundIndex < 0) {
+      throw new Error("Who Am I publication history entry is invalid.");
+    }
+    return {
+      day,
+      roundIndex,
+      subjectId,
+      league: league as WhoAmIAuthoredPublicationHistoryEntry["league"],
+      scriptId: typeof script === "string" && script ? script : null,
+    };
+  });
+}
