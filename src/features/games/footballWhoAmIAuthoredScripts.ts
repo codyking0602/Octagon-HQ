@@ -9233,6 +9233,1218 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       }
     }
   },
+  {
+    "league": "CFB",
+    "subjectId": "barry-switzer",
+    "name": "Barry Switzer",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/honors/college-football-hall-of-fame/barry-switzer/2012"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-barry-switzer-a-1",
+            "text": "I became a major-college head coach in the early 1970s after several years as an assistant.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-a-2",
+            "text": "My program produced a long unbeaten streak that extended into my first seasons in charge.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-a-3",
+            "text": "Across 16 seasons as a college head coach, my teams won 12 conference championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-a-4",
+            "text": "My teams also appeared in 13 bowl games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-a-5",
+            "text": "I finished my college head-coaching career with a .837 winning percentage.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-a-6",
+            "text": "I won three national championships.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-a-7",
+            "text": "Two of those national titles came in back-to-back seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-a-8",
+            "text": "My offenses were closely associated with the wishbone and annually ranked among the nation's best rushing attacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-a-9",
+            "text": "My national championships came in 1974, 1975 and 1985.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-a-10",
+            "text": "I am the Oklahoma coach who later won a Super Bowl with the Dallas Cowboys.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-barry-switzer-b-1",
+            "text": "I played center and linebacker in college and captained a conference-championship team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-b-2",
+            "text": "After a year in the Army, I began coaching as an assistant at my alma mater.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-b-3",
+            "text": "I then joined another major program as an assistant in the mid-1960s.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-b-4",
+            "text": "Seven years later, I was promoted to head coach.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-b-5",
+            "text": "My first season as head coach came in 1973.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-b-6",
+            "text": "I went on to post a 157-29-4 college record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-b-7",
+            "text": "My teams won eight of their 13 bowl appearances.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-b-8",
+            "text": "I retired from college coaching after the 1988 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-b-9",
+            "text": "My school later named an athletic facility the Switzer Center.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-barry-switzer-b-10",
+            "text": "I am the former Arkansas player who became Oklahoma's three-time national-championship coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "bear-bryant",
+    "name": "Bear Bryant",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/honors/hall-of-fame/paul-bear-bryant/1955?path=football"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-bear-bryant-a-1",
+            "text": "I was a college head coach for 38 seasons across four schools.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-a-2",
+            "text": "At one stop, I won a conference title and ended Oklahoma's 31-game winning streak in a Sugar Bowl.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-a-3",
+            "text": "At another stop, I won a Southwest Conference championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-a-4",
+            "text": "I later took over a program that had won only four games in the previous three seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-a-5",
+            "text": "By my fourth season there, I had won a national championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-a-6",
+            "text": "I ultimately won six national championships at that final school.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-a-7",
+            "text": "My teams there played in a bowl game for 24 consecutive seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-a-8",
+            "text": "I retired with 323 career victories.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-a-9",
+            "text": "My six national-title seasons were 1961, 1964, 1965, 1973, 1978 and 1979.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-a-10",
+            "text": "I am the Alabama coaching legend known by a nickname I got after wrestling a circus bear as a teenager.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-bear-bryant-b-1",
+            "text": "I played end in college during the 1930s.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-b-2",
+            "text": "My early coaching career included assistant stops before service in the U.S. Navy during World War II.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-b-3",
+            "text": "My first head-coaching job came at Maryland in 1945.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-b-4",
+            "text": "I then spent eight seasons as the head coach at Kentucky.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-b-5",
+            "text": "After Kentucky, I coached Texas A&M for four seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-b-6",
+            "text": "My final head-coaching stop began in 1958.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-b-7",
+            "text": "That final program improved from five wins in my first year to a national title in my fourth.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-b-8",
+            "text": "I spent 25 seasons leading that school.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-b-9",
+            "text": "I finished with a 232-46-9 record there.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bear-bryant-b-10",
+            "text": "I am the former Alabama player who returned to lead the Crimson Tide to six national championships.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "bobby-bowden-cfb",
+    "name": "Bobby Bowden",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/honors/nff-college-football-hall-of-fame/bobby-bowden/2189"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-bobby-bowden-a-1",
+            "text": "I spent 44 seasons as a college head coach.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-a-2",
+            "text": "At my signature stop, I inherited a program that had won only four games over the previous three years.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-a-3",
+            "text": "My second team there went 10-2.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-a-4",
+            "text": "I later produced 14 consecutive seasons finishing in the AP top five.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-a-5",
+            "text": "My teams won 10 or more games in each of those 14 seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-a-6",
+            "text": "I won two national championships.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-a-7",
+            "text": "My teams also won 12 conference championships after joining a league.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-a-8",
+            "text": "I guided the same program to 31 bowl appearances in 34 seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-a-9",
+            "text": "My national-title seasons were 1993 and 1999.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-a-10",
+            "text": "I am the longtime Florida State coach whose career also included head-coaching stops at Samford and West Virginia.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-bobby-bowden-b-1",
+            "text": "I began my college playing career at Alabama but transferred after one semester.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-b-2",
+            "text": "I finished my playing career at what is now Samford.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-b-3",
+            "text": "My coaching career later brought me back there as a head coach.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-b-4",
+            "text": "After that, I became an assistant at Florida State and then offensive coordinator at West Virginia.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-b-5",
+            "text": "I served as West Virginia's head coach for six seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-b-6",
+            "text": "Success there brought me back to Tallahassee in 1976.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-b-7",
+            "text": "My Seminoles eventually produced Heisman winners Charlie Ward and Chris Weinke.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-b-8",
+            "text": "I coached Florida State for 34 seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-b-9",
+            "text": "My final game was a bowl victory over West Virginia.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-bobby-bowden-b-10",
+            "text": "I am the College Football Hall of Fame coach whose Seminoles won the 1993 and 1999 national championships.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "steve-spurrier-cfb",
+    "name": "Steve Spurrier",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/honors/college-football-hall-of-fame/steve-spurrier/2407"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-steve-spurrier-a-1",
+            "text": "I became a college head coach in the late 1980s.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-a-2",
+            "text": "At my first college stop, I won a conference title and earned league Coach of the Year twice.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-a-3",
+            "text": "I then returned to my alma mater as head coach.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-a-4",
+            "text": "There, I won six conference championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-a-5",
+            "text": "My teams reached back-to-back national championship games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-a-6",
+            "text": "I won a national title in the second of those appearances.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-a-7",
+            "text": "I later became the winningest coach in a second SEC program's history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-a-8",
+            "text": "I am one of the few people inducted into the College Football Hall of Fame as both a player and a coach.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-a-9",
+            "text": "My 1996 team won the national championship after defeating Florida State in the Sugar Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-a-10",
+            "text": "I am the Heisman-winning quarterback who later coached Florida and became known for the 'Fun 'n' Gun' offense.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-steve-spurrier-b-1",
+            "text": "I won the Heisman Trophy as a college quarterback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-b-2",
+            "text": "After a 10-year professional playing career, I moved into coaching.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-b-3",
+            "text": "My assistant-coaching path included Florida, Georgia Tech and Duke.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-b-4",
+            "text": "I also coached professionally before returning to the college game as a head coach.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-b-5",
+            "text": "My first major college head-coaching stop was Duke.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-b-6",
+            "text": "I then went back to the school where I had starred as a player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-b-7",
+            "text": "At Florida, I compiled a 122-27-1 record in 12 seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-b-8",
+            "text": "Later at South Carolina, I won the program's first SEC East title.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-b-9",
+            "text": "I became the winningest head coach in both Florida and South Carolina history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-steve-spurrier-b-10",
+            "text": "I am the former Gators quarterback who won a Heisman as a player and a national title as Florida's head coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "urban-meyer-cfb",
+    "name": "Urban Meyer",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "osu": "https://ohiostatebuckeyes.com/news/2011/11/28/the-ohio-state-university-selects-urban-meyer-as-head-football-coach"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-urban-meyer-a-1",
+            "text": "My first two major-college head-coaching stops both produced rapid turnarounds.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-a-2",
+            "text": "At one of them, my teams went 22-2 over two seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-a-3",
+            "text": "That program became the first from outside the BCS automatic-qualifying conferences to play in a BCS bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-a-4",
+            "text": "I then took over an SEC program and won two national championships there.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-a-5",
+            "text": "Those titles came in my second and fourth seasons at that school.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-a-6",
+            "text": "After stepping away from coaching, I later returned to lead a Big Ten powerhouse.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-a-7",
+            "text": "I won another national championship at that third major stop.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-a-8",
+            "text": "Across those three signature programs, my teams were known for spread-option offense and elite quarterback play.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-a-9",
+            "text": "My national titles came with Florida in 2006 and 2008 and Ohio State in 2014.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-a-10",
+            "text": "I am the coach who led Utah to an undefeated BCS-bowl season before winning championships at Florida and Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-urban-meyer-b-1",
+            "text": "I began my coaching career in Ohio after a brief high-school internship.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-b-2",
+            "text": "One of my early college jobs was as a graduate assistant at Ohio State.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-b-3",
+            "text": "My first head-coaching opportunity came at Bowling Green.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-b-4",
+            "text": "I then moved west to Utah.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-b-5",
+            "text": "At Utah, I coached an undefeated team that won the Fiesta Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-b-6",
+            "text": "Florida hired me next, and I went 65-15 over six seasons there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-b-7",
+            "text": "I won two SEC championships and two national championships with the Gators.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-b-8",
+            "text": "I later returned to Ohio State as head coach.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-b-9",
+            "text": "There, I added a third national championship to my résumé.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-urban-meyer-b-10",
+            "text": "I am the Ohio native whose head-coaching path ran from Bowling Green to Utah, Florida and Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "woody-hayes",
+    "name": "Woody Hayes",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/honors/nff-college-football-hall-of-fame/woody-hayes/1846"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-woody-hayes-a-1",
+            "text": "I spent 28 seasons leading the same Big Ten program.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-a-2",
+            "text": "My teams won 13 conference championships there.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-a-3",
+            "text": "I also won three national championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-a-4",
+            "text": "My teams twice produced 17-game conference winning streaks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-a-5",
+            "text": "I coached three Heisman Trophy winners.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-a-6",
+            "text": "My program led the nation in home attendance in 21 of my 28 seasons there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-a-7",
+            "text": "My career head-coaching record was 238-72-10.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-a-8",
+            "text": "My style became synonymous with a power-running philosophy often described as 'three yards and a cloud of dust.'",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-a-9",
+            "text": "I won 205 games at Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-a-10",
+            "text": "I am the Ohio State coaching icon whose tenure ran from 1951 through 1978.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-woody-hayes-b-1",
+            "text": "I played tackle at Denison during the 1930s.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-b-2",
+            "text": "After early high-school coaching, I served more than five years in the U.S. Navy.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-b-3",
+            "text": "I returned to coaching as the head coach at Denison.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-b-4",
+            "text": "I then spent two seasons as head coach at Miami of Ohio.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-b-5",
+            "text": "My next job became the defining stop of my career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-b-6",
+            "text": "I took over Ohio State in 1951.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-b-7",
+            "text": "My Buckeye teams produced 51 first-team All-Americans.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-b-8",
+            "text": "I won 13 Big Ten championships.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-b-9",
+            "text": "I also won three national championships during 28 seasons in Columbus.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-woody-hayes-b-10",
+            "text": "I am the College Football Hall of Fame coach most associated with Ohio State's mid-20th-century power-running identity.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      }
+    }
+  },
 
   {
     "league": "CFB",
