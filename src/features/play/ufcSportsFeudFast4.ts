@@ -77,7 +77,16 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       "Name a position or action from the wrestling side of MMA.",
       "Name a term associated with controlling an opponent on the mat.",
     ],
-    answers: ["Takedown", "Double-leg", "Single-leg", "Clinch", "Back control", "Mount", "Half guard", "Ground-and-pound"],
+    answers: [
+      { name: "Takedown", aliases: ["Take down"] },
+      { name: "Double-leg", aliases: ["Double leg"] },
+      { name: "Single-leg", aliases: ["Single leg"] },
+      { name: "Clinch", aliases: ["Clinch work"] },
+      { name: "Back control", aliases: ["Back", "Take the back"] },
+      { name: "Mount", aliases: ["Full mount"] },
+      { name: "Half guard", aliases: ["Half-guard"] },
+      { name: "Ground-and-pound", aliases: ["Ground and pound", "GNP"] },
+    ],
   },
   {
     category: "rules",
