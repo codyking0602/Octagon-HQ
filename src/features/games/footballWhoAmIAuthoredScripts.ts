@@ -5407,7 +5407,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-a-3",
-            "text": "My rookie season paired more than 4,000 passing yards with more than 500 rushing yards.",
+            "text": "My rookie season combined high-volume passing with record-setting production as a runner.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5426,16 +5426,17 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-a-5",
-            "text": "My team won three consecutive division titles from 2013 through 2015.",
+            "text": "As a rookie, I became the first quarterback in NFL history to pass for 4,000 yards and rush for 500 yards in the same season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
+              "rookie",
               "career"
             ]
           },
           {
             "id": "nfl-cam-newton-a-6",
-            "text": "As a rookie, I rushed for 14 touchdowns, then an NFL single-season record for a quarterback.",
+            "text": "That rookie season also included 14 rushing touchdowns, then an NFL single-season record for a quarterback.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5496,7 +5497,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-b-2",
-            "text": "At my final college stop, I became the first SEC player to pass for 2,000 yards and rush for 1,000 yards in the same season.",
+            "text": "I arrived at my final college stop as a transfer and became its starting quarterback for one season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5505,7 +5506,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-b-3",
-            "text": "I won the Heisman Trophy while leading a 14-0 team to an SEC championship and a national championship.",
+            "text": "That season, I became the first SEC player to pass for 2,000 yards and rush for 1,000 yards in the same year.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5560,17 +5561,16 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-b-9",
-            "text": "Carolina drafted me first overall after my one-season Auburn breakthrough.",
+            "text": "My lone season at Auburn ended 14-0 with the Heisman Trophy, an SEC championship and a national championship.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "auburn",
-              "career"
+              "auburn"
             ]
           },
           {
             "id": "nfl-cam-newton-b-10",
-            "text": "I am the quarterback who paired a 2010 Heisman and national title with the 2015 NFL MVP and a trip to Super Bowl 50.",
+            "text": "I am the quarterback who paired that Auburn title run with the 2015 NFL MVP and a trip to Super Bowl 50 with Carolina.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -5615,7 +5615,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-a-3",
-            "text": "My second NFL season was my first of many 4,000-yard passing years.",
+            "text": "I produced 14 seasons with at least 4,000 passing yards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5692,7 +5692,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-peyton-manning-b-1",
-            "text": "I entered the NFL as the first overall pick after playing quarterback at an SEC school.",
+            "text": "I entered the NFL as a first-round quarterback after playing at an SEC school.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5710,7 +5710,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-b-3",
-            "text": "My first franchise kept me at quarterback from 1998 through 2011.",
+            "text": "My first NFL franchise kept me at quarterback for more than a decade.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5755,7 +5755,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-b-8",
-            "text": "In my second Denver season, I threw for 5,477 yards and 55 touchdowns.",
+            "text": "Indianapolis had selected me first overall in the 1998 NFL Draft.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5764,7 +5764,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-b-9",
-            "text": "I made four Super Bowl appearances with four different head coaches across Indianapolis and Denver.",
+            "text": "My second Denver season produced 5,477 passing yards and 55 touchdown passes.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -5773,7 +5773,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-b-10",
-            "text": "I am the former Tennessee quarterback drafted first overall by Indianapolis who later ended his career with a Super Bowl 50 win in Denver.",
+            "text": "I am the former Tennessee quarterback who starred for Indianapolis, finished with Denver and ended his career by winning Super Bowl 50.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -5818,7 +5818,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-a-3",
-            "text": "In my second NFL season, I led the league with 1,570 receiving yards and 15 touchdown catches.",
+            "text": "By my second NFL season, I was already leading the league in both receiving yards and touchdown catches.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5836,7 +5836,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-a-5",
-            "text": "My first 100-catch season came in 1990.",
+            "text": "That second season included 1,570 receiving yards and 15 touchdown catches.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5914,7 +5914,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-b-3",
-            "text": "By my second NFL season, I was already leading the league in receiving yards and touchdown catches.",
+            "text": "My first 100-catch NFL season came several years into my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6022,7 +6022,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-randy-moss-a-3",
-            "text": "As a rookie, I led the league with 17 touchdown receptions.",
+            "text": "I led the NFL in touchdown receptions during my rookie season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6040,7 +6040,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-randy-moss-a-5",
-            "text": "I went on to lead the NFL in touchdown receptions five different times.",
+            "text": "My rookie total was 17 touchdown catches, breaking the previous NFL rookie record.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6619,7 +6619,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-a-2",
-            "text": "My rookie season included 133 tackles, an interception and heavy production as a pass rusher.",
+            "text": "My rookie season immediately showed that I could affect games as both a tackler and a pass rusher.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6646,7 +6646,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-a-5",
-            "text": "Beginning with my rookie year, my team reached the playoffs six times during a 10-season stretch.",
+            "text": "My rookie year included 133 tackles, 9.5 sacks, two forced fumbles and an interception.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6673,7 +6673,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-a-8",
-            "text": "My official career sack total was 132.5, not counting 9.5 sacks from my rookie year before sacks became an official NFL statistic.",
+            "text": "My official career sack total was 132.5, not counting the 9.5 from my rookie year before sacks became an official NFL statistic.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6714,7 +6714,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-b-2",
-            "text": "My rookie season produced 133 tackles, 9.5 sacks, two forced fumbles and an interception.",
+            "text": "I spent my entire 13-season NFL career with one franchise.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6723,7 +6723,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-b-3",
-            "text": "My first nine NFL seasons all ended with first-team All-Pro recognition.",
+            "text": "My team became a regular playoff participant after a long drought early in my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6750,7 +6750,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-b-6",
-            "text": "The Giants won two Super Bowls during the long run that began with my rookie season.",
+            "text": "The Giants won two Super Bowls during my career.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6935,15 +6935,6 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aaron-donald-b-3",
-            "text": "The Rams selected me 13th overall in the 2014 NFL Draft.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "draft"
-            ]
-          },
-          {
-            "id": "nfl-aaron-donald-b-4",
             "text": "My first NFL season ended with Defensive Rookie of the Year honors and a franchise rookie sack record.",
             "band": "helpful",
             "verification": "verified",
@@ -6953,8 +6944,17 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
-            "id": "nfl-aaron-donald-b-5",
+            "id": "nfl-aaron-donald-b-4",
             "text": "I made the Pro Bowl in each of my first 10 NFL seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "nfl-aaron-donald-b-5",
+            "text": "Across those first 10 NFL seasons, I earned eight first-team All-Pro selections.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6972,11 +6972,11 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aaron-donald-b-7",
-            "text": "Across those first 10 NFL seasons, I earned eight first-team All-Pro selections.",
+            "text": "The Rams selected me 13th overall in the 2014 NFL Draft.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "career"
+              "draft"
             ]
           },
           {
