@@ -23762,6 +23762,1058 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-ashton-jeanty",
+    "name": "Ashton Jeanty",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "boise": "https://broncosports.com/sports/football/roster/ashton-jeanty/10215",
+      "awards": "https://broncosports.com/news/2024/12/13/football-ashton-jeanty-wins-doak-walker-award-and-maxwell-award",
+      "bowden": "https://broncosports.com/news/2025/1/10/football-jeanty-wins-bobby-bowden-trophy"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-ashton-jeanty-a-1",
+            "text": "I produced one of the highest single-season rushing totals in major-college football history.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "bowden"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-a-2",
+            "text": "My peak season included 29 rushing touchdowns and 30 total touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "boise"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-a-3",
+            "text": "I finished that season with 2,601 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "bowden"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-a-4",
+            "text": "That total ranked second in FBS single-season history at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "bowden"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-a-5",
+            "text": "I also piled up 2,739 yards from scrimmage and 2,750 all-purpose yards that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-a-6",
+            "text": "I won both the Doak Walker Award and the Maxwell Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "awards"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-a-7",
+            "text": "I became the first Group of 5 player to win those two awards in the same season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "awards"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-a-8",
+            "text": "My team won a second straight Mountain West title and earned the No. 3 seed in the College Football Playoff.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bowden"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-a-9",
+            "text": "I finished my Boise State career as the program's all-time leader with 4,769 rushing yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bowden"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-a-10",
+            "text": "I was the Boise State running back whose 2024 season ended with 2,601 rushing yards plus the Maxwell and Doak Walker awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "awards"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-ashton-jeanty-b-1",
+            "text": "I opened my final college season by setting school single-game records for rushing yards and rushing touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "boise"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-b-2",
+            "text": "That opener featured 267 rushing yards and six touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "boise"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-b-3",
+            "text": "The next week, I ran for 192 yards and three touchdowns against a top-10 opponent.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-b-4",
+            "text": "Later that month, I posted 259 rushing yards and four touchdowns in another win.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-b-5",
+            "text": "I recorded at least 100 rushing yards in all 14 games of that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-b-6",
+            "text": "I finished with 1,970 yards after contact, a College Football Playoff-era record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "bowden"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-b-7",
+            "text": "I also forced 164 missed tackles, another CFP-era record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "bowden"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-b-8",
+            "text": "I tied LaDainian Tomlinson's mark with five touchdown runs of at least 70 yards in one season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bowden"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-b-9",
+            "text": "I led Boise State to the Fiesta Bowl while averaging 185.8 rushing yards per game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "bowden"
+            ]
+          },
+          {
+            "id": "cfb-ashton-jeanty-b-10",
+            "text": "My 2024 Boise State season produced 2,601 rushing yards, 29 rushing touchdowns and two major national awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "awards"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-calvin-johnson",
+    "name": "Calvin Johnson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "cfbhof": "https://www.cfbhall.com/inductees/calvin-johnson-2018/",
+      "pfhof": "https://www.profootballhof.com/players/calvin-johnson"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-calvin-johnson-a-1",
+            "text": "I became a three-time first-team all-conference wide receiver in college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-a-2",
+            "text": "I earned Freshman All-America honors and was named my conference's Rookie of the Year.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-a-3",
+            "text": "I finished my college career with 2,927 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-a-4",
+            "text": "My 28 career touchdown receptions became a school record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-a-5",
+            "text": "I also posted 13 career 100-yard receiving games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-a-6",
+            "text": "As a junior, I caught 15 touchdown passes and topped 1,200 receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-a-7",
+            "text": "That season, I won the Biletnikoff Award as the nation's top receiver.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof",
+              "pfhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-a-8",
+            "text": "I was also named my conference's Player of the Year and finished in the top 10 of the Heisman voting.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-a-9",
+            "text": "I left Georgia Tech as its career leader in receiving yards and touchdown catches.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-a-10",
+            "text": "After winning the 2006 Biletnikoff at Georgia Tech, I was selected second overall in the 2007 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof",
+              "pfhof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-calvin-johnson-b-1",
+            "text": "I was a 6-foot-5 receiver who made an immediate impact as a freshman.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-b-2",
+            "text": "I helped my team reach a bowl game in each of my three college seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-b-3",
+            "text": "I became one of only six players from my program to earn first-team All-America honors twice.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-b-4",
+            "text": "As a senior-classified junior, I became a unanimous first-team All-American.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-b-5",
+            "text": "My final season set school marks for receiving yards, touchdown catches and 100-yard receiving games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-b-6",
+            "text": "Those single-season totals were 1,202 receiving yards, 15 touchdown catches and seven 100-yard games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-b-7",
+            "text": "I helped Georgia Tech win its division in 2006.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-b-8",
+            "text": "I eventually entered the College Football Hall of Fame after playing for Georgia Tech from 2004 through 2006.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-b-9",
+            "text": "Georgia Tech fans knew me as the record-setting receiver who won the 2006 Biletnikoff Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-calvin-johnson-b-10",
+            "text": "I later became known as Megatron after leaving Georgia Tech as the second overall NFL Draft pick.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof",
+              "pfhof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-larry-fitzgerald",
+    "name": "Larry Fitzgerald",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "pitt": "https://pittsburghpanthers.com/sports/general/roster/larry-fitzgerald/8662",
+      "hof": "https://pittsburghpanthers.com/honors/pitt-athletics-hall-of-fame/larry-fitzgerald/58",
+      "retired": "https://pittsburghpanthers.com/news/2013/7/1/LARRY_FITZGERALD_JOINS_LEGENDARY_LIST_OF_PITT_RETIRED_JERSEYS"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-larry-fitzgerald-a-1",
+            "text": "I played only two college seasons but finished with more than 2,600 receiving yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-a-2",
+            "text": "My college career included 34 touchdown receptions in 26 games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-a-3",
+            "text": "In my second season, I caught 92 passes for 1,672 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-a-4",
+            "text": "I scored 22 receiving touchdowns that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-a-5",
+            "text": "I led the nation in receiving yards per game and touchdown catches.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-a-6",
+            "text": "I won the Biletnikoff Award as the nation's top receiver.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-a-7",
+            "text": "I became the first sophomore to win the Walter Camp Player of the Year award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-a-8",
+            "text": "I finished second in the Heisman Trophy voting, carrying three voting regions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "retired"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-a-9",
+            "text": "My No. 1 jersey was later retired by Pitt.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "retired"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-a-10",
+            "text": "I was Pitt's two-year receiving star from 2002-03 before becoming the third overall pick in the 2004 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-larry-fitzgerald-b-1",
+            "text": "I built a college record streak by catching a touchdown pass in game after game across two seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-b-2",
+            "text": "That streak eventually reached 18 consecutive games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-b-3",
+            "text": "I set or tied four NCAA records during my brief college career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "retired"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-b-4",
+            "text": "I also set eight Big East records and 11 school records.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "retired"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-b-5",
+            "text": "My sophomore season included an NCAA-record 18-game touchdown streak and 22 touchdown catches.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-b-6",
+            "text": "I was a unanimous first-team All-American in 2003.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-b-7",
+            "text": "My Heisman runner-up finish was the highest by a wide receiver since Desmond Howard won in 1991.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "retired"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-b-8",
+            "text": "I left college with 161 catches, 2,677 yards and a school-record 34 receiving touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-b-9",
+            "text": "The Pitt receiver wearing No. 1 became one of the defining college stars of the 2003 season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt"
+            ]
+          },
+          {
+            "id": "cfb-larry-fitzgerald-b-10",
+            "text": "I am the Pitt wideout who won the Biletnikoff and Walter Camp awards before finishing second for the 2003 Heisman.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-brock-bowers",
+    "name": "Brock Bowers",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "uga": "https://georgiadogs.com/sports/football/roster/brock--bowers/7345"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-brock-bowers-a-1",
+            "text": "I became an immediate receiving centerpiece as a true freshman tight end.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-a-2",
+            "text": "I led my team in receiving in each of my first three college seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-a-3",
+            "text": "As a freshman, I caught 56 passes for 882 yards and 13 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-a-4",
+            "text": "Those 13 touchdown catches set a school single-season record for any pass catcher.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-a-5",
+            "text": "I was named both the conference coaches' Freshman of the Year and the FWAA Freshman of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-a-6",
+            "text": "As a sophomore, I led my team with 63 catches for 942 yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-a-7",
+            "text": "I became my program's first winner of the John Mackey Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-a-8",
+            "text": "A year later, I became the first player ever to win the Mackey Award in back-to-back seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-a-9",
+            "text": "I wore No. 19 while helping Georgia win back-to-back national championships.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-a-10",
+            "text": "I was Georgia's three-time first-team All-America tight end and the first back-to-back Mackey Award winner.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-brock-bowers-b-1",
+            "text": "My college offense used me not only as a tight end but occasionally as a runner.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-b-2",
+            "text": "As a freshman, I scored on an 89-yard reception and also produced a rushing touchdown.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-b-3",
+            "text": "I set a conference championship-game record for a tight end with 10 receptions as a freshman.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-b-4",
+            "text": "The next season, three of my nine rushing attempts ended in touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-b-5",
+            "text": "I caught seven passes for 152 yards and a touchdown in a national championship game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-b-6",
+            "text": "As a junior, I posted a career-high 157 receiving yards at Auburn, including the game-winning touchdown.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-b-7",
+            "text": "I became only the third player in school history to earn first-team All-America honors three times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-b-8",
+            "text": "The other two players in that school trio were Herschel Walker and David Pollack.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-b-9",
+            "text": "I was Georgia's No. 19 tight end during the program's 2021 and 2022 national-title seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-brock-bowers-b-10",
+            "text": "My Georgia career featured two national titles and consecutive John Mackey Awards in 2022 and 2023.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-aaron-donald",
+    "name": "Aaron Donald",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "pitt": "https://pittsburghpanthers.com/honors/pitt-athletics-hall-of-fame/aaron-donald/78",
+      "acc": "https://pittsburghpanthers.com/news/2013/12/4/aaron_donald_named_acc_defensive_player_of_the_year",
+      "hof": "https://pittsburghpanthers.com/news/2026/1/14/legendary-pitt-defensive-lineman-aaron-donald-elected-to-college-football-hall-of-fame"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-aaron-donald-a-1",
+            "text": "I was an interior defensive lineman who accumulated 66 tackles for loss during my college career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-a-2",
+            "text": "That career tackles-for-loss total became the most by an FBS interior defensive lineman since the NCAA began tracking the statistic.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-a-3",
+            "text": "As a senior, I led the nation with 28.5 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-a-4",
+            "text": "I also recorded 11 sacks and forced four fumbles that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-a-5",
+            "text": "I was named my conference's Defensive Player of the Year as a senior.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "acc"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-a-6",
+            "text": "I won the Bronko Nagurski Trophy and the Chuck Bednarik Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-a-7",
+            "text": "I also won the Outland Trophy and the Rotary Lombardi Award in the same season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-a-8",
+            "text": "That four-award sweep came with unanimous first-team All-America honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-a-9",
+            "text": "Pitt later retired the No. 97 jersey I wore for the Panthers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-a-10",
+            "text": "I was Pitt's dominant 2013 defensive tackle before the Rams selected me 13th overall in the 2014 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-aaron-donald-b-1",
+            "text": "I stayed close to home for college after starring at a high school in western Pennsylvania.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-b-2",
+            "text": "I contributed immediately as a freshman and developed into one of the nation's most disruptive linemen.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-b-3",
+            "text": "By my senior season, I had reached 28.5 career sacks before the year was even complete.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "acc"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-b-4",
+            "text": "I collected five National Defensive Player of the Week honors during that final college season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "acc"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-b-5",
+            "text": "A blocked extra point I made against Syracuse proved decisive in a one-point win.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "acc"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-b-6",
+            "text": "My final season ended with 28.5 tackles for loss, 11 sacks and four forced fumbles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-b-7",
+            "text": "I swept four of the biggest national awards available to defensive and interior linemen.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-b-8",
+            "text": "I later entered the College Football Hall of Fame after my No. 97 had been retired by Pitt.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-b-9",
+            "text": "My Pittsburgh college career ended as one of the most decorated defensive seasons in program history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt"
+            ]
+          },
+          {
+            "id": "cfb-aaron-donald-b-10",
+            "text": "I am the Pitt No. 97 who won the Nagurski, Bednarik, Outland and Lombardi awards in 2013.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "pitt",
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
