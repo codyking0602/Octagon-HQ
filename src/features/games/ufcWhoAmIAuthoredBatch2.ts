@@ -1745,7 +1745,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-kayla-harrison-a-1",
-            "text": "Before MMA became my profession, I worked jobs including landscaping, dog walking and hardware-store work.",
+            "text": "While developing as an athlete, I worked jobs that included landscaping, dog walking and hardware-store work.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1754,35 +1754,34 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kayla-harrison-a-2",
-            "text": "I did not begin learning striking until after retiring from competitive judo.",
+            "text": "At 16, I moved away from home to pursue elite training under an Olympic medalist and coach.",
             "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "identity2"
+            ]
+          },
+          {
+            "id": "ufc-kayla-harrison-a-3",
+            "text": "After the 2016 Olympics, I retired from competitive judo and began learning striking for a move into MMA.",
+            "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "identity5"
             ]
           },
           {
-            "id": "ufc-kayla-harrison-a-3",
-            "text": "My UFC debut came in 2024 and ended by submission.",
+            "id": "ufc-kayla-harrison-a-4",
+            "text": "I made my professional MMA debut in 2018 and built an established career before entering the UFC.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
               "profile"
             ]
           },
           {
-            "id": "ufc-kayla-harrison-a-4",
-            "text": "My first UFC title opportunity came in my third UFC appearance.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
             "id": "ufc-kayla-harrison-a-5",
-            "text": "I submitted Holly Holm in my UFC debut.",
+            "text": "My UFC debut came on UFC 300 in 2024.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1792,7 +1791,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kayla-harrison-a-6",
-            "text": "I beat Ketlen Vieira by decision in my second UFC appearance.",
+            "text": "I submitted former champion Holly Holm in the second round of that debut.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1802,7 +1801,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kayla-harrison-a-7",
-            "text": "I submitted Julianna Peña to win UFC bantamweight gold.",
+            "text": "In my third UFC appearance, I submitted Julianna Peña to win the women’s bantamweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1812,7 +1811,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kayla-harrison-a-8",
-            "text": "I became the youngest American awarded a sixth-degree judo black belt.",
+            "text": "I became the youngest American awarded a sixth-degree black belt in judo.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1830,7 +1829,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kayla-harrison-a-10",
-            "text": "I repeated as an Olympic judo champion four years later.",
+            "text": "Four years after that breakthrough, I won Olympic judo gold again.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1844,34 +1843,36 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-kayla-harrison-b-1",
-            "text": "I moved away from home at 16 to pursue elite judo training.",
+            "text": "I turned professional in MMA only after completing an elite career in another combat sport.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity2"
-            ]
-          },
-          {
-            "id": "ufc-kayla-harrison-b-2",
-            "text": "After retiring from competitive judo, I began learning striking before transitioning fully into MMA.",
-            "band": "broad",
-            "verification": "verified",
-            "sourceIds": [
+              "profile",
               "identity5"
             ]
           },
           {
-            "id": "ufc-kayla-harrison-b-3",
-            "text": "I entered the UFC in 2024 after an established MMA career outside the promotion.",
-            "band": "helpful",
+            "id": "ufc-kayla-harrison-b-2",
+            "text": "I spent several years building my MMA résumé outside the UFC before joining the promotion.",
+            "band": "broad",
             "verification": "verified",
             "sourceIds": [
               "profile"
             ]
           },
           {
+            "id": "ufc-kayla-harrison-b-3",
+            "text": "My first UFC appearance was on the promotion’s 300th numbered event.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ledger",
+              "profile"
+            ]
+          },
+          {
             "id": "ufc-kayla-harrison-b-4",
-            "text": "I won each of my first three UFC appearances.",
+            "text": "I won each of my first three UFC fights.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1880,56 +1881,60 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kayla-harrison-b-5",
-            "text": "My first UFC win came over a former UFC champion.",
+            "text": "My first UFC win came by submission against a former UFC champion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-kayla-harrison-b-6",
-            "text": "My second UFC fight ended in a three-round decision victory.",
+            "text": "My second UFC fight was a three-round decision win over Ketlen Vieira.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-kayla-harrison-b-7",
-            "text": "My third UFC appearance was a championship fight.",
+            "text": "My third UFC fight was a title bout against Julianna Peña.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-kayla-harrison-b-8",
-            "text": "I won that championship fight by submission.",
+            "text": "I won that championship fight with a second-round kimura.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-kayla-harrison-b-9",
-            "text": "My judo career included Olympic gold medals at consecutive Games.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "identity3"
-            ]
-          },
-          {
-            "id": "ufc-kayla-harrison-b-10",
-            "text": "As a teenager, I trained under Olympic medalist Jimmy Pedro.",
+            "text": "As a teenager, I moved to train under Olympic medalist Jimmy Pedro.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "identity2"
+            ]
+          },
+          {
+            "id": "ufc-kayla-harrison-b-10",
+            "text": "My pre-MMA résumé includes becoming the first American Olympic judo champion and then repeating as a gold medalist four years later.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity3"
             ]
           }
         ]
