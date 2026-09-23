@@ -5044,6 +5044,1294 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     }
   },
   {
+    "league": "CFB",
+    "subjectId": "cfb-archie-griffin",
+    "name": "Archie Griffin",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/archie-griffin/",
+      "heisman75": "https://www.heisman.com/heisman-winners/archie-griffin-75/",
+      "osu": "https://ohiostatebuckeyes.com/sports/2018/7/2/archie-griffin",
+      "retired": "https://ohiostatebuckeyes.com/news/2007/6/28/ohio-state-retires-archie-griffins-no-45-3",
+      "streak": "https://ohiostatebuckeyes.com/news/2014/7/29/did-you-know-31-days-to-kickoff",
+      "anniversary": "https://ohiostatebuckeyes.com/news/2020/12/2/45-years-later-griffins-still-the-only-two-time-heisman-winner-2"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-archie-griffin-a-1",
+            "text": "I became a four-year starting college tailback after arriving as a local high-school star.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-a-2",
+            "text": "In just my second college game, I rushed for a then-school-record 239 yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-a-3",
+            "text": "After 867 rushing yards as a freshman, I jumped to 1,577 as a sophomore.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-a-4",
+            "text": "My junior season produced a career-best 1,620 rushing yards and 12 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-a-5",
+            "text": "That year, I led my team to a 10-1 record and a No. 3 national ranking.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-a-6",
+            "text": "I won the Heisman Trophy as a junior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-a-7",
+            "text": "As a senior, I rushed for 1,357 yards while my team completed an 11-0 regular season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-a-8",
+            "text": "I then won the Heisman Trophy for a second consecutive year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman75",
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-a-9",
+            "text": "My four seasons included four Big Ten titles and four consecutive Rose Bowl starts for Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-a-10",
+            "text": "I wore No. 45 for the Buckeyes and remain the only player ever to win two Heisman Trophies.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu",
+              "retired"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-archie-griffin-b-1",
+            "text": "My first college carry ended in a fumble.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "anniversary"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-b-2",
+            "text": "Two weeks later, I responded with a 239-yard rushing game that broke a school record that had stood for 27 seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "anniversary"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-b-3",
+            "text": "Beginning in my sophomore season, I rushed for at least 100 yards in 31 consecutive regular-season games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "streak",
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-b-4",
+            "text": "That streak remains an NCAA record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "streak",
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-b-5",
+            "text": "I finished my college career with 5,589 rushing yards, still the school record decades later.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-b-6",
+            "text": "My teams went 40-5-1 during my four seasons as the starting tailback.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-b-7",
+            "text": "I was a three-time first-team All-American and twice won the Big Ten's Silver Football as league MVP.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-b-8",
+            "text": "I left college as the NCAA's all-time leading rusher at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "anniversary"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-b-9",
+            "text": "Ohio State later retired the No. 45 jersey I wore.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retired"
+            ]
+          },
+          {
+            "id": "cfb-archie-griffin-b-10",
+            "text": "I am the Buckeyes running back who won the Heisman in both 1974 and 1975.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "heisman75",
+              "osu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-bo-jackson",
+    "name": "Bo Jackson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/bo-jackson/",
+      "auburn40": "https://auburntigers.com/news/2025/08/15/auburn-to-honor-bo-jackson-at-iron-bowl-to-commemorate-40th-anniversary-of-heisman-trophy-season",
+      "auburnStory": "https://auburntigers.com/news/2025/11/28/heisman-at-40-auburn-honors-bo-jacksons-1985-season",
+      "auburnRoyals": "https://auburntigers.com/news/2024/06/30/bo-jack-royals-hof"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-bo-jackson-a-1",
+            "text": "I made an immediate impact as a true freshman running back, rushing for 829 yards and nine touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-a-2",
+            "text": "As a sophomore, I rushed for 1,213 yards and 12 touchdowns while my team finished 11-1.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-a-3",
+            "text": "Injuries limited me to 475 rushing yards during my junior football season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-a-4",
+            "text": "I opened my senior year with a career-high 290 rushing yards and four touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "auburnStory"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-a-5",
+            "text": "That senior season ended with 1,786 rushing yards and 17 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "auburn40"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-a-6",
+            "text": "I won the Heisman Trophy by only 45 points, then the closest vote in the award's history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "auburnStory"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-a-7",
+            "text": "I was a three-time All-SEC selection and a two-time All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-a-8",
+            "text": "I finished my college career with 4,303 rushing yards, a program record that still stands.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "auburnStory"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-a-9",
+            "text": "I became Auburn's second Heisman winner, following Pat Sullivan.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-a-10",
+            "text": "I wore No. 34 for Auburn, a jersey the school later retired.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "auburn40"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-bo-jackson-b-1",
+            "text": "I was recruited out of high school in three sports: football, baseball and track and field.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-b-2",
+            "text": "The New York Yankees drafted me out of high school, but I chose a football scholarship instead.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-b-3",
+            "text": "In college, I lettered not only in football but also in baseball and track.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-b-4",
+            "text": "I hit .401 during my junior baseball season and finished my college baseball career with a .335 average.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-b-5",
+            "text": "On the football field, a shoulder injury cost me roughly half of my junior season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "auburnStory"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-b-6",
+            "text": "Even while playing part of my senior season with broken ribs, I topped 200 rushing yards four times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "auburnStory"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-b-7",
+            "text": "Across four Iron Bowls, I rushed for 630 yards and six touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "auburnStory"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-b-8",
+            "text": "My 1985 Heisman season made me Auburn's second winner of the award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "auburnStory"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-b-9",
+            "text": "Tampa Bay selected me first overall in the 1986 NFL Draft, but I chose professional baseball instead.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "auburnRoyals"
+            ]
+          },
+          {
+            "id": "cfb-bo-jackson-b-10",
+            "text": "I am Auburn's No. 34 two-sport icon who won the 1985 Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "auburn40"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-earl-campbell",
+    "name": "Earl Campbell",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/earl-campbell/",
+      "texasVisit": "https://texaslonghorns.com/news/2012/1/8/010812aaa_605",
+      "texasSpring": "https://texaslonghorns.com/news/2010/4/3/040310aaa_559",
+      "texasThrill": "https://texaslonghorns.com/news/2009/7/9/070909aaa_585"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-earl-campbell-a-1",
+            "text": "I became a starting college fullback as a freshman and rushed for 928 yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasThrill"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-a-2",
+            "text": "As a sophomore, I rushed for 1,118 yards and 13 touchdowns and earned consensus All-America honors.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasThrill"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-a-3",
+            "text": "A hamstring injury then caused me to miss four games during my junior season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasThrill"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-a-4",
+            "text": "My senior season became my breakthrough, with 1,744 rushing yards and 19 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasSpring"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-a-5",
+            "text": "I led the nation in both rushing and scoring that year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasSpring"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-a-6",
+            "text": "My team completed an 11-0 regular season and spent much of the year ranked No. 1.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-a-7",
+            "text": "I won the Heisman Trophy after receiving 371 first-place votes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-a-8",
+            "text": "I finished my college career with a then-school-record 4,443 rushing yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasVisit"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-a-9",
+            "text": "I became the first Texas Longhorn to win the Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-a-10",
+            "text": "I wore No. 20 at Texas, a number the school later retired.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texasVisit"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-earl-campbell-b-1",
+            "text": "I was the fifth of 11 children, and two of my brothers later joined me at the same college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-b-2",
+            "text": "My first three college seasons were spent primarily as a fullback in the Wishbone offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasThrill"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-b-3",
+            "text": "During an injury-plagued junior season, I managed only 653 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasThrill"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-b-4",
+            "text": "With a new head coach as a senior, I moved to tailback in an I-formation offense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasThrill"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-b-5",
+            "text": "That season included road games of 222 rushing yards against Texas A&M and 213 against SMU.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasThrill"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-b-6",
+            "text": "I recorded ten 100-yard rushing games during my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasThrill"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-b-7",
+            "text": "My 1,744 rushing yards set a Southwest Conference record that stood for 16 years.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasSpring"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-b-8",
+            "text": "That season ended with the Heisman Trophy and a trip to the Cotton Bowl with Texas.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-b-9",
+            "text": "I became the first Heisman winner in Longhorn history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-earl-campbell-b-10",
+            "text": "Known as the 'Tyler Rose,' I am the Texas running back whose No. 20 was retired.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasVisit"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-herschel-walker",
+    "name": "Herschel Walker",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/herschel-walker/",
+      "ugaHonor": "https://georgiadogs.com/news/2025/5/13/general-walker-diaz-wallace-selected-for-georgias-circle-of-honor",
+      "ugaLegend": "https://georgiadogs.com/sports/2017/6/17/sports-m-footbl-spec-rel-geo-legends-walker-html",
+      "ugaCamp": "https://georgiadogs.com/news/2002/1/31/Herschel_Walker_Named_Walter_Camp_s_2001_Alumnus_of_the_Year"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-herschel-walker-a-1",
+            "text": "As a true freshman running back, I rushed for 1,616 yards and 15 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaHonor"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-a-2",
+            "text": "That freshman season ended 12-0 with a national championship.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaHonor"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-a-3",
+            "text": "I finished third in the Heisman voting that year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaHonor"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-a-4",
+            "text": "As a sophomore, I rushed for 1,891 yards and 20 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaCamp"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-a-5",
+            "text": "That second season moved me up to second in the Heisman voting.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaHonor"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-a-6",
+            "text": "As a junior, I rushed for 1,752 yards and won the Heisman Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaCamp"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-a-7",
+            "text": "I became the first player in my program's history to earn All-America honors in three different seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaHonor"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-a-8",
+            "text": "I finished my three-year college career with 5,259 rushing yards in the school's current record book.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaLegend",
+              "ugaHonor"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-a-9",
+            "text": "My No. 34 is one of the retired football jerseys at Georgia.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaHonor"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-a-10",
+            "text": "I am the Bulldogs running back who won the 1982 Heisman after finishing third and second the previous two years.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaHonor"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-herschel-walker-b-1",
+            "text": "As a high-school senior, I rushed for 3,167 yards while helping my team win its first state championship.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-b-2",
+            "text": "I was also the valedictorian of my high-school class.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-b-3",
+            "text": "My first college season set an NCAA freshman rushing record with 1,616 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaLegend"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-b-4",
+            "text": "That year, I became the first true freshman named a unanimous All-American.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaCamp"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-b-5",
+            "text": "In the national-title Sugar Bowl, I rushed for 150 yards and two touchdowns in a 17-10 win over Notre Dame.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaCamp"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-b-6",
+            "text": "I also competed in college track and earned All-America honors as a sprinter.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaCamp"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-b-7",
+            "text": "I finished in the top three of the Heisman voting in all three of my college seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-b-8",
+            "text": "By the end of my career, I owned 41 school records, 16 SEC records and 11 NCAA records.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaHonor"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-b-9",
+            "text": "Georgia retired the No. 34 jersey I wore.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaHonor"
+            ]
+          },
+          {
+            "id": "cfb-herschel-walker-b-10",
+            "text": "I am the Georgia running back whose three college seasons culminated with the 1982 Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "ugaHonor"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-ricky-williams",
+    "name": "Ricky Williams",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/ricky-williams/",
+      "texasRetire": "https://texaslonghorns.com/news/2012/2/7/020712aaa_159",
+      "texasCotton": "https://texaslonghorns.com/news/2017/12/28/football-ricky-williams-to-be-inducted-into-cotton-bowl-hall-of-fame",
+      "texasHall": "https://texaslonghorns.com/news/2010/9/11/091110aaa_917",
+      "texasTop": "https://texaslonghorns.com/news/2020/1/9/four-football-legends-named-in-college-footballs-top-150-players-of-all-time"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-ricky-williams-a-1",
+            "text": "I began college at fullback and rushed for 990 yards as a freshman.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasHall"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-a-2",
+            "text": "As a sophomore, I rushed for 1,272 yards and 12 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-a-3",
+            "text": "My junior season produced 1,893 rushing yards and 25 touchdowns while I led the nation in rushing.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-a-4",
+            "text": "I finished fifth in the Heisman voting that year, then returned for my senior season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-a-5",
+            "text": "As a senior, I rushed for 2,124 yards and 27 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-a-6",
+            "text": "I became the first player ever to win the Doak Walker Award twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasRetire"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-a-7",
+            "text": "I finished my career with 6,279 rushing yards and 72 rushing touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasRetire",
+              "texasCotton"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-a-8",
+            "text": "I left college holding 21 NCAA records and 46 school records.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasRetire",
+              "texasHall"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-a-9",
+            "text": "I became the second Texas player to win the Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasHall"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-a-10",
+            "text": "Texas later retired the No. 34 jersey I wore.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-ricky-williams-b-1",
+            "text": "I left California for college after saying the football culture of my destination appealed to me.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-b-2",
+            "text": "My freshman rushing total broke Earl Campbell's school freshman record.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasHall"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-b-3",
+            "text": "I helped my team win the Southwest Conference championship in 1995 and the Big 12 title in 1996.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasCotton"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-b-4",
+            "text": "I won back-to-back NCAA rushing titles in 1997 and 1998.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasRetire",
+              "texasCotton"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-b-5",
+            "text": "In my final home game, a 60-yard touchdown run against Texas A&M broke Tony Dorsett's 22-year-old NCAA career rushing record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasTop"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-b-6",
+            "text": "My senior season also brought the Maxwell and Walter Camp national player-of-the-year awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "texasRetire"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-b-7",
+            "text": "I won the Heisman with 714 first-place votes and 2,355 total points.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-b-8",
+            "text": "I was the first two-time Doak Walker winner and a two-time unanimous first-team All-American at Texas.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasCotton"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-b-9",
+            "text": "I finished my Longhorn career as the NCAA's all-time leading rusher at 6,279 yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHall",
+              "texasCotton"
+            ]
+          },
+          {
+            "id": "cfb-ricky-williams-b-10",
+            "text": "I am the Texas No. 34 running back who won the 1998 Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-ladainian-tomlinson",
+    "name": "LaDainian Tomlinson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/honors/college-football-hall-of-fame/ladainian-tomlinson/2370",
+      "tcuLegacy": "https://gofrogs.com/news/2014/10/2/Tomlinson_s_Legacy_Lingers_at_TCU",
+      "tcuDoak": "https://gofrogs.com/news/2000/12/9/tcu_s_ladainian_tomlinson_named_winner_of_the_2000_doak_walker_award_presented_by_vectrix",
+      "tcuHonor": "https://gofrogs.com/news/2005/11/30/Footage_from_LT_Day_now_available",
+      "tcuHistory": "https://gofrogs.com/documents/download/2018/7/31/06_mg_section_7.pdf",
+      "tcu1998": "https://gofrogs.com/news/2000/12/14/From_1_10_to_10_1_Frogs_to_Play_in_Mobile_Alabama_Bowl"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-ladainian-tomlinson-a-1",
+            "text": "I rushed for 538 yards as a college freshman and 717 as a sophomore.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tcuHistory"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-a-2",
+            "text": "My junior season was the breakout: 1,850 rushing yards and 18 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tcuHistory"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-a-3",
+            "text": "That year, I set an NCAA single-game record with 406 rushing yards against UTEP.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "tcuLegacy"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-a-4",
+            "text": "I followed with 2,158 rushing yards and 22 touchdowns as a senior.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tcuHistory"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-a-5",
+            "text": "I led the nation in rushing in both of my final two college seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "tcuLegacy"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-a-6",
+            "text": "I won the Doak Walker Award as the nation's top running back in my senior season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "tcuDoak"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-a-7",
+            "text": "I finished fourth in the Heisman Trophy voting that year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "tcuLegacy"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-a-8",
+            "text": "I ended my career with 5,263 rushing yards and 54 rushing touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tcuHistory",
+              "tcuHonor"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-a-9",
+            "text": "I became the all-time leading rusher in TCU and conference history at the time.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-a-10",
+            "text": "I wore No. 5 for TCU, a jersey the school later honored so it could not be worn again without my permission.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "tcuHonor"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-ladainian-tomlinson-b-1",
+            "text": "My first two college seasons totaled 1,255 rushing yards before I became a national star.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tcuHistory"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-b-2",
+            "text": "As a sophomore, I started games at both fullback and tailback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu1998"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-b-3",
+            "text": "That sophomore team won seven games and upset USC in the Sun Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tcuLegacy"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-b-4",
+            "text": "The next season, my team recovered from a 1-3 start to finish 7-1 down the stretch and earn a share of its conference championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tcuLegacy"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-b-5",
+            "text": "During that run, I rushed for 406 yards on 43 carries in one game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "tcuLegacy"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-b-6",
+            "text": "That performance also included an NCAA-record 287 rushing yards in one half.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-b-7",
+            "text": "My senior team reached 10 wins for the first time in school history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tcuLegacy"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-b-8",
+            "text": "I closed my career with consecutive national rushing titles and the 2000 Doak Walker Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "tcuDoak"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-b-9",
+            "text": "TCU later honored the No. 5 jersey I wore for four seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "tcuHonor"
+            ]
+          },
+          {
+            "id": "cfb-ladainian-tomlinson-b-10",
+            "text": "I am the Horned Frogs running back who ran for 406 yards in a game and finished fourth for the 2000 Heisman.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "tcuLegacy"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
     "league": "NFL",
     "subjectId": "andy-reid",
     "name": "Andy Reid",
