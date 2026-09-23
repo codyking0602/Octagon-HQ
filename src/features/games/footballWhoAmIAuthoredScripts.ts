@@ -33929,6 +33929,2455 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "joe-namath",
+    "name": "Joe Namath",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/joe-namath"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-joe-namath-a-1",
+            "text": "I entered pro football during the AFL-NFL bidding era after being drafted by clubs in both leagues.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-a-2",
+            "text": "I chose the AFL and won that league's Rookie of the Year award in my first season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-a-3",
+            "text": "Two years into my career, I became the first pro quarterback to pass for more than 4,000 yards in a season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-a-4",
+            "text": "That 4,000-yard passing barrier was not reached again for another 12 years.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-a-5",
+            "text": "In 1968, I was the AFL Player of the Year and a unanimous All-Pro.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-a-6",
+            "text": "That season ended with my team facing the heavily favored Baltimore Colts in the championship game between the rival leagues.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-a-7",
+            "text": "Before that championship game, I publicly guaranteed my team would win.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-a-8",
+            "text": "We won 16-7, and I was named the game's Most Valuable Player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-a-9",
+            "text": "My pro identity became inseparable from the New York Jets and the nickname \"Broadway Joe.\"",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-a-10",
+            "text": "The championship I guaranteed was Super Bowl III, the defining upset of the AFL-NFL era.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-joe-namath-b-1",
+            "text": "Knee injuries followed me throughout a 13-season professional career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-b-2",
+            "text": "Even so, I finished in the top three in passing yards in six different seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-b-3",
+            "text": "I ranked among the league leaders in touchdown passes four times and in sack percentage six times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-b-4",
+            "text": "I led the AFL or NFL in game-winning drives in four separate seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-b-5",
+            "text": "I earned all-league honors four times and was selected to five All-AFL or Pro Bowl teams.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-b-6",
+            "text": "In 1972, I led the NFL in yards per pass attempt at 8.7.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-b-7",
+            "text": "Earlier, in 1967, I had led the AFL in the same category at 8.2 yards per attempt.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-b-8",
+            "text": "I became the only pro player to lead both the AFL and the NFL in yards per passing attempt.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-b-9",
+            "text": "I finished with 27,663 passing yards and 173 touchdown passes while becoming the quarterback most associated with the Jets' first championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-namath-b-10",
+            "text": "My career is remembered above all for delivering the Jets' 16-7 Super Bowl upset after a famous guarantee.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "andrew-luck",
+    "name": "Andrew Luck",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "draft": "https://www.colts.com/news/arrival-of-new-era-7240445",
+      "rookie": "https://www.colts.com/news/record-breaking-2012-season-had-it-all-9268685",
+      "playoff": "https://www.colts.com/news/andrew-luck-directs-first-playoff-win-12360877",
+      "season14": "https://www.colts.com/news/2014-indianapolis-colts-season-in-review-14861314",
+      "retire": "https://www.colts.com/news/andrew-luck-announces-retirement-from-nfl"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-andrew-luck-a-1",
+            "text": "I became an immediate NFL starter and won 11 games during my rookie regular season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-a-2",
+            "text": "That debut season included seven fourth-quarter or overtime game-winning drives.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-a-3",
+            "text": "I was the first overall selection in the 2012 NFL Draft after playing quarterback at Stanford.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-a-4",
+            "text": "I threw for 4,374 yards as a rookie, then the NFL record for a first-year quarterback.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-a-5",
+            "text": "I became the first rookie quarterback with at least 4,000 passing yards and 10 wins.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rookie"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-a-6",
+            "text": "In my second postseason, I helped erase a 28-point deficit in a 45-44 wild-card victory.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "playoff"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-a-7",
+            "text": "That comeback against Kansas City gave me my first NFL playoff win.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "playoff"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-a-8",
+            "text": "By my third season, I led the NFL with 40 touchdown passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "season14"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-a-9",
+            "text": "That same 2014 season, I set a Colts record with 4,761 passing yards and led Indianapolis to the AFC Championship Game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "season14",
+              "retire"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-a-10",
+            "text": "I was Indianapolis' first-overall quarterback from Stanford who reached four Pro Bowls before stepping away from football.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "retire"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-andrew-luck-b-1",
+            "text": "I was selected to the Pro Bowl in each of my first three NFL seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-b-2",
+            "text": "A shoulder injury later kept me off the field for an entire season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-b-3",
+            "text": "I returned in 2018 and won NFL Comeback Player of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-b-4",
+            "text": "That comeback season produced the fourth Pro Bowl selection of my career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-b-5",
+            "text": "I finished my regular-season career with a 55-33 record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-b-6",
+            "text": "Across 86 regular-season games, I threw 171 touchdown passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-b-7",
+            "text": "My 23,671 career passing yards ranked third in Colts history when I retired.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-b-8",
+            "text": "I completed exactly 2,000 regular-season passes for Indianapolis.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-b-9",
+            "text": "The Colts chose me first overall in 2012 to begin a new era at quarterback in Indianapolis.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-andrew-luck-b-10",
+            "text": "I unexpectedly retired in August 2019 after explaining that repeated injury, pain and rehabilitation had taken the joy out of playing.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "tony-dorsett",
+    "name": "Tony Dorsett",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/tony-dorsett"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-tony-dorsett-a-1",
+            "text": "I was a first-round running back who topped 1,000 rushing yards as an NFL rookie.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-a-2",
+            "text": "My first professional season produced 1,007 rushing yards and 12 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-a-3",
+            "text": "I was named the league's Offensive Rookie of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-a-4",
+            "text": "I rushed for more than 1,000 yards in eight of my first nine NFL seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-a-5",
+            "text": "My best rushing season came in 1981, when I gained 1,646 yards and added 325 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-a-6",
+            "text": "I played in five conference championship games during my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-a-7",
+            "text": "I appeared in both Super Bowl XII and Super Bowl XIII.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-a-8",
+            "text": "Across 17 postseason games, I rushed for 1,383 yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-a-9",
+            "text": "I spent the first 11 seasons of my career in the Dallas Cowboys backfield.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-a-10",
+            "text": "My 99-yard touchdown run in the 1982 regular-season finale set a record that can only be tied.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-tony-dorsett-b-1",
+            "text": "Before turning pro, I was a four-time All-American and a Heisman Trophy winner at Pittsburgh.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-b-2",
+            "text": "Dallas selected me in the first round of the 1977 NFL Draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-b-3",
+            "text": "I won the NFC rushing title during the strike-shortened 1982 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-b-4",
+            "text": "I finished my professional career with 16,326 yards from scrimmage.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-b-5",
+            "text": "My 91 career touchdowns included scores as a runner, receiver and on a fumble return.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-b-6",
+            "text": "I earned four Pro Bowl selections and first-team All-Pro honors in 1981.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-b-7",
+            "text": "After 11 seasons in Dallas, I was traded to Denver before the 1988 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-b-8",
+            "text": "I led the Broncos with 703 rushing yards in my lone season there before an injury ended my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-b-9",
+            "text": "I retired with 12,739 rushing yards, one of the largest totals in league history at the time.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dorsett-b-10",
+            "text": "I am the Hall of Fame Cowboys running back whose signature NFL play was a 99-yard touchdown run.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-christian-mccaffrey",
+    "name": "Christian McCaffrey",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "panthers": "https://www.panthers.com/news/christian-mccaffrey-statistics-rankings-records-panthers-career",
+      "draft": "https://www.panthers.com/history/this-day",
+      "trade": "https://www.49ers.com/news/49ers-announce-trade-for-running-back-christian-mccaffrey",
+      "triple": "https://www.49ers.com/news/christian-mccaffrey-named-nfc-offensive-player-of-the-week",
+      "opoy": "https://www.49ers.com/news/christian-mccaffrey-announced-as-ap-offensive-player-of-the-year"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-christian-mccaffrey-a-1",
+            "text": "I entered the NFL as a top-10 running back and immediately became a major receiving option out of the backfield.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "panthers"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-a-2",
+            "text": "As a rookie, I caught 80 passes and produced 1,086 yards from scrimmage.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "panthers"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-a-3",
+            "text": "In my second season, I topped 1,000 rushing yards while catching 107 passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "panthers"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-a-4",
+            "text": "A year later, I became the third player in NFL history with 1,000 rushing yards and 1,000 receiving yards in the same season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "panthers"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-a-5",
+            "text": "That 2019 season produced 2,392 yards from scrimmage, then the third-highest total in league history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "panthers"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-a-6",
+            "text": "I set the single-season record for receptions by a running back with 116.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "panthers"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-a-7",
+            "text": "I was named first-team All-Pro at both running back and flex for that season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "panthers",
+              "trade"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-a-8",
+            "text": "I became the fastest player in league history to reach both 3,000 rushing yards and 3,000 receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "panthers"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-a-9",
+            "text": "Carolina drafted me eighth overall in 2017 and used me as one of the league's premier dual-threat backs.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "panthers"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-a-10",
+            "text": "My 1,000-rushing, 1,000-receiving season made me the defining all-purpose weapon of the Panthers' late-2010s offense.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "panthers"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-christian-mccaffrey-b-1",
+            "text": "My career took a major turn when I was traded during the 2022 season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-b-2",
+            "text": "The acquiring team sent four draft choices, including second-, third- and fourth-round picks, to Carolina.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-b-3",
+            "text": "Nine days after that trade, I scored touchdowns as a passer, runner and receiver in the same game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "triple"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-b-4",
+            "text": "That made me one of only four players since the 1970 merger to score all three ways in one game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "triple"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-b-5",
+            "text": "In 2023, I led the NFL with 1,459 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "opoy"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-b-6",
+            "text": "That season I also led the league in scrimmage touches, scrimmage yards and scrimmage touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "opoy"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-b-7",
+            "text": "I surpassed 2,000 yards from scrimmage for the second time in my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "opoy"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-b-8",
+            "text": "I was a unanimous first-team All-Pro and won AP Offensive Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "opoy"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-b-9",
+            "text": "Those honors came in my first full season with the San Francisco 49ers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "trade",
+              "opoy"
+            ]
+          },
+          {
+            "id": "nfl-christian-mccaffrey-b-10",
+            "text": "I am the former Panthers all-purpose star who became the 49ers' Offensive Player of the Year running back.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "panthers",
+              "opoy"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-cris-carter",
+    "name": "Cris Carter",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/cris-carter"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-cris-carter-a-1",
+            "text": "I entered the NFL through the supplemental draft rather than the regular college draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-a-2",
+            "text": "My first NFL reception went for a 22-yard touchdown.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-a-3",
+            "text": "After beginning my career in Philadelphia, I found my long-term home with Minnesota.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-a-4",
+            "text": "Across two consecutive seasons, I caught 244 passes, then the most ever over a two-year span.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-a-5",
+            "text": "I recorded 122 receptions in back-to-back seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-a-6",
+            "text": "I led the NFL in receiving touchdowns three different times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-a-7",
+            "text": "I posted at least 10 receiving touchdowns in six seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-a-8",
+            "text": "I finished my career with 130 touchdown receptions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-a-9",
+            "text": "I held or shared 19 Minnesota Vikings receiving records when my Hall of Fame profile was compiled.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-a-10",
+            "text": "I became the Hall of Fame Vikings receiver remembered for elite hands and 1,101 career catches.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-cris-carter-b-1",
+            "text": "I played 13 full 16-game seasons during a 16-year NFL career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-b-2",
+            "text": "I produced 42 career games with at least 100 receiving yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-b-3",
+            "text": "I caught at least 70 passes in 10 different seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-b-4",
+            "text": "I was selected to the NFL's All-Decade Team for the 1990s.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-b-5",
+            "text": "I finished with 13,899 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-b-6",
+            "text": "My 1,101 receptions ranked second in NFL history when I retired.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-b-7",
+            "text": "I initially retired after the 2001 season, then returned for five games with Miami in 2002.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-b-8",
+            "text": "That brief Dolphins stint was the final stop of my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-b-9",
+            "text": "Before Miami, I had spent 12 seasons catching passes for the Minnesota Vikings.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-cris-carter-b-10",
+            "text": "I am the 1990s All-Decade Vikings star who retired with more than 1,100 catches and 130 receiving touchdowns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-deandre-hopkins",
+    "name": "DeAndre Hopkins",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "draft": "https://www.nfl.com/draft/tracker/2013/rounds/1",
+      "allpro17": "https://www.houstontexans.com/news/deandre-hopkins-named-ap-all-pro-first-team-20203433",
+      "allpro19": "https://www.houstontexans.com/news/wr-deandre-hopkins-named-ap-first-team-all-pro",
+      "cards": "https://www.azcardinals.com/news/deandre-hopkins-number-8-in-nfl-top-100-2021",
+      "hail": "https://www.azcardinals.com/news/cardinals-hail-mary-deandre-hopkins-kyler-murray-beats-bills"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-deandre-hopkins-a-1",
+            "text": "I was a first-round wide receiver whose production stayed remarkably consistent through my first seven NFL seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "allpro19"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-a-2",
+            "text": "I opened my career with seven consecutive seasons of at least 800 receiving yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro19"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-a-3",
+            "text": "By the end of that stretch, I had already surpassed 600 receptions, 8,500 receiving yards and 50 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro19"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-a-4",
+            "text": "I earned second-team All-Pro honors in 2015 before reaching an even higher level two years later.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro17",
+              "allpro19"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-a-5",
+            "text": "In 2017, I caught 96 passes for 1,378 yards and a franchise-record 13 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro17"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-a-6",
+            "text": "Those 13 touchdown catches led the NFL.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro17"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-a-7",
+            "text": "I was named first-team All-Pro in three consecutive seasons from 2017 through 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro19"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-a-8",
+            "text": "By 2019, my four career All-Pro selections tied the offensive club record set by another star Houston receiver.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro19"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-a-9",
+            "text": "Houston selected me 27th overall in the 2013 draft after my college career at Clemson.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-a-10",
+            "text": "I became the Texans' three-time first-team All-Pro receiver before the next chapter of my career began in Arizona.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro19",
+              "cards"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-deandre-hopkins-b-1",
+            "text": "In my final college season, I caught 18 touchdown passes at Clemson.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-b-2",
+            "text": "I entered the NFL as the 27th overall selection in 2013.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-b-3",
+            "text": "After seven seasons in Houston, I began a new chapter with Arizona.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "allpro19",
+              "cards"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-b-4",
+            "text": "In my first Cardinals season, I set a franchise record with 115 receptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cards"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-b-5",
+            "text": "That year I also recorded 1,407 receiving yards and six touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cards"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-b-6",
+            "text": "One of my most famous catches came on a 43-yard throw with two seconds left against Buffalo.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hail"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-b-7",
+            "text": "I secured that pass in the end zone while surrounded by three Bills defenders.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hail"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-b-8",
+            "text": "The touchdown completed a 32-30 comeback victory.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hail"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-b-9",
+            "text": "That last-second play became known as the Cardinals' \"Hail Murray.\"",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hail"
+            ]
+          },
+          {
+            "id": "nfl-deandre-hopkins-b-10",
+            "text": "I am the former Texans All-Pro who made Arizona's famous Hail Mary catch from Kyler Murray.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hail",
+              "allpro19"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-tony-gonzalez",
+    "name": "Tony Gonzalez",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/tony-gonzalez"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-tony-gonzalez-a-1",
+            "text": "I was a first-round tight end who developed into one of the most durable receiving threats at my position.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-a-2",
+            "text": "My breakout third NFL season produced 76 catches, 849 yards and 11 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-a-3",
+            "text": "That season began a run that eventually included 14 Pro Bowl selections.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-a-4",
+            "text": "A year later, I topped 1,200 receiving yards for the first time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-a-5",
+            "text": "I caught at least 80 passes in eight different seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-a-6",
+            "text": "In 2004, I led the entire NFL with a career-high 102 receptions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-a-7",
+            "text": "I earned first-team All-Pro honors seven times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-a-8",
+            "text": "I led Kansas City in receiving in eight different seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-a-9",
+            "text": "The Chiefs selected me in the first round in 1997 after my college career at California.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-a-10",
+            "text": "I retired as the career leader among NFL tight ends in receptions, receiving yards and touchdown catches.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-tony-gonzalez-b-1",
+            "text": "I missed only one game during a 17-season NFL career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-b-2",
+            "text": "Except for my rookie year, I never finished a season with fewer than 59 receptions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-b-3",
+            "text": "I recorded at least 900 receiving yards in nine different seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-b-4",
+            "text": "After 12 seasons with my first team, I was traded to Atlanta in 2009.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-b-5",
+            "text": "I later helped the Falcons reach the conference championship game after the 2012 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-b-6",
+            "text": "That was the only conference championship game appearance of my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-b-7",
+            "text": "I finished with 1,325 catches for 15,127 yards and 111 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-b-8",
+            "text": "At retirement, I ranked second in NFL history in career receptions regardless of position.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-b-9",
+            "text": "I was selected to the NFL's All-Decade Team for the 2000s.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-gonzalez-b-10",
+            "text": "I am the Hall of Fame tight end who starred for both the Chiefs and Falcons while redefining receiving production at the position.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-joe-thomas",
+    "name": "Joe Thomas",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/joe-thomas"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-joe-thomas-a-1",
+            "text": "I was a top-three draft pick who immediately became a full-time starter on the offensive line.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-a-2",
+            "text": "As a rookie, I started every game and earned a spot on the league's All-Rookie Team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-a-3",
+            "text": "That debut season also began a streak of 10 consecutive Pro Bowl selections.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-a-4",
+            "text": "I became the only offensive lineman ever selected to the Pro Bowl in each of his first 10 seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-a-5",
+            "text": "I earned first-team All-Pro honors six times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-a-6",
+            "text": "Those first-team selections came in two three-year runs: 2009-11 and 2013-15.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-a-7",
+            "text": "I was selected to the NFL's All-Decade Team for the 2010s.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-a-8",
+            "text": "My team went 10-6 in my rookie year, the only winning season of my NFL career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-a-9",
+            "text": "Cleveland selected me third overall in the 2007 draft, and I spent all 11 of my seasons with the Browns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-a-10",
+            "text": "I am the Hall of Fame Browns left tackle whose first 10 seasons all ended with Pro Bowl honors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-joe-thomas-b-1",
+            "text": "I built my career around availability as much as individual honors.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-b-2",
+            "text": "For more than a decade, I did not miss a start or even an offensive snap.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-b-3",
+            "text": "I eventually started all 167 games I played in the NFL.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-b-4",
+            "text": "My consecutive-snap streak reached 10,363 plays.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-b-5",
+            "text": "That streak was widely regarded as an NFL record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-b-6",
+            "text": "It finally ended when a triceps injury forced me out during the 2017 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-b-7",
+            "text": "I retired in March 2018 after 11 seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-b-8",
+            "text": "My 10,363-snap streak was later commemorated in Cleveland's Ring of Honor.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-b-9",
+            "text": "Every one of my 167 career starts came for the Cleveland Browns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-joe-thomas-b-10",
+            "text": "I am the third-overall Wisconsin tackle whose 10,363 consecutive snaps became the signature number of my Browns career.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "reggie-white",
+    "name": "Reggie White",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/reggie-white"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-reggie-white-a-1",
+            "text": "I spent my first two professional seasons outside the NFL before joining the league in 1985.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-a-2",
+            "text": "Even though I arrived after the season had begun, I recorded 13 sacks in my first NFL campaign.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-a-3",
+            "text": "Two years later, I piled up 21 sacks in only 12 games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-a-4",
+            "text": "I followed that with an 18-sack season in 1988.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-a-5",
+            "text": "My dominance helped earn me a place on the NFL's All-Decade Team for the 1980s.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-a-6",
+            "text": "I was named first-team All-Pro 10 times during my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-a-7",
+            "text": "I was selected to 13 consecutive Pro Bowls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-a-8",
+            "text": "My first eight NFL seasons were spent terrorizing quarterbacks for Philadelphia.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-a-9",
+            "text": "I retired as the NFL's all-time sack leader with 198.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-a-10",
+            "text": "I am the Hall of Fame pass rusher whose dominance earned All-Decade honors in both the 1980s and 1990s.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-reggie-white-b-1",
+            "text": "I was an ordained minister long before my professional football career was finished.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-b-2",
+            "text": "That background helped produce one of the most famous defensive nicknames in league history.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-b-3",
+            "text": "After leaving Philadelphia, I became a cornerstone of Green Bay's defense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-b-4",
+            "text": "I recorded three sacks in Super Bowl XXXI.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-b-5",
+            "text": "That performance helped the Packers win the championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-b-6",
+            "text": "Over the next two Green Bay seasons, I added 27 more sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-b-7",
+            "text": "After briefly retiring, I returned for one final season with Carolina in 2000.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-b-8",
+            "text": "I finished with 198 career sacks across 232 NFL games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-b-9",
+            "text": "Fans knew me as the \"Minister of Defense,\" a nickname tied to both my faith and my pass-rushing dominance.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-reggie-white-b-10",
+            "text": "I am the Eagles-and-Packers legend who won Super Bowl XXXI and retired as the league's career sack leader.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-dwight-freeney",
+    "name": "Dwight Freeney",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/dwight-freeney"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-dwight-freeney-a-1",
+            "text": "I was a first-round edge rusher who made an immediate impact on a defense that had struggled the year before.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-a-2",
+            "text": "As a rookie, I played all 16 games and started eight of them.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-a-3",
+            "text": "That debut season produced 13 sacks and 20 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-a-4",
+            "text": "I was named to the NFL All-Rookie Team and finished second in Defensive Rookie of the Year voting.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-a-5",
+            "text": "I recorded double-digit sacks in each of my next three seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-a-6",
+            "text": "In 2004, I led the NFL with 16 sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-a-7",
+            "text": "That season brought my first first-team All-Pro selection.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-a-8",
+            "text": "I later won a Super Bowl with the team that drafted me.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-a-9",
+            "text": "Indianapolis selected me 11th overall in 2002, and I spent my first 11 seasons with the Colts.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-a-10",
+            "text": "I am the Hall of Fame Colts pass rusher whose explosive spin move era included a league-leading 16-sack season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-dwight-freeney-b-1",
+            "text": "My pass-rushing career eventually stretched across 16 NFL seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-b-2",
+            "text": "I played 218 regular-season games and appeared in 22 more in the postseason.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-b-3",
+            "text": "I finished with 125.5 regular-season sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-b-4",
+            "text": "I also forced 47 fumbles, tied for fourth-most in league history when my Hall of Fame profile was compiled.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-b-5",
+            "text": "Twice in my career, I forced three fumbles in a single game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-b-6",
+            "text": "After a foot injury limited me in 2007, I rebounded with 10.5 sacks the next season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-b-7",
+            "text": "I then totaled 23.5 sacks over the following two seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-b-8",
+            "text": "My postseason résumé included three AFC Championship Games and two NFC Championship Games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-b-9",
+            "text": "I played in three Super Bowls and won one of them with Indianapolis.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-dwight-freeney-b-10",
+            "text": "I am the 2024 Hall of Fame inductee who built the first 11 seasons of a 125.5-sack career with the Colts.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "ronnie-lott",
+    "name": "Ronnie Lott",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/ronnie-lott"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-ronnie-lott-a-1",
+            "text": "I was a top-10 defensive back who stepped directly into a starting role as an NFL rookie.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-a-2",
+            "text": "During that first season, I returned three interceptions for touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-a-3",
+            "text": "I helped a young secondary reach and win the Super Bowl in my rookie year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-a-4",
+            "text": "I finished second in the league's Rookie of the Year voting.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-a-5",
+            "text": "Over my first 10 NFL seasons, my team won eight division titles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-a-6",
+            "text": "I was part of four championship teams during that decade.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-a-7",
+            "text": "Across 20 career playoff starts, I intercepted nine passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-a-8",
+            "text": "I earned eight first-team All-Pro selections and 10 Pro Bowl selections.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-a-9",
+            "text": "San Francisco selected me eighth overall in 1981, and I spent my first 10 seasons with the 49ers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-a-10",
+            "text": "I am the Hall of Fame defensive back who anchored four 49ers Super Bowl champions in the 1980s.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-ronnie-lott-b-1",
+            "text": "My career included significant time at cornerback, free safety and strong safety.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-b-2",
+            "text": "I was selected to the Pro Bowl at three different secondary positions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-b-3",
+            "text": "In 1986, I led the NFL with a career-high 10 interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-b-4",
+            "text": "That same season I added 77 tackles, three forced fumbles and two sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-b-5",
+            "text": "I finished my career with 63 interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-b-6",
+            "text": "I led the league in interceptions twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-b-7",
+            "text": "After a decade in San Francisco, I played for the Raiders and then the Jets.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-b-8",
+            "text": "I surpassed 1,000 career tackles during my final seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-b-9",
+            "text": "My combination of cornerback skill and punishing safety play made me one of the defining defensive backs of the 1980s 49ers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ronnie-lott-b-10",
+            "text": "I am the USC product drafted eighth overall by San Francisco who later finished with 63 interceptions and four Super Bowl rings.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "champ-bailey",
+    "name": "Champ Bailey",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/champ-bailey"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-champ-bailey-a-1",
+            "text": "I was a top-10 cornerback who started every game of my rookie NFL season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-a-2",
+            "text": "As a rookie, I intercepted five passes and returned one for a touchdown.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-a-3",
+            "text": "In one game that year, I became the youngest player in league history to record three interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-a-4",
+            "text": "I spent my first five NFL seasons in Washington.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-a-5",
+            "text": "A blockbuster trade sent me to Denver before the 2004 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-a-6",
+            "text": "In 2006, I led the NFL with 10 interceptions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-a-7",
+            "text": "Those picks produced 162 return yards and one touchdown.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-a-8",
+            "text": "I was selected to 12 Pro Bowls, the most by a defensive back in league history when I entered the Hall of Fame.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-a-9",
+            "text": "Washington selected me seventh overall in 1999 after an All-America career at Georgia.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-a-10",
+            "text": "I am the Hall of Fame cornerback who spent a decade in Denver after beginning his career in Washington.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-champ-bailey-b-1",
+            "text": "I played 215 regular-season games across a 15-year NFL career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-b-2",
+            "text": "I started all but three of those games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-b-3",
+            "text": "I finished with 52 interceptions and 203 passes defensed.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-b-4",
+            "text": "My career totals also included 908 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-b-5",
+            "text": "I earned five first-team All-Pro selections and a spot on the NFL's All-Decade Team for the 2000s.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-b-6",
+            "text": "One of my signature postseason plays began with an interception in my own end zone against New England.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-b-7",
+            "text": "I returned that interception 100 yards before being tackled at the 1-yard line.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-b-8",
+            "text": "At the time, that was the longest non-scoring play in NFL history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-b-9",
+            "text": "That famous playoff return came as a Denver Bronco in January 2006.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-champ-bailey-b-10",
+            "text": "I am the 12-time Pro Bowl cornerback whose Washington-to-Denver career included a 100-yard playoff interception return.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
