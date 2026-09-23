@@ -1,12 +1,13 @@
 import {
   ufcWhoAmIAuthoredLaunchPool,
 } from "../games/ufcWhoAmIAuthoredLaunchPool";
-import type {
-  UfcWhoAmIAuthoredIdentity,
-  UfcWhoAmIAuthoredScriptId,
-} from "../games/ufcWhoAmIAuthoredScripts";
-import { getUfcWhoAmIUniverse } from "../games/ufcWhoAmIAuthority";
-import type { WhoAmIRound, WhoAmISubject } from "../games/whoAmIEngine";
+import type { UfcWhoAmIAuthoredScriptId } from "../games/ufcWhoAmIAuthoredScripts";
+import type { WhoAmIRound } from "../games/whoAmIEngine";
+import {
+  buildUfcWhoAmIAuthoredRound,
+  ufcWhoAmIAuthoredScriptIds,
+  ufcWhoAmIAuthoredSubject,
+} from "./ufcWhoAmIAuthoredRound";
 import {
   appendWhoAmIAuthoredHistory,
   selectWhoAmIAuthoredIdentity,
@@ -21,83 +22,14 @@ export interface UfcWhoAmIAuthoredDailyRound {
   scriptId: UfcWhoAmIAuthoredScriptId;
 }
 
-function subjectFromCandidate(
-  candidate: ReturnType<typeof getUfcWhoAmIUniverse>["candidates"][number],
-): WhoAmISubject {
-  const { id, name, kind, eraBand, rescueGroup } = candidate;
-  return {
-    id,
-    name,
-    kind,
-    ...(eraBand ? { eraBand } : {}),
-    ...(rescueGroup ? { rescueGroup } : {}),
-  };
-}
-
-function authoredSubject(identity: UfcWhoAmIAuthoredIdentity): WhoAmISubject {
-  const existing = getUfcWhoAmIUniverse().candidates.find(
-    (candidate) => candidate.id === identity.subjectId,
-  );
-  if (!existing) {
-    throw new Error(`Authored UFC Who Am I subject ${identity.subjectId} is outside the canonical UFC universe.`);
-  }
-  if (existing.name !== identity.name) {
-    throw new Error(
-      `Authored UFC Who Am I subject id ${identity.subjectId} belongs to ${existing.name}, not ${identity.name}.`,
-    );
-  }
-  return subjectFromCandidate(existing);
-}
-
-function ufcSubjects() {
-  return getUfcWhoAmIUniverse().candidates.map(subjectFromCandidate);
-}
-
-function scriptIds(identity: UfcWhoAmIAuthoredIdentity) {
-  return (["A", "B", "C"] as const).filter((id) => Boolean(identity.scripts[id]));
-}
-
 function selectionCandidates() {
   return ufcWhoAmIAuthoredLaunchPool.map(
     (identity): WhoAmIAuthoredSelectionCandidate<UfcWhoAmIAuthoredScriptId> => ({
       subjectId: identity.subjectId,
       earlyRotation: identity.earlyRotation,
-      scriptIds: scriptIds(identity),
+      scriptIds: ufcWhoAmIAuthoredScriptIds(identity),
     }),
   );
-}
-
-function authoredRound(
-  selection: { subjectId: string; scriptId: UfcWhoAmIAuthoredScriptId },
-): UfcWhoAmIAuthoredDailyRound {
-  const identity = ufcWhoAmIAuthoredLaunchPool.find(
-    (row) => row.subjectId === selection.subjectId,
-  );
-  if (!identity) {
-    throw new Error(`Authored UFC Who Am I subject ${selection.subjectId} is unavailable.`);
-  }
-
-  const script = identity.scripts[selection.scriptId];
-  if (!script || script.clues.length !== 10) {
-    throw new Error(
-      `Authored UFC Who Am I script ${selection.scriptId} is unavailable for ${identity.subjectId}.`,
-    );
-  }
-
-  return {
-    scriptId: selection.scriptId,
-    round: {
-      sport: "ufc",
-      league: "UFC",
-      subjects: ufcSubjects(),
-      hiddenSubject: authoredSubject(identity),
-      clues: script.clues.map((clue) => ({
-        id: clue.id,
-        text: clue.text,
-        band: clue.band,
-      })),
-    },
-  };
 }
 
 function ufcHistory(history: readonly WhoAmIAuthoredPublicationHistoryEntry[]) {
@@ -132,8 +64,8 @@ export function createUfcWhoAmIAuthoredDailyRounds(
   }
 
   return [
-    authoredRound(firstSelection),
-    authoredRound(secondSelection),
+    { scriptId: firstSelection.scriptId, round: buildUfcWhoAmIAuthoredRound(firstSelection) },
+    { scriptId: secondSelection.scriptId, round: buildUfcWhoAmIAuthoredRound(secondSelection) },
   ] as const;
 }
 
@@ -159,8 +91,8 @@ export function ufcWhoAmIAuthoredBindingAudit() {
   return ufcWhoAmIAuthoredLaunchPool.map((identity) => ({
     name: identity.name,
     subjectId: identity.subjectId,
-    subjectName: authoredSubject(identity).name,
+    subjectName: ufcWhoAmIAuthoredSubject(identity).name,
     earlyRotation: identity.earlyRotation,
-    scriptIds: scriptIds(identity),
+    scriptIds: ufcWhoAmIAuthoredScriptIds(identity),
   }));
 }
