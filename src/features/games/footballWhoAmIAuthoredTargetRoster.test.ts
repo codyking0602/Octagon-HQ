@@ -3,6 +3,8 @@ import { getFootballWhoAmILaunchPool } from "./footballWhoAmIAuthority";
 import {
   FOOTBALL_WHO_AM_I_AUDITED_CUT_NAMES,
   FOOTBALL_WHO_AM_I_AUTHORED_APPROVED_ADDITIONS,
+  FOOTBALL_WHO_AM_I_AUTHORED_COACH_ADDITIONS,
+  FOOTBALL_WHO_AM_I_AUTHORED_COACH_CUT_NAMES,
   FOOTBALL_WHO_AM_I_AUTHORED_EXPLICIT_OUT,
   FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES,
   footballWhoAmIAuthoredTargetRoster,
@@ -20,8 +22,8 @@ describe("Football Who Am I authored target roster", () => {
     expect(footballWhoAmIAuthoredTargetRoster("NFL").coaches).toHaveLength(20);
     expect(footballWhoAmIAuthoredTargetRoster("NFL").subjects).toHaveLength(140);
     expect(footballWhoAmIAuthoredTargetRoster("CFB").players).toHaveLength(168);
-    expect(footballWhoAmIAuthoredTargetRoster("CFB").coaches).toHaveLength(20);
-    expect(footballWhoAmIAuthoredTargetRoster("CFB").subjects).toHaveLength(188);
+    expect(footballWhoAmIAuthoredTargetRoster("CFB").coaches).toHaveLength(25);
+    expect(footballWhoAmIAuthoredTargetRoster("CFB").subjects).toHaveLength(193);
   });
 
   it.each(LEAGUES)("keeps the frozen %s identities unique", (league) => {
@@ -48,9 +50,25 @@ describe("Football Who Am I authored target roster", () => {
     expect([...reconstructed.entries()].sort()).toEqual(
       frozen.map((subject) => [subject.subjectId, subject.name] as const).sort(),
     );
-    expect(legacy.coaches.map((subject) => [subject.id, subject.name] as const)).toEqual(
-      footballWhoAmIAuthoredTargetRoster(league).coaches
-        .map((subject) => [subject.subjectId, subject.name] as const),
+  });
+
+  it.each(LEAGUES)("reconstructs the frozen %s coaches from reviewed cuts plus approved additions", (league) => {
+    const legacy = getFootballWhoAmILaunchPool(league);
+    const cuts = new Set(FOOTBALL_WHO_AM_I_AUTHORED_COACH_CUT_NAMES[league].map(normalizedName));
+    expect(legacy.coaches.filter((subject) => cuts.has(normalizedName(subject.name)))).toHaveLength(cuts.size);
+
+    const reconstructed = new Map(
+      legacy.coaches
+        .filter((subject) => !cuts.has(normalizedName(subject.name)))
+        .map((subject) => [subject.id, subject.name] as const),
+    );
+    for (const addition of FOOTBALL_WHO_AM_I_AUTHORED_COACH_ADDITIONS[league]) {
+      reconstructed.set(addition.subjectId, addition.name);
+    }
+
+    const frozen = footballWhoAmIAuthoredTargetRoster(league).coaches;
+    expect([...reconstructed.entries()].sort()).toEqual(
+      frozen.map((subject) => [subject.subjectId, subject.name] as const).sort(),
     );
   });
 

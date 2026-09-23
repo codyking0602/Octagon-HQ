@@ -253,13 +253,48 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_EXPLICIT_OUT = {
   CFB: ["Peter Warrick", "Eric Crouch", "Chris Weinke"] as const,
 } satisfies Record<FootballWhoAmIAuthoredTargetLeague, readonly string[]>;
 
+export const FOOTBALL_WHO_AM_I_AUTHORED_COACH_CUT_NAMES = {
+  NFL: [
+    "Earl 'Curly' Lambeau",
+    "George Halas",
+    "Paul Brown",
+    "Bud Grant",
+    "Dick Vermeil",
+    "Don Coryell",
+    "George Allen",
+    "Chuck Noll",
+  ],
+  CFB: ["Tom Osborne"],
+} as const;
+
+export const FOOTBALL_WHO_AM_I_AUTHORED_COACH_ADDITIONS = {
+  NFL: [
+    { subjectId: "nfl-mike-tomlin", name: "Mike Tomlin" },
+    { subjectId: "nfl-sean-payton", name: "Sean Payton" },
+    { subjectId: "nfl-john-harbaugh", name: "John Harbaugh" },
+    { subjectId: "nfl-sean-mcvay", name: "Sean McVay" },
+    { subjectId: "nfl-mike-shanahan", name: "Mike Shanahan" },
+    { subjectId: "nfl-tom-coughlin", name: "Tom Coughlin" },
+    { subjectId: "nfl-tony-dungy", name: "Tony Dungy" },
+    { subjectId: "nfl-dan-campbell", name: "Dan Campbell" },
+  ],
+  CFB: [
+    { subjectId: "cfb-lou-holtz", name: "Lou Holtz" },
+    { subjectId: "cfb-mack-brown", name: "Mack Brown" },
+    { subjectId: "cfb-jim-harbaugh", name: "Jim Harbaugh" },
+    { subjectId: "cfb-ryan-day", name: "Ryan Day" },
+    { subjectId: "cfb-jim-tressel", name: "Jim Tressel" },
+    { subjectId: "cfb-lincoln-riley", name: "Lincoln Riley" },
+  ],
+} as const;
+
 /**
  * Frozen post-audit authored target. Do not reconstruct this from era metadata
  * or the old 200-identity launch census: several legacy career windows are
  * intentionally incomplete and previously changed the roster by accident.
  *
  * NFL: 120 players + 20 coaches = 140 identities.
- * CFB: 168 players + 20 coaches = 188 identities.
+ * CFB: 168 players + 25 coaches = 193 identities.
  */
 export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
   "NFL": [
@@ -1009,26 +1044,8 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
     },
     {
       "league": "NFL",
-      "subjectId": "chuck-noll",
-      "name": "Chuck Noll",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
       "subjectId": "don-shula",
       "name": "Don Shula",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
-      "subjectId": "nfl-earl-curly-lambeau",
-      "name": "Earl 'Curly' Lambeau",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
-      "subjectId": "nfl-george-halas",
-      "name": "George Halas",
       "kind": "coach"
     },
     {
@@ -1047,12 +1064,6 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
       "league": "NFL",
       "subjectId": "nfl-john-madden",
       "name": "John Madden",
-      "kind": "coach"
-    },
-    {
-      "league": "NFL",
-      "subjectId": "paul-brown",
-      "name": "Paul Brown",
       "kind": "coach"
     },
     {
@@ -1081,26 +1092,50 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
     },
     {
       "league": "NFL",
-      "subjectId": "nfl-bud-grant",
-      "name": "Bud Grant",
+      "subjectId": "nfl-mike-tomlin",
+      "name": "Mike Tomlin",
       "kind": "coach"
     },
     {
       "league": "NFL",
-      "subjectId": "dick-vermeil",
-      "name": "Dick Vermeil",
+      "subjectId": "nfl-sean-payton",
+      "name": "Sean Payton",
       "kind": "coach"
     },
     {
       "league": "NFL",
-      "subjectId": "nfl-don-coryell",
-      "name": "Don Coryell",
+      "subjectId": "nfl-john-harbaugh",
+      "name": "John Harbaugh",
       "kind": "coach"
     },
     {
       "league": "NFL",
-      "subjectId": "nfl-george-allen",
-      "name": "George Allen",
+      "subjectId": "nfl-sean-mcvay",
+      "name": "Sean McVay",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-mike-shanahan",
+      "name": "Mike Shanahan",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-tom-coughlin",
+      "name": "Tom Coughlin",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-tony-dungy",
+      "name": "Tony Dungy",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-dan-campbell",
+      "name": "Dan Campbell",
       "kind": "coach"
     }
   ],
@@ -2163,12 +2198,6 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
     },
     {
       "league": "CFB",
-      "subjectId": "tom-osborne",
-      "name": "Tom Osborne",
-      "kind": "coach"
-    },
-    {
-      "league": "CFB",
       "subjectId": "urban-meyer-cfb",
       "name": "Urban Meyer",
       "kind": "coach"
@@ -2231,6 +2260,42 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
       "league": "CFB",
       "subjectId": "gary-patterson-cfb",
       "name": "Gary Patterson",
+      "kind": "coach"
+    },
+    {
+      "league": "CFB",
+      "subjectId": "cfb-lou-holtz",
+      "name": "Lou Holtz",
+      "kind": "coach"
+    },
+    {
+      "league": "CFB",
+      "subjectId": "cfb-mack-brown",
+      "name": "Mack Brown",
+      "kind": "coach"
+    },
+    {
+      "league": "CFB",
+      "subjectId": "cfb-jim-harbaugh",
+      "name": "Jim Harbaugh",
+      "kind": "coach"
+    },
+    {
+      "league": "CFB",
+      "subjectId": "cfb-ryan-day",
+      "name": "Ryan Day",
+      "kind": "coach"
+    },
+    {
+      "league": "CFB",
+      "subjectId": "cfb-jim-tressel",
+      "name": "Jim Tressel",
+      "kind": "coach"
+    },
+    {
+      "league": "CFB",
+      "subjectId": "cfb-lincoln-riley",
+      "name": "Lincoln Riley",
       "kind": "coach"
     }
   ]
