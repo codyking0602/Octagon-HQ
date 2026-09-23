@@ -1245,7 +1245,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dustin-poirier-b-4",
-            "text": "A move to lightweight in 2015 opened a new chapter that eventually took me to title fights.",
+            "text": "A move to lightweight in 2015 opened a new chapter that eventually took me to championship opportunities.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1411,7 +1411,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tito-ortiz-a-9",
-            "text": "My championship reign ended against Randy Couture before my rivalry with Chuck Liddell produced two major UFC fights.",
+            "text": "My championship reign ended against Randy Couture before my rivalry with Chuck Liddell produced two major meetings inside the UFC.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2381,7 +2381,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-lyoto-machida-b-8",
-            "text": "My championship rivalry with Mauricio Rua produced back-to-back title fights.",
+            "text": "My championship rivalry with Mauricio Rua produced back-to-back championship bouts.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
