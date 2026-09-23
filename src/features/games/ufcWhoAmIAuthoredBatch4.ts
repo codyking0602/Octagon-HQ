@@ -109,7 +109,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-a-10",
-            "text": "A defining UFC result in my career came against Cain Velasquez in 2011.",
+            "text": "My UFC résumé includes a matchup against Cain Velasquez in 2011.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -755,7 +755,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-a-10",
-            "text": "A defining UFC result in my career came against Alexander Volkanovski in 2024.",
+            "text": "My UFC résumé includes a matchup against Alexander Volkanovski in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -971,7 +971,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-a-10",
-            "text": "A defining UFC result in my career came against Israel Adesanya in 2019.",
+            "text": "My UFC résumé includes a matchup against Israel Adesanya in 2019.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1187,7 +1187,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-a-10",
-            "text": "A defining UFC result in my career came against Anderson Silva in 2013.",
+            "text": "My UFC résumé includes a matchup against Anderson Silva in 2013.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1403,7 +1403,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-sean-strickland-a-10",
-            "text": "A defining UFC result in my career came against Israel Adesanya in 2023.",
+            "text": "My UFC résumé includes a matchup against Israel Adesanya in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1619,7 +1619,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-brandon-moreno-a-10",
-            "text": "A defining UFC result in my career came against Deiveson Figueiredo in 2021.",
+            "text": "My UFC résumé includes a matchup against Deiveson Figueiredo in 2021.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1835,7 +1835,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-rashad-evans-a-10",
-            "text": "A defining UFC result in my career came against Jon Jones in 2012.",
+            "text": "My UFC résumé includes a matchup against Jon Jones in 2012.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2051,7 +2051,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dominick-cruz-a-10",
-            "text": "A defining UFC result in my career came against Demetrious Johnson in 2011.",
+            "text": "My UFC résumé includes a matchup against Demetrious Johnson in 2011.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2267,7 +2267,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-bisping-a-10",
-            "text": "A defining UFC result in my career came against Georges St-Pierre in 2017.",
+            "text": "My UFC résumé includes a matchup against Georges St-Pierre in 2017.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
