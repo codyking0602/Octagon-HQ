@@ -34,10 +34,20 @@ const BRITTLE_PATTERNS = [
   /still the record/i,
 ];
 
+const EARLY_IDENTITY_SHORTCUTS = [
+  /\bWaianae\b/i,
+  /\bDagestan\b/i,
+  /\bSaint-Isidore\b/i,
+  /\bRio de Janeiro\b/i,
+  /\bManaus\b/i,
+  /\bAmerican Kickboxing Academy\b/i,
+  /\bChute Boxe\b/i,
+];
+
 describe("UFC Who Am I authored launch pool", () => {
-  it("launches with twelve canonical fighters and 240 authored clues", () => {
-    expect(ufcWhoAmIAuthoredLaunchPool).toHaveLength(12);
-    expect(new Set(ufcWhoAmIAuthoredLaunchPool.map((identity) => identity.subjectId)).size).toBe(12);
+  it("covers all 100 canonical fighters with 2,000 authored clues", () => {
+    expect(ufcWhoAmIAuthoredLaunchPool).toHaveLength(100);
+    expect(new Set(ufcWhoAmIAuthoredLaunchPool.map((identity) => identity.subjectId)).size).toBe(100);
 
     let clueCount = 0;
     for (const identity of ufcWhoAmIAuthoredLaunchPool) {
@@ -46,10 +56,10 @@ describe("UFC Who Am I authored launch pool", () => {
       expect(Object.keys(identity.scripts).sort()).toEqual(["A", "B"]);
       clueCount += identity.scripts.A!.clues.length + identity.scripts.B!.clues.length;
     }
-    expect(clueCount).toBe(240);
+    expect(clueCount).toBe(2_000);
   });
 
-  it("keeps every launch script source-backed, distinct and progression-safe", () => {
+  it("keeps every authored script source-backed, distinct and progression-safe", () => {
     const globalClueIds = new Set<string>();
 
     for (const identity of ufcWhoAmIAuthoredLaunchPool) {
@@ -80,7 +90,25 @@ describe("UFC Who Am I authored launch pool", () => {
     }
   });
 
-  it("is large enough to serve two fighters per Daily with the six-appearance cooldown", () => {
+  it("keeps the opening four clues broad instead of using identity shortcuts", () => {
+    const canonicalNames = ufcWhoAmIAuthoredLaunchPool.map((identity) => identity.name.toLowerCase());
+
+    for (const identity of ufcWhoAmIAuthoredLaunchPool) {
+      for (const scriptId of ["A", "B"] as const) {
+        for (const clue of identity.scripts[scriptId]!.clues.slice(0, 4)) {
+          expect(EARLY_IDENTITY_SHORTCUTS.some((pattern) => pattern.test(clue.text))).toBe(false);
+
+          const lower = clue.text.toLowerCase();
+          const namedOtherCanonicalFighter = canonicalNames.some(
+            (name) => name !== identity.name.toLowerCase() && lower.includes(name),
+          );
+          expect(namedOtherCanonicalFighter).toBe(false);
+        }
+      }
+    }
+  });
+
+  it("is comfortably larger than the six-appearance two-fighter cooldown", () => {
     expect(ufcWhoAmIAuthoredLaunchPool.length).toBeGreaterThan(6 + 2);
   });
 });
