@@ -5044,6 +5044,1269 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     }
   },
   {
+    "league": "CFB",
+    "subjectId": "cfb-joe-burrow",
+    "name": "Joe Burrow",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/joe-burrow/",
+      "lsu": "https://lsusports.net/sports/fb/roster/player/joe-burrow",
+      "lsu2018": "https://lsusports.net/sports/fb/roster/season/2018/player/joe-burrow",
+      "transfer": "https://lsusports.net/news/2019/07/11/211716544-2"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-joe-burrow-a-1",
+            "text": "Before my final college season, I had never thrown more than 16 touchdown passes in a year at my current school.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-a-2",
+            "text": "My first year as a full-time starter there ended 10-3 and included a bowl offensive MVP honor.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu2018"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-a-3",
+            "text": "That first season made me the first quarterback in school history to throw for at least 2,500 yards and rush for at least 350 in the same year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu2018"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-a-4",
+            "text": "One year later, I completed 77.9 percent of my passes during the Heisman voting period, then the best mark in Heisman history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-a-5",
+            "text": "I entered the postseason after throwing for 4,715 yards and 48 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-a-6",
+            "text": "I won the Heisman by a record 1,846-point margin.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-a-7",
+            "text": "That season I also won the Maxwell, Walter Camp, Davey O'Brien and Johnny Unitas Golden Arm awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-a-8",
+            "text": "In the CFP semifinal and national championship game, I combined for 956 passing yards and 12 touchdown passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-a-9",
+            "text": "I finished that season 15-0 as LSU's national-championship quarterback.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-a-10",
+            "text": "Wearing No. 9, I became LSU's second Heisman winner and its first since Billy Cannon in 1959.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "lsu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-joe-burrow-b-1",
+            "text": "I was named Ohio Mr. Football in high school after a senior season with nearly 4,500 passing yards and 63 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-b-2",
+            "text": "I began my college career in the Big Ten, redshirting once and spending two seasons in a backup role.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-b-3",
+            "text": "I graduated from that first school, then moved as a graduate transfer with two seasons of eligibility remaining.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "transfer"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-b-4",
+            "text": "In my first season after the transfer, I became the first quarterback in school history to lead four wins over top-10 opponents in one year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu2018"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-b-5",
+            "text": "Across two seasons at my final school, I went 25-3 as the starting quarterback.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-b-6",
+            "text": "Those two seasons included 11 wins over top-10 teams, the most by a quarterback in school history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-b-7",
+            "text": "I became the first quarterback in that program's history to earn unanimous first-team All-America honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-b-8",
+            "text": "My path went from an Ohio State backup to a graduate transfer who eventually won the Heisman Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "transfer"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-b-9",
+            "text": "I became the first LSU player to win the Heisman since Billy Cannon in 1959.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-joe-burrow-b-10",
+            "text": "I closed my LSU career with a 15-0 national championship and wore No. 9 in Baton Rouge.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-lamar-jackson",
+    "name": "Lamar Jackson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/lamar-jackson/",
+      "louisville": "https://gocards.com/sports/football/roster/lamar-jackson/6874",
+      "honor": "https://gocards.com/sports/2015/3/26/GEN_2014010128"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-lamar-jackson-a-1",
+            "text": "As a true freshman quarterback, I also made one start from the backfield at running back.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-a-2",
+            "text": "My first college season ended with a bowl MVP after I topped 200 yards both passing and rushing.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-a-3",
+            "text": "The next season, I produced 610 yards of total offense in one game, including 411 passing and 199 rushing.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-a-4",
+            "text": "I finished that regular season with 1,538 rushing yards, the most ever by a Heisman-winning quarterback.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-a-5",
+            "text": "I became the first Heisman winner with at least 30 passing touchdowns and at least 21 rushing touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-a-6",
+            "text": "I was named both ACC Player of the Year and ACC Offensive Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-a-7",
+            "text": "I also won the Maxwell and Davey O'Brien awards during that breakout season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-a-8",
+            "text": "I became the youngest Heisman winner ever at 19 years and 337 days.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-a-9",
+            "text": "That Heisman was the first in Louisville football history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-a-10",
+            "text": "I wore No. 8 for the Cardinals, and Louisville later retired that number.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "louisville",
+              "honor"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-lamar-jackson-b-1",
+            "text": "I came out of South Florida as an all-state dual-threat quarterback who also earned statewide recognition as a utility player.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-b-2",
+            "text": "As a freshman, I finished second in my conference's Offensive Rookie of the Year voting.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-b-3",
+            "text": "I set a school quarterback rushing record with 184 yards in one early start, then broke it with 186 later that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-b-4",
+            "text": "In my freshman bowl game, I rushed for 226 yards and became only the third quarterback in bowl history to pass and run for 200 yards in the same game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-b-5",
+            "text": "My sophomore opener included eight total touchdowns, with six through the air and two on the ground.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-b-6",
+            "text": "A few weeks later, I ran for 146 yards and four touchdowns in a 63-20 win over Florida State.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "louisville"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-b-7",
+            "text": "I finished the following season as a Heisman finalist after already winning the award the year before.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "honor"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-b-8",
+            "text": "I was the first player in ACC history to win both Player of the Year and Offensive Player of the Year in back-to-back seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "honor"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-b-9",
+            "text": "Louisville retired my No. 8 jersey after my three-year career.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "honor"
+            ]
+          },
+          {
+            "id": "cfb-lamar-jackson-b-10",
+            "text": "I am the Louisville quarterback who won the 2016 Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "honor"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-baker-mayfield",
+    "name": "Baker Mayfield",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/baker-mayfield/",
+      "oklahoma": "https://soonersports.com/sports/football/roster/baker-mayfield/3343"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-baker-mayfield-a-1",
+            "text": "I began my FBS career without a scholarship and won a starting quarterback job as a true freshman.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-a-2",
+            "text": "My first college start produced 413 passing yards and four touchdown passes.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "oklahoma"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-a-3",
+            "text": "After one season, I transferred within the same conference and had to sit out a year under the rules then in place.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "oklahoma"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-a-4",
+            "text": "I later had a year of lost eligibility restored by a conference vote.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oklahoma"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-a-5",
+            "text": "I finished in the top five of the Heisman voting three different times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-a-6",
+            "text": "In 2016, I set an NCAA passing-efficiency record with a 196.38 rating.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-a-7",
+            "text": "One season later, I broke my own record with a 203.76 rating during the Heisman voting period.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-a-8",
+            "text": "I became the first Heisman winner of the modern scholarship era to have begun his college career as a walk-on.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-a-9",
+            "text": "My transfer took me from Texas Tech to Oklahoma, where I wore No. 6.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "oklahoma"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-a-10",
+            "text": "I became Oklahoma's sixth Heisman Trophy winner in 2017.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-baker-mayfield-b-1",
+            "text": "In high school, I went 25-2 as a starter and helped win a Texas state championship.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-b-2",
+            "text": "My first FBS season earned me Big 12 Offensive Freshman of the Year honors.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "oklahoma"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-b-3",
+            "text": "After transferring, I redshirted one season before taking over as the starter at my new school.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "oklahoma"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-b-4",
+            "text": "Over three playing seasons there, I passed for 12,292 yards and 119 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oklahoma"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-b-5",
+            "text": "In one road game during my final season, I threw for 598 yards and five touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-b-6",
+            "text": "During the Heisman voting period of my final season, I threw for 4,340 yards, 41 touchdowns and only five interceptions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-b-7",
+            "text": "That team reached the College Football Playoff with a 12-1 record before the postseason.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-b-8",
+            "text": "I won the Heisman with 2,398 points, more than 1,000 ahead of runner-up Bryce Love.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-b-9",
+            "text": "I was a Heisman finalist in 2016 and won it for Oklahoma one year later.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-baker-mayfield-b-10",
+            "text": "I am the No. 6 Sooners quarterback whose career began as a walk-on at Texas Tech.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "oklahoma"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-adrian-peterson",
+    "name": "Adrian Peterson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "freshman": "https://soonersports.com/news/2005/6/21/208387985",
+      "heismanRun": "https://soonersports.com/news/2004/12/9/208368510",
+      "record": "https://soonersports.com/news/2005/1/25/208391750?path=football",
+      "career": "https://soonersports.com/news/2007/4/28/208388438",
+      "voting": "https://www.heisman.com/voting-records/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-adrian-peterson-a-1",
+            "text": "I was a true freshman running back who immediately became a featured runner on a national-title contender.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heismanRun"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-a-2",
+            "text": "I ran for at least 100 yards in 11 games during that first season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "record"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-a-3",
+            "text": "I reached 1,000 career rushing yards in my seventh game, tying the NCAA freshman speed record at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "record"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-a-4",
+            "text": "I finished that freshman year with a school-record 1,925 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-a-5",
+            "text": "That total also established an NCAA freshman rushing record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-a-6",
+            "text": "I ran for 225 yards against Texas and 249 against Oklahoma State during that season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heismanRun"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-a-7",
+            "text": "I became the first freshman ever named a finalist for the Doak Walker Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-a-8",
+            "text": "I finished second in the Heisman vote, then the highest finish ever by a freshman.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-a-9",
+            "text": "That record-setting freshman season came at Oklahoma.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-a-10",
+            "text": "I am the Sooners running back who rushed for 1,925 yards in 2004 and finished second to Matt Leinart for the Heisman.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "career",
+              "voting"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-adrian-peterson-b-1",
+            "text": "A shoulder problem followed me from preseason into my first college season and required surgery afterward.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "record"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-b-2",
+            "text": "The next year, an ankle injury cost me all or most of four games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-b-3",
+            "text": "Even with that interruption, I still rushed for 1,108 yards in my second season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-b-4",
+            "text": "A broken collarbone then caused me to miss seven games in my third season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-b-5",
+            "text": "I still cleared 1,000 rushing yards in that shortened third year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-b-6",
+            "text": "I left college after three seasons with 4,045 rushing yards and 41 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-b-7",
+            "text": "I finished third on Oklahoma's career rushing list, only 74 yards behind Billy Sims' school mark at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-b-8",
+            "text": "I had already set the school and NCAA freshman rushing records with 1,925 yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-b-9",
+            "text": "Minnesota selected me seventh overall immediately after my Oklahoma career.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-adrian-peterson-b-10",
+            "text": "I am the Oklahoma back whose 2004 freshman season ended with a runner-up Heisman finish.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "career"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-barry-sanders",
+    "name": "Barry Sanders",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/barry-sanders/",
+      "osu": "https://okstate.com/sports/2015/3/17/GEN_2014010114",
+      "honor": "https://okstate.com/news/2021/7/22/football-barry-sanders-to-be-honored-by-oklahoma-state",
+      "tokyo": "https://okstate.com/news/2022/5/23/football-record-rewind-barrys-332-rushing-yards-vs-texas-tech-in-1988"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-barry-sanders-a-1",
+            "text": "I spent my first two college seasons behind another future Pro Football Hall of Fame running back.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-a-2",
+            "text": "As a sophomore, I made my biggest impact on special teams and led the nation in kickoff-return average.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-a-3",
+            "text": "When the starting job opened the next year, I produced four games with at least 300 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-a-4",
+            "text": "I rushed for 2,628 yards in that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-a-5",
+            "text": "I averaged 238.9 rushing yards per game and scored 37 rushing touchdowns in the 11-game regular season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "tokyo"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-a-6",
+            "text": "That season produced 34 NCAA records.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "tokyo"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-a-7",
+            "text": "I won the Heisman while sweeping all six voting regions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-a-8",
+            "text": "I accepted the trophy by satellite from Tokyo before playing Texas Tech there later that day.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "tokyo"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-a-9",
+            "text": "Oklahoma State later retired my No. 21 jersey.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-a-10",
+            "text": "I became Oklahoma State's first Heisman Trophy winner in 1988.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-barry-sanders-b-1",
+            "text": "I did not become my high school's starting tailback until the fourth game of my senior season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-b-2",
+            "text": "Despite rushing for 1,417 yards over my final seven high-school games, I received only three scholarship offers.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-b-3",
+            "text": "As a college freshman, I rushed for 325 yards while averaging 23.7 yards on kickoff returns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-b-4",
+            "text": "The next year, I backed up Thurman Thomas and scored two kickoff-return touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-b-5",
+            "text": "In 1988, I piled up 937 rushing yards and 13 touchdowns over one three-game stretch.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "honor"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-b-6",
+            "text": "Against Texas Tech in Tokyo, I ran for 332 yards and four touchdowns on 44 carries.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tokyo"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-b-7",
+            "text": "I had accepted the Heisman Trophy by satellite only hours before that Texas Tech performance.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tokyo"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-b-8",
+            "text": "I left after my junior season and became the third pick of the 1989 NFL Draft.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-b-9",
+            "text": "I played behind Thurman Thomas before turning Oklahoma State's No. 21 into a legendary college number.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-barry-sanders-b-10",
+            "text": "I am the Cowboys running back whose 1988 season set 34 NCAA records and won Oklahoma State its first Heisman.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "tokyo"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-devonta-smith",
+    "name": "DeVonta Smith",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/devonta-smith/",
+      "alabama": "https://rolltide.com/sports/football/roster/devonta-smith/6374"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-devonta-smith-a-1",
+            "text": "My freshman college season produced only eight catches, but three of them went for touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-a-2",
+            "text": "One year later, I finished with 42 receptions and six receiving scores.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-a-3",
+            "text": "As a junior, I led my team with 1,256 receiving yards and 14 touchdowns on 68 catches.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-a-4",
+            "text": "By the end of my career, I held my school and conference records for receiving yards and receiving touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-a-5",
+            "text": "My final season ended with 117 catches for 1,856 yards and 23 receiving touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-a-6",
+            "text": "I became the first wide receiver ever named AP Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-a-7",
+            "text": "I also won the Biletnikoff, Maxwell and Walter Camp awards that season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-a-8",
+            "text": "I became the first wide receiver in almost three decades to win the Heisman Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-a-9",
+            "text": "I wore No. 6 for Alabama and became the program's third Heisman winner.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-a-10",
+            "text": "My final catch as a freshman was the game-winning touchdown of the 2017 CFP national championship game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-devonta-smith-b-1",
+            "text": "I starred in both football and basketball before college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-b-2",
+            "text": "My final college season included an 84-yard punt-return touchdown.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-b-3",
+            "text": "Against Mississippi State that season, I caught 11 passes for 203 yards and four touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-b-4",
+            "text": "At LSU, I turned eight catches into 231 yards and three touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-b-5",
+            "text": "In the conference championship game, I set a title-game record with 15 receptions and finished with 184 receiving yards and two touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-b-6",
+            "text": "In the CFP semifinal, I caught seven passes for 130 yards and three touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-b-7",
+            "text": "In the national championship, I had 12 catches for 215 yards and three touchdowns, all before a hand injury ended my night early.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-b-8",
+            "text": "I was named Offensive MVP of both the CFP semifinal and the national championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-b-9",
+            "text": "I finished as Alabama's No. 6 receiver with program records of 235 catches, 3,965 yards and 46 receiving touchdowns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-devonta-smith-b-10",
+            "text": "I am the Alabama wide receiver who won the 2020 Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
     "league": "NFL",
     "subjectId": "andy-reid",
     "name": "Andy Reid",
