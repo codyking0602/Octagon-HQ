@@ -6620,6 +6620,1260 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       }
     }
   },
+  {
+    "league": "NFL",
+    "subjectId": "bill-belichick",
+    "name": "Bill Belichick",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "patriots": "https://www.patriots.com/news/the-patriots-and-bill-belichick-have-mutually-agreed-to-part-ways",
+      "giants": "https://www.patriots.com/news/a-giant-success-245451"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-bill-belichick-a-1",
+            "text": "I had already been an NFL head coach for five seasons before taking over the franchise most associated with my career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-a-2",
+            "text": "At that second head-coaching stop, my first season ended 5-11.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-a-3",
+            "text": "Over the next two decades, that franchise became one of the league's most consistent contenders.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-a-4",
+            "text": "My second head-coaching tenure ultimately lasted 24 seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-a-5",
+            "text": "Beginning in my second season there, my teams produced 19 consecutive winning seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-a-6",
+            "text": "I eventually won 17 division titles, including 11 consecutive division championships.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-a-7",
+            "text": "My teams won nine conference championships during that run.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-a-8",
+            "text": "I won six Super Bowls, the most by a head coach in NFL history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-a-9",
+            "text": "I finished my tenure there with 30 postseason victories for that franchise.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-a-10",
+            "text": "My six titles came in Super Bowls XXXVI, XXXVIII, XXXIX, XLIX, LI and LIII with New England.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-bill-belichick-b-1",
+            "text": "I entered the NFL coaching ranks in the mid-1970s as a special assistant.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-b-2",
+            "text": "I worked for three NFL franchises before settling into a long assistant run with a fourth.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-b-3",
+            "text": "That fourth stop began in 1979, and I worked my way from defensive and special-teams roles into greater responsibility.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-b-4",
+            "text": "I eventually became the Giants' defensive coordinator.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-b-5",
+            "text": "As a coordinator, I helped the Giants win championships in the 1986 and 1990 seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-b-6",
+            "text": "My first head-coaching job came with Cleveland, where I spent five seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-b-7",
+            "text": "After Cleveland, I reunited with Bill Parcells and later worked with the Jets.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-b-8",
+            "text": "I returned to head coaching in 2000 and went on to win six Super Bowls and nine conference championships.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-b-9",
+            "text": "I finished my New England tenure with 333 total career victories and an NFL-record 31 postseason wins.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          },
+          {
+            "id": "nfl-bill-belichick-b-10",
+            "text": "I am the coach who went from Parcells' Giants staff to Cleveland and eventually built New England's six-title dynasty.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "giants"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "bill-parcells",
+    "name": "Bill Parcells",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/bill-parcells",
+      "college": "https://www.profootballhof.com/news/college-days-bill-parcells"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-bill-parcells-a-1",
+            "text": "I took over four different NFL teams during my head-coaching career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-a-2",
+            "text": "Only five of my 19 seasons as a head coach ended with losing records.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-a-3",
+            "text": "My first head-coaching job began with a franchise that had posted only one winning season in the previous decade.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-a-4",
+            "text": "Three years into that job, my team went 14-2 and won a championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-a-5",
+            "text": "I won a second championship with that same franchise four seasons later.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-a-6",
+            "text": "At my next stop, I inherited a 2-14 team and reached the Super Bowl within four seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-a-7",
+            "text": "I later took over a 1-15 team and reached a conference championship game in my second season there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-a-8",
+            "text": "My final head-coaching job produced two playoff appearances in four seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-a-9",
+            "text": "My two Super Bowl wins came in XXI and XXV with the New York Giants.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-a-10",
+            "text": "I am the coach nicknamed 'The Big Tuna' who also led New England, the Jets and Dallas.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-bill-parcells-b-1",
+            "text": "I played linebacker in college and earned all-conference honors twice.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-b-2",
+            "text": "I was selected in an NFL Draft but chose coaching instead of pursuing a pro playing career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-b-3",
+            "text": "I immediately chose coaching rather than pursuing a professional playing career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-b-4",
+            "text": "Nearly two decades passed between that draft and my first NFL head-coaching season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-b-5",
+            "text": "My first NFL head-coaching season finished 3-12-1.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-b-6",
+            "text": "Within three years, that same team had improved to 14-2.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-b-7",
+            "text": "After two Super Bowl titles there, I later rebuilt New England into an AFC champion.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-b-8",
+            "text": "I then produced one of the league's sharpest turnarounds with the Jets, going from a 1-15 predecessor to 12-4 in two years.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-b-9",
+            "text": "I was named NFL Coach of the Year in both 1986 and 1994.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          },
+          {
+            "id": "nfl-bill-parcells-b-10",
+            "text": "I am the Hall of Fame coach whose four head-coaching stops were the Giants, Patriots, Jets and Cowboys.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "college"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "vince-lombardi",
+    "name": "Vince Lombardi",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/vince-lombardi"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-vince-lombardi-a-1",
+            "text": "I did not become an NFL head coach until I was 45 years old.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-a-2",
+            "text": "I took over a team that had gone 1-10-1 the season before I arrived.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-a-3",
+            "text": "In my first season, that team improved to 7-5.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-a-4",
+            "text": "Over the next eight seasons, my teams won six division championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-a-5",
+            "text": "During that same span, I won five NFL championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-a-6",
+            "text": "My teams won the first two Super Bowls ever played.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-a-7",
+            "text": "I stepped away from coaching after the second of those Super Bowl wins but remained in management.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-a-8",
+            "text": "I later returned to coach another franchise for one season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-a-9",
+            "text": "My career head-coaching record was 105-35-6.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-a-10",
+            "text": "I am the Green Bay coaching icon whose name now appears on the Super Bowl championship trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-vince-lombardi-b-1",
+            "text": "Before my head-coaching career, I spent five NFL seasons as an assistant with the New York Giants.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-b-2",
+            "text": "I built my reputation there as an offensive coach.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-b-3",
+            "text": "My first NFL head-coaching opportunity also gave me control of the team's football operation.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-b-4",
+            "text": "I inherited one of the league's weakest teams at that first stop.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-b-5",
+            "text": "By my second season there, I had already reached the NFL Championship Game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-b-6",
+            "text": "I then won three league titles before the Super Bowl era began.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-b-7",
+            "text": "My final two teams at that stop won Super Bowls I and II.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-b-8",
+            "text": "After a year away from coaching, I took over Washington and produced a winning season in 1969.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-b-9",
+            "text": "I finished with five NFL titles and two Super Bowl victories in ten seasons as a head coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-vince-lombardi-b-10",
+            "text": "I am the Hall of Fame coach most closely identified with the Packers' 1960s dynasty.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-tony-dungy",
+    "name": "Tony Dungy",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/tony-dungy"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-tony-dungy-a-1",
+            "text": "I took over a franchise that had suffered 12 double-digit-loss seasons in the previous 13 years.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-a-2",
+            "text": "By my second year, that team finished 10-6 and reached the playoffs.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-a-3",
+            "text": "Two seasons later, I delivered that franchise its first division title since 1981.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-a-4",
+            "text": "I reached the playoffs four times in six seasons at my first head-coaching stop.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-a-5",
+            "text": "Eight days after that tenure ended, I was hired by another franchise.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-a-6",
+            "text": "My second team reached the playoffs in all seven of my seasons as head coach.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-a-7",
+            "text": "That team won at least 12 games in six consecutive seasons under me.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-a-8",
+            "text": "I won Super Bowl XLI after beating New England in the conference championship game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-a-9",
+            "text": "I became the first African American head coach to win a Super Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-a-10",
+            "text": "I am the Hall of Fame coach who rebuilt Tampa Bay before winning a championship with Indianapolis.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-tony-dungy-b-1",
+            "text": "Before coaching, I played defensive back in the NFL.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-b-2",
+            "text": "My coaching career began at the University of Minnesota in 1980.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-b-3",
+            "text": "I returned to the NFL with Pittsburgh the next year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-b-4",
+            "text": "I eventually rose to defensive coordinator with the Steelers.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-b-5",
+            "text": "My assistant-coaching path later included Kansas City and Minnesota.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-b-6",
+            "text": "I served as Minnesota's defensive coordinator from 1992 through 1995.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-b-7",
+            "text": "My first head-coaching opportunity came in Tampa Bay in 1996.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-b-8",
+            "text": "I later coached Peyton Manning's Colts for seven seasons and won five division titles there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-b-9",
+            "text": "My overall head-coaching record was 148-79.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-tony-dungy-b-10",
+            "text": "I am the defense-rooted coach whose Indianapolis team won Super Bowl XLI.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "pete-carroll",
+    "name": "Pete Carroll",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "seahawks": "https://www.seahawks.com/team/coaches-roster/all-time/pete-carroll"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-pete-carroll-a-1",
+            "text": "I returned to the NFL as a head coach in 2010 after nearly a decade away from the league.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-a-2",
+            "text": "That 14-season run eventually became the winningest head-coaching tenure in franchise history.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-a-3",
+            "text": "My teams reached the playoffs in ten of those 14 seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-a-4",
+            "text": "At their peak, my teams posted five straight 10-win seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-a-5",
+            "text": "I won five division titles there.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-a-6",
+            "text": "My teams reached back-to-back Super Bowls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-a-7",
+            "text": "The first of those Super Bowl trips ended with a championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-a-8",
+            "text": "My defense led the NFL in scoring defense four consecutive seasons from 2012 through 2015.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-a-9",
+            "text": "I won two conference championships with Seattle.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-a-10",
+            "text": "I am the former USC coach who won Super Bowl XLVIII with Seattle during the Legion of Boom era.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-pete-carroll-b-1",
+            "text": "My coaching career included NFL head-coaching stops before the tenure that made me a champion.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-b-2",
+            "text": "I later left the NFL and spent nine seasons as a college head coach.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-b-3",
+            "text": "At that college stop, my teams reached a bowl game in every season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-b-4",
+            "text": "I won seven consecutive conference titles there.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-b-5",
+            "text": "I went 97-19 there and won two national championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-b-6",
+            "text": "I returned to the NFL in 2010.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-b-7",
+            "text": "My new team reached the playoffs in ten of my 14 seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-b-8",
+            "text": "That franchise earned the NFC's No. 1 seed in consecutive seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-b-9",
+            "text": "I became one of the few coaches to win both a major college national title and a Super Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          },
+          {
+            "id": "nfl-pete-carroll-b-10",
+            "text": "I am the former USC coach who later won Super Bowl XLVIII with Seattle.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "seahawks"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-mike-shanahan",
+    "name": "Mike Shanahan",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "broncos": "https://www.denverbroncos.com/team/tradition/ring-of-fame/mike-shanahan"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-mike-shanahan-a-1",
+            "text": "I spent 14 seasons as the head coach of the franchise most associated with my career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-a-2",
+            "text": "My teams posted nine winning seasons during that run.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-a-3",
+            "text": "I reached the playoffs seven times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-a-4",
+            "text": "My teams advanced to three conference championship games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-a-5",
+            "text": "I became that franchise's all-time leader in regular-season coaching wins.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-a-6",
+            "text": "I also became its all-time leader in postseason coaching victories.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-a-7",
+            "text": "My teams won back-to-back Super Bowls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-a-8",
+            "text": "During my tenure, my offense led the NFL in both total offense and rushing offense.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-a-9",
+            "text": "Those championship wins came in Super Bowls XXXII and XXXIII.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-a-10",
+            "text": "I am the Denver coach who won consecutive Super Bowls with John Elway.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-mike-shanahan-b-1",
+            "text": "Before becoming the longtime head coach at my best-known stop, I had already worked there in two separate assistant stints.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-b-2",
+            "text": "I also had an NFL head-coaching stint elsewhere between those two assistant runs.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-b-3",
+            "text": "I later returned to my best-known franchise as head coach in the mid-1990s.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-b-4",
+            "text": "Within my first four seasons as head coach there, I had won two Super Bowls.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-b-5",
+            "text": "Across 14 seasons, my teams went 138-86 in the regular season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-b-6",
+            "text": "At home, those teams compiled an 83-29 record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-b-7",
+            "text": "My offense became especially known for a productive rushing attack.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-b-8",
+            "text": "I was eventually inducted into that franchise's Ring of Fame.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-b-9",
+            "text": "I remain the Broncos' all-time leader in both regular-season and postseason coaching wins.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          },
+          {
+            "id": "nfl-mike-shanahan-b-10",
+            "text": "I am the coach whose Denver teams won Super Bowls XXXII and XXXIII back-to-back.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "broncos"
+            ]
+          }
+        ]
+      }
+    }
+  },
 
   {
     "league": "CFB",
