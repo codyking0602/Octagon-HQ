@@ -1,0 +1,1 @@
+export const WHO_AM_I_AUTHORED_RECENCY_COOLDOWN = 6;
