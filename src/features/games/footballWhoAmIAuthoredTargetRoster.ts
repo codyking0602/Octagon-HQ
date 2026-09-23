@@ -121,15 +121,15 @@ function normalizedName(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
 }
 
-const strictKeep = {
+const strictKeep: Readonly<Record<FootballWhoAmIAuthoredTargetLeague, ReadonlySet<string>>> = {
   NFL: new Set(NFL_STRICT_PRE_2000_KEEP.map(normalizedName)),
   CFB: new Set(CFB_STRICT_PRE_2000_KEEP.map(normalizedName)),
-} as const;
+};
 
-const crossoverKeep = {
+const crossoverKeep: Readonly<Record<FootballWhoAmIAuthoredTargetLeague, ReadonlySet<string>>> = {
   NFL: new Set(NFL_CROSSOVER_KEEP.map(normalizedName)),
   CFB: new Set(CFB_CROSSOVER_KEEP.map(normalizedName)),
-} as const;
+};
 
 function keepAuditedBasePlayer(
   league: FootballWhoAmIAuthoredTargetLeague,
