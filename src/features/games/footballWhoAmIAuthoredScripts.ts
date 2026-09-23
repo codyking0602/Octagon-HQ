@@ -24388,6 +24388,410 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-demarcus-ware",
+    "name": "DeMarcus Ware",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/demarcus-ware"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-demarcus-ware-a-1",
+            "text": "I came from Troy and entered the NFL as the 11th overall pick in 2005.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-a-2",
+            "text": "I started all 16 games as a rookie at outside linebacker.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-a-3",
+            "text": "My eight rookie sacks led my team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-a-4",
+            "text": "I then led that same team in sacks for each of the next seven seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-a-5",
+            "text": "In 2008, I led the entire NFL with 20 sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-a-6",
+            "text": "I led the league again in 2010 with 15.5 sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-a-7",
+            "text": "I posted 19.5 sacks in 2011.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-a-8",
+            "text": "I left Dallas with a franchise-record 117 career sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-a-9",
+            "text": "I made nine Pro Bowls and earned four first-team All-Pro selections.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-a-10",
+            "text": "I finished with 138.5 sacks after closing my career with Denver.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-demarcus-ware-b-1",
+            "text": "My 12 NFL seasons were split between two franchises.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-b-2",
+            "text": "I played only one season on a team with a losing record.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-b-3",
+            "text": "My teams reached the playoffs five times during my career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-b-4",
+            "text": "In my first Denver season, I recorded 10 sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-b-5",
+            "text": "I started at weakside linebacker in Super Bowl 50.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-b-6",
+            "text": "In that championship win, I recorded two sacks and four quarterback hits.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-b-7",
+            "text": "I earned three second-team All-Pro selections in addition to four first-team honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-b-8",
+            "text": "I was named to the NFL's All-Decade Team of the 2000s.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-b-9",
+            "text": "My career began as Dallas's No. 11 overall pick and ended as a Super Bowl champion in Denver.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-demarcus-ware-b-10",
+            "text": "I am the Hall of Fame pass rusher whose 117 sacks still stand as the Cowboys' franchise record.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-darrelle-revis",
+    "name": "Darrelle Revis",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/darrelle-revis"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-darrelle-revis-a-1",
+            "text": "I played college football at Pitt before becoming the 14th overall pick in 2007.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-a-2",
+            "text": "I earned all-rookie recognition in my first NFL season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-a-3",
+            "text": "In 2009, I intercepted six passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-a-4",
+            "text": "That same season, I recorded an NFL-record 31 passes defensed.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-a-5",
+            "text": "My team finished that year first in the league against the pass, in total yards allowed and in points allowed.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-a-6",
+            "text": "I finished second in voting for AP Defensive Player of the Year in 2009.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-a-7",
+            "text": "I earned first-team All-Pro honors in three straight seasons from 2009 through 2011.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-a-8",
+            "text": "I finished my career with seven Pro Bowls and four first-team All-Pro selections.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-a-9",
+            "text": "My four first-team All-Pro seasons were 2009, 2010, 2011 and 2014.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-a-10",
+            "text": "The Jets cornerback whose 2009 season included six interceptions and an NFL-record 31 passes defensed was me.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-darrelle-revis-b-1",
+            "text": "I played 11 NFL seasons for four franchises.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-b-2",
+            "text": "I finished my career with 29 interceptions and 139 passes defensed.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-b-3",
+            "text": "One of my interceptions became a 100-yard touchdown return against Miami in 2011.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-b-4",
+            "text": "After six seasons with my first team, I spent one season each with two different clubs before returning.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-b-5",
+            "text": "One of those one-year stops ended with a Super Bowl championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-b-6",
+            "text": "I started for New England in its 28-24 Super Bowl XLIX win over Seattle.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-b-7",
+            "text": "I returned to the Jets in 2015 and earned another Pro Bowl selection.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-b-8",
+            "text": "I was named to the NFL's 2010s All-Decade Team and entered the Jets Ring of Honor in 2022.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-b-9",
+            "text": "I entered the Pro Football Hall of Fame with the Class of 2023 after a seven-Pro-Bowl career.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-darrelle-revis-b-10",
+            "text": "My prime as a Jets shutdown corner produced four first-team All-Pro selections.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
