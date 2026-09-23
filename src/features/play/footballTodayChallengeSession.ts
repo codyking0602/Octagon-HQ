@@ -446,7 +446,7 @@ function buildSessionPublication(
     return {
       setupKey: persisted.setupKey,
       contentVersion: persisted.contentVersion,
-      scoringVersion: persisted.scoringVersion,
+      scoringVersion: persisted.scoringVersion as OfficialDailySetupPublication["scoringVersion"],
       publicSetup: persisted.publicSetup,
       revealSetup: persisted.revealSetup,
       privateSetupEvidence: persisted.privateSetupEvidence,
