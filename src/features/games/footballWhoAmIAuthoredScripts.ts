@@ -47095,7 +47095,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-brian-orakpo-a-1",
-            "text": "I finished my college career with 21 sacks and 37 tackles for loss.",
+            "text": "I finished my college career with 22 sacks and 38 tackles for loss.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -47190,7 +47190,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-brian-orakpo-b-1",
-            "text": "I played 46 college games and made 20 starts during my career.",
+            "text": "I played 47 college games and made 21 starts during my career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -47199,7 +47199,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-brian-orakpo-b-2",
-            "text": "I finished with 130 tackles, 59 quarterback pressures and six forced fumbles.",
+            "text": "I finished with 132 tackles, 62 quarterback pressures and six forced fumbles.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
