@@ -1334,43 +1334,45 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-mackenzie-dern-a-1",
-            "text": "I joined the UFC in 2018 after beginning my professional career elsewhere.",
+            "text": "Before MMA, my profession was already competitive Brazilian jiu-jitsu rather than a conventional job.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-mackenzie-dern-a-2",
-            "text": "My UFC debut ended with a win by decision.",
+            "text": "I built a world-level grappling résumé before ever entering the UFC.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-mackenzie-dern-a-3",
-            "text": "I spent most of my UFC career at Strawweight.",
+            "text": "My professional MMA career began only after I had already become one of the best-known women in submission grappling.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile",
+              "identity2"
             ]
           },
           {
             "id": "ufc-mackenzie-dern-a-4",
-            "text": "I reached my first UFC title opportunity in 2025.",
+            "text": "I entered the UFC in 2018 and started my run with back-to-back victories.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-mackenzie-dern-a-5",
-            "text": "I beat Ashley Yoder by decision in 2018.",
+            "text": "Amanda Ribas handed me the first loss of my professional MMA career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1380,7 +1382,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-mackenzie-dern-a-6",
-            "text": "I beat Hannah Cifers by submission in 2020.",
+            "text": "I rebounded with a run that included submissions of Randa Markos and Nina Nunes.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1390,7 +1392,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-mackenzie-dern-a-7",
-            "text": "I lost to Amanda Ribas by decision in 2019.",
+            "text": "A five-round main event with Marina Rodriguez became one of my first major tests against a top strawweight striker.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1400,7 +1402,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-mackenzie-dern-a-8",
-            "text": "I beat Nina Nunes by submission in 2021.",
+            "text": "I later beat Angela Hill over five rounds in another main event.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1410,21 +1412,21 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-mackenzie-dern-a-9",
-            "text": "I won UFC gold at Strawweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-mackenzie-dern-a-10",
-            "text": "My UFC résumé includes a matchup against Virna Jandiroba in 2025.",
+            "text": "A 2025 rematch with Ribas ended with me earning a submission victory.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
               "profile"
+            ]
+          },
+          {
+            "id": "ufc-mackenzie-dern-a-10",
+            "text": "I began jiu-jitsu around age three in the academy of my father, Wellington “Megaton” Dias.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity1"
             ]
           }
         ]
@@ -1434,43 +1436,45 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-mackenzie-dern-b-1",
-            "text": "My UFC career began in 2018.",
+            "text": "Grappling competition was already a full-time athletic career for me before I transitioned to mixed martial arts.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2",
+              "identity3"
             ]
           },
           {
             "id": "ufc-mackenzie-dern-b-2",
-            "text": "I won 2 of my first three UFC appearances.",
+            "text": "My early accomplishments included both world-level Brazilian jiu-jitsu and ADCC championships.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-mackenzie-dern-b-3",
-            "text": "One stretch of my UFC career reached 4 consecutive victories.",
+            "text": "I grew up fluent in English and Portuguese with strong connections to both the United States and Brazil.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-mackenzie-dern-b-4",
-            "text": "My first UFC title opportunity came after 15 earlier UFC appearances.",
+            "text": "My UFC career began in 2018 after an unbeaten start to professional MMA.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-mackenzie-dern-b-5",
-            "text": "I beat Amanda Cooper by submission in 2018.",
+            "text": "My first UFC setback came in a decision against Amanda Ribas.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1480,7 +1484,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-mackenzie-dern-b-6",
-            "text": "I beat Randa Markos by submission in 2020.",
+            "text": "I later submitted Nina Nunes with an armbar in the first round.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1490,7 +1494,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-mackenzie-dern-b-7",
-            "text": "I beat Virna Jandiroba by decision in 2020.",
+            "text": "Five-round fights with Marina Rodriguez, Yan Xiaonan and Angela Hill tested my game beyond pure grappling.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1500,31 +1504,31 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-mackenzie-dern-b-8",
-            "text": "I beat Tecia Torres by decision in 2022.",
+            "text": "After becoming a mother, I quickly brought my daughter into the same family jiu-jitsu culture that shaped me.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
-              "profile"
+              "identity5"
             ]
           },
           {
             "id": "ufc-mackenzie-dern-b-9",
-            "text": "My UFC career includes a championship victory at Strawweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-mackenzie-dern-b-10",
-            "text": "I also shared the Octagon with Jessica Andrade in 2023.",
+            "text": "I eventually avenged the Ribas loss by submitting her in a rematch.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
               "profile"
+            ]
+          },
+          {
+            "id": "ufc-mackenzie-dern-b-10",
+            "text": "My father “Megaton” Dias and an elite BJJ résumé are the strongest clues to the grappling identity I brought into the UFC.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity1",
+              "identity2"
             ]
           }
         ]
@@ -1550,43 +1554,44 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-holly-holm-a-1",
-            "text": "I attended real-estate school and has maintained a real-estate license outside of fighting.",
+            "text": "My combat-sports path began almost accidentally when I took cardio-kickboxing classes for exercise as a teenager.",
             "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "identity2"
+            ]
+          },
+          {
+            "id": "ufc-holly-holm-a-2",
+            "text": "Before fighting became full time, I worked jobs including restaurant serving and chiropractic assistance.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "identity5"
+            ]
+          },
+          {
+            "id": "ufc-holly-holm-a-3",
+            "text": "I also attended real-estate school and maintained a real-estate license outside fighting.",
+            "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "identity4"
             ]
           },
           {
-            "id": "ufc-holly-holm-a-2",
-            "text": "My UFC debut ended with a win by decision.",
-            "band": "broad",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-holly-holm-a-3",
-            "text": "My UFC career included appearances at both Bantamweight and Featherweight.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
             "id": "ufc-holly-holm-a-4",
-            "text": "I reached my first UFC title opportunity in 2015.",
+            "text": "I entered the UFC in 2015 after an elite career in another combat sport.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile",
+              "identity3"
             ]
           },
           {
             "id": "ufc-holly-holm-a-5",
-            "text": "I beat Marion Reneau by decision in 2015.",
+            "text": "I knocked out Ronda Rousey with a head kick to win the UFC bantamweight championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1596,7 +1601,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-a-6",
-            "text": "I beat Raquel Pennington by decision in 2015.",
+            "text": "Miesha Tate took the belt from me with a fifth-round submission in my first defense.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1606,7 +1611,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-a-7",
-            "text": "I beat Megan Anderson by decision in 2018.",
+            "text": "I later fought Germaine de Randamie for the inaugural UFC women’s featherweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1616,7 +1621,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-a-8",
-            "text": "I lost to Ketlen Vieira by decision in 2022.",
+            "text": "Another featherweight title opportunity came against Cris Cyborg in a five-round fight.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1626,21 +1631,20 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-a-9",
-            "text": "I won UFC gold at Bantamweight.",
+            "text": "My pre-UFC boxing career was accomplished enough to earn induction into major boxing halls of fame.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-holly-holm-a-10",
-            "text": "My UFC résumé includes a matchup against Ronda Rousey in 2015.",
+            "text": "My nickname “The Preacher’s Daughter” is literal: my father was a Church of Christ preacher for much of my life.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
-              "profile"
+              "identity1"
             ]
           }
         ]
@@ -1650,43 +1654,44 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-holly-holm-b-1",
-            "text": "My UFC career began in 2015.",
+            "text": "I became a world-class professional boxer before mixed martial arts became my main stage.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-holly-holm-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "My entry into striking started with a fitness class rather than with a childhood plan to become a fighter.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-holly-holm-b-3",
-            "text": "One stretch of my UFC career reached 3 consecutive victories.",
+            "text": "Real estate remained one of my interests and credentials outside combat sports.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-holly-holm-b-4",
-            "text": "My first UFC title opportunity came after 2 earlier UFC appearances.",
+            "text": "I joined the UFC unbeaten in MMA and won my first two appearances by decision.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-holly-holm-b-5",
-            "text": "I fought Mayra Bueno Silva in 2023.",
+            "text": "My third UFC fight was a championship bout with Ronda Rousey.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1696,7 +1701,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-b-6",
-            "text": "I beat Bethe Correia by stoppage in 2017.",
+            "text": "A second-round head kick produced one of the biggest title upsets in UFC history.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1706,7 +1711,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-b-7",
-            "text": "I beat Yana Santos by decision in 2023.",
+            "text": "I lost the championship to Miesha Tate late in the fifth round of my first defense.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1716,7 +1721,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-b-8",
-            "text": "I beat Raquel Pennington by decision in 2020.",
+            "text": "I later challenged for featherweight gold against both Germaine de Randamie and Cris Cyborg.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1726,21 +1731,21 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-b-9",
-            "text": "My UFC career includes a championship victory at Bantamweight.",
+            "text": "My career combined elite boxing credentials with a UFC championship won by one of the promotion’s most famous head kicks.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3",
+              "profile"
             ]
           },
           {
             "id": "ufc-holly-holm-b-10",
-            "text": "I also shared the Octagon with Amanda Nunes in 2019.",
+            "text": "“The Preacher’s Daughter” nickname came directly from my father’s profession.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
-              "profile"
+              "identity1"
             ]
           }
         ]
@@ -1766,43 +1771,43 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-nate-diaz-a-1",
-            "text": "I joined the UFC in 2007 after beginning my professional career elsewhere.",
+            "text": "Martial arts gave me structure while I was growing up in a rough environment.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-nate-diaz-a-2",
-            "text": "My UFC debut ended with a win by submission.",
+            "text": "An older brother helped pull me deeper into Brazilian jiu-jitsu and the fighting world.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-nate-diaz-a-3",
-            "text": "My UFC career included appearances at both Lightweight and Welterweight.",
+            "text": "As a teenager, I trained around experienced professional fighters in a demanding grappling room.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-nate-diaz-a-4",
-            "text": "I reached my first UFC title opportunity in 2007.",
+            "text": "My route into the UFC came through winning season five of The Ultimate Fighter.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-nate-diaz-a-5",
-            "text": "I lost to Clay Guida by decision in 2009.",
+            "text": "I won that season’s finale against Manny Gamburyan.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1812,7 +1817,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-a-6",
-            "text": "I lost to Gray Maynard by decision in 2010.",
+            "text": "A high-volume decision over Donald Cerrone became one of the signature wins of my lightweight run.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1822,7 +1827,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-a-7",
-            "text": "I lost to Rory MacDonald by decision in 2011.",
+            "text": "After beating Michael Johnson, my post-fight callout set up a short-notice fight with Conor McGregor.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1832,7 +1837,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-a-8",
-            "text": "I lost to Rafael Dos Anjos by decision in 2014.",
+            "text": "I submitted McGregor in the second round at UFC 196.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1842,20 +1847,22 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-a-9",
-            "text": "I challenged for UFC gold at Lightweight.",
+            "text": "We fought again five months later, with McGregor winning a five-round majority decision.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-nate-diaz-a-10",
-            "text": "I have described martial arts as a source of structure and refuge while growing up in rough parts of Stockton, California.",
+            "text": "I later fought Jorge Masvidal for the inaugural BMF championship, adding another major event to the Diaz-family legacy.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity1"
+              "ledger",
+              "profile"
             ]
           }
         ]
@@ -1865,43 +1872,45 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-nate-diaz-b-1",
-            "text": "My UFC career began in 2007.",
+            "text": "Brazilian jiu-jitsu became the technical foundation that kept me committed to combat sports as a teenager.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1",
+              "identity2"
             ]
           },
           {
             "id": "ufc-nate-diaz-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "I adopted a vegan or heavily plant-based diet as part of how I managed conditioning and recovery.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-nate-diaz-b-3",
-            "text": "One stretch of my UFC career reached 5 consecutive victories.",
+            "text": "My family later built a martial-arts academy where teaching the sport locally became part of life outside UFC events.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-nate-diaz-b-4",
-            "text": "My first undisputed UFC title opportunity came in 2012.",
+            "text": "I entered the UFC as an Ultimate Fighter winner and spent years moving between lightweight and welterweight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-nate-diaz-b-5",
-            "text": "I lost to Joe Stevenson by decision in 2009.",
+            "text": "Wins over Jim Miller and Donald Cerrone established me as a major lightweight contender.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1911,7 +1920,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-b-6",
-            "text": "I lost to Dong Hyun Kim by decision in 2011.",
+            "text": "A long layoff ended with a decision win over Michael Johnson and an unforgettable post-fight callout.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1921,7 +1930,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-b-7",
-            "text": "I lost to Josh Thomson by stoppage in 2013.",
+            "text": "I handed Conor McGregor his first UFC loss by rear-naked choke on short notice.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1931,7 +1940,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-b-8",
-            "text": "I lost to Jorge Masvidal in 2019.",
+            "text": "The rematch became a five-round main event and one of the promotion’s biggest fights.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1941,20 +1950,21 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nate-diaz-b-9",
-            "text": "One of my UFC title opportunities came at Lightweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-nate-diaz-b-10",
-            "text": "I fought Conor McGregor twice in 2016, splitting the two fights.",
+            "text": "Years later, I beat Anthony Pettis before facing Jorge Masvidal for the BMF belt.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-nate-diaz-b-10",
+            "text": "My older brother Nick and I became one of the most recognizable sibling pairings in MMA.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity2",
               "profile"
             ]
           }
@@ -1981,7 +1991,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-colby-covington-a-1",
-            "text": "My foundation was elite collegiate wrestling, including a Pac-10 championship and All-American recognition at Oregon State.",
+            "text": "My foundation was elite collegiate wrestling, including conference-championship and All-American recognition.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1990,34 +2000,35 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-a-2",
-            "text": "My UFC debut ended with a win by stoppage.",
+            "text": "I earned a bachelor’s degree in sociology.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-colby-covington-a-3",
-            "text": "I spent most of my UFC career at Welterweight.",
+            "text": "My college path included junior college and multiple Division I programs before I found my final home.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-colby-covington-a-4",
-            "text": "I reached my first UFC title opportunity in 2018.",
+            "text": "I entered the UFC in 2014 and built a pressure-heavy style around wrestling and pace.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-colby-covington-a-5",
-            "text": "I lost to Warlley Alves by submission in 2015.",
+            "text": "A decision over Demian Maia helped move me into the top tier at welterweight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2027,7 +2038,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-a-6",
-            "text": "I beat Anying Wang by stoppage in 2014.",
+            "text": "I beat Rafael dos Anjos over five rounds to win an interim UFC welterweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2037,7 +2048,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-a-7",
-            "text": "I beat Mike Pyle by decision in 2015.",
+            "text": "My first undisputed title fight with Kamaru Usman ended by fifth-round stoppage.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2047,7 +2058,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-a-8",
-            "text": "I beat Max Griffin by stoppage in 2016.",
+            "text": "I later beat Tyron Woodley and earned a second five-round championship fight with Usman.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2057,20 +2068,21 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-a-9",
-            "text": "I won UFC gold at Welterweight.",
+            "text": "A former friendship with Jorge Masvidal deteriorated into a personal rivalry that eventually headlined UFC 272.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
+              "identity5",
               "ledger"
             ]
           },
           {
             "id": "ufc-colby-covington-a-10",
-            "text": "I and Jorge Masvidal were once close friends, teammates and roommates before their relationship deteriorated into one of MMA's most personal rivalries.",
+            "text": "My mother gave me the nickname “Chaos,” connecting it to both the mythological term and my behavior as a child.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity5"
+              "identity1"
             ]
           }
         ]
@@ -2080,43 +2092,44 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-colby-covington-b-1",
-            "text": "My UFC career began in 2014.",
+            "text": "Wrestling was the sport that carried me through an unusually winding college path.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-colby-covington-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "I finished college with a sociology degree before MMA became my full-time profession.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-colby-covington-b-3",
-            "text": "One stretch of my UFC career reached 7 consecutive victories.",
+            "text": "My UFC rise was built less on quick finishes than on pace, takedowns and high-volume pressure.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-colby-covington-b-4",
-            "text": "My first UFC title opportunity came after 9 earlier UFC appearances.",
+            "text": "A long winning streak eventually moved me into an interim-title opportunity.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-colby-covington-b-5",
-            "text": "I lost to Joaquin Buckley in 2024.",
+            "text": "I defeated Rafael dos Anjos to claim interim welterweight gold.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2126,7 +2139,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-b-6",
-            "text": "I beat Wagner Silva by submission in 2014.",
+            "text": "After beating Robbie Lawler, I challenged Kamaru Usman for the undisputed championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2136,7 +2149,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-b-7",
-            "text": "I beat Jonathan Meunier by submission in 2016.",
+            "text": "That fight ended late in the fifth round, and I later earned a rematch after stopping Tyron Woodley.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2146,7 +2159,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-b-8",
-            "text": "I beat Bryan Barberena by decision in 2016.",
+            "text": "I lost the second Usman fight by decision after another full championship bout.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2156,20 +2169,20 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-colby-covington-b-9",
-            "text": "My UFC career includes a championship victory at Welterweight.",
+            "text": "My former roommate and teammate Jorge Masvidal later became one of my most bitter public rivals.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-colby-covington-b-10",
-            "text": "I also shared the Octagon with Kamaru Usman in 2021.",
+            "text": "The “Chaos” nickname came from my mother and became the label attached to the provocative persona around my UFC career.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
+              "identity1",
               "profile"
             ]
           }
@@ -2196,43 +2209,43 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-yair-rodriguez-a-1",
-            "text": "I joined the UFC in 2014 after beginning my professional career elsewhere.",
+            "text": "I began taekwondo at about five years old.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-yair-rodriguez-a-2",
-            "text": "My UFC debut ended with a win by decision.",
+            "text": "Before fighting became full time, I tried to balance school, work and training at the same time.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-yair-rodriguez-a-3",
-            "text": "I spent my UFC career primarily at Featherweight.",
+            "text": "My route into broader MMA accelerated after I found a vale-tudo gym while looking for somewhere to keep training.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-yair-rodriguez-a-4",
-            "text": "I reached my first UFC title opportunity in 2023.",
+            "text": "I entered the UFC by winning the featherweight tournament on The Ultimate Fighter: Latin America.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile"
             ]
           },
           {
             "id": "ufc-yair-rodriguez-a-5",
-            "text": "I fought Jeremy Stephens in 2019.",
+            "text": "A second-round knockout of B.J. Penn became one of my early high-profile UFC wins.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2242,7 +2255,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-a-6",
-            "text": "I beat Charles Rosa by decision in 2015.",
+            "text": "I knocked out Chan Sung Jung with a last-second upward elbow at 4:59 of the fifth round.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2252,7 +2265,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-a-7",
-            "text": "I beat Andre Fili by stoppage in 2016.",
+            "text": "A five-round fight with Max Holloway ended in a decision loss but reinforced my place among the top featherweights.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2262,7 +2275,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-a-8",
-            "text": "I beat BJ Penn by stoppage in 2017.",
+            "text": "I submitted Josh Emmett to win an interim UFC featherweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2272,20 +2285,20 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-a-9",
-            "text": "I won interim UFC featherweight gold.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-yair-rodriguez-a-10",
-            "text": "I won the interim featherweight title by submitting Josh Emmett in 2023.",
+            "text": "My undisputed title opportunity came against Alexander Volkanovski.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-yair-rodriguez-a-10",
+            "text": "Known as “El Pantera,” I became especially recognized for creative kicks, spinning attacks and unconventional elbows.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
               "profile"
             ]
           }
@@ -2296,53 +2309,52 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-yair-rodriguez-b-1",
-            "text": "My UFC career began in 2014.",
+            "text": "Taekwondo formed the base of the unorthodox striking style I later brought into MMA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-yair-rodriguez-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "Finding a more complete fighting gym changed my path from traditional martial arts toward mixed martial arts.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity2"
             ]
           },
           {
             "id": "ufc-yair-rodriguez-b-3",
-            "text": "One stretch of my UFC career reached 6 consecutive victories.",
+            "text": "I eventually moved away from home to immerse myself in higher-level training.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-yair-rodriguez-b-4",
-            "text": "My first UFC title opportunity came in 2023.",
+            "text": "A reality-show tournament victory brought me into the UFC featherweight division.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-yair-rodriguez-b-5",
-            "text": "I lost to Brian Ortega by submission in 2024.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger",
               "profile"
             ]
           },
           {
+            "id": "ufc-yair-rodriguez-b-5",
+            "text": "I moved to Chicago to train with coaches including Izzy Martinez and Mike Valle as my career became more serious.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "identity3"
+            ]
+          },
+          {
             "id": "ufc-yair-rodriguez-b-6",
-            "text": "I beat Dan Hooker by decision in 2015.",
+            "text": "My UFC résumé added a knockout of former champion B.J. Penn and a decision over Dan Hooker.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2352,7 +2364,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-b-7",
-            "text": "I beat Alex Caceres by decision in 2016.",
+            "text": "The final second of a five-round fight with Chan Sung Jung produced one of the most unusual knockouts in UFC history.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2362,7 +2374,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-b-8",
-            "text": "I beat Chan Sung Jung by stoppage in 2018.",
+            "text": "I later lost a five-round battle with Max Holloway before rebounding with a submission of Josh Emmett.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2372,20 +2384,20 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-b-9",
-            "text": "My UFC résumé includes an interim featherweight championship.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-yair-rodriguez-b-10",
-            "text": "I challenged Alexander Volkanovski for the undisputed featherweight title in 2023.",
+            "text": "That Emmett win made me interim featherweight champion and led to a title fight with Alexander Volkanovski.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-yair-rodriguez-b-10",
+            "text": "The nickname “El Pantera” became attached to one of the division’s most creative striking styles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
               "profile"
             ]
           }
