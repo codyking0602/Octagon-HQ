@@ -57,7 +57,7 @@ describe("UFC Who Am I authored launch pool", () => {
         const script = identity.scripts[scriptId]!;
         expect(script.clues).toHaveLength(10);
         expect(script.clues.map((clue) => clue.band)).toEqual(EXPECTED_BANDS);
-        expect(new Set(script.clues.map((clue) => clue.text)).toHaveLength(10);
+        expect(new Set(script.clues.map((clue) => clue.text)).size).toBe(10);
 
         for (const clue of script.clues) {
           expect(clue.verification).toBe("verified");
