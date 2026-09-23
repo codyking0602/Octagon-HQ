@@ -276,6 +276,7 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_COACH_ADDITIONS = {
     { subjectId: "nfl-mike-shanahan", name: "Mike Shanahan" },
     { subjectId: "nfl-tom-coughlin", name: "Tom Coughlin" },
     { subjectId: "nfl-tony-dungy", name: "Tony Dungy" },
+    { subjectId: "nfl-dan-campbell", name: "Dan Campbell" },
   ],
   CFB: [
     { subjectId: "cfb-lou-holtz", name: "Lou Holtz" },
@@ -292,7 +293,7 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_COACH_ADDITIONS = {
  * or the old 200-identity launch census: several legacy career windows are
  * intentionally incomplete and previously changed the roster by accident.
  *
- * NFL: 120 players + 19 coaches = 139 identities.
+ * NFL: 120 players + 20 coaches = 140 identities.
  * CFB: 168 players + 25 coaches = 193 identities.
  */
 export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
@@ -1129,6 +1130,12 @@ export const FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES = {
       "league": "NFL",
       "subjectId": "nfl-tony-dungy",
       "name": "Tony Dungy",
+      "kind": "coach"
+    },
+    {
+      "league": "NFL",
+      "subjectId": "nfl-dan-campbell",
+      "name": "Dan Campbell",
       "kind": "coach"
     }
   ],
