@@ -2277,7 +2277,7 @@ export const ufcWhoAmIAuthoredBatch8: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-diego-lopes-a-8",
-            "text": "I then earned a five-round decision over Brian Ortega.",
+            "text": "I then earned a three-round decision over Brian Ortega.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2376,7 +2376,7 @@ export const ufcWhoAmIAuthoredBatch8: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-diego-lopes-b-8",
-            "text": "A five-round win over Brian Ortega moved me into the championship picture.",
+            "text": "A three-round win over Brian Ortega moved me into the championship picture.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
