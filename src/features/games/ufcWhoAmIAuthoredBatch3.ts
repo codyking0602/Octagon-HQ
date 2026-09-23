@@ -24,7 +24,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-michael-chandler-a-1",
-            "text": "I entered Missouri's wrestling program as a walk-on and developed into an NCAA Division I All-American and team captain.",
+            "text": "I entered a Division I wrestling program as a walk-on and developed into an All-American and team captain.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -141,7 +141,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-b-3",
-            "text": "Before college wrestling, I was also a multi-year high-school football player in Missouri.",
+            "text": "Before college wrestling, I was also a multi-year high-school football player.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -150,7 +150,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-b-4",
-            "text": "My first UFC title opportunity came after 1 earlier UFC appearances.",
+            "text": "My first UFC title opportunity came after one earlier UFC appearance.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -208,7 +208,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-chandler-b-10",
-            "text": "One of my most recognizable UFC matchups came against Charles Oliveira in 2024.",
+            "text": "I also shared the Octagon with Charles Oliveira in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -423,7 +423,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-brian-ortega-b-10",
-            "text": "One of my most recognizable UFC matchups came against Max Holloway in 2018.",
+            "text": "I also shared the Octagon with Max Holloway in 2018.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -638,7 +638,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ciryl-gane-b-10",
-            "text": "One of my most recognizable UFC matchups came against Jon Jones in 2023.",
+            "text": "I also shared the Octagon with Jon Jones in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -854,7 +854,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-marlon-vera-b-10",
-            "text": "One of my most recognizable UFC matchups came against Frankie Edgar in 2021.",
+            "text": "I also shared the Octagon with Frankie Edgar in 2021.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -885,7 +885,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-dominick-reyes-a-1",
-            "text": "I was a four-year football player and three-year starting safety at Stony Brook before turning to MMA.",
+            "text": "Before turning to MMA, I played college football as a defensive back.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1069,7 +1069,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dominick-reyes-b-10",
-            "text": "One of my most recognizable UFC matchups came against Jan Blachowicz in 2020.",
+            "text": "I also shared the Octagon with Jan Blachowicz in 2020.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1284,7 +1284,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dan-hooker-b-10",
-            "text": "One of my most recognizable UFC matchups came against Dustin Poirier in 2020.",
+            "text": "I also shared the Octagon with Dustin Poirier in 2020.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1499,7 +1499,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-islam-makhachev-b-10",
-            "text": "One of my most recognizable UFC matchups came against Alexander Volkanovski in 2023.",
+            "text": "I also shared the Octagon with Alexander Volkanovski in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1715,7 +1715,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-matt-hughes-b-10",
-            "text": "One of my most recognizable UFC matchups came against Georges St-Pierre in 2006.",
+            "text": "I also shared the Octagon with Georges St-Pierre in 2006.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1930,7 +1930,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-stipe-miocic-b-10",
-            "text": "One of my most recognizable UFC matchups came against Jon Jones in 2024.",
+            "text": "I also shared the Octagon with Jon Jones in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2145,7 +2145,7 @@ export const ufcWhoAmIAuthoredBatch3: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-merab-dvalishvili-b-10",
-            "text": "One of my most recognizable UFC matchups came against Sean O'Malley in 2025.",
+            "text": "I also shared the Octagon with Sean O'Malley in 2025.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
