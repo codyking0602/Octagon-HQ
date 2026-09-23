@@ -113,7 +113,16 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
       "Name something tied to signing a college football prospect.",
       "Name a recruiting term a serious college football fan knows.",
     ],
-    answers: ["Five-star", "Commitment", "Signing day", "Transfer portal", "Official visit", "Recruiting class", "Decommitment", "Early enrollee"],
+    answers: [
+      { name: "Five-star", aliases: ["5-star", "5 star", "Five star"] },
+      { name: "Commitment", aliases: ["Commit", "Committed"] },
+      { name: "Signing day", aliases: ["NSD", "National Signing Day"] },
+      { name: "Transfer portal", aliases: ["Portal"] },
+      { name: "Official visit", aliases: ["Visit"] },
+      { name: "Recruiting class", aliases: ["Class"] },
+      { name: "Decommitment", aliases: ["Decommit", "Decommitted"] },
+      { name: "Early enrollee", aliases: ["Early enroll", "Early enrollment"] },
+    ],
   },
   {
     category: "postseason",
