@@ -58007,6 +58007,2606 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-danielle-hunter",
+    "name": "Danielle Hunter",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "draft": "https://www.nfl.com/draft/tracker/2015/teams/minnesota-vikings",
+      "breakout": "https://www.vikings.com/news/danielle-hunter-pro-bowl-fan-support",
+      "milestone": "https://www.vikings.com/news/defensive-stats-that-were-solid-in-2019-2-to-improve-in-2020"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-danielle-hunter-a-1",
+            "text": "I entered the league as a third-round defensive end rather than a first-round headliner.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-a-2",
+            "text": "I began my NFL career in a rotational pass-rush role before becoming a full-time starter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-a-3",
+            "text": "My first double-digit-sack season came in my second NFL year, when I recorded 12.5.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-a-4",
+            "text": "In 2018, I jumped to a career-high-at-the-time 14.5 sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-a-5",
+            "text": "That 2018 breakout brought my first Pro Bowl selection.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-a-6",
+            "text": "I was also recognized as a second-team All-Pro after that 2018 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-a-7",
+            "text": "I matched my 14.5-sack total again in 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-a-8",
+            "text": "During the 2019 season, I became the youngest player in NFL history to reach 50 career sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-a-9",
+            "text": "Minnesota selected me 88th overall out of LSU in the 2015 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-a-10",
+            "text": "I wore No. 99 while becoming one of the Vikings' signature edge rushers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-danielle-hunter-b-1",
+            "text": "I arrived in Minnesota in the same 2015 draft class as Trae Waynes and Eric Kendricks.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-b-2",
+            "text": "I was drafted after a college career at LSU but became a much bigger sack producer in the NFL.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-b-3",
+            "text": "I led my team with 12.5 sacks during the 2016 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-b-4",
+            "text": "My 2018 season included 21 tackles for loss, second-most in the league.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-b-5",
+            "text": "I earned Pro Bowl honors in consecutive seasons in 2018 and 2019.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-b-6",
+            "text": "I accumulated 40 career sacks before I had turned 25 years old.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-b-7",
+            "text": "By Week 14 of the 2019 season, my career sack total had reached 50.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-b-8",
+            "text": "That 50th sack made me the youngest player ever to hit the milestone at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-b-9",
+            "text": "The Vikings used pick No. 88 in the 2015 draft to bring me to Minnesota.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          },
+          {
+            "id": "nfl-danielle-hunter-b-10",
+            "text": "A No. 99 edge rusher from LSU, I became a two-time Pro Bowler before age 26.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "breakout",
+              "milestone"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-elvis-dumervil",
+    "name": "Elvis Dumervil",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "retirement": "https://www.nfl.com/news/veteran-de-elvis-dumervil-retires-after-12-seasons-0ap3000000952251",
+      "stats": "https://www.nfl.com/players/elvis-dumervil/stats/career"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-elvis-dumervil-a-1",
+            "text": "I entered the NFL as a fourth-round pick and eventually became one of my era's most productive pass rushers.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-a-2",
+            "text": "My 12-year career included stops with three different franchises.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-a-3",
+            "text": "I recorded 17 sacks during the 2009 season in Denver.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-a-4",
+            "text": "That 2009 total led the NFL in sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-a-5",
+            "text": "I later produced another 17-sack season after moving to the AFC North.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-a-6",
+            "text": "My second 17-sack season came in 2014 with Baltimore.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-a-7",
+            "text": "Across my career, I earned five Pro Bowl selections and two first-team All-Pro honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-a-8",
+            "text": "I finished my NFL career with 105.5 sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-a-9",
+            "text": "My professional stops were Denver, Baltimore and San Francisco.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-a-10",
+            "text": "Denver drafted me in the fourth round in 2006 before I became a five-time Pro Bowl edge rusher.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-elvis-dumervil-b-1",
+            "text": "I was a mid-round draft pick who spent my first seven NFL seasons with Denver.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-b-2",
+            "text": "Before changing teams, I posted three double-digit-sack seasons for the Broncos.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-b-3",
+            "text": "One of those Denver seasons ended with 17 sacks in 2009.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-b-4",
+            "text": "That 2009 performance helped earn me first-team All-Pro recognition.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-b-5",
+            "text": "I joined Baltimore in 2013 and immediately remained a major part of the pass rush.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-b-6",
+            "text": "In my second Ravens season, I tied my career high with 17 sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-b-7",
+            "text": "My five Pro Bowl selections were earned during a career split mostly between Denver and Baltimore.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-b-8",
+            "text": "I closed my career in San Francisco and led that team with 6.5 sacks in 2017.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-b-9",
+            "text": "At retirement, my 105.5 career sacks ranked among the top 30 totals in league history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-elvis-dumervil-b-10",
+            "text": "I was the No. 92 pass rusher who starred for both the Broncos and Ravens before finishing with the 49ers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retirement",
+              "stats"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-cameron-jordan",
+    "name": "Cameron Jordan",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "saints": "https://www.neworleanssaints.com/team/players-roster/cameron-jordan/career"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-cameron-jordan-a-1",
+            "text": "I entered the league as a first-round defensive lineman and stayed with the same franchise for well over a decade.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-a-2",
+            "text": "I became a long-running defensive captain and one of the most durable stars in my team's history.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-a-3",
+            "text": "My first 12-sack season came in 2013, my third year in the league.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-a-4",
+            "text": "I recorded 13 sacks in 2017 and earned first-team All-Pro recognition.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-a-5",
+            "text": "That 2017 season began a run of six consecutive Pro Bowl selections.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-a-6",
+            "text": "I set a career high with 15.5 sacks in 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-a-7",
+            "text": "I eventually became my franchise's all-time leader in career sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-a-8",
+            "text": "I also became the club's career leader in postseason quarterback takedowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-a-9",
+            "text": "I have worn No. 94 throughout a career spent entirely with New Orleans.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-a-10",
+            "text": "The Saints selected me 24th overall out of California in the 2011 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-cameron-jordan-b-1",
+            "text": "I was a first-round pick from California who developed into a cornerstone on an NFC South defense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-b-2",
+            "text": "My career has stretched across multiple coaching eras without a change of franchise.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-b-3",
+            "text": "I have been selected as a defensive captain more than ten times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-b-4",
+            "text": "I became the first player in team history to record seven different double-digit-sack seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-b-5",
+            "text": "I also posted at least 7.5 sacks in 11 consecutive seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-b-6",
+            "text": "My eight Pro Bowl selections are the most ever by a defensive player for my franchise.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-b-7",
+            "text": "Through the 2025 season, my franchise-record career sack total had reached 132.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-b-8",
+            "text": "Even in my 15th NFL season, I produced 10.5 sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-b-9",
+            "text": "The black-and-gold team that drafted me in 2011 is the only NFL team I have played for.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          },
+          {
+            "id": "nfl-cameron-jordan-b-10",
+            "text": "I am the No. 94 Saints defensive end who became the franchise's all-time sack leader.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "saints"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-cameron-wake",
+    "name": "Cameron Wake",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "journey": "https://www.nfl.com/news/dolphins-wake-has-taken-longest-route-to-sacking-nfl-qbs-09000d5d81b79859",
+      "cflpath": "https://www.nfl.com/news/nfl-s-best-home-grown-talent-which-non-qb-rules-each-team-0ap3000000820292",
+      "titans": "https://static.clubs.nfl.com/image/upload/titans/gcxd2syfaxsgd2oa7haj.pdf",
+      "stats": "https://www.nfl.com/players/cameron-wake/stats/career"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-cameron-wake-a-1",
+            "text": "I went undrafted and spent time away from football before becoming an NFL star.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-a-2",
+            "text": "During that time away from the game, I worked in the mortgage business.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-a-3",
+            "text": "My route back to the NFL went through the Canadian Football League.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-a-4",
+            "text": "I did not make my NFL debut as a regular pass rusher until after my 27th birthday.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-a-5",
+            "text": "I joined Miami in 2009 and remained there for ten seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-a-6",
+            "text": "I recorded 14 sacks in 2010 and followed later with a 15-sack season in 2012.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-a-7",
+            "text": "I was selected to five Pro Bowls during my NFL career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-a-8",
+            "text": "From 2009 through 2018, my 98 sacks tied for the most in the league over that span.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-a-9",
+            "text": "I finished my Miami tenure second in Dolphins history in sacks.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-a-10",
+            "text": "I was the No. 91 Dolphins edge rusher whose unusual path ran from Penn State to Canada and then Miami.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-cameron-wake-b-1",
+            "text": "I played college football at Penn State but was not selected in the NFL Draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-b-2",
+            "text": "After being out of football, I rebuilt my career north of the border before returning to the NFL.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-b-3",
+            "text": "My first decade in the league was spent almost entirely in Miami.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-b-4",
+            "text": "In a 2010 overtime win at Green Bay, I finished with three sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-b-5",
+            "text": "One of my best seasons came in 2012, when I reached 15 sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-b-6",
+            "text": "I remained productive late in my thirties, recording 11.5 sacks in 2016.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-b-7",
+            "text": "My Dolphins run ended with 98 sacks over the 2009-18 seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-b-8",
+            "text": "I finished my NFL career with 100.5 sacks and 22 forced fumbles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-b-9",
+            "text": "My final NFL season came with Tennessee in 2019.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-cameron-wake-b-10",
+            "text": "A five-time Pro Bowler who wore No. 91 in Miami, I became one of the great undrafted pass-rush success stories.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "journey",
+              "cflpath",
+              "titans",
+              "stats"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-asante-samuel",
+    "name": "Asante Samuel",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "patriots": "https://www.patriots.com/news/q-a-with-cb-asante-samuel-136791",
+      "value": "https://www.nfl.com/news/top-five-nfl-draft-values-of-the-millennium-at-cornerback-richard-sherman-was-a-fifth-round-find",
+      "playoffs": "https://www.nfl.com/news/eagles-samuel-sets-nfl-playoff-record-with-fourth-return-td-09000d5d80de1c79",
+      "stats": "https://www.nfl.com/players/asante-samuel/stats/career"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-asante-samuel-a-1",
+            "text": "I was a fourth-round cornerback who quickly became a starter on championship teams.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-a-2",
+            "text": "In my first NFL home game, I sealed a win with a 55-yard interception return for a touchdown.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-a-3",
+            "text": "I won Super Bowl rings in each of my first two NFL seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-a-4",
+            "text": "In 2006, I tied for the league lead with 10 interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-a-5",
+            "text": "I followed that with six more interceptions during a 16-0 regular season in 2007.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-a-6",
+            "text": "I eventually made four consecutive Pro Bowls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-a-7",
+            "text": "I finished my career with 51 interceptions and six regular-season pick-sixes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-a-8",
+            "text": "I set the NFL postseason record with four career interception returns for touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-a-9",
+            "text": "After five seasons in New England, I signed with Philadelphia as a major free agent.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-a-10",
+            "text": "I was the No. 22 ballhawk whose career included the Patriots, Eagles and Falcons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-asante-samuel-b-1",
+            "text": "I came out of UCF after setting a school record for pass breakups.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-b-2",
+            "text": "New England found me with the 120th overall pick in the 2003 draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-b-3",
+            "text": "Across the 2006 and 2007 regular seasons, I led the NFL with 16 interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-b-4",
+            "text": "Before leaving New England, I had already returned three postseason interceptions for touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-b-5",
+            "text": "I joined Philadelphia in 2008 after five seasons with the Patriots.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-b-6",
+            "text": "In my first postseason game as an Eagle, I scored on a 44-yard interception return against Minnesota.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-b-7",
+            "text": "That touchdown gave me an NFL-record fourth postseason pick-six.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-b-8",
+            "text": "I later finished my playing career with Atlanta after four seasons in Philadelphia.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-b-9",
+            "text": "My 51 career interceptions helped make me one of the best draft values of my era at cornerback.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          },
+          {
+            "id": "nfl-asante-samuel-b-10",
+            "text": "A four-time Pro Bowler and two-time Super Bowl champion, I built my reputation by turning interceptions into points.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "patriots",
+              "value",
+              "playoffs",
+              "stats"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-charles-tillman",
+    "name": "Charles Tillman",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "draft": "https://www.chicagobears.com/news/tillman-details-his-draft-day-experience-18730661",
+      "legacy": "https://www.chicagobears.com/news/peanut-leaves-a-legacy-17348443",
+      "technique": "https://www.chicagobears.com/news/lunch-with-larry-charles-tillman"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-charles-tillman-a-1",
+            "text": "I was a second-round cornerback from Louisiana-Lafayette who spent nearly my entire career with one team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-a-2",
+            "text": "Twelve of my thirteen NFL seasons came in Chicago.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-a-3",
+            "text": "I helped a defense win three NFC North titles and one conference championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-a-4",
+            "text": "My 36 interceptions in Chicago became the most ever by a Bears cornerback.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-a-5",
+            "text": "I also forced 42 fumbles during my Bears career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-a-6",
+            "text": "In 2012 alone, I forced a career-high 10 fumbles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-a-7",
+            "text": "That 2012 season sent me to my second consecutive Pro Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-a-8",
+            "text": "I set Bears records for defensive touchdowns and interception-return touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-a-9",
+            "text": "My signature ball-stripping technique became known throughout football as the Peanut Punch.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-a-10",
+            "text": "I am the Bears cornerback nicknamed Peanut who wore No. 33 and turned forcing fumbles into a trademark.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-charles-tillman-b-1",
+            "text": "Chicago selected me 35th overall in the 2003 draft after my college career in Louisiana.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-b-2",
+            "text": "I started at cornerback for the Bears in Super Bowl XLI.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-b-3",
+            "text": "I took pride in special teams work, including blocking for an all-time great return specialist.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-b-4",
+            "text": "My final NFL season was with Carolina after twelve years in Chicago.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-b-5",
+            "text": "I finished my full career with 38 interceptions and 44 forced fumbles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-b-6",
+            "text": "I also received Walter Payton NFL Man of the Year honors during my final years with the Bears.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-b-7",
+            "text": "My 36 Bears interceptions remain the franchise's top total by a cornerback.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-b-8",
+            "text": "Coaches around football continued teaching my punch-out technique after I retired.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-b-9",
+            "text": "That technique was so associated with me that it carried my childhood nickname: the Peanut Punch.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          },
+          {
+            "id": "nfl-charles-tillman-b-10",
+            "text": "I spent twelve seasons as a Chicago corner before closing my career with the Panthers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "legacy",
+              "technique"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-deangelo-hall",
+    "name": "DeAngelo Hall",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "draft": "https://static.www.nfl.com/league/apps/league-site/media-guides/2023/CAR.pdf",
+      "record": "https://www.commanders.com/news/hall-named-nfc-defensive-player-of-the-week-3447530",
+      "retirement": "https://www.commanders.com/news/deangelo-hall-officially-announces-his-retirement-reflects-on-football-career",
+      "legacy": "https://www.commanders.com/news/deangelo-hall-excited-about-options-for-his-future-20192607"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-deangelo-hall-a-1",
+            "text": "I entered the league as a top-10 draft pick at cornerback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-a-2",
+            "text": "I made two Pro Bowls during my first four seasons in Atlanta.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-a-3",
+            "text": "A brief 2008 stop in Oakland was followed by a long run in Washington.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-a-4",
+            "text": "I retired with 43 regular-season interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-a-5",
+            "text": "In one 2010 game, I intercepted four passes in a single afternoon.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-a-6",
+            "text": "One of those four picks became a 92-yard touchdown return.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-a-7",
+            "text": "That performance earned me NFC Defensive Player of the Week honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-a-8",
+            "text": "I later finished that season by being named MVP of the Pro Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-a-9",
+            "text": "I became the first player in NFL history with at least five interception-return touchdowns and five fumble-return touchdowns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-a-10",
+            "text": "I was the No. 23 Washington defensive back whose four-interception game tied an NFL record.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-deangelo-hall-b-1",
+            "text": "My 14-year NFL career included Atlanta, Oakland and Washington.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-b-2",
+            "text": "Atlanta selected me eighth overall out of Virginia Tech in the 2004 draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-b-3",
+            "text": "I earned my first Pro Bowl berth in 2005 after leading the Falcons with six interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-b-4",
+            "text": "In Washington's 2010 opener, I returned a fumble for the game-winning touchdown against Dallas.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-b-5",
+            "text": "Later that season, all four of my interceptions against Chicago came in the second half.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-b-6",
+            "text": "The four-pick performance tied both an NFL record and the Washington franchise record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-b-7",
+            "text": "The jersey from that record-tying game was sent to the Pro Football Hall of Fame.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-b-8",
+            "text": "My career ended with 43 interceptions and three Pro Bowl selections.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-b-9",
+            "text": "My final Pro Bowl appearance included an interception and a fumble-return touchdown on the way to MVP honors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          },
+          {
+            "id": "nfl-deangelo-hall-b-10",
+            "text": "A Virginia Tech corner drafted eighth overall, I became one of Washington's signature ballhawks of the 2010s.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "record",
+              "retirement",
+              "legacy"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-devin-mccourty",
+    "name": "Devin McCourty",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "early": "https://www.patriots.com/news/inside-the-helmet-devin-mccourty-186571",
+      "retirement": "https://www.patriots.com/news/patriots-safety-devin-mccourty-announces-his-retirement"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-devin-mccourty-a-1",
+            "text": "I entered the NFL as a first-round cornerback and later became a long-term safety.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-a-2",
+            "text": "As a rookie, I tied for the league lead with seven interceptions and made the Pro Bowl.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-a-3",
+            "text": "My defense eventually shifted me from outside corner to the middle of the secondary.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-a-4",
+            "text": "I earned second-team All-Pro honors at both cornerback and safety during my career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-a-5",
+            "text": "I was elected a team captain in twelve different seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-a-6",
+            "text": "I won three Super Bowl championships with the same franchise.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-a-7",
+            "text": "My entire 13-year NFL career was spent in New England.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-a-8",
+            "text": "I started all 205 regular-season games I played.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-a-9",
+            "text": "I retired with 35 regular-season interceptions and 24 postseason starts.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-a-10",
+            "text": "New England selected me 27th overall out of Rutgers in the 2010 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-devin-mccourty-b-1",
+            "text": "I played at Rutgers and once shared a college secondary with my twin brother.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-b-2",
+            "text": "The Patriots drafted me in the first round in 2010, well before my twin was selected later that weekend.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-b-3",
+            "text": "My rookie season at cornerback produced seven interceptions and a Pro Bowl trip.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-b-4",
+            "text": "I later became the center-field safety who helped organize New England's defense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-b-5",
+            "text": "My career scoring plays included a 104-yard kickoff return touchdown.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-b-6",
+            "text": "I became one of only a small group of players to start in at least five Super Bowls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-b-7",
+            "text": "At retirement, my 24 postseason starts were the most ever by an NFL defensive player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-b-8",
+            "text": "From the time I entered the league through retirement, I had played more defensive snaps than any other player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-b-9",
+            "text": "I was part of each of New England's final three championship teams of the dynasty era.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          },
+          {
+            "id": "nfl-devin-mccourty-b-10",
+            "text": "A 12-time captain and three-time champion, I spent all 13 of my NFL seasons with the Patriots.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "early",
+              "retirement"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "maxx-crosby",
+    "name": "Maxx Crosby",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "raiders": "https://www.raiders.com/team/players-roster/maxx-crosby/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "maxx-crosby-a-1",
+            "text": "I entered the league as a fourth-round defensive end from a Mid-American Conference program.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-a-2",
+            "text": "As a rookie, I posted 10 sacks and four forced fumbles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-a-3",
+            "text": "That first season ended with me finishing second in Defensive Rookie of the Year voting.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-a-4",
+            "text": "I led my team in sacks in each of my first two NFL seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-a-5",
+            "text": "My first Pro Bowl came in 2021, along with second-team All-Pro recognition.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-a-6",
+            "text": "In 2022, I recorded 12.5 sacks and led the league with 22 tackles for loss.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-a-7",
+            "text": "I raised my sack career high to 14.5 during the 2023 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-a-8",
+            "text": "I made five consecutive Pro Bowls from 2021 through 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-a-9",
+            "text": "I have worn No. 98 while spending my entire NFL career with the Raiders.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-a-10",
+            "text": "Oakland drafted me 106th overall in 2019, one year before the franchise began playing in Las Vegas.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "maxx-crosby-b-1",
+            "text": "I was lightly recruited out of high school before becoming a two-year starter at Eastern Michigan.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-b-2",
+            "text": "My college career ended with 20 sacks, 41 tackles for loss and consecutive first-team All-MAC selections.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-b-3",
+            "text": "The Raiders selected me in the fourth round of the 2019 draft.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-b-4",
+            "text": "My 10-sack rookie year made me just the second rookie in franchise history to reach double figures.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-b-5",
+            "text": "In 2020, I again led the team in sacks and also blocked two kicks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-b-6",
+            "text": "The next season, I became the first Raider since 2016 to win multiple AFC Defensive Player of the Week awards in one year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-b-7",
+            "text": "In 2025, I set a Raiders single-season record with 28 tackles for loss.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-b-8",
+            "text": "I became one of only 12 players in league history to record at least seven sacks in each of my first seven seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-b-9",
+            "text": "Five straight Pro Bowls turned the No. 98 edge rusher into the centerpiece of the Las Vegas pass rush.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          },
+          {
+            "id": "maxx-crosby-b-10",
+            "text": "I am the Eastern Michigan fourth-rounder who became the Raiders' defining pass rusher of the 2020s.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "raiders"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "amon-ra-st-brown",
+    "name": "Amon-Ra St. Brown",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "draft": "https://www.detroitlions.com/news/camp-notes-st-brown-looking-to-pick-up-where-he-left-off-last-season",
+      "extension": "https://www.detroitlions.com/news/lions-sign-wr-amon-ra-st-brown-to-contract-extension-through-2028-season",
+      "lions": "https://www.detroitlions.com/team/players-roster/amon-ra-st-brown/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "amon-ra-st-brown-a-1",
+            "text": "I entered the NFL as a fourth-round receiver after sixteen other wideouts had already been drafted.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-a-2",
+            "text": "Late in my rookie season, I produced six straight games with at least eight receptions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-a-3",
+            "text": "I set franchise rookie records with 90 catches and 912 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-a-4",
+            "text": "My first NFL season also included the first walk-off receiving touchdown by a rookie wideout in team history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-a-5",
+            "text": "At age 23, I became the youngest player in franchise history with 100 catches and 1,000 receiving yards in a season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-a-6",
+            "text": "In 2023, I posted 119 catches for 1,515 yards and 10 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-a-7",
+            "text": "I earned first-team All-Pro honors in both 2023 and 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-a-8",
+            "text": "I produced four consecutive 100-catch seasons from 2022 through 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-a-9",
+            "text": "I wear No. 14 as the centerpiece of Detroit's passing game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-a-10",
+            "text": "I am the Lions receiver who reached at least 90 catches in each of my first five NFL seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "amon-ra-st-brown-b-1",
+            "text": "I played three college seasons at USC and finished there with 178 receptions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-b-2",
+            "text": "My final college season brought first-team All-Pac-12 honors.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-b-3",
+            "text": "Detroit selected me 112th overall in the 2021 draft.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-b-4",
+            "text": "Across the end of 2021 and start of 2022, I tied the NFL record with eight straight games of at least eight catches.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-b-5",
+            "text": "In 2024, I finished with 115 receptions, 1,263 yards and 12 receiving touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-b-6",
+            "text": "That season also featured eight consecutive games with a receiving touchdown.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-b-7",
+            "text": "Through five NFL seasons, my 547 receptions were the most ever by a player over that span.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-b-8",
+            "text": "I became the only player in league history to record at least 90 receptions in each of his first five seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-b-9",
+            "text": "My football family includes a brother who also became an NFL wide receiver, and I am fluent in German and French.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          },
+          {
+            "id": "amon-ra-st-brown-b-10",
+            "text": "A fourth-round USC pick wearing No. 14, I became a multi-time first-team All-Pro for the Lions.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "extension",
+              "lions"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "jahmyr-gibbs",
+    "name": "Jahmyr Gibbs",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "lions": "https://www.detroitlions.com/team/players-roster/jahmyr-gibbs/",
+      "extension": "https://www.detroitlions.com/news/lions-sign-rb-jahmyr-gibbs-to-contract-extension-through-the-2030-season"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "jahmyr-gibbs-a-1",
+            "text": "My college career included two seasons at Georgia Tech before I finished at Alabama.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-a-2",
+            "text": "I entered the NFL as the 12th overall pick in the draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-a-3",
+            "text": "As a rookie, I rushed for 945 yards and 10 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-a-4",
+            "text": "I also caught 52 passes for 316 yards during that first season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-a-5",
+            "text": "My rookie year ended with a Pro Bowl selection.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-a-6",
+            "text": "In 2024, I rushed for 1,412 yards and 16 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-a-7",
+            "text": "That season I scored 20 total touchdowns, an NFL high and a Lions single-season record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-a-8",
+            "text": "I made the Pro Bowl in each of my first three NFL seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-a-9",
+            "text": "I wear No. 0 in Detroit's backfield.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-a-10",
+            "text": "The Lions drafted me 12th overall out of Alabama, their highest-selected running back since Barry Sanders.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "jahmyr-gibbs-b-1",
+            "text": "In college, I produced more than 2,100 rushing yards and 1,200 receiving yards while also returning kickoffs.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-b-2",
+            "text": "At Alabama, I led the team in rushing and caught 44 passes in my final college season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-b-3",
+            "text": "My final college year also brought third-team AP All-America recognition as an all-purpose player.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-b-4",
+            "text": "I opened my NFL career by reaching at least 50 scrimmage yards in each of my first 13 games, a franchise rookie record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-b-5",
+            "text": "As a rookie in the playoffs, I became one of three first-year players ever to post 80 rushing yards, 80 receiving yards and two touchdowns in a single postseason.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-b-6",
+            "text": "In 2024, I became the first player in NFL history to record at least 70 scrimmage yards in all 17 games of a season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-b-7",
+            "text": "That same year, I set an NFL record with seven straight games averaging at least 5.0 yards per carry on 10 or more attempts.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-b-8",
+            "text": "Through three NFL seasons, my 49 total touchdowns were the most ever by a player over that span.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-b-9",
+            "text": "I joined Barry Sanders and Billy Sims as a Lions back to make the Pro Bowl in each of my first two seasons, then added a third straight selection.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          },
+          {
+            "id": "jahmyr-gibbs-b-10",
+            "text": "A No. 0 dual-threat back drafted 12th overall, I became Detroit's touchdown engine immediately.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lions",
+              "extension"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
