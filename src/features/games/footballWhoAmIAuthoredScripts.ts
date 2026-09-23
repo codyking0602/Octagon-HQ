@@ -5044,6 +5044,1269 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     }
   },
   {
+    "league": "CFB",
+    "subjectId": "cfb-doug-flutie",
+    "name": "Doug Flutie",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/doug-flutie/",
+      "bc": "https://bceagles.com/news/2001/3/26/Football_Retired_Jerseys",
+      "roster": "https://bceagles.com/sports/football/roster/1984"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-doug-flutie-a-1",
+            "text": "I became a starting college quarterback as a true freshman and never missed a game in four seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-a-2",
+            "text": "By my junior year, I had already become a Heisman finalist and helped my team finish 9-3 with a bowl victory.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-a-3",
+            "text": "As a senior, I threw for 3,454 yards and 27 touchdowns during the regular season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-a-4",
+            "text": "I became the first major-college passer to surpass 10,000 career passing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-a-5",
+            "text": "I finished with 10,579 career passing yards, then an NCAA record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "bc"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-a-6",
+            "text": "I was a unanimous first-team All-American and also won the Maxwell and Davey O'Brien awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-a-7",
+            "text": "I won the Heisman after receiving 678 first-place votes and 2,240 total points.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-a-8",
+            "text": "That trophy was the first Heisman in Boston College history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-a-9",
+            "text": "My senior season included a last-second 48-yard touchdown pass to Gerard Phelan to beat Miami 47-45.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "bc"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-a-10",
+            "text": "I wore No. 22 at Boston College, a number the school later retired.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roster",
+              "bc"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-doug-flutie-b-1",
+            "text": "I was an all-league high-school athlete in football, basketball and baseball.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-b-2",
+            "text": "I measured 5-foot-9 as a senior college quarterback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-b-3",
+            "text": "My first college season included 1,652 passing yards and 10 touchdowns after I won the starting job as a true freshman.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-b-4",
+            "text": "I followed with 2,749 passing yards as a sophomore and 2,724 as a junior.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-b-5",
+            "text": "That junior season ended 9-3 with a Liberty Bowl victory and a third-place Heisman finish.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-b-6",
+            "text": "My senior team finished the regular season 9-2 and ranked eighth in the polls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-b-7",
+            "text": "I was also a Rhodes Scholarship candidate during my senior year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-b-8",
+            "text": "The Heisman ballots were already in before the most famous play of my college career happened.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-b-9",
+            "text": "That play was a desperation touchdown pass at Miami that produced a 47-45 Boston College win.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "bc"
+            ]
+          },
+          {
+            "id": "cfb-doug-flutie-b-10",
+            "text": "Boston College later retired the No. 22 jersey I wore while winning the 1984 Heisman.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "roster"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-matt-leinart",
+    "name": "Matt Leinart",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/matt-leinart/",
+      "uscHeisman": "https://usctrojans.com/sports/2018/7/25/matt-leinart-heisman-trophy-winner",
+      "uscRoster": "https://usctrojans.com/sports/football/roster/leinart-matt/1807",
+      "uscOutlook": "https://usctrojans.com/news/2004/7/22/2004_usc_football_outlook",
+      "uscND": "https://usctrojans.com/news/2004/11/27/no_1_usc_tramples_notre_dame_41_10"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-matt-leinart-a-1",
+            "text": "I redshirted my first college season and spent the next one backing up a Heisman-winning quarterback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-a-2",
+            "text": "My first career pass went for a touchdown in a road season opener.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "uscOutlook"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-a-3",
+            "text": "In my first season as the starter, I threw for 3,556 yards and a then-conference-record 38 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "uscOutlook"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-a-4",
+            "text": "That team won a national championship, and I finished sixth in the Heisman voting.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-a-5",
+            "text": "The next regular season, I threw for 2,990 yards and 28 touchdowns with six interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-a-6",
+            "text": "I led my team to a 12-0 regular season while it went wire-to-wire at No. 1 in the polls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-a-7",
+            "text": "I won the Heisman over a finalist group that included Adrian Peterson, Jason White, Alex Smith and one of my own teammates.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-a-8",
+            "text": "In the BCS title game, I threw for 332 yards and five touchdowns in a 55-19 win over Oklahoma.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-a-9",
+            "text": "I became USC's sixth Heisman winner and its second in three years.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "uscHeisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-a-10",
+            "text": "I succeeded Carson Palmer as USC's starting quarterback and won the 2004 Heisman.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-matt-leinart-b-1",
+            "text": "I was California's Gatorade Player of the Year after throwing for 2,870 yards and 28 touchdowns as a high-school senior.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-b-2",
+            "text": "I considered Oklahoma before choosing my college program.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-b-3",
+            "text": "After a redshirt year and a season as a reserve, I won a spring competition for the starting quarterback job.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-b-4",
+            "text": "In my first season as the starter, I went 212 consecutive passes without an interception, then a conference record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uscOutlook"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-b-5",
+            "text": "Against Notre Dame in 2004, I threw for 400 yards and five touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uscND"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-b-6",
+            "text": "I became the first junior from my school to win the Heisman Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uscHeisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-b-7",
+            "text": "After winning a second straight national championship, I returned to school for one more season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "uscHeisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-b-8",
+            "text": "In that final college season, I threw for 3,815 yards and 28 touchdowns and finished third in the Heisman voting.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-b-9",
+            "text": "My three seasons as a starter at USC included national-title teams in 2003 and 2004.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "uscHeisman"
+            ]
+          },
+          {
+            "id": "cfb-matt-leinart-b-10",
+            "text": "I am the USC quarterback who won the 2004 Heisman one season before teammate Reggie Bush won it.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-andrew-luck",
+    "name": "Andrew Luck",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "stanford": "https://gostanford.com/news/2013/04/17/andrew-luck-profile-1",
+      "hall": "https://gostanford.com/news/2023/08/17/2023-hall-of-fame-class"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-andrew-luck-a-1",
+            "text": "I took over at quarterback for a program that had endured seven straight losing seasons before my time as the starter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-a-2",
+            "text": "Across 38 career starts, my teams went 31-7.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-a-3",
+            "text": "In 2010, I threw for 3,338 yards and 32 touchdowns while completing 70.6 percent of my passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-a-4",
+            "text": "That season produced a school-record 12 wins and a runner-up finish in the Heisman voting.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-a-5",
+            "text": "One year later, I set school records with 37 touchdown passes and a 71.3 percent completion rate.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-a-6",
+            "text": "I won the Maxwell, Walter Camp and Johnny Unitas Golden Arm awards in my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-a-7",
+            "text": "I finished second in the Heisman voting for a second consecutive season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-a-8",
+            "text": "I ended my career holding school records with 82 touchdown passes and 10,387 yards of total offense.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-a-9",
+            "text": "I led Stanford to the Orange Bowl and Fiesta Bowl in my final two seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-a-10",
+            "text": "After that Stanford career, I was selected No. 1 overall in the 2012 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-andrew-luck-b-1",
+            "text": "I did not see game action during my first college season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-b-2",
+            "text": "As a redshirt freshman, I set a school freshman record with 2,575 passing yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-b-3",
+            "text": "That first season as a starter included back-to-back upsets of ranked Oregon and USC.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-b-4",
+            "text": "A broken right index finger in my final regular-season game kept me out of that season's bowl game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-b-5",
+            "text": "The next year, I helped set a school record for wins and reached the Orange Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-b-6",
+            "text": "I was named Orange Bowl Most Outstanding Player after throwing for 287 yards and four touchdowns in a 40-12 win.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-b-7",
+            "text": "In my final regular season, I helped win a 56-48 triple-overtime game at USC after forcing overtime with a late touchdown drive.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-b-8",
+            "text": "I was named the Academic All-America of the Year during my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-b-9",
+            "text": "I was the Stanford quarterback who finished second for the Heisman behind Cam Newton and then Robert Griffin III in consecutive years.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-andrew-luck-b-10",
+            "text": "I closed my college career as a two-time Heisman runner-up before becoming the first pick of the 2012 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-bryce-young",
+    "name": "Bryce Young",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/bryce-young/",
+      "alabama": "https://rolltide.com/sports/football/roster/young-bryce/8139",
+      "roster": "https://rolltide.com/sports/football/roster/2022"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-bryce-young-a-1",
+            "text": "As a college freshman, I played in nine games as a reserve for a national-championship team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-a-2",
+            "text": "In my first year as the starter, I threw five touchdown passes in a game three different times.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-a-3",
+            "text": "One of those games included a school-record 559 passing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-a-4",
+            "text": "Through the conference championship, I had thrown for 4,322 yards, 43 touchdowns and only four interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-a-5",
+            "text": "In that conference title game, I passed for 421 yards and produced 461 yards of total offense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-a-6",
+            "text": "That performance set championship-game records for passing yards and total offense and earned me game MVP honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-a-7",
+            "text": "I led my team to a 12-1 record, a conference championship and the top seed in the College Football Playoff.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-a-8",
+            "text": "I became Alabama's fourth Heisman winner and its second in consecutive seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-a-9",
+            "text": "My Heisman followed a teammate who had won the award as a wide receiver one year earlier.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-a-10",
+            "text": "I wore No. 9 at Alabama and won the 2021 Heisman Trophy in my first season as the starting quarterback.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "roster"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-bryce-young-b-1",
+            "text": "I started high school at one Los Angeles-area program before transferring for my final two seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-b-2",
+            "text": "As a high-school senior, I threw for 4,528 yards and 58 touchdowns and was named the Gatorade Player of the Year.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-b-3",
+            "text": "My freshman college season was spent backing up Mac Jones on an undefeated national-title team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-b-4",
+            "text": "In the Iron Bowl the next year, I helped rally my team late and finished with 317 passing yards and two touchdowns in a four-overtime win.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-b-5",
+            "text": "One week later, I threw for 421 yards and three touchdowns against top-ranked Georgia in the conference championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "alabama"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-b-6",
+            "text": "I was 20 years and 139 days old when I won the Heisman, making me the seventh-youngest winner at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-b-7",
+            "text": "I returned for another season and finished my college career with 8,356 passing yards and 80 touchdown passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-b-8",
+            "text": "Those career totals ranked second in Alabama history in both passing yards and passing touchdowns when I left.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-b-9",
+            "text": "Alabama's No. 9 quarterback became the program's fourth Heisman winner.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-bryce-young-b-10",
+            "text": "I am the Alabama quarterback who won the 2021 Heisman immediately after DeVonta Smith's 2020 victory.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-c-j-stroud",
+    "name": "C.J. Stroud",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "awards2021": "https://ohiostatebuckeyes.com/news/2021/12/1/c-j-stroud-big-tens-offensive-qb-and-freshman-of-the-year",
+      "rose": "https://ohiostatebuckeyes.com/news/2022/1/1/ohio-state-rose-bowl-recap",
+      "roster": "https://ohiostatebuckeyes.com/sports/football/roster/c-j-stroud/4470",
+      "finalist2022": "https://ohiostatebuckeyes.com/news/2022/12/6/c-j-stroud-a-heisman-trophy-finalist-for-second-consecutive-year",
+      "repeat": "https://ohiostatebuckeyes.com/news/2022/11/30/stroud-repeats-as-the-big-tens-quarterback-offensive-player-of-the-year",
+      "peach": "https://ohiostatebuckeyes.com/news/2023/1/1/recap-ohio-state-vs-georgia-123122"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-c-j-stroud-a-1",
+            "text": "I entered my first season as a starting college quarterback without having thrown a collegiate pass.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "awards2021"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-a-2",
+            "text": "That year, I became the first quarterback in school history to throw five touchdown passes without an interception in back-to-back games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "awards2021",
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-a-3",
+            "text": "I became the first player in Big Ten history to win its Offensive Player, Quarterback and Freshman of the Year awards in the same season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "awards2021"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-a-4",
+            "text": "Before my bowl game, I had thrown for 3,862 yards and 38 touchdowns with only five interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "awards2021"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-a-5",
+            "text": "Against Michigan State, I tied a school record with six touchdown passes and completed a school-record 17 consecutive throws.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "awards2021"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-a-6",
+            "text": "I became a Heisman finalist in that first season as a starter.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "awards2021"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-a-7",
+            "text": "In the Rose Bowl, I threw for a school-record 573 yards and six touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rose",
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-a-8",
+            "text": "I finished that season with 4,435 passing yards, 44 touchdowns and a school-record 71.9 percent completion rate.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-a-9",
+            "text": "That Rose Bowl ended in a 48-45 Ohio State win over Utah.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "rose"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-a-10",
+            "text": "I became a two-time Heisman Trophy finalist while playing quarterback at Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist2022",
+              "roster"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-c-j-stroud-b-1",
+            "text": "I entered my second season as a starting quarterback after being voted a team captain.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-b-2",
+            "text": "I won my conference's Quarterback of the Year and Offensive Player of the Year awards in consecutive seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "repeat"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-b-3",
+            "text": "I became the first Big Ten quarterback with back-to-back seasons of at least 30 touchdown passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "repeat",
+              "finalist2022"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-b-4",
+            "text": "During the 2022 regular season, I threw for 3,340 yards and 37 touchdowns with six interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist2022",
+              "repeat"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-b-5",
+            "text": "I led the nation in passing efficiency and co-led it in touchdown passes entering the postseason.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "repeat",
+              "finalist2022"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-b-6",
+            "text": "I was selected as a Heisman finalist for the second consecutive year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist2022"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-b-7",
+            "text": "In the CFP semifinal against No. 1 Georgia, I threw for 348 yards and four touchdowns without an interception.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "roster",
+              "peach"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-b-8",
+            "text": "I also rushed for 71 yards in that one-point semifinal loss.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-b-9",
+            "text": "I finished my Ohio State career with 8,123 passing yards, 85 touchdown passes and 16 school records set or tied.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-c-j-stroud-b-10",
+            "text": "I wore No. 7 for Ohio State and closed my career with two straight trips to New York as a Heisman finalist.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roster",
+              "finalist2022"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-caleb-williams",
+    "name": "Caleb Williams",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "heisman": "https://www.heisman.com/heisman-winners/caleb-williams/",
+      "usc": "https://usctrojans.com/sports/football/roster/williams-caleb/15820",
+      "uscRoster": "https://usctrojans.com/sports/football/roster/2022"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-caleb-williams-a-1",
+            "text": "I changed schools after my freshman season and immediately won the starting quarterback job at my new program.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-a-2",
+            "text": "That new team improved from 4-8 the year before I arrived to 11-2 before bowl season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-a-3",
+            "text": "Through the Heisman voting period, I threw for 4,075 yards and 37 touchdowns with four interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-a-4",
+            "text": "I also rushed for 372 yards and a team-best 10 touchdowns during that stretch.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-a-5",
+            "text": "My 4,447 yards of total offense broke my school's single-season record before the bowl game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-a-6",
+            "text": "My 47 total touchdowns led the nation and set a school record during the Heisman voting period.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-a-7",
+            "text": "I also won the Maxwell, Walter Camp and AP Player of the Year awards that season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-a-8",
+            "text": "I won the Heisman Trophy as a sophomore quarterback.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-a-9",
+            "text": "My transfer took me from Oklahoma to USC along with head coach Lincoln Riley.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-a-10",
+            "text": "I wore No. 13 at USC and won the 2022 Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "uscRoster"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-caleb-williams-b-1",
+            "text": "I enrolled early at my first college after graduating from high school a semester early.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-b-2",
+            "text": "As a freshman, I appeared in 11 games and started the final seven.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-b-3",
+            "text": "That freshman season produced 1,912 passing yards and 21 touchdowns plus 442 rushing yards and six more scores.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-b-4",
+            "text": "After one season, I transferred to follow my head coach to a new program.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-b-5",
+            "text": "In 2022, I set a USC single-game record with 503 yards of total offense against UCLA.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-b-6",
+            "text": "In the Cotton Bowl, I threw for 462 yards and five touchdowns, both bowl records.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-b-7",
+            "text": "Including that bowl, I finished the 2022 season with USC single-season records of 4,537 passing yards and 42 touchdown passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-b-8",
+            "text": "My completed 2022 season also set USC records with 4,919 yards of total offense and 52 combined passing and rushing touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-b-9",
+            "text": "I won the Heisman at USC after beginning my college career at Oklahoma.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-caleb-williams-b-10",
+            "text": "I am the No. 13 USC quarterback who won the 2022 Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "uscRoster"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
     "league": "NFL",
     "subjectId": "andy-reid",
     "name": "Andy Reid",
