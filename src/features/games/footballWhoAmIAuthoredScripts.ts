@@ -34522,7 +34522,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tony-dorsett-b-9",
-            "text": "I retired with 12,739 rushing yards, one of the largest totals in league history at the time.",
+            "text": "I retired with 12,739 rushing yards.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -34646,7 +34646,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-christian-mccaffrey-a-10",
-            "text": "My 1,000-rushing, 1,000-receiving season made me the defining all-purpose weapon of the Panthers' late-2010s offense.",
+            "text": "I am the Panthers running back whose 2019 season combined 1,387 rushing yards, 1,005 receiving yards and 19 total touchdowns.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -34850,7 +34850,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cris-carter-a-10",
-            "text": "I became the Hall of Fame Vikings receiver remembered for elite hands and 1,101 career catches.",
+            "text": "I am the Hall of Fame Vikings receiver who retired with 1,101 career catches and 130 touchdown receptions.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -35058,7 +35058,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-deandre-hopkins-a-10",
-            "text": "I became the Texans' three-time first-team All-Pro receiver before the next chapter of my career began in Arizona.",
+            "text": "I was Houston's three-time first-team All-Pro receiver before posting 115 catches in my first season with Arizona.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -35358,7 +35358,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tony-gonzalez-b-10",
-            "text": "I am the Hall of Fame tight end who starred for both the Chiefs and Falcons while redefining receiving production at the position.",
+            "text": "I am the Hall of Fame tight end who spent 12 seasons with Kansas City before finishing his career with Atlanta.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -35690,7 +35690,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-reggie-white-b-2",
-            "text": "That background helped produce one of the most famous defensive nicknames in league history.",
+            "text": "I began my NFL career after two seasons in the USFL.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -35869,7 +35869,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dwight-freeney-a-10",
-            "text": "I am the Hall of Fame Colts pass rusher whose explosive spin move era included a league-leading 16-sack season.",
+            "text": "I am the Hall of Fame Colts pass rusher whose first three seasons included 13 rookie sacks and a league-leading 16-sack year.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -36157,7 +36157,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ronnie-lott-b-9",
-            "text": "My combination of cornerback skill and punishing safety play made me one of the defining defensive backs of the 1980s 49ers.",
+            "text": "I became the 49ers defensive back who earned Pro Bowl selections at cornerback, free safety and strong safety.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -36228,7 +36228,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-champ-bailey-a-5",
-            "text": "A blockbuster trade sent me to Denver before the 2004 season.",
+            "text": "A trade sent me to Denver before the 2004 season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
