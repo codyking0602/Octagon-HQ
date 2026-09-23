@@ -125,7 +125,16 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
       "Name something that can happen during the NFL Draft.",
       "Name a draft term almost every NFL fan knows.",
     ],
-    answers: ["First-round pick", "Mock draft", "Trade up", "Trade down", "Best player available", "Combine", "Pro day", "Draft steal"],
+    answers: [
+      { name: "First-round pick", aliases: ["First round", "1st round", "Round 1"] },
+      { name: "Mock draft", aliases: ["Mock"] },
+      { name: "Trade up", aliases: ["Move up"] },
+      { name: "Trade down", aliases: ["Move down"] },
+      { name: "Best player available", aliases: ["BPA", "Best available"] },
+      { name: "Combine", aliases: ["NFL Combine", "Scouting Combine"] },
+      { name: "Pro day", aliases: ["Pro-day"] },
+      { name: "Draft steal", aliases: ["Steal"] },
+    ],
   },
   {
     category: "postseason",
