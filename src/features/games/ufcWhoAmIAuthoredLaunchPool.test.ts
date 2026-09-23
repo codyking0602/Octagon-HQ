@@ -79,6 +79,17 @@ const CALIBRATED_GENERATED_IDS = new Set([
   "ufc:stipe-miocic",
   "ufc:merab-dvalishvili",
   "ufc:cain-velasquez",
+  "ufc:junior-dos-santos",
+  "ufc:tyron-woodley",
+  "ufc:alexandre-pantoja",
+  "ufc:ilia-topuria",
+  "ufc:robert-whittaker",
+  "ufc:chris-weidman",
+  "ufc:sean-strickland",
+  "ufc:brandon-moreno",
+  "ufc:rashad-evans",
+  "ufc:dominick-cruz",
+  "ufc:michael-bisping",
 ]);
 
 const MASS_TEMPLATE_PATTERNS = [
