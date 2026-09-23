@@ -7935,7 +7935,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-tomlin-a-5",
-            "text": "I later returned to the Super Bowl two seasons after that first title.",
+            "text": "I returned to the Super Bowl two seasons after that first title.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8151,7 +8151,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-payton-a-3",
-            "text": "In my first season, that team improved to 11 wins and captured its division.",
+            "text": "That debut season ended with a division title and a trip to the conference championship game.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8328,8 +8328,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "earlyRotation": "normal",
     "sources": {
       "bio": "https://www.giants.com/team/coaches-roster/john-harbaugh",
-      "museum": "https://www.giants.com/news/coaching-timeline-john-harbaugh-s-path-to-the-giants",
-      "guide": "https://www.giants.com/news/john-harbaugh-hired-head-coach-new-york-giants-nfl"
+      "timeline": "https://www.giants.com/news/coaching-timeline-john-harbaugh-s-path-to-the-giants",
+      "hire": "https://www.giants.com/news/john-harbaugh-hired-head-coach-new-york-giants-nfl"
     },
     "scripts": {
       "A": {
@@ -8337,79 +8337,79 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-john-harbaugh-a-1",
-            "text": "I became an NFL head coach after spending most of my pro assistant career working with special teams and defensive backs.",
+            "text": "Most of my NFL assistant career before head coaching was spent working with special teams.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-a-2",
-            "text": "I reached the playoffs in each of my first five seasons.",
+            "text": "I became a head coach without first serving as an NFL offensive or defensive coordinator.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-a-3",
-            "text": "In my fifth season, my team won a championship.",
+            "text": "My first several teams became regular postseason participants.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-a-4",
-            "text": "That postseason included a road double-overtime victory over the AFC's top seed.",
+            "text": "I reached the playoffs in each of my first five seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-a-5",
-            "text": "My team then won the conference championship on the road.",
+            "text": "My fifth season as a head coach ended with a championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-a-6",
+            "text": "That postseason included a road double-overtime win over the AFC's top seed.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bio",
+              "timeline",
+              "hire"
+            ]
+          },
+          {
+            "id": "nfl-john-harbaugh-a-7",
             "text": "The championship game matched me against a team coached by my younger brother.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
-            ]
-          },
-          {
-            "id": "nfl-john-harbaugh-a-7",
-            "text": "I later won the NFL Coach of the Year award.",
-            "band": "strong",
-            "verification": "verified",
-            "sourceIds": [
-              "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
@@ -8419,8 +8419,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
@@ -8430,19 +8430,19 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-a-10",
-            "text": "I am the longtime Baltimore coach who won the Super Bowl against my brother before becoming the Giants head coach in 2026.",
+            "text": "I am the longtime Baltimore coach who won a Super Bowl against my brother before becoming the Giants head coach in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           }
         ]
@@ -8457,30 +8457,30 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-b-2",
-            "text": "My coaching career began at Western Michigan in 1984.",
+            "text": "My coaching career began as a graduate assistant under my father.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-b-3",
-            "text": "Before reaching the NFL, I also coached at Pittsburgh, Morehead State, Cincinnati and Indiana.",
+            "text": "I spent 14 years coaching in college before reaching the NFL.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
@@ -8490,8 +8490,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
@@ -8501,8 +8501,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
@@ -8512,8 +8512,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
@@ -8523,41 +8523,41 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-b-8",
-            "text": "My first five Baltimore teams all reached the postseason.",
+            "text": "I won 180 regular-season games during 18 seasons in Baltimore.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-b-9",
-            "text": "That fifth season ended with a Super Bowl victory.",
+            "text": "That tenure included a Super Bowl victory over a team coached by my brother.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           },
           {
             "id": "nfl-john-harbaugh-b-10",
-            "text": "I am the former Eagles special teams coach who won a championship with Baltimore and became the Giants head coach in 2026.",
+            "text": "I am the former Eagles special teams coach who became the Giants head coach in 2026 after a championship run in Baltimore.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "bio",
-              "museum",
-              "guide"
+              "timeline",
+              "hire"
             ]
           }
         ]
@@ -8597,7 +8597,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-a-3",
-            "text": "I was named AP Coach of the Year after that debut season.",
+            "text": "In my first season, that team improved to 11 wins and captured its division.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8773,9 +8773,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
     "sources": {
-      "giants": "https://www.giants.com/news/tom-coughlin",
-      "hof": "https://www.giants.com/news/tom-coughlin-among-12-coaches-to-advance-in-hall-of-fame-class-of-2026-selection-process",
-      "staff": "https://www.giants.com/news/super-coaching-staff"
+      "jags": "https://www.jaguars.com/team/history/pride-of-the-jaguars/tom-coughlin/",
+      "giants": "https://www.giants.com/news/tom-coughlin"
     },
     "scripts": {
       "A": {
@@ -8783,46 +8782,42 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-tom-coughlin-a-1",
-            "text": "I spent 20 seasons as an NFL head coach across two franchises.",
+            "text": "I held two NFL head-coaching jobs over a long career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
             "id": "nfl-tom-coughlin-a-2",
-            "text": "My first NFL head-coaching job came after I had already led a college program.",
+            "text": "Before my first pro head-coaching job, I had already led a college program.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
             "id": "nfl-tom-coughlin-a-3",
-            "text": "That first pro team was an expansion franchise.",
+            "text": "My first NFL team was an expansion franchise.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
             "id": "nfl-tom-coughlin-a-4",
-            "text": "By its second season, that expansion team had reached a conference championship game.",
+            "text": "By its second season, that team had reached a conference championship game.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8831,9 +8826,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8842,9 +8836,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8853,9 +8846,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8864,9 +8856,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8875,9 +8866,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8886,9 +8876,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           }
         ]
@@ -8902,9 +8891,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8913,9 +8901,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8924,9 +8911,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8935,9 +8921,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8946,9 +8931,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8957,9 +8941,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8968,9 +8951,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8979,9 +8961,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -8990,9 +8971,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           },
           {
@@ -9001,9 +8981,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "giants",
-              "hof",
-              "staff"
+              "jags",
+              "giants"
             ]
           }
         ]
@@ -9036,7 +9015,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dan-campbell-a-2",
-            "text": "My first season in that full-time role was a deep rebuild with only three wins.",
+            "text": "My first season in that full-time role was a deep rebuild.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -9151,7 +9130,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dan-campbell-b-3",
-            "text": "One of the teams I had played for later gave me my first full-time NFL head-coaching job.",
+            "text": "One of those teams later gave me my first full-time NFL head-coaching job.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9233,7 +9212,6 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       }
     }
   },
-
   {
     "league": "CFB",
     "subjectId": "cfb-nick-saban",
