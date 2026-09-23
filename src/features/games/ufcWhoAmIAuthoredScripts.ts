@@ -111,7 +111,7 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
         id: "B",
         clues: [
           { id: "ufc-georges-st-pierre-b-1", text: "I made my professional mixed martial arts debut in 2002.", band: "broad", verification: "verified", sourceIds: ["retired", "hof"] },
-          { id: "ufc-georges-st-pierre-b-2", text: "Before reaching the UFC, I worked my way through the Quebec regional promotion TKO MMA.", band: "broad", verification: "verified", sourceIds: ["retired"] },
+          { id: "ufc-georges-st-pierre-b-2", text: "Before reaching the UFC, I worked my way through the regional promotion TKO MMA.", band: "broad", verification: "verified", sourceIds: ["retired"] },
           { id: "ufc-georges-st-pierre-b-3", text: "I won 20 of my 22 UFC appearances.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-georges-st-pierre-b-4", text: "One stretch of my UFC career reached 13 consecutive victories.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-georges-st-pierre-b-5", text: "Across my UFC career, I landed 90 takedowns.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
@@ -157,9 +157,9 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
         id: "B",
         clues: [
           { id: "ufc-amanda-nunes-b-1", text: "My rise to the top accelerated after I won a close three-round fight over an opponent who would later become a dominant champion in another division.", band: "broad", verification: "verified", sourceIds: ["goat"] },
-          { id: "ufc-amanda-nunes-b-2", text: "The first UFC belt I captured was the women’s bantamweight championship.", band: "broad", verification: "verified", sourceIds: ["lineage"] },
-          { id: "ufc-amanda-nunes-b-3", text: "I defended that belt against Raquel Pennington in Brazil.", band: "helpful", verification: "verified", sourceIds: ["goat", "champchamp"] },
-          { id: "ufc-amanda-nunes-b-4", text: "I stopped Holly Holm with a head kick after becoming a two-division champion.", band: "helpful", verification: "verified", sourceIds: ["comfort"] },
+          { id: "ufc-amanda-nunes-b-2", text: "I climbed into my first UFC title opportunity after putting together three consecutive wins.", band: "broad", verification: "verified", sourceIds: ["goat", "lineage"] },
+          { id: "ufc-amanda-nunes-b-3", text: "My first UFC title fight came in 2016.", band: "helpful", verification: "verified", sourceIds: ["goat", "lineage"] },
+          { id: "ufc-amanda-nunes-b-4", text: "My first UFC title defense ended in the opening round.", band: "helpful", verification: "verified", sourceIds: ["goat"] },
           { id: "ufc-amanda-nunes-b-5", text: "Against Germaine de Randamie, I leaned heavily on wrestling to neutralize a dangerous striker.", band: "helpful", verification: "verified", sourceIds: ["comfort"] },
           { id: "ufc-amanda-nunes-b-6", text: "I also defended my featherweight championship against Felicia Spencer and Megan Anderson.", band: "strong", verification: "verified", sourceIds: ["comfort", "champchamp"] },
           { id: "ufc-amanda-nunes-b-7", text: "I lost my bantamweight title to Julianna Peña by second-round submission at UFC 269.", band: "strong", verification: "verified", sourceIds: ["lineage"] },
@@ -201,9 +201,9 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
         id: "B",
         clues: [
           { id: "ufc-max-holloway-b-1", text: "Before fighting became my profession, I worked as a handyman.", band: "broad", verification: "verified", sourceIds: ["profile"] },
-          { id: "ufc-max-holloway-b-2", text: "My son Rush has been a visible part of my fight life and a major source of motivation.", band: "broad", verification: "verified", sourceIds: ["lifetime"] },
+          { id: "ufc-max-holloway-b-2", text: "My first three UFC appearances included one win and two losses.", band: "broad", verification: "verified", sourceIds: ["career", "profile"] },
           { id: "ufc-max-holloway-b-3", text: "I received the UFC Forrest Griffin Community Award in 2022.", band: "helpful", verification: "verified", sourceIds: ["career"] },
-          { id: "ufc-max-holloway-b-4", text: "I challenged Dustin Poirier for an interim lightweight title in 2019 and lost a five-round decision.", band: "helpful", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-max-holloway-b-4", text: "I moved up a division for an interim title opportunity in 2019.", band: "helpful", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-b-5", text: "I lost the featherweight championship to Alexander Volkanovski by decision later that year.", band: "helpful", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-b-6", text: "An immediate rematch with Volkanovski ended in a split-decision loss.", band: "strong", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-b-7", text: "I rebounded from championship losses with a five-round win over Yair Rodriguez.", band: "strong", verification: "verified", sourceIds: ["career"] },
