@@ -140,11 +140,14 @@ describe("Sports Feud authored Daily banks", () => {
     const hallOfFame = ufcQuestion("ufc-fast3-07-1");
     expect(hallOfFame.prompt.toLowerCase()).toContain("career");
 
-    const tradition = cfbQuestion("cfb-fast3-08-3");
-    expect(tradition.prompt.toLowerCase()).toContain("specific school");
-    expect(matchFamilyFeudAnswer(football, tradition, "tailgating").status).toBe("unrecognized");
-    expect(matchedName(football, tradition, "Enter Sandman"))
-      .toBe("Virginia Tech Enter Sandman");
+    expect(CFB_FAST.some((question) =>
+      question.prompts?.includes?.("Name a tradition that makes a home game feel unique.")
+    )).toBe(false);
+
+    const award = cfbQuestion("cfb-fast3-08-3");
+    expect(award.prompt.toLowerCase()).toContain("award");
+    expect(matchedName(football, award, "Heisman"))
+      .toBe("Heisman Trophy");
 
     expect(matchedName(football, cfbQuestion("cfb-fast4-07-5"), "blitz"))
       .toBe("Blitz");
