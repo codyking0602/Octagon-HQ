@@ -72,6 +72,7 @@ type UfcRuntimeModule = {
     gameType: OfficialDailyGameType,
     day: string,
     scheduleVersion: string,
+    publicationHistory?: unknown,
   ) => JsonRecord;
   advanceOfficialDailyRuntime: DailyAdvanceRuntime;
 };
@@ -81,6 +82,7 @@ type FootballPublicationRuntimeModule = {
     day: string,
     scheduleVersion: string,
     gameType: OfficialDailyGameType,
+    publicationHistory?: unknown,
   ) => unknown;
 };
 
@@ -368,6 +370,22 @@ function advanceDailyCombo(
   };
 }
 
+
+async function whoAmIPublicationHistory(
+  admin: SupabaseClient,
+  sport: "ufc" | "football",
+  day: string,
+) {
+  const response = await admin.rpc("get_who_am_i_publication_history", {
+    p_sport: sport,
+    p_before_day: day,
+  });
+  if (response.error || !Array.isArray(response.data)) {
+    throw new Error("Who Am I publication history is unavailable.");
+  }
+  return response.data;
+}
+
 async function materializeToday(admin: SupabaseClient) {
   const requested = await admin.rpc("get_daily_challenge_materialization_request", {});
   if (requested.error) throw new Error("The official daily materialization request failed.");
@@ -392,9 +410,12 @@ async function materializeToday(admin: SupabaseClient) {
   let fallbackReason: string | null = null;
   let publication;
   try {
+    const publicationHistory = gameType === "who_am_i"
+      ? await whoAmIPublicationHistory(admin, "ufc", day)
+      : undefined;
     publication = gameType === "keep_4_cut_4"
       ? buildDailyComboSetup(day, scheduleVersion, ufcRuntime)
-      : ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion);
+      : ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion, publicationHistory);
   } catch {
     if (gameType === "find_leader") throw new Error("The official Find the Leader fallback could not be materialized.");
     fallbackReason = `materialization_failed:${gameType}`;
@@ -449,10 +470,14 @@ async function materializeFootballToday(admin: SupabaseClient) {
   }
 
   const footballRuntime = await loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType);
+  const publicationHistory = expectedGame === "who_am_i"
+    ? await whoAmIPublicationHistory(admin, "football", day)
+    : undefined;
   const publication = footballRuntime.buildFootballDailyPersistenceSetup(
     day,
     scheduleVersion,
     expectedGame as OfficialDailyGameType,
+    publicationHistory,
   ) as JsonRecord;
   const publicationSchedule = requiredString(publication.scheduleVersion, "Football daily schedule version");
   const publicationGame = requiredString(publication.gameType, "Football daily game type");
