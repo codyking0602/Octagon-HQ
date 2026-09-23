@@ -228,4 +228,139 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
       }
     }
   }
+,
+  {
+    subjectId: "ufc:randy-couture",
+    name: "Randy Couture",
+    earlyRotation: "normal",
+    sources: {
+      service: "https://www.war.gov/News/Feature-Stories/Story/Article/3619215/sports-heroes-who-served-champion-wrestler-actor-was-also-a-soldier/",
+      nickname: "https://sports.yahoo.com/randy-couture-explains-origin-natural-135052584.html",
+      feats: "https://www.ufc.com/news/greatest-feats-ufc-history",
+      twodiv: "https://www.ufc.com/news/history-two-division-champions-part-1-ufc-freedom-250",
+      brock: "https://www.ufc.com/news/flashback-brock-lesnar-shocks-randy-couture-ufc-91",
+      champs: "https://www.ufc.com/news/15-ufc-heavyweight-champions"
+    },
+    scripts: {
+      A: {
+        id: "A",
+        clues: [
+          { id: "ufc-randy-couture-a-1", text: "Before MMA, I served in the U.S. Army and reached the rank of sergeant.", band: "broad", verification: "verified", sourceIds: ["service"] },
+          { id: "ufc-randy-couture-a-2", text: "I was a high-level Greco-Roman wrestler and a three-time U.S. Olympic team alternate.", band: "broad", verification: "verified", sourceIds: ["service"] },
+          { id: "ufc-randy-couture-a-3", text: "I entered the UFC unusually late for a future champion, after an extensive wrestling career.", band: "helpful", verification: "verified", sourceIds: ["service", "feats"] },
+          { id: "ufc-randy-couture-a-4", text: "My first UFC championship came at heavyweight.", band: "helpful", verification: "verified", sourceIds: ["twodiv", "champs"] },
+          { id: "ufc-randy-couture-a-5", text: "After losing consecutive heavyweight title fights, I dropped to light heavyweight just before turning 40.", band: "helpful", verification: "verified", sourceIds: ["feats"] },
+          { id: "ufc-randy-couture-a-6", text: "I stopped Chuck Liddell to win an interim light heavyweight championship in 2003.", band: "strong", verification: "verified", sourceIds: ["feats", "twodiv"] },
+          { id: "ufc-randy-couture-a-7", text: "I unified that title by defeating Tito Ortiz later the same year.", band: "strong", verification: "verified", sourceIds: ["feats", "twodiv"] },
+          { id: "ufc-randy-couture-a-8", text: "I became the first fighter in UFC history to win championships in two weight classes.", band: "strong", verification: "verified", sourceIds: ["twodiv"] },
+          { id: "ufc-randy-couture-a-9", text: "At age 43, I returned to heavyweight and defeated Tim Sylvia to capture the championship again.", band: "giveaway", verification: "verified", sourceIds: ["twodiv"] },
+          { id: "ufc-randy-couture-a-10", text: "My nickname “The Natural” reflected how quickly I adapted to mixed martial arts.", band: "giveaway", verification: "verified", sourceIds: ["nickname"] }
+        ]
+      },
+      B: {
+        id: "B",
+        clues: [
+          { id: "ufc-randy-couture-b-1", text: "My collegiate wrestling career included competing for Oklahoma State.", band: "broad", verification: "verified", sourceIds: ["service"] },
+          { id: "ufc-randy-couture-b-2", text: "Outside competition, I created a foundation supporting wounded U.S. service members and their families.", band: "broad", verification: "verified", sourceIds: ["service"] },
+          { id: "ufc-randy-couture-b-3", text: "I regained the UFC heavyweight championship by defeating Kevin Randleman at UFC 28.", band: "helpful", verification: "verified", sourceIds: ["champs"] },
+          { id: "ufc-randy-couture-b-4", text: "I then defended that heavyweight belt twice against Pedro Rizzo.", band: "helpful", verification: "verified", sourceIds: ["champs"] },
+          { id: "ufc-randy-couture-b-5", text: "My career included a championship trilogy with Chuck Liddell.", band: "helpful", verification: "verified", sourceIds: ["feats", "twodiv"] },
+          { id: "ufc-randy-couture-b-6", text: "Across heavyweight and light heavyweight, I accumulated five undisputed UFC championship reigns.", band: "strong", verification: "verified", sourceIds: ["twodiv"] },
+          { id: "ufc-randy-couture-b-7", text: "I successfully defended the heavyweight title against Gabriel Gonzaga after my late-career return.", band: "strong", verification: "verified", sourceIds: ["brock"] },
+          { id: "ufc-randy-couture-b-8", text: "Brock Lesnar ended that heavyweight reign with a second-round stoppage at UFC 91.", band: "strong", verification: "verified", sourceIds: ["brock"] },
+          { id: "ufc-randy-couture-b-9", text: "I was inducted into the UFC Hall of Fame in 2006.", band: "giveaway", verification: "verified", sourceIds: ["twodiv"] },
+          { id: "ufc-randy-couture-b-10", text: "I am the former Army wrestler who became UFC champion at both heavyweight and light heavyweight.", band: "giveaway", verification: "verified", sourceIds: ["service", "twodiv"] }
+        ]
+      }
+    }
+  },
+  {
+    subjectId: "ufc:chuck-liddell",
+    name: "Chuck Liddell",
+    earlyRotation: "normal",
+    sources: {
+      roots: "https://www.ufc.com/news/road-ufc-200-fighting-liddells-dna",
+      tribute: "https://www.ufc.com/news/chuck-liddell-tribute-fighter",
+      boardroom: "https://www.ufc.com/news/chuck-liddell-retires-boardroom",
+      roster: "https://www.ufc.com/news/ultimate-30-all-time-roster",
+      hof: "https://www.ufc.com/news/liddell-and-mask-are-two-newest-inductees-ufc-hall-fame"
+    },
+    scripts: {
+      A: {
+        id: "A",
+        clues: [
+          { id: "ufc-chuck-liddell-a-1", text: "I began karate around age 12 and once imagined owning a karate gym.", band: "broad", verification: "verified", sourceIds: ["roots"] },
+          { id: "ufc-chuck-liddell-a-2", text: "I earned an accounting degree after my grandmother encouraged me to have a practical fallback plan.", band: "broad", verification: "verified", sourceIds: ["roots"] },
+          { id: "ufc-chuck-liddell-a-3", text: "The tattoo on the side of my head has been described as representing a place of peace and prosperity.", band: "helpful", verification: "verified", sourceIds: ["tribute"] },
+          { id: "ufc-chuck-liddell-a-4", text: "I became one of the defining stars of the UFC’s early Zuffa era.", band: "helpful", verification: "verified", sourceIds: ["roster", "hof"] },
+          { id: "ufc-chuck-liddell-a-5", text: "My first UFC title opportunity came after a long climb through the light heavyweight division.", band: "helpful", verification: "verified", sourceIds: ["tribute"] },
+          { id: "ufc-chuck-liddell-a-6", text: "I won the light heavyweight championship by knocking out Randy Couture in our rematch.", band: "strong", verification: "verified", sourceIds: ["tribute", "roster"] },
+          { id: "ufc-chuck-liddell-a-7", text: "I successfully defended that championship four times.", band: "strong", verification: "verified", sourceIds: ["roster"] },
+          { id: "ufc-chuck-liddell-a-8", text: "Two of my most famous victories were knockouts of Tito Ortiz during my championship-era run.", band: "strong", verification: "verified", sourceIds: ["tribute"] },
+          { id: "ufc-chuck-liddell-a-9", text: "I was inducted into the UFC Hall of Fame’s Pioneer Wing in 2009.", band: "giveaway", verification: "verified", sourceIds: ["hof", "roster"] },
+          { id: "ufc-chuck-liddell-a-10", text: "Known as “The Iceman,” I became one of the UFC’s first major crossover superstars.", band: "giveaway", verification: "verified", sourceIds: ["roster", "hof"] }
+        ]
+      },
+      B: {
+        id: "B",
+        clues: [
+          { id: "ufc-chuck-liddell-b-1", text: "While in college, I worked behind a bar before fighting became my profession.", band: "broad", verification: "verified", sourceIds: ["tribute"] },
+          { id: "ufc-chuck-liddell-b-2", text: "After my first retirement, I moved into a UFC executive role involving fighter relations and business work.", band: "broad", verification: "verified", sourceIds: ["boardroom"] },
+          { id: "ufc-chuck-liddell-b-3", text: "My fighting identity blended a wrestling base with an aggressive striking style.", band: "helpful", verification: "verified", sourceIds: ["roots", "tribute"] },
+          { id: "ufc-chuck-liddell-b-4", text: "Randy Couture handed me a stoppage loss before I later avenged it twice.", band: "helpful", verification: "verified", sourceIds: ["tribute"] },
+          { id: "ufc-chuck-liddell-b-5", text: "I knocked out Vernon White and Jeremy Horn during the stretch that established my championship reign.", band: "helpful", verification: "verified", sourceIds: ["tribute"] },
+          { id: "ufc-chuck-liddell-b-6", text: "My title run ended when Quinton Jackson stopped me in the first round.", band: "strong", verification: "verified", sourceIds: ["tribute"] },
+          { id: "ufc-chuck-liddell-b-7", text: "A three-round fight with Wanderlei Silva was recognized as Fight of the Year.", band: "strong", verification: "verified", sourceIds: ["roster"] },
+          { id: "ufc-chuck-liddell-b-8", text: "I became especially known for knockout power at light heavyweight.", band: "strong", verification: "verified", sourceIds: ["roster", "hof"] },
+          { id: "ufc-chuck-liddell-b-9", text: "My UFC résumé is closely linked to rivalries with Couture, Ortiz and Jackson.", band: "giveaway", verification: "verified", sourceIds: ["tribute", "roster"] },
+          { id: "ufc-chuck-liddell-b-10", text: "My mohawk, head tattoo and “Iceman” nickname became instantly recognizable parts of UFC culture.", band: "giveaway", verification: "verified", sourceIds: ["tribute", "hof"] }
+        ]
+      }
+    }
+  },
+  {
+    subjectId: "ufc:jose-aldo",
+    name: "Jose Aldo",
+    earlyRotation: "normal",
+    sources: {
+      roots: "https://www.ufc.com/news/brazil-aldo-king-honed-humble-roots",
+      evolution: "https://www.ufc.com/news/legendary-moura-discusses-aldos-evolution",
+      origin: "https://www.ufc.com/news/jose-aldo-el-maradona-de-las-amm",
+      career: "https://www.ufc.com/news/jose-aldo-career-ufc-career-highlights",
+      hof: "https://www.ufc.com/news/jose-aldo-king-rio-earns-enshrinement-ufc-hall-fame"
+    },
+    scripts: {
+      A: {
+        id: "A",
+        clues: [
+          { id: "ufc-jose-aldo-a-1", text: "The scar on my cheek came from a childhood accident involving a hot grill.", band: "broad", verification: "verified", sourceIds: ["roots"] },
+          { id: "ufc-jose-aldo-a-2", text: "Before fighting became my career, I tried to pursue professional soccer.", band: "broad", verification: "verified", sourceIds: ["evolution"] },
+          { id: "ufc-jose-aldo-a-3", text: "I left Manaus for Rio de Janeiro as a young fighter with very little money or support.", band: "helpful", verification: "verified", sourceIds: ["roots"] },
+          { id: "ufc-jose-aldo-a-4", text: "My martial-arts path included capoeira before Brazilian jiu-jitsu became another foundation.", band: "helpful", verification: "verified", sourceIds: ["origin"] },
+          { id: "ufc-jose-aldo-a-5", text: "I went 8-0 in the WEC with seven finishes.", band: "helpful", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-jose-aldo-a-6", text: "An eight-second flying-knee knockout of Cub Swanson became one of my signature WEC performances.", band: "strong", verification: "verified", sourceIds: ["hof", "career"] },
+          { id: "ufc-jose-aldo-a-7", text: "I stopped Mike Brown to win the WEC featherweight championship in 2009.", band: "strong", verification: "verified", sourceIds: ["career", "hof"] },
+          { id: "ufc-jose-aldo-a-8", text: "When the WEC merged into the UFC, I was awarded the inaugural UFC featherweight championship.", band: "strong", verification: "verified", sourceIds: ["career", "hof"] },
+          { id: "ufc-jose-aldo-a-9", text: "My first UFC featherweight reign included seven successful title defenses.", band: "giveaway", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-jose-aldo-a-10", text: "Known as the “King of Rio,” I entered the UFC Hall of Fame’s Modern Wing in 2023.", band: "giveaway", verification: "verified", sourceIds: ["hof"] }
+        ]
+      },
+      B: {
+        id: "B",
+        clues: [
+          { id: "ufc-jose-aldo-b-1", text: "Early in Rio, I sometimes slept on academy mats and relied on teammates for meals and clothing.", band: "broad", verification: "verified", sourceIds: ["evolution"] },
+          { id: "ufc-jose-aldo-b-2", text: "Explosive kicks and fast striking became hallmarks of my fighting style.", band: "broad", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-jose-aldo-b-3", text: "I defended a featherweight championship against Urijah Faber before ever competing in the UFC.", band: "helpful", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-jose-aldo-b-4", text: "My first UFC bout was a five-round title defense against Mark Hominick.", band: "helpful", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-jose-aldo-b-5", text: "I knocked out Chad Mendes at 4:59 of the first round in a title fight in Rio.", band: "helpful", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-jose-aldo-b-6", text: "I later beat Mendes again, this time by five-round decision in another championship fight.", band: "strong", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-jose-aldo-b-7", text: "An 18-fight winning streak ended when Conor McGregor knocked me out in 13 seconds.", band: "strong", verification: "verified", sourceIds: ["career", "hof"] },
+          { id: "ufc-jose-aldo-b-8", text: "I regained UFC featherweight gold by beating Frankie Edgar for an interim title that was later elevated.", band: "strong", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-jose-aldo-b-9", text: "I later moved to bantamweight and challenged Petr Yan for a vacant UFC championship.", band: "giveaway", verification: "verified", sourceIds: ["career"] },
+          { id: "ufc-jose-aldo-b-10", text: "My championship history spans WEC dominance, the inaugural UFC featherweight crown and a later bantamweight run.", band: "giveaway", verification: "verified", sourceIds: ["career", "hof"] }
+        ]
+      }
+    }
+  }
+
 ];
