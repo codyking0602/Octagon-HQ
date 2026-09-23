@@ -5746,8 +5746,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "heisman",
-              "ugaHonor"
+              "ugaCamp"
             ]
           },
           {
@@ -5766,6 +5765,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
+              "ugaCamp",
               "ugaHonor"
             ]
           },
