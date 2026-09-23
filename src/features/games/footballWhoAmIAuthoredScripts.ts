@@ -22851,7 +22851,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-colt-mccoy-b-1",
-            "text": "I spent my redshirt season as a backup on a national championship team before taking over the starting job the next year.",
+            "text": "I redshirted during my first college season and then became a four-year starting quarterback.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -22861,7 +22861,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-colt-mccoy-b-2",
-            "text": "As a redshirt freshman, I became the first Texas freshman quarterback to win 10 games.",
+            "text": "My first year as a starter brought 10 wins and national freshman recognition.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -22960,7 +22960,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-deshaun-watson-a-1",
-            "text": "I became a three-year college quarterback and finished 32-3 as a starter.",
+            "text": "I played three college seasons and developed into a multi-year starting quarterback.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23056,7 +23056,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-deshaun-watson-b-1",
-            "text": "I reached the College Football Playoff in each of my final two college seasons.",
+            "text": "My college teams reached double-digit victories in each of my three seasons.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23787,7 +23787,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-christian-mccaffrey-a-1",
-            "text": "As a sophomore, I became the only FBS player that season to lead my team in both rushing and receiving yards.",
+            "text": "I built my college value as a runner, receiver, kick returner and punt returner.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23796,7 +23796,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-christian-mccaffrey-a-2",
-            "text": "That season, I rushed for 2,019 yards and added 645 receiving yards.",
+            "text": "As a sophomore, I became the only FBS player that season to lead my team in both rushing and receiving yards.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24632,7 +24632,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-michael-crabtree-a-2",
-            "text": "That first season, I caught 134 passes for 1,962 yards and 22 touchdowns.",
+            "text": "My first full season immediately became one of the most prolific receiving seasons ever by a freshman.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24641,7 +24641,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-michael-crabtree-a-3",
-            "text": "All three of those totals set NCAA freshman records at the time.",
+            "text": "That season, I caught 134 passes for 1,962 yards and 22 touchdowns.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24650,7 +24650,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-michael-crabtree-a-4",
-            "text": "I posted 11 games with at least 100 receiving yards during that freshman season.",
+            "text": "All three of those receiving totals set NCAA freshman records at the time.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24820,7 +24820,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "earlyRotation": "normal",
     "sources": {
       "osu": "https://ohiostatebuckeyes.com/news/2020/1/3/dominant-defender-chase-young-departs-for-nfl-draft",
-      "hendricks": "https://ohiostatebuckeyes.com/news/2019/12/11/chase-young-is-the-2019-ted-hendricks-award-winner"
+      "hendricks": "https://ohiostatebuckeyes.com/news/2019/12/11/chase-young-is-the-2019-ted-hendricks-award-winner",
+      "draft": "https://ohiostatebuckeyes.com/news/2020/4/23/chase-young-selected-no-2-overall-by-the-washington-redskins"
     },
     "scripts": {
       "A": {
@@ -24933,7 +24934,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chase-young-b-2",
-            "text": "My career ended with 30.5 sacks, second-most in school history at the time.",
+            "text": "My sack total increased in every college season, from 3.5 to 10.5 to 16.5.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24951,7 +24952,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chase-young-b-4",
-            "text": "My sack totals climbed from 3.5 as a freshman to 10.5 as a sophomore and 16.5 as a junior.",
+            "text": "I finished with 30.5 career sacks, second-most in school history at the time.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -25009,7 +25010,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "osu"
+              "draft"
             ]
           }
         ]
@@ -25453,7 +25454,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-deion-sanders-a-1",
-            "text": "I lettered in three sports in college: football, baseball and track.",
+            "text": "I contributed immediately as a freshman and eventually became a major weapon on both defense and special teams.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -25463,7 +25464,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-deion-sanders-a-2",
-            "text": "As a freshman, I started at cornerback while also playing outfield and competing in track.",
+            "text": "I also competed in two other varsity sports during my college career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -25757,7 +25758,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-tyrann-mathieu-b-1",
-            "text": "My college résumé was built around takeaways: eight fumble recoveries, four interceptions and 11 forced fumbles in two seasons.",
+            "text": "My two-year college career was defined by creating turnovers in several different ways.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -25766,7 +25767,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-tyrann-mathieu-b-2",
-            "text": "As a sophomore, I led the nation with five fumble recoveries and ranked fourth with six forced fumbles.",
+            "text": "As a sophomore, I led my conference in both forced fumbles and fumble recoveries.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -25775,7 +25776,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-tyrann-mathieu-b-3",
-            "text": "I also averaged 15.6 yards per punt return and scored twice on punt returns that season.",
+            "text": "That year, I ranked No. 1 nationally in fumble recoveries and fourth in forced fumbles.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
