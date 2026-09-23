@@ -131,7 +131,8 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
       goat: "https://www.ufc.com/news/amanda-nunes-forever-goat",
       champchamp: "https://www.ufc.com/news/history-two-division-champions-part-1-ufc-freedom-250",
       comfort: "https://www.ufc.com/news/amanda-nunes-loves-stepping-out-of-her-comfort-zone-ufc-289",
-      lineage: "https://www.ufc.com/news/ufc-womens-bantamweight-title-lineage-Rousey-Holm-Tate-Nunes-Pena"
+      lineage: "https://www.ufc.com/news/ufc-womens-bantamweight-title-lineage-Rousey-Holm-Tate-Nunes-Pena",
+      return2026: "https://www.ufc.com/news/gane-hokit-harrison-nunes-headline-ufc-334-new-york-city"
     },
     scripts: {
       A: {
@@ -160,8 +161,8 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
           { id: "ufc-amanda-nunes-b-6", text: "I also defended my featherweight championship against Felicia Spencer and Megan Anderson.", band: "strong", verification: "verified", sourceIds: ["comfort", "champchamp"] },
           { id: "ufc-amanda-nunes-b-7", text: "I lost my bantamweight title to Julianna Peña by second-round submission at UFC 269.", band: "strong", verification: "verified", sourceIds: ["lineage"] },
           { id: "ufc-amanda-nunes-b-8", text: "I reclaimed that belt by dominating Peña over five rounds in their rematch at UFC 277.", band: "strong", verification: "verified", sourceIds: ["comfort", "lineage"] },
-          { id: "ufc-amanda-nunes-b-9", text: "My final fight was a successful bantamweight title defense against Irene Aldana at UFC 289.", band: "giveaway", verification: "verified", sourceIds: ["goat", "lineage"] },
-          { id: "ufc-amanda-nunes-b-10", text: "I retired in the Octagon while holding championships from both the bantamweight and featherweight divisions.", band: "giveaway", verification: "verified", sourceIds: ["goat", "champchamp"] }
+          { id: "ufc-amanda-nunes-b-9", text: "I announced my retirement after a five-round title defense against Irene Aldana at UFC 289, then later set plans to return.", band: "giveaway", verification: "verified", sourceIds: ["goat", "lineage", "return2026"] },
+          { id: "ufc-amanda-nunes-b-10", text: "My comeback was booked as a women’s bantamweight title challenge against Kayla Harrison in 2026.", band: "giveaway", verification: "verified", sourceIds: ["return2026"] }
         ]
       }
     }
