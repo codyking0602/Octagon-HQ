@@ -7073,7 +7073,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-brett-favre-a-6",
-            "text": "I became the first player to win the AP NFL MVP award in three consecutive seasons.",
+            "text": "I won the NFL MVP award in three consecutive seasons.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7477,7 +7477,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-elway-a-6",
-            "text": "I won the AP NFL MVP award in 1987.",
+            "text": "I won the NFL MVP award in 1987.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7536,7 +7536,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-elway-b-2",
-            "text": "I was immediately traded after the draft for two veteran players and a future first-round pick.",
+            "text": "The team that drafted me dealt me away immediately in a package that included established players and a future first-round pick.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7554,7 +7554,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-elway-b-4",
-            "text": "I became the only player in NFL history at the time to post seven straight seasons with at least 3,000 passing yards and 200 rushing yards.",
+            "text": "For seven straight seasons, I paired at least 3,000 passing yards with at least 200 rushing yards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7563,7 +7563,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-elway-b-5",
-            "text": "I later became only the second quarterback in league history with more than 40,000 passing yards and 3,000 rushing yards.",
+            "text": "That dual-threat production eventually put me over both 40,000 career passing yards and 3,000 rushing yards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7679,7 +7679,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-emmitt-smith-a-6",
-            "text": "In 1993, I won the AP NFL MVP award.",
+            "text": "In 1993, I won the NFL MVP award.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7931,7 +7931,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-walter-payton-b-1",
-            "text": "I entered the NFL as a top-five draft pick after starring at a historically Black college.",
+            "text": "I entered the NFL as a top-five running back pick after starring at a smaller college program.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7940,7 +7940,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-walter-payton-b-2",
-            "text": "At 5-foot-10 and about 200 pounds, I built a reputation around toughness, balance and all-around production.",
+            "text": "At about 5-foot-10 and 200 pounds, I built a reputation around toughness, balance and all-around production.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7949,7 +7949,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-walter-payton-b-3",
-            "text": "I rushed for 3,563 yards during four college seasons.",
+            "text": "My durability eventually produced 178 consecutive starts when postseason games are included.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7958,7 +7958,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-walter-payton-b-4",
-            "text": "Chicago selected me fourth overall in the 1975 NFL Draft.",
+            "text": "I became one of the most productive receiving backs of my era as well as an elite runner.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7976,7 +7976,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-walter-payton-b-6",
-            "text": "My career scoring included 110 rushing touchdowns, 15 receiving touchdowns and eight passing touchdowns.",
+            "text": "My career production included 110 rushing touchdowns, 15 receiving touchdowns and eight touchdown passes.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7994,7 +7994,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-walter-payton-b-8",
-            "text": "My college was Jackson State, where I developed before spending my entire NFL career with Chicago.",
+            "text": "Chicago selected me fourth overall in 1975 after I rushed for 3,563 yards at Jackson State.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8012,7 +8012,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-walter-payton-b-10",
-            "text": "I am the Jackson State star known for an all-purpose Chicago career that ended with the NFL rushing record and a Super Bowl ring.",
+            "text": "I am the Jackson State star whose all-purpose Chicago career ended with the NFL rushing record and a Super Bowl XX championship.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8133,7 +8133,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-ray-lewis-b-1",
-            "text": "I entered the league from Miami as a first-round linebacker.",
+            "text": "I entered the league as a first-round linebacker after a decorated college career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8142,7 +8142,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ray-lewis-b-2",
-            "text": "I was only the second draft pick ever made by a newly established franchise.",
+            "text": "I was one of the first draft picks ever made by a newly established franchise.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8196,7 +8196,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ray-lewis-b-8",
-            "text": "Baltimore selected me 26th overall in the 1996 NFL Draft.",
+            "text": "Baltimore selected me 26th overall in 1996 out of Miami.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8335,7 +8335,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-ed-reed-b-1",
-            "text": "I entered the NFL from Miami as a first-round defensive back.",
+            "text": "I entered the NFL as a first-round defensive back after a decorated college career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8380,7 +8380,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ed-reed-b-6",
-            "text": "The Ravens selected me 24th overall in the 2002 NFL Draft.",
+            "text": "Baltimore selected me 24th overall in 2002 out of Miami.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8537,7 +8537,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-ladainian-tomlinson-b-1",
-            "text": "I entered the NFL after a college career that included historic rushing production.",
+            "text": "I entered the NFL as a highly drafted running back after a prolific college career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8546,7 +8546,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ladainian-tomlinson-b-2",
-            "text": "As a college junior, I set an NCAA single-game rushing record with 406 yards.",
+            "text": "I immediately became a high-volume runner and pass catcher as a rookie.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8555,7 +8555,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ladainian-tomlinson-b-3",
-            "text": "As a senior, I became only the second college player to reach 2,000 rushing yards in a season and 5,000 in a career.",
+            "text": "My rookie season ended with 1,236 rushing yards and 10 rushing touchdowns.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8564,7 +8564,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ladainian-tomlinson-b-4",
-            "text": "San Diego selected me fifth overall in the 2001 NFL Draft.",
+            "text": "I caught at least 50 passes in nine of my 11 professional seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8573,7 +8573,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ladainian-tomlinson-b-5",
-            "text": "In my first four NFL games, I rushed for 412 yards and six touchdowns.",
+            "text": "In college, I once set an NCAA single-game rushing record with 406 yards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8582,15 +8582,6 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ladainian-tomlinson-b-6",
-            "text": "I caught at least 50 passes in nine of my 11 professional seasons.",
-            "band": "strong",
-            "verification": "verified",
-            "sourceIds": [
-              "hof"
-            ]
-          },
-          {
-            "id": "nfl-ladainian-tomlinson-b-7",
             "text": "My San Diego teams won five division titles in a six-season span.",
             "band": "strong",
             "verification": "verified",
@@ -8599,8 +8590,17 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
-            "id": "nfl-ladainian-tomlinson-b-8",
+            "id": "nfl-ladainian-tomlinson-b-7",
             "text": "After nine seasons with the Chargers, I signed with the New York Jets and played two more years.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-ladainian-tomlinson-b-8",
+            "text": "San Diego selected me fifth overall in the 2001 NFL Draft.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
