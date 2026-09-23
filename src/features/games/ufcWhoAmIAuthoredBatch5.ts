@@ -109,7 +109,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-quinton-jackson-a-10",
-            "text": "A defining UFC result in my career came against Chuck Liddell in 2007.",
+            "text": "My UFC résumé includes a matchup against Chuck Liddell in 2007.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -540,7 +540,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-paddy-pimblett-a-10",
-            "text": "A defining UFC result in my career came against Justin Gaethje in 2026.",
+            "text": "My UFC résumé includes a matchup against Justin Gaethje in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -756,7 +756,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-zhang-weili-a-10",
-            "text": "A defining UFC result in my career came against Joanna Jedrzejczyk in 2020.",
+            "text": "My UFC résumé includes a matchup against Joanna Jedrzejczyk in 2020.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1402,7 +1402,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-mackenzie-dern-a-10",
-            "text": "A defining UFC result in my career came against Virna Jandiroba in 2025.",
+            "text": "My UFC résumé includes a matchup against Virna Jandiroba in 2025.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1618,7 +1618,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-holly-holm-a-10",
-            "text": "A defining UFC result in my career came against Ronda Rousey in 2015.",
+            "text": "My UFC résumé includes a matchup against Ronda Rousey in 2015.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
