@@ -110,7 +110,7 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
       B: {
         id: "B",
         clues: [
-          { id: "ufc-georges-st-pierre-b-1", text: "I was born in the small Quebec municipality of Saint-Isidore.", band: "broad", verification: "verified", sourceIds: ["retired"] },
+          { id: "ufc-georges-st-pierre-b-1", text: "I made my professional mixed martial arts debut in 2002.", band: "broad", verification: "verified", sourceIds: ["retired", "hof"] },
           { id: "ufc-georges-st-pierre-b-2", text: "Before reaching the UFC, I worked my way through the Quebec regional promotion TKO MMA.", band: "broad", verification: "verified", sourceIds: ["retired"] },
           { id: "ufc-georges-st-pierre-b-3", text: "I won 20 of my 22 UFC appearances.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-georges-st-pierre-b-4", text: "One stretch of my UFC career reached 13 consecutive victories.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
