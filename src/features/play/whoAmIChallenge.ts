@@ -1,5 +1,6 @@
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { getFootballWhoAmIUniverse, getUfcWhoAmIUniverse } from "../games/whoAmIAuthority";
+import { resolveUfcWhoAmIAuthoredSharedRound } from "./ufcWhoAmIAuthoredRound";
 import {
   WHO_AM_I_CLUE_LIMIT,
   type WhoAmICandidate,
@@ -158,6 +159,12 @@ export function sharedWhoAmIRound(
 
   const candidate = universe.candidates.find((entry) => entry.id === shared.answerId);
   if (!candidate) return null;
+
+  if (expectedSport === "ufc") {
+    const authoredRound = resolveUfcWhoAmIAuthoredSharedRound(shared.answerId, shared.clueIds);
+    if (authoredRound) return authoredRound;
+  }
+
   const cluesById = new Map(candidate.clues.map((clue) => [clue.id, clue]));
   const clues = shared.clueIds.map((id) => cluesById.get(id) ?? null);
   if (clues.some((clue) => !clue)) return null;
