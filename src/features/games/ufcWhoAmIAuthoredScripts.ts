@@ -30,6 +30,8 @@ export interface UfcWhoAmIAuthoredIdentity {
  * - clues 1-4 create possibilities; 5-7 narrow; 8-10 identify
  * - title résumé, signature fights, style/background and career path beat generic counts
  * - opponent and nickname anchors generally stay late
+ * - distinctive geography, nationality and gym/camp combinations stay out of clues 1-4 when they would identify the fighter too quickly
+ * - signature opponents and defining title-fight names generally stay out of clues 1-4
  * - every clue is verified against the existing research archive and/or direct UFC authority
  * - authored text is served verbatim; runtime must never reconstruct these clues
  */
@@ -52,7 +54,7 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
           { id: "ufc-khabib-nurmagomedov-a-1", text: "My father initially wanted me to focus on school before taking a larger role in my fight training.", band: "broad", verification: "verified", sourceIds: ["making"] },
           { id: "ufc-khabib-nurmagomedov-a-2", text: "I turned professional in mixed martial arts in 2008.", band: "broad", verification: "verified", sourceIds: ["making", "hof"] },
           { id: "ufc-khabib-nurmagomedov-a-3", text: "Before reaching the UFC, I built a background across wrestling, judo and combat sambo.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
-          { id: "ufc-khabib-nurmagomedov-a-4", text: "I split major portions of my training between Dagestan and American Kickboxing Academy in California.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
+          { id: "ufc-khabib-nurmagomedov-a-4", text: "I arrived in the UFC with an unbeaten professional record.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-khabib-nurmagomedov-a-5", text: "My UFC debut ended with a rear-naked choke victory in Nashville in 2012.", band: "helpful", verification: "verified", sourceIds: ["hof", "profile"] },
           { id: "ufc-khabib-nurmagomedov-a-6", text: "A 2014 decision win over Rafael dos Anjos became one of the important victories in my climb at lightweight.", band: "strong", verification: "verified", sourceIds: ["profile", "hof"] },
           { id: "ufc-khabib-nurmagomedov-a-7", text: "I won a vacant UFC lightweight championship by going five rounds with Al Iaquinta.", band: "strong", verification: "verified", sourceIds: ["hof", "profile"] },
@@ -108,7 +110,7 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
       B: {
         id: "B",
         clues: [
-          { id: "ufc-georges-st-pierre-b-1", text: "I was born in the small Quebec municipality of Saint-Isidore.", band: "broad", verification: "verified", sourceIds: ["retired"] },
+          { id: "ufc-georges-st-pierre-b-1", text: "I made my professional mixed martial arts debut in 2002.", band: "broad", verification: "verified", sourceIds: ["retired", "hof"] },
           { id: "ufc-georges-st-pierre-b-2", text: "Before reaching the UFC, I worked my way through the Quebec regional promotion TKO MMA.", band: "broad", verification: "verified", sourceIds: ["retired"] },
           { id: "ufc-georges-st-pierre-b-3", text: "I won 20 of my 22 UFC appearances.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-georges-st-pierre-b-4", text: "One stretch of my UFC career reached 13 consecutive victories.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
@@ -132,21 +134,22 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
       champchamp: "https://www.ufc.com/news/history-two-division-champions-part-1-ufc-freedom-250",
       comfort: "https://www.ufc.com/news/amanda-nunes-loves-stepping-out-of-her-comfort-zone-ufc-289",
       lineage: "https://www.ufc.com/news/ufc-womens-bantamweight-title-lineage-Rousey-Holm-Tate-Nunes-Pena",
-      return2026: "https://www.ufc.com/news/gane-hokit-harrison-nunes-headline-ufc-334-new-york-city"
+      return2026: "https://www.ufc.com/news/gane-hokit-harrison-nunes-headline-ufc-334-new-york-city",
+      early: "https://www.ufc.com/news/super-seven-amanda-nunes"
     },
     scripts: {
       A: {
         id: "A",
         clues: [
-          { id: "ufc-amanda-nunes-a-1", text: "I built my championship résumé after first emerging as a Brazilian finisher with serious power.", band: "broad", verification: "verified", sourceIds: ["goat", "hof"] },
-          { id: "ufc-amanda-nunes-a-2", text: "A 2016 win over Valentina Shevchenko helped move me into position for my first UFC title shot.", band: "broad", verification: "verified", sourceIds: ["goat"] },
-          { id: "ufc-amanda-nunes-a-3", text: "I won my first UFC championship by submitting Miesha Tate in the first round at UFC 200.", band: "helpful", verification: "verified", sourceIds: ["goat", "lineage"] },
-          { id: "ufc-amanda-nunes-a-4", text: "My first defense lasted only 48 seconds against a returning former champion.", band: "helpful", verification: "verified", sourceIds: ["goat"] },
-          { id: "ufc-amanda-nunes-a-5", text: "I retained my bantamweight belt in a close five-round rematch with Shevchenko.", band: "helpful", verification: "verified", sourceIds: ["goat"] },
-          { id: "ufc-amanda-nunes-a-6", text: "I later moved up a division and stopped Cris Cyborg in 51 seconds.", band: "strong", verification: "verified", sourceIds: ["goat", "champchamp"] },
-          { id: "ufc-amanda-nunes-a-7", text: "That victory made me the first woman to hold UFC championships in two weight classes.", band: "strong", verification: "verified", sourceIds: ["champchamp"] },
-          { id: "ufc-amanda-nunes-a-8", text: "I became the first simultaneous two-division UFC champion to successfully defend both belts.", band: "strong", verification: "verified", sourceIds: ["champchamp", "goat"] },
-          { id: "ufc-amanda-nunes-a-9", text: "My résumé includes wins over Ronda Rousey, Cris Cyborg, Miesha Tate, Holly Holm and Valentina Shevchenko.", band: "giveaway", verification: "verified", sourceIds: ["hof"] },
+          { id: "ufc-amanda-nunes-a-1", text: "Before reaching the UFC, I competed under both the Strikeforce and Invicta FC banners.", band: "broad", verification: "verified", sourceIds: ["early"] },
+          { id: "ufc-amanda-nunes-a-2", text: "My UFC debut in 2013 ended with a first-round stoppage.", band: "broad", verification: "verified", sourceIds: ["early"] },
+          { id: "ufc-amanda-nunes-a-3", text: "I won each of my first two UFC appearances by first-round stoppage.", band: "helpful", verification: "verified", sourceIds: ["early"] },
+          { id: "ufc-amanda-nunes-a-4", text: "After a setback in 2014, I put together three straight UFC wins to earn my first title opportunity.", band: "helpful", verification: "verified", sourceIds: ["early", "goat"] },
+          { id: "ufc-amanda-nunes-a-5", text: "A 2016 win over Valentina Shevchenko helped move me into position for that title shot.", band: "helpful", verification: "verified", sourceIds: ["goat"] },
+          { id: "ufc-amanda-nunes-a-6", text: "I won my first UFC championship by submitting Miesha Tate in the first round at UFC 200.", band: "strong", verification: "verified", sourceIds: ["goat", "lineage"] },
+          { id: "ufc-amanda-nunes-a-7", text: "I later moved up a division and stopped Cris Cyborg in 51 seconds.", band: "strong", verification: "verified", sourceIds: ["goat", "champchamp"] },
+          { id: "ufc-amanda-nunes-a-8", text: "That victory made me the first woman to hold UFC championships in two weight classes.", band: "strong", verification: "verified", sourceIds: ["champchamp"] },
+          { id: "ufc-amanda-nunes-a-9", text: "I became the first simultaneous two-division UFC champion to successfully defend both belts.", band: "giveaway", verification: "verified", sourceIds: ["champchamp", "goat"] },
           { id: "ufc-amanda-nunes-a-10", text: "Known as “The Lioness,” I was inducted into the UFC Hall of Fame’s Modern Wing in 2025.", band: "giveaway", verification: "verified", sourceIds: ["hof"] }
         ]
       },
@@ -182,7 +185,7 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
       A: {
         id: "A",
         clues: [
-          { id: "ufc-max-holloway-a-1", text: "Representing Waianae, Hawaii became an important part of how I described my identity and motivation.", band: "broad", verification: "verified", sourceIds: ["hometown"] },
+          { id: "ufc-max-holloway-a-1", text: "I entered the UFC before my 21st birthday.", band: "broad", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-a-2", text: "A friend helped bring me into formal fight training after a trainer noticed my natural ability on a speed bag.", band: "broad", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-max-holloway-a-3", text: "I developed from a young UFC prospect into the centerpiece of a long featherweight winning streak.", band: "helpful", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-a-4", text: "I first captured UFC gold by winning an interim featherweight championship.", band: "helpful", verification: "verified", sourceIds: ["career"] },
