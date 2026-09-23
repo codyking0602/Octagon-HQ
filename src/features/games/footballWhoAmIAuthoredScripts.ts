@@ -46581,7 +46581,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-chase-coffman-b-3",
-            "text": "I averaged nine receptions per game across the 10 contests I played as a senior.",
+            "text": "Even after missing two games, I finished my senior season with 90 receptions.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -48381,7 +48381,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       "butkus": "https://rolltide.com/news/2013/12/8/C_J_Mosley_Wins_Butkus_Award",
       "notes": "https://rolltide.com/news/2012/10/22/Football_Returns_Home_to_Host_Undefeated_Mississippi_State",
       "roster": "https://rolltide.com/sports/football/roster/2013",
-      "freshman": "https://rolltide.com/news/2010/10/9/Postgame_Notes_Alabama_vs_South_Carolina_Oct_9_2010"
+      "freshman": "https://rolltide.com/news/2010/10/9/Postgame_Notes_Alabama_vs_South_Carolina_Oct_9_2010",
+      "allamericans": "https://rolltide.com/sports/2025/5/9/all-americans"
     },
     "scripts": {
       "A": {
