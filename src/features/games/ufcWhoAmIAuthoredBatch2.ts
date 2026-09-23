@@ -109,7 +109,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dricus-du-plessis-a-10",
-            "text": "A defining UFC result in my career came against Israel Adesanya in 2024.",
+            "text": "My UFC résumé includes a matchup against Israel Adesanya in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -540,7 +540,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-sean-omalley-a-10",
-            "text": "A defining UFC result in my career came against Aljamain Sterling in 2023.",
+            "text": "My UFC résumé includes a matchup against Aljamain Sterling in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1185,7 +1185,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-valentina-shevchenko-a-10",
-            "text": "A defining UFC result in my career came against Zhang Weili in 2025.",
+            "text": "My UFC résumé includes a matchup against Zhang Weili in 2025.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2041,7 +2041,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-miesha-tate-a-10",
-            "text": "A defining UFC result in my career came against Holly Holm in 2016.",
+            "text": "My UFC résumé includes a matchup against Holly Holm in 2016.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2257,7 +2257,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-jorge-masvidal-a-10",
-            "text": "A defining UFC result in my career came against Kamaru Usman in 2020.",
+            "text": "My UFC résumé includes a matchup against Kamaru Usman in 2020.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
