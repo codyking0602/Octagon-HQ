@@ -35987,6 +35987,1044 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-manti-teo",
+    "name": "Manti Te'o",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://fightingirish.com/news/2022/11/01/teo-voted-to-polynesian-football-hall-of-fame",
+      "aa": "https://fightingirish.com/news/2012/12/14/manti-teo-named-33rd-unanimous-all-american-in-school-history",
+      "maxwell": "https://fightingirish.com/news/2012/12/06/manti-teo-wins-maxwell-award",
+      "heisman": "https://fightingirish.com/news/2012/12/08/manti-teo-finishes-second-for-heisman-trophy"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-manti-teo-a-1",
+            "text": "I was a four-year linebacker whose tackling production built toward a decorated senior season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-a-2",
+            "text": "I led my team in tackles for three consecutive seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-a-3",
+            "text": "As a senior, I recorded 113 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-a-4",
+            "text": "That same year, I intercepted seven passes from the linebacker position.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-a-5",
+            "text": "My senior team completed a 12-0 regular season and reached the national championship game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-a-6",
+            "text": "I became the 33rd unanimous All-American in school history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-a-7",
+            "text": "I collected seven major national awards during that senior season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-a-8",
+            "text": "I finished second in the Heisman vote with more first-place votes and points than any defensive player before me.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-a-9",
+            "text": "I became the first primarily defensive player to win the Maxwell Award since 1980.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "maxwell"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-a-10",
+            "text": "I was the Notre Dame linebacker whose 2012 season combined a 12-0 run, seven interceptions and a Heisman runner-up finish.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-manti-teo-b-1",
+            "text": "I made 63 tackles as a freshman despite not yet being the centerpiece of the defense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-b-2",
+            "text": "As a sophomore, I recorded 21 tackles in a game against Stanford.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-b-3",
+            "text": "I finished my college career with 437 tackles, third-most in school history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-b-4",
+            "text": "My seven career interceptions set a school record for a linebacker.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-b-5",
+            "text": "I became only the third player in program history to lead the team in tackles three straight years.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-b-6",
+            "text": "I earned All-America recognition in three different seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-b-7",
+            "text": "My final defense allowed only 10.3 points per game, best in the nation.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-b-8",
+            "text": "That defense helped an independent program reach the BCS Championship Game without a regular-season loss.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman",
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-b-9",
+            "text": "My senior trophy haul included the Maxwell, Lott, Bednarik, Walter Camp, Nagurski, Butkus and Lombardi awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-manti-teo-b-10",
+            "text": "I am the Fighting Irish linebacker whose 2012 award sweep ended with a second-place Heisman finish.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-patrick-willis",
+    "name": "Patrick Willis",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "oleMiss": "https://olemisssports.com/news/2024/8/3/ole-miss-football-legend-patrick-willis-enshrined-in-pro-football-hall-of-fame"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-patrick-willis-a-1",
+            "text": "I was a four-year college linebacker whose career stretched from 2003 through 2006.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-a-2",
+            "text": "I twice led the Southeastern Conference in tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-a-3",
+            "text": "I earned first-team All-America honors in both of my final two seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-a-4",
+            "text": "I finished college with 355 career tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-a-5",
+            "text": "I also recorded 33 career tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-a-6",
+            "text": "I was named conference Defensive Player of the Year twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-a-7",
+            "text": "My senior season ended with consensus All-America recognition.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-a-8",
+            "text": "That year I won both the Butkus Award and the Lambert Trophy as the nation's top linebacker.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-a-9",
+            "text": "I also received the Conerly Trophy and my school's Chucky Mullins Courage Award as a senior.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-a-10",
+            "text": "I was the Ole Miss linebacker whose 2006 award sweep preceded being selected 11th overall in the NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-patrick-willis-b-1",
+            "text": "I came to college from Bruceton, Tennessee, and developed into the captain of my defense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-b-2",
+            "text": "My achievements included Academic All-SEC recognition in addition to defensive honors.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-b-3",
+            "text": "I served as a team captain during my senior season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-b-4",
+            "text": "That senior year I was selected to 13 different first-team All-America squads, a school record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-b-5",
+            "text": "I finished my college career by earning Defensive MVP honors for the South team at the Senior Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-b-6",
+            "text": "I was inducted into the College Football Hall of Fame in 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-b-7",
+            "text": "I also entered the Ole Miss Sports Hall of Fame before my College Football Hall of Fame selection.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-b-8",
+            "text": "My 355 tackles and 33 tackles for loss both ranked sixth on the school's career lists.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-b-9",
+            "text": "My four seasons with the Rebels produced back-to-back first-team All-America selections to close the run.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          },
+          {
+            "id": "cfb-patrick-willis-b-10",
+            "text": "I am the Rebels linebacker who captained the 2006 defense and won the Butkus and Lambert awards in the same season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "oleMiss"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-eric-berry",
+    "name": "Eric Berry",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "vols": "https://utsports.com/sports/football/roster/eric-berry/12198"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-eric-berry-a-1",
+            "text": "I made an immediate impact in the secondary and earned conference defensive freshman honors.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-a-2",
+            "text": "My ability to turn interceptions into long returns became a defining part of my college career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-a-3",
+            "text": "As a freshman, I made five interceptions and returned them for 222 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-a-4",
+            "text": "The next season, I intercepted seven passes, tied for the national lead.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-a-5",
+            "text": "I led the nation with 265 interception-return yards that sophomore year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-a-6",
+            "text": "That season made me Tennessee's first unanimous All-American since 1990.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-a-7",
+            "text": "I broke both school and conference records for interception-return yardage.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-a-8",
+            "text": "As a junior, I won the Jim Thorpe Award as the nation's top defensive back.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-a-9",
+            "text": "I finished college with 14 interceptions, 494 return yards and three interception-return touchdowns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-a-10",
+            "text": "I was the No. 14 Tennessee safety whose ball-hawking career ended with the Thorpe Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-eric-berry-b-1",
+            "text": "I finished my college career with 245 tackles from the defensive backfield.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-b-2",
+            "text": "I also broke up 31 passes and recorded 17.5 tackles for loss.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-b-3",
+            "text": "My freshman season alone included 86 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-b-4",
+            "text": "One sophomore interception became a 72-yard touchdown against Mississippi State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-b-5",
+            "text": "Another pick that year went 45 yards for a score against Vanderbilt.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-b-6",
+            "text": "Over my career, I intercepted Tim Tebow twice in games played at Florida.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-b-7",
+            "text": "I earned unanimous All-America recognition in consecutive seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-b-8",
+            "text": "My final season ended with the award given annually to college football's best defensive back.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-b-9",
+            "text": "I left after three seasons and became the fifth overall pick in the 2010 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          },
+          {
+            "id": "cfb-eric-berry-b-10",
+            "text": "I am the Volunteers safety who wore No. 14 and left with the SEC career record for interception-return yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vols"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-sean-taylor",
+    "name": "Sean Taylor",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "aa": "https://miamihurricanes.com/news/2011/07/28/205548328-2",
+      "hof": "https://miamihurricanes.com/news/2014/10/06/209700297-2",
+      "roster": "https://miamihurricanes.com/sports/football/roster/player/sean-taylor"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-sean-taylor-a-1",
+            "text": "I became a standout safety on one of the nation's deepest defenses in the early 2000s.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-a-2",
+            "text": "My biggest individual season came as a junior.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-a-3",
+            "text": "That year, I tied a school single-season record with 10 interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-a-4",
+            "text": "I returned those interceptions for 184 yards, then the second-highest single-season total in program history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-a-5",
+            "text": "Three of my career interceptions were returned for touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-a-6",
+            "text": "I was named Big East Defensive Player of the Year in 2003.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-a-7",
+            "text": "That same season brought consensus first-team All-America recognition.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-a-8",
+            "text": "I finished as a finalist for the Jim Thorpe Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-a-9",
+            "text": "I recorded 14 career interceptions, all during my final two college seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-a-10",
+            "text": "I was the Miami safety whose 10-interception 2003 season made him a consensus All-American and Big East Defensive Player of the Year.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-sean-taylor-b-1",
+            "text": "I was a member of a national championship team before becoming a full-time starter in the secondary.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-b-2",
+            "text": "In my first season as a starter, I made 85 tackles, broke up 15 passes and intercepted four throws.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-b-3",
+            "text": "Against Ohio State in the Fiesta Bowl, I recorded 11 tackles and two interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-b-4",
+            "text": "I scored on a 47-yard fake-punt run against Syracuse.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-b-5",
+            "text": "I also returned a punt 78 yards for a touchdown against Pittsburgh.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-b-6",
+            "text": "That first year as a starter ended with first-team All-Big East honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-b-7",
+            "text": "The next season, I intercepted a pass in four consecutive games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-b-8",
+            "text": "I finished second in school history with 306 career interception-return yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-b-9",
+            "text": "I wore No. 26 while starring at safety for Miami from 2001 through 2003.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roster",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-sean-taylor-b-10",
+            "text": "I left the Hurricanes after my consensus All-America junior season and became a first-round draft pick by Washington.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "aa"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-patrick-peterson",
+    "name": "Patrick Peterson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "lsu": "https://lsusports.net/sports/fb/roster/player/patrick-peterson",
+      "awards": "https://lsusports.net/news/2010/12/09/205052998"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-patrick-peterson-a-1",
+            "text": "I became a three-year starter at cornerback before leaving college after my junior season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-a-2",
+            "text": "Across 39 games, I made 30 starts in the secondary.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-a-3",
+            "text": "My career totals included 135 tackles, 22 pass breakups and seven interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-a-4",
+            "text": "As a junior, I intercepted four passes and broke up six more.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-a-5",
+            "text": "I earned first-team all-conference honors during that final season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-a-6",
+            "text": "I was recognized as a consensus first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-a-7",
+            "text": "I won the Bednarik Award as the nation's top defensive player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu",
+              "awards"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-a-8",
+            "text": "I also won the Jim Thorpe Award as the nation's top defensive back.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu",
+              "awards"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-a-9",
+            "text": "Conference coaches selected me as their Defensive Player of the Year.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-a-10",
+            "text": "I was the No. 7 LSU cornerback who won both the Bednarik and Thorpe awards in 2010.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu",
+              "awards"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-patrick-peterson-b-1",
+            "text": "My college role expanded beyond cornerback to both punt and kickoff returns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-b-2",
+            "text": "I scored touchdowns in three different ways: interception return, punt return and blocked-field-goal return.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-b-3",
+            "text": "As a junior, I returned 26 punts for 418 yards and two touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-b-4",
+            "text": "My 16.1-yard punt-return average led the conference and ranked fourth nationally.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-b-5",
+            "text": "I also averaged 29.1 yards on kickoffs, best in the conference and ninth nationally.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-b-6",
+            "text": "My 932 kickoff-return yards set a school single-season record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-b-7",
+            "text": "I accumulated 1,484 all-purpose yards during that final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-b-8",
+            "text": "Conference coaches named me their Special Teams Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-b-9",
+            "text": "I became the first LSU player to win both the Thorpe and Bednarik awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "awards",
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-patrick-peterson-b-10",
+            "text": "I am the Tigers No. 7 who paired elite cornerback play with conference-leading return production in 2010.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu",
+              "awards"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
