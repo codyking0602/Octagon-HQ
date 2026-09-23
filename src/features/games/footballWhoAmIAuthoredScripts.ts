@@ -24811,6 +24811,1045 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-chase-young",
+    "name": "Chase Young",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "osu": "https://ohiostatebuckeyes.com/news/2020/1/3/dominant-defender-chase-young-departs-for-nfl-draft",
+      "hendricks": "https://ohiostatebuckeyes.com/news/2019/12/11/chase-young-is-the-2019-ted-hendricks-award-winner"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-chase-young-a-1",
+            "text": "I began my college career as a reserve defensive end and recorded 3.5 sacks as a freshman.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-a-2",
+            "text": "As a sophomore, I moved into the starting lineup and produced 10.5 sacks.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-a-3",
+            "text": "That second season also included 15.5 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-a-4",
+            "text": "I became a team captain during my junior season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-a-5",
+            "text": "As a junior, I set a school single-season record with 16.5 sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-a-6",
+            "text": "I led the nation in both sacks and sacks per game that season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-a-7",
+            "text": "I also forced six fumbles during my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-a-8",
+            "text": "I won the Bednarik, Nagurski and Ted Hendricks awards in the same year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu",
+              "hendricks"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-a-9",
+            "text": "I became only the ninth primarily defensive player since 1982 to be named a Heisman Trophy finalist.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-a-10",
+            "text": "I was Ohio State's dominant edge rusher in 2019 before leaving early for the NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-chase-young-b-1",
+            "text": "I played 38 college games and started 23 of them across three seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-b-2",
+            "text": "My career ended with 30.5 sacks, second-most in school history at the time.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-b-3",
+            "text": "I also accumulated 42.5 tackles for loss over my three seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-b-4",
+            "text": "My sack totals climbed from 3.5 as a freshman to 10.5 as a sophomore and 16.5 as a junior.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-b-5",
+            "text": "In my final season, I anchored a defense that finished No. 1 nationally in total defense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-b-6",
+            "text": "That defense allowed just 259.7 yards per game while I routinely faced double- and triple-teams.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-b-7",
+            "text": "I won the Chicago Tribune Silver Football as the Big Ten's best player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-b-8",
+            "text": "I was also named the conference's Defensive Player and Defensive Lineman of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-b-9",
+            "text": "I earned unanimous All-America honors after one of the most decorated defensive seasons in Ohio State history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-chase-young-b-10",
+            "text": "After that 2019 season, Washington selected me second overall in the 2020 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-myles-garrett",
+    "name": "Myles Garrett",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "tamu": "https://12thman.com/sports/football/roster/season/2016/player/myles-garrett",
+      "freshman": "https://12thman.com/news/2015/01/14/garrett-named-to-fwaa-freshman-all-america-team",
+      "hall": "https://12thman.com/news/2026/06/22/eight-aggie-legends-named-to-texas-aandm-athletic-hall-of-fame-2026-class"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-myles-garrett-a-1",
+            "text": "I made an immediate impact as a freshman defensive end, leading my team in sacks and tackles for loss.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-a-2",
+            "text": "That freshman season included 53 tackles and 14 tackles for loss.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-a-3",
+            "text": "My 11.5 freshman sacks broke both school and conference freshman records.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-a-4",
+            "text": "As a sophomore, I led the SEC with 12.5 sacks, 19.5 tackles for loss and five forced fumbles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-a-5",
+            "text": "I earned first-team All-America honors after that sophomore season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-a-6",
+            "text": "I followed it with unanimous first-team All-America recognition as a junior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-a-7",
+            "text": "I recorded at least eight sacks and 14 tackles for loss in each of my three college seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-a-8",
+            "text": "My team named me its Defensive MVP in all three seasons I played.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-a-9",
+            "text": "I finished my Texas A&M career with 32.5 sacks and 48.5 tackles for loss.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-a-10",
+            "text": "I became the first player in Texas A&M history to be selected No. 1 overall in the NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-myles-garrett-b-1",
+            "text": "I came to college from Arlington, Texas, and immediately became one of the nation's top freshman pass rushers.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-b-2",
+            "text": "As a freshman, my 11.5 sacks ranked in the top 10 nationally and led all first-year players.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-b-3",
+            "text": "One freshman game against Louisiana-Monroe produced a career-high 3.5 sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-b-4",
+            "text": "As a sophomore, I contributed not only sacks but also an interception and a blocked punt.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-b-5",
+            "text": "I earned first-team all-conference honors twice during my three-year career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-b-6",
+            "text": "I was a consensus first-team All-American as a sophomore and again as a junior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-b-7",
+            "text": "My career totals included 145 tackles and 30 quarterback pressures.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-b-8",
+            "text": "I also forced seven fumbles over my three seasons in Aggieland.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-b-9",
+            "text": "I was the Texas A&M defensive end who became a finalist for the Lombardi, Bednarik, Hendricks and Lott awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-myles-garrett-b-10",
+            "text": "Cleveland made me the top overall pick in 2017 after three decorated seasons with the Aggies.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-luke-kuechly",
+    "name": "Luke Kuechly",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "bc": "https://bceagles.com/sports/football/roster/l-kuechly/1595",
+      "hof": "https://bceagles.com/news/2023/1/9/kuechly-headed-to-the-college-football-hall-of-fame",
+      "retire": "https://bceagles.com/news/2016/10/21/football-kuechly-honored-by-jersey-retirement"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-luke-kuechly-a-1",
+            "text": "I played only three college seasons at linebacker before entering the NFL Draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-a-2",
+            "text": "In those three seasons, I piled up a school-record 532 tackles, including 299 solo stops.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-a-3",
+            "text": "My career average of 14.0 tackles per game ranked first in NCAA history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-a-4",
+            "text": "I recorded at least 10 tackles in 34 of my 38 college games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-a-5",
+            "text": "At one point, I had a streak of 33 consecutive games with double-digit tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-a-6",
+            "text": "As a junior, I led the nation with 191 tackles and 102 solo tackles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bc"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-a-7",
+            "text": "That season, I won the Butkus, Nagurski, Lombardi and Lott IMPACT awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-a-8",
+            "text": "I was also named ACC Defensive Player of the Year and a consensus All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bc"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-a-9",
+            "text": "Boston College later retired the No. 40 jersey I wore as its record-setting middle linebacker.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-a-10",
+            "text": "Carolina selected me ninth overall in the 2012 NFL Draft after my three-year career with the Eagles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-luke-kuechly-b-1",
+            "text": "I was named ACC Defensive Rookie of the Year after my freshman season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-b-2",
+            "text": "As a sophomore, I led the nation in tackles and finished with 183, then an ACC single-season record.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-b-3",
+            "text": "That sophomore season made me a unanimous first-team All-American.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bc"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-b-4",
+            "text": "I led the nation in tackles per game in each of my three college seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-b-5",
+            "text": "I earned Defensive MVP honors in both bowl games I played for Boston College.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-b-6",
+            "text": "My junior-year high was 23 tackles in a single game against Duke.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bc"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-b-7",
+            "text": "I closed my final regular season with a 45-yard interception return for a touchdown against Miami.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-b-8",
+            "text": "I served as a team captain and team MVP during my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bc",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-b-9",
+            "text": "I became the first Boston College player ever to win the Butkus Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bc"
+            ]
+          },
+          {
+            "id": "cfb-luke-kuechly-b-10",
+            "text": "I was the Eagles' No. 40 linebacker who swept college football's major defensive awards in 2011.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retire",
+              "bc"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-deion-sanders",
+    "name": "Deion Sanders",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "fsu": "https://seminoles.com/honors/florida-state-athletics-hall-of-fame/deion-sanders/99",
+      "nff": "https://footballfoundation.org/hof_search.aspx?hof=2313"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-deion-sanders-a-1",
+            "text": "I lettered in three sports in college: football, baseball and track.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-a-2",
+            "text": "As a freshman, I started at cornerback while also playing outfield and competing in track.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-a-3",
+            "text": "I became a two-time consensus All-American in football.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-a-4",
+            "text": "I finished my college career with 14 interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-a-5",
+            "text": "I returned four of those interceptions for touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-a-6",
+            "text": "As a senior, I recorded five interceptions in nine games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-a-7",
+            "text": "That same season, I led the nation by averaging 15.2 yards per punt return.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-a-8",
+            "text": "I won the Jim Thorpe Award as the nation's top defensive back.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-a-9",
+            "text": "I wore No. 2 for Florida State and became known as \"Prime Time.\"",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-a-10",
+            "text": "After starring for the Seminoles in three sports, Atlanta selected me fifth overall in the 1989 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "nff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-deion-sanders-b-1",
+            "text": "I played defensive back and returned punts for four seasons from 1985 through 1988.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-b-2",
+            "text": "My college career included 126 punt returns for 1,429 yards, both long-standing school records.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-b-3",
+            "text": "I also returned three punts for touchdowns during my career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-b-4",
+            "text": "The only football losses of my final two college seasons came against Miami.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-b-5",
+            "text": "I earned unanimous All-America honors in both my junior and senior seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-b-6",
+            "text": "My 14 career interceptions ranked among the top totals in Florida State history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-b-7",
+            "text": "My senior year ended with the award presented to the nation's best defensive back.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-b-8",
+            "text": "I was inducted into the College Football Hall of Fame in 2011.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-b-9",
+            "text": "I was Florida State's No. 2 cornerback and return specialist before becoming a top-five NFL draft pick.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-deion-sanders-b-10",
+            "text": "I was the three-sport Seminole star nicknamed \"Prime Time\" who was drafted by both the Atlanta Falcons and New York Yankees.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "nff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-tyrann-mathieu",
+    "name": "Tyrann Mathieu",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "lsu": "https://lsusports.net/sports/fb/roster/season/2011/player/tyrann-mathieu",
+      "heisman": "https://lsusports.net/news/2011/12/05/205342715"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-tyrann-mathieu-a-1",
+            "text": "I made an immediate impact as a true freshman while working as a reserve cornerback and nickel back.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-a-2",
+            "text": "That freshman season, I led my conference with five forced fumbles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-a-3",
+            "text": "I was named the Defensive Most Outstanding Player of the Cotton Bowl as a freshman.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-a-4",
+            "text": "In just two college seasons, I created 14 turnovers and scored four touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-a-5",
+            "text": "I finished those two seasons with 133 tackles, 16 tackles for loss and six sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-a-6",
+            "text": "As a sophomore, I won the Bednarik Award as the nation's top defensive player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-a-7",
+            "text": "I also became a unanimous first-team All-American and the AP SEC Defensive Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-a-8",
+            "text": "I became the first defensive back invited to the Heisman ceremony since Charles Woodson and finished fifth in the voting.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-a-9",
+            "text": "I was the LSU defensive back and returner whose playmaking style became associated with the \"Honey Badger\" nickname.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-a-10",
+            "text": "After only two seasons on the field for the Tigers, I left with a school-record 11 forced fumbles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-tyrann-mathieu-b-1",
+            "text": "My college résumé was built around takeaways: eight fumble recoveries, four interceptions and 11 forced fumbles in two seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-b-2",
+            "text": "As a sophomore, I led the nation with five fumble recoveries and ranked fourth with six forced fumbles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-b-3",
+            "text": "I also averaged 15.6 yards per punt return and scored twice on punt returns that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-b-4",
+            "text": "Against Oregon, I forced and recovered a fumble on a punt and returned it for my first career touchdown.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-b-5",
+            "text": "At West Virginia, I forced and recovered a fumble and also made an interception that I returned to the 1-yard line.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-b-6",
+            "text": "Against Arkansas, I returned a punt 92 yards for a touchdown and forced two fumbles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-b-7",
+            "text": "In the SEC Championship Game, I returned a punt 62 yards for a touchdown and was named the game's MVP.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-b-8",
+            "text": "I became the first defensive player since 1994 to win SEC Championship Game MVP.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-b-9",
+            "text": "I was LSU's dynamic No. 7 defensive back who combined elite turnover production with punt-return touchdowns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-tyrann-mathieu-b-10",
+            "text": "My 2011 season ended with Bednarik honors, a Heisman finalist trip to New York and an SEC championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu",
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
