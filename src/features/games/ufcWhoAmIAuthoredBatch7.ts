@@ -660,7 +660,11 @@ export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
       "identity2": "https://www.si.com/more-sports/2010/06/29/shamrock",
       "identity3": "https://www.si.com/more-sports/2010/06/29/shamrock",
       "identity4": "https://www.si.com/more-sports/2010/06/29/shamrock",
-      "identity5": "https://www.si.com/more-sports/2010/06/29/shamrock"
+      "identity5": "https://www.si.com/more-sports/2010/06/29/shamrock",
+      "lineage": "https://www.ufc.com/news/ufc-light-heavyweight-title-lineage-jones-cormier-blachowicz-teixeira-prochazka?language_content_entity=en",
+      "titleFights": "https://www.ufc.com/news/10-light-heavyweight-title-fights",
+      "tito": "https://www.ufc.com/news/10-top-september-skirmishes",
+      "siblings": "https://www.ufc.com/news/national-sibling-day-diaz-brothers-shevchenko-sisters"
     },
     "scripts": {
       "A": {
@@ -668,7 +672,7 @@ export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-frank-shamrock-a-1",
-            "text": "I spent part of my youth moving through foster homes and group homes.",
+            "text": "I spent part of my youth moving through foster homes and group homes before finding stability at a boys ranch.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -677,7 +681,7 @@ export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frank-shamrock-a-2",
-            "text": "I deliberately cross-trained striking, wrestling and submissions at a time when many fighters specialized more narrowly.",
+            "text": "I deliberately trained striking, wrestling and submissions together at a time when many fighters still specialized much more narrowly.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -686,74 +690,78 @@ export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frank-shamrock-a-3",
-            "text": "My UFC debut came in 1997 and was also my first UFC title fight.",
+            "text": "After leaving one famous fight-team orbit, I moved to San Jose and helped form American Kickboxing Academy.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-frank-shamrock-a-4",
-            "text": "I never lost during my five-fight UFC run.",
+            "text": "My UFC debut came in Japan in 1997, and the bout was already a championship fight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
+              "lineage",
               "ledger"
             ]
           },
           {
             "id": "ufc-frank-shamrock-a-5",
-            "text": "I submitted Kevin Jackson in my UFC debut.",
+            "text": "I submitted Olympic wrestler Kevin Jackson in that debut to become a UFC champion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
+              "lineage",
               "ledger"
             ]
           },
           {
             "id": "ufc-frank-shamrock-a-6",
-            "text": "I stopped Igor Zinoviev in my first UFC title defense.",
+            "text": "I then defended the belt against Igor Zinoviev, Jeremy Horn and John Lober.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "lineage"
             ]
           },
           {
             "id": "ufc-frank-shamrock-a-7",
-            "text": "I submitted Jeremy Horn in another championship defense.",
+            "text": "Every appearance I made in the UFC carried championship stakes.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "titleFights"
             ]
           },
           {
             "id": "ufc-frank-shamrock-a-8",
-            "text": "I stopped Tito Ortiz in my final UFC appearance.",
+            "text": "My last UFC fight ended in the fourth round against Tito Ortiz at UFC 22.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
+              "tito",
               "ledger"
             ]
           },
           {
             "id": "ufc-frank-shamrock-a-9",
-            "text": "All five of my UFC appearances were championship fights.",
+            "text": "I left the UFC in 1999 without a loss in five appearances and with four successful title defenses.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
+              "lineage",
               "ledger"
             ]
           },
           {
             "id": "ufc-frank-shamrock-a-10",
-            "text": "After leaving one famous fight-team orbit, I helped form American Kickboxing Academy.",
+            "text": "I was the first champion of the UFC division now known as light heavyweight, when the belt was still called the middleweight title.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity3"
+              "lineage"
             ]
           }
         ]
@@ -763,16 +771,16 @@ export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-frank-shamrock-b-1",
-            "text": "I was taken in as a teenager by the man who ran a boys ranch where I had lived.",
+            "text": "As a teenager, I was taken in by the man who ran the boys ranch where I had lived, and he later adopted me.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity2"
+              "identity1"
             ]
           },
           {
             "id": "ufc-frank-shamrock-b-2",
-            "text": "After my first retirement, I described myself less as only a fighter and more as a fight executive.",
+            "text": "After my first retirement, I described myself less as only a fighter and more as a “fight executive.”",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -781,74 +789,78 @@ export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frank-shamrock-b-3",
-            "text": "I opened my UFC career with a first-round submission victory.",
+            "text": "My training philosophy helped make me an early example of the well-rounded mixed martial artist rather than a one-discipline specialist.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-frank-shamrock-b-4",
-            "text": "I won all five of my UFC appearances.",
+            "text": "I opened my UFC career with a first-round submission in a title fight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "lineage"
             ]
           },
           {
             "id": "ufc-frank-shamrock-b-5",
-            "text": "My second UFC fight ended by first-round stoppage.",
+            "text": "That first UFC opponent was Olympic gold medalist Kevin Jackson.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "lineage"
             ]
           },
           {
             "id": "ufc-frank-shamrock-b-6",
-            "text": "I beat John Lober by stoppage in 1998.",
+            "text": "I won all five of my UFC appearances and defended my championship four times.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
+              "lineage",
               "ledger"
             ]
           },
           {
             "id": "ufc-frank-shamrock-b-7",
-            "text": "I defended UFC gold against four different opponents.",
+            "text": "Two of those title defenses came against Jeremy Horn and John Lober.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "lineage"
             ]
           },
           {
             "id": "ufc-frank-shamrock-b-8",
-            "text": "My UFC career ended with a fourth-round stoppage victory.",
+            "text": "My 1999 defense against Tito Ortiz ended late in the fourth round and became one of the defining fights of that era.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "tito",
+              "titleFights"
             ]
           },
           {
             "id": "ufc-frank-shamrock-b-9",
-            "text": "My last UFC opponent was Tito Ortiz.",
+            "text": "My entire UFC résumé consisted of championship fights.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "titleFights"
             ]
           },
           {
             "id": "ufc-frank-shamrock-b-10",
-            "text": "The surname I became famous under came from the man who took me in and later adopted me.",
+            "text": "The surname I became famous under came from my adoptive father, and another of his adopted sons was already one of the UFC’s earliest stars.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity2"
+              "identity1",
+              "siblings"
             ]
           }
         ]
