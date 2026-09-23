@@ -5258,7 +5258,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-nick-saban-a-6",
-            "text": "My first season at that new SEC program finished 7-6; one year later, we completed a 12-0 regular season.",
+            "text": "After a two-season NFL head-coaching stint, my first season at a different SEC program finished 7-6; one year later, we completed a 12-0 regular season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": ["bama"]
