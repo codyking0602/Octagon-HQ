@@ -539,7 +539,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-alexa-grasso-a-10",
-            "text": "A defining UFC result in my career came against Valentina Shevchenko.",
+            "text": "My UFC résumé includes a matchup against Valentina Shevchenko.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -755,7 +755,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-julianna-pena-a-10",
-            "text": "A defining UFC result in my career came against Amanda Nunes.",
+            "text": "My UFC résumé includes a matchup against Amanda Nunes.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -971,7 +971,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-rafael-dos-anjos-a-10",
-            "text": "A defining UFC result in my career came against Anthony Pettis.",
+            "text": "My UFC résumé includes a matchup against Anthony Pettis.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1616,7 +1616,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-derrick-lewis-a-10",
-            "text": "A defining UFC result in my career came against Daniel Cormier.",
+            "text": "My UFC résumé includes a matchup against Daniel Cormier.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1832,7 +1832,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-paulo-costa-a-10",
-            "text": "A defining UFC result in my career came against Israel Adesanya.",
+            "text": "My UFC résumé includes a matchup against Israel Adesanya.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2039,7 +2039,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-tai-tuivasa-a-9",
-            "text": "I became a ranked UFC contender in the Heavyweight division.",
+            "text": "I built much of my UFC résumé in the Heavyweight division.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2048,7 +2048,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-tai-tuivasa-a-10",
-            "text": "A defining UFC result in my career came against Rashad Coulter.",
+            "text": "My UFC résumé includes a matchup against Rashad Coulter.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2264,7 +2264,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-diego-lopes-a-10",
-            "text": "A defining UFC result in my career came against Alexander Volkanovski.",
+            "text": "My UFC résumé includes a matchup against Alexander Volkanovski.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
