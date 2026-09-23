@@ -23967,6 +23967,427 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-antonio-brown",
+    "name": "Antonio Brown",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "draft": "https://www.steelers.com/news/steelers-select-antonio-brown-in-the-sixth-round-2244289",
+      "peak": "https://www.steelers.com/news/post-game-notes-at-browns-16630072",
+      "museum": "https://www.steelers.com/museum/stats/individual-receiving",
+      "decade": "https://www.profootballhof.com/news/nfl-s-all-decade-team-of-the-2010s-offense",
+      "exit": "https://www.steelers.com/news/brown-traded-to-raiders"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-antonio-brown-a-1",
+            "text": "I entered the NFL as a sixth-round pick, 195th overall, in 2010.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-2",
+            "text": "In college, I became my school's career receptions leader with 305 catches.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-3",
+            "text": "I was also a two-time MAC Special Teams Player of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-4",
+            "text": "During the 2010s, I produced six 100-catch NFL seasons, tying a league record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "decade"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-5",
+            "text": "In 2014, I led the NFL with 129 catches and 1,698 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "museum"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-6",
+            "text": "In 2015, I raised my franchise records to 136 catches and 1,834 receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "peak",
+              "museum"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-7",
+            "text": "Those 2014 and 2015 seasons made me the first player with consecutive 125-catch seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "peak"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-8",
+            "text": "One 2015 game against Oakland produced franchise records of 17 catches and 284 receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "museum"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-9",
+            "text": "I finished my Pittsburgh career second in franchise history with 837 receptions and 11,207 receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "exit"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-10",
+            "text": "The sixth-round Central Michigan receiver who became an NFL 2010s All-Decade selection in Pittsburgh was me.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "decade"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-antonio-brown-b-1",
+            "text": "At Central Michigan, I was the only player in school history with two 1,000-yard receiving seasons when I was drafted.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-b-2",
+            "text": "I also produced two 100-reception seasons in college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-b-3",
+            "text": "My college career included touchdowns as a receiver, runner, passer, punt returner and kickoff returner.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-b-4",
+            "text": "I eventually posted six NFL seasons with at least 100 catches.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "decade"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-b-5",
+            "text": "Across the 2010s, I totaled 841 catches, 11,263 yards and 75 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "decade"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-b-6",
+            "text": "During my Pittsburgh peak, I set an NFL record for receptions over a three-season span.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "peak"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-b-7",
+            "text": "I became the first player in NFL history with two games of at least 15 catches in one season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "peak"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-b-8",
+            "text": "Four of Pittsburgh's five highest single-season receiving-yard totals belong to my 2013, 2014, 2015 and 2017 seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "museum"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-b-9",
+            "text": "I made the NFL's 2010s All-Decade Team after arriving from Central Michigan in round six.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft",
+              "decade"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-b-10",
+            "text": "My Steelers run ended with me second to Hines Ward in both franchise receptions and receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "exit"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "jason-witten",
+    "name": "Jason Witten",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "cowboys": "https://www.dallascowboys.com/news/rank-em-best-picks-by-round-in-cowboys-history",
+      "return": "https://www.dallascowboys.com/news/witten-ends-retirement-returning-to-cowboys",
+      "record": "https://www.profootballhof.com/news/witten-into-history",
+      "game": "https://www.profootballhof.com/news/witten-s-big-day",
+      "pace": "https://www.profootballhof.com/news/another-great-season",
+      "wpmoy": "https://www.dallascowboys.com/news/witten-wins-walter-payton-nfl-man-of-the-year-award-334681",
+      "top60": "https://www.dallascowboys.com/news/top-60"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "jason-witten-a-1",
+            "text": "I was a third-round draft pick in 2003 who became a long-term NFL tight end.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "jason-witten-a-2",
+            "text": "I spent my first 15 NFL seasons with one franchise before briefly retiring.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "return"
+            ]
+          },
+          {
+            "id": "jason-witten-a-3",
+            "text": "I returned from that one-year retirement in 2019.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "return",
+              "top60"
+            ]
+          },
+          {
+            "id": "jason-witten-a-4",
+            "text": "I reached 600 career receptions in 125 games, then the fastest a tight end had done it.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "pace"
+            ]
+          },
+          {
+            "id": "jason-witten-a-5",
+            "text": "In 2012, I caught 18 passes in one game, then an NFL record for a tight end.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "game",
+              "record"
+            ]
+          },
+          {
+            "id": "jason-witten-a-6",
+            "text": "That same season, I broke the single-season record for receptions by a tight end.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "record"
+            ]
+          },
+          {
+            "id": "jason-witten-a-7",
+            "text": "I finished 2012 with 110 catches for 1,039 yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "record"
+            ]
+          },
+          {
+            "id": "jason-witten-a-8",
+            "text": "I was selected to 11 Pro Bowls and twice named first-team All-Pro.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "jason-witten-a-9",
+            "text": "I became the Cowboys' all-time leader in games played.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "jason-witten-a-10",
+            "text": "My career became synonymous with the Dallas tight end position from 2003 through a 2019 comeback.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "return",
+              "cowboys"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "jason-witten-b-1",
+            "text": "I played college football at Tennessee before entering the NFL in 2003.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "jason-witten-b-2",
+            "text": "After missing one game as a rookie with a broken jaw, I later put together a 251-game consecutive playing streak.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "top60"
+            ]
+          },
+          {
+            "id": "jason-witten-b-3",
+            "text": "My record-setting 103rd catch of the 2012 season came in overtime against New Orleans.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "record"
+            ]
+          },
+          {
+            "id": "jason-witten-b-4",
+            "text": "The previous single-season record for a tight end had been 102 catches.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "record"
+            ]
+          },
+          {
+            "id": "jason-witten-b-5",
+            "text": "I won the Walter Payton NFL Man of the Year award for the 2012 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "wpmoy"
+            ]
+          },
+          {
+            "id": "jason-witten-b-6",
+            "text": "I retired after the 2017 season to join Monday Night Football, then returned to the field.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "return"
+            ]
+          },
+          {
+            "id": "jason-witten-b-7",
+            "text": "My 11 Pro Bowl invitations were the most in Cowboys history by an offensive player when I returned.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "return"
+            ]
+          },
+          {
+            "id": "jason-witten-b-8",
+            "text": "I also earned two first-team All-Pro selections during my Dallas career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "jason-witten-b-9",
+            "text": "Dallas drafted me in Round 3, and I became the franchise's all-time leader in games played.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cowboys"
+            ]
+          },
+          {
+            "id": "jason-witten-b-10",
+            "text": "The Tennessee tight end who became a Cowboys fixture for 16 playing seasons was me.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "return",
+              "top60"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
