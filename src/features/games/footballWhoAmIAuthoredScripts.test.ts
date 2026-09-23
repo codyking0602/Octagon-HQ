@@ -3,6 +3,7 @@ import {
   footballWhoAmIAuthoredIdentities,
   getFootballWhoAmIAuthoredIdentity,
 } from "./footballWhoAmIAuthoredScripts";
+import { FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES } from "./footballWhoAmIAuthoredTargetRoster";
 
 const REVIEWED_IDENTITIES = new Set([
   "NFL:Patrick Mahomes",
@@ -34,8 +35,8 @@ const EXPECTED_BANDS = [
 ] as const;
 
 describe("Football Who Am I authored scripts", () => {
-  it("tracks the authored migration with 42 completed identities", () => {
-    expect(footballWhoAmIAuthoredIdentities).toHaveLength(42);
+  it("tracks the authored migration with 66 completed identities", () => {
+    expect(footballWhoAmIAuthoredIdentities).toHaveLength(66);
   });
 
   it("keeps league/name and canonical stage ownership unique", () => {
@@ -44,7 +45,7 @@ describe("Football Who Am I authored scripts", () => {
     expect(new Set(keys).size).toBe(keys.length);
     expect(new Set(subjectKeys).size).toBe(subjectKeys.length);
     for (const identity of footballWhoAmIAuthoredIdentities) {
-      expect(identity.subjectId).toMatch(identity.league === "CFB" ? /^cfb-[a-z0-9-]+$/ : /^[a-z0-9-]+$/);
+      expect(identity.subjectId).toMatch(/^[a-z0-9-]+$/);
       expect(getFootballWhoAmIAuthoredIdentity(identity.league, identity.name)).toBe(identity);
     }
   });
@@ -83,6 +84,22 @@ describe("Football Who Am I authored scripts", () => {
     }
   });
 
+
+  it("covers every frozen Football coach with the exact target subject id", () => {
+    const targetCoaches = Object.values(FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES)
+      .flat()
+      .filter((identity) => identity.kind === "coach");
+    const targetNames = new Set(targetCoaches.map((identity) => `${identity.league}:${identity.name}`));
+    const authoredCoaches = footballWhoAmIAuthoredIdentities.filter((identity) =>
+      targetNames.has(`${identity.league}:${identity.name}`)
+    );
+
+    expect(targetCoaches).toHaveLength(45);
+    expect(authoredCoaches).toHaveLength(45);
+    expect(authoredCoaches.map((identity) => `${identity.league}:${identity.subjectId}`).sort()).toEqual(
+      targetCoaches.map((identity) => `${identity.league}:${identity.subjectId}`).sort(),
+    );
+  });
   it("deprioritizes only identities whose clue ladders were exposed during owner review", () => {
     for (const identity of footballWhoAmIAuthoredIdentities) {
       const key = `${identity.league}:${identity.name}`;
