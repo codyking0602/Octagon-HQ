@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { WhoAmIRound } from "../games/whoAmIEngine";
-import { createUfcWhoAmIRound } from "../games/whoAmIAuthority";
+import { createUfcWhoAmIAuthoredCasualRound } from "./ufcWhoAmIAuthoredCasual";
 import WhoAmIPage from "./WhoAmIPage";
 import {
   sharedWhoAmIRound,
