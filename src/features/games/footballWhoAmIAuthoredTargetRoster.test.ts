@@ -11,10 +11,10 @@ describe("Football Who Am I authored target roster", () => {
     expect(roster.players).toHaveLength(120);
     expect(roster.coaches).toHaveLength(20);
     expect(roster.subjects).toHaveLength(140);
-    for (const name of FOOTBALL_WHO_AM_I_AUTHORED_APPROVED_ADDITIONS.NFL) {
-      expect(roster.players.some((subject) => subject.name === name)).toBe(true);
+    for (const addition of FOOTBALL_WHO_AM_I_AUTHORED_APPROVED_ADDITIONS.NFL) {
+      expect(roster.players.some((subject) => subject.subjectId === addition.subjectId && subject.name === addition.name)).toBe(true);
     }
-    console.log("AUTHORED_TARGET_NFL", JSON.stringify(roster.subjects.map((subject) => [subject.id, subject.name])));
+    console.log("AUTHORED_TARGET_NFL", JSON.stringify(roster.subjects.map((subject) => [subject.subjectId, subject.name])));
   });
 
   it("reconstructs the approved post-audit CFB roster instead of restoring 200", () => {
@@ -22,12 +22,12 @@ describe("Football Who Am I authored target roster", () => {
     expect(roster.players).toHaveLength(168);
     expect(roster.coaches).toHaveLength(20);
     expect(roster.subjects).toHaveLength(188);
-    for (const name of FOOTBALL_WHO_AM_I_AUTHORED_APPROVED_ADDITIONS.CFB) {
-      expect(roster.players.some((subject) => subject.name === name)).toBe(true);
+    for (const addition of FOOTBALL_WHO_AM_I_AUTHORED_APPROVED_ADDITIONS.CFB) {
+      expect(roster.players.some((subject) => subject.subjectId === addition.subjectId && subject.name === addition.name)).toBe(true);
     }
     for (const name of FOOTBALL_WHO_AM_I_AUTHORED_EXPLICIT_OUT.CFB) {
       expect(roster.players.some((subject) => subject.name === name)).toBe(false);
     }
-    console.log("AUTHORED_TARGET_CFB", JSON.stringify(roster.subjects.map((subject) => [subject.id, subject.name])));
+    console.log("AUTHORED_TARGET_CFB", JSON.stringify(roster.subjects.map((subject) => [subject.subjectId, subject.name])));
   });
 });
