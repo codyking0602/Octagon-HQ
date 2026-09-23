@@ -40,6 +40,8 @@ export interface FootballWhoAmIAuthoredIdentity {
  * - NFL identities are career-forward (roughly 70-80% pro / 20-30% origin)
  * - CFB identities are college-career-forward
  * - school/team/number/signature-path combinations stay late
+ * - coach ladders use team/program trajectory, role progression, signature decisions and championships
+ * - alternate coach scripts should materially split the head-coaching arc from origin/coordinator history
  * - runtime never synthesizes or recomputes authored clue facts
  */
 export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredIdentity[] = [
@@ -5036,6 +5038,333 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
               "heisman",
               "colorado"
             ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "andy-reid",
+    "name": "Andy Reid",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "deprioritized",
+    "sources": {
+      "chiefs": "https://www.chiefs.com/team/coaches-roster/andy-reid",
+      "byu": "https://byucougars.com/sports/football/roster/player/andy-reid",
+      "hire": "https://www.chiefs.com/news/chiefs-name-andy-reid-head-coach-9301869"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-andy-reid-a-1",
+            "text": "Before I became a head coach, I spent seven seasons on an NFL staff that reached the playoffs six times.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": ["chiefs"]
+          },
+          {
+            "id": "nfl-andy-reid-a-2",
+            "text": "My first NFL head-coaching job came in 1999 with a team that had gone 3-13 the previous season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          },
+          {
+            "id": "nfl-andy-reid-a-3",
+            "text": "I led that franchise to the playoffs nine times in 14 seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          },
+          {
+            "id": "nfl-andy-reid-a-4",
+            "text": "During that run, my teams won six division titles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          },
+          {
+            "id": "nfl-andy-reid-a-5",
+            "text": "I reached five conference championship games with that first franchise.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          },
+          {
+            "id": "nfl-andy-reid-a-6",
+            "text": "I took that first franchise to Super Bowl XXXIX.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          },
+          {
+            "id": "nfl-andy-reid-a-7",
+            "text": "I became head coach of a second franchise in 2013 and immediately produced an 11-5 playoff season after that team had gone 2-14.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["chiefs"]
+          },
+          {
+            "id": "nfl-andy-reid-a-8",
+            "text": "I became the first NFL head coach to record at least 100 wins with two different franchises.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["chiefs"]
+          },
+          {
+            "id": "nfl-andy-reid-a-9",
+            "text": "With my second franchise, I won three Super Bowls, including back-to-back championships.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": ["chiefs"]
+          },
+          {
+            "id": "nfl-andy-reid-a-10",
+            "text": "I am the longtime Kansas City head coach who previously spent 14 seasons leading Philadelphia.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-andy-reid-b-1",
+            "text": "I played offensive tackle in college after transferring from a junior college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": ["byu"]
+          },
+          {
+            "id": "nfl-andy-reid-b-2",
+            "text": "I began my coaching career as a graduate assistant at my alma mater under LaVell Edwards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": ["byu"]
+          },
+          {
+            "id": "nfl-andy-reid-b-3",
+            "text": "Before reaching the NFL, I coached offensive line at several colleges and also served as an offensive coordinator.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["chiefs"]
+          },
+          {
+            "id": "nfl-andy-reid-b-4",
+            "text": "My first NFL staff was in Green Bay under Mike Holmgren, beginning in 1992.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          },
+          {
+            "id": "nfl-andy-reid-b-5",
+            "text": "I later served as Brett Favre's quarterbacks coach during a season in which he won his third consecutive league MVP award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          },
+          {
+            "id": "nfl-andy-reid-b-6",
+            "text": "My first head-coaching tenure lasted 14 seasons and included six division championships.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          },
+          {
+            "id": "nfl-andy-reid-b-7",
+            "text": "After changing franchises, I became the first head coach to win 100 games with two different NFL teams.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["chiefs"]
+          },
+          {
+            "id": "nfl-andy-reid-b-8",
+            "text": "I coached in three consecutive Super Bowls with my second franchise following the 2022, 2023 and 2024 seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["chiefs"]
+          },
+          {
+            "id": "nfl-andy-reid-b-9",
+            "text": "Patrick Mahomes won multiple league MVP awards and three Super Bowl MVP awards with me as his head coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": ["chiefs"]
+          },
+          {
+            "id": "nfl-andy-reid-b-10",
+            "text": "I am the former Eagles head coach who won Super Bowls LIV, LVII and LVIII with Kansas City.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": ["chiefs", "hire"]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-nick-saban",
+    "name": "Nick Saban",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "deprioritized",
+    "sources": {
+      "bama": "https://rolltide.com/sports/football/roster/coaches/nick-saban/1436",
+      "lsu": "https://lsusports.net/news/2011/12/04/177163"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-nick-saban-a-1",
+            "text": "My first season as a college head coach ended 9-2 with a share of a conference championship.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-a-2",
+            "text": "I later spent five seasons leading a Big Ten program and took it to four bowl games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-a-3",
+            "text": "At my next college stop, I won an SEC championship in my second season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-a-4",
+            "text": "Two years later, that team went 13-1 and won a national championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["bama", "lsu"]
+          },
+          {
+            "id": "cfb-nick-saban-a-5",
+            "text": "After a two-season stint as an NFL head coach, I returned to the SEC.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-a-6",
+            "text": "My first season at that new SEC program finished 7-6; one year later, we completed a 12-0 regular season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-a-7",
+            "text": "In my third season there, we went 14-0 and won the national championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-a-8",
+            "text": "I eventually won six national championships at that school after already winning one at another SEC program.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["bama", "lsu"]
+          },
+          {
+            "id": "cfb-nick-saban-a-9",
+            "text": "I coached four Heisman Trophy winners at three different positions: running back, wide receiver and quarterback.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-a-10",
+            "text": "I am the Alabama coach who passed Bear Bryant by winning a seventh national title in the poll era.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-nick-saban-b-1",
+            "text": "I spent four seasons as an NFL defensive coordinator under Bill Belichick before returning to college head coaching.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-b-2",
+            "text": "During that NFL stint, the defense I coordinated improved to allowing the fewest points in the league in 1994.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-b-3",
+            "text": "My first college head-coaching job had already produced a 9-2 season and a MAC co-championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-b-4",
+            "text": "At LSU, I won the program's first outright SEC championship since 1986.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-b-5",
+            "text": "My 2003 LSU defense led the nation in both scoring defense and total defense while winning a national title.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": ["bama", "lsu"]
+          },
+          {
+            "id": "cfb-nick-saban-b-6",
+            "text": "At Alabama, my 2011 defense allowed only 8.2 points per game and won the national title with a 21-0 victory.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-b-7",
+            "text": "I became the first coach to win back-to-back BCS national championships.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-b-8",
+            "text": "An onside kick I called in the 2015 national championship game helped swing a victory over Clemson.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-b-9",
+            "text": "At Alabama, I won national championships for the 2009, 2011, 2012, 2015, 2017 and 2020 seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": ["bama"]
+          },
+          {
+            "id": "cfb-nick-saban-b-10",
+            "text": "With one national championship at LSU and six at Alabama, I finished with seven national titles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": ["bama", "lsu"]
           }
         ]
       }
