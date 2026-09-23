@@ -59043,6 +59043,1039 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-sammy-watkins",
+    "name": "Sammy Watkins",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "clemson": "https://clemsontigers.com/sports/football/roster/player/sammy-watkins",
+      "finalist": "https://clemsontigers.com/news/2013/11/25/watkins-finalist-for-biletnikoff-award"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-sammy-watkins-a-1",
+            "text": "I spent three college seasons contributing as a receiver, runner and kickoff returner.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-a-2",
+            "text": "I finished my career with 240 receptions for 3,391 yards and 27 receiving touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-a-3",
+            "text": "I also returned 60 kickoffs for 1,376 yards and a touchdown.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-a-4",
+            "text": "My career total reached 5,129 all-purpose yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-a-5",
+            "text": "I became a three-time first-team All-American during my college career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-a-6",
+            "text": "I earned first-team all-conference recognition twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-a-7",
+            "text": "By the end of my career, I ranked first in school history in both receptions and receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-a-8",
+            "text": "I also owned the school record for career 100-yard receiving games with 15.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-a-9",
+            "text": "I wore No. 2 while becoming Clemson's career leader in catches and receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-a-10",
+            "text": "I was Clemson's three-time first-team All-American receiver who finished with 3,391 receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-sammy-watkins-b-1",
+            "text": "My final college season produced more than 100 receptions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-b-2",
+            "text": "I finished that year with 101 catches for 1,464 yards and 12 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-b-3",
+            "text": "I set a school single-season record with eight 100-yard receiving games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-b-4",
+            "text": "I became one of three finalists for the Biletnikoff Award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-b-5",
+            "text": "Early that season, I scored on a 77-yard reception in a win over a top-five Georgia team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-b-6",
+            "text": "Later, I scored on receptions of 91 yards at Syracuse and 96 yards at Virginia.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-b-7",
+            "text": "In my final college game, I set school records with 16 catches and 227 receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-b-8",
+            "text": "That two-touchdown performance against Ohio State earned me Orange Bowl MVP honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-b-9",
+            "text": "My No. 2 Clemson jersey was at the center of a 227-yard Orange Bowl finale.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson"
+            ]
+          },
+          {
+            "id": "cfb-sammy-watkins-b-10",
+            "text": "I closed my Clemson career by setting Orange Bowl school records against Ohio State after a Biletnikoff-finalist season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemson",
+              "finalist"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jake-butt",
+    "name": "Jake Butt",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "mich": "https://mgoblue.com/sports/football/roster/jake-butt/1408",
+      "mackey": "https://mgoblue.com/news/2016/12/7/butt_named_recipient_of_mackey_award"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jake-butt-a-1",
+            "text": "I was a four-year letterman at tight end who appeared in 49 college games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-a-2",
+            "text": "I made 37 starts over the course of my career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-a-3",
+            "text": "I finished with 138 receptions, a school record for a tight end.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-a-4",
+            "text": "My 1,646 receiving yards also set the school career record for the position.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-a-5",
+            "text": "I became one of only six tight ends in program history to reach 1,000 career receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-a-6",
+            "text": "I earned first-team All-America recognition from Sports Illustrated in back-to-back seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-a-7",
+            "text": "My conference named me its tight end of the year twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-a-8",
+            "text": "As a senior, I won the John Mackey Award as the nation's top tight end.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "mich",
+              "mackey"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-a-9",
+            "text": "I wore No. 88 while setting Michigan's career tight-end records for catches and receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-a-10",
+            "text": "I was Michigan's No. 88 tight end who won the 2016 Mackey Award after a record-setting four-year career.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "mich",
+              "mackey"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jake-butt-b-1",
+            "text": "I made a reception in 36 of my final 40 college games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-b-2",
+            "text": "My 2015 season included 51 catches for 620 yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-b-3",
+            "text": "That year, I earned first-team all-conference honors and the Ozzie Newsome Tight End of the Year award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-b-4",
+            "text": "I reached 1,000 career receiving yards during a 2015 game against Penn State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-b-5",
+            "text": "My career-high receiving game was 102 yards against Rutgers.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-b-6",
+            "text": "I caught a career-high eight passes against Utah in 2015.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-b-7",
+            "text": "As a senior, I started all 13 games and was voted a co-captain.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-b-8",
+            "text": "That final season also brought the Senior CLASS Award and first-team honors from both Walter Camp and the AFCA.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-b-9",
+            "text": "At Michigan, I combined the No. 88 jersey with two conference tight-end-of-the-year awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "mich"
+            ]
+          },
+          {
+            "id": "cfb-jake-butt-b-10",
+            "text": "My senior season ended with both the John Mackey Award and Michigan's career tight-end receiving records.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "mich",
+              "mackey"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jermaine-gresham",
+    "name": "Jermaine Gresham",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "watch": "https://soonersports.com/news/2009/7/29/208369850",
+      "finalist": "https://soonersports.com/news/2008/11/24/208394369",
+      "weekly": "https://soonersports.com/news/2008/12/3/208397533",
+      "semi": "https://soonersports.com/news/2008/11/18/208401486"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jermaine-gresham-a-1",
+            "text": "I developed into a major receiving threat from the tight end position.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-a-2",
+            "text": "During my standout junior season, I averaged more than five knockdown blocks per game while also producing as a receiver.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-a-3",
+            "text": "That season ended with 66 catches for 950 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "watch"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-a-4",
+            "text": "I caught 14 touchdown passes, then a single-season school record for any player.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "watch"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-a-5",
+            "text": "My conference named me a first-team all-league tight end.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "watch",
+              "weekly"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-a-6",
+            "text": "I became one of three finalists for the John Mackey Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-a-7",
+            "text": "The Sporting News selected me as a first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "watch"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-a-8",
+            "text": "By the following preseason, I had 26 career touchdown receptions, five shy of the school record for any receiver.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "watch"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-a-9",
+            "text": "At Oklahoma, my 14 touchdown catches in 2008 set a school single-season record.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "watch"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-a-10",
+            "text": "I was the Sooners tight end who became a 2008 Mackey finalist and first-team All-American.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "watch",
+              "finalist"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jermaine-gresham-b-1",
+            "text": "Before my biggest season was complete, I had already become my school's career touchdown-receptions leader among tight ends.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "semi"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-b-2",
+            "text": "I reached 21 career touchdown catches at the position during the 2008 season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "semi"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-b-3",
+            "text": "Late that year, I earned the Mackey Award's weekly tight-end honor in consecutive weeks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "weekly"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-b-4",
+            "text": "I was the only player to win that weekly Mackey honor three times during the 2008 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "weekly"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-b-5",
+            "text": "Against a ranked Oklahoma State team, I caught nine passes for a career-high 158 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "weekly"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-b-6",
+            "text": "Two of those catches were touchdowns, including one covering 73 yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "weekly"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-b-7",
+            "text": "That road performance helped my team score 61 points in Bedlam.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "weekly"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-b-8",
+            "text": "My blocking and receiving were both central to an offense ranked among the nation's leaders in total offense.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-b-9",
+            "text": "I played tight end for Oklahoma during its 2008 run to the Big 12 championship and national title game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "weekly"
+            ]
+          },
+          {
+            "id": "cfb-jermaine-gresham-b-10",
+            "text": "My Oklahoma identity was built around a 14-touchdown junior season, a Mackey final and a school record for tight-end touchdown catches.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "watch",
+              "semi",
+              "finalist"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-kellen-winslow-ii",
+    "name": "Kellen Winslow II",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "roster": "https://miamihurricanes.com/sports/football/roster/season/2002-03/player/kellen-winslow",
+      "award": "https://miamihurricanes.com/news/2011/07/28/205547464-2",
+      "allamerica": "https://miamihurricanes.com/news/2011/07/28/205548328-2"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-kellen-winslow-ii-a-1",
+            "text": "I began college as a wide receiver before moving to tight end during my freshman season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-a-2",
+            "text": "I was one of four true freshmen who played for a national championship team in my first year.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-a-3",
+            "text": "My first season as the starting tight end produced 57 catches for 726 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-a-4",
+            "text": "I scored eight receiving touchdowns during that sophomore season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-a-5",
+            "text": "I led my team in receptions as a first-year starter.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-a-6",
+            "text": "Conference coaches named me first-team all-league at tight end.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-a-7",
+            "text": "In a major bowl game, I caught 11 passes for 122 yards and a touchdown.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-a-8",
+            "text": "That 11-catch performance established a school bowl record at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "roster"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-a-9",
+            "text": "I wore No. 81 at Miami while emerging as one of the nation's top tight ends.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roster",
+              "award"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-a-10",
+            "text": "I was Miami's No. 81 tight end who followed a 57-catch sophomore season with national honors as a junior.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "roster",
+              "award"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-kellen-winslow-ii-b-1",
+            "text": "As a junior, I led my team with 60 receptions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "award"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-b-2",
+            "text": "Those catches produced 605 receiving yards while I started 12 games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "award"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-b-3",
+            "text": "I broke my school's career receptions record for a tight end, finishing with 119.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "award"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-b-4",
+            "text": "I caught 10 passes for 104 yards against West Virginia in a game decided in the final seconds.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "award"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-b-5",
+            "text": "A week later, I made seven catches for 106 yards in a rain-soaked win at Florida State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "award"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-b-6",
+            "text": "I also made a special-teams impact by blocking a punt against Syracuse.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "award"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-b-7",
+            "text": "My junior year ended with consensus first-team All-America recognition.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "allamerica"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-b-8",
+            "text": "I became the first player in Miami history to win the John Mackey Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "award"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-b-9",
+            "text": "Miami fans knew me as the No. 81 tight end whose 2003 season ended with 119 career receptions at the position.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "award"
+            ]
+          },
+          {
+            "id": "cfb-kellen-winslow-ii-b-10",
+            "text": "I was Miami's 2003 consensus All-American and Mackey Award-winning tight end.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "award",
+              "allamerica"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-david-decastro",
+    "name": "David DeCastro",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://gostanford.com/news/2013/04/17/david-decastro-profile",
+      "hof": "https://gostanford.com/news/2025/8/5/2025-hall-of-fame-class-announced"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-david-decastro-a-1",
+            "text": "I redshirted my first college season before becoming a fixture at right guard.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-a-2",
+            "text": "I started every one of the 39 games I played over the next three seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-a-3",
+            "text": "My team went 31-8 during that three-year run.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-a-4",
+            "text": "The offensive line allowed only 24 sacks across those three seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-a-5",
+            "text": "I earned first-team all-conference honors in each of my final two seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-a-6",
+            "text": "As a junior, I became a unanimous first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-a-7",
+            "text": "I finished that season as an Outland Trophy finalist and a Lombardi Award semifinalist.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-a-8",
+            "text": "My run blocking helped an offense average 210.6 rushing yards per game in my final season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-a-9",
+            "text": "I started all 39 of my Stanford games at right guard.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-a-10",
+            "text": "I was Stanford's unanimous All-America right guard and 2011 Outland Trophy finalist.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-david-decastro-b-1",
+            "text": "My first season in the lineup came as a redshirt freshman.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-b-2",
+            "text": "I started all 13 games that year and earned Freshman All-America recognition.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-b-3",
+            "text": "That offensive line allowed a conference-low seven sacks for the season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-b-4",
+            "text": "The same unit helped set a school rushing record with 2,837 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-b-5",
+            "text": "Across my college career, I was credited with 316 knockdown blocks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-b-6",
+            "text": "My Hall of Fame profile also credits me with 68 touchdown-resulting blocks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-b-7",
+            "text": "I played on three bowl teams, including one that won the Orange Bowl 40-12.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-b-8",
+            "text": "My college career included a school-record era of rushing production while protecting Andrew Luck.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-b-9",
+            "text": "At Stanford, I became known as the right guard who never missed a start once I entered the lineup.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "cfb-david-decastro-b-10",
+            "text": "My Cardinal career culminated with unanimous All-America honors and an Outland Trophy finalist spot in 2011.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
