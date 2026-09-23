@@ -58007,6 +58007,1042 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-desean-jackson",
+    "name": "DeSean Jackson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "cal": "https://calbears.com/sports/mens-rowing/roster/coaches/desean-jackson/222",
+      "awards": "https://calbears.com/sports/2007/7/6/207750322"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-desean-jackson-a-1",
+            "text": "I was a college wide receiver who also became one of the country's most dangerous punt returners.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-a-2",
+            "text": "In one season, I led the nation by averaging 18.2 yards per punt return.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-a-3",
+            "text": "That year, I earned first-team all-conference honors at both wide receiver and punt returner.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cal",
+              "awards"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-a-4",
+            "text": "I returned four punts for touchdowns in that same season, setting school and conference records at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-a-5",
+            "text": "One of those punt-return scores covered 95 yards against Arizona.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-a-6",
+            "text": "I captured the inaugural Randy Moss Award as the nation's top return specialist.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "awards"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-a-7",
+            "text": "Multiple major selectors named me a first-team All-American as a punt returner.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "awards"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-a-8",
+            "text": "My breakout 2006 season also included more than 1,000 receiving yards and nine touchdown catches.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-a-9",
+            "text": "At California, I paired four punt-return touchdowns with first-team all-conference recognition at two roles in 2006.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cal",
+              "awards"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-a-10",
+            "text": "I was Cal's explosive receiver-returner who won the first Randy Moss Award and broke loose for a 95-yard punt-return touchdown.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cal",
+              "awards"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-desean-jackson-b-1",
+            "text": "My first collegiate reception went for a 31-yard touchdown.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-b-2",
+            "text": "In that same debut, my first college punt return became a 49-yard touchdown.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-b-3",
+            "text": "As a freshman, I led my team with 38 catches, 601 receiving yards and seven touchdown receptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-b-4",
+            "text": "I closed that freshman season with six catches for 130 yards and two touchdowns in a bowl game against BYU.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-b-5",
+            "text": "The next season, I caught three touchdown passes in a game against Minnesota.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-b-6",
+            "text": "Against Oregon, I scored on both a 65-yard punt return and a 36-yard reception.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-b-7",
+            "text": "I later caught five passes for 81 yards in a Holiday Bowl victory over Texas A&M.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-b-8",
+            "text": "My college career produced five punt-return touchdowns, which stood as school and conference records in my profile.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-b-9",
+            "text": "I starred for California as both a receiver and returner during the mid-2000s.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-desean-jackson-b-10",
+            "text": "My Cal résumé featured the inaugural Randy Moss Award, a 95-yard punt-return touchdown and first-team All-America return honors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cal",
+              "awards"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-dez-bryant",
+    "name": "Dez Bryant",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "osu": "https://okstate.com/news/2009/8/12/Bryant_Headlines_Biletnikoff_Watch_List",
+      "afca": "https://okstate.com/news/2008/12/4/Dez_Bryant_Named_To_AFCA_All_America_Squad",
+      "hof": "https://okstate.com/news/2025/6/2/cowboy-football-dez-bryant-added-to-college-football-hall-of-fame-ballot",
+      "draft": "https://okstate.com/news/2010/4/22/Bryant_Goes_To_Dallas_Cowboys"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-dez-bryant-a-1",
+            "text": "My signature college season came as a sophomore wide receiver.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-a-2",
+            "text": "That season, I caught 87 passes for 1,480 yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-a-3",
+            "text": "I added 19 touchdown receptions, the second-highest total in the nation that year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-a-4",
+            "text": "I averaged 113.9 receiving yards per game, ranking third nationally.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-a-5",
+            "text": "I finished as the runner-up for the Biletnikoff Award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osu",
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-a-6",
+            "text": "I became a consensus first-team All-American after that sophomore season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-a-7",
+            "text": "My conference also named me its Special Teams Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "afca",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-a-8",
+            "text": "I averaged nearly 18 yards per punt return and scored twice on punt returns during that breakout year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "afca",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-a-9",
+            "text": "At Oklahoma State, my 2008 season paired 1,480 receiving yards with 19 touchdown catches.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-a-10",
+            "text": "I was the Oklahoma State receiver who became a consensus All-American and Biletnikoff runner-up in 2008.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osu",
+              "draft"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-dez-bryant-b-1",
+            "text": "I made a major impact as both a receiver and punt returner in college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-b-2",
+            "text": "My career punt-return average was 19.6 yards, with three touchdowns on 22 returns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-b-3",
+            "text": "I produced a 236-yard receiving game against Houston during my sophomore season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "afca"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-b-4",
+            "text": "Later that year, I caught 11 passes for 212 yards and two touchdowns against Baylor.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "afca"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-b-5",
+            "text": "My junior season began with two touchdown catches in a win over a ranked Georgia team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-b-6",
+            "text": "Through three games that junior year, I had 17 catches for 323 yards and four touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-b-7",
+            "text": "My college career totaled 147 receptions for 2,425 yards and 29 receiving touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-b-8",
+            "text": "I posted nine career 100-yard receiving games despite playing only 28 college games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-b-9",
+            "text": "I wore Oklahoma State orange and became one of the program's most decorated receivers of the late 2000s.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-dez-bryant-b-10",
+            "text": "My college identity is the Oklahoma State star whose 2008 season produced consensus All-America honors, 19 receiving touchdowns and elite punt-return production.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "osu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jordan-shipley",
+    "name": "Jordan Shipley",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "texas": "https://texaslonghorns.com/sports/football/roster/jordan-shipley/3412",
+      "biletnikoff": "https://texaslonghorns.com/news/2009/11/23/112309aad_273"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jordan-shipley-a-1",
+            "text": "Injuries kept me off the field for each of my first two planned college seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-a-2",
+            "text": "A medical hardship eventually helped turn my college career into a six-year stay.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-a-3",
+            "text": "I finished as my program's career leader with 248 receptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-a-4",
+            "text": "I also ended my career with 3,191 receiving yards and 33 touchdown catches.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-a-5",
+            "text": "As a senior, I set school single-season records with 116 catches and 1,485 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-a-6",
+            "text": "That final season made me a consensus first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-a-7",
+            "text": "I also became the first player from my school to reach the Biletnikoff Award final.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "biletnikoff"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-a-8",
+            "text": "My senior year included 13 receiving touchdowns and seven 100-yard receiving games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-a-9",
+            "text": "I wore No. 8 while becoming Texas' all-time receptions leader.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-a-10",
+            "text": "I was the Texas receiver who caught 116 passes for 1,485 yards on the 2009 team that reached the BCS Championship Game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jordan-shipley-b-1",
+            "text": "Besides playing receiver, I served as a holder and returned both punts and kickoffs.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-b-2",
+            "text": "I became the first player in school history to score by reception, kickoff return and punt return in the same season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-b-3",
+            "text": "I once set a school single-game record with 15 receptions against Oklahoma State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-b-4",
+            "text": "I opened one season with a touchdown catch in eight consecutive games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-b-5",
+            "text": "A 2009 game against UCF produced 11 catches for 273 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-b-6",
+            "text": "I returned two punts for touchdowns during my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-b-7",
+            "text": "In the national championship game, I caught 10 passes for 122 yards and two touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-b-8",
+            "text": "I ended my career with a reception in 31 consecutive games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-b-9",
+            "text": "At Texas, my connection with Colt McCoy produced 234 completions, the most productive quarterback-to-receiver pairing in school history at the time.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-jordan-shipley-b-10",
+            "text": "I was Texas' No. 8 receiver, a 2009 Biletnikoff finalist and a two-time All-American.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas",
+              "biletnikoff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-marqise-lee",
+    "name": "Marqise Lee",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "usc": "https://usctrojans.com/sports/track-and-field/roster/marqise-lee/3998",
+      "outlook": "https://usctrojans.com/news/2013/3/1/2013_usc_spring_football_outlook"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-marqise-lee-a-1",
+            "text": "I played wide receiver while also competing for my school in track and field.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-a-2",
+            "text": "My biggest college season came during my sophomore year.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-a-3",
+            "text": "That year, I caught 118 passes for 1,721 yards and 14 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-a-4",
+            "text": "Both my reception total and receiving-yardage total set conference single-season records.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-a-5",
+            "text": "I accumulated 2,683 all-purpose yards in that same season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-a-6",
+            "text": "I became a unanimous first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc",
+              "outlook"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-a-7",
+            "text": "I won the Biletnikoff Award as the nation's top receiver.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc",
+              "outlook"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-a-8",
+            "text": "My conference named me its Offensive Player of the Year, and I finished fourth in Heisman voting.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "outlook"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-a-9",
+            "text": "I became USC's first Biletnikoff Award winner after that record-setting 2012 season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "outlook"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-a-10",
+            "text": "I wore No. 9 for USC when I broke the Pac-12 season records for catches and receiving yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc",
+              "outlook"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-marqise-lee-b-1",
+            "text": "I was a receiver who also handled kickoff-return duties at a high level.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-b-2",
+            "text": "In one season, I returned 30 kickoffs for 856 yards and a touchdown.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-b-3",
+            "text": "That same year, I produced 16 plays of at least 40 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-b-4",
+            "text": "More than half of my 118 receptions that season moved the chains for first downs.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-b-5",
+            "text": "I set a school single-game record with 345 receiving yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "outlook"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-b-6",
+            "text": "I averaged 206.4 all-purpose yards per game during my record-setting sophomore season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-b-7",
+            "text": "My 2012 touchdown plays averaged more than 40 yards in length.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "usc"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-b-8",
+            "text": "By the next spring, I owned or shared 19 school records, including five conference marks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "outlook"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-b-9",
+            "text": "At USC, I was the explosive No. 9 receiver and kickoff returner whose 2012 season rewrote the Pac-12 record book.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc",
+              "outlook"
+            ]
+          },
+          {
+            "id": "cfb-marqise-lee-b-10",
+            "text": "My USC career is most closely identified with a 118-catch, 1,721-yard Biletnikoff season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "usc",
+              "outlook"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-ryan-broyles",
+    "name": "Ryan Broyles",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "career": "https://soonersports.com/news/2011/12/8/208399284",
+      "finalist": "https://soonersports.com/news/2011/11/21/208365271",
+      "season": "https://soonersports.com/news/2011/1/6/208390240",
+      "debut": "https://soonersports.com/news/2008/9/6/208390298"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-ryan-broyles-a-1",
+            "text": "I redshirted before becoming an immediate receiving force when I finally made my college debut.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "debut"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-a-2",
+            "text": "That debut produced seven catches for 141 yards, both school freshman-debut records.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "debut"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-a-3",
+            "text": "I eventually posted at least 83 receptions in three consecutive seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-a-4",
+            "text": "My career ended with 349 receptions, an NCAA record at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "career",
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-a-5",
+            "text": "I also finished with 4,586 receiving yards, second in NCAA history at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "career",
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-a-6",
+            "text": "My 45 career receiving touchdowns set a Big 12 record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-a-7",
+            "text": "I became a Biletnikoff Award finalist in back-to-back seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-a-8",
+            "text": "I earned consensus All-America recognition in both 2010 and 2011.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-a-9",
+            "text": "At Oklahoma, I set the NCAA career receptions record and the Big 12 career marks for receiving yards and touchdown catches.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-a-10",
+            "text": "I was the Sooners receiver whose college career ended with 349 catches, 4,586 yards and 45 receiving touchdowns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-ryan-broyles-b-1",
+            "text": "My junior season became one of the busiest receiving seasons in college football history.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "season"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-b-2",
+            "text": "That year, I caught 131 passes for 1,622 yards and 14 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "season"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-b-3",
+            "text": "I led the nation with 9.4 receptions per game during that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "season"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-b-4",
+            "text": "By then, I had set school records for receptions, receiving yards and receiving touchdowns across multiple categories.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "season"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-b-5",
+            "text": "I returned for my senior season instead of leaving early for the draft.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "season"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-b-6",
+            "text": "In nine senior-year games, I caught 83 passes for 1,157 yards and 10 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "finalist"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-b-7",
+            "text": "I topped 100 receiving yards in seven of those nine games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-b-8",
+            "text": "At Kansas, a 57-yard touchdown catch made me the NCAA career receptions leader.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-b-9",
+            "text": "My final college game came against Texas A&M, when a knee injury ended my senior season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          },
+          {
+            "id": "cfb-ryan-broyles-b-10",
+            "text": "I was Oklahoma's Norman-raised receiver who became a two-time consensus All-American and the NCAA career receptions record holder.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "career"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
