@@ -45048,6 +45048,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "sources": {
       "nfl-retire": "https://www.nfl.com/news/alex-smith-retires-16-year-career-49ers-chiefs-washington",
       "chiefs-2017": "https://www.chiefs.com/news/alex-smith-is-back-in-the-pro-bowl-after-a-career-season-20307719",
+      "chiefs-offense": "https://www.chiefs.com/news/by-the-numbers-chiefs-offense-in-2017-20359649",
       "sf-2012": "https://www.49ers.com/news/49ers-sign-qb-smith-to-3-year-deal-7080194",
       "washington-recovery": "https://www.commanders.com/news/espn-documentary-alex-smith-how-to-watch-redskins-project-11",
       "nfl-stats": "https://www.nfl.com/players/alex-smith/stats/career"
@@ -45225,7 +45226,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "chiefs-2017"
+              "chiefs-offense"
             ]
           },
           {
@@ -45582,7 +45583,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-bijan-robinson-b-1",
-            "text": "Before the NFL, I posted three 2,000-yard rushing seasons in high school and became one of the nation's top recruits.",
+            "text": "Before entering the NFL, I rushed for 3,410 yards and 33 touchdowns across three seasons at Texas.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -45728,12 +45729,12 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-amari-cooper-a-4",
-            "text": "I made the Pro Bowl in each of my first two NFL seasons.",
+            "text": "I made the Pro Bowl as a rookie and eventually grew that total to five career selections.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "bills-trade",
-              "nfl-stats"
+              "raiders-rookie",
+              "bills-trade"
             ]
           },
           {
@@ -46329,6 +46330,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "earlyRotation": "normal",
     "sources": {
       "ravens-retire": "https://www.baltimoreravens.com/news/press-release-marshal-yanda-retires",
+      "nfl-retire": "https://www.nfl.com/news/ravens-marshal-yanda-to-retire-after-13-seasons-0ap3000001105696",
       "ravens-draft": "https://www.baltimoreravens.com/team/history/all-time-drafts",
       "ravens-story": "https://www.baltimoreravens.com/news/marshal-yanda-decides-to-retire-after-13-seasons-eight-pro-bowls",
       "ravens-alltime": "https://www.baltimoreravens.com/news/revealing-the-ravens-all-time-25-team"
@@ -46363,8 +46365,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ravens-retire",
-              "ravens-story"
+              "nfl-retire",
+              "ravens-retire"
             ]
           },
           {
@@ -47155,7 +47157,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aqib-talib-b-10",
-            "text": "The big-play corner from the Broncos' No-Fly Zone finished with 10 career interception-return touchdowns, fourth-most in NFL history at the time of his retirement.",
+            "text": "The big-play corner from Denver's No-Fly Zone finished with 10 career interception-return touchdowns, a total the Broncos noted ranked fourth in NFL history.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
