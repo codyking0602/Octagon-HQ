@@ -8037,6 +8037,1258 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-michael-vick",
+    "name": "Michael Vick",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "vt": "https://hokiesports.com/news/2025/01/15/virginia-tech-football-vick-named-to-2025-college-football-hall-of-fame-class",
+      "heisman": "https://www.heisman.com/articles/notes-on-the-heisman-finalists/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-michael-vick-a-1",
+            "text": "I became a first-team All-American as a redshirt freshman quarterback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-a-2",
+            "text": "My first season as a starter ended with my team unbeaten through the regular season and playing for a national championship.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-a-3",
+            "text": "That season, I threw for 1,840 yards and 12 touchdowns while adding 585 rushing yards and eight scores.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-a-4",
+            "text": "I led the nation with a 180.4 passing-efficiency rating, then an NCAA freshman record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-a-5",
+            "text": "I finished third in the Heisman Trophy voting during that breakout season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-a-6",
+            "text": "I was named both Big East Offensive Player of the Year and Big East Rookie of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-a-7",
+            "text": "In the national championship game against Florida State, I accounted for 322 yards and two touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-a-8",
+            "text": "Across my two playing seasons in college, my teams went 22-2.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-a-9",
+            "text": "Virginia Tech later retired the No. 7 jersey I wore in Blacksburg.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-a-10",
+            "text": "After only two college playing seasons, Atlanta selected me first overall in the 2001 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vt",
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-michael-vick-b-1",
+            "text": "I played only two college seasons before giving up my remaining eligibility for the NFL Draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-b-2",
+            "text": "As a redshirt sophomore, I threw for 1,234 yards and eight touchdowns and rushed for 617 yards and eight more scores.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-b-3",
+            "text": "I closed my college career as the MVP of a Gator Bowl victory over Clemson.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-b-4",
+            "text": "I earned first-team all-conference honors one season and second-team honors the next.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-b-5",
+            "text": "My college career ended with 3,074 passing yards and 1,202 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-b-6",
+            "text": "My 12.0 yards per pass attempt in 1999 became a school single-season record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-b-7",
+            "text": "I also left with a school career record of 9.79 yards per pass attempt.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-b-8",
+            "text": "I was selected for the College Football Hall of Fame's 2025 class.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-b-9",
+            "text": "I was the No. 7 quarterback who became the face of Frank Beamer's Virginia Tech breakthrough.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-michael-vick-b-10",
+            "text": "I led the Hokies to their first national championship game before becoming the No. 1 pick in the 2001 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-tua-tagovailoa",
+    "name": "Tua Tagovailoa",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "bama": "https://rolltide.com/sports/football/roster/tua-tagovailoa/5472",
+      "title": "https://rolltide.com/news/2018/1/8/alabama-football-wins-2018-national-championship-in-overtime-thriller-against-georgia-26-23",
+      "heisman": "https://www.heisman.com/kyler-murray-named-2018-heisman-trophy-winner/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-tua-tagovailoa-a-1",
+            "text": "I arrived in college as a highly rated dual-threat quarterback from Hawai'i.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-a-2",
+            "text": "As a freshman, I spent the regular season as a reserve but still threw 11 touchdown passes in limited action.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-a-3",
+            "text": "I entered the national championship game at halftime with my team trailing 13-0.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-a-4",
+            "text": "From that point through overtime, I completed 14 passes for 166 yards and three touchdowns and added 27 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-a-5",
+            "text": "I was named the Offensive MVP of that national championship game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-a-6",
+            "text": "As a sophomore starter, I set Alabama single-season records with 3,966 passing yards and 43 passing touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-a-7",
+            "text": "That season I won both the Maxwell Award and Walter Camp Player of the Year and was named SEC Offensive Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-a-8",
+            "text": "I finished second in the Heisman Trophy voting to Kyler Murray.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-a-9",
+            "text": "I wore No. 13 at Alabama after coming from Ewa Beach, Hawai'i.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-a-10",
+            "text": "My freshman title run ended with a 41-yard overtime touchdown pass to DeVonta Smith on second-and-26.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bama",
+              "title"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-tua-tagovailoa-b-1",
+            "text": "I spent my first college season behind an established starter before taking over the job as a sophomore.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-b-2",
+            "text": "In my first season as the starter, I earned consensus All-America recognition and led the nation in passing efficiency.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-b-3",
+            "text": "I accounted for 48 touchdowns that season, 43 passing and five rushing.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-b-4",
+            "text": "In the playoff semifinal against Oklahoma, I completed 24 of 27 passes for 318 yards and four touchdowns and was named Orange Bowl Offensive MVP.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-b-5",
+            "text": "The next season, I became the first Alabama quarterback to throw for at least 400 yards and five touchdowns in the same game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-b-6",
+            "text": "I finished my college career as Alabama's record holder with 87 passing touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-b-7",
+            "text": "I also left as the program's career leader in touchdown responsibility with 96.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-b-8",
+            "text": "A season-ending injury at Mississippi State ended my junior year after I had thrown 33 touchdowns in nine games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-b-9",
+            "text": "My college career included a Maxwell Award, a Walter Camp Award and a national championship while wearing Alabama's No. 13.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-tua-tagovailoa-b-10",
+            "text": "I am the Alabama quarterback whose first national-title moment came after replacing Jalen Hurts and throwing the overtime winner to DeVonta Smith.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bama",
+              "title"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-kyler-murray",
+    "name": "Kyler Murray",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "ou": "https://soonersports.com/sports/football/roster/kyler-murray/3464",
+      "heisman": "https://www.heisman.com/heisman-winners/kyler-murray/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-kyler-murray-a-1",
+            "text": "I was an elite high-school football player who was also considered a major baseball prospect.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-a-2",
+            "text": "My first FBS season came at a different school, where I appeared in eight games and made three starts.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-a-3",
+            "text": "After transferring, I sat out a season before becoming a backup quarterback.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-a-4",
+            "text": "In 2017, I backed up the reigning Heisman Trophy winner and threw only 21 passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ou",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-a-5",
+            "text": "The next season, I became the starter and led my team to a conference championship and the College Football Playoff.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-a-6",
+            "text": "My completed 2018 season included 4,361 passing yards, 42 passing touchdowns, 1,001 rushing yards and 12 rushing scores.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-a-7",
+            "text": "I won the Davey O'Brien Award and Manning Award and was named AP Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-a-8",
+            "text": "I became the first player to win the Heisman the year after replacing another Heisman winner.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-a-9",
+            "text": "I wore No. 1 at Oklahoma after beginning my college career at Texas A&M.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ou",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-a-10",
+            "text": "I followed Baker Mayfield to give Oklahoma consecutive Heisman winners before becoming the first overall NFL Draft pick.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-kyler-murray-b-1",
+            "text": "I was named a state Gatorade Player of the Year in football while also starring on the baseball diamond.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-b-2",
+            "text": "As a true freshman at my first college, I threw for 686 yards and five touchdowns and rushed for 335 yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-b-3",
+            "text": "After a transfer and a year out, my first season at my new school produced only 359 passing yards as a reserve.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ou"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-b-4",
+            "text": "Through the 2018 Heisman voting period, I had 4,053 passing yards, 40 passing touchdowns, 892 rushing yards and 11 rushing scores.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-b-5",
+            "text": "My 205.7 passing-efficiency rating at that point set a Heisman-era record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-b-6",
+            "text": "I became my school's seventh Heisman Trophy winner.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-b-7",
+            "text": "My win made my school only the fourth program to produce Heisman winners in consecutive seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-b-8",
+            "text": "I received 2,167 Heisman voting points, finishing ahead of Tua Tagovailoa and Dwayne Haskins.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-b-9",
+            "text": "I led Oklahoma to the 2018 Big 12 title and a College Football Playoff berth.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-kyler-murray-b-10",
+            "text": "I am the No. 1 Oklahoma quarterback who transferred from Texas A&M and succeeded Baker Mayfield.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ou",
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-marcus-mariota",
+    "name": "Marcus Mariota",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "oregon": "https://goducks.com/sports/football/roster/marcus-mariota/4962",
+      "heisman": "https://www.heisman.com/heisman-winners/marcus-mariota/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-marcus-mariota-a-1",
+            "text": "I did not play during my first college season before becoming a three-year starting quarterback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-a-2",
+            "text": "My teams won 36 games during my three seasons as the starter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-a-3",
+            "text": "In 2013, I threw for 3,665 yards and 31 touchdowns with only four interceptions while rushing for 715 yards and nine scores.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-a-4",
+            "text": "That season, I became the first player in school history to exceed 4,000 yards of total offense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-a-5",
+            "text": "I also set a conference record with a streak of 353 consecutive pass attempts without an interception.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-a-6",
+            "text": "In my final season, I threw for 4,454 yards and 42 touchdowns and led the nation in passing efficiency.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-a-7",
+            "text": "I accounted for a conference-record 58 touchdowns during that final season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-a-8",
+            "text": "That year I won the Maxwell, Walter Camp, Davey O'Brien and Johnny Unitas Golden Arm awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-a-9",
+            "text": "I became Oregon's first Heisman Trophy winner and the first Heisman winner born in Hawai'i.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-a-10",
+            "text": "Wearing No. 8, I led Oregon to a Rose Bowl playoff win over Florida State and then the inaugural College Football Playoff Championship Game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-marcus-mariota-b-1",
+            "text": "I was a dual-threat quarterback who recorded five 100-yard rushing games during my college career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-b-2",
+            "text": "I produced multiple interception-free passing streaks of at least 200 attempts.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-b-3",
+            "text": "I finished college with 10,796 passing yards and 2,237 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-b-4",
+            "text": "My career totals included school records of 105 touchdown passes and 136 total touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-b-5",
+            "text": "I became the first quarterback in Pac-12 history to earn first-team all-conference honors three times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-b-6",
+            "text": "In my final conference championship game, I threw for 367 yards and ran for three touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-b-7",
+            "text": "My playoff semifinal win included 338 passing yards and two touchdowns against Florida State.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-b-8",
+            "text": "I won the Heisman with 2,534 voting points, more than twice the total of the runner-up.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-b-9",
+            "text": "I was Oregon's No. 8 quarterback and the first Heisman winner in program history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-marcus-mariota-b-10",
+            "text": "I am the Honolulu native who became the first player born in Hawai'i to win the Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "oregon",
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-robert-griffin-iii",
+    "name": "Robert Griffin III",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "baylor": "https://baylorbears.com/news/2021/2/4/football-rg3-2008-11-gave-baylor-a-spot-in-the-heisman-room",
+      "records": "https://baylorbears.com/news/2012/1/11/Heisman_Trophy_Winner_RG3_Declares_for_NFL_Draft",
+      "manning": "https://baylorbears.com/news/2012/1/24/griffin_iii_wins_2012_manning_award",
+      "heisman": "https://www.heisman.com/heisman-winners/robert-griffin-iii/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-robert-griffin-iii-a-1",
+            "text": "I was born in Japan to two U.S. Army sergeants and later became an elite high-school hurdler in Texas.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-a-2",
+            "text": "Before my first college football season, I earned track All-America honors in the 400-meter hurdles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-a-3",
+            "text": "As a freshman quarterback, I threw for 2,091 yards and rushed for 843 yards with 13 rushing touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-a-4",
+            "text": "A knee injury cost me most of my second football season, but I returned the next year to throw for 3,501 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-a-5",
+            "text": "In 2011, I finished with 4,293 passing yards and 37 passing touchdowns plus 699 rushing yards and 10 rushing scores.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "baylor",
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-a-6",
+            "text": "That season, I led my program to 10 wins for only the second time in school history and the first time since 1980.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "manning"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-a-7",
+            "text": "I threw for 479 yards and the winning touchdown with eight seconds left in my school's first-ever victory over Oklahoma.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "manning"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-a-8",
+            "text": "I earned consensus All-America honors and won both the Davey O'Brien and Manning awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "baylor",
+              "manning"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-a-9",
+            "text": "I became the first Baylor player to win the Heisman Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "baylor",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-a-10",
+            "text": "I was Baylor's No. 10 dual-threat quarterback before becoming the second overall pick in the 2012 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-robert-griffin-iii-b-1",
+            "text": "One of the college coaches who insisted on keeping me at quarterback was Art Briles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-b-2",
+            "text": "I enrolled early and won a Big 12 title in the 400-meter hurdles before ever taking a college football snap.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-b-3",
+            "text": "My 2011 season produced 4,992 yards of total offense and 47 touchdowns responsible for.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-b-4",
+            "text": "I finished my college career with 10,366 passing yards and 2,254 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-b-5",
+            "text": "Across three full seasons, I set or tied 54 school records.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-b-6",
+            "text": "During my Heisman season, my 192.31 regular-season passing-efficiency mark was the best in Heisman history at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-b-7",
+            "text": "I won the Heisman voting with 1,687 points, finishing ahead of Andrew Luck.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-b-8",
+            "text": "My final college team won the Alamo Bowl and finished 10-3, giving the program its first bowl victory since 1992.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "manning"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-b-9",
+            "text": "That Heisman was the first ever won by a Baylor player.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-robert-griffin-iii-b-10",
+            "text": "I left Baylor as its record-setting No. 10 quarterback and was selected second overall in the following NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jameis-winston",
+    "name": "Jameis Winston",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "fsu": "https://seminoles.com/sports/football/roster/jameis-winston/3109",
+      "heisman": "https://www.heisman.com/heisman-winners/jameis-winston/",
+      "jersey": "https://seminoles.com/news/2023/11/16/football-florida-state-to-honor-jameis-winston-with-jersey-retirement",
+      "baseball": "https://seminoles.com/sports/baseball/roster/amara-kamara/4815"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jameis-winston-a-1",
+            "text": "I redshirted my first college football season before taking over as the starting quarterback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-a-2",
+            "text": "In my first career start, I completed 25 of 27 passes for 356 yards and four touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-a-3",
+            "text": "I became the first freshman ever named ACC Player of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-a-4",
+            "text": "My first season as the starter ended with 4,057 passing yards and 40 touchdown passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-a-5",
+            "text": "I became the first freshman quarterback to lead a team to 14 victories in a season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-a-6",
+            "text": "At 19 years and 342 days old, I became the youngest Heisman Trophy winner at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-a-7",
+            "text": "My 40 touchdown passes set conference, school and national freshman records.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-a-8",
+            "text": "I led a 14-0 national championship season and was named Offensive MVP of the title game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-a-9",
+            "text": "I became Florida State's third Heisman winner after Charlie Ward and Chris Weinke.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-a-10",
+            "text": "My championship season ended with an 80-yard winning drive and a touchdown pass to Kelvin Benjamin with 13 seconds left against Auburn.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jameis-winston-b-1",
+            "text": "I was a two-sport college athlete, playing football while also pitching and playing the outfield in baseball.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "baseball",
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-b-2",
+            "text": "During my second baseball season, I served as a closer and posted a 1.08 ERA with seven saves.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "baseball"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-b-3",
+            "text": "In my second football season as a starter, my team completed another undefeated regular season and reached the first College Football Playoff.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-b-4",
+            "text": "That year, I engineered four game-winning fourth-quarter drives, the most in the nation.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-b-5",
+            "text": "I won my first 26 college starts and finished my football career with a 26-1 record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "jersey"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-b-6",
+            "text": "Across two seasons as a starter, I passed for 7,964 yards and 65 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "jersey"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-b-7",
+            "text": "My 163.28 career passing-efficiency mark became both a school and conference record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "jersey"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-b-8",
+            "text": "My college honors included the Heisman, Davey O'Brien and Manning awards along with ACC Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-b-9",
+            "text": "Florida State later retired the No. 5 jersey I wore during my two-year run as its starter.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "jersey"
+            ]
+          },
+          {
+            "id": "cfb-jameis-winston-b-10",
+            "text": "I led Florida State to the 2013 national championship and returned the next season to take the Seminoles to the College Football Playoff.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsu",
+              "jersey"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
