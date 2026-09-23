@@ -6984,7 +6984,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-parcells-b-3",
-            "text": "I went directly from my playing days into a coaching career.",
+            "text": "I immediately chose coaching rather than pursuing a professional playing career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6994,7 +6994,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-parcells-b-4",
-            "text": "I spent years climbing the coaching ladder before receiving my first NFL head-coaching job.",
+            "text": "Nearly two decades passed between that draft and my first NFL head-coaching season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
