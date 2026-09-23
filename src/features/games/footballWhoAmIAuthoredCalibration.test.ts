@@ -118,7 +118,7 @@ describe("Football Who Am I authored calibration", () => {
 
       expect(a).toHaveLength(10);
       expect(b).toHaveLength(10);
-      expect(new Set(a.filter((text) => b.includes(text)))).toHaveLength(0);
+      expect(a.filter((text) => b.includes(text))).toHaveLength(0);
       expect(a.slice(0, 5)).not.toEqual(b.slice(0, 5));
       expect(a.slice(8)).not.toEqual(b.slice(8));
     },
