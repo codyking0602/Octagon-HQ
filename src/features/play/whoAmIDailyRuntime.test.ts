@@ -44,8 +44,8 @@ function rows(value: unknown) {
 
 describe("official Who Am I Daily runtime", () => {
   it("builds deterministic UFC and Football boards without casual recent-subject exclusions", () => {
-    const ufc = buildOfficialDailySetup("who_am_i", "2026-10-01", "test-who-am-i-v1");
-    const ufcAgain = buildOfficialDailySetup("who_am_i", "2026-10-01", "test-who-am-i-v1");
+    const ufc = buildOfficialDailySetup("who_am_i", "2026-09-20", "test-who-am-i-v1");
+    const ufcAgain = buildOfficialDailySetup("who_am_i", "2026-09-20", "test-who-am-i-v1");
     expect(ufcAgain).toEqual(ufc);
     expect(ufc.contentVersion).toBe("who-am-i-daily-v2");
     expect(ufc.publicSetup.league).toBe("UFC");
@@ -67,7 +67,7 @@ describe("official Who Am I Daily runtime", () => {
   });
 
   it("matches casual natural scoring, including the ten-point wrong-guess penalty", () => {
-    const setup = buildOfficialDailySetup("who_am_i", "2026-10-02", "test-who-am-i-v1");
+    const setup = buildOfficialDailySetup("who_am_i", "2026-09-21", "test-who-am-i-v1");
     let context = contextFor("who_am_i", setup);
     const hiddenId = String(setup.privateGradingEvidence.hidden_subject_id);
     const wrongId = (setup.privateGradingEvidence.subject_ids as string[]).find((id) => id !== hiddenId)!;
@@ -106,7 +106,7 @@ describe("official Who Am I Daily runtime", () => {
   });
 
   it("uses the same deterministic five-name Recovery Board and 45/30/0 scoring", () => {
-    const setup = buildOfficialDailySetup("who_am_i", "2026-10-03", "test-who-am-i-v1");
+    const setup = buildOfficialDailySetup("who_am_i", "2026-09-22", "test-who-am-i-v1");
     let context = contextFor("who_am_i", setup);
     const hiddenId = String(setup.privateGradingEvidence.hidden_subject_id);
 
