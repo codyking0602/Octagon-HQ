@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { assertFamilyFeudPack } from "../games/familyFeudEngine";
+import {
+  assertFamilyFeudPack,
+  matchFamilyFeudAnswer,
+} from "../games/familyFeudEngine";
 import { CFB_SPORTS_FEUD_MAIN } from "./cfbSportsFeudMain";
 import { CFB_SPORTS_FEUD_FAST_1 } from "./cfbSportsFeudFast1";
 import { CFB_SPORTS_FEUD_FAST_2 } from "./cfbSportsFeudFast2";
@@ -100,6 +103,54 @@ describe("Sports Feud authored Daily banks", () => {
     expect(footballSportsFeudDomainForDay("2026-10-08")).toBe("cfb");
     expect(footballSportsFeudDomainForDay("2026-10-15")).toBe("nfl");
     expect(footballSportsFeudDomainForDay("2026-10-19")).toBe("cfb");
+  });
+
+  it("keeps Fast Money prompts precise while accepting natural shorthand", () => {
+    const ufc = buildSportsFeudPack("ufc", "2026-09-23");
+    const football = buildSportsFeudPack("cfb", "2026-09-23");
+
+    const ufcQuestion = (id: string) => {
+      const question = ufc.fastMoney.find((row) => row.id === id);
+      expect(question).toBeDefined();
+      return question!;
+    };
+    const cfbQuestion = (id: string) => {
+      const question = football.fastMoney.find((row) => row.id === id);
+      expect(question).toBeDefined();
+      return question!;
+    };
+    const matchedName = (
+      pack: ReturnType<typeof buildSportsFeudPack>,
+      question: ReturnType<typeof ufcQuestion>,
+      input: string,
+    ) => {
+      const match = matchFamilyFeudAnswer(pack, question, input);
+      expect(match.status).toBe("matched");
+      if (match.status !== "matched") return null;
+      return pack.entities.find((entity) => entity.id === match.entityId)?.displayName ?? null;
+    };
+
+    expect(matchedName(ufc, ufcQuestion("ufc-fast3-10-1"), "New York"))
+      .toBe("Madison Square Garden");
+    expect(matchedName(ufc, ufcQuestion("ufc-fast3-10-1"), "MSG"))
+      .toBe("Madison Square Garden");
+    expect(matchedName(ufc, ufcQuestion("ufc-fast4-09-3"), "faint"))
+      .toBe("Fainting");
+
+    const hallOfFame = ufcQuestion("ufc-fast3-07-1");
+    expect(hallOfFame.prompt.toLowerCase()).toContain("career");
+
+    expect(CFB_FAST.some((question) =>
+      question.prompt === "Name a tradition that makes a home game feel unique."
+    )).toBe(false);
+
+    const award = cfbQuestion("cfb-fast3-08-3");
+    expect(award.prompt.toLowerCase()).toContain("award");
+    expect(matchedName(football, award, "Heisman"))
+      .toBe("Heisman Trophy");
+
+    expect(matchedName(football, cfbQuestion("cfb-fast4-07-5"), "blitz"))
+      .toBe("Blitz");
   });
 
   it("never mixes question identities across the three source banks", () => {
