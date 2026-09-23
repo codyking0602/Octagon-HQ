@@ -5678,6 +5678,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       "freshman": "https://soonersports.com/news/2005/6/21/208387985",
       "heismanRun": "https://soonersports.com/news/2004/12/9/208368510",
       "record": "https://soonersports.com/news/2005/1/25/208391750?path=football",
+      "shoulder": "https://soonersports.com/news/2005/1/18/208406076",
       "career": "https://soonersports.com/news/2007/4/28/208388438",
       "voting": "https://www.heisman.com/voting-records/"
     },
@@ -5792,7 +5793,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "record"
+              "shoulder"
             ]
           },
           {
