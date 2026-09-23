@@ -36,10 +36,13 @@ describe("Football Who Am I authored scripts", () => {
     expect(footballWhoAmIAuthoredIdentities).toHaveLength(21);
   });
 
-  it("keeps league/name ownership unique", () => {
+  it("keeps league/name and canonical stage ownership unique", () => {
     const keys = footballWhoAmIAuthoredIdentities.map((identity) => `${identity.league}:${identity.name}`);
+    const subjectKeys = footballWhoAmIAuthoredIdentities.map((identity) => `${identity.league}:${identity.subjectId}`);
     expect(new Set(keys).size).toBe(keys.length);
+    expect(new Set(subjectKeys).size).toBe(subjectKeys.length);
     for (const identity of footballWhoAmIAuthoredIdentities) {
+      expect(identity.subjectId).toMatch(identity.league === "CFB" ? /^cfb-[a-z0-9-]+$/ : /^[a-z0-9-]+$/);
       expect(getFootballWhoAmIAuthoredIdentity(identity.league, identity.name)).toBe(identity);
     }
   });
