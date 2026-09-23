@@ -1088,7 +1088,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kamaru-usman-b-10",
-            "text": "The wrestler once called “Marty” became UFC champion Kamaru Usman, “The Nigerian Nightmare.”",
+            "text": "The wrestler once known as “Marty” became a dominant UFC champion nicknamed “The Nigerian Nightmare.”",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1119,43 +1119,35 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-daniel-cormier-a-1",
-            "text": "I joined the UFC in 2013 after beginning my professional career elsewhere.",
+            "text": "I was an all-state high-school linebacker as well as a standout wrestler before choosing wrestling as my main competitive path.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-daniel-cormier-a-2",
-            "text": "My UFC debut ended with a win by decision.",
+            "text": "My amateur career eventually took me to the highest levels of American wrestling before I ever competed in MMA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-daniel-cormier-a-3",
-            "text": "My UFC career included appearances at both Light Heavyweight and Heavyweight.",
+            "text": "I did not begin professional mixed martial arts until after that long wrestling career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1",
+              "profile"
             ]
           },
           {
             "id": "ufc-daniel-cormier-a-4",
-            "text": "I reached my first UFC title opportunity in 2015.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-daniel-cormier-a-5",
-            "text": "I beat Patrick Cummins by stoppage in 2014.",
+            "text": "I arrived in the UFC in 2013 as an unbeaten heavyweight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1164,8 +1156,17 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
             ]
           },
           {
+            "id": "ufc-daniel-cormier-a-5",
+            "text": "As captain of the 2008 U.S. Olympic wrestling team, I was hospitalized during a severe weight cut and could not compete.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "identity1"
+            ]
+          },
+          {
             "id": "ufc-daniel-cormier-a-6",
-            "text": "I beat Frank Mir by decision in 2013.",
+            "text": "I later dropped from heavyweight to light heavyweight and quickly reached a UFC title fight.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1175,7 +1176,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-a-7",
-            "text": "I beat Anderson Silva by decision in 2016.",
+            "text": "My first UFC championship attempt came against Jon Jones.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1185,7 +1186,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-a-8",
-            "text": "I beat Alexander Gustafsson by decision in 2015.",
+            "text": "I then submitted Anthony Johnson to win the vacant light-heavyweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1195,20 +1196,21 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-a-9",
-            "text": "I won UFC championships in more than one weight class.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-daniel-cormier-a-10",
-            "text": "My UFC résumé includes a matchup against Stipe Miocic in 2018.",
+            "text": "A knockout of Stipe Miocic made me a UFC champion in a second weight class.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-daniel-cormier-a-10",
+            "text": "I became one of the promotion’s best-known two-division champions before moving into broadcasting and the UFC Hall of Fame.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity5",
               "profile"
             ]
           }
@@ -1219,25 +1221,26 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-daniel-cormier-b-1",
-            "text": "My UFC career began in 2013.",
+            "text": "Wrestling remained part of my life outside the cage, including work as a high-school coach.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-daniel-cormier-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "I entered the UFC with an established heavyweight résumé rather than as a young prospect.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-daniel-cormier-b-3",
-            "text": "One stretch of my UFC career reached 4 consecutive victories.",
+            "text": "My first several UFC wins came across heavyweight and light heavyweight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1246,16 +1249,17 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-b-4",
-            "text": "My first UFC title opportunity came after 4 earlier UFC appearances.",
+            "text": "At light heavyweight, I beat Dan Henderson before receiving my first UFC title opportunity.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-daniel-cormier-b-5",
-            "text": "I beat Dan Henderson by submission in 2014.",
+            "text": "After losing to Jon Jones, I won the vacant belt by submitting Anthony Johnson.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1265,7 +1269,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-b-6",
-            "text": "I beat Roy Nelson by decision in 2013.",
+            "text": "I defended that championship against Alexander Gustafsson and later beat Johnson a second time.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1275,7 +1279,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-b-7",
-            "text": "I beat Anthony Johnson by submission in 2015.",
+            "text": "I then returned to heavyweight and knocked out Stipe Miocic for another championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1285,7 +1289,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-b-8",
-            "text": "I beat Anthony Johnson by submission in 2017.",
+            "text": "That victory made me a simultaneous UFC champion in two weight classes.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1295,20 +1299,21 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-b-9",
-            "text": "My UFC résumé includes championship victories in two weight classes.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-daniel-cormier-b-10",
-            "text": "I also shared the Octagon with Jon Jones in 2015.",
+            "text": "My heavyweight title story became a trilogy with Miocic.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-daniel-cormier-b-10",
+            "text": "Known throughout the sport by my initials, I later became a UFC broadcaster and Hall of Famer.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity5",
               "profile"
             ]
           }
@@ -1335,7 +1340,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-charles-oliveira-a-1",
-            "text": "At about eight years old, I was diagnosed with rheumatoid arthritis and a heart murmur and was initially told to avoid vigorous activity.",
+            "text": "As a child, I was diagnosed with serious health problems and was initially told to avoid vigorous activity.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1344,34 +1349,35 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-a-2",
-            "text": "My UFC debut ended with a win by submission.",
+            "text": "I nevertheless became obsessed with Brazilian jiu-jitsu after being introduced to it around age twelve.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-charles-oliveira-a-3",
-            "text": "My UFC career included appearances at both Lightweight and Featherweight.",
+            "text": "When I needed money for an early MMA opportunity in the United States, people in my community organized a raffle to help fund the trip.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-charles-oliveira-a-4",
-            "text": "I reached my first UFC title opportunity in 2021.",
+            "text": "I entered the UFC in 2010 and spent parts of my long career in two different weight classes.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-charles-oliveira-a-5",
-            "text": "I beat Darren Elkins by submission in 2010.",
+            "text": "My UFC path included plenty of setbacks before a long winning streak completely changed my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1381,7 +1387,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-a-6",
-            "text": "I beat Eric Wisely by submission in 2012.",
+            "text": "That resurgence was powered by the submission game that eventually produced record-setting UFC finish totals.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1391,7 +1397,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-a-7",
-            "text": "I beat Andy Ogle by submission in 2014.",
+            "text": "I stopped Michael Chandler to win the vacant lightweight championship in 2021.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1401,7 +1407,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-a-8",
-            "text": "I beat Will Brooks by submission in 2017.",
+            "text": "I followed that title win with submissions of Dustin Poirier and Justin Gaethje.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1411,21 +1417,21 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-a-9",
-            "text": "I won UFC gold at Lightweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-charles-oliveira-a-10",
-            "text": "My UFC résumé includes a matchup against Islam Makhachev in 2022.",
+            "text": "Islam Makhachev ended that championship run in a 2022 title fight.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
               "profile"
+            ]
+          },
+          {
+            "id": "ufc-charles-oliveira-a-10",
+            "text": "My nickname, “Do Bronx,” reflects the neighborhood identity I carried with me from where I grew up.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity1"
             ]
           }
         ]
@@ -1435,34 +1441,35 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-charles-oliveira-b-1",
-            "text": "My UFC career began in 2010.",
+            "text": "My family turned fight week into a shared ritual, even fasting with me while I made weight.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-charles-oliveira-b-2",
-            "text": "I won 2 of my first three UFC appearances.",
+            "text": "My grandmother also became part of that routine by sending a voice message that I would repeatedly listen to.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-charles-oliveira-b-3",
-            "text": "One stretch of my UFC career reached 11 consecutive victories.",
+            "text": "Aggressive grappling and submission attacks became the central identity of my fighting style.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1",
+              "profile"
             ]
           },
           {
             "id": "ufc-charles-oliveira-b-4",
-            "text": "My first UFC title opportunity came after 27 earlier UFC appearances.",
+            "text": "I spent more than a decade in the UFC before ever fighting for the undisputed championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1471,7 +1478,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-b-5",
-            "text": "I beat Efrain Escudero by submission in 2010.",
+            "text": "A late-career surge included wins over Kevin Lee and Tony Ferguson before I finally reached a title fight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1481,7 +1488,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-b-6",
-            "text": "I beat Jonathan Brookins by submission in 2012.",
+            "text": "I rallied to stop Michael Chandler and become UFC lightweight champion.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1491,7 +1498,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-b-7",
-            "text": "I beat Myles Jury by submission in 2015.",
+            "text": "I then submitted Dustin Poirier in my first title defense.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1501,7 +1508,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-b-8",
-            "text": "I beat Clay Guida by submission in 2018.",
+            "text": "I submitted Justin Gaethje in my next fight after being stripped of the belt for missing championship weight.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1511,20 +1518,21 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-b-9",
-            "text": "My UFC career includes a championship victory at Lightweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-charles-oliveira-b-10",
-            "text": "I also shared the Octagon with Justin Gaethje in 2022.",
+            "text": "My career became synonymous with UFC records for submissions and finishes.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-charles-oliveira-b-10",
+            "text": "I am the submission specialist known as “Do Bronx,” a nickname rooted in my home neighborhood.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity1",
               "profile"
             ]
           }
@@ -1551,43 +1559,44 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-frankie-edgar-a-1",
-            "text": "I worked full shifts as a union plumber while already competing in the UFC, then coached wrestling before training at night.",
+            "text": "I qualified for the NCAA Division I wrestling championships in each of my four college seasons.",
             "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "identity2"
+            ]
+          },
+          {
+            "id": "ufc-frankie-edgar-a-2",
+            "text": "I earned a college degree in political science before fighting became my full-time profession.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "identity2"
+            ]
+          },
+          {
+            "id": "ufc-frankie-edgar-a-3",
+            "text": "Even after reaching the UFC, I worked full shifts as a union plumber and coached wrestling before training at night.",
+            "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "identity1"
             ]
           },
           {
-            "id": "ufc-frankie-edgar-a-2",
-            "text": "My UFC debut ended with a win by decision.",
-            "band": "broad",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-frankie-edgar-a-3",
-            "text": "My UFC career included appearances at both Lightweight and Featherweight.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
             "id": "ufc-frankie-edgar-a-4",
-            "text": "I reached my first UFC title opportunity in 2010.",
+            "text": "I made my UFC debut in 2007 and climbed the lightweight ranks largely through pace, wrestling and durability.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-frankie-edgar-a-5",
-            "text": "I beat Mark Bocek by stoppage in 2007.",
+            "text": "I won the lightweight championship by upsetting B.J. Penn in 2010.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1597,7 +1606,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frankie-edgar-a-6",
-            "text": "I lost to Marlon Vera by stoppage in 2021.",
+            "text": "I beat Penn again in an immediate title rematch.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1607,7 +1616,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frankie-edgar-a-7",
-            "text": "I beat Tyson Griffin by decision in 2007.",
+            "text": "My championship rivalry with Gray Maynard included a draw followed by a comeback stoppage win.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1617,7 +1626,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frankie-edgar-a-8",
-            "text": "I beat Hermes França by decision in 2008.",
+            "text": "I later dropped to featherweight and twice challenged José Aldo for that division’s title.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1627,20 +1636,21 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frankie-edgar-a-9",
-            "text": "I won UFC gold at Lightweight.",
+            "text": "Over the course of my UFC career I competed at lightweight, featherweight and bantamweight.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-frankie-edgar-a-10",
-            "text": "I earned a bachelor's degree in Political Science from Clarion University.",
+            "text": "My championship run and constant ability to survive trouble helped make “The Answer” one of the defining nicknames of my era.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity3"
+              "profile"
             ]
           }
         ]
@@ -1650,43 +1660,44 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-frankie-edgar-b-1",
-            "text": "My UFC career began in 2007.",
+            "text": "I have recalled earning only about sixty dollars for my first MMA fight and breaking my orbital bone in the bout.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity4"
             ]
           },
           {
             "id": "ufc-frankie-edgar-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "For years, fighting existed alongside ordinary work rather than replacing it immediately.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-frankie-edgar-b-3",
-            "text": "One stretch of my UFC career reached 5 consecutive victories.",
+            "text": "I kept plumbing, coaching wrestling and training all packed into the same routine while my UFC career was developing.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-frankie-edgar-b-4",
-            "text": "My first UFC title opportunity came after 7 earlier UFC appearances.",
+            "text": "At lightweight, wins over contenders such as Tyson Griffin and Sean Sherk moved me toward the top of the division.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-frankie-edgar-b-5",
-            "text": "I beat Matt Veach by submission in 2009.",
+            "text": "I eventually received a title shot against B.J. Penn and won a close decision.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1696,7 +1707,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frankie-edgar-b-6",
-            "text": "I lost to Chris Gutiérrez by stoppage in 2022.",
+            "text": "The immediate rematch was far more decisive, and I left with the belt again.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1706,7 +1717,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frankie-edgar-b-7",
-            "text": "I beat Spencer Fisher by decision in 2007.",
+            "text": "Gray Maynard then became the central rival of my title reign, with two dramatic championship fights.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1716,7 +1727,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frankie-edgar-b-8",
-            "text": "I beat Jeremy Stephens by decision in 2016.",
+            "text": "After losing the lightweight belt, I moved to featherweight and challenged José Aldo.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1726,20 +1737,21 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frankie-edgar-b-9",
-            "text": "My UFC career includes a championship victory at Lightweight.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-frankie-edgar-b-10",
-            "text": "I also shared the Octagon with B.J. Penn in 2010.",
+            "text": "I later extended my UFC career into the bantamweight division as well.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-frankie-edgar-b-10",
+            "text": "The former union plumber became a UFC lightweight champion remembered as “The Answer.”",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity1",
               "profile"
             ]
           }
@@ -1766,53 +1778,53 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-benson-henderson-a-1",
-            "text": "I fell in love with wrestling after wandering into a wrestling room and later became a two-time NAIA All-American at Dana College.",
+            "text": "My mother made martial arts part of childhood as a way for my brother and me to stay connected to her cultural background.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity2"
+              "identity1"
             ]
           },
           {
             "id": "ufc-benson-henderson-a-2",
-            "text": "My UFC debut ended with a win by decision.",
+            "text": "I later fell in love with wrestling and became a two-time college All-American.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-benson-henderson-a-3",
-            "text": "My UFC career included appearances at both Lightweight and Welterweight.",
+            "text": "I double-majored in criminal justice and sociology while competing in college.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-benson-henderson-a-4",
-            "text": "I reached my first UFC title opportunity in 2012.",
+            "text": "After graduation, I passed police testing and received job offers but chose professional fighting instead.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-benson-henderson-a-5",
-            "text": "I beat Mark Bocek by decision in 2011.",
+            "text": "I entered the UFC in 2011 after already winning a championship in another major promotion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
-              "profile"
+              "profile",
+              "identity1"
             ]
           },
           {
             "id": "ufc-benson-henderson-a-6",
-            "text": "I beat Brandon Thatch by submission in 2015.",
+            "text": "Three straight UFC wins, capped by a victory over Clay Guida, earned me a lightweight title shot.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1822,7 +1834,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-benson-henderson-a-7",
-            "text": "I lost to Donald Cerrone by decision in 2015.",
+            "text": "I defeated Frankie Edgar to become UFC lightweight champion.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1832,7 +1844,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-benson-henderson-a-8",
-            "text": "I beat Clay Guida by decision in 2011.",
+            "text": "My title reign included defenses against Edgar, Nate Diaz and Gilbert Melendez.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1842,20 +1854,20 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-benson-henderson-a-9",
-            "text": "I won UFC gold at Lightweight.",
+            "text": "I later admitted that I secretly competed with a toothpick in my mouth during many fights.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-benson-henderson-a-10",
-            "text": "I double-majored in criminal justice and sociology in college.",
+            "text": "The former college wrestler and UFC lightweight champion became widely known by the nickname “Smooth.”",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity3"
+              "profile"
             ]
           }
         ]
@@ -1865,34 +1877,35 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-benson-henderson-b-1",
-            "text": "After college, I passed police testing and received job offers from departments in Omaha and Denver, but chose to pursue MMA instead.",
+            "text": "My wrestling career began almost by accident after I wandered into a wrestling room and became hooked on the sport.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity4"
+              "identity1"
             ]
           },
           {
             "id": "ufc-benson-henderson-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "A law-enforcement career was a realistic option for me before I chose MMA instead.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-benson-henderson-b-3",
-            "text": "One stretch of my UFC career reached 7 consecutive victories.",
+            "text": "By the time I reached the UFC, I had already been a champion outside the promotion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "profile",
+              "identity1"
             ]
           },
           {
             "id": "ufc-benson-henderson-b-4",
-            "text": "My first UFC title opportunity came after 3 earlier UFC appearances.",
+            "text": "I won my first three UFC appearances to move directly into the lightweight title picture.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1901,7 +1914,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-benson-henderson-b-5",
-            "text": "I beat Rustam Khabilov by submission in 2014.",
+            "text": "The last of those wins came against Clay Guida in a title eliminator.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1911,7 +1924,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-benson-henderson-b-6",
-            "text": "I beat Jorge Masvidal by decision in 2015.",
+            "text": "I then beat Frankie Edgar for the championship and defeated him again in the rematch.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1921,7 +1934,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-benson-henderson-b-7",
-            "text": "I beat Jim Miller by decision in 2011.",
+            "text": "I added successful defenses against Nate Diaz and Gilbert Melendez.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1931,7 +1944,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-benson-henderson-b-8",
-            "text": "I beat Josh Thomson by decision in 2014.",
+            "text": "Anthony Pettis ended my UFC title reign in a rematch of a rivalry that had started before either man’s UFC run.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1941,21 +1954,21 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-benson-henderson-b-9",
-            "text": "My UFC career includes a championship victory at Lightweight.",
+            "text": "One of my strangest trademarks was secretly keeping a toothpick in my mouth while competing.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity5"
             ]
           },
           {
             "id": "ufc-benson-henderson-b-10",
-            "text": "I also shared the Octagon with Frankie Edgar in 2012.",
+            "text": "I am the lightweight champion nicknamed “Smooth,” known for elite wrestling, close decisions and that toothpick habit.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
-              "profile"
+              "profile",
+              "identity5"
             ]
           }
         ]
@@ -1981,43 +1994,43 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-bj-penn-a-1",
-            "text": "I earned a Brazilian jiu-jitsu black belt in less than three years and became the first American to win a black-belt world championship, helping establish 'The Prodigy' identity.",
+            "text": "I grew up in a family where my brothers and I trained martial arts together for years.",
             "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "identity4"
+            ]
+          },
+          {
+            "id": "ufc-bj-penn-a-2",
+            "text": "A neighbor helped introduce me to Brazilian jiu-jitsu when I was a teenager.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "identity4"
+            ]
+          },
+          {
+            "id": "ufc-bj-penn-a-3",
+            "text": "I earned a Brazilian jiu-jitsu black belt in less than three years.",
+            "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "identity3"
             ]
           },
           {
-            "id": "ufc-bj-penn-a-2",
-            "text": "My UFC debut ended with a win by stoppage.",
-            "band": "broad",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-bj-penn-a-3",
-            "text": "My UFC career included appearances at both Lightweight and Welterweight.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
             "id": "ufc-bj-penn-a-4",
-            "text": "I reached my first UFC title opportunity in 2002.",
+            "text": "I then became the first American to win a black-belt world championship in the sport.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-bj-penn-a-5",
-            "text": "I lost to Ryan Hall by submission in 2018.",
+            "text": "I entered the UFC in 2001 with very little professional MMA experience.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2027,7 +2040,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-a-6",
-            "text": "I beat Joey Gilbert by stoppage in 2001.",
+            "text": "My first UFC title opportunity came against Jens Pulver at lightweight.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2037,7 +2050,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-a-7",
-            "text": "I beat Duane Ludwig by submission in 2003.",
+            "text": "I later moved up and submitted Matt Hughes to win the welterweight championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2047,7 +2060,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-a-8",
-            "text": "I lost to Yair Rodriguez by stoppage in 2017.",
+            "text": "Years later I returned to lightweight and won that division’s vacant title by submitting Joe Stevenson.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2057,20 +2070,21 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-a-9",
-            "text": "I won UFC championships in more than one weight class.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-bj-penn-a-10",
-            "text": "My UFC résumé includes a matchup against Matt Hughes in 2004.",
+            "text": "I defended the lightweight belt against Sean Sherk, Kenny Florian and Diego Sanchez.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
+              "profile"
+            ]
+          },
+          {
+            "id": "ufc-bj-penn-a-10",
+            "text": "My rapid jiu-jitsu rise and championships in two UFC weight classes made “The Prodigy” a fitting nickname.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity3",
               "profile"
             ]
           }
@@ -2081,25 +2095,26 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-bj-penn-b-1",
-            "text": "My UFC career began in 2001.",
+            "text": "I was already an elite Brazilian jiu-jitsu competitor before my professional MMA career really began.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-bj-penn-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
+            "text": "The UFC signed me almost immediately, and my first three appearances all ended in stoppage victories.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-bj-penn-b-3",
-            "text": "One stretch of my UFC career reached 3 consecutive victories.",
+            "text": "I reached a lightweight title fight extremely early in my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2108,16 +2123,17 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-b-4",
-            "text": "My first UFC title opportunity came after 3 earlier UFC appearances.",
+            "text": "That first championship attempt ended in a decision loss to Jens Pulver.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-bj-penn-b-5",
-            "text": "I lost to Clay Guida by decision in 2019.",
+            "text": "After spending time outside the UFC, I returned and shocked Matt Hughes with a first-round submission for the welterweight title.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2127,7 +2143,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-b-6",
-            "text": "I beat Paul Creighton by stoppage in 2002.",
+            "text": "A later chapter brought me back to lightweight and another championship opportunity.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2137,7 +2153,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-b-7",
-            "text": "I lost to Dennis Siver by decision in 2017.",
+            "text": "I submitted Joe Stevenson to win the vacant lightweight belt.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2147,7 +2163,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-b-8",
-            "text": "I beat Din Thomas by stoppage in 2001.",
+            "text": "Successful defenses over Sean Sherk, Kenny Florian and Diego Sanchez followed.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2157,21 +2173,21 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-b-9",
-            "text": "My UFC résumé includes championship victories in two weight classes.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-bj-penn-b-10",
-            "text": "I also shared the Octagon with Georges St-Pierre in 2009.",
+            "text": "I became one of the UFC’s early champions in two different weight classes.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "ledger",
               "profile"
+            ]
+          },
+          {
+            "id": "ufc-bj-penn-b-10",
+            "text": "My family called me “Baby Jay,” and that childhood name was shortened into the initials fans came to know me by.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "identity2"
             ]
           }
         ]
@@ -2197,43 +2213,43 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-glover-teixeira-a-1",
-            "text": "I joined the UFC in 2012 after beginning my professional career elsewhere.",
+            "text": "I grew up doing hard physical work in a rural farming environment.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-glover-teixeira-a-2",
-            "text": "My UFC debut ended with a win by submission.",
+            "text": "After immigrating as a young man, I worked in landscaping and sent money home to help my family.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity1"
             ]
           },
           {
             "id": "ufc-glover-teixeira-a-3",
-            "text": "I spent most of my UFC career at Light Heavyweight.",
+            "text": "I originally wanted to pursue boxing, but watching an early UFC event redirected me toward mixed martial arts.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-glover-teixeira-a-4",
-            "text": "I reached my first UFC title opportunity in 2014.",
+            "text": "Immigration and visa problems kept me away from the United States for years and delayed a major part of my fighting career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "identity3"
             ]
           },
           {
             "id": "ufc-glover-teixeira-a-5",
-            "text": "I beat Kyle Kingsbury by submission in 2012.",
+            "text": "I finally reached the UFC in 2012 after already spending years as a professional fighter.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2243,7 +2259,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-glover-teixeira-a-6",
-            "text": "I beat Karl Roberson by submission in 2019.",
+            "text": "Five straight UFC wins, including one over Quinton Jackson, carried me into a title fight with Jon Jones.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2253,7 +2269,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-glover-teixeira-a-7",
-            "text": "I beat James Te Huna by submission in 2013.",
+            "text": "Years later I rebuilt myself with another long winning streak deep into my career.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2263,7 +2279,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-glover-teixeira-a-8",
-            "text": "I beat Jared Cannonier by decision in 2017.",
+            "text": "I submitted Jan Błachowicz in 2021 to become UFC light-heavyweight champion at age 42.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2273,20 +2289,22 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-glover-teixeira-a-9",
-            "text": "I won UFC gold at Light Heavyweight.",
+            "text": "My first defense became a dramatic five-round fight with Jiří Procházka.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-glover-teixeira-a-10",
-            "text": "I grew up in the rural Brazilian town of Sobrália on a farm before emigrating to the United States as a teenager.",
+            "text": "Long before winning UFC gold, I had trained closely with Chuck Liddell under coach John Hackleman.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity1"
+              "identity3",
+              "profile"
             ]
           }
         ]
@@ -2296,44 +2314,8 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-glover-teixeira-b-1",
-            "text": "My UFC career began in 2012.",
+            "text": "My professional career began years before the UFC was able to become my long-term home.",
             "band": "broad",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-glover-teixeira-b-2",
-            "text": "I won 3 of my first three UFC appearances.",
-            "band": "broad",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-glover-teixeira-b-3",
-            "text": "One stretch of my UFC career reached 6 consecutive victories.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-glover-teixeira-b-4",
-            "text": "My first UFC title opportunity came after 5 earlier UFC appearances.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "ledger"
-            ]
-          },
-          {
-            "id": "ufc-glover-teixeira-b-5",
-            "text": "I beat Fábio Maldonado in 2012.",
-            "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "ledger",
@@ -2341,8 +2323,45 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
             ]
           },
           {
+            "id": "ufc-glover-teixeira-b-2",
+            "text": "As a young immigrant I supported myself through physical labor while trying to build a fighting career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "identity1"
+            ]
+          },
+          {
+            "id": "ufc-glover-teixeira-b-3",
+            "text": "A tape of the earliest UFC era changed my ambition from traditional boxing toward mixed martial arts.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "identity3"
+            ]
+          },
+          {
+            "id": "ufc-glover-teixeira-b-4",
+            "text": "Visa problems forced me to spend years away from the United States even while my career was developing.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "identity3"
+            ]
+          },
+          {
+            "id": "ufc-glover-teixeira-b-5",
+            "text": "Once back, I trained with Chuck Liddell and coach John Hackleman before eventually reaching the UFC.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "identity3",
+              "profile"
+            ]
+          },
+          {
             "id": "ufc-glover-teixeira-b-6",
-            "text": "I lost to Corey Anderson by decision in 2018.",
+            "text": "I opened my UFC run with five consecutive wins and then challenged Jon Jones for the title.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2352,7 +2371,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-glover-teixeira-b-7",
-            "text": "I beat Patrick Cummins by stoppage in 2015.",
+            "text": "After later setbacks, I put together six straight victories to earn another championship opportunity.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2362,7 +2381,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-glover-teixeira-b-8",
-            "text": "I beat Misha Cirkunov by stoppage in 2017.",
+            "text": "That second title shot came against Jan Błachowicz, and I won by second-round submission.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2372,16 +2391,17 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-glover-teixeira-b-9",
-            "text": "My UFC career includes a championship victory at Light Heavyweight.",
+            "text": "I became a first-time UFC champion at 42 years old, one of the oldest title winners in promotion history.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "ledger"
+              "ledger",
+              "profile"
             ]
           },
           {
             "id": "ufc-glover-teixeira-b-10",
-            "text": "I also shared the Octagon with Jan Błachowicz in 2021.",
+            "text": "My late-career championship run and fights with Błachowicz and Jiří Procházka defined one of MMA’s most unusual veteran peaks.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
