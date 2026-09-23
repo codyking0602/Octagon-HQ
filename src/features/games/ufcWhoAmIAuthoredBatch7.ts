@@ -2280,7 +2280,7 @@ export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dan-henderson-a-7",
-            "text": "When I later returned, I challenged Quinton Jackson and Anderson Silva in UFC title fights.",
+            "text": "When I later returned, I challenged Quinton Jackson and Anderson Silva in UFC championship bouts.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
