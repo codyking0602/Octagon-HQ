@@ -1478,7 +1478,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-b-5",
-            "text": "A late-career surge included wins over Kevin Lee and Tony Ferguson before I finally reached a title fight.",
+            "text": "A career-changing resurgence included wins over Kevin Lee and Tony Ferguson before I finally reached a title fight.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
