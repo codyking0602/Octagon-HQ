@@ -119,7 +119,16 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       "Name a performance area people debate on UFC scorecards.",
       "Name something that can matter when comparing two close MMA rounds.",
     ],
-    answers: ["Effective striking", "Effective grappling", "Damage", "Takedowns", "Submission attempts", "Control", "Aggression", "Cage pressure"],
+    answers: [
+      { name: "Effective striking", aliases: ["Striking", "Significant strikes", "Strikes"] },
+      { name: "Effective grappling", aliases: ["Grappling"] },
+      { name: "Damage", aliases: ["Visible damage"] },
+      { name: "Takedowns", aliases: ["Takedown"] },
+      { name: "Submission attempts", aliases: ["Submissions", "Submission attempt", "Sub attempts"] },
+      { name: "Control", aliases: ["Control time", "Octagon control"] },
+      { name: "Aggression", aliases: ["Aggressive", "Effective aggression"] },
+      { name: "Cage pressure", aliases: ["Pressure", "Forward pressure"] },
+    ],
   },
   {
     category: "stats",
