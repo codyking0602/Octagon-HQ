@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   assertFamilyFeudPack,
+  FAMILY_FEUD_FAST_MONEY_TIME_MS,
   matchFamilyFeudAnswer,
 } from "../games/familyFeudEngine";
 import { CFB_SPORTS_FEUD_MAIN } from "./cfbSportsFeudMain";
@@ -103,6 +104,44 @@ describe("Sports Feud authored Daily banks", () => {
     expect(footballSportsFeudDomainForDay("2026-10-08")).toBe("cfb");
     expect(footballSportsFeudDomainForDay("2026-10-15")).toBe("nfl");
     expect(footballSportsFeudDomainForDay("2026-10-19")).toBe("cfb");
+  });
+
+  it("gives Fast Money 50 seconds", () => {
+    expect(FAMILY_FEUD_FAST_MONEY_TIME_MS).toBe(50_000);
+  });
+
+  it("removes rivalry-trophy trivia and lets loud-stadium answers use the school or team", () => {
+    expect(CFB_FAST.some((question) => /rivalry trophy/i.test(question.prompt))).toBe(false);
+
+    const conference = CFB_FAST.find((question) => question.id === "cfb-fast3-09-1");
+    expect(conference).toBeDefined();
+    expect(conference?.answers.map((answer) => answer.name)).toContain("SEC");
+
+    const findPack = (domain: "cfb" | "nfl", questionId: string) => {
+      for (let offset = 0; offset < 365; offset += 1) {
+        const pack = buildSportsFeudPack(domain, addDays("2026-09-23", offset));
+        if (pack.fastMoney.some((question) => question.id === questionId)) return pack;
+      }
+      throw new Error("Could not find selected Fast Money question " + questionId);
+    };
+
+    const cfb = findPack("cfb", "cfb-fast3-05-1");
+    const cfbStadium = cfb.fastMoney.find((question) => question.id === "cfb-fast3-05-1")!;
+    const cfbMatch = matchFamilyFeudAnswer(cfb, cfbStadium, "Tennessee");
+    expect(cfbMatch.status).toBe("matched");
+    if (cfbMatch.status === "matched") {
+      expect(cfb.entities.find((entity) => entity.id === cfbMatch.entityId)?.displayName)
+        .toBe("Neyland Stadium");
+    }
+
+    const nfl = findPack("nfl", "nfl-fast3-05-1");
+    const nflStadium = nfl.fastMoney.find((question) => question.id === "nfl-fast3-05-1")!;
+    const nflMatch = matchFamilyFeudAnswer(nfl, nflStadium, "Chiefs");
+    expect(nflMatch.status).toBe("matched");
+    if (nflMatch.status === "matched") {
+      expect(nfl.entities.find((entity) => entity.id === nflMatch.entityId)?.displayName)
+        .toBe("Arrowhead Stadium");
+    }
   });
 
   it("keeps Fast Money prompts precise while accepting natural shorthand", () => {
