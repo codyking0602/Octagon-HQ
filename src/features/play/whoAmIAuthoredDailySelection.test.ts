@@ -55,6 +55,14 @@ describe("Who Am I authored Daily selection", () => {
     const unseen = candidates.find((candidate) => candidate.subjectId === "subject-8")!;
     expect(history.slice(-WHO_AM_I_AUTHORED_RECENCY_COOLDOWN).some((row) => row.subjectId === eligibleRepeat.subjectId)).toBe(false);
     expect(history.some((row) => row.subjectId === unseen.subjectId)).toBe(false);
+
+    const possiblePicks = new Set(
+      Array.from({ length: 512 }, (_value, index) => (
+        selectWhoAmIAuthoredIdentity(candidates, history, ["repeat-eligibility", index]).subjectId
+      )),
+    );
+    expect(possiblePicks).toContain("subject-1");
+    expect(possiblePicks).toContain("subject-8");
   });
 
   it("alternates authored scripts from the last published script", () => {
