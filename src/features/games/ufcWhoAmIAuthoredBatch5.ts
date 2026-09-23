@@ -1003,8 +1003,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity3",
-              "identity4"
+              "identity2"
             ]
           },
           {
@@ -1013,60 +1012,59 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity3"
+              "identity2"
             ]
           },
           {
             "id": "ufc-ronda-rousey-b-3",
-            "text": "I became a professional MMA champion before the UFC had created a women’s division.",
+            "text": "I did not enter professional MMA until after years of elite international competition.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "profile"
+              "identity2"
             ]
           },
           {
             "id": "ufc-ronda-rousey-b-4",
-            "text": "When the UFC added women, I was installed as the inaugural bantamweight champion.",
+            "text": "Before joining the UFC, I had already become a champion in another major MMA promotion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "profile"
+              "identity3"
             ]
           },
           {
             "id": "ufc-ronda-rousey-b-5",
-            "text": "My first UFC fight was both the promotion’s first women’s bout and a championship main event.",
+            "text": "I won an Olympic bronze medal in judo in 2008.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
-              "profile"
+              "identity2",
+              "identity3"
             ]
           },
           {
             "id": "ufc-ronda-rousey-b-6",
-            "text": "I submitted Liz Carmouche, Miesha Tate and Cat Zingano in successive UFC title fights.",
+            "text": "When the UFC added women, I entered as its inaugural bantamweight champion.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "ledger",
-              "profile"
+              "identity3"
             ]
           },
           {
             "id": "ufc-ronda-rousey-b-7",
-            "text": "The Zingano defense lasted only 14 seconds.",
+            "text": "My first UFC fight was the promotion’s first women’s bout, and I submitted Liz Carmouche in the title main event.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
               "ledger",
-              "profile"
+              "identity3"
             ]
           },
           {
             "id": "ufc-ronda-rousey-b-8",
-            "text": "My title reign ended in a major upset loss to Holly Holm.",
+            "text": "I later submitted Miesha Tate and Cat Zingano in title fights, with the Zingano defense lasting only 14 seconds.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1076,7 +1074,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ronda-rousey-b-9",
-            "text": "I later returned for one more UFC title fight against Amanda Nunes.",
+            "text": "Holly Holm ended my unbeaten run and championship reign with a head kick in 2015.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1086,13 +1084,12 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ronda-rousey-b-10",
-            "text": "My judo medal, armbar-heavy title run and later WWE career made me one of the biggest crossover stars in women’s combat sports.",
+            "text": "My Olympic judo medal, armbar-heavy UFC title run and later WWE career made me one of combat sports’ biggest crossover stars.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "identity4",
-              "identity5",
-              "profile"
+              "identity3",
+              "identity5"
             ]
           }
         ]
