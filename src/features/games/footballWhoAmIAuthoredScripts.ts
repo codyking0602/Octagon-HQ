@@ -34952,6 +34952,1041 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jamarr-chase",
+    "name": "Ja'Marr Chase",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "lsu": "https://lsusports.net/sports/fb/roster/player/jamarr-chase"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jamarr-chase-a-1",
+            "text": "I played only two college seasons before ending my career with fewer than 100 receptions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-a-2",
+            "text": "My second season turned me from a regular starter into the nation's most productive big-play receiver.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-a-3",
+            "text": "That year I caught 84 passes for 1,780 yards and 20 touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-a-4",
+            "text": "I led the nation in both receiving yards and receiving touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-a-5",
+            "text": "My yardage and touchdown totals established Southeastern Conference single-season records at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-a-6",
+            "text": "I won the Biletnikoff Award as the nation's top receiver.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-a-7",
+            "text": "I became the first wide receiver in LSU history to earn unanimous All-America honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-a-8",
+            "text": "In the national championship game against Clemson, I caught nine passes for 221 yards and two touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-a-9",
+            "text": "That championship performance capped a 15-0 season alongside Heisman-winning quarterback Joe Burrow.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-a-10",
+            "text": "I was the LSU receiver whose 1,780-yard, 20-touchdown season ended with a Biletnikoff Award and a national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jamarr-chase-b-1",
+            "text": "My college career covered just 27 games, including 21 starts.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-b-2",
+            "text": "I chose not to play the following season after helping win a national championship.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-b-3",
+            "text": "I became the first LSU receiver to surpass 2,000 career receiving yards within his first two seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-b-4",
+            "text": "I produced eight career 100-yard receiving games, including three games over 200 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-b-5",
+            "text": "Against Vanderbilt, I set career highs with 10 catches, 229 yards and four receiving touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-b-6",
+            "text": "My final college season featured 14 starts and more than 21 yards per reception.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-b-7",
+            "text": "I finished my two seasons with 98 catches, 2,093 receiving yards and 23 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-b-8",
+            "text": "My last college game produced the biggest receiving-yard total of my career on the sport's championship stage.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-b-9",
+            "text": "After opting out of the next college season, Cincinnati selected me fifth overall in the 2021 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jamarr-chase-b-10",
+            "text": "I am the former LSU No. 1 receiver who put up 221 yards against Clemson in the national title game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-kyle-pitts",
+    "name": "Kyle Pitts",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "florida": "https://floridagators.com/sports/football/roster/kyle-pitts/13782"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-kyle-pitts-a-1",
+            "text": "I developed from a lightly used freshman into one of college football's most productive tight ends.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-a-2",
+            "text": "As a sophomore, I played 13 games and started 12.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-a-3",
+            "text": "That sophomore season produced 54 catches for 649 yards and five touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-a-4",
+            "text": "I led conference tight ends in receptions, receiving yards and receiving touchdowns that year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-a-5",
+            "text": "My first full year as a starter ended with first-team all-conference honors.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-a-6",
+            "text": "In only eight games the next season, I caught 43 passes for 770 yards and 12 touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-a-7",
+            "text": "I became a unanimous first-team All-American and won the John Mackey Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-a-8",
+            "text": "I finished 10th in Heisman voting, the first tight end in 43 years to place in the top 10.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-a-9",
+            "text": "My final season opened with a four-touchdown receiving game at Ole Miss.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-a-10",
+            "text": "I was the No. 84 Florida tight end whose 2020 season produced 12 touchdowns and the Mackey Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-kyle-pitts-b-1",
+            "text": "I finished my college career with exactly 100 receptions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-b-2",
+            "text": "Those catches produced 1,492 yards and 18 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-b-3",
+            "text": "I left school as the program's career receiving-yardage leader among tight ends.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-b-4",
+            "text": "My first career 100-yard receiving game came at LSU during my sophomore season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-b-5",
+            "text": "I later became the first Florida tight end to record three 100-yard receiving games in one season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-b-6",
+            "text": "At Ole Miss, I caught eight passes for 170 yards and tied a school single-game record with four receiving touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-b-7",
+            "text": "Against Kentucky, I scored three touchdowns on five catches.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-b-8",
+            "text": "In the conference championship game against Alabama, I had seven catches for 129 yards and a touchdown.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-b-9",
+            "text": "My 12 touchdown catches in my final season set a school single-season record for a tight end.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-kyle-pitts-b-10",
+            "text": "I am the Gators tight end who paired the Mackey Award with a top-10 Heisman finish in 2020.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-alex-mack",
+    "name": "Alex Mack",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/hof_search.aspx?hof=2566",
+      "cal": "https://calbears.com/news/2024/6/3/cal-trio-on-2025-college-football-hof-national-ballot"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-alex-mack-a-1",
+            "text": "I was a four-year college offensive lineman who became a fixture at center.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-a-2",
+            "text": "My teams won a bowl game in each of my four seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-a-3",
+            "text": "As a sophomore, I helped my program share its first conference championship since 1975.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-a-4",
+            "text": "I earned first-team all-conference honors three consecutive times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-a-5",
+            "text": "I was named a first-team All-American by The Sporting News as a junior.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-a-6",
+            "text": "I won the Morris Trophy as my conference's top lineman in both 2007 and 2008.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-a-7",
+            "text": "I became the first player since Lincoln Kennedy to win that lineman award twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-a-8",
+            "text": "I served as a team captain during my senior season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-a-9",
+            "text": "My final year also brought the National Football Foundation's top scholar-athlete trophy, now called the Campbell Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-a-10",
+            "text": "I was the Cal center from 2005 through 2008 who won two Morris Trophies before Cleveland drafted me 21st overall.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-alex-mack-b-1",
+            "text": "The offensive line I played on allowed the fewest sacks in its conference in back-to-back seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-b-2",
+            "text": "I helped open running lanes for Marshawn Lynch during two of my college seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-b-3",
+            "text": "In 2006, our offense led the conference in scoring at 32.8 points per game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-b-4",
+            "text": "My teams went 34-17 across my four college seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-b-5",
+            "text": "My program reached the national top 10 at some point in each of those four seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-b-6",
+            "text": "I earned academic all-conference recognition in all four of my college seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-b-7",
+            "text": "I graduated magna cum laude while becoming one of the country's top offensive linemen.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-b-8",
+            "text": "As a senior, I was named my conference's Scholar-Athlete of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-b-9",
+            "text": "I was selected for the College Football Hall of Fame's 2025 class.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-alex-mack-b-10",
+            "text": "I am the Golden Bears center who combined a two-time Morris Trophy resume with the Campbell Trophy as a senior.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff",
+              "cal"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jadeveon-clowney",
+    "name": "Jadeveon Clowney",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "sc": "https://www.scstatehouse.gov/sess120_2013-2014/prever/298_20130124.htm",
+      "guide": "https://gamecocksonline.com/documents/2016/7/10/_scar_m_footbl_2016_17_misc_non_event__16-fb-mg-sec-6.pdf",
+      "report": "https://gamecocksonline.com/documents/2014/8/27/_scar_genrel_2014_15_misc_non_event__scar-14-annual-report.pdf",
+      "stats": "https://www.sports-reference.com/cfb/players/jadeveon-clowney-1.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jadeveon-clowney-a-1",
+            "text": "I made an immediate impact as a defensive end from my first college season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "guide",
+              "stats"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-a-2",
+            "text": "I earned national freshman recognition before becoming a dominant sophomore.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-a-3",
+            "text": "As a sophomore, I recorded 23.5 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "sc",
+              "stats"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-a-4",
+            "text": "That same season, I set a school record with 13 sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "sc",
+              "stats"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-a-5",
+            "text": "I was a unanimous first-team All-American in 2012.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "sc",
+              "guide"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-a-6",
+            "text": "I was named my conference's Defensive Player of the Year that season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "sc",
+              "guide"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-a-7",
+            "text": "I also won the Ted Hendricks Award as the nation's top defensive end.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-a-8",
+            "text": "My sophomore season was strong enough to produce a sixth-place finish in Heisman Trophy voting.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "sc"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-a-9",
+            "text": "In the Outback Bowl against Michigan, I forced a famous fumble with a backfield hit and recovered the ball myself.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "sc"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-a-10",
+            "text": "I was the South Carolina defensive end whose college resume led Houston to select me first overall in the 2014 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "report",
+              "stats"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jadeveon-clowney-b-1",
+            "text": "I spent three college seasons as one of the nation's most disruptive edge defenders.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stats",
+              "guide"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-b-2",
+            "text": "My career included repeated all-conference and All-America recognition.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-b-3",
+            "text": "I finished with 47 career tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-b-4",
+            "text": "My college total included 24 sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-b-5",
+            "text": "I forced nine fumbles across my three seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stats"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-b-6",
+            "text": "After my unanimous sophomore season, I earned first-team AFCA All-America honors again as a junior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "guide"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-b-7",
+            "text": "My program posted three consecutive 11-win seasons during my college career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "report"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-b-8",
+            "text": "My final team finished No. 4 nationally, then the highest postseason ranking in school history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "report"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-b-9",
+            "text": "I played for Steve Spurrier on a South Carolina defense that helped turn the Gamecocks into a top-10 program.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "report",
+              "guide"
+            ]
+          },
+          {
+            "id": "cfb-jadeveon-clowney-b-10",
+            "text": "I am the Gamecocks edge defender remembered for the Michigan bowl-game hit and becoming the first pick of the 2014 draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "sc",
+              "report"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-will-anderson-jr",
+    "name": "Will Anderson Jr.",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "bama": "https://rolltide.com/sports/football/roster/will-anderson-jr-/8049"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-will-anderson-jr-a-1",
+            "text": "I became a three-year defensive force at linebacker and edge rusher for a perennial title contender.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-a-2",
+            "text": "My college production placed me near the top of a program famous for elite defenders.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-a-3",
+            "text": "I finished with 62 career tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-a-4",
+            "text": "I also recorded 34.5 career sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-a-5",
+            "text": "Both totals ranked second in school history behind Derrick Thomas when I left.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-a-6",
+            "text": "I won the Bronko Nagurski Trophy twice, becoming only the second player ever to do so.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-a-7",
+            "text": "My award collection also included the Bednarik, Lombardi and Lott IMPACT trophies.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-a-8",
+            "text": "I joined Manti Te'o as one of the only players to sweep those four major defensive awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-a-9",
+            "text": "I earned unanimous All-America recognition in consecutive seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-a-10",
+            "text": "I was the No. 31 Alabama defender who finished behind only Derrick Thomas in the program's career sacks and tackles-for-loss lists.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-will-anderson-jr-b-1",
+            "text": "I came to college from Hampton, Georgia, and became a starter on defense almost immediately.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-b-2",
+            "text": "As a junior, I again led my conference in sacks.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-b-3",
+            "text": "That final season included 10 sacks and 17 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-b-4",
+            "text": "I also made 51 tackles and was credited with 12 quarterback hurries that year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-b-5",
+            "text": "One of my final-season interceptions became a 25-yard touchdown return.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-b-6",
+            "text": "I was voted conference Defensive Player of the Year for the second straight season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-b-7",
+            "text": "Against Texas in 2022, a late third-down sack helped force a field-goal attempt in a one-point road win.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-b-8",
+            "text": "My junior year ended with another unanimous first-team All-America selection.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-b-9",
+            "text": "By the end of three seasons, only one Alabama legend had more career sacks or tackles for loss.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          },
+          {
+            "id": "cfb-will-anderson-jr-b-10",
+            "text": "I am the Crimson Tide edge defender who became a two-time Nagurski Trophy winner before leaving after the 2022 season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bama"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
