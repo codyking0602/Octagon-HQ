@@ -5702,7 +5702,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-herschel-walker-a-1",
-            "text": "As a true freshman running back, I rushed for 1,616 yards and 15 touchdowns.",
+            "text": "I played only three college seasons, and I earned major national recognition in all three.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5712,7 +5712,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-herschel-walker-a-2",
-            "text": "That freshman season ended 12-0 with a national championship.",
+            "text": "I was an All-American from my first season on campus.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5722,7 +5722,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-herschel-walker-a-3",
-            "text": "I finished third in the Heisman voting that year.",
+            "text": "As a freshman, I rushed for 1,616 yards and 15 touchdowns while my team won the national championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5732,7 +5732,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-herschel-walker-a-4",
-            "text": "As a sophomore, I rushed for 1,891 yards and 20 touchdowns.",
+            "text": "I finished third in the Heisman voting during that freshman title season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5742,7 +5742,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-herschel-walker-a-5",
-            "text": "That second season moved me up to second in the Heisman voting.",
+            "text": "As a sophomore, I rushed for 1,891 yards and 20 touchdowns.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5752,7 +5752,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-herschel-walker-a-6",
-            "text": "As a junior, I rushed for 1,752 yards and won the Heisman Trophy.",
+            "text": "That second season moved me up to second in the Heisman voting.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5762,7 +5762,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-herschel-walker-a-7",
-            "text": "I became the first player in my program's history to earn All-America honors in three different seasons.",
+            "text": "As a junior, I rushed for 1,752 yards and won the Heisman Trophy.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
