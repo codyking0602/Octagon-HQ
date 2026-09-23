@@ -5407,7 +5407,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-a-3",
-            "text": "As a rookie, I became the first quarterback in NFL history to pass for 4,000 yards and rush for 500 yards in the same season.",
+            "text": "My rookie season paired high-volume passing with unusual rushing production for a quarterback.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5417,7 +5417,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-a-4",
-            "text": "That same rookie season, I rushed for 14 touchdowns, setting a single-season NFL record for a quarterback at the time.",
+            "text": "I set multiple rookie and quarterback rushing marks before completing my first NFL season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5427,7 +5427,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-a-5",
-            "text": "I made the Pro Bowl as a rookie and later earned two more Pro Bowl selections with my original franchise.",
+            "text": "I earned three Pro Bowl selections during my first run with the franchise that drafted me.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5437,7 +5437,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-a-6",
-            "text": "From 2013 through 2015, my team won three straight division titles.",
+            "text": "As a rookie, I became the first quarterback in NFL history to pass for 4,000 yards and rush for 500 yards in the same season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5446,7 +5446,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-a-7",
-            "text": "In 2015, I threw 35 touchdown passes and rushed for 10 more while my team finished 15-1.",
+            "text": "My rookie season also included 14 rushing touchdowns, then an NFL single-season record for a quarterback.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5455,7 +5455,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-a-8",
-            "text": "That 2015 season made me the first player in franchise history to win the AP NFL MVP award.",
+            "text": "In 2015, I threw 35 touchdown passes and rushed for 10 more while my team finished 15-1.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5464,7 +5464,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-a-9",
-            "text": "I was the No. 1 overall pick in the 2011 NFL Draft and became my franchise's all-time leader in passing yards and passing touchdowns.",
+            "text": "That 2015 season made me the first player in franchise history to win the AP NFL MVP award.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -5607,7 +5607,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-a-2",
-            "text": "I started my career with a run of 208 consecutive starts before an injury cost me an entire season.",
+            "text": "I was a durable pocket passer who started every game for more than a decade before an injury interrupted my career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5616,7 +5616,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-a-3",
-            "text": "In 2004, I set the NFL single-season record with 49 touchdown passes.",
+            "text": "My second NFL season was my first of many 4,000-yard passing years.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5625,7 +5625,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-a-4",
-            "text": "I eventually appeared in four Super Bowls with four different head coaches.",
+            "text": "I remained with my first NFL franchise through the 2011 season before changing teams late in my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5634,7 +5634,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-a-5",
-            "text": "I produced 14 seasons with at least 4,000 passing yards.",
+            "text": "In 2004, I set the NFL single-season record with 49 touchdown passes.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5643,7 +5643,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-a-6",
-            "text": "I was named AP NFL MVP five times, more than any player had won the award before me.",
+            "text": "I was named AP NFL MVP five times.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5652,7 +5652,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-a-7",
-            "text": "In 2013, I set single-season NFL records with 5,477 passing yards and 55 touchdown passes.",
+            "text": "I eventually appeared in four Super Bowls with four different head coaches.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5661,7 +5661,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-a-8",
-            "text": "My first Super Bowl victory came after a postseason run that included overcoming a 21-3 deficit in the AFC Championship Game.",
+            "text": "In 2013, I set single-season NFL records with 5,477 passing yards and 55 touchdown passes.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5829,7 +5829,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-a-4",
-            "text": "The following year, I set an NFL record with 22 touchdown receptions in a 12-game season.",
+            "text": "That early breakout began a long run in which I repeatedly paired 1,000-yard seasons with double-digit touchdown totals.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5838,7 +5838,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-a-5",
-            "text": "I later became the first receiver in my career to reach 100 catches in a season.",
+            "text": "I eventually posted 11 consecutive 1,000-yard receiving seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5847,7 +5847,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-a-6",
-            "text": "In 1995, I set an NFL single-season receiving record with 1,848 yards.",
+            "text": "In 1987, I set an NFL record with 22 touchdown receptions in a 12-game season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5856,7 +5856,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-a-7",
-            "text": "I won three Super Bowl rings with the franchise that drafted me.",
+            "text": "In 1995, I set an NFL single-season receiving record with 1,848 yards.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5865,7 +5865,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-a-8",
-            "text": "I was named the MVP of Super Bowl XXIII after that franchise beat Cincinnati.",
+            "text": "I won three Super Bowl rings with the franchise that drafted me and was the MVP of Super Bowl XXIII.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5897,7 +5897,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-jerry-rice-b-1",
-            "text": "I entered the NFL from a small-school program rather than a traditional major-conference power.",
+            "text": "I played college football outside the major conferences before becoming a first-round NFL receiver.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5906,7 +5906,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-b-2",
-            "text": "San Francisco selected me 16th overall in the first round of the 1985 draft out of Mississippi Valley State.",
+            "text": "By my second NFL season, I was leading the league in receiving yards and touchdown catches.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5916,7 +5916,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-b-3",
-            "text": "As a rookie, I caught 49 passes for 927 yards and three touchdowns.",
+            "text": "By my second NFL season, I was leading the league in receiving yards and touchdown catches.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5925,7 +5925,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-b-4",
-            "text": "By 1986, I was already leading the NFL in receiving yards and touchdown catches.",
+            "text": "My first 100-catch season came in 1990.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5952,7 +5952,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-b-7",
-            "text": "After my long San Francisco run, I also played for Oakland and Seattle.",
+            "text": "After my long run with one franchise, I also played for Oakland and Seattle.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5970,7 +5970,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jerry-rice-b-9",
-            "text": "Three of my Super Bowl trips with San Francisco ended in championships, including one in which I was the game's MVP.",
+            "text": "San Francisco selected me 16th overall in 1985 out of Mississippi Valley State.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6101,7 +6101,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-randy-moss-b-1",
-            "text": "I was a two-time consensus All-American at Marshall before entering the NFL.",
+            "text": "I was a two-time consensus All-American before entering the NFL from a smaller college program.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6110,7 +6110,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-randy-moss-b-2",
-            "text": "Minnesota selected me with the 21st pick of the 1998 draft.",
+            "text": "I entered the league as a first-round receiver after that decorated college career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6119,7 +6119,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-randy-moss-b-3",
-            "text": "My first Vikings team scored a then-NFL-record 556 points.",
+            "text": "My first NFL team set a then-league record for points in my rookie season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6128,7 +6128,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-randy-moss-b-4",
-            "text": "I eventually ranked second in Vikings history in receptions, receiving yards and touchdown catches behind Cris Carter.",
+            "text": "I eventually ranked second in my original franchise's history in receptions, receiving yards and touchdown catches behind a Hall of Fame teammate.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6137,7 +6137,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-randy-moss-b-5",
-            "text": "After my first Minnesota run, I spent two seasons with Oakland.",
+            "text": "After my first long NFL stop, I spent two seasons with Oakland.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6155,7 +6155,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-randy-moss-b-7",
-            "text": "In 2010 alone, I appeared for three different teams.",
+            "text": "My career later included New England, a return to Minnesota, Tennessee and finally San Francisco.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6164,7 +6164,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-randy-moss-b-8",
-            "text": "I made one Super Bowl with New England and another with San Francisco.",
+            "text": "Marshall was my college, and Minnesota selected me 21st overall in the 1998 draft.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6321,24 +6321,6 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-barry-sanders-b-3",
-            "text": "I entered the league as the third overall pick in the 1989 draft after leaving college before my senior season.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "hof"
-            ]
-          },
-          {
-            "id": "nfl-barry-sanders-b-4",
-            "text": "As a rookie, I rushed for 1,470 yards and finished only 10 yards short of the league lead.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "hof"
-            ]
-          },
-          {
-            "id": "nfl-barry-sanders-b-5",
             "text": "The year before I entered the NFL, I won the Heisman Trophy at Oklahoma State.",
             "band": "helpful",
             "verification": "verified",
@@ -6347,8 +6329,26 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
+            "id": "nfl-barry-sanders-b-4",
+            "text": "The year before I entered the NFL, I won the Heisman Trophy at Oklahoma State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-barry-sanders-b-5",
+            "text": "Detroit selected me third overall in the 1989 draft after I left college before my senior season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
             "id": "nfl-barry-sanders-b-6",
-            "text": "In 1994, I rushed for 1,883 yards and finished with 2,166 yards from scrimmage.",
+            "text": "The year before I entered the NFL, I won the Heisman Trophy at Oklahoma State.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6357,7 +6357,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-barry-sanders-b-7",
-            "text": "I later became the only back at the time to post four consecutive 1,500-yard rushing seasons.",
+            "text": "Detroit selected me third overall in the 1989 draft after I left college before my senior season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6514,7 +6514,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-deion-sanders-b-2",
-            "text": "Over my career, I caught 60 passes for 784 yards and three touchdowns.",
+            "text": "I also contributed on offense during my career rather than playing only defense and special teams.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6523,7 +6523,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-deion-sanders-b-3",
-            "text": "I also scored six punt-return touchdowns and three kickoff-return touchdowns.",
+            "text": "I scored touchdowns on both punt returns and kickoff returns during my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6532,7 +6532,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-deion-sanders-b-4",
-            "text": "In 1998, I led the NFL in punt-return average.",
+            "text": "By the late 1990s, I was still contributing as both a cornerback and a return specialist.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6550,7 +6550,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-deion-sanders-b-6",
-            "text": "After retiring for three seasons, I returned to play for Baltimore and intercepted five passes over two seasons.",
+            "text": "My return-game career included six punt-return touchdowns and three kickoff-return touchdowns.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6559,7 +6559,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-deion-sanders-b-7",
-            "text": "My NFL path ran through Atlanta, San Francisco, Dallas, Washington and Baltimore.",
+            "text": "After retiring for three seasons, I returned to play for Baltimore and intercepted five passes over two seasons.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6568,7 +6568,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-deion-sanders-b-8",
-            "text": "During my lone season with San Francisco, I became the first player with two 90-yard interception-return touchdowns in one season.",
+            "text": "My NFL path ran through Atlanta, San Francisco, Dallas, Washington and Baltimore.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6707,7 +6707,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-lawrence-taylor-b-1",
-            "text": "I was an All-America linebacker at North Carolina before becoming one of the first players chosen in my draft.",
+            "text": "I was an All-America linebacker before becoming one of the first players chosen in my draft.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6716,7 +6716,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-b-2",
-            "text": "The New York Giants selected me second overall in the 1981 NFL Draft.",
+            "text": "My rookie season produced 133 tackles, 9.5 sacks, two forced fumbles and an interception.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6725,7 +6725,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-b-3",
-            "text": "As a rookie, I posted 133 tackles, 9.5 sacks, two forced fumbles and an interception.",
+            "text": "The Giants selected me second overall in the 1981 NFL Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6734,7 +6734,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-b-4",
-            "text": "My first nine seasons all ended with first-team All-Pro recognition.",
+            "text": "The Giants selected me second overall in the 1981 NFL Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6743,7 +6743,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-b-5",
-            "text": "In a 1988 game, I played through a torn pectoral muscle with a shoulder harness and recorded three sacks and two forced fumbles.",
+            "text": "The Giants selected me second overall in the 1981 NFL Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6752,7 +6752,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-b-6",
-            "text": "My career totals included 33 forced fumbles and nine interceptions in addition to my pass-rushing production.",
+            "text": "The Giants selected me second overall in the 1981 NFL Draft.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6761,7 +6761,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-lawrence-taylor-b-7",
-            "text": "The Giants won two Super Bowls during the long run that began with my rookie season.",
+            "text": "The Giants selected me second overall in the 1981 NFL Draft.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6826,7 +6826,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aaron-donald-a-2",
-            "text": "Eleven teams passed before my franchise selected me 13th overall.",
+            "text": "I was still selected in the first half of the first round despite those size and length concerns.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6845,7 +6845,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aaron-donald-a-4",
-            "text": "Within a few seasons, I had become the centerpiece of one of the league's most disruptive defensive fronts.",
+            "text": "I led the Rams in sacks every season from 2015 through 2019.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6934,7 +6934,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aaron-donald-b-3",
-            "text": "In my final college season, I won the Nagurski, Bednarik, Outland and Lombardi awards.",
+            "text": "My senior season included double-digit sacks and more than 20 tackles for loss.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6943,7 +6943,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aaron-donald-b-4",
-            "text": "That senior season included 11 sacks and 28.5 tackles for loss.",
+            "text": "In my final college season, I won the Nagurski, Bednarik, Outland and Lombardi awards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6952,7 +6952,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aaron-donald-b-5",
-            "text": "I was projected as a top-15 draft choice but remained available until the Rams picked at No. 13.",
+            "text": "In my final college season, I won the Nagurski, Bednarik, Outland and Lombardi awards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
