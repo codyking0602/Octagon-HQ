@@ -55,11 +55,20 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     prompts: [
       "Name a college football stadium known for being loud.",
       "Name a stadium where a road offense can barely hear itself.",
-      "Name a college venue famous for a hostile atmosphere.",
+      "Name an NFL-style hostile college venue with a huge home crowd.",
       "Name a stadium you would expect on a loudest-in-college-football list.",
       "Name a home field where crowd noise feels like a real advantage.",
     ],
-    answers: ["Tiger Stadium", "Beaver Stadium", "Neyland Stadium", "Kyle Field", "Autzen Stadium", "Ohio Stadium", "Sanford Stadium", "Memorial Stadium Clemson"],
+    answers: [
+      { name: "Tiger Stadium", aliases: ["LSU", "LSU Tigers", "Tiger Stadium LSU"] },
+      { name: "Beaver Stadium", aliases: ["Penn State", "Nittany Lions"] },
+      { name: "Neyland Stadium", aliases: ["Neyland", "Tennessee", "Vols", "Volunteers"] },
+      { name: "Kyle Field", aliases: ["Texas A&M", "A&M", "Aggies", "TAMU"] },
+      { name: "Autzen Stadium", aliases: ["Autzen", "Oregon", "Ducks"] },
+      { name: "Ohio Stadium", aliases: ["Ohio State", "OSU", "Buckeyes", "The Horseshoe", "Horseshoe"] },
+      { name: "Sanford Stadium", aliases: ["Sanford", "Georgia", "UGA", "Bulldogs"] },
+      { name: "Memorial Stadium Clemson", aliases: ["Clemson", "Clemson Tigers", "Memorial Stadium"] },
+    ],
   },
   {
     category: "bowls",
