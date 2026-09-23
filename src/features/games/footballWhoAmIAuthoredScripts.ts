@@ -22754,7 +22754,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-jim-kelly-a-1",
-            "text": "I was a first-round quarterback in the 1983 draft, but I did not enter the NFL right away.",
+            "text": "I was drafted by an NFL team but began my professional career in a different league.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -22763,7 +22763,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jim-kelly-a-2",
-            "text": "Instead, I spent two seasons with the Houston Gamblers in the USFL.",
+            "text": "I spent my first two professional seasons outside the NFL.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -22773,7 +22773,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-jim-kelly-a-3",
-            "text": "Across those two USFL seasons, I threw for 9,842 yards and 83 touchdowns.",
+            "text": "With the Houston Gamblers, I threw for 9,842 yards and 83 touchdowns across two USFL seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -22960,7 +22960,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "kurt-warner-a-1",
-            "text": "Before my NFL breakout, I spent time in both the Arena Football League and NFL Europe.",
+            "text": "My path to an NFL starting job ran through more than one professional football league.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -22970,7 +22970,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-a-2",
-            "text": "I signed with St. Louis as a free agent in 1998 and saw only brief action that season.",
+            "text": "I signed with St. Louis as a free agent in 1998 after years spent outside the NFL.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -22979,25 +22979,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-a-3",
-            "text": "A preseason knee injury to the team's prized free-agent quarterback suddenly made me the starter in 1999.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "hof"
-            ]
-          },
-          {
-            "id": "kurt-warner-a-4",
-            "text": "I entered that opportunity with only 11 career NFL pass attempts.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "rise"
-            ]
-          },
-          {
-            "id": "kurt-warner-a-5",
-            "text": "That season I threw 41 touchdown passes and led a 13-3 team.",
+            "text": "Those earlier stops included both the Arena Football League and NFL Europe.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23006,8 +22988,26 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
+            "id": "kurt-warner-a-4",
+            "text": "A preseason knee injury to the team's projected starter suddenly gave me the job in 1999.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-5",
+            "text": "I entered that opportunity with only 11 career NFL pass attempts.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "rise"
+            ]
+          },
+          {
             "id": "kurt-warner-a-6",
-            "text": "I won NFL MVP in my first full season as a starter.",
+            "text": "That season I threw 41 touchdown passes and led a 13-3 team.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -23017,21 +23017,21 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-a-7",
-            "text": "I threw for a then-Super-Bowl-record 414 yards in the championship game.",
-            "band": "strong",
-            "verification": "verified",
-            "sourceIds": [
-              "hof"
-            ]
-          },
-          {
-            "id": "kurt-warner-a-8",
-            "text": "I won Super Bowl XXXIV MVP after delivering the franchise's first Super Bowl title.",
+            "text": "I won NFL MVP in my first full season as a starter.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
               "hof",
               "rise"
+            ]
+          },
+          {
+            "id": "kurt-warner-a-8",
+            "text": "I threw for a then-Super-Bowl-record 414 yards and won Super Bowl XXXIV MVP.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
             ]
           },
           {
@@ -23059,7 +23059,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "kurt-warner-b-1",
-            "text": "My NFL career eventually included starting opportunities with the Rams, Giants and Cardinals.",
+            "text": "I played 12 NFL seasons and was selected to four Pro Bowls.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23068,7 +23068,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-b-2",
-            "text": "I joined Arizona in 2005 after spending the previous season with the Giants.",
+            "text": "My career included a major second act after I left the franchise where I first became a star.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23077,7 +23077,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-b-3",
-            "text": "In 2008, I led Arizona to its first division title since 1975.",
+            "text": "I joined Arizona in 2005 after spending the previous season with the Giants.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23086,7 +23086,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-b-4",
-            "text": "That postseason ended with the franchise's first Super Bowl appearance.",
+            "text": "In 2008, I led Arizona to its first division title since 1975.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23095,7 +23095,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-b-5",
-            "text": "In the NFC title game, I threw for 279 yards and four touchdowns against Philadelphia.",
+            "text": "That postseason ended with the franchise's first Super Bowl appearance.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23104,7 +23104,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-b-6",
-            "text": "I threw for 377 yards and three touchdowns in Super Bowl XLIII, though Arizona lost narrowly.",
+            "text": "In the NFC title game, I threw for 279 yards and four touchdowns against Philadelphia.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -23113,7 +23113,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-b-7",
-            "text": "I became the first quarterback to throw for at least 300 yards in three Super Bowls.",
+            "text": "I threw for 377 yards and three touchdowns in Super Bowl XLIII, though Arizona lost narrowly.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -23122,7 +23122,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-b-8",
-            "text": "My career totals included 32,344 passing yards and 208 touchdown passes.",
+            "text": "I became the first quarterback to throw for at least 300 yards in three Super Bowls.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -23131,7 +23131,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "kurt-warner-b-9",
-            "text": "I made four Pro Bowls and entered the Hall of Fame with the Class of 2017.",
+            "text": "I finished with 32,344 passing yards, 208 touchdown passes and a place in the Hall of Fame's Class of 2017.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -23168,7 +23168,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-roger-staubach-a-1",
-            "text": "I did not begin my NFL career until I was 27 years old.",
+            "text": "I was a mobile quarterback whose NFL career began later than most stars at my position.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23177,7 +23177,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-roger-staubach-a-2",
-            "text": "Military service delayed my pro football career by four years after college.",
+            "text": "Once I became a full-time starter, I spent the rest of my career with one franchise.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23186,7 +23186,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-roger-staubach-a-3",
-            "text": "Part of that active duty was served in Vietnam.",
+            "text": "I did not begin my NFL career until age 27 because of a post-college service commitment.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23195,7 +23195,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-roger-staubach-a-4",
-            "text": "I joined Dallas in 1969 and became the regular starting quarterback in 1971.",
+            "text": "That commitment included four years on active duty, with time served in Vietnam.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23469,7 +23469,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "eric-dickerson-b-1",
-            "text": "Before the NFL, I was a two-time All-America running back at SMU.",
+            "text": "I was a decorated college running back who entered the NFL near the very top of the draft.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23487,7 +23487,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "eric-dickerson-b-3",
-            "text": "A blockbuster 1987 trade moved me from Los Angeles to Indianapolis during the season.",
+            "text": "At SMU, I was a two-time All-America selection before becoming the No. 2 overall pick.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23496,7 +23496,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "eric-dickerson-b-4",
-            "text": "In only nine games for Indianapolis that year, I rushed for 1,011 yards.",
+            "text": "A blockbuster 1987 trade moved me from Los Angeles to Indianapolis during the season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23505,7 +23505,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "eric-dickerson-b-5",
-            "text": "In 1988, I led the league with 1,659 rushing yards, the first Colt to win the rushing title since 1955.",
+            "text": "In only nine games for Indianapolis that year, I rushed for 1,011 yards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23514,7 +23514,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "eric-dickerson-b-6",
-            "text": "The next season, I became the first player in NFL history with seven consecutive 1,000-yard rushing seasons.",
+            "text": "In 1988, I led the league with 1,659 rushing yards, the first Colt to win the rushing title since 1955.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -23523,7 +23523,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "eric-dickerson-b-7",
-            "text": "I won four NFL rushing titles, in 1983, 1984, 1986 and 1988.",
+            "text": "The next season, I became the first player in NFL history with seven consecutive 1,000-yard rushing seasons.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -23773,7 +23773,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
     "sources": {
-      "hof": "https://www.profootballhof.com/players/terrell-owens"
+      "hof": "https://www.profootballhof.com/players/terrell-owens",
+      "injury": "https://www.nfl.com/news/terrell-owens-heads-guys-who-deserve-love-on-valentine-s-day-0ap3000000785761"
     },
     "scripts": {
       "A": {
@@ -23781,7 +23782,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-terrell-owens-a-1",
-            "text": "I came from Tennessee-Chattanooga and was drafted in the third round in 1996.",
+            "text": "I was a third-round receiver who spent my first eight NFL seasons with one franchise.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23790,7 +23791,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-terrell-owens-a-2",
-            "text": "I developed beside Jerry Rice for most of my first eight NFL seasons.",
+            "text": "Early in my career, I developed alongside one of the league's most accomplished veteran receivers.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -23799,7 +23800,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-terrell-owens-a-3",
-            "text": "I led San Francisco in receptions five times.",
+            "text": "I came from Tennessee-Chattanooga and entered the league in 1996.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23808,7 +23809,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-terrell-owens-a-4",
-            "text": "In 2000, I set a career high with 1,451 receiving yards.",
+            "text": "I led San Francisco in receptions five times.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23817,7 +23818,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-terrell-owens-a-5",
-            "text": "In 2002, I set another career high with 100 catches.",
+            "text": "In 2000, I set a career high with 1,451 receiving yards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -23912,11 +23913,11 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-terrell-owens-b-5",
-            "text": "After a serious late-season injury, I returned for that season's Super Bowl.",
+            "text": "After breaking my leg and tearing ankle ligaments late in the 2004 season, I returned for the Super Bowl.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "hof"
+              "injury"
             ]
           },
           {
@@ -23925,7 +23926,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "hof"
+              "hof",
+              "injury"
             ]
           },
           {
@@ -23987,16 +23989,16 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-antonio-brown-a-1",
-            "text": "I entered the NFL as a sixth-round pick, 195th overall, in 2010.",
+            "text": "I was a Day 3 receiver who later made the NFL's 2010s All-Decade Team.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "draft"
+              "decade"
             ]
           },
           {
             "id": "nfl-antonio-brown-a-2",
-            "text": "In college, I became my school's career receptions leader with 305 catches.",
+            "text": "My college résumé included major special-teams production in addition to receiving.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24005,7 +24007,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-antonio-brown-a-3",
-            "text": "I was also a two-time MAC Special Teams Player of the Year.",
+            "text": "Pittsburgh selected me in the sixth round, 195th overall, in 2010.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24014,24 +24016,43 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-antonio-brown-a-4",
-            "text": "During the 2010s, I produced six 100-catch NFL seasons, tying a league record.",
+            "text": "At Central Michigan, I became the school's career receptions leader with 305 catches.",
             "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-5",
+            "text": "I was a two-time MAC Special Teams Player of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "nfl-antonio-brown-a-6",
+            "text": "During the 2010s, I produced six 100-catch NFL seasons, tying a league record.",
+            "band": "strong",
             "verification": "verified",
             "sourceIds": [
               "decade"
             ]
           },
           {
-            "id": "nfl-antonio-brown-a-5",
-            "text": "In 2014, I led the NFL with 129 catches and 1,698 receiving yards.",
-            "band": "helpful",
+            "id": "nfl-antonio-brown-a-7",
+            "text": "In 2014, I caught 129 passes for 1,698 receiving yards.",
+            "band": "strong",
             "verification": "verified",
             "sourceIds": [
+              "peak",
               "museum"
             ]
           },
           {
-            "id": "nfl-antonio-brown-a-6",
+            "id": "nfl-antonio-brown-a-8",
             "text": "In 2015, I raised my franchise records to 136 catches and 1,834 receiving yards.",
             "band": "strong",
             "verification": "verified",
@@ -24041,40 +24062,21 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
-            "id": "nfl-antonio-brown-a-7",
-            "text": "Those 2014 and 2015 seasons made me the first player with consecutive 125-catch seasons.",
-            "band": "strong",
-            "verification": "verified",
-            "sourceIds": [
-              "peak"
-            ]
-          },
-          {
-            "id": "nfl-antonio-brown-a-8",
+            "id": "nfl-antonio-brown-a-9",
             "text": "One 2015 game against Oakland produced franchise records of 17 catches and 284 receiving yards.",
-            "band": "strong",
+            "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "museum"
             ]
           },
           {
-            "id": "nfl-antonio-brown-a-9",
+            "id": "nfl-antonio-brown-a-10",
             "text": "I finished my Pittsburgh career second in franchise history with 837 receptions and 11,207 receiving yards.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "exit"
-            ]
-          },
-          {
-            "id": "nfl-antonio-brown-a-10",
-            "text": "The sixth-round Central Michigan receiver who became an NFL 2010s All-Decade selection in Pittsburgh was me.",
-            "band": "giveaway",
-            "verification": "verified",
-            "sourceIds": [
-              "draft",
-              "decade"
             ]
           }
         ]
@@ -24084,7 +24086,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-antonio-brown-b-1",
-            "text": "At Central Michigan, I was the only player in school history with two 1,000-yard receiving seasons when I was drafted.",
+            "text": "My college résumé mixed high-volume receiving with return-game production.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24093,7 +24095,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-antonio-brown-b-2",
-            "text": "I also produced two 100-reception seasons in college.",
+            "text": "I posted two 100-catch seasons and two 1,000-yard receiving seasons in college.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24102,7 +24104,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-antonio-brown-b-3",
-            "text": "My college career included touchdowns as a receiver, runner, passer, punt returner and kickoff returner.",
+            "text": "At Central Michigan, I scored touchdowns as a receiver, runner, passer, punt returner and kickoff returner.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24198,11 +24200,12 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "jason-witten-a-1",
-            "text": "I was a third-round draft pick in 2003 who became a long-term NFL tight end.",
+            "text": "I was a mid-round tight end who became one of the longest-tenured players in one franchise's history.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "cowboys"
+              "cowboys",
+              "return"
             ]
           },
           {
@@ -24296,7 +24299,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "jason-witten-b-1",
-            "text": "I played college football at Tennessee before entering the NFL in 2003.",
+            "text": "I played tight end in the SEC before entering the NFL as a third-round pick.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24404,7 +24407,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-demarcus-ware-a-1",
-            "text": "I came from Troy and entered the NFL as the 11th overall pick in 2005.",
+            "text": "I was a first-round pass rusher from a smaller college program.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24413,7 +24416,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-demarcus-ware-a-2",
-            "text": "I started all 16 games as a rookie at outside linebacker.",
+            "text": "I immediately started all 16 games as a rookie at outside linebacker.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24422,7 +24425,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-demarcus-ware-a-3",
-            "text": "My eight rookie sacks led my team.",
+            "text": "Dallas took me 11th overall in 2005 after I played at Troy.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24431,7 +24434,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-demarcus-ware-a-4",
-            "text": "I then led that same team in sacks for each of the next seven seasons.",
+            "text": "My eight rookie sacks led the Cowboys.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24440,7 +24443,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-demarcus-ware-a-5",
-            "text": "In 2008, I led the entire NFL with 20 sacks.",
+            "text": "I then led Dallas in sacks for each of the next seven seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24449,7 +24452,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-demarcus-ware-a-6",
-            "text": "I led the league again in 2010 with 15.5 sacks.",
+            "text": "In 2008, I led the entire NFL with 20 sacks.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -24458,7 +24461,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-demarcus-ware-a-7",
-            "text": "I posted 19.5 sacks in 2011.",
+            "text": "I led the league again in 2010 with 15.5 sacks.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -24606,7 +24609,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-darrelle-revis-a-1",
-            "text": "I played college football at Pitt before becoming the 14th overall pick in 2007.",
+            "text": "I was a first-round cornerback who became a full-time starter immediately.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24624,7 +24627,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-darrelle-revis-a-3",
-            "text": "In 2009, I intercepted six passes.",
+            "text": "The Jets selected me 14th overall in 2007 after I played at Pitt.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24633,7 +24636,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-darrelle-revis-a-4",
-            "text": "That same season, I recorded an NFL-record 31 passes defensed.",
+            "text": "In 2009, I intercepted six passes.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24642,7 +24645,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-darrelle-revis-a-5",
-            "text": "My team finished that year first in the league against the pass, in total yards allowed and in points allowed.",
+            "text": "That same season, I recorded an NFL-record 31 passes defensed.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24651,7 +24654,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-darrelle-revis-a-6",
-            "text": "I finished second in voting for AP Defensive Player of the Year in 2009.",
+            "text": "My team finished that year first in the league against the pass, in total yards allowed and in points allowed.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -24660,7 +24663,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-darrelle-revis-a-7",
-            "text": "I earned first-team All-Pro honors in three straight seasons from 2009 through 2011.",
+            "text": "I finished second in voting for AP Defensive Player of the Year in 2009.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -24669,7 +24672,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-darrelle-revis-a-8",
-            "text": "I finished my career with seven Pro Bowls and four first-team All-Pro selections.",
+            "text": "I earned first-team All-Pro honors in three straight seasons from 2009 through 2011.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -24678,7 +24681,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-darrelle-revis-a-9",
-            "text": "My four first-team All-Pro seasons were 2009, 2010, 2011 and 2014.",
+            "text": "I finished my career with seven Pro Bowls and four first-team All-Pro selections.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -24810,16 +24813,17 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "micah-parsons-a-1",
-            "text": "I entered the NFL after opting out of my final college football season.",
+            "text": "I was a first-round linebacker whose versatility included both off-ball work and pass rushing.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "draft"
+              "draft",
+              "rookie"
             ]
           },
           {
             "id": "micah-parsons-a-2",
-            "text": "My original drafting team moved down from pick 10 to pick 12 before selecting me.",
+            "text": "My college career lasted only two playing seasons before I sat out my final year.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -24828,7 +24832,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "micah-parsons-a-3",
-            "text": "At Penn State, I became the first sophomore to win Big Ten Linebacker of the Year.",
+            "text": "My original drafting team moved down from pick 10 to pick 12 before selecting me.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24837,7 +24841,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "micah-parsons-a-4",
-            "text": "Dallas selected me 12th overall in the 2021 NFL Draft.",
+            "text": "At Penn State, I became the first sophomore to win Big Ten Linebacker of the Year.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24846,11 +24850,11 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "micah-parsons-a-5",
-            "text": "As a rookie, I was used both off the ball and as a pass rusher.",
+            "text": "Dallas selected me 12th overall in the 2021 NFL Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "rookie"
+              "draft"
             ]
           },
           {
@@ -25023,7 +25027,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "tyreek-hill-a-1",
-            "text": "I entered the NFL as a fifth-round pick, 165th overall, in 2016.",
+            "text": "I entered the NFL as a Day 3 pick whose earliest role mixed offense and special teams.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -25033,8 +25037,18 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "tyreek-hill-a-2",
-            "text": "I came into the league from West Alabama with a background that included elite track speed.",
+            "text": "Speed made me an immediate threat both from scrimmage and in the return game.",
             "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "proBowl",
+              "versatile"
+            ]
+          },
+          {
+            "id": "tyreek-hill-a-3",
+            "text": "Kansas City selected me 165th overall in the 2016 NFL Draft.",
+            "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "draft",
@@ -25042,30 +25056,22 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
-            "id": "tyreek-hill-a-3",
-            "text": "As a rookie, I immediately became a major factor as a return specialist.",
+            "id": "tyreek-hill-a-4",
+            "text": "I came into the league from West Alabama after a track-heavy athletic background.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
+              "draft",
               "proBowl"
             ]
           },
           {
-            "id": "tyreek-hill-a-4",
-            "text": "I finished that rookie season with 12 total touchdowns, tying a franchise rookie record.",
+            "id": "tyreek-hill-a-5",
+            "text": "I finished my rookie season with 12 total touchdowns, tying a franchise rookie record.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "rookie"
-            ]
-          },
-          {
-            "id": "tyreek-hill-a-5",
-            "text": "I also led the NFL in punt-return average as a rookie.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "versatile"
             ]
           },
           {
