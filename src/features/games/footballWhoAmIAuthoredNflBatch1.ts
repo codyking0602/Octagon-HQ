@@ -116,7 +116,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
         "clues": [
           {
             "id": "nfl-cam-newton-b-1",
-            "text": "My college path included time at one SEC school before I spent a season playing outside the FBS.",
+            "text": "I began college at one SEC program before transferring twice on the way to my breakthrough season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -125,7 +125,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-cam-newton-b-2",
-            "text": "At that junior-college stop, I helped my team win an NJCAA national championship.",
+            "text": "One of my college stops came outside the FBS before I returned to the SEC.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -134,7 +134,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-cam-newton-b-3",
-            "text": "I transferred again and, in my only season as the starter at my final school, won the Heisman Trophy.",
+            "text": "At my final college stop, I started only one season before entering the NFL Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -143,7 +143,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-cam-newton-b-4",
-            "text": "The Panthers then used the first overall selection of the 2011 draft on me.",
+            "text": "After that one-year starting run, I was selected first overall in the 2011 NFL Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -280,7 +280,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-peyton-manning-a-7",
-            "text": "I appeared in four Super Bowls, each with a different head coach.",
+            "text": "I reached four Super Bowls across my Indianapolis and Denver tenures.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -386,7 +386,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-peyton-manning-b-8",
-            "text": "I retired having recorded a victory against all 32 NFL franchises.",
+            "text": "I finished my career with 71,940 passing yards and 539 touchdown passes.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -527,7 +527,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
         "clues": [
           {
             "id": "nfl-jerry-rice-b-1",
-            "text": "In college, I played in a pass-heavy offense with quarterback Willie Totten at an HBCU in Mississippi.",
+            "text": "I starred at a small Division I-AA program in an unusually pass-heavy offense.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -536,7 +536,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-jerry-rice-b-2",
-            "text": "I finished my college career with 301 receptions, 4,693 receiving yards and 50 touchdown catches.",
+            "text": "My college offense became known for huge passing numbers long before spread attacks were common.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -545,7 +545,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-jerry-rice-b-3",
-            "text": "I helped that program reach its only Division I-AA playoff appearance in 1984.",
+            "text": "I finished my college career with 301 receptions, 4,693 receiving yards and 50 touchdown catches.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -554,7 +554,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-jerry-rice-b-4",
-            "text": "San Francisco selected me 16th overall in the 1985 draft.",
+            "text": "I was selected 16th overall in the 1985 NFL Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -748,7 +748,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-randy-moss-b-3",
-            "text": "In 1996, I helped Marshall go 15-0 and win the Division I-AA national championship while scoring 29 touchdowns.",
+            "text": "In my first season at my final college, I helped my team go 15-0 and win a national championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -935,7 +935,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
         "clues": [
           {
             "id": "nfl-barry-sanders-b-1",
-            "text": "Early in college, I made my mark as a return specialist while another future NFL star was the starting tailback.",
+            "text": "Early in college, I made my mark as a return specialist before becoming the featured tailback.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -944,7 +944,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-barry-sanders-b-2",
-            "text": "I spent my first two college seasons backing up Thurman Thomas.",
+            "text": "I spent my first two college seasons behind an older star running back.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1143,7 +1143,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
         "clues": [
           {
             "id": "nfl-deion-sanders-b-1",
-            "text": "As a college freshman, I started at cornerback, played outfield in baseball and also competed in track.",
+            "text": "As a college freshman, I started at cornerback while also competing in other sports.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1170,7 +1170,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-deion-sanders-b-4",
-            "text": "In 1989, I was drafted by both the Atlanta Falcons and the New York Yankees.",
+            "text": "In 1989, I was selected in both the NFL Draft and the Major League Baseball Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1354,7 +1354,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
         "clues": [
           {
             "id": "nfl-aaron-donald-b-1",
-            "text": "I stayed in my hometown for college and developed into one of the nation's most decorated defensive linemen.",
+            "text": "I stayed close to home for college and developed into one of the nation's most decorated defensive linemen.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1364,7 +1364,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-aaron-donald-b-2",
-            "text": "As a college senior, I won the Nagurski, Bednarik, Outland and Lombardi awards.",
+            "text": "As a college senior, I became a consensus All-American and swept several major national defensive and lineman awards.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1382,7 +1382,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-aaron-donald-b-4",
-            "text": "The Rams selected me 13th overall in the 2014 NFL Draft.",
+            "text": "I was selected 13th overall in the 2014 NFL Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1409,7 +1409,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-aaron-donald-b-7",
-            "text": "I was a unanimous selection to the NFL's All-Decade Team of the 2010s.",
+            "text": "Across my first 10 NFL seasons, I earned eight first-team All-Pro selections.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1418,7 +1418,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-aaron-donald-b-8",
-            "text": "Across my first 154 regular-season games, I totaled 111 sacks and became the Rams' official-era franchise sack leader.",
+            "text": "I was one of only three unanimous selections to the NFL's All-Decade Team of the 2010s.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1589,7 +1589,7 @@ export const footballWhoAmIAuthoredNflBatch1 = [
           },
           {
             "id": "nfl-lawrence-taylor-b-4",
-            "text": "The Giants selected me second overall in the 1981 NFL Draft.",
+            "text": "I was selected second overall in the 1981 NFL Draft.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
