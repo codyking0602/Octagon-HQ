@@ -68,6 +68,25 @@ describe("UFC Who Am I authored calibration scripts", () => {
     }
   });
 
+  it("avoids brittle current-state wording in authored clue text", () => {
+    const brittlePatterns = [
+      /my final fight/i,
+      /my most recent fight/i,
+      /i currently hold/i,
+      /i am currently/i,
+      /my current streak/i,
+      /still the record/i,
+    ];
+
+    for (const identity of ufcWhoAmIAuthoredIdentities) {
+      for (const scriptId of ["A", "B"] as const) {
+        for (const clue of identity.scripts[scriptId]!.clues) {
+          expect(brittlePatterns.some((pattern) => pattern.test(clue.text))).toBe(false);
+        }
+      }
+    }
+  });
+
   it("keeps the calibration bank UFC-career-forward rather than generic-count-forward", () => {
     const bannedGenericPatterns = [
       /primary UFC division/i,
