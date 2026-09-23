@@ -209,7 +209,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-jon-jones-b-10",
-            "text": "One of my most recognizable UFC matchups came against Daniel Cormier in 2017.",
+            "text": "I also shared the Octagon with Daniel Cormier in 2017.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -339,7 +339,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-tj-dillashaw-b-1",
-            "text": "I entered the UFC through season 14 of The Ultimate Fighter as a member of Team Bisping.",
+            "text": "I entered the UFC through a season of The Ultimate Fighter.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -424,7 +424,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tj-dillashaw-b-10",
-            "text": "One of my most recognizable UFC matchups came against Henry Cejudo in 2019.",
+            "text": "I also shared the Octagon with Henry Cejudo in 2019.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -639,7 +639,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-francis-ngannou-b-10",
-            "text": "One of my most recognizable UFC matchups came against Stipe Miocic in 2018.",
+            "text": "I also shared the Octagon with Stipe Miocic in 2018.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -854,7 +854,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-b-10",
-            "text": "One of my most recognizable UFC matchups came against Petr Yan in 2021.",
+            "text": "I also shared the Octagon with Petr Yan in 2021.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1070,7 +1070,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-justin-gaethje-b-10",
-            "text": "One of my most recognizable UFC matchups came against Ilia Topuria in 2026.",
+            "text": "I also shared the Octagon with Ilia Topuria in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1285,7 +1285,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dustin-poirier-b-10",
-            "text": "One of my most recognizable UFC matchups came against Islam Makhachev in 2024.",
+            "text": "I also shared the Octagon with Islam Makhachev in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1316,7 +1316,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-tito-ortiz-a-1",
-            "text": "Before becoming a UFC name himself, I gained early no-holds-barred experience by training with fellow Huntington Beach fighter Tank Abbott.",
+            "text": "Before becoming a UFC name, I gained early no-holds-barred experience by training with another established fighter from my area.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1500,7 +1500,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tito-ortiz-b-10",
-            "text": "One of my most recognizable UFC matchups came against Chuck Liddell in 2006.",
+            "text": "I also shared the Octagon with Chuck Liddell in 2006.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1715,7 +1715,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robbie-lawler-b-10",
-            "text": "One of my most recognizable UFC matchups came against Johny Hendricks in 2014.",
+            "text": "I also shared the Octagon with Johny Hendricks in 2014.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2144,7 +2144,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-petr-yan-b-10",
-            "text": "One of my most recognizable UFC matchups came against Aljamain Sterling in 2022.",
+            "text": "I also shared the Octagon with Aljamain Sterling in 2022.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2360,7 +2360,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-lyoto-machida-b-10",
-            "text": "One of my most recognizable UFC matchups came against Rashad Evans in 2009.",
+            "text": "I also shared the Octagon with Rashad Evans in 2009.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
