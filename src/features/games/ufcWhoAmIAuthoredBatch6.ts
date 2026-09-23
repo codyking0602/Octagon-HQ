@@ -208,7 +208,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kevin-holland-b-10",
-            "text": "One of my most recognizable UFC matchups came against John Phillips in 2018.",
+            "text": "I also shared the Octagon with John Phillips in 2018.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -424,7 +424,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-gilbert-burns-b-10",
-            "text": "One of my most recognizable UFC matchups came against Tyron Woodley in 2020.",
+            "text": "I also shared the Octagon with Tyron Woodley in 2020.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -640,7 +640,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nick-diaz-b-10",
-            "text": "One of my most recognizable UFC matchups came against Carlos Condit in 2012.",
+            "text": "I also shared the Octagon with Carlos Condit in 2012.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -856,7 +856,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alexander-volkanovski-b-10",
-            "text": "One of my most recognizable UFC matchups came against Islam Makhachev in 2023.",
+            "text": "I also shared the Octagon with Islam Makhachev in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1071,7 +1071,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kamaru-usman-b-10",
-            "text": "One of my most recognizable UFC matchups came against Leon Edwards in 2023.",
+            "text": "I also shared the Octagon with Leon Edwards in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1287,7 +1287,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-b-10",
-            "text": "One of my most recognizable UFC matchups came against Jon Jones in 2015.",
+            "text": "I also shared the Octagon with Jon Jones in 2015.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1503,7 +1503,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-b-10",
-            "text": "One of my most recognizable UFC matchups came against Justin Gaethje in 2022.",
+            "text": "I also shared the Octagon with Justin Gaethje in 2022.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1718,7 +1718,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-frankie-edgar-b-10",
-            "text": "One of my most recognizable UFC matchups came against B.J. Penn in 2010.",
+            "text": "I also shared the Octagon with B.J. Penn in 2010.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1933,7 +1933,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-benson-henderson-b-10",
-            "text": "One of my most recognizable UFC matchups came against Frankie Edgar in 2012.",
+            "text": "I also shared the Octagon with Frankie Edgar in 2012.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2149,7 +2149,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-b-10",
-            "text": "One of my most recognizable UFC matchups came against Georges St-Pierre in 2009.",
+            "text": "I also shared the Octagon with Georges St-Pierre in 2009.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2364,7 +2364,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-glover-teixeira-b-10",
-            "text": "One of my most recognizable UFC matchups came against Jan Błachowicz in 2021.",
+            "text": "I also shared the Octagon with Jan Błachowicz in 2021.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
