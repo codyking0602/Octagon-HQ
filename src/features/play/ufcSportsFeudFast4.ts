@@ -32,7 +32,16 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       "Name a submission fighters drill constantly.",
       "Name a tap-out technique used in the UFC.",
     ],
-    answers: ["Rear-naked choke", "Guillotine", "Armbar", "Triangle choke", "Kimura", "Americana", "Arm-triangle choke", "Heel hook"],
+    answers: [
+      { name: "Rear-naked choke", aliases: ["RNC", "Rear naked", "Rear naked choke"] },
+      { name: "Guillotine", aliases: ["Guillotine choke"] },
+      { name: "Armbar", aliases: ["Arm bar"] },
+      { name: "Triangle choke", aliases: ["Triangle"] },
+      { name: "Kimura", aliases: ["Kimura lock"] },
+      { name: "Americana", aliases: ["Americana lock"] },
+      { name: "Arm-triangle choke", aliases: ["Arm triangle", "Arm-triangle"] },
+      { name: "Heel hook", aliases: ["Heelhook"] },
+    ],
   },
   {
     category: "techniques",
