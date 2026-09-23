@@ -209,7 +209,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dricus-du-plessis-b-10",
-            "text": "One of my most recognizable UFC matchups came against Sean Strickland in 2024.",
+            "text": "I also shared the Octagon with Sean Strickland in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -424,7 +424,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-khamzat-chimaev-b-10",
-            "text": "One of my most recognizable UFC matchups came against Sean Strickland in 2026.",
+            "text": "I also shared the Octagon with Sean Strickland in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -640,7 +640,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-sean-omalley-b-10",
-            "text": "One of my most recognizable UFC matchups came against Merab Dvalishvili in 2024.",
+            "text": "I also shared the Octagon with Merab Dvalishvili in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -671,11 +671,11 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "ufc-forrest-griffin-a-1",
-            "text": "My 2005 Ultimate Fighter finale with Stephan Bonnar became one of the defining mainstream breakthrough moments in UFC history and helped secure the show's future on television.",
+            "text": "Before becoming a full-time fighter, I worked as a university police officer.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity3"
+              "identity1"
             ]
           },
           {
@@ -1069,7 +1069,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chael-sonnen-b-10",
-            "text": "One of my most recognizable UFC matchups came against Anderson Silva in 2010.",
+            "text": "I also shared the Octagon with Anderson Silva in 2010.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1285,7 +1285,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-valentina-shevchenko-b-10",
-            "text": "One of my most recognizable UFC matchups came against Joanna Jedrzejczyk in 2018.",
+            "text": "I also shared the Octagon with Joanna Jedrzejczyk in 2018.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1442,7 +1442,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-rose-namajunas-b-4",
-            "text": "My first UFC title opportunity came after 0 earlier UFC appearances.",
+            "text": "My first UFC title opportunity came in my UFC debut.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1500,7 +1500,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-rose-namajunas-b-10",
-            "text": "One of my most recognizable UFC matchups came against Zhang Weili in 2021.",
+            "text": "I also shared the Octagon with Zhang Weili in 2021.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1853,11 +1853,10 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kayla-harrison-b-2",
-            "text": "After my second Olympic gold medal, I retired from competitive judo before transitioning fully into MMA.",
+            "text": "After retiring from competitive judo, I began learning striking before transitioning fully into MMA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "identity3",
               "identity5"
             ]
           },
@@ -2083,7 +2082,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-miesha-tate-b-4",
-            "text": "My first UFC title opportunity came after 1 earlier UFC appearances.",
+            "text": "My first UFC title opportunity came after one earlier UFC appearance.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2141,7 +2140,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-miesha-tate-b-10",
-            "text": "One of my most recognizable UFC matchups came against Amanda Nunes in 2016.",
+            "text": "I also shared the Octagon with Amanda Nunes in 2016.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2357,7 +2356,7 @@ export const ufcWhoAmIAuthoredBatch2: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-jorge-masvidal-b-10",
-            "text": "One of my most recognizable UFC matchups came against Kamaru Usman in 2021.",
+            "text": "I also shared the Octagon with Kamaru Usman in 2021.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
