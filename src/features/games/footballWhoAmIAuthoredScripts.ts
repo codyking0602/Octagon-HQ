@@ -24814,6 +24814,1052 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-ndamukong-suh",
+    "name": "Ndamukong Suh",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nebraska": "https://huskers.com/sports/football/roster/player/ndamukong-suh",
+      "hall": "https://huskers.com/nebraska-athletics-hall-of-famers-s",
+      "cfbhof": "https://huskers.com/news/2026/01/14/suh-selected-for-college-football-hall-of-fame"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-ndamukong-suh-a-1",
+            "text": "I was an interior defensive lineman who finished my college career with more than 200 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-a-2",
+            "text": "My career totals included 57 tackles for loss and 24 sacks.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-a-3",
+            "text": "As a senior, I led my team with 85 tackles from the defensive tackle position.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-a-4",
+            "text": "That season also included 12 sacks, 10 pass breakups and three blocked kicks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-a-5",
+            "text": "I was named my conference's Defensive Player of the Year and Defensive Lineman of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska",
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-a-6",
+            "text": "I won both the Outland Trophy and the Lombardi Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-a-7",
+            "text": "I also won the Bronko Nagurski Trophy and the Chuck Bednarik Award in the same season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-a-8",
+            "text": "I became the first defensive player to win the Associated Press College Football Player of the Year award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-a-9",
+            "text": "I finished fourth in the 2009 Heisman voting while starring at Nebraska.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska",
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-a-10",
+            "text": "I was Nebraska's No. 93 defensive tackle whose 2009 season swept the Outland, Lombardi, Nagurski and Bednarik awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska",
+              "hall"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-ndamukong-suh-b-1",
+            "text": "A knee injury early in my college career led to a medical redshirt.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-b-2",
+            "text": "I later became a two-time defensive MVP for my college team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-b-3",
+            "text": "My senior-season defense led the nation in scoring defense, allowing a little over 10 points per game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-b-4",
+            "text": "In my conference championship game as a senior, I tied a school record with seven tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-b-5",
+            "text": "I became the first defensive tackle invited to the Heisman ceremony in 15 years.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-b-6",
+            "text": "My fourth-place Heisman finish matched the best by a defensive lineman since 1972.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska",
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-b-7",
+            "text": "I was a unanimous first-team All-American in my final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nebraska",
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-b-8",
+            "text": "Nebraska later retired my No. 93 jersey and selected me for its athletics Hall of Fame.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hall"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-b-9",
+            "text": "I became a College Football Hall of Famer after one of the most decorated defensive seasons in Nebraska history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-ndamukong-suh-b-10",
+            "text": "Detroit selected me second overall in 2010 after my dominant senior season at Nebraska.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hall",
+              "cfbhof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-von-miller",
+    "name": "Von Miller",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "tamu": "https://12thman.com/news/2010/12/07/big-12-sack-leader-miller-receives-butkus-award",
+      "tshof": "https://tshof.org/inductee/miller-von/"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-von-miller-a-1",
+            "text": "I developed into one of college football's top edge rushers after beginning my career at linebacker.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu",
+              "tshof"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-a-2",
+            "text": "My breakout junior season ended with an NCAA-leading 17 quarterback sacks.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu",
+              "tshof"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-a-3",
+            "text": "That 17-sack season earned me first-team All-America recognition.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-a-4",
+            "text": "I considered entering the NFL Draft after that junior season but returned for my senior year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-a-5",
+            "text": "As a senior, I recorded 9.5 sacks and 14.5 tackles for loss before the bowl game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-a-6",
+            "text": "I led the Big 12 in sacks for a second consecutive season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-a-7",
+            "text": "I was a unanimous All-Big 12 selection as a senior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-a-8",
+            "text": "I won the 2010 Butkus Award as the nation's top collegiate linebacker.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu",
+              "tshof"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-a-9",
+            "text": "I finished my Texas A&M career with 33 sacks.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "tshof"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-a-10",
+            "text": "I was the Texas A&M pass rusher who won the 2010 Butkus Award before going second overall in the 2011 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu",
+              "tshof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-von-miller-b-1",
+            "text": "I was a Texas high school product who stayed in-state for college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tshof"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-b-2",
+            "text": "My two biggest college seasons both ended with me leading my conference in sacks.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-b-3",
+            "text": "I forced three fumbles and recovered two more during my senior regular season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-b-4",
+            "text": "I also knocked down six passes that year from my linebacker role.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-b-5",
+            "text": "My return for my senior season coincided with a major statistical improvement by my team's defense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-b-6",
+            "text": "I followed an NCAA-best 17-sack junior year with another 9.5 sacks as a senior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-b-7",
+            "text": "My college career closed with consensus All-America honors and 33 sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tshof"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-b-8",
+            "text": "The defining individual award of my senior year was named for Dick Butkus.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-b-9",
+            "text": "I became Texas A&M's Butkus-winning linebacker after leading the Big 12 in sacks in back-to-back seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "tamu"
+            ]
+          },
+          {
+            "id": "cfb-von-miller-b-10",
+            "text": "Denver used the second pick of the 2011 NFL Draft on the Texas A&M defender who had just won the Butkus Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "tshof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-charles-woodson",
+    "name": "Charles Woodson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "michigan": "https://mgoblue.com/news/2018/1/6/charles-woodson-named-to-college-football-hall-of-fame",
+      "title": "https://mgoblue.com/sports/2017/6/16/football-1997-national-champion",
+      "heisman": "https://mgoblue.com/sports/2017/6/16/football-heisman-trophy-history"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-charles-woodson-a-1",
+            "text": "I was a defensive back whose college team also used me on offense and special teams.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-a-2",
+            "text": "I earned first-team all-conference honors in each of my three college seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-a-3",
+            "text": "I became a two-time first-team All-American.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-a-4",
+            "text": "In my final regular-season game, I intercepted a pass, caught a 37-yard pass and returned a punt 78 yards for a touchdown.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-a-5",
+            "text": "That performance helped clinch an outright conference championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-a-6",
+            "text": "I won the Jim Thorpe Award, the Bronko Nagurski Trophy and the Chuck Bednarik Award in the same season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-a-7",
+            "text": "I also won the Walter Camp Award that year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-a-8",
+            "text": "I became the first primarily defensive player to win the Heisman Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "title",
+              "heisman"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-a-9",
+            "text": "I wore No. 2 for an undefeated Michigan team that won the 1997 national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-a-10",
+            "text": "I was Michigan's 1997 Heisman-winning cornerback, receiver and returner.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "heisman"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-charles-woodson-b-1",
+            "text": "My final college team completed a perfect 12-0 season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-b-2",
+            "text": "That defense allowed only 9.5 points per game.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-b-3",
+            "text": "In the Rose Bowl, I intercepted a pass in the end zone.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "title",
+              "michigan"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-b-4",
+            "text": "I also tied the Rose Bowl record at the time with four pass breakups.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "title",
+              "michigan"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-b-5",
+            "text": "That 21-16 Rose Bowl win completed an undefeated national championship season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-b-6",
+            "text": "I was voted Big Ten MVP by the conference's coaches.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-b-7",
+            "text": "I was also a two-time Big Ten Defensive Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-b-8",
+            "text": "My 1997 award haul included the Heisman, Walter Camp, Nagurski, Bednarik and Thorpe honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-b-9",
+            "text": "Michigan's No. 2 made his signature late-season impact against Ohio State and then Washington State in the Rose Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "michigan",
+              "title"
+            ]
+          },
+          {
+            "id": "cfb-charles-woodson-b-10",
+            "text": "I am the Michigan defender who won the 1997 Heisman while leading a perfect national-title team.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "title",
+              "heisman"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-ed-reed",
+    "name": "Ed Reed",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "miami": "https://miamihurricanes.com/sports/football/roster/player/edward-reed",
+      "aa": "https://miamihurricanes.com/news/2002/04/30/205536772-2"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-ed-reed-a-1",
+            "text": "I became a multi-year starter in the secondary and developed a reputation for creating turnovers.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-a-2",
+            "text": "Over my final two college seasons, I intercepted 17 passes.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "miami",
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-a-3",
+            "text": "I earned consensus first-team All-America honors in consecutive seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "miami",
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-a-4",
+            "text": "As a senior, I led the nation in interceptions per game and finished with nine picks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-a-5",
+            "text": "I also broke up 18 passes during that senior season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-a-6",
+            "text": "I was named my conference's co-Defensive Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-a-7",
+            "text": "I finished my career with school records of 21 interceptions and 389 interception-return yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "miami",
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-a-8",
+            "text": "My final college team led the nation in scoring defense, pass-efficiency defense and turnover margin.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-a-9",
+            "text": "I wore No. 20 while helping Miami complete an undefeated 2001 national championship season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-a-10",
+            "text": "I closed my Miami career with nine tackles in a 37-14 Rose Bowl win over Nebraska for the national title.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-ed-reed-b-1",
+            "text": "I scored five college touchdowns on interception returns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-b-2",
+            "text": "My blocked kicks and takeaways helped produce 106 points for my team across my career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "miami",
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-b-3",
+            "text": "As a junior, I ranked third nationally with eight interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-b-4",
+            "text": "As a senior, I returned three interceptions for touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-b-5",
+            "text": "In a road win at Florida State, I intercepted two passes and blocked a punt despite playing with a shoulder injury.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-b-6",
+            "text": "Late in another close road game, I took a lateral after a teammate's interception and raced 80 yards to seal the win.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-b-7",
+            "text": "I set my school's career interception record by picking off two passes at Virginia Tech.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-b-8",
+            "text": "I started 48 of 49 games in my college career and finished as a two-time consensus All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "miami",
+              "aa"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-b-9",
+            "text": "I was the Miami safety whose final season featured nine interceptions and a national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "cfb-ed-reed-b-10",
+            "text": "The No. 20 safety left Miami as its career leader in interceptions and interception-return yards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "miami",
+              "aa"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jayden-daniels",
+    "name": "Jayden Daniels",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "lsu": "https://lsusports.net/sports/fb/roster/player/jayden-daniels",
+      "florida": "https://lsusports.net/news/2023/11/11/daniels-adds-to-heisman-campaign-football-beats-florida-52-35"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jayden-daniels-a-1",
+            "text": "I was a five-year starting college quarterback who finished with more than 12,000 passing yards and 3,000 rushing yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-a-2",
+            "text": "I became the first player in FBS history to reach both of those career thresholds.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-a-3",
+            "text": "My final season included 3,812 passing yards and 40 touchdown passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-a-4",
+            "text": "I also rushed for 1,134 yards in that season, a school record for a quarterback.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-a-5",
+            "text": "My 208.0 passer rating set an FBS single-season record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-a-6",
+            "text": "I won the Davey O'Brien Award, the Johnny Unitas Golden Arm Award and the Manning Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-a-7",
+            "text": "I was named both SEC Offensive Player of the Year and a consensus All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-a-8",
+            "text": "I won the 2023 Heisman Trophy, becoming the third winner in LSU history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-a-9",
+            "text": "I wore No. 5 at LSU while producing one of the most explosive quarterback seasons in SEC history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-a-10",
+            "text": "I was LSU's 2023 Heisman-winning quarterback before Washington selected me second overall in the 2024 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jayden-daniels-b-1",
+            "text": "I started 55 college games across two programs.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-b-2",
+            "text": "I played 29 games at my first school before transferring and playing 26 more at my final school.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-b-3",
+            "text": "My career totals reached 12,749 passing yards and 3,307 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-b-4",
+            "text": "I accounted for 124 touchdowns across my college career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-b-5",
+            "text": "In one senior-season game, I became the first FBS player to pass for at least 350 yards and rush for at least 200 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu",
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-b-6",
+            "text": "That performance against Florida produced an SEC-record 606 yards of total offense.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu",
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-b-7",
+            "text": "I threw for 372 yards and ran for 234 more in that game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "florida"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-b-8",
+            "text": "After transferring from Arizona State, I finished my career at LSU with 6,725 passing yards and 2,019 rushing yards in two seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-b-9",
+            "text": "I joined Billy Cannon and Joe Burrow as LSU Heisman Trophy winners.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-jayden-daniels-b-10",
+            "text": "I am the Arizona State transfer who became LSU's 2023 Heisman-winning No. 5 quarterback.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
