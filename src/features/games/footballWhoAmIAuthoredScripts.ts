@@ -23150,6 +23150,416 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "nfl-roger-staubach",
+    "name": "Roger Staubach",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/roger-staubach",
+      "spotlight": "https://www.profootballhof.com/news/gold-jacket-spotlight-the-idol-of-other-idols-roger-staubach",
+      "pearson": "https://www.profootballhof.com/players/drew-pearson"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nfl-roger-staubach-a-1",
+            "text": "I did not begin my NFL career until I was 27 years old.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-a-2",
+            "text": "Military service delayed my pro football career by four years after college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-a-3",
+            "text": "Part of that active duty was served in Vietnam.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-a-4",
+            "text": "I joined Dallas in 1969 and became the regular starting quarterback in 1971.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-a-5",
+            "text": "As a runner, I added 2,264 yards and 20 touchdowns during my pro career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-a-6",
+            "text": "I led the NFL in passer rating four times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "spotlight"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-a-7",
+            "text": "I was selected to six Pro Bowls and the NFL's 1970s All-Decade Team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "spotlight"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-a-8",
+            "text": "I appeared in five Super Bowls during my 11-year pro career and won two of them.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "spotlight"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-a-9",
+            "text": "I was named MVP of Super Bowl VI.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "spotlight"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-a-10",
+            "text": "Before the NFL, I had won the 1963 Heisman Trophy at the U.S. Naval Academy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nfl-roger-staubach-b-1",
+            "text": "I built a reputation for late-game rallies, finishing with 23 game-winning drives and 15 fourth-quarter comebacks.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "spotlight"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-b-2",
+            "text": "I retired as the NFL's career leader in passer rating.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "spotlight"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-b-3",
+            "text": "A separated shoulder cost me most of the 1972 regular season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-b-4",
+            "text": "In that season's divisional playoffs, I came off the bench and threw two touchdowns in the final 90 seconds to beat San Francisco 30-28.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-b-5",
+            "text": "I won the 1971 Bert Bell Award and the 1978 Walter Payton Man of the Year Award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "spotlight"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-b-6",
+            "text": "In the final seconds of a 1975 divisional playoff, my 50-yard touchdown pass beat Minnesota 17-14.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "spotlight",
+              "pearson"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-b-7",
+            "text": "That completion to Drew Pearson gave rise to the term \"Hail Mary\" pass.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "pearson"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-b-8",
+            "text": "I finished my NFL career with 22,700 passing yards and 153 touchdown passes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "spotlight"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-b-9",
+            "text": "My college was Navy, and my entire NFL career was spent with Dallas.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "nfl-roger-staubach-b-10",
+            "text": "I was the Cowboys quarterback behind the original \"Hail Mary\" touchdown to Drew Pearson.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "pearson"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "NFL",
+    "subjectId": "eric-dickerson",
+    "name": "Eric Dickerson",
+    "stageFocus": "NFL-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://www.profootballhof.com/players/eric-dickerson"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "eric-dickerson-a-1",
+            "text": "I entered the NFL as the second overall pick in the 1983 draft.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-a-2",
+            "text": "As a rookie, I handled a then-record 390 rushing attempts.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-a-3",
+            "text": "That rookie season produced 1,808 rushing yards and 18 rushing touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-a-4",
+            "text": "I topped 1,000 rushing yards in each of my first four seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-a-5",
+            "text": "Three of those first four seasons exceeded 1,800 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-a-6",
+            "text": "In my second NFL season, I rushed for 2,105 yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-a-7",
+            "text": "That total broke O.J. Simpson's single-season record of 2,003 rushing yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-a-8",
+            "text": "I later ran for a playoff-record 248 yards against Dallas.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-a-9",
+            "text": "I became the fastest player ever to reach 10,000 rushing yards, doing it in 91 games.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-a-10",
+            "text": "My 2,105-yard season remains the NFL single-season rushing record.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "eric-dickerson-b-1",
+            "text": "Before the NFL, I was a two-time All-America running back at SMU.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-b-2",
+            "text": "My pro career eventually included the Rams, Colts, Raiders and Falcons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-b-3",
+            "text": "A blockbuster 1987 trade moved me from Los Angeles to Indianapolis during the season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-b-4",
+            "text": "In only nine games for Indianapolis that year, I rushed for 1,011 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-b-5",
+            "text": "In 1988, I led the league with 1,659 rushing yards, the first Colt to win the rushing title since 1955.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-b-6",
+            "text": "The next season, I became the first player in NFL history with seven consecutive 1,000-yard rushing seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-b-7",
+            "text": "I won four NFL rushing titles, in 1983, 1984, 1986 and 1988.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-b-8",
+            "text": "I finished with 13,259 rushing yards and 90 rushing touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-b-9",
+            "text": "I was selected to six Pro Bowls and earned five All-Pro selections.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "eric-dickerson-b-10",
+            "text": "The Rams back who posted 1,808 rushing yards as a rookie and 2,105 in year two was me.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
