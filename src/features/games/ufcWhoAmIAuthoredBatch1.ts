@@ -109,7 +109,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-jon-jones-a-10",
-            "text": "A defining UFC result in my career came against Stipe Miocic in 2024.",
+            "text": "My UFC résumé includes a matchup against Stipe Miocic in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -970,7 +970,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-justin-gaethje-a-10",
-            "text": "A defining UFC result in my career came against Khabib Nurmagomedov in 2020.",
+            "text": "My UFC résumé includes a matchup against Khabib Nurmagomedov in 2020.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1401,7 +1401,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tito-ortiz-a-10",
-            "text": "A defining UFC result in my career came against Randy Couture in 2003.",
+            "text": "My UFC résumé includes a matchup against Randy Couture in 2003.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2260,7 +2260,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-lyoto-machida-a-10",
-            "text": "A defining UFC result in my career came against Jon Jones in 2011.",
+            "text": "My UFC résumé includes a matchup against Jon Jones in 2011.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
