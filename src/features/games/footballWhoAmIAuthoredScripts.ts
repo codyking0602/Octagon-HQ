@@ -1,4 +1,5 @@
 import type { WhoAmIClueBand } from "./whoAmIEngine";
+import { footballWhoAmIAuthoredNflBatch1 } from "./footballWhoAmIAuthoredNflBatch1";
 
 export type FootballWhoAmIAuthoredLeague = "NFL" | "CFB";
 export type FootballWhoAmIAuthoredScriptId = "A" | "B" | "C";
@@ -45,6 +46,7 @@ export interface FootballWhoAmIAuthoredIdentity {
  * - runtime never synthesizes or recomputes authored clue facts
  */
 export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredIdentity[] = [
+  ...footballWhoAmIAuthoredNflBatch1,
   {
     "league": "NFL",
     "subjectId": "patrick-mahomes",
