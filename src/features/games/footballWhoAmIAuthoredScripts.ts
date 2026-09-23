@@ -9970,7 +9970,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-steve-spurrier-b-2",
-            "text": "I won college football's most famous individual trophy as a senior.",
+            "text": "I spent a decade playing professional football before moving fully into coaching.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -9980,7 +9980,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-steve-spurrier-b-3",
-            "text": "After a professional playing career, I moved into coaching.",
+            "text": "My early coaching work was on the offensive side of the ball.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9990,7 +9990,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-steve-spurrier-b-4",
-            "text": "My first major-college head-coaching job was at Duke.",
+            "text": "My first major-college head-coaching job came at Duke.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -10300,7 +10300,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-woody-hayes-a-1",
-            "text": "I coached at three Ohio colleges during my head-coaching career.",
+            "text": "I coached at three colleges in the same state during my head-coaching career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -10309,7 +10309,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-woody-hayes-a-2",
-            "text": "My longest tenure lasted 28 seasons at one school.",
+            "text": "My longest tenure lasted nearly three decades at one school.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -10318,7 +10318,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-woody-hayes-a-3",
-            "text": "My teams there won 205 games.",
+            "text": "My teams there won more than 200 games.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -10404,7 +10404,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-woody-hayes-b-2",
-            "text": "I began my head-coaching career at Denison.",
+            "text": "I began my head-coaching career at a small college in Ohio.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -10413,7 +10413,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-woody-hayes-b-3",
-            "text": "I then coached at Miami of Ohio before moving to a Big Ten program.",
+            "text": "I then moved to another Ohio program before taking a Big Ten job.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
