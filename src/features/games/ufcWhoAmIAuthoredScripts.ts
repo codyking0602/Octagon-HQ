@@ -30,6 +30,7 @@ export interface UfcWhoAmIAuthoredIdentity {
  * - clues 1-4 create possibilities; 5-7 narrow; 8-10 identify
  * - title résumé, signature fights, style/background and career path beat generic counts
  * - opponent and nickname anchors generally stay late
+ * - distinctive geography, nationality and gym/camp combinations stay out of clues 1-4 when they would identify the fighter too quickly
  * - every clue is verified against the existing research archive and/or direct UFC authority
  * - authored text is served verbatim; runtime must never reconstruct these clues
  */
@@ -52,7 +53,7 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
           { id: "ufc-khabib-nurmagomedov-a-1", text: "My father initially wanted me to focus on school before taking a larger role in my fight training.", band: "broad", verification: "verified", sourceIds: ["making"] },
           { id: "ufc-khabib-nurmagomedov-a-2", text: "I turned professional in mixed martial arts in 2008.", band: "broad", verification: "verified", sourceIds: ["making", "hof"] },
           { id: "ufc-khabib-nurmagomedov-a-3", text: "Before reaching the UFC, I built a background across wrestling, judo and combat sambo.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
-          { id: "ufc-khabib-nurmagomedov-a-4", text: "I split major portions of my training between Dagestan and American Kickboxing Academy in California.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
+          { id: "ufc-khabib-nurmagomedov-a-4", text: "I arrived in the UFC with an unbeaten professional record.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-khabib-nurmagomedov-a-5", text: "My UFC debut ended with a rear-naked choke victory in Nashville in 2012.", band: "helpful", verification: "verified", sourceIds: ["hof", "profile"] },
           { id: "ufc-khabib-nurmagomedov-a-6", text: "A 2014 decision win over Rafael dos Anjos became one of the important victories in my climb at lightweight.", band: "strong", verification: "verified", sourceIds: ["profile", "hof"] },
           { id: "ufc-khabib-nurmagomedov-a-7", text: "I won a vacant UFC lightweight championship by going five rounds with Al Iaquinta.", band: "strong", verification: "verified", sourceIds: ["hof", "profile"] },
@@ -182,7 +183,7 @@ export const ufcWhoAmIAuthoredIdentities: readonly UfcWhoAmIAuthoredIdentity[] =
       A: {
         id: "A",
         clues: [
-          { id: "ufc-max-holloway-a-1", text: "Representing Waianae, Hawaii became an important part of how I described my identity and motivation.", band: "broad", verification: "verified", sourceIds: ["hometown"] },
+          { id: "ufc-max-holloway-a-1", text: "I entered the UFC before my 21st birthday.", band: "broad", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-a-2", text: "A friend helped bring me into formal fight training after a trainer noticed my natural ability on a speed bag.", band: "broad", verification: "verified", sourceIds: ["profile"] },
           { id: "ufc-max-holloway-a-3", text: "I developed from a young UFC prospect into the centerpiece of a long featherweight winning streak.", band: "helpful", verification: "verified", sourceIds: ["career"] },
           { id: "ufc-max-holloway-a-4", text: "I first captured UFC gold by winning an interim featherweight championship.", band: "helpful", verification: "verified", sourceIds: ["career"] },
