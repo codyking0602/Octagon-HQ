@@ -8890,7 +8890,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-robert-griffin-iii-a-1",
-            "text": "I was born in Japan to two U.S. Army sergeants and later became an elite high-school hurdler in Texas.",
+            "text": "I became a starting college quarterback as a freshman and immediately added a major rushing dimension to the offense.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8899,7 +8899,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-robert-griffin-iii-a-2",
-            "text": "Before my first college football season, I earned track All-America honors in the 400-meter hurdles.",
+            "text": "I was also a two-sport college athlete, competing at a national level in track and field.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
