@@ -44,6 +44,25 @@ const EDITORIAL_FAILURE_PATTERNS = [
   /appearances at both .*Ultimate Fighter .* Tournament/i,
 ];
 
+const CALIBRATED_GENERATED_IDS = new Set([
+  "ufc:aljamain-sterling",
+  "ufc:kayla-harrison",
+  "ufc:michael-chandler",
+  "ufc:frank-shamrock",
+]);
+
+const MASS_TEMPLATE_PATTERNS = [
+  /^My UFC debut ended with a (?:win|loss)/i,
+  /^I reached my first UFC title opportunity/i,
+  /^My first UFC title opportunity came after/i,
+  /^One stretch of my UFC career reached/i,
+  /^I spent most of my UFC career/i,
+  /^My UFC career included appearances at/i,
+  /^My UFC career includes a championship victory/i,
+  /^I won \d+ of my first three UFC appearances/i,
+  /^My UFC résumé includes a matchup against/i,
+];
+
 const EARLY_IDENTITY_SHORTCUTS = [
   /\bWaianae\b/i,
   /\bDagestan\b/i,
@@ -116,6 +135,25 @@ describe("UFC Who Am I authored launch pool", () => {
             (name) => name !== identity.name.toLowerCase() && lower.includes(name),
           );
           expect(namedOtherCanonicalFighter).toBe(false);
+        }
+      }
+    }
+  });
+
+  it("locks the first recalibrated generated fighters away from the mass-authoring templates", () => {
+    const calibrated = ufcWhoAmIAuthoredLaunchPool.filter((identity) =>
+      CALIBRATED_GENERATED_IDS.has(identity.subjectId),
+    );
+    expect(calibrated).toHaveLength(CALIBRATED_GENERATED_IDS.size);
+
+    for (const identity of calibrated) {
+      for (const scriptId of ["A", "B"] as const) {
+        const clues = identity.scripts[scriptId]!.clues;
+        for (const clue of clues) {
+          expect(MASS_TEMPLATE_PATTERNS.some((pattern) => pattern.test(clue.text))).toBe(false);
+        }
+        for (const clue of clues.slice(0, 4)) {
+          expect(/\b(?:Petr Yan|Cory Sandhagen|Holly Holm|Julianna Peña|Charles Oliveira|Conor McGregor|Tito Ortiz|Kevin Jackson)\b/i.test(clue.text)).toBe(false);
         }
       }
     }
