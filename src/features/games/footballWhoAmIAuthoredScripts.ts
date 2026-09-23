@@ -6656,7 +6656,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-3",
-            "text": "Beginning the next year, my teams produced 19 consecutive winning seasons.",
+            "text": "Over the next two decades, that franchise became one of the league's most consistent contenders.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6666,7 +6666,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-4",
-            "text": "I eventually won 17 division titles with that franchise.",
+            "text": "My second head-coaching tenure ultimately lasted 24 seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6676,7 +6676,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-5",
-            "text": "My teams also won 11 consecutive division championships from 2009 through 2019.",
+            "text": "Beginning in my second season there, my teams produced 19 consecutive winning seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6686,7 +6686,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-6",
-            "text": "I reached nine Super Bowls as a head coach with the same franchise.",
+            "text": "I eventually won 17 division titles, including 11 consecutive division championships.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6696,7 +6696,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-7",
-            "text": "I won six of those Super Bowls, the most by a head coach in NFL history.",
+            "text": "My teams won nine conference championships during that run.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6706,7 +6706,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-8",
-            "text": "I finished my tenure there with 30 postseason victories for that franchise.",
+            "text": "I won six Super Bowls, the most by a head coach in NFL history.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6716,7 +6716,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-9",
-            "text": "My six titles came in Super Bowls XXXVI, XXXVIII, XXXIX, XLIX, LI and LIII.",
+            "text": "I finished my tenure there with 30 postseason victories for that franchise.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6726,7 +6726,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-a-10",
-            "text": "I am the longtime New England head coach whose championship run was built around Tom Brady.",
+            "text": "My six titles came in Super Bowls XXXVI, XXXVIII, XXXIX, XLIX, LI and LIII with New England.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6741,7 +6741,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-bill-belichick-b-1",
-            "text": "I entered the NFL coaching ranks in 1975 as a special assistant with Baltimore.",
+            "text": "I entered the NFL coaching ranks in the mid-1970s as a special assistant.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6751,7 +6751,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-2",
-            "text": "My early stops also included Detroit and Denver before I joined the New York Giants.",
+            "text": "I worked for three NFL franchises before settling into a long assistant run with a fourth.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6761,7 +6761,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-3",
-            "text": "With the Giants, I worked my way from defensive assistant and special teams roles into coordinating the defense.",
+            "text": "That fourth stop began in 1979, and I worked my way from defensive and special-teams roles into greater responsibility.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6771,7 +6771,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-4",
-            "text": "I served as the Giants' defensive coordinator during championship seasons in 1986 and 1990.",
+            "text": "I eventually became the Giants' defensive coordinator.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6781,7 +6781,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-5",
-            "text": "My first head-coaching job came with Cleveland, where I spent five seasons.",
+            "text": "As a coordinator, I helped the Giants win championships in the 1986 and 1990 seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6791,7 +6791,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-6",
-            "text": "After Cleveland, I reunited with Bill Parcells and later worked with the Jets.",
+            "text": "My first head-coaching job came with Cleveland, where I spent five seasons.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6801,7 +6801,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-7",
-            "text": "I returned to head coaching in 2000 with a franchise that had never won a Super Bowl.",
+            "text": "After Cleveland, I reunited with Bill Parcells and later worked with the Jets.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6811,7 +6811,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-8",
-            "text": "That franchise went on to win six Super Bowls and nine conference championships during my tenure.",
+            "text": "I returned to head coaching in 2000 and went on to win six Super Bowls and nine conference championships.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6821,7 +6821,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-belichick-b-9",
-            "text": "I finished that run with 333 total career victories and an NFL-record 31 postseason wins.",
+            "text": "I finished my New England tenure with 333 total career victories and an NFL-record 31 postseason wins.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6974,7 +6974,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-parcells-b-2",
-            "text": "Detroit selected me in the seventh round of the 1964 NFL Draft.",
+            "text": "I was selected in an NFL Draft but chose coaching instead of pursuing a pro playing career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6984,7 +6984,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-parcells-b-3",
-            "text": "Instead of pursuing a pro playing career, I went directly into coaching.",
+            "text": "I went directly from my playing days into a coaching career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6994,7 +6994,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-bill-parcells-b-4",
-            "text": "My college coaching path eventually led to the NFL before I became a head coach.",
+            "text": "I spent years climbing the coaching ladder before receiving my first NFL head-coaching job.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7194,7 +7194,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-3",
-            "text": "My first head-coaching opportunity came in Green Bay in 1959.",
+            "text": "My first NFL head-coaching opportunity also gave me control of the team's football operation.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7203,7 +7203,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-4",
-            "text": "That franchise had been one of the league's weakest teams before my arrival.",
+            "text": "I inherited one of the league's weakest teams at that first stop.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7212,7 +7212,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-5",
-            "text": "By my second season, I had already taken the team to the NFL Championship Game.",
+            "text": "By my second season there, I had already reached the NFL Championship Game.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7221,7 +7221,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-6",
-            "text": "I then won league titles in 1961, 1962 and 1965.",
+            "text": "I then won three league titles before the Super Bowl era began.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7230,7 +7230,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-7",
-            "text": "My final two Green Bay teams finished as champions in Super Bowls I and II.",
+            "text": "My final two teams at that stop won Super Bowls I and II.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7239,7 +7239,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-vince-lombardi-b-8",
-            "text": "After a year away from coaching, I took over Washington in 1969 and produced a winning season.",
+            "text": "After a year away from coaching, I took over Washington and produced a winning season in 1969.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7494,7 +7494,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-2",
-            "text": "My team posted five straight 10-win seasons from 2012 through 2016.",
+            "text": "That 14-season run eventually became the winningest head-coaching tenure in franchise history.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7503,7 +7503,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-3",
-            "text": "Across 14 seasons at that stop, I reached the playoffs ten times.",
+            "text": "My teams reached the playoffs in ten of those 14 seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7512,7 +7512,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-4",
-            "text": "I won five division titles there.",
+            "text": "At their peak, my teams posted five straight 10-win seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7521,7 +7521,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-5",
-            "text": "My teams reached back-to-back Super Bowls.",
+            "text": "I won five division titles there.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7530,7 +7530,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-6",
-            "text": "The first of those trips ended with a championship.",
+            "text": "My teams reached back-to-back Super Bowls.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7539,7 +7539,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-7",
-            "text": "My defense led the NFL in scoring defense four consecutive seasons from 2012 through 2015.",
+            "text": "The first of those Super Bowl trips ended with a championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7548,7 +7548,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-8",
-            "text": "I won two conference championships with that franchise.",
+            "text": "My defense led the NFL in scoring defense four consecutive seasons from 2012 through 2015.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7557,7 +7557,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-9",
-            "text": "My Super Bowl title came in XLVIII with Seattle.",
+            "text": "I won two conference championships with Seattle.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -7566,7 +7566,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-a-10",
-            "text": "I am the coach who returned from USC to build the Seahawks' Legion of Boom era.",
+            "text": "I am the former USC coach who won Super Bowl XLVIII with Seattle during the Legion of Boom era.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -7598,7 +7598,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-b-3",
-            "text": "At that college stop, I won seven consecutive conference titles.",
+            "text": "At that college stop, my teams reached a bowl game in every season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7607,7 +7607,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-b-4",
-            "text": "I also won two national championships there.",
+            "text": "I won seven consecutive conference titles there.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7616,7 +7616,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-pete-carroll-b-5",
-            "text": "My record across those nine college seasons was 97-19.",
+            "text": "I went 97-19 there and won two national championships.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7791,7 +7791,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-shanahan-b-2",
-            "text": "Those assistant stretches came during the 1980s and early 1990s.",
+            "text": "I also had an NFL head-coaching stint elsewhere between those two assistant runs.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7800,7 +7800,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-shanahan-b-3",
-            "text": "I later returned as head coach in 1995.",
+            "text": "I later returned to my best-known franchise as head coach in the mid-1990s.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7809,7 +7809,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-shanahan-b-4",
-            "text": "My first four seasons there included two Super Bowl championships.",
+            "text": "Within my first four seasons as head coach there, I had won two Super Bowls.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
