@@ -7882,7 +7882,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "earlyRotation": "normal",
     "sources": {
       "steelers": "https://www.steelers.com/news/statement-from-steelers-president-art-rooney-ii-x1216",
-      "path": "https://www.steelers.com/news/labriola-on-tomlin-coach-of-the-year",
+      "path": "https://www.steelers.com/news/tomlin-steelers-a-perfect-match-15513466",
       "hire": "https://www.steelers.com/news/tbt-tomlin-arrives-in-pittsburgh"
     },
     "scripts": {
@@ -7902,7 +7902,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-tomlin-a-2",
-            "text": "I took over a franchise that had employed only two head coaches in the previous 38 seasons.",
+            "text": "I inherited a franchise known for extraordinary long-term coaching continuity.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7913,7 +7913,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-tomlin-a-3",
-            "text": "I reached the playoffs in four of my first five seasons.",
+            "text": "I reached the playoffs in four of my first five seasons as a head coach.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8006,7 +8006,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-mike-tomlin-b-1",
-            "text": "My first NFL job came in 2001 coaching the secondary in Tampa Bay.",
+            "text": "My NFL coaching background began on the defensive side of the ball, especially in the secondary.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8017,7 +8017,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-tomlin-b-2",
-            "text": "I learned that defense under Tony Dungy and Monte Kiffin.",
+            "text": "My first pro staff was known for a 4-3, Tampa-2 defensive foundation.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8061,7 +8061,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-mike-tomlin-b-6",
-            "text": "My first draft as a head coach included linebackers Lawrence Timmons and LaMarr Woodley with the top two picks.",
+            "text": "I won division titles in each of my first two seasons as a head coach.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8133,7 +8133,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-sean-payton-a-1",
-            "text": "My first NFL head-coaching job began in 2006.",
+            "text": "My first NFL head-coaching job came after assistant stops with three NFC teams.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8142,7 +8142,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-payton-a-2",
-            "text": "In my first season, I took that team to a division title and a conference championship game.",
+            "text": "In my first season as a head coach, my team won 10 games.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8151,7 +8151,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-payton-a-3",
-            "text": "I was named AP Coach of the Year after that debut season.",
+            "text": "In my first season, that team improved to 11 wins and captured its division.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8160,7 +8160,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-payton-a-4",
-            "text": "Three years later, my team opened the season with 13 consecutive wins.",
+            "text": "I was named AP Coach of the Year after that debut season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8169,7 +8169,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-payton-a-5",
-            "text": "That season ended with the first world championship in franchise history.",
+            "text": "Three years later, my team opened a season with 13 consecutive wins.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8178,7 +8178,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-payton-a-6",
-            "text": "My teams later won four consecutive division titles from 2017 through 2020.",
+            "text": "That run ended with the first world championship in franchise history.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8187,7 +8187,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-payton-a-7",
-            "text": "I became the winningest head coach in that franchise's history.",
+            "text": "My teams later won four consecutive division titles from 2017 through 2020.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8196,7 +8196,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-payton-a-8",
-            "text": "After leaving that job, I returned to coaching with a team in the other conference.",
+            "text": "After leaving that franchise, I returned to coaching in the other conference and eventually led that team to a division title and conference championship game.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8327,9 +8327,9 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "stageFocus": "NFL-career-forward",
     "earlyRotation": "normal",
     "sources": {
-      "bio": "https://www.baltimoreravens.com/news/john-harbaugh-bio-7748188",
-      "museum": "https://www.baltimoreravens.com/team/history/mobile-museum/the-harbaugh-effect",
-      "guide": "https://comms.baltimoreravens.com/press/Media_Guide/FRONT_OFFICE.pdf"
+      "bio": "https://www.giants.com/team/coaches-roster/john-harbaugh",
+      "museum": "https://www.giants.com/news/coaching-timeline-john-harbaugh-s-path-to-the-giants",
+      "guide": "https://www.giants.com/news/john-harbaugh-hired-head-coach-new-york-giants-nfl"
     },
     "scripts": {
       "A": {
@@ -8337,7 +8337,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-john-harbaugh-a-1",
-            "text": "I became an NFL head coach in 2008 without previously serving as an NFL offensive or defensive coordinator.",
+            "text": "I became an NFL head coach after spending most of my pro assistant career working with special teams and defensive backs.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8414,7 +8414,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-harbaugh-a-8",
-            "text": "I led my franchise to a dozen playoff berths in my first 17 seasons.",
+            "text": "I led Baltimore to 12 playoff berths across 18 seasons as its head coach.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8436,7 +8436,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-harbaugh-a-10",
-            "text": "I am the longtime Baltimore head coach who faced Jim Harbaugh in the Super Bowl.",
+            "text": "I am the longtime Baltimore coach who won the Super Bowl against my brother before becoming the Giants head coach in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8551,7 +8551,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-harbaugh-b-10",
-            "text": "I am the former Eagles special teams coach who became the Ravens' championship head coach.",
+            "text": "I am the former Eagles special teams coach who won a championship with Baltimore and became the Giants head coach in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8579,7 +8579,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-sean-mcvay-a-1",
-            "text": "I became an NFL head coach at age 30.",
+            "text": "My first NFL head-coaching opportunity came after fewer than ten seasons working in the league.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8588,7 +8588,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-a-2",
-            "text": "In my first season, I turned a four-win team into an 11-win division champion.",
+            "text": "I inherited a team coming off a four-win season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8606,7 +8606,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-a-4",
-            "text": "In my second season, I reached the Super Bowl.",
+            "text": "That first-year offense went from last in the league in scoring to first.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8615,7 +8615,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-a-5",
-            "text": "Within my first five seasons, I reached the Super Bowl a second time.",
+            "text": "I was named AP Coach of the Year after that debut season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8624,7 +8624,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-a-6",
-            "text": "That second appearance ended with a championship.",
+            "text": "I reached the Super Bowl in my second season as a head coach.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8633,7 +8633,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-a-7",
-            "text": "I became the youngest head coach in NFL history to win a Super Bowl.",
+            "text": "Within my first five seasons, I reached a second Super Bowl and won it.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8642,7 +8642,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-a-8",
-            "text": "My first nine seasons produced seven playoff berths.",
+            "text": "My first nine seasons produced seven playoff berths and two Super Bowl appearances.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8651,7 +8651,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-a-9",
-            "text": "My championship came in Super Bowl LVI.",
+            "text": "I became the youngest head coach in NFL history to win a Super Bowl.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8660,7 +8660,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-a-10",
-            "text": "I am the Rams head coach who won a Super Bowl at the franchise's home stadium in Los Angeles.",
+            "text": "I am the Rams head coach whose championship came in Super Bowl LVI at the franchise's home stadium in Los Angeles.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8674,7 +8674,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-sean-mcvay-b-1",
-            "text": "I began my NFL coaching career in my early 20s.",
+            "text": "I played wide receiver in college before entering coaching.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8683,7 +8683,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-b-2",
-            "text": "Before becoming a head coach, I worked primarily on the offensive side of the ball.",
+            "text": "My first NFL coaching job came as an offensive assistant.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8692,7 +8692,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-b-3",
-            "text": "I eventually became an offensive coordinator in Washington.",
+            "text": "After a season outside the NFL, I joined Washington's staff in 2010.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8701,7 +8701,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-b-4",
-            "text": "My work there helped launch me into a head-coaching job before I turned 31.",
+            "text": "I worked there as an offensive assistant, tight ends coach and eventually offensive coordinator.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8710,7 +8710,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-b-5",
-            "text": "I immediately built one of the league's highest-scoring offenses.",
+            "text": "I spent three seasons as Washington's offensive coordinator.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8719,7 +8719,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-sean-mcvay-b-6",
-            "text": "My first Rams team won the NFC West after the franchise had gone more than a decade without a winning season.",
+            "text": "I left Washington for my first head-coaching opportunity and immediately won a division title.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8794,7 +8794,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-a-2",
-            "text": "My first NFL head-coaching job came with an expansion team.",
+            "text": "My first NFL head-coaching job came after I had already led a college program.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8805,7 +8805,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-a-3",
-            "text": "I took that franchise to two conference championship games.",
+            "text": "That first pro team was an expansion franchise.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8816,7 +8816,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-a-4",
-            "text": "At my second NFL head-coaching stop, I won three division titles.",
+            "text": "By its second season, that expansion team had reached a conference championship game.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8827,7 +8827,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-a-5",
-            "text": "I also reached the playoffs five times there.",
+            "text": "I later moved to a second NFL franchise and won three division titles there.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8838,7 +8838,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-a-6",
-            "text": "My teams won two Super Bowls.",
+            "text": "I reached the playoffs five times at that second stop.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8849,7 +8849,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-a-7",
-            "text": "Both of those championships came against the same opposing franchise.",
+            "text": "My teams there won two Super Bowls.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8860,7 +8860,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-a-8",
-            "text": "The first ended an opponent's bid for a 19-0 season.",
+            "text": "Both championships came against the same opposing franchise.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8871,7 +8871,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-a-9",
-            "text": "My Super Bowl wins came in XLII and XLVI.",
+            "text": "The first of those wins ended an opponent's bid for a 19-0 season.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8882,7 +8882,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-a-10",
-            "text": "I am the Giants coach who twice defeated Bill Belichick's Patriots for the championship.",
+            "text": "My Super Bowl wins came in XLII and XLVI as the Giants coach who twice defeated New England.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8898,7 +8898,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-tom-coughlin-b-1",
-            "text": "Before my first NFL head-coaching job, I served as the Giants' wide receivers coach.",
+            "text": "Before becoming an NFL head coach, I had assistant stops with three professional franchises.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8909,7 +8909,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-b-2",
-            "text": "That assistant stint ended with a victory in Super Bowl XXV.",
+            "text": "One of those assistant tenures ended with a Super Bowl victory.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8920,7 +8920,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-b-3",
-            "text": "I left the NFL staff to become the head coach at Boston College.",
+            "text": "I left the pro assistant ranks to become a college head coach.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8931,7 +8931,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-b-4",
-            "text": "I later became the first head coach in Jacksonville Jaguars history.",
+            "text": "That college job lasted three seasons before my first NFL head-coaching opportunity.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8942,7 +8942,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-b-5",
-            "text": "That expansion franchise reached the conference championship game in only its second season.",
+            "text": "My first NFL head-coaching opportunity came with an expansion franchise.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8953,7 +8953,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-b-6",
-            "text": "I eventually returned to the Giants as head coach in 2004.",
+            "text": "That expansion team reached the conference championship game in only its second season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8964,7 +8964,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-b-7",
-            "text": "My Giants teams won 102 regular-season games.",
+            "text": "I later returned to the Giants as head coach in 2004.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8975,7 +8975,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-b-8",
-            "text": "I tied Bill Parcells for the most postseason wins by a Giants head coach.",
+            "text": "My Giants teams won 102 regular-season games and two Super Bowls.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8986,7 +8986,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-b-9",
-            "text": "My two championships there were Super Bowls XLII and XLVI.",
+            "text": "I tied Bill Parcells for the most postseason wins by a Giants head coach.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8997,7 +8997,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-tom-coughlin-b-10",
-            "text": "I am the former Boston College and Jaguars head coach who later won two Super Bowls with the Giants.",
+            "text": "I am the former Boston College and Jaguars head coach whose Giants won Super Bowls XLII and XLVI.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -9026,7 +9026,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-dan-campbell-a-1",
-            "text": "My first full-time NFL head-coaching job began in 2021.",
+            "text": "My first full-time NFL head-coaching job came after I had previously served as an interim head coach.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -9036,7 +9036,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dan-campbell-a-2",
-            "text": "My first season there ended with only three wins.",
+            "text": "My first season in that full-time role was a deep rebuild with only three wins.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -9046,7 +9046,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dan-campbell-a-3",
-            "text": "The next year, my team improved to 9-8.",
+            "text": "The next year, my team climbed above .500.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9141,7 +9141,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dan-campbell-b-2",
-            "text": "I played for the Giants, Cowboys, Lions and Saints.",
+            "text": "I played for four different NFL franchises during that career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -9151,7 +9151,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dan-campbell-b-3",
-            "text": "I began coaching as an intern with Miami in 2010.",
+            "text": "One of the teams I had played for later gave me my first full-time NFL head-coaching job.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9161,7 +9161,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dan-campbell-b-4",
-            "text": "I rose to become Miami's tight ends coach and later its interim head coach.",
+            "text": "I began coaching as an intern with Miami and later became the team's tight ends coach.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9171,7 +9171,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dan-campbell-b-5",
-            "text": "In that interim role, I took over a 1-3 team and won my first two games.",
+            "text": "I later served as Miami's interim head coach, taking over a 1-3 team and winning my first two games.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9201,7 +9201,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-dan-campbell-b-8",
-            "text": "Detroit hired me as head coach in 2021.",
+            "text": "Detroit hired me as its head coach in 2021.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
