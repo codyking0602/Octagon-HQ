@@ -76,14 +76,14 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
         clues: [
           { id: "ufc-alex-pereira-b-1", text: "I built a high-level career in another combat sport before my UFC rise.", band: "broad", verification: "verified", sourceIds: ["profile", "career"] },
           { id: "ufc-alex-pereira-b-2", text: "I entered the UFC with far more high-level striking experience than MMA experience.", band: "broad", verification: "verified", sourceIds: ["career"] },
-          { id: "ufc-alex-pereira-b-3", text: "My first UFC light heavyweight bout was a split-decision win over a former champion.", band: "helpful", verification: "verified", sourceIds: ["career", "moving"] },
-          { id: "ufc-alex-pereira-b-4", text: "My first UFC light heavyweight title opportunity came only months after I moved up a division.", band: "helpful", verification: "verified", sourceIds: ["career", "moving"] },
-          { id: "ufc-alex-pereira-b-5", text: "Two months later, I took a short-notice rematch and finished it with a head kick seconds into the second round.", band: "helpful", verification: "verified", sourceIds: ["moving"] },
-          { id: "ufc-alex-pereira-b-6", text: "I defended the light heavyweight title three times in a seven-month stretch.", band: "strong", verification: "verified", sourceIds: ["moving"] },
-          { id: "ufc-alex-pereira-b-7", text: "Magomed Ankalaev took my light heavyweight belt before I won it back in their rematch.", band: "strong", verification: "verified", sourceIds: ["moving"] },
-          { id: "ufc-alex-pereira-b-8", text: "In the rematch with Ankalaev, I regained the title with a stoppage in one minute and 20 seconds.", band: "strong", verification: "verified", sourceIds: ["moving"] },
-          { id: "ufc-alex-pereira-b-9", text: "After winning UFC championships at middleweight and light heavyweight, I pursued a third divisional title against Ciryl Gane.", band: "giveaway", verification: "verified", sourceIds: ["moving"] },
-          { id: "ufc-alex-pereira-b-10", text: "My UFC identity combines elite kickboxing power, two divisional titles, and the nickname “Poatan.”", band: "giveaway", verification: "verified", sourceIds: ["career", "nickname"] }
+          { id: "ufc-alex-pereira-b-3", text: "My UFC career shifted from middleweight to light heavyweight after a championship run in my first UFC division.", band: "helpful", verification: "verified", sourceIds: ["career","moving"] },
+          { id: "ufc-alex-pereira-b-4", text: "My first fight at 205 pounds was a split-decision win over former champion Jan Blachowicz.", band: "helpful", verification: "verified", sourceIds: ["career","moving"] },
+          { id: "ufc-alex-pereira-b-5", text: "I stopped Jiří Procházka to win the vacant light-heavyweight championship at Madison Square Garden.", band: "helpful", verification: "verified", sourceIds: ["career","moving"] },
+          { id: "ufc-alex-pereira-b-6", text: "I defended that belt with knockouts of Jamahal Hill and Procházka.", band: "strong", verification: "verified", sourceIds: ["moving"] },
+          { id: "ufc-alex-pereira-b-7", text: "A later defense against Khalil Rountree Jr. ended with a fourth-round stoppage.", band: "strong", verification: "verified", sourceIds: ["moving"] },
+          { id: "ufc-alex-pereira-b-8", text: "Magomed Ankalaev took my belt, but I regained it in the rematch with a stoppage in one minute and 20 seconds.", band: "strong", verification: "verified", sourceIds: ["moving"] },
+          { id: "ufc-alex-pereira-b-9", text: "I then moved to heavyweight and challenged Ciryl Gane for an interim title in 2026, losing by second-round stoppage.", band: "giveaway", verification: "verified", sourceIds: ["moving"] },
+          { id: "ufc-alex-pereira-b-10", text: "My UFC identity combines elite kickboxing power, championships in two divisions and the nickname “Poatan.”", band: "giveaway", verification: "verified", sourceIds: ["career","nickname"] }
         ]
       }
     }
@@ -123,15 +123,15 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
         id: "B",
         clues: [
           { id: "ufc-conor-mcgregor-b-1", text: "A long-term coaching relationship became a major turning point when I was pushed to commit seriously to training.", band: "broad", verification: "verified", sourceIds: ["making"] },
-          { id: "ufc-conor-mcgregor-b-2", text: "Outside fighting, I later built major business ventures around my public persona.", band: "broad", verification: "verified", sourceIds: ["about"] },
-          { id: "ufc-conor-mcgregor-b-3", text: "My fame eventually carried me into a major crossover bout outside mixed martial arts.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
-          { id: "ufc-conor-mcgregor-b-4", text: "One of my early UFC setbacks led to an immediate rematch that went the full five rounds.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
-          { id: "ufc-conor-mcgregor-b-5", text: "After a long MMA layoff, I returned in 2020 and stopped Donald Cerrone in 40 seconds.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
-          { id: "ufc-conor-mcgregor-b-6", text: "I was stopped by Dustin Poirier in our 2021 rematch.", band: "strong", verification: "verified", sourceIds: ["profile"] },
-          { id: "ufc-conor-mcgregor-b-7", text: "Our trilogy fight ended after the first round because of a doctor stoppage following a leg injury.", band: "strong", verification: "verified", sourceIds: ["profile"] },
-          { id: "ufc-conor-mcgregor-b-8", text: "I challenged Khabib Nurmagomedov for the lightweight title at UFC 229 and was submitted in the fourth round.", band: "strong", verification: "verified", sourceIds: ["profile", "walkouts"] },
-          { id: "ufc-conor-mcgregor-b-9", text: "I returned to the UFC again in 2026 for a bout with Max Holloway.", band: "giveaway", verification: "verified", sourceIds: ["profile", "walkouts"] },
-          { id: "ufc-conor-mcgregor-b-10", text: "My “Notorious” nickname became part of a public persona tied to my Irish identity and crossover fame.", band: "giveaway", verification: "verified", sourceIds: ["nickname", "walkouts", "decade"] }
+          { id: "ufc-conor-mcgregor-b-2", text: "Before reaching the UFC, I had already held featherweight and lightweight titles in the same regional promotion.", band: "broad", verification: "verified", sourceIds: ["profile","decade"] },
+          { id: "ufc-conor-mcgregor-b-3", text: "I entered the UFC in 2013 and rose quickly through the featherweight division.", band: "helpful", verification: "verified", sourceIds: ["profile","decade"] },
+          { id: "ufc-conor-mcgregor-b-4", text: "A win over Dennis Siver put me directly into an interim-title opportunity.", band: "helpful", verification: "verified", sourceIds: ["profile"] },
+          { id: "ufc-conor-mcgregor-b-5", text: "I stopped Chad Mendes to win that interim featherweight championship.", band: "helpful", verification: "verified", sourceIds: ["profile","double"] },
+          { id: "ufc-conor-mcgregor-b-6", text: "I then knocked out José Aldo in 13 seconds to unify the division.", band: "strong", verification: "verified", sourceIds: ["aldo","double"] },
+          { id: "ufc-conor-mcgregor-b-7", text: "My fame later carried me into a crossover boxing match with Floyd Mayweather.", band: "strong", verification: "verified", sourceIds: ["profile","decade"] },
+          { id: "ufc-conor-mcgregor-b-8", text: "I returned to MMA to challenge Khabib Nurmagomedov for the lightweight title and was submitted.", band: "strong", verification: "verified", sourceIds: ["profile","walkouts"] },
+          { id: "ufc-conor-mcgregor-b-9", text: "Two 2021 fights with Dustin Poirier ended in stoppage losses, with the trilogy bout ending after a serious leg injury.", band: "giveaway", verification: "verified", sourceIds: ["profile"] },
+          { id: "ufc-conor-mcgregor-b-10", text: "After five years away, “The Notorious” returned in 2026 for a rematch with Max Holloway.", band: "giveaway", verification: "verified", sourceIds: ["profile","nickname","walkouts"] }
         ]
       }
     }
@@ -214,16 +214,16 @@ export const ufcWhoAmIAuthoredLaunchExpansion: readonly UfcWhoAmIAuthoredIdentit
       B: {
         id: "B",
         clues: [
-          { id: "ufc-anderson-silva-b-1", text: "I became a dedicated Spider-Man comic collector and said I related to a superhero who still had ordinary bills to pay.", band: "broad", verification: "verified", sourceIds: ["soundbytes"] },
-          { id: "ufc-anderson-silva-b-2", text: "Away from competition, I described myself as a practical joker who enjoyed making people laugh.", band: "broad", verification: "verified", sourceIds: ["soundbytes"] },
-          { id: "ufc-anderson-silva-b-3", text: "I won each of my first three UFC appearances by stoppage.", band: "helpful", verification: "verified", sourceIds: ["hof", "profile"] },
+          { id: "ufc-anderson-silva-b-1", text: "Away from competition, I described myself as a practical joker who enjoyed making people laugh.", band: "broad", verification: "verified", sourceIds: ["soundbytes"] },
+          { id: "ufc-anderson-silva-b-2", text: "I spent years competing in other promotions before finally making my UFC debut in 2006.", band: "broad", verification: "verified", sourceIds: ["hof","greatness"] },
+          { id: "ufc-anderson-silva-b-3", text: "I won each of my first three UFC appearances by stoppage.", band: "helpful", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-anderson-silva-b-4", text: "During my title years, I also accepted non-title fights in another division.", band: "helpful", verification: "verified", sourceIds: ["greatness"] },
           { id: "ufc-anderson-silva-b-5", text: "My striking performances made opponents such as Forrest Griffin part of some of the sport’s most replayed highlights.", band: "helpful", verification: "verified", sourceIds: ["greatness"] },
-          { id: "ufc-anderson-silva-b-6", text: "I stopped Sonnen in the second round of our rematch after submitting him in our first fight.", band: "strong", verification: "verified", sourceIds: ["defenses"] },
+          { id: "ufc-anderson-silva-b-6", text: "I stopped Chael Sonnen in our rematch after submitting him late in our first title fight.", band: "strong", verification: "verified", sourceIds: ["defenses"] },
           { id: "ufc-anderson-silva-b-7", text: "Chris Weidman ended my championship reign with a second-round knockout.", band: "strong", verification: "verified", sourceIds: ["hof"] },
           { id: "ufc-anderson-silva-b-8", text: "My immediate rematch with Weidman ended when I suffered a severe leg injury.", band: "strong", verification: "verified", sourceIds: ["hof"] },
-          { id: "ufc-anderson-silva-b-9", text: "Late in my UFC career, I shared the Octagon with Michael Bisping, Daniel Cormier and Israel Adesanya.", band: "giveaway", verification: "verified", sourceIds: ["greatness"] },
-          { id: "ufc-anderson-silva-b-10", text: "My 16-fight UFC winning streak and ten middleweight title defenses became defining records of my era.", band: "giveaway", verification: "verified", sourceIds: ["hof", "greatness"] }
+          { id: "ufc-anderson-silva-b-9", text: "Away from fighting, I became a dedicated Spider-Man comic collector.", band: "giveaway", verification: "verified", sourceIds: ["soundbytes"] },
+          { id: "ufc-anderson-silva-b-10", text: "Known as “The Spider,” I built a 16-fight UFC winning streak and made ten successful middleweight title defenses.", band: "giveaway", verification: "verified", sourceIds: ["hof","greatness","spiderquotes"] }
         ]
       }
     }
