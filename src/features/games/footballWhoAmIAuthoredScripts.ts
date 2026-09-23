@@ -5506,7 +5506,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-cam-newton-b-3",
-            "text": "That season, I became the first SEC player to pass for 2,000 yards and rush for 1,000 yards in the same year.",
+            "text": "That season, my offense leaned heavily on me as both a passer and a runner.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5701,7 +5701,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-peyton-manning-b-2",
-            "text": "As a rookie, I started all 16 games and set then-rookie records for completions, attempts, passing yards and touchdown passes.",
+            "text": "As a rookie, I started all 16 games and set multiple league rookie passing records.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6843,7 +6843,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-aaron-donald-a-4",
-            "text": "I led the Rams in sacks every season from 2015 through 2019.",
+            "text": "I led my franchise in sacks every season from 2015 through 2019.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6916,7 +6916,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-aaron-donald-b-1",
-            "text": "I grew up in the same city where I later played college football.",
+            "text": "I grew up in Western Pennsylvania and stayed in the region for college football.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
