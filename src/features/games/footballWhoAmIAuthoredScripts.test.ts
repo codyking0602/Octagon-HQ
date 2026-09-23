@@ -3,6 +3,7 @@ import {
   footballWhoAmIAuthoredIdentities,
   getFootballWhoAmIAuthoredIdentity,
 } from "./footballWhoAmIAuthoredScripts";
+import { FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES } from "./footballWhoAmIAuthoredTargetRoster";
 
 const REVIEWED_IDENTITIES = new Set([
   "NFL:Patrick Mahomes",
@@ -80,6 +81,20 @@ describe("Football Who Am I authored scripts", () => {
         identity.scripts.B!.clues.some((right) => right.text === left.text)
       );
       expect(exactOverlap).toHaveLength(0);
+    }
+  });
+
+  it("covers every frozen Football coach with the exact target subject ID", () => {
+    const targetCoaches = Object.values(FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES)
+      .flat()
+      .filter((identity) => identity.kind === "coach");
+
+    expect(targetCoaches).toHaveLength(45);
+
+    for (const target of targetCoaches) {
+      const authored = getFootballWhoAmIAuthoredIdentity(target.league, target.name);
+      expect(authored, `${target.league}:${target.name}`).toBeDefined();
+      expect(authored!.subjectId).toBe(target.subjectId);
     }
   });
 
