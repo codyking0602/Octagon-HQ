@@ -209,7 +209,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-junior-dos-santos-b-10",
-            "text": "One of my most recognizable UFC matchups came against Stipe Miocic in 2017.",
+            "text": "I also shared the Octagon with Stipe Miocic in 2017.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -424,7 +424,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-tyron-woodley-b-10",
-            "text": "One of my most recognizable UFC matchups came against Robbie Lawler in 2016.",
+            "text": "I also shared the Octagon with Robbie Lawler in 2016.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -639,7 +639,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alex-pantoja-b-10",
-            "text": "One of my most recognizable UFC matchups came against Brandon Royval in 2023.",
+            "text": "I also shared the Octagon with Brandon Royval in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -855,7 +855,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ilia-topuria-b-10",
-            "text": "One of my most recognizable UFC matchups came against Max Holloway in 2024.",
+            "text": "I also shared the Octagon with Max Holloway in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1071,7 +1071,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-robert-whittaker-b-10",
-            "text": "One of my most recognizable UFC matchups came against Israel Adesanya in 2022.",
+            "text": "I also shared the Octagon with Israel Adesanya in 2022.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1287,7 +1287,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-chris-weidman-b-10",
-            "text": "One of my most recognizable UFC matchups came against Anderson Silva in 2013.",
+            "text": "I also shared the Octagon with Anderson Silva in 2013.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1503,7 +1503,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-sean-strickland-b-10",
-            "text": "One of my most recognizable UFC matchups came against Khamzat Chimaev in 2026.",
+            "text": "I also shared the Octagon with Khamzat Chimaev in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1719,7 +1719,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-brandon-moreno-b-10",
-            "text": "One of my most recognizable UFC matchups came against Deiveson Figueiredo in 2023.",
+            "text": "I also shared the Octagon with Deiveson Figueiredo in 2023.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1935,7 +1935,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-rashad-evans-b-10",
-            "text": "One of my most recognizable UFC matchups came against Forrest Griffin in 2008.",
+            "text": "I also shared the Octagon with Forrest Griffin in 2008.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2093,7 +2093,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dominick-cruz-b-4",
-            "text": "My first UFC title opportunity came after 0 earlier UFC appearances.",
+            "text": "My first UFC title opportunity came in my UFC debut.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2151,7 +2151,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-dominick-cruz-b-10",
-            "text": "One of my most recognizable UFC matchups came against T.J. Dillashaw in 2016.",
+            "text": "I also shared the Octagon with T.J. Dillashaw in 2016.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2367,7 +2367,7 @@ export const ufcWhoAmIAuthoredBatch4: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-michael-bisping-b-10",
-            "text": "One of my most recognizable UFC matchups came against Luke Rockhold in 2016.",
+            "text": "I also shared the Octagon with Luke Rockhold in 2016.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
