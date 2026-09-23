@@ -100,7 +100,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-kevin-holland-a-9",
-            "text": "I became a ranked UFC contender in the Middleweight division.",
+            "text": "I built much of my UFC résumé in the Middleweight division.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -324,7 +324,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-gilbert-burns-a-10",
-            "text": "A defining UFC result in my career came against Kamaru Usman in 2021.",
+            "text": "My UFC résumé includes a matchup against Kamaru Usman in 2021.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -540,7 +540,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-nick-diaz-a-10",
-            "text": "A defining UFC result in my career came against Georges St-Pierre in 2013.",
+            "text": "My UFC résumé includes a matchup against Georges St-Pierre in 2013.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -756,7 +756,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-alexander-volkanovski-a-10",
-            "text": "A defining UFC result in my career came against Max Holloway in 2019.",
+            "text": "My UFC résumé includes a matchup against Max Holloway in 2019.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1187,7 +1187,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-daniel-cormier-a-10",
-            "text": "A defining UFC result in my career came against Stipe Miocic in 2018.",
+            "text": "My UFC résumé includes a matchup against Stipe Miocic in 2018.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1403,7 +1403,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-charles-oliveira-a-10",
-            "text": "A defining UFC result in my career came against Islam Makhachev in 2022.",
+            "text": "My UFC résumé includes a matchup against Islam Makhachev in 2022.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2049,7 +2049,7 @@ export const ufcWhoAmIAuthoredBatch6: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-bj-penn-a-10",
-            "text": "A defining UFC result in my career came against Matt Hughes in 2004.",
+            "text": "My UFC résumé includes a matchup against Matt Hughes in 2004.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
