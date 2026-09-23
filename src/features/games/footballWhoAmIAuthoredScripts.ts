@@ -23769,6 +23769,1048 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-christian-mccaffrey",
+    "name": "Christian McCaffrey",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "stanford": "https://gostanford.com/sports/football/roster/player/christian-mccaffrey",
+      "records": "https://gostanford.com/news/2016/01/02/all-purpose-records",
+      "rose": "https://gostanford.com/news/2016/01/1/rose-bowl-champions"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-christian-mccaffrey-a-1",
+            "text": "As a sophomore, I became the only FBS player that season to lead my team in both rushing and receiving yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-a-2",
+            "text": "That season, I rushed for 2,019 yards and added 645 receiving yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-a-3",
+            "text": "I also accumulated more than 1,000 kickoff-return yards in the same season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-a-4",
+            "text": "My 3,864 all-purpose yards set an NCAA single-season record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-a-5",
+            "text": "I was named my conference's Offensive Player of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-a-6",
+            "text": "I became the first player from my school to win the Associated Press Player of the Year award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-a-7",
+            "text": "I earned consensus All-America honors and finished as the Heisman Trophy runner-up.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "rose"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-a-8",
+            "text": "I produced a school-record 461 all-purpose yards in the conference championship game and was named its MVP.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "records"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-a-9",
+            "text": "I wore No. 5 for Stanford and helped the Cardinal win both the Pac-12 and Rose Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "rose"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-a-10",
+            "text": "My record-setting sophomore season ended with 368 all-purpose yards in a Rose Bowl victory over Iowa.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford",
+              "rose"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-christian-mccaffrey-b-1",
+            "text": "I began my college career contributing as a runner, receiver and returner rather than immediately serving as the featured back.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-b-2",
+            "text": "As a freshman, I totaled 796 all-purpose yards and scored on a 52-yard reception on my first career touch.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-b-3",
+            "text": "In my junior season, I led my conference with 1,603 rushing yards despite missing six quarters of action.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-b-4",
+            "text": "That year, I set a school record with 284 rushing yards in the rivalry game against Cal.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-b-5",
+            "text": "I was named Academic All-American of the Year as a junior.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-b-6",
+            "text": "In the Rose Bowl after my sophomore season, I became the first player in the game's history with 100 rushing and 100 receiving yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-b-7",
+            "text": "My first touch of that Rose Bowl was a 75-yard touchdown reception.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rose",
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-b-8",
+            "text": "I also returned a punt for a touchdown in that game while setting the Rose Bowl all-purpose-yardage record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "rose",
+              "stanford"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-b-9",
+            "text": "I was the Stanford running back who finished second to Derrick Henry in the 2015 Heisman voting.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "rose"
+            ]
+          },
+          {
+            "id": "cfb-christian-mccaffrey-b-10",
+            "text": "After three seasons with the Cardinal, Carolina selected me eighth overall in the NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "stanford"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-eddie-george",
+    "name": "Eddie George",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://ohiostatebuckeyes.com/honors/hall-of-fame-inductees/eddie-george/138",
+      "returning": "https://ohiostatebuckeyes.com/news/2008/3/19/football-returning-pays-big-dividends",
+      "retire": "https://ohiostatebuckeyes.com/news/1995/11/11/ohio-state-retires-eddie-georges-no-27-2"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-eddie-george-a-1",
+            "text": "I entered my senior season after rushing for more than 1,400 yards as a junior.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "returning"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-a-2",
+            "text": "I served as a team co-captain during my final college season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "returning"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-a-3",
+            "text": "That year, I rushed for a then-school-record 1,927 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "returning"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-a-4",
+            "text": "I also scored 24 rushing touchdowns in that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "returning"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-a-5",
+            "text": "Three of my senior-year games ended with at least 200 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "returning"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-a-6",
+            "text": "I won the Doak Walker Award, Maxwell Award and Walter Camp Player of the Year honor.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "returning"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-a-7",
+            "text": "I was also named Big Ten MVP and a first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-a-8",
+            "text": "My senior season culminated in winning the Heisman Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "returning"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-a-9",
+            "text": "Ohio State later retired the No. 27 jersey I wore in Columbus.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-a-10",
+            "text": "I became the Buckeyes' sixth Heisman Trophy winner before Houston selected me in the first round of the NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "returning",
+              "retire"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-eddie-george-b-1",
+            "text": "My first two college seasons produced fewer than 400 rushing yards combined before my career took off.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-b-2",
+            "text": "As a junior, I broke through with more than 1,400 rushing yards and chose to return for one more season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "returning"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-b-3",
+            "text": "One early senior-year performance included 212 rushing yards against Washington.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-b-4",
+            "text": "Two weeks later, I added 207 rushing yards against Notre Dame.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-b-5",
+            "text": "I ended my college career with 12 consecutive 100-yard rushing games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-b-6",
+            "text": "Against Illinois, I ran for a school-record 314 yards and scored three total touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retire",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-b-7",
+            "text": "I finished my career with 20 games of at least 100 rushing yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-b-8",
+            "text": "My 44 career rushing touchdowns ranked third in Ohio State history when I left.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "retire"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-b-9",
+            "text": "I was the Ohio State tailback whose dominant 1995 season swept the Heisman, Doak Walker, Maxwell and Walter Camp awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-eddie-george-b-10",
+            "text": "The Houston Oilers made me the 14th overall pick after my No. 27 became synonymous with a record-setting senior season in Columbus.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "retire"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-ezekiel-elliott",
+    "name": "Ezekiel Elliott",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "postseason": "https://ohiostatebuckeyes.com/news/2015/7/7/elliott-barrett-jones-and-miller-on-maxwell-award-watch-list",
+      "year": "https://ohiostatebuckeyes.com/news/2015/12/5/big-year-for-ezekiel-continues-named-finalist-for-silver-football",
+      "combine": "https://ohiostatebuckeyes.com/news/2016/2/11/ohio-state-leads-the-way-with-14-invites-to-nfl-scouting-combine"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-ezekiel-elliott-a-1",
+            "text": "I emerged as the featured running back on a team that reached the first College Football Playoff.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-a-2",
+            "text": "Across three postseason games that season, I rushed for 696 yards and eight touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-a-3",
+            "text": "I began that stretch with 220 rushing yards and two scores in a 59-0 conference championship victory.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-a-4",
+            "text": "Next, I rushed for 230 yards and two touchdowns against the nation's No. 1 team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-a-5",
+            "text": "That semifinal included an 85-yard fourth-quarter touchdown run that helped seal the win.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-a-6",
+            "text": "I was named the Sugar Bowl's Offensive MVP after that performance.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-a-7",
+            "text": "In the national championship game, I rushed for 246 yards and four touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-a-8",
+            "text": "I earned offensive MVP honors again as my team won the national championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-a-9",
+            "text": "I was the Ohio State running back who went 220, 230 and 246 rushing yards in three straight postseason games.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-a-10",
+            "text": "That three-game surge carried the Buckeyes through Wisconsin, Alabama and Oregon to the 2014 national title.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "postseason"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-ezekiel-elliott-b-1",
+            "text": "I finished college with 3,961 rushing yards, second-most in school history at the time.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "combine"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-b-2",
+            "text": "My 6.7 yards per carry was the best career average among the program's leading rushers.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "combine"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-b-3",
+            "text": "I recorded five 200-yard rushing games and 22 games with at least 100 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "combine"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-b-4",
+            "text": "My final two seasons produced a combined 3,699 rushing yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "combine"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-b-5",
+            "text": "I scored 44 total touchdowns during my Ohio State career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "combine"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-b-6",
+            "text": "Against Indiana as a junior, I rushed for a school-record 243 yards in the second half alone.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "year"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-b-7",
+            "text": "I closed the 2015 regular season with 214 rushing yards against Michigan.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "year"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-b-8",
+            "text": "That season, I was named both Big Ten Offensive Player of the Year and Running Back of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "year",
+              "combine"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-b-9",
+            "text": "I also won the Chicago Tribune Silver Football as the Big Ten's most valuable player.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "combine"
+            ]
+          },
+          {
+            "id": "cfb-ezekiel-elliott-b-10",
+            "text": "I left Ohio State as the championship back whose career included the program's second-most rushing yards and one of its most famous postseason runs.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "combine",
+              "postseason"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-justin-blackmon",
+    "name": "Justin Blackmon",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "biletnikoff": "https://okstate.com/news/2010/12/9/Blackmon_Wins_Biletnikoff_Award",
+      "draft": "https://okstate.com/news/2012/4/26/Blackmon_Drafted_By_Jacksonville_Jaguars",
+      "alamo": "https://okstate.com/news/2010/12/30/Oklahoma_State_Post_Game_Notes_vs_Arizona"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-justin-blackmon-a-1",
+            "text": "I became a full-time starting wide receiver as a redshirt sophomore.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "biletnikoff",
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-a-2",
+            "text": "During that regular season, I caught 102 passes for 1,665 yards and 18 touchdowns in 11 games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "biletnikoff"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-a-3",
+            "text": "I led the nation in both receiving yards per game and receptions per game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "biletnikoff"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-a-4",
+            "text": "I became the first wide receiver to be named Big 12 Offensive Player of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-a-5",
+            "text": "I earned unanimous All-America recognition during that breakout season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-a-6",
+            "text": "I won the Biletnikoff Award as the nation's top receiver.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "biletnikoff"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-a-7",
+            "text": "After the bowl game, my season totals reached school records of 111 catches, 1,782 yards and 20 touchdown receptions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "alamo"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-a-8",
+            "text": "Those 1,782 receiving yards set an NCAA record for a sophomore.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "alamo",
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-a-9",
+            "text": "I was named Offensive MVP of the Alamo Bowl to close that season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-a-10",
+            "text": "I was the Oklahoma State receiver whose first Biletnikoff season produced one of the most prolific sophomore campaigns ever.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "biletnikoff",
+              "draft"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-justin-blackmon-b-1",
+            "text": "I starred for two Oklahoma State teams that went a combined 23-3 during my final two seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-b-2",
+            "text": "My college career ended with 233 receptions for 3,304 yards and 38 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-b-3",
+            "text": "I set an NCAA record by extending a streak of 100-yard receiving games to 14 straight.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-b-4",
+            "text": "I produced two separate seasons with at least 100 receptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-b-5",
+            "text": "I became only the second player ever to win the Biletnikoff Award twice.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-b-6",
+            "text": "I also became a two-time unanimous All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-b-7",
+            "text": "My final college game ended with Offensive MVP honors in the Fiesta Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-b-8",
+            "text": "I was described by my school as its most decorated player since Barry Sanders' Heisman season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-b-9",
+            "text": "I was the Cowboys receiver who paired back-to-back Biletnikoff trophies with major bowl MVP honors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          },
+          {
+            "id": "cfb-justin-blackmon-b-10",
+            "text": "Jacksonville selected me fifth overall in the 2012 NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "draft"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-michael-crabtree",
+    "name": "Michael Crabtree",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://texastech.com/news/2022/1/10/crabtree-selected-for-college-football-hall-of-fame",
+      "ring": "https://texastech.com/news/2020/9/17/football-crabtree-to-be-inducted-into-texas-tech-ring-of-honor",
+      "texas": "https://texastech.com/news/2008/11/1/Crabtree_s_Last_Second_TD_Sends_Red_Raiders_Past_No_1_Longhorns_39_33"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-michael-crabtree-a-1",
+            "text": "I burst onto the college scene as a redshirt freshman wide receiver.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ring"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-a-2",
+            "text": "That first season, I caught 134 passes for 1,962 yards and 22 touchdowns.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ring"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-a-3",
+            "text": "All three of those totals set NCAA freshman records at the time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ring"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-a-4",
+            "text": "I posted 11 games with at least 100 receiving yards during that freshman season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ring"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-a-5",
+            "text": "I was named my conference's Offensive Player of the Year and Offensive Newcomer of the Year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ring"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-a-6",
+            "text": "I became the first freshman ever to win the Biletnikoff Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ring"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-a-7",
+            "text": "As a sophomore, I added 1,165 receiving yards and 19 touchdown catches.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ring"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-a-8",
+            "text": "I then became the first player in history to win the Biletnikoff Award twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "ring"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-a-9",
+            "text": "I left Texas Tech with school career records of 3,127 receiving yards and 41 touchdown catches.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "ring"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-a-10",
+            "text": "I was the Red Raiders receiver who became the program's only two-time unanimous All-American.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-michael-crabtree-b-1",
+            "text": "I played only two college seasons, and my team went a combined 20-6 during them.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-b-2",
+            "text": "My final team finished 11-2 and climbed as high as No. 2 in the national rankings.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-b-3",
+            "text": "I earned first-team All-Big 12 honors in both of my college seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-b-4",
+            "text": "I became the only player in school history to earn unanimous All-America honors twice.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-b-5",
+            "text": "I finished fifth in the Heisman Trophy voting as a sophomore.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-b-6",
+            "text": "My quarterback and I connected for 37 career touchdowns, a Big 12 record at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-b-7",
+            "text": "In a matchup with the nation's No. 1 team, my school entered the final drive trailing by one point.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-b-8",
+            "text": "With one second remaining, I caught a 28-yard touchdown pass, broke a tackle and stayed in bounds for the winning score.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-b-9",
+            "text": "That 39-33 victory gave Texas Tech its first win over a No. 1-ranked opponent.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          },
+          {
+            "id": "cfb-michael-crabtree-b-10",
+            "text": "I was the Texas Tech receiver whose last-second catch against No. 1 Texas became the defining play of the 2008 season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texas"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
