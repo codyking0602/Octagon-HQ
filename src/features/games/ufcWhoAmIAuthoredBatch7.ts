@@ -1,10 +1,10 @@
 import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
 
- /**
-  * Static authored UFC Who Am I batch 7.
-  * Source-backed at authoring time; runtime serves these clue strings verbatim.
-  */
- export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
+/**
+ * Static authored UFC Who Am I batch 7.
+ * Source-backed at authoring time; runtime serves these clue strings verbatim.
+ */
+export const ufcWhoAmIAuthoredBatch7: readonly UfcWhoAmIAuthoredIdentity[] = [
   {
     "subjectId": "ufc:leon-edwards",
     "name": "Leon Edwards",
@@ -109,7 +109,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-leon-edwards-a-10",
-            "text": "I' younger brother Fabian also became a professional mixed martial artist, making fighting a family profession.",
+            "text": "My younger brother Fabian also became a professional mixed martial artist, making fighting a family profession.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -208,7 +208,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-leon-edwards-b-10",
-            "text": "One of my most recognizable UFC matchups came against Kamaru Usman.",
+            "text": "I also shared the Octagon with Kamaru Usman.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -324,7 +324,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-fabricio-werdum-a-10",
-            "text": "I moved to Spain after establishing himself in jiu-jitsu and lived there for years, becoming fluent enough in Spanish to be closely identified with Spanish-speaking MMA audiences.",
+            "text": "I moved to Spain after establishing myself in jiu-jitsu and lived there for years, becoming fluent in Spanish and closely connected with Spanish-speaking MMA audiences.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -637,7 +637,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-tony-ferguson-b-10",
-            "text": "One of my most recognizable UFC matchups came against Kevin Lee.",
+            "text": "I also shared the Octagon with Kevin Lee.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1058,7 +1058,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-deiveson-figueiredo-b-10",
-            "text": "One of my most recognizable UFC matchups came against Brandon Moreno.",
+            "text": "I also shared the Octagon with Brandon Moreno.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1274,7 +1274,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-vitor-belfort-b-10",
-            "text": "One of my most recognizable UFC matchups came against Anderson Silva.",
+            "text": "I also shared the Octagon with Anderson Silva.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1490,7 +1490,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-tom-aspinall-b-10",
-            "text": "One of my most recognizable UFC matchups came against Sergei Pavlovich.",
+            "text": "I also shared the Octagon with Sergei Pavlovich.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1521,7 +1521,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
         "clues": [
           {
             "id": "ufc-royce-gracie-a-1",
-            "text": "After the first UFC tournament, I's celebration was notably understated: Ritz crackers and apple juice before going to bed.",
+            "text": "After an early tournament victory, my celebration was unusually understated: Ritz crackers and apple juice before going to bed.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1706,7 +1706,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-royce-gracie-b-10",
-            "text": "One of my most recognizable UFC matchups came against Matt Hughes.",
+            "text": "I also shared the Octagon with Matt Hughes.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1822,7 +1822,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-anthony-pettis-a-10",
-            "text": "I' younger brother Sergio also became a high-level professional MMA fighter, and the brothers spent years training and competing in the same sport.",
+            "text": "My younger brother Sergio also became a high-level professional MMA fighter, and we spent years training and competing in the same sport.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1921,7 +1921,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-anthony-pettis-b-10",
-            "text": "One of my most recognizable UFC matchups came against Max Holloway.",
+            "text": "I also shared the Octagon with Max Holloway.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2137,7 +2137,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-shogun-rua-b-10",
-            "text": "One of my most recognizable UFC matchups came against Lyoto Machida.",
+            "text": "I also shared the Octagon with Lyoto Machida.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2352,7 +2352,7 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
           },
           {
             "id": "ufc-dan-henderson-b-10",
-            "text": "One of my most recognizable UFC matchups came against Michael Bisping.",
+            "text": "I also shared the Octagon with Michael Bisping.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2365,4 +2365,3 @@ import type { UfcWhoAmIAuthoredIdentity } from "./ufcWhoAmIAuthoredScripts";
     }
   }
 ];
- 
