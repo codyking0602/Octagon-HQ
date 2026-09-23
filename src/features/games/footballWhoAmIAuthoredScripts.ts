@@ -7257,7 +7257,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-joe-montana-a-4",
-            "text": "In 1989, my 112.4 passer rating set a then-NFL single-season record.",
+            "text": "At my peak, I set a then-NFL single-season record for passer rating.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7275,7 +7275,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-joe-montana-a-6",
-            "text": "I won four Super Bowl championships without losing one as a starting quarterback.",
+            "text": "In 1989, my 112.4 passer rating set that league record.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7284,7 +7284,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-joe-montana-a-7",
-            "text": "I was named Super Bowl MVP three times.",
+            "text": "I won four Super Bowl championships without losing one as a starting quarterback.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7293,7 +7293,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-joe-montana-a-8",
-            "text": "One championship run included a 92-yard drive in the closing minutes to beat Cincinnati.",
+            "text": "I was named Super Bowl MVP three times.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7302,7 +7302,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-joe-montana-a-9",
-            "text": "At retirement, I held major NFL postseason records including 16 wins as a starting quarterback and four Super Bowl championships.",
+            "text": "One championship run included a 92-yard drive in the closing minutes to beat Cincinnati.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -7459,7 +7459,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-elway-a-4",
-            "text": "I led my team to five victories in six conference championship games.",
+            "text": "I repeatedly led my team deep into the playoffs, including multiple conference championship victories.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7486,7 +7486,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-elway-a-7",
-            "text": "Late in my career, I finally won a Super Bowl after several earlier appearances had ended in defeat.",
+            "text": "I led my team to five victories in six AFC Championship Games.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7495,7 +7495,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-elway-a-8",
-            "text": "I followed that first championship by winning another Super Bowl the next season and earning game MVP honors.",
+            "text": "Late in my career, I finally won a Super Bowl after several earlier appearances had ended in defeat.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7504,7 +7504,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-john-elway-a-9",
-            "text": "I finished with 51,475 passing yards and 300 passing touchdowns.",
+            "text": "I followed that first championship by winning another Super Bowl the next season and earning game MVP honors.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -7756,7 +7756,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-emmitt-smith-b-4",
-            "text": "My best statistical rushing season produced 1,773 yards and 25 rushing touchdowns.",
+            "text": "My peak rushing season produced career highs in both rushing yards and rushing touchdowns.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7765,7 +7765,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-emmitt-smith-b-5",
-            "text": "That peak season came during a stretch in which my team repeatedly contended for championships.",
+            "text": "That peak season reached 1,773 rushing yards and 25 rushing touchdowns.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7949,7 +7949,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-walter-payton-b-3",
-            "text": "My durability eventually produced 178 consecutive starts when postseason games are included.",
+            "text": "I was selected to the NFL's All-Decade Team for both the 1970s and the 1980s.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8038,7 +8038,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-ray-lewis-a-1",
-            "text": "I was a first-round linebacker who spent my entire NFL career with one franchise.",
+            "text": "I was a first-round linebacker whose range and tackling quickly became defining parts of my NFL identity.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8065,7 +8065,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ray-lewis-a-4",
-            "text": "In 2000, I anchored a defense that allowed only 165 points over a 16-game regular season.",
+            "text": "One of my defenses set major league records for points and rushing yards allowed over a 16-game season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8074,7 +8074,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ray-lewis-a-5",
-            "text": "That championship defense also allowed just 970 rushing yards and recorded four shutouts.",
+            "text": "That unit allowed only 165 points and 970 rushing yards while recording four shutouts.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8335,7 +8335,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-ed-reed-b-1",
-            "text": "I entered the NFL as a first-round defensive back after a decorated college career.",
+            "text": "My pro career eventually ended with a season split between two AFC teams.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8344,7 +8344,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ed-reed-b-2",
-            "text": "My professional career lasted 12 seasons and included one late-career year split between two teams.",
+            "text": "Before that final season, I spent 11 years with one franchise.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8469,7 +8469,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "nfl-ladainian-tomlinson-a-4",
-            "text": "In one season, I caught 100 passes for 725 yards and four touchdowns.",
+            "text": "In one season, I became a 100-catch running back and added four receiving touchdowns.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8537,7 +8537,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "nfl-ladainian-tomlinson-b-1",
-            "text": "I entered the NFL as a highly drafted running back after a prolific college career.",
+            "text": "I reached the NFL after a college career built around historic rushing production.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
