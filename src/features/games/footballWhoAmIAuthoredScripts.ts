@@ -24909,26 +24909,25 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "micah-parsons-b-1",
-            "text": "I began my career as a first-round linebacker whose pass-rush ability quickly became a defining trait.",
+            "text": "I spent my first four NFL seasons with Dallas before a blockbuster trade changed franchises.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "draft",
-              "rookie"
+              "trade"
             ]
           },
           {
             "id": "micah-parsons-b-2",
-            "text": "My first NFL season produced three forced fumbles along with 13 sacks.",
+            "text": "Across those four seasons, I totaled 52.5 sacks.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "rookie"
+              "trade"
             ]
           },
           {
             "id": "micah-parsons-b-3",
-            "text": "I was a two-time first-team All-Pro during my first four professional seasons.",
+            "text": "I earned two first-team All-Pro selections during that four-year run.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24937,7 +24936,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "micah-parsons-b-4",
-            "text": "I finished in the top three of Defensive Player of the Year voting three times during those four seasons.",
+            "text": "I finished in the top three of Defensive Player of the Year voting three times in those four seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -24955,15 +24954,6 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "micah-parsons-b-6",
-            "text": "My four-year Dallas total reached 52.5 sacks.",
-            "band": "strong",
-            "verification": "verified",
-            "sourceIds": [
-              "trade"
-            ]
-          },
-          {
-            "id": "micah-parsons-b-7",
             "text": "Only three defenders had ever made the Pro Bowl in each of their first four seasons when I did it.",
             "band": "strong",
             "verification": "verified",
@@ -24972,7 +24962,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
-            "id": "micah-parsons-b-8",
+            "id": "micah-parsons-b-7",
             "text": "Dallas traded me for Kenny Clark plus first-round picks in 2026 and 2027.",
             "band": "strong",
             "verification": "verified",
@@ -24981,8 +24971,17 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
-            "id": "micah-parsons-b-9",
+            "id": "micah-parsons-b-8",
             "text": "I signed a four-year, $188 million contract with Green Bay as part of that move.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "micah-parsons-b-9",
+            "text": "The Green Bay deal ended a four-year Dallas run that had produced four Pro Bowl selections.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -25128,44 +25127,25 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "tyreek-hill-b-1",
-            "text": "My early NFL role mixed receiving, rushing and return-game work rather than fitting one narrow job description.",
+            "text": "I spent six seasons with my first NFL franchise before a blockbuster trade reshaped my career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "proBowl",
-              "versatile"
+              "trade"
             ]
           },
           {
             "id": "tyreek-hill-b-2",
-            "text": "In my rookie season, I scored touchdowns as a receiver, runner, punt returner and kickoff returner.",
+            "text": "By the end of my fourth season, I had 4,115 receiving yards, the most through four seasons in that franchise's history.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "versatile"
+              "milestones"
             ]
           },
           {
             "id": "tyreek-hill-b-3",
-            "text": "I earned Pro Bowl selections in each of my first four NFL seasons.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "milestones"
-            ]
-          },
-          {
-            "id": "tyreek-hill-b-4",
-            "text": "After four seasons, my 4,115 receiving yards were the most through four seasons in Chiefs history.",
-            "band": "helpful",
-            "verification": "verified",
-            "sourceIds": [
-              "milestones"
-            ]
-          },
-          {
-            "id": "tyreek-hill-b-5",
-            "text": "In a 2020 win at Tampa Bay, I caught 13 passes for 269 yards and three touchdowns.",
+            "text": "In a 2020 game at Tampa Bay, I caught 13 passes for 269 yards and three touchdowns.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -25173,17 +25153,35 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
             ]
           },
           {
-            "id": "tyreek-hill-b-6",
-            "text": "My 2022 trade sent a first-, second- and fourth-round pick that year plus two future picks to my former team.",
-            "band": "strong",
+            "id": "tyreek-hill-b-4",
+            "text": "The 2021 season was my last in Kansas City before a five-pick trade.",
+            "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "trade"
             ]
           },
           {
-            "id": "tyreek-hill-b-7",
+            "id": "tyreek-hill-b-5",
+            "text": "Miami acquired me in 2022 for five draft picks, including a first-rounder.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "trade"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-6",
             "text": "I caught 119 passes in each of my first two seasons with Miami.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "miami"
+            ]
+          },
+          {
+            "id": "tyreek-hill-b-7",
+            "text": "Both of those Miami seasons produced more than 1,700 receiving yards.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -25201,10 +25199,11 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "tyreek-hill-b-9",
-            "text": "Both of my first two Miami seasons produced more than 1,700 receiving yards.",
+            "text": "I was a Super Bowl LIV champion in Kansas City before producing my biggest receiving seasons in Miami.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
+              "superBowl",
               "miami"
             ]
           },
