@@ -24,10 +24,8 @@ import {
   keepCutTier,
 } from "./keepCutEngine";
 import { seededLineupRandom } from "./lineupModel";
-import {
-  advanceWhoAmIDailyRuntime,
-  buildWhoAmIDailyPublication,
-} from "./whoAmIDailyRuntime";
+import { buildWhoAmIDailyPublication } from "./whoAmIDailyRuntime";
+import { advanceCanonicalWhoAmIDailyRuntime } from "./whoAmITwoRoundDailyRuntime";
 import {
   blindRankRating,
   getPlayFighter,
