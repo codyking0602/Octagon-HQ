@@ -10725,7 +10725,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-kirby-smart-a-1",
-            "text": "My first college head-coaching job came at my alma mater.",
+            "text": "My first college head-coaching job came at a program where I had previously played.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -10734,7 +10734,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-kirby-smart-a-2",
-            "text": "In my second season, I won a conference championship and reached the national championship game.",
+            "text": "My second team won 13 games and reached the final game of the season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -10743,7 +10743,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-kirby-smart-a-3",
-            "text": "That title-game appearance ended a drought of roughly three decades for the program.",
+            "text": "That run also delivered the program's first conference championship in more than a decade.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -11332,7 +11332,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-jim-tressel-a-1",
-            "text": "I won national championships at two different levels of Division I college football.",
+            "text": "Before reaching the top subdivision, I built a championship résumé at another Division I level.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -11362,7 +11362,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jim-tressel-a-4",
-            "text": "I then moved to a major-conference program and won another national championship in my second season.",
+            "text": "I then moved to a major-conference program and quickly turned it into a national-title contender.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -11372,7 +11372,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jim-tressel-a-5",
-            "text": "That title team finished 14-0.",
+            "text": "My second team there finished 14-0 and won the national championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
