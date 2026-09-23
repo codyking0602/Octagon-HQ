@@ -11762,6 +11762,1239 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
       }
     }
   },
+  {
+    "league": "CFB",
+    "subjectId": "bill-snyder-cfb",
+    "name": "Bill Snyder",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "kstate": "https://www.kstatesports.com/news/2018/12/2/football-bill-snyder-announces-retirement-from-kansas-state"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-bill-snyder-a-1",
+            "text": "I took over a program that was in the middle of a 27-game winless stretch.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-a-2",
+            "text": "In my third season, that program posted only its second winning record since 1970.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-a-3",
+            "text": "Two years later, I took the school to just the second bowl game in its history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-a-4",
+            "text": "That appearance began a run of 11 consecutive postseason trips.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-a-5",
+            "text": "My teams eventually won two conference championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-a-6",
+            "text": "One of those titles came with an upset of the nation's No. 1 team in a conference championship game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-a-7",
+            "text": "I retired once and returned three years later to rebuild the program again.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-a-8",
+            "text": "I finished as the winningest coach in school history with 215 victories.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-a-9",
+            "text": "My 2012 team rose to No. 1 in the BCS standings and won the Big 12.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-a-10",
+            "text": "I am the coach who engineered Kansas State's rise from one of college football's weakest programs into a national contender.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-bill-snyder-b-1",
+            "text": "Before becoming a head coach, I spent many years as a college assistant.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-b-2",
+            "text": "My first major head-coaching opportunity did not arrive until late in my coaching career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-b-3",
+            "text": "The program I inherited had won only about a quarter of its games across more than five decades.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-b-4",
+            "text": "My first tenure eventually produced six 11-win seasons in a seven-year span.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-b-5",
+            "text": "I stepped away after the 2005 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-b-6",
+            "text": "I returned to the same job in 2009.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-b-7",
+            "text": "Three seasons into that second stint, my team won 10 games and returned to a major bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-b-8",
+            "text": "The next year, we won the conference and earned a Fiesta Bowl berth.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-b-9",
+            "text": "Across both tenures, I led the school to 19 of its first 21 bowl appearances.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          },
+          {
+            "id": "cfb-bill-snyder-b-10",
+            "text": "I am the Hall of Fame coach whose entire major-college head-coaching career was spent at Kansas State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "kstate"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "chris-petersen-cfb",
+    "name": "Chris Petersen",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "boise": "https://broncosports.com/news/2026/1/14/chris-petersen-inducted-into-college-football-hall-of-fame",
+      "uw": "https://gohuskies.com/sports/football/roster/coaches/chris-petersen/4183"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-chris-petersen-a-1",
+            "text": "My first head-coaching job produced an undefeated season in year one.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-a-2",
+            "text": "That debut season ended with a major bowl victory over a traditional power.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-a-3",
+            "text": "Across eight seasons at my first school, I went 92-12.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-a-4",
+            "text": "I won at least 10 games in seven of those eight seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-a-5",
+            "text": "I became the first FBS coach to win the Bear Bryant Coach of the Year award twice.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-a-6",
+            "text": "I later took over another program and won two conference championships there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-a-7",
+            "text": "That second program reached the College Football Playoff in 2016.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-a-8",
+            "text": "I finished my head-coaching career with 147 victories against only 38 losses.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-a-9",
+            "text": "My famous first-season bowl win came when Boise State beat Oklahoma in the Fiesta Bowl.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-a-10",
+            "text": "I am the coach who built Boise State into a national phenomenon before leading Washington to the playoff.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-chris-petersen-b-1",
+            "text": "I played quarterback at UC Davis before beginning my coaching career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-b-2",
+            "text": "My early coaching path included stops at Pittsburgh State, UC Davis, Oregon and Portland State.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-b-3",
+            "text": "I joined Boise State as an assistant before eventually becoming its offensive coordinator.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-b-4",
+            "text": "When the head-coaching job opened, I was promoted from within.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-b-5",
+            "text": "My first Boise State team finished 13-0.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-b-6",
+            "text": "That season ended with one of the most memorable trick-play finishes in major-bowl history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-b-7",
+            "text": "I later left Boise State for Washington.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-b-8",
+            "text": "At Washington, I won Pac-12 titles in 2016 and 2018.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-b-9",
+            "text": "My 2016 Huskies became the program's first College Football Playoff team.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          },
+          {
+            "id": "cfb-chris-petersen-b-10",
+            "text": "I am the former Boise State offensive coordinator who became a championship head coach at both Boise State and Washington.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "boise",
+              "uw"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "frank-beamer-cfb",
+    "name": "Frank Beamer",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "vt": "https://hokiesports.com/news/2018/01/08/frank-beamer-selected-to-college-football-hall-of-fames-class-of-2018"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-frank-beamer-a-1",
+            "text": "I spent 35 seasons as a college head coach.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-a-2",
+            "text": "My first six years as a head coach came at a smaller program before I returned to my alma mater.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-a-3",
+            "text": "At my longest stop, I eventually produced 23 consecutive bowl appearances.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-a-4",
+            "text": "My teams also posted eight straight 10-win seasons from 2004 through 2011.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-a-5",
+            "text": "I won three Big East championships and four ACC championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-a-6",
+            "text": "My best-known team completed the first undefeated regular season in school history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-a-7",
+            "text": "That team reached the national championship game after the 1999 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-a-8",
+            "text": "I finished with 280 career victories, including a school-record 238 at my alma mater.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-a-9",
+            "text": "My program became famous for game-changing special teams under the nickname 'Beamerball.'",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-a-10",
+            "text": "I am the longtime Virginia Tech coach whose teams turned blocked kicks and special teams into a program identity.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-frank-beamer-b-1",
+            "text": "I played cornerback in college for the school I would later coach for nearly three decades.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-b-2",
+            "text": "Before becoming a head coach, I worked as an assistant at Maryland, The Citadel and Murray State.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-b-3",
+            "text": "My first head-coaching job came at Murray State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-b-4",
+            "text": "I led that program to a share of a conference title and an FCS playoff berth.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-b-5",
+            "text": "I returned to Virginia Tech as head coach in 1987.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-b-6",
+            "text": "Before my arrival, the school had won only one of its six bowl appearances.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-b-7",
+            "text": "I eventually won 11 bowl games there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-b-8",
+            "text": "My teams reached a bowl every season for the final 23 years of my tenure.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-b-9",
+            "text": "I won seven major-conference titles while leading Virginia Tech.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          },
+          {
+            "id": "cfb-frank-beamer-b-10",
+            "text": "I am the former Hokies defensive back who became the winningest coach in Virginia Tech history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "vt"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "gary-patterson-cfb",
+    "name": "Gary Patterson",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "tcu": "https://www.tcu.edu/news/2026/a-legendary-career-gary-patterson-inducted-into-college-football-hall-of-fame.php"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-gary-patterson-a-1",
+            "text": "I spent 22 seasons as the head coach of one program.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-a-2",
+            "text": "During that tenure, the school competed in three different conferences.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-a-3",
+            "text": "My teams won six conference championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-a-4",
+            "text": "I produced 11 final Top 25 finishes, including seven in the top 10.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-a-5",
+            "text": "My 2010 team completed an undefeated season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-a-6",
+            "text": "That season ended with the program's first appearance in a BCS bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-a-7",
+            "text": "We won that game in the Rose Bowl and finished No. 2 in the final AP poll.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-a-8",
+            "text": "Four years later, my team finished No. 3 after winning a share of the Big 12 title.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-a-9",
+            "text": "I finished with a 181-79 record as a head coach.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-a-10",
+            "text": "I am the defensive-minded coach who led TCU from Conference USA through the Mountain West and into the Big 12.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-gary-patterson-b-1",
+            "text": "I played safety and linebacker at Kansas State before entering coaching.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-b-2",
+            "text": "My assistant-coaching path included several schools before I arrived at my best-known program.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-b-3",
+            "text": "I first joined that program as defensive coordinator.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-b-4",
+            "text": "I was promoted to head coach after Dennis Franchione left.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-b-5",
+            "text": "Defense became the defining identity of my teams.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-b-6",
+            "text": "My program regularly finished among the national leaders in total defense.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-b-7",
+            "text": "I guided the school through major conference transitions without losing national relevance.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-b-8",
+            "text": "My best team went unbeaten and won the Rose Bowl.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-b-9",
+            "text": "I later won a Big 12 championship and finished No. 3 nationally in 2014.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          },
+          {
+            "id": "cfb-gary-patterson-b-10",
+            "text": "I am the longtime TCU coach whose 22-year tenure produced 181 wins.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "tcu"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-lou-holtz",
+    "name": "Lou Holtz",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nff": "https://footballfoundation.org/hof_search.aspx?hof=2228"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-lou-holtz-a-1",
+            "text": "I became the only coach in NCAA history to lead six different programs to bowl games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-2",
+            "text": "My head-coaching career included stops in several different regions and conferences.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-3",
+            "text": "At one stop, my first season ended with a major bowl upset of a top-three opponent.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-4",
+            "text": "I later took over another program and won a national championship in my third season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-5",
+            "text": "That championship team finished undefeated.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-6",
+            "text": "I eventually won 100 games at that school.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-7",
+            "text": "After retiring once, I returned to coaching at a program coming off a winless season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-8",
+            "text": "That team improved by eight wins in my second season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-9",
+            "text": "My 1988 Notre Dame team won the national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-a-10",
+            "text": "I am the Hall of Fame coach who led Notre Dame to its most recent consensus national title.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-lou-holtz-b-1",
+            "text": "My college head-coaching career began at William & Mary.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-2",
+            "text": "I later coached North Carolina State, Arkansas and Minnesota before reaching my best-known stop.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-3",
+            "text": "At Arkansas, my first season ended with a 31-6 Orange Bowl upset of No. 3 Oklahoma.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-4",
+            "text": "My Razorbacks reached six consecutive bowl games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-5",
+            "text": "I took over Notre Dame in 1986.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-6",
+            "text": "Two seasons later, that team went undefeated and won the national championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-7",
+            "text": "After leaving Notre Dame, I spent time in broadcasting before returning to the sideline.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-8",
+            "text": "My final coaching stop was South Carolina.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-9",
+            "text": "There, I followed an 0-11 first season with an 8-5 campaign and an Outback Bowl upset of Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          },
+          {
+            "id": "cfb-lou-holtz-b-10",
+            "text": "I am the coach whose six bowl-program stops included Arkansas, Notre Dame and South Carolina.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nff"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "brian-kelly-cfb",
+    "name": "Brian Kelly",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "lsu": "https://lsusports.net/sports/fb/roster/season/2025/staff/brian-kelly"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-brian-kelly-a-1",
+            "text": "My first head-coaching job lasted 13 seasons at the Division II level.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-a-2",
+            "text": "I won five consecutive conference championships during that first tenure.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-a-3",
+            "text": "My teams there won back-to-back national championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-a-4",
+            "text": "I later rebuilt a major-conference program into a team that completed a 12-0 regular season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-a-5",
+            "text": "At my next stop, I reached a BCS National Championship Game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-a-6",
+            "text": "I later led that same program to two College Football Playoff appearances.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-a-7",
+            "text": "I became the winningest coach in that school's history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-a-8",
+            "text": "My teams averaged 10 wins per season across my final five years there.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-a-9",
+            "text": "That long tenure came at Notre Dame, where I recorded 113 victories.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-a-10",
+            "text": "I am the coach whose path included Grand Valley State, Central Michigan, Cincinnati, Notre Dame and LSU.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-brian-kelly-b-1",
+            "text": "I was a four-year college letterwinner at linebacker and served twice as a team captain.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-b-2",
+            "text": "My first head-coaching stop produced 118 victories.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-b-3",
+            "text": "I won Division II national titles in 2002 and 2003.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-b-4",
+            "text": "I then moved to Central Michigan and won the MAC in my third season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-b-5",
+            "text": "At Cincinnati, I won consecutive Big East championships.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-b-6",
+            "text": "My final Cincinnati team finished the regular season 12-0.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-b-7",
+            "text": "I took over Notre Dame in 2010.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-b-8",
+            "text": "My Irish reached the national championship game in 2012 and the playoff in 2018 and 2020.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-b-9",
+            "text": "I left Notre Dame as the program's all-time wins leader.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          },
+          {
+            "id": "cfb-brian-kelly-b-10",
+            "text": "I am the veteran coach who later moved from Notre Dame to LSU.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsu"
+            ]
+          }
+        ]
+      }
+    }
+  },
 
   {
     "league": "CFB",
