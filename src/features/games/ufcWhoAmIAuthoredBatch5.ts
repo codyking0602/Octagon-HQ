@@ -936,7 +936,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ronda-rousey-a-5",
-            "text": "I won an Olympic bronze medal in judo in 2008.",
+            "text": "I became the first American woman to win an Olympic medal in judo at the 2008 Games.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -975,7 +975,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-ronda-rousey-a-9",
-            "text": "Holly Holm ended my unbeaten run and championship reign with a head kick in 2015.",
+            "text": "My first professional MMA loss came when Holly Holm ended my UFC title reign in 2015.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
