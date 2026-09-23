@@ -24115,7 +24115,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-calvin-johnson-b-4",
-            "text": "As a senior-classified junior, I became a unanimous first-team All-American.",
+            "text": "In my final college season, I became a unanimous first-team All-American.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
