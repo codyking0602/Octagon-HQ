@@ -35,8 +35,8 @@ const EXPECTED_BANDS = [
 ] as const;
 
 describe("Football Who Am I authored scripts", () => {
-  it("extends the authored migration to 31 completed identities", () => {
-    expect(footballWhoAmIAuthoredIdentities).toHaveLength(31);
+  it("extends the authored migration to 39 completed identities", () => {
+    expect(footballWhoAmIAuthoredIdentities).toHaveLength(39);
   });
 
   it("keeps league/name and canonical stage ownership unique", () => {
@@ -95,6 +95,28 @@ describe("Football Who Am I authored scripts", () => {
       ["Deion Sanders", "deion-sanders"],
       ["Lawrence Taylor", "lawrence-taylor"],
       ["Aaron Donald", "nfl-aaron-donald"],
+    ]);
+    const frozen = footballWhoAmIAuthoredTargetRoster("NFL").players;
+
+    for (const [name, subjectId] of expected) {
+      expect(frozen).toContainEqual({ league: "NFL", subjectId, name, kind: "player" });
+      const authored = getFootballWhoAmIAuthoredIdentity("NFL", name);
+      expect(authored?.subjectId).toBe(subjectId);
+      expect(authored?.earlyRotation).toBe("normal");
+    }
+  });
+
+
+  it("binds NFL player batch 2 to the frozen target roster without exposing it as reviewed", () => {
+    const expected = new Map([
+      ["Brett Favre", "brett-favre"],
+      ["Joe Montana", "joe-montana"],
+      ["John Elway", "john-elway"],
+      ["Emmitt Smith", "emmitt-smith"],
+      ["Walter Payton", "walter-payton"],
+      ["Ray Lewis", "nfl-ray-lewis"],
+      ["Ed Reed", "nfl-ed-reed"],
+      ["LaDainian Tomlinson", "ladainian-tomlinson"],
     ]);
     const frozen = footballWhoAmIAuthoredTargetRoster("NFL").players;
 
