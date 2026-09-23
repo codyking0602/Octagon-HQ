@@ -52,7 +52,7 @@ describe("Football Who Am I authored scripts", () => {
       expect(identity.stageFocus).toBe(identity.league === "NFL" ? "NFL-career-forward" : "CFB-career-forward");
 
       for (const scriptId of ["A", "B"] as const) {
-        const script = identity.scripts[scriptId];
+        const script = identity.scripts[scriptId]!;
         expect(script.id).toBe(scriptId);
         expect(script.clues).toHaveLength(10);
         expect(script.clues.map((clue) => clue.band)).toEqual(EXPECTED_BANDS);
@@ -71,8 +71,8 @@ describe("Football Who Am I authored scripts", () => {
         }
       }
 
-      const exactOverlap = identity.scripts.A.clues.filter((left) =>
-        identity.scripts.B.clues.some((right) => right.text === left.text)
+      const exactOverlap = identity.scripts.A!.clues.filter((left) =>
+        identity.scripts.B!.clues.some((right) => right.text === left.text)
       );
       expect(exactOverlap).toHaveLength(0);
     }
