@@ -5806,7 +5806,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-bryce-young-b-3",
-            "text": "My freshman college season was spent backing up Mac Jones on an undefeated national-title team.",
+            "text": "As a freshman, I completed 13 of 22 passes for 156 yards and one touchdown in reserve duty.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
