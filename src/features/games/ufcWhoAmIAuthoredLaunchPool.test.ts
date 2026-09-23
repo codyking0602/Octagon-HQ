@@ -59,6 +59,16 @@ const CALIBRATED_GENERATED_IDS = new Set([
   "ufc:henry-cejudo",
   "ufc:petr-yan",
   "ufc:lyoto-machida",
+  "ufc:dricus-du-plessis",
+  "ufc:khamzat-chimaev",
+  "ufc:sean-omalley",
+  "ufc:forrest-griffin",
+  "ufc:chael-sonnen",
+  "ufc:valentina-shevchenko",
+  "ufc:rose-namajunas",
+  "ufc:cris-cyborg",
+  "ufc:miesha-tate",
+  "ufc:jorge-masvidal",
 ]);
 
 const MASS_TEMPLATE_PATTERNS = [
