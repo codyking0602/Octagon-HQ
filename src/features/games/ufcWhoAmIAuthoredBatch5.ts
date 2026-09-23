@@ -2242,7 +2242,7 @@ export const ufcWhoAmIAuthoredBatch5: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-yair-rodriguez-a-5",
-            "text": "A second-round knockout of B.J. Penn became one of my early high-profile UFC wins.",
+            "text": "A second-round knockout of B.J. Penn became one of my early high-profile victories in the promotion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
