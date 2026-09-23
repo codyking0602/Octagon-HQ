@@ -131,9 +131,10 @@ function HQBackButton({ onClick }: { onClick: () => void }) {
 }
 
 function Host({ asset }: { asset: string }) {
+  const deionClass = asset.endsWith("/3cfb.png") ? " is-cfb-deion" : "";
   return (
     <img
-      className="feud-fast-host-asset"
+      className={"feud-fast-host-asset" + deionClass}
       src={asset}
       alt=""
       aria-hidden="true"
@@ -295,6 +296,11 @@ export function OfficialSportsFeudDailyView({
         setFastRevealPhase("answer");
         setDisplayedFastTotal(0);
         setScene("reveal");
+      } else {
+        // Fast Money is a single 45-second typing session. Keep the same native
+        // input focused between server-owned answers so iOS never folds the
+        // keyboard between prompts.
+        fastInputRef.current?.focus({ preventScroll: true });
       }
       return;
     }
@@ -628,13 +634,15 @@ export function OfficialSportsFeudDailyView({
               <input
                 ref={fastInputRef}
                 value={answer}
-                onChange={(event) => setAnswer(event.target.value)}
+                onChange={(event) => {
+                  if (!busy && !pendingKindRef.current) setAnswer(event.target.value);
+                }}
                 placeholder="Type your answer"
                 autoCapitalize="words"
                 autoCorrect="off"
                 enterKeyHint="send"
                 aria-label="Fast Money answer"
-                disabled={busy}
+                aria-busy={busy || Boolean(pendingKindRef.current)}
               />
               <button type="submit" aria-label="Submit Fast Money answer" onPointerDown={(event) => event.preventDefault()} disabled={busy}>↑</button>
             </div>

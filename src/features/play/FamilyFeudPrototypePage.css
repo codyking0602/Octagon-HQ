@@ -2917,3 +2917,17 @@ body.family-feud-prototype-active {
     height: 21px;
   }
 }
+
+
+/* Deion's CFB cutout carries more transparent canvas on its left edge than the
+   other hosts. Nudge only that approved host five percentage points farther
+   into the right-side crop; UFC/NFL and the other CFB hosts stay locked. */
+.family-feud-prototype[data-scene="main"] > .feud-fast-host-asset.is-cfb-deion {
+  right: -31% !important;
+}
+
+@media (max-height: 760px) {
+  .family-feud-prototype[data-scene="main"] > .feud-fast-host-asset.is-cfb-deion {
+    right: -32% !important;
+  }
+}
