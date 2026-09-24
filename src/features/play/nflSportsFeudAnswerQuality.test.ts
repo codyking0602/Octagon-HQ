@@ -249,6 +249,77 @@ describe("NFL Sports Feud authored answer quality", () => {
     }
   });
 
+  it("locks the September 25 NFL slate to seven reviewed prompts", () => {
+    expect(footballSportsFeudDomainForDay("2026-09-25")).toBe("nfl");
+
+    const pack = buildSportsFeudPack("nfl", "2026-09-25");
+    expect(pack.mainBoards.map((question) => question.id)).toEqual([
+      "nfl-main-20-2",
+      "nfl-main-07-4",
+    ]);
+    expect(pack.fastMoney.map((question) => question.id)).toEqual([
+      "nfl-fast4-08-1",
+      "nfl-fast5-07-3",
+      "nfl-fast1-06-5",
+      "nfl-fast2-06-2",
+      "nfl-fast3-05-4",
+    ]);
+
+    const visual = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-20-2")!;
+    expect(visual.prompt).toBe(
+      "Name an NFL franchise with a classic visual identity that has stayed recognizable for decades.",
+    );
+    expect(visual.answers.map((answer) => answer.name)).toEqual([
+      "Green Bay Packers",
+      "Las Vegas Raiders",
+      "Pittsburgh Steelers",
+      "Dallas Cowboys",
+      "San Francisco 49ers",
+      "Chicago Bears",
+      "Kansas City Chiefs",
+      "Miami Dolphins",
+    ]);
+
+    const runningBack = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-07-4")!;
+    expect(runningBack.answers.map((answer) => answer.name)).toEqual([
+      "Barry Sanders",
+      "Walter Payton",
+      "Emmitt Smith",
+      "Jim Brown",
+      "Derrick Henry",
+      "Adrian Peterson",
+      "LaDainian Tomlinson",
+      "Eric Dickerson",
+    ]);
+    expect(runningBack.alsoAcceptedAnswers?.map((answer) => answer.name)).toEqual(
+      expect.arrayContaining([
+        "Marshawn Lynch",
+        "Christian McCaffrey",
+        "Saquon Barkley",
+        "Ezekiel Elliott",
+        "Priest Holmes",
+        "Shaun Alexander",
+      ]),
+    );
+
+    const coverage = NFL_FAST.find((question) => question.id === "nfl-fast5-07-3")!;
+    expect(coverage.prompt).toBe("Name an NFL cornerback famous for coverage ability.");
+    expect(coverage.alsoAcceptedAnswers?.map((answer) => answer.name)).toEqual(
+      expect.arrayContaining(["Patrick Surtain II", "Nnamdi Asomugha"]),
+    );
+
+    const mvp = NFL_FAST.find((question) => question.id === "nfl-fast1-06-5")!;
+    expect([
+      ...mvp.answers,
+      ...(mvp.alsoAcceptedAnswers ?? []),
+    ].map((answer) => answer.name)).toContain("Matthew Stafford");
+
+    const siblingVisual = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-20-1")!;
+    expect(siblingVisual.prompt).toBe("Name an NFL team with an iconic uniform or logo.");
+    expect(siblingVisual.answers[1]?.name).toBe("Dallas Cowboys");
+    expect(visual.answers[1]?.name).toBe("Las Vegas Raiders");
+  });
+
   it("leaves the September 23 Football Daily routed to CFB", () => {
     expect(footballSportsFeudDomainForDay("2026-09-23")).toBe("cfb");
   });
