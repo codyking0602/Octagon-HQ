@@ -2410,7 +2410,10 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
         ]
       },
       {
-        "name": "Kings MMA"
+        "name": "Kings MMA",
+        "aliases": [
+          "Kings"
+        ]
       },
       {
         "name": "Serra-Longo",
@@ -3662,7 +3665,10 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
         ]
       },
       {
-        "name": "Left hook"
+        "name": "Left hook",
+        "aliases": [
+          "Hook"
+        ]
       },
       {
         "name": "Ground-and-pound",
