@@ -500,9 +500,9 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
         alsoAcceptedAnswers: ["Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Denver Broncos", "Cleveland Browns", "Philadelphia Eagles", "Los Angeles Rams", "Indianapolis Colts", "Baltimore Ravens"],
       },
       {
-        prompt: "Name an NFL team whose Super Bowl trophy case helps define the brand.",
-        answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Kansas City Chiefs", "Green Bay Packers", "New York Giants", "Denver Broncos"],
-        alsoAcceptedAnswers: ["Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Philadelphia Eagles", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Indianapolis Colts"],
+        prompt: "Name an NFL team whose collection of Super Bowl trophies is central to its brand.",
+        answers: ["New England Patriots", "Pittsburgh Steelers", "Dallas Cowboys", "San Francisco 49ers", "Green Bay Packers", "Kansas City Chiefs", "New York Giants", "Denver Broncos"],
+        alsoAcceptedAnswers: ["Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Indianapolis Colts", "Philadelphia Eagles", "Seattle Seahawks"],
       },
       {
         prompt: "Name a franchise with memorable Super Bowl wins.",
