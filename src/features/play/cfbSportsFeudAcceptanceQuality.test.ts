@@ -116,6 +116,58 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     }
   });
 
+  it("gives every audited Fast Money family at least two prompt-specific ranked orderings", () => {
+    const families = new Map<string, SportsFeudAuthoredQuestion[]>();
+    for (const question of CFB_FAST) {
+      const family = question.id.replace(/-\d+$/, "");
+      const rows = families.get(family) ?? [];
+      rows.push(question);
+      families.set(family, rows);
+    }
+
+    expect(families.size).toBe(50);
+    for (const [family, rows] of families) {
+      expect(rows, family).toHaveLength(5);
+      const rankings = new Set(rows.map((question) =>
+        question.answers.map((answer) => normalizeFamilyFeudInput(answer.name)).join("|")
+      ));
+      expect(rankings.size, family).toBeGreaterThan(1);
+    }
+  });
+
+  it("locks current closed-set CFB facts through the 2025 season", () => {
+    const heismanQbs = candidates(authoredQuestion("cfb-fast1-06-1")).map((answer) => answer.name);
+    expect(heismanQbs).toHaveLength(21);
+    expect(heismanQbs).toContain("Fernando Mendoza");
+
+    const heismanRunningBacks = candidates(authoredQuestion("cfb-fast1-07-1")).map((answer) => answer.name);
+    expect(heismanRunningBacks).toHaveLength(16);
+    expect(heismanRunningBacks).toContain("Reggie Bush");
+
+    expect(matchName(authoredQuestion("cfb-fast1-05-1"), "Hoosiers")?.name).toBe("Indiana");
+    expect(matchName(authoredQuestion("cfb-fast3-01-1"), "Cignetti")?.name).toBe("Curt Cignetti");
+  });
+
+  it("keeps 2000-plus school-star families inside the authored era", () => {
+    const michigan = new Set(candidates(authoredQuestion("cfb-fast2-07-1")).map((answer) => answer.name));
+    for (const pre2000 of ["Charles Woodson", "Desmond Howard", "Tom Brady"]) {
+      expect(michigan.has(pre2000), pre2000).toBe(false);
+    }
+
+    const notreDame = new Set(candidates(authoredQuestion("cfb-fast2-08-1")).map((answer) => answer.name));
+    for (const pre2000 of ["Tim Brown", "Joe Montana", "Jerome Bettis", "Rocket Ismail"]) {
+      expect(notreDame.has(pre2000), pre2000).toBe(false);
+    }
+
+    const georgia = new Set(candidates(authoredQuestion("cfb-fast2-09-1")).map((answer) => answer.name));
+    expect(georgia.has("Herschel Walker")).toBe(false);
+  });
+
+  it("keeps mascot and return-game identities college-correct", () => {
+    expect(matchName(authoredQuestion("cfb-fast3-07-1"), "Boomer and Sooner")?.name).toBe("Boomer and Sooner");
+    expect(matchName(authoredQuestion("cfb-fast5-07-1"), "Dante Pettis")?.name).toBe("Dante Pettis");
+  });
+
   it("keeps authored aliases collision-free and off-board answers distinct from ranked answers", () => {
     for (const question of CFB_ALL) {
       const ranked = new Set(question.answers.map((answer) => normalizeFamilyFeudInput(answer.name)));
@@ -211,6 +263,8 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
       name: "Nick Saban",
       kind: "surname",
     });
+    expect(matchName(authoredQuestion("cfb-main-06-1"), "Mendoza")?.name).toBe("Fernando Mendoza");
+    expect(matchName(authoredQuestion("cfb-main-18-3"), "FB")?.name).toBe("Fullback");
 
     expect(matchName(authoredQuestion("cfb-main-01-2"), "Bama")?.name).toBe("Alabama");
     expect(matchName(authoredQuestion("cfb-fast1-01-1"), "Bama")?.name).toBe("Alabama");

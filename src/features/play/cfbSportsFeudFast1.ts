@@ -8,9 +8,21 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     prompts: [
       "Name an SEC school.",
       "Name a football program from the SEC.",
-      "Name an SEC team you would expect to see on national TV.",
-      "Name a school that feels unmistakably SEC.",
-      "Name an SEC program with a huge football following.",
+      {
+        prompt: "Name an SEC team you would expect to see on national TV.",
+        answers: ["Alabama","Georgia","Texas","LSU","Oklahoma","Tennessee","Florida","Texas A&M"],
+        alsoAcceptedAnswers: ["Auburn","Arkansas","Kentucky","Mississippi State","Missouri","Ole Miss","South Carolina","Vanderbilt"],
+      },
+      {
+        prompt: "Name a school that feels unmistakably SEC.",
+        answers: ["Alabama","Georgia","LSU","Tennessee","Auburn","Florida","Ole Miss","Texas A&M"],
+        alsoAcceptedAnswers: ["Texas","Oklahoma","Arkansas","Kentucky","Mississippi State","Missouri","South Carolina","Vanderbilt"],
+      },
+      {
+        prompt: "Name an SEC program with a huge football following.",
+        answers: ["Alabama","Georgia","Texas","Tennessee","LSU","Oklahoma","Florida","Auburn"],
+        alsoAcceptedAnswers: ["Texas A&M","Arkansas","Kentucky","Mississippi State","Missouri","Ole Miss","South Carolina","Vanderbilt"],
+      },
     ],
     answers: [
       { name: "Alabama", aliases: ["Bama", "Crimson Tide"] },
@@ -40,9 +52,21 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     prompts: [
       "Name a Big Ten school.",
       "Name a football program from the Big Ten.",
-      "Name a Big Ten team with a major national brand.",
-      "Name a school that fits naturally in a Big Ten football conversation.",
-      "Name a Big Ten program known by almost every college football fan.",
+      {
+        prompt: "Name a Big Ten team with a major national brand.",
+        answers: ["Ohio State","Michigan","Penn State","USC","Oregon","Nebraska","Wisconsin","Washington"],
+        alsoAcceptedAnswers: ["Iowa","Illinois","Indiana","Maryland","Michigan State","Minnesota","Northwestern","Purdue","Rutgers","UCLA"],
+      },
+      {
+        prompt: "Name a school that fits naturally in a Big Ten football conversation.",
+        answers: ["Ohio State","Michigan","Penn State","Wisconsin","Iowa","Nebraska","Michigan State","Minnesota"],
+        alsoAcceptedAnswers: ["Oregon","USC","Illinois","Indiana","Maryland","Northwestern","Purdue","Rutgers","UCLA","Washington"],
+      },
+      {
+        prompt: "Name a Big Ten program known by almost every college football fan.",
+        answers: ["Ohio State","Michigan","Penn State","USC","Oregon","Nebraska","Wisconsin","Iowa"],
+        alsoAcceptedAnswers: ["Illinois","Indiana","Maryland","Michigan State","Minnesota","Northwestern","Purdue","Rutgers","UCLA","Washington"],
+      },
     ],
     answers: [
       { name: "Ohio State", aliases: ["OSU", "Buckeyes", "Ohio St"] },
@@ -74,9 +98,21 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     prompts: [
       "Name a Big 12 school.",
       "Name a football program from the Big 12.",
-      "Name a Big 12 team you associate with a strong home crowd.",
-      "Name a school that belongs in a Big 12 football conversation.",
-      "Name a Big 12 program fans recognize quickly.",
+      {
+        prompt: "Name a Big 12 team you associate with a strong home crowd.",
+        answers: ["Kansas State","Oklahoma State","Texas Tech","Iowa State","BYU","Utah","West Virginia","TCU"],
+        alsoAcceptedAnswers: ["Baylor","Kansas","Arizona","Arizona State","Cincinnati","Colorado","Houston","UCF"],
+      },
+      {
+        prompt: "Name a school that belongs in a Big 12 football conversation.",
+        answers: ["Oklahoma State","Kansas State","Texas Tech","TCU","Baylor","Iowa State","West Virginia","Kansas"],
+        alsoAcceptedAnswers: ["Arizona","Arizona State","BYU","Cincinnati","Colorado","Houston","UCF","Utah"],
+      },
+      {
+        prompt: "Name a Big 12 program fans recognize quickly.",
+        answers: ["Oklahoma State","TCU","Texas Tech","Kansas State","Utah","Colorado","BYU","Baylor"],
+        alsoAcceptedAnswers: ["West Virginia","Kansas","Iowa State","Arizona","Arizona State","Cincinnati","Houston","UCF"],
+      },
     ],
     answers: [
       { name: "Texas Tech", aliases: ["Red Raiders", "Tech"] },
@@ -106,9 +142,21 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     prompts: [
       "Name an ACC school with a recognizable football brand.",
       "Name a football program from the ACC.",
-      "Name an ACC team you would expect in a big college football matchup.",
-      "Name a school that feels important to ACC football history.",
-      "Name an ACC program a casual college football fan might know.",
+      {
+        prompt: "Name an ACC team you would expect in a big college football matchup.",
+        answers: ["Clemson","Florida State","Miami","Louisville","Virginia Tech","SMU","NC State","North Carolina"],
+        alsoAcceptedAnswers: ["Syracuse","Boston College","Cal","Duke","Georgia Tech","Pitt","Stanford","Virginia","Wake Forest"],
+      },
+      {
+        prompt: "Name a school that feels important to ACC football history.",
+        answers: ["Florida State","Clemson","Miami","Virginia Tech","Georgia Tech","Syracuse","NC State","Virginia"],
+        alsoAcceptedAnswers: ["Louisville","North Carolina","Boston College","Cal","Duke","Pitt","SMU","Stanford","Wake Forest"],
+      },
+      {
+        prompt: "Name an ACC program a casual college football fan might know.",
+        answers: ["Clemson","Florida State","Miami","Virginia Tech","Louisville","North Carolina","NC State","Stanford"],
+        alsoAcceptedAnswers: ["Syracuse","Boston College","Cal","Duke","Georgia Tech","Pitt","SMU","Virginia","Wake Forest"],
+      },
     ],
     answers: [
       { name: "Clemson", aliases: ["Tigers", "Clemson Tigers"] },
@@ -137,11 +185,31 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     entityKind: "school",
     collisionGroup: "achievements",
     prompts: [
-      "Name a program that won a college football national championship from 2000 through 2024.",
-      "Name a national champion in college football from the 2000 through 2024 seasons.",
-      "Name a school that celebrated a college football national title between 2000 and 2024.",
-      "Name a program that reached the top of college football between 2000 and 2024.",
-      "Name a college football champion from the 2000 through 2024 seasons.",
+      {
+        prompt: "Name a program that won a college football national championship from 2000 through 2025.",
+        answers: ["Alabama","Georgia","Ohio State","LSU","Clemson","Florida","USC","Texas"],
+        alsoAcceptedAnswers: ["Auburn","Florida State","Miami","Michigan","Oklahoma","Indiana"],
+      },
+      {
+        prompt: "Name a national champion in college football from the 2000 through 2025 seasons.",
+        answers: ["Alabama","Georgia","Ohio State","LSU","Clemson","Florida","USC","Oklahoma"],
+        alsoAcceptedAnswers: ["Texas","Auburn","Florida State","Miami","Michigan","Indiana"],
+      },
+      {
+        prompt: "Name a school that celebrated a college football national title between 2000 and 2025.",
+        answers: ["Alabama","Georgia","LSU","Ohio State","Clemson","Florida","USC","Michigan"],
+        alsoAcceptedAnswers: ["Texas","Auburn","Florida State","Miami","Oklahoma","Indiana"],
+      },
+      {
+        prompt: "Name a program that reached the top of college football between 2000 and 2025.",
+        answers: ["Alabama","Georgia","Ohio State","LSU","Clemson","USC","Florida","Oklahoma"],
+        alsoAcceptedAnswers: ["Texas","Auburn","Florida State","Miami","Michigan","Indiana"],
+      },
+      {
+        prompt: "Name a college football champion from the 2000 through 2025 seasons.",
+        answers: ["Alabama","Georgia","Ohio State","LSU","Clemson","Florida","Texas","Michigan"],
+        alsoAcceptedAnswers: ["USC","Auburn","Florida State","Miami","Oklahoma","Indiana"],
+      },
     ],
     answers: [
       { name: "Alabama", aliases: ["Bama", "Crimson Tide"] },
@@ -159,6 +227,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
       { name: "Miami", aliases: ["The U", "Hurricanes", "Miami Hurricanes"] },
       { name: "Michigan", aliases: ["Wolverines"] },
       { name: "Oklahoma", aliases: ["OU", "Sooners"] },
+      { name: "Indiana", aliases: ["Hoosiers"] },
     ],
   },
   {
@@ -166,11 +235,31 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
-      "Name a Heisman Trophy-winning quarterback.",
-      "Name a quarterback who won the Heisman.",
-      "Name a Heisman quarterback from the modern era.",
-      "Name a college quarterback whose season ended with the Heisman Trophy.",
-      "Name a quarterback you remember holding the Heisman.",
+      {
+        prompt: "Name a Heisman Trophy-winning quarterback from the 2000 season or later.",
+        answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Marcus Mariota","Jameis Winston"],
+        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
+      },
+      {
+        prompt: "Name a quarterback who won the Heisman in the 2000s or later.",
+        answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Caleb Williams","Kyler Murray"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
+      },
+      {
+        prompt: "Name a modern-era Heisman quarterback from 2000 or later.",
+        answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Caleb Williams","Baker Mayfield","Kyler Murray"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
+      },
+      {
+        prompt: "Name a college quarterback whose season since 2000 ended with the Heisman Trophy.",
+        answers: ["Cam Newton","Joe Burrow","Tim Tebow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Marcus Mariota","Robert Griffin III"],
+        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Jameis Winston","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
+      },
+      {
+        prompt: "Name a quarterback you remember holding the Heisman since 2000.",
+        answers: ["Tim Tebow","Cam Newton","Johnny Manziel","Joe Burrow","Lamar Jackson","Baker Mayfield","Caleb Williams","Kyler Murray"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
+      },
     ],
     answers: [
       "Tim Tebow",
@@ -191,6 +280,11 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
       "Matt Leinart",
       "Robert Griffin III",
       "Jayden Daniels",
+      "Chris Weinke",
+      "Eric Crouch",
+      "Jason White",
+      "Bryce Young",
+      "Fernando Mendoza",
     ],
   },
   {
@@ -198,11 +292,31 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     entityKind: "person",
     collisionGroup: "running-backs",
     prompts: [
-      "Name a running back who won the Heisman Trophy.",
-      "Name a Heisman-winning running back.",
-      "Name a college running back remembered for a Heisman season.",
-      "Name a running back whose college peak earned the Heisman.",
-      "Name a Heisman back fans still talk about.",
+      {
+        prompt: "Name a running back who won the Heisman Trophy in 1976 or later.",
+        answers: ["Barry Sanders","Derrick Henry","Reggie Bush","Eddie George","Ricky Williams","Mark Ingram","Ron Dayne","Bo Jackson"],
+        alsoAcceptedAnswers: ["Herschel Walker","Marcus Allen","Tony Dorsett","Earl Campbell","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
+      },
+      {
+        prompt: "Name a Heisman-winning running back from 1976 or later.",
+        answers: ["Barry Sanders","Bo Jackson","Herschel Walker","Derrick Henry","Reggie Bush","Ricky Williams","Eddie George","Marcus Allen"],
+        alsoAcceptedAnswers: ["Mark Ingram","Ron Dayne","Tony Dorsett","Earl Campbell","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
+      },
+      {
+        prompt: "Name a college running back who won the Heisman in 1976 or later.",
+        answers: ["Barry Sanders","Derrick Henry","Reggie Bush","Bo Jackson","Herschel Walker","Ricky Williams","Eddie George","Marcus Allen"],
+        alsoAcceptedAnswers: ["Mark Ingram","Ron Dayne","Tony Dorsett","Earl Campbell","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
+      },
+      {
+        prompt: "Name a running back whose Heisman-winning season came in 1976 or later.",
+        answers: ["Barry Sanders","Derrick Henry","Bo Jackson","Herschel Walker","Reggie Bush","Ricky Williams","Marcus Allen","Earl Campbell"],
+        alsoAcceptedAnswers: ["Eddie George","Mark Ingram","Ron Dayne","Tony Dorsett","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
+      },
+      {
+        prompt: "Name a Heisman-winning running back from 1976 or later that fans still remember.",
+        answers: ["Barry Sanders","Bo Jackson","Herschel Walker","Derrick Henry","Reggie Bush","Ricky Williams","Earl Campbell","Marcus Allen"],
+        alsoAcceptedAnswers: ["Eddie George","Mark Ingram","Ron Dayne","Tony Dorsett","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
+      },
     ],
     answers: [
       "Barry Sanders",
@@ -230,11 +344,31 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     entityKind: "person",
     collisionGroup: "running-backs",
     prompts: [
-      "Name a legendary college running back.",
-      "Name a college back who felt impossible to tackle.",
-      "Name a running back you would put in a college football highlight reel.",
-      "Name a college running back whose name still gets huge respect.",
-      "Name a back who belongs in an all-time college football conversation.",
+      {
+        prompt: "Name a legendary college running back.",
+        answers: ["Barry Sanders","Bo Jackson","Herschel Walker","Reggie Bush","Derrick Henry","Ricky Williams","Adrian Peterson","Earl Campbell"],
+        alsoAcceptedAnswers: ["LaDainian Tomlinson","Marshall Faulk","Eric Dickerson","Archie Griffin","Tony Dorsett","Marcus Allen","Jonathan Taylor","Saquon Barkley"],
+      },
+      {
+        prompt: "Name a college back who felt impossible to tackle.",
+        answers: ["Earl Campbell","Bo Jackson","Derrick Henry","Herschel Walker","Adrian Peterson","Ricky Williams","Barry Sanders","Marshawn Lynch"],
+        alsoAcceptedAnswers: ["Reggie Bush","LaDainian Tomlinson","Marshall Faulk","Eric Dickerson","Archie Griffin","Tony Dorsett","Marcus Allen","Jonathan Taylor","Saquon Barkley"],
+      },
+      {
+        prompt: "Name a running back you would put in a college football highlight reel.",
+        answers: ["Barry Sanders","Reggie Bush","Bo Jackson","Adrian Peterson","Herschel Walker","Derrick Henry","Ricky Williams","LaDainian Tomlinson"],
+        alsoAcceptedAnswers: ["Earl Campbell","Marshall Faulk","Eric Dickerson","Archie Griffin","Tony Dorsett","Marcus Allen","Jonathan Taylor","Saquon Barkley"],
+      },
+      {
+        prompt: "Name a college running back whose name still gets huge respect.",
+        answers: ["Barry Sanders","Bo Jackson","Herschel Walker","Earl Campbell","Ricky Williams","Derrick Henry","Adrian Peterson","Archie Griffin"],
+        alsoAcceptedAnswers: ["Reggie Bush","LaDainian Tomlinson","Marshall Faulk","Eric Dickerson","Tony Dorsett","Marcus Allen","Jonathan Taylor","Saquon Barkley"],
+      },
+      {
+        prompt: "Name a back who belongs in an all-time college football conversation.",
+        answers: ["Barry Sanders","Herschel Walker","Bo Jackson","Earl Campbell","Ricky Williams","Archie Griffin","Reggie Bush","Derrick Henry"],
+        alsoAcceptedAnswers: ["Adrian Peterson","LaDainian Tomlinson","Marshall Faulk","Eric Dickerson","Tony Dorsett","Marcus Allen","Jonathan Taylor","Saquon Barkley"],
+      },
     ],
     answers: [
       "Barry Sanders",
@@ -262,11 +396,31 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     entityKind: "person",
     collisionGroup: "receivers",
     prompts: [
-      "Name a legendary college wide receiver.",
-      "Name a receiver whose college career produced unforgettable highlights.",
-      "Name a college wideout who became a Saturday superstar.",
-      "Name a receiver you would include in an all-time college football debate.",
-      "Name a college receiver remembered for looking different from everyone else.",
+      {
+        prompt: "Name a legendary college wide receiver.",
+        answers: ["Larry Fitzgerald","Randy Moss","Calvin Johnson","DeVonta Smith","Michael Crabtree","Justin Blackmon","Amari Cooper","Marvin Harrison Jr."],
+        alsoAcceptedAnswers: ["Jerry Rice","Fred Biletnikoff","Peter Warrick","Keyshawn Johnson","Ja'Marr Chase","Julio Jones","CeeDee Lamb","Torry Holt"],
+      },
+      {
+        prompt: "Name a receiver whose college career produced unforgettable highlights.",
+        answers: ["Randy Moss","Larry Fitzgerald","Calvin Johnson","Michael Crabtree","DeVonta Smith","Peter Warrick","Justin Blackmon","Marvin Harrison Jr."],
+        alsoAcceptedAnswers: ["Amari Cooper","Jerry Rice","Fred Biletnikoff","Keyshawn Johnson","Ja'Marr Chase","Julio Jones","CeeDee Lamb","Torry Holt"],
+      },
+      {
+        prompt: "Name a college wideout who became a Saturday superstar.",
+        answers: ["Randy Moss","Larry Fitzgerald","Calvin Johnson","DeVonta Smith","Justin Blackmon","Michael Crabtree","Amari Cooper","Ja'Marr Chase"],
+        alsoAcceptedAnswers: ["Marvin Harrison Jr.","Jerry Rice","Fred Biletnikoff","Peter Warrick","Keyshawn Johnson","Julio Jones","CeeDee Lamb","Torry Holt"],
+      },
+      {
+        prompt: "Name a receiver you would include in an all-time college football debate.",
+        answers: ["Randy Moss","Larry Fitzgerald","Calvin Johnson","Fred Biletnikoff","Jerry Rice","DeVonta Smith","Michael Crabtree","Justin Blackmon"],
+        alsoAcceptedAnswers: ["Amari Cooper","Marvin Harrison Jr.","Peter Warrick","Keyshawn Johnson","Ja'Marr Chase","Julio Jones","CeeDee Lamb","Torry Holt"],
+      },
+      {
+        prompt: "Name a college receiver remembered for looking different from everyone else.",
+        answers: ["Randy Moss","Calvin Johnson","Larry Fitzgerald","DeVonta Smith","Marvin Harrison Jr.","Justin Blackmon","Peter Warrick","Michael Crabtree"],
+        alsoAcceptedAnswers: ["Amari Cooper","Jerry Rice","Fred Biletnikoff","Keyshawn Johnson","Ja'Marr Chase","Julio Jones","CeeDee Lamb","Torry Holt"],
+      },
     ],
     answers: [
       "Larry Fitzgerald",
@@ -294,11 +448,31 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     entityKind: "person",
     collisionGroup: "defenders",
     prompts: [
-      "Name a legendary college defensive player.",
-      "Name a defender whose college tape still gets talked about.",
-      "Name a college defensive star who could take over games.",
-      "Name a defender who belongs in a modern college football legend conversation.",
-      "Name a college defensive player you would never want to block.",
+      {
+        prompt: "Name a legendary college defensive player.",
+        answers: ["Ndamukong Suh","Charles Woodson","Jadeveon Clowney","Manti Te'o","Chase Young","Will Anderson Jr.","Myles Garrett","Micah Parsons"],
+        alsoAcceptedAnswers: ["Derrick Thomas","Ed Reed","Julius Peppers","Luke Kuechly","Terrell Suggs","Von Miller","Khalil Mack","Champ Bailey"],
+      },
+      {
+        prompt: "Name a defender whose college tape still gets talked about.",
+        answers: ["Ndamukong Suh","Jadeveon Clowney","Charles Woodson","Myles Garrett","Chase Young","Ed Reed","Julius Peppers","Will Anderson Jr."],
+        alsoAcceptedAnswers: ["Manti Te'o","Micah Parsons","Derrick Thomas","Luke Kuechly","Terrell Suggs","Von Miller","Khalil Mack","Champ Bailey"],
+      },
+      {
+        prompt: "Name a college defensive star who could take over games.",
+        answers: ["Ndamukong Suh","Charles Woodson","Jadeveon Clowney","Derrick Thomas","Chase Young","Will Anderson Jr.","Myles Garrett","Ed Reed"],
+        alsoAcceptedAnswers: ["Manti Te'o","Micah Parsons","Julius Peppers","Luke Kuechly","Terrell Suggs","Von Miller","Khalil Mack","Champ Bailey"],
+      },
+      {
+        prompt: "Name a defender who belongs in a modern college football legend conversation.",
+        answers: ["Ndamukong Suh","Charles Woodson","Jadeveon Clowney","Manti Te'o","Chase Young","Will Anderson Jr.","Myles Garrett","Luke Kuechly"],
+        alsoAcceptedAnswers: ["Micah Parsons","Derrick Thomas","Ed Reed","Julius Peppers","Terrell Suggs","Von Miller","Khalil Mack","Champ Bailey"],
+      },
+      {
+        prompt: "Name a college defensive player you would never want to block.",
+        answers: ["Ndamukong Suh","Jadeveon Clowney","Derrick Thomas","Myles Garrett","Julius Peppers","Chase Young","Will Anderson Jr.","Terrell Suggs"],
+        alsoAcceptedAnswers: ["Charles Woodson","Manti Te'o","Micah Parsons","Ed Reed","Luke Kuechly","Von Miller","Khalil Mack","Champ Bailey"],
+      },
     ],
     answers: [
       "Ndamukong Suh",
