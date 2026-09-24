@@ -237,27 +237,27 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
       {
         prompt: "Name a Heisman Trophy-winning quarterback from the 2000 season or later.",
         answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Marcus Mariota","Jameis Winston"],
-        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels"],
+        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
       },
       {
         prompt: "Name a quarterback who won the Heisman in the 2000s or later.",
         answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Caleb Williams","Kyler Murray"],
-        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
       },
       {
         prompt: "Name a modern-era Heisman quarterback from 2000 or later.",
         answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Caleb Williams","Baker Mayfield","Kyler Murray"],
-        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
       },
       {
         prompt: "Name a college quarterback whose season since 2000 ended with the Heisman Trophy.",
         answers: ["Cam Newton","Joe Burrow","Tim Tebow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Marcus Mariota","Robert Griffin III"],
-        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Jameis Winston","Jayden Daniels"],
+        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Jameis Winston","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
       },
       {
         prompt: "Name a quarterback you remember holding the Heisman since 2000.",
         answers: ["Tim Tebow","Cam Newton","Johnny Manziel","Joe Burrow","Lamar Jackson","Baker Mayfield","Caleb Williams","Kyler Murray"],
-        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
       },
     ],
     answers: [
@@ -279,7 +279,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
       "Matt Leinart",
       "Robert Griffin III",
       "Jayden Daniels",
-    ],
+    ,"Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
   },
   {
     category: "players",
@@ -287,27 +287,27 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     collisionGroup: "running-backs",
     prompts: [
       {
-        prompt: "Name a modern-era running back who won the Heisman Trophy.",
+        prompt: "Name a running back who won the Heisman Trophy in 1976 or later.",
         answers: ["Barry Sanders","Derrick Henry","Reggie Bush","Eddie George","Ricky Williams","Mark Ingram","Ron Dayne","Bo Jackson"],
         alsoAcceptedAnswers: ["Herschel Walker","Marcus Allen","Tony Dorsett","Earl Campbell","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
       },
       {
-        prompt: "Name a Heisman-winning running back from the modern college football era.",
+        prompt: "Name a Heisman-winning running back from 1976 or later.",
         answers: ["Barry Sanders","Bo Jackson","Herschel Walker","Derrick Henry","Reggie Bush","Ricky Williams","Eddie George","Marcus Allen"],
         alsoAcceptedAnswers: ["Mark Ingram","Ron Dayne","Tony Dorsett","Earl Campbell","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
       },
       {
-        prompt: "Name a college running back remembered for a Heisman season.",
+        prompt: "Name a college running back who won the Heisman in 1976 or later.",
         answers: ["Barry Sanders","Derrick Henry","Reggie Bush","Bo Jackson","Herschel Walker","Ricky Williams","Eddie George","Marcus Allen"],
         alsoAcceptedAnswers: ["Mark Ingram","Ron Dayne","Tony Dorsett","Earl Campbell","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
       },
       {
-        prompt: "Name a running back whose college peak earned the Heisman.",
+        prompt: "Name a running back whose Heisman-winning season came in 1976 or later.",
         answers: ["Barry Sanders","Derrick Henry","Bo Jackson","Herschel Walker","Reggie Bush","Ricky Williams","Marcus Allen","Earl Campbell"],
         alsoAcceptedAnswers: ["Eddie George","Mark Ingram","Ron Dayne","Tony Dorsett","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
       },
       {
-        prompt: "Name a Heisman running back fans still talk about.",
+        prompt: "Name a Heisman-winning running back from 1976 or later that fans still remember.",
         answers: ["Barry Sanders","Bo Jackson","Herschel Walker","Derrick Henry","Reggie Bush","Ricky Williams","Earl Campbell","Marcus Allen"],
         alsoAcceptedAnswers: ["Eddie George","Mark Ingram","Ron Dayne","Tony Dorsett","Rashaan Salaam","Charles White","George Rogers","Mike Rozier"],
       },
