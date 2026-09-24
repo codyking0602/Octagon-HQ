@@ -133,26 +133,121 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Jon Jones",
-      "Georges St-Pierre",
-      "Anderson Silva",
-      "Demetrious Johnson",
-      "Jose Aldo",
-      "Khabib Nurmagomedov",
-      "Amanda Nunes",
-      "Conor McGregor"
+      {
+        "name": "Jon Jones",
+        "aliases": [
+          "Bones"
+        ]
+      },
+      {
+        "name": "Georges St-Pierre",
+        "aliases": [
+          "GSP",
+          "St Pierre",
+          "Georges St Pierre"
+        ]
+      },
+      {
+        "name": "Anderson Silva",
+        "aliases": [
+          "The Spider"
+        ]
+      },
+      {
+        "name": "Demetrious Johnson",
+        "aliases": [
+          "Mighty Mouse",
+          "DJ"
+        ]
+      },
+      {
+        "name": "Jose Aldo",
+        "aliases": [
+          "Aldo"
+        ]
+      },
+      {
+        "name": "Khabib Nurmagomedov",
+        "aliases": [
+          "Khabib"
+        ]
+      },
+      {
+        "name": "Amanda Nunes",
+        "aliases": [
+          "The Lioness"
+        ]
+      },
+      {
+        "name": "Conor McGregor",
+        "aliases": [
+          "Conor",
+          "Notorious"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Ronda Rousey",
-      "Stipe Miocic",
-      "Daniel Cormier",
-      "Randy Couture",
-      "Matt Hughes",
-      "Alexander Volkanovski",
-      "Israel Adesanya",
-      "Chuck Liddell",
-      "BJ Penn",
-      "Brock Lesnar"
+      {
+        "name": "Ronda Rousey",
+        "aliases": [
+          "Rowdy"
+        ]
+      },
+      {
+        "name": "Stipe Miocic",
+        "aliases": [
+          "Stipe"
+        ]
+      },
+      {
+        "name": "Daniel Cormier",
+        "aliases": [
+          "DC"
+        ]
+      },
+      {
+        "name": "Randy Couture",
+        "aliases": [
+          "The Natural"
+        ]
+      },
+      {
+        "name": "Matt Hughes",
+        "aliases": [
+          "Hughes"
+        ]
+      },
+      {
+        "name": "Alexander Volkanovski",
+        "aliases": [
+          "Volk"
+        ]
+      },
+      {
+        "name": "Israel Adesanya",
+        "aliases": [
+          "Izzy",
+          "Stylebender"
+        ]
+      },
+      {
+        "name": "Chuck Liddell",
+        "aliases": [
+          "Iceman"
+        ]
+      },
+      {
+        "name": "BJ Penn",
+        "aliases": [
+          "BJ"
+        ]
+      },
+      {
+        "name": "Brock Lesnar",
+        "aliases": [
+          "Lesnar"
+        ]
+      }
     ]
   },
   {
@@ -267,20 +362,75 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Francis Ngannou",
-      "Alex Pereira",
-      "Derrick Lewis",
-      "Chuck Liddell",
+      {
+        "name": "Francis Ngannou",
+        "aliases": [
+          "Predator"
+        ]
+      },
+      {
+        "name": "Alex Pereira",
+        "aliases": [
+          "Poatan"
+        ]
+      },
+      {
+        "name": "Derrick Lewis",
+        "aliases": [
+          "Black Beast"
+        ]
+      },
+      {
+        "name": "Chuck Liddell",
+        "aliases": [
+          "Iceman"
+        ]
+      },
       "Wanderlei Silva",
-      "Dan Henderson",
-      "Justin Gaethje",
-      "Jiri Prochazka"
+      {
+        "name": "Dan Henderson",
+        "aliases": [
+          "Hendo"
+        ]
+      },
+      {
+        "name": "Justin Gaethje",
+        "aliases": [
+          "Highlight"
+        ]
+      },
+      {
+        "name": "Jiri Prochazka",
+        "aliases": [
+          "Jiri"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Anthony Johnson",
-      "Mark Hunt",
-      "Mirko Cro Cop",
-      "Quinton Jackson",
+      {
+        "name": "Anthony Johnson",
+        "aliases": [
+          "Rumble"
+        ]
+      },
+      {
+        "name": "Mark Hunt",
+        "aliases": [
+          "Super Samoan"
+        ]
+      },
+      {
+        "name": "Mirko Cro Cop",
+        "aliases": [
+          "Cro Cop"
+        ]
+      },
+      {
+        "name": "Quinton Jackson",
+        "aliases": [
+          "Rampage"
+        ]
+      },
       "Sergei Pavlovich",
       "Tai Tuivasa"
     ]
@@ -397,22 +547,67 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Charles Oliveira",
+      {
+        "name": "Charles Oliveira",
+        "aliases": [
+          "Do Bronx"
+        ]
+      },
       "Demian Maia",
-      "Frank Mir",
-      "BJ Penn",
-      "Nate Diaz",
-      "Mackenzie Dern",
+      {
+        "name": "Frank Mir",
+        "aliases": [
+          "Mir"
+        ]
+      },
+      {
+        "name": "BJ Penn",
+        "aliases": [
+          "BJ"
+        ]
+      },
+      {
+        "name": "Nate Diaz",
+        "aliases": [
+          "Nate"
+        ]
+      },
+      {
+        "name": "Mackenzie Dern",
+        "aliases": [
+          "Dern"
+        ]
+      },
       "Rodolfo Vieira",
-      "Tony Ferguson"
+      {
+        "name": "Tony Ferguson",
+        "aliases": [
+          "El Cucuy"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Khabib Nurmagomedov",
+      {
+        "name": "Khabib Nurmagomedov",
+        "aliases": [
+          "Khabib"
+        ]
+      },
       "Jim Miller",
-      "Islam Makhachev",
+      {
+        "name": "Islam Makhachev",
+        "aliases": [
+          "Islam"
+        ]
+      },
       "Brian Ortega",
       "Royce Gracie",
-      "Fabricio Werdum"
+      {
+        "name": "Fabricio Werdum",
+        "aliases": [
+          "Vai Cavalo"
+        ]
+      }
     ]
   },
   {
@@ -527,18 +722,71 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Khabib Nurmagomedov",
-      "Georges St-Pierre",
-      "Daniel Cormier",
-      "Kamaru Usman",
-      "Islam Makhachev",
-      "Henry Cejudo",
-      "Merab Dvalishvili",
-      "Chael Sonnen"
+      {
+        "name": "Khabib Nurmagomedov",
+        "aliases": [
+          "Khabib"
+        ]
+      },
+      {
+        "name": "Georges St-Pierre",
+        "aliases": [
+          "GSP",
+          "St Pierre",
+          "Georges St Pierre"
+        ]
+      },
+      {
+        "name": "Daniel Cormier",
+        "aliases": [
+          "DC"
+        ]
+      },
+      {
+        "name": "Kamaru Usman",
+        "aliases": [
+          "Usman"
+        ]
+      },
+      {
+        "name": "Islam Makhachev",
+        "aliases": [
+          "Islam"
+        ]
+      },
+      {
+        "name": "Henry Cejudo",
+        "aliases": [
+          "Triple C"
+        ]
+      },
+      {
+        "name": "Merab Dvalishvili",
+        "aliases": [
+          "Merab",
+          "Machine"
+        ]
+      },
+      {
+        "name": "Chael Sonnen",
+        "aliases": [
+          "American Gangster"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Matt Hughes",
-      "Randy Couture",
+      {
+        "name": "Matt Hughes",
+        "aliases": [
+          "Hughes"
+        ]
+      },
+      {
+        "name": "Randy Couture",
+        "aliases": [
+          "The Natural"
+        ]
+      },
       "Frankie Edgar",
       "Josh Koscheck",
       "Jon Fitch",
@@ -657,22 +905,89 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Anderson Silva",
-      "Israel Adesanya",
-      "Alex Pereira",
+      {
+        "name": "Anderson Silva",
+        "aliases": [
+          "The Spider"
+        ]
+      },
+      {
+        "name": "Israel Adesanya",
+        "aliases": [
+          "Izzy",
+          "Stylebender"
+        ]
+      },
+      {
+        "name": "Alex Pereira",
+        "aliases": [
+          "Poatan"
+        ]
+      },
       "Max Holloway",
-      "Jose Aldo",
-      "Conor McGregor",
-      "Stephen Thompson",
-      "Joanna Jedrzejczyk"
+      {
+        "name": "Jose Aldo",
+        "aliases": [
+          "Aldo"
+        ]
+      },
+      {
+        "name": "Conor McGregor",
+        "aliases": [
+          "Conor",
+          "Notorious"
+        ]
+      },
+      {
+        "name": "Stephen Thompson",
+        "aliases": [
+          "Wonderboy"
+        ]
+      },
+      {
+        "name": "Joanna Jedrzejczyk",
+        "aliases": [
+          "Joanna"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Dustin Poirier",
-      "Alexander Volkanovski",
-      "Justin Gaethje",
-      "Valentina Shevchenko",
-      "Petr Yan",
-      "Ilia Topuria"
+      {
+        "name": "Dustin Poirier",
+        "aliases": [
+          "Diamond"
+        ]
+      },
+      {
+        "name": "Alexander Volkanovski",
+        "aliases": [
+          "Volk"
+        ]
+      },
+      {
+        "name": "Justin Gaethje",
+        "aliases": [
+          "Highlight"
+        ]
+      },
+      {
+        "name": "Valentina Shevchenko",
+        "aliases": [
+          "Bullet"
+        ]
+      },
+      {
+        "name": "Petr Yan",
+        "aliases": [
+          "Yan"
+        ]
+      },
+      {
+        "name": "Ilia Topuria",
+        "aliases": [
+          "El Matador"
+        ]
+      }
     ]
   },
   {
@@ -787,22 +1102,63 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Conor McGregor",
-      "Chael Sonnen",
-      "Nate Diaz",
+      {
+        "name": "Conor McGregor",
+        "aliases": [
+          "Conor",
+          "Notorious"
+        ]
+      },
+      {
+        "name": "Chael Sonnen",
+        "aliases": [
+          "American Gangster"
+        ]
+      },
+      {
+        "name": "Nate Diaz",
+        "aliases": [
+          "Nate"
+        ]
+      },
       "Michael Bisping",
-      "Colby Covington",
+      {
+        "name": "Colby Covington",
+        "aliases": [
+          "Chaos"
+        ]
+      },
       "Sean Strickland",
       "Kevin Holland",
-      "Derrick Lewis"
+      {
+        "name": "Derrick Lewis",
+        "aliases": [
+          "Black Beast"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Jorge Masvidal",
+      {
+        "name": "Jorge Masvidal",
+        "aliases": [
+          "Gamebred"
+        ]
+      },
       "Tito Ortiz",
-      "Quinton Jackson",
+      {
+        "name": "Quinton Jackson",
+        "aliases": [
+          "Rampage"
+        ]
+      },
       "Paddy Pimblett",
       "Sean O'Malley",
-      "Tony Ferguson"
+      {
+        "name": "Tony Ferguson",
+        "aliases": [
+          "El Cucuy"
+        ]
+      }
     ]
   },
   {
@@ -917,22 +1273,96 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Anderson Silva",
-      "Georges St-Pierre",
-      "Demetrious Johnson",
-      "Jon Jones",
-      "Jose Aldo",
-      "Amanda Nunes",
-      "Valentina Shevchenko",
-      "Israel Adesanya"
+      {
+        "name": "Anderson Silva",
+        "aliases": [
+          "The Spider"
+        ]
+      },
+      {
+        "name": "Georges St-Pierre",
+        "aliases": [
+          "GSP",
+          "St Pierre",
+          "Georges St Pierre"
+        ]
+      },
+      {
+        "name": "Demetrious Johnson",
+        "aliases": [
+          "Mighty Mouse",
+          "DJ"
+        ]
+      },
+      {
+        "name": "Jon Jones",
+        "aliases": [
+          "Bones"
+        ]
+      },
+      {
+        "name": "Jose Aldo",
+        "aliases": [
+          "Aldo"
+        ]
+      },
+      {
+        "name": "Amanda Nunes",
+        "aliases": [
+          "The Lioness"
+        ]
+      },
+      {
+        "name": "Valentina Shevchenko",
+        "aliases": [
+          "Bullet"
+        ]
+      },
+      {
+        "name": "Israel Adesanya",
+        "aliases": [
+          "Izzy",
+          "Stylebender"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Khabib Nurmagomedov",
-      "Alexander Volkanovski",
-      "Kamaru Usman",
-      "Matt Hughes",
-      "Ronda Rousey",
-      "Islam Makhachev"
+      {
+        "name": "Khabib Nurmagomedov",
+        "aliases": [
+          "Khabib"
+        ]
+      },
+      {
+        "name": "Alexander Volkanovski",
+        "aliases": [
+          "Volk"
+        ]
+      },
+      {
+        "name": "Kamaru Usman",
+        "aliases": [
+          "Usman"
+        ]
+      },
+      {
+        "name": "Matt Hughes",
+        "aliases": [
+          "Hughes"
+        ]
+      },
+      {
+        "name": "Ronda Rousey",
+        "aliases": [
+          "Rowdy"
+        ]
+      },
+      {
+        "name": "Islam Makhachev",
+        "aliases": [
+          "Islam"
+        ]
+      }
     ]
   },
   {
@@ -1052,23 +1482,74 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Khabib Nurmagomedov",
-      "Charles Oliveira",
-      "Dustin Poirier",
-      "Justin Gaethje",
-      "BJ Penn",
-      "Islam Makhachev",
-      "Tony Ferguson",
+      {
+        "name": "Khabib Nurmagomedov",
+        "aliases": [
+          "Khabib"
+        ]
+      },
+      {
+        "name": "Charles Oliveira",
+        "aliases": [
+          "Do Bronx"
+        ]
+      },
+      {
+        "name": "Dustin Poirier",
+        "aliases": [
+          "Diamond"
+        ]
+      },
+      {
+        "name": "Justin Gaethje",
+        "aliases": [
+          "Highlight"
+        ]
+      },
+      {
+        "name": "BJ Penn",
+        "aliases": [
+          "BJ"
+        ]
+      },
+      {
+        "name": "Islam Makhachev",
+        "aliases": [
+          "Islam"
+        ]
+      },
+      {
+        "name": "Tony Ferguson",
+        "aliases": [
+          "El Cucuy"
+        ]
+      },
       "Eddie Alvarez"
     ],
     "alsoAcceptedAnswers": [
-      "Conor McGregor",
+      {
+        "name": "Conor McGregor",
+        "aliases": [
+          "Conor",
+          "Notorious"
+        ]
+      },
       "Frankie Edgar",
       "Benson Henderson",
       "Rafael dos Anjos",
       "Donald Cerrone",
-      "Nate Diaz",
-      "Ilia Topuria"
+      {
+        "name": "Nate Diaz",
+        "aliases": [
+          "Nate"
+        ]
+      },
+      {
+        "name": "Ilia Topuria",
+        "aliases": [
+          "El Matador"
+        ]
+      }
     ]
   },
   {
@@ -1198,24 +1679,106 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Georges St-Pierre",
-      "Kamaru Usman",
-      "Matt Hughes",
-      "Robbie Lawler",
-      "Tyron Woodley",
-      "Leon Edwards",
-      "Stephen Thompson",
-      "Carlos Condit"
+      {
+        "name": "Georges St-Pierre",
+        "aliases": [
+          "GSP",
+          "St Pierre",
+          "Georges St Pierre"
+        ]
+      },
+      {
+        "name": "Kamaru Usman",
+        "aliases": [
+          "Usman"
+        ]
+      },
+      {
+        "name": "Matt Hughes",
+        "aliases": [
+          "Hughes"
+        ]
+      },
+      {
+        "name": "Robbie Lawler",
+        "aliases": [
+          "Ruthless"
+        ]
+      },
+      {
+        "name": "Tyron Woodley",
+        "aliases": [
+          "Woodley"
+        ]
+      },
+      {
+        "name": "Leon Edwards",
+        "aliases": [
+          "Rocky"
+        ]
+      },
+      {
+        "name": "Stephen Thompson",
+        "aliases": [
+          "Wonderboy"
+        ]
+      },
+      {
+        "name": "Carlos Condit",
+        "aliases": [
+          "Natural Born Killer"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Jorge Masvidal",
-      "Nick Diaz",
-      "Colby Covington",
-      "Johny Hendricks",
-      "Belal Muhammad",
-      "Islam Makhachev",
-      "Jack Della Maddalena",
-      "BJ Penn",
+      {
+        "name": "Jorge Masvidal",
+        "aliases": [
+          "Gamebred"
+        ]
+      },
+      {
+        "name": "Nick Diaz",
+        "aliases": [
+          "Nick"
+        ]
+      },
+      {
+        "name": "Colby Covington",
+        "aliases": [
+          "Chaos"
+        ]
+      },
+      {
+        "name": "Johny Hendricks",
+        "aliases": [
+          "Bigg Rigg"
+        ]
+      },
+      {
+        "name": "Belal Muhammad",
+        "aliases": [
+          "Belal"
+        ]
+      },
+      {
+        "name": "Islam Makhachev",
+        "aliases": [
+          "Islam"
+        ]
+      },
+      {
+        "name": "Jack Della Maddalena",
+        "aliases": [
+          "JDM"
+        ]
+      },
+      {
+        "name": "BJ Penn",
+        "aliases": [
+          "BJ"
+        ]
+      },
       "Matt Serra"
     ]
   },
@@ -1341,24 +1904,95 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Stipe Miocic",
-      "Francis Ngannou",
-      "Cain Velasquez",
-      "Daniel Cormier",
-      "Randy Couture",
-      "Junior dos Santos",
-      "Derrick Lewis",
-      "Brock Lesnar"
+      {
+        "name": "Stipe Miocic",
+        "aliases": [
+          "Stipe"
+        ]
+      },
+      {
+        "name": "Francis Ngannou",
+        "aliases": [
+          "Predator"
+        ]
+      },
+      {
+        "name": "Cain Velasquez",
+        "aliases": [
+          "Cain"
+        ]
+      },
+      {
+        "name": "Daniel Cormier",
+        "aliases": [
+          "DC"
+        ]
+      },
+      {
+        "name": "Randy Couture",
+        "aliases": [
+          "The Natural"
+        ]
+      },
+      {
+        "name": "Junior dos Santos",
+        "aliases": [
+          "JDS",
+          "Dos Santos"
+        ]
+      },
+      {
+        "name": "Derrick Lewis",
+        "aliases": [
+          "Black Beast"
+        ]
+      },
+      {
+        "name": "Brock Lesnar",
+        "aliases": [
+          "Lesnar"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Fabricio Werdum",
+      {
+        "name": "Fabricio Werdum",
+        "aliases": [
+          "Vai Cavalo"
+        ]
+      },
       "Andrei Arlovski",
-      "Frank Mir",
-      "Mark Hunt",
+      {
+        "name": "Frank Mir",
+        "aliases": [
+          "Mir"
+        ]
+      },
+      {
+        "name": "Mark Hunt",
+        "aliases": [
+          "Super Samoan"
+        ]
+      },
       "Alistair Overeem",
-      "Tom Aspinall",
-      "Ciryl Gane",
-      "Jon Jones"
+      {
+        "name": "Tom Aspinall",
+        "aliases": [
+          "Aspinall"
+        ]
+      },
+      {
+        "name": "Ciryl Gane",
+        "aliases": [
+          "Bon Gamin"
+        ]
+      },
+      {
+        "name": "Jon Jones",
+        "aliases": [
+          "Bones"
+        ]
+      }
     ]
   },
   {
@@ -1468,21 +2102,78 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Amanda Nunes",
-      "Ronda Rousey",
-      "Valentina Shevchenko",
-      "Joanna Jedrzejczyk",
-      "Rose Namajunas",
-      "Cris Cyborg",
-      "Zhang Weili",
-      "Holly Holm"
+      {
+        "name": "Amanda Nunes",
+        "aliases": [
+          "The Lioness"
+        ]
+      },
+      {
+        "name": "Ronda Rousey",
+        "aliases": [
+          "Rowdy"
+        ]
+      },
+      {
+        "name": "Valentina Shevchenko",
+        "aliases": [
+          "Bullet"
+        ]
+      },
+      {
+        "name": "Joanna Jedrzejczyk",
+        "aliases": [
+          "Joanna"
+        ]
+      },
+      {
+        "name": "Rose Namajunas",
+        "aliases": [
+          "Thug Rose"
+        ]
+      },
+      {
+        "name": "Cris Cyborg",
+        "aliases": [
+          "Cyborg"
+        ]
+      },
+      {
+        "name": "Zhang Weili",
+        "aliases": [
+          "Weili",
+          "Magnum"
+        ]
+      },
+      {
+        "name": "Holly Holm",
+        "aliases": [
+          "Preacher's Daughter"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Miesha Tate",
-      "Julianna Pena",
+      {
+        "name": "Miesha Tate",
+        "aliases": [
+          "Cupcake"
+        ]
+      },
+      {
+        "name": "Julianna Pena",
+        "aliases": [
+          "Pena",
+          "Peña"
+        ]
+      },
       "Alexa Grasso",
       "Jessica Andrade",
-      "Kayla Harrison"
+      {
+        "name": "Kayla Harrison",
+        "aliases": [
+          "Kayla"
+        ]
+      }
     ]
   },
   {
@@ -1592,21 +2283,82 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "American Top Team",
-      "AKA",
-      "Jackson Wink",
-      "City Kickboxing",
-      "Xtreme Couture",
-      "Nova Uniao",
-      "Team Alpha Male",
-      "Roufusport"
+      {
+        "name": "American Top Team",
+        "aliases": [
+          "ATT"
+        ]
+      },
+      {
+        "name": "AKA",
+        "aliases": [
+          "American Kickboxing Academy"
+        ]
+      },
+      {
+        "name": "Jackson Wink",
+        "aliases": [
+          "Jackson-Wink",
+          "Jackson Wink MMA"
+        ]
+      },
+      {
+        "name": "City Kickboxing",
+        "aliases": [
+          "CKB"
+        ]
+      },
+      {
+        "name": "Xtreme Couture",
+        "aliases": [
+          "Extreme Couture"
+        ]
+      },
+      {
+        "name": "Nova Uniao",
+        "aliases": [
+          "Nova União"
+        ]
+      },
+      {
+        "name": "Team Alpha Male",
+        "aliases": [
+          "TAM"
+        ]
+      },
+      {
+        "name": "Roufusport",
+        "aliases": [
+          "Roufus Sport"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Tristar Gym",
+      {
+        "name": "Tristar Gym",
+        "aliases": [
+          "Tristar"
+        ]
+      },
       "Kings MMA",
-      "Serra-Longo",
-      "MMA Lab",
-      "Kill Cliff FC"
+      {
+        "name": "Serra-Longo",
+        "aliases": [
+          "Serra Longo"
+        ]
+      },
+      {
+        "name": "MMA Lab",
+        "aliases": [
+          "The MMA Lab"
+        ]
+      },
+      {
+        "name": "Kill Cliff FC",
+        "aliases": [
+          "Kill Cliff"
+        ]
+      }
     ]
   },
   {
@@ -1721,22 +2473,97 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "McGregor-Diaz",
-      "Jones-Cormier",
-      "Liddell-Ortiz",
-      "Silva-Sonnen",
-      "McGregor-Nurmagomedov",
-      "Hughes-St-Pierre",
-      "Couture-Liddell",
-      "Adesanya-Pereira"
+      {
+        "name": "McGregor-Diaz",
+        "aliases": [
+          "McGregor vs Diaz",
+          "Conor vs Nate"
+        ]
+      },
+      {
+        "name": "Jones-Cormier",
+        "aliases": [
+          "Jones vs Cormier",
+          "Jones DC"
+        ]
+      },
+      {
+        "name": "Liddell-Ortiz",
+        "aliases": [
+          "Liddell vs Ortiz",
+          "Chuck vs Tito"
+        ]
+      },
+      {
+        "name": "Silva-Sonnen",
+        "aliases": [
+          "Silva vs Sonnen"
+        ]
+      },
+      {
+        "name": "McGregor-Nurmagomedov",
+        "aliases": [
+          "McGregor vs Khabib",
+          "Conor vs Khabib"
+        ]
+      },
+      {
+        "name": "Hughes-St-Pierre",
+        "aliases": [
+          "Hughes vs GSP"
+        ]
+      },
+      {
+        "name": "Couture-Liddell",
+        "aliases": [
+          "Couture vs Liddell"
+        ]
+      },
+      {
+        "name": "Adesanya-Pereira",
+        "aliases": [
+          "Adesanya vs Pereira",
+          "Izzy vs Pereira"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Ortiz-Shamrock",
-      "McGregor-Aldo",
-      "Nunes-Shevchenko",
-      "Usman-Covington",
-      "Poirier-McGregor",
-      "Lesnar-Mir"
+      {
+        "name": "Ortiz-Shamrock",
+        "aliases": [
+          "Ortiz vs Shamrock"
+        ]
+      },
+      {
+        "name": "McGregor-Aldo",
+        "aliases": [
+          "McGregor vs Aldo"
+        ]
+      },
+      {
+        "name": "Nunes-Shevchenko",
+        "aliases": [
+          "Nunes vs Shevchenko"
+        ]
+      },
+      {
+        "name": "Usman-Covington",
+        "aliases": [
+          "Usman vs Covington"
+        ]
+      },
+      {
+        "name": "Poirier-McGregor",
+        "aliases": [
+          "Poirier vs McGregor"
+        ]
+      },
+      {
+        "name": "Lesnar-Mir",
+        "aliases": [
+          "Lesnar vs Mir"
+        ]
+      }
     ]
   },
   {
@@ -1861,24 +2688,110 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Griffin-Bonnar",
-      "Jones-Gustafsson 1",
-      "Lawler-MacDonald 2",
-      "Henderson-Shogun 1",
-      "Adesanya-Gastelum",
-      "Zhang-Jedrzejczyk 1",
-      "McGregor-Diaz 2",
-      "Poirier-Hooker"
+      {
+        "name": "Griffin-Bonnar",
+        "aliases": [
+          "Griffin vs Bonnar"
+        ]
+      },
+      {
+        "name": "Jones-Gustafsson 1",
+        "aliases": [
+          "Jones vs Gustafsson 1",
+          "Jones Gustafsson"
+        ]
+      },
+      {
+        "name": "Lawler-MacDonald 2",
+        "aliases": [
+          "Lawler vs MacDonald 2",
+          "Lawler Rory 2"
+        ]
+      },
+      {
+        "name": "Henderson-Shogun 1",
+        "aliases": [
+          "Henderson vs Shogun 1",
+          "Hendo Shogun"
+        ]
+      },
+      {
+        "name": "Adesanya-Gastelum",
+        "aliases": [
+          "Adesanya vs Gastelum",
+          "Izzy Gastelum"
+        ]
+      },
+      {
+        "name": "Zhang-Jedrzejczyk 1",
+        "aliases": [
+          "Zhang vs Joanna 1",
+          "Weili Joanna"
+        ]
+      },
+      {
+        "name": "McGregor-Diaz 2",
+        "aliases": [
+          "McGregor vs Diaz 2",
+          "Conor Nate 2"
+        ]
+      },
+      {
+        "name": "Poirier-Hooker",
+        "aliases": [
+          "Poirier vs Hooker"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Silva-Sonnen 1",
-      "Edgar-Maynard 2",
-      "Hunt-Silva",
-      "Usman-Covington 1",
-      "Gaethje-Chandler",
-      "Holloway-Kattar",
-      "Holloway-Gaethje",
-      "Whittaker-Romero 2"
+      {
+        "name": "Silva-Sonnen 1",
+        "aliases": [
+          "Silva vs Sonnen 1"
+        ]
+      },
+      {
+        "name": "Edgar-Maynard 2",
+        "aliases": [
+          "Edgar vs Maynard 2"
+        ]
+      },
+      {
+        "name": "Hunt-Silva",
+        "aliases": [
+          "Hunt vs Silva"
+        ]
+      },
+      {
+        "name": "Usman-Covington 1",
+        "aliases": [
+          "Usman vs Covington 1"
+        ]
+      },
+      {
+        "name": "Gaethje-Chandler",
+        "aliases": [
+          "Gaethje vs Chandler"
+        ]
+      },
+      {
+        "name": "Holloway-Kattar",
+        "aliases": [
+          "Holloway vs Kattar"
+        ]
+      },
+      {
+        "name": "Holloway-Gaethje",
+        "aliases": [
+          "Holloway vs Gaethje"
+        ]
+      },
+      {
+        "name": "Whittaker-Romero 2",
+        "aliases": [
+          "Whittaker vs Romero 2"
+        ]
+      }
     ]
   },
   {
@@ -1988,21 +2901,76 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "T-Mobile Arena",
-      "Madison Square Garden",
-      "MGM Grand Garden Arena",
-      "UFC APEX",
-      "The O2",
-      "Fight Island",
-      "Honda Center",
-      "Etihad Arena"
+      {
+        "name": "T-Mobile Arena",
+        "aliases": [
+          "T Mobile",
+          "TMobile"
+        ]
+      },
+      {
+        "name": "Madison Square Garden",
+        "aliases": [
+          "MSG"
+        ]
+      },
+      {
+        "name": "MGM Grand Garden Arena",
+        "aliases": [
+          "MGM Grand",
+          "MGM"
+        ]
+      },
+      {
+        "name": "UFC APEX",
+        "aliases": [
+          "Apex",
+          "UFC Apex"
+        ]
+      },
+      {
+        "name": "The O2",
+        "aliases": [
+          "O2",
+          "O2 Arena"
+        ]
+      },
+      {
+        "name": "Fight Island",
+        "aliases": [
+          "Yas Island"
+        ]
+      },
+      {
+        "name": "Honda Center",
+        "aliases": [
+          "Honda"
+        ]
+      },
+      {
+        "name": "Etihad Arena",
+        "aliases": [
+          "Etihad"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Las Vegas",
+      {
+        "name": "Las Vegas",
+        "aliases": [
+          "Vegas"
+        ]
+      },
       "Abu Dhabi",
       "London",
       "Anaheim",
-      "New York City"
+      {
+        "name": "New York City",
+        "aliases": [
+          "NYC",
+          "New York"
+        ]
+      }
     ]
   },
   {
@@ -2112,21 +3080,107 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Win a UFC title",
-      "Defend the title repeatedly",
-      "Become a two-division champion",
-      "Beat another all-time great",
-      "Long winning streak",
-      "Headline a huge PPV",
-      "Record a famous knockout",
-      "Enter the UFC Hall of Fame"
+      {
+        "name": "Win a UFC title",
+        "aliases": [
+          "Win title",
+          "Win the title",
+          "Become champion",
+          "UFC champ"
+        ]
+      },
+      {
+        "name": "Defend the title repeatedly",
+        "aliases": [
+          "Title defenses",
+          "Defend title",
+          "Multiple defenses"
+        ]
+      },
+      {
+        "name": "Become a two-division champion",
+        "aliases": [
+          "Double champ",
+          "Champ champ",
+          "Two division champ",
+          "Two-division champ"
+        ]
+      },
+      {
+        "name": "Beat another all-time great",
+        "aliases": [
+          "Beat a legend",
+          "Beat an all time great"
+        ]
+      },
+      {
+        "name": "Long winning streak",
+        "aliases": [
+          "Win streak",
+          "Winning streak"
+        ]
+      },
+      {
+        "name": "Headline a huge PPV",
+        "aliases": [
+          "Headline PPV",
+          "Main event PPV"
+        ]
+      },
+      {
+        "name": "Record a famous knockout",
+        "aliases": [
+          "Famous KO",
+          "Big KO",
+          "Iconic knockout"
+        ]
+      },
+      {
+        "name": "Enter the UFC Hall of Fame",
+        "aliases": [
+          "Hall of Fame",
+          "HOF",
+          "UFC HOF"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Become pound-for-pound No. 1",
-      "Win The Ultimate Fighter",
-      "Set a UFC record",
-      "Win Fight of the Night awards",
-      "Retire as champion"
+      {
+        "name": "Become pound-for-pound No. 1",
+        "aliases": [
+          "P4P number 1",
+          "P4P #1",
+          "Pound for pound number 1"
+        ]
+      },
+      {
+        "name": "Win The Ultimate Fighter",
+        "aliases": [
+          "Win TUF",
+          "TUF winner"
+        ]
+      },
+      {
+        "name": "Set a UFC record",
+        "aliases": [
+          "UFC record",
+          "Set record"
+        ]
+      },
+      {
+        "name": "Win Fight of the Night awards",
+        "aliases": [
+          "Fight of the Night",
+          "FOTN"
+        ]
+      },
+      {
+        "name": "Retire as champion",
+        "aliases": [
+          "Retire champ",
+          "Retire champion"
+        ]
+      }
     ]
   },
   {
@@ -2226,19 +3280,76 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Lightweight",
-      "Welterweight",
-      "Middleweight",
-      "Featherweight",
-      "Bantamweight",
-      "Heavyweight",
-      "Light heavyweight",
-      "Flyweight"
+      {
+        "name": "Lightweight",
+        "aliases": [
+          "LW"
+        ]
+      },
+      {
+        "name": "Welterweight",
+        "aliases": [
+          "WW"
+        ]
+      },
+      {
+        "name": "Middleweight",
+        "aliases": [
+          "MW"
+        ]
+      },
+      {
+        "name": "Featherweight",
+        "aliases": [
+          "FW"
+        ]
+      },
+      {
+        "name": "Bantamweight",
+        "aliases": [
+          "BW"
+        ]
+      },
+      {
+        "name": "Heavyweight",
+        "aliases": [
+          "HW"
+        ]
+      },
+      {
+        "name": "Light heavyweight",
+        "aliases": [
+          "LHW"
+        ]
+      },
+      {
+        "name": "Flyweight",
+        "aliases": [
+          "FLW"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Strawweight",
-      "Women's flyweight",
-      "Women's bantamweight"
+      {
+        "name": "Strawweight",
+        "aliases": [
+          "SW"
+        ]
+      },
+      {
+        "name": "Women's flyweight",
+        "aliases": [
+          "Women's FLW",
+          "WFLW"
+        ]
+      },
+      {
+        "name": "Women's bantamweight",
+        "aliases": [
+          "Women's BW",
+          "WBW"
+        ]
+      }
     ]
   },
   {
@@ -2354,18 +3465,34 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
     ],
     "answers": [
       "Cardio",
-      "Fight IQ",
+      {
+        "name": "Fight IQ",
+        "aliases": [
+          "IQ"
+        ]
+      },
       "Durability",
       "Power",
       "Speed",
-      "Wrestling defense",
+      {
+        "name": "Wrestling defense",
+        "aliases": [
+          "Takedown defense",
+          "TDD"
+        ]
+      },
       "Composure",
       "Toughness"
     ],
     "alsoAcceptedAnswers": [
       "Striking",
       "Wrestling",
-      "Submission defense",
+      {
+        "name": "Submission defense",
+        "aliases": [
+          "Sub defense"
+        ]
+      },
       "Adaptability",
       "Discipline",
       "Recovery"
@@ -2483,22 +3610,86 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Rear-naked choke",
-      "Guillotine",
-      "Armbar",
-      "Head kick",
+      {
+        "name": "Rear-naked choke",
+        "aliases": [
+          "RNC",
+          "Rear naked choke"
+        ]
+      },
+      {
+        "name": "Guillotine",
+        "aliases": [
+          "Guillotine choke"
+        ]
+      },
+      {
+        "name": "Armbar",
+        "aliases": [
+          "Arm bar"
+        ]
+      },
+      {
+        "name": "Head kick",
+        "aliases": [
+          "High kick"
+        ]
+      },
       "Left hook",
-      "Ground-and-pound",
-      "Triangle choke",
-      "Body shot"
+      {
+        "name": "Ground-and-pound",
+        "aliases": [
+          "GNP",
+          "Ground and pound",
+          "Ground pound"
+        ]
+      },
+      {
+        "name": "Triangle choke",
+        "aliases": [
+          "Triangle"
+        ]
+      },
+      {
+        "name": "Body shot",
+        "aliases": [
+          "Body punch",
+          "Shot to body"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Arm-triangle choke",
+      {
+        "name": "Arm-triangle choke",
+        "aliases": [
+          "Arm triangle"
+        ]
+      },
       "Kimura",
-      "Knee",
-      "Elbow",
-      "Uppercut",
-      "Heel hook"
+      {
+        "name": "Knee",
+        "aliases": [
+          "Knee strike"
+        ]
+      },
+      {
+        "name": "Elbow",
+        "aliases": [
+          "Elbow strike"
+        ]
+      },
+      {
+        "name": "Uppercut",
+        "aliases": [
+          "Upper cut"
+        ]
+      },
+      {
+        "name": "Heel hook",
+        "aliases": [
+          "Heelhook"
+        ]
+      }
     ]
   },
   {
@@ -2613,19 +3804,62 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       }
     ],
     "answers": [
-      "Conor McGregor",
-      "Israel Adesanya",
-      "Alex Pereira",
+      {
+        "name": "Conor McGregor",
+        "aliases": [
+          "Conor",
+          "Notorious"
+        ]
+      },
+      {
+        "name": "Israel Adesanya",
+        "aliases": [
+          "Izzy",
+          "Stylebender"
+        ]
+      },
+      {
+        "name": "Alex Pereira",
+        "aliases": [
+          "Poatan"
+        ]
+      },
       "Darren Till",
-      "Tom Aspinall",
+      {
+        "name": "Tom Aspinall",
+        "aliases": [
+          "Aspinall"
+        ]
+      },
       "Paddy Pimblett",
       "Max Holloway",
-      "Jiri Prochazka"
+      {
+        "name": "Jiri Prochazka",
+        "aliases": [
+          "Jiri"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Anderson Silva",
-      "Ronda Rousey",
-      "The Korean Zombie",
+      {
+        "name": "Anderson Silva",
+        "aliases": [
+          "The Spider"
+        ]
+      },
+      {
+        "name": "Ronda Rousey",
+        "aliases": [
+          "Rowdy"
+        ]
+      },
+      {
+        "name": "The Korean Zombie",
+        "aliases": [
+          "Korean Zombie",
+          "Chan Sung Jung"
+        ]
+      },
       "Tai Tuivasa",
       "Mike Perry",
       "Diego Sanchez"
