@@ -102,7 +102,7 @@ function SportContextRow({
         {context.sport === "mlb" ? "MLB PLAYOFFS" : context.sport.toUpperCase()} {context.section}
       </strong>
       {context.switchable ? (
-        <div className="sport-context-row__switch" role="group" aria-label={`${sectionLabel} sport`}>
+        <div className={`sport-context-row__switch${showMlb ? " sport-context-row__switch--three" : ""}`} role="group" aria-label={`${sectionLabel} sport`}>
           {(["ufc", "football", ...(showMlb ? ["mlb"] as const : [])] as SelectedSport[]).map((sport) => (
             <button
               key={sport}
