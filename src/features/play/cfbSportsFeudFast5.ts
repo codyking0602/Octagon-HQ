@@ -309,7 +309,6 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
       { name: "Georgia", aliases: ["UGA", "Bulldogs", "Georgia Bulldogs"] },
       { name: "Tennessee", aliases: ["Vols", "Volunteers"] },
       { name: "Clemson", aliases: ["Clemson Tigers"] },
-      { name: "Miami", aliases: ["The U", "Hurricanes", "Miami Hurricanes"] },
       { name: "UCLA", aliases: ["Bruins"] },
       { name: "North Carolina", aliases: ["UNC", "Tar Heels"] },
     ],
