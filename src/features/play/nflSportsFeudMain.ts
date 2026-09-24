@@ -518,11 +518,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "awards",
     prompts: [
-      "Name an NFL award or honor players want to win.",
-      "Name an award that can define an NFL season.",
-      "Name a major individual honor in pro football.",
-      "Name an NFL award fans debate every year.",
-      "Name an award that can become part of a player's legacy.",
+      {
+        prompt: "Name an NFL award or honor players want to win.",
+        answers: ["NFL MVP", "Super Bowl MVP", "Defensive Player of the Year", "Offensive Player of the Year", "First-team All-Pro", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Walter Payton Man of the Year"],
+        alsoAcceptedAnswers: ["Comeback Player of the Year", "Pro Bowl selection", "NFL rushing title", "NFL passing title"],
+      },
+      {
+        prompt: "Name an individual NFL award that can define a player's season.",
+        answers: ["NFL MVP", "Defensive Player of the Year", "Offensive Player of the Year", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "Super Bowl MVP", "Walter Payton Man of the Year"],
+        alsoAcceptedAnswers: ["First-team All-Pro", "Pro Bowl selection"],
+      },
+      {
+        prompt: "Name a major individual honor in pro football.",
+        answers: ["NFL MVP", "Pro Football Hall of Fame", "Super Bowl MVP", "First-team All-Pro", "Defensive Player of the Year", "Offensive Player of the Year", "Pro Bowl selection", "Walter Payton Man of the Year"],
+        alsoAcceptedAnswers: ["Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "All-Decade Team"],
+      },
+      {
+        prompt: "Name an NFL award fans debate every year.",
+        answers: ["NFL MVP", "Offensive Player of the Year", "Defensive Player of the Year", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "Coach of the Year", "Super Bowl MVP"],
+        alsoAcceptedAnswers: ["First-team All-Pro", "Pro Bowl selection"],
+      },
+      {
+        prompt: "Name an NFL honor that can become a major part of a player's legacy.",
+        answers: ["NFL MVP", "Pro Football Hall of Fame", "Super Bowl MVP", "First-team All-Pro", "Defensive Player of the Year", "Offensive Player of the Year", "Walter Payton Man of the Year", "Pro Bowl selection"],
+        alsoAcceptedAnswers: ["Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "All-Decade Team"],
+      },
     ],
     answers: ["NFL MVP", "Super Bowl MVP", "Defensive Player of the Year", "Offensive Player of the Year", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "Walter Payton Man of the Year"],
     alsoAcceptedAnswers: ["First-team All-Pro", "Pro Bowl selection"],
