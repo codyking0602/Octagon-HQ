@@ -13,6 +13,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a champion you would want when everything is on the line.",
     ],
     answers: ["Georges St-Pierre", "Jon Jones", "Amanda Nunes", "Khabib Nurmagomedov", "Anderson Silva", "Demetrious Johnson", "Jose Aldo", "Alexander Volkanovski"],
+    alsoAcceptedAnswers: ["Stipe Miocic", "Daniel Cormier", "Israel Adesanya", "Kamaru Usman", "Ronda Rousey", "Charles Oliveira"],
   },
   {
     category: "fighter-traits",
@@ -26,6 +27,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a fighter whose power is part of the scouting report immediately.",
     ],
     answers: ["Francis Ngannou", "Alex Pereira", "Derrick Lewis", "Dan Henderson", "Chuck Liddell", "Jiri Prochazka", "Justin Gaethje", "Yoel Romero"],
+    alsoAcceptedAnswers: ["Anthony Johnson", "Mark Hunt", "Quinton Jackson", "Mirko Cro Cop", "Sergei Pavlovich", "Tom Aspinall"],
   },
   {
     category: "fighter-traits",
@@ -39,6 +41,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a fighter you associate with relentless late-round pace.",
     ],
     answers: ["Max Holloway", "Merab Dvalishvili", "Colby Covington", "Georges St-Pierre", "Kamaru Usman", "Nate Diaz", "Tony Ferguson", "Demetrious Johnson"],
+    alsoAcceptedAnswers: ["Alexander Volkanovski", "Dustin Poirier", "Robert Whittaker", "Joanna Jedrzejczyk", "Valentina Shevchenko", "Henry Cejudo"],
   },
   {
     category: "fighter-traits",
@@ -52,6 +55,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a fighter fans associate with surviving wars.",
     ],
     answers: ["Max Holloway", "Nate Diaz", "Justin Gaethje", "Tony Ferguson", "Dan Henderson", "Robbie Lawler", "Dustin Poirier", "Mark Hunt"],
+    alsoAcceptedAnswers: ["Calvin Kattar", "Frankie Edgar", "Nick Diaz", "Brian Ortega", "Chris Leben"],
   },
   {
     category: "personality",
@@ -65,6 +69,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a UFC star who knew how to create attention with words.",
     ],
     answers: ["Conor McGregor", "Chael Sonnen", "Nate Diaz", "Michael Bisping", "Colby Covington", "Sean Strickland", "Kevin Holland", "Derrick Lewis"],
+    alsoAcceptedAnswers: ["Jorge Masvidal", "Tito Ortiz", "Quinton Jackson", "Paddy Pimblett", "Sean O'Malley", "Tony Ferguson"],
   },
   {
     category: "fighter-style",
@@ -78,6 +83,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a pressure fighter fans recognize immediately.",
     ],
     answers: ["Khabib Nurmagomedov", "Merab Dvalishvili", "Max Holloway", "Justin Gaethje", "Colby Covington", "Petr Yan", "Paulo Costa", "Cain Velasquez"],
+    alsoAcceptedAnswers: ["Rafael dos Anjos", "Charles Oliveira", "Michael Chandler", "Sean Strickland", "Joanna Jedrzejczyk", "Kamaru Usman"],
   },
   {
     category: "fighter-style",
@@ -91,6 +97,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a counterstriker serious MMA fans recognize.",
     ],
     answers: ["Anderson Silva", "Conor McGregor", "Israel Adesanya", "Lyoto Machida", "Stephen Thompson", "Jose Aldo", "Valentina Shevchenko", "Petr Yan"],
+    alsoAcceptedAnswers: ["Alexander Volkanovski", "Dustin Poirier", "Robert Whittaker", "Leon Edwards", "Alex Pereira"],
   },
   {
     category: "fighter-style",
@@ -104,6 +111,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a grappler who turned mat skill into major UFC success.",
     ],
     answers: ["Khabib Nurmagomedov", "Charles Oliveira", "Islam Makhachev", "Demian Maia", "Georges St-Pierre", "BJ Penn", "Frank Mir", "Mackenzie Dern"],
+    alsoAcceptedAnswers: ["Jim Miller", "Rodolfo Vieira", "Gilbert Burns", "Ronaldo Souza", "Aljamain Sterling", "Brian Ortega"],
   },
   {
     category: "underdogs",
@@ -117,6 +125,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a fighter who proved betting odds do not decide a fight.",
     ],
     answers: ["Matt Serra", "Holly Holm", "Chris Weidman", "Michael Bisping", "Julianna Pena", "Leon Edwards", "Nate Diaz", "Gabriel Gonzaga"],
+    alsoAcceptedAnswers: ["TJ Dillashaw", "Rose Namajunas", "Rafael dos Anjos", "Henry Cejudo", "Sean Strickland"],
   },
   {
     category: "culture",
@@ -130,5 +139,6 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       "Name a UFC fighter whose entrance has become part of the fan experience.",
     ],
     answers: ["Conor McGregor", "Israel Adesanya", "Alex Pereira", "Darren Till", "Tom Aspinall", "Paddy Pimblett", "Max Holloway", "Jiri Prochazka"],
+    alsoAcceptedAnswers: ["Anderson Silva", "Ronda Rousey", "The Korean Zombie", "Tai Tuivasa", "Mike Perry", "Diego Sanchez"],
   },
 ] as const);
