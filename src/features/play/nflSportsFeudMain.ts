@@ -142,11 +142,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
-      "Name an NFL franchise with an iconic all-time brand.",
-      "Name a team that belongs in almost any NFL history conversation.",
-      "Name a franchise whose logo and colors feel instantly important.",
-      "Name an NFL team with a huge historical footprint.",
-      "Name a franchise you would include in an NFL blue-blood debate.",
+      {
+        prompt: "Name an NFL franchise with an iconic all-time brand.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "Pittsburgh Steelers", "San Francisco 49ers", "New England Patriots", "Las Vegas Raiders", "New York Giants", "Chicago Bears"],
+        alsoAcceptedAnswers: ["Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Philadelphia Eagles", "Buffalo Bills", "Washington Commanders", "Indianapolis Colts", "Los Angeles Rams", "Cleveland Browns"],
+      },
+      {
+        prompt: "Name a team that belongs in almost any NFL history conversation.",
+        answers: ["Green Bay Packers", "Chicago Bears", "New York Giants", "Pittsburgh Steelers", "Dallas Cowboys", "San Francisco 49ers", "New England Patriots", "Las Vegas Raiders"],
+        alsoAcceptedAnswers: ["Cleveland Browns", "Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Washington Commanders", "Indianapolis Colts", "Los Angeles Rams", "Philadelphia Eagles", "Buffalo Bills"],
+      },
+      {
+        prompt: "Name an NFL franchise whose logo and colors are instantly recognizable.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Chicago Bears", "Kansas City Chiefs", "Miami Dolphins"],
+        alsoAcceptedAnswers: ["New York Giants", "Buffalo Bills", "Los Angeles Chargers", "Cleveland Browns", "New Orleans Saints", "Los Angeles Rams", "Philadelphia Eagles", "Denver Broncos", "Indianapolis Colts"],
+      },
+      {
+        prompt: "Name an NFL team with a huge historical footprint.",
+        answers: ["Green Bay Packers", "Chicago Bears", "New York Giants", "Pittsburgh Steelers", "Dallas Cowboys", "San Francisco 49ers", "New England Patriots", "Las Vegas Raiders"],
+        alsoAcceptedAnswers: ["Cleveland Browns", "Washington Commanders", "Miami Dolphins", "Kansas City Chiefs", "Denver Broncos", "Indianapolis Colts", "Los Angeles Rams", "Philadelphia Eagles", "Buffalo Bills"],
+      },
+      {
+        prompt: "Name a franchise you would include in an NFL blue-blood debate.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "Pittsburgh Steelers", "San Francisco 49ers", "New England Patriots", "New York Giants", "Las Vegas Raiders", "Chicago Bears"],
+        alsoAcceptedAnswers: ["Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Washington Commanders", "Los Angeles Rams", "Indianapolis Colts", "Cleveland Browns", "Philadelphia Eagles"],
+      },
     ],
     answers: ["Dallas Cowboys", "Green Bay Packers", "Pittsburgh Steelers", "San Francisco 49ers", "New England Patriots", "New York Giants", "Las Vegas Raiders", "Chicago Bears"],
     alsoAcceptedAnswers: ["Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Philadelphia Eagles", "Buffalo Bills", "Washington Commanders", "Indianapolis Colts", "Los Angeles Rams"],
