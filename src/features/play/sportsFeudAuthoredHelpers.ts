@@ -23,6 +23,7 @@ export interface SportsFeudQuestionFamily {
 }
 
 const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  "Arrowhead Stadium": ["Arrowhead", "Chiefs", "Kansas City"],
   "Defensive Player of the Year": ["DPOY"],
   "Offensive Player of the Year": ["OPOY"],
   "Offensive Rookie of the Year": ["OROY"],
