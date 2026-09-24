@@ -16,7 +16,7 @@ export const UFC_SPORTS_FEUD_SEP24_PROTOTYPE = {
         person("Islam Makhachev", ["Islam"]),
         person("Khamzat Chimaev", ["Khamzat"]),
         person("Merab Dvalishvili", ["Merab"]),
-        person("Georges St-Pierre", ["GSP"]),
+        person("Georges St-Pierre", ["GSP", "St Pierre"]),
         person("Cain Velasquez", ["Cain"]),
         person("Kamaru Usman", ["Kamaru"]),
         person("Daniel Cormier", ["DC"]),
@@ -185,6 +185,7 @@ export const UFC_SPORTS_FEUD_SEP24_PROTOTYPE = {
         person("Mirko Cro Cop", ["Cro Cop"]),
         person("Chuck Liddell"),
         person("Robert Whittaker"),
+        person("Jon Jones"),
       ],
     },
     {
