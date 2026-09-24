@@ -22,8 +22,23 @@ export interface SportsFeudQuestionFamily {
   alsoAcceptedAnswers?: readonly (string | SportsFeudAuthoredAnswer)[];
 }
 
+const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  "Defensive Player of the Year": ["DPOY"],
+  "Offensive Player of the Year": ["OPOY"],
+  "Offensive Rookie of the Year": ["OROY"],
+  "Defensive Rookie of the Year": ["DROY"],
+  "Comeback Player of the Year": ["CPOY"],
+  "Walter Payton Man of the Year": ["WPMOY", "Man of the Year"],
+};
+
 function answer(value: string | SportsFeudAuthoredAnswer): SportsFeudAuthoredAnswer {
-  return typeof value === "string" ? { name: value } : value;
+  if (typeof value !== "string") return value;
+  const aliases = STANDARD_ALIASES[value];
+  return aliases ? { name: value, aliases } : { name: value };
+}
+
+function answerName(value: string | SportsFeudAuthoredAnswer): string {
+  return (typeof value === "string" ? value : value.name).trim().toLowerCase();
 }
 
 export function expandSportsFeudFamilies(
@@ -53,6 +68,9 @@ export function expandSportsFeudFamilies(
         );
       }
 
+      const rankedNames = new Set(rankedAnswers.slice(0, 8).map(answerName));
+      const offBoardAnswers = acceptedAnswers?.filter((value) => !rankedNames.has(answerName(value)));
+
       questions.push({
         id: prefix + "-" + String(familyIndex + 1).padStart(2, "0") + "-" + (promptIndex + 1),
         category: variant?.category ?? family.category,
@@ -60,8 +78,8 @@ export function expandSportsFeudFamilies(
         collisionGroup: variant?.collisionGroup ?? family.collisionGroup,
         prompt,
         answers: rankedAnswers.slice(0, 8).map(answer),
-        ...(acceptedAnswers?.length
-          ? { alsoAcceptedAnswers: acceptedAnswers.map(answer) }
+        ...(offBoardAnswers?.length
+          ? { alsoAcceptedAnswers: offBoardAnswers.map(answer) }
           : {}),
       });
     });
