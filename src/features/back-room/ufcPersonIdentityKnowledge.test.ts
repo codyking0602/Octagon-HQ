@@ -7,7 +7,7 @@ import {
   ufcPersonIdentityKnowledgeRecords,
   ufcPersonIdentityKnowledgeSources,
 } from "./ufcPersonIdentityKnowledge";
-import { getUfcWhoAmIUniverse } from "../games/whoAmIAuthority";
+import { getCanonicalUfcWhoAmIUniverse } from "../games/ufcWhoAmIAuthority";
 
 const EXPECTED_UFC_PR10_SUBJECT_IDS = [
   "ufc:alex-pantoja",
@@ -121,7 +121,7 @@ function normalize(value: string) {
 describe("Who Am I PR10 UFC person identity knowledge", () => {
   it("keeps the original PR10 research population while the canonical universe expands to 133", () => {
     const ledgerIds = ufcFactualLedgerSubjects.map((subject) => subject.id);
-    const universeIds = getUfcWhoAmIUniverse().candidates.map((candidate) => candidate.id);
+    const universeIds = getCanonicalUfcWhoAmIUniverse().candidates.map((candidate) => candidate.id);
     const originalIds = new Set<string>(EXPECTED_UFC_PR10_SUBJECT_IDS);
 
     expect(ledgerIds).toHaveLength(133);
@@ -205,6 +205,6 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
     expect(getUfcPersonIdentityKnowledge("ufc:not-a-real-launch-id")).toBeNull();
 
     expect(footballPersonIdentityKnowledgeRecords.length).toBeGreaterThan(0);
-    expect(getUfcWhoAmIUniverse().candidates).toHaveLength(133);
+    expect(getCanonicalUfcWhoAmIUniverse().candidates).toHaveLength(133);
   });
 });
