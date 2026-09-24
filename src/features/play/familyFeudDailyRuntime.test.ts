@@ -242,6 +242,21 @@ describe("Family Feud V2 Daily persistence contract", () => {
     expect(result.publicState.hq_score).toBe(30);
   });
 
+  it("rejects a queued Fast Money answer if its prompt no longer matches authoritative progress", () => {
+    const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
+    const { submission } = strikeOutBothBoards(publication);
+
+    expect(() => advanceFamilyFeudDailyRuntime(
+      context(publication, submission),
+      {
+        type: "answer",
+        answer: "Alpha One",
+        question_id: "fast-2",
+        time_remaining_ms: 44_000,
+      },
+    )).toThrow("Fast Money question changed before this answer could sync.");
+  });
+
   it("settles unanswered Fast Money prompts at zero when time expires", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const fastState = {
