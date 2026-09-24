@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useIdentity } from "../identity/IdentityProvider";
 import { MLB_ROUND_LABELS, type MlbPlayoffRound } from "./mlbPlayoffsConfig";
 import { bracketComplete, nodeParticipants, sanitizeBracketPicks, teamById } from "./mlbBracket";
 import type { MlbBracketEntry, MlbBracketNode } from "./mlbPlayoffsRepository";
@@ -35,7 +36,9 @@ function nodeResultClass(node: MlbBracketNode, pick: string | undefined, winners
 }
 
 export default function MlbPicksPage() {
-  const { hub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(true);
+  const identity = useIdentity();
+  const signedIn = Boolean(identity.profile);
+  const { hub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(signedIn);
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [viewedProfileId, setViewedProfileId] = useState("");
 
@@ -55,6 +58,19 @@ export default function MlbPicksPage() {
   const ownRank = hub && ownEntry ? bracketRank(hub.brackets, ownEntry.profile_id) : null;
   const roundSeries = hub?.series.filter((series) => series.round === hub.currentRound) ?? [];
   const ownSeriesPicks = new Map(hub?.ownRoundPicks.map((pick) => [pick.series_id, pick.winner_team_id]) ?? []);
+
+  if (!signedIn) {
+    return (
+      <div className="page mlb-picks-page">
+        <section className="page-heading"><p className="eyebrow">MLB PLAYOFFS · PICKS</p><h1>Call October</h1></section>
+        <section className="surface-card mlb-state-card">
+          <strong>Sign in to make playoff picks.</strong>
+          <p>Your full bracket and round-by-round picks stay tied to your HQ profile.</p>
+          <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN</button>
+        </section>
+      </div>
+    );
+  }
 
   if (loading && !hub) {
     return <div className="page mlb-picks-page"><section className="surface-card mlb-state-card"><strong>Loading MLB Playoffs…</strong></section></div>;
