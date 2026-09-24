@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ufcWhoAmIAuthoredCanonicalExpansion } from "../back-room/ufcWhoAmIAuthoredCanonicalExpansion";
 import {
   createUfcWhoAmIAuthoredDailyRounds,
   extendUfcWhoAmIHistoryForDaily,
@@ -122,6 +123,23 @@ describe("UFC authored Who Am I Daily", () => {
     }
 
     expect(repeats).toBeGreaterThan(0);
+  });
+
+  it("rotates all 33 expansion fighters through the normal Daily selector", () => {
+    const expansionIds = new Set(ufcWhoAmIAuthoredCanonicalExpansion.map((subject) => subject.id));
+    const seen = new Set<string>();
+    let history: WhoAmIAuthoredPublicationHistoryEntry[] = [];
+
+    for (let offset = 0; offset < 500 && seen.size < expansionIds.size; offset += 1) {
+      const day = dayOffset(UFC_AUTHORED_WHO_AM_I_CUTOVER_DAY, offset);
+      const rounds = createUfcWhoAmIAuthoredDailyRounds(day, history);
+      for (const entry of rounds) {
+        if (expansionIds.has(entry.round.hiddenSubject.id)) seen.add(entry.round.hiddenSubject.id);
+      }
+      history = extendUfcWhoAmIHistoryForDaily(history, day, rounds);
+    }
+
+    expect(seen.size).toBe(33);
   });
 
   it("requires both fighters and averages their scores on the 0-100 Daily scale", () => {
