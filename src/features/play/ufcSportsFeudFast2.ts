@@ -13,7 +13,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
       "Name an MMA star associated with the American Top Team camp.",
     ],
     answers: ["Amanda Nunes", "Dustin Poirier", "Jorge Masvidal", "Joanna Jedrzejczyk", "Kayla Harrison", "Thiago Alves", "Yoel Romero", "Junior dos Santos"],
-    alsoAcceptedAnswers: ["Robbie Lawler", "Colby Covington", "Tyron Woodley", "Gleison Tibau", "Renato Moicano"],
+    alsoAcceptedAnswers: ["Robbie Lawler", "Colby Covington", "Alexandre Pantoja", "Gleison Tibau", "Renato Moicano"],
   },
   {
     category: "gyms",
@@ -41,7 +41,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
       "Name an MMA star associated with the Auckland-based City Kickboxing camp.",
     ],
     answers: ["Israel Adesanya", "Alexander Volkanovski", "Dan Hooker", "Kai Kara-France", "Carlos Ulberg", "Brad Riddell", "Shane Young", "Blood Diamond"],
-    alsoAcceptedAnswers: ["Kevin Jousset", "Genah Fabian"],
+    alsoAcceptedAnswers: ["Kevin Jousset", "Navajo Stirling"],
   },
   {
     category: "gyms",
@@ -69,7 +69,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
       "Name an MMA star associated with Greg Jackson's team.",
     ],
     answers: ["Jon Jones", "Holly Holm", "Carlos Condit", "Rashad Evans", "Donald Cerrone", "Diego Sanchez", "Michelle Waterson-Gomez", "Andrei Arlovski"],
-    alsoAcceptedAnswers: ["Alistair Overeem", "Travis Browne", "John Dodson", "Cub Swanson"],
+    alsoAcceptedAnswers: ["Alistair Overeem", "Travis Browne", "John Dodson", "Tim Kennedy"],
   },
   {
     category: "national-identity",
