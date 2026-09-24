@@ -33,18 +33,18 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Georges St-Pierre",
           "Jon Jones",
-          "Amanda Nunes",
           "Demetrious Johnson",
-          "Khabib Nurmagomedov",
-          "Anderson Silva",
+          "Amanda Nunes",
           "Jose Aldo",
-          "Alexander Volkanovski"
+          "Khabib Nurmagomedov",
+          "Alexander Volkanovski",
+          "Kamaru Usman"
         ],
         "alsoAcceptedAnswers": [
+          "Anderson Silva",
           "Stipe Miocic",
           "Daniel Cormier",
           "Israel Adesanya",
-          "Kamaru Usman",
           "Ronda Rousey",
           "Charles Oliveira",
           "Islam Makhachev"
@@ -56,18 +56,18 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Jon Jones",
           "Georges St-Pierre",
           "Amanda Nunes",
-          "Khabib Nurmagomedov",
           "Anderson Silva",
-          "Demetrious Johnson",
-          "Jose Aldo",
-          "Alexander Volkanovski"
+          "Khabib Nurmagomedov",
+          "Ronda Rousey",
+          "Israel Adesanya",
+          "Stipe Miocic"
         ],
         "alsoAcceptedAnswers": [
-          "Stipe Miocic",
+          "Demetrious Johnson",
+          "Jose Aldo",
+          "Alexander Volkanovski",
           "Daniel Cormier",
-          "Israel Adesanya",
           "Kamaru Usman",
-          "Ronda Rousey",
           "Charles Oliveira",
           "Islam Makhachev"
         ]
@@ -77,43 +77,43 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Jon Jones",
           "Georges St-Pierre",
-          "Anderson Silva",
           "Amanda Nunes",
           "Khabib Nurmagomedov",
-          "Demetrious Johnson",
-          "Jose Aldo",
-          "Alexander Volkanovski"
-        ],
-        "alsoAcceptedAnswers": [
+          "Anderson Silva",
           "Stipe Miocic",
           "Daniel Cormier",
+          "Charles Oliveira"
+        ],
+        "alsoAcceptedAnswers": [
+          "Demetrious Johnson",
+          "Jose Aldo",
+          "Alexander Volkanovski",
           "Israel Adesanya",
           "Kamaru Usman",
           "Ronda Rousey",
-          "Charles Oliveira",
           "Islam Makhachev"
         ]
       },
       {
         "prompt": "Name a champion you would want when everything is on the line.",
         "answers": [
-          "Jon Jones",
           "Georges St-Pierre",
+          "Jon Jones",
           "Amanda Nunes",
-          "Khabib Nurmagomedov",
-          "Islam Makhachev",
-          "Anderson Silva",
           "Demetrious Johnson",
-          "Jose Aldo"
+          "Khabib Nurmagomedov",
+          "Jose Aldo",
+          "Stipe Miocic",
+          "Charles Oliveira"
         ],
         "alsoAcceptedAnswers": [
+          "Anderson Silva",
           "Alexander Volkanovski",
-          "Stipe Miocic",
           "Daniel Cormier",
           "Israel Adesanya",
           "Kamaru Usman",
           "Ronda Rousey",
-          "Charles Oliveira"
+          "Islam Makhachev"
         ]
       }
     ],
@@ -247,20 +247,20 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Francis Ngannou",
           "Alex Pereira",
-          "Derrick Lewis",
           "Anthony Johnson",
+          "Derrick Lewis",
           "Dan Henderson",
-          "Chuck Liddell",
+          "Mark Hunt",
           "Jiri Prochazka",
-          "Justin Gaethje"
+          "Tom Aspinall"
         ],
         "alsoAcceptedAnswers": [
+          "Chuck Liddell",
+          "Justin Gaethje",
           "Yoel Romero",
-          "Mark Hunt",
           "Quinton Jackson",
           "Mirko Cro Cop",
-          "Sergei Pavlovich",
-          "Tom Aspinall"
+          "Sergei Pavlovich"
         ]
       },
       {
@@ -269,19 +269,19 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Francis Ngannou",
           "Alex Pereira",
           "Derrick Lewis",
-          "Dan Henderson",
-          "Chuck Liddell",
-          "Jiri Prochazka",
-          "Justin Gaethje",
-          "Yoel Romero"
-        ],
-        "alsoAcceptedAnswers": [
           "Anthony Johnson",
           "Mark Hunt",
+          "Justin Gaethje",
+          "Tom Aspinall",
+          "Jiri Prochazka"
+        ],
+        "alsoAcceptedAnswers": [
+          "Dan Henderson",
+          "Chuck Liddell",
+          "Yoel Romero",
           "Quinton Jackson",
           "Mirko Cro Cop",
-          "Sergei Pavlovich",
-          "Tom Aspinall"
+          "Sergei Pavlovich"
         ]
       },
       {
@@ -290,19 +290,19 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Francis Ngannou",
           "Alex Pereira",
           "Derrick Lewis",
-          "Jiri Prochazka",
+          "Anthony Johnson",
           "Dan Henderson",
           "Chuck Liddell",
-          "Justin Gaethje",
-          "Yoel Romero"
+          "Mark Hunt",
+          "Tom Aspinall"
         ],
         "alsoAcceptedAnswers": [
-          "Anthony Johnson",
-          "Mark Hunt",
+          "Jiri Prochazka",
+          "Justin Gaethje",
+          "Yoel Romero",
           "Quinton Jackson",
           "Mirko Cro Cop",
-          "Sergei Pavlovich",
-          "Tom Aspinall"
+          "Sergei Pavlovich"
         ]
       },
       {
@@ -312,18 +312,18 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Alex Pereira",
           "Derrick Lewis",
           "Anthony Johnson",
-          "Dan Henderson",
-          "Chuck Liddell",
+          "Tom Aspinall",
           "Jiri Prochazka",
+          "Mark Hunt",
           "Justin Gaethje"
         ],
         "alsoAcceptedAnswers": [
+          "Dan Henderson",
+          "Chuck Liddell",
           "Yoel Romero",
-          "Mark Hunt",
           "Quinton Jackson",
           "Mirko Cro Cop",
-          "Sergei Pavlovich",
-          "Tom Aspinall"
+          "Sergei Pavlovich"
         ]
       }
     ],
@@ -446,20 +446,20 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       {
         "prompt": "Name a fighter you would trust to keep a brutal pace for five rounds.",
         "answers": [
-          "Max Holloway",
           "Merab Dvalishvili",
+          "Max Holloway",
           "Colby Covington",
           "Kamaru Usman",
+          "Alexander Volkanovski",
+          "Dustin Poirier",
+          "Demetrious Johnson",
+          "Joanna Jedrzejczyk"
+        ],
+        "alsoAcceptedAnswers": [
           "Georges St-Pierre",
           "Nate Diaz",
           "Tony Ferguson",
-          "Demetrious Johnson"
-        ],
-        "alsoAcceptedAnswers": [
-          "Alexander Volkanovski",
-          "Dustin Poirier",
           "Robert Whittaker",
-          "Joanna Jedrzejczyk",
           "Valentina Shevchenko",
           "Henry Cejudo"
         ]
@@ -467,17 +467,17 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       {
         "prompt": "Name a UFC athlete famous for not slowing down.",
         "answers": [
-          "Max Holloway",
           "Merab Dvalishvili",
+          "Max Holloway",
           "Colby Covington",
-          "Tony Ferguson",
-          "Georges St-Pierre",
           "Kamaru Usman",
           "Nate Diaz",
+          "Tony Ferguson",
+          "Alexander Volkanovski",
           "Demetrious Johnson"
         ],
         "alsoAcceptedAnswers": [
-          "Alexander Volkanovski",
+          "Georges St-Pierre",
           "Dustin Poirier",
           "Robert Whittaker",
           "Joanna Jedrzejczyk",
@@ -488,39 +488,39 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       {
         "prompt": "Name a fighter whose conditioning became part of the game plan.",
         "answers": [
-          "Max Holloway",
           "Merab Dvalishvili",
+          "Max Holloway",
           "Colby Covington",
-          "Georges St-Pierre",
           "Kamaru Usman",
-          "Nate Diaz",
           "Tony Ferguson",
-          "Demetrious Johnson"
+          "Dustin Poirier",
+          "Joanna Jedrzejczyk",
+          "Valentina Shevchenko"
         ],
         "alsoAcceptedAnswers": [
+          "Georges St-Pierre",
+          "Nate Diaz",
+          "Demetrious Johnson",
           "Alexander Volkanovski",
-          "Dustin Poirier",
           "Robert Whittaker",
-          "Joanna Jedrzejczyk",
-          "Valentina Shevchenko",
           "Henry Cejudo"
         ]
       },
       {
         "prompt": "Name a fighter you associate with relentless late-round pace.",
         "answers": [
-          "Max Holloway",
           "Merab Dvalishvili",
+          "Max Holloway",
           "Colby Covington",
-          "Nate Diaz",
-          "Georges St-Pierre",
           "Kamaru Usman",
+          "Nate Diaz",
           "Tony Ferguson",
-          "Demetrious Johnson"
+          "Dustin Poirier",
+          "Alexander Volkanovski"
         ],
         "alsoAcceptedAnswers": [
-          "Alexander Volkanovski",
-          "Dustin Poirier",
+          "Georges St-Pierre",
+          "Demetrious Johnson",
           "Robert Whittaker",
           "Joanna Jedrzejczyk",
           "Valentina Shevchenko",
@@ -652,18 +652,18 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Max Holloway",
           "Nate Diaz",
-          "Justin Gaethje",
           "Tony Ferguson",
-          "Dan Henderson",
+          "Justin Gaethje",
           "Robbie Lawler",
-          "Dustin Poirier",
-          "Mark Hunt"
+          "Mark Hunt",
+          "Brian Ortega",
+          "Calvin Kattar"
         ],
         "alsoAcceptedAnswers": [
-          "Calvin Kattar",
+          "Dan Henderson",
+          "Dustin Poirier",
           "Frankie Edgar",
           "Nick Diaz",
-          "Brian Ortega",
           "Chris Leben"
         ]
       },
@@ -672,16 +672,16 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Max Holloway",
           "Nate Diaz",
-          "Dan Henderson",
-          "Mark Hunt",
           "Justin Gaethje",
           "Tony Ferguson",
-          "Robbie Lawler",
+          "Dan Henderson",
+          "Mark Hunt",
+          "Frankie Edgar",
           "Dustin Poirier"
         ],
         "alsoAcceptedAnswers": [
+          "Robbie Lawler",
           "Calvin Kattar",
-          "Frankie Edgar",
           "Nick Diaz",
           "Brian Ortega",
           "Chris Leben"
@@ -691,39 +691,39 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "prompt": "Name a fighter whose chin became part of the legend.",
         "answers": [
           "Max Holloway",
+          "Dan Henderson",
+          "Mark Hunt",
           "Nate Diaz",
           "Robbie Lawler",
-          "Mark Hunt",
           "Justin Gaethje",
           "Tony Ferguson",
-          "Dan Henderson",
-          "Dustin Poirier"
+          "Chris Leben"
         ],
         "alsoAcceptedAnswers": [
+          "Dustin Poirier",
           "Calvin Kattar",
           "Frankie Edgar",
           "Nick Diaz",
-          "Brian Ortega",
-          "Chris Leben"
+          "Brian Ortega"
         ]
       },
       {
         "prompt": "Name a fighter fans associate with surviving wars.",
         "answers": [
+          "Max Holloway",
           "Nate Diaz",
           "Justin Gaethje",
           "Robbie Lawler",
           "Dustin Poirier",
-          "Max Holloway",
           "Tony Ferguson",
-          "Dan Henderson",
-          "Mark Hunt"
+          "Nick Diaz",
+          "Brian Ortega"
         ],
         "alsoAcceptedAnswers": [
+          "Dan Henderson",
+          "Mark Hunt",
           "Calvin Kattar",
           "Frankie Edgar",
-          "Nick Diaz",
-          "Brian Ortega",
           "Chris Leben"
         ]
       }
@@ -760,9 +760,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Hendo"
         ]
       },
-      {
-        "name": "Robbie Lawler"
-      },
+      "Robbie Lawler",
       {
         "name": "Dustin Poirier",
         "aliases": [
@@ -843,27 +841,27 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Michael Bisping",
           "Colby Covington",
           "Nate Diaz",
-          "Sean Strickland",
-          "Kevin Holland",
-          "Derrick Lewis"
+          "Jorge Masvidal",
+          "Paddy Pimblett",
+          "Sean O'Malley"
         ],
         "alsoAcceptedAnswers": [
-          "Jorge Masvidal",
+          "Sean Strickland",
+          "Kevin Holland",
+          "Derrick Lewis",
           "Tito Ortiz",
           "Quinton Jackson",
-          "Paddy Pimblett",
-          "Sean O'Malley",
           "Tony Ferguson"
         ]
       },
       {
         "prompt": "Name a UFC personality known for talking before the cage door closes.",
         "answers": [
-          "Conor McGregor",
           "Chael Sonnen",
+          "Conor McGregor",
+          "Michael Bisping",
           "Nate Diaz",
           "Sean Strickland",
-          "Michael Bisping",
           "Colby Covington",
           "Kevin Holland",
           "Derrick Lewis"
@@ -882,16 +880,16 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Conor McGregor",
           "Chael Sonnen",
-          "Michael Bisping",
-          "Derrick Lewis",
           "Nate Diaz",
           "Colby Covington",
-          "Sean Strickland",
-          "Kevin Holland"
+          "Michael Bisping",
+          "Tito Ortiz",
+          "Jorge Masvidal",
+          "Sean Strickland"
         ],
         "alsoAcceptedAnswers": [
-          "Jorge Masvidal",
-          "Tito Ortiz",
+          "Kevin Holland",
+          "Derrick Lewis",
           "Quinton Jackson",
           "Paddy Pimblett",
           "Sean O'Malley",
@@ -903,19 +901,19 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Conor McGregor",
           "Chael Sonnen",
-          "Jorge Masvidal",
-          "Sean O'Malley",
-          "Nate Diaz",
-          "Michael Bisping",
           "Colby Covington",
-          "Sean Strickland"
+          "Nate Diaz",
+          "Sean Strickland",
+          "Jorge Masvidal",
+          "Paddy Pimblett",
+          "Sean O'Malley"
         ],
         "alsoAcceptedAnswers": [
+          "Michael Bisping",
           "Kevin Holland",
           "Derrick Lewis",
           "Tito Ortiz",
           "Quinton Jackson",
-          "Paddy Pimblett",
           "Tony Ferguson"
         ]
       }
@@ -1041,18 +1039,18 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       {
         "prompt": "Name a fighter who makes opponents work every second.",
         "answers": [
-          "Khabib Nurmagomedov",
           "Merab Dvalishvili",
-          "Colby Covington",
-          "Kamaru Usman",
+          "Khabib Nurmagomedov",
           "Max Holloway",
+          "Colby Covington",
           "Justin Gaethje",
-          "Petr Yan",
-          "Paulo Costa"
+          "Cain Velasquez",
+          "Kamaru Usman",
+          "Rafael dos Anjos"
         ],
         "alsoAcceptedAnswers": [
-          "Cain Velasquez",
-          "Rafael dos Anjos",
+          "Petr Yan",
+          "Paulo Costa",
           "Charles Oliveira",
           "Michael Chandler",
           "Sean Strickland",
@@ -1062,20 +1060,20 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       {
         "prompt": "Name a UFC athlete you associate with walking opponents down.",
         "answers": [
-          "Max Holloway",
-          "Justin Gaethje",
-          "Petr Yan",
-          "Sean Strickland",
           "Khabib Nurmagomedov",
-          "Merab Dvalishvili",
-          "Colby Covington",
-          "Paulo Costa"
+          "Sean Strickland",
+          "Justin Gaethje",
+          "Max Holloway",
+          "Paulo Costa",
+          "Charles Oliveira",
+          "Petr Yan",
+          "Michael Chandler"
         ],
         "alsoAcceptedAnswers": [
+          "Merab Dvalishvili",
+          "Colby Covington",
           "Cain Velasquez",
           "Rafael dos Anjos",
-          "Charles Oliveira",
-          "Michael Chandler",
           "Joanna Jedrzejczyk",
           "Kamaru Usman"
         ]
@@ -1085,20 +1083,20 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Merab Dvalishvili",
           "Khabib Nurmagomedov",
-          "Colby Covington",
-          "Cain Velasquez",
           "Max Holloway",
+          "Colby Covington",
           "Justin Gaethje",
-          "Petr Yan",
-          "Paulo Costa"
+          "Cain Velasquez",
+          "Rafael dos Anjos",
+          "Kamaru Usman"
         ],
         "alsoAcceptedAnswers": [
-          "Rafael dos Anjos",
+          "Petr Yan",
+          "Paulo Costa",
           "Charles Oliveira",
           "Michael Chandler",
           "Sean Strickland",
-          "Joanna Jedrzejczyk",
-          "Kamaru Usman"
+          "Joanna Jedrzejczyk"
         ]
       },
       {
@@ -1109,15 +1107,15 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Max Holloway",
           "Justin Gaethje",
           "Colby Covington",
-          "Petr Yan",
-          "Paulo Costa",
-          "Cain Velasquez"
+          "Cain Velasquez",
+          "Sean Strickland",
+          "Charles Oliveira"
         ],
         "alsoAcceptedAnswers": [
+          "Petr Yan",
+          "Paulo Costa",
           "Rafael dos Anjos",
-          "Charles Oliveira",
           "Michael Chandler",
-          "Sean Strickland",
           "Joanna Jedrzejczyk",
           "Kamaru Usman"
         ]
@@ -1247,15 +1245,15 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Israel Adesanya",
           "Stephen Thompson",
           "Lyoto Machida",
-          "Jose Aldo",
           "Valentina Shevchenko",
-          "Petr Yan"
+          "Leon Edwards",
+          "Robert Whittaker"
         ],
         "alsoAcceptedAnswers": [
+          "Jose Aldo",
+          "Petr Yan",
           "Alexander Volkanovski",
           "Dustin Poirier",
-          "Robert Whittaker",
-          "Leon Edwards",
           "Alex Pereira"
         ]
       },
@@ -1263,36 +1261,36 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "prompt": "Name a UFC striker you associate with making people pay for mistakes.",
         "answers": [
           "Anderson Silva",
-          "Israel Adesanya",
           "Conor McGregor",
-          "Valentina Shevchenko",
-          "Lyoto Machida",
+          "Israel Adesanya",
           "Stephen Thompson",
+          "Lyoto Machida",
           "Jose Aldo",
-          "Petr Yan"
+          "Valentina Shevchenko",
+          "Alex Pereira"
         ],
         "alsoAcceptedAnswers": [
+          "Petr Yan",
           "Alexander Volkanovski",
           "Dustin Poirier",
           "Robert Whittaker",
-          "Leon Edwards",
-          "Alex Pereira"
+          "Leon Edwards"
         ]
       },
       {
         "prompt": "Name a fighter whose timing can punish aggressive opponents.",
         "answers": [
           "Anderson Silva",
-          "Israel Adesanya",
-          "Lyoto Machida",
-          "Stephen Thompson",
           "Conor McGregor",
+          "Israel Adesanya",
+          "Stephen Thompson",
           "Jose Aldo",
           "Valentina Shevchenko",
-          "Petr Yan"
+          "Petr Yan",
+          "Alexander Volkanovski"
         ],
         "alsoAcceptedAnswers": [
-          "Alexander Volkanovski",
+          "Lyoto Machida",
           "Dustin Poirier",
           "Robert Whittaker",
           "Leon Edwards",
@@ -1303,18 +1301,18 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "prompt": "Name a counterstriker serious MMA fans recognize.",
         "answers": [
           "Anderson Silva",
-          "Israel Adesanya",
           "Conor McGregor",
+          "Israel Adesanya",
           "Lyoto Machida",
           "Stephen Thompson",
           "Jose Aldo",
           "Valentina Shevchenko",
-          "Petr Yan"
+          "Robert Whittaker"
         ],
         "alsoAcceptedAnswers": [
+          "Petr Yan",
           "Alexander Volkanovski",
           "Dustin Poirier",
-          "Robert Whittaker",
           "Leon Edwards",
           "Alex Pereira"
         ]
@@ -1437,40 +1435,40 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Khabib Nurmagomedov",
           "Islam Makhachev",
-          "Charles Oliveira",
           "Georges St-Pierre",
           "Demian Maia",
-          "BJ Penn",
-          "Frank Mir",
-          "Mackenzie Dern"
+          "Charles Oliveira",
+          "Aljamain Sterling",
+          "Ronaldo Souza",
+          "Gilbert Burns"
         ],
         "alsoAcceptedAnswers": [
+          "BJ Penn",
+          "Frank Mir",
+          "Mackenzie Dern",
           "Jim Miller",
           "Rodolfo Vieira",
-          "Gilbert Burns",
-          "Ronaldo Souza",
-          "Aljamain Sterling",
           "Brian Ortega"
         ]
       },
       {
         "prompt": "Name a UFC athlete you would hate to face in a scramble.",
         "answers": [
-          "Charles Oliveira",
-          "Islam Makhachev",
-          "Demian Maia",
           "Khabib Nurmagomedov",
+          "Islam Makhachev",
+          "Charles Oliveira",
+          "Demian Maia",
+          "Mackenzie Dern",
+          "Rodolfo Vieira",
+          "Aljamain Sterling",
+          "Gilbert Burns"
+        ],
+        "alsoAcceptedAnswers": [
           "Georges St-Pierre",
           "BJ Penn",
           "Frank Mir",
-          "Mackenzie Dern"
-        ],
-        "alsoAcceptedAnswers": [
           "Jim Miller",
-          "Rodolfo Vieira",
-          "Gilbert Burns",
           "Ronaldo Souza",
-          "Aljamain Sterling",
           "Brian Ortega"
         ]
       },
@@ -1479,39 +1477,39 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Khabib Nurmagomedov",
           "Islam Makhachev",
-          "Georges St-Pierre",
-          "Aljamain Sterling",
           "Charles Oliveira",
           "Demian Maia",
+          "Georges St-Pierre",
           "BJ Penn",
-          "Frank Mir"
+          "Aljamain Sterling",
+          "Brian Ortega"
         ],
         "alsoAcceptedAnswers": [
+          "Frank Mir",
           "Mackenzie Dern",
           "Jim Miller",
           "Rodolfo Vieira",
           "Gilbert Burns",
-          "Ronaldo Souza",
-          "Brian Ortega"
+          "Ronaldo Souza"
         ]
       },
       {
         "prompt": "Name a grappler who turned mat skill into major UFC success.",
         "answers": [
           "Khabib Nurmagomedov",
-          "Charles Oliveira",
           "Islam Makhachev",
-          "Demian Maia",
+          "Charles Oliveira",
           "Georges St-Pierre",
+          "Demian Maia",
           "BJ Penn",
           "Frank Mir",
-          "Mackenzie Dern"
+          "Ronaldo Souza"
         ],
         "alsoAcceptedAnswers": [
+          "Mackenzie Dern",
           "Jim Miller",
           "Rodolfo Vieira",
           "Gilbert Burns",
-          "Ronaldo Souza",
           "Aljamain Sterling",
           "Brian Ortega"
         ]
@@ -1641,18 +1639,18 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Matt Serra",
           "Holly Holm",
           "Chris Weidman",
-          "Michael Bisping",
           "Julianna Pena",
+          "Michael Bisping",
           "Leon Edwards",
           "Nate Diaz",
-          "Gabriel Gonzaga"
+          "Sean Strickland"
         ],
         "alsoAcceptedAnswers": [
+          "Gabriel Gonzaga",
           "TJ Dillashaw",
           "Rose Namajunas",
           "Rafael dos Anjos",
           "Henry Cejudo",
-          "Sean Strickland",
           "Justin Gaethje"
         ]
       },
@@ -1661,16 +1659,16 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Matt Serra",
           "Holly Holm",
-          "Julianna Pena",
-          "Nate Diaz",
           "Chris Weidman",
+          "Julianna Pena",
           "Michael Bisping",
           "Leon Edwards",
-          "Gabriel Gonzaga"
+          "Rose Namajunas",
+          "TJ Dillashaw"
         ],
         "alsoAcceptedAnswers": [
-          "TJ Dillashaw",
-          "Rose Namajunas",
+          "Nate Diaz",
+          "Gabriel Gonzaga",
           "Rafael dos Anjos",
           "Henry Cejudo",
           "Sean Strickland",
@@ -1683,19 +1681,19 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Matt Serra",
           "Holly Holm",
           "Chris Weidman",
-          "Sean Strickland",
-          "Justin Gaethje",
           "Michael Bisping",
           "Julianna Pena",
-          "Leon Edwards"
+          "Leon Edwards",
+          "Nate Diaz",
+          "Gabriel Gonzaga"
         ],
         "alsoAcceptedAnswers": [
-          "Nate Diaz",
-          "Gabriel Gonzaga",
           "TJ Dillashaw",
           "Rose Namajunas",
           "Rafael dos Anjos",
-          "Henry Cejudo"
+          "Henry Cejudo",
+          "Sean Strickland",
+          "Justin Gaethje"
         ]
       },
       {
@@ -1703,17 +1701,17 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "answers": [
           "Matt Serra",
           "Holly Holm",
-          "Julianna Pena",
-          "Sean Strickland",
           "Chris Weidman",
+          "Julianna Pena",
           "Michael Bisping",
           "Leon Edwards",
-          "Nate Diaz"
+          "Sean Strickland",
+          "Rose Namajunas"
         ],
         "alsoAcceptedAnswers": [
+          "Nate Diaz",
           "Gabriel Gonzaga",
           "TJ Dillashaw",
-          "Rose Namajunas",
           "Rafael dos Anjos",
           "Henry Cejudo",
           "Justin Gaethje"
@@ -1841,19 +1839,19 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       {
         "prompt": "Name a fighter whose walk to the cage feels like part of the show.",
         "answers": [
-          "Conor McGregor",
-          "Israel Adesanya",
           "Alex Pereira",
+          "Israel Adesanya",
+          "Conor McGregor",
           "Darren Till",
-          "Tom Aspinall",
           "Paddy Pimblett",
-          "Max Holloway",
-          "Jiri Prochazka"
+          "The Korean Zombie",
+          "Jiri Prochazka",
+          "Tom Aspinall"
         ],
         "alsoAcceptedAnswers": [
+          "Max Holloway",
           "Anderson Silva",
           "Ronda Rousey",
-          "The Korean Zombie",
           "Tai Tuivasa",
           "Mike Perry",
           "Diego Sanchez"
@@ -1862,14 +1860,14 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       {
         "prompt": "Name a UFC star with an entrance fans look forward to.",
         "answers": [
-          "Conor McGregor",
-          "Israel Adesanya",
-          "Paddy Pimblett",
-          "The Korean Zombie",
           "Alex Pereira",
+          "Israel Adesanya",
+          "Conor McGregor",
+          "Paddy Pimblett",
           "Darren Till",
           "Tom Aspinall",
-          "Max Holloway"
+          "Max Holloway",
+          "The Korean Zombie"
         ],
         "alsoAcceptedAnswers": [
           "Jiri Prochazka",
@@ -1884,17 +1882,17 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "prompt": "Name a fighter whose walkout helps create a big-fight atmosphere.",
         "answers": [
           "Conor McGregor",
-          "Israel Adesanya",
           "Alex Pereira",
+          "Israel Adesanya",
           "Darren Till",
-          "Tom Aspinall",
           "Paddy Pimblett",
-          "Max Holloway",
-          "Jiri Prochazka"
+          "Tom Aspinall",
+          "Jiri Prochazka",
+          "Ronda Rousey"
         ],
         "alsoAcceptedAnswers": [
+          "Max Holloway",
           "Anderson Silva",
-          "Ronda Rousey",
           "The Korean Zombie",
           "Tai Tuivasa",
           "Mike Perry",
@@ -1904,17 +1902,17 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
       {
         "prompt": "Name a UFC fighter whose entrance has become part of the fan experience.",
         "answers": [
+          "Alex Pereira",
           "Conor McGregor",
           "Israel Adesanya",
-          "The Korean Zombie",
-          "Alex Pereira",
           "Darren Till",
-          "Tom Aspinall",
           "Paddy Pimblett",
-          "Max Holloway"
+          "The Korean Zombie",
+          "Max Holloway",
+          "Jiri Prochazka"
         ],
         "alsoAcceptedAnswers": [
-          "Jiri Prochazka",
+          "Tom Aspinall",
           "Anderson Silva",
           "Ronda Rousey",
           "Tai Tuivasa",
@@ -1944,9 +1942,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Poatan"
         ]
       },
-      {
-        "name": "Darren Till"
-      },
+      "Darren Till",
       {
         "name": "Tom Aspinall",
         "aliases": [
