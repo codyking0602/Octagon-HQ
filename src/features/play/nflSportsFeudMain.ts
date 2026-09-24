@@ -108,8 +108,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
-      "Name an NFL franchise known for great wide receivers.",
-      "Name a team whose history includes multiple star pass catchers.",
+      {
+        prompt: "Name an NFL franchise known for great wide receivers.",
+        answers: ["San Francisco 49ers", "Minnesota Vikings", "Pittsburgh Steelers", "Dallas Cowboys", "Los Angeles Rams", "Las Vegas Raiders", "Indianapolis Colts", "Cincinnati Bengals"],
+        alsoAcceptedAnswers: ["Miami Dolphins", "Arizona Cardinals", "Detroit Lions", "Atlanta Falcons", "Buffalo Bills", "Philadelphia Eagles", "Green Bay Packers", "Tampa Bay Buccaneers", "Houston Texans"],
+      },
+      {
+        prompt: "Name a team whose history includes multiple star pass catchers.",
+        answers: ["San Francisco 49ers", "Minnesota Vikings", "Kansas City Chiefs", "Dallas Cowboys", "Pittsburgh Steelers", "Los Angeles Rams", "New England Patriots", "Los Angeles Chargers"],
+        alsoAcceptedAnswers: ["Green Bay Packers", "Indianapolis Colts", "Las Vegas Raiders", "Philadelphia Eagles", "Cincinnati Bengals", "Miami Dolphins", "Atlanta Falcons", "Arizona Cardinals", "Detroit Lions", "Tampa Bay Buccaneers"],
+      },
       "Name an NFL franchise you associate with big-name receivers.",
       "Name a team that belongs in a great-receivers conversation.",
       "Name a franchise where fans can name several memorable wideouts.",
