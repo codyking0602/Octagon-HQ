@@ -12,7 +12,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
         alsoAcceptedAnswers: ["Jake Coker","John Parker Wilson","Brodie Croyle"],
       },
       {
-        prompt: "Name an Alabama quarterback you strongly associate with the modern Crimson Tide era.",
+        prompt: "Name an Alabama quarterback you strongly associate with the Crimson Tide since 2000.",
         answers: ["Tua Tagovailoa","Bryce Young","Jalen Hurts","Mac Jones","AJ McCarron","Jalen Milroe","Greg McElroy","Blake Sims"],
         alsoAcceptedAnswers: ["Jake Coker","John Parker Wilson","Brodie Croyle"],
       },
@@ -55,7 +55,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
         alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman"],
       },
       {
-        prompt: "Name an Ohio State quarterback you strongly associate with the modern Buckeyes era.",
+        prompt: "Name an Ohio State quarterback you strongly associate with the Buckeyes since 2000.",
         answers: ["Justin Fields","CJ Stroud","JT Barrett","Troy Smith","Braxton Miller","Dwayne Haskins","Terrelle Pryor","Cardale Jones"],
         alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman"],
       },
@@ -98,7 +98,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
         alsoAcceptedAnswers: ["Kedon Slovis","JT Daniels","Miller Moss","Jayden Maiava"],
       },
       {
-        prompt: "Name a USC quarterback fans remember from the modern Trojans era.",
+        prompt: "Name a USC quarterback fans remember from 2000 or later.",
         answers: ["Matt Leinart","Carson Palmer","Caleb Williams","Sam Darnold","Mark Sanchez","Matt Barkley","Cody Kessler","John David Booty"],
         alsoAcceptedAnswers: ["Kedon Slovis","JT Daniels","Miller Moss","Jayden Maiava"],
       },
@@ -184,7 +184,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
         alsoAcceptedAnswers: ["David Ash","Shane Buechele","Arch Manning"],
       },
       {
-        prompt: "Name a Longhorns quarterback fans remember from the modern era.",
+        prompt: "Name a Longhorns quarterback fans remember from 2000 or later.",
         answers: ["Vince Young","Colt McCoy","Quinn Ewers","Sam Ehlinger","Chris Simms","Major Applewhite","Arch Manning","Shane Buechele"],
         alsoAcceptedAnswers: ["Garrett Gilbert","Case McCoy","David Ash"],
       },
