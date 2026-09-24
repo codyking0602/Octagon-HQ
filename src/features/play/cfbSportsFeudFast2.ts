@@ -328,7 +328,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
         alsoAcceptedAnswers: ["Harrison Smith","Kyren Williams","Tyler Eifert","Audric Estime","Jeremiyah Love","Ian Book","Joe Alt","Quenton Nelson"],
       },
       {
-        prompt: "Name a Notre Dame player from 2000 or later you would expect in a modern program legends conversation.",
+        prompt: "Name a Notre Dame player from 2000 or later who belongs in a modern legends conversation.",
         answers: ["Manti Te'o","Brady Quinn","Golden Tate","Kyle Hamilton","Michael Mayer","Jeff Samardzija","Michael Floyd","Harrison Smith"],
         alsoAcceptedAnswers: ["Kyren Williams","Tyler Eifert","Jaylon Smith","Audric Estime","Jeremiyah Love","Ian Book","Joe Alt","Quenton Nelson"],
       },
