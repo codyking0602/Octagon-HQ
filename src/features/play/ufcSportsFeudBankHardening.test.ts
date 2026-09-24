@@ -153,9 +153,27 @@ describe("UFC Sports Feud answer-acceptance hardening", () => {
     }
   });
 
-  it("materializes every authored UFC question and preserves unique person surnames", () => {
+  it("materializes every authored UFC question with unique aliases and safe person surnames", () => {
     const selected = materializedQuestions();
     expect(selected.size).toBe(350);
+
+    for (const authored of UFC_ALL) {
+      const { pack, question } = materializedQuestion(authored.id);
+      const candidates = question.candidateIds.map((entityId) =>
+        pack.entities.find((entity) => entity.id === entityId)!);
+      const aliasOwners = new Map<string, string>();
+      for (const entity of candidates) {
+        for (const raw of [entity.displayName, ...(entity.aliases ?? [])]) {
+          const term = normalizeFamilyFeudInput(raw);
+          const prior = aliasOwners.get(term);
+          expect(
+            prior == null || prior === entity.id,
+            `${authored.id} materialized alias "${raw}" collides across entities`,
+          ).toBe(true);
+          aliasOwners.set(term, entity.id);
+        }
+      }
+    }
 
     for (const authored of UFC_ALL.filter((question) => question.entityKind === "person")) {
       const { pack, question } = materializedQuestion(authored.id);
