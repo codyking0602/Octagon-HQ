@@ -183,25 +183,28 @@ describe("Family Feud V2 engine contract", () => {
     expect(transition.state.mainBoards[0]!.strikes).toBe(2);
   });
 
-  it("keeps also-accepted responses off the live board and clears only the four core answers", () => {
+  it("scores also-accepted Main responses at two points and lets them clear the board", () => {
     let state = createFamilyFeudState();
     let transition = submitFamilyFeudMainAnswer(pack, state, "Caleb Williams");
     expect(transition.outcome).toMatchObject({
       type: "board-also-accepted",
       entityId: "caleb-williams",
+      slotIndex: 0,
+      points: 2,
     });
     expect(transition.state.mainBoards[0]!.strikes).toBe(0);
-    expect(transition.state.mainBoards[0]!.revealedEntityIds).toEqual([]);
+    expect(transition.state.mainBoards[0]!.revealedEntityIds).toEqual(["caleb-williams"]);
+    expect(familyFeudScore(pack, transition.state).main).toBe(2);
 
     state = transition.state;
-    for (const answer of ["Matthew Stafford", "Jared Goff", "Drake Maye", "Dak Prescott"]) {
+    for (const answer of ["Matthew Stafford", "Jared Goff", "Drake Maye"]) {
       state = submitFamilyFeudMainAnswer(pack, state, answer).state;
     }
     expect(state.mainBoardIndex).toBe(1);
     expect(state.mainBoards[0]!.revealedEntityIds).toEqual([
-      "stafford", "goff", "maye", "prescott",
+      "caleb-williams", "stafford", "goff", "maye",
     ]);
-    expect(familyFeudScore(pack, state).main).toBe(30);
+    expect(familyFeudScore(pack, state).main).toBe(27);
   });
 
   it("does not repeat state changes for a duplicate valid off-board Main guess", () => {
@@ -264,7 +267,7 @@ describe("Family Feud V2 engine contract", () => {
     });
   });
 
-  it("advances Fast Money with variable points and zero for a valid off-board answer", () => {
+  it("advances Fast Money with variable points and one point for a valid off-board answer", () => {
     let state: FamilyFeudState = { ...createFamilyFeudState(), phase: "fast-money" };
 
     let transition = submitFamilyFeudFastMoneyAnswer(pack, state, "Stafford", 44_000);
@@ -281,7 +284,7 @@ describe("Family Feud V2 engine contract", () => {
       type: "fast-money-answer",
       questionIndex: 1,
       entityId: "mahomes",
-      points: 0,
+      points: 1,
     });
   });
 
