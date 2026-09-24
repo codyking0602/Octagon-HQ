@@ -127,4 +127,4 @@ begin
   alter table private.daily_challenge_setups
     enable trigger daily_challenge_setups_immutable;
 end;
-$;
+$$;
