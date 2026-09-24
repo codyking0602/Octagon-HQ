@@ -280,7 +280,12 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
       "Matt Leinart",
       "Robert Griffin III",
       "Jayden Daniels",
-    ,"Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
+      "Chris Weinke",
+      "Eric Crouch",
+      "Jason White",
+      "Bryce Young",
+      "Fernando Mendoza",
+    ],
   },
   {
     category: "players",
