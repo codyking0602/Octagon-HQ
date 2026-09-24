@@ -5,6 +5,8 @@ import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useSport } from "../app/SportProvider";
 import { nextFootballEntryState } from "../features/back-room/footballEntrySession";
+import { useIdentity } from "../features/identity/IdentityProvider";
+import { canViewMlbPlayoffs } from "../features/mlb/mlbPlayoffsConfig";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
 type SecretSportSection = "picks" | "play";
@@ -24,13 +26,17 @@ function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
     return pathname === "/picks"
       || pathname.startsWith("/picks/")
       || pathname === "/football/picks"
-      || pathname.startsWith("/football/picks/");
+      || pathname.startsWith("/football/picks/")
+      || pathname === "/mlb/picks"
+      || pathname.startsWith("/mlb/picks/");
   }
   if (icon === "play") {
     return pathname === "/play"
       || pathname.startsWith("/play/")
       || pathname === "/football"
-      || (pathname.startsWith("/football/") && !pathname.startsWith("/football/picks"));
+      || (pathname.startsWith("/football/") && !pathname.startsWith("/football/picks"))
+      || pathname === "/mlb"
+      || (pathname.startsWith("/mlb/") && !pathname.startsWith("/mlb/picks"));
   }
   return pathname === "/rankings" || pathname.startsWith("/rankings/");
 }
@@ -74,13 +80,16 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqThemeScope }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const identity = useIdentity();
   const { selectedSport, setSelectedSport } = useSport();
   const keyboardSessionRef = useRef(false);
   const lastActiveSportTapRef = useRef<Record<SecretSportSection, number>>({ picks: 0, play: 0 });
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
-  const selectedPlayRoot = selectedSport === "football" ? "/football" : "/play";
-  const selectedPicksRoot = selectedSport === "football" ? "/football/picks" : "/picks";
+  const mlbMode = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
+  const effectiveSport = selectedSport === "mlb" && !canViewMlbPlayoffs(identity.profile) ? "ufc" : selectedSport;
+  const selectedPlayRoot = effectiveSport === "football" ? "/football" : effectiveSport === "mlb" ? "/mlb" : "/play";
+  const selectedPicksRoot = effectiveSport === "football" ? "/football/picks" : effectiveSport === "mlb" ? "/mlb/picks" : "/picks";
   const standardDestinations = baseDestinations.map((destination) => (
     destination.icon === "play" ? { ...destination, to: selectedPlayRoot }
       : destination.icon === "picks" ? { ...destination, to: selectedPicksRoot }
@@ -156,8 +165,16 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
               if (activeSection) {
                 const now = Date.now();
                 const activeRoot = section === "play"
-                  ? (footballMode ? "/football" : "/play")
-                  : (footballMode ? "/football/picks" : "/picks");
+                  ? (footballMode ? "/football" : mlbMode ? "/mlb" : "/play")
+                  : (footballMode ? "/football/picks" : mlbMode ? "/mlb/picks" : "/picks");
+                if (mlbMode) {
+                  lastActiveSportTapRef.current[section] = now;
+                  if (location.pathname === activeRoot) {
+                    event.preventDefault();
+                    scrollPageToTop("smooth");
+                  }
+                  return;
+                }
                 if (now - lastActiveSportTapRef.current[section] <= SECRET_SPORT_TAP_WINDOW_MS) {
                   event.preventDefault();
                   lastActiveSportTapRef.current[section] = 0;
