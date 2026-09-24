@@ -59,20 +59,6 @@ function ufcDivision(value: string) {
 }
 
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
-  const debutYear = Number(subject.activeFrom.slice(0, 4));
-  const lastYear = Number(subject.activeTo.slice(0, 4));
-
-  if (subject.scope === "authored-who-am-i-expansion") {
-    return {
-      id: subject.id,
-      name: subject.name,
-      kind: "fighter",
-      eraBand: eraBand(debutYear, lastYear),
-      rescueGroup: subject.primaryDivision,
-      clues: [],
-    };
-  }
-
   const wins = subject.fights.filter((fight) => fight.result === "win");
   const losses = subject.fights.filter((fight) => fight.result === "loss");
   const koWins = wins.filter((fight) => fight.methodCategory === "ko-tko");
@@ -85,6 +71,8 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
     [subject.primaryDivision, ...subject.secondaryDivisions, ...subject.fights.map((fight) => fight.division)]
       .filter((division) => !division.trim().toLowerCase().startsWith("catchweight")),
   )];
+  const debutYear = Number(subject.activeFrom.slice(0, 4));
+  const lastYear = Number(subject.activeTo.slice(0, 4));
   const activeDecades = [...new Set(subject.fights.map((fight) => Math.floor(Number(fight.date.slice(0, 4)) / 10) * 10))].sort();
   const recognizableNames = new Set(ufcFactualLedgerSubjects.map((fighter) => fighter.name.toLowerCase()));
   const recognizableFights = subject.fights.filter((fight) => recognizableNames.has(fight.opponent.toLowerCase()));
@@ -144,12 +132,13 @@ const ufcUniverse: WhoAmIUniverse = {
   candidates: ufcFactualLedgerSubjects.map(ufcCandidate),
 };
 
+// The authored cutover expanded the canonical universe from 100 to 133. Keep
+// the legacy generated selector pinned to the original first 100 subjects so
+// pre-cutover Daily materializations and legacy Casual boards do not drift.
 const legacyUfcUniverse: WhoAmIUniverse = {
   sport: "ufc",
   league: "UFC",
-  candidates: ufcFactualLedgerSubjects
-    .filter((subject) => subject.scope !== "authored-who-am-i-expansion")
-    .map(ufcCandidate),
+  candidates: ufcFactualLedgerSubjects.slice(0, 100).map(ufcCandidate),
 };
 
 export function getUfcWhoAmIUniverse() {
