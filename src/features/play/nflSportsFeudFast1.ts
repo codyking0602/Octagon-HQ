@@ -16,11 +16,21 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       { name: "Dallas Cowboys", aliases: ["Cowboys", "Dallas"] },
       { name: "San Francisco 49ers", aliases: ["49ers", "Niners", "San Francisco"] },
       { name: "Green Bay Packers", aliases: ["Packers", "Green Bay"] },
-      { name: "Philadelphia Eagles", aliases: ["Eagles", "Philadelphia"] },
+      { name: "Philadelphia Eagles", aliases: ["Eagles", "Philadelphia", "Philly"] },
       { name: "New York Giants", aliases: ["Giants", "NY Giants"] },
       { name: "Seattle Seahawks", aliases: ["Seahawks", "Seattle"] },
       { name: "Minnesota Vikings", aliases: ["Vikings", "Minnesota"] },
       { name: "Los Angeles Rams", aliases: ["Rams", "LA Rams"] },
+    ],
+    alsoAcceptedAnswers: [
+      { name: "Washington Commanders", aliases: ["Commanders", "Washington"] },
+      { name: "Chicago Bears", aliases: ["Bears", "Chicago"] },
+      { name: "Detroit Lions", aliases: ["Lions", "Detroit"] },
+      { name: "Tampa Bay Buccaneers", aliases: ["Buccaneers", "Bucs", "Tampa Bay", "Tampa"] },
+      { name: "Atlanta Falcons", aliases: ["Falcons", "Atlanta"] },
+      { name: "New Orleans Saints", aliases: ["Saints", "New Orleans"] },
+      { name: "Carolina Panthers", aliases: ["Panthers", "Carolina"] },
+      { name: "Arizona Cardinals", aliases: ["Cardinals", "Arizona"] },
     ],
   },
   {
@@ -35,14 +45,24 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name an AFC franchise almost every football fan recognizes.",
     ],
     answers: [
-      { name: "Kansas City Chiefs", aliases: ["Chiefs", "Kansas City"] },
+      { name: "Kansas City Chiefs", aliases: ["Chiefs", "Kansas City", "KC"] },
       { name: "Pittsburgh Steelers", aliases: ["Steelers", "Pittsburgh"] },
       { name: "New England Patriots", aliases: ["Patriots", "New England"] },
       { name: "Buffalo Bills", aliases: ["Bills", "Buffalo"] },
       { name: "Baltimore Ravens", aliases: ["Ravens", "Baltimore"] },
       { name: "Denver Broncos", aliases: ["Broncos", "Denver"] },
-      { name: "Las Vegas Raiders", aliases: ["Raiders", "Oakland Raiders"] },
+      { name: "Las Vegas Raiders", aliases: ["Raiders", "Las Vegas", "Vegas", "Oakland Raiders"] },
       { name: "Miami Dolphins", aliases: ["Dolphins", "Miami"] },
+    ],
+    alsoAcceptedAnswers: [
+      { name: "New York Jets", aliases: ["Jets", "NY Jets"] },
+      { name: "Cincinnati Bengals", aliases: ["Bengals", "Cincinnati"] },
+      { name: "Cleveland Browns", aliases: ["Browns", "Cleveland"] },
+      { name: "Houston Texans", aliases: ["Texans", "Houston"] },
+      { name: "Indianapolis Colts", aliases: ["Colts", "Indianapolis", "Indy"] },
+      { name: "Jacksonville Jaguars", aliases: ["Jaguars", "Jags", "Jacksonville"] },
+      { name: "Tennessee Titans", aliases: ["Titans", "Tennessee"] },
+      { name: "Los Angeles Chargers", aliases: ["Chargers", "LA Chargers", "Bolts"] },
     ],
   },
   {
@@ -57,6 +77,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name a franchise whose fans know how to handle cold football weather.",
     ],
     answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Pittsburgh Steelers", "New England Patriots", "Cleveland Browns", "Minnesota Vikings", "Denver Broncos"],
+    alsoAcceptedAnswers: ["Kansas City Chiefs", "Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens"],
   },
   {
     category: "team-identity",
@@ -70,6 +91,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name an AFC franchise almost every generation of fans recognizes.",
     ],
     answers: ["Pittsburgh Steelers", "New England Patriots", "Kansas City Chiefs", "Las Vegas Raiders", "Denver Broncos", "Miami Dolphins", "Buffalo Bills", "Baltimore Ravens"],
+    alsoAcceptedAnswers: ["New York Jets", "Cincinnati Bengals", "Cleveland Browns", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans", "Los Angeles Chargers"],
   },
   {
     category: "champions",
@@ -83,6 +105,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name a franchise fans associate with repeated championship success.",
     ],
     answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Kansas City Chiefs", "Green Bay Packers", "New York Giants", "Denver Broncos"],
+    alsoAcceptedAnswers: ["Las Vegas Raiders", "Miami Dolphins", "Washington Commanders", "Indianapolis Colts", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Philadelphia Eagles", "Seattle Seahawks"],
   },
   {
     category: "players",
@@ -96,6 +119,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name an NFL quarterback fans remember as a league MVP.",
     ],
     answers: ["Tom Brady", "Peyton Manning", "Patrick Mahomes", "Aaron Rodgers", "Lamar Jackson", "Brett Favre", "Steve Young", "Cam Newton"],
+    alsoAcceptedAnswers: ["Matthew Stafford", "Josh Allen", "Joe Montana", "Dan Marino", "Johnny Unitas", "Kurt Warner", "Matt Ryan", "Rich Gannon", "Joe Theismann", "Ken Anderson", "Boomer Esiason", "Brian Sipe", "Roman Gabriel", "John Brodie"],
   },
   {
     category: "players",
@@ -109,6 +133,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name a 2,000-yard rusher fans still talk about.",
     ],
     answers: ["Eric Dickerson", "Adrian Peterson", "Jamal Lewis", "Barry Sanders", "Terrell Davis", "Chris Johnson", "Derrick Henry", "OJ Simpson"],
+    alsoAcceptedAnswers: ["Saquon Barkley"],
   },
   {
     category: "players",
@@ -122,6 +147,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name a wide receiver whose scoring ability became part of his reputation.",
     ],
     answers: ["Jerry Rice", "Randy Moss", "Terrell Owens", "Marvin Harrison", "Cris Carter", "Larry Fitzgerald", "Davante Adams", "Calvin Johnson"],
+    alsoAcceptedAnswers: ["Steve Largent", "Mike Evans", "Antonio Brown", "Julio Jones", "Isaac Bruce", "Tim Brown", "Andre Reed", "Don Hutson"],
   },
   {
     category: "players",
@@ -135,6 +161,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name a pass rusher fans associate with dominant pressure.",
     ],
     answers: ["Bruce Smith", "Reggie White", "Michael Strahan", "JJ Watt", "Von Miller", "Aaron Donald", "Derrick Thomas", "TJ Watt"],
+    alsoAcceptedAnswers: ["Kevin Greene", "Jared Allen", "DeMarcus Ware", "Julius Peppers", "Terrell Suggs", "Chris Doleman", "John Randle", "Myles Garrett"],
   },
   {
     category: "players",
@@ -148,5 +175,6 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name a defensive back remembered for making quarterbacks pay.",
     ],
     answers: ["Ed Reed", "Deion Sanders", "Rod Woodson", "Paul Krause", "Charles Woodson", "Champ Bailey", "Richard Sherman", "Ty Law"],
+    alsoAcceptedAnswers: ["Night Train Lane", "Ronnie Lott", "Ken Riley", "Aeneas Williams", "Ronde Barber", "Everson Walls", "Lem Barney", "Aqib Talib"],
   },
 ] as const);

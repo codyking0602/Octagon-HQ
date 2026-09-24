@@ -6,13 +6,14 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
     entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
-      "Name a coach who won a Super Bowl.",
-      "Name a Super Bowl-winning NFL head coach.",
-      "Name a coach you remember lifting the Lombardi Trophy.",
-      "Name an NFL coach whose résumé includes a Super Bowl title.",
-      "Name a championship coach almost every NFL fan knows.",
+      "Name an NFL head coach who won multiple Super Bowls.",
+      "Name a head coach with more than one Super Bowl win.",
+      "Name a coach you remember lifting the Lombardi Trophy multiple times.",
+      "Name an NFL head coach whose résumé includes multiple Super Bowl titles.",
+      "Name a multiple-time Super Bowl-winning coach almost every NFL fan knows.",
     ],
     answers: ["Bill Belichick", "Andy Reid", "Bill Walsh", "Chuck Noll", "Joe Gibbs", "Tom Landry", "Don Shula", "Bill Parcells"],
+    alsoAcceptedAnswers: ["George Seifert", "Tom Coughlin", "Mike Shanahan", "Jimmy Johnson", "Tom Flores"],
   },
   {
     category: "coaches",
@@ -26,6 +27,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       "Name a coach whose teams are remembered for moving the ball.",
     ],
     answers: ["Andy Reid", "Bill Walsh", "Sean McVay", "Mike Shanahan", "Kyle Shanahan", "Mike Holmgren", "Don Coryell", "Sean Payton"],
+    alsoAcceptedAnswers: ["Sid Gillman", "Paul Brown", "Mike Martz", "Bruce Arians", "Jon Gruden", "Mike McDaniel", "Doug Pederson", "Kevin O'Connell"],
   },
   {
     category: "coaches",
@@ -39,6 +41,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       "Name a coach whose best teams were famous for physical defense.",
     ],
     answers: ["Bill Belichick", "Mike Tomlin", "Bill Parcells", "Tony Dungy", "Pete Carroll", "Mike Ditka", "Buddy Ryan", "Dick LeBeau"],
+    alsoAcceptedAnswers: ["Bill Cowher", "Rex Ryan", "Wade Phillips", "Lovie Smith", "Dan Quinn", "George Allen", "Marty Schottenheimer"],
   },
   {
     category: "rivalries",
@@ -52,6 +55,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       "Name an NFL rivalry a casual fan might recognize.",
     ],
     answers: ["Packers-Bears", "Cowboys-Eagles", "Steelers-Ravens", "49ers-Cowboys", "Raiders-Chiefs", "Giants-Eagles", "Packers-Vikings", "Jets-Patriots"],
+    alsoAcceptedAnswers: ["Cowboys-Commanders", "Patriots-Colts", "49ers-Seahawks", "Browns-Steelers", "Saints-Falcons", "Chiefs-Broncos", "Bears-Vikings", "Bengals-Steelers"],
   },
   {
     category: "venues",
@@ -74,6 +78,10 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       { name: "M&T Bank Stadium", aliases: ["M and T", "Ravens", "Baltimore"] },
       { name: "U.S. Bank Stadium", aliases: ["US Bank", "Vikings", "Minnesota"] },
     ],
+    alsoAcceptedAnswers: [
+      { name: "Ford Field", aliases: ["Lions", "Detroit"] },
+      { name: "Empower Field at Mile High", aliases: ["Mile High", "Broncos", "Denver"] },
+    ],
   },
   {
     category: "history",
@@ -87,6 +95,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       "Name a Super Bowl matchup that became bigger than the final score.",
     ],
     answers: ["Giants-Patriots", "49ers-Bengals", "Cowboys-Bills", "Steelers-Cowboys", "Patriots-Seahawks", "Chiefs-49ers", "Rams-Titans", "Eagles-Patriots"],
+    alsoAcceptedAnswers: ["Chiefs-Eagles", "Ravens-49ers", "Colts-Saints", "Broncos-Seahawks", "Rams-Patriots", "Bills-Giants", "Bears-Patriots", "Chiefs-Buccaneers"],
   },
   {
     category: "awards",
@@ -109,6 +118,11 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       { name: "Comeback Player of the Year", aliases: ["CPOY", "Comeback POY"] },
       { name: "Walter Payton Man of the Year", aliases: ["Walter Payton", "Man of the Year", "WPMOY"] },
     ],
+    alsoAcceptedAnswers: [
+      { name: "First-team All-Pro", aliases: ["All-Pro", "First team All Pro"] },
+      { name: "Pro Bowl selection", aliases: ["Pro Bowl", "Pro Bowler"] },
+      "Art Rooney Sportsmanship Award",
+    ],
   },
   {
     category: "players",
@@ -122,6 +136,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       "Name a tight end whose highlights changed expectations for the position.",
     ],
     answers: ["Tony Gonzalez", "Rob Gronkowski", "Travis Kelce", "Antonio Gates", "Jason Witten", "Shannon Sharpe", "Kellen Winslow", "George Kittle"],
+    alsoAcceptedAnswers: ["Ozzie Newsome", "Mike Ditka", "John Mackey", "Dave Casper", "Mark Andrews", "Zach Ertz", "Dallas Clark", "Vernon Davis"],
   },
   {
     category: "players",
@@ -135,6 +150,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       "Name a kicker who became unusually famous for his position.",
     ],
     answers: ["Justin Tucker", "Adam Vinatieri", "Morten Andersen", "Sebastian Janikowski", "Jason Elam", "Gary Anderson", "Stephen Gostkowski", "Robbie Gould"],
+    alsoAcceptedAnswers: ["Jan Stenerud", "Lou Groza", "Matt Prater", "Harrison Butker", "Nick Folk", "Matt Bryant", "John Kasay"],
   },
   {
     category: "players",
@@ -148,5 +164,6 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       "Name a player whose special-teams highlights became part of his fame.",
     ],
     answers: ["Devin Hester", "Dante Hall", "Brian Mitchell", "Josh Cribbs", "Cordarrelle Patterson", "Deion Sanders", "Tyreek Hill", "Desmond Howard"],
+    alsoAcceptedAnswers: ["Gale Sayers", "Billy Johnson", "Mel Gray", "Jacoby Jones", "Leon Washington", "Ted Ginn Jr.", "Darren Sproles"],
   },
 ] as const);
