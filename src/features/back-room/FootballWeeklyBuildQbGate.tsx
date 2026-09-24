@@ -166,8 +166,17 @@ function TraitSlots({ state }: { state: FootballWeeklyBuildQbState }) {
       {TRAITS.map((trait) => {
         const item = won.get(trait);
         const passUsed = state.trait_passes[trait] === true;
+        const identity = item ? buildQbTeamVisualIdentity(item.team_code) : null;
         return (
-          <article className={item ? "is-filled" : ""} key={trait}>
+          <article
+            className={item ? "is-filled" : ""}
+            key={trait}
+            style={identity ? {
+              "--weekly-qb-primary": identity.primary,
+              "--weekly-qb-rgb": identity.primaryRgb,
+              "--weekly-qb-secondary": identity.secondary,
+            } as React.CSSProperties : undefined}
+          >
             <small>{trait}</small>
             {item ? (
               <div>
@@ -177,7 +186,7 @@ function TraitSlots({ state }: { state: FootballWeeklyBuildQbState }) {
             ) : (
               <strong>OPEN</strong>
             )}
-            {!item ? <span>{passUsed ? "PASS USED" : "FREE PASS AVAILABLE"}</span> : null}
+            {!item ? <span>{passUsed ? "PASS USED" : "FREE PASS"}</span> : null}
           </article>
         );
       })}
