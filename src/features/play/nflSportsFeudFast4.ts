@@ -13,6 +13,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
       "Name a position that can change a game with one play.",
     ],
     answers: ["Running back", "Wide receiver", "Linebacker", "Cornerback", "Defensive end", "Safety", "Tight end", "Offensive tackle"],
+    alsoAcceptedAnswers: ["Defensive tackle", "Guard", "Center", "Kicker", "Punter", "Fullback", "Long snapper", "Nose tackle"],
   },
   {
     category: "game-concepts",
@@ -34,24 +35,26 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
     prompts: [
       "Name a common NFL penalty.",
       "Name a flag NFL fans complain about.",
-      "Name a penalty an offense can commit.",
+      "Name a penalty you might see during an NFL game.",
       "Name a penalty that can erase a big play.",
       "Name a football penalty almost every fan understands.",
     ],
     answers: ["Holding", "False start", "Pass interference", "Offsides", "Personal foul", "Roughing the passer", "Delay of game", "Illegal formation"],
+    alsoAcceptedAnswers: ["Facemask", "Illegal contact", "Intentional grounding", "Encroachment", "Neutral zone infraction", "Horse-collar tackle", "Illegal hands to the face", "Unsportsmanlike conduct"],
   },
   {
     category: "stats",
     entityKind: "other",
     collisionGroup: "stats",
     prompts: [
-      "Name a quarterback statistic.",
-      "Name a number fans use to judge an NFL quarterback.",
-      "Name a quarterback stat shown in a broadcast box score.",
+      "Name a traditional NFL passing statistic.",
+      "Name a passing number fans use to judge an NFL quarterback.",
+      "Name a passing stat shown in an NFL broadcast box score.",
       "Name a passing stat people compare after a game.",
-      "Name a stat that can describe how a quarterback played.",
+      "Name a passing stat that can describe how a quarterback played.",
     ],
     answers: ["Passing yards", "Passing touchdowns", "Completion percentage", "Interceptions", "Pass attempts", "Completions", "Yards per attempt", "Passer rating"],
+    alsoAcceptedAnswers: ["QBR", "Longest completion", "Sacks taken", "Touchdown-to-interception ratio"],
   },
   {
     category: "stats",
@@ -65,6 +68,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
       "Name a defensive stat that can earn Pro Bowl attention.",
     ],
     answers: ["Tackles", "Sacks", "Interceptions", "Tackles for loss", "Pass breakups", "Forced fumbles", "Fumble recoveries", "Quarterback hits"],
+    alsoAcceptedAnswers: ["Solo tackles", "Assisted tackles", "Quarterback pressures", "Defensive touchdowns", "Interception return yards", "Sack yards"],
   },
   {
     category: "strategy",
@@ -87,6 +91,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
       { name: "Counter", aliases: ["Counter run"] },
       { name: "Bootleg", aliases: ["Boot"] },
     ],
+    alsoAcceptedAnswers: ["Read option", "Power run", "Draw", "Trap", "Flood", "Levels", "Sail", "Stick"],
   },
   {
     category: "strategy",
@@ -109,6 +114,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
       { name: "Zone blitz", aliases: ["Zone pressure"] },
       { name: "Cover 0", aliases: ["Cover zero"] },
     ],
+    alsoAcceptedAnswers: ["Tampa 2", "Cover 6", "Quarter-quarter-half", "QB spy", "Bracket coverage", "Prevent defense", "Nickel package", "Dime package"],
   },
   {
     category: "special-teams",
@@ -117,11 +123,12 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
     prompts: [
       "Name something a special teams unit does.",
       "Name a play that belongs to special teams.",
-      "Name something that can happen on fourth down without the offense staying out.",
+      "Name a special-teams play that can change field position or points.",
       "Name a special-teams job fans notice during a game.",
       "Name a play involving the kicking game.",
     ],
     answers: ["Field goal", "Punt", "Kickoff", "Extra point", "Punt return", "Kick return", "Onside kick", "Fake punt"],
+    alsoAcceptedAnswers: ["Kick coverage", "Punt coverage", "Punt block", "Field-goal block", "Long snap", "Hold for a field goal"],
   },
   {
     category: "draft",
@@ -144,6 +151,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
       { name: "Pro day", aliases: ["Pro-day"] },
       { name: "Draft steal", aliases: ["Steal"] },
     ],
+    alsoAcceptedAnswers: ["On the clock", "Draft board", "Draft capital", "Compensatory pick", "Sleeper", "Reach", "War room", "Prospect"],
   },
   {
     category: "divisions",
