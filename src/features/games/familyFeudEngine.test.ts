@@ -209,7 +209,7 @@ describe("Family Feud V2 engine contract", () => {
     expect(transition.outcome.type).toBe("board-also-accepted");
     expect(transition.state.mainBoards[0]!.strikes).toBe(0);
 
-    transition = submitFamilyFeudMainAnswer(pack, transition.state, "Williams");
+    transition = submitFamilyFeudMainAnswer(pack, transition.state, "Caleb Williams");
     expect(transition.outcome.type).toBe("already-guessed");
     expect(transition.state.mainBoards[0]!.strikes).toBe(0);
     expect(transition.state.mainBoards[0]!.submittedEntityIds).toEqual(["caleb-williams"]);
