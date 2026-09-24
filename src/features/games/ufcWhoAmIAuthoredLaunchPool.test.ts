@@ -144,6 +144,43 @@ const CALIBRATED_GENERATED_IDS = new Set([
   "ufc:diego-lopes",
 ]);
 
+
+const EXPANSION_2026_IDS = new Set([
+  "ufc:jiri-prochazka",
+  "ufc:magomed-ankalaev",
+  "ufc:jan-blachowicz",
+  "ufc:jamahal-hill",
+  "ufc:carlos-ulberg",
+  "ufc:arman-tsarukyan",
+  "ufc:cory-sandhagen",
+  "ufc:umar-nurmagomedov",
+  "ufc:belal-muhammad",
+  "ufc:jack-della-maddalena",
+  "ufc:ian-machado-garry",
+  "ufc:shavkat-rakhmonov",
+  "ufc:urijah-faber",
+  "ufc:frank-mir",
+  "ufc:alistair-overeem",
+  "ufc:rich-franklin",
+  "ufc:carlos-condit",
+  "ufc:matt-serra",
+  "ufc:luke-rockhold",
+  "ufc:yoel-romero",
+  "ufc:ken-shamrock",
+  "ufc:joshua-van",
+  "ufc:brandon-royval",
+  "ufc:michael-morales",
+  "ufc:carlos-prates",
+  "ufc:tim-kennedy",
+  "ufc:brendan-schaub",
+  "ufc:kimbo-slice",
+  "ufc:cm-punk",
+  "ufc:mike-perry",
+  "ufc:paige-vanzant",
+  "ufc:greg-hardy",
+  "ufc:darren-till",
+]);
+
 const MASS_TEMPLATE_PATTERNS = [
   /^My UFC debut ended with a (?:win|loss)/i,
   /^I reached my first UFC title opportunity/i,
@@ -264,6 +301,21 @@ describe("UFC Who Am I authored launch pool", () => {
             (name) => name !== identity.name.toLowerCase() && lower.includes(name),
           );
           expect(namedOtherCanonicalFighter).toBe(false);
+        }
+      }
+    }
+  });
+
+  it("keeps the 33-fighter expansion away from mass-authoring templates", () => {
+    const expansion = ufcWhoAmIAuthoredLaunchPool.filter((identity) =>
+      EXPANSION_2026_IDS.has(identity.subjectId),
+    );
+    expect(expansion).toHaveLength(33);
+
+    for (const identity of expansion) {
+      for (const scriptId of ["A", "B"] as const) {
+        for (const clue of identity.scripts[scriptId]!.clues) {
+          expect(MASS_TEMPLATE_PATTERNS.some((pattern) => pattern.test(clue.text))).toBe(false);
         }
       }
     }
