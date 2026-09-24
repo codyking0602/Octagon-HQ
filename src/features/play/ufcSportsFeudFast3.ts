@@ -873,7 +873,11 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
         "name": "Holloway-Gaethje"
       },
       {
-        "name": "Whittaker-Romero 2"
+        "name": "Whittaker-Romero 2",
+        "aliases": [
+          "Whittaker vs Romero 2",
+          "Whittaker Romero 2"
+        ]
       }
     ]
   },
@@ -2078,7 +2082,11 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
         "name": "Anaheim"
       },
       {
-        "name": "New York City"
+        "name": "New York City",
+        "aliases": [
+          "NYC",
+          "New York"
+        ]
       }
     ]
   }
