@@ -407,7 +407,11 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "venues",
     prompts: [
-      "Name one of the toughest NFL stadiums for a road team.",
+      {
+        prompt: "Name one of the toughest NFL stadiums for a road team.",
+        answers: ["Arrowhead Stadium", "Lumen Field", "Lambeau Field", "Highmark Stadium", "Superdome", "Lincoln Financial Field", "M&T Bank Stadium", "Empower Field at Mile High"],
+        alsoAcceptedAnswers: ["U.S. Bank Stadium", "Ford Field", "Acrisure Stadium", "Gillette Stadium"],
+      },
       "Name an NFL stadium famous for crowd noise.",
       "Name a road environment that can make an offense miserable.",
       "Name an NFL venue where home-field advantage feels real.",
