@@ -11,9 +11,11 @@ describe("Sports Feud Casual owner preview retirement", () => {
     expect(footballPlaySource).not.toContain("isFamilyFeudPrototypeOwner");
   });
 
-  it("preserves the official Sports Feud Daily routes", () => {
+  it("preserves the official Sports Feud Daily routes and isolates the owner QA replay", () => {
     expect(routerSource).toContain('path: "play/sports-feud"');
     expect(routerSource).toContain('gameType="sports_feud"');
     expect(routerSource).toContain('path: "football/sports-feud"');
+    expect(routerSource).toContain('path: "play/sports-feud/qa-replay"');
+    expect(routerSource).toContain('qaReplayDay="2026-09-24"');
   });
 });

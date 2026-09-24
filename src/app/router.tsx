@@ -69,6 +69,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/20-questions", element: <Navigate to="/play/who-am-i" replace /> },
       { path: "play/who-am-i", element: <TodayChallengeGameRoute gameType="who_am_i" casual={<UfcWhoAmIPage />} /> },
       { path: "play/millionaire", element: <TodayChallengeGameRoute gameType="millionaire" casual={<MillionaireCasualPage scope="ufc" />} /> },
+      { path: "play/sports-feud/qa-replay", element: <FamilyFeudPrototypePage scope="ufc" qaReplayDay="2026-09-24" /> },
       { path: "play/sports-feud", element: <TodayChallengeGameRoute gameType="sports_feud" casual={<FamilyFeudPrototypePage scope="ufc" />} /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },

@@ -25,11 +25,20 @@ vi.mock("../identity/IdentityProvider", () => ({
 
 import FamilyFeudPrototypePage from "./FamilyFeudPrototypePage";
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
+import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
 
 function renderFootball() {
   return render(
     <MemoryRouter initialEntries={["/football/sports-feud"]}>
       <FamilyFeudPrototypePage scope="football" />
+    </MemoryRouter>,
+  );
+}
+
+function renderUfcQaReplay() {
+  return render(
+    <MemoryRouter initialEntries={["/play/sports-feud/qa-replay"]}>
+      <FamilyFeudPrototypePage scope="ufc" qaReplayDay="2026-09-24" />
     </MemoryRouter>,
   );
 }
@@ -129,6 +138,22 @@ describe("Sports Feud private daily presentation", () => {
     renderFootball();
     expect(screen.queryByRole("button", { name: "PLAY SPORTS FEUD" })).not.toBeInTheDocument();
     expect(document.body).not.toHaveClass("family-feud-prototype-active");
+  });
+
+  it("replays the Sept. 24 UFC question set locally against the repaired bank", () => {
+    const expected = buildSportsFeudPack("ufc", "2026-09-24");
+    renderUfcQaReplay();
+
+    expect(screen.getByText("UFC HQ · OWNER QA REPLAY")).toBeInTheDocument();
+    expect(screen.getByText(/writes no Daily result or leaderboard score/i)).toBeInTheDocument();
+    expect(document.querySelector(".family-feud-prototype")).toHaveAttribute(
+      "data-qa-replay-day",
+      "2026-09-24",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "REPLAY SEPT 24 FEUD" }));
+    expect(screen.getByText(expected.mainBoards[0]!.prompt)).toBeInTheDocument();
+    expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-scene", "main");
   });
 
   it("uses production Daily Challenge language without preview-only controls", () => {

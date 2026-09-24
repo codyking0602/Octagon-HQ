@@ -28,6 +28,7 @@ import {
 } from "../games/familyFeudEngine";
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import { familyFeudPrototypePack } from "./familyFeudPrototypePacks";
+import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
 import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
@@ -38,6 +39,12 @@ import "./FamilyFeudPrototypePage.css";
 import "./SportsFeudRevealPass.css";
 
 type PrototypeScope = "ufc" | "football";
+
+interface FamilyFeudPrototypePageProps {
+  scope: PrototypeScope;
+  qaReplayDay?: string;
+}
+
 type PrototypeScene = "intro" | "main" | "fast-intro" | "fast" | "reveal" | "fast-recap" | "result";
 type MainRevealPhase = "idle" | "suspense" | "correct" | "strike";
 type FastRevealPhase = "answer" | "score" | "complete";
@@ -123,9 +130,13 @@ function FastMoneyHost({ asset }: { asset: string }) {
   );
 }
 
-function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
+function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototypePageProps) {
   const navigate = useNavigate();
-  const pack = useMemo(() => familyFeudPrototypePack(scope), [scope]);
+  const pack = useMemo(() => {
+    if (!qaReplayDay) return familyFeudPrototypePack(scope);
+    if (scope !== "ufc") throw new Error("Sports Feud QA replay is currently UFC-only.");
+    return buildSportsFeudPack("ufc", qaReplayDay);
+  }, [qaReplayDay, scope]);
   const [state, setState] = useState<FamilyFeudState>(() => createFamilyFeudState());
   const [scene, setScene] = useState<PrototypeScene>("intro");
   const [answer, setAnswer] = useState("");
@@ -472,6 +483,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
       data-scope={scope}
       data-scene={scene}
       data-main-reveal={mainReveal.phase}
+      data-qa-replay-day={qaReplayDay ?? undefined}
       style={{
         "--feud-keyboard-inset": keyboardInset + "px",
         "--feud-viewport-offset": viewportOffsetTop + "px",
@@ -484,16 +496,18 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
 
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="feud-intro-title">
-          <div className="feud-intro__eyebrow">{hqName} · DAILY CHALLENGE</div>
+          <div className="feud-intro__eyebrow">{qaReplayDay ? `${hqName} · OWNER QA REPLAY` : `${hqName} · DAILY CHALLENGE`}</div>
           <Brand />
           <h1 id="feud-intro-title">Clear the board.</h1>
-          <p>Find four good HQ answers before three strikes. Then finish five Fast Money prompts.</p>
+          <p>{qaReplayDay
+            ? `Replay the ${qaReplayDay} UFC question set against the repaired answer bank. This run is local QA only and writes no Daily result or leaderboard score.`
+            : "Find four good HQ answers before three strikes. Then finish five Fast Money prompts."}</p>
           <div className="feud-intro__rules">
             <span><b>2</b> BOARDS</span>
             <span><b>4</b> ANSWERS EACH</span>
             <span><b>0:50</b> FAST MONEY</span>
           </div>
-          <button className="feud-primary-button" type="button" onClick={startGame}>PLAY SPORTS FEUD</button>
+          <button className="feud-primary-button" type="button" onClick={startGame}>{qaReplayDay ? "REPLAY SEPT 24 FEUD" : "PLAY SPORTS FEUD"}</button>
         </section>
       ) : null}
 
@@ -797,7 +811,7 @@ function FamilyFeudPrototypeExperience({ scope }: { scope: PrototypeScope }) {
   return createPortal(view, document.body);
 }
 
-export default function FamilyFeudPrototypePage({ scope }: { scope: PrototypeScope }) {
+export default function FamilyFeudPrototypePage({ scope, qaReplayDay }: FamilyFeudPrototypePageProps) {
   const identity = useIdentity();
   const exitRoute = scope === "football" ? "/football" : "/play";
 
@@ -806,5 +820,5 @@ export default function FamilyFeudPrototypePage({ scope }: { scope: PrototypeSco
     return <Navigate to={exitRoute} replace />;
   }
 
-  return <FamilyFeudPrototypeExperience scope={scope} />;
+  return <FamilyFeudPrototypeExperience scope={scope} qaReplayDay={qaReplayDay} />;
 }
