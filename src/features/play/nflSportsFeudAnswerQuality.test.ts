@@ -249,6 +249,42 @@ describe("NFL Sports Feud authored answer quality", () => {
     }
   });
 
+  it("keeps NFL Main questions 61-80 independently authored after review", () => {
+    for (const familyNumber of [13, 14, 15, 16]) {
+      const prefix = "nfl-main-" + String(familyNumber).padStart(2, "0") + "-";
+      const rows = NFL_SPORTS_FEUD_MAIN.filter((question) => question.id.startsWith(prefix));
+      expect(rows).toHaveLength(5);
+
+      const universeSignatures = rows.map((question) =>
+        [
+          ...question.answers,
+          ...(question.alsoAcceptedAnswers ?? []),
+        ].map((answer) => normalizeFamilyFeudInput(answer.name)).join("|"),
+      );
+      expect(new Set(universeSignatures).size, prefix + " independent universes").toBe(5);
+    }
+
+    const vocabularyMoment = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-13-4")!;
+    expect(vocabularyMoment.prompt).toContain("nickname");
+    expect(vocabularyMoment.answers.map((answer) => answer.name)).toEqual(
+      expect.arrayContaining(["Immaculate Reception", "The Catch", "Music City Miracle", "Beast Quake"]),
+    );
+
+    const historyTeam = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-14-3")!;
+    expect(historyTeam.answers.map((answer) => answer.name)).toContain("Chicago Bears");
+    expect(historyTeam.alsoAcceptedAnswers?.map((answer) => answer.name)).toContain("Cleveland Browns");
+
+    const honor = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-15-3")!;
+    expect(honor.answers.map((answer) => answer.name)).toContain("Pro Football Hall of Fame");
+    expect(honor.answers.map((answer) => answer.name)).toContain("First-team All-Pro");
+
+    const milestone = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-16-3")!;
+    expect(milestone.prompt).toContain("statistical milestone");
+    expect(milestone.answers.map((answer) => answer.name)).toEqual(
+      expect.arrayContaining(["Rush for 2,000 yards", "Pass for 5,000 yards", "Record 20 sacks", "Throw 50 touchdown passes"]),
+    );
+  });
+
   it("keeps NFL Main questions 41-60 independently authored after review", () => {
     for (const familyNumber of [9, 10, 11, 12]) {
       const prefix = "nfl-main-" + String(familyNumber).padStart(2, "0") + "-";
