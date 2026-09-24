@@ -118,6 +118,11 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
       { name: "Comeback Player of the Year", aliases: ["CPOY", "Comeback POY"] },
       { name: "Walter Payton Man of the Year", aliases: ["Walter Payton", "Man of the Year", "WPMOY"] },
     ],
+    alsoAcceptedAnswers: [
+      { name: "First-team All-Pro", aliases: ["All-Pro", "First team All Pro"] },
+      { name: "Pro Bowl selection", aliases: ["Pro Bowl", "Pro Bowler"] },
+      "Art Rooney Sportsmanship Award",
+    ],
   },
   {
     category: "players",
