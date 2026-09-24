@@ -103,7 +103,11 @@ function matchTerms(entity: FamilyFeudEntity) {
     normalizeFamilyFeudInput(entity.displayName),
     ...(entity.aliases ?? []).map(normalizeFamilyFeudInput),
   ];
-  if (entity.kind === "person") terms.push(surname(entity.displayName));
+  if (entity.kind === "person") {
+    const tokens = normalizeFamilyFeudInput(entity.displayName).split(" ").filter(Boolean);
+    terms.push(tokens[0] ?? "");
+    terms.push(surname(entity.displayName));
+  }
   return [...new Set(terms.filter(Boolean))];
 }
 
