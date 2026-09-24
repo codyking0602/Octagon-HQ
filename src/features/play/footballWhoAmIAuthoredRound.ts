@@ -21,12 +21,6 @@ function subjectFromCandidate(
   };
 }
 
-const targetByKey = new Map(
-  Object.values(FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES)
-    .flat()
-    .map((identity) => [`${identity.league}:${identity.subjectId}`, identity] as const),
-);
-
 function authoredIdentity(
   league: FootballWhoAmIAuthoredLeague,
   subjectId: string,
@@ -52,7 +46,12 @@ export function footballWhoAmIAuthoredSubject(
     return subjectFromCandidate(existing);
   }
 
-  const target = targetByKey.get(`${identity.league}:${identity.subjectId}`);
+  const target = Object.values(FOOTBALL_WHO_AM_I_AUTHORED_TARGET_IDENTITIES)
+    .flat()
+    .find((candidate) => (
+      candidate.league === identity.league
+      && candidate.subjectId === identity.subjectId
+    ));
   if (!target || target.name !== identity.name) {
     throw new Error(
       `Authored ${identity.league} Who Am I subject ${identity.subjectId} is outside the frozen target roster.`,
