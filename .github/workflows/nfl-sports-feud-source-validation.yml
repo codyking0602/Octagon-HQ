@@ -1,0 +1,74 @@
+name: NFL Sports Feud Source Validation
+
+on:
+  push:
+    branches:
+      - chatgpt/sports-feud-nfl-full-bank-repair
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nfl-sports-feud-source-validation-${{ github.sha }}
+  cancel-in-progress: false
+
+env:
+  SOURCE_SHA: ${{ github.sha }}
+  VITE_SUPABASE_URL: https://octagon-validation.supabase.co
+  VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_octagon_validation_only_00000000000000000000
+  VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -eo pipefail {0}
+
+jobs:
+  core:
+    name: typecheck + production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+      - name: Verify exact checked-out SHA
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build production artifacts
+        run: npm run build:artifacts
+
+  tests:
+    name: test shard ${{ matrix.shard }}/8
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+      - name: Verify exact checked-out SHA
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Run full-suite shard
+        run: npm test -- --shard=${{ matrix.shard }}/8
