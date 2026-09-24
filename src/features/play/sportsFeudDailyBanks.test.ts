@@ -224,7 +224,7 @@ describe("Sports Feud authored Daily banks", () => {
     };
 
     expect(matchedName(ufc, ufcQuestion("ufc-fast3-10-1"), "New York"))
-      .toBe("Madison Square Garden");
+      .toBe("New York City");
     expect(matchedName(ufc, ufcQuestion("ufc-fast3-10-1"), "MSG"))
       .toBe("Madison Square Garden");
     expect(matchedName(ufc, ufcQuestion("ufc-fast4-09-3"), "faint"))
