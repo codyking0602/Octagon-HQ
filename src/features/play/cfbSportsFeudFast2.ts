@@ -52,27 +52,27 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
       {
         prompt: "Name a memorable Ohio State quarterback from 2000 or later.",
         answers: ["CJ Stroud","Justin Fields","Dwayne Haskins","JT Barrett","Braxton Miller","Troy Smith","Terrelle Pryor","Cardale Jones"],
-        alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman"],
+        alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman","Julian Sayin"],
       },
       {
         prompt: "Name an Ohio State quarterback you strongly associate with the Buckeyes since 2000.",
         answers: ["Justin Fields","CJ Stroud","JT Barrett","Troy Smith","Braxton Miller","Dwayne Haskins","Terrelle Pryor","Cardale Jones"],
-        alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman"],
+        alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman","Julian Sayin"],
       },
       {
         prompt: "Name a Buckeyes quarterback fans remember from the 2000s or later.",
         answers: ["Troy Smith","Justin Fields","CJ Stroud","JT Barrett","Braxton Miller","Dwayne Haskins","Cardale Jones","Terrelle Pryor"],
-        alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman"],
+        alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman","Julian Sayin"],
       },
       {
         prompt: "Name an Ohio State quarterback associated with a major postseason run since 2000.",
         answers: ["Cardale Jones","Justin Fields","CJ Stroud","Craig Krenzel","JT Barrett","Troy Smith","Will Howard","Dwayne Haskins"],
-        alsoAcceptedAnswers: ["Braxton Miller","Terrelle Pryor","Kyle McCord","Todd Boeckman"],
+        alsoAcceptedAnswers: ["Braxton Miller","Terrelle Pryor","Kyle McCord","Todd Boeckman","Julian Sayin"],
       },
       {
         prompt: "Name an Ohio State quarterback who became a national name since 2000.",
         answers: ["CJ Stroud","Justin Fields","Troy Smith","Dwayne Haskins","Braxton Miller","JT Barrett","Terrelle Pryor","Cardale Jones"],
-        alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman"],
+        alsoAcceptedAnswers: ["Craig Krenzel","Will Howard","Kyle McCord","Todd Boeckman","Julian Sayin"],
       },
     ],
     answers: [
@@ -85,7 +85,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
       "Terrelle Pryor",
       "Cardale Jones",
     ],
-    alsoAcceptedAnswers: ["Craig Krenzel", "Will Howard", "Kyle McCord", "Todd Boeckman"],
+    alsoAcceptedAnswers: ["Craig Krenzel", "Will Howard", "Kyle McCord", "Todd Boeckman","Julian Sayin"],
   },
   {
     category: "school-stars",
@@ -344,31 +344,31 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
       {
         prompt: "Name a Georgia player who became a major college football star from the 2000 season or later.",
         answers: ["Stetson Bennett","Brock Bowers","Nick Chubb","Todd Gurley","Roquan Smith","Jalen Carter","Matthew Stafford","A.J. Green"],
-        alsoAcceptedAnswers: ["David Pollack","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey"],
+        alsoAcceptedAnswers: ["David Pollack","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey","Gunner Stockton"],
       },
       {
         prompt: "Name a player strongly associated with Georgia football since 2000.",
         answers: ["Stetson Bennett","Brock Bowers","Nick Chubb","Todd Gurley","Roquan Smith","David Pollack","A.J. Green","Matthew Stafford"],
-        alsoAcceptedAnswers: ["Jalen Carter","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey"],
+        alsoAcceptedAnswers: ["Jalen Carter","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey","Gunner Stockton"],
       },
       {
         prompt: "Name a Bulldogs star fans remember from the 2000s or later.",
         answers: ["Brock Bowers","Nick Chubb","Stetson Bennett","Todd Gurley","Roquan Smith","A.J. Green","Jalen Carter","Matthew Stafford"],
-        alsoAcceptedAnswers: ["David Pollack","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey"],
+        alsoAcceptedAnswers: ["David Pollack","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey","Gunner Stockton"],
       },
       {
         prompt: "Name a Georgia player from 2000 or later you would put on a program highlight reel.",
         answers: ["Nick Chubb","Todd Gurley","Brock Bowers","Stetson Bennett","A.J. Green","Sony Michel","George Pickens","Matthew Stafford"],
-        alsoAcceptedAnswers: ["Roquan Smith","Jalen Carter","David Pollack","Aaron Murray","Jordan Davis","Nakobe Dean","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey"],
+        alsoAcceptedAnswers: ["Roquan Smith","Jalen Carter","David Pollack","Aaron Murray","Jordan Davis","Nakobe Dean","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey","Gunner Stockton"],
       },
       {
         prompt: "Name a Georgia player who helped shape the program since 2000.",
         answers: ["Stetson Bennett","Brock Bowers","Nick Chubb","David Pollack","Roquan Smith","Todd Gurley","Matthew Stafford","A.J. Green"],
-        alsoAcceptedAnswers: ["Jalen Carter","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey"],
+        alsoAcceptedAnswers: ["Jalen Carter","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey","Gunner Stockton"],
       },
     ],
     answers: ["Stetson Bennett","Brock Bowers","Nick Chubb","Todd Gurley","Roquan Smith","Jalen Carter","Matthew Stafford","A.J. Green"],
-    alsoAcceptedAnswers: ["David Pollack","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey"],
+    alsoAcceptedAnswers: ["David Pollack","Aaron Murray","Jordan Davis","Nakobe Dean","George Pickens","Sony Michel","Knowshon Moreno","Travon Walker","Malaki Starks","Ladd McConkey","Gunner Stockton"],
   },
   {
     category: "school-stars",
@@ -378,27 +378,27 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
       {
         prompt: "Name a Clemson player who became a major college football star since 2000.",
         answers: ["Deshaun Watson","Trevor Lawrence","CJ Spiller","Sammy Watkins","DeAndre Hopkins","Christian Wilkins","Travis Etienne","Isaiah Simmons"],
-        alsoAcceptedAnswers: ["Tajh Boyd","Tee Higgins","Dexter Lawrence","Vic Beasley","Mike Williams","Ben Boulware","Wayne Gallman"],
+        alsoAcceptedAnswers: ["Tajh Boyd","Tee Higgins","Dexter Lawrence","Vic Beasley","Mike Williams","Ben Boulware","Wayne Gallman","Cade Klubnik"],
       },
       {
         prompt: "Name a player strongly associated with Clemson football since 2000.",
         answers: ["Deshaun Watson","Trevor Lawrence","CJ Spiller","Sammy Watkins","Travis Etienne","Christian Wilkins","Tajh Boyd","DeAndre Hopkins"],
-        alsoAcceptedAnswers: ["Isaiah Simmons","Tee Higgins","Dexter Lawrence","Vic Beasley","Mike Williams","Ben Boulware","Wayne Gallman"],
+        alsoAcceptedAnswers: ["Isaiah Simmons","Tee Higgins","Dexter Lawrence","Vic Beasley","Mike Williams","Ben Boulware","Wayne Gallman","Cade Klubnik"],
       },
       {
         prompt: "Name a Tigers star from Clemson's modern era since 2000.",
         answers: ["Deshaun Watson","Trevor Lawrence","CJ Spiller","Sammy Watkins","Travis Etienne","DeAndre Hopkins","Christian Wilkins","Isaiah Simmons"],
-        alsoAcceptedAnswers: ["Tajh Boyd","Tee Higgins","Dexter Lawrence","Vic Beasley","Mike Williams","Ben Boulware","Wayne Gallman"],
+        alsoAcceptedAnswers: ["Tajh Boyd","Tee Higgins","Dexter Lawrence","Vic Beasley","Mike Williams","Ben Boulware","Wayne Gallman","Cade Klubnik"],
       },
       {
         prompt: "Name a Clemson player fans remember from a huge game since 2000.",
         answers: ["Deshaun Watson","Trevor Lawrence","Sammy Watkins","CJ Spiller","Travis Etienne","Tee Higgins","Christian Wilkins","Ben Boulware"],
-        alsoAcceptedAnswers: ["DeAndre Hopkins","Isaiah Simmons","Tajh Boyd","Dexter Lawrence","Vic Beasley","Mike Williams","Wayne Gallman"],
+        alsoAcceptedAnswers: ["DeAndre Hopkins","Isaiah Simmons","Tajh Boyd","Dexter Lawrence","Vic Beasley","Mike Williams","Wayne Gallman","Cade Klubnik"],
       },
       {
         prompt: "Name a Clemson player from 2000 or later you would expect in a modern legends conversation.",
         answers: ["Deshaun Watson","Trevor Lawrence","CJ Spiller","Sammy Watkins","Travis Etienne","DeAndre Hopkins","Christian Wilkins","Isaiah Simmons"],
-        alsoAcceptedAnswers: ["Tajh Boyd","Tee Higgins","Dexter Lawrence","Vic Beasley","Mike Williams","Ben Boulware","Wayne Gallman"],
+        alsoAcceptedAnswers: ["Tajh Boyd","Tee Higgins","Dexter Lawrence","Vic Beasley","Mike Williams","Ben Boulware","Wayne Gallman","Cade Klubnik"],
       },
     ],
     answers: [
@@ -411,6 +411,6 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
       "Travis Etienne",
       "Isaiah Simmons",
     ],
-    alsoAcceptedAnswers: ["Tajh Boyd", "Tee Higgins", "Dexter Lawrence", "Vic Beasley", "Mike Williams", "Ben Boulware", "Wayne Gallman"],
+    alsoAcceptedAnswers: ["Tajh Boyd", "Tee Higgins", "Dexter Lawrence", "Vic Beasley", "Mike Williams", "Ben Boulware", "Wayne Gallman","Cade Klubnik"],
   },
 ] as const);
