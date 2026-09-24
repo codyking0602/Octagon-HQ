@@ -52,9 +52,21 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
     prompts: [
       "Name an AFC team.",
       "Name a franchise from the AFC.",
-      "Name an AFC team with a major national brand.",
-      "Name a team you think of when someone says the AFC.",
-      "Name an AFC franchise almost every football fan recognizes.",
+      {
+        prompt: "Name an AFC team with a major national brand.",
+        answers: ["Kansas City Chiefs", "Pittsburgh Steelers", "New England Patriots", "Las Vegas Raiders", "Buffalo Bills", "Denver Broncos", "Miami Dolphins", "Baltimore Ravens"],
+        alsoAcceptedAnswers: ["New York Jets", "Cincinnati Bengals", "Cleveland Browns", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans", "Los Angeles Chargers"],
+      },
+      {
+        prompt: "Name a team you think of when someone says the AFC.",
+        answers: ["Kansas City Chiefs", "Pittsburgh Steelers", "New England Patriots", "Buffalo Bills", "Baltimore Ravens", "Denver Broncos", "Las Vegas Raiders", "Cincinnati Bengals"],
+        alsoAcceptedAnswers: ["Miami Dolphins", "New York Jets", "Cleveland Browns", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans", "Los Angeles Chargers"],
+      },
+      {
+        prompt: "Name an AFC franchise almost every football fan recognizes.",
+        answers: ["Pittsburgh Steelers", "Kansas City Chiefs", "New England Patriots", "Las Vegas Raiders", "Buffalo Bills", "Denver Broncos", "Miami Dolphins", "New York Jets"],
+        alsoAcceptedAnswers: ["Baltimore Ravens", "Cincinnati Bengals", "Cleveland Browns", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans", "Los Angeles Chargers"],
+      },
     ],
     answers: [
       { name: "Kansas City Chiefs", aliases: ["Chiefs", "Kansas City", "KC"] },
