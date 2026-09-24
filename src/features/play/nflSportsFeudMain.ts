@@ -441,11 +441,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "moments",
     prompts: [
-      "Name an iconic NFL playoff or Super Bowl moment.",
-      "Name a single NFL play that instantly identifies a famous game.",
-      "Name an NFL moment fans still replay years later.",
-      "Name a postseason play that became part of football vocabulary.",
-      "Name a play that can make an NFL fan remember exactly where they were.",
+      {
+        prompt: "Name an iconic NFL playoff or Super Bowl moment.",
+        answers: ["Immaculate Reception", "Helmet Catch", "The Catch", "Minneapolis Miracle", "Music City Miracle", "Philly Special", "Malcolm Butler goal-line interception", "Beast Quake"],
+        alsoAcceptedAnswers: [{ name: "Santonio Holmes toe-tap", aliases: ["Santonio Holmes catch"] }, "Tuck Rule", "Mile High Miracle", "Double Doink", "Wide Right", "28-3 comeback", "13 Seconds", "James Harrison 100-yard interception return"],
+      },
+      {
+        prompt: "Name a single NFL play that instantly identifies a famous game.",
+        answers: ["Immaculate Reception", "Helmet Catch", "The Catch", "Minneapolis Miracle", "Music City Miracle", "Philly Special", "Malcolm Butler goal-line interception", "Beast Quake"],
+        alsoAcceptedAnswers: [{ name: "Santonio Holmes toe-tap", aliases: ["Santonio Holmes catch"] }, "Mile High Miracle", "Double Doink", "James Harrison 100-yard interception return", "Sea of Hands", "Miracle at the Meadowlands"],
+      },
+      {
+        prompt: "Name an NFL moment fans still replay years later.",
+        answers: ["Helmet Catch", "Immaculate Reception", "28-3 comeback", "The Catch", "Minneapolis Miracle", "Malcolm Butler goal-line interception", "Philly Special", "Beast Quake"],
+        alsoAcceptedAnswers: ["Music City Miracle", { name: "Santonio Holmes toe-tap", aliases: ["Santonio Holmes catch"] }, "Tuck Rule", "Mile High Miracle", "Double Doink", "Wide Right", "13 Seconds", "James Harrison 100-yard interception return"],
+      },
+      {
+        prompt: "Name a postseason play whose nickname became part of NFL vocabulary.",
+        answers: ["Immaculate Reception", "The Catch", "Helmet Catch", "Music City Miracle", "Minneapolis Miracle", "Philly Special", "Beast Quake", "Mile High Miracle"],
+        alsoAcceptedAnswers: ["Double Doink", "Wide Right", "Tuck Rule", "Sea of Hands", "Miracle at the Meadowlands"],
+      },
+      {
+        prompt: "Name a postseason play that can make NFL fans remember exactly where they were.",
+        answers: ["Helmet Catch", "Malcolm Butler goal-line interception", "Minneapolis Miracle", "Immaculate Reception", "Philly Special", "The Catch", "Music City Miracle", "Double Doink"],
+        alsoAcceptedAnswers: ["Beast Quake", "Mile High Miracle", { name: "Santonio Holmes toe-tap", aliases: ["Santonio Holmes catch"] }, "Wide Right", "13 Seconds", "James Harrison 100-yard interception return"],
+      },
     ],
     answers: ["Immaculate Reception", "Helmet Catch", "Minneapolis Miracle", "Music City Miracle", "Philly Special", "Beast Quake", "Malcolm Butler goal-line interception", "Santonio Holmes toe-tap"],
     alsoAcceptedAnswers: [
