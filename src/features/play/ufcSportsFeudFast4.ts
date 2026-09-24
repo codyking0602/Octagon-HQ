@@ -552,11 +552,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        "name": "Front kick",
-        "aliases": [
-          "Teep kick",
-          "Push kick"
-        ]
+        "name": "Front kick"
       },
       {
         "name": "Spinning backfist",
@@ -705,11 +701,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        "name": "Front kick",
-        "aliases": [
-          "Teep kick",
-          "Push kick"
-        ]
+        "name": "Front kick"
       },
       {
         "name": "Side kick",
@@ -746,7 +738,6 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       {
         "name": "Teep",
         "aliases": [
-          "Push kick",
           "Front push kick"
         ]
       },
