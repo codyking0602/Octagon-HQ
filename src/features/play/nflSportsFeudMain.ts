@@ -586,11 +586,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "positions",
     prompts: [
-      "Name an NFL position fans love to watch.",
-      "Name a position that can produce the biggest Sunday stars.",
-      "Name a football position casual fans recognize immediately.",
-      "Name a position group that can become a team's identity.",
-      "Name a position that can change a game with one play.",
+      {
+        prompt: "Name an NFL position fans love to watch.",
+        answers: ["Quarterback", "Wide receiver", "Running back", "Pass rusher", "Cornerback", "Tight end", "Linebacker", "Safety"],
+        alsoAcceptedAnswers: ["Defensive tackle", "Kicker", "Punter", "Center", "Guard", "Offensive tackle", "Fullback", "Long snapper", "Nose tackle"],
+      },
+      {
+        prompt: "Name an NFL position that can produce the biggest Sunday stars.",
+        answers: ["Quarterback", "Wide receiver", "Running back", "Pass rusher", "Cornerback", "Tight end", "Linebacker", "Safety"],
+        alsoAcceptedAnswers: ["Defensive tackle", "Kicker", "Offensive tackle", "Guard", "Center", "Punter", "Fullback", "Nose tackle"],
+      },
+      {
+        prompt: "Name a football position casual fans recognize immediately.",
+        answers: ["Quarterback", "Running back", "Wide receiver", "Kicker", "Tight end", "Linebacker", "Cornerback", "Safety"],
+        alsoAcceptedAnswers: ["Pass rusher", "Defensive tackle", "Offensive tackle", "Center", "Guard", "Punter", "Fullback", "Long snapper", "Nose tackle"],
+      },
+      {
+        prompt: "Name an NFL position that can become part of a team's identity.",
+        answers: ["Quarterback", "Running back", "Wide receiver", "Pass rusher", "Linebacker", "Cornerback", "Safety", "Tight end"],
+        alsoAcceptedAnswers: ["Defensive tackle", "Offensive tackle", "Center", "Guard", "Kicker", "Fullback", "Nose tackle", "Punter"],
+      },
+      {
+        prompt: "Name an NFL position that can change a game with one play.",
+        answers: ["Quarterback", "Wide receiver", "Pass rusher", "Cornerback", "Safety", "Running back", "Kicker", "Tight end"],
+        alsoAcceptedAnswers: ["Linebacker", "Defensive tackle", "Punter", "Offensive tackle", "Center", "Guard", "Fullback", "Nose tackle"],
+      },
     ],
     answers: ["Quarterback", "Running back", "Wide receiver", "Pass rusher", "Cornerback", "Linebacker", "Tight end", "Safety"],
     alsoAcceptedAnswers: ["Defensive tackle", "Center", "Guard", "Kicker", "Punter", "Fullback", "Long snapper", "Nose tackle"],
@@ -600,11 +620,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "traits",
     prompts: [
-      "Name a trait every NFL coach wants in a quarterback.",
-      "Name a quarterback trait that separates stars from average starters.",
-      "Name something scouts notice immediately in an NFL quarterback.",
-      "Name a quarterback quality that matters late in a close game.",
-      "Name a trait fans brag about when they love their quarterback.",
+      {
+        prompt: "Name a trait every NFL coach wants in a quarterback.",
+        answers: ["Accuracy", "Decision-making", "Processing", "Leadership", "Poise", "Arm strength", "Toughness", "Pocket presence"],
+        alsoAcceptedAnswers: ["Mobility", "Anticipation", "Footwork", "Field vision", "Mechanics", "Ball security", "Quick release", "Timing"],
+      },
+      {
+        prompt: "Name a quarterback trait that separates stars from average starters.",
+        answers: ["Processing", "Accuracy", "Anticipation", "Decision-making", "Pocket presence", "Poise", "Arm strength", "Mobility"],
+        alsoAcceptedAnswers: ["Leadership", "Quick release", "Footwork", "Timing", "Toughness", "Field vision", "Mechanics", "Ball security"],
+      },
+      {
+        prompt: "Name something scouts evaluate quickly in an NFL quarterback.",
+        answers: ["Arm strength", "Accuracy", "Mobility", "Mechanics", "Quick release", "Footwork", "Pocket presence", "Anticipation"],
+        alsoAcceptedAnswers: ["Processing", "Decision-making", "Poise", "Toughness", "Leadership", "Timing", "Field vision"],
+      },
+      {
+        prompt: "Name a quarterback quality that matters late in a close game.",
+        answers: ["Poise", "Decision-making", "Accuracy", "Processing", "Leadership", "Pocket presence", "Ball security", "Toughness"],
+        alsoAcceptedAnswers: ["Anticipation", "Timing", "Mobility", "Quick release", "Arm strength", "Field vision", "Clutch play"],
+      },
+      {
+        prompt: "Name a trait fans brag about when they love their quarterback.",
+        answers: ["Arm strength", "Accuracy", "Mobility", "Leadership", "Toughness", "Poise", "Quick release", "Pocket presence"],
+        alsoAcceptedAnswers: ["Processing", "Decision-making", "Anticipation", "Footwork", "Timing", "Field vision", "Mechanics", "Ball security"],
+      },
     ],
     answers: ["Accuracy", "Processing", "Arm strength", "Poise", "Mobility", "Anticipation", "Leadership", "Toughness"],
     alsoAcceptedAnswers: ["Pocket presence", "Footwork", "Decision-making", "Field vision", "Mechanics", "Ball security", "Quick release", "Timing"],
@@ -614,11 +654,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "defense",
     prompts: [
-      "Name a trait every great NFL defense needs.",
-      "Name something that can make a defense hard to play against.",
-      "Name a quality coaches want from a defensive unit.",
-      "Name something fans praise when their defense is elite.",
-      "Name a defensive trait that can travel in the playoffs.",
+      {
+        prompt: "Name a trait every great NFL defense needs.",
+        answers: ["Pass rush", "Tackling", "Coverage", "Turnovers", "Physicality", "Communication", "Run defense", "Discipline"],
+        alsoAcceptedAnswers: ["Speed", "Red-zone defense", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning"],
+      },
+      {
+        prompt: "Name something that can make a defense hard to play against.",
+        answers: ["Pass rush", "Coverage", "Turnovers", "Tackling", "Physicality", "Run defense", "Speed", "Versatility"],
+        alsoAcceptedAnswers: ["Communication", "Discipline", "Red-zone defense", "Depth", "Pursuit", "Technique", "Conditioning", "Disguise"],
+      },
+      {
+        prompt: "Name a quality coaches want from a defensive unit.",
+        answers: ["Communication", "Discipline", "Tackling", "Physicality", "Speed", "Depth", "Versatility", "Run defense"],
+        alsoAcceptedAnswers: ["Pass rush", "Coverage", "Turnovers", "Pursuit", "Technique", "Conditioning", "Red-zone defense"],
+      },
+      {
+        prompt: "Name something fans praise when their defense is elite.",
+        answers: ["Pass rush", "Turnovers", "Coverage", "Tackling", "Run defense", "Physicality", "Red-zone defense", "Speed"],
+        alsoAcceptedAnswers: ["Communication", "Discipline", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning"],
+      },
+      {
+        prompt: "Name a defensive trait that can travel in the playoffs.",
+        answers: ["Pass rush", "Run defense", "Tackling", "Coverage", "Physicality", "Turnovers", "Discipline", "Depth"],
+        alsoAcceptedAnswers: ["Communication", "Speed", "Red-zone defense", "Versatility", "Pursuit", "Technique", "Conditioning"],
+      },
     ],
     answers: ["Pass rush", "Tackling", "Turnovers", "Coverage", "Physicality", "Communication", "Speed", "Discipline"],
     alsoAcceptedAnswers: ["Run defense", "Red-zone defense", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning"],
@@ -628,7 +688,11 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "team",
     collisionGroup: "culture",
     prompts: [
-      "Name an NFL team with an iconic uniform or logo.",
+      {
+        prompt: "Name an NFL team with an iconic uniform or logo.",
+        answers: ["Green Bay Packers", "Dallas Cowboys", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Chicago Bears", "Miami Dolphins", "Kansas City Chiefs"],
+        alsoAcceptedAnswers: ["New York Giants", "Buffalo Bills", "Indianapolis Colts", "Los Angeles Chargers", "Cleveland Browns", "Philadelphia Eagles", "New Orleans Saints", "Los Angeles Rams", "Minnesota Vikings", "Denver Broncos"],
+      },
       {
         prompt: "Name an NFL franchise with a classic visual identity that has stayed recognizable for decades.",
         answers: [
@@ -654,9 +718,21 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
           "Denver Broncos",
         ],
       },
-      "Name a team whose colors and helmet feel unmistakably NFL.",
-      "Name an NFL franchise you would include in a classic-uniform conversation.",
-      "Name a team whose visual identity barely needs an introduction.",
+      {
+        prompt: "Name a team whose colors and helmet feel unmistakably NFL.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "Pittsburgh Steelers", "Las Vegas Raiders", "San Francisco 49ers", "Chicago Bears", "Kansas City Chiefs", "Miami Dolphins"],
+        alsoAcceptedAnswers: ["New York Giants", "Buffalo Bills", "Indianapolis Colts", "Cleveland Browns", "Philadelphia Eagles", "New Orleans Saints", "Los Angeles Chargers", "Denver Broncos"],
+      },
+      {
+        prompt: "Name an NFL franchise you would include in a classic-uniform conversation.",
+        answers: ["Green Bay Packers", "Las Vegas Raiders", "Chicago Bears", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Indianapolis Colts", "Miami Dolphins"],
+        alsoAcceptedAnswers: ["New York Giants", "Cleveland Browns", "Kansas City Chiefs", "New Orleans Saints", "Buffalo Bills", "Los Angeles Chargers", "Philadelphia Eagles", "Minnesota Vikings"],
+      },
+      {
+        prompt: "Name an NFL team whose visual identity barely needs an introduction.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Chicago Bears", "Kansas City Chiefs", "Philadelphia Eagles"],
+        alsoAcceptedAnswers: ["Miami Dolphins", "New York Giants", "Buffalo Bills", "Indianapolis Colts", "Cleveland Browns", "New Orleans Saints", "Los Angeles Chargers", "Los Angeles Rams"],
+      },
     ],
     answers: ["Green Bay Packers", "Dallas Cowboys", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Kansas City Chiefs", "Chicago Bears", "Miami Dolphins"],
     alsoAcceptedAnswers: ["New York Giants", "Buffalo Bills", "Indianapolis Colts", "Los Angeles Chargers", "Los Angeles Rams", "Cleveland Browns", "Philadelphia Eagles", "New Orleans Saints"],
