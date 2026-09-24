@@ -292,6 +292,7 @@ describe("Sports Feud authored Daily banks", () => {
     expect(matchedName(0, "Cain Velasquez")).toBe("Cain Velasquez");
     expect(matchedName(0, "Islam")).toBe("Islam Makhachev");
     expect(matchedName(0, "Geroege St Lierre")).toBe("Georges St-Pierre");
+    expect(matchedName(0, "st pierre")).toBe("Georges St-Pierre");
 
     expect(matchedName(1, "Valentina")).toBe("Valentina Shevchenko");
     expect(matchedName(1, "Joana")).toBe("Joanna Jedrzejczyk");
@@ -300,6 +301,14 @@ describe("Sports Feud authored Daily banks", () => {
 
     expect(matchedName(4, "Herb", true)).toBe("Herb Dean");
     expect(matchedName(1, "Conor", true)).toBe("Conor McGregor");
+    expect(matchedName(3, "Jon Jones", true)).toBe("Jon Jones");
+
+    const striking = pack.fastMoney[3]!;
+    const jon = matchFamilyFeudAnswer(pack, striking, "Jon Jones");
+    expect(jon.status).toBe("matched");
+    if (jon.status === "matched") {
+      expect(striking.alsoAcceptedEntityIds).toContain(jon.entityId);
+    }
   });
 
   it("never mixes question identities across the three source banks", () => {
