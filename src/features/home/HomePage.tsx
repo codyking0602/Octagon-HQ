@@ -413,17 +413,29 @@ export default function HomePage() {
         </section>
       </section>
 
-      {mlbVisible ? <MlbHomeHq enabled={mlbVisible} signedIn={signedIn} /> : null}
-
       {isFootballSeason() ? (
         <>
           {footballHq}
+          {mlbVisible ? (
+            <MlbHomeHq
+              enabled={mlbVisible}
+              signedIn={signedIn}
+              previewMode={identity.profile?.canControlPicks === true}
+            />
+          ) : null}
           {ufcHq}
         </>
       ) : (
         <>
           {ufcHq}
           {footballHq}
+          {mlbVisible ? (
+            <MlbHomeHq
+              enabled={mlbVisible}
+              signedIn={signedIn}
+              previewMode={identity.profile?.canControlPicks === true}
+            />
+          ) : null}
         </>
       )}
     </div>
