@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   {
     category: "divisions",
+    entityKind: "other",
     collisionGroup: "divisions",
     prompts: [
       "Name a UFC weight class.",
@@ -15,6 +16,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   },
   {
     category: "champions",
+    entityKind: "person",
     collisionGroup: "lightweights",
     prompts: [
       "Name a UFC lightweight champion from any era.",
@@ -27,6 +29,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   },
   {
     category: "champions",
+    entityKind: "person",
     collisionGroup: "welterweights",
     prompts: [
       "Name a UFC welterweight champion from any era.",
@@ -39,6 +42,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   },
   {
     category: "champions",
+    entityKind: "person",
     collisionGroup: "middleweights",
     prompts: [
       "Name a UFC middleweight champion from any era.",
@@ -51,6 +55,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   },
   {
     category: "champions",
+    entityKind: "person",
     collisionGroup: "heavyweights",
     prompts: [
       "Name a UFC heavyweight champion from any era.",
@@ -63,6 +68,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   },
   {
     category: "champions",
+    entityKind: "person",
     collisionGroup: "multi-division",
     prompts: [
       "Name a UFC fighter who won titles in two weight classes.",
@@ -75,6 +81,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   },
   {
     category: "fighters",
+    entityKind: "person",
     collisionGroup: "knockouts",
     prompts: [
       "Name a UFC fighter known for knockout power.",
@@ -87,6 +94,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   },
   {
     category: "fighters",
+    entityKind: "person",
     collisionGroup: "submissions",
     prompts: [
       "Name a UFC fighter known for submissions.",
@@ -99,6 +107,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   },
   {
     category: "fighters",
+    entityKind: "person",
     collisionGroup: "wrestling",
     prompts: [
       "Name a UFC fighter known for wrestling.",
@@ -111,6 +120,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
   },
   {
     category: "fighters",
+    entityKind: "person",
     collisionGroup: "striking",
     prompts: [
       "Name a UFC fighter known for elite striking.",

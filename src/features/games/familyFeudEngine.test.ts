@@ -78,8 +78,13 @@ const mainTwo = question(
   ["achane", "saquon"],
 );
 
-function fastQuestion(id: string, candidates: readonly string[], answerIds: readonly string[]) {
-  return question(id, "Fast Money " + id, candidates, answerIds, fastPoints);
+function fastQuestion(
+  id: string,
+  candidates: readonly string[],
+  answerIds: readonly string[],
+  alsoAcceptedEntityIds: readonly string[] = [],
+) {
+  return question(id, "Fast Money " + id, candidates, answerIds, fastPoints, alsoAcceptedEntityIds);
 }
 
 const pack: FamilyFeudPack = {
@@ -88,8 +93,8 @@ const pack: FamilyFeudPack = {
   entities,
   mainBoards: [mainOne, mainTwo],
   fastMoney: [
-    fastQuestion("fm-1", passingCandidates, ["stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams"]),
-    fastQuestion("fm-2", rushingCandidates, ["cook", "henry", "taylor", "bijan", "achane", "saquon"]),
+    fastQuestion("fm-1", passingCandidates, ["stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams"], ["mahomes"]),
+    fastQuestion("fm-2", rushingCandidates, ["cook", "henry", "taylor", "bijan", "achane", "saquon"], ["mahomes"]),
     fastQuestion("fm-3", passingCandidates, ["stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams"]),
     fastQuestion("fm-4", rushingCandidates, ["cook", "henry", "taylor", "bijan", "achane", "saquon"]),
     fastQuestion("fm-5", passingCandidates, ["stafford", "goff", "maye", "prescott", "lawrence", "caleb-williams"]),
@@ -128,6 +133,18 @@ describe("Family Feud V2 engine contract", () => {
       status: "matched",
       entityId: "mahomes",
       kind: "typo",
+    });
+  });
+
+  it("uses explicit person typing even when prompt wording contains fight, submission, team, or award terms", () => {
+    const noisyPrompt = {
+      ...mainOne,
+      prompt: "Name a fighter on a team known for submission fights and awards.",
+    };
+    expect(matchFamilyFeudAnswer(pack, noisyPrompt, "Stafford")).toMatchObject({
+      status: "matched",
+      entityId: "stafford",
+      kind: "surname",
     });
   });
 
@@ -185,6 +202,17 @@ describe("Family Feud V2 engine contract", () => {
       "stafford", "goff", "maye", "prescott",
     ]);
     expect(familyFeudScore(pack, state).main).toBe(30);
+  });
+
+  it("does not repeat state changes for a duplicate valid off-board Main guess", () => {
+    let transition = submitFamilyFeudMainAnswer(pack, createFamilyFeudState(), "Caleb Williams");
+    expect(transition.outcome.type).toBe("board-also-accepted");
+    expect(transition.state.mainBoards[0]!.strikes).toBe(0);
+
+    transition = submitFamilyFeudMainAnswer(pack, transition.state, "Caleb Williams");
+    expect(transition.outcome.type).toBe("already-guessed");
+    expect(transition.state.mainBoards[0]!.strikes).toBe(0);
+    expect(transition.state.mainBoards[0]!.submittedEntityIds).toEqual(["caleb-williams"]);
   });
 
   it("ends a main board on the third strike without subtracting banked points", () => {

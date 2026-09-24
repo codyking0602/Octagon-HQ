@@ -26,7 +26,12 @@ const acceptedIds = candidateIds.slice(0, 6);
 const mainPoints = [10, 8, 7, 5, 5, 4] as const;
 const fastPoints = [8, 7, 6, 5, 4, 3] as const;
 
-function question(id: string, prompt: string, points: readonly number[]) {
+function question(
+  id: string,
+  prompt: string,
+  points: readonly number[],
+  alsoAcceptedEntityIds: readonly string[] = [],
+) {
   return {
     id,
     prompt,
@@ -35,6 +40,7 @@ function question(id: string, prompt: string, points: readonly number[]) {
       entityId: acceptedIds[index]!,
       points: value,
     })),
+    ...(alsoAcceptedEntityIds.length ? { alsoAcceptedEntityIds } : {}),
   };
 }
 
@@ -43,8 +49,8 @@ const pack: FamilyFeudPack = {
   sport: "football",
   entities,
   mainBoards: [
-    question("main-1", "Main board one", mainPoints),
-    question("main-2", "Main board two", mainPoints),
+    question("main-1", "Main board one", mainPoints, ["entity-7"]),
+    question("main-2", "Main board two", mainPoints, ["entity-7"]),
   ],
   fastMoney: [
     question("fast-1", "Fast one", fastPoints),
@@ -71,7 +77,7 @@ function strikeOutBothBoards(publication: ReturnType<typeof buildFamilyFeudDaily
   let submission: Record<string, unknown> = {};
   let result: ReturnType<typeof advanceFamilyFeudDailyRuntime> | null = null;
   for (let board = 0; board < 2; board += 1) {
-    for (const answer of ["Golf Seven", "Hotel Eight", "India Nine"]) {
+    for (const answer of ["Hotel Eight", "India Nine", "not a real answer"]) {
       result = advanceFamilyFeudDailyRuntime(
         context(publication, submission),
         { type: "answer", answer },
@@ -130,6 +136,23 @@ describe("Family Feud V2 Daily persistence contract", () => {
     expect(result.publicState.main_points).toBe(4);
   });
 
+  it("accepts a valid off-board Main answer with zero points and no strike", () => {
+    const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
+    const result = advanceFamilyFeudDailyRuntime(
+      context(publication),
+      { type: "answer", answer: "Golf Seven" },
+    );
+
+    expect(result.publicState.last_feedback).toMatchObject({
+      type: "accepted",
+      points: 0,
+      message: "VALID ANSWER — 0 POINTS",
+    });
+    const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
+    expect(boards[0]).toMatchObject({ strikes: 0 });
+    expect(result.publicState.main_points).toBe(0);
+  });
+
   it("keeps the live board exactly as played and publishes a separate settled answer reveal", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     let submission: Record<string, unknown> = {};
@@ -140,7 +163,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
     );
     submission = result.submissionState;
 
-    for (const answer of ["Golf Seven", "Hotel Eight", "India Nine"]) {
+    for (const answer of ["Hotel Eight", "India Nine", "not a real answer"]) {
       result = advanceFamilyFeudDailyRuntime(
         context(publication, submission),
         { type: "answer", answer },

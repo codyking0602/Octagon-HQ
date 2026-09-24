@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for the Dallas Cowboys.",
@@ -15,6 +16,7 @@ export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   },
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for the Green Bay Packers.",
@@ -27,6 +29,7 @@ export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   },
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for the San Francisco 49ers.",
@@ -39,6 +42,7 @@ export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   },
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for the Pittsburgh Steelers.",
@@ -51,6 +55,7 @@ export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   },
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for the New England Patriots.",
@@ -63,6 +68,7 @@ export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   },
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "players",
     prompts: [
       "Name a Kansas City Chiefs player fans strongly associate with the franchise.",
@@ -75,6 +81,7 @@ export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   },
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "defenders",
     prompts: [
       "Name a Baltimore Ravens defensive star.",
@@ -87,6 +94,7 @@ export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   },
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "receivers",
     prompts: [
       "Name a famous Minnesota Vikings receiver.",
@@ -99,6 +107,7 @@ export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   },
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "players",
     prompts: [
       "Name a famous Raiders player.",
@@ -111,6 +120,7 @@ export const NFL_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("nfl-fast2", [
   },
   {
     category: "team-stars",
+    entityKind: "person",
     collisionGroup: "defenders",
     prompts: [
       "Name a famous Chicago Bears defender.",

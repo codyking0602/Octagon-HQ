@@ -552,9 +552,13 @@ export function submitFamilyFeudFastMoneyAnswer(
   let points = 0;
   let matchKind: FamilyFeudFastMoneyResult["matchKind"] = "unrecognized";
   if (match.status === "matched") {
-    entityId = match.entityId;
-    matchKind = match.kind;
-    points = question.answers.find((answer) => answer.entityId === match.entityId)?.points ?? 0;
+    const rankedAnswer = question.answers.find((answer) => answer.entityId === match.entityId);
+    const alsoAccepted = (question.alsoAcceptedEntityIds ?? []).includes(match.entityId);
+    if (rankedAnswer || alsoAccepted) {
+      entityId = match.entityId;
+      matchKind = match.kind;
+      points = rankedAnswer?.points ?? 0;
+    }
   }
 
   state.fastMoneyResults.push({

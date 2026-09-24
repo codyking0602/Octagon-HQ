@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   {
     category: "rules",
+    entityKind: "other",
     collisionGroup: "finishes",
     prompts: [
       "Name a broad way a UFC fight can end.",
@@ -24,6 +25,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   },
   {
     category: "techniques",
+    entityKind: "other",
     collisionGroup: "submissions",
     prompts: [
       "Name a common MMA submission.",
@@ -45,6 +47,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   },
   {
     category: "techniques",
+    entityKind: "other",
     collisionGroup: "strikes",
     prompts: [
       "Name a strike you can use in MMA.",
@@ -57,6 +60,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   },
   {
     category: "techniques",
+    entityKind: "other",
     collisionGroup: "kicks",
     prompts: [
       "Name a type of kick used in MMA.",
@@ -69,6 +73,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   },
   {
     category: "grappling",
+    entityKind: "other",
     collisionGroup: "grappling",
     prompts: [
       "Name a wrestling or grappling term used in MMA.",
@@ -90,6 +95,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   },
   {
     category: "rules",
+    entityKind: "other",
     collisionGroup: "fouls",
     prompts: [
       "Name a foul in MMA.",
@@ -111,6 +117,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   },
   {
     category: "judging",
+    entityKind: "other",
     collisionGroup: "judging",
     prompts: [
       "Name something judges or fans look at when deciding who won a round.",
@@ -132,6 +139,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   },
   {
     category: "stats",
+    entityKind: "other",
     collisionGroup: "stats",
     prompts: [
       "Name a UFC fight statistic.",
@@ -144,6 +152,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   },
   {
     category: "weight-cutting",
+    entityKind: "other",
     collisionGroup: "weight-cutting",
     prompts: [
       "Name something that can happen during a difficult UFC weight cut.",
@@ -165,6 +174,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   },
   {
     category: "corner",
+    entityKind: "other",
     collisionGroup: "corner",
     prompts: [
       "Name something a fighter's corner does between rounds.",

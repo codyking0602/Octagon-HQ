@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   {
     category: "positions",
+    entityKind: "other",
     collisionGroup: "positions",
     prompts: [
       "Name a college football position other than quarterback.",
@@ -15,6 +16,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   },
   {
     category: "game-concepts",
+    entityKind: "other",
     collisionGroup: "scoring",
     prompts: [
       "Name a way to score points in college football.",
@@ -27,6 +29,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   },
   {
     category: "game-concepts",
+    entityKind: "other",
     collisionGroup: "penalties",
     prompts: [
       "Name a common football penalty.",
@@ -39,6 +42,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   },
   {
     category: "stats",
+    entityKind: "other",
     collisionGroup: "stats",
     prompts: [
       "Name a quarterback statistic.",
@@ -51,6 +55,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   },
   {
     category: "stats",
+    entityKind: "other",
     collisionGroup: "stats",
     prompts: [
       "Name a defensive football statistic.",
@@ -63,6 +68,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   },
   {
     category: "strategy",
+    entityKind: "other",
     collisionGroup: "offense",
     prompts: [
       "Name an offensive concept you hear in college football.",
@@ -84,6 +90,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   },
   {
     category: "strategy",
+    entityKind: "other",
     collisionGroup: "defense",
     prompts: [
       "Name a defensive coverage, pressure, or concept.",
@@ -105,6 +112,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   },
   {
     category: "recruiting",
+    entityKind: "other",
     collisionGroup: "recruiting",
     prompts: [
       "Name a term associated with college football recruiting.",
@@ -126,6 +134,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   },
   {
     category: "postseason",
+    entityKind: "other",
     collisionGroup: "postseason",
     prompts: [
       "Name a stage or game type in the college football postseason.",
@@ -147,6 +156,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
   },
   {
     category: "fan-culture",
+    entityKind: "other",
     collisionGroup: "culture",
     prompts: [
       "Name something college football fans commonly do on game day.",

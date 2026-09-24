@@ -1,3 +1,4 @@
+import type { FamilyFeudEntityKind } from "../games/familyFeudEngine";
 import type {
   SportsFeudAuthoredAnswer,
   SportsFeudAuthoredQuestion,
@@ -5,9 +6,11 @@ import type {
 
 export interface SportsFeudQuestionFamily {
   category: string;
+  entityKind: FamilyFeudEntityKind;
   collisionGroup?: string;
   prompts: readonly string[];
   answers: readonly (string | SportsFeudAuthoredAnswer)[];
+  alsoAcceptedAnswers?: readonly (string | SportsFeudAuthoredAnswer)[];
 }
 
 function answer(value: string | SportsFeudAuthoredAnswer): SportsFeudAuthoredAnswer {
@@ -30,9 +33,13 @@ export function expandSportsFeudFamilies(
       questions.push({
         id: `${prefix}-${String(familyIndex + 1).padStart(2, "0")}-${promptIndex + 1}`,
         category: family.category,
+        entityKind: family.entityKind,
         collisionGroup: family.collisionGroup,
         prompt,
         answers: family.answers.slice(0, 8).map(answer),
+        ...(family.alsoAcceptedAnswers?.length
+          ? { alsoAcceptedAnswers: family.alsoAcceptedAnswers.map(answer) }
+          : {}),
       });
     });
   });

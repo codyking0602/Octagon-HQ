@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   {
     category: "franchise-identity",
+    entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
       "Name an NFL franchise famous for great quarterbacks.",
@@ -15,6 +16,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "franchise-identity",
+    entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
       "Name an NFL franchise known for great running backs.",
@@ -27,6 +29,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "franchise-identity",
+    entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
       "Name an NFL franchise you associate with elite defense.",
@@ -39,6 +42,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "franchise-identity",
+    entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
       "Name an NFL franchise known for great wide receivers.",
@@ -51,6 +55,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "history-legacy",
+    entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
       "Name an NFL franchise with an iconic all-time brand.",
@@ -63,6 +68,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "player-identity",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name an all-time iconic NFL quarterback.",
@@ -75,6 +81,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "player-identity",
+    entityKind: "person",
     collisionGroup: "running-backs",
     prompts: [
       "Name an all-time great NFL running back.",
@@ -87,6 +94,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "player-identity",
+    entityKind: "person",
     collisionGroup: "receivers",
     prompts: [
       "Name an all-time great NFL wide receiver.",
@@ -99,6 +107,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "player-identity",
+    entityKind: "person",
     collisionGroup: "defenders",
     prompts: [
       "Name an all-time great NFL defensive player.",
@@ -111,6 +120,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "coach-legacy",
+    entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
       "Name an NFL coach strongly associated with a dynasty.",
@@ -123,6 +133,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "rivalries",
+    entityKind: "other",
     collisionGroup: "rivalries",
     prompts: [
       "Name an NFL rivalry almost every football fan knows.",
@@ -135,6 +146,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "venues",
+    entityKind: "other",
     collisionGroup: "venues",
     prompts: [
       "Name one of the toughest NFL stadiums for a road team.",
@@ -147,6 +159,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "moments",
+    entityKind: "other",
     collisionGroup: "moments",
     prompts: [
       "Name an iconic NFL playoff or Super Bowl moment.",
@@ -159,6 +172,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "history-legacy",
+    entityKind: "team",
     collisionGroup: "champions",
     prompts: [
       "Name an NFL franchise you associate with Super Bowl success.",
@@ -171,6 +185,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "awards",
+    entityKind: "other",
     collisionGroup: "awards",
     prompts: [
       "Name an NFL award or honor players want to win.",
@@ -183,6 +198,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "achievements",
+    entityKind: "other",
     collisionGroup: "achievements",
     prompts: [
       "Name an accomplishment that can make an NFL season legendary.",
@@ -195,6 +211,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "positions",
+    entityKind: "other",
     collisionGroup: "positions",
     prompts: [
       "Name an NFL position fans love to watch.",
@@ -207,6 +224,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "traits",
+    entityKind: "other",
     collisionGroup: "traits",
     prompts: [
       "Name a trait every NFL coach wants in a quarterback.",
@@ -219,6 +237,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "traits",
+    entityKind: "other",
     collisionGroup: "defense",
     prompts: [
       "Name a trait every great NFL defense needs.",
@@ -231,6 +250,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
   },
   {
     category: "culture",
+    entityKind: "team",
     collisionGroup: "culture",
     prompts: [
       "Name an NFL team with an iconic uniform or logo.",

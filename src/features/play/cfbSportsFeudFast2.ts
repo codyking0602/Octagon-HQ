@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for Alabama.",
@@ -15,6 +16,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   },
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for Ohio State.",
@@ -27,6 +29,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   },
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for USC.",
@@ -39,6 +42,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   },
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for Oklahoma.",
@@ -51,6 +55,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   },
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback who played for Texas.",
@@ -63,6 +68,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   },
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "players",
     prompts: [
       "Name an LSU player who became a huge college football star.",
@@ -75,6 +81,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   },
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "players",
     prompts: [
       "Name a Michigan player who became a huge college football star.",
@@ -87,6 +94,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   },
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "players",
     prompts: [
       "Name a Notre Dame player college football fans remember.",
@@ -99,6 +107,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   },
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "players",
     prompts: [
       "Name a Georgia player who became a major college football star.",
@@ -111,6 +120,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
   },
   {
     category: "school-stars",
+    entityKind: "person",
     collisionGroup: "players",
     prompts: [
       "Name a Clemson player who became a major college football star.",

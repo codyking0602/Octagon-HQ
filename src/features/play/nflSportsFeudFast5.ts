@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   {
     category: "player-traits",
+    entityKind: "person",
     collisionGroup: "clutch",
     prompts: [
       "Name an NFL quarterback you associate with clutch moments.",
@@ -15,6 +16,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   },
   {
     category: "player-traits",
+    entityKind: "person",
     collisionGroup: "speed",
     prompts: [
       "Name an NFL player known for elite speed.",
@@ -27,6 +29,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   },
   {
     category: "player-traits",
+    entityKind: "person",
     collisionGroup: "power",
     prompts: [
       "Name an NFL running back known for power.",
@@ -39,6 +42,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   },
   {
     category: "quarterbacks",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a famous dual-threat NFL quarterback.",
@@ -51,6 +55,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   },
   {
     category: "quarterbacks",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a classic pocket-passing NFL quarterback.",
@@ -63,6 +68,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   },
   {
     category: "defenders",
+    entityKind: "person",
     collisionGroup: "pass-rushers",
     prompts: [
       "Name an NFL pass rusher who became a superstar.",
@@ -75,6 +81,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   },
   {
     category: "defenders",
+    entityKind: "person",
     collisionGroup: "corners",
     prompts: [
       "Name an NFL cornerback known for shutting receivers down.",
@@ -87,6 +94,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   },
   {
     category: "young-stars",
+    entityKind: "person",
     collisionGroup: "rookies",
     prompts: [
       "Name an NFL player who made a huge impact as a rookie.",
@@ -99,6 +107,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   },
   {
     category: "underdogs",
+    entityKind: "team",
     collisionGroup: "teams",
     prompts: [
       "Name an NFL team remembered for an underdog playoff run.",
@@ -111,6 +120,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
   },
   {
     category: "culture",
+    entityKind: "team",
     collisionGroup: "culture",
     prompts: [
       "Name an NFL team known for a classic uniform.",

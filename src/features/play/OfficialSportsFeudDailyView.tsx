@@ -263,12 +263,23 @@ export function OfficialSportsFeudDailyView({
     if (kind === "main") {
       const response = record(nextState.last_feedback);
       const responseType = String(response.type ?? "");
-      if (responseType === "ambiguous" || responseType === "already-guessed") {
+      if (
+        responseType === "ambiguous"
+        || responseType === "already-guessed"
+        || responseType === "accepted"
+      ) {
         setDisplayState(nextState);
-        setFeedback(responseType === "ambiguous" ? "BE MORE SPECIFIC" : "ALREADY GUESSED");
+        setFeedback(
+          responseType === "ambiguous"
+            ? "BE MORE SPECIFIC"
+            : responseType === "already-guessed"
+              ? "ALREADY GUESSED"
+              : "VALID ANSWER — 0 POINTS",
+        );
         if (responseType === "ambiguous") setAnswer(lastSubmittedRef.current);
         setMainRevealPhase("idle");
         pendingKindRef.current = null;
+        if (responseType === "accepted") mainInputRef.current?.focus({ preventScroll: true });
         return;
       }
 

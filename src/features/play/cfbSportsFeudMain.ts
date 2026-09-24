@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   {
     category: "program-identity",
+    entityKind: "school",
     collisionGroup: "programs",
     prompts: [
       "Name a college football program known for producing great running backs.",
@@ -15,6 +16,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "program-identity",
+    entityKind: "school",
     collisionGroup: "programs",
     prompts: [
       "Name a college football program famous for producing quarterbacks.",
@@ -27,6 +29,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "program-identity",
+    entityKind: "school",
     collisionGroup: "programs",
     prompts: [
       "Name a college football program you associate with elite defense.",
@@ -39,6 +42,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "style-identity",
+    entityKind: "school",
     collisionGroup: "programs",
     prompts: [
       "Name a college football program you associate with explosive offense.",
@@ -51,6 +55,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "history-legacy",
+    entityKind: "school",
     collisionGroup: "programs",
     prompts: [
       "Name a college football blue blood.",
@@ -63,6 +68,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "player-identity",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a quarterback you immediately associate with winning the Heisman Trophy.",
@@ -75,6 +81,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "player-identity",
+    entityKind: "person",
     collisionGroup: "players",
     prompts: [
       "Name a player who had one of the most dominant individual college football seasons ever.",
@@ -87,6 +94,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "player-identity",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name an iconic college quarterback from the 2000s or later.",
@@ -99,6 +107,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "coach-legacy",
+    entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
       "Name a college football coach strongly associated with a dynasty.",
@@ -111,6 +120,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "coach-identity",
+    entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
       "Name a college football coach known for offensive innovation.",
@@ -123,6 +133,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "rivalries",
+    entityKind: "other",
     collisionGroup: "rivalries",
     prompts: [
       "Name a college football rivalry almost every fan knows.",
@@ -135,6 +146,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "venues",
+    entityKind: "school",
     collisionGroup: "venues",
     prompts: [
       "Name one of the toughest places to play a road game in college football.",
@@ -147,6 +159,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "traditions",
+    entityKind: "other",
     collisionGroup: "traditions",
     prompts: [
       "Name a college football tradition even casual fans recognize.",
@@ -159,6 +172,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "bowl-history",
+    entityKind: "other",
     collisionGroup: "bowls",
     prompts: [
       "Name a college football bowl game almost every fan knows.",
@@ -171,6 +185,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "history-legacy",
+    entityKind: "other",
     collisionGroup: "conferences",
     prompts: [
       "Name a conference that has played a major role in college football history.",
@@ -183,6 +198,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "moments",
+    entityKind: "other",
     collisionGroup: "moments",
     prompts: [
       "Name an iconic college football play or moment from the modern era.",
@@ -195,6 +211,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "achievements",
+    entityKind: "other",
     collisionGroup: "achievements",
     prompts: [
       "Name something that can make a college football season legendary.",
@@ -207,6 +224,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "positions",
+    entityKind: "other",
     collisionGroup: "positions",
     prompts: [
       "Name a college football position fans love to watch.",
@@ -219,6 +237,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "traits",
+    entityKind: "other",
     collisionGroup: "traits",
     prompts: [
       "Name a trait every college football coach wants in a quarterback.",
@@ -231,6 +250,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
   },
   {
     category: "culture",
+    entityKind: "school",
     collisionGroup: "culture",
     prompts: [
       "Name a college football program known for an iconic uniform look.",

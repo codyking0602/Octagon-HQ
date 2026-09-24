@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   {
     category: "champion-legacy",
+    entityKind: "person",
     collisionGroup: "champions",
     prompts: [
       "Name a UFC champion known for a long or dominant reign.",
@@ -15,6 +16,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   },
   {
     category: "ufc-history",
+    entityKind: "person",
     collisionGroup: "tuf",
     prompts: [
       "Name a fighter who became famous through The Ultimate Fighter.",
@@ -27,6 +29,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   },
   {
     category: "rivalries",
+    entityKind: "other",
     collisionGroup: "rivalries",
     prompts: [
       "Name a famous UFC rivalry.",
@@ -39,6 +42,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   },
   {
     category: "fights",
+    entityKind: "other",
     collisionGroup: "fights",
     prompts: [
       "Name an iconic UFC fight.",
@@ -51,6 +55,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   },
   {
     category: "ufc-history",
+    entityKind: "person",
     collisionGroup: "pioneers",
     prompts: [
       "Name an early UFC pioneer.",
@@ -63,6 +68,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   },
   {
     category: "mma-history",
+    entityKind: "person",
     collisionGroup: "pride",
     prompts: [
       "Name a PRIDE star who later fought in the UFC.",
@@ -75,6 +81,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   },
   {
     category: "ufc-history",
+    entityKind: "person",
     collisionGroup: "hall-of-fame",
     prompts: [
       "Name a fighter inducted into the UFC Hall of Fame for their career.",
@@ -87,6 +94,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   },
   {
     category: "broadcast",
+    entityKind: "person",
     collisionGroup: "broadcast",
     prompts: [
       "Name a UFC commentator or analyst fans recognize.",
@@ -99,6 +107,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   },
   {
     category: "officials",
+    entityKind: "person",
     collisionGroup: "officials",
     prompts: [
       "Name a referee UFC fans recognize.",
@@ -111,6 +120,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
   },
   {
     category: "venues",
+    entityKind: "other",
     collisionGroup: "venues",
     prompts: [
       "Name a UFC arena or event location fans know.",
