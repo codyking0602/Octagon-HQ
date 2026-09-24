@@ -235,7 +235,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     collisionGroup: "bowls",
     prompts: [
       {
-        prompt: "Name a college football bowl game.",
+        prompt: "Name a well-known college football bowl game.",
         answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Citrus Bowl","Gator Bowl"],
         alsoAcceptedAnswers: ["Alamo Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
       },
@@ -304,17 +304,17 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     prompts: [
       "Name a major college football individual award.",
       {
-        prompt: "Name a college football award players can win.",
+        prompt: "Name a nationally prominent college football award players can win.",
         answers: ["Heisman Trophy","Maxwell Award","Doak Walker Award","Biletnikoff Award","Bednarik Award","Butkus Award","Outland Trophy","Davey O'Brien Award"],
         alsoAcceptedAnswers: ["Lou Groza Award","Jim Thorpe Award","Lombardi Award","Ray Guy Award","John Mackey Award","Rimington Trophy","Walter Camp Award"],
       },
       {
-        prompt: "Name an award given to a standout college football player.",
+        prompt: "Name a major national award given to a standout college football player.",
         answers: ["Heisman Trophy","Maxwell Award","Walter Camp Award","Bednarik Award","Biletnikoff Award","Doak Walker Award","Butkus Award","Davey O'Brien Award"],
         alsoAcceptedAnswers: ["Outland Trophy","Lou Groza Award","Jim Thorpe Award","Lombardi Award","Ray Guy Award","John Mackey Award","Rimington Trophy"],
       },
       {
-        prompt: "Name a trophy or award college football stars chase.",
+        prompt: "Name a prominent national award college football stars chase.",
         answers: ["Heisman Trophy","Maxwell Award","Walter Camp Award","Biletnikoff Award","Doak Walker Award","Bednarik Award","Butkus Award","Outland Trophy"],
         alsoAcceptedAnswers: ["Lou Groza Award","Davey O'Brien Award","Jim Thorpe Award","Lombardi Award","Ray Guy Award","John Mackey Award","Rimington Trophy"],
       },
@@ -392,7 +392,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     collisionGroup: "schools",
     prompts: [
       {
-        prompt: "Name a college football school whose primary look features red.",
+        prompt: "Name a major college football school whose primary look features red.",
         answers: ["Alabama","Ohio State","Georgia","Oklahoma","USC","Nebraska","Wisconsin","Arkansas"],
         alsoAcceptedAnswers: ["Utah","Texas Tech","NC State","Louisville","Rutgers","South Carolina","Stanford","Indiana"],
       },
