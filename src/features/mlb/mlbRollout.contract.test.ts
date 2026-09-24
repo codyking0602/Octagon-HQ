@@ -6,7 +6,7 @@ const appShell = readFileSync("src/app/AppShell.tsx", "utf8");
 const bottomNav = readFileSync("src/components/BottomNavigation.tsx", "utf8");
 const home = readFileSync("src/features/home/HomePage.tsx", "utf8");
 const router = readFileSync("src/app/router.tsx", "utf8");
-const migration = readFileSync("supabase/migrations/202612310157_mlb_playoffs_foundation.sql", "utf8");
+const migration = readFileSync("supabase/migrations/202612310175_mlb_playoffs_foundation.sql", "utf8");
 
 describe("MLB Playoffs rollout gate", () => {
   it("stays owner-only until the explicit public release", () => {
