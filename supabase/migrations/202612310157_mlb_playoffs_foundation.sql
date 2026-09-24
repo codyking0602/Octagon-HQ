@@ -302,6 +302,8 @@ declare
   v_node jsonb;
   v_node_id text;
   v_pick text;
+  v_left_team text;
+  v_right_team text;
   v_node_count integer := 0;
 begin
   if v_profile_id is null then
@@ -350,6 +352,23 @@ begin
       where team ->> 'id' = v_pick
     ) then
       raise exception 'mlb_playoffs_unknown_team';
+    end if;
+
+    v_left_team := coalesce(
+      nullif(v_node #>> '{left,team_id}', ''),
+      nullif(p_picks ->> (v_node #>> '{left,source_node_id}'), '')
+    );
+    v_right_team := coalesce(
+      nullif(v_node #>> '{right,team_id}', ''),
+      nullif(p_picks ->> (v_node #>> '{right,source_node_id}'), '')
+    );
+
+    if v_left_team is null or v_right_team is null then
+      raise exception 'mlb_playoffs_invalid_bracket_path';
+    end if;
+
+    if v_pick not in (v_left_team, v_right_team) then
+      raise exception 'mlb_playoffs_invalid_bracket_path';
     end if;
   end loop;
 
