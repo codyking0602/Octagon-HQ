@@ -20,14 +20,15 @@ begin
     and schedule.sport = 'ufc'
     and daily.game_type = 'sports_feud';
 
-  if v_daily_id is null or v_setup_id is null then
-    raise exception 'September 24 UFC Sports Feud materialization is unavailable for audited reset';
+  if (v_daily_id is null) <> (v_setup_id is null) then
+    raise exception 'September 24 UFC Sports Feud materialization is partially missing';
   end if;
 
-  if v_setup_key is distinct from
-      'family-feud-daily-v2:play-rotation-v14-weighted-sep24:2026-09-24:ufc:sports-feud-bank-v1-ufc-2026-09-24-ufc-main-04-3-ufc-main-11-5' then
-    raise exception 'September 24 UFC Sports Feud setup changed before audited reset: %', v_setup_key;
-  end if;
+  if v_daily_id is not null then
+    if v_setup_key is distinct from
+        'family-feud-daily-v2:play-rotation-v14-weighted-sep24:2026-09-24:ufc:sports-feud-bank-v1-ufc-2026-09-24-ufc-main-04-3-ufc-main-11-5' then
+      raise exception 'September 24 UFC Sports Feud setup changed before audited reset: %', v_setup_key;
+    end if;
 
   select count(*)
     into v_attempt_count
@@ -68,8 +69,9 @@ begin
     raise exception 'refusing to delete September 24 UFC Sports Feud setup because it is still referenced';
   end if;
 
-  delete from private.daily_challenge_setups
-  where id = v_setup_id;
+    delete from private.daily_challenge_setups
+    where id = v_setup_id;
+  end if;
 
   if private.daily_challenge_schedule_for_day(date '2026-09-24', 'ufc')
       is distinct from 'play-rotation-v14-weighted-sep24'
