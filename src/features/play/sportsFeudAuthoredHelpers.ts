@@ -31,6 +31,19 @@ const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
   "Comeback Player of the Year": ["CPOY"],
   "Walter Payton Man of the Year": ["WPMOY", "Man of the Year"],
   "First-team All-Pro": ["All-Pro", "First Team All-Pro"],
+  "Pass interference": ["PI", "DPI", "OPI"],
+  "Personal foul": ["Unnecessary roughness"],
+  "Roughing the passer": ["RTP"],
+  "Best player available": ["BPA", "Best available"],
+  "Play-action": ["Play action", "PA"],
+  "RPO": ["Run-pass option", "Run pass option"],
+  "Four verticals": ["Four verts", "4 verts", "Verts"],
+  "Running back": ["RB"],
+  "Touchdown": ["TD"],
+  "Field goal": ["FG"],
+  "Extra point": ["PAT", "Point after", "Point after touchdown"],
+  "Yards per attempt": ["YPA"],
+  "Tackles for loss": ["TFL", "TFLs"],
 };
 
 function answer(value: string | SportsFeudAuthoredAnswer): SportsFeudAuthoredAnswer {
