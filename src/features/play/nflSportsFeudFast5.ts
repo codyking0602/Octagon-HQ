@@ -13,6 +13,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name an NFL legend you would want with the game on the line.",
     ],
     answers: ["Tom Brady", "Joe Montana", "Patrick Mahomes", "John Elway", "Peyton Manning", "Aaron Rodgers", "Ben Roethlisberger", "Eli Manning"],
+    alsoAcceptedAnswers: ["Drew Brees", "Roger Staubach", "Terry Bradshaw", "Troy Aikman", "Brett Favre", "Russell Wilson", "Jim Kelly", "Matthew Stafford"],
   },
   {
     category: "player-traits",
@@ -26,6 +27,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name a player you would pick for an NFL footrace.",
     ],
     answers: ["Tyreek Hill", "Deion Sanders", "Chris Johnson", "Randy Moss", "Bo Jackson", "Derrick Henry", "Devin Hester", "DeSean Jackson"],
+    alsoAcceptedAnswers: ["Bob Hayes", "Darrell Green", "Michael Vick", "Ted Ginn Jr.", "Raheem Mostert", "Xavier Worthy", "Jamaal Charles", "Percy Harvin"],
   },
   {
     category: "player-traits",
@@ -39,6 +41,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name an NFL back you associate with downhill running.",
     ],
     answers: ["Derrick Henry", "Marshawn Lynch", "Earl Campbell", "Jerome Bettis", "Adrian Peterson", "Christian Okoye", "Mike Alstott", "Nick Chubb"],
+    alsoAcceptedAnswers: ["Jim Brown", "Walter Payton", "Bo Jackson", "Jamal Lewis", "Larry Csonka", "Eddie George", "Steven Jackson", "Jonathan Stewart"],
   },
   {
     category: "quarterbacks",
@@ -52,6 +55,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name a quarterback defenders had to account for as a runner.",
     ],
     answers: ["Michael Vick", "Lamar Jackson", "Cam Newton", "Steve Young", "Randall Cunningham", "Josh Allen", "Jalen Hurts", "Russell Wilson"],
+    alsoAcceptedAnswers: ["Fran Tarkenton", "Roger Staubach", "Steve McNair", "Kordell Stewart", "Kyler Murray", "Robert Griffin III", "Daunte Culpepper", "Justin Fields"],
   },
   {
     category: "quarterbacks",
@@ -65,6 +69,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name a quarterback you picture diagnosing a defense from the pocket.",
     ],
     answers: ["Peyton Manning", "Tom Brady", "Dan Marino", "Drew Brees", "Joe Montana", "Philip Rivers", "Matt Ryan", "Kurt Warner"],
+    alsoAcceptedAnswers: ["Troy Aikman", "Eli Manning", "Ben Roethlisberger", "Jim Kelly", "Ken Anderson", "Warren Moon", "Matthew Stafford", "Carson Palmer"],
   },
   {
     category: "defenders",
@@ -78,6 +83,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name a defender you associate with living in the backfield.",
     ],
     answers: ["Reggie White", "Bruce Smith", "Lawrence Taylor", "JJ Watt", "Von Miller", "Michael Strahan", "TJ Watt", "Myles Garrett"],
+    alsoAcceptedAnswers: ["Kevin Greene", "Jared Allen", "DeMarcus Ware", "Julius Peppers", "Derrick Thomas", "Terrell Suggs", "Jack Youngblood", "Mark Gastineau"],
   },
   {
     category: "defenders",
@@ -91,6 +97,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name a defensive back whose reputation changed passing-game plans.",
     ],
     answers: ["Deion Sanders", "Darrelle Revis", "Champ Bailey", "Richard Sherman", "Charles Woodson", "Rod Woodson", "Patrick Peterson", "Jalen Ramsey"],
+    alsoAcceptedAnswers: ["Mel Blount", "Mike Haynes", "Night Train Lane", "Darrell Green", "Aeneas Williams", "Ty Law", "Lester Hayes", "Sauce Gardner"],
   },
   {
     category: "young-stars",
@@ -104,6 +111,7 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name an NFL player whose career started with a bang.",
     ],
     answers: ["Randy Moss", "Cam Newton", "Saquon Barkley", "Ezekiel Elliott", "Adrian Peterson", "Justin Jefferson", "CJ Stroud", "Micah Parsons"],
+    alsoAcceptedAnswers: ["Lawrence Taylor", "Eric Dickerson", "Barry Sanders", "Dan Marino", "Odell Beckham Jr.", "Ja'Marr Chase", "Dak Prescott", "Robert Griffin III"],
   },
   {
     category: "underdogs",
@@ -114,9 +122,10 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name a franchise that has shocked a favorite in the postseason.",
       "Name a team fans remember for a surprising January run.",
       "Name an NFL club that has played the Cinderella role.",
-      "Name a team that proved a low seed can still make serious noise.",
+      "Name a team that showed an underdog can make serious playoff noise.",
     ],
     answers: ["New York Giants", "Pittsburgh Steelers", "Green Bay Packers", "Arizona Cardinals", "Tennessee Titans", "Jacksonville Jaguars", "Cincinnati Bengals", "Carolina Panthers"],
+    alsoAcceptedAnswers: ["Baltimore Ravens", "Philadelphia Eagles", "Las Vegas Raiders", "New England Patriots"],
   },
   {
     category: "culture",
@@ -130,5 +139,6 @@ export const NFL_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("nfl-fast5", [
       "Name a franchise whose visual identity has aged well.",
     ],
     answers: ["Green Bay Packers", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Chicago Bears", "Miami Dolphins", "Kansas City Chiefs"],
+    alsoAcceptedAnswers: ["Buffalo Bills", "Indianapolis Colts", "Los Angeles Chargers", "Los Angeles Rams", "Cleveland Browns", "New York Giants", "Philadelphia Eagles", "New Orleans Saints"],
   },
 ] as const);
