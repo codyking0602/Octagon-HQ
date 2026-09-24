@@ -74,11 +74,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
-      "Name an NFL franchise you associate with elite defense.",
-      "Name a team whose history makes you think defense first.",
-      "Name an NFL franchise known for scary defensive units.",
-      "Name a team that has built a major part of its identity on defense.",
-      "Name an NFL franchise you would hate to face in a defensive slugfest.",
+      {
+        prompt: "Name an NFL franchise you associate with elite defense.",
+        answers: ["Pittsburgh Steelers", "Baltimore Ravens", "Chicago Bears", "Seattle Seahawks", "San Francisco 49ers", "Denver Broncos", "Tampa Bay Buccaneers", "New York Giants"],
+        alsoAcceptedAnswers: ["Philadelphia Eagles", "Dallas Cowboys", "Minnesota Vikings", "New England Patriots", "Los Angeles Rams", "Las Vegas Raiders", "Kansas City Chiefs", "Miami Dolphins", "Cleveland Browns"],
+      },
+      {
+        prompt: "Name a team whose history makes you think defense first.",
+        answers: ["Pittsburgh Steelers", "Chicago Bears", "Baltimore Ravens", "New York Giants", "Minnesota Vikings", "Las Vegas Raiders", "Tampa Bay Buccaneers", "Philadelphia Eagles"],
+        alsoAcceptedAnswers: ["Denver Broncos", "San Francisco 49ers", "Dallas Cowboys", "Seattle Seahawks", "Los Angeles Rams", "Cleveland Browns", "Miami Dolphins", "New England Patriots"],
+      },
+      {
+        prompt: "Name an NFL franchise known for scary defensive units.",
+        answers: ["Chicago Bears", "Baltimore Ravens", "Pittsburgh Steelers", "Seattle Seahawks", "Tampa Bay Buccaneers", "New York Giants", "San Francisco 49ers", "Denver Broncos"],
+        alsoAcceptedAnswers: ["Los Angeles Rams", "Philadelphia Eagles", "Dallas Cowboys", "Minnesota Vikings", "New England Patriots", "Las Vegas Raiders", "Kansas City Chiefs", "Miami Dolphins"],
+      },
+      {
+        prompt: "Name a team that has built a major part of its identity on defense.",
+        answers: ["Pittsburgh Steelers", "Baltimore Ravens", "Chicago Bears", "New York Giants", "Tampa Bay Buccaneers", "Denver Broncos", "Seattle Seahawks", "Minnesota Vikings"],
+        alsoAcceptedAnswers: ["Philadelphia Eagles", "Las Vegas Raiders", "San Francisco 49ers", "Cleveland Browns", "Dallas Cowboys", "Los Angeles Rams", "Miami Dolphins", "New England Patriots"],
+      },
+      {
+        prompt: "Name an NFL franchise you would hate to face in a defensive slugfest.",
+        answers: ["Pittsburgh Steelers", "Baltimore Ravens", "Chicago Bears", "New York Giants", "Philadelphia Eagles", "San Francisco 49ers", "Seattle Seahawks", "Denver Broncos"],
+        alsoAcceptedAnswers: ["Minnesota Vikings", "Cleveland Browns", "Tampa Bay Buccaneers", "New England Patriots", "Los Angeles Rams", "Las Vegas Raiders", "Dallas Cowboys", "Kansas City Chiefs", "Miami Dolphins"],
+      },
     ],
     answers: ["Pittsburgh Steelers", "Baltimore Ravens", "Chicago Bears", "Seattle Seahawks", "Tampa Bay Buccaneers", "New York Giants", "Denver Broncos", "San Francisco 49ers"],
     alsoAcceptedAnswers: ["Minnesota Vikings", "Dallas Cowboys", "Las Vegas Raiders", "Philadelphia Eagles", "New England Patriots", "Los Angeles Rams", "Kansas City Chiefs", "Miami Dolphins"],
