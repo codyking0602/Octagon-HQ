@@ -274,7 +274,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     ],
     answers: [
       { name: "Tailgate", aliases: ["Tailgating"] },
-      { name: "Cheer", aliases: ["Cheering", "Chant"] },
+      { name: "Cheer", aliases: ["Cheering"] },
       { name: "Wear team colors", aliases: ["Team colors", "Wear colors", "Jersey"] },
       { name: "Sing the fight song", aliases: ["Fight song", "Sing fight song"] },
       { name: "Watch GameDay", aliases: ["GameDay", "College GameDay", "Watch College GameDay"] },
