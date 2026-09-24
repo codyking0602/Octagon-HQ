@@ -961,10 +961,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
         ]
       },
       {
-        "name": "Ken Shamrock",
-        "aliases": [
-          "Shamrock"
-        ]
+        "name": "Ken Shamrock"
       },
       {
         "name": "Dan Severn",
@@ -1011,10 +1008,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
         ]
       },
       {
-        "name": "Frank Shamrock",
-        "aliases": [
-          "Shamrock"
-        ]
+        "name": "Frank Shamrock"
       },
       {
         "name": "Bas Rutten",
@@ -1727,10 +1721,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
         ]
       },
       {
-        "name": "Ken Shamrock",
-        "aliases": [
-          "Shamrock"
-        ]
+        "name": "Ken Shamrock"
       }
     ]
   },
