@@ -1,5 +1,6 @@
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { getFootballWhoAmIUniverse, getUfcWhoAmIUniverse } from "../games/whoAmIAuthority";
+import { resolveFootballWhoAmIAuthoredSharedRound } from "./footballWhoAmIAuthoredRound";
 import { resolveUfcWhoAmIAuthoredSharedRound } from "./ufcWhoAmIAuthoredRound";
 import {
   WHO_AM_I_CLUE_LIMIT,
@@ -151,6 +152,15 @@ export function sharedWhoAmIRound(
 ): WhoAmIRound | null {
   const shared = decodeSharedRound(searchParams.get("round")?.trim() ?? "");
   if (!shared) return null;
+
+  if (expectedSport === "football" && (shared.league === "NFL" || shared.league === "CFB")) {
+    const authoredRound = resolveFootballWhoAmIAuthoredSharedRound(
+      shared.league,
+      shared.answerId,
+      shared.clueIds,
+    );
+    if (authoredRound) return authoredRound;
+  }
 
   const universe = expectedSport === "ufc"
     ? shared.league === "UFC" ? getUfcWhoAmIUniverse() : null
