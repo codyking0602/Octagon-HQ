@@ -184,7 +184,10 @@
 }
 
 .football-weekly-build-qb__slots article.is-filled {
-  background: rgba(255,255,255,.075);
+  border-color: rgba(var(--weekly-qb-rgb), .72);
+  background:
+    linear-gradient(145deg, rgba(var(--weekly-qb-rgb), .28), rgba(var(--weekly-qb-rgb), .12)),
+    rgba(255,255,255,.045);
 }
 
 .football-weekly-build-qb__slots small,
@@ -202,20 +205,22 @@
   font-size: .9rem;
 }
 
-.football-weekly-build-qb__slots article > div {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  margin: 5px 0;
+.football-weekly-build-qb__slots article.is-filled > div {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  align-items: start;
+  margin: 5px 0 0;
   min-width: 0;
 }
 
-.football-weekly-build-qb__slots article > div strong {
+.football-weekly-build-qb__slots article.is-filled > div strong {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
   font-size: .76rem;
+  line-height: 1.05;
 }
 
 .football-weekly-build-qb__mark {
