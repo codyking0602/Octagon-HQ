@@ -176,6 +176,37 @@ function footballActionHistory(context: OfficialDailyRuntimeContext & JsonRecord
   return value as JsonRecord[];
 }
 
+function dailyClientActionIds(context: OfficialDailyRuntimeContext & JsonRecord) {
+  const value = context.submissionState._client_action_ids;
+  if (value == null) return [] as string[];
+  if (!Array.isArray(value) || value.some((id) => typeof id !== "string")) {
+    throw new Error("Today’s Challenge saved client action ids are invalid.");
+  }
+  return value as string[];
+}
+
+function requestedClientActionId(body: JsonRecord) {
+  if (body.client_action_id == null) return null;
+  if (typeof body.client_action_id !== "string") {
+    throw new Error("Today’s Challenge client action id is invalid.");
+  }
+  const id = body.client_action_id.trim();
+  if (!/^[A-Za-z0-9._:-]{8,128}$/.test(id)) {
+    throw new Error("Today’s Challenge client action id is invalid.");
+  }
+  return id;
+}
+
+function submissionStateWithClientActionId(
+  submissionState: JsonRecord,
+  existingIds: readonly string[],
+  clientActionId: string | null,
+) {
+  if (!clientActionId) return submissionState;
+  const ids = [...existingIds, clientActionId].slice(-64);
+  return { ...submissionState, _client_action_ids: ids };
+}
+
 function runtimeContext(value: unknown): OfficialDailyRuntimeContext & JsonRecord {
   const row = requiredRecord(value, "Daily runtime context");
   return {
@@ -587,7 +618,7 @@ function normalizeLegacyFootballProgress(
   if (!history.length || isDailyCombo(context)) return context;
 
   const stateKeys = Object.keys(context.submissionState)
-    .filter((key) => key !== "action_history" && key !== "final_submission");
+    .filter((key) => key !== "action_history" && key !== "final_submission" && key !== "_client_action_ids");
   if (stateKeys.length) return context;
 
   let replayContext: OfficialDailyRuntimeContext = {
@@ -615,6 +646,9 @@ function normalizeLegacyFootballProgress(
     submissionState: {
       ...replayContext.submissionState,
       action_history: history,
+      ...(dailyClientActionIds(context).length
+        ? { _client_action_ids: dailyClientActionIds(context) }
+        : {}),
     },
     publicState: replayContext.publicState,
   };
@@ -740,6 +774,10 @@ Deno.serve(async (request) => {
       if (body.mode !== "advance") {
         return safeError(400, "INVALID_MODE", "Unsupported Football Today’s Challenge runtime mode.");
       }
+      const clientActionId = requestedClientActionId(body);
+      if (clientActionId && dailyClientActionIds(context).includes(clientActionId)) {
+        return json(footballPublicPayload(context));
+      }
       if (asRecord(context.official_attempt)) {
         return safeError(409, "OFFICIAL_ATTEMPT_COMPLETE", "The official Football first attempt is already complete.");
       }
@@ -763,10 +801,10 @@ Deno.serve(async (request) => {
         p_daily_challenge_id: materialized.dailyChallengeId,
         p_profile_id: profileId,
         p_expected_revision: Number(context.progress_revision),
-        p_submission_state: {
+        p_submission_state: submissionStateWithClientActionId({
           ...advanced.submissionState,
           action_history: [...history, action],
-        },
+        }, dailyClientActionIds(context), clientActionId),
         p_public_state: advanced.publicState,
       });
       if (saved.error) {
@@ -791,6 +829,10 @@ Deno.serve(async (request) => {
     if (body.mode !== "advance") {
       return safeError(400, "INVALID_MODE", "Unsupported official daily runtime mode.");
     }
+    const clientActionId = requestedClientActionId(body);
+    if (clientActionId && dailyClientActionIds(context).includes(clientActionId)) {
+      return json(publicPayload(context));
+    }
     if (asRecord(context.official_attempt)) {
       return safeError(409, "OFFICIAL_ATTEMPT_COMPLETE", "The official first attempt is already complete.");
     }
@@ -811,7 +853,11 @@ Deno.serve(async (request) => {
       p_daily_challenge_id: materialized.dailyChallengeId,
       p_profile_id: profileId,
       p_expected_revision: Number(context.progress_revision),
-      p_submission_state: advanced.submissionState,
+      p_submission_state: submissionStateWithClientActionId(
+        advanced.submissionState,
+        dailyClientActionIds(context),
+        clientActionId,
+      ),
       p_public_state: advanced.publicState,
     });
     if (saved.error) {
