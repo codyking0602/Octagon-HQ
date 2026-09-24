@@ -293,6 +293,74 @@ function matchTerms(pack: FamilyFeudPack, question: FamilyFeudQuestion) {
   return terms;
 }
 
+function personTokenTypoAllowance(value: string) {
+  if (value.length < 4) return 0;
+  if (value.length < 6) return 1;
+  if (value.length < 9) return 3;
+  return 4;
+}
+
+function resolvePersonToken(
+  rows: readonly { entityId: string; term: string; kind: "first-name" | "surname" }[],
+  value: string,
+): FamilyFeudMatchResult | null {
+  const ranked = rows
+    .map((row) => ({ ...row, distance: editDistance(value, row.term) }))
+    .filter((row) => row.distance <= personTokenTypoAllowance(value))
+    .sort((left, right) => left.distance - right.distance || left.entityId.localeCompare(right.entityId));
+  if (!ranked.length) return null;
+
+  const bestDistance = ranked[0]!.distance;
+  const best = ranked.filter((row) => row.distance === bestDistance);
+  const ids = [...new Set(best.map((row) => row.entityId))];
+  if (ids.length > 1) return { status: "ambiguous", entityIds: ids };
+  return {
+    status: "matched",
+    entityId: ids[0]!,
+    kind: bestDistance === 0 ? best[0]!.kind : "typo",
+  };
+}
+
+function matchPersonTokens(
+  pack: FamilyFeudPack,
+  question: FamilyFeudQuestion,
+  normalized: string,
+): FamilyFeudMatchResult | null {
+  const inputTokens = normalized.split(" ").filter(Boolean);
+  if (inputTokens.length < 2) return null;
+
+  const people = questionEntities(pack, question).filter((entity) => entity.kind === "person");
+  if (!people.length) return null;
+
+  const firstRows = people.map((entity) => ({
+    entityId: entity.id,
+    term: personFirstName(entity.displayName),
+    kind: "first-name" as const,
+  })).filter((row) => row.term);
+  const surnameRows = people.map((entity) => ({
+    entityId: entity.id,
+    term: personSurname(entity.displayName),
+    kind: "surname" as const,
+  })).filter((row) => row.term);
+
+  const first = resolvePersonToken(firstRows, inputTokens[0]!);
+  const last = resolvePersonToken(surnameRows, inputTokens.at(-1)!);
+
+  if (first?.status === "matched" && last?.status === "matched") {
+    if (first.entityId !== last.entityId) {
+      return { status: "ambiguous", entityIds: [first.entityId, last.entityId] };
+    }
+    return first.kind === "typo" || last.kind === "typo"
+      ? { status: "matched", entityId: first.entityId, kind: "typo" }
+      : first;
+  }
+  if (first?.status === "matched") return first;
+  if (last?.status === "matched") return last;
+  if (first?.status === "ambiguous") return first;
+  if (last?.status === "ambiguous") return last;
+  return null;
+}
+
 export function matchFamilyFeudAnswer(
   pack: FamilyFeudPack,
   question: FamilyFeudQuestion,
@@ -316,6 +384,9 @@ export function matchFamilyFeudAnswer(
           : "surname";
     return { status: "matched", entityId: ids[0]!, kind };
   }
+
+  const personTokenMatch = matchPersonTokens(pack, question, normalized);
+  if (personTokenMatch) return personTokenMatch;
 
   const allowance = typoAllowance(normalized);
   if (allowance === 0) return { status: "unrecognized" };
