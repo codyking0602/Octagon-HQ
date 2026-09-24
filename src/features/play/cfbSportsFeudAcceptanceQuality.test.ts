@@ -119,7 +119,7 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
   it("gives every audited Fast Money family at least two prompt-specific ranked orderings", () => {
     const families = new Map<string, SportsFeudAuthoredQuestion[]>();
     for (const question of CFB_FAST) {
-      const family = question.id.replace(/-\\d+$/, "");
+      const family = question.id.replace(/-\d+$/, "");
       const rows = families.get(family) ?? [];
       rows.push(question);
       families.set(family, rows);
