@@ -13,6 +13,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a division a UFC fighter can compete in.",
     ],
     answers: ["Lightweight", "Welterweight", "Middleweight", "Featherweight", "Bantamweight", "Heavyweight", "Light heavyweight", "Flyweight"],
+    alsoAcceptedAnswers: ["Strawweight", "Women's flyweight", "Women's bantamweight", "Women's featherweight"],
   },
   {
     category: "champions",
@@ -25,7 +26,17 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a lightweight whose résumé includes UFC gold.",
       "Name a champion strongly associated with the UFC lightweight division.",
     ],
-    answers: ["Khabib Nurmagomedov", "Charles Oliveira", "BJ Penn", "Islam Makhachev", "Frankie Edgar", "Benson Henderson", "Eddie Alvarez", "Rafael dos Anjos"],
+    answers: [
+      { name: "Khabib Nurmagomedov", aliases: ["Khabib"] },
+      "Charles Oliveira",
+      "BJ Penn",
+      "Islam Makhachev",
+      "Frankie Edgar",
+      "Benson Henderson",
+      "Eddie Alvarez",
+      "Rafael dos Anjos",
+    ],
+    alsoAcceptedAnswers: ["Jens Pulver", "Sean Sherk", "Anthony Pettis", "Conor McGregor", "Ilia Topuria"],
   },
   {
     category: "champions",
@@ -38,7 +49,17 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a welterweight whose résumé includes UFC gold.",
       "Name a champion strongly associated with the UFC welterweight division.",
     ],
-    answers: ["Georges St-Pierre", "Matt Hughes", "Kamaru Usman", "Tyron Woodley", "Leon Edwards", "Robbie Lawler", "Johny Hendricks", "Carlos Newton"],
+    answers: [
+      { name: "Georges St-Pierre", aliases: ["GSP"] },
+      "Matt Hughes",
+      "Kamaru Usman",
+      "Tyron Woodley",
+      "Leon Edwards",
+      "Robbie Lawler",
+      "Johny Hendricks",
+      "Carlos Newton",
+    ],
+    alsoAcceptedAnswers: ["BJ Penn", "Pat Miletich", "Sean Sherk", "Belal Muhammad"],
   },
   {
     category: "champions",
@@ -52,6 +73,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a champion strongly associated with the UFC middleweight division.",
     ],
     answers: ["Anderson Silva", "Israel Adesanya", "Chris Weidman", "Michael Bisping", "Robert Whittaker", "Alex Pereira", "Luke Rockhold", "Sean Strickland"],
+    alsoAcceptedAnswers: ["Rich Franklin", "Evan Tanner", "Dave Menne", "Dricus du Plessis"],
   },
   {
     category: "champions",
@@ -64,7 +86,17 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a heavyweight whose résumé includes UFC gold.",
       "Name a champion strongly associated with the UFC heavyweight division.",
     ],
-    answers: ["Stipe Miocic", "Cain Velasquez", "Francis Ngannou", "Daniel Cormier", "Randy Couture", "Junior dos Santos", "Brock Lesnar", "Fabricio Werdum"],
+    answers: [
+      { name: "Stipe Miocic", aliases: ["Stipe"] },
+      "Cain Velasquez",
+      "Francis Ngannou",
+      { name: "Daniel Cormier", aliases: ["DC"] },
+      "Randy Couture",
+      "Junior dos Santos",
+      "Brock Lesnar",
+      "Fabricio Werdum",
+    ],
+    alsoAcceptedAnswers: ["Frank Mir", "Andrei Arlovski", "Tim Sylvia", "Josh Barnett", "Antonio Rodrigo Nogueira", "Tom Aspinall"],
   },
   {
     category: "champions",
@@ -78,6 +110,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a multi-division UFC champion.",
     ],
     answers: ["Conor McGregor", "Daniel Cormier", "Amanda Nunes", "Henry Cejudo", "BJ Penn", "Randy Couture", "Jon Jones", "Alex Pereira"],
+    alsoAcceptedAnswers: ["Georges St-Pierre", "Ilia Topuria"],
   },
   {
     category: "fighters",
@@ -91,6 +124,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a UFC knockout artist almost every MMA fan knows.",
     ],
     answers: ["Francis Ngannou", "Alex Pereira", "Derrick Lewis", "Chuck Liddell", "Dan Henderson", "Wanderlei Silva", "Jiri Prochazka", "Justin Gaethje"],
+    alsoAcceptedAnswers: ["Anthony Johnson", "Mark Hunt", "Mirko Cro Cop", "Quinton Jackson", "Sergei Pavlovich", "Tai Tuivasa"],
   },
   {
     category: "fighters",
@@ -104,6 +138,14 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a submission specialist serious MMA fans know.",
     ],
     answers: ["Charles Oliveira", "Demian Maia", "Frank Mir", "BJ Penn", "Nate Diaz", "Mackenzie Dern", "Rodolfo Vieira", "Tony Ferguson"],
+    alsoAcceptedAnswers: [
+      { name: "Khabib Nurmagomedov", aliases: ["Khabib"] },
+      "Jim Miller",
+      "Islam Makhachev",
+      "Brian Ortega",
+      "Royce Gracie",
+      "Fabricio Werdum",
+    ],
   },
   {
     category: "fighters",
@@ -117,6 +159,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a wrestler who turned elite grappling into UFC success.",
     ],
     answers: ["Khabib Nurmagomedov", "Georges St-Pierre", "Daniel Cormier", "Kamaru Usman", "Islam Makhachev", "Henry Cejudo", "Merab Dvalishvili", "Chael Sonnen"],
+    alsoAcceptedAnswers: ["Matt Hughes", "Randy Couture", "Frankie Edgar", "Josh Koscheck", "Jon Fitch", "Chad Mendes"],
   },
   {
     category: "fighters",
@@ -130,5 +173,6 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a striker whose UFC style looked especially polished.",
     ],
     answers: ["Anderson Silva", "Israel Adesanya", "Alex Pereira", "Max Holloway", "Jose Aldo", "Conor McGregor", "Stephen Thompson", "Joanna Jedrzejczyk"],
+    alsoAcceptedAnswers: ["Dustin Poirier", "Alexander Volkanovski", "Justin Gaethje", "Valentina Shevchenko", "Petr Yan", "Ilia Topuria"],
   },
 ] as const);
