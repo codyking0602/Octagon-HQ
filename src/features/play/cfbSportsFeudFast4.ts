@@ -6,11 +6,31 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     entityKind: "other",
     collisionGroup: "positions",
     prompts: [
-      "Name a college football position other than quarterback.",
-      "Name a position you can play on a football field.",
-      "Name a college football position that produces stars.",
-      "Name a football position recruits specialize in.",
-      "Name a position group coaches talk about constantly.",
+      {
+        prompt: "Name a college football position other than quarterback.",
+        answers: ["Running back","Wide receiver","Linebacker","Cornerback","Defensive end","Safety","Tight end","Offensive tackle"],
+        alsoAcceptedAnswers: ["Guard","Center","Defensive tackle","Kicker","Punter","Long snapper","Fullback"],
+      },
+      {
+        prompt: "Name a football position other than quarterback.",
+        answers: ["Wide receiver","Running back","Linebacker","Cornerback","Safety","Tight end","Defensive end","Kicker"],
+        alsoAcceptedAnswers: ["Offensive tackle","Guard","Center","Defensive tackle","Punter","Long snapper","Fullback"],
+      },
+      {
+        prompt: "Name a college football position besides quarterback that produces stars.",
+        answers: ["Wide receiver","Running back","Defensive end","Cornerback","Linebacker","Tight end","Safety","Kicker"],
+        alsoAcceptedAnswers: ["Offensive tackle","Guard","Center","Defensive tackle","Punter","Long snapper","Fullback"],
+      },
+      {
+        prompt: "Name a non-quarterback football position recruits specialize in.",
+        answers: ["Wide receiver","Cornerback","Linebacker","Defensive end","Running back","Offensive tackle","Safety","Tight end"],
+        alsoAcceptedAnswers: ["Guard","Center","Defensive tackle","Kicker","Punter","Long snapper","Fullback"],
+      },
+      {
+        prompt: "Name a position group besides quarterbacks that coaches talk about constantly.",
+        answers: ["Offensive tackle","Defensive end","Linebacker","Wide receiver","Cornerback","Running back","Safety","Tight end"],
+        alsoAcceptedAnswers: ["Guard","Center","Defensive tackle","Kicker","Punter","Long snapper","Fullback"],
+      },
     ],
     answers: [
       { name: "Running back", aliases: ["RB"] },
@@ -37,11 +57,31 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     entityKind: "other",
     collisionGroup: "scoring",
     prompts: [
-      "Name a way to score points in college football.",
-      "Name something that can put points on the scoreboard.",
-      "Name a scoring play you can see on a Saturday.",
-      "Name a way an offense or special teams unit can score.",
-      "Name something that changes the score in a football game.",
+      {
+        prompt: "Name a way to score points in college football.",
+        answers: ["Touchdown","Field goal","Extra point","Two-point conversion","Safety","Pick-six","Kick return touchdown","Punt return touchdown"],
+        alsoAcceptedAnswers: ["Fumble return touchdown","Blocked kick return touchdown"],
+      },
+      {
+        prompt: "Name something that can put points on the scoreboard.",
+        answers: ["Touchdown","Field goal","Extra point","Two-point conversion","Safety","Pick-six","Fumble return touchdown","Kick return touchdown"],
+        alsoAcceptedAnswers: ["Punt return touchdown","Blocked kick return touchdown"],
+      },
+      {
+        prompt: "Name a scoring play you can see on a Saturday.",
+        answers: ["Touchdown","Field goal","Extra point","Two-point conversion","Pick-six","Safety","Kick return touchdown","Punt return touchdown"],
+        alsoAcceptedAnswers: ["Fumble return touchdown","Blocked kick return touchdown"],
+      },
+      {
+        prompt: "Name a way an offense, defense, or special teams unit can score.",
+        answers: ["Touchdown","Field goal","Extra point","Two-point conversion","Kick return touchdown","Punt return touchdown","Pick-six","Safety"],
+        alsoAcceptedAnswers: ["Fumble return touchdown","Blocked kick return touchdown"],
+      },
+      {
+        prompt: "Name something that changes the score in a football game.",
+        answers: ["Touchdown","Field goal","Extra point","Two-point conversion","Safety","Pick-six","Fumble return touchdown","Kick return touchdown"],
+        alsoAcceptedAnswers: ["Punt return touchdown","Blocked kick return touchdown"],
+      },
     ],
     answers: [
       { name: "Touchdown", aliases: ["TD"] },
@@ -63,11 +103,31 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     entityKind: "other",
     collisionGroup: "penalties",
     prompts: [
-      "Name a common football penalty.",
-      "Name a flag college football fans complain about.",
-      "Name a penalty an offense can commit.",
-      "Name a penalty that can ruin a big play.",
-      "Name a football penalty almost every fan understands.",
+      {
+        prompt: "Name a common football penalty.",
+        answers: ["Holding","False start","Pass interference","Offsides","Personal foul","Targeting","Delay of game","Illegal formation"],
+        alsoAcceptedAnswers: ["Facemask","Unsportsmanlike conduct","Roughing the passer","Intentional grounding","Illegal block in the back","Ineligible receiver downfield","Illegal substitution"],
+      },
+      {
+        prompt: "Name a flag college football fans complain about.",
+        answers: ["Targeting","Pass interference","Holding","Roughing the passer","Personal foul","Offsides","Unsportsmanlike conduct","Facemask"],
+        alsoAcceptedAnswers: ["False start","Delay of game","Illegal formation","Intentional grounding","Illegal block in the back","Ineligible receiver downfield","Illegal substitution"],
+      },
+      {
+        prompt: "Name a penalty an offense can commit.",
+        answers: ["Holding","False start","Delay of game","Illegal formation","Intentional grounding","Illegal block in the back","Ineligible receiver downfield","Illegal substitution"],
+        alsoAcceptedAnswers: ["Personal foul","Unsportsmanlike conduct","Facemask","Pass interference"],
+      },
+      {
+        prompt: "Name a penalty that can ruin a big play.",
+        answers: ["Holding","Pass interference","Illegal block in the back","Personal foul","Targeting","Ineligible receiver downfield","Illegal formation","Facemask"],
+        alsoAcceptedAnswers: ["False start","Offsides","Unsportsmanlike conduct","Roughing the passer","Intentional grounding","Delay of game","Illegal substitution"],
+      },
+      {
+        prompt: "Name a football penalty almost every fan understands.",
+        answers: ["Holding","False start","Pass interference","Offsides","Facemask","Targeting","Delay of game","Roughing the passer"],
+        alsoAcceptedAnswers: ["Personal foul","Unsportsmanlike conduct","Intentional grounding","Illegal block in the back","Ineligible receiver downfield","Illegal formation","Illegal substitution"],
+      },
     ],
     answers: [
       "Holding",
@@ -94,11 +154,31 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     entityKind: "other",
     collisionGroup: "stats",
     prompts: [
-      "Name a quarterback statistic.",
-      "Name a number fans use to judge a quarterback.",
-      "Name a quarterback stat shown in a broadcast box score.",
-      "Name a passing stat people compare after a game.",
-      "Name a stat that can describe how a quarterback played.",
+      {
+        prompt: "Name a quarterback statistic.",
+        answers: ["Passing yards","Passing touchdowns","Completion percentage","Interceptions","Pass attempts","Completions","Yards per attempt","Passer rating"],
+        alsoAcceptedAnswers: ["QBR","Rushing yards","Rushing touchdowns","Sacks taken","Turnovers"],
+      },
+      {
+        prompt: "Name a number fans use to judge a quarterback.",
+        answers: ["Passing yards","Passing touchdowns","Interceptions","Completion percentage","Passer rating","QBR","Yards per attempt","Rushing yards"],
+        alsoAcceptedAnswers: ["Pass attempts","Completions","Rushing touchdowns","Sacks taken","Turnovers"],
+      },
+      {
+        prompt: "Name a quarterback stat shown in a broadcast box score.",
+        answers: ["Passing yards","Passing touchdowns","Completions","Pass attempts","Interceptions","Completion percentage","Rushing yards","Rushing touchdowns"],
+        alsoAcceptedAnswers: ["Yards per attempt","Passer rating","QBR","Sacks taken","Turnovers"],
+      },
+      {
+        prompt: "Name a passing stat people compare after a game.",
+        answers: ["Passing yards","Passing touchdowns","Interceptions","Completion percentage","Completions","Pass attempts","Yards per attempt","Passer rating"],
+        alsoAcceptedAnswers: ["QBR","Sacks taken"],
+      },
+      {
+        prompt: "Name a stat that can describe how a quarterback played.",
+        answers: ["Passing yards","Passing touchdowns","Interceptions","Completion percentage","Passer rating","QBR","Rushing yards","Turnovers"],
+        alsoAcceptedAnswers: ["Pass attempts","Completions","Yards per attempt","Rushing touchdowns","Sacks taken"],
+      },
     ],
     answers: [
       { name: "Passing yards", aliases: ["Pass yards"] },
@@ -123,11 +203,31 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     entityKind: "other",
     collisionGroup: "stats",
     prompts: [
-      "Name a defensive football statistic.",
-      "Name a stat that can make a defender stand out.",
-      "Name a defensive number shown in a box score.",
-      "Name a stat scouts notice for a college defender.",
-      "Name a defensive stat fans brag about.",
+      {
+        prompt: "Name a defensive football statistic.",
+        answers: ["Tackles","Sacks","Interceptions","Tackles for loss","Pass breakups","Forced fumbles","Fumble recoveries","Quarterback hurries"],
+        alsoAcceptedAnswers: ["Quarterback hits","Defensive touchdowns","Blocked kicks","Solo tackles","Assisted tackles"],
+      },
+      {
+        prompt: "Name a stat that can make a defender stand out.",
+        answers: ["Sacks","Interceptions","Tackles for loss","Forced fumbles","Pass breakups","Tackles","Defensive touchdowns","Quarterback hurries"],
+        alsoAcceptedAnswers: ["Fumble recoveries","Quarterback hits","Blocked kicks","Solo tackles","Assisted tackles"],
+      },
+      {
+        prompt: "Name a defensive number shown in a box score.",
+        answers: ["Tackles","Sacks","Interceptions","Tackles for loss","Pass breakups","Forced fumbles","Fumble recoveries","Solo tackles"],
+        alsoAcceptedAnswers: ["Quarterback hurries","Quarterback hits","Defensive touchdowns","Blocked kicks","Assisted tackles"],
+      },
+      {
+        prompt: "Name a stat scouts notice for a college defender.",
+        answers: ["Tackles for loss","Sacks","Interceptions","Pass breakups","Forced fumbles","Quarterback hurries","Tackles","Quarterback hits"],
+        alsoAcceptedAnswers: ["Fumble recoveries","Defensive touchdowns","Blocked kicks","Solo tackles","Assisted tackles"],
+      },
+      {
+        prompt: "Name a defensive stat fans brag about.",
+        answers: ["Sacks","Interceptions","Tackles","Tackles for loss","Forced fumbles","Defensive touchdowns","Pass breakups","Quarterback hurries"],
+        alsoAcceptedAnswers: ["Fumble recoveries","Quarterback hits","Blocked kicks","Solo tackles","Assisted tackles"],
+      },
     ],
     answers: [
       "Tackles",
@@ -153,10 +253,26 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     collisionGroup: "offense",
     prompts: [
       "Name an offensive concept you hear in college football.",
-      "Name a football play concept an offense might build around.",
-      "Name an offensive idea commentators mention during games.",
-      "Name a concept a coordinator might use to stress a defense.",
-      "Name an offensive term college football fans recognize.",
+      {
+        prompt: "Name a football play concept an offense might build around.",
+        answers: ["RPO","Read option","Inside zone","Outside zone","Air Raid","Spread offense","Power run","Play-action"],
+        alsoAcceptedAnswers: ["Screen pass","Four verticals","Mesh","Zone read","Counter","Bootleg","Jet sweep"],
+      },
+      {
+        prompt: "Name an offensive idea commentators mention during games.",
+        answers: ["RPO","Play-action","Read option","Screen pass","Air Raid","Spread offense","Four verticals","Zone read"],
+        alsoAcceptedAnswers: ["Mesh","Counter","Inside zone","Outside zone","Power run","Bootleg","Jet sweep"],
+      },
+      {
+        prompt: "Name a concept a coordinator might use to stress a defense.",
+        answers: ["RPO","Play-action","Read option","Screen pass","Mesh","Four verticals","Jet sweep","Bootleg"],
+        alsoAcceptedAnswers: ["Zone read","Counter","Air Raid","Spread offense","Inside zone","Outside zone","Power run"],
+      },
+      {
+        prompt: "Name an offensive term college football fans recognize.",
+        answers: ["RPO","Play-action","Read option","Screen pass","Air Raid","Spread offense","Four verticals","Zone read"],
+        alsoAcceptedAnswers: ["Mesh","Counter","Inside zone","Outside zone","Power run","Bootleg","Jet sweep"],
+      },
     ],
     answers: [
       { name: "RPO", aliases: ["Run-pass option", "Run pass option"] },
@@ -184,10 +300,26 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     collisionGroup: "defense",
     prompts: [
       "Name a defensive coverage, pressure, or concept.",
-      "Name a defensive call a college team might use.",
-      "Name a defensive term commentators mention during games.",
-      "Name a defensive look a quarterback has to identify before the snap.",
-      "Name a defensive concept college football fans hear all the time.",
+      {
+        prompt: "Name a defensive call a college team might use.",
+        answers: ["Blitz","Cover 3","Cover 2","Man coverage","Cover 1","Quarters","Zone blitz","Cover 0"],
+        alsoAcceptedAnswers: ["Cover 6","Tampa 2","Prevent defense","Nickel","Dime","Spy","Press coverage"],
+      },
+      {
+        prompt: "Name a defensive term commentators mention during games.",
+        answers: ["Blitz","Man coverage","Cover 2","Cover 3","Zone blitz","Nickel","Dime","Spy"],
+        alsoAcceptedAnswers: ["Cover 1","Quarters","Cover 0","Cover 6","Tampa 2","Prevent defense","Press coverage"],
+      },
+      {
+        prompt: "Name a defensive look a quarterback has to identify before the snap.",
+        answers: ["Cover 0","Cover 1","Cover 2","Cover 3","Quarters","Blitz","Man coverage","Press coverage"],
+        alsoAcceptedAnswers: ["Zone blitz","Cover 6","Tampa 2","Prevent defense","Nickel","Dime","Spy"],
+      },
+      {
+        prompt: "Name a defensive concept college football fans hear all the time.",
+        answers: ["Blitz","Man coverage","Cover 2","Cover 3","Cover 1","Quarters","Zone blitz","Nickel"],
+        alsoAcceptedAnswers: ["Cover 0","Cover 6","Tampa 2","Prevent defense","Dime","Spy","Press coverage"],
+      },
     ],
     answers: [
       { name: "Cover 2", aliases: ["Cover two"] },
@@ -215,10 +347,26 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     collisionGroup: "recruiting",
     prompts: [
       "Name a term associated with college football recruiting.",
-      "Name something fans hear during recruiting season.",
-      "Name a word coaches and fans use when talking about recruits.",
-      "Name something tied to signing a college football prospect.",
-      "Name a recruiting term a serious college football fan knows.",
+      {
+        prompt: "Name something fans hear during recruiting season.",
+        answers: ["Five-star","Commitment","Signing day","Transfer portal","Official visit","Recruiting class","Decommitment","Crystal Ball"],
+        alsoAcceptedAnswers: ["Early enrollee","Flip","Preferred walk-on","NIL","Early signing period","Verbal commitment"],
+      },
+      {
+        prompt: "Name a word coaches and fans use when talking about recruits.",
+        answers: ["Five-star","Commitment","Official visit","Decommitment","Flip","Crystal Ball","Recruiting class","Verbal commitment"],
+        alsoAcceptedAnswers: ["Signing day","Transfer portal","Early enrollee","Preferred walk-on","NIL","Early signing period"],
+      },
+      {
+        prompt: "Name something tied to signing a college football prospect.",
+        answers: ["Signing day","Commitment","Five-star","Official visit","Recruiting class","Early signing period","Verbal commitment","Decommitment"],
+        alsoAcceptedAnswers: ["Transfer portal","Early enrollee","Crystal Ball","Flip","Preferred walk-on","NIL"],
+      },
+      {
+        prompt: "Name a recruiting term a serious college football fan knows.",
+        answers: ["Five-star","Commitment","Signing day","Official visit","Crystal Ball","Flip","Decommitment","Preferred walk-on"],
+        alsoAcceptedAnswers: ["Transfer portal","Recruiting class","Early enrollee","NIL","Early signing period","Verbal commitment"],
+      },
     ],
     answers: [
       { name: "Five-star", aliases: ["5-star", "5 star", "Five star"] },
@@ -244,11 +392,31 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     entityKind: "other",
     collisionGroup: "postseason",
     prompts: [
-      "Name a stage or game type in the college football postseason.",
-      "Name a round or game teams can reach after the regular season.",
-      "Name a postseason stage in modern college football.",
-      "Name a game type that can appear on a college football postseason path.",
-      "Name a college football postseason round or game.",
+      {
+        prompt: "Name a stage or game type in the college football postseason.",
+        answers: ["Bowl game","Conference championship","CFP first round","CFP quarterfinal","CFP semifinal","National championship","New Year's Six","College Football Playoff"],
+        alsoAcceptedAnswers: [],
+      },
+      {
+        prompt: "Name a round or game teams can reach after the regular season.",
+        answers: ["Bowl game","Conference championship","CFP first round","CFP quarterfinal","CFP semifinal","National championship","New Year's Six","College Football Playoff"],
+        alsoAcceptedAnswers: [],
+      },
+      {
+        prompt: "Name a postseason stage in modern college football.",
+        answers: ["College Football Playoff","CFP first round","CFP quarterfinal","CFP semifinal","National championship","Bowl game","Conference championship","New Year's Six"],
+        alsoAcceptedAnswers: [],
+      },
+      {
+        prompt: "Name a game type that can appear on a college football postseason path.",
+        answers: ["Bowl game","Conference championship","CFP first round","CFP quarterfinal","CFP semifinal","National championship","New Year's Six","College Football Playoff"],
+        alsoAcceptedAnswers: [],
+      },
+      {
+        prompt: "Name a college football postseason round or game.",
+        answers: ["Bowl game","CFP first round","CFP quarterfinal","CFP semifinal","National championship","Conference championship","New Year's Six","College Football Playoff"],
+        alsoAcceptedAnswers: [],
+      },
     ],
     answers: [
       { name: "Bowl game", aliases: ["Bowl"] },
@@ -266,11 +434,31 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     entityKind: "other",
     collisionGroup: "culture",
     prompts: [
-      "Name something college football fans commonly do on game day.",
-      "Name a common Saturday activity for college football fans.",
-      "Name something fans often do around a big college football game.",
-      "Name a familiar college football game-day activity.",
-      "Name something fans commonly do on a college football Saturday.",
+      {
+        prompt: "Name something college football fans commonly do on game day.",
+        answers: ["Tailgate","Cheer",{ name: "Wear team colors", aliases: ["Team colors", "Wear colors", "Jersey"] },"Sing the fight song","Watch GameDay","Trash talk","Storm the field","Cookout"],
+        alsoAcceptedAnswers: ["Attend the game","Watch party","Watch with friends","Chant","Wave a flag"],
+      },
+      {
+        prompt: "Name a common Saturday activity for college football fans.",
+        answers: ["Tailgate","Watch GameDay","Attend the game","Watch party","Wear team colors","Cheer","Cookout","Watch with friends"],
+        alsoAcceptedAnswers: ["Sing the fight song","Trash talk","Storm the field","Chant","Wave a flag"],
+      },
+      {
+        prompt: "Name something fans often do around a big college football game.",
+        answers: ["Tailgate","Attend the game","Wear team colors","Cheer","Trash talk","Watch party","Cookout","Chant"],
+        alsoAcceptedAnswers: ["Sing the fight song","Watch GameDay","Storm the field","Watch with friends","Wave a flag"],
+      },
+      {
+        prompt: "Name a familiar college football game-day activity.",
+        answers: ["Tailgate","Cheer","Wear team colors","Attend the game","Watch GameDay","Sing the fight song","Watch party","Cookout"],
+        alsoAcceptedAnswers: ["Trash talk","Storm the field","Watch with friends","Chant","Wave a flag"],
+      },
+      {
+        prompt: "Name something fans commonly do on a college football Saturday.",
+        answers: ["Tailgate","Watch GameDay","Attend the game","Cheer","Wear team colors","Watch party","Cookout","Trash talk"],
+        alsoAcceptedAnswers: ["Sing the fight song","Storm the field","Watch with friends","Chant","Wave a flag"],
+      },
     ],
     answers: [
       { name: "Tailgate", aliases: ["Tailgating"] },
