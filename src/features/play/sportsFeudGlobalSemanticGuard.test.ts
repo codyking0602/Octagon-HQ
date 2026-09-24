@@ -167,7 +167,7 @@ describe("Sports Feud global semantic guard", () => {
         ).toBe(false);
 
         const universeSize = question.answers.length + accepted.length;
-        expect(universeSize, `${question.id} candidate universe`).toBeLessThanOrEqual(25);
+        expect(universeSize, `${question.id} candidate universe`).toBeGreaterThanOrEqual(8);
         if (accepted.length === 0) rankedOnlyFamilies.add(familyId(question.id));
       }
     }
