@@ -59,7 +59,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Johny Hendricks",
       "Carlos Newton",
     ],
-    alsoAcceptedAnswers: ["BJ Penn", "Pat Miletich", "Sean Sherk", "Belal Muhammad"],
+    alsoAcceptedAnswers: ["BJ Penn", "Pat Miletich", "Matt Serra", "Belal Muhammad", "Jack Della Maddalena", "Islam Makhachev"],
   },
   {
     category: "champions",
@@ -73,7 +73,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a champion strongly associated with the UFC middleweight division.",
     ],
     answers: ["Anderson Silva", "Israel Adesanya", "Chris Weidman", "Michael Bisping", "Robert Whittaker", "Alex Pereira", "Luke Rockhold", "Sean Strickland"],
-    alsoAcceptedAnswers: ["Rich Franklin", "Evan Tanner", "Dave Menne", "Dricus du Plessis"],
+    alsoAcceptedAnswers: ["Rich Franklin", "Evan Tanner", "Dave Menne", "Murilo Bustamante", "Georges St-Pierre", "Dricus du Plessis", "Khamzat Chimaev"],
   },
   {
     category: "champions",
@@ -96,7 +96,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Brock Lesnar",
       "Fabricio Werdum",
     ],
-    alsoAcceptedAnswers: ["Frank Mir", "Andrei Arlovski", "Tim Sylvia", "Josh Barnett", "Antonio Rodrigo Nogueira", "Tom Aspinall"],
+    alsoAcceptedAnswers: ["Frank Mir", "Andrei Arlovski", "Tim Sylvia", "Josh Barnett", "Antonio Rodrigo Nogueira", "Tom Aspinall", "Bas Rutten", "Kevin Randleman", "Mark Coleman", "Ricco Rodriguez", "Maurice Smith"],
   },
   {
     category: "champions",
