@@ -13,6 +13,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name a champion whose reign became a major part of UFC history.",
     ],
     answers: ["Anderson Silva", "Georges St-Pierre", "Demetrious Johnson", "Jon Jones", "Jose Aldo", "Amanda Nunes", "Valentina Shevchenko", "Israel Adesanya"],
+    alsoAcceptedAnswers: ["Khabib Nurmagomedov", "Alexander Volkanovski", "Kamaru Usman", "Matt Hughes", "Ronda Rousey"],
   },
   {
     category: "ufc-history",
@@ -26,6 +27,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name a TUF alum MMA fans still remember.",
     ],
     answers: ["Forrest Griffin", "Stephan Bonnar", "Michael Bisping", "Rashad Evans", "Tony Ferguson", "Nate Diaz", "Matt Serra", "Robert Whittaker"],
+    alsoAcceptedAnswers: ["Diego Sanchez", "Kenny Florian", "Gray Maynard", "Kelvin Gastelum", "Rose Namajunas", "Carla Esparza", "Julianna Pena"],
   },
   {
     category: "rivalries",
@@ -39,6 +41,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name two fighters whose rivalry became part of UFC history.",
     ],
     answers: ["McGregor-Diaz", "Jones-Cormier", "Liddell-Ortiz", "Silva-Sonnen", "McGregor-Nurmagomedov", "Hughes-St-Pierre", "Couture-Liddell", "Adesanya-Pereira"],
+    alsoAcceptedAnswers: ["Ortiz-Shamrock", "McGregor-Aldo", "Nunes-Shevchenko", "Usman-Covington", "Poirier-McGregor"],
   },
   {
     category: "fights",
@@ -52,6 +55,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name a UFC matchup people still talk about years later.",
     ],
     answers: ["Griffin-Bonnar", "Jones-Gustafsson 1", "Lawler-MacDonald 2", "Henderson-Shogun 1", "Adesanya-Gastelum", "Zhang-Jedrzejczyk 1", "McGregor-Diaz 2", "Poirier-Hooker"],
+    alsoAcceptedAnswers: ["Silva-Sonnen 1", "Edgar-Maynard 2", "Hunt-Silva", "Usman-Covington 1", "Gaethje-Chandler", "Holloway-Kattar"],
   },
   {
     category: "ufc-history",
@@ -65,6 +69,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name a pioneer you would expect in a conversation about early UFC history.",
     ],
     answers: ["Royce Gracie", "Ken Shamrock", "Dan Severn", "Mark Coleman", "Tank Abbott", "Don Frye", "Randy Couture", "Pat Miletich"],
+    alsoAcceptedAnswers: ["Tito Ortiz", "Frank Shamrock", "Bas Rutten", "Vitor Belfort", "Oleg Taktarov", "Marco Ruas"],
   },
   {
     category: "mma-history",
@@ -78,6 +83,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name a former PRIDE standout UFC fans recognize.",
     ],
     answers: ["Wanderlei Silva", "Mauricio Rua", "Dan Henderson", "Mirko Cro Cop", "Quinton Jackson", "Antonio Rodrigo Nogueira", "Anderson Silva", "Fabricio Werdum"],
+    alsoAcceptedAnswers: ["Mark Hunt", "Alistair Overeem", "Nick Diaz", "Kazushi Sakuraba", "Ryo Chonan"],
   },
   {
     category: "ufc-history",
@@ -91,6 +97,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name a fighter whose career earned an individual UFC Hall of Fame induction.",
     ],
     answers: ["Royce Gracie", "Chuck Liddell", "Randy Couture", "Georges St-Pierre", "Khabib Nurmagomedov", "BJ Penn", "Michael Bisping", "Ronda Rousey"],
+    alsoAcceptedAnswers: ["Matt Hughes", "Tito Ortiz", "Urijah Faber", "Rashad Evans", "Jose Aldo", "Anderson Silva", "Frankie Edgar"],
   },
   {
     category: "broadcast",
@@ -99,11 +106,12 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
     prompts: [
       "Name a UFC commentator or analyst fans recognize.",
       "Name a voice you associate with UFC broadcasts.",
-      "Name someone you might hear calling or analyzing a UFC fight.",
+      "Name someone who has called or analyzed UFC fights.",
       "Name a UFC broadcaster whose voice is familiar to MMA fans.",
       "Name a commentator or analyst strongly connected with UFC coverage.",
     ],
     answers: ["Joe Rogan", "Jon Anik", "Daniel Cormier", "Michael Bisping", "Dominick Cruz", "Paul Felder", "Laura Sanko", "Brendan Fitzgerald"],
+    alsoAcceptedAnswers: ["Din Thomas", "Anthony Smith", "Karyn Bryant", "Kenny Florian"],
   },
   {
     category: "officials",
@@ -114,20 +122,21 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name an MMA referee you have seen inside the Octagon.",
       "Name a referee associated with major UFC fights.",
       "Name an official serious UFC fans know by name.",
-      "Name a referee you might hear introduced before a UFC main event.",
+      "Name a referee whose name UFC fans have heard before a major fight.",
     ],
     answers: ["Herb Dean", "John McCarthy", "Marc Goddard", "Jason Herzog", "Dan Miragliotta", "Keith Peterson", "Mike Beltran", "Kevin MacDonald"],
+    alsoAcceptedAnswers: ["Mario Yamasaki", "Steve Mazzagatti", "Josh Rosenthal", "Yves Lavigne"],
   },
   {
     category: "venues",
     entityKind: "other",
     collisionGroup: "venues",
     prompts: [
-      "Name a UFC arena or event location fans know.",
-      "Name a UFC venue you could picture on a major card.",
-      "Name an arena or event site tied to memorable UFC nights.",
-      "Name a familiar UFC fight location.",
-      "Name a place strongly associated with major UFC events.",
+      "Name a UFC arena, host city, or named event site fans know.",
+      "Name a UFC arena, host city, or named event site you could picture on a major card.",
+      "Name an arena, host city, or named event site tied to memorable UFC nights.",
+      "Name a familiar UFC arena, host city, or named event site.",
+      "Name an arena, host city, or named event site strongly associated with major UFC events.",
     ],
     answers: [
       { name: "T-Mobile Arena", aliases: ["T-Mobile", "T Mobile", "T Mobile Arena"] },
@@ -139,5 +148,6 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       { name: "Honda Center", aliases: ["Honda"] },
       { name: "Etihad Arena", aliases: ["Etihad"] },
     ],
+    alsoAcceptedAnswers: ["Las Vegas", "Abu Dhabi", "London", "Anaheim"],
   },
 ] as const);

@@ -13,6 +13,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a fighter you would expect in a UFC Mount Rushmore debate.",
     ],
     answers: ["Jon Jones", "Georges St-Pierre", "Anderson Silva", "Demetrious Johnson", "Jose Aldo", "Khabib Nurmagomedov", "Amanda Nunes", "Conor McGregor"],
+    alsoAcceptedAnswers: ["Ronda Rousey", "Stipe Miocic", "Daniel Cormier", "Randy Couture", "Matt Hughes", "Alexander Volkanovski", "Israel Adesanya"],
   },
   {
     category: "fighter-style",
@@ -26,6 +27,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a UFC knockout artist almost every MMA fan recognizes.",
     ],
     answers: ["Francis Ngannou", "Alex Pereira", "Derrick Lewis", "Chuck Liddell", "Wanderlei Silva", "Dan Henderson", "Justin Gaethje", "Jiri Prochazka"],
+    alsoAcceptedAnswers: ["Anthony Johnson", "Mark Hunt", "Mirko Cro Cop", "Quinton Jackson", "Sergei Pavlovich", "Tai Tuivasa"],
   },
   {
     category: "fighter-style",
@@ -39,6 +41,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a submission specialist MMA fans recognize quickly.",
     ],
     answers: ["Charles Oliveira", "Demian Maia", "Frank Mir", "BJ Penn", "Nate Diaz", "Mackenzie Dern", "Rodolfo Vieira", "Tony Ferguson"],
+    alsoAcceptedAnswers: ["Khabib Nurmagomedov", "Jim Miller", "Islam Makhachev", "Brian Ortega", "Royce Gracie", "Fabricio Werdum"],
   },
   {
     category: "fighter-style",
@@ -52,6 +55,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a wrestler who turned elite grappling into UFC success.",
     ],
     answers: ["Khabib Nurmagomedov", "Georges St-Pierre", "Daniel Cormier", "Kamaru Usman", "Islam Makhachev", "Henry Cejudo", "Merab Dvalishvili", "Chael Sonnen"],
+    alsoAcceptedAnswers: ["Matt Hughes", "Randy Couture", "Frankie Edgar", "Josh Koscheck", "Jon Fitch", "Chad Mendes"],
   },
   {
     category: "fighter-style",
@@ -65,6 +69,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a striker whose UFC style looked especially polished.",
     ],
     answers: ["Anderson Silva", "Israel Adesanya", "Alex Pereira", "Max Holloway", "Jose Aldo", "Conor McGregor", "Stephen Thompson", "Joanna Jedrzejczyk"],
+    alsoAcceptedAnswers: ["Dustin Poirier", "Alexander Volkanovski", "Justin Gaethje", "Valentina Shevchenko", "Petr Yan", "Ilia Topuria"],
   },
   {
     category: "fighter-personality",
@@ -78,6 +83,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a UFC star who knew how to create attention outside the cage.",
     ],
     answers: ["Conor McGregor", "Chael Sonnen", "Nate Diaz", "Michael Bisping", "Colby Covington", "Sean Strickland", "Kevin Holland", "Derrick Lewis"],
+    alsoAcceptedAnswers: ["Jorge Masvidal", "Tito Ortiz", "Quinton Jackson", "Paddy Pimblett", "Sean O'Malley", "Tony Ferguson"],
   },
   {
     category: "fighter-legacy",
@@ -91,6 +97,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a champion who ruled a division for a meaningful stretch.",
     ],
     answers: ["Anderson Silva", "Georges St-Pierre", "Demetrious Johnson", "Jon Jones", "Jose Aldo", "Amanda Nunes", "Valentina Shevchenko", "Israel Adesanya"],
+    alsoAcceptedAnswers: ["Khabib Nurmagomedov", "Alexander Volkanovski", "Kamaru Usman", "Matt Hughes", "Ronda Rousey"],
   },
   {
     category: "division-identity",
@@ -104,6 +111,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a lightweight you would expect in a division history conversation.",
     ],
     answers: ["Khabib Nurmagomedov", "Charles Oliveira", "Dustin Poirier", "Justin Gaethje", "BJ Penn", "Islam Makhachev", "Tony Ferguson", "Eddie Alvarez"],
+    alsoAcceptedAnswers: ["Conor McGregor", "Frankie Edgar", "Benson Henderson", "Rafael dos Anjos", "Donald Cerrone", "Nate Diaz"],
   },
   {
     category: "division-identity",
@@ -117,6 +125,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a welterweight you would expect in a division history conversation.",
     ],
     answers: ["Georges St-Pierre", "Kamaru Usman", "Matt Hughes", "Robbie Lawler", "Tyron Woodley", "Leon Edwards", "Stephen Thompson", "Carlos Condit"],
+    alsoAcceptedAnswers: ["Jorge Masvidal", "Nick Diaz", "Colby Covington", "Johny Hendricks", "Belal Muhammad"],
   },
   {
     category: "division-identity",
@@ -130,6 +139,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a heavyweight you would expect in a division history conversation.",
     ],
     answers: ["Stipe Miocic", "Francis Ngannou", "Cain Velasquez", "Daniel Cormier", "Randy Couture", "Junior dos Santos", "Derrick Lewis", "Brock Lesnar"],
+    alsoAcceptedAnswers: ["Fabricio Werdum", "Andrei Arlovski", "Frank Mir", "Mark Hunt", "Alistair Overeem", "Tom Aspinall", "Ciryl Gane"],
   },
   {
     category: "fighter-legacy",
@@ -143,6 +153,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a fighter who helped make women's MMA a major part of the UFC.",
     ],
     answers: ["Amanda Nunes", "Ronda Rousey", "Valentina Shevchenko", "Joanna Jedrzejczyk", "Rose Namajunas", "Cris Cyborg", "Zhang Weili", "Holly Holm"],
+    alsoAcceptedAnswers: ["Miesha Tate", "Julianna Pena", "Alexa Grasso", "Jessica Andrade"],
   },
   {
     category: "gyms",
@@ -156,6 +167,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name an MMA team associated with multiple notable UFC fighters.",
     ],
     answers: ["American Top Team", "AKA", "Jackson Wink", "City Kickboxing", "Xtreme Couture", "Nova Uniao", "Team Alpha Male", "Roufusport"],
+    alsoAcceptedAnswers: ["Tristar Gym", "Kings MMA", "Serra-Longo", "MMA Lab", "Kill Cliff FC"],
   },
   {
     category: "rivalries",
@@ -169,6 +181,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name two fighters whose rivalry became part of UFC history.",
     ],
     answers: ["McGregor-Diaz", "Jones-Cormier", "Liddell-Ortiz", "Silva-Sonnen", "McGregor-Nurmagomedov", "Hughes-St-Pierre", "Couture-Liddell", "Adesanya-Pereira"],
+    alsoAcceptedAnswers: ["Ortiz-Shamrock", "McGregor-Aldo", "Nunes-Shevchenko", "Usman-Covington", "Poirier-McGregor"],
   },
   {
     category: "fights",
@@ -182,19 +195,21 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a UFC matchup people still talk about years later.",
     ],
     answers: ["Griffin-Bonnar", "Jones-Gustafsson 1", "Lawler-MacDonald 2", "Henderson-Shogun 1", "Adesanya-Gastelum", "Zhang-Jedrzejczyk 1", "McGregor-Diaz 2", "Poirier-Hooker"],
+    alsoAcceptedAnswers: ["Silva-Sonnen 1", "Edgar-Maynard 2", "Hunt-Silva", "Usman-Covington 1", "Gaethje-Chandler", "Holloway-Kattar"],
   },
   {
     category: "venues",
     entityKind: "other",
     collisionGroup: "venues",
     prompts: [
-      "Name a venue or place strongly associated with major UFC events.",
-      "Name a location where you can picture a huge UFC card.",
-      "Name a venue that has hosted memorable UFC nights.",
-      "Name a place UFC fans associate with big fights.",
-      "Name a UFC event location that feels familiar to longtime fans.",
+      "Name a UFC arena, host city, or named event site strongly associated with major cards.",
+      "Name a UFC arena, host city, or named event site where you can picture a huge card.",
+      "Name an arena, host city, or named event site tied to memorable UFC nights.",
+      "Name a UFC arena, host city, or named event site fans associate with big fights.",
+      "Name an arena, host city, or named event site familiar to longtime UFC fans.",
     ],
     answers: ["T-Mobile Arena", "Madison Square Garden", "MGM Grand Garden Arena", "UFC APEX", "The O2", "Fight Island", "Honda Center", "Etihad Arena"],
+    alsoAcceptedAnswers: ["Las Vegas", "Abu Dhabi", "London", "Anaheim"],
   },
   {
     category: "achievements",
@@ -208,6 +223,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name something a fighter can accomplish that fans remember for years.",
     ],
     answers: ["Win a UFC title", "Defend the title repeatedly", "Become a two-division champion", "Beat another all-time great", "Long winning streak", "Headline a huge PPV", "Record a famous knockout", "Enter the UFC Hall of Fame"],
+    alsoAcceptedAnswers: ["Become pound-for-pound No. 1", "Win The Ultimate Fighter", "Set a UFC record", "Win Fight of the Night awards", "Retire as champion"],
   },
   {
     category: "divisions",
@@ -221,6 +237,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a weight class a UFC fighter can compete in.",
     ],
     answers: ["Lightweight", "Welterweight", "Middleweight", "Featherweight", "Bantamweight", "Heavyweight", "Light heavyweight", "Flyweight"],
+    alsoAcceptedAnswers: ["Strawweight", "Women's flyweight", "Women's bantamweight"],
   },
   {
     category: "traits",
@@ -234,6 +251,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a quality that matters when a UFC fight gets difficult.",
     ],
     answers: ["Cardio", "Fight IQ", "Durability", "Power", "Speed", "Wrestling defense", "Composure", "Toughness"],
+    alsoAcceptedAnswers: ["Striking", "Wrestling", "Submission defense", "Adaptability", "Discipline", "Recovery"],
   },
   {
     category: "techniques",
@@ -247,6 +265,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a finishing technique that can change a UFC fight in seconds.",
     ],
     answers: ["Rear-naked choke", "Guillotine", "Armbar", "Head kick", "Left hook", "Ground-and-pound", "Triangle choke", "Body shot"],
+    alsoAcceptedAnswers: ["Arm-triangle choke", "Kimura", "Knee", "Elbow", "Uppercut", "Heel hook"],
   },
   {
     category: "culture",
@@ -260,5 +279,6 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a UFC fighter whose entrance has become part of the fan experience.",
     ],
     answers: ["Conor McGregor", "Israel Adesanya", "Alex Pereira", "Darren Till", "Tom Aspinall", "Paddy Pimblett", "Max Holloway", "Jiri Prochazka"],
+    alsoAcceptedAnswers: ["Anderson Silva", "Ronda Rousey", "The Korean Zombie", "Tai Tuivasa", "Mike Perry", "Diego Sanchez"],
   },
 ] as const);
