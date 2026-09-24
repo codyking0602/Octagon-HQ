@@ -654,8 +654,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "defense",
     prompts: [
-      "Name a trait every great NFL defense needs.",
-      "Name something that can make a defense hard to play against.",
+      {
+        prompt: "Name a trait every great NFL defense needs.",
+        answers: ["Pass rush", "Tackling", "Coverage", "Turnovers", "Physicality", "Communication", "Run defense", "Discipline"],
+        alsoAcceptedAnswers: ["Speed", "Red-zone defense", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning"],
+      },
+      {
+        prompt: "Name something that can make a defense hard to play against.",
+        answers: ["Pass rush", "Coverage", "Turnovers", "Tackling", "Physicality", "Run defense", "Speed", "Versatility"],
+        alsoAcceptedAnswers: ["Communication", "Discipline", "Red-zone defense", "Depth", "Pursuit", "Technique", "Conditioning", "Disguise"],
+      },
       "Name a quality coaches want from a defensive unit.",
       "Name something fans praise when their defense is elite.",
       "Name a defensive trait that can travel in the playoffs.",
