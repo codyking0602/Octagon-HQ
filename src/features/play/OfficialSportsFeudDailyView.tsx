@@ -394,6 +394,17 @@ export function OfficialSportsFeudDailyView({
   const slots = records(mainBoard.slots);
   const answerReveal = records(mainBoard.answer_reveal);
   const currentFastQuestion = record(fastState.current_question);
+  const fastAnsweredCount = Math.min(
+    FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT,
+    Number(fastState.answered_count ?? 0),
+  );
+  const fastQuestionIndex = fastState.question_index == null
+    ? Math.min(FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT - 1, fastAnsweredCount)
+    : Math.max(0, Math.min(
+        FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT - 1,
+        Number(fastState.question_index ?? 0),
+      ));
+  const fastFinishing = fastState.client_pending_complete === true && !projection.officialAttempt;
   const finalScore = projection.officialAttempt?.normalizedScore ?? Number(displayState.hq_score ?? 0);
   const finalMain = projection.officialAttempt
     ? Number(projection.officialAttempt.publicResult.main_points ?? displayState.main_points ?? 0)
@@ -666,15 +677,15 @@ export function OfficialSportsFeudDailyView({
           </header>
           <div className="feud-fast-showdown">
             <section className="feud-fast-question">
-              <span className="feud-fast-progress">{Number(fastState.question_index ?? 0) + 1} OF 5</span>
+              <span className="feud-fast-progress">{fastFinishing ? 5 : fastQuestionIndex + 1} OF 5</span>
               <small>{hqName} · FAST MONEY</small>
-              <h1>{String(currentFastQuestion.prompt ?? "")}</h1>
+              <h1>{fastFinishing ? "LOCKING OFFICIAL SCORE…" : String(currentFastQuestion.prompt ?? "")}</h1>
               <div className="feud-fast-dots" aria-label="Fast Money progress">
                 {Array.from({ length: 5 }, (_, index) => (
                   <i
-                    className={index < Number(fastState.answered_count ?? 0)
+                    className={index < fastAnsweredCount
                       ? "is-done"
-                      : index === Number(fastState.question_index ?? 0) ? "is-current" : ""}
+                      : !fastFinishing && index === fastQuestionIndex ? "is-current" : ""}
                     key={index}
                   />
                 ))}
@@ -684,7 +695,7 @@ export function OfficialSportsFeudDailyView({
 
           <div className="feud-fast-board-progress" aria-label="Fast Money submitted answers">
             {Array.from({ length: 5 }, (_value, index) => (
-              <div className={index < Number(fastState.answered_count ?? 0) ? "is-filled" : index === Number(fastState.question_index ?? 0) ? "is-current" : ""} key={index}>
+              <div className={index < fastAnsweredCount ? "is-filled" : !fastFinishing && index === fastQuestionIndex ? "is-current" : ""} key={index}>
                 <span>{index < fastSubmitted.length ? String(fastSubmitted[index]?.submitted_answer ?? "") : ""}</span>
               </div>
             ))}
@@ -697,16 +708,22 @@ export function OfficialSportsFeudDailyView({
                 ref={fastInputRef}
                 value={answer}
                 onChange={(event) => {
-                  if (!busy && !pendingKindRef.current) setAnswer(event.target.value);
+                  if (!fastFinishing) setAnswer(event.target.value);
                 }}
                 placeholder="Type your answer"
                 autoCapitalize="words"
                 autoCorrect="off"
                 enterKeyHint="send"
                 aria-label="Fast Money answer"
-                aria-busy={busy || Boolean(pendingKindRef.current)}
+                aria-busy={fastFinishing}
+                disabled={fastFinishing}
               />
-              <button type="submit" aria-label="Submit Fast Money answer" onPointerDown={(event) => event.preventDefault()} disabled={busy}>↑</button>
+              <button
+                type="submit"
+                aria-label="Submit Fast Money answer"
+                onPointerDown={(event) => event.preventDefault()}
+                disabled={fastFinishing}
+              >↑</button>
             </div>
           </form>
         </section>
