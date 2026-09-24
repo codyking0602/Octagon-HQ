@@ -43,6 +43,12 @@ export function MlbHomeHq({
   const bracketCompleted = hub?.ownBracket ? Object.keys(hub.ownBracket).length : 0;
   const bracketTotal = hub?.bracketTemplate.nodes.length ?? 0;
   const bracketPercent = bracketTotal ? Math.round((bracketCompleted / bracketTotal) * 100) : 0;
+  const roundTitle = hub ? ({
+    wild_card: "Wild Card",
+    division_series: "Division Series",
+    championship_series: "League Championship",
+    world_series: "World Series",
+  } as const)[hub.currentRound] : "October";
 
   return (
     <section
@@ -53,7 +59,7 @@ export function MlbHomeHq({
       <header className="home-sport-hq__heading mlb-hq__heading">
         <div>
           <p className="eyebrow">MLB PLAYOFFS</p>
-          <h2>{hub ? MLB_ROUND_LABELS[hub.currentRound] : "October"}</h2>
+          <h2>{roundTitle}</h2>
         </div>
         <small>BRACKET · PICKS · SERIES</small>
       </header>
