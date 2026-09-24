@@ -73,6 +73,11 @@
   background: rgba(var(--hq-context-accent-rgb), .055);
 }
 
+.sport-context-row__switch--three {
+  min-width: 194px;
+  grid-template-columns: repeat(3, minmax(54px, 1fr));
+}
+
 .sport-context-row__switch button {
   min-height: 28px;
   padding: 0 9px;
@@ -117,6 +122,11 @@
   .sport-context-row__switch {
     min-width: 124px;
     grid-template-columns: repeat(2, minmax(54px, 1fr));
+  }
+
+  .sport-context-row__switch--three {
+    min-width: 174px;
+    grid-template-columns: repeat(3, minmax(48px, 1fr));
   }
 
   .sport-context-row__switch button {
