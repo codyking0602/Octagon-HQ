@@ -158,4 +158,56 @@ describe("Today’s Challenge runtime repository", () => {
         stale: true,
       });
   });
+  it("carries sanitized completed-game details through Daily leaderboard entries", async () => {
+    const { client } = clientWithResponses([]);
+    client.rpc = vi.fn().mockResolvedValue({
+      data: {
+        unlocked: true,
+        player_count: 1,
+        entries: [{
+          rank: 1,
+          profile_id: "22222222-2222-4222-8222-222222222222",
+          display_name: "SHANE",
+          initials: "S",
+          avatar_photo_data: null,
+          game_type: "millionaire",
+          native_score: 23,
+          normalized_score: 23,
+          completed_at: "2026-09-24T14:00:00Z",
+          public_result: { outcome: "lost" },
+          progress_revision: 3,
+          public_state: { complete: true },
+          result_detail: {
+            action_history: [
+              { type: "answer", choice_id: "A" },
+              { type: "use_lifeline", lifeline: "fifty-fifty" },
+              { type: "answer", choice_id: "C" },
+            ],
+          },
+          is_current_user: false,
+        }],
+      },
+      error: null,
+    });
+
+    const repository = createTodayChallengeRepository(client as never)!;
+    const leaderboard = await repository.loadDailyLeaderboard(
+      "2026-09-24",
+      "football-daily-v15-weighted-sep24",
+    );
+
+    expect(leaderboard.entries[0]?.resultDetail).toEqual({
+      action_history: [
+        { type: "answer", choice_id: "A" },
+        { type: "use_lifeline", lifeline: "fifty-fifty" },
+        { type: "answer", choice_id: "C" },
+      ],
+    });
+    expect(client.rpc).toHaveBeenCalledWith("get_daily_challenge_leaderboard", {
+      p_day: "2026-09-24",
+      p_schedule_version: "football-daily-v15-weighted-sep24",
+      p_sport: "ufc",
+    });
+  });
+
 });
