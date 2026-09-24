@@ -98,19 +98,85 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       }
     ],
     "answers": [
-      "Lightweight",
-      "Welterweight",
-      "Middleweight",
-      "Featherweight",
-      "Bantamweight",
-      "Heavyweight",
-      "Light heavyweight",
-      "Flyweight"
+      {
+        "name": "Lightweight",
+        "aliases": [
+          "LW",
+          "155"
+        ]
+      },
+      {
+        "name": "Welterweight",
+        "aliases": [
+          "WW",
+          "170"
+        ]
+      },
+      {
+        "name": "Middleweight",
+        "aliases": [
+          "MW",
+          "185"
+        ]
+      },
+      {
+        "name": "Featherweight",
+        "aliases": [
+          "FW",
+          "145"
+        ]
+      },
+      {
+        "name": "Bantamweight",
+        "aliases": [
+          "BW",
+          "135"
+        ]
+      },
+      {
+        "name": "Heavyweight",
+        "aliases": [
+          "HW",
+          "265"
+        ]
+      },
+      {
+        "name": "Light heavyweight",
+        "aliases": [
+          "LHW",
+          "205"
+        ]
+      },
+      {
+        "name": "Flyweight",
+        "aliases": [
+          "FLW",
+          "125"
+        ]
+      }
     ],
     "alsoAcceptedAnswers": [
-      "Strawweight",
-      "Women's flyweight",
-      "Women's bantamweight"
+      {
+        "name": "Strawweight",
+        "aliases": [
+          "SW",
+          "115"
+        ]
+      },
+      {
+        "name": "Women's flyweight",
+        "aliases": [
+          "Women's FLW",
+          "WFLW"
+        ]
+      },
+      {
+        "name": "Women's bantamweight",
+        "aliases": [
+          "Women's BW",
+          "WBW"
+        ]
+      }
     ]
   },
   {
