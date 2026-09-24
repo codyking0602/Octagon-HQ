@@ -58007,6 +58007,3957 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-isaiah-simmons",
+    "name": "Isaiah Simmons",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "clemsonAA": "https://clemsontigers.com/all-americans",
+      "clemson2019": "https://clemsontigers.com/news/2024/09/7/reunion-teams-2024-program-story"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-isaiah-simmons-a-1",
+            "text": "My final college season included more than 100 tackles from a hybrid defensive role.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-a-2",
+            "text": "That same season, I also reached double digits in pass breakups.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-a-3",
+            "text": "I finished that year with 16 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-a-4",
+            "text": "I added eight sacks despite spending much of my career working in space.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-a-5",
+            "text": "I also intercepted three passes during that final season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-a-6",
+            "text": "I was voted my conference's Defensive Player of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-a-7",
+            "text": "I became a unanimous first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-a-8",
+            "text": "I finished as a finalist for the Nagurski, Bednarik and Lott IMPACT awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-a-9",
+            "text": "I became the first Clemson player to win the Butkus Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-a-10",
+            "text": "My 2019 season made me the sixth unanimous All-American in Clemson history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-isaiah-simmons-b-1",
+            "text": "I was a defensive centerpiece on a team that opened a season with 14 consecutive victories.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-b-2",
+            "text": "That team won its fifth straight conference championship before reaching the national title game.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-b-3",
+            "text": "I led the team with 107 tackles during that run.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-b-4",
+            "text": "My final stat line also included 10 pass breakups and three interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-b-5",
+            "text": "I paired those coverage numbers with 16 tackles for loss and eight sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-b-6",
+            "text": "I became just the third FBS player since 2005 to post 100 tackles, 16 tackles for loss, eight sacks and multiple interceptions in one season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-b-7",
+            "text": "No FBS player had reached all four of those marks since Khalil Mack in 2013.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-b-8",
+            "text": "My versatility helped earn first-team all-conference honors and the league's top defensive-player award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-b-9",
+            "text": "The Tigers had never produced a Butkus Award winner before my final season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          },
+          {
+            "id": "cfb-isaiah-simmons-b-10",
+            "text": "I was the Clemson defender whose 2019 résumé combined a Butkus Award, unanimous All-America honors and 107 tackles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "clemsonAA",
+              "clemson2019"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-james-laurinaitis",
+    "name": "James Laurinaitis",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "osuHof": "https://ohiostatebuckeyes.com/honors/hall-of-fame-inductees/james-laurinaitis/255",
+      "osuCfbHof": "https://ohiostatebuckeyes.com/news/2026/1/14/james-laurinaitis-to-be-inducted-into-college-football-hall-of-fame"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-james-laurinaitis-a-1",
+            "text": "I led my college team in tackles in three consecutive seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-a-2",
+            "text": "My tackle totals in those three years climbed from 115 to 121 to 130.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-a-3",
+            "text": "I finished my career with 375 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-a-4",
+            "text": "I also recorded 24.5 tackles for loss and 13 sacks in college.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-a-5",
+            "text": "I intercepted nine passes from the linebacker position.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-a-6",
+            "text": "I won a major national defensive award as a sophomore.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-a-7",
+            "text": "I won the Butkus Award as a junior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-a-8",
+            "text": "As a senior, I added both the Lott IMPACT Trophy and the Senior CLASS Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-a-9",
+            "text": "I became a three-time consensus or unanimous All-American at Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-a-10",
+            "text": "I was the Buckeyes linebacker who won the Nagurski, Butkus and Lott awards in three successive seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-james-laurinaitis-b-1",
+            "text": "I played in 51 college games and started the final 40 of them.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-b-2",
+            "text": "My teams won four consecutive conference championships during my career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-b-3",
+            "text": "I finished 4-0 in rivalry games against Michigan.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-b-4",
+            "text": "I helped my program reach two BCS national championship games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-b-5",
+            "text": "In one of those title games, I set a championship-game record with 18 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-b-6",
+            "text": "I served as a team captain in each of my final two seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-b-7",
+            "text": "I was named Big Ten Defensive Player of the Year twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-b-8",
+            "text": "I became one of only eight three-time All-Americans in Ohio State history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-b-9",
+            "text": "My 375 career tackles still rank among the highest totals in Buckeyes history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-james-laurinaitis-b-10",
+            "text": "I am the Ohio State linebacker whose four-year run paired four Big Ten titles with the Nagurski, Butkus and Lott trophies.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuCfbHof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jaylon-smith",
+    "name": "Jaylon Smith",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "ndRoster": "https://fightingirish.com/sports/football/roster/player/jaylon-smith",
+      "ndButkus": "https://fightingirish.com/news/2015/12/09/jaylon-smith-2015-butkus-award-winner",
+      "ndAA": "https://fightingirish.com/news/2015/12/17/smith-stanley-named-consensus-football-all-americans"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jaylon-smith-a-1",
+            "text": "I made 63 tackles as a freshman linebacker.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-a-2",
+            "text": "That freshman total ranked third in my school's record book at the position for a first-year player.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-a-3",
+            "text": "As a sophomore, I led my team with 112 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-a-4",
+            "text": "I also led that sophomore defense in tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-a-5",
+            "text": "That season brought second-team AP All-America honors and a spot among the Butkus finalists.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-a-6",
+            "text": "I followed with 113 tackles during my junior regular season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-a-7",
+            "text": "I became the first player at my school in more than a decade to combine 113 tackles, nine tackles for loss and five passes defended in one season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-a-8",
+            "text": "I earned consensus All-America recognition as a junior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-a-9",
+            "text": "I won the collegiate Butkus Award in 2015.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-a-10",
+            "text": "I was the Notre Dame linebacker who joined Manti Te'o as a winner of both the high-school and college Butkus awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jaylon-smith-b-1",
+            "text": "I became a full-time defensive fixture immediately and started every game of my sophomore season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-b-2",
+            "text": "My sophomore year included career-high 14-tackle games against both Stanford and USC.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-b-3",
+            "text": "I was named my team's Defensive Player of the Year after that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-b-4",
+            "text": "I then posted at least 100 tackles for a second consecutive year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-b-5",
+            "text": "Over my junior regular season, I led the team in total tackles, solo tackles, assisted tackles and pass breakups.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-b-6",
+            "text": "I recorded a career-high 15 tackles on the road against a top-10 Stanford team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-b-7",
+            "text": "I finished that regular season with 68 solo tackles and two fumble recoveries.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-b-8",
+            "text": "I became the first Irish player since Manti Te'o to record consecutive 100-tackle seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-b-9",
+            "text": "My junior year ended with consensus All-America status and the nation's top linebacker award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          },
+          {
+            "id": "cfb-jaylon-smith-b-10",
+            "text": "I wore No. 9 for Notre Dame while becoming the 2015 Butkus Award winner.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ndRoster",
+              "ndButkus",
+              "ndAA"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-micah-parsons",
+    "name": "Micah Parsons",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "psuRoster": "https://gopsusports.com/sports/football/roster/player/micah-parsons",
+      "psuBigTen": "https://gopsusports.com/news/2019/12/3/parsons-claims-big-ten-linebacker-of-the-year",
+      "cotton": "https://www.cottonbowl.com/news/2019/12/28/general-parsons-earns-defensive-mvp-in-cotton-bowl-classic-win.aspx"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-micah-parsons-a-1",
+            "text": "I led my college team in tackles as a true freshman.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-a-2",
+            "text": "My 83 tackles made me the first true or redshirt freshman in program history to lead the team in that category.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-a-3",
+            "text": "I again led the team in tackles during my second college season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-a-4",
+            "text": "I reached 100 tackles that year, the program's first player to do so since 2016.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-a-5",
+            "text": "I forced four fumbles during that sophomore season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-a-6",
+            "text": "I became the first sophomore ever to win my conference's Linebacker of the Year award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-a-7",
+            "text": "I was a first-team all-conference selection by both the coaches and media.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-a-8",
+            "text": "I became an NCAA consensus All-American as a sophomore.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-a-9",
+            "text": "I finished that season as a finalist for the Butkus Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-a-10",
+            "text": "I was the Penn State linebacker whose two-year career ended with 192 tackles and six forced fumbles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-micah-parsons-b-1",
+            "text": "I produced a 14-tackle game against Michigan during my sophomore season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-b-2",
+            "text": "Later that fall, I recorded 12 tackles on the road at Michigan State.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-b-3",
+            "text": "I closed the regular season with double-digit tackles in three straight games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-b-4",
+            "text": "Six of my final seven games that year included at least 10 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-b-5",
+            "text": "My bowl finale featured a game-high 14 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-b-6",
+            "text": "In that bowl, I added two sacks and forced two fumbles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-b-7",
+            "text": "I was named the defensive MVP of the Cotton Bowl after a win over Memphis.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-b-8",
+            "text": "That performance pushed my sophomore-season tackle total to 109.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-b-9",
+            "text": "I earned consensus All-America honors and Big Ten Linebacker of the Year before leaving Penn State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          },
+          {
+            "id": "cfb-micah-parsons-b-10",
+            "text": "I wore No. 11 for the Nittany Lions and finished my college career as the 2019 Cotton Bowl defensive MVP.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "psuRoster",
+              "psuBigTen",
+              "cotton"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-nakobe-dean",
+    "name": "Nakobe Dean",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "ugaRoster": "https://georgiadogs.com/sports/football/roster/nakobe-dean/5425",
+      "ugaScholar": "https://georgiadogs.com/news/2022/4/4/football-nakobe-dean-named-arthur-ashe-jr-sports-scholar-of-year"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-nakobe-dean-a-1",
+            "text": "I started every game at inside linebacker during my final college season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-a-2",
+            "text": "I finished that season with 72 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-a-3",
+            "text": "I led my team with 10.5 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-a-4",
+            "text": "I also recorded six sacks and 31 quarterback pressures.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-a-5",
+            "text": "My coverage production included six pass breakups and two interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-a-6",
+            "text": "I earned first-team all-conference honors from both the AP and the league's coaches.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-a-7",
+            "text": "I became a consensus first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-a-8",
+            "text": "I was one of my team's permanent captains during a national championship season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-a-9",
+            "text": "I won the Butkus Award as the nation's top linebacker.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-a-10",
+            "text": "I wore No. 17 for Georgia while winning the 2021 Butkus Award and a national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-nakobe-dean-b-1",
+            "text": "I set a career high with 15 tackles in a game against Florida as a sophomore.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-b-2",
+            "text": "In my final season opener, I recorded two sacks in a win over a top-three Clemson team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-b-3",
+            "text": "Against Florida later that year, I returned an interception 50 yards for a touchdown.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-b-4",
+            "text": "I led my team with 11 tackles at Tennessee and also forced a fumble.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-b-5",
+            "text": "In the Orange Bowl, I made seven tackles and matched a career high with two tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-b-6",
+            "text": "That playoff semifinal also included a sack, five quarterback pressures and a forced fumble.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-b-7",
+            "text": "I was a finalist for the Lott IMPACT Trophy and a semifinalist for the Bednarik Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-b-8",
+            "text": "Away from the field, I studied mechanical engineering and captained the AFCA Good Works Team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-b-9",
+            "text": "My final season combined the Butkus Award with a consensus All-America selection.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          },
+          {
+            "id": "cfb-nakobe-dean-b-10",
+            "text": "I was the Bulldogs linebacker who paired a 50-yard pick-six against Florida with the 2021 national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster",
+              "ugaScholar"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-paul-posluszny",
+    "name": "Paul Posluszny",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "psuHof": "https://gopsusports.com/news/2024/01/8/posluszny-elected-to-college-football-hall-of-fame",
+      "psuBednarik": "https://gopsusports.com/news/2007/03/01/posluszny-to-receive-bednarik-award-at-friday-maxwell-football-club-dinner"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-paul-posluszny-a-1",
+            "text": "I became the first player at my school to lead the team in tackles three times.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-a-2",
+            "text": "I also became the program's first player with three 100-tackle seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-a-3",
+            "text": "I finished my college career with 372 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-a-4",
+            "text": "I started the final 37 games of my career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-a-5",
+            "text": "I earned first-team All-America honors in each of my final two seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-a-6",
+            "text": "I won the Butkus Award during my junior season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-a-7",
+            "text": "I became only the second two-time winner of the Bednarik Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-a-8",
+            "text": "I was named Big Ten Defensive Player of the Week a conference-record five times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-a-9",
+            "text": "I served as Penn State's first two-time team captain since the late 1960s.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-a-10",
+            "text": "I was the Nittany Lions linebacker who won the 2005 Butkus and back-to-back Bednarik awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-paul-posluszny-b-1",
+            "text": "I was a linebacker who paired elite defensive production with an unusually decorated academic résumé.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-b-2",
+            "text": "I earned first-team Academic All-America honors twice.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-b-3",
+            "text": "As a junior, I helped a conference-championship team while leading it with 116 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-b-4",
+            "text": "That season made me both a first-team All-American and an Academic All-American.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-b-5",
+            "text": "I returned for my senior year rather than leaving college early.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-b-6",
+            "text": "I graduated in three and a half years with a degree in finance.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-b-7",
+            "text": "I was named the 2006 Academic All-American of the Year for Division I football.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-b-8",
+            "text": "My senior year also produced a second straight Bednarik Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-b-9",
+            "text": "My 372 tackles set the Penn State career record at the time I finished.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          },
+          {
+            "id": "cfb-paul-posluszny-b-10",
+            "text": "I am the Penn State linebacker whose college résumé combined two Bednarik trophies, a Butkus Award and Academic All-American of the Year.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "psuHof",
+              "psuBednarik"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-rolando-mcclain",
+    "name": "Rolando McClain",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "bamaHonors": "https://rolltide.com/documents/download/2015/9/30/20150920honors-nfl.pdf"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-rolando-mcclain-a-1",
+            "text": "I recorded at least 75 tackles in each of my three college seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-a-2",
+            "text": "My tackle totals rose from 75 to 95 to 105.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-a-3",
+            "text": "I finished my career with 275 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-a-4",
+            "text": "I also compiled 31.5 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-a-5",
+            "text": "I intercepted five passes from the linebacker position.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-a-6",
+            "text": "My final season included 14.5 tackles for loss and four sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-a-7",
+            "text": "I became a consensus first-team All-American as a junior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-a-8",
+            "text": "I won the Butkus Award during that final college season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-a-9",
+            "text": "I helped my team win both its conference and national championships.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-a-10",
+            "text": "I was the No. 25 Alabama linebacker whose 2009 season ended with the Butkus Award and a national title.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-rolando-mcclain-b-1",
+            "text": "I was described as the quarterback of a defense that ranked near the top of the nation in several categories.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-b-2",
+            "text": "That defense allowed only 11.4 points per game.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-b-3",
+            "text": "It also surrendered just 244.1 total yards per game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-b-4",
+            "text": "Against the run, the unit allowed only 78.1 yards per game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-b-5",
+            "text": "I led that championship defense with 105 tackles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-b-6",
+            "text": "My junior-year stat line also included two interceptions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-b-7",
+            "text": "The year before, I had posted 95 tackles and 12 tackles for loss.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-b-8",
+            "text": "My three college seasons produced 31.5 tackles for loss and five interceptions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-b-9",
+            "text": "I became the nation's Butkus Award winner while directing Alabama's 2009 defense.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          },
+          {
+            "id": "cfb-rolando-mcclain-b-10",
+            "text": "I am the Crimson Tide linebacker who led a national-title defense in tackles while earning consensus All-America honors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "bamaHonors"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-caleb-downs",
+    "name": "Caleb Downs",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "osuRoster": "https://ohiostatebuckeyes.com/sports/football/roster/caleb-downs/12257",
+      "osuAthlete": "https://ohiostatebuckeyes.com/news/2026/6/22/football-caleb-downs-joy-dunne-named-ohio-state-athletes-of-the-year"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-caleb-downs-a-1",
+            "text": "I became the first Alabama freshman ever to lead that program in tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-a-2",
+            "text": "That freshman season produced 107 tackles, two interceptions and five passes defended.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-a-3",
+            "text": "I was named the SEC Freshman of the Year before entering the transfer portal.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-a-4",
+            "text": "I changed schools before my sophomore season and immediately became a defensive centerpiece.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-a-5",
+            "text": "In my first year at my new school, I recorded 82 tackles and two interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-a-6",
+            "text": "I earned unanimous first-team All-America honors in each of my final two college seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-a-7",
+            "text": "I was named Big Ten Defensive Back of the Year in consecutive years.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-a-8",
+            "text": "As a junior, I won both the Jim Thorpe Award and the Lott IMPACT Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-a-9",
+            "text": "I became only the sixth two-time unanimous All-American in Ohio State history.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-a-10",
+            "text": "I wore No. 2 for Ohio State after transferring from Alabama and finished college as a two-time unanimous All-American.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-caleb-downs-b-1",
+            "text": "My first college season ended with national freshman honors after I made 107 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-b-2",
+            "text": "A year later, I returned a punt 79 yards for a touchdown against a top-five opponent.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-b-3",
+            "text": "That was my new school's first punt-return touchdown in a decade.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-b-4",
+            "text": "I intercepted a pass against Michigan while also making a personal-best 11 tackles for my new team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-b-5",
+            "text": "I added another interception against Texas in a College Football Playoff semifinal.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-b-6",
+            "text": "That postseason run ended with a national championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-b-7",
+            "text": "In my final season, I recorded 68 tackles, five tackles for loss, two interceptions and two forced fumbles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-b-8",
+            "text": "I captained a defense that finished No. 1 nationally in total, scoring and passing defense.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-b-9",
+            "text": "My 2025 awards included Big Ten Defensive Player of the Year, the Thorpe Award and the Lott IMPACT Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          },
+          {
+            "id": "cfb-caleb-downs-b-10",
+            "text": "I finished a three-year college career with 44 starts, 257 tackles and six interceptions across Alabama and Ohio State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuAthlete"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-cooper-dejean",
+    "name": "Cooper DeJean",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "iowaRoster": "https://hawkeyesports.com/sports/football/roster/player/cooper-dejean",
+      "iowaAA": "https://hawkeyesports.com/news/2023/12/14/dejean-taylor-unanimous-consensus-all-america"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-cooper-dejean-a-1",
+            "text": "I became a full-time defensive playmaker during my second college season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-a-2",
+            "text": "That year, I recorded 75 tackles and five interceptions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-a-3",
+            "text": "I set a school single-season record with three interception returns for touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-a-4",
+            "text": "I also broke up eight passes during that breakout season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-a-5",
+            "text": "My bowl performance that year earned game MVP honors.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-a-6",
+            "text": "The following season, I was named my conference's Defensive Back of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-a-7",
+            "text": "I also won the conference's Return Specialist of the Year award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-a-8",
+            "text": "I became a unanimous consensus All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-a-9",
+            "text": "I finished as a finalist for both the Jim Thorpe and Bronko Nagurski awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-a-10",
+            "text": "I wore No. 3 for Iowa while tying the program career record with three pick-sixes.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-cooper-dejean-b-1",
+            "text": "I began college contributing on special teams before becoming a starting defensive back.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-b-2",
+            "text": "My first college start came at safety in a road win over Nebraska.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-b-3",
+            "text": "As a sophomore, I returned an interception for a touchdown in multiple Big Ten games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-b-4",
+            "text": "I capped that season with another pick-six against Kentucky in the Music City Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-b-5",
+            "text": "As a junior, I returned a punt 70 yards for a go-ahead touchdown against Michigan State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-b-6",
+            "text": "I finished that shortened junior season with 41 tackles, two interceptions and five pass breakups in 10 games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-b-7",
+            "text": "An injury in mid-November ended my final college season early.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-b-8",
+            "text": "Even with only 10 games, I swept first-team honors from all five selectors used for unanimous All-America status.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-b-9",
+            "text": "I earned first-team All-Big Ten honors on both defense and as a return specialist.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          },
+          {
+            "id": "cfb-cooper-dejean-b-10",
+            "text": "I was the Hawkeyes defensive back and returner who became a 2023 unanimous consensus All-American.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "iowaRoster",
+              "iowaAA"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-darqueze-dennard",
+    "name": "Darqueze Dennard",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "msuRoster": "https://msuspartans.com/sports/football/roster/darqueze-dennard/1940",
+      "msuHof": "https://msuspartans.com/honors/hall-of-fame/darqueze-dennard/181"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-darqueze-dennard-a-1",
+            "text": "I developed into a three-year starting cornerback after seeing the field as a true freshman.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-a-2",
+            "text": "I finished my college career with 167 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-a-3",
+            "text": "I also recorded 30 passes defended.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-a-4",
+            "text": "My career total included 10 interceptions and 20 pass breakups.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-a-5",
+            "text": "I started 40 of the 44 games I played.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-a-6",
+            "text": "I earned first-team all-conference honors in each of my final two seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-a-7",
+            "text": "As a senior, I was named my conference's Defensive Back of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-a-8",
+            "text": "I became a unanimous first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-a-9",
+            "text": "I became the first Michigan State player to win the Jim Thorpe Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-a-10",
+            "text": "I wore No. 31 while anchoring Michigan State's 2013 Big Ten and Rose Bowl championship defense.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-darqueze-dennard-b-1",
+            "text": "I closed my college career with 29 consecutive starts.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-b-2",
+            "text": "My senior class won 42 games across four seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-b-3",
+            "text": "I served as a co-captain of the nation's No. 1 defense in my final year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-b-4",
+            "text": "That team set a school record with 13 victories.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-b-5",
+            "text": "We ended Ohio State's unbeaten run by winning the Big Ten Championship Game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-b-6",
+            "text": "I finished my college career with a Rose Bowl victory over Stanford.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-b-7",
+            "text": "Across my four seasons, I was part of two conference championship teams and three bowl wins.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-b-8",
+            "text": "My senior awards included the Thorpe Award and unanimous All-America recognition.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-b-9",
+            "text": "I was the first Spartan cornerback to become a unanimous first-team All-American.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          },
+          {
+            "id": "cfb-darqueze-dennard-b-10",
+            "text": "I am the Michigan State cornerback whose 2013 season combined the nation's No. 1 defense, a Big Ten title and the Jim Thorpe Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "msuRoster",
+              "msuHof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-derwin-james",
+    "name": "Derwin James",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "fsuRoster": "https://seminoles.com/sports/football/roster/derwin-james/785"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-derwin-james-a-1",
+            "text": "I made 91 tackles as a true freshman defensive back.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-a-2",
+            "text": "That freshman season also included 9.5 tackles for loss.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-a-3",
+            "text": "I recorded 4.5 sacks during my first college season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-a-4",
+            "text": "I earned Freshman All-America recognition after starting the final eight games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-a-5",
+            "text": "A knee injury limited my second season to only two games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-a-6",
+            "text": "I returned to start every regular-season game the following year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-a-7",
+            "text": "That comeback season produced 84 tackles and 11 pass breakups.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-a-8",
+            "text": "I earned first-team All-ACC and first-team FWAA All-America honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-a-9",
+            "text": "I recorded two interceptions during my final college season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-a-10",
+            "text": "I wore No. 3 for Florida State and became an All-American after returning from a season-ending knee injury.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-derwin-james-b-1",
+            "text": "My first college year ended with a 14-tackle performance in the Peach Bowl.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-b-2",
+            "text": "I opened the next season with a team-high eight tackles and my first career interception against a ranked opponent.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-b-3",
+            "text": "An injury in the second game ended that season and led to a redshirt.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-b-4",
+            "text": "In my return year, I posted a career-high 13 tackles at Boston College.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-b-5",
+            "text": "Against Syracuse, I intercepted a pass and recorded a tackle for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-b-6",
+            "text": "I also blocked a potential game-tying field goal at the end of that Syracuse game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-b-7",
+            "text": "Later that season, I returned an interception 41 yards for a touchdown.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-b-8",
+            "text": "My final six regular-season games included 47 tackles and both of my interceptions.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-b-9",
+            "text": "I ended the comeback season as a first-team All-American and first-team all-conference selection.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-derwin-james-b-10",
+            "text": "I was the Seminoles safety whose college arc went from Freshman All-American to knee injury to first-team All-American.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "fsuRoster"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-eric-weddle",
+    "name": "Eric Weddle",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "utahHof": "https://utahutes.com/news/2026/1/14/eric-weddle-named-to-2026-college-football-hall-of-fame-class"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-eric-weddle-a-1",
+            "text": "I finished my college career with 277 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-a-2",
+            "text": "I also recorded 22.5 tackles for loss and 10 sacks from the secondary.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-a-3",
+            "text": "My 18 career interceptions ranked among the best totals in school and conference history.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-a-4",
+            "text": "I forced a school-record nine fumbles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-a-5",
+            "text": "I returned three interceptions for touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-a-6",
+            "text": "I earned all-conference recognition in each of my four seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-a-7",
+            "text": "I was named my conference's Defensive Player of the Year twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-a-8",
+            "text": "My final season brought consensus All-America honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-a-9",
+            "text": "I helped Utah win conference championships in both 2003 and 2004.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-a-10",
+            "text": "I was the Utes safety whose career ended with 18 interceptions and back-to-back conference Defensive Player of the Year awards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-eric-weddle-b-1",
+            "text": "I contributed on defense, offense and special teams during my college career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-b-2",
+            "text": "In addition to my defensive work, I carried the ball 52 times for 259 yards.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-b-3",
+            "text": "Those rushing attempts produced six touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-b-4",
+            "text": "I also returned 52 punts for 408 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-b-5",
+            "text": "During my final season, I scored eight total touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-b-6",
+            "text": "I became the first player in school history to score on back-to-back plays from scrimmage.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-b-7",
+            "text": "My defensive career also included 23 pass breakups and six fumble recoveries.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-b-8",
+            "text": "Two of my fumble recoveries were returned for touchdowns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-b-9",
+            "text": "I became a consensus All-American while playing for Utah in 2006.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          },
+          {
+            "id": "cfb-eric-weddle-b-10",
+            "text": "I am the Utah defensive back whose four-way role included 18 career interceptions, six rushing touchdowns and punt-return duties.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "utahHof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jamal-adams",
+    "name": "Jamal Adams",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "lsuRoster": "https://lsusports.net/sports/fb/roster/player/jamal-adams"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jamal-adams-a-1",
+            "text": "I played in 37 college games and started 26 of them in the secondary.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-a-2",
+            "text": "I finished my career with 209 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-a-3",
+            "text": "My career total also included 17.5 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-a-4",
+            "text": "I intercepted five passes over three college seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-a-5",
+            "text": "I earned Freshman All-America recognition in my first season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-a-6",
+            "text": "I followed with second-team all-conference honors as a sophomore.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-a-7",
+            "text": "As a junior, I became a permanent team captain.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-a-8",
+            "text": "That final season brought first-team All-America and first-team all-conference honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-a-9",
+            "text": "I led an LSU defense that allowed only 16 touchdowns during my final season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-a-10",
+            "text": "I wore No. 33 for LSU while developing from a Freshman All-American into a first-team All-American captain.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jamal-adams-b-1",
+            "text": "I made 66 tackles during my freshman season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-b-2",
+            "text": "That first year also included five tackles for loss, a sack and five pass breakups.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-b-3",
+            "text": "I became the first freshman captain of my head coach's tenure.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-b-4",
+            "text": "As a sophomore, I recorded four interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-b-5",
+            "text": "My second season ended with 67 tackles and six pass breakups.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-b-6",
+            "text": "I set a career high with 13 tackles against Auburn as a junior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-b-7",
+            "text": "Against Alabama that year, I intercepted a pass while the defense kept the opponent scoreless for three quarters.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-b-8",
+            "text": "I closed my final season with six tackles in a Citrus Bowl win over Louisville.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-b-9",
+            "text": "That LSU defense held the Heisman-winning quarterback without a touchdown in the bowl game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          },
+          {
+            "id": "cfb-jamal-adams-b-10",
+            "text": "I was the LSU safety who finished a three-year career with 209 tackles, five interceptions and permanent-captain honors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jeff-okudah",
+    "name": "Jeff Okudah",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "osuRoster": "https://ohiostatebuckeyes.com/sports/football/roster/okudah-jeff/449",
+      "osuFeature": "https://ohiostatebuckeyes.com/news/2020/1/3/jeff-okudah-departs-dbu-as-an-all-time-top-cb"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jeff-okudah-a-1",
+            "text": "I played in 41 college games and made 15 starts at cornerback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-a-2",
+            "text": "I finished my career with 88 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-a-3",
+            "text": "My career total included 21 passes defended.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-a-4",
+            "text": "I broke up 18 passes over three seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-a-5",
+            "text": "All three of my college interceptions came during my final season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-a-6",
+            "text": "That final year also included 35 tackles and two forced fumbles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-a-7",
+            "text": "I helped a 13-1 team win another outright conference championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-a-8",
+            "text": "I became a unanimous first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-a-9",
+            "text": "I finished as a finalist for the Jim Thorpe Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-a-10",
+            "text": "I became the first Ohio State cornerback to earn unanimous All-America status.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jeff-okudah-b-1",
+            "text": "I did not record a college interception until my final season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-b-2",
+            "text": "My first career pick came against Miami of Ohio.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-b-3",
+            "text": "One week later, I intercepted two passes at Nebraska.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-b-4",
+            "text": "One of those interceptions came while I was lying on my back.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-b-5",
+            "text": "I finished that season with nine pass breakups.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-b-6",
+            "text": "My secondary helped lead the nation in total defense.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-b-7",
+            "text": "That defense also ranked second nationally in passing yards allowed.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-b-8",
+            "text": "I started every game for a team that finished 13-1.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-b-9",
+            "text": "My final season combined three interceptions, unanimous All-America honors and a Thorpe Award finalist spot.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          },
+          {
+            "id": "cfb-jeff-okudah-b-10",
+            "text": "I was the Buckeyes cornerback whose three career interceptions all arrived during the 2019 Big Ten championship season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuRoster",
+              "osuFeature"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-malaki-starks",
+    "name": "Malaki Starks",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "ugaRoster": "https://georgiadogs.com/sports/football/roster/malaki-starks/8131"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-malaki-starks-a-1",
+            "text": "I became a regular starter in the secondary as a true freshman.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-a-2",
+            "text": "I finished that freshman season with 68 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-a-3",
+            "text": "I led my team with seven pass breakups that year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-a-4",
+            "text": "I also intercepted two passes during my first college season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-a-5",
+            "text": "My freshman year ended with a national championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-a-6",
+            "text": "I became a consensus first-team All-American as a sophomore.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-a-7",
+            "text": "As a junior, I led my defense with 77 tackles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-a-8",
+            "text": "I was a finalist for the Jim Thorpe Award in that junior season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-a-9",
+            "text": "I earned first-team All-America recognition from both the AFCA and FWAA as a junior.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-a-10",
+            "text": "I wore No. 24 for Georgia while earning All-America honors in each of my first three college seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-malaki-starks-b-1",
+            "text": "I recorded my first college interception during my debut season and quickly moved into the starting lineup.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-b-2",
+            "text": "As a freshman, I posted a career-high 10 tackles in a win over Tennessee.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-b-3",
+            "text": "I also made four tackles in the playoff semifinal win over Ohio State that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-b-4",
+            "text": "Two years later, I opened the season with a diving interception against Clemson.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-b-5",
+            "text": "That Clemson performance earned national defensive-back-of-the-week honors.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-b-6",
+            "text": "I recorded eight tackles and two tackles for loss against Alabama as a junior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-b-7",
+            "text": "I later led my team with seven tackles in a regular-season win over Texas.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-b-8",
+            "text": "In the SEC Championship rematch with Texas, I made eight tackles, seven of them solo.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-b-9",
+            "text": "My junior year ended with 77 tackles, a Thorpe finalist selection and first-team All-America honors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          },
+          {
+            "id": "cfb-malaki-starks-b-10",
+            "text": "I was the Georgia safety whose freshman national title was followed by consensus All-America honors in 2023.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "ugaRoster"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-malcolm-jenkins",
+    "name": "Malcolm Jenkins",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "osuHof": "https://ohiostatebuckeyes.com/honors/hall-of-fame-inductees/malcolm-jenkins/485",
+      "osuHumanitarian": "https://ohiostatebuckeyes.com/news/2021/11/29/malcolm-jenkins-honored-with-big-tens-dungy-thompson-humanitarian-award"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-malcolm-jenkins-a-1",
+            "text": "I played in 49 college games and started 45 of them in the secondary.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-a-2",
+            "text": "I finished my career with 196 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-a-3",
+            "text": "I also recorded 18 passes defended.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-a-4",
+            "text": "My career included 11 interceptions, with two returned for touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-a-5",
+            "text": "I earned all-conference honors in each of my final three seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-a-6",
+            "text": "I was part of four conference championship teams.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-a-7",
+            "text": "I helped my program reach two BCS national championship games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-a-8",
+            "text": "As a senior, I became a consensus first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-a-9",
+            "text": "I won the Jim Thorpe Award in my final college season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-a-10",
+            "text": "I was the Ohio State defensive back who finished a four-title college run by winning the 2008 Thorpe Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-malcolm-jenkins-b-1",
+            "text": "I was a team captain during my senior season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-b-2",
+            "text": "That final year produced a career-high 57 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-b-3",
+            "text": "I also forced three fumbles as a senior.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-b-4",
+            "text": "My final season included three interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-b-5",
+            "text": "I blocked two punts during that senior campaign.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-b-6",
+            "text": "Over my full college career, I blocked three punts and forced four fumbles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-b-7",
+            "text": "I started 45 times while playing on four Big Ten championship teams.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-b-8",
+            "text": "My senior performance earned consensus All-America recognition.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-b-9",
+            "text": "I ended college as the nation's Jim Thorpe Award winner.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          },
+          {
+            "id": "cfb-malcolm-jenkins-b-10",
+            "text": "I am the Buckeyes defensive back whose 2008 résumé included 57 tackles, three interceptions, two blocked punts and the Thorpe Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "osuHof",
+              "osuHumanitarian"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-michael-huff",
+    "name": "Michael Huff",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "texasHof": "https://texaslonghorns.com/honors/hall-of-honor/michael-huff/877",
+      "texasCfbHof": "https://texaslonghorns.com/news/2025/12/10/michael-huff-inducted-into-the-nff-college-football-hall-of-fame"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-michael-huff-a-1",
+            "text": "I started 50 of the 51 college games I played in the secondary.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-a-2",
+            "text": "I finished my career with 318 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-a-3",
+            "text": "I also recorded 26 tackles for loss.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-a-4",
+            "text": "My career totals included seven interceptions and 44 pass breakups.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-a-5",
+            "text": "I forced six fumbles and recovered three more.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-a-6",
+            "text": "I earned first-team all-conference honors twice.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-a-7",
+            "text": "I became a unanimous first-team All-American as a senior.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-a-8",
+            "text": "I became the first player from my school to win the Jim Thorpe Award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-a-9",
+            "text": "My senior season ended with a national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-a-10",
+            "text": "I was the Texas defensive back who won the 2005 Thorpe Award before earning Defensive MVP honors in the national title game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-michael-huff-b-1",
+            "text": "I was a two-sport college athlete who earned all-conference recognition in both football and track.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-b-2",
+            "text": "My football teams won at least 10 games in each of my four seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-b-3",
+            "text": "Those teams went 45-6 overall during my career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-b-4",
+            "text": "I returned four career interceptions for touchdowns, a school record.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-b-5",
+            "text": "Including another fumble return, I set a school record with five defensive touchdowns.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-b-6",
+            "text": "I also blocked three kicks during my college career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-b-7",
+            "text": "In my final season, I recorded 109 tackles, 10 tackles for loss and 14 pass breakups.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-b-8",
+            "text": "In the national championship game against USC, I made 12 tackles and recovered a fumble.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-b-9",
+            "text": "My fourth-down stop late in that title game gave my offense the ball for the winning drive.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          },
+          {
+            "id": "cfb-michael-huff-b-10",
+            "text": "I was the Longhorns defender named Defensive MVP of the Rose Bowl national championship victory over USC.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "texasHof",
+              "texasCfbHof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-morris-claiborne",
+    "name": "Morris Claiborne",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "lsuRoster": "https://lsusports.net/sports/fb/roster/season/2011/player/morris-claiborne",
+      "lsuAA": "https://lsusports.net/lsu-football-first-team-all-americans"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-morris-claiborne-a-1",
+            "text": "I played in 33 college games and started 26 times at cornerback.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-a-2",
+            "text": "I finished my career with 95 tackles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-a-3",
+            "text": "I recorded 11 career interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-a-4",
+            "text": "I also broke up 12 passes during my college career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-a-5",
+            "text": "My final season included six interceptions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-a-6",
+            "text": "I led the nation with 173 interception-return yards that year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-a-7",
+            "text": "I was named my conference's Defensive Player of the Year by the coaches.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-a-8",
+            "text": "I became a consensus first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-a-9",
+            "text": "I won the Jim Thorpe Award as the nation's top defensive back.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-a-10",
+            "text": "I was the LSU cornerback who followed Patrick Peterson by giving the school consecutive Thorpe Award winners.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-morris-claiborne-b-1",
+            "text": "I made 51 tackles during my final college season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-b-2",
+            "text": "I opened that season with six tackles in a neutral-site win over Oregon.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-b-3",
+            "text": "I returned an interception 89 yards against Tennessee.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-b-4",
+            "text": "I intercepted two passes in a win over Mississippi State.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-b-5",
+            "text": "I picked off a pass in the regular-season win over Alabama and returned it 33 yards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-b-6",
+            "text": "I also returned a kickoff 99 yards for a touchdown at West Virginia.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-b-7",
+            "text": "In the SEC Championship Game, I returned an interception 45 yards for a touchdown against Georgia.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-b-8",
+            "text": "My team finished 13-1, won the conference and reached the national championship game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-b-9",
+            "text": "That season ended with consensus All-America honors and the Jim Thorpe Award.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          },
+          {
+            "id": "cfb-morris-claiborne-b-10",
+            "text": "I wore No. 17 for LSU while leading the nation in interception-return yards during the 2011 SEC championship season.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "lsuRoster",
+              "lsuAA"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
