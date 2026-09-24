@@ -566,7 +566,7 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
 
 let cachedUniverse: TwentyQuestionsUniverse | null = null;
 
-/** Canonical UFC Games factual universe. Rankings remain separate from the 100-subject launch ledger. */
+/** UFC 20 Questions remains pinned to its established 100-subject launch universe. */
 export function getUfcTwentyQuestionsUniverse(): TwentyQuestionsUniverse {
   if (cachedUniverse) return cachedUniverse;
 
