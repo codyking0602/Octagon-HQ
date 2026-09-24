@@ -95,10 +95,26 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
     collisionGroup: "teams",
     prompts: [
       "Name an NFL team you associate with cold-weather football.",
-      "Name a franchise whose home games can feel brutally cold.",
-      "Name an NFL team that looks natural playing in snow.",
-      "Name a team you picture in a freezing late-season game.",
-      "Name a franchise whose fans know how to handle cold football weather.",
+      {
+        prompt: "Name a franchise whose outdoor home games can feel brutally cold.",
+        answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Cleveland Browns", "Pittsburgh Steelers", "Denver Broncos", "New England Patriots", "Kansas City Chiefs"],
+        alsoAcceptedAnswers: ["Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens"],
+      },
+      {
+        prompt: "Name an NFL team that looks natural playing in snow.",
+        answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Cleveland Browns", "Denver Broncos", "Pittsburgh Steelers", "New England Patriots", "Kansas City Chiefs"],
+        alsoAcceptedAnswers: ["Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens", "Minnesota Vikings"],
+      },
+      {
+        prompt: "Name a team you picture in a freezing late-season game.",
+        answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Cleveland Browns", "Pittsburgh Steelers", "New England Patriots", "Denver Broncos", "Kansas City Chiefs"],
+        alsoAcceptedAnswers: ["Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens"],
+      },
+      {
+        prompt: "Name a franchise whose fans know how to handle cold football weather.",
+        answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Cleveland Browns", "Pittsburgh Steelers", "Denver Broncos", "New England Patriots", "Kansas City Chiefs"],
+        alsoAcceptedAnswers: ["Minnesota Vikings", "Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens"],
+      },
     ],
     answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Pittsburgh Steelers", "New England Patriots", "Cleveland Browns", "Minnesota Vikings", "Denver Broncos"],
     alsoAcceptedAnswers: ["Kansas City Chiefs", "Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens"],
