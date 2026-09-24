@@ -179,7 +179,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name an NFL quarterback fans remember as a league MVP.",
     ],
     answers: ["Tom Brady", "Peyton Manning", "Patrick Mahomes", "Aaron Rodgers", "Lamar Jackson", "Brett Favre", "Steve Young", "Cam Newton"],
-    alsoAcceptedAnswers: ["Matthew Stafford", "Josh Allen", "Joe Montana", "Dan Marino", "Johnny Unitas", "Kurt Warner", "Matt Ryan", "Rich Gannon", "Joe Theismann", "Ken Anderson", "Boomer Esiason", "Brian Sipe", "Roman Gabriel", "John Brodie"],
+    alsoAcceptedAnswers: ["Matthew Stafford", "Josh Allen", "Joe Montana", "Dan Marino", "Johnny Unitas", "Kurt Warner", "Matt Ryan", "Rich Gannon", "Joe Theismann", "Ken Anderson", "Boomer Esiason", "Brian Sipe", "Roman Gabriel", "John Brodie", "Steve McNair", "John Elway", "Terry Bradshaw", "Bert Jones", "Fran Tarkenton", "Ken Stabler", "Earl Morrall", "Bart Starr", "Y.A. Tittle"],
   },
   {
     category: "players",
