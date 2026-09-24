@@ -40,11 +40,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
-      "Name an NFL franchise known for great running backs.",
-      "Name a team whose history includes multiple star running backs.",
-      "Name a franchise where the ground game feels like part of the identity.",
-      "Name an NFL team you associate with legendary rushers.",
-      "Name a franchise that belongs in a great-running-backs conversation.",
+      {
+        prompt: "Name an NFL franchise known for great running backs.",
+        answers: ["Dallas Cowboys", "Chicago Bears", "Pittsburgh Steelers", "Los Angeles Rams", "Buffalo Bills", "Minnesota Vikings", "Tennessee Titans", "Cleveland Browns"],
+        alsoAcceptedAnswers: ["Detroit Lions", "Las Vegas Raiders", "Kansas City Chiefs", "Los Angeles Chargers", "Indianapolis Colts", "San Francisco 49ers", "New York Giants", "Seattle Seahawks", "Miami Dolphins", "Philadelphia Eagles", "Denver Broncos"],
+      },
+      {
+        prompt: "Name a team whose history includes multiple star running backs.",
+        answers: ["Dallas Cowboys", "Pittsburgh Steelers", "Los Angeles Rams", "Chicago Bears", "Buffalo Bills", "Cleveland Browns", "Indianapolis Colts", "Tennessee Titans"],
+        alsoAcceptedAnswers: ["Minnesota Vikings", "Kansas City Chiefs", "San Francisco 49ers", "New York Giants", "Los Angeles Chargers", "Las Vegas Raiders", "Seattle Seahawks", "Denver Broncos", "Miami Dolphins"],
+      },
+      {
+        prompt: "Name a franchise where the ground game feels like part of the identity.",
+        answers: ["Pittsburgh Steelers", "Chicago Bears", "Baltimore Ravens", "Tennessee Titans", "Cleveland Browns", "Dallas Cowboys", "San Francisco 49ers", "Las Vegas Raiders"],
+        alsoAcceptedAnswers: ["Seattle Seahawks", "New York Giants", "Buffalo Bills", "Minnesota Vikings", "Los Angeles Rams", "Philadelphia Eagles", "Washington Commanders", "Denver Broncos", "Miami Dolphins"],
+      },
+      {
+        prompt: "Name an NFL team you associate with legendary rushers.",
+        answers: ["Chicago Bears", "Dallas Cowboys", "Cleveland Browns", "Detroit Lions", "Los Angeles Rams", "Buffalo Bills", "Minnesota Vikings", "Tennessee Titans"],
+        alsoAcceptedAnswers: ["Los Angeles Chargers", "Indianapolis Colts", "Las Vegas Raiders", "Kansas City Chiefs", "San Francisco 49ers", "New York Giants", "Miami Dolphins", "Seattle Seahawks", "Denver Broncos"],
+      },
+      {
+        prompt: "Name an NFL franchise with more than one running back worthy of an all-time-team debate.",
+        answers: ["Dallas Cowboys", "Chicago Bears", "Pittsburgh Steelers", "Los Angeles Rams", "Buffalo Bills", "Cleveland Browns", "Las Vegas Raiders", "Minnesota Vikings"],
+        alsoAcceptedAnswers: ["Tennessee Titans", "Indianapolis Colts", "San Francisco 49ers", "Kansas City Chiefs", "New York Giants", "Los Angeles Chargers", "Miami Dolphins", "Seattle Seahawks"],
+      },
     ],
     answers: ["Dallas Cowboys", "Chicago Bears", "Pittsburgh Steelers", "Buffalo Bills", "Los Angeles Rams", "Minnesota Vikings", "Tennessee Titans", "Cleveland Browns"],
     alsoAcceptedAnswers: ["Detroit Lions", "Las Vegas Raiders", "Kansas City Chiefs", "Los Angeles Chargers", "New York Giants", "Indianapolis Colts", "San Francisco 49ers"],
