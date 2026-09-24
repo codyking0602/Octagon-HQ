@@ -5,7 +5,7 @@ import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { useSport } from "../app/SportProvider";
 import { nextFootballEntryState } from "../features/back-room/footballEntrySession";
-import { useIdentity } from "../features/identity/IdentityProvider";
+import { useOptionalIdentity } from "../features/identity/IdentityProvider";
 import { canViewMlbPlayoffs } from "../features/mlb/mlbPlayoffsConfig";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
@@ -80,14 +80,14 @@ function NavigationIcon({ name }: { name: NavigationIconName }) {
 export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqThemeScope }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const identity = useIdentity();
+  const identity = useOptionalIdentity();
   const { selectedSport, setSelectedSport } = useSport();
   const keyboardSessionRef = useRef(false);
   const lastActiveSportTapRef = useRef<Record<SecretSportSection, number>>({ picks: 0, play: 0 });
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const mlbMode = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
-  const effectiveSport = selectedSport === "mlb" && !canViewMlbPlayoffs(identity.profile) ? "ufc" : selectedSport;
+  const effectiveSport = selectedSport === "mlb" && !canViewMlbPlayoffs(identity?.profile) ? "ufc" : selectedSport;
   const selectedPlayRoot = effectiveSport === "football" ? "/football" : effectiveSport === "mlb" ? "/mlb" : "/play";
   const selectedPicksRoot = effectiveSport === "football" ? "/football/picks" : effectiveSport === "mlb" ? "/mlb/picks" : "/picks";
   const standardDestinations = baseDestinations.map((destination) => (
