@@ -8,9 +8,21 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
     prompts: [
       "Name an NFC team.",
       "Name a franchise from the NFC.",
-      "Name an NFC team with a major national fan base.",
-      "Name a team you think of when someone says the NFC.",
-      "Name an NFC franchise almost every football fan recognizes.",
+      {
+        prompt: "Name an NFC team with a major national fan base.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "San Francisco 49ers", "Philadelphia Eagles", "Chicago Bears", "New York Giants", "Seattle Seahawks", "Minnesota Vikings"],
+        alsoAcceptedAnswers: ["Washington Commanders", "Detroit Lions", "Tampa Bay Buccaneers", "Atlanta Falcons", "New Orleans Saints", "Carolina Panthers", "Arizona Cardinals", "Los Angeles Rams"],
+      },
+      {
+        prompt: "Name a team you think of when someone says the NFC.",
+        answers: ["Dallas Cowboys", "San Francisco 49ers", "Green Bay Packers", "Philadelphia Eagles", "New York Giants", "Seattle Seahawks", "Los Angeles Rams", "Chicago Bears"],
+        alsoAcceptedAnswers: ["Minnesota Vikings", "Washington Commanders", "Detroit Lions", "Tampa Bay Buccaneers", "Atlanta Falcons", "New Orleans Saints", "Carolina Panthers", "Arizona Cardinals"],
+      },
+      {
+        prompt: "Name an NFC franchise almost every football fan recognizes.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "San Francisco 49ers", "Philadelphia Eagles", "New York Giants", "Chicago Bears", "Seattle Seahawks", "Los Angeles Rams"],
+        alsoAcceptedAnswers: ["Minnesota Vikings", "Washington Commanders", "Detroit Lions", "Tampa Bay Buccaneers", "Atlanta Falcons", "New Orleans Saints", "Carolina Panthers", "Arizona Cardinals"],
+      },
     ],
     answers: [
       { name: "Dallas Cowboys", aliases: ["Cowboys", "Dallas"] },
