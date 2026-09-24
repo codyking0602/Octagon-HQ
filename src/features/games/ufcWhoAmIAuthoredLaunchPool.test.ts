@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
+import { ufcWhoAmIAuthoredCanonicalExpansion } from "../back-room/ufcWhoAmIAuthoredCanonicalExpansion";
 import { ufcWhoAmIAuthoredLaunchPool } from "./ufcWhoAmIAuthoredLaunchPool";
 
 const EXPECTED_BANDS = [
@@ -160,9 +161,9 @@ const EARLY_IDENTITY_SHORTCUTS = [
 ];
 
 describe("UFC Who Am I authored launch pool", () => {
-  it("covers all 100 canonical fighters with 2,000 authored clues", () => {
-    expect(ufcWhoAmIAuthoredLaunchPool).toHaveLength(100);
-    expect(new Set(ufcWhoAmIAuthoredLaunchPool.map((identity) => identity.subjectId)).size).toBe(100);
+  it("covers all 133 canonical fighters with 2,660 authored clues", () => {
+    expect(ufcWhoAmIAuthoredLaunchPool).toHaveLength(133);
+    expect(new Set(ufcWhoAmIAuthoredLaunchPool.map((identity) => identity.subjectId)).size).toBe(133);
 
     let clueCount = 0;
     for (const identity of ufcWhoAmIAuthoredLaunchPool) {
@@ -171,7 +172,7 @@ describe("UFC Who Am I authored launch pool", () => {
       expect(Object.keys(identity.scripts).sort()).toEqual(["A", "B"]);
       clueCount += identity.scripts.A!.clues.length + identity.scripts.B!.clues.length;
     }
-    expect(clueCount).toBe(2_000);
+    expect(clueCount).toBe(2_660);
   });
 
   it("keeps every authored script source-backed, distinct and progression-safe", () => {
@@ -203,6 +204,20 @@ describe("UFC Who Am I authored launch pool", () => {
         identity.scripts.B!.clues.some((right) => right.text === left.text)
       );
       expect(exactOverlap).toHaveLength(0);
+    }
+  });
+
+  it("keeps all 33 expansion fighters away from mass-authoring templates", () => {
+    const expansionIds = new Set(ufcWhoAmIAuthoredCanonicalExpansion.map((subject) => subject.id));
+    const expansion = ufcWhoAmIAuthoredLaunchPool.filter((identity) => expansionIds.has(identity.subjectId));
+
+    expect(expansion).toHaveLength(33);
+    for (const identity of expansion) {
+      for (const scriptId of ["A", "B"] as const) {
+        for (const clue of identity.scripts[scriptId]!.clues) {
+          expect(MASS_TEMPLATE_PATTERNS.some((pattern) => pattern.test(clue.text))).toBe(false);
+        }
+      }
     }
   });
 
