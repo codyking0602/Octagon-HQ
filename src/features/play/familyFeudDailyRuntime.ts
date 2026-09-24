@@ -162,6 +162,14 @@ function publicFeedback(pack: FamilyFeudPack, outcome?: FamilyFeudOutcome | null
         board_index: outcome.boardIndex,
         strikes: outcome.strikes,
       };
+    case "board-also-accepted":
+      return {
+        type: "accepted",
+        board_index: outcome.boardIndex,
+        entity: entityPresentation(pack, outcome.entityId),
+        points: 0,
+        message: "VALID ANSWER — 0 POINTS",
+      };
     case "ambiguous":
       return {
         type: "ambiguous",

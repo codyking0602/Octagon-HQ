@@ -1,6 +1,5 @@
 import type {
   FamilyFeudEntity,
-  FamilyFeudEntityKind,
   FamilyFeudPack,
   FamilyFeudQuestion,
 } from "../games/familyFeudEngine";
@@ -92,7 +91,7 @@ function unique<T>(values: readonly T[]) {
 function aliasIndex(domain: SportsFeudBankDomain) {
   const map = new Map<string, string[]>();
   for (const question of BANKS[domain].fast) {
-    for (const answer of question.answers) {
+    for (const answer of [...question.answers, ...(question.alsoAcceptedAnswers ?? [])]) {
       const aliases = answer.aliases ?? [];
       if (!aliases.length) continue;
       map.set(answer.name, unique([...(map.get(answer.name) ?? []), ...aliases]));
@@ -119,17 +118,6 @@ function automaticAliases(name: string) {
     }
   }
   return aliases;
-}
-
-function entityKind(question: SportsFeudAuthoredQuestion): FamilyFeudEntityKind {
-  const prompt = question.prompt.toLowerCase();
-  if (/\b(fight|rivalry|team|program|school|franchise|stadium|venue|city|country|award|record|stat|position|route|coverage|formation|play|technique|submission|takedown|kick|elbow|weight class|division|something|trait|way|type|style matchup|gym|event)\b/.test(prompt)) {
-    return "other";
-  }
-  if (/\b(fighter|player|quarterback|running back|receiver|wide receiver|linebacker|defensive back|pass rusher|tight end|kicker|offensive lineman|coach|defender|rookie|return man|woman|champion)\b/.test(prompt)) {
-    return "person";
-  }
-  return "other";
 }
 
 function questionOffset(domain: SportsFeudBankDomain, salt: string) {
@@ -190,22 +178,36 @@ function materializeQuestion(
   points: readonly number[],
   entities: FamilyFeudEntity[],
 ): FamilyFeudQuestion {
-  const kind = entityKind(question);
+  const rankedNames = new Set(question.answers.map((answer) => answer.name.trim().toLowerCase()));
   const answers = question.answers.map((answer, index) => {
     const entityId = `${question.id}:a${index + 1}`;
     entities.push({
       id: entityId,
       displayName: answer.name,
-      kind,
+      kind: question.entityKind,
       aliases: answerAliases(domain, answer),
     });
     return { entityId, points: points[index] ?? 1 };
   });
+  const alsoAcceptedEntityIds = (question.alsoAcceptedAnswers ?? []).map((answer, index) => {
+    if (rankedNames.has(answer.name.trim().toLowerCase())) {
+      throw new Error(`Sports Feud valid off-board answer ${answer.name} duplicates a ranked answer for ${question.id}.`);
+    }
+    const entityId = `${question.id}:v${index + 1}`;
+    entities.push({
+      id: entityId,
+      displayName: answer.name,
+      kind: question.entityKind,
+      aliases: answerAliases(domain, answer),
+    });
+    return entityId;
+  });
   return {
     id: question.id,
     prompt: question.prompt,
-    candidateIds: answers.map((answer) => answer.entityId),
+    candidateIds: [...answers.map((answer) => answer.entityId), ...alsoAcceptedEntityIds],
     answers,
+    ...(alsoAcceptedEntityIds.length ? { alsoAcceptedEntityIds } : {}),
   };
 }
 

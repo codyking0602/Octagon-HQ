@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   {
     category: "fighter-traits",
+    entityKind: "person",
     collisionGroup: "clutch",
     prompts: [
       "Name a UFC fighter you associate with clutch championship moments.",
@@ -15,6 +16,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   },
   {
     category: "fighter-traits",
+    entityKind: "person",
     collisionGroup: "power",
     prompts: [
       "Name a UFC fighter known for scary power.",
@@ -27,6 +29,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   },
   {
     category: "fighter-traits",
+    entityKind: "person",
     collisionGroup: "cardio",
     prompts: [
       "Name a UFC fighter known for elite cardio.",
@@ -39,6 +42,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   },
   {
     category: "fighter-traits",
+    entityKind: "person",
     collisionGroup: "durability",
     prompts: [
       "Name a UFC fighter famous for toughness or durability.",
@@ -51,6 +55,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   },
   {
     category: "personality",
+    entityKind: "person",
     collisionGroup: "culture",
     prompts: [
       "Name a UFC fighter famous for trash talk.",
@@ -63,6 +68,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   },
   {
     category: "fighter-style",
+    entityKind: "person",
     collisionGroup: "pressure",
     prompts: [
       "Name a UFC fighter known for relentless pressure.",
@@ -75,6 +81,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   },
   {
     category: "fighter-style",
+    entityKind: "person",
     collisionGroup: "counter-striking",
     prompts: [
       "Name a UFC fighter known for counterstriking.",
@@ -87,6 +94,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   },
   {
     category: "fighter-style",
+    entityKind: "person",
     collisionGroup: "grappling",
     prompts: [
       "Name a UFC fighter known for elite grappling.",
@@ -99,6 +107,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   },
   {
     category: "underdogs",
+    entityKind: "person",
     collisionGroup: "moments",
     prompts: [
       "Name a fighter remembered for a huge UFC upset.",
@@ -111,6 +120,7 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
   },
   {
     category: "culture",
+    entityKind: "person",
     collisionGroup: "culture",
     prompts: [
       "Name a UFC fighter known for a memorable walkout.",

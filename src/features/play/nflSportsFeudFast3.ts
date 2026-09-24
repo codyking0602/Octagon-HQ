@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   {
     category: "coaches",
+    entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
       "Name a coach who won a Super Bowl.",
@@ -15,6 +16,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   },
   {
     category: "coaches",
+    entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
       "Name an NFL coach known for offense.",
@@ -27,6 +29,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   },
   {
     category: "coaches",
+    entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
       "Name an NFL coach strongly associated with defense.",
@@ -39,6 +42,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   },
   {
     category: "rivalries",
+    entityKind: "other",
     collisionGroup: "rivalries",
     prompts: [
       "Name a famous NFL rivalry.",
@@ -51,6 +55,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   },
   {
     category: "venues",
+    entityKind: "other",
     collisionGroup: "venues",
     prompts: [
       "Name an NFL stadium known for being loud.",
@@ -72,6 +77,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   },
   {
     category: "history",
+    entityKind: "other",
     collisionGroup: "super-bowls",
     prompts: [
       "Name a famous Super Bowl matchup.",
@@ -84,6 +90,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   },
   {
     category: "awards",
+    entityKind: "other",
     collisionGroup: "awards",
     prompts: [
       "Name a major NFL award.",
@@ -105,6 +112,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "tight-ends",
     prompts: [
       "Name a famous NFL tight end.",
@@ -117,6 +125,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "kickers",
     prompts: [
       "Name a famous NFL kicker.",
@@ -129,6 +138,7 @@ export const NFL_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("nfl-fast3", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "returners",
     prompts: [
       "Name a famous NFL return specialist.",

@@ -65,6 +65,7 @@ function assertAuthoredBank(main: readonly SportsFeudAuthoredQuestion[], fast: r
   expect(new Set(fast.map((question) => question.prompt)).size).toBe(250);
 
   for (const question of all) {
+    expect(["person", "team", "school", "other"]).toContain(question.entityKind);
     expect(question.answers).toHaveLength(8);
     expect(new Set(question.answers.map((answer) => answer.name.toLowerCase())).size).toBe(8);
   }
@@ -243,6 +244,25 @@ describe("Sports Feud authored Daily banks", () => {
 
     expect(matchedName(football, cfbQuestion("cfb-fast4-07-5"), "blitz"))
       .toBe("Blitz");
+  });
+
+  it("keeps explicit person matching independent of prompt keywords", () => {
+    const findQuestion = (domain: "ufc" | "cfb" | "nfl", id: string) => {
+      for (let offset = 0; offset < 730; offset += 1) {
+        const pack = buildSportsFeudPack(domain, addDays("2026-09-23", offset));
+        const question = [...pack.mainBoards, ...pack.fastMoney].find((row) => row.id === id);
+        if (question) return { pack, question };
+      }
+      throw new Error("Could not materialize " + id);
+    };
+
+    const submissions = findQuestion("ufc", "ufc-main-03-1");
+    expect(matchFamilyFeudAnswer(submissions.pack, submissions.question, "Oliveira"))
+      .toMatchObject({ status: "matched", kind: "surname" });
+
+    const heavyweight = findQuestion("ufc", "ufc-main-10-1");
+    expect(matchFamilyFeudAnswer(heavyweight.pack, heavyweight.question, "Miocic"))
+      .toMatchObject({ status: "matched", kind: "surname" });
   });
 
   it("never mixes question identities across the three source banks", () => {

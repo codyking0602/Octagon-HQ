@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   {
     category: "coaches",
+    entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
       "Name a coach who won a college football national championship.",
@@ -15,6 +16,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   },
   {
     category: "coaches",
+    entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
       "Name an offensive-minded college football coach.",
@@ -27,6 +29,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   },
   {
     category: "coaches",
+    entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
       "Name a college football coach strongly associated with defense.",
@@ -39,6 +42,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   },
   {
     category: "rivalries",
+    entityKind: "other",
     collisionGroup: "rivalries",
     prompts: [
       "Name a famous college football rivalry.",
@@ -51,6 +55,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   },
   {
     category: "venues",
+    entityKind: "other",
     collisionGroup: "venues",
     prompts: [
       "Name a college football stadium known for being loud.",
@@ -72,6 +77,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   },
   {
     category: "bowls",
+    entityKind: "other",
     collisionGroup: "bowls",
     prompts: [
       "Name a college football bowl game.",
@@ -84,6 +90,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   },
   {
     category: "traditions",
+    entityKind: "other",
     collisionGroup: "traditions",
     prompts: [
       "Name a famous college football mascot or live mascot.",
@@ -96,6 +103,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   },
   {
     category: "awards",
+    entityKind: "other",
     collisionGroup: "awards",
     prompts: [
       "Name a major college football individual award.",
@@ -117,6 +125,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   },
   {
     category: "conferences",
+    entityKind: "other",
     collisionGroup: "conferences",
     prompts: [
       "Name a major college football conference.",
@@ -138,6 +147,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
   },
   {
     category: "school-identity",
+    entityKind: "school",
     collisionGroup: "schools",
     prompts: [
       "Name a college football school whose primary look features red.",

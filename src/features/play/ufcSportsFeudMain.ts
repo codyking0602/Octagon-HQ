@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   {
     category: "fighter-legacy",
+    entityKind: "person",
     collisionGroup: "fighters",
     prompts: [
       "Name a fighter who belongs in almost any UFC all-time-great conversation.",
@@ -15,6 +16,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "fighter-style",
+    entityKind: "person",
     collisionGroup: "knockouts",
     prompts: [
       "Name a UFC fighter famous for knockout power.",
@@ -27,6 +29,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "fighter-style",
+    entityKind: "person",
     collisionGroup: "submissions",
     prompts: [
       "Name a UFC fighter famous for submissions.",
@@ -39,6 +42,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "fighter-style",
+    entityKind: "person",
     collisionGroup: "wrestling",
     prompts: [
       "Name a UFC fighter famous for wrestling.",
@@ -51,6 +55,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "fighter-style",
+    entityKind: "person",
     collisionGroup: "striking",
     prompts: [
       "Name a UFC fighter known for elite striking.",
@@ -63,6 +68,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "fighter-personality",
+    entityKind: "person",
     collisionGroup: "culture",
     prompts: [
       "Name a UFC fighter famous for trash talk or personality.",
@@ -75,6 +81,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "fighter-legacy",
+    entityKind: "person",
     collisionGroup: "champions",
     prompts: [
       "Name a UFC champion remembered for a dominant title reign.",
@@ -87,6 +94,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "division-identity",
+    entityKind: "person",
     collisionGroup: "lightweights",
     prompts: [
       "Name a UFC lightweight star from the modern era.",
@@ -99,6 +107,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "division-identity",
+    entityKind: "person",
     collisionGroup: "welterweights",
     prompts: [
       "Name a UFC welterweight star from the modern era.",
@@ -111,6 +120,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "division-identity",
+    entityKind: "person",
     collisionGroup: "heavyweights",
     prompts: [
       "Name a famous UFC heavyweight.",
@@ -123,6 +133,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "fighter-legacy",
+    entityKind: "person",
     collisionGroup: "women",
     prompts: [
       "Name a legendary women's UFC fighter.",
@@ -135,6 +146,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "gyms",
+    entityKind: "other",
     collisionGroup: "gyms",
     prompts: [
       "Name a gym or team strongly associated with UFC fighters.",
@@ -147,6 +159,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "rivalries",
+    entityKind: "other",
     collisionGroup: "rivalries",
     prompts: [
       "Name a famous UFC rivalry.",
@@ -159,6 +172,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "fights",
+    entityKind: "other",
     collisionGroup: "fights",
     prompts: [
       "Name an iconic UFC fight.",
@@ -171,6 +185,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "venues",
+    entityKind: "other",
     collisionGroup: "venues",
     prompts: [
       "Name a venue or place strongly associated with major UFC events.",
@@ -183,6 +198,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "achievements",
+    entityKind: "other",
     collisionGroup: "achievements",
     prompts: [
       "Name a UFC accomplishment that can define a fighter's legacy.",
@@ -195,6 +211,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "divisions",
+    entityKind: "other",
     collisionGroup: "divisions",
     prompts: [
       "Name a UFC weight class.",
@@ -207,6 +224,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "traits",
+    entityKind: "other",
     collisionGroup: "traits",
     prompts: [
       "Name a trait every elite UFC fighter needs.",
@@ -219,6 +237,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "techniques",
+    entityKind: "other",
     collisionGroup: "techniques",
     prompts: [
       "Name a technique you might see finish a UFC fight.",
@@ -231,6 +250,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
   },
   {
     category: "culture",
+    entityKind: "person",
     collisionGroup: "culture",
     prompts: [
       "Name a UFC fighter known for a memorable walkout or entrance.",

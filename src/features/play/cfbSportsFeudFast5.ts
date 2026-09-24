@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   {
     category: "player-traits",
+    entityKind: "person",
     collisionGroup: "clutch",
     prompts: [
       "Name a college football player you associate with clutch moments.",
@@ -15,6 +16,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   },
   {
     category: "player-traits",
+    entityKind: "person",
     collisionGroup: "speed",
     prompts: [
       "Name a college football player known for elite speed.",
@@ -27,6 +29,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   },
   {
     category: "player-traits",
+    entityKind: "person",
     collisionGroup: "power",
     prompts: [
       "Name a college running back known for power.",
@@ -39,6 +42,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   },
   {
     category: "quarterbacks",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a famous dual-threat college quarterback.",
@@ -51,6 +55,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   },
   {
     category: "quarterbacks",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a college quarterback known more for passing than running.",
@@ -63,6 +68,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   },
   {
     category: "defenders",
+    entityKind: "person",
     collisionGroup: "pass-rushers",
     prompts: [
       "Name a college pass rusher who became a national star.",
@@ -75,6 +81,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   },
   {
     category: "special-teams",
+    entityKind: "person",
     collisionGroup: "returners",
     prompts: [
       "Name a college football player known for dangerous returns.",
@@ -87,6 +94,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   },
   {
     category: "young-stars",
+    entityKind: "person",
     collisionGroup: "young-stars",
     prompts: [
       "Name a college football player who became a star very early in his career.",
@@ -99,6 +107,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   },
   {
     category: "underdogs",
+    entityKind: "school",
     collisionGroup: "programs",
     prompts: [
       "Name a college football program famous for a giant-killing upset.",
@@ -111,6 +120,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
   },
   {
     category: "culture",
+    entityKind: "school",
     collisionGroup: "culture",
     prompts: [
       "Name a college football program known for great uniforms.",

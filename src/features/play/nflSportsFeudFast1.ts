@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   {
     category: "teams",
+    entityKind: "team",
     collisionGroup: "teams",
     prompts: [
       "Name an NFC team.",
@@ -24,6 +25,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   },
   {
     category: "teams",
+    entityKind: "team",
     collisionGroup: "teams",
     prompts: [
       "Name an AFC team.",
@@ -45,6 +47,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   },
   {
     category: "team-identity",
+    entityKind: "team",
     collisionGroup: "teams",
     prompts: [
       "Name an NFL team you associate with cold-weather football.",
@@ -57,6 +60,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   },
   {
     category: "team-identity",
+    entityKind: "team",
     collisionGroup: "teams",
     prompts: [
       "Name an AFC franchise with a strong historical identity.",
@@ -69,6 +73,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   },
   {
     category: "champions",
+    entityKind: "team",
     collisionGroup: "achievements",
     prompts: [
       "Name a franchise that has won multiple Super Bowls.",
@@ -81,6 +86,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name an NFL MVP quarterback.",
@@ -93,6 +99,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "running-backs",
     prompts: [
       "Name an NFL running back who rushed for 2,000 yards in a season.",
@@ -105,6 +112,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "receivers",
     prompts: [
       "Name an NFL receiver known for huge touchdown production.",
@@ -117,6 +125,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "defenders",
     prompts: [
       "Name an NFL player famous for sacks.",
@@ -129,6 +138,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "defenders",
     prompts: [
       "Name an NFL defensive back known for interceptions.",

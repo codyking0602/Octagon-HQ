@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   {
     category: "gyms",
+    entityKind: "person",
     collisionGroup: "gyms",
     prompts: [
       "Name a UFC fighter associated with American Top Team.",
@@ -15,6 +16,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   },
   {
     category: "gyms",
+    entityKind: "person",
     collisionGroup: "gyms",
     prompts: [
       "Name a UFC fighter associated with AKA.",
@@ -27,6 +29,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   },
   {
     category: "gyms",
+    entityKind: "person",
     collisionGroup: "gyms",
     prompts: [
       "Name a UFC fighter associated with City Kickboxing.",
@@ -39,6 +42,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   },
   {
     category: "gyms",
+    entityKind: "person",
     collisionGroup: "gyms",
     prompts: [
       "Name a UFC fighter associated with Team Alpha Male.",
@@ -51,6 +55,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   },
   {
     category: "gyms",
+    entityKind: "person",
     collisionGroup: "gyms",
     prompts: [
       "Name a UFC fighter associated with Jackson Wink.",
@@ -63,6 +68,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   },
   {
     category: "national-identity",
+    entityKind: "person",
     collisionGroup: "fighters",
     prompts: [
       "Name a famous Brazilian UFC fighter.",
@@ -75,6 +81,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   },
   {
     category: "national-identity",
+    entityKind: "person",
     collisionGroup: "fighters",
     prompts: [
       "Name a famous UFC fighter from the UK or Ireland.",
@@ -87,6 +94,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   },
   {
     category: "national-identity",
+    entityKind: "person",
     collisionGroup: "fighters",
     prompts: [
       "Name a UFC fighter from Dagestan or strongly associated with Dagestani MMA.",
@@ -99,6 +107,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   },
   {
     category: "women",
+    entityKind: "person",
     collisionGroup: "women",
     prompts: [
       "Name a famous women's UFC fighter.",
@@ -111,6 +120,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
   },
   {
     category: "heavyweights",
+    entityKind: "person",
     collisionGroup: "heavyweights",
     prompts: [
       "Name a famous UFC heavyweight.",

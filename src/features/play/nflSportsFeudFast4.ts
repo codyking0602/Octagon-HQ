@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   {
     category: "positions",
+    entityKind: "other",
     collisionGroup: "positions",
     prompts: [
       "Name an NFL position other than quarterback.",
@@ -15,6 +16,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   },
   {
     category: "game-concepts",
+    entityKind: "other",
     collisionGroup: "scoring",
     prompts: [
       "Name a way to score points in an NFL game.",
@@ -27,6 +29,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   },
   {
     category: "game-concepts",
+    entityKind: "other",
     collisionGroup: "penalties",
     prompts: [
       "Name a common NFL penalty.",
@@ -39,6 +42,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   },
   {
     category: "stats",
+    entityKind: "other",
     collisionGroup: "stats",
     prompts: [
       "Name a quarterback statistic.",
@@ -51,6 +55,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   },
   {
     category: "stats",
+    entityKind: "other",
     collisionGroup: "stats",
     prompts: [
       "Name an NFL defensive statistic.",
@@ -63,6 +68,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   },
   {
     category: "strategy",
+    entityKind: "other",
     collisionGroup: "offense",
     prompts: [
       "Name an offensive concept you hear in the NFL.",
@@ -84,6 +90,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   },
   {
     category: "strategy",
+    entityKind: "other",
     collisionGroup: "defense",
     prompts: [
       "Name a defensive coverage, pressure, or concept.",
@@ -105,6 +112,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   },
   {
     category: "special-teams",
+    entityKind: "other",
     collisionGroup: "special-teams",
     prompts: [
       "Name something a special teams unit does.",
@@ -117,6 +125,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   },
   {
     category: "draft",
+    entityKind: "other",
     collisionGroup: "draft",
     prompts: [
       "Name a term associated with the NFL Draft.",
@@ -138,6 +147,7 @@ export const NFL_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("nfl-fast4", [
   },
   {
     category: "divisions",
+    entityKind: "other",
     collisionGroup: "divisions",
     prompts: [
       "Name an NFL division.",

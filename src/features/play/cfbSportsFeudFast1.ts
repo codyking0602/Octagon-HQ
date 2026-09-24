@@ -3,6 +3,7 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   {
     category: "schools",
+    entityKind: "school",
     collisionGroup: "schools",
     prompts: [
       "Name an SEC school.",
@@ -24,6 +25,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   },
   {
     category: "schools",
+    entityKind: "school",
     collisionGroup: "schools",
     prompts: [
       "Name a Big Ten school.",
@@ -45,6 +47,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   },
   {
     category: "schools",
+    entityKind: "school",
     collisionGroup: "schools",
     prompts: [
       "Name a Big 12 school.",
@@ -66,6 +69,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   },
   {
     category: "schools",
+    entityKind: "school",
     collisionGroup: "schools",
     prompts: [
       "Name an ACC school with a recognizable football brand.",
@@ -87,6 +91,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   },
   {
     category: "champions",
+    entityKind: "school",
     collisionGroup: "achievements",
     prompts: [
       "Name a team that has won a national championship since 2000.",
@@ -99,6 +104,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
       "Name a Heisman Trophy-winning quarterback.",
@@ -111,6 +117,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "running-backs",
     prompts: [
       "Name a running back who won the Heisman Trophy.",
@@ -123,6 +130,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "running-backs",
     prompts: [
       "Name a legendary college running back.",
@@ -135,6 +143,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "receivers",
     prompts: [
       "Name a legendary college wide receiver.",
@@ -147,6 +156,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
   },
   {
     category: "players",
+    entityKind: "person",
     collisionGroup: "defenders",
     prompts: [
       "Name a legendary college defensive player.",
