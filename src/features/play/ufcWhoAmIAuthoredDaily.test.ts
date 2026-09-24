@@ -148,6 +148,32 @@ describe("UFC authored Who Am I Daily", () => {
     expect(seen.size).toBe(33);
   });
 
+  it("selects from the 33-fighter expansion under the canonical Daily selector", () => {
+    const expansionIds = new Set([
+      "ufc:jiri-prochazka","ufc:magomed-ankalaev","ufc:jan-blachowicz","ufc:jamahal-hill",
+      "ufc:carlos-ulberg","ufc:arman-tsarukyan","ufc:cory-sandhagen","ufc:umar-nurmagomedov",
+      "ufc:belal-muhammad","ufc:jack-della-maddalena","ufc:ian-machado-garry","ufc:shavkat-rakhmonov",
+      "ufc:urijah-faber","ufc:frank-mir","ufc:alistair-overeem","ufc:rich-franklin","ufc:carlos-condit",
+      "ufc:matt-serra","ufc:luke-rockhold","ufc:yoel-romero","ufc:ken-shamrock","ufc:joshua-van",
+      "ufc:brandon-royval","ufc:michael-morales","ufc:carlos-prates","ufc:tim-kennedy",
+      "ufc:brendan-schaub","ufc:kimbo-slice","ufc:cm-punk","ufc:mike-perry","ufc:paige-vanzant",
+      "ufc:greg-hardy","ufc:darren-till",
+    ]);
+    let history: WhoAmIAuthoredPublicationHistoryEntry[] = [];
+    const seenExpansion = new Set<string>();
+
+    for (let offset = 0; offset < 180; offset += 1) {
+      const day = dayOffset(UFC_AUTHORED_WHO_AM_I_CUTOVER_DAY, offset);
+      const rounds = createUfcWhoAmIAuthoredDailyRounds(day, history);
+      for (const entry of rounds) {
+        if (expansionIds.has(entry.round.hiddenSubject.id)) seenExpansion.add(entry.round.hiddenSubject.id);
+      }
+      history = extendUfcWhoAmIHistoryForDaily(history, day, rounds);
+    }
+
+    expect(seenExpansion.size).toBeGreaterThan(0);
+  });
+
   it("requires both fighters and averages their scores on the 0-100 Daily scale", () => {
     const setup = buildOfficialDailySetup(
       "who_am_i",
