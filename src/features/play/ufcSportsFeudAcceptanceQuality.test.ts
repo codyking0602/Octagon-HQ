@@ -145,6 +145,27 @@ describe("UFC Sports Feud full-bank acceptance quality", () => {
     expect(fouls).not.toContain("Knee to a grounded opponent");
   });
 
+  it("audits natural player shorthand as authored semantic coverage", () => {
+    const aliasSet = (id: string, answerName: string) => {
+      const row = question(id);
+      const answer = candidates(row).find((candidate) => candidate.name === answerName);
+      expect(answer, `${id} ${answerName}`).toBeDefined();
+      return new Set((answer?.aliases ?? []).map(normalizeFamilyFeudInput));
+    };
+
+    expect(aliasSet("ufc-fast4-01-1", "Knockout")).toContain(normalizeFamilyFeudInput("KO"));
+    expect(aliasSet("ufc-fast4-02-1", "Rear-naked choke")).toContain(normalizeFamilyFeudInput("RNC"));
+    expect(aliasSet("ufc-fast4-05-1", "Ground-and-pound")).toContain(normalizeFamilyFeudInput("GNP"));
+    expect(aliasSet("ufc-fast4-08-1", "Takedown defense")).toContain(normalizeFamilyFeudInput("TDD"));
+    expect(aliasSet("ufc-main-16-1", "Enter the UFC Hall of Fame")).toContain(normalizeFamilyFeudInput("HOF"));
+    expect(aliasSet("ufc-main-16-1", "Become pound-for-pound No. 1")).toContain(normalizeFamilyFeudInput("P4P #1"));
+    expect(aliasSet("ufc-main-15-1", "Madison Square Garden")).toContain(normalizeFamilyFeudInput("MSG"));
+    expect(aliasSet("ufc-main-12-1", "American Top Team")).toContain(normalizeFamilyFeudInput("ATT"));
+    expect(aliasSet("ufc-main-01-1", "Georges St-Pierre")).toContain(normalizeFamilyFeudInput("GSP"));
+    expect(aliasSet("ufc-fast4-09-1", "Fainting")).toContain(normalizeFamilyFeudInput("faint"));
+    expect(aliasSet("ufc-fast4-10-1", "Give instructions")).toContain(normalizeFamilyFeudInput("instructions"));
+  });
+
   it("keeps Fast Money prompts immediate and phone-sized", () => {
     for (const row of UFC_FAST) {
       expect(row.prompt.length, row.id).toBeLessThanOrEqual(100);
