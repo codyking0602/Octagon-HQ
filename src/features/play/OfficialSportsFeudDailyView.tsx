@@ -518,9 +518,9 @@ export function OfficialSportsFeudDailyView({
     setTimeRemainingMs(capturedTimeRemainingMs);
     setFeedback(null);
     setAnswer("");
-    window.requestAnimationFrame(() => {
-      if (!fastSessionClosedRef.current) fastInputRef.current?.focus({ preventScroll: true });
-    });
+    if (!fastSessionClosedRef.current) {
+      fastInputRef.current?.focus({ preventScroll: true });
+    }
 
     onAdvance(
       {
