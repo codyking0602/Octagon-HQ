@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { ufcWhoAmIAuthoredCanonicalExpansion } from "../back-room/ufcWhoAmIAuthoredCanonicalExpansion";
+import { ufcWhoAmIAuthoredExpansion133Batch1 } from "../games/ufcWhoAmIAuthoredExpansion133Batch1";
+import { ufcWhoAmIAuthoredExpansion133Batch2 } from "../games/ufcWhoAmIAuthoredExpansion133Batch2";
+import { ufcWhoAmIAuthoredExpansion133Batch3 } from "../games/ufcWhoAmIAuthoredExpansion133Batch3";
 import {
   createUfcWhoAmIAuthoredDailyRounds,
   extendUfcWhoAmIHistoryForDaily,
@@ -126,7 +128,11 @@ describe("UFC authored Who Am I Daily", () => {
   });
 
   it("rotates all 33 expansion fighters through the normal Daily selector", () => {
-    const expansionIds = new Set(ufcWhoAmIAuthoredCanonicalExpansion.map((subject) => subject.id));
+    const expansionIds = new Set([
+      ...ufcWhoAmIAuthoredExpansion133Batch1,
+      ...ufcWhoAmIAuthoredExpansion133Batch2,
+      ...ufcWhoAmIAuthoredExpansion133Batch3,
+    ].map((identity) => identity.subjectId));
     const seen = new Set<string>();
     let history: WhoAmIAuthoredPublicationHistoryEntry[] = [];
 
