@@ -339,11 +339,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
-      "Name an NFL coach strongly associated with a dynasty.",
-      "Name a coach whose team dominated the league for a sustained stretch.",
-      "Name an NFL coach you think of when someone says dynasty.",
-      "Name a coach who built a championship machine.",
-      "Name a coach whose era changed the NFL title picture.",
+      {
+        prompt: "Name an NFL coach strongly associated with a dynasty.",
+        answers: ["Bill Belichick", "Vince Lombardi", "Chuck Noll", "Bill Walsh", "Andy Reid", "Joe Gibbs", "Tom Landry", "Don Shula"],
+        alsoAcceptedAnswers: ["Jimmy Johnson", "George Seifert", "Paul Brown", "George Halas", "Curly Lambeau"],
+      },
+      {
+        prompt: "Name a coach whose team dominated the league for a sustained stretch.",
+        answers: ["Bill Belichick", "Vince Lombardi", "Chuck Noll", "Bill Walsh", "Andy Reid", "Joe Gibbs", "Don Shula", "Paul Brown"],
+        alsoAcceptedAnswers: ["Tom Landry", "George Seifert", "Jimmy Johnson", "George Halas", "Curly Lambeau"],
+      },
+      {
+        prompt: "Name an NFL coach you think of when someone says dynasty.",
+        answers: ["Bill Belichick", "Vince Lombardi", "Chuck Noll", "Bill Walsh", "Andy Reid", "Joe Gibbs", "Jimmy Johnson", "George Seifert"],
+        alsoAcceptedAnswers: ["Tom Landry", "Don Shula", "Paul Brown", "George Halas", "Curly Lambeau"],
+      },
+      {
+        prompt: "Name a coach who built a championship machine.",
+        answers: ["Bill Belichick", "Vince Lombardi", "Chuck Noll", "Bill Walsh", "Andy Reid", "Joe Gibbs", "Tom Landry", "Paul Brown"],
+        alsoAcceptedAnswers: ["Don Shula", "Jimmy Johnson", "George Seifert", "George Halas", "Curly Lambeau"],
+      },
+      {
+        prompt: "Name a coach whose era changed the NFL title picture.",
+        answers: ["Bill Belichick", "Vince Lombardi", "Bill Walsh", "Chuck Noll", "Andy Reid", "Paul Brown", "Joe Gibbs", "Don Shula"],
+        alsoAcceptedAnswers: ["Tom Landry", "Jimmy Johnson", "George Seifert", "George Halas", "Curly Lambeau"],
+      },
     ],
     answers: ["Bill Belichick", "Vince Lombardi", "Chuck Noll", "Bill Walsh", "Joe Gibbs", "Tom Landry", "Andy Reid", "Don Shula"],
     alsoAcceptedAnswers: ["Jimmy Johnson", "George Seifert", "Paul Brown", "George Halas", "Curly Lambeau"],
