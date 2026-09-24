@@ -58482,7 +58482,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jaylon-smith-a-2",
-            "text": "That freshman total ranked third in my school's record book at the position for a first-year player.",
+            "text": "That freshman total ranked third on my school's single-season tackles list for first-year players.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -59606,7 +59606,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-caleb-downs-a-1",
-            "text": "I became the first Alabama freshman ever to lead that program in tackles.",
+            "text": "I became the first freshman in my program's history to lead the team in tackles.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -61298,7 +61298,8 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
     "earlyRotation": "normal",
     "sources": {
       "osuHof": "https://ohiostatebuckeyes.com/honors/hall-of-fame-inductees/malcolm-jenkins/485",
-      "osuHumanitarian": "https://ohiostatebuckeyes.com/news/2021/11/29/malcolm-jenkins-honored-with-big-tens-dungy-thompson-humanitarian-award"
+      "osuHumanitarian": "https://ohiostatebuckeyes.com/news/2021/11/29/malcolm-jenkins-honored-with-big-tens-dungy-thompson-humanitarian-award",
+      "osuRewind": "https://ohiostatebuckeyes.com/news/2009/7/6/08-09-rewind-football"
     },
     "scripts": {
       "A": {
@@ -61411,102 +61412,112 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         "clues": [
           {
             "id": "cfb-malcolm-jenkins-b-1",
-            "text": "I was a team captain during my senior season.",
+            "text": "My senior class finished 43-8 and won four conference titles.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           },
           {
             "id": "cfb-malcolm-jenkins-b-2",
-            "text": "That final year produced a career-high 57 tackles.",
+            "text": "I made a late interception at Wisconsin one play after my offense took the lead.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           },
           {
             "id": "cfb-malcolm-jenkins-b-3",
-            "text": "I also forced three fumbles as a senior.",
+            "text": "That interception came with 53 seconds remaining.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           },
           {
             "id": "cfb-malcolm-jenkins-b-4",
-            "text": "My final season included three interceptions.",
+            "text": "Against Purdue, I blocked a punt that a teammate returned for the game's only touchdown.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           },
           {
             "id": "cfb-malcolm-jenkins-b-5",
-            "text": "I blocked two punts during that senior campaign.",
+            "text": "I also intercepted a pass in that 16-3 win over Purdue.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           },
           {
             "id": "cfb-malcolm-jenkins-b-6",
-            "text": "Over my full college career, I blocked three punts and forced four fumbles.",
+            "text": "At Michigan State, my sack forced a fumble that was returned for a touchdown.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           },
           {
             "id": "cfb-malcolm-jenkins-b-7",
-            "text": "I started 45 times while playing on four Big Ten championship teams.",
+            "text": "Against Illinois, I blocked another punt for a safety while breaking up three passes.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           },
           {
             "id": "cfb-malcolm-jenkins-b-8",
-            "text": "My senior performance earned consensus All-America recognition.",
+            "text": "I finished the season with 57 tackles and nine pass breakups.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           },
           {
             "id": "cfb-malcolm-jenkins-b-9",
-            "text": "I ended college as the nation's Jim Thorpe Award winner.",
+            "text": "I capped that senior year as a consensus All-American and Jim Thorpe Award winner.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           },
           {
             "id": "cfb-malcolm-jenkins-b-10",
-            "text": "I am the Buckeyes defensive back whose 2008 résumé included 57 tackles, three interceptions, two blocked punts and the Thorpe Award.",
+            "text": "I was the Ohio State cornerback whose 2008 impact included interceptions, two blocked punts and the Thorpe Award.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "osuHof",
-              "osuHumanitarian"
+              "osuHumanitarian",
+              "osuRewind"
             ]
           }
         ]
