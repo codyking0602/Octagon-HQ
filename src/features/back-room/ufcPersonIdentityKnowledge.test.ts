@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { footballPersonIdentityKnowledgeRecords } from "./footballPersonIdentityKnowledge";
 import { ufcFactualLedgerSubjects } from "./ufcFactualLedger";
-import { ufcWhoAmIAuthoredCanonicalExpansion } from "./ufcWhoAmIAuthoredCanonicalExpansion";
 import {
   getUfcPersonIdentityFactSources,
   getUfcPersonIdentityKnowledge,
@@ -119,26 +118,23 @@ function normalize(value: string) {
 
 describe("Who Am I PR10 UFC person identity knowledge", () => {
   it("keeps the original PR10 research population while the canonical universe expands to 133", () => {
-    const ledgerIds = ufcFactualLedgerSubjects.map((subject) => subject.id).sort();
-    const universeIds = getUfcWhoAmIUniverse().candidates.map((candidate) => candidate.id).sort();
-    const authoredIds = ufcWhoAmIAuthoredCanonicalExpansion.map((subject) => subject.id).sort();
+    const ledgerIds = ufcFactualLedgerSubjects.map((subject) => subject.id);
+    const universeIds = getUfcWhoAmIUniverse().candidates.map((candidate) => candidate.id);
+    const originalIds = new Set(EXPECTED_UFC_PR10_SUBJECT_IDS);
 
     expect(ledgerIds).toHaveLength(133);
     expect(universeIds).toHaveLength(133);
+    expect(new Set(ledgerIds).size).toBe(133);
+    expect(new Set(universeIds).size).toBe(133);
     for (const subjectId of EXPECTED_UFC_PR10_SUBJECT_IDS) {
       expect(ledgerIds).toContain(subjectId);
       expect(universeIds).toContain(subjectId);
     }
-    expect(
-      ufcFactualLedgerSubjects
-        .filter((subject) => subject.scope === "authored-who-am-i-expansion")
-        .map((subject) => subject.id)
-        .sort(),
-    ).toEqual(authoredIds);
+    expect(ledgerIds.filter((subjectId) => !originalIds.has(subjectId as never))).toHaveLength(33);
     expect(ufcFactualLedgerSubjects.filter((subject) => subject.scope === "ranked-core")).toHaveLength(81);
 
     const expansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "recognizable-expansion");
-    expect(expansion).toHaveLength(19);
+    expect(expansion).toHaveLength(52);
     expect(expansion.every((subject) => subject.recognizabilityTier === "A")).toBe(true);
   });
 
