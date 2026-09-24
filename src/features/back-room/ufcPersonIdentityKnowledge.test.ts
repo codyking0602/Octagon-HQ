@@ -120,7 +120,7 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
   it("keeps the original PR10 research population while the canonical universe expands to 133", () => {
     const ledgerIds = ufcFactualLedgerSubjects.map((subject) => subject.id);
     const universeIds = getUfcWhoAmIUniverse().candidates.map((candidate) => candidate.id);
-    const originalIds = new Set(EXPECTED_UFC_PR10_SUBJECT_IDS);
+    const originalIds = new Set<string>(EXPECTED_UFC_PR10_SUBJECT_IDS);
 
     expect(ledgerIds).toHaveLength(133);
     expect(universeIds).toHaveLength(133);
@@ -130,7 +130,7 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
       expect(ledgerIds).toContain(subjectId);
       expect(universeIds).toContain(subjectId);
     }
-    expect(ledgerIds.filter((subjectId) => !originalIds.has(subjectId as never))).toHaveLength(33);
+    expect(ledgerIds.filter((subjectId) => !originalIds.has(subjectId))).toHaveLength(33);
     expect(ufcFactualLedgerSubjects.filter((subject) => subject.scope === "ranked-core")).toHaveLength(81);
 
     const expansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "recognizable-expansion");
