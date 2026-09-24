@@ -22,6 +22,8 @@ import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { currentDailyChallengeChampionship } from "../play/dailyChallengeChampionship";
 import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
+import { MlbHomeHq } from "../mlb/MlbHomeHq";
+import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
 import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
@@ -137,6 +139,7 @@ export default function HomePage() {
   const footballPlayerPhotos = useFootballHomeSpotlightPhotos();
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
+  const mlbVisible = canViewMlbPlayoffs(identity.profile);
   const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
   const ufcDailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport: "ufc" });
   const ufcDailyOverview = useTodayChallengeOverview({
@@ -409,6 +412,8 @@ export default function HomePage() {
           )}
         </section>
       </section>
+
+      {mlbVisible ? <MlbHomeHq enabled={mlbVisible} signedIn={signedIn} /> : null}
 
       {isFootballSeason() ? (
         <>
