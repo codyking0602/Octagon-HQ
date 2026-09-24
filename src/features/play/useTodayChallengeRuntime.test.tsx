@@ -11,13 +11,13 @@ import { todayChallengeRuntimeQueryKey, useTodayChallengeRuntime } from "./useTo
 
 function projection(
   revision: number,
-  publicState: Record<string, unknown> = { guesses: revision > 1 ? [50, 60] : [50] },
+  guesses: number[] = revision > 1 ? [50, 60] : [50],
 ): TodayChallengeProjection {
   return {
     available: true,
     id: "11111111-1111-4111-8111-111111111111",
-    centralDay: "2026-08-05",
-    scheduleVersion: "find-leader-v1",
+    centralDay: "2026-09-23",
+    scheduleVersion: "responsive-test-v1",
     gameType: "wavelength",
     setupKey: "wavelength:test",
     contentVersion: "wavelength-v1",
@@ -25,7 +25,7 @@ function projection(
     fallbackReason: null,
     publicSetup: {},
     progressRevision: revision,
-    publicState,
+    publicState: { guesses },
     revealSetup: null,
     officialAttempt: null,
     deploymentSha: "test-sha",
@@ -34,12 +34,12 @@ function projection(
 
 function completedProjection(revision: number): TodayChallengeProjection {
   return {
-    ...projection(revision, { complete: true, guesses: [50, 60] }),
+    ...projection(revision, [50, 60]),
     officialAttempt: {
-      nativeScore: 80,
-      normalizedScore: 80,
-      completedAt: "2026-08-05T18:00:00Z",
-      publicResult: { score: 80 },
+      nativeScore: 88,
+      normalizedScore: 88,
+      completedAt: "2026-09-23T20:00:00Z",
+      publicResult: { score: 88 },
     },
   };
 }
@@ -52,7 +52,7 @@ function wrapper(client: QueryClient) {
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
-  let reject!: (error: unknown) => void;
+  let reject!: (reason?: unknown) => void;
   const promise = new Promise<T>((resolvePromise, rejectPromise) => {
     resolve = resolvePromise;
     reject = rejectPromise;
@@ -64,12 +64,12 @@ const emptyStandings = {
   playerCount: 0,
   currentUserRank: null,
   currentUserWins: 0,
-  currentWeekStart: "2026-08-03",
-  currentWeekEnd: "2026-08-09",
+  currentWeekStart: "2026-09-21",
+  currentWeekEnd: "2026-09-27",
   entries: [],
 };
 
-function repositoryWith(
+function makeRepository(
   loadToday: TodayChallengeRepository["loadToday"],
   advance: TodayChallengeRepository["advance"],
 ): TodayChallengeRepository {
@@ -81,6 +81,18 @@ function repositoryWith(
     loadStandings: vi.fn().mockResolvedValue(emptyStandings),
     loadDailyLeaderboard: vi.fn().mockResolvedValue({ unlocked: false, playerCount: 0, entries: [] }),
   };
+}
+
+function optimisticGuess(value: number) {
+  return (current: TodayChallengeProjection): TodayChallengeProjection => ({
+    ...current,
+    publicState: {
+      guesses: [
+        ...((current.publicState.guesses as number[] | undefined) ?? []),
+        value,
+      ],
+    },
+  });
 }
 
 describe("useTodayChallengeRuntime", () => {
@@ -97,15 +109,13 @@ describe("useTodayChallengeRuntime", () => {
     ]);
   });
 
-  it("queues rapid sequential actions and sends them strictly in acknowledged revision order", async () => {
-    const first = projection(1);
-    const second = projection(2);
-    const third = projection(3, { guesses: [50, 60, 70] });
+  it("queues rapid optimistic actions and sends them strictly in authoritative revision order", async () => {
     const firstSave = deferred<TodayChallengeProjection>();
+    const secondSave = deferred<TodayChallengeProjection>();
     const advance = vi.fn<TodayChallengeRepository["advance"]>()
       .mockImplementationOnce(() => firstSave.promise)
-      .mockResolvedValueOnce(third);
-    const repository = repositoryWith(vi.fn().mockResolvedValue(first), advance);
+      .mockImplementationOnce(() => secondSave.promise);
+    const repository = makeRepository(vi.fn().mockResolvedValue(projection(1)), advance);
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const { result } = renderHook(() => useTodayChallengeRuntime({
       profileId: "profile-one",
@@ -115,40 +125,42 @@ describe("useTodayChallengeRuntime", () => {
 
     await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
 
-    let firstAction!: Promise<TodayChallengeProjection | null>;
-    let secondAction!: Promise<TodayChallengeProjection | null>;
+    let first!: Promise<TodayChallengeProjection | null>;
+    let second!: Promise<TodayChallengeProjection | null>;
     act(() => {
-      firstAction = result.current.advance({ guess: 60 });
-      secondAction = result.current.advance({ guess: 70 });
+      first = result.current.advance(
+        { guess: 60 },
+        { dedupeKey: "round-1", optimisticUpdate: optimisticGuess(60) },
+      );
+      second = result.current.advance(
+        { guess: 70 },
+        { dedupeKey: "round-2", optimisticUpdate: optimisticGuess(70) },
+      );
     });
 
     await waitFor(() => expect(advance).toHaveBeenCalledTimes(1));
     expect(result.current.pendingActionCount).toBe(2);
-    expect(advance).toHaveBeenNthCalledWith(1, first, { guess: 60 }, expect.any(String));
+    expect(result.current.projection?.publicState).toEqual({ guesses: [50, 60, 70] });
+    const firstActionId = advance.mock.calls[0]![2];
+    expect(firstActionId).toEqual(expect.any(String));
 
-    await act(async () => {
-      firstSave.resolve(second);
-      await firstAction;
-    });
-
+    act(() => firstSave.resolve(projection(2, [50, 60])));
+    await expect(first).resolves.toMatchObject({ progressRevision: 2 });
     await waitFor(() => expect(advance).toHaveBeenCalledTimes(2));
-    expect(advance).toHaveBeenNthCalledWith(2, second, { guess: 70 }, expect.any(String));
-    await act(async () => {
-      await secondAction;
-    });
+    expect(advance.mock.calls[1]![0].progressRevision).toBe(2);
+    expect(advance.mock.calls[1]![1]).toEqual({ guess: 70 });
+    expect(advance.mock.calls[1]![2]).not.toBe(firstActionId);
 
+    act(() => secondSave.resolve(projection(3, [50, 60, 70])));
+    await expect(second).resolves.toMatchObject({ progressRevision: 3 });
+    await waitFor(() => expect(result.current.pendingActionCount).toBe(0));
     expect(result.current.projection?.progressRevision).toBe(3);
-    expect(result.current.pendingActionCount).toBe(0);
-    expect(result.current.busy).toBe(false);
-    expect(advance.mock.calls[0]?.[2]).not.toBe(advance.mock.calls[1]?.[2]);
   });
 
-  it("collapses duplicate taps for the same logical pending action", async () => {
-    const first = projection(1);
-    const second = projection(2);
+  it("collapses duplicate taps for the same semantic action", async () => {
     const save = deferred<TodayChallengeProjection>();
     const advance = vi.fn<TodayChallengeRepository["advance"]>().mockImplementation(() => save.promise);
-    const repository = repositoryWith(vi.fn().mockResolvedValue(first), advance);
+    const repository = makeRepository(vi.fn().mockResolvedValue(projection(1)), advance);
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const { result } = renderHook(() => useTodayChallengeRuntime({
       profileId: "profile-one",
@@ -156,69 +168,34 @@ describe("useTodayChallengeRuntime", () => {
       repository,
     }), { wrapper: wrapper(client) });
 
-    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
-
-    let one!: Promise<TodayChallengeProjection | null>;
+    await waitFor(() => expect(result.current.projection).not.toBeNull());
+    let first!: Promise<TodayChallengeProjection | null>;
     let duplicate!: Promise<TodayChallengeProjection | null>;
     act(() => {
-      one = result.current.advance({ guess: 60 }, { dedupeKey: "wavelength:guess:2" });
-      duplicate = result.current.advance({ guess: 60 }, { dedupeKey: "wavelength:guess:2" });
+      first = result.current.advance(
+        { guess: 60 },
+        { dedupeKey: "same-step", optimisticUpdate: optimisticGuess(60) },
+      );
+      duplicate = result.current.advance(
+        { guess: 60 },
+        { dedupeKey: "same-step", optimisticUpdate: optimisticGuess(60) },
+      );
     });
 
-    expect(duplicate).toBe(one);
-    await waitFor(() => expect(advance).toHaveBeenCalledTimes(1));
+    expect(duplicate).toBe(first);
+    expect(advance).toHaveBeenCalledTimes(1);
     expect(result.current.pendingActionCount).toBe(1);
 
-    await act(async () => {
-      save.resolve(second);
-      await one;
-    });
-    expect(result.current.pendingActionCount).toBe(0);
+    act(() => save.resolve(projection(2, [50, 60])));
+    await expect(first).resolves.toMatchObject({ progressRevision: 2 });
+    await waitFor(() => expect(result.current.pendingActionCount).toBe(0));
   });
 
-  it("refreshes canonical cross-device state and safely discards queued intent after a stale revision", async () => {
-    const first = projection(1);
-    const canonical = projection(4, { guesses: [50, 55, 58, 61] });
-    const loadToday = vi.fn()
-      .mockResolvedValueOnce(first)
-      .mockResolvedValueOnce(canonical);
-    const advance = vi.fn().mockRejectedValue(new TodayChallengeRepositoryError(
-      "STALE_PROGRESS",
-      "Official daily progress changed on another device.",
-    ));
-    const repository = repositoryWith(loadToday, advance);
-    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    const { result } = renderHook(() => useTodayChallengeRuntime({
-      profileId: "profile-one",
-      enabled: true,
-      repository,
-    }), { wrapper: wrapper(client) });
-
-    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
-
-    let firstAction!: Promise<TodayChallengeProjection | null>;
-    let queuedAction!: Promise<TodayChallengeProjection | null>;
-    act(() => {
-      firstAction = result.current.advance({ guess: 60 });
-      queuedAction = result.current.advance({ guess: 70 });
-    });
-
-    await expect(firstAction).resolves.toMatchObject({ progressRevision: 4 });
-    await expect(queuedAction).resolves.toMatchObject({ progressRevision: 4 });
-    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(4));
-    expect(advance).toHaveBeenCalledTimes(1);
-    expect(loadToday).toHaveBeenCalledTimes(2);
-    expect(result.current.pendingActionCount).toBe(0);
-    expect(result.current.error).toBeNull();
-  });
-
-  it("retries a transient failure with the same idempotency key before advancing the queue", async () => {
-    const first = projection(1);
-    const second = projection(2);
+  it("retries transient failures with the exact same client action id", async () => {
     const advance = vi.fn<TodayChallengeRepository["advance"]>()
-      .mockRejectedValueOnce(new Error("temporary network failure"))
-      .mockResolvedValueOnce(second);
-    const repository = repositoryWith(vi.fn().mockResolvedValue(first), advance);
+      .mockRejectedValueOnce(new Error("network reset"))
+      .mockResolvedValueOnce(projection(2, [50, 60]));
+    const repository = makeRepository(vi.fn().mockResolvedValue(projection(1)), advance);
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const { result } = renderHook(() => useTodayChallengeRuntime({
       profileId: "profile-one",
@@ -226,31 +203,67 @@ describe("useTodayChallengeRuntime", () => {
       repository,
     }), { wrapper: wrapper(client) });
 
-    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
-
-    let pending!: Promise<TodayChallengeProjection | null>;
-    act(() => {
-      pending = result.current.advance({ guess: 60 });
-    });
-    await waitFor(() => expect(advance).toHaveBeenCalledTimes(1));
-    const firstId = advance.mock.calls[0]?.[2];
-
+    await waitFor(() => expect(result.current.projection).not.toBeNull());
     await act(async () => {
-      await pending;
+      await result.current.advance(
+        { guess: 60 },
+        { dedupeKey: "retry-step", optimisticUpdate: optimisticGuess(60) },
+      );
     });
 
     expect(advance).toHaveBeenCalledTimes(2);
-    expect(advance.mock.calls[1]?.[2]).toBe(firstId);
+    expect(advance.mock.calls[0]![2]).toBe(advance.mock.calls[1]![2]);
     expect(result.current.projection?.progressRevision).toBe(2);
     expect(result.current.error).toBeNull();
   });
 
-  it("keeps unsynced optimistic state out of the canonical query cache and reconciles a differing server response", async () => {
-    const first = projection(1, { guesses: [50] });
-    const authoritative = projection(2, { guesses: [50, 60] });
-    const save = deferred<TodayChallengeProjection>();
-    const advance = vi.fn<TodayChallengeRepository["advance"]>().mockImplementation(() => save.promise);
-    const repository = repositoryWith(vi.fn().mockResolvedValue(first), advance);
+  it("keeps a failed transient action queued for explicit retry", async () => {
+    const advance = vi.fn<TodayChallengeRepository["advance"]>()
+      .mockRejectedValueOnce(new Error("offline-1"))
+      .mockRejectedValueOnce(new Error("offline-2"))
+      .mockRejectedValueOnce(new Error("offline-3"))
+      .mockResolvedValueOnce(projection(2, [50, 60]));
+    const repository = makeRepository(vi.fn().mockResolvedValue(projection(1)), advance);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { result } = renderHook(() => useTodayChallengeRuntime({
+      profileId: "profile-one",
+      enabled: true,
+      repository,
+    }), { wrapper: wrapper(client) });
+
+    await waitFor(() => expect(result.current.projection).not.toBeNull());
+    act(() => {
+      void result.current.advance(
+        { guess: 60 },
+        { dedupeKey: "offline-step", optimisticUpdate: optimisticGuess(60) },
+      );
+    });
+
+    await waitFor(() => expect(result.current.error).toBeInstanceOf(Error), { timeout: 2500 });
+    expect(result.current.pendingActionCount).toBe(1);
+    const actionId = advance.mock.calls[0]![2];
+
+    await act(async () => {
+      await result.current.retryPending();
+    });
+
+    await waitFor(() => expect(result.current.pendingActionCount).toBe(0));
+    expect(advance).toHaveBeenCalledTimes(4);
+    expect(advance.mock.calls[3]![2]).toBe(actionId);
+    expect(result.current.projection?.progressRevision).toBe(2);
+  });
+
+  it("refreshes canonical cross-device state after a stale optimistic revision and drops dependent actions", async () => {
+    const loadToday = vi.fn()
+      .mockResolvedValueOnce(projection(1))
+      .mockResolvedValueOnce(projection(5, [50, 55, 65]));
+    const advance = vi.fn<TodayChallengeRepository["advance"]>().mockRejectedValue(
+      new TodayChallengeRepositoryError(
+        "STALE_PROGRESS",
+        "Official daily progress changed on another device.",
+      ),
+    );
+    const repository = makeRepository(loadToday, advance);
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const { result } = renderHook(() => useTodayChallengeRuntime({
       profileId: "profile-one",
@@ -259,80 +272,74 @@ describe("useTodayChallengeRuntime", () => {
     }), { wrapper: wrapper(client) });
 
     await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
-    let pending!: Promise<TodayChallengeProjection | null>;
+    let first!: Promise<TodayChallengeProjection | null>;
+    let second!: Promise<TodayChallengeProjection | null>;
     act(() => {
-      pending = result.current.advance(
-        { guess: 999 },
-        {
-          optimisticUpdate: (current) => ({
-            ...current,
-            publicState: { guesses: [50, 999] },
-            progressRevision: 999,
-            officialAttempt: completedProjection(999).officialAttempt,
-          }),
-        },
+      first = result.current.advance(
+        { guess: 60 },
+        { dedupeKey: "stale-1", optimisticUpdate: optimisticGuess(60) },
+      );
+      second = result.current.advance(
+        { guess: 70 },
+        { dedupeKey: "stale-2", optimisticUpdate: optimisticGuess(70) },
       );
     });
 
-    await waitFor(() => expect(result.current.projection?.publicState).toEqual({ guesses: [50, 999] }));
-    expect(result.current.projection?.progressRevision).toBe(1);
-    expect(result.current.projection?.officialAttempt).toBeNull();
+    await expect(first).resolves.toMatchObject({ progressRevision: 5 });
+    await expect(second).resolves.toMatchObject({ progressRevision: 5 });
+    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(5));
+    expect(loadToday).toHaveBeenCalledTimes(2);
+    expect(advance).toHaveBeenCalledTimes(1);
+    expect(result.current.pendingActionCount).toBe(0);
+    expect(result.current.projection?.publicState).toEqual({ guesses: [50, 55, 65] });
+  });
+
+  it("keeps optimistic state out of the canonical cache so a reload cannot fabricate progress", async () => {
+    const save = deferred<TodayChallengeProjection>();
+    const repository = makeRepository(
+      vi.fn().mockResolvedValue(projection(1)),
+      vi.fn().mockImplementation(() => save.promise),
+    );
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const hook = renderHook(() => useTodayChallengeRuntime({
+      profileId: "profile-one",
+      enabled: true,
+      repository,
+    }), { wrapper: wrapper(client) });
+
+    await waitFor(() => expect(hook.result.current.projection).not.toBeNull());
+    act(() => {
+      void hook.result.current.advance(
+        { guess: 99 },
+        { dedupeKey: "pending-reload", optimisticUpdate: optimisticGuess(99) },
+      );
+    });
+
+    expect(hook.result.current.projection?.publicState).toEqual({ guesses: [50, 99] });
     expect(client.getQueryData<TodayChallengeProjection>(
       todayChallengeRuntimeQueryKey("profile-one"),
     )?.publicState).toEqual({ guesses: [50] });
 
-    await act(async () => {
-      save.resolve(authoritative);
-      await pending;
-    });
-
-    await waitFor(() => expect(result.current.projection?.publicState).toEqual({ guesses: [50, 60] }));
-    expect(result.current.projection?.progressRevision).toBe(2);
-  });
-
-  it("never persists an unsynced optimistic transition across a reload", async () => {
-    const first = projection(1, { guesses: [50] });
-    const save = deferred<TodayChallengeProjection>();
-    const advance = vi.fn<TodayChallengeRepository["advance"]>().mockImplementation(() => save.promise);
-    const loadToday = vi.fn().mockResolvedValue(first);
-    const repository = repositoryWith(loadToday, advance);
-
-    const firstClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    const mounted = renderHook(() => useTodayChallengeRuntime({
-      profileId: "profile-one",
-      enabled: true,
-      repository,
-    }), { wrapper: wrapper(firstClient) });
-    await waitFor(() => expect(mounted.result.current.projection?.progressRevision).toBe(1));
-
-    act(() => {
-      void mounted.result.current.advance(
-        { guess: 999 },
-        { optimisticUpdate: (current) => ({ ...current, publicState: { guesses: [50, 999] } }) },
-      );
-    });
-    await waitFor(() => expect(mounted.result.current.projection?.publicState).toEqual({ guesses: [50, 999] }));
-    mounted.unmount();
-
+    hook.unmount();
     const secondClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    const reloaded = renderHook(() => useTodayChallengeRuntime({
+    const secondRepository = makeRepository(
+      vi.fn().mockResolvedValue(projection(1)),
+      vi.fn(),
+    );
+    const second = renderHook(() => useTodayChallengeRuntime({
       profileId: "profile-one",
       enabled: true,
-      repository,
+      repository: secondRepository,
     }), { wrapper: wrapper(secondClient) });
 
-    await waitFor(() => expect(reloaded.result.current.projection?.publicState).toEqual({ guesses: [50] }));
-    expect(reloaded.result.current.projection?.officialAttempt).toBeNull();
-
-    save.resolve(projection(2));
-    reloaded.unmount();
+    await waitFor(() => expect(second.result.current.projection?.publicState).toEqual({ guesses: [50] }));
   });
 
-  it("accepts a completed authoritative response exactly once and blocks further official writes", async () => {
-    const first = projection(1);
-    const complete = completedProjection(2);
-    const advance = vi.fn<TodayChallengeRepository["advance"]>().mockResolvedValue(complete);
-    const repository = repositoryWith(vi.fn().mockResolvedValue(first), advance);
+  it("reconciles an authoritative server response that differs from the optimistic state", async () => {
+    const repository = makeRepository(
+      vi.fn().mockResolvedValue(projection(1)),
+      vi.fn().mockResolvedValue(projection(2, [50, 61])),
+    );
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const { result } = renderHook(() => useTodayChallengeRuntime({
       profileId: "profile-one",
@@ -340,21 +347,52 @@ describe("useTodayChallengeRuntime", () => {
       repository,
     }), { wrapper: wrapper(client) });
 
-    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
+    await waitFor(() => expect(result.current.projection).not.toBeNull());
     await act(async () => {
-      await result.current.advance({ type: "finish" }, { dedupeKey: "finish" });
+      await result.current.advance(
+        { guess: 60 },
+        { dedupeKey: "server-diff", optimisticUpdate: optimisticGuess(60) },
+      );
     });
-    await waitFor(() => expect(result.current.projection?.officialAttempt?.normalizedScore).toBe(80));
 
-    await act(async () => {
-      await expect(result.current.advance({ type: "finish" }, { dedupeKey: "finish" }))
-        .resolves.toMatchObject({ officialAttempt: { normalizedScore: 80 } });
+    expect(result.current.projection?.publicState).toEqual({ guesses: [50, 61] });
+  });
+
+  it("settles a completed official attempt exactly once and discards actions queued behind it", async () => {
+    const save = deferred<TodayChallengeProjection>();
+    const advance = vi.fn<TodayChallengeRepository["advance"]>().mockImplementation(() => save.promise);
+    const repository = makeRepository(vi.fn().mockResolvedValue(projection(1)), advance);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { result } = renderHook(() => useTodayChallengeRuntime({
+      profileId: "profile-one",
+      enabled: true,
+      repository,
+    }), { wrapper: wrapper(client) });
+
+    await waitFor(() => expect(result.current.projection).not.toBeNull());
+    let first!: Promise<TodayChallengeProjection | null>;
+    let second!: Promise<TodayChallengeProjection | null>;
+    act(() => {
+      first = result.current.advance(
+        { guess: 60 },
+        { dedupeKey: "final-1", optimisticUpdate: optimisticGuess(60) },
+      );
+      second = result.current.advance(
+        { guess: 70 },
+        { dedupeKey: "final-2", optimisticUpdate: optimisticGuess(70) },
+      );
     });
+
+    act(() => save.resolve(completedProjection(2)));
+    await expect(first).resolves.toMatchObject({ officialAttempt: { normalizedScore: 88 } });
+    await expect(second).resolves.toBeNull();
+    await waitFor(() => expect(result.current.pendingActionCount).toBe(0));
     expect(advance).toHaveBeenCalledTimes(1);
+    expect(result.current.projection?.officialAttempt?.normalizedScore).toBe(88);
   });
 
   it("does not read or mutate official state while disabled", () => {
-    const repository = repositoryWith(vi.fn(), vi.fn());
+    const repository = makeRepository(vi.fn(), vi.fn());
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const { result } = renderHook(() => useTodayChallengeRuntime({
       profileId: "signed-out",
