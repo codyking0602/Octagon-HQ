@@ -237,27 +237,27 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
       {
         prompt: "Name a Heisman Trophy-winning quarterback from the 2000 season or later.",
         answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Marcus Mariota","Jameis Winston"],
-        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
+        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
       },
       {
         prompt: "Name a quarterback who won the Heisman in the 2000s or later.",
         answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Caleb Williams","Kyler Murray"],
-        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
       },
       {
         prompt: "Name a modern-era Heisman quarterback from 2000 or later.",
         answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Caleb Williams","Baker Mayfield","Kyler Murray"],
-        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
       },
       {
         prompt: "Name a college quarterback whose season since 2000 ended with the Heisman Trophy.",
         answers: ["Cam Newton","Joe Burrow","Tim Tebow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Marcus Mariota","Robert Griffin III"],
-        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Jameis Winston","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
+        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Jameis Winston","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
       },
       {
         prompt: "Name a quarterback you remember holding the Heisman since 2000.",
         answers: ["Tim Tebow","Cam Newton","Johnny Manziel","Joe Burrow","Lamar Jackson","Baker Mayfield","Caleb Williams","Kyler Murray"],
-        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
       },
     ],
     answers: [
@@ -279,7 +279,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
       "Matt Leinart",
       "Robert Griffin III",
       "Jayden Daniels",
-    ,"Chris Weinke","Eric Crouch","Jason White","Bryce Young"],
+    ,"Chris Weinke","Eric Crouch","Jason White","Bryce Young","Fernando Mendoza"],
   },
   {
     category: "players",
