@@ -59,6 +59,18 @@ function ufcDivision(value: string) {
 }
 
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
+
+  if (subject.scope === "authored-who-am-i-expansion") {
+    return {
+      id: subject.id,
+      name: subject.name,
+      kind: "fighter",
+      eraBand: eraBand(debutYear, lastYear),
+      rescueGroup: subject.primaryDivision,
+      clues: [],
+    };
+  }
+
   const wins = subject.fights.filter((fight) => fight.result === "win");
   const losses = subject.fights.filter((fight) => fight.result === "loss");
   const koWins = wins.filter((fight) => fight.methodCategory === "ko-tko");
@@ -132,6 +144,14 @@ const ufcUniverse: WhoAmIUniverse = {
   candidates: ufcFactualLedgerSubjects.map(ufcCandidate),
 };
 
+const legacyUfcUniverse: WhoAmIUniverse = {
+  sport: "ufc",
+  league: "UFC",
+  candidates: ufcFactualLedgerSubjects
+    .filter((subject) => subject.scope !== "authored-who-am-i-expansion")
+    .map(ufcCandidate),
+};
+
 export function getUfcWhoAmIUniverse() {
   return ufcUniverse;
 }
@@ -140,5 +160,5 @@ export function createUfcWhoAmIRound(
   random: () => number = Math.random,
   excludedSubjectIds: ReadonlySet<string> = new Set(),
 ): WhoAmIRound {
-  return createWhoAmIRound(ufcUniverse, random, excludedSubjectIds);
+  return createWhoAmIRound(legacyUfcUniverse, random, excludedSubjectIds);
 }
