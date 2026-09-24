@@ -33,11 +33,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     entityKind: "person",
     collisionGroup: "lightweights",
     prompts: [
-      "Name a UFC lightweight champion from any era.",
-      "Name a fighter who has held the UFC lightweight title.",
-      "Name a former or current UFC 155-pound champion.",
-      "Name a lightweight whose résumé includes UFC gold.",
-      "Name another fighter on the UFC lightweight champions list."
+      "Name an undisputed UFC lightweight champion from any era.",
+      "Name a fighter who has held the undisputed UFC lightweight title.",
+      "Name a former or current undisputed UFC 155-pound champion.",
+      "Name a lightweight whose résumé includes undisputed UFC gold.",
+      "Name another fighter on the undisputed UFC lightweight champions list."
     ],
     answers: [
       {
@@ -68,11 +68,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     entityKind: "person",
     collisionGroup: "welterweights",
     prompts: [
-      "Name a UFC welterweight champion from any era.",
-      "Name a fighter who has held the UFC welterweight title.",
-      "Name a former or current UFC 170-pound champion.",
-      "Name a welterweight whose résumé includes UFC gold.",
-      "Name another fighter on the UFC welterweight champions list."
+      "Name an undisputed UFC welterweight champion from any era.",
+      "Name a fighter who has held the undisputed UFC welterweight title.",
+      "Name a former or current undisputed UFC 170-pound champion.",
+      "Name a welterweight whose résumé includes undisputed UFC gold.",
+      "Name another fighter on the undisputed UFC welterweight champions list."
     ],
     answers: [
       {
@@ -103,11 +103,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     entityKind: "person",
     collisionGroup: "middleweights",
     prompts: [
-      "Name a UFC middleweight champion from any era.",
-      "Name a fighter who has held the UFC middleweight title.",
-      "Name a former or current UFC 185-pound champion.",
-      "Name a middleweight whose résumé includes UFC gold.",
-      "Name another fighter on the UFC middleweight champions list."
+      "Name an undisputed UFC middleweight champion from any era.",
+      "Name a fighter who has held the undisputed UFC middleweight title.",
+      "Name a former or current undisputed UFC 185-pound champion.",
+      "Name a middleweight whose résumé includes undisputed UFC gold.",
+      "Name another fighter on the undisputed UFC middleweight champions list."
     ],
     answers: [
       "Anderson Silva",
@@ -134,11 +134,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     entityKind: "person",
     collisionGroup: "heavyweights",
     prompts: [
-      "Name a UFC heavyweight champion from any era.",
-      "Name a fighter who has held the UFC heavyweight title.",
-      "Name a former or current UFC heavyweight champion.",
-      "Name a heavyweight whose résumé includes UFC gold.",
-      "Name another fighter on the UFC heavyweight champions list."
+      "Name an undisputed UFC heavyweight champion from any era.",
+      "Name a fighter who has held the undisputed UFC heavyweight title.",
+      "Name a former or current undisputed UFC heavyweight champion.",
+      "Name a heavyweight whose résumé includes undisputed UFC gold.",
+      "Name another fighter on the undisputed UFC heavyweight champions list."
     ],
     answers: [
       {
@@ -165,7 +165,6 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Andrei Arlovski",
       "Tim Sylvia",
       "Josh Barnett",
-      "Antonio Rodrigo Nogueira",
       "Tom Aspinall",
       "Bas Rutten",
       "Kevin Randleman",
