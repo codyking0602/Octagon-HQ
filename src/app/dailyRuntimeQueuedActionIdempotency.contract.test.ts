@@ -9,7 +9,12 @@ describe("Daily runtime queued-action idempotency", () => {
     expect(source).toContain("dailyClientActionIds(context).includes(clientActionId)");
     expect(source).toContain("submissionStateWithClientActionId(");
     expect(source).toContain("_client_action_ids");
-    expect(source.indexOf("dailyClientActionIds(context).includes(clientActionId)"))
-      .toBeLessThan(source.indexOf('if (asRecord(context.official_attempt))'));
+    const duplicateAck = source.indexOf("dailyClientActionIds(context).includes(clientActionId)");
+    const completedAttemptCheck = source.indexOf(
+      'if (asRecord(context.official_attempt))',
+      duplicateAck,
+    );
+    expect(duplicateAck).toBeGreaterThan(-1);
+    expect(completedAttemptCheck).toBeGreaterThan(duplicateAck);
   });
 });
