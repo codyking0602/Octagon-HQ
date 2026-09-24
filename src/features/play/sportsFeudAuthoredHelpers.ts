@@ -29,6 +29,7 @@ const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
   "Defensive Rookie of the Year": ["DROY"],
   "Comeback Player of the Year": ["CPOY"],
   "Walter Payton Man of the Year": ["WPMOY", "Man of the Year"],
+  "First-team All-Pro": ["All-Pro", "First Team All-Pro"],
 };
 
 function answer(value: string | SportsFeudAuthoredAnswer): SportsFeudAuthoredAnswer {
