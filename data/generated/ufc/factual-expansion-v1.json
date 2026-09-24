@@ -8,7 +8,7 @@
     "recognizabilityTier": "A",
     "modernActivityYear": 2016,
     "minimumModernShare": 0.75,
-    "maximumLegacySubjects": 10
+    "maximumLegacySubjects": 5
   },
   "provenance": {
     "provider": "ufcstats",
