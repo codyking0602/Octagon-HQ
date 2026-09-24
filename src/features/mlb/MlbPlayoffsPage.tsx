@@ -1,19 +1,33 @@
-import { useIdentity } from "../identity/IdentityProvider";
-import { canViewMlbPlayoffs } from "./mlbPlayoffsConfig";
-import { MlbHomeHq } from "./MlbHomeHq";
+import { Link } from "react-router-dom";
+import "../../styles/mlb-playoffs.css";
 
 export default function MlbPlayoffsPage() {
-  const identity = useIdentity();
-  const enabled = canViewMlbPlayoffs(identity.profile);
-
   return (
-    <div className="page mlb-playoffs-page">
-      <section className="page-heading">
-        <p className="eyebrow">MLB PLAYOFFS</p>
-        <h1>October starts here</h1>
-        <p>Bracket, fresh series picks, and one-off postseason games.</p>
+    <div className="page mlb-play-page">
+      <section className="page-heading mlb-play-page__heading">
+        <p className="eyebrow">MLB PLAYOFFS · PLAY</p>
+        <h1>Featured Challenge</h1>
+        <p>One handcrafted postseason game at a time.</p>
       </section>
-      <MlbHomeHq enabled={enabled} signedIn={Boolean(identity.profile)} />
+
+      <section className="surface-card mlb-play-feature">
+        <div className="mlb-play-feature__topline">
+          <span>WHO AM I</span>
+          <small>POSTSEASON EDITION</small>
+        </div>
+        <div className="mlb-play-feature__body">
+          <div>
+            <p className="eyebrow">FEATURED CHALLENGE</p>
+            <h2>October Legend</h2>
+            <p>Four clues. One postseason icon.</p>
+          </div>
+          <div className="mlb-play-feature__meta">
+            <span><b>4</b><small>CLUES</small></span>
+            <span><b>1</b><small>ANSWER</small></span>
+          </div>
+        </div>
+        <Link className="primary-action" to="/mlb/challenge">PLAY CHALLENGE →</Link>
+      </section>
     </div>
   );
 }
