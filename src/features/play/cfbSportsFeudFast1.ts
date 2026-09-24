@@ -222,11 +222,12 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
       { name: "Texas", aliases: ["Longhorns", "UT"] },
     ],
     alsoAcceptedAnswers: [
-      { name: "Auburn", aliases: ["Auburn Tigers",{ name: "Indiana", aliases: ["Hoosiers"] }] },
+      { name: "Auburn", aliases: ["Auburn Tigers"] },
       { name: "Florida State", aliases: ["FSU", "Seminoles"] },
       { name: "Miami", aliases: ["The U", "Hurricanes", "Miami Hurricanes"] },
       { name: "Michigan", aliases: ["Wolverines"] },
       { name: "Oklahoma", aliases: ["OU", "Sooners"] },
+      { name: "Indiana", aliases: ["Hoosiers"] },
     ],
   },
   {
