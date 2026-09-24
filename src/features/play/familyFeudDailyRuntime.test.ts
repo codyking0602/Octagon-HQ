@@ -136,7 +136,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
     expect(result.publicState.main_points).toBe(4);
   });
 
-  it("accepts a valid off-board Main answer with zero points and no strike", () => {
+  it("scores a valid off-board Main answer for two points with no strike", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const result = advanceFamilyFeudDailyRuntime(
       context(publication),
@@ -144,13 +144,20 @@ describe("Family Feud V2 Daily persistence contract", () => {
     );
 
     expect(result.publicState.last_feedback).toMatchObject({
-      type: "accepted",
-      points: 0,
-      message: "VALID ANSWER — 0 POINTS",
+      type: "correct",
+      points: 2,
+      entity: { id: "entity-7", display_name: "Golf Seven" },
     });
     const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
+    const slots = boards[0]!.slots as Array<Record<string, unknown>>;
     expect(boards[0]).toMatchObject({ strikes: 0 });
-    expect(result.publicState.main_points).toBe(0);
+    expect(slots[0]).toMatchObject({
+      points: 2,
+      revealed: true,
+      found: true,
+      entity: { id: "entity-7", display_name: "Golf Seven" },
+    });
+    expect(result.publicState.main_points).toBe(2);
   });
 
   it("keeps the live board exactly as played and publishes a separate settled answer reveal", () => {

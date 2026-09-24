@@ -16,6 +16,11 @@ import { NFL_SPORTS_FEUD_FAST_3 } from "./nflSportsFeudFast3";
 import { NFL_SPORTS_FEUD_FAST_4 } from "./nflSportsFeudFast4";
 import { NFL_SPORTS_FEUD_FAST_5 } from "./nflSportsFeudFast5";
 import { UFC_SPORTS_FEUD_MAIN } from "./ufcSportsFeudMain";
+import {
+  UFC_SEP24_SPORTS_FEUD_FAST,
+  UFC_SEP24_SPORTS_FEUD_MAIN,
+  UFC_SEP24_SPORTS_FEUD_PACK_VERSION,
+} from "./ufcSportsFeudSep24Prototype";
 import { UFC_SPORTS_FEUD_FAST_1 } from "./ufcSportsFeudFast1";
 import { UFC_SPORTS_FEUD_FAST_2 } from "./ufcSportsFeudFast2";
 import { UFC_SPORTS_FEUD_FAST_3 } from "./ufcSportsFeudFast3";
@@ -229,6 +234,21 @@ export function buildSportsFeudPack(
   day: string,
 ): FamilyFeudPack {
   const entities: FamilyFeudEntity[] = [];
+
+  if (domain === "ufc" && day === "2026-09-24") {
+    const main = UFC_SEP24_SPORTS_FEUD_MAIN.map((question) =>
+      materializeQuestion(domain, question, MAIN_POINTS, entities));
+    const fast = UFC_SEP24_SPORTS_FEUD_FAST.map((question) =>
+      materializeQuestion(domain, question, FAST_POINTS, entities));
+    return {
+      id: `${UFC_SEP24_SPORTS_FEUD_PACK_VERSION}-ufc-${day}`,
+      sport: "ufc",
+      entities,
+      mainBoards: main,
+      fastMoney: fast,
+    };
+  }
+
   const authoredMain = selectMain(domain, day);
   const main = authoredMain.map((question) =>
     materializeQuestion(domain, question, MAIN_POINTS, entities));

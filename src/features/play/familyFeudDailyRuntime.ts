@@ -9,6 +9,7 @@ import {
   FAMILY_FEUD_STRIKES_PER_BOARD,
   assertFamilyFeudPack,
   createFamilyFeudState,
+  familyFeudMainAnswerPoints,
   familyFeudScore,
   submitFamilyFeudFastMoneyAnswer,
   submitFamilyFeudMainAnswer,
@@ -75,9 +76,10 @@ function answerById(
   questionIndex: number,
   entityId: string,
 ): FamilyFeudRankedAnswer {
-  const answer = pack.mainBoards[questionIndex]!.answers.find((row) => row.entityId === entityId);
-  if (!answer) throw new Error("Family Feud revealed answer is outside its board.");
-  return answer;
+  const question = pack.mainBoards[questionIndex]!;
+  const points = familyFeudMainAnswerPoints(question, entityId);
+  if (points == null) throw new Error("Family Feud revealed answer is outside its board.");
+  return { entityId, points };
 }
 
 function mainBoardPublicState(
@@ -167,8 +169,8 @@ function publicFeedback(pack: FamilyFeudPack, outcome?: FamilyFeudOutcome | null
         type: "accepted",
         board_index: outcome.boardIndex,
         entity: entityPresentation(pack, outcome.entityId),
-        points: 0,
-        message: "VALID ANSWER — 0 POINTS",
+        points: 2,
+        message: "GOOD ANSWER — +2",
       };
     case "ambiguous":
       return {

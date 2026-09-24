@@ -81,7 +81,7 @@ function matchName(question: SportsFeudAuthoredQuestion, input: string) {
   };
 }
 
-function surname(answer: SportsFeudAuthoredAnswer) {
+function personTokens(answer: SportsFeudAuthoredAnswer) {
   const tokens = normalizeFamilyFeudInput(answer.name).split(" ").filter(Boolean);
   while (
     tokens.length > 1
@@ -89,7 +89,15 @@ function surname(answer: SportsFeudAuthoredAnswer) {
   ) {
     tokens.pop();
   }
-  return tokens.at(-1) ?? "";
+  return tokens;
+}
+
+function firstName(answer: SportsFeudAuthoredAnswer) {
+  return personTokens(answer)[0] ?? "";
+}
+
+function surname(answer: SportsFeudAuthoredAnswer) {
+  return personTokens(answer).at(-1) ?? "";
 }
 
 function addDays(day: string, offset: number) {
@@ -143,11 +151,18 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     for (const question of personQuestions) {
       const rows = candidates(question);
       const bySurname = new Map<string, SportsFeudAuthoredAnswer[]>();
+      const shortNameOwners = new Map<string, Set<string>>();
       for (const answer of rows) {
         const key = surname(answer);
         const group = bySurname.get(key) ?? [];
         group.push(answer);
         bySurname.set(key, group);
+        for (const shortName of [firstName(answer), key]) {
+          if (!shortName) continue;
+          const owners = shortNameOwners.get(shortName) ?? new Set<string>();
+          owners.add(answer.name);
+          shortNameOwners.set(shortName, owners);
+        }
       }
 
       let unambiguousCount = 0;
@@ -155,14 +170,15 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
       for (const [key, group] of bySurname) {
         if (!key) continue;
         const match = matchFamilyFeudAnswer(pack, runtimeQuestion, key);
-        if (group.length === 1) {
+        const owners = shortNameOwners.get(key) ?? new Set<string>();
+        if (group.length === 1 && owners.size === 1) {
           unambiguousCount += 1;
           expect(match, `${question.id} surname ${key}`).toMatchObject({
             status: "matched",
             kind: "surname",
           });
         } else {
-          expect(match, `${question.id} surname ${key} should stay ambiguous`).toMatchObject({
+          expect(match, `${question.id} short name ${key} should stay ambiguous`).toMatchObject({
             status: "ambiguous",
           });
         }
