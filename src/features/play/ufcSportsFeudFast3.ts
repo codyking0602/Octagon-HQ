@@ -106,7 +106,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
     prompts: [
       "Name a UFC commentator or analyst fans recognize.",
       "Name a voice you associate with UFC broadcasts.",
-      "Name someone you might hear calling or analyzing a UFC fight.",
+      "Name someone who has called or analyzed UFC fights.",
       "Name a UFC broadcaster whose voice is familiar to MMA fans.",
       "Name a commentator or analyst strongly connected with UFC coverage.",
     ],
@@ -122,7 +122,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name an MMA referee you have seen inside the Octagon.",
       "Name a referee associated with major UFC fights.",
       "Name an official serious UFC fans know by name.",
-      "Name a referee you might hear introduced before a UFC main event.",
+      "Name a referee whose name UFC fans have heard before a major fight.",
     ],
     answers: ["Herb Dean", "John McCarthy", "Marc Goddard", "Jason Herzog", "Dan Miragliotta", "Keith Peterson", "Mike Beltran", "Kevin MacDonald"],
     alsoAcceptedAnswers: ["Mario Yamasaki", "Steve Mazzagatti", "Josh Rosenthal", "Yves Lavigne"],
