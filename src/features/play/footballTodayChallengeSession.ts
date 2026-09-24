@@ -20,9 +20,12 @@ const FOOTBALL_STAGE11_FUTURE_SCHEDULE_VERSION = "football-daily-v5" as const;
 export const FOOTBALL_TODAY_SCHEDULE_VERSION = "football-daily-v7-hit-number-pool-cleanup" as const;
 export const FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION = "football-daily-v11-millionaire-no-double" as const;
 export const FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION = "football-daily-v12-sports-feud" as const;
+export const FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION = "football-daily-v15-weighted-sep24" as const;
+export const FOOTBALL_WEIGHTED_SEP25_SCHEDULE_VERSION = "football-daily-v16-weighted-sep25" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
 const FOOTBALL_MILLIONAIRE_CUTOVER_DAY = "2026-09-19";
 const FOOTBALL_SPORTS_FEUD_CUTOVER_DAY = "2026-09-23";
+const FOOTBALL_WEIGHTED_CUTOVER_DAY = "2026-09-24";
 const FOOTBALL_TODAY_QUESTION_REFRESH_DAY = "2026-09-13";
 const FOOTBALL_HISTORICAL_ANCHOR_DAY = "2026-08-22";
 const FOOTBALL_HISTORICAL_CYCLE: readonly OfficialDailyGameType[] = [
@@ -108,6 +111,35 @@ const FOOTBALL_SPORTS_FEUD_CYCLE: readonly OfficialDailyGameType[] = [
   "millionaire",
 ];
 
+const FOOTBALL_WEIGHTED_CYCLE: readonly OfficialDailyGameType[] = [
+  "millionaire",
+  "sports_feud",
+  "who_am_i",
+  "wavelength",
+  "find_leader",
+  "millionaire",
+  "sports_feud",
+  "who_am_i",
+  "wavelength",
+  "hit_the_number",
+  "find_leader",
+  "millionaire",
+  "sports_feud",
+  "wavelength",
+  "find_leader",
+  "who_am_i",
+  "millionaire",
+  "hit_the_number",
+  "wavelength",
+  "find_leader",
+  "sports_feud",
+  "millionaire",
+  "wavelength",
+  "who_am_i",
+  "find_leader",
+  "hit_the_number",
+];
+
 const FOOTBALL_TODAY_GAME_OVERRIDES: Readonly<Record<string, OfficialDailyGameType>> = {
   "2026-09-04": "blind_resume",
 };
@@ -189,6 +221,10 @@ function dayNumber(day: string) {
 
 export function footballTodayScheduleVersionForDay(day: string): string {
   dayNumber(day);
+  if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SEP25_SCHEDULE_VERSION;
+  if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
+  if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SEP25_SCHEDULE_VERSION;
+  if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
   if (day >= FOOTBALL_SPORTS_FEUD_CUTOVER_DAY) return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
   if (day >= FOOTBALL_MILLIONAIRE_CUTOVER_DAY) return FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION;
   if (day >= FOOTBALL_TODAY_QUESTION_REFRESH_DAY) return FOOTBALL_TODAY_SCHEDULE_VERSION;
@@ -210,6 +246,11 @@ function footballTodaySetupScheduleVersionForDay(day: string): string {
 
 export function footballTodayGameForDay(day: string): OfficialDailyGameType {
   const currentDayNumber = dayNumber(day);
+  if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) {
+    const offset = currentDayNumber - dayNumber(FOOTBALL_WEIGHTED_CUTOVER_DAY);
+    const index = ((offset % FOOTBALL_WEIGHTED_CYCLE.length) + FOOTBALL_WEIGHTED_CYCLE.length) % FOOTBALL_WEIGHTED_CYCLE.length;
+    return FOOTBALL_WEIGHTED_CYCLE[index]!;
+  }
   if (day >= FOOTBALL_SPORTS_FEUD_CUTOVER_DAY) {
     const offset = currentDayNumber - dayNumber(FOOTBALL_SPORTS_FEUD_CUTOVER_DAY);
     const index = ((offset % FOOTBALL_SPORTS_FEUD_CYCLE.length) + FOOTBALL_SPORTS_FEUD_CYCLE.length) % FOOTBALL_SPORTS_FEUD_CYCLE.length;

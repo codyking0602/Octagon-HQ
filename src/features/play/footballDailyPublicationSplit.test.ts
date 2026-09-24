@@ -37,6 +37,18 @@ function addDays(day: string, offset: number) {
 }
 
 describe("split Football Daily publication runtimes", () => {
+  it("mirrors the weighted Football schedule while preserving Sept. 23 Sports Feud", () => {
+    expect(footballTodayGameForDay("2026-09-23")).toBe("sports_feud");
+    expect(footballTodayGameForDay("2026-09-24")).toBe("millionaire");
+    expect(footballTodayGameForDay("2026-09-25")).toBe("sports_feud");
+    expect(footballTodayGameForDay("2026-09-26")).toBe("who_am_i");
+    expect(footballTodayGameForDay("2026-09-27")).toBe("wavelength");
+    expect(footballTodayGameForDay("2026-09-28")).toBe("find_leader");
+    expect(footballTodayGameForDay("2026-09-29")).toBe("millionaire");
+    expect(footballTodayScheduleVersionForDay("2026-09-24")).toBe("football-daily-v15-weighted-sep24");
+    expect(footballTodayScheduleVersionForDay("2026-09-25")).toBe("football-daily-v16-weighted-sep25");
+  });
+
   it("matches the canonical persisted setup across the live future rotation", () => {
     for (let offset = 0; offset < 40; offset += 1) {
       const day = addDays("2026-09-13", offset);
