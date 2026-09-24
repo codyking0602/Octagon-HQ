@@ -7,6 +7,7 @@ const bottomNav = readFileSync("src/components/BottomNavigation.tsx", "utf8");
 const home = readFileSync("src/features/home/HomePage.tsx", "utf8");
 const router = readFileSync("src/app/router.tsx", "utf8");
 const migration = readFileSync("supabase/migrations/202612310175_mlb_playoffs_foundation.sql", "utf8");
+const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
 
 describe("MLB Playoffs rollout gate", () => {
   it("stays owner-only until the explicit public release", () => {
@@ -38,6 +39,13 @@ describe("MLB Playoffs rollout gate", () => {
     expect(migration).toContain("'\{\"teams\":[],\"nodes\":[]\}'::jsonb".replace(/\\\{/g, "{").replace(/\\\}/g, "}"));
     expect(migration).toContain("if not v_season.field_ready then");
     expect(migration).toContain("mlb_playoffs_field_not_ready");
+  });
+
+  it("keeps critical team identity readable on phone layouts", () => {
+    expect(styles).toContain("overflow-wrap: anywhere;");
+    const teamRule = styles.match(/\.mlb-team-choice span \{[\s\S]*?\}/)?.[0] ?? "";
+    expect(teamRule).not.toContain("text-overflow: ellipsis");
+    expect(teamRule).not.toContain("white-space: nowrap");
   });
 
   it("keeps bracket scoring progressive and simple", () => {
