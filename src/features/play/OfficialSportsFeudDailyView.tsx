@@ -8,6 +8,7 @@ import type { CSSProperties, FormEvent } from "react";
 import { createPortal } from "react-dom";
 import {
   FAMILY_FEUD_BOARD_ANSWER_COUNT,
+  FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT,
   FAMILY_FEUD_FAST_MONEY_RAW_MAX,
   FAMILY_FEUD_FAST_MONEY_TIME_MS,
   FAMILY_FEUD_MAIN_BOARD_MAX,
@@ -15,6 +16,12 @@ import {
   FAMILY_FEUD_STRIKES_PER_BOARD,
 } from "../games/familyFeudEngine";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
+import type { TodayChallengeAdvanceOptions } from "./useTodayChallengeRuntime";
+import {
+  optimisticSportsFeudFastMoneyProjection,
+  optimisticSportsFeudFastMoneyPublicState,
+  optimisticSportsFeudFastMoneyTimeout,
+} from "./sportsFeudDailyOptimistic";
 import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
@@ -159,7 +166,10 @@ export function OfficialSportsFeudDailyView({
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
-  onAdvance: (action: Record<string, unknown>) => void;
+  onAdvance: (
+    action: Record<string, unknown>,
+    options?: TodayChallengeAdvanceOptions,
+  ) => void;
   onExit?: () => void;
 }) {
   const initial = initialPresentation(projection);
@@ -179,7 +189,9 @@ export function OfficialSportsFeudDailyView({
   const [viewportOffsetTop, setViewportOffsetTop] = useState(0);
   const mainInputRef = useRef<HTMLInputElement>(null);
   const fastInputRef = useRef<HTMLInputElement>(null);
-  const pendingKindRef = useRef<"main" | "fast" | null>(null);
+  const pendingKindRef = useRef<"main" | null>(null);
+  const fastLocalIndexRef = useRef(Number(record(projection.publicState.fast_money).answered_count ?? 0));
+  const fastSessionClosedRef = useRef(false);
   const pendingBoardIndexRef = useRef(0);
   const submittedAtRef = useRef(0);
   const lastSubmittedRef = useRef("");
@@ -278,34 +290,21 @@ export function OfficialSportsFeudDailyView({
       return () => window.clearTimeout(revealTimer);
     }
 
-    if (kind === "fast") {
-      const response = record(nextState.last_feedback);
-      const responseType = String(response.type ?? "");
-      setDisplayState(nextState);
-      if (responseType === "ambiguous") {
-        setFeedback("BE MORE SPECIFIC");
-        setAnswer(lastSubmittedRef.current);
-      } else {
-        setFeedback(null);
-        setAnswer("");
-      }
-      pendingKindRef.current = null;
+    setDisplayState(nextState);
+    if (scene === "fast") {
+      const nextFast = record(nextState.fast_money);
+      fastLocalIndexRef.current = Number(nextFast.answered_count ?? fastLocalIndexRef.current);
       if (nextState.complete === true) {
+        fastSessionClosedRef.current = true;
         fastInputRef.current?.blur();
         setFastRevealIndex(0);
         setFastRevealPhase("answer");
         setDisplayedFastTotal(0);
         setScene("reveal");
-      } else {
-        // Fast Money is a single 50-second typing session. Keep the same native
-        // input focused between server-owned answers so iOS never folds the
-        // keyboard between prompts.
+      } else if (nextFast.client_pending_complete !== true) {
         fastInputRef.current?.focus({ preventScroll: true });
       }
-      return;
     }
-
-    setDisplayState(nextState);
   }, [projection.progressRevision, projection.publicState]);
 
   useEffect(() => {
@@ -315,18 +314,33 @@ export function OfficialSportsFeudDailyView({
     deadlineRef.current = performance.now() + stored;
     setTimeRemainingMs(stored);
     const interval = window.setInterval(() => {
+      if (fastSessionClosedRef.current) return;
       setTimeRemainingMs(Math.max(0, deadlineRef.current - performance.now()));
     }, 80);
     return () => window.clearInterval(interval);
   }, [scene]);
 
   useEffect(() => {
-    if (scene !== "fast" || timeRemainingMs > 0 || timeoutQueuedRef.current || pendingKindRef.current) return;
+    if (
+      scene !== "fast"
+      || timeRemainingMs > 0
+      || timeoutQueuedRef.current
+      || fastSessionClosedRef.current
+    ) return;
     timeoutQueuedRef.current = true;
-    pendingKindRef.current = "fast";
-    submittedAtRef.current = performance.now();
-    onAdvance({ type: "timeout" });
-  }, [onAdvance, projection.progressRevision, scene, timeRemainingMs]);
+    fastSessionClosedRef.current = true;
+    setDisplayState((current) => optimisticSportsFeudFastMoneyTimeout({
+      ...projection,
+      publicState: current,
+    }).publicState);
+    onAdvance(
+      { type: "timeout" },
+      {
+        dedupeKey: "sports-feud:fast-money:timeout",
+        optimisticUpdate: optimisticSportsFeudFastMoneyTimeout,
+      },
+    );
+  }, [onAdvance, projection, scene, timeRemainingMs]);
 
   useEffect(() => {
     if (scene !== "reveal") return undefined;
@@ -381,6 +395,17 @@ export function OfficialSportsFeudDailyView({
   const slots = records(mainBoard.slots);
   const answerReveal = records(mainBoard.answer_reveal);
   const currentFastQuestion = record(fastState.current_question);
+  const fastAnsweredCount = Math.min(
+    FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT,
+    Number(fastState.answered_count ?? 0),
+  );
+  const fastQuestionIndex = fastState.question_index == null
+    ? Math.min(FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT - 1, fastAnsweredCount)
+    : Math.max(0, Math.min(
+        FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT - 1,
+        Number(fastState.question_index ?? 0),
+      ));
+  const fastFinishing = fastState.client_pending_complete === true && !projection.officialAttempt;
   const finalScore = projection.officialAttempt?.normalizedScore ?? Number(displayState.hq_score ?? 0);
   const finalMain = projection.officialAttempt
     ? Number(projection.officialAttempt.publicResult.main_points ?? displayState.main_points ?? 0)
@@ -442,6 +467,10 @@ export function OfficialSportsFeudDailyView({
   }
 
   function startFastMoney() {
+    const currentFast = record(displayState.fast_money);
+    fastLocalIndexRef.current = Number(currentFast.answered_count ?? 0);
+    fastSessionClosedRef.current = false;
+    timeoutQueuedRef.current = false;
     setFeedback(null);
     setAnswer("");
     setFastRevealIndex(0);
@@ -453,16 +482,62 @@ export function OfficialSportsFeudDailyView({
   function submitFast(event: FormEvent) {
     event.preventDefault();
     const value = answer.trim();
-    if (!value || busy || pendingKindRef.current || scene !== "fast") return;
-    lastSubmittedRef.current = value;
-    pendingKindRef.current = "fast";
-    submittedAtRef.current = performance.now();
-    setFeedback(null);
-    onAdvance({
-      type: "answer",
+    if (!value || scene !== "fast" || fastSessionClosedRef.current) return;
+
+    const questionIndex = fastLocalIndexRef.current;
+    const prompts = records(setup.fast_money_prompts);
+    const question = prompts[questionIndex];
+    const questionId = String(question?.id ?? "");
+    if (!questionId || questionIndex >= FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT) return;
+
+    const capturedTimeRemainingMs = Math.max(
+      0,
+      Math.floor(deadlineRef.current - performance.now()),
+    );
+    if (capturedTimeRemainingMs <= 0) {
+      setTimeRemainingMs(0);
+      return;
+    }
+
+    const optimisticAction = {
+      questionIndex,
+      questionId,
       answer: value,
-      time_remaining_ms: Math.floor(timeRemainingMs),
-    });
+      timeRemainingMs: capturedTimeRemainingMs,
+    };
+    fastLocalIndexRef.current = questionIndex + 1;
+    if (fastLocalIndexRef.current >= FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT) {
+      fastSessionClosedRef.current = true;
+    }
+
+    setDisplayState((current) => optimisticSportsFeudFastMoneyPublicState(
+      current,
+      setup,
+      optimisticAction,
+    ));
+    setTimeRemainingMs(capturedTimeRemainingMs);
+    setFeedback(null);
+    setAnswer("");
+    if (!fastSessionClosedRef.current) {
+      fastInputRef.current?.focus({ preventScroll: true });
+    }
+
+    onAdvance(
+      {
+        type: "answer",
+        answer: value,
+        question_id: questionId,
+        question_index: questionIndex,
+        time_remaining_ms: capturedTimeRemainingMs,
+      },
+      {
+        dedupeKey: `sports-feud:fast-money:${questionIndex}:${questionId}`,
+        optimisticUpdate: (current) => optimisticSportsFeudFastMoneyProjection(
+          current,
+          optimisticAction,
+        ),
+      },
+    );
   }
 
   const view = (
@@ -604,15 +679,15 @@ export function OfficialSportsFeudDailyView({
           </header>
           <div className="feud-fast-showdown">
             <section className="feud-fast-question">
-              <span className="feud-fast-progress">{Number(fastState.question_index ?? 0) + 1} OF 5</span>
+              <span className="feud-fast-progress">{fastFinishing ? 5 : fastQuestionIndex + 1} OF 5</span>
               <small>{hqName} · FAST MONEY</small>
-              <h1>{String(currentFastQuestion.prompt ?? "")}</h1>
+              <h1>{fastFinishing ? "LOCKING OFFICIAL SCORE…" : String(currentFastQuestion.prompt ?? "")}</h1>
               <div className="feud-fast-dots" aria-label="Fast Money progress">
                 {Array.from({ length: 5 }, (_, index) => (
                   <i
-                    className={index < Number(fastState.answered_count ?? 0)
+                    className={index < fastAnsweredCount
                       ? "is-done"
-                      : index === Number(fastState.question_index ?? 0) ? "is-current" : ""}
+                      : !fastFinishing && index === fastQuestionIndex ? "is-current" : ""}
                     key={index}
                   />
                 ))}
@@ -622,7 +697,7 @@ export function OfficialSportsFeudDailyView({
 
           <div className="feud-fast-board-progress" aria-label="Fast Money submitted answers">
             {Array.from({ length: 5 }, (_value, index) => (
-              <div className={index < Number(fastState.answered_count ?? 0) ? "is-filled" : index === Number(fastState.question_index ?? 0) ? "is-current" : ""} key={index}>
+              <div className={index < fastAnsweredCount ? "is-filled" : !fastFinishing && index === fastQuestionIndex ? "is-current" : ""} key={index}>
                 <span>{index < fastSubmitted.length ? String(fastSubmitted[index]?.submitted_answer ?? "") : ""}</span>
               </div>
             ))}
@@ -635,16 +710,22 @@ export function OfficialSportsFeudDailyView({
                 ref={fastInputRef}
                 value={answer}
                 onChange={(event) => {
-                  if (!busy && !pendingKindRef.current) setAnswer(event.target.value);
+                  if (!fastFinishing) setAnswer(event.target.value);
                 }}
                 placeholder="Type your answer"
                 autoCapitalize="words"
                 autoCorrect="off"
                 enterKeyHint="send"
                 aria-label="Fast Money answer"
-                aria-busy={busy || Boolean(pendingKindRef.current)}
+                aria-busy={fastFinishing}
+                disabled={fastFinishing}
               />
-              <button type="submit" aria-label="Submit Fast Money answer" onPointerDown={(event) => event.preventDefault()} disabled={busy}>↑</button>
+              <button
+                type="submit"
+                aria-label="Submit Fast Money answer"
+                onPointerDown={(event) => event.preventDefault()}
+                disabled={fastFinishing}
+              >↑</button>
             </div>
           </form>
         </section>

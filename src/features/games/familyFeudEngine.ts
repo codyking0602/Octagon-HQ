@@ -55,6 +55,7 @@ export interface FamilyFeudFastMoneyResult {
   entityId: string | null;
   points: number;
   matchKind: FamilyFeudMatchKind | "unrecognized";
+  timeRemainingMs?: number;
 }
 
 export interface FamilyFeudState {
@@ -527,6 +528,7 @@ export function submitFamilyFeudFastMoneyAnswer(
   current: FamilyFeudState,
   input: string,
   requestedTimeRemainingMs?: number,
+  options: { consumeAmbiguous?: boolean } = {},
 ): FamilyFeudTransition {
   assertFamilyFeudPack(pack);
   if (current.phase !== "fast-money") throw new Error("Family Feud is not in Fast Money.");
@@ -542,7 +544,7 @@ export function submitFamilyFeudFastMoneyAnswer(
   const question = pack.fastMoney[questionIndex]!;
   const match = matchFamilyFeudAnswer(pack, question, input);
 
-  if (match.status === "ambiguous" || match.status === "empty") {
+  if (match.status === "empty" || (match.status === "ambiguous" && !options.consumeAmbiguous)) {
     return { state, outcome: { type: "ambiguous", boardIndex: null } };
   }
 
@@ -561,6 +563,7 @@ export function submitFamilyFeudFastMoneyAnswer(
     entityId,
     points,
     matchKind,
+    timeRemainingMs: state.fastMoneyTimeRemainingMs,
   });
   state.fastMoneyIndex += 1;
   settleFastMoneyIfComplete(state);

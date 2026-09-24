@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { blindResumeV3RoundPoints, createBlindResumeV3Card } from "../play/blindResumeV3";
 import {
@@ -205,10 +206,15 @@ describe("Football Blind Resume Daily v4", () => {
     repositoryMocks.loadToday.mockResolvedValue(projection);
     repositoryMocks.advance.mockResolvedValue(projection);
 
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
     render(
-      <MemoryRouter>
-        <FootballTodayChallengePage />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <FootballTodayChallengePage />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
     expect(await screen.findByText("Which football career ranks higher?")).toBeInTheDocument();
@@ -227,10 +233,18 @@ describe("Football Blind Resume Daily v4", () => {
 
     const reveal = screen.getByRole("button", { name: `SHOW ${nextFactCount} MORE ${nextFactCount === 1 ? "FACT" : "FACTS"}` });
     fireEvent.click(reveal);
-    await waitFor(() => expect(repositoryMocks.advance).toHaveBeenCalledWith(projection, { reveal: true }));
+    await waitFor(() => expect(repositoryMocks.advance).toHaveBeenCalledWith(
+      projection,
+      { reveal: true },
+      expect.any(String),
+    ));
 
     fireEvent.click(screen.getByRole("button", { name: "PICK A" }));
-    await waitFor(() => expect(repositoryMocks.advance).toHaveBeenCalledWith(projection, { choice: "A" }));
+    await waitFor(() => expect(repositoryMocks.advance).toHaveBeenCalledWith(
+      projection,
+      { choice: "A" },
+      expect.any(String),
+    ));
   });
 
   it("keeps the legacy Football route Daily-only instead of restoring a second game owner", () => {

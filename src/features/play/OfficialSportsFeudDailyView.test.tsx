@@ -84,7 +84,13 @@ function projection(
     contentVersion: "family-feud-daily-v2",
     scoringVersion: "family-feud-score-v2",
     fallbackReason: null,
-    publicSetup: { presentation_domain: "cfb" },
+    publicSetup: {
+      presentation_domain: "cfb",
+      fast_money_prompts: Array.from({ length: 5 }, (_, index) => ({
+        id: "fast-" + (index + 1),
+        prompt: "Fast prompt " + (index + 1),
+      })),
+    },
     progressRevision,
     publicState,
     revealSetup: null,
@@ -132,31 +138,82 @@ describe("Official Sports Feud Daily mobile locks", () => {
     fireEvent.change(input, { target: { value: "Myles Garrett" } });
     fireEvent.submit(input.closest("form")!);
 
-    expect(onAdvance).toHaveBeenCalledWith(expect.objectContaining({
-      type: "answer",
-      answer: "Myles Garrett",
-    }));
+    expect(onAdvance).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "answer",
+        answer: "Myles Garrett",
+        question_id: "fast-2",
+      }),
+      expect.objectContaining({
+        dedupeKey: expect.stringContaining("fast-2"),
+        optimisticUpdate: expect.any(Function),
+      }),
+    );
+    expect(screen.getByText("Fast prompt 3")).toBeInTheDocument();
+    expect(screen.getByLabelText("Fast Money answer")).toHaveValue("");
+    expect(screen.getByLabelText("Fast Money answer")).toHaveFocus();
 
     rerender(
       <OfficialSportsFeudDailyView
-        projection={first}
+        projection={{
+          ...first,
+          publicState: {
+            ...first.publicState,
+            fast_money: {
+              ...(first.publicState.fast_money as Record<string, unknown>),
+              answered_count: 2,
+              question_index: 2,
+              current_question: { id: "fast-3", prompt: "Fast prompt 3" },
+              submitted_answers: [
+                { submitted_answer: "Answer 1" },
+                { submitted_answer: "Myles Garrett" },
+              ],
+            },
+          },
+        }}
         busy={true}
         onAdvance={onAdvance}
       />,
     );
 
-    expect(input).not.toBeDisabled();
-    expect(input).toHaveFocus();
-
-    rerender(
+    expect(screen.getByLabelText("Fast Money answer")).not.toBeDisabled();
+    expect(screen.getByLabelText("Fast Money answer")).toHaveFocus();
+  });
+  it("queues all five Fast Money answers locally before any server acknowledgement", () => {
+    const onAdvance = vi.fn();
+    render(
       <OfficialSportsFeudDailyView
-        projection={projection(fastState(2), 2)}
+        projection={projection({
+          ...fastState(0),
+          main_boards: [
+            { prompt: "Round one", strikes: 3, settled: true, slots: [], answer_reveal: [] },
+            { prompt: "Round two", strikes: 3, settled: true, slots: [], answer_reveal: [] },
+          ],
+        }, 1)}
         busy={false}
         onAdvance={onAdvance}
       />,
     );
 
-    expect(screen.getByText("Fast prompt 3")).toBeInTheDocument();
-    expect(screen.getByLabelText("Fast Money answer")).toHaveFocus();
+    fireEvent.click(screen.getByRole("button", { name: "GO TO FAST MONEY" }));
+    fireEvent.click(screen.getByRole("button", { name: "START 50 SECONDS" }));
+
+    screen.getByLabelText("Fast Money answer").focus();
+    for (let index = 0; index < 5; index += 1) {
+      const input = screen.getByLabelText("Fast Money answer");
+      fireEvent.change(input, { target: { value: "Answer " + (index + 1) } });
+      fireEvent.submit(input.closest("form")!);
+      if (index < 4) {
+        expect(screen.getByText("Fast prompt " + (index + 2))).toBeInTheDocument();
+        expect(screen.getByLabelText("Fast Money answer")).toHaveFocus();
+      }
+    }
+
+    expect(onAdvance).toHaveBeenCalledTimes(5);
+    expect(onAdvance.mock.calls.map(([action]) => (action as Record<string, unknown>).question_id))
+      .toEqual(["fast-1", "fast-2", "fast-3", "fast-4", "fast-5"]);
+    expect(screen.getByText("LOCKING OFFICIAL SCORE…")).toBeInTheDocument();
+    expect(screen.getByLabelText("Fast Money answer")).toBeDisabled();
   });
+
 });

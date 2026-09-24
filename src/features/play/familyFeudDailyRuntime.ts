@@ -377,10 +377,27 @@ export function advanceFamilyFeudDailyRuntime(
     if (state.phase === "main") {
       transition = submitFamilyFeudMainAnswer(pack, state, answer);
     } else {
+      const currentQuestion = pack.fastMoney[state.fastMoneyIndex];
+      const requestedQuestionId = action.question_id == null ? null : String(action.question_id);
+      const requestedQuestionIndex = action.question_index == null
+        ? null
+        : Number(action.question_index);
+      if (
+        (requestedQuestionId && currentQuestion?.id !== requestedQuestionId)
+        || (requestedQuestionIndex != null && requestedQuestionIndex !== state.fastMoneyIndex)
+      ) {
+        throw new Error("Fast Money question changed before this answer could sync.");
+      }
       const timeRemaining = action.time_remaining_ms == null
         ? undefined
         : Number(action.time_remaining_ms);
-      transition = submitFamilyFeudFastMoneyAnswer(pack, state, answer, timeRemaining);
+      transition = submitFamilyFeudFastMoneyAnswer(
+        pack,
+        state,
+        answer,
+        timeRemaining,
+        { consumeAmbiguous: true },
+      );
     }
   } else {
     throw new Error("Family Feud action is invalid.");

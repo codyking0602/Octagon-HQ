@@ -189,7 +189,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
 
     let result = advanceFamilyFeudDailyRuntime(
       context(publication, submission),
-      { type: "answer", answer: "Alpha One", time_remaining_ms: 44_000 },
+      { type: "answer", answer: "Alpha One", question_id: "fast-1", question_index: 0, time_remaining_ms: 44_000 },
     );
     submission = result.submissionState;
 
@@ -202,15 +202,21 @@ describe("Family Feud V2 Daily persistence contract", () => {
       points: null,
     });
 
-    for (const remaining of [
-      ["Bravo Two", 40_000],
-      ["Charlie Three", 35_000],
-      ["Delta Four", 30_000],
-      ["Echo Five", 25_000],
+    for (const [answer, timeRemaining, questionIndex] of [
+      ["Bravo Two", 40_000, 1],
+      ["Charlie Three", 35_000, 2],
+      ["Delta Four", 30_000, 3],
+      ["Echo Five", 25_000, 4],
     ] as const) {
       result = advanceFamilyFeudDailyRuntime(
         context(publication, submission),
-        { type: "answer", answer: remaining[0], time_remaining_ms: remaining[1] },
+        {
+          type: "answer",
+          answer,
+          question_id: "fast-" + (questionIndex + 1),
+          question_index: questionIndex,
+          time_remaining_ms: timeRemaining,
+        },
       );
       submission = result.submissionState;
     }
@@ -240,6 +246,68 @@ describe("Family Feud V2 Daily persistence contract", () => {
       points: 8,
     });
     expect(result.publicState.hq_score).toBe(30);
+  });
+
+  it("rejects a queued Fast Money answer if its prompt no longer matches authoritative progress", () => {
+    const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
+    const { submission } = strikeOutBothBoards(publication);
+
+    expect(() => advanceFamilyFeudDailyRuntime(
+      context(publication, submission),
+      {
+        type: "answer",
+        answer: "Alpha One",
+        question_id: "fast-2",
+        time_remaining_ms: 44_000,
+      },
+    )).toThrow("Fast Money question changed before this answer could sync.");
+  });
+
+  it("consumes zero-point Daily Fast Money answers and preserves per-answer timing evidence", () => {
+    const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
+    const { submission } = strikeOutBothBoards(publication);
+
+    const result = advanceFamilyFeudDailyRuntime(
+      context(publication, submission),
+      {
+        type: "answer",
+        answer: "India Nine",
+        question_id: "fast-1",
+        question_index: 0,
+        time_remaining_ms: 37_250,
+      },
+    );
+
+    expect(result.publicState.fast_money).toMatchObject({
+      answered_count: 1,
+      question_index: 1,
+      current_question: { id: "fast-2" },
+    });
+    const engineState = result.submissionState.engine_state as {
+      fastMoneyResults: Array<Record<string, unknown>>;
+    };
+    expect(engineState.fastMoneyResults[0]).toMatchObject({
+      questionId: "fast-1",
+      submittedText: "India Nine",
+      points: 0,
+      timeRemainingMs: 37_250,
+    });
+  });
+
+  it("rejects out-of-order Fast Money prompt identities before grading", () => {
+    const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
+    const { submission } = strikeOutBothBoards(publication);
+
+    expect(() => advanceFamilyFeudDailyRuntime(
+      context(publication, submission),
+      {
+        type: "answer",
+        answer: "Alpha One",
+        question_id: "fast-2",
+        question_index: 1,
+        time_remaining_ms: 44_000,
+      },
+    )).toThrow(/question changed/i);
   });
 
   it("settles unanswered Fast Money prompts at zero when time expires", () => {

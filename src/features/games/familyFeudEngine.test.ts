@@ -208,6 +208,34 @@ describe("Family Feud V2 engine contract", () => {
     expect(transition.state.fastMoneyTimeRemainingMs).toBe(36_000);
   });
 
+  it("can consume an ambiguous Fast Money answer as zero for latency-independent Daily play", () => {
+    const state: FamilyFeudState = { ...createFamilyFeudState(), phase: "fast-money" };
+    const transition = submitFamilyFeudFastMoneyAnswer(
+      pack,
+      state,
+      "Williams",
+      36_000,
+      { consumeAmbiguous: true },
+    );
+
+    expect(transition.outcome).toMatchObject({
+      type: "fast-money-answer",
+      questionIndex: 0,
+      entityId: null,
+      points: 0,
+    });
+    expect(transition.state.fastMoneyIndex).toBe(1);
+    expect(transition.state.fastMoneyTimeRemainingMs).toBe(36_000);
+    expect(transition.state.fastMoneyResults[0]).toMatchObject({
+      questionId: "fm-1",
+      submittedText: "Williams",
+      entityId: null,
+      points: 0,
+      matchKind: "unrecognized",
+      timeRemainingMs: 36_000,
+    });
+  });
+
   it("advances Fast Money with variable points and zero for a valid off-board answer", () => {
     let state: FamilyFeudState = { ...createFamilyFeudState(), phase: "fast-money" };
 

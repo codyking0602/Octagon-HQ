@@ -74,6 +74,8 @@ export function HitTheNumberGameView({
   controls,
   resultActions,
   busy = false,
+  selectionBusy = busy,
+  lockBusy = busy,
 }: {
   setup: HitTheNumberPublicSetup;
   format?: HitTheNumberFormatSetup;
@@ -92,6 +94,8 @@ export function HitTheNumberGameView({
   controls?: ReactNode;
   resultActions?: ReactNode;
   busy?: boolean;
+  selectionBusy?: boolean;
+  lockBusy?: boolean;
 }) {
   const stat = HIT_THE_NUMBER_STATS.find((row) => row.id === setup.statId)!;
   const fighters = setupFighters(setup);
@@ -174,7 +178,7 @@ export function HitTheNumberGameView({
                     className={`hit-number-role-slot${active ? " is-active" : ""}${fighter ? " is-filled" : ""}`}
                     aria-label={`${slot.label}: ${fighter?.name ?? "empty"}`}
                     aria-pressed={active}
-                    disabled={busy || Boolean(result)}
+                    disabled={selectionBusy || Boolean(result)}
                     onClick={() => onSelectSlot?.(index)}
                     key={slot.id}
                   >
@@ -250,7 +254,7 @@ export function HitTheNumberGameView({
             <button
               className={`hit-number-lock${ready ? " is-ready" : ""}`}
               type="button"
-              disabled={!ready || busy}
+              disabled={!ready || lockBusy}
               onClick={onLock}
             >
               {ready
@@ -318,7 +322,7 @@ export function HitTheNumberGameView({
                     data-fighter-id={fighter.id}
                     data-divisions={fighter.divisions.join("|")}
                     aria-pressed={selected}
-                    disabled={busy || usedElsewhere || revealRandomPool}
+                    disabled={selectionBusy || usedElsewhere || revealRandomPool}
                     onClick={() => onToggleFighter(fighter.id)}
                     key={fighter.id}
                   >

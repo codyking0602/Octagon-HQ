@@ -24,7 +24,10 @@ import type {
   TodayChallengeProjection,
   TodayChallengeRepository,
 } from "./todayChallengeRepository";
-import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
+import {
+  useTodayChallengeRuntime,
+  type TodayChallengeAdvanceOptions,
+} from "./useTodayChallengeRuntime";
 
 export { OfficialTodayChallengeView } from "./OfficialTodayChallengePresentation";
 
@@ -73,7 +76,10 @@ export function OfficialTodayChallengeContent({
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
-  onAdvance: (action: Record<string, unknown>) => void;
+  onAdvance: (
+    action: Record<string, unknown>,
+    options?: TodayChallengeAdvanceOptions,
+  ) => void;
   onNavigate: (route: string) => void;
   showMillionaireExit?: boolean;
   onSportsFeudExit?: () => void;
@@ -221,7 +227,7 @@ export default function OfficialTodayChallengePage({
       <OfficialTodayChallengeContent
         projection={runtime.projection}
         busy={runtime.busy}
-        onAdvance={(action) => { void runtime.advance(action); }}
+        onAdvance={(action, options) => { void runtime.advance(action, options); }}
         onNavigate={(route) => navigate(route)}
         showMillionaireExit
       />
