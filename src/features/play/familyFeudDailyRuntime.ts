@@ -3,6 +3,7 @@ import {
   FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT,
   FAMILY_FEUD_FAST_MONEY_RAW_MAX,
   FAMILY_FEUD_FAST_MONEY_TIME_MS,
+  FAMILY_FEUD_MAIN_ALSO_ACCEPTED_POINTS,
   FAMILY_FEUD_MAIN_BOARD_MAX,
   FAMILY_FEUD_MAIN_RAW_MAX,
   FAMILY_FEUD_RAW_MAX,
@@ -75,9 +76,13 @@ function answerById(
   questionIndex: number,
   entityId: string,
 ): FamilyFeudRankedAnswer {
-  const answer = pack.mainBoards[questionIndex]!.answers.find((row) => row.entityId === entityId);
-  if (!answer) throw new Error("Family Feud revealed answer is outside its board.");
-  return answer;
+  const question = pack.mainBoards[questionIndex]!;
+  const answer = question.answers.find((row) => row.entityId === entityId);
+  if (answer) return answer;
+  if ((question.alsoAcceptedEntityIds ?? []).includes(entityId)) {
+    return { entityId, points: FAMILY_FEUD_MAIN_ALSO_ACCEPTED_POINTS };
+  }
+  throw new Error("Family Feud revealed answer is outside its board.");
 }
 
 function mainBoardPublicState(
@@ -164,11 +169,12 @@ function publicFeedback(pack: FamilyFeudPack, outcome?: FamilyFeudOutcome | null
       };
     case "board-also-accepted":
       return {
-        type: "accepted",
+        type: "correct",
         board_index: outcome.boardIndex,
+        slot_index: outcome.slotIndex,
         entity: entityPresentation(pack, outcome.entityId),
-        points: 0,
-        message: "VALID ANSWER — 0 POINTS",
+        points: outcome.points,
+        message: "GOOD ANSWER",
       };
     case "ambiguous":
       return {

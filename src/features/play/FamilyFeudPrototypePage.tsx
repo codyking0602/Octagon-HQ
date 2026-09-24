@@ -11,6 +11,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import {
   FAMILY_FEUD_BOARD_ANSWER_COUNT,
   FAMILY_FEUD_FAST_MONEY_TIME_MS,
+  FAMILY_FEUD_MAIN_ALSO_ACCEPTED_POINTS,
   FAMILY_FEUD_MAIN_BOARD_MAX,
   FAMILY_FEUD_MAIN_RAW_MAX,
   FAMILY_FEUD_FAST_MONEY_RAW_MAX,
@@ -69,7 +70,7 @@ function feedbackCopy(outcome: FamilyFeudOutcome | null) {
   switch (outcome.type) {
     case "board-correct": return "+" + outcome.points + " HQ POINTS";
     case "board-strike": return "STRIKE — KEEP GOING";
-    case "board-also-accepted": return "ACCEPTED — NOT TOP 4";
+    case "board-also-accepted": return "+" + outcome.points + " HQ POINTS";
     case "ambiguous": return "BE MORE SPECIFIC";
     case "already-guessed": return "ALREADY GUESSED";
     case "fast-money-answer": return "LOCKED";
@@ -250,7 +251,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
       const timer = window.setTimeout(() => {
         setState(pending.state);
         setMainReveal({
-          phase: pending.outcome.type === "board-correct" ? "correct" : "strike",
+          phase: pending.outcome.type === "board-correct" || pending.outcome.type === "board-also-accepted" ? "correct" : "strike",
           transition: pending,
         });
       }, MAIN_SUSPENSE_MS);
@@ -442,11 +443,21 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
   const mainBoardPoints = familyFeudMainBoardScore(pack, state, displayBoardIndex);
   const foundIds = new Set(mainBoardState.revealedEntityIds);
   const foundMainAnswers = mainBoardState.revealedEntityIds
-    .map((entityId) => mainQuestion.answers.find((row) => row.entityId === entityId))
+    .map((entityId) => {
+      const ranked = mainQuestion.answers.find((row) => row.entityId === entityId);
+      if (ranked) return ranked;
+      if ((mainQuestion.alsoAcceptedEntityIds ?? []).includes(entityId)) {
+        return { entityId, points: FAMILY_FEUD_MAIN_ALSO_ACCEPTED_POINTS };
+      }
+      return null;
+    })
     .filter((row): row is FamilyFeudRankedAnswer => Boolean(row));
   const mainDisplayAnswers = foundMainAnswers;
   const newlyRevealedEntityId = mainReveal.phase === "correct"
-    && mainReveal.transition?.outcome.type === "board-correct"
+    && (
+      mainReveal.transition?.outcome.type === "board-correct"
+      || mainReveal.transition?.outcome.type === "board-also-accepted"
+    )
       ? mainReveal.transition.outcome.entityId
       : null;
 

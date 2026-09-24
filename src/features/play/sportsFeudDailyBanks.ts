@@ -21,6 +21,7 @@ import { UFC_SPORTS_FEUD_FAST_2 } from "./ufcSportsFeudFast2";
 import { UFC_SPORTS_FEUD_FAST_3 } from "./ufcSportsFeudFast3";
 import { UFC_SPORTS_FEUD_FAST_4 } from "./ufcSportsFeudFast4";
 import { UFC_SPORTS_FEUD_FAST_5 } from "./ufcSportsFeudFast5";
+import { UFC_SPORTS_FEUD_SEP24_PROTOTYPE } from "./ufcSportsFeudSep24Prototype";
 import type {
   SportsFeudAuthoredAnswer,
   SportsFeudAuthoredQuestion,
@@ -229,10 +230,16 @@ export function buildSportsFeudPack(
   day: string,
 ): FamilyFeudPack {
   const entities: FamilyFeudEntity[] = [];
-  const authoredMain = selectMain(domain, day);
+  const useSep24UfcPrototype = domain === "ufc" && day === "2026-09-24";
+  const authoredMain = useSep24UfcPrototype
+    ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.main
+    : selectMain(domain, day);
+  const authoredFast = useSep24UfcPrototype
+    ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.fastMoney
+    : selectFast(domain, day, authoredMain);
   const main = authoredMain.map((question) =>
     materializeQuestion(domain, question, MAIN_POINTS, entities));
-  const fast = selectFast(domain, day, authoredMain).map((question) =>
+  const fast = authoredFast.map((question) =>
     materializeQuestion(domain, question, FAST_POINTS, entities));
   return {
     id: `${SPORTS_FEUD_BANK_VERSION}-${domain}-${day}-${main.map((q) => q.id).join("-")}`,

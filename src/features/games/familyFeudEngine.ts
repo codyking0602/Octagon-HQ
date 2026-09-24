@@ -37,6 +37,8 @@ export const FAMILY_FEUD_FAST_MONEY_TIME_MS = 50_000;
 export const FAMILY_FEUD_MAIN_BOARD_MAX = 30;
 export const FAMILY_FEUD_MAIN_RAW_MAX = 60;
 export const FAMILY_FEUD_FAST_MONEY_QUESTION_MAX = 8;
+export const FAMILY_FEUD_MAIN_ALSO_ACCEPTED_POINTS = 2;
+export const FAMILY_FEUD_FAST_MONEY_ALSO_ACCEPTED_POINTS = 1;
 export const FAMILY_FEUD_FAST_MONEY_RAW_MAX = 40;
 export const FAMILY_FEUD_RAW_MAX = 100;
 
@@ -67,7 +69,7 @@ export interface FamilyFeudState {
   fastMoneyTimeRemainingMs: number;
 }
 
-export type FamilyFeudMatchKind = "exact" | "alias" | "surname" | "typo";
+export type FamilyFeudMatchKind = "exact" | "alias" | "first-name" | "surname" | "typo";
 
 export type FamilyFeudMatchResult =
   | { status: "matched"; entityId: string; kind: FamilyFeudMatchKind }
@@ -90,6 +92,8 @@ export type FamilyFeudOutcome =
       boardIndex: number;
       entityId: string;
       displayName: string;
+      slotIndex: number;
+      points: number;
     }
   | { type: "ambiguous"; boardIndex: number | null }
   | { type: "already-guessed"; boardIndex: number; entityId: string | null }
@@ -205,6 +209,12 @@ export function normalizeFamilyFeudInput(value: string) {
     .replace(/\s+/g, " ");
 }
 
+function personFirstName(displayName: string) {
+  const tokens = normalizeFamilyFeudInput(displayName).split(" ").filter(Boolean);
+  const first = tokens[0] ?? "";
+  return first === "the" ? "" : first;
+}
+
 function personSurname(displayName: string) {
   const tokens = normalizeFamilyFeudInput(displayName).split(" ").filter(Boolean);
   while (tokens.length > 1 && ["jr", "sr", "ii", "iii", "iv", "v"].includes(tokens[tokens.length - 1]!)) {
@@ -234,16 +244,24 @@ function editDistance(left: string, right: string) {
   return prior[right.length]!;
 }
 
-function typoAllowance(value: string) {
-  if (value.length < 5) return 0;
-  if (value.length < 9) return 1;
-  return 2;
+function typoAllowance(value: string, term: string) {
+  const maxLength = Math.max(value.length, term.length);
+  const phrase = value.includes(" ") && term.includes(" ");
+  if (phrase) {
+    if (maxLength < 10) return 2;
+    if (maxLength < 14) return 4;
+    return 6;
+  }
+  if (maxLength < 5) return 0;
+  if (maxLength < 9) return 1;
+  if (maxLength < 13) return 2;
+  return 3;
 }
 
 interface MatchTerm {
   entityId: string;
   term: string;
-  kind: "exact" | "alias" | "surname";
+  kind: "exact" | "alias" | "first-name" | "surname";
 }
 
 function questionEntities(pack: FamilyFeudPack, question: FamilyFeudQuestion) {
@@ -268,6 +286,8 @@ function matchTerms(pack: FamilyFeudPack, question: FamilyFeudQuestion) {
       if (term) terms.push({ entityId: entity.id, term, kind: "alias" });
     }
     if (entity.kind === "person") {
+      const firstName = personFirstName(entity.displayName);
+      if (firstName) terms.push({ entityId: entity.id, term: firstName, kind: "first-name" });
       const surname = personSurname(entity.displayName);
       if (surname) terms.push({ entityId: entity.id, term: surname, kind: "surname" });
     }
@@ -293,16 +313,17 @@ export function matchFamilyFeudAnswer(
       ? "exact"
       : matchingTerms.some((row) => row.kind === "alias")
         ? "alias"
-        : "surname";
+        : matchingTerms.some((row) => row.kind === "first-name")
+          ? "first-name"
+          : "surname";
     return { status: "matched", entityId: ids[0]!, kind };
   }
 
-  const allowance = typoAllowance(normalized);
-  if (allowance === 0) return { status: "unrecognized" };
-
   const byEntity = new Map<string, number>();
   for (const row of terms) {
-    if (row.term.length < 5) continue;
+    if (row.term.length < 3) continue;
+    const allowance = typoAllowance(normalized, row.term);
+    if (allowance === 0) continue;
     const distance = editDistance(normalized, row.term);
     if (distance > allowance) continue;
     const previous = byEntity.get(row.entityId);
@@ -386,11 +407,14 @@ export function familyFeudMainBoardScore(
   const question = pack.mainBoards[boardIndex];
   const board = state.mainBoards[boardIndex];
   if (!question || !board) return 0;
-  const revealed = new Set(board.revealedEntityIds);
-  return question.answers.reduce(
-    (sum, answer) => sum + (revealed.has(answer.entityId) ? answer.points : 0),
-    0,
-  );
+  return board.revealedEntityIds.reduce((sum, entityId) => {
+    const ranked = question.answers.find((answer) => answer.entityId === entityId);
+    if (ranked) return sum + ranked.points;
+    if ((question.alsoAcceptedEntityIds ?? []).includes(entityId)) {
+      return sum + FAMILY_FEUD_MAIN_ALSO_ACCEPTED_POINTS;
+    }
+    return sum;
+  }, 0);
 }
 
 export function familyFeudMainRawScore(pack: FamilyFeudPack, state: FamilyFeudState) {
@@ -484,15 +508,18 @@ export function submitFamilyFeudMainAnswer(
     match.status === "matched"
     && (question.alsoAcceptedEntityIds ?? []).includes(match.entityId)
   ) {
-    return {
-      state,
-      outcome: {
-        type: "board-also-accepted",
-        boardIndex,
-        entityId: match.entityId,
-        displayName: entityDisplayName(pack, match.entityId),
-      },
+    const displaySlotIndex = board.revealedEntityIds.length;
+    board.revealedEntityIds.push(match.entityId);
+    const outcome: FamilyFeudOutcome = {
+      type: "board-also-accepted",
+      boardIndex,
+      entityId: match.entityId,
+      displayName: entityDisplayName(pack, match.entityId),
+      slotIndex: displaySlotIndex,
+      points: FAMILY_FEUD_MAIN_ALSO_ACCEPTED_POINTS,
     };
+    advanceMainPhase(state);
+    return { state, outcome };
   }
 
   board.strikes = Math.min(FAMILY_FEUD_STRIKES_PER_BOARD, board.strikes + 1);
@@ -557,7 +584,7 @@ export function submitFamilyFeudFastMoneyAnswer(
     if (rankedAnswer || alsoAccepted) {
       entityId = match.entityId;
       matchKind = match.kind;
-      points = rankedAnswer?.points ?? 0;
+      points = rankedAnswer?.points ?? FAMILY_FEUD_FAST_MONEY_ALSO_ACCEPTED_POINTS;
     }
   }
 

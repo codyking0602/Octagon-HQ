@@ -81,6 +81,12 @@ function matchName(question: SportsFeudAuthoredQuestion, input: string) {
   };
 }
 
+function firstName(answer: SportsFeudAuthoredAnswer) {
+  const tokens = normalizeFamilyFeudInput(answer.name).split(" ").filter(Boolean);
+  const first = tokens[0] ?? "";
+  return first === "the" ? "" : first;
+}
+
 function surname(answer: SportsFeudAuthoredAnswer) {
   const tokens = normalizeFamilyFeudInput(answer.name).split(" ").filter(Boolean);
   while (
@@ -136,41 +142,57 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     }
   });
 
-  it("supports surnames for every unambiguous person answer while preserving ambiguity", () => {
+  it("supports unique person short names while preserving first-name/surname ambiguity", () => {
     const personQuestions = CFB_ALL.filter((question) => question.entityKind === "person");
     expect(personQuestions.length).toBeGreaterThan(0);
 
     for (const question of personQuestions) {
       const rows = candidates(question);
+      const byFirst = new Map<string, SportsFeudAuthoredAnswer[]>();
       const bySurname = new Map<string, SportsFeudAuthoredAnswer[]>();
       for (const answer of rows) {
-        const key = surname(answer);
-        const group = bySurname.get(key) ?? [];
-        group.push(answer);
-        bySurname.set(key, group);
+        const first = firstName(answer);
+        if (first) {
+          const group = byFirst.get(first) ?? [];
+          group.push(answer);
+          byFirst.set(first, group);
+        }
+        const last = surname(answer);
+        if (last) {
+          const group = bySurname.get(last) ?? [];
+          group.push(answer);
+          bySurname.set(last, group);
+        }
       }
 
       let unambiguousCount = 0;
       const { pack, runtimeQuestion } = materializeForMatch(question);
-      for (const [key, group] of bySurname) {
-        if (!key) continue;
-        const match = matchFamilyFeudAnswer(pack, runtimeQuestion, key);
-        if (group.length === 1) {
-          unambiguousCount += 1;
-          expect(match, `${question.id} surname ${key}`).toMatchObject({
-            status: "matched",
-            kind: "surname",
-          });
-        } else {
-          expect(match, `${question.id} surname ${key} should stay ambiguous`).toMatchObject({
-            status: "ambiguous",
-          });
+      for (const answer of rows) {
+        for (const [kind, key] of [
+          ["first-name", firstName(answer)],
+          ["surname", surname(answer)],
+        ] as const) {
+          if (!key) continue;
+          const owners = new Set([
+            ...(byFirst.get(key) ?? []),
+            ...(bySurname.get(key) ?? []),
+          ].map((row) => row.name));
+          const match = matchFamilyFeudAnswer(pack, runtimeQuestion, key);
+          if (owners.size === 1) {
+            unambiguousCount += 1;
+            expect(match, question.id + " " + kind + " " + key).toMatchObject({
+              status: "matched",
+            });
+          } else {
+            expect(match, question.id + " short-name " + key + " should stay ambiguous").toMatchObject({
+              status: "ambiguous",
+            });
+          }
         }
       }
       expect(unambiguousCount, question.id).toBeGreaterThan(0);
     }
   });
-
   it("resolves Saban and natural school shorthand", () => {
     expect(matchName(authoredQuestion("cfb-main-09-1"), "Saban")).toEqual({
       name: "Nick Saban",
