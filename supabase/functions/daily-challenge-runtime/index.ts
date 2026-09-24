@@ -418,6 +418,11 @@ async function whoAmIPublicationHistory(
 }
 
 async function materializeToday(admin: SupabaseClient) {
+  const relaunchReset = await admin.rpc("reset_sep24_ufc_sports_feud_for_relaunch", {});
+  if (relaunchReset.error) {
+    throw new Error("The September 24 UFC Sports Feud relaunch reset failed.");
+  }
+
   const requested = await admin.rpc("get_daily_challenge_materialization_request", {});
   if (requested.error) throw new Error("The official daily materialization request failed.");
   const request = requiredRecord(requested.data, "Daily materialization request");
