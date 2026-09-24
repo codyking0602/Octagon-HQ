@@ -27,6 +27,8 @@ import {
   FOOTBALL_TODAY_SCHEDULE_VERSION,
   FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION,
   FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION,
+  FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION,
+  FOOTBALL_WEIGHTED_SCHEDULE_VERSION,
 } from "./footballTodayChallengeSession";
 
 type JsonRecord = Record<string, unknown>;
@@ -44,6 +46,8 @@ function isoDay(offset: number) {
 }
 
 function setupScheduleVersion(day: string) {
+  if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SCHEDULE_VERSION;
+  if (day >= "2026-09-24") return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
   if (day >= "2026-09-23") return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
   if (day >= "2026-09-19") return FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION;
   if (day >= "2026-09-13") return FOOTBALL_TODAY_SCHEDULE_VERSION;
@@ -110,15 +114,23 @@ describe("Football Today’s Challenge session", () => {
     expect(FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION).toBe("football-daily-v12-sports-feud");
     expect(footballTodayGameForDay("2026-09-23")).toBe("sports_feud");
 
+    expect(footballTodayScheduleVersionForDay("2026-09-24")).toBe(FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION);
+    expect(FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION).toBe("football-daily-v15-weighted-sep24");
+    expect(footballTodayGameForDay("2026-09-24")).toBe("millionaire");
+    expect(footballTodayScheduleVersionForDay("2026-09-25")).toBe(FOOTBALL_WEIGHTED_SCHEDULE_VERSION);
+    expect(FOOTBALL_WEIGHTED_SCHEDULE_VERSION).toBe("football-daily-v16-weighted-sep25");
+    expect(footballTodayGameForDay("2026-09-25")).toBe("sports_feud");
+    expect(footballTodayGameForDay("2026-09-26")).toBe("who_am_i");
+
     const future = Array.from({ length: 26 }, (_unused, offset) => {
-      const day = new Date(Date.UTC(2026, 8, 23 + offset)).toISOString().slice(0, 10);
+      const day = new Date(Date.UTC(2026, 8, 24 + offset)).toISOString().slice(0, 10);
       return footballTodayGameForDay(day);
     });
     expect(future.filter((game) => game === "find_leader")).toHaveLength(5);
     expect(future.filter((game) => game === "wavelength")).toHaveLength(5);
-    expect(future.filter((game) => game === "hit_the_number")).toHaveLength(4);
+    expect(future.filter((game) => game === "hit_the_number")).toHaveLength(3);
     expect(future.filter((game) => game === "who_am_i")).toHaveLength(4);
-    expect(future.filter((game) => game === "millionaire")).toHaveLength(4);
+    expect(future.filter((game) => game === "millionaire")).toHaveLength(5);
     expect(future.filter((game) => game === "sports_feud")).toHaveLength(4);
     expect(future).not.toContain("keep_4_cut_4");
     expect(future).not.toContain("blind_resume");
