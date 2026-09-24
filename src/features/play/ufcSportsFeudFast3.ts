@@ -111,7 +111,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
       "Name a commentator or analyst strongly connected with UFC coverage.",
     ],
     answers: ["Joe Rogan", "Jon Anik", "Daniel Cormier", "Michael Bisping", "Dominick Cruz", "Paul Felder", "Laura Sanko", "Brendan Fitzgerald"],
-    alsoAcceptedAnswers: ["Din Thomas", "Anthony Smith", "Karyn Bryant", "Megan Olivi"],
+    alsoAcceptedAnswers: ["Din Thomas", "Anthony Smith", "Karyn Bryant", "Kenny Florian"],
   },
   {
     category: "officials",
