@@ -436,7 +436,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     prompts: [
       {
         prompt: "Name something college football fans commonly do on game day.",
-        answers: ["Tailgate","Cheer","Wear team colors","Sing the fight song","Watch GameDay","Trash talk","Storm the field","Cookout"],
+        answers: ["Tailgate","Cheer",{ name: "Wear team colors", aliases: ["Team colors", "Wear colors", "Jersey"] },"Sing the fight song","Watch GameDay","Trash talk","Storm the field","Cookout"],
         alsoAcceptedAnswers: ["Attend the game","Watch party","Watch with friends","Chant","Wave a flag"],
       },
       {
