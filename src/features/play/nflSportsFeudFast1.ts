@@ -124,11 +124,31 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
     entityKind: "team",
     collisionGroup: "teams",
     prompts: [
-      "Name an AFC franchise with a strong historical identity.",
-      "Name an AFC team with decades of recognizable football history.",
-      "Name a franchise that belongs in an AFC history conversation.",
-      "Name an AFC team whose past includes famous players or playoff runs.",
-      "Name an AFC franchise almost every generation of fans recognizes.",
+      {
+        prompt: "Name an AFC franchise with a strong historical identity.",
+        answers: ["Pittsburgh Steelers", "Las Vegas Raiders", "Miami Dolphins", "New England Patriots", "Kansas City Chiefs", "Denver Broncos", "Buffalo Bills", "Cleveland Browns"],
+        alsoAcceptedAnswers: ["New York Jets", "Indianapolis Colts", "Cincinnati Bengals", "Los Angeles Chargers", "Tennessee Titans", "Baltimore Ravens", "Jacksonville Jaguars", "Houston Texans"],
+      },
+      {
+        prompt: "Name an AFC team with decades of recognizable football history.",
+        answers: ["Pittsburgh Steelers", "Las Vegas Raiders", "Miami Dolphins", "Denver Broncos", "Kansas City Chiefs", "New England Patriots", "Cleveland Browns", "Indianapolis Colts"],
+        alsoAcceptedAnswers: ["Buffalo Bills", "New York Jets", "Cincinnati Bengals", "Los Angeles Chargers", "Tennessee Titans", "Baltimore Ravens", "Jacksonville Jaguars", "Houston Texans"],
+      },
+      {
+        prompt: "Name a franchise that belongs in an AFC history conversation.",
+        answers: ["Pittsburgh Steelers", "New England Patriots", "Las Vegas Raiders", "Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Buffalo Bills", "Indianapolis Colts"],
+        alsoAcceptedAnswers: ["Cleveland Browns", "New York Jets", "Cincinnati Bengals", "Los Angeles Chargers", "Tennessee Titans", "Baltimore Ravens", "Jacksonville Jaguars", "Houston Texans"],
+      },
+      {
+        prompt: "Name an AFC team whose past includes famous players or playoff runs.",
+        answers: ["Pittsburgh Steelers", "New England Patriots", "Kansas City Chiefs", "Las Vegas Raiders", "Denver Broncos", "Miami Dolphins", "Buffalo Bills", "Indianapolis Colts"],
+        alsoAcceptedAnswers: ["Baltimore Ravens", "Cincinnati Bengals", "Cleveland Browns", "New York Jets", "Los Angeles Chargers", "Tennessee Titans", "Jacksonville Jaguars", "Houston Texans"],
+      },
+      {
+        prompt: "Name an AFC franchise almost every generation of fans recognizes.",
+        answers: ["Pittsburgh Steelers", "Las Vegas Raiders", "Miami Dolphins", "Kansas City Chiefs", "Denver Broncos", "New England Patriots", "Cleveland Browns", "New York Jets"],
+        alsoAcceptedAnswers: ["Buffalo Bills", "Indianapolis Colts", "Cincinnati Bengals", "Los Angeles Chargers", "Tennessee Titans", "Baltimore Ravens", "Jacksonville Jaguars", "Houston Texans"],
+      },
     ],
     answers: ["Pittsburgh Steelers", "New England Patriots", "Kansas City Chiefs", "Las Vegas Raiders", "Denver Broncos", "Miami Dolphins", "Buffalo Bills", "Baltimore Ravens"],
     alsoAcceptedAnswers: ["New York Jets", "Cincinnati Bengals", "Cleveland Browns", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans", "Los Angeles Chargers"],
