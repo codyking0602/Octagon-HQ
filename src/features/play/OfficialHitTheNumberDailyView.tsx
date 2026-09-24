@@ -11,6 +11,7 @@ import {
   type HitTheNumberFormatSetup,
 } from "./hitTheNumberFormats";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
+import type { TodayChallengeAdvanceOptions } from "./useTodayChallengeRuntime";
 
 const LEGACY_CLASSIC_FORMAT: HitTheNumberFormatSetup = {
   formatId: "classic",
@@ -128,6 +129,53 @@ function revealedPoolValues(
   return revealed;
 }
 
+function optimisticToggle(
+  projection: TodayChallengeProjection,
+  fighterId: string,
+  slotIndex?: number,
+): TodayChallengeProjection {
+  const setup = publicSetup(projection);
+  const format = publicFormat(projection);
+
+  if (format.slots.length) {
+    const assignments = slotAssignments(projection, format);
+    if (slotIndex == null || slotIndex < 0 || slotIndex >= assignments.length) return projection;
+    const nextAssignments = [...assignments];
+    if (nextAssignments[slotIndex] === fighterId) {
+      nextAssignments[slotIndex] = null;
+    } else {
+      if (nextAssignments.some((assignedId, index) => index !== slotIndex && assignedId === fighterId)) {
+        return projection;
+      }
+      nextAssignments[slotIndex] = fighterId;
+    }
+    const selectedIds = nextAssignments.filter((id): id is string => id != null);
+    return {
+      ...projection,
+      publicState: {
+        ...projection.publicState,
+        complete: false,
+        selected_ids: selectedIds,
+        slot_assignments: nextAssignments,
+      },
+    };
+  }
+
+  const selectedIds = stringArray(projection.publicState.selected_ids);
+  const alreadySelected = selectedIds.includes(fighterId);
+  if (!alreadySelected && selectedIds.length >= setup.pickCount) return projection;
+  return {
+    ...projection,
+    publicState: {
+      ...projection.publicState,
+      complete: false,
+      selected_ids: alreadySelected
+        ? selectedIds.filter((id) => id !== fighterId)
+        : [...selectedIds, fighterId],
+    },
+  };
+}
+
 export function OfficialHitTheNumberDailyView({
   projection,
   busy,
@@ -135,7 +183,10 @@ export function OfficialHitTheNumberDailyView({
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
-  onAdvance: (action: Record<string, unknown>) => void;
+  onAdvance: (
+    action: Record<string, unknown>,
+    options?: TodayChallengeAdvanceOptions,
+  ) => void;
 }) {
   const [search, setSearch] = useState("");
   const [activeSlotIndex, setActiveSlotIndex] = useState(0);
@@ -152,13 +203,26 @@ export function OfficialHitTheNumberDailyView({
 
   function toggleFighter(fighterId: string) {
     if (!format.slots.length) {
-      onAdvance({ fighter_id: fighterId });
+      const alreadySelected = selectedIds.includes(fighterId);
+      onAdvance(
+        { fighter_id: fighterId },
+        {
+          dedupeKey: `hit-number:${fighterId}:${alreadySelected ? "remove" : "add"}`,
+          optimisticUpdate: (current) => optimisticToggle(current, fighterId),
+        },
+      );
       return;
     }
 
     const slotIndex = Math.min(activeSlotIndex, format.slots.length - 1);
     const wasAssigned = assignments[slotIndex] === fighterId;
-    onAdvance({ fighter_id: fighterId, slot_index: slotIndex });
+    onAdvance(
+      { fighter_id: fighterId, slot_index: slotIndex },
+      {
+        dedupeKey: `hit-number:slot:${slotIndex}:${fighterId}:${wasAssigned ? "remove" : "add"}`,
+        optimisticUpdate: (current) => optimisticToggle(current, fighterId, slotIndex),
+      },
+    );
     if (wasAssigned) return;
 
     for (let offset = 1; offset <= format.slots.length; offset += 1) {
@@ -187,6 +251,8 @@ export function OfficialHitTheNumberDailyView({
         onSelectSlot={setActiveSlotIndex}
         onLock={() => onAdvance({ lock: true })}
         busy={busy}
+        selectionBusy={false}
+        lockBusy={busy}
       />
     </div>
   );
