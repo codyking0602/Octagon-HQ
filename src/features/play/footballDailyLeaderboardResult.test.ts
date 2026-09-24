@@ -8,6 +8,12 @@ const footballDaily = readFileSync(
 );
 
 describe("Football Daily leaderboard result renderer", () => {
+  it("routes Millionaire and Sports Feud through the read-only leaderboard viewer", () => {
+    expect(hub).toContain("DailyLeaderboardGameResult");
+    expect(hub).toContain('entry.gameType === "millionaire" || entry.gameType === "sports_feud"');
+    expect(hub).toContain("resultDetail={entry.resultDetail}");
+  });
+
   it("uses the Football result presentation instead of the UFC official renderer", () => {
     expect(hub).toContain("FootballTodayChallengeResult");
     expect(hub).toContain('sport === "football"');

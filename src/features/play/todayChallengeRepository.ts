@@ -69,6 +69,7 @@ const leaderboardSchema = z.object({
     public_result: jsonRecordSchema.default({}),
     progress_revision: z.coerce.number().int().nonnegative(),
     public_state: jsonRecordSchema,
+    result_detail: jsonRecordSchema.default({}),
     is_current_user: z.boolean(),
   })),
 });
@@ -164,6 +165,7 @@ export interface TodayChallengeLeaderboard {
     publicResult: Record<string, unknown>;
     progressRevision: number;
     publicState: Record<string, unknown>;
+    resultDetail: Record<string, unknown>;
     isCurrentUser: boolean;
   }>;
 }
@@ -465,6 +467,7 @@ export function createTodayChallengeRepository(
           publicResult: entry.public_result,
           progressRevision: entry.progress_revision,
           publicState: entry.public_state,
+          resultDetail: entry.result_detail,
           isCurrentUser: entry.is_current_user,
         })),
       };

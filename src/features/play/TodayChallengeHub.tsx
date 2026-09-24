@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "./DailyChallengeStandings";
+import { DailyLeaderboardGameResult } from "./DailyLeaderboardGameResult";
 import {
   dailyRankKeepComboStage,
   isDailyRankKeepCombo,
@@ -116,7 +117,12 @@ function DailyAnswerDetail({
         <span><strong>{entry.displayName}</strong><small>#{entry.rank} · {entry.normalizedScore}/100</small></span>
       </header>
       <div className="today-hub-official-result__body official-daily-page">
-        {sport === "football" ? (
+        {entry.gameType === "millionaire" || entry.gameType === "sports_feud" ? (
+          <DailyLeaderboardGameResult
+            projection={resultProjection}
+            resultDetail={entry.resultDetail}
+          />
+        ) : sport === "football" ? (
           <Suspense fallback={<p className="today-hub-empty">Loading official Football result…</p>}>
             <FootballTodayChallengeResult projection={resultProjection} onExit={onClose} />
           </Suspense>
