@@ -8,6 +8,7 @@ import type { CSSProperties, FormEvent } from "react";
 import { createPortal } from "react-dom";
 import {
   FAMILY_FEUD_BOARD_ANSWER_COUNT,
+  FAMILY_FEUD_FAST_MONEY_QUESTION_COUNT,
   FAMILY_FEUD_FAST_MONEY_RAW_MAX,
   FAMILY_FEUD_FAST_MONEY_TIME_MS,
   FAMILY_FEUD_MAIN_BOARD_MAX,
