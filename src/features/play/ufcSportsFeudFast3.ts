@@ -2202,10 +2202,7 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
         "name": "Madison Square Garden",
         "aliases": [
           "MSG",
-          "Madison Square",
-          "New York",
-          "NYC",
-          "New York City"
+          "Madison Square"
         ]
       },
       {
