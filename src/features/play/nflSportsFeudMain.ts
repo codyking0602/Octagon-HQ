@@ -441,11 +441,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "moments",
     prompts: [
-      "Name an iconic NFL playoff or Super Bowl moment.",
-      "Name a single NFL play that instantly identifies a famous game.",
-      "Name an NFL moment fans still replay years later.",
-      "Name a postseason play that became part of football vocabulary.",
-      "Name a play that can make an NFL fan remember exactly where they were.",
+      {
+        prompt: "Name an iconic NFL playoff or Super Bowl moment.",
+        answers: ["Immaculate Reception", "Helmet Catch", "The Catch", "Minneapolis Miracle", "Music City Miracle", "Philly Special", "Malcolm Butler goal-line interception", "Beast Quake"],
+        alsoAcceptedAnswers: [{ name: "Santonio Holmes toe-tap", aliases: ["Santonio Holmes catch"] }, "Tuck Rule", "Mile High Miracle", "Double Doink", "Wide Right", "28-3 comeback", "13 Seconds", "James Harrison 100-yard interception return"],
+      },
+      {
+        prompt: "Name a single NFL play that instantly identifies a famous game.",
+        answers: ["Immaculate Reception", "Helmet Catch", "The Catch", "Minneapolis Miracle", "Music City Miracle", "Philly Special", "Malcolm Butler goal-line interception", "Beast Quake"],
+        alsoAcceptedAnswers: [{ name: "Santonio Holmes toe-tap", aliases: ["Santonio Holmes catch"] }, "Mile High Miracle", "Double Doink", "James Harrison 100-yard interception return", "Sea of Hands", "Miracle at the Meadowlands"],
+      },
+      {
+        prompt: "Name an NFL moment fans still replay years later.",
+        answers: ["Helmet Catch", "Immaculate Reception", "28-3 comeback", "The Catch", "Minneapolis Miracle", "Malcolm Butler goal-line interception", "Philly Special", "Beast Quake"],
+        alsoAcceptedAnswers: ["Music City Miracle", { name: "Santonio Holmes toe-tap", aliases: ["Santonio Holmes catch"] }, "Tuck Rule", "Mile High Miracle", "Double Doink", "Wide Right", "13 Seconds", "James Harrison 100-yard interception return"],
+      },
+      {
+        prompt: "Name a postseason play whose nickname became part of NFL vocabulary.",
+        answers: ["Immaculate Reception", "The Catch", "Helmet Catch", "Music City Miracle", "Minneapolis Miracle", "Philly Special", "Beast Quake", "Mile High Miracle"],
+        alsoAcceptedAnswers: ["Double Doink", "Wide Right", "Tuck Rule", "Sea of Hands", "Miracle at the Meadowlands"],
+      },
+      {
+        prompt: "Name a postseason play that can make NFL fans remember exactly where they were.",
+        answers: ["Helmet Catch", "Malcolm Butler goal-line interception", "Minneapolis Miracle", "Immaculate Reception", "Philly Special", "The Catch", "Music City Miracle", "Double Doink"],
+        alsoAcceptedAnswers: ["Beast Quake", "Mile High Miracle", { name: "Santonio Holmes toe-tap", aliases: ["Santonio Holmes catch"] }, "Wide Right", "13 Seconds", "James Harrison 100-yard interception return"],
+      },
     ],
     answers: ["Immaculate Reception", "Helmet Catch", "Minneapolis Miracle", "Music City Miracle", "Philly Special", "Beast Quake", "Malcolm Butler goal-line interception", "Santonio Holmes toe-tap"],
     alsoAcceptedAnswers: [
@@ -464,11 +484,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "team",
     collisionGroup: "champions",
     prompts: [
-      "Name an NFL franchise you associate with Super Bowl success.",
-      "Name a team with a major Super Bowl legacy.",
-      "Name a franchise fans expect in a championship-history conversation.",
-      "Name an NFL team whose trophy case helps define the brand.",
-      "Name a franchise with memorable Super Bowl wins.",
+      {
+        prompt: "Name an NFL franchise you associate with Super Bowl success.",
+        answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Kansas City Chiefs", "Green Bay Packers", "New York Giants", "Denver Broncos"],
+        alsoAcceptedAnswers: ["Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Philadelphia Eagles", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Indianapolis Colts"],
+      },
+      {
+        prompt: "Name a team with a major Super Bowl legacy.",
+        answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Green Bay Packers", "Kansas City Chiefs", "New York Giants", "Las Vegas Raiders"],
+        alsoAcceptedAnswers: ["Denver Broncos", "Washington Commanders", "Miami Dolphins", "Baltimore Ravens", "Los Angeles Rams", "Indianapolis Colts", "Tampa Bay Buccaneers", "Philadelphia Eagles"],
+      },
+      {
+        prompt: "Name a franchise fans expect in an NFL championship-history conversation.",
+        answers: ["Green Bay Packers", "Pittsburgh Steelers", "New England Patriots", "Dallas Cowboys", "San Francisco 49ers", "New York Giants", "Kansas City Chiefs", "Chicago Bears"],
+        alsoAcceptedAnswers: ["Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Denver Broncos", "Cleveland Browns", "Philadelphia Eagles", "Los Angeles Rams", "Indianapolis Colts", "Baltimore Ravens"],
+      },
+      {
+        prompt: "Name an NFL team whose collection of Super Bowl trophies is central to its brand.",
+        answers: ["New England Patriots", "Pittsburgh Steelers", "Dallas Cowboys", "San Francisco 49ers", "Green Bay Packers", "Kansas City Chiefs", "New York Giants", "Denver Broncos"],
+        alsoAcceptedAnswers: ["Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Indianapolis Colts", "Philadelphia Eagles", "Seattle Seahawks"],
+      },
+      {
+        prompt: "Name a franchise with memorable Super Bowl wins.",
+        answers: ["New England Patriots", "New York Giants", "Pittsburgh Steelers", "San Francisco 49ers", "Kansas City Chiefs", "Dallas Cowboys", "Philadelphia Eagles", "Green Bay Packers"],
+        alsoAcceptedAnswers: ["Denver Broncos", "Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Indianapolis Colts", "Seattle Seahawks", "New Orleans Saints", "Chicago Bears"],
+      },
     ],
     answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Kansas City Chiefs", "Green Bay Packers", "New York Giants", "Denver Broncos"],
     alsoAcceptedAnswers: ["Las Vegas Raiders", "Miami Dolphins", "Washington Commanders", "Indianapolis Colts", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Philadelphia Eagles", "Seattle Seahawks"],
@@ -478,11 +518,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "awards",
     prompts: [
-      "Name an NFL award or honor players want to win.",
-      "Name an award that can define an NFL season.",
-      "Name a major individual honor in pro football.",
-      "Name an NFL award fans debate every year.",
-      "Name an award that can become part of a player's legacy.",
+      {
+        prompt: "Name an NFL award or honor players want to win.",
+        answers: ["NFL MVP", "Super Bowl MVP", "Defensive Player of the Year", "Offensive Player of the Year", "First-team All-Pro", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Walter Payton Man of the Year"],
+        alsoAcceptedAnswers: ["Comeback Player of the Year", "Pro Bowl selection", "NFL rushing title", "NFL passing title"],
+      },
+      {
+        prompt: "Name an individual NFL award that can define a player's season.",
+        answers: ["NFL MVP", "Defensive Player of the Year", "Offensive Player of the Year", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "Super Bowl MVP", "Walter Payton Man of the Year"],
+        alsoAcceptedAnswers: ["First-team All-Pro", "Pro Bowl selection"],
+      },
+      {
+        prompt: "Name a major individual honor in pro football.",
+        answers: ["NFL MVP", "Pro Football Hall of Fame", "Super Bowl MVP", "First-team All-Pro", "Defensive Player of the Year", "Offensive Player of the Year", "Pro Bowl selection", "Walter Payton Man of the Year"],
+        alsoAcceptedAnswers: ["Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "All-Decade Team"],
+      },
+      {
+        prompt: "Name an NFL award fans debate every year.",
+        answers: ["NFL MVP", "Offensive Player of the Year", "Defensive Player of the Year", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "Coach of the Year", "Super Bowl MVP"],
+        alsoAcceptedAnswers: ["First-team All-Pro", "Pro Bowl selection"],
+      },
+      {
+        prompt: "Name an NFL honor that can become a major part of a player's legacy.",
+        answers: ["NFL MVP", "Pro Football Hall of Fame", "Super Bowl MVP", "First-team All-Pro", "Defensive Player of the Year", "Offensive Player of the Year", "Walter Payton Man of the Year", "Pro Bowl selection"],
+        alsoAcceptedAnswers: ["Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "All-Decade Team"],
+      },
     ],
     answers: ["NFL MVP", "Super Bowl MVP", "Defensive Player of the Year", "Offensive Player of the Year", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "Walter Payton Man of the Year"],
     alsoAcceptedAnswers: ["First-team All-Pro", "Pro Bowl selection"],
@@ -492,11 +552,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "achievements",
     prompts: [
-      "Name an accomplishment that can make an NFL season legendary.",
-      "Name something an NFL player or team can do that fans remember for decades.",
-      "Name a milestone that can turn a great season into an historic one.",
-      "Name an achievement that makes a football résumé jump off the page.",
-      "Name something every NFL star would love attached to one season.",
+      {
+        prompt: "Name an accomplishment that can make an NFL season legendary.",
+        answers: ["Win the Super Bowl", "Win league MVP", "Go undefeated", "Rush for 2,000 yards", "Pass for 5,000 yards", "Record 20 sacks", "Score 20 touchdowns", "Set an NFL record"],
+        alsoAcceptedAnswers: ["Win Super Bowl MVP", "Win Offensive Player of the Year", "Win Defensive Player of the Year", "Make first-team All-Pro", "Win the receiving triple crown"],
+      },
+      {
+        prompt: "Name something an NFL player or team can do in one season that fans remember for decades.",
+        answers: ["Win the Super Bowl", "Go undefeated", "Set an NFL record", "Win league MVP", "Win Super Bowl MVP", "Rush for 2,000 yards", "Record 20 sacks", "Pass for 5,000 yards"],
+        alsoAcceptedAnswers: ["Score 20 touchdowns", "Throw 50 touchdown passes", "Win the receiving triple crown", "Win Defensive Player of the Year", "Win Offensive Player of the Year"],
+      },
+      {
+        prompt: "Name a single-season statistical milestone that can turn a great NFL year into a historic one.",
+        answers: ["Rush for 2,000 yards", "Pass for 5,000 yards", "Record 20 sacks", "Score 20 touchdowns", "Throw 50 touchdown passes", "Set an NFL record", "Win the receiving triple crown", "Record 10 interceptions"],
+        alsoAcceptedAnswers: ["Rush for 20 touchdowns", "Record 2,000 scrimmage yards", "Lead the NFL in a major statistic"],
+      },
+      {
+        prompt: "Name an achievement that makes an NFL player's résumé jump off the page.",
+        answers: ["Win the Super Bowl", "Win league MVP", "Make first-team All-Pro", "Win Super Bowl MVP", "Win Defensive Player of the Year", "Win Offensive Player of the Year", "Set an NFL record", "Make the Pro Bowl"],
+        alsoAcceptedAnswers: ["Win Offensive Rookie of the Year", "Win Defensive Rookie of the Year", "Lead the NFL in a major statistic", "Win Comeback Player of the Year"],
+      },
+      {
+        prompt: "Name an achievement every NFL star would love attached to one season.",
+        answers: ["Win the Super Bowl", "Win league MVP", "Make first-team All-Pro", "Win Super Bowl MVP", "Win Offensive Player of the Year", "Win Defensive Player of the Year", "Set an NFL record", "Lead the NFL in a major statistic"],
+        alsoAcceptedAnswers: ["Make the Pro Bowl", "Go undefeated", "Win the receiving triple crown", "Win Comeback Player of the Year"],
+      },
     ],
     answers: ["Win the Super Bowl", "Win league MVP", "Go undefeated", "Rush for 2,000 yards", "Pass for 5,000 yards", "Record 20 sacks", "Score 20 touchdowns", "Set an NFL record"],
     alsoAcceptedAnswers: ["Win Super Bowl MVP", "Win Offensive Player of the Year", "Win Defensive Player of the Year", "Make first-team All-Pro", "Lead the NFL in a major statistic"],
