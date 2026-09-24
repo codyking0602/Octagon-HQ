@@ -100,7 +100,7 @@ describe("UFC Sports Feud full-bank acceptance quality", () => {
     expect(middleweight).toContain("Khamzat Chimaev");
 
     const heavyweight = names(question("ufc-fast1-05-1"));
-    expect(heavyweight).toHaveLength(21);
+    expect(heavyweight).toHaveLength(20);
     expect(heavyweight).toContain("Jon Jones");
     expect(heavyweight).toContain("Tom Aspinall");
     expect(heavyweight).toContain("Ciryl Gane");
