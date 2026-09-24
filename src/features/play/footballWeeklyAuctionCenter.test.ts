@@ -43,6 +43,16 @@ describe("Football Weekly Auction Center and archive", () => {
     expect(buildQbGate).toContain("{showNewWeekAction ? (");
   });
 
+  it("keeps the Build a QB roster summary and daily bidding note compact", () => {
+    expect(buildQbGate).toContain("compactQuarterbackSlotName(item.display_name, collectionNames)");
+    expect(buildQbGate).toContain('passUsed ? "PASS USED" : "FREE PASS AVAILABLE"');
+    expect(buildQbGate).not.toContain("PASS USED · $1 MIN");
+    expect(buildQbGate).not.toContain("LOCKED IN");
+    expect(buildQbGate).toContain("<span>Bids lock at midnight CT</span>");
+    expect(buildQbGate).toContain("<span>$0 bid = pass</span>");
+    expect(buildQbGate).not.toContain("results reveal at midnight CT");
+  });
+
   it("adds explicit Back controls to both full-height Build a QB reference sheets", () => {
     expect(buildQbGate).toContain('aria-label="Back to Build a QB"');
     expect(buildQbGate).toContain("← BACK");
