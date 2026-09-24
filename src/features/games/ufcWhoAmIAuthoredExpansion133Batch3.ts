@@ -1285,7 +1285,7 @@ export const ufcWhoAmIAuthoredExpansion133Batch3: readonly UfcWhoAmIAuthoredIden
           },
           {
             "id": "ufc-kimbo-slice-b-10",
-            "text": "That nickname was “Kimbo Slice,” one of the defining crossover identities of early viral-era MMA.",
+            "text": "That two-word nickname became one of the defining crossover identities of early viral-era MMA.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1503,7 +1503,7 @@ export const ufcWhoAmIAuthoredExpansion133Batch3: readonly UfcWhoAmIAuthoredIden
           },
           {
             "id": "ufc-cm-punk-b-10",
-            "text": "I fought in the UFC under the same name fans knew from wrestling: “CM Punk.”",
+            "text": "My UFC billing used the same initials-and-word ring name that fans already knew from professional wrestling.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
