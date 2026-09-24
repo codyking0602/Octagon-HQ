@@ -13,7 +13,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a division a UFC fighter can compete in.",
     ],
     answers: ["Lightweight", "Welterweight", "Middleweight", "Featherweight", "Bantamweight", "Heavyweight", "Light heavyweight", "Flyweight"],
-    alsoAcceptedAnswers: ["Strawweight", "Women's flyweight", "Women's bantamweight", "Women's featherweight"],
+    alsoAcceptedAnswers: ["Strawweight", "Women's flyweight", "Women's bantamweight"],
   },
   {
     category: "champions",
@@ -24,7 +24,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a fighter who has held the UFC lightweight title.",
       "Name a former or current UFC 155-pound champion.",
       "Name a lightweight whose résumé includes UFC gold.",
-      "Name a champion strongly associated with the UFC lightweight division.",
+      "Name another fighter on the UFC lightweight champions list.",
     ],
     answers: [
       { name: "Khabib Nurmagomedov", aliases: ["Khabib"] },
@@ -47,7 +47,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a fighter who has held the UFC welterweight title.",
       "Name a former or current UFC 170-pound champion.",
       "Name a welterweight whose résumé includes UFC gold.",
-      "Name a champion strongly associated with the UFC welterweight division.",
+      "Name another fighter on the UFC welterweight champions list.",
     ],
     answers: [
       { name: "Georges St-Pierre", aliases: ["GSP"] },
@@ -70,7 +70,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a fighter who has held the UFC middleweight title.",
       "Name a former or current UFC 185-pound champion.",
       "Name a middleweight whose résumé includes UFC gold.",
-      "Name a champion strongly associated with the UFC middleweight division.",
+      "Name another fighter on the UFC middleweight champions list.",
     ],
     answers: ["Anderson Silva", "Israel Adesanya", "Chris Weidman", "Michael Bisping", "Robert Whittaker", "Alex Pereira", "Luke Rockhold", "Sean Strickland"],
     alsoAcceptedAnswers: ["Rich Franklin", "Evan Tanner", "Dave Menne", "Murilo Bustamante", "Georges St-Pierre", "Dricus du Plessis", "Khamzat Chimaev"],
@@ -84,7 +84,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Name a fighter who has held the UFC heavyweight title.",
       "Name a former or current UFC heavyweight champion.",
       "Name a heavyweight whose résumé includes UFC gold.",
-      "Name a champion strongly associated with the UFC heavyweight division.",
+      "Name another fighter on the UFC heavyweight champions list.",
     ],
     answers: [
       { name: "Stipe Miocic", aliases: ["Stipe"] },
