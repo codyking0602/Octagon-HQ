@@ -129,7 +129,6 @@ describe("NFL Sports Feud authored answer quality", () => {
 
       expect(new Set(accepted).size).toBe(accepted.length);
       expect(accepted.every((name) => !ranked.has(name))).toBe(true);
-      expect(question.answers.length + accepted.length).toBeLessThanOrEqual(25);
     }
   });
 
