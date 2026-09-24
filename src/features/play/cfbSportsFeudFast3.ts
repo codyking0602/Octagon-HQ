@@ -7,29 +7,29 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     collisionGroup: "coaches",
     prompts: [
       {
-        prompt: "Name a coach who won a college football national championship from 2000 through 2024.",
+        prompt: "Name a coach who won a college football national championship from 2000 through 2025.",
         answers: ["Nick Saban","Kirby Smart","Urban Meyer","Dabo Swinney","Pete Carroll","Jim Harbaugh","Mack Brown","Bob Stoops"],
-        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day"],
+        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day","Curt Cignetti"],
       },
       {
-        prompt: "Name a national-title-winning college football coach from the 2000 through 2024 seasons.",
+        prompt: "Name a national-title-winning college football coach from the 2000 through 2025 seasons.",
         answers: ["Nick Saban","Urban Meyer","Kirby Smart","Dabo Swinney","Pete Carroll","Bob Stoops","Mack Brown","Jim Harbaugh"],
-        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day"],
+        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day","Curt Cignetti"],
       },
       {
-        prompt: "Name a coach you remember winning a college football championship between 2000 and 2024.",
+        prompt: "Name a coach you remember winning a college football championship between 2000 and 2025.",
         answers: ["Nick Saban","Kirby Smart","Urban Meyer","Dabo Swinney","Pete Carroll","Jim Harbaugh","Les Miles","Jimbo Fisher"],
-        alsoAcceptedAnswers: ["Mack Brown","Bob Stoops","Larry Coker","Jim Tressel","Gene Chizik","Ed Orgeron","Ryan Day"],
+        alsoAcceptedAnswers: ["Mack Brown","Bob Stoops","Larry Coker","Jim Tressel","Gene Chizik","Ed Orgeron","Ryan Day","Curt Cignetti"],
       },
       {
-        prompt: "Name a college coach whose résumé includes a national title from 2000 through 2024.",
+        prompt: "Name a college coach whose résumé includes a national title from 2000 through 2025.",
         answers: ["Nick Saban","Urban Meyer","Kirby Smart","Dabo Swinney","Pete Carroll","Mack Brown","Bob Stoops","Jim Harbaugh"],
-        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day"],
+        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day","Curt Cignetti"],
       },
       {
-        prompt: "Name a championship coach from the 2000 through 2024 college football seasons.",
+        prompt: "Name a championship coach from the 2000 through 2025 college football seasons.",
         answers: ["Nick Saban","Kirby Smart","Urban Meyer","Dabo Swinney","Pete Carroll","Jim Harbaugh","Bob Stoops","Mack Brown"],
-        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day"],
+        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day","Curt Cignetti"],
       },
     ],
     answers: [
@@ -42,7 +42,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
       "Mack Brown",
       "Bob Stoops",
     ],
-    alsoAcceptedAnswers: ["Larry Coker", "Jim Tressel", "Les Miles", "Gene Chizik", "Jimbo Fisher", "Ed Orgeron", "Ryan Day"],
+    alsoAcceptedAnswers: ["Larry Coker", "Jim Tressel", "Les Miles", "Gene Chizik", "Jimbo Fisher", "Ed Orgeron", "Ryan Day","Curt Cignetti"],
   },
   {
     category: "coaches",
