@@ -2,13 +2,13 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 
 export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   {
-    category: "rules",
-    entityKind: "other",
-    collisionGroup: "finishes",
-    prompts: [
+    "category": "rules",
+    "entityKind": "other",
+    "collisionGroup": "finishes",
+    "prompts": [
       {
-        prompt: "Name a broad way a UFC fight can end.",
-        answers: [
+        "prompt": "Name a broad way a UFC fight can end.",
+        "answers": [
           "Knockout",
           "TKO",
           "Submission",
@@ -18,15 +18,15 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "No contest",
           "Corner stoppage"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Draw",
           "Technical decision",
           "Technical draw"
         ]
       },
       {
-        prompt: "Name a basic result type you can see on a UFC fight result.",
-        answers: [
+        "prompt": "Name a basic result type you can see on a UFC fight result.",
+        "answers": [
           "Knockout",
           "TKO",
           "Submission",
@@ -36,15 +36,15 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "No contest",
           "Corner stoppage"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Draw",
           "Technical decision",
           "Technical draw"
         ]
       },
       {
-        prompt: "Name a common official outcome for an MMA fight.",
-        answers: [
+        "prompt": "Name a common official outcome for an MMA fight.",
+        "answers": [
           "Decision",
           "TKO",
           "Submission",
@@ -54,15 +54,15 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Disqualification",
           "Corner stoppage"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Draw",
           "Technical decision",
           "Technical draw"
         ]
       },
       {
-        prompt: "Name a broad finish or result type in the UFC.",
-        answers: [
+        "prompt": "Name a broad finish or result type in the UFC.",
+        "answers": [
           "Knockout",
           "TKO",
           "Submission",
@@ -72,15 +72,15 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "No contest",
           "Corner stoppage"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Draw",
           "Technical decision",
           "Technical draw"
         ]
       },
       {
-        prompt: "Name a simple UFC fight outcome.",
-        answers: [
+        "prompt": "Name a simple UFC fight outcome.",
+        "answers": [
           "Knockout",
           "Submission",
           "Decision",
@@ -90,90 +90,110 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "No contest",
           "Corner stoppage"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Draw",
           "Technical decision",
           "Technical draw"
         ]
       }
     ],
-    answers: [
+    "answers": [
       {
-        name: "Knockout",
-        aliases: [
-          "KO"
+        "name": "Knockout",
+        "aliases": [
+          "KO",
+          "K.O."
         ]
       },
       {
-        name: "TKO",
-        aliases: [
+        "name": "TKO",
+        "aliases": [
           "Technical knockout",
           "Technical KO"
         ]
       },
       {
-        name: "Submission",
-        aliases: [
-          "Sub"
+        "name": "Submission",
+        "aliases": [
+          "Sub",
+          "Tapout",
+          "Tap out"
         ]
       },
       {
-        name: "Decision",
-        aliases: [
-          "Dec"
+        "name": "Decision",
+        "aliases": [
+          "Dec",
+          "Judges decision"
         ]
       },
       {
-        name: "Doctor stoppage",
-        aliases: [
+        "name": "Doctor stoppage",
+        "aliases": [
           "Doctor",
-          "Medical stoppage"
+          "Medical stoppage",
+          "Doctor stop",
+          "Doctor's stoppage"
         ]
       },
       {
-        name: "Disqualification",
-        aliases: [
+        "name": "Disqualification",
+        "aliases": [
           "DQ",
-          "Disqualified"
+          "Disqualified",
+          "D.Q."
         ]
       },
       {
-        name: "No contest",
-        aliases: [
+        "name": "No contest",
+        "aliases": [
           "NC",
           "No-contest"
         ]
       },
       {
-        name: "Corner stoppage",
-        aliases: [
+        "name": "Corner stoppage",
+        "aliases": [
           "Corner",
           "Corner stop",
           "Corner throws in towel",
-          "Towel"
+          "Towel",
+          "Throw in towel"
         ]
       }
     ],
-    alsoAcceptedAnswers: [
+    "alsoAcceptedAnswers": [
       {
-        name: "Draw",
-        aliases: [
+        "name": "Draw",
+        "aliases": [
           "Split draw",
-          "Majority draw"
+          "Majority draw",
+          "Tie"
         ]
       },
-      "Technical decision",
-      "Technical draw"
+      {
+        "name": "Technical decision",
+        "aliases": [
+          "Tech decision",
+          "Technical dec"
+        ]
+      },
+      {
+        "name": "Technical draw",
+        "aliases": [
+          "Tech draw"
+        ]
+      }
     ]
   },
   {
-    category: "techniques",
-    entityKind: "other",
-    collisionGroup: "submissions",
-    prompts: [
+    "category": "techniques",
+    "entityKind": "other",
+    "collisionGroup": "submissions",
+    "prompts": [
       {
-        prompt: "Name a common MMA submission.",
-        answers: [
+        "prompt": "Name a common MMA submission.",
+        "answers": [
           "Rear-naked choke",
           "Guillotine",
           "Armbar",
@@ -183,7 +203,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Arm-triangle choke",
           "Heel hook"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "D'Arce choke",
           "Anaconda choke",
           "Kneebar",
@@ -195,8 +215,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a submission you might see finish a UFC fight.",
-        answers: [
+        "prompt": "Name a submission you might see finish a UFC fight.",
+        "answers": [
           "Rear-naked choke",
           "Guillotine",
           "Armbar",
@@ -206,7 +226,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Arm-triangle choke",
           "Heel hook"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "D'Arce choke",
           "Anaconda choke",
           "Kneebar",
@@ -218,8 +238,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a grappling hold MMA fans recognize.",
-        answers: [
+        "prompt": "Name a grappling hold MMA fans recognize.",
+        "answers": [
           "Rear-naked choke",
           "Armbar",
           "Triangle choke",
@@ -229,7 +249,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Arm-triangle choke",
           "Heel hook"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "D'Arce choke",
           "Anaconda choke",
           "Kneebar",
@@ -241,8 +261,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a submission fighters drill constantly.",
-        answers: [
+        "prompt": "Name a submission fighters drill constantly.",
+        "answers": [
           "Rear-naked choke",
           "Guillotine",
           "Armbar",
@@ -252,7 +272,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Arm-triangle choke",
           "Heel hook"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "D'Arce choke",
           "Anaconda choke",
           "Kneebar",
@@ -264,8 +284,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a tap-out technique used in the UFC.",
-        answers: [
+        "prompt": "Name a tap-out technique used in the UFC.",
+        "answers": [
           "Rear-naked choke",
           "Guillotine",
           "Armbar",
@@ -275,7 +295,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Arm-triangle choke",
           "Heel hook"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "D'Arce choke",
           "Anaconda choke",
           "Kneebar",
@@ -287,78 +307,124 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       }
     ],
-    answers: [
+    "answers": [
       {
-        name: "Rear-naked choke",
-        aliases: [
+        "name": "Rear-naked choke",
+        "aliases": [
           "RNC",
           "Rear naked",
           "Rear naked choke"
         ]
       },
       {
-        name: "Guillotine",
-        aliases: [
+        "name": "Guillotine",
+        "aliases": [
           "Guillotine choke"
         ]
       },
       {
-        name: "Armbar",
-        aliases: [
+        "name": "Armbar",
+        "aliases": [
           "Arm bar"
         ]
       },
       {
-        name: "Triangle choke",
-        aliases: [
+        "name": "Triangle choke",
+        "aliases": [
           "Triangle"
         ]
       },
       {
-        name: "Kimura",
-        aliases: [
+        "name": "Kimura",
+        "aliases": [
           "Kimura lock"
         ]
       },
       {
-        name: "Americana",
-        aliases: [
-          "Americana lock"
+        "name": "Americana",
+        "aliases": [
+          "Americana lock",
+          "Keylock",
+          "Key lock"
         ]
       },
       {
-        name: "Arm-triangle choke",
-        aliases: [
+        "name": "Arm-triangle choke",
+        "aliases": [
           "Arm triangle",
-          "Arm-triangle"
+          "Arm-triangle",
+          "Arm triangle choke"
         ]
       },
       {
-        name: "Heel hook",
-        aliases: [
+        "name": "Heel hook",
+        "aliases": [
           "Heelhook"
         ]
       }
     ],
-    alsoAcceptedAnswers: [
-      "D'Arce choke",
-      "Anaconda choke",
-      "Kneebar",
-      "Neck crank",
-      "Twister",
-      "Calf slicer",
-      "Von Flue choke",
-      "Peruvian necktie"
+    "alsoAcceptedAnswers": [
+      {
+        "name": "D'Arce choke",
+        "aliases": [
+          "Darce",
+          "D Arce",
+          "Brabo choke"
+        ]
+      },
+      {
+        "name": "Anaconda choke",
+        "aliases": [
+          "Anaconda"
+        ]
+      },
+      {
+        "name": "Kneebar",
+        "aliases": [
+          "Knee bar"
+        ]
+      },
+      {
+        "name": "Neck crank",
+        "aliases": [
+          "Crank"
+        ]
+      },
+      {
+        "name": "Twister",
+        "aliases": [
+          "The Twister"
+        ]
+      },
+      {
+        "name": "Calf slicer",
+        "aliases": [
+          "Calf slice"
+        ]
+      },
+      {
+        "name": "Von Flue choke",
+        "aliases": [
+          "Von Flue",
+          "Von Flue submission"
+        ]
+      },
+      {
+        "name": "Peruvian necktie",
+        "aliases": [
+          "Peruvian neck tie"
+        ]
+      }
     ]
   },
   {
-    category: "techniques",
-    entityKind: "other",
-    collisionGroup: "strikes",
-    prompts: [
+    "category": "techniques",
+    "entityKind": "other",
+    "collisionGroup": "strikes",
+    "prompts": [
       {
-        prompt: "Name a strike you can use in MMA.",
-        answers: [
+        "prompt": "Name a strike you can use in MMA.",
+        "answers": [
           "Jab",
           "Cross",
           "Hook",
@@ -368,7 +434,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Body kick",
           "Head kick"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Overhand",
           "Low kick",
           "Front kick",
@@ -380,8 +446,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a striking technique you might see in the UFC.",
-        answers: [
+        "prompt": "Name a striking technique you might see in the UFC.",
+        "answers": [
           "Jab",
           "Cross",
           "Hook",
@@ -391,7 +457,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Body kick",
           "Head kick"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Overhand",
           "Low kick",
           "Front kick",
@@ -403,8 +469,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a legal attack fighters throw on the feet.",
-        answers: [
+        "prompt": "Name a legal attack fighters throw on the feet.",
+        "answers": [
           "Jab",
           "Cross",
           "Hook",
@@ -414,7 +480,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Uppercut",
           "Elbow"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Knee",
           "Overhand",
           "Front kick",
@@ -426,8 +492,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a basic strike MMA athletes train.",
-        answers: [
+        "prompt": "Name a basic strike MMA athletes train.",
+        "answers": [
           "Jab",
           "Cross",
           "Hook",
@@ -437,7 +503,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Knee",
           "Body kick"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Head kick",
           "Overhand",
           "Front kick",
@@ -449,8 +515,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a strike that can hurt an opponent in the Octagon.",
-        answers: [
+        "prompt": "Name a strike that can hurt an opponent in the Octagon.",
+        "answers": [
           "Head kick",
           "Hook",
           "Knee",
@@ -460,7 +526,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Cross",
           "Body kick"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Overhand",
           "Low kick",
           "Front kick",
@@ -472,35 +538,118 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       }
     ],
-    answers: [
-      "Jab",
-      "Cross",
-      "Hook",
-      "Uppercut",
-      "Elbow",
-      "Knee",
-      "Body kick",
-      "Head kick"
+    "answers": [
+      {
+        "name": "Jab",
+        "aliases": [
+          "Jab punch"
+        ]
+      },
+      {
+        "name": "Cross",
+        "aliases": [
+          "Straight",
+          "Straight right",
+          "Straight left"
+        ]
+      },
+      {
+        "name": "Hook",
+        "aliases": [
+          "Hook punch"
+        ]
+      },
+      {
+        "name": "Uppercut",
+        "aliases": [
+          "Upper cut"
+        ]
+      },
+      {
+        "name": "Elbow",
+        "aliases": [
+          "Elbow strike",
+          "Elbows"
+        ]
+      },
+      {
+        "name": "Knee",
+        "aliases": [
+          "Knee strike",
+          "Knees"
+        ]
+      },
+      {
+        "name": "Body kick",
+        "aliases": [
+          "Kick to body"
+        ]
+      },
+      {
+        "name": "Head kick",
+        "aliases": [
+          "High kick",
+          "Kick to head"
+        ]
+      }
     ],
-    alsoAcceptedAnswers: [
-      "Overhand",
-      "Low kick",
-      "Front kick",
-      "Spinning backfist",
-      "Hammerfist",
-      "Spinning elbow",
-      "Superman punch",
-      "Spinning kick"
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Overhand",
+        "aliases": [
+          "Overhand right",
+          "Overhand left"
+        ]
+      },
+      {
+        "name": "Low kick",
+        "aliases": [
+          "Leg kick"
+        ]
+      },
+      {
+        "name": "Front kick"
+      },
+      {
+        "name": "Spinning backfist",
+        "aliases": [
+          "Spinning back fist"
+        ]
+      },
+      {
+        "name": "Hammerfist",
+        "aliases": [
+          "Hammer fist"
+        ]
+      },
+      {
+        "name": "Spinning elbow",
+        "aliases": [
+          "Spin elbow"
+        ]
+      },
+      {
+        "name": "Superman punch",
+        "aliases": [
+          "Superman"
+        ]
+      },
+      {
+        "name": "Spinning kick",
+        "aliases": [
+          "Spin kick"
+        ]
+      }
     ]
   },
   {
-    category: "techniques",
-    entityKind: "other",
-    collisionGroup: "kicks",
-    prompts: [
+    "category": "techniques",
+    "entityKind": "other",
+    "collisionGroup": "kicks",
+    "prompts": [
       {
-        prompt: "Name a type of kick used in MMA.",
-        answers: [
+        "prompt": "Name a type of kick used in MMA.",
+        "answers": [
           "Low kick",
           "Head kick",
           "Body kick",
@@ -510,7 +659,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Calf kick",
           "Oblique kick"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Roundhouse kick",
           "Teep",
           "Wheel kick",
@@ -520,8 +669,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a kicking technique you might see in the UFC.",
-        answers: [
+        "prompt": "Name a kicking technique you might see in the UFC.",
+        "answers": [
           "Low kick",
           "Head kick",
           "Body kick",
@@ -531,7 +680,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Calf kick",
           "Oblique kick"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Roundhouse kick",
           "Teep",
           "Wheel kick",
@@ -541,8 +690,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a kick fighters use to attack at range.",
-        answers: [
+        "prompt": "Name a kick fighters use to attack at range.",
+        "answers": [
           "Low kick",
           "Front kick",
           "Body kick",
@@ -552,7 +701,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Calf kick",
           "Oblique kick"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Roundhouse kick",
           "Teep",
           "Wheel kick",
@@ -562,8 +711,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a kick commentators identify during UFC fights.",
-        answers: [
+        "prompt": "Name a kick commentators identify during UFC fights.",
+        "answers": [
           "Low kick",
           "Head kick",
           "Body kick",
@@ -573,7 +722,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Spinning back kick",
           "Oblique kick"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Roundhouse kick",
           "Teep",
           "Wheel kick",
@@ -583,8 +732,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a striking weapon that comes from the legs.",
-        answers: [
+        "prompt": "Name a striking weapon that comes from the legs.",
+        "answers": [
           "Low kick",
           "Head kick",
           "Front kick",
@@ -594,7 +743,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Calf kick",
           "Oblique kick"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Roundhouse kick",
           "Teep",
           "Wheel kick",
@@ -604,33 +753,102 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       }
     ],
-    answers: [
-      "Low kick",
-      "Head kick",
-      "Body kick",
-      "Front kick",
-      "Side kick",
-      "Spinning back kick",
-      "Calf kick",
-      "Oblique kick"
+    "answers": [
+      {
+        "name": "Low kick",
+        "aliases": [
+          "Leg kick"
+        ]
+      },
+      {
+        "name": "Head kick",
+        "aliases": [
+          "High kick",
+          "Kick to head"
+        ]
+      },
+      {
+        "name": "Body kick",
+        "aliases": [
+          "Kick to body"
+        ]
+      },
+      {
+        "name": "Front kick"
+      },
+      {
+        "name": "Side kick",
+        "aliases": [
+          "Sidekick"
+        ]
+      },
+      {
+        "name": "Spinning back kick",
+        "aliases": [
+          "Spin back kick"
+        ]
+      },
+      {
+        "name": "Calf kick",
+        "aliases": [
+          "Calf kicks"
+        ]
+      },
+      {
+        "name": "Oblique kick",
+        "aliases": [
+          "Oblique"
+        ]
+      }
     ],
-    alsoAcceptedAnswers: [
-      "Roundhouse kick",
-      "Teep",
-      "Wheel kick",
-      "Question-mark kick",
-      "Axe kick",
-      "Switch kick"
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Roundhouse kick",
+        "aliases": [
+          "Roundhouse"
+        ]
+      },
+      {
+        "name": "Teep",
+        "aliases": [
+          "Front push kick"
+        ]
+      },
+      {
+        "name": "Wheel kick",
+        "aliases": [
+          "Spinning wheel kick"
+        ]
+      },
+      {
+        "name": "Question-mark kick",
+        "aliases": [
+          "Question mark kick",
+          "Question kick"
+        ]
+      },
+      {
+        "name": "Axe kick",
+        "aliases": [
+          "Ax kick"
+        ]
+      },
+      {
+        "name": "Switch kick",
+        "aliases": [
+          "Switchkick"
+        ]
+      }
     ]
   },
   {
-    category: "grappling",
-    entityKind: "other",
-    collisionGroup: "grappling",
-    prompts: [
+    "category": "grappling",
+    "entityKind": "other",
+    "collisionGroup": "grappling",
+    "prompts": [
       {
-        prompt: "Name a wrestling or grappling position, action, or control term used in MMA.",
-        answers: [
+        "prompt": "Name a wrestling or grappling position, action, or control term used in MMA.",
+        "answers": [
           "Takedown",
           "Double-leg",
           "Single-leg",
@@ -640,7 +858,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Half guard",
           "Ground-and-pound"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Guard",
           "Side control",
           "Sprawl",
@@ -652,8 +870,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a wrestling or grappling action a fighter might use after closing distance.",
-        answers: [
+        "prompt": "Name a wrestling or grappling action a fighter might use after closing distance.",
+        "answers": [
           "Takedown",
           "Double-leg",
           "Single-leg",
@@ -663,7 +881,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Mount",
           "Half guard"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Ground-and-pound",
           "Guard",
           "Side control",
@@ -675,8 +893,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a wrestling or grappling position, action, or control term commentators mention in UFC fights.",
-        answers: [
+        "prompt": "Name a wrestling or grappling position, action, or control term commentators mention in UFC fights.",
+        "answers": [
           "Takedown",
           "Clinch",
           "Back control",
@@ -686,7 +904,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Single-leg",
           "Ground-and-pound"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Guard",
           "Side control",
           "Sprawl",
@@ -698,8 +916,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a position, action, or control term from the wrestling or grappling side of MMA.",
-        answers: [
+        "prompt": "Name a position, action, or control term from the wrestling or grappling side of MMA.",
+        "answers": [
           "Mount",
           "Back control",
           "Half guard",
@@ -709,7 +927,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Double-leg",
           "Single-leg"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Clinch",
           "Ground-and-pound",
           "Sprawl",
@@ -721,8 +939,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a wrestling or grappling term associated with controlling an opponent.",
-        answers: [
+        "prompt": "Name a wrestling or grappling term associated with controlling an opponent.",
+        "answers": [
           "Takedown",
           "Clinch",
           "Back control",
@@ -732,7 +950,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Single-leg",
           "Half guard"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Ground-and-pound",
           "Guard",
           "Side control",
@@ -744,77 +962,123 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       }
     ],
-    answers: [
+    "answers": [
       {
-        name: "Takedown",
-        aliases: [
-          "Take down"
+        "name": "Takedown",
+        "aliases": [
+          "Take down",
+          "TD"
         ]
       },
       {
-        name: "Double-leg",
-        aliases: [
-          "Double leg"
+        "name": "Double-leg",
+        "aliases": [
+          "Double leg",
+          "Double-leg takedown"
         ]
       },
       {
-        name: "Single-leg",
-        aliases: [
-          "Single leg"
+        "name": "Single-leg",
+        "aliases": [
+          "Single leg",
+          "Single-leg takedown"
         ]
       },
       {
-        name: "Clinch",
-        aliases: [
-          "Clinch work"
+        "name": "Clinch",
+        "aliases": [
+          "Clinch work",
+          "Clinch fighting"
         ]
       },
       {
-        name: "Back control",
-        aliases: [
+        "name": "Back control",
+        "aliases": [
           "Back",
-          "Take the back"
+          "Take the back",
+          "Back mount"
         ]
       },
       {
-        name: "Mount",
-        aliases: [
+        "name": "Mount",
+        "aliases": [
           "Full mount"
         ]
       },
       {
-        name: "Half guard",
-        aliases: [
+        "name": "Half guard",
+        "aliases": [
           "Half-guard"
         ]
       },
       {
-        name: "Ground-and-pound",
-        aliases: [
+        "name": "Ground-and-pound",
+        "aliases": [
           "Ground and pound",
-          "GNP"
+          "GNP",
+          "Ground pound"
         ]
       }
     ],
-    alsoAcceptedAnswers: [
-      "Guard",
-      "Side control",
-      "Sprawl",
-      "Sweep",
-      "Body lock",
-      "Underhook",
-      "Rear body lock",
-      "Mat return"
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Guard",
+        "aliases": [
+          "Full guard"
+        ]
+      },
+      {
+        "name": "Side control",
+        "aliases": [
+          "Side-control"
+        ]
+      },
+      {
+        "name": "Sprawl",
+        "aliases": [
+          "Sprawling"
+        ]
+      },
+      {
+        "name": "Sweep",
+        "aliases": [
+          "Sweeps"
+        ]
+      },
+      {
+        "name": "Body lock",
+        "aliases": [
+          "Bodylock"
+        ]
+      },
+      {
+        "name": "Underhook",
+        "aliases": [
+          "Under hook"
+        ]
+      },
+      {
+        "name": "Rear body lock",
+        "aliases": [
+          "Rear bodylock"
+        ]
+      },
+      {
+        "name": "Mat return",
+        "aliases": [
+          "Mat returns"
+        ]
+      }
     ]
   },
   {
-    category: "rules",
-    entityKind: "other",
-    collisionGroup: "fouls",
-    prompts: [
+    "category": "rules",
+    "entityKind": "other",
+    "collisionGroup": "fouls",
+    "prompts": [
       {
-        prompt: "Name a foul in MMA.",
-        answers: [
+        "prompt": "Name a foul in MMA.",
+        "answers": [
           "Eye poke",
           "Groin strike",
           "Fence grab",
@@ -824,7 +1088,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Back-of-head strike",
           "Knee to the head of a grounded opponent"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Grabbing shorts or gloves",
           "Throat attack",
           "Small-joint manipulation",
@@ -834,8 +1098,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name something illegal inside the UFC Octagon.",
-        answers: [
+        "prompt": "Name something illegal inside the UFC Octagon.",
+        "answers": [
           "Eye poke",
           "Groin strike",
           "Fence grab",
@@ -845,7 +1109,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Back-of-head strike",
           "Knee to the head of a grounded opponent"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Grabbing shorts or gloves",
           "Throat attack",
           "Small-joint manipulation",
@@ -855,8 +1119,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name an action that can draw a warning or point deduction.",
-        answers: [
+        "prompt": "Name an action that can draw a warning or point deduction.",
+        "answers": [
           "Eye poke",
           "Fence grab",
           "Groin strike",
@@ -866,7 +1130,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Hair pulling",
           "Knee to the head of a grounded opponent"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Grabbing shorts or gloves",
           "Throat attack",
           "Small-joint manipulation",
@@ -876,8 +1140,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a foul referees watch for in a UFC fight.",
-        answers: [
+        "prompt": "Name a foul referees watch for in a UFC fight.",
+        "answers": [
           "Eye poke",
           "Groin strike",
           "Fence grab",
@@ -887,7 +1151,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Hair pulling",
           "Back-of-head strike"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Grabbing shorts or gloves",
           "Throat attack",
           "Small-joint manipulation",
@@ -897,8 +1161,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name an illegal technique under the unified MMA rules.",
-        answers: [
+        "prompt": "Name an illegal technique under the unified MMA rules.",
+        "answers": [
           "Eye poke",
           "Groin strike",
           "Knee to the head of a grounded opponent",
@@ -908,7 +1172,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Biting",
           "Hair pulling"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Grabbing shorts or gloves",
           "Throat attack",
           "Small-joint manipulation",
@@ -918,68 +1182,75 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       }
     ],
-    answers: [
+    "answers": [
       {
-        name: "Eye poke",
-        aliases: [
+        "name": "Eye poke",
+        "aliases": [
           "Eye poking",
-          "Poke the eye"
+          "Poke the eye",
+          "Poke eye"
         ]
       },
       {
-        name: "Groin strike",
-        aliases: [
+        "name": "Groin strike",
+        "aliases": [
           "Low blow",
           "Groin shot"
         ]
       },
       {
-        name: "Fence grab",
-        aliases: [
+        "name": "Fence grab",
+        "aliases": [
           "Grab the fence",
-          "Cage grab"
+          "Cage grab",
+          "Grab fence",
+          "Fence grabbing"
         ]
       },
       {
-        name: "Headbutt",
-        aliases: [
-          "Head butt"
+        "name": "Headbutt",
+        "aliases": [
+          "Head butt",
+          "Headbutting"
         ]
       },
       {
-        name: "Biting",
-        aliases: [
+        "name": "Biting",
+        "aliases": [
           "Bite"
         ]
       },
       {
-        name: "Hair pulling",
-        aliases: [
+        "name": "Hair pulling",
+        "aliases": [
           "Pull hair",
           "Hair pull"
         ]
       },
       {
-        name: "Back-of-head strike",
-        aliases: [
+        "name": "Back-of-head strike",
+        "aliases": [
           "Back of head",
           "Hit back of head",
-          "Rabbit punch"
+          "Rabbit punch",
+          "Back of head strike"
         ]
       },
       {
-        name: "Knee to the head of a grounded opponent",
-        aliases: [
+        "name": "Knee to the head of a grounded opponent",
+        "aliases": [
           "Illegal knee",
           "Knee to grounded opponent",
-          "Knee on grounded opponent"
+          "Knee on grounded opponent",
+          "Grounded head knee",
+          "Knee to grounded head"
         ]
       }
     ],
-    alsoAcceptedAnswers: [
+    "alsoAcceptedAnswers": [
       {
-        name: "Grabbing shorts or gloves",
-        aliases: [
+        "name": "Grabbing shorts or gloves",
+        "aliases": [
           "Grab shorts",
           "Grab gloves",
           "Shorts grab",
@@ -987,52 +1258,54 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        name: "Throat attack",
-        aliases: [
+        "name": "Throat attack",
+        "aliases": [
           "Throat strike",
           "Strike to throat"
         ]
       },
       {
-        name: "Small-joint manipulation",
-        aliases: [
+        "name": "Small-joint manipulation",
+        "aliases": [
           "Small joint manipulation",
           "Finger bending",
           "Toe bending"
         ]
       },
       {
-        name: "Fish-hooking",
-        aliases: [
+        "name": "Fish-hooking",
+        "aliases": [
           "Fish hook",
           "Fish hooking"
         ]
       },
       {
-        name: "Spiking on the head or neck",
-        aliases: [
+        "name": "Spiking on the head or neck",
+        "aliases": [
           "Spiking",
           "Spike on head",
-          "Spike on neck"
+          "Spike on neck",
+          "Piledriver"
         ]
       },
       {
-        name: "Attacking the spine",
-        aliases: [
+        "name": "Attacking the spine",
+        "aliases": [
           "Spine strike",
-          "Strike to spine"
+          "Strike to spine",
+          "Strike spine"
         ]
       }
     ]
   },
   {
-    category: "judging",
-    entityKind: "other",
-    collisionGroup: "judging",
-    prompts: [
+    "category": "judging",
+    "entityKind": "other",
+    "collisionGroup": "judging",
+    "prompts": [
       {
-        prompt: "Name something judges or fans look at when deciding who won a round.",
-        answers: [
+        "prompt": "Name something judges or fans look at when deciding who won a round.",
+        "answers": [
           "Effective striking",
           "Effective grappling",
           "Damage",
@@ -1042,7 +1315,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Aggression",
           "Cage pressure"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Knockdowns",
           "Positional advancement",
           "Near submissions",
@@ -1051,8 +1324,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a factor that can influence how an MMA round is scored.",
-        answers: [
+        "prompt": "Name a factor that can influence how an MMA round is scored.",
+        "answers": [
           "Effective striking",
           "Effective grappling",
           "Damage",
@@ -1062,7 +1335,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Submission attempts",
           "Control"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Knockdowns",
           "Positional advancement",
           "Near submissions",
@@ -1071,8 +1344,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name something that helps a fighter make a round look convincing.",
-        answers: [
+        "prompt": "Name something that helps a fighter make a round look convincing.",
+        "answers": [
           "Damage",
           "Knockdowns",
           "Effective striking",
@@ -1082,7 +1355,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Submission attempts",
           "Aggression"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Cage pressure",
           "Positional advancement",
           "Near submissions",
@@ -1091,8 +1364,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a performance area people debate on UFC scorecards.",
-        answers: [
+        "prompt": "Name a performance area people debate on UFC scorecards.",
+        "answers": [
           "Damage",
           "Control",
           "Takedowns",
@@ -1102,7 +1375,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Effective grappling",
           "Submission attempts"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Knockdowns",
           "Positional advancement",
           "Near submissions",
@@ -1111,8 +1384,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name something that can matter when comparing two close MMA rounds.",
-        answers: [
+        "prompt": "Name something that can matter when comparing two close MMA rounds.",
+        "answers": [
           "Effective striking",
           "Effective grappling",
           "Damage",
@@ -1122,7 +1395,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Submission attempts",
           "Cage pressure"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Knockdowns",
           "Positional advancement",
           "Near submissions",
@@ -1131,79 +1404,111 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       }
     ],
-    answers: [
+    "answers": [
       {
-        name: "Effective striking",
-        aliases: [
+        "name": "Effective striking",
+        "aliases": [
           "Striking",
           "Significant strikes",
-          "Strikes"
+          "Strikes",
+          "Effective strikes"
         ]
       },
       {
-        name: "Effective grappling",
-        aliases: [
+        "name": "Effective grappling",
+        "aliases": [
           "Grappling"
         ]
       },
       {
-        name: "Damage",
-        aliases: [
+        "name": "Damage",
+        "aliases": [
           "Visible damage"
         ]
       },
       {
-        name: "Takedowns",
-        aliases: [
-          "Takedown"
+        "name": "Takedowns",
+        "aliases": [
+          "Takedown",
+          "TDs",
+          "Take downs"
         ]
       },
       {
-        name: "Submission attempts",
-        aliases: [
+        "name": "Submission attempts",
+        "aliases": [
           "Submissions",
           "Submission attempt",
-          "Sub attempts"
+          "Sub attempts",
+          "Subs attempted"
         ]
       },
       {
-        name: "Control",
-        aliases: [
+        "name": "Control",
+        "aliases": [
           "Control time",
           "Octagon control"
         ]
       },
       {
-        name: "Aggression",
-        aliases: [
+        "name": "Aggression",
+        "aliases": [
           "Aggressive",
           "Effective aggression"
         ]
       },
       {
-        name: "Cage pressure",
-        aliases: [
+        "name": "Cage pressure",
+        "aliases": [
           "Pressure",
           "Forward pressure"
         ]
       }
     ],
-    alsoAcceptedAnswers: [
-      "Knockdowns",
-      "Positional advancement",
-      "Near submissions",
-      "Clean strikes",
-      "Ground strikes"
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Knockdowns",
+        "aliases": [
+          "KDs",
+          "Knock downs"
+        ]
+      },
+      {
+        "name": "Positional advancement",
+        "aliases": [
+          "Advance position",
+          "Position advancement"
+        ]
+      },
+      {
+        "name": "Near submissions",
+        "aliases": [
+          "Near subs",
+          "Submission threats"
+        ]
+      },
+      {
+        "name": "Clean strikes",
+        "aliases": [
+          "Clean shots"
+        ]
+      },
+      {
+        "name": "Ground strikes",
+        "aliases": [
+          "Ground striking"
+        ]
+      }
     ]
   },
   {
-    category: "stats",
-    entityKind: "other",
-    collisionGroup: "stats",
-    prompts: [
+    "category": "stats",
+    "entityKind": "other",
+    "collisionGroup": "stats",
+    "prompts": [
       {
-        prompt: "Name a UFC fight statistic.",
-        answers: [
+        "prompt": "Name a UFC fight statistic.",
+        "answers": [
           "Significant strikes",
           "Total strikes",
           "Takedowns",
@@ -1213,7 +1518,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Submission attempts",
           "Head strikes"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Body strikes",
           "Leg strikes",
           "Distance strikes",
@@ -1225,8 +1530,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a number shown during or after an MMA fight.",
-        answers: [
+        "prompt": "Name a number shown during or after an MMA fight.",
+        "answers": [
           "Significant strikes",
           "Total strikes",
           "Takedowns",
@@ -1236,7 +1541,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Submission attempts",
           "Head strikes"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Body strikes",
           "Leg strikes",
           "Distance strikes",
@@ -1248,8 +1553,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a stat fans use to describe what happened in a bout.",
-        answers: [
+        "prompt": "Name a stat fans use to describe what happened in a bout.",
+        "answers": [
           "Significant strikes",
           "Takedowns",
           "Control time",
@@ -1259,7 +1564,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Takedown accuracy",
           "Head strikes"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Body strikes",
           "Leg strikes",
           "Distance strikes",
@@ -1271,8 +1576,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a fight metric you might see on a UFC broadcast.",
-        answers: [
+        "prompt": "Name a fight metric you might see on a UFC broadcast.",
+        "answers": [
           "Significant strikes",
           "Total strikes",
           "Takedowns",
@@ -1282,7 +1587,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Knockdowns",
           "Submission attempts"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Body strikes",
           "Leg strikes",
           "Distance strikes",
@@ -1294,8 +1599,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a statistic analysts use when breaking down a UFC fight.",
-        answers: [
+        "prompt": "Name a statistic analysts use when breaking down a UFC fight.",
+        "answers": [
           "Significant strikes",
           "Takedown accuracy",
           "Control time",
@@ -1305,7 +1610,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Takedowns",
           "Knockdowns"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Submission attempts",
           "Head strikes",
           "Body strikes",
@@ -1317,35 +1622,120 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       }
     ],
-    answers: [
-      "Significant strikes",
-      "Total strikes",
-      "Takedowns",
-      "Takedown accuracy",
-      "Control time",
-      "Knockdowns",
-      "Submission attempts",
-      "Head strikes"
+    "answers": [
+      {
+        "name": "Significant strikes",
+        "aliases": [
+          "Sig strikes",
+          "Sig. strikes",
+          "Significant strike"
+        ]
+      },
+      {
+        "name": "Total strikes",
+        "aliases": [
+          "All strikes"
+        ]
+      },
+      {
+        "name": "Takedowns",
+        "aliases": [
+          "TDs",
+          "Take downs"
+        ]
+      },
+      {
+        "name": "Takedown accuracy",
+        "aliases": [
+          "TD accuracy",
+          "Takedown %"
+        ]
+      },
+      {
+        "name": "Control time"
+      },
+      {
+        "name": "Knockdowns",
+        "aliases": [
+          "KDs",
+          "Knock downs"
+        ]
+      },
+      {
+        "name": "Submission attempts",
+        "aliases": [
+          "Sub attempts",
+          "Subs attempted"
+        ]
+      },
+      {
+        "name": "Head strikes",
+        "aliases": [
+          "Strikes to head"
+        ]
+      }
     ],
-    alsoAcceptedAnswers: [
-      "Body strikes",
-      "Leg strikes",
-      "Distance strikes",
-      "Clinch strikes",
-      "Ground strikes",
-      "Striking accuracy",
-      "Striking differential",
-      "Takedown defense"
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Body strikes",
+        "aliases": [
+          "Strikes to body"
+        ]
+      },
+      {
+        "name": "Leg strikes",
+        "aliases": [
+          "Strikes to legs"
+        ]
+      },
+      {
+        "name": "Distance strikes",
+        "aliases": [
+          "Range strikes"
+        ]
+      },
+      {
+        "name": "Clinch strikes",
+        "aliases": [
+          "Clinch striking"
+        ]
+      },
+      {
+        "name": "Ground strikes",
+        "aliases": [
+          "Ground striking"
+        ]
+      },
+      {
+        "name": "Striking accuracy",
+        "aliases": [
+          "Strike accuracy",
+          "Striking %"
+        ]
+      },
+      {
+        "name": "Striking differential",
+        "aliases": [
+          "Strike differential"
+        ]
+      },
+      {
+        "name": "Takedown defense",
+        "aliases": [
+          "TDD",
+          "Takedown D"
+        ]
+      }
     ]
   },
   {
-    category: "weight-cutting",
-    entityKind: "other",
-    collisionGroup: "weight-cutting",
-    prompts: [
+    "category": "weight-cutting",
+    "entityKind": "other",
+    "collisionGroup": "weight-cutting",
+    "prompts": [
       {
-        prompt: "Name something a fighter may deal with during or immediately after a difficult UFC weight cut.",
-        answers: [
+        "prompt": "Name something a fighter may deal with during or immediately after a difficult UFC weight cut.",
+        "answers": [
           "Dehydration",
           "Missed weight",
           "Dizziness",
@@ -1355,7 +1745,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Exhaustion",
           "Rehydration"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Headache",
           "Weakness",
           "Nausea",
@@ -1364,8 +1754,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a symptom, problem, or recovery step tied to a hard UFC weight cut.",
-        answers: [
+        "prompt": "Name a symptom, problem, or recovery step tied to a hard UFC weight cut.",
+        "answers": [
           "Dehydration",
           "Dizziness",
           "Cramping",
@@ -1375,7 +1765,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Fainting",
           "Vomiting"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Headache",
           "Weakness",
           "Nausea",
@@ -1384,8 +1774,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a symptom, outcome, or recovery need after a rough UFC weight cut.",
-        answers: [
+        "prompt": "Name a symptom, outcome, or recovery need after a rough UFC weight cut.",
+        "answers": [
           "Dehydration",
           "Dizziness",
           "Cramping",
@@ -1395,7 +1785,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Fainting",
           "Vomiting"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Exhaustion",
           "Headache",
           "Weakness",
@@ -1404,8 +1794,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name something a fighter might deal with while cutting a lot of weight or rehydrating afterward.",
-        answers: [
+        "prompt": "Name something a fighter might deal with while cutting a lot of weight or rehydrating afterward.",
+        "answers": [
           "Missed weight",
           "Dehydration",
           "Fainting",
@@ -1415,7 +1805,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Cramping",
           "Exhaustion"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Headache",
           "Weakness",
           "Nausea",
@@ -1424,8 +1814,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name something fans watch for when a UFC weight cut goes badly or recovery begins.",
-        answers: [
+        "prompt": "Name something fans watch for when a UFC weight cut goes badly or recovery begins.",
+        "answers": [
           "Dehydration",
           "Rehydration",
           "Exhaustion",
@@ -1435,7 +1825,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Dizziness",
           "Fainting"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Vomiting",
           "Headache",
           "Nausea",
@@ -1444,39 +1834,41 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       }
     ],
-    answers: [
+    "answers": [
       {
-        name: "Dehydration",
-        aliases: [
+        "name": "Dehydration",
+        "aliases": [
           "Dehydrated"
         ]
       },
       {
-        name: "Missed weight",
-        aliases: [
+        "name": "Missed weight",
+        "aliases": [
           "Miss weight",
           "Misses weight",
-          "Overweight"
+          "Overweight",
+          "Missed the weight",
+          "Weight miss"
         ]
       },
       {
-        name: "Dizziness",
-        aliases: [
+        "name": "Dizziness",
+        "aliases": [
           "Dizzy",
           "Lightheaded",
           "Lightheadedness"
         ]
       },
       {
-        name: "Cramping",
-        aliases: [
+        "name": "Cramping",
+        "aliases": [
           "Cramps",
           "Cramp"
         ]
       },
       {
-        name: "Fainting",
-        aliases: [
+        "name": "Fainting",
+        "aliases": [
           "Faint",
           "Pass out",
           "Passing out",
@@ -1484,44 +1876,72 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        name: "Vomiting",
-        aliases: [
+        "name": "Vomiting",
+        "aliases": [
           "Vomit",
           "Throw up",
           "Throwing up"
         ]
       },
       {
-        name: "Exhaustion",
-        aliases: [
+        "name": "Exhaustion",
+        "aliases": [
           "Exhausted",
           "Fatigue"
         ]
       },
       {
-        name: "Rehydration",
-        aliases: [
+        "name": "Rehydration",
+        "aliases": [
           "Rehydrate",
-          "Rehydrating"
+          "Rehydrating",
+          "Hydrate",
+          "Hydration"
         ]
       }
     ],
-    alsoAcceptedAnswers: [
-      "Headache",
-      "Weakness",
-      "Nausea",
-      "Low energy",
-      "Poor sleep"
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Headache",
+        "aliases": [
+          "Headaches"
+        ]
+      },
+      {
+        "name": "Weakness",
+        "aliases": [
+          "Weak"
+        ]
+      },
+      {
+        "name": "Nausea",
+        "aliases": [
+          "Nauseous"
+        ]
+      },
+      {
+        "name": "Low energy",
+        "aliases": [
+          "No energy"
+        ]
+      },
+      {
+        "name": "Poor sleep",
+        "aliases": [
+          "Can't sleep",
+          "Bad sleep"
+        ]
+      }
     ]
   },
   {
-    category: "corner",
-    entityKind: "other",
-    collisionGroup: "corner",
-    prompts: [
+    "category": "corner",
+    "entityKind": "other",
+    "collisionGroup": "corner",
+    "prompts": [
       {
-        prompt: "Name something a fighter's corner does between rounds.",
-        answers: [
+        "prompt": "Name something a fighter's corner does between rounds.",
+        "answers": [
           "Give instructions",
           "Apply ice",
           "Reduce swelling",
@@ -1531,7 +1951,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Encourage the fighter",
           "Adjust the game plan"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Apply petroleum jelly",
           "Check a cut",
           "Clean the fighter",
@@ -1539,8 +1959,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a job performed by a UFC corner team.",
-        answers: [
+        "prompt": "Name a job performed by a UFC corner team.",
+        "answers": [
           "Give instructions",
           "Adjust the game plan",
           "Give water",
@@ -1550,7 +1970,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Control breathing",
           "Encourage the fighter"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Apply petroleum jelly",
           "Check a cut",
           "Clean the fighter",
@@ -1558,8 +1978,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name something coaches might do during the one-minute break.",
-        answers: [
+        "prompt": "Name something coaches might do during the one-minute break.",
+        "answers": [
           "Give instructions",
           "Give water",
           "Apply ice",
@@ -1569,7 +1989,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Encourage the fighter",
           "Adjust the game plan"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Apply petroleum jelly",
           "Check a cut",
           "Clean the fighter",
@@ -1577,8 +1997,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name a responsibility of the people in a fighter's corner.",
-        answers: [
+        "prompt": "Name a responsibility of the people in a fighter's corner.",
+        "answers": [
           "Stop bleeding",
           "Reduce swelling",
           "Apply ice",
@@ -1588,7 +2008,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Control breathing",
           "Encourage the fighter"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Adjust the game plan",
           "Apply petroleum jelly",
           "Clean the fighter",
@@ -1596,8 +2016,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        prompt: "Name something that can happen on the stool between rounds.",
-        answers: [
+        "prompt": "Name something that can happen on the stool between rounds.",
+        "answers": [
           "Give instructions",
           "Give water",
           "Control breathing",
@@ -1607,7 +2027,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Stop bleeding",
           "Encourage the fighter"
         ],
-        alsoAcceptedAnswers: [
+        "alsoAcceptedAnswers": [
           "Adjust the game plan",
           "Apply petroleum jelly",
           "Check a cut",
@@ -1615,75 +2035,105 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       }
     ],
-    answers: [
+    "answers": [
       {
-        name: "Give instructions",
-        aliases: [
+        "name": "Give instructions",
+        "aliases": [
           "Instructions",
           "Coaching",
           "Coach"
         ]
       },
       {
-        name: "Apply ice",
-        aliases: [
+        "name": "Apply ice",
+        "aliases": [
           "Ice",
-          "Ice the fighter"
+          "Ice the fighter",
+          "Ice them"
         ]
       },
       {
-        name: "Reduce swelling",
-        aliases: [
+        "name": "Reduce swelling",
+        "aliases": [
           "Swelling",
-          "Reduce swelling"
+          "Reduce swelling",
+          "Reduce inflammation"
         ]
       },
       {
-        name: "Stop bleeding",
-        aliases: [
+        "name": "Stop bleeding",
+        "aliases": [
           "Bleeding",
           "Cut",
           "Cuts",
-          "Stop the cut"
+          "Stop the cut",
+          "Stop the blood"
         ]
       },
       {
-        name: "Give water",
-        aliases: [
+        "name": "Give water",
+        "aliases": [
           "Water",
           "Hydrate",
           "Hydration"
         ]
       },
       {
-        name: "Control breathing",
-        aliases: [
+        "name": "Control breathing",
+        "aliases": [
           "Breathing",
-          "Breathe"
+          "Breathe",
+          "Slow breathing"
         ]
       },
       {
-        name: "Encourage the fighter",
-        aliases: [
+        "name": "Encourage the fighter",
+        "aliases": [
           "Encourage",
           "Motivate",
           "Motivation"
         ]
       },
       {
-        name: "Adjust the game plan",
-        aliases: [
+        "name": "Adjust the game plan",
+        "aliases": [
           "Game plan",
           "Gameplan",
-          "Adjust strategy"
+          "Adjust strategy",
+          "Adjustments",
+          "Make adjustments"
         ]
       }
     ],
-    alsoAcceptedAnswers: [
-      "Apply petroleum jelly",
-      "Check a cut",
-      "Clean the fighter",
-      "Calm the fighter down"
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Apply petroleum jelly",
+        "aliases": [
+          "Vaseline",
+          "Petroleum jelly"
+        ]
+      },
+      {
+        "name": "Check a cut",
+        "aliases": [
+          "Check cut",
+          "Cut check"
+        ]
+      },
+      {
+        "name": "Clean the fighter",
+        "aliases": [
+          "Clean them",
+          "Wipe down"
+        ]
+      },
+      {
+        "name": "Calm the fighter down",
+        "aliases": [
+          "Calm them",
+          "Calm down"
+        ]
+      }
     ]
   }
 ] as const);
