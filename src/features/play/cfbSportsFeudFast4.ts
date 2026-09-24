@@ -12,22 +12,22 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
         alsoAcceptedAnswers: ["Guard","Center","Defensive tackle","Kicker","Punter","Long snapper","Fullback"],
       },
       {
-        prompt: "Name a position you can play on a football field.",
+        prompt: "Name a football position other than quarterback.",
         answers: ["Wide receiver","Running back","Linebacker","Cornerback","Safety","Tight end","Defensive end","Kicker"],
         alsoAcceptedAnswers: ["Offensive tackle","Guard","Center","Defensive tackle","Punter","Long snapper","Fullback"],
       },
       {
-        prompt: "Name a college football position that produces stars.",
+        prompt: "Name a college football position besides quarterback that produces stars.",
         answers: ["Wide receiver","Running back","Defensive end","Cornerback","Linebacker","Tight end","Safety","Kicker"],
         alsoAcceptedAnswers: ["Offensive tackle","Guard","Center","Defensive tackle","Punter","Long snapper","Fullback"],
       },
       {
-        prompt: "Name a football position recruits specialize in.",
+        prompt: "Name a non-quarterback football position recruits specialize in.",
         answers: ["Wide receiver","Cornerback","Linebacker","Defensive end","Running back","Offensive tackle","Safety","Tight end"],
         alsoAcceptedAnswers: ["Guard","Center","Defensive tackle","Kicker","Punter","Long snapper","Fullback"],
       },
       {
-        prompt: "Name a position group coaches talk about constantly.",
+        prompt: "Name a position group besides quarterbacks that coaches talk about constantly.",
         answers: ["Offensive tackle","Defensive end","Linebacker","Wide receiver","Cornerback","Running back","Safety","Tight end"],
         alsoAcceptedAnswers: ["Guard","Center","Defensive tackle","Kicker","Punter","Long snapper","Fullback"],
       },
