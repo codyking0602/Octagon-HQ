@@ -239,9 +239,9 @@
 
 .mlb-team-choice span {
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-height: 2.35em;
+  overflow-wrap: anywhere;
+  line-height: 1.17;
   font-weight: 800;
 }
 
