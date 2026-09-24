@@ -220,7 +220,11 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
         answers: ["Barry Sanders", "Gale Sayers", "Walter Payton", "Bo Jackson", "Earl Campbell", "Eric Dickerson", "Jim Brown", "Tony Dorsett"],
         alsoAcceptedAnswers: ["Adrian Peterson", "LaDainian Tomlinson", "Marcus Allen", "Marshall Faulk", "Thurman Thomas", "Emmitt Smith", "Derrick Henry", "Terrell Davis"],
       },
-      "Name an NFL back you would put in a legends conversation.",
+      {
+        prompt: "Name an NFL back you would put in a legends conversation.",
+        answers: ["Jim Brown", "Walter Payton", "Barry Sanders", "Emmitt Smith", "LaDainian Tomlinson", "Eric Dickerson", "Adrian Peterson", "Marshall Faulk"],
+        alsoAcceptedAnswers: ["Gale Sayers", "Earl Campbell", "Derrick Henry", "Marcus Allen", "Tony Dorsett", "Thurman Thomas", "Frank Gore", "Terrell Davis"],
+      },
       {
         prompt: "Name a running back who became the identity of an offense.",
         answers: [
@@ -253,7 +257,11 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
           "Frank Gore",
         ],
       },
-      "Name a back defenders would hate to tackle all afternoon.",
+      {
+        prompt: "Name a back defenders would hate to tackle all afternoon.",
+        answers: ["Derrick Henry", "Earl Campbell", "Marshawn Lynch", "Jim Brown", "Adrian Peterson", "Jerome Bettis", "Walter Payton", "Nick Chubb"],
+        alsoAcceptedAnswers: ["Christian Okoye", "Larry Csonka", "Jamal Lewis", "Bo Jackson", "Eddie George", "Steven Jackson", "Mike Alstott", "Ricky Williams", "Emmitt Smith"],
+      },
     ],
     answers: ["Barry Sanders", "Walter Payton", "Emmitt Smith", "Jim Brown", "Adrian Peterson", "LaDainian Tomlinson", "Eric Dickerson", "Derrick Henry"],
     alsoAcceptedAnswers: ["Marshall Faulk", "Earl Campbell", "Gale Sayers", "OJ Simpson", "Marcus Allen", "Tony Dorsett", "Thurman Thomas", "Frank Gore"],
