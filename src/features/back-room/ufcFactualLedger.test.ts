@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import { ufcFactualExpansion, ufcFactualLedgerSubjects } from "./ufcFactualLedger";
+import { ufcWhoAmIAuthoredCanonicalExpansion } from "./ufcWhoAmIAuthoredCanonicalExpansion";
 
 const normalize = (value: string) => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
 
@@ -8,12 +9,29 @@ describe("UFC factual ledger", () => {
   it("extends the ranked factual core to the configured launch target without changing rankings", () => {
     const ranked = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "ranked-core");
     const expansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "recognizable-expansion");
+    const authoredExpansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "authored-who-am-i-expansion");
 
     expect(ranked).toHaveLength(canonicalRankingInputs.counts.fighters);
     expect(canonicalRankingInputs.counts.fighters).toBe(ufcFactualExpansion.rankedSubjectCountAtGeneration);
     expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount);
-    expect(ufcFactualLedgerSubjects).toHaveLength(ufcFactualExpansion.targetTotalSubjects);
+    expect(ranked.length + expansion.length).toBe(ufcFactualExpansion.targetTotalSubjects);
+    expect(authoredExpansion).toHaveLength(33);
+    expect(ufcFactualLedgerSubjects).toHaveLength(133);
     expect(ranked.map((subject) => subject.name)).toEqual(canonicalRankingInputs.fighters.map((fighter) => fighter.fighter));
+  });
+
+  it("adds exactly the approved 33 authored identities without inventing fight ledgers", () => {
+    const authoredExpansion = ufcFactualLedgerSubjects.filter(
+      (subject) => subject.scope === "authored-who-am-i-expansion",
+    );
+
+    expect(authoredExpansion).toHaveLength(33);
+    expect(authoredExpansion.map((subject) => subject.id)).toEqual(
+      ufcWhoAmIAuthoredCanonicalExpansion.map((subject) => subject.id),
+    );
+    expect(authoredExpansion.every((subject) => subject.recognizabilityTier === "A")).toBe(true);
+    expect(authoredExpansion.every((subject) => subject.fights.length === 0)).toBe(true);
+    expect(authoredExpansion.every((subject) => subject.identitySourceUrl?.startsWith("https://www.ufc.com/"))).toBe(true);
   });
 
   it("keeps the recognizable expansion A-tier, modern-leaning, source-backed, and identity-unique", () => {
