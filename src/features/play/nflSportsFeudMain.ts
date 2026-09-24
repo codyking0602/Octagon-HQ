@@ -215,7 +215,11 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
         answers: ["Barry Sanders", "Walter Payton", "Emmitt Smith", "Jim Brown", "Adrian Peterson", "LaDainian Tomlinson", "Eric Dickerson", "Marshall Faulk"],
         alsoAcceptedAnswers: ["Derrick Henry", "Earl Campbell", "Gale Sayers", "Marcus Allen", "Tony Dorsett", "Thurman Thomas", "Frank Gore", "Terrell Davis"],
       },
-      "Name a running back whose highlights still look special decades later.",
+      {
+        prompt: "Name a running back whose highlights still look special decades later.",
+        answers: ["Barry Sanders", "Gale Sayers", "Walter Payton", "Bo Jackson", "Earl Campbell", "Eric Dickerson", "Jim Brown", "Tony Dorsett"],
+        alsoAcceptedAnswers: ["Adrian Peterson", "LaDainian Tomlinson", "Marcus Allen", "Marshall Faulk", "Thurman Thomas", "Emmitt Smith", "Derrick Henry", "Terrell Davis"],
+      },
       "Name an NFL back you would put in a legends conversation.",
       {
         prompt: "Name a running back who became the identity of an offense.",
