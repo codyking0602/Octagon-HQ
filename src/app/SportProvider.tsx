@@ -7,14 +7,14 @@ import {
   type PropsWithChildren,
 } from "react";
 
-export type SelectedSport = "ufc" | "football";
+export type SelectedSport = "ufc" | "football" | "mlb";
 
 export const SELECTED_SPORT_STORAGE_KEY = "the-hq:selected-sport";
 
 const DEFAULT_SPORT: SelectedSport = "ufc";
 
 function isSelectedSport(value: string | null): value is SelectedSport {
-  return value === "ufc" || value === "football";
+  return value === "ufc" || value === "football" || value === "mlb";
 }
 
 function readPersistedSport(): SelectedSport {
