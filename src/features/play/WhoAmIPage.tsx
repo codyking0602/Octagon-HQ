@@ -78,6 +78,7 @@ interface WhoAmIPageProps {
   onChallenge?: (round: WhoAmIRound, result: WhoAmICompletedResult) => Promise<string>;
   onAllGames?: () => void;
   onComplete?: (round: WhoAmIRound, result: WhoAmICompletedResult) => void;
+  onRoundShown?: (round: WhoAmIRound) => void;
 }
 
 export default function WhoAmIPage({
@@ -88,6 +89,7 @@ export default function WhoAmIPage({
   onChallenge,
   onAllGames,
   onComplete,
+  onRoundShown,
 }: WhoAmIPageProps) {
   const [round, setRound] = useState<WhoAmIRound>(() => initialRound ?? createRound(recentSubjectExclusions()));
   const [phase, setPhase] = useState<Phase>("start");
@@ -134,7 +136,8 @@ export default function WhoAmIPage({
 
   useEffect(() => {
     rememberRecentSubject(round.league, round.hiddenSubject.id);
-  }, [round.hiddenSubject.id, round.league]);
+    onRoundShown?.(round);
+  }, [onRoundShown, round]);
 
   const football = sport === "football";
   const finalGuessRequired = phase === "playing" && revealedCount >= WHO_AM_I_CLUE_LIMIT;
