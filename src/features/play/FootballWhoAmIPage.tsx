@@ -84,11 +84,12 @@ export default function FootballWhoAmIPage() {
       onChallenge={challengeSomeone}
       onAllGames={() => navigate("/football")}
       onComplete={recordChallengeResult}
+      onRoundShown={rememberFootballWhoAmIAuthoredCasualRound}
       createRound={(excludedSubjectIdsByLeague) => (
-        createFootballWhoAmIRound(Math.random, {
-        NFL: excludedSubjectIdsByLeague.NFL,
-        CFB: excludedSubjectIdsByLeague.CFB,
-      })
+        createFootballWhoAmIAuthoredCasualRound(Math.random, {
+          NFL: excludedSubjectIdsByLeague.NFL,
+          CFB: excludedSubjectIdsByLeague.CFB,
+        })
       )}
     />
   );
