@@ -198,6 +198,7 @@ describe("Official Sports Feud Daily mobile locks", () => {
     fireEvent.click(screen.getByRole("button", { name: "GO TO FAST MONEY" }));
     fireEvent.click(screen.getByRole("button", { name: "START 50 SECONDS" }));
 
+    screen.getByLabelText("Fast Money answer").focus();
     for (let index = 0; index < 5; index += 1) {
       const input = screen.getByLabelText("Fast Money answer");
       fireEvent.change(input, { target: { value: "Answer " + (index + 1) } });
