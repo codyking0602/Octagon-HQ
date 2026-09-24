@@ -237,7 +237,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       "Name a weight class a UFC fighter can compete in.",
     ],
     answers: ["Lightweight", "Welterweight", "Middleweight", "Featherweight", "Bantamweight", "Heavyweight", "Light heavyweight", "Flyweight"],
-    alsoAcceptedAnswers: ["Strawweight", "Women's flyweight", "Women's bantamweight", "Women's featherweight"],
+    alsoAcceptedAnswers: ["Strawweight", "Women's flyweight", "Women's bantamweight"],
   },
   {
     category: "traits",
