@@ -38,6 +38,12 @@ describe("UFC authored Who Am I Casual", () => {
     expect(exhausted.hiddenSubject.id).toBe(first.subjectId);
   });
 
+  it("can select fighters from the 33-fighter expansion", () => {
+    const round = createUfcWhoAmIAuthoredCasualRound(() => 0.999999);
+    expect(round.hiddenSubject.id).toBe("ufc:darren-till");
+    expect(round.clues).toHaveLength(10);
+  });
+
   it("can use either authored script route for the same fighter", () => {
     const identity = ufcWhoAmIAuthoredLaunchPool[0]!;
     const a = createUfcWhoAmIAuthoredCasualRound(() => 0);
