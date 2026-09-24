@@ -97,14 +97,29 @@ describe("UFC Sports Feud answer-acceptance hardening", () => {
     }
   });
 
-  it("types clearly person-oriented UFC prompts as people", () => {
-    const personPrompt = /\b(fighter|champion|commentator|analyst|broadcaster|referee|underdog|TUF alum|Hall of Famer|pioneer|MMA star|UFC name)\b/i;
-    const genericPersonMentions = /\b(fighter(?:'s|s)? (?:can|would|might|needs?|trait|corner|drill|throw|compete|accomplish|deal|weight cut|résumé))\b/i;
+  it("types every audited person-oriented UFC family as people", () => {
+    const personFamilies = new Set([
+      ...Array.from({ length: 11 }, (_value, index) =>
+        `ufc-main-${String(index + 1).padStart(2, "0")}`),
+      "ufc-main-20",
+      ...Array.from({ length: 9 }, (_value, index) =>
+        `ufc-fast1-${String(index + 2).padStart(2, "0")}`),
+      ...Array.from({ length: 10 }, (_value, index) =>
+        `ufc-fast2-${String(index + 1).padStart(2, "0")}`),
+      "ufc-fast3-01",
+      "ufc-fast3-02",
+      "ufc-fast3-05",
+      "ufc-fast3-06",
+      "ufc-fast3-07",
+      "ufc-fast3-08",
+      "ufc-fast3-09",
+      ...Array.from({ length: 10 }, (_value, index) =>
+        `ufc-fast5-${String(index + 1).padStart(2, "0")}`),
+    ]);
 
-    const clearlyPerson = UFC_ALL.filter(
-      (question) => personPrompt.test(question.prompt) && !genericPersonMentions.test(question.prompt),
-    );
-    expect(clearlyPerson.length).toBeGreaterThan(150);
+    const clearlyPerson = UFC_ALL.filter((question) =>
+      personFamilies.has(question.id.slice(0, question.id.lastIndexOf("-"))));
+    expect(clearlyPerson).toHaveLength(240);
     for (const question of clearlyPerson) {
       expect(question.entityKind, `${question.id}: ${question.prompt}`).toBe("person");
     }
