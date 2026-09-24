@@ -422,8 +422,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
         answers: ["Arrowhead Stadium", "Lumen Field", "Superdome", "Highmark Stadium", "Lincoln Financial Field", "M&T Bank Stadium", "U.S. Bank Stadium", "Empower Field at Mile High"],
         alsoAcceptedAnswers: ["Lambeau Field", "Ford Field", "Acrisure Stadium", "Gillette Stadium"],
       },
-      "Name an NFL venue where home-field advantage feels real.",
-      "Name an NFL stadium widely known for a difficult road atmosphere.",
+      {
+        prompt: "Name an NFL venue where home-field advantage feels real.",
+        answers: ["Arrowhead Stadium", "Lumen Field", "Lambeau Field", "Highmark Stadium", "Lincoln Financial Field", "Superdome", "M&T Bank Stadium", "Empower Field at Mile High"],
+        alsoAcceptedAnswers: ["U.S. Bank Stadium", "Ford Field", "Acrisure Stadium", "Gillette Stadium"],
+      },
+      {
+        prompt: "Name an NFL stadium widely known for a difficult road atmosphere.",
+        answers: ["Arrowhead Stadium", "Lumen Field", "Lambeau Field", "Superdome", "Highmark Stadium", "Lincoln Financial Field", "Empower Field at Mile High", "M&T Bank Stadium"],
+        alsoAcceptedAnswers: ["U.S. Bank Stadium", "Ford Field", "Acrisure Stadium", "Gillette Stadium"],
+      },
     ],
     answers: ["Arrowhead Stadium", "Lambeau Field", "Lumen Field", "Superdome", "Highmark Stadium", "Lincoln Financial Field", "Acrisure Stadium", "M&T Bank Stadium"],
     alsoAcceptedAnswers: ["U.S. Bank Stadium", "Ford Field"],
