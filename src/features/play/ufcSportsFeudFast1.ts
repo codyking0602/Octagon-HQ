@@ -6,11 +6,96 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     "entityKind": "other",
     "collisionGroup": "divisions",
     "prompts": [
-      "Name a UFC weight class.",
-      "Name a division you can see on a UFC card.",
-      "Name a UFC division with famous champions.",
-      "Name a weight class MMA fans debate constantly.",
-      "Name a division a UFC fighter can compete in."
+      {
+        "prompt": "Name a UFC weight class.",
+        "answers": [
+          "Lightweight",
+          "Welterweight",
+          "Middleweight",
+          "Featherweight",
+          "Bantamweight",
+          "Heavyweight",
+          "Light heavyweight",
+          "Flyweight"
+        ],
+        "alsoAcceptedAnswers": [
+          "Strawweight",
+          "Women's flyweight",
+          "Women's bantamweight"
+        ]
+      },
+      {
+        "prompt": "Name a division you can see on a UFC card.",
+        "answers": [
+          "Lightweight",
+          "Welterweight",
+          "Middleweight",
+          "Heavyweight",
+          "Featherweight",
+          "Bantamweight",
+          "Flyweight",
+          "Light heavyweight"
+        ],
+        "alsoAcceptedAnswers": [
+          "Strawweight",
+          "Women's flyweight",
+          "Women's bantamweight"
+        ]
+      },
+      {
+        "prompt": "Name a UFC division with famous champions.",
+        "answers": [
+          "Lightweight",
+          "Welterweight",
+          "Heavyweight",
+          "Middleweight",
+          "Featherweight",
+          "Bantamweight",
+          "Light heavyweight",
+          "Flyweight"
+        ],
+        "alsoAcceptedAnswers": [
+          "Strawweight",
+          "Women's flyweight",
+          "Women's bantamweight"
+        ]
+      },
+      {
+        "prompt": "Name a weight class MMA fans debate constantly.",
+        "answers": [
+          "Lightweight",
+          "Welterweight",
+          "Middleweight",
+          "Featherweight",
+          "Bantamweight",
+          "Flyweight",
+          "Heavyweight",
+          "Light heavyweight"
+        ],
+        "alsoAcceptedAnswers": [
+          "Strawweight",
+          "Women's flyweight",
+          "Women's bantamweight"
+        ]
+      },
+      {
+        "prompt": "Name a division a UFC fighter can compete in.",
+        "answers": [
+          "Lightweight",
+          "Welterweight",
+          "Middleweight",
+          "Featherweight",
+          "Bantamweight",
+          "Heavyweight",
+          "Flyweight",
+          "Light heavyweight"
+        ],
+        "alsoAcceptedAnswers": [
+          "Strawweight",
+          "Women's flyweight",
+          "Women's bantamweight"
+        ]
+      }
     ],
     "answers": [
       {
@@ -99,11 +184,111 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     "entityKind": "person",
     "collisionGroup": "lightweights",
     "prompts": [
-      "Name an undisputed UFC lightweight champion from any era.",
-      "Name a fighter who has held the undisputed UFC lightweight title.",
-      "Name a former or current undisputed UFC 155-pound champion.",
-      "Name a lightweight whose résumé includes undisputed UFC gold.",
-      "Name another fighter on the undisputed UFC lightweight champions list."
+      {
+        "prompt": "Name an undisputed UFC lightweight champion from any era.",
+        "answers": [
+          "Khabib Nurmagomedov",
+          "BJ Penn",
+          "Islam Makhachev",
+          "Charles Oliveira",
+          "Conor McGregor",
+          "Frankie Edgar",
+          "Benson Henderson",
+          "Justin Gaethje"
+        ],
+        "alsoAcceptedAnswers": [
+          "Eddie Alvarez",
+          "Rafael dos Anjos",
+          "Jens Pulver",
+          "Sean Sherk",
+          "Anthony Pettis",
+          "Ilia Topuria"
+        ]
+      },
+      {
+        "prompt": "Name a fighter who has held the undisputed UFC lightweight title.",
+        "answers": [
+          "Khabib Nurmagomedov",
+          "Islam Makhachev",
+          "Charles Oliveira",
+          "BJ Penn",
+          "Frankie Edgar",
+          "Benson Henderson",
+          "Anthony Pettis",
+          "Conor McGregor"
+        ],
+        "alsoAcceptedAnswers": [
+          "Eddie Alvarez",
+          "Rafael dos Anjos",
+          "Jens Pulver",
+          "Sean Sherk",
+          "Ilia Topuria",
+          "Justin Gaethje"
+        ]
+      },
+      {
+        "prompt": "Name a former or current undisputed UFC 155-pound champion.",
+        "answers": [
+          "Justin Gaethje",
+          "Ilia Topuria",
+          "Islam Makhachev",
+          "Charles Oliveira",
+          "Khabib Nurmagomedov",
+          "Conor McGregor",
+          "Rafael dos Anjos",
+          "Eddie Alvarez"
+        ],
+        "alsoAcceptedAnswers": [
+          "BJ Penn",
+          "Frankie Edgar",
+          "Benson Henderson",
+          "Jens Pulver",
+          "Sean Sherk",
+          "Anthony Pettis"
+        ]
+      },
+      {
+        "prompt": "Name a lightweight whose résumé includes undisputed UFC gold.",
+        "answers": [
+          "Khabib Nurmagomedov",
+          "BJ Penn",
+          "Islam Makhachev",
+          "Charles Oliveira",
+          "Frankie Edgar",
+          "Benson Henderson",
+          "Rafael dos Anjos",
+          "Conor McGregor"
+        ],
+        "alsoAcceptedAnswers": [
+          "Eddie Alvarez",
+          "Jens Pulver",
+          "Sean Sherk",
+          "Anthony Pettis",
+          "Ilia Topuria",
+          "Justin Gaethje"
+        ]
+      },
+      {
+        "prompt": "Name another fighter on the undisputed UFC lightweight champions list.",
+        "answers": [
+          "Khabib Nurmagomedov",
+          "BJ Penn",
+          "Islam Makhachev",
+          "Charles Oliveira",
+          "Frankie Edgar",
+          "Benson Henderson",
+          "Conor McGregor",
+          "Ilia Topuria"
+        ],
+        "alsoAcceptedAnswers": [
+          "Eddie Alvarez",
+          "Rafael dos Anjos",
+          "Jens Pulver",
+          "Sean Sherk",
+          "Anthony Pettis",
+          "Justin Gaethje"
+        ]
+      }
     ],
     "answers": [
       {
@@ -130,18 +315,14 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Islam"
         ]
       },
-      {
-        "name": "Frankie Edgar"
-      },
+      "Frankie Edgar",
       {
         "name": "Benson Henderson",
         "aliases": [
           "Bendo"
         ]
       },
-      {
-        "name": "Eddie Alvarez"
-      },
+      "Eddie Alvarez",
       {
         "name": "Rafael dos Anjos",
         "aliases": [
@@ -150,12 +331,8 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       }
     ],
     "alsoAcceptedAnswers": [
-      {
-        "name": "Jens Pulver"
-      },
-      {
-        "name": "Sean Sherk"
-      },
+      "Jens Pulver",
+      "Sean Sherk",
       {
         "name": "Anthony Pettis",
         "aliases": [
@@ -187,11 +364,111 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     "entityKind": "person",
     "collisionGroup": "welterweights",
     "prompts": [
-      "Name an undisputed UFC welterweight champion from any era.",
-      "Name a fighter who has held the undisputed UFC welterweight title.",
-      "Name a former or current undisputed UFC 170-pound champion.",
-      "Name a welterweight whose résumé includes undisputed UFC gold.",
-      "Name another fighter on the undisputed UFC welterweight champions list."
+      {
+        "prompt": "Name an undisputed UFC welterweight champion from any era.",
+        "answers": [
+          "Georges St-Pierre",
+          "Matt Hughes",
+          "Kamaru Usman",
+          "Islam Makhachev",
+          "Leon Edwards",
+          "Robbie Lawler",
+          "Tyron Woodley",
+          "BJ Penn"
+        ],
+        "alsoAcceptedAnswers": [
+          "Johny Hendricks",
+          "Carlos Newton",
+          "Pat Miletich",
+          "Matt Serra",
+          "Belal Muhammad",
+          "Jack Della Maddalena"
+        ]
+      },
+      {
+        "prompt": "Name a fighter who has held the undisputed UFC welterweight title.",
+        "answers": [
+          "Georges St-Pierre",
+          "Matt Hughes",
+          "Kamaru Usman",
+          "Islam Makhachev",
+          "Leon Edwards",
+          "Robbie Lawler",
+          "Tyron Woodley",
+          "Belal Muhammad"
+        ],
+        "alsoAcceptedAnswers": [
+          "Johny Hendricks",
+          "Carlos Newton",
+          "BJ Penn",
+          "Pat Miletich",
+          "Matt Serra",
+          "Jack Della Maddalena"
+        ]
+      },
+      {
+        "prompt": "Name a former or current undisputed UFC 170-pound champion.",
+        "answers": [
+          "Islam Makhachev",
+          "Jack Della Maddalena",
+          "Belal Muhammad",
+          "Leon Edwards",
+          "Kamaru Usman",
+          "Tyron Woodley",
+          "Robbie Lawler",
+          "Georges St-Pierre"
+        ],
+        "alsoAcceptedAnswers": [
+          "Matt Hughes",
+          "Johny Hendricks",
+          "Carlos Newton",
+          "BJ Penn",
+          "Pat Miletich",
+          "Matt Serra"
+        ]
+      },
+      {
+        "prompt": "Name a welterweight whose résumé includes undisputed UFC gold.",
+        "answers": [
+          "Georges St-Pierre",
+          "Matt Hughes",
+          "Kamaru Usman",
+          "Islam Makhachev",
+          "Leon Edwards",
+          "Robbie Lawler",
+          "Tyron Woodley",
+          "Johny Hendricks"
+        ],
+        "alsoAcceptedAnswers": [
+          "Carlos Newton",
+          "BJ Penn",
+          "Pat Miletich",
+          "Matt Serra",
+          "Belal Muhammad",
+          "Jack Della Maddalena"
+        ]
+      },
+      {
+        "prompt": "Name another fighter on the undisputed UFC welterweight champions list.",
+        "answers": [
+          "Georges St-Pierre",
+          "Matt Hughes",
+          "Kamaru Usman",
+          "Islam Makhachev",
+          "Leon Edwards",
+          "Robbie Lawler",
+          "Tyron Woodley",
+          "BJ Penn"
+        ],
+        "alsoAcceptedAnswers": [
+          "Johny Hendricks",
+          "Carlos Newton",
+          "Pat Miletich",
+          "Matt Serra",
+          "Belal Muhammad",
+          "Jack Della Maddalena"
+        ]
+      }
     ],
     "answers": [
       {
@@ -238,9 +515,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Bigg Rigg"
         ]
       },
-      {
-        "name": "Carlos Newton"
-      }
+      "Carlos Newton"
     ],
     "alsoAcceptedAnswers": [
       {
@@ -249,9 +524,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "BJ"
         ]
       },
-      {
-        "name": "Pat Miletich"
-      },
+      "Pat Miletich",
       {
         "name": "Matt Serra",
         "aliases": [
@@ -284,11 +557,116 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     "entityKind": "person",
     "collisionGroup": "middleweights",
     "prompts": [
-      "Name an undisputed UFC middleweight champion from any era.",
-      "Name a fighter who has held the undisputed UFC middleweight title.",
-      "Name a former or current undisputed UFC 185-pound champion.",
-      "Name a middleweight whose résumé includes undisputed UFC gold.",
-      "Name another fighter on the undisputed UFC middleweight champions list."
+      {
+        "prompt": "Name an undisputed UFC middleweight champion from any era.",
+        "answers": [
+          "Anderson Silva",
+          "Israel Adesanya",
+          "Chris Weidman",
+          "Sean Strickland",
+          "Dricus du Plessis",
+          "Khamzat Chimaev",
+          "Robert Whittaker",
+          "Michael Bisping"
+        ],
+        "alsoAcceptedAnswers": [
+          "Alex Pereira",
+          "Luke Rockhold",
+          "Rich Franklin",
+          "Evan Tanner",
+          "Dave Menne",
+          "Murilo Bustamante",
+          "Georges St-Pierre"
+        ]
+      },
+      {
+        "prompt": "Name a fighter who has held the undisputed UFC middleweight title.",
+        "answers": [
+          "Anderson Silva",
+          "Israel Adesanya",
+          "Chris Weidman",
+          "Sean Strickland",
+          "Dricus du Plessis",
+          "Khamzat Chimaev",
+          "Robert Whittaker",
+          "Alex Pereira"
+        ],
+        "alsoAcceptedAnswers": [
+          "Michael Bisping",
+          "Luke Rockhold",
+          "Rich Franklin",
+          "Evan Tanner",
+          "Dave Menne",
+          "Murilo Bustamante",
+          "Georges St-Pierre"
+        ]
+      },
+      {
+        "prompt": "Name a former or current undisputed UFC 185-pound champion.",
+        "answers": [
+          "Sean Strickland",
+          "Khamzat Chimaev",
+          "Dricus du Plessis",
+          "Israel Adesanya",
+          "Alex Pereira",
+          "Robert Whittaker",
+          "Chris Weidman",
+          "Anderson Silva"
+        ],
+        "alsoAcceptedAnswers": [
+          "Michael Bisping",
+          "Luke Rockhold",
+          "Rich Franklin",
+          "Evan Tanner",
+          "Dave Menne",
+          "Murilo Bustamante",
+          "Georges St-Pierre"
+        ]
+      },
+      {
+        "prompt": "Name a middleweight whose résumé includes undisputed UFC gold.",
+        "answers": [
+          "Anderson Silva",
+          "Israel Adesanya",
+          "Chris Weidman",
+          "Robert Whittaker",
+          "Michael Bisping",
+          "Alex Pereira",
+          "Sean Strickland",
+          "Dricus du Plessis"
+        ],
+        "alsoAcceptedAnswers": [
+          "Luke Rockhold",
+          "Rich Franklin",
+          "Evan Tanner",
+          "Dave Menne",
+          "Murilo Bustamante",
+          "Georges St-Pierre",
+          "Khamzat Chimaev"
+        ]
+      },
+      {
+        "prompt": "Name another fighter on the undisputed UFC middleweight champions list.",
+        "answers": [
+          "Anderson Silva",
+          "Israel Adesanya",
+          "Chris Weidman",
+          "Robert Whittaker",
+          "Sean Strickland",
+          "Dricus du Plessis",
+          "Khamzat Chimaev",
+          "Michael Bisping"
+        ],
+        "alsoAcceptedAnswers": [
+          "Alex Pereira",
+          "Luke Rockhold",
+          "Rich Franklin",
+          "Evan Tanner",
+          "Dave Menne",
+          "Murilo Bustamante",
+          "Georges St-Pierre"
+        ]
+      }
     ],
     "answers": [
       {
@@ -344,18 +722,10 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       }
     ],
     "alsoAcceptedAnswers": [
-      {
-        "name": "Rich Franklin"
-      },
-      {
-        "name": "Evan Tanner"
-      },
-      {
-        "name": "Dave Menne"
-      },
-      {
-        "name": "Murilo Bustamante"
-      },
+      "Rich Franklin",
+      "Evan Tanner",
+      "Dave Menne",
+      "Murilo Bustamante",
       {
         "name": "Georges St-Pierre",
         "aliases": [
@@ -385,11 +755,136 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     "entityKind": "person",
     "collisionGroup": "heavyweights",
     "prompts": [
-      "Name an undisputed UFC heavyweight champion from any era.",
-      "Name a fighter who has held the undisputed UFC heavyweight title.",
-      "Name a former or current undisputed UFC heavyweight champion.",
-      "Name a heavyweight whose résumé includes undisputed UFC gold.",
-      "Name another fighter on the undisputed UFC heavyweight champions list."
+      {
+        "prompt": "Name an undisputed UFC heavyweight champion from any era.",
+        "answers": [
+          "Stipe Miocic",
+          "Cain Velasquez",
+          "Francis Ngannou",
+          "Daniel Cormier",
+          "Randy Couture",
+          "Junior dos Santos",
+          "Brock Lesnar",
+          "Jon Jones"
+        ],
+        "alsoAcceptedAnswers": [
+          "Fabricio Werdum",
+          "Frank Mir",
+          "Andrei Arlovski",
+          "Tim Sylvia",
+          "Josh Barnett",
+          "Tom Aspinall",
+          "Bas Rutten",
+          "Kevin Randleman",
+          "Mark Coleman",
+          "Ricco Rodriguez",
+          "Maurice Smith"
+        ]
+      },
+      {
+        "prompt": "Name a fighter who has held the undisputed UFC heavyweight title.",
+        "answers": [
+          "Stipe Miocic",
+          "Cain Velasquez",
+          "Francis Ngannou",
+          "Daniel Cormier",
+          "Randy Couture",
+          "Junior dos Santos",
+          "Brock Lesnar",
+          "Tom Aspinall"
+        ],
+        "alsoAcceptedAnswers": [
+          "Fabricio Werdum",
+          "Frank Mir",
+          "Andrei Arlovski",
+          "Tim Sylvia",
+          "Josh Barnett",
+          "Bas Rutten",
+          "Kevin Randleman",
+          "Mark Coleman",
+          "Ricco Rodriguez",
+          "Maurice Smith",
+          "Jon Jones"
+        ]
+      },
+      {
+        "prompt": "Name a former or current undisputed UFC heavyweight champion.",
+        "answers": [
+          "Tom Aspinall",
+          "Jon Jones",
+          "Francis Ngannou",
+          "Stipe Miocic",
+          "Daniel Cormier",
+          "Cain Velasquez",
+          "Fabricio Werdum",
+          "Junior dos Santos"
+        ],
+        "alsoAcceptedAnswers": [
+          "Randy Couture",
+          "Brock Lesnar",
+          "Frank Mir",
+          "Andrei Arlovski",
+          "Tim Sylvia",
+          "Josh Barnett",
+          "Bas Rutten",
+          "Kevin Randleman",
+          "Mark Coleman",
+          "Ricco Rodriguez",
+          "Maurice Smith"
+        ]
+      },
+      {
+        "prompt": "Name a heavyweight whose résumé includes undisputed UFC gold.",
+        "answers": [
+          "Stipe Miocic",
+          "Cain Velasquez",
+          "Francis Ngannou",
+          "Daniel Cormier",
+          "Randy Couture",
+          "Brock Lesnar",
+          "Jon Jones",
+          "Tom Aspinall"
+        ],
+        "alsoAcceptedAnswers": [
+          "Junior dos Santos",
+          "Fabricio Werdum",
+          "Frank Mir",
+          "Andrei Arlovski",
+          "Tim Sylvia",
+          "Josh Barnett",
+          "Bas Rutten",
+          "Kevin Randleman",
+          "Mark Coleman",
+          "Ricco Rodriguez",
+          "Maurice Smith"
+        ]
+      },
+      {
+        "prompt": "Name another fighter on the undisputed UFC heavyweight champions list.",
+        "answers": [
+          "Stipe Miocic",
+          "Randy Couture",
+          "Cain Velasquez",
+          "Francis Ngannou",
+          "Daniel Cormier",
+          "Jon Jones",
+          "Tom Aspinall",
+          "Brock Lesnar"
+        ],
+        "alsoAcceptedAnswers": [
+          "Junior dos Santos",
+          "Fabricio Werdum",
+          "Frank Mir",
+          "Andrei Arlovski",
+          "Tim Sylvia",
+          "Josh Barnett",
+          "Bas Rutten",
+          "Kevin Randleman",
+          "Mark Coleman",
+          "Ricco Rodriguez",
+          "Maurice Smith"
+        ]
+      }
     ],
     "answers": [
       {
@@ -509,12 +1004,6 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Jones",
           "Bones"
         ]
-      },
-      {
-        "name": "Ciryl Gane",
-        "aliases": [
-          "Bon Gamin"
-        ]
       }
     ]
   },
@@ -523,11 +1012,96 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
     "entityKind": "person",
     "collisionGroup": "multi-division",
     "prompts": [
-      "Name a UFC fighter who won titles in two weight classes.",
-      "Name a fighter with UFC championships in two divisions.",
-      "Name a UFC champion who proved capable of winning gold at multiple weights.",
-      "Name a fighter whose UFC résumé includes titles in two weight classes.",
-      "Name a multi-division UFC champion."
+      {
+        "prompt": "Name a UFC fighter who won titles in two weight classes.",
+        "answers": [
+          "Conor McGregor",
+          "Daniel Cormier",
+          "Amanda Nunes",
+          "Henry Cejudo",
+          "BJ Penn",
+          "Randy Couture",
+          "Jon Jones",
+          "Alex Pereira"
+        ],
+        "alsoAcceptedAnswers": [
+          "Georges St-Pierre",
+          "Ilia Topuria",
+          "Islam Makhachev"
+        ]
+      },
+      {
+        "prompt": "Name a fighter with UFC championships in two divisions.",
+        "answers": [
+          "Conor McGregor",
+          "Daniel Cormier",
+          "Amanda Nunes",
+          "Henry Cejudo",
+          "Jon Jones",
+          "Alex Pereira",
+          "Ilia Topuria",
+          "Islam Makhachev"
+        ],
+        "alsoAcceptedAnswers": [
+          "BJ Penn",
+          "Randy Couture",
+          "Georges St-Pierre"
+        ]
+      },
+      {
+        "prompt": "Name a UFC champion who proved capable of winning gold at multiple weights.",
+        "answers": [
+          "Amanda Nunes",
+          "Daniel Cormier",
+          "Henry Cejudo",
+          "Jon Jones",
+          "Alex Pereira",
+          "Conor McGregor",
+          "Ilia Topuria",
+          "Islam Makhachev"
+        ],
+        "alsoAcceptedAnswers": [
+          "BJ Penn",
+          "Randy Couture",
+          "Georges St-Pierre"
+        ]
+      },
+      {
+        "prompt": "Name a fighter whose UFC résumé includes titles in two weight classes.",
+        "answers": [
+          "Conor McGregor",
+          "Daniel Cormier",
+          "Amanda Nunes",
+          "Henry Cejudo",
+          "Jon Jones",
+          "Alex Pereira",
+          "Georges St-Pierre",
+          "Islam Makhachev"
+        ],
+        "alsoAcceptedAnswers": [
+          "BJ Penn",
+          "Randy Couture",
+          "Ilia Topuria"
+        ]
+      },
+      {
+        "prompt": "Name a multi-division UFC champion.",
+        "answers": [
+          "Conor McGregor",
+          "Daniel Cormier",
+          "Amanda Nunes",
+          "Henry Cejudo",
+          "Jon Jones",
+          "Alex Pereira",
+          "Ilia Topuria",
+          "Islam Makhachev"
+        ],
+        "alsoAcceptedAnswers": [
+          "BJ Penn",
+          "Randy Couture",
+          "Georges St-Pierre"
+        ]
+      }
     ],
     "answers": [
       {
@@ -617,14 +1191,14 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Alex Pereira",
           "Derrick Lewis",
           "Chuck Liddell",
+          "Anthony Johnson",
           "Dan Henderson",
-          "Wanderlei Silva",
-          "Jiri Prochazka",
-          "Justin Gaethje"
+          "Mark Hunt",
+          "Jiri Prochazka"
         ],
         "alsoAcceptedAnswers": [
-          "Anthony Johnson",
-          "Mark Hunt",
+          "Wanderlei Silva",
+          "Justin Gaethje",
           "Mirko Cro Cop",
           "Quinton Jackson",
           "Sergei Pavlovich",
@@ -638,18 +1212,18 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Alex Pereira",
           "Derrick Lewis",
           "Anthony Johnson",
-          "Chuck Liddell",
           "Dan Henderson",
-          "Wanderlei Silva",
-          "Jiri Prochazka"
+          "Jiri Prochazka",
+          "Mark Hunt",
+          "Tai Tuivasa"
         ],
         "alsoAcceptedAnswers": [
+          "Chuck Liddell",
+          "Wanderlei Silva",
           "Justin Gaethje",
-          "Mark Hunt",
           "Mirko Cro Cop",
           "Quinton Jackson",
-          "Sergei Pavlovich",
-          "Tai Tuivasa"
+          "Sergei Pavlovich"
         ]
       },
       {
@@ -657,15 +1231,15 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
         "answers": [
           "Francis Ngannou",
           "Alex Pereira",
-          "Chuck Liddell",
           "Derrick Lewis",
-          "Dan Henderson",
-          "Wanderlei Silva",
+          "Chuck Liddell",
           "Jiri Prochazka",
-          "Justin Gaethje"
+          "Justin Gaethje",
+          "Dan Henderson",
+          "Anthony Johnson"
         ],
         "alsoAcceptedAnswers": [
-          "Anthony Johnson",
+          "Wanderlei Silva",
           "Mark Hunt",
           "Mirko Cro Cop",
           "Quinton Jackson",
@@ -676,18 +1250,18 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       {
         "prompt": "Name a fighter you would never want to trade shots with.",
         "answers": [
-          "Francis Ngannou",
           "Alex Pereira",
+          "Francis Ngannou",
           "Justin Gaethje",
           "Chuck Liddell",
-          "Derrick Lewis",
-          "Dan Henderson",
+          "Jiri Prochazka",
           "Wanderlei Silva",
-          "Jiri Prochazka"
+          "Dan Henderson",
+          "Mark Hunt"
         ],
         "alsoAcceptedAnswers": [
+          "Derrick Lewis",
           "Anthony Johnson",
-          "Mark Hunt",
           "Mirko Cro Cop",
           "Quinton Jackson",
           "Sergei Pavlovich",
@@ -697,17 +1271,17 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       {
         "prompt": "Name a UFC knockout artist almost every MMA fan knows.",
         "answers": [
+          "Chuck Liddell",
           "Francis Ngannou",
           "Alex Pereira",
-          "Chuck Liddell",
           "Derrick Lewis",
           "Dan Henderson",
-          "Wanderlei Silva",
-          "Jiri Prochazka",
-          "Justin Gaethje"
+          "Anthony Johnson",
+          "Justin Gaethje",
+          "Wanderlei Silva"
         ],
         "alsoAcceptedAnswers": [
-          "Anthony Johnson",
+          "Jiri Prochazka",
           "Mark Hunt",
           "Mirko Cro Cop",
           "Quinton Jackson",
@@ -792,9 +1366,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Rampage"
         ]
       },
-      {
-        "name": "Sergei Pavlovich"
-      },
+      "Sergei Pavlovich",
       {
         "name": "Tai Tuivasa",
         "aliases": [
@@ -814,18 +1386,18 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Charles Oliveira",
           "Demian Maia",
           "Frank Mir",
+          "Royce Gracie",
           "BJ Penn",
           "Nate Diaz",
-          "Mackenzie Dern",
-          "Rodolfo Vieira",
-          "Tony Ferguson"
+          "Brian Ortega",
+          "Mackenzie Dern"
         ],
         "alsoAcceptedAnswers": [
+          "Rodolfo Vieira",
+          "Tony Ferguson",
           "Khabib Nurmagomedov",
           "Jim Miller",
           "Islam Makhachev",
-          "Brian Ortega",
-          "Royce Gracie",
           "Fabricio Werdum"
         ]
       },
@@ -833,21 +1405,21 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
         "prompt": "Name a fighter whose ground game can end a fight quickly.",
         "answers": [
           "Charles Oliveira",
+          "Islam Makhachev",
+          "Khabib Nurmagomedov",
+          "Demian Maia",
           "Frank Mir",
           "Brian Ortega",
-          "Mackenzie Dern",
-          "Demian Maia",
-          "BJ Penn",
-          "Nate Diaz",
-          "Rodolfo Vieira"
+          "Fabricio Werdum",
+          "BJ Penn"
         ],
         "alsoAcceptedAnswers": [
+          "Nate Diaz",
+          "Mackenzie Dern",
+          "Rodolfo Vieira",
           "Tony Ferguson",
-          "Khabib Nurmagomedov",
           "Jim Miller",
-          "Islam Makhachev",
-          "Royce Gracie",
-          "Fabricio Werdum"
+          "Royce Gracie"
         ]
       },
       {
@@ -855,41 +1427,41 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
         "answers": [
           "Charles Oliveira",
           "Demian Maia",
-          "Islam Makhachev",
+          "Brian Ortega",
           "Frank Mir",
-          "BJ Penn",
-          "Nate Diaz",
           "Mackenzie Dern",
-          "Rodolfo Vieira"
+          "Islam Makhachev",
+          "BJ Penn",
+          "Fabricio Werdum"
         ],
         "alsoAcceptedAnswers": [
+          "Nate Diaz",
+          "Rodolfo Vieira",
           "Tony Ferguson",
           "Khabib Nurmagomedov",
           "Jim Miller",
-          "Brian Ortega",
-          "Royce Gracie",
-          "Fabricio Werdum"
+          "Royce Gracie"
         ]
       },
       {
         "prompt": "Name a fighter you would hate to grapple with.",
         "answers": [
+          "Demian Maia",
           "Khabib Nurmagomedov",
           "Islam Makhachev",
-          "Demian Maia",
           "Charles Oliveira",
+          "Rodolfo Vieira",
+          "Fabricio Werdum",
           "Frank Mir",
-          "BJ Penn",
-          "Nate Diaz",
           "Mackenzie Dern"
         ],
         "alsoAcceptedAnswers": [
-          "Rodolfo Vieira",
+          "BJ Penn",
+          "Nate Diaz",
           "Tony Ferguson",
           "Jim Miller",
           "Brian Ortega",
-          "Royce Gracie",
-          "Fabricio Werdum"
+          "Royce Gracie"
         ]
       },
       {
@@ -897,19 +1469,19 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
         "answers": [
           "Charles Oliveira",
           "Demian Maia",
-          "Royce Gracie",
           "Frank Mir",
-          "BJ Penn",
+          "Royce Gracie",
           "Nate Diaz",
-          "Mackenzie Dern",
-          "Rodolfo Vieira"
+          "BJ Penn",
+          "Brian Ortega",
+          "Tony Ferguson"
         ],
         "alsoAcceptedAnswers": [
-          "Tony Ferguson",
+          "Mackenzie Dern",
+          "Rodolfo Vieira",
           "Khabib Nurmagomedov",
           "Jim Miller",
           "Islam Makhachev",
-          "Brian Ortega",
           "Fabricio Werdum"
         ]
       }
@@ -1017,13 +1589,13 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Daniel Cormier",
           "Kamaru Usman",
           "Islam Makhachev",
-          "Henry Cejudo",
-          "Merab Dvalishvili",
-          "Chael Sonnen"
-        ],
-        "alsoAcceptedAnswers": [
           "Matt Hughes",
           "Randy Couture",
+          "Henry Cejudo"
+        ],
+        "alsoAcceptedAnswers": [
+          "Merab Dvalishvili",
+          "Chael Sonnen",
           "Frankie Edgar",
           "Josh Koscheck",
           "Jon Fitch",
@@ -1034,37 +1606,37 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
         "prompt": "Name a fighter whose takedowns became part of his identity.",
         "answers": [
           "Georges St-Pierre",
-          "Daniel Cormier",
-          "Kamaru Usman",
-          "Henry Cejudo",
           "Khabib Nurmagomedov",
+          "Kamaru Usman",
+          "Daniel Cormier",
           "Islam Makhachev",
           "Merab Dvalishvili",
-          "Chael Sonnen"
+          "Matt Hughes",
+          "Chad Mendes"
         ],
         "alsoAcceptedAnswers": [
-          "Matt Hughes",
+          "Henry Cejudo",
+          "Chael Sonnen",
           "Randy Couture",
           "Frankie Edgar",
           "Josh Koscheck",
-          "Jon Fitch",
-          "Chad Mendes"
+          "Jon Fitch"
         ]
       },
       {
         "prompt": "Name a UFC star associated with relentless grappling pressure.",
         "answers": [
           "Khabib Nurmagomedov",
-          "Islam Makhachev",
           "Merab Dvalishvili",
+          "Islam Makhachev",
           "Kamaru Usman",
-          "Georges St-Pierre",
           "Daniel Cormier",
-          "Henry Cejudo",
-          "Chael Sonnen"
+          "Georges St-Pierre",
+          "Chael Sonnen",
+          "Matt Hughes"
         ],
         "alsoAcceptedAnswers": [
-          "Matt Hughes",
+          "Henry Cejudo",
           "Randy Couture",
           "Frankie Edgar",
           "Josh Koscheck",
@@ -1078,30 +1650,30 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Khabib Nurmagomedov",
           "Daniel Cormier",
           "Islam Makhachev",
-          "Matt Hughes",
-          "Georges St-Pierre",
           "Kamaru Usman",
-          "Henry Cejudo",
-          "Merab Dvalishvili"
+          "Matt Hughes",
+          "Randy Couture",
+          "Georges St-Pierre",
+          "Jon Fitch"
         ],
         "alsoAcceptedAnswers": [
+          "Henry Cejudo",
+          "Merab Dvalishvili",
           "Chael Sonnen",
-          "Randy Couture",
           "Frankie Edgar",
           "Josh Koscheck",
-          "Jon Fitch",
           "Chad Mendes"
         ]
       },
       {
         "prompt": "Name a wrestler who turned elite grappling into UFC success.",
         "answers": [
+          "Khabib Nurmagomedov",
+          "Georges St-Pierre",
           "Daniel Cormier",
           "Henry Cejudo",
-          "Georges St-Pierre",
           "Randy Couture",
           "Matt Hughes",
-          "Khabib Nurmagomedov",
           "Kamaru Usman",
           "Islam Makhachev"
         ],
@@ -1181,18 +1753,10 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Couture"
         ]
       },
-      {
-        "name": "Frankie Edgar"
-      },
-      {
-        "name": "Josh Koscheck"
-      },
-      {
-        "name": "Jon Fitch"
-      },
-      {
-        "name": "Chad Mendes"
-      }
+      "Frankie Edgar",
+      "Josh Koscheck",
+      "Jon Fitch",
+      "Chad Mendes"
     ]
   },
   {
@@ -1208,15 +1772,15 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Alex Pereira",
           "Max Holloway",
           "Jose Aldo",
-          "Conor McGregor",
           "Stephen Thompson",
-          "Joanna Jedrzejczyk"
+          "Joanna Jedrzejczyk",
+          "Valentina Shevchenko"
         ],
         "alsoAcceptedAnswers": [
+          "Conor McGregor",
           "Dustin Poirier",
           "Alexander Volkanovski",
           "Justin Gaethje",
-          "Valentina Shevchenko",
           "Petr Yan",
           "Ilia Topuria"
         ]
@@ -1228,14 +1792,14 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Israel Adesanya",
           "Max Holloway",
           "Jose Aldo",
-          "Alex Pereira",
           "Conor McGregor",
           "Stephen Thompson",
-          "Joanna Jedrzejczyk"
+          "Joanna Jedrzejczyk",
+          "Alexander Volkanovski"
         ],
         "alsoAcceptedAnswers": [
+          "Alex Pereira",
           "Dustin Poirier",
-          "Alexander Volkanovski",
           "Justin Gaethje",
           "Valentina Shevchenko",
           "Petr Yan",
@@ -1245,19 +1809,19 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       {
         "prompt": "Name a UFC star you would pick for a striking showcase.",
         "answers": [
+          "Stephen Thompson",
           "Israel Adesanya",
           "Anderson Silva",
-          "Stephen Thompson",
           "Valentina Shevchenko",
-          "Alex Pereira",
-          "Max Holloway",
+          "Joanna Jedrzejczyk",
+          "Alexander Volkanovski",
           "Jose Aldo",
-          "Conor McGregor"
+          "Alex Pereira"
         ],
         "alsoAcceptedAnswers": [
-          "Joanna Jedrzejczyk",
+          "Max Holloway",
+          "Conor McGregor",
           "Dustin Poirier",
-          "Alexander Volkanovski",
           "Justin Gaethje",
           "Petr Yan",
           "Ilia Topuria"
@@ -1266,21 +1830,21 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       {
         "prompt": "Name a fighter opponents had to respect at kickboxing range.",
         "answers": [
-          "Israel Adesanya",
           "Alex Pereira",
+          "Israel Adesanya",
           "Stephen Thompson",
           "Jose Aldo",
+          "Valentina Shevchenko",
+          "Joanna Jedrzejczyk",
           "Anderson Silva",
-          "Max Holloway",
-          "Conor McGregor",
-          "Joanna Jedrzejczyk"
+          "Petr Yan"
         ],
         "alsoAcceptedAnswers": [
+          "Max Holloway",
+          "Conor McGregor",
           "Dustin Poirier",
           "Alexander Volkanovski",
           "Justin Gaethje",
-          "Valentina Shevchenko",
-          "Petr Yan",
           "Ilia Topuria"
         ]
       },
@@ -1291,16 +1855,16 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Israel Adesanya",
           "Stephen Thompson",
           "Joanna Jedrzejczyk",
-          "Alex Pereira",
-          "Max Holloway",
           "Jose Aldo",
-          "Conor McGregor"
+          "Max Holloway",
+          "Valentina Shevchenko",
+          "Alexander Volkanovski"
         ],
         "alsoAcceptedAnswers": [
+          "Alex Pereira",
+          "Conor McGregor",
           "Dustin Poirier",
-          "Alexander Volkanovski",
           "Justin Gaethje",
-          "Valentina Shevchenko",
           "Petr Yan",
           "Ilia Topuria"
         ]
@@ -1358,9 +1922,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       }
     ],
     "alsoAcceptedAnswers": [
-      {
-        "name": "Dustin Poirier"
-      },
+      "Dustin Poirier",
       {
         "name": "Alexander Volkanovski",
         "aliases": [
